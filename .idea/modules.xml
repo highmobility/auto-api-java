@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/autoapi.iml" filepath="$PROJECT_DIR$/.idea/modules/autoapi.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/autoapi_main.iml" filepath="$PROJECT_DIR$/.idea/modules/autoapi_main.iml" group="autoapi" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/autoapi_test.iml" filepath="$PROJECT_DIR$/.idea/modules/autoapi_test.iml" group="autoapi" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hmkit-auto-api.iml" filepath="$PROJECT_DIR$/.idea/modules/hmkit-auto-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hmkit-auto-api_main.iml" filepath="$PROJECT_DIR$/.idea/modules/hmkit-auto-api_main.iml" group="hmkit-auto-api" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hmkit-auto-api_test.iml" filepath="$PROJECT_DIR$/.idea/modules/hmkit-auto-api_test.iml" group="hmkit-auto-api" />
     </modules>
   </component>
 </project>
