@@ -1,6 +1,6 @@
 package com.highmobility.autoapi;
 
-import com.highmobility.byteutils.Bytes;
+import com.highmobility.utils.Bytes;
 
 import java.io.UnsupportedEncodingException;
 

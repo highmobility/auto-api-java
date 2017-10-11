@@ -2,7 +2,7 @@ package com.highmobility.autoapi.incoming;
 
 import com.highmobility.autoapi.AutoHvacState;
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.byteutils.Bytes;
+import com.highmobility.utils.Bytes;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;

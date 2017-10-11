@@ -1,7 +1,7 @@
 package com.highmobility.autoapi.incoming;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.WindscreenDamagePosition;
-import com.highmobility.byteutils.Bytes;
+import com.highmobility.utils.Bytes;
 
 import java.util.Arrays;
 import java.util.Date;

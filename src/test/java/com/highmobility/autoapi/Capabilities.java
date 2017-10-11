@@ -4,7 +4,7 @@ import com.highmobility.autoapi.capability.*;
 import com.highmobility.autoapi.incoming.Capability;
 import com.highmobility.autoapi.incoming.IncomingCommand;
 import com.highmobility.autoapi.Command.Identifier;
-import com.highmobility.byteutils.Bytes;
+import com.highmobility.utils.Bytes;
 import org.junit.Before;
 import org.junit.Test;
 

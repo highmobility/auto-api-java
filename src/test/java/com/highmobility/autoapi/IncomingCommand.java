@@ -2,7 +2,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.incoming.*;
 import com.highmobility.autoapi.incoming.NotificationAction;
-import com.highmobility.byteutils.Bytes;
+import com.highmobility.utils.Bytes;
 import org.junit.Test;
 
 import java.text.DateFormat;
@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -551,7 +552,17 @@ public class IncomingCommand {
 
     @Test
     public void vehicleTime() {
-        byte[] bytes = Bytes.bytesFromHex("00500111010a102000FF10");
+        /*
+            0x11, # 2017
+            0x01, # January
+            0x0a, # the 10th
+            0x10, # 16h
+            0x20, # 32min
+
+            0x0078 # +120 min UTC time offset
+        */
+
+        byte[] bytes = Bytes.bytesFromHex("00500111010a1020010078");
         com.highmobility.autoapi.incoming.IncomingCommand command = null;
 
         try {
@@ -563,11 +574,14 @@ public class IncomingCommand {
         assertTrue(command.getClass() == VehicleTime.class);
         Calendar c = ((VehicleTime)command).getVehicleTime();
         float rawOffset = c.getTimeZone().getRawOffset();
-        assertTrue(rawOffset == -240 * 60 * 1000);
+        float expectedRawOffset = 120 * 60 * 1000;
+        assertTrue(rawOffset == expectedRawOffset);
         Date commandDate = c.getTime();
 
-        String string = "2017-01-10T22:32:00";
+        String string = "2017-01-10T14:32:01"; // hour is 16 - 2 = 14 because timezone is UTC+2
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+
         try {
             Date date = format.parse(string);
             assertTrue((format.format(commandDate).equals(format.format(date))));

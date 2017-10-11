@@ -1,7 +1,7 @@
 package com.highmobility.autoapi.incoming;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.byteutils.Bytes;
+import com.highmobility.utils.Bytes;
 
 /**
  * Created by ttiganik on 13/09/16.

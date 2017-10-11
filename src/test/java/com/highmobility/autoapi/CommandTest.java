@@ -3,7 +3,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.incoming.LightsState;
 import com.highmobility.autoapi.incoming.TrunkState;
 import com.highmobility.autoapi.incoming.WindscreenState;
-import com.highmobility.byteutils.Bytes;
+import com.highmobility.utils.Bytes;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;

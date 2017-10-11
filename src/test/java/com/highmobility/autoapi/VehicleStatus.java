@@ -10,7 +10,7 @@ import com.highmobility.autoapi.vehiclestatus.RooftopState;
 import com.highmobility.autoapi.vehiclestatus.ValetMode;
 import com.highmobility.autoapi.vehiclestatus.VehicleLocation;
 import com.highmobility.autoapi.vehiclestatus.VehicleTime;
-import com.highmobility.byteutils.Bytes;
+import com.highmobility.utils.Bytes;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -58,7 +59,8 @@ public class VehicleStatus {
                         "003603020100" +
                         "00460102" +
                         "004720010e4265726c696e205061726b696e670363054F11010a11220A000000000000" +
-                        "00500811010a1020000078";
+                        "00500811010a10200a0078";
+
         byte[] bytes = Bytes.bytesFromHex(vehicleStatusHexString);
 
         try {
@@ -421,11 +423,15 @@ public class VehicleStatus {
 
         Calendar c = ((VehicleTime)state).getVehicleTime();
 
-        assertTrue(c.getTimeZone().getRawOffset() == 120 * 60 * 1000);
+        float rawOffset = c.getTimeZone().getRawOffset();
+        float expectedRawOffset = 120 * 60 * 1000;
+        assertTrue(rawOffset == expectedRawOffset);
         Date commandDate = c.getTime();
 
-        String string = "2017-01-10T16:32:00";
+        String string = "2017-01-10T14:32:10"; // hour is 16 - 2 = 14 because timezone is UTC+2
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+
         try {
             Date date = format.parse(string);
             assertTrue((format.format(commandDate).equals(format.format(date))));
@@ -433,6 +439,5 @@ public class VehicleStatus {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
     }
 }

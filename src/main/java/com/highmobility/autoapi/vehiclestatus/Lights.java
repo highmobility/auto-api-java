@@ -3,7 +3,7 @@ package com.highmobility.autoapi.vehiclestatus;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.incoming.LightsState;
-import com.highmobility.byteutils.Bytes;
+import com.highmobility.utils.Bytes;
 
 /**
  * Created by ttiganik on 14/12/2016.

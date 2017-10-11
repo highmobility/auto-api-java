@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 
 import com.highmobility.autoapi.incoming.DiagnosticsState;
-import com.highmobility.byteutils.Bytes;
+import com.highmobility.utils.Bytes;
 
 import java.util.Arrays;
 

@@ -1,7 +1,7 @@
 package com.highmobility.autoapi.vehiclestatus;
 import com.highmobility.autoapi.Command.Identifier;
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.byteutils.Bytes;
+import com.highmobility.utils.Bytes;
 
 import java.util.Arrays;
 import java.util.Calendar;
