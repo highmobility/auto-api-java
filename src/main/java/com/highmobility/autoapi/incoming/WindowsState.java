@@ -1,15 +1,9 @@
-package com.highmobility.autoapi.vehiclestatus;
-import com.highmobility.autoapi.Command.Identifier;
+package com.highmobility.autoapi.incoming;
+
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.WindowState;
 
-/**
- * Created by ttiganik on 14/12/2016.
- */
-
-public class Windows extends FeatureState {
-    WindowState[] windowStates;
-
+public class WindowsState extends IncomingCommand {
     /**
      *
      * @return The states for the windows.
@@ -18,8 +12,10 @@ public class Windows extends FeatureState {
         return windowStates;
     }
 
-    public Windows(byte[] bytes) throws CommandParseException {
-        super(Identifier.WINDOWS);
+    WindowState[] windowStates;
+
+    WindowsState(byte[] bytes) throws CommandParseException {
+        super(bytes);
 
         if (bytes.length < 4) throw new CommandParseException();
 

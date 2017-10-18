@@ -1,8 +1,31 @@
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.incoming.*;
+import com.highmobility.autoapi.incoming.ChargeState;
+import com.highmobility.autoapi.incoming.ClimateState;
+import com.highmobility.autoapi.incoming.ControlMode;
+import com.highmobility.autoapi.incoming.DeliveredParcels;
+import com.highmobility.autoapi.incoming.DiagnosticsState;
+import com.highmobility.autoapi.incoming.DriverFatigue;
+import com.highmobility.autoapi.incoming.Failure;
+import com.highmobility.autoapi.incoming.IgnitionState;
+import com.highmobility.autoapi.incoming.KeyfobPosition;
+import com.highmobility.autoapi.incoming.LightsState;
+import com.highmobility.autoapi.incoming.LockState;
+import com.highmobility.autoapi.incoming.Maintenance;
+import com.highmobility.autoapi.incoming.Notification;
 import com.highmobility.autoapi.incoming.NotificationAction;
+import com.highmobility.autoapi.incoming.ParkingTicket;
+import com.highmobility.autoapi.incoming.RooftopState;
+import com.highmobility.autoapi.incoming.SendMessage;
+import com.highmobility.autoapi.incoming.TheftAlarmState;
+import com.highmobility.autoapi.incoming.TrunkState;
+import com.highmobility.autoapi.incoming.ValetMode;
+import com.highmobility.autoapi.incoming.VehicleLocation;
+import com.highmobility.autoapi.incoming.VehicleTime;
+import com.highmobility.autoapi.incoming.WindowsState;
+import com.highmobility.autoapi.incoming.WindscreenState;
 import com.highmobility.utils.Bytes;
+
 import org.junit.Test;
 
 import java.text.DateFormat;
@@ -589,5 +612,42 @@ public class IncomingCommand {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void windows() {
+        byte[] bytes = Bytes.bytesFromHex("004501040001010002000301");
+        com.highmobility.autoapi.incoming.IncomingCommand command = null;
+
+        try {
+            command = com.highmobility.autoapi.incoming.IncomingCommand.create(bytes);
+        } catch (CommandParseException e) {
+            fail("init failed");
+        }
+        assertTrue(command.getClass() == WindowsState.class);
+
+        WindowState[] states = ((WindowsState)command).getWindowStates();
+
+        assertTrue(states.length == 4);
+
+        for (int i = 0; i < states.length; i++) {
+            WindowState state = states[i];
+
+            switch (state.location) {
+                case FRONT_LEFT:
+                    assertTrue(state.getPosition() == WindowState.Position.OPEN);
+                    break;
+                case FRONT_RIGHT:
+                    assertTrue(state.getPosition() == WindowState.Position.CLOSED);
+                    break;
+                case REAR_RIGHT:
+                    assertTrue(state.getPosition() == WindowState.Position.CLOSED);
+                    break;
+                case REAR_LEFT:
+                    assertTrue(state.getPosition() == WindowState.Position.OPEN);
+                    break;
+            }
+        }
+
     }
 }

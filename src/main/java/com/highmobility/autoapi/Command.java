@@ -1,14 +1,13 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.incoming.LightsState;
-import com.highmobility.autoapi.incoming.WindscreenState;
 import com.highmobility.autoapi.incoming.TrunkState;
+import com.highmobility.autoapi.incoming.WindscreenState;
 import com.highmobility.utils.Bytes;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -1670,7 +1669,8 @@ public class Command {
      * Commands for the Windows category of the Auto API.
      */
     public enum Windows implements Type {
-        OPEN_CLOSE_WINDOWS((byte)0x02);
+        OPEN_CLOSE_WINDOWS((byte)0x02),
+        WINDOWS_STATE((byte)0x01);
 
         public static byte[] openCloseWindows(WindowState[] windowStates) {
             byte[] command = OPEN_CLOSE_WINDOWS.getIdentifierAndType();

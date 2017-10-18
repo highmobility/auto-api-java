@@ -22,6 +22,17 @@ public class WindowState {
 
             return 0x00;
         }
+
+        public static Location fromByte(byte value) throws CommandParseException {
+            switch (value) {
+                case 0x00: return FRONT_LEFT;
+                case 0x01: return FRONT_RIGHT;
+                case 0x02: return REAR_RIGHT;
+                case 0x03: return REAR_LEFT;
+            }
+
+            throw new CommandParseException();
+        }
     }
 
     public enum Position {
@@ -36,6 +47,15 @@ public class WindowState {
             }
 
             return 0x00;
+        }
+
+        public static Position fromByte(byte value) throws CommandParseException {
+            switch (value) {
+                case 0x01: return OPEN;
+                case 0x00: return CLOSED;
+            }
+
+            throw new CommandParseException();
         }
     }
 

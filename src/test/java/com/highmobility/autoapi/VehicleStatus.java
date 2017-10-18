@@ -44,7 +44,7 @@ public class VehicleStatus {
                         "4d7920436172" + // "My Car"
                         "06"           + // License plate is 6 bytes
                         "414243313233" + // "ABC123"
-                        "0F" +      // length
+                        "10" +      // length
                         "00200D04000100010000020101030001" + // door locks
                         "0021020001" +
                         "0023080200FF32bf19999a" +
@@ -59,7 +59,8 @@ public class VehicleStatus {
                         "003603020100" +
                         "00460102" +
                         "004720010e4265726c696e205061726b696e670363054F11010a11220A000000000000" +
-                        "00500811010a10200a0078";
+                        "00500811010a10200a0078" +
+                        "004509040001010002000300"; // windows
 
         byte[] bytes = Bytes.bytesFromHex(vehicleStatusHexString);
 
@@ -75,7 +76,7 @@ public class VehicleStatus {
 
     @Test
     public void states_size() {
-        assertTrue(vehicleStatus.getFeatureStates().length == 15);
+        assertTrue(vehicleStatus.getFeatureStates().length == 16);
     }
 
     @Test
@@ -438,6 +439,44 @@ public class VehicleStatus {
             // msSince1970 are random
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void windows() {
+        FeatureState featureState = null;
+        for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
+            FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
+            if (iteratingState.getFeature() == Identifier.WINDOWS) {
+                featureState = iteratingState;
+                break;
+            }
+        }
+
+        assertTrue(featureState != null);
+        assertTrue(featureState.getClass() == Windows.class);
+
+        WindowState[] states = ((Windows)featureState).getWindowStates();
+
+        assertTrue(states.length == 4);
+
+        for (int i = 0; i < states.length; i++) {
+            WindowState state = states[i];
+
+            switch (state.location) {
+                case FRONT_LEFT:
+                    assertTrue(state.getPosition() == WindowState.Position.OPEN);
+                    break;
+                case FRONT_RIGHT:
+                    assertTrue(state.getPosition() == WindowState.Position.CLOSED);
+                break;
+                case REAR_RIGHT:
+                    assertTrue(state.getPosition() == WindowState.Position.CLOSED);
+                    break;
+                case REAR_LEFT:
+                    assertTrue(state.getPosition() == WindowState.Position.CLOSED);
+                break;
+            }
         }
     }
 }

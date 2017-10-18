@@ -90,6 +90,9 @@ public class IncomingCommand {
             else if (Bytes.startsWith(bytes, Command.VehicleTime.VEHICLE_TIME.getIdentifierAndType())) {
                 return new VehicleTime(bytes);
             }
+            else if (Bytes.startsWith(bytes, Command.Windows.WINDOWS_STATE.getIdentifierAndType())) {
+                return new WindowsState(bytes);
+            }
             else {
                 throw new CommandParseException();
             }
