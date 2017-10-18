@@ -34,33 +34,33 @@ public class VehicleStatus {
     @Before
     public void setup() {
         String vehicleStatusHexString =
-                "0011" + // MSB, LSB Message Identifier for Vehicle Status
-                        "01"       + // Message Type for Vehicle Status
-                        "4a46325348424443374348343531383639" + // VIN
-                        "01"           + // All-electric powertrain
-                        "06"           + // Model name is 6 bytes
-                        "547970652058" + // "Type X"
-                        "06"           + // Car name is 6 bytes
-                        "4d7920436172" + // "My Car"
-                        "06"           + // License plate is 6 bytes
-                        "414243313233" + // "ABC123"
-                        "10" +      // length
-                        "00200D04000100010000020101030001" + // door locks
-                        "0021020001" +
-                        "0023080200FF32bf19999a" +
-                        "002410419800004140000001000041ac000060" + // climate
-                        "0025020135" + // rooftop state
-                        "00270102" +
-                        "00280101" + // valet mode
-                        "00300842561eb941567ab1" + // location 53.530003 13.404954; // 8 feature states
-                        "00330B0249F00063003C09C45A01" +
-                        "00340501F5000E61" +
-                        "00350100" +
-                        "003603020100" +
-                        "00460102" +
-                        "004720010e4265726c696e205061726b696e670363054F11010a11220A000000000000" +
-                        "00500811010a10200a0078" +
-                        "004509040001010002000300"; // windows
+            "0011" + // MSB, LSB Message Identifier for Vehicle Status
+            "01"       + // Message Type for Vehicle Status
+            "4a46325348424443374348343531383639" + // VIN
+            "01"           + // All-electric powertrain
+            "06"           + // Model name is 6 bytes
+            "547970652058" + // "Type X"
+            "06"           + // Car name is 6 bytes
+            "4d7920436172" + // "My Car"
+            "06"           + // License plate is 6 bytes
+            "414243313233" + // "ABC123"
+            "10" +      // length
+            "00200D04000100010000020101030001" + // door locks
+            "0021020001" +
+            "0023080200FF32bf19999a" +
+            "002410419800004140000001000041ac000060" + // climate
+            "0025020135" + // rooftop state
+            "00270102" +
+            "00280101" + // valet mode
+            "00300842561eb941567ab1" + // location 53.530003 13.404954; // 8 feature states
+            "00330B0249F00063003C09C45A01" +
+            "00340501F5000E61" +
+            "00350100" +
+            "003603020100" +
+            "00460102" +
+            "004720010e4265726c696e205061726b696e670363054F11010a11220A000000000000" +
+            "00500811010a10200a0078" +
+            "004509040001010002000300"; // windows
 
         byte[] bytes = Bytes.bytesFromHex(vehicleStatusHexString);
 
