@@ -1,7 +1,9 @@
 package com.highmobility.autoapi.incoming;
 
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.capability.FeatureCapability;
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.utils.Bytes;
 
 import java.util.Arrays;
 
@@ -11,7 +13,25 @@ import java.util.Arrays;
  * This command is sent when a Get Capabilities command is received by the car.
  */
 public class Capabilities extends IncomingCommand {
-    FeatureCapability[] capabilites;
+    FeatureCapability[] capabilities;
+
+    /**
+     * Create the capabilities command bytes
+     *
+     * @param capabilities the capabilities
+     * @return command bytes
+     */
+    public static byte[] getCommandBytes(FeatureCapability[] capabilities) {
+        byte[] bytes = Command.Capabilities.CAPABILITIES.getIdentifierAndType();
+        bytes = Bytes.concatBytes(bytes, (byte)capabilities.length);
+
+        for (int i = 0; i < capabilities.length; i++) {
+            byte[] capabilityBytes = capabilities[i].getBytes();
+            bytes = Bytes.concatBytes(bytes, capabilityBytes);
+        }                    
+
+        return bytes;
+    }
 
     public Capabilities(byte[] bytes) throws CommandParseException {
         super(bytes);
@@ -21,8 +41,8 @@ public class Capabilities extends IncomingCommand {
         int capabilitiesCount = bytes[3];
         if (capabilitiesCount == 0) return;
 
-        capabilites = new FeatureCapability[capabilitiesCount];
-        int knownCapabilitesCount = 0;
+        capabilities = new FeatureCapability[capabilitiesCount];
+        int knownCapabilitiesCount = 0;
         int capabilityPosition = 4;
 
         for (int i = 0; i < capabilitiesCount; i++) {
@@ -31,30 +51,30 @@ public class Capabilities extends IncomingCommand {
                         capabilityPosition + 3 + capabilityLength); // length = 2x identifier byte + length byte + bytes
             FeatureCapability featureCapability = FeatureCapability.fromBytes(capabilityBytes);
 
-            capabilites[i] = featureCapability;
+            capabilities[i] = featureCapability;
             capabilityPosition += capabilityLength + 3;
             if (featureCapability != null) {
-                knownCapabilitesCount++;
+                knownCapabilitiesCount++;
             }
             else {
-                knownCapabilitesCount ++;
-                knownCapabilitesCount --;
+                knownCapabilitiesCount ++;
+                knownCapabilitiesCount --;
             }
         }
 
-        if (capabilitiesCount != knownCapabilitesCount) {
+        if (capabilitiesCount != knownCapabilitiesCount) {
             // resize the array if any of the capabilities is unknown(null)
-            FeatureCapability[] trimmedCapabilites = new FeatureCapability[knownCapabilitesCount];
-            int trimmedCapabilitesPosition = 0;
+            FeatureCapability[] trimmedCapabilities = new FeatureCapability[knownCapabilitiesCount];
+            int trimmedCapabilitiesPosition = 0;
             for (int i = 0; i < capabilitiesCount; i++) {
-                FeatureCapability featureCapability = capabilites[i];
+                FeatureCapability featureCapability = capabilities[i];
                 if (featureCapability != null) {
-                    trimmedCapabilites[trimmedCapabilitesPosition] = featureCapability;
-                    trimmedCapabilitesPosition++;
+                    trimmedCapabilities[trimmedCapabilitiesPosition] = featureCapability;
+                    trimmedCapabilitiesPosition++;
                 }
             }
 
-            capabilites = trimmedCapabilites;
+            capabilities = trimmedCapabilities;
         }
     }
 
@@ -62,7 +82,7 @@ public class Capabilities extends IncomingCommand {
      *
      * @return All of the Capabilities that are available for the vehicle.
      */
-    public FeatureCapability[] getCapabilites() {
-        return capabilites;
+    public FeatureCapability[] getCapabilities() {
+        return capabilities;
     }
 }

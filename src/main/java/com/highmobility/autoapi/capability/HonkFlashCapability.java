@@ -31,4 +31,22 @@ public class HonkFlashCapability extends FeatureCapability {
         flashLightsCapability = AvailableCapability.Capability.fromByte(bytes[4]);
         emergencyFlasherCapability = AvailableCapability.Capability.fromByte(bytes[5]);
     }
+
+    public HonkFlashCapability(AvailableCapability.Capability honkHornCapability,
+                               AvailableCapability.Capability flashLightsCapability,
+                               AvailableCapability.Capability emergencyFlasherCapability) {
+        super(Command.Identifier.HONK_FLASH);
+        this.honkHornCapability = honkHornCapability;
+        this.flashLightsCapability = flashLightsCapability;
+        this.emergencyFlasherCapability = emergencyFlasherCapability;
+    }
+
+    @Override public byte[] getBytes() {
+        byte[] bytes = getBytesWithCapabilityCount(3);
+        bytes[3] = honkHornCapability.getByte();
+        bytes[4] = flashLightsCapability.getByte();
+        bytes[5] = emergencyFlasherCapability.getByte();
+
+        return bytes;
+    }
 }

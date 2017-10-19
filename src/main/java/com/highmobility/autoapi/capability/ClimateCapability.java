@@ -9,17 +9,32 @@ import com.highmobility.autoapi.CommandParseException;
 
 public class ClimateCapability extends FeatureCapability {
     public enum ProfileCapability {
-        UNAVAILABLE, AVAILABLE, GET_STATE_AVAILABLE, NO_SCHEDULING;
+        UNAVAILABLE((byte)0x00),
+        AVAILABLE((byte)0x01),
+        GET_STATE_AVAILABLE((byte)0x02),
+        NO_SCHEDULING((byte)0x03);
 
         public static ProfileCapability fromByte(byte value) throws CommandParseException {
-            switch (value) {
-                case 0x00: return UNAVAILABLE;
-                case 0x01: return AVAILABLE;
-                case 0x02: return GET_STATE_AVAILABLE;
-                case 0x03: return NO_SCHEDULING;
+            ProfileCapability[] capabilities = ProfileCapability.values();
+
+            for (int i = 0; i < capabilities.length; i++) {
+                ProfileCapability capability = capabilities[i];
+                if (capability.getByte() == value) {
+                    return capability;
+                }
             }
 
             throw new CommandParseException();
+        }
+
+        private byte capabilityByte;
+
+        ProfileCapability(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
+        }
+
+        public byte getByte() {
+            return capabilityByte;
         }
     }
 
@@ -41,5 +56,19 @@ public class ClimateCapability extends FeatureCapability {
 
         climateCapability = AvailableGetStateCapability.Capability.fromByte(bytes[3]);
         profileCapability = ProfileCapability.fromByte(bytes[4]);
+    }
+
+    public ClimateCapability(AvailableGetStateCapability.Capability climateCapability,
+            ClimateCapability.ProfileCapability profileCapability) {
+        super(Command.Identifier.CLIMATE);
+        this.climateCapability = climateCapability;
+        this.profileCapability = profileCapability;
+    }
+
+    @Override public byte[] getBytes() {
+        byte[] bytes = getBytesWithCapabilityCount(2);
+        bytes[3] = climateCapability.getByte();
+        bytes[4] = profileCapability.getByte();
+        return bytes;
     }
 }

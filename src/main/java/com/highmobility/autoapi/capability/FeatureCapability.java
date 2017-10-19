@@ -45,7 +45,8 @@ public class FeatureCapability {
                 || feature == Identifier.GRAPHICS
                 || feature == Identifier.TEXT_INPUT
                 || feature == Identifier.WINDOWS
-                || feature == Identifier.KEYFOB_POSITION) {
+                || feature == Identifier.KEYFOB_POSITION
+                || feature == Identifier.FUELING) {
             featureCapability =  new AvailableCapability(feature, capabilityBytes);
         }
         else if (feature == Identifier.CLIMATE) {
@@ -66,9 +67,6 @@ public class FeatureCapability {
         else if (feature == Identifier.NOTIFICATIONS) {
             featureCapability = new NotificationsCapability(capabilityBytes);
         }
-        else if (feature == Identifier.FUELING) {
-            featureCapability = new FuelingCapability(capabilityBytes);
-        }
         else if (feature == Identifier.WINDSCREEN) {
             featureCapability = new WindscreenCapability(capabilityBytes);
         }
@@ -78,5 +76,15 @@ public class FeatureCapability {
 
     public Identifier getIdentifier() {
         return identifier;
+    }
+
+    public byte[] getBytes() {return null;} // override this
+
+    byte[] getBytesWithCapabilityCount(int capabilityCount) {
+        byte[] bytes = new byte[3 + capabilityCount];
+        bytes[0] = identifier.getIdentifier()[0];
+        bytes[1] = identifier.getIdentifier()[1];
+        bytes[2] = (byte) capabilityCount;
+        return bytes;
     }
 }

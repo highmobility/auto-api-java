@@ -7,7 +7,6 @@ import com.highmobility.utils.Bytes;
 /**
  * Created by ttiganik on 28/09/2016.
  */
-
 public class Failure extends IncomingCommand {
     public enum Reason {
         UNSUPPORTED_CAPABILITY((byte)0x00),
@@ -21,6 +20,20 @@ public class Failure extends IncomingCommand {
             return reasonByte;
         }
 
+        public static Reason fromByte(byte reasonByte) throws CommandParseException {
+            Reason[] allValues = Reason.values();
+
+            for (int i = 0; i < allValues.length; i++) {
+                Reason reason = allValues[i];
+
+                if (reason.getByte() == reasonByte) {
+                    return reason;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
         Reason(byte reason) {
             this.reasonByte = reason;
         }
@@ -30,28 +43,29 @@ public class Failure extends IncomingCommand {
     private Command.Type failedType;
     private Reason failureReason;
 
+    /**
+     * Create the failure message command bytes
+     *
+     * @param failedType the command that failed
+     * @param failureReason the failure reason
+     * @return command bytes
+     */
+    public static byte[] getCommandBytes(Command.Type failedType, Reason failureReason) {
+        byte[] bytes = Command.FailureMessage.FAILURE_MESSAGE.getIdentifierAndType();
+
+        bytes = Bytes.concatBytes(bytes, failedType.getIdentifierAndType());
+        bytes = Bytes.concatBytes(bytes, failureReason.getByte());
+
+        return bytes;
+    }
+
     public Failure(byte[] bytes) throws CommandParseException {
         super(bytes);
 
         if (bytes.length != 7) throw new CommandParseException();
 
         failedType = Command.typeFromBytes(bytes[3], bytes[4], bytes[5]);
-
-        byte reasonByte = bytes[6];
-        Reason[] allValues = Reason.values();
-
-        for (int i = 0; i < allValues.length; i++) {
-            Reason reason = allValues[i];
-
-            if (reason.getByte() == reasonByte) {
-                failureReason = reason;
-                break;
-            }
-        }
-
-        if (failureReason == null) {
-            throw new CommandParseException();
-        }
+        failureReason = Reason.fromByte(bytes[6]);
     }
 
     /**
@@ -68,14 +82,5 @@ public class Failure extends IncomingCommand {
      */
     public Reason getFailureReason() {
         return failureReason;
-    }
-
-    public static byte[] createBytes(Command.Type failedType, Reason failureReason) {
-        byte[] bytes = Command.FailureMessage.FAILURE_MESSAGE.getIdentifierAndType();
-
-        bytes = Bytes.concatBytes(bytes, failedType.getIdentifierAndType());
-        bytes = Bytes.concatBytes(bytes, failureReason.getByte());
-
-        return bytes;
     }
 }

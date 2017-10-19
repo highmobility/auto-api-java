@@ -6,11 +6,9 @@ import com.highmobility.autoapi.CommandParseException;
 /**
  * Created by root on 6/20/17.
  */
-
 public class WindscreenCapability extends FeatureCapability {
     AvailableCapability.Capability wiperCapability;
     AvailableGetStateCapability.Capability windscreenDamageCapability;
-
 
     public WindscreenCapability(byte[] bytes) throws CommandParseException {
         super(Command.Identifier.WINDSCREEN);
@@ -19,4 +17,17 @@ public class WindscreenCapability extends FeatureCapability {
         windscreenDamageCapability = AvailableGetStateCapability.Capability.fromByte(bytes[4]);
     }
 
+    public WindscreenCapability(AvailableCapability.Capability wiperCapability,
+                                AvailableGetStateCapability.Capability windscreenDamageCapability) {
+        super(Command.Identifier.WINDSCREEN);
+        this.wiperCapability = wiperCapability;
+        this.windscreenDamageCapability = windscreenDamageCapability;
+    }
+
+    @Override public byte[] getBytes() {
+        byte[] bytes = getBytesWithCapabilityCount(2);
+        bytes[3] = wiperCapability.getByte();
+        bytes[4] = windscreenDamageCapability.getByte();
+        return bytes;
+    }
 }

@@ -18,11 +18,24 @@ public class NotificationsCapability extends FeatureCapability {
         notificationAction = AvailableCapability.Capability.fromByte(bytes[4]);
     }
 
+    public NotificationsCapability(AvailableCapability.Capability notification, AvailableCapability.Capability notificationAction) {
+        super(Command.Identifier.NOTIFICATIONS);
+        this.notification = notification;
+        this.notificationAction = notificationAction;
+    }
+
     public AvailableCapability.Capability getNotification() {
         return notification;
     }
 
     public AvailableCapability.Capability getNotificationAction() {
         return notificationAction;
+    }
+
+    @Override public byte[] getBytes() {
+        byte[] bytes = getBytesWithCapabilityCount(2);
+        bytes[3] = notification.getByte();
+        bytes[4] = notificationAction.getByte();
+        return bytes;
     }
 }

@@ -49,8 +49,8 @@ public class Capabilities {
 
     @Test
     public void capabilities_init() {
-        assertTrue(capabilites.getCapabilites() != null);
-        assertTrue(capabilites.getCapabilites().length == 31);
+        assertTrue(capabilites.getCapabilities() != null);
+        assertTrue(capabilites.getCapabilities().length == 31);
     }
 
     @Test
@@ -65,17 +65,17 @@ public class Capabilities {
             fail("unknowncapabilities init failed");
         }
 
-        assertTrue(unknownCapabilities.getCapabilites().length == 12);
-        for (int i = 0; i < unknownCapabilities.getCapabilites().length; i++) {
-            assertTrue(unknownCapabilities.getCapabilites()[i] != null);
+        assertTrue(unknownCapabilities.getCapabilities().length == 12);
+        for (int i = 0; i < unknownCapabilities.getCapabilities().length; i++) {
+            assertTrue(unknownCapabilities.getCapabilities()[i] != null);
         }
     }
 
     @Test
     public void capabilites_init_door_locks() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Command.Identifier.DOOR_LOCKS) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -92,8 +92,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_trunk_access() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.TRUNK_ACCESS) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -111,8 +111,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_wake_up() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.WAKE_UP) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -129,8 +129,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_charging() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.CHARGING) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -147,8 +147,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_climate() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.CLIMATE) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -166,8 +166,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_rooftop() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.ROOFTOP) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -185,8 +185,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_honkflash() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.HONK_FLASH) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -205,8 +205,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_remote_control() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.REMOTE_CONTROL) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -223,8 +223,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_valet_mode() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.VALET_MODE) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -241,8 +241,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_heart_rate() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.HEART_RATE) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -259,8 +259,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_vehicle_location() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.VEHICLE_LOCATION) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -277,8 +277,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_navi_destination() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.NAVI_DESTINATION) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -295,8 +295,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_delivered_parcels() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.DELIVERED_PARCELS) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -313,8 +313,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_diagnostics() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.DIAGNOSTICS) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -331,8 +331,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_maintenance() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.MAINTENANCE) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -349,8 +349,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_engine() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.ENGINE) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -366,8 +366,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_lights() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.LIGHTS) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -389,8 +389,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_messaging() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.MESSAGING) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -409,8 +409,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_notifications() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.NOTIFICATIONS) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -429,8 +429,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_fueling() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.FUELING) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -438,16 +438,16 @@ public class Capabilities {
         }
 
         assertTrue(featureCapability != null);
-        assertTrue(featureCapability.getClass() == FuelingCapability.class);
-        assertTrue(((FuelingCapability) featureCapability).getFuelCapCapability()
+        assertTrue(featureCapability.getClass() == AvailableCapability.class);
+        assertTrue(((AvailableCapability) featureCapability).getCapability()
                 == AvailableCapability.Capability.AVAILABLE);
     }
 
     @Test
     public void capabilites_init_driver_fatigue() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.DRIVER_FATIGUE) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -463,8 +463,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_video_handover() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.VIDEO_HANDOVER) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -480,8 +480,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_text_input() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.TEXT_INPUT) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -497,8 +497,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_windows() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.WINDOWS) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -514,8 +514,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_theft_alarm() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.THEFT_ALARM) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -531,8 +531,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_parking_ticket() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.PARKING_TICKET) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -548,8 +548,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_keyfob_position() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.KEYFOB_POSITION) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -607,8 +607,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_graphics() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.GRAPHICS) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -625,8 +625,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_browser() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.BROWSER) {
                 featureCapability = iteratingFeatureCapability;
                 break;
@@ -643,8 +643,8 @@ public class Capabilities {
     @Test
     public void capabilites_init_vehicle_time() {
         FeatureCapability featureCapability = null;
-        for (int i = 0; i < capabilites.getCapabilites().length; i++) {
-            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilites()[i];
+        for (int i = 0; i < capabilites.getCapabilities().length; i++) {
+            FeatureCapability iteratingFeatureCapability = capabilites.getCapabilities()[i];
             if (iteratingFeatureCapability.getIdentifier() == Identifier.VEHICLE_TIME) {
                 featureCapability = iteratingFeatureCapability;
                 break;

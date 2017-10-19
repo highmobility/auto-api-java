@@ -20,6 +20,16 @@ public class LightsCapability extends FeatureCapability {
         ambientLightsCapability = AvailableCapability.Capability.fromByte(bytes[5]);
     }
 
+    public LightsCapability(AvailableGetStateCapability.Capability exteriorLightsCapability,
+                            AvailableGetStateCapability.Capability interiorLightsCapability,
+                            AvailableCapability.Capability ambientLightsCapability) {
+        super(Command.Identifier.LIGHTS);
+
+        this.exteriorLightsCapability = exteriorLightsCapability;
+        this.interiorLightsCapability = interiorLightsCapability;
+        this.ambientLightsCapability = ambientLightsCapability;
+    }
+
     public AvailableGetStateCapability.Capability getExteriorLightsCapability() {
         return exteriorLightsCapability;
     }
@@ -30,5 +40,13 @@ public class LightsCapability extends FeatureCapability {
 
     public AvailableCapability.Capability getAmbientLightsCapability() {
         return ambientLightsCapability;
+    }
+
+    @Override public byte[] getBytes() {
+        byte[] bytes = getBytesWithCapabilityCount(3);
+        bytes[3] = exteriorLightsCapability.getByte();
+        bytes[4] = interiorLightsCapability.getByte();
+        bytes[5] = ambientLightsCapability.getByte();
+        return bytes;
     }
 }
