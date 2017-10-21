@@ -23,27 +23,6 @@ public class Climate extends FeatureState {
 
     float defrostingTemperature;
 
-    Climate(byte[] bytes) {
-        super(Command.Identifier.CLIMATE);
-
-        insideTemperature = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 3, 3 + 4)).getFloat();
-        outsideTemperature = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 7, 7 + 4)).getFloat();
-
-        hvacActive = bytes[11] == 0x00 ? false : true;
-        defoggingActive = bytes[12] == 0x00 ? false : true;
-        defrostingActive = bytes[13] == 0x00 ? false : true;
-
-        defrostingTemperature = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 14, 14 + 4)).getFloat();
-
-        int hvacActiveOnDays = bytes[18];
-        if (Bytes.getBit(hvacActiveOnDays, 7)) isAutoHvacConstant = true;
-
-        this.hvacActiveOnDays = new boolean[7];
-        for (int i = 0; i < 7; i++) {
-            this.hvacActiveOnDays[i] = Bytes.getBit(hvacActiveOnDays, i);
-        }
-    }
-
     /**
      *
      * @return Inside temperature in celsius
@@ -106,5 +85,26 @@ public class Climate extends FeatureState {
      */
     public boolean[] getHvacActiveOnDays() {
         return hvacActiveOnDays;
+    }
+
+    Climate(byte[] bytes) {
+        super(Command.Identifier.CLIMATE);
+
+        insideTemperature = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 3, 3 + 4)).getFloat();
+        outsideTemperature = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 7, 7 + 4)).getFloat();
+
+        hvacActive = bytes[11] == 0x00 ? false : true;
+        defoggingActive = bytes[12] == 0x00 ? false : true;
+        defrostingActive = bytes[13] == 0x00 ? false : true;
+
+        defrostingTemperature = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 14, 14 + 4)).getFloat();
+
+        int hvacActiveOnDays = bytes[18];
+        if (Bytes.getBit(hvacActiveOnDays, 7)) isAutoHvacConstant = true;
+
+        this.hvacActiveOnDays = new boolean[7];
+        for (int i = 0; i < 7; i++) {
+            this.hvacActiveOnDays[i] = Bytes.getBit(hvacActiveOnDays, i);
+        }
     }
 }

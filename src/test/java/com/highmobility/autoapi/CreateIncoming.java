@@ -154,6 +154,10 @@ public class CreateIncoming {
 
         byte[] bytes = Capabilities.getCommandBytes(capabilities);
         assertTrue(Arrays.equals(expectedBytes, bytes));
+    }
+
+    @Test
+    public void vehicleStatus() {
 
     }
 }

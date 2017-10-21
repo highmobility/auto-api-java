@@ -9,7 +9,7 @@ import com.highmobility.autoapi.CommandParseException;
 public class Fueling extends FeatureState {
     public Fueling(byte[] bytes) throws CommandParseException {
         super(Command.Identifier.FUELING);
-
+        // TODO: implement
         if (bytes.length < 5) throw new CommandParseException();
 
     }

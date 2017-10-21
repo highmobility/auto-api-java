@@ -41,4 +41,14 @@ public class FeatureState {
     public Command.Identifier getFeature() {
         return feature;
     }
+
+    public byte[] getBytes() {return null;} // override this
+
+    byte[] getBytesWithCapabilityCount(int capabilityCount) {
+        byte[] bytes = new byte[2 + capabilityCount];
+        bytes[0] = feature.getIdentifier()[0];
+        bytes[1] = feature.getIdentifier()[1];
+        bytes[2] = (byte) capabilityCount;
+        return bytes;
+    }
 }

@@ -12,7 +12,6 @@ import com.highmobility.autoapi.capability.RooftopCapability;
 import com.highmobility.autoapi.capability.TrunkAccessCapability;
 import com.highmobility.autoapi.capability.WindscreenCapability;
 import com.highmobility.autoapi.incoming.Capabilities;
-import com.highmobility.autoapi.incoming.Capability;
 import com.highmobility.autoapi.incoming.ChargeState;
 import com.highmobility.autoapi.incoming.ClimateState;
 import com.highmobility.autoapi.incoming.ControlMode;
@@ -55,178 +54,6 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class IncomingCommand {
-    @Test
-    public void capabilities() {
-        byte[] bytes = Bytes.bytesFromHex("00100112" +
-                "00200101" +
-                "0021020300" +
-                "00220100" +
-                "00230100" +
-                "0024020100" +
-                "0025020101" +
-                "002603010101" +
-                "00270101" +
-                "00280101" +
-                "00290100" +
-                "00300101" +
-                "00310101" +
-                "00320101" +
-                "00400100" +
-                "003603000101" +
-                "0037020000" +
-                "0038020100" +
-                "0042020002");
-
-        com.highmobility.autoapi.incoming.IncomingCommand command = null;
-
-        try {
-            command = com.highmobility.autoapi.incoming.IncomingCommand.create(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
-
-        assertTrue(command.getClass() == Capabilities.class);
-        FeatureCapability[] capabilities = ((Capabilities)command).getCapabilities();
-        int expectedCapabilitiesCount = 18;
-        assertTrue(capabilities.length == expectedCapabilitiesCount);
-        int capabilitiesFound = 0;
-        for (int i = 0; i < capabilities.length; i++) {
-            FeatureCapability capa = capabilities[i];
-
-            switch (capa.getIdentifier()) {
-                case DOOR_LOCKS: {
-                    AvailableGetStateCapability capability = (AvailableGetStateCapability) capa;
-                    assertTrue(capability.getCapability() == AvailableGetStateCapability.Capability.AVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case TRUNK_ACCESS: {
-                    TrunkAccessCapability trunkAccessCapability = (TrunkAccessCapability) capa;
-                    assertTrue(trunkAccessCapability.getLockCapability()
-                            == TrunkAccessCapability.LockCapability.GET_STATE_UNLOCK_AVAILABLE);
-                    assertTrue(trunkAccessCapability.getPositionCapability()
-                            == TrunkAccessCapability.PositionCapability.UNAVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case WAKE_UP: {
-                    AvailableCapability capability = (AvailableCapability) capa;
-                    assertTrue(capability.getCapability() == AvailableCapability.Capability.UNAVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case CHARGING: {
-                    AvailableGetStateCapability capability = (AvailableGetStateCapability) capa;
-                    assertTrue(capability.getCapability() == AvailableGetStateCapability.Capability.UNAVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case CLIMATE: {
-                    ClimateCapability capability = (ClimateCapability) capa;
-                    assertTrue(capability.getClimateCapability()
-                            == AvailableGetStateCapability.Capability.AVAILABLE);
-                    assertTrue(capability.getProfileCapability()
-                            == ClimateCapability.ProfileCapability.UNAVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case ROOFTOP: {
-                    RooftopCapability capability = (RooftopCapability) capa;
-                    assertTrue(capability.getDimmingCapability()
-                            == RooftopCapability.DimmingCapability.AVAILABLE);
-                    assertTrue(capability.getOpenCloseCapability()
-                            == RooftopCapability.OpenCloseCapability.AVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case HONK_FLASH: {
-                    HonkFlashCapability capability = (HonkFlashCapability) capa;
-                    assertTrue(capability.getEmergencyFlasherCapability()
-                            == AvailableCapability.Capability.AVAILABLE);
-                    assertTrue(capability.getFlashLightsCapability()
-                            == AvailableCapability.Capability.AVAILABLE);
-                    assertTrue(capability.getHonkHornCapability()
-                            == AvailableCapability.Capability.AVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case REMOTE_CONTROL: {
-                    AvailableCapability capability = (AvailableCapability) capa;
-                    assertTrue(capability.getCapability() == AvailableCapability.Capability.AVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case VALET_MODE: {
-                    AvailableGetStateCapability capability = (AvailableGetStateCapability) capa;
-                    assertTrue(capability.getCapability() == AvailableGetStateCapability.Capability.AVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case HEART_RATE: {
-                    AvailableCapability capability = (AvailableCapability) capa;
-                    assertTrue(capability.getCapability() == AvailableCapability.Capability.UNAVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case VEHICLE_LOCATION: {
-                    AvailableCapability capability = (AvailableCapability) capa;
-                    assertTrue(capability.getCapability() == AvailableCapability.Capability.AVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case NAVI_DESTINATION: {
-                    AvailableCapability capability = (AvailableCapability) capa;
-                    assertTrue(capability.getCapability() == AvailableCapability.Capability.AVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case DELIVERED_PARCELS: {
-                    AvailableCapability capability = (AvailableCapability) capa;
-                    assertTrue(capability.getCapability() == AvailableCapability.Capability.AVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case FUELING: {
-                    AvailableCapability capability = (AvailableCapability) capa;
-                    assertTrue(capability.getCapability() == AvailableCapability.Capability.UNAVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case LIGHTS: {
-                    LightsCapability capability = (LightsCapability) capa;
-                    assertTrue(capability.getExteriorLightsCapability() == AvailableGetStateCapability.Capability.UNAVAILABLE);
-                    assertTrue(capability.getInteriorLightsCapability() == AvailableGetStateCapability.Capability.AVAILABLE);
-                    assertTrue(capability.getAmbientLightsCapability() == AvailableCapability.Capability.AVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case MESSAGING: {
-                    MessagingCapability capability = (MessagingCapability) capa;
-                    assertTrue(capability.getSendMessage() == AvailableCapability.Capability.UNAVAILABLE);
-                    assertTrue(capability.getMessageReceived() == AvailableCapability.Capability.UNAVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case NOTIFICATIONS: {
-                    NotificationsCapability capability = (NotificationsCapability) capa;
-                    assertTrue(capability.getNotification() == AvailableCapability.Capability.AVAILABLE);
-                    assertTrue(capability.getNotificationAction() == AvailableCapability.Capability.UNAVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-                case WINDSCREEN: {
-                    WindscreenCapability capability = (WindscreenCapability) capa;
-                    assertTrue(capability.getWiperCapability() == AvailableCapability.Capability.UNAVAILABLE);
-                    assertTrue(capability.getWindscreenDamageCapability() == AvailableGetStateCapability.Capability.GET_STATE_AVAILABLE);
-                    capabilitiesFound++;
-                    break;
-                }
-            }
-        }
-
-        assertTrue(capabilitiesFound == expectedCapabilitiesCount);
-    }
-
     @Test
     public void deliveredParcels_init() {
         /*
@@ -833,6 +660,5 @@ public class IncomingCommand {
                     break;
             }
         }
-
     }
 }

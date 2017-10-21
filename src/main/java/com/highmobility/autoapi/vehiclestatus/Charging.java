@@ -17,18 +17,6 @@ public class Charging extends FeatureState {
     float batteryLevel;
     float batteryCurrent;
 
-    Charging(byte[] bytes) throws CommandParseException {
-        super(Command.Identifier.CHARGING);
-
-        if (bytes.length != 11) throw new CommandParseException();
-
-        chargingState = ChargeState.ChargingState.fromByte(bytes[3]);
-        estimatedRange = ((bytes[4] & 0xff) << 8) | (bytes[5] & 0xff);
-        batteryLevel = bytes[6] / 100f;
-        byte[] batteryCurrentBytes = Arrays.copyOfRange(bytes, 7, 7 + 4);
-        batteryCurrent = ByteBuffer.wrap(batteryCurrentBytes).getFloat();
-    }
-
     public ChargeState.ChargingState getChargingState() {
         return chargingState;
     }
@@ -55,5 +43,24 @@ public class Charging extends FeatureState {
      */
     public float getBatteryCurrent() {
         return batteryCurrent;
+    }
+
+    public byte[] getBytes() {
+        byte[] bytes = getBytesWithCapabilityCount(3);
+        // TODO: implement
+        return bytes;
+    }
+
+
+    Charging(byte[] bytes) throws CommandParseException {
+        super(Command.Identifier.CHARGING);
+
+        if (bytes.length != 11) throw new CommandParseException();
+
+        chargingState = ChargeState.ChargingState.fromByte(bytes[3]);
+        estimatedRange = ((bytes[4] & 0xff) << 8) | (bytes[5] & 0xff);
+        batteryLevel = bytes[6] / 100f;
+        byte[] batteryCurrentBytes = Arrays.copyOfRange(bytes, 7, 7 + 4);
+        batteryCurrent = ByteBuffer.wrap(batteryCurrentBytes).getFloat();
     }
 }

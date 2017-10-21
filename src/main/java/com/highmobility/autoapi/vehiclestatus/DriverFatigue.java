@@ -8,6 +8,7 @@ import com.highmobility.autoapi.CommandParseException;
 
 public class DriverFatigue extends FeatureState {
     public DriverFatigue(byte[] bytes) throws CommandParseException {
+        // TODO: implement
         super(Command.Identifier.DRIVER_FATIGUE);
 
         if (bytes.length < 5) throw new CommandParseException();

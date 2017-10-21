@@ -33,6 +33,14 @@ public class Capabilities extends IncomingCommand {
         return bytes;
     }
 
+    /**
+     *
+     * @return All of the Capabilities that are available for the vehicle.
+     */
+    public FeatureCapability[] getCapabilities() {
+        return capabilities;
+    }
+
     public Capabilities(byte[] bytes) throws CommandParseException {
         super(bytes);
 
@@ -76,13 +84,5 @@ public class Capabilities extends IncomingCommand {
 
             capabilities = trimmedCapabilities;
         }
-    }
-
-    /**
-     *
-     * @return All of the Capabilities that are available for the vehicle.
-     */
-    public FeatureCapability[] getCapabilities() {
-        return capabilities;
     }
 }

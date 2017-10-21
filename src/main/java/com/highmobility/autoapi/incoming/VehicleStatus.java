@@ -1,6 +1,8 @@
 package com.highmobility.autoapi.incoming;
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.vehiclestatus.FeatureState;
+import com.highmobility.utils.Bytes;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -13,25 +15,77 @@ import java.util.Arrays;
  */
 public class VehicleStatus extends IncomingCommand {
     public enum PowerTrain {
-        UNKNOWN,
-        ALLELECTRIC,
-        COMBUSTIONENGINE,
-        PLUGINHYBRID,
-        HYDROGEN,
-        HYDROGENHYBRID;
+        UNKNOWN((byte)0x00),
+        ALLELECTRIC((byte)0x01),
+        COMBUSTIONENGINE((byte)0x02),
+        PLUGINHYBRID((byte)0x03),
+        HYDROGEN((byte)0x04),
+        HYDROGENHYBRID((byte)0x05);
 
-        static PowerTrain fromByte(byte value) throws CommandParseException {
-            switch (value) {
-                case 0x00: return UNKNOWN;
-                case 0x01: return ALLELECTRIC;
-                case 0x02: return COMBUSTIONENGINE;
-                case 0x03: return PLUGINHYBRID;
-                case 0x04: return HYDROGEN;
-                case 0x05: return HYDROGENHYBRID;
+        public static PowerTrain fromByte(byte value) throws CommandParseException {
+            PowerTrain[] values = PowerTrain.values();
+
+            for (int i = 0; i < values.length; i++) {
+                PowerTrain capability = values[i];
+                if (capability.getByte() == value) {
+                    return capability;
+                }
             }
 
             throw new CommandParseException();
         }
+
+        private byte capabilityByte;
+
+        PowerTrain(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
+        }
+
+        public byte getByte() {
+            return capabilityByte;
+        }
+    }
+
+    /**
+     * Create the vehicle status command bytes
+     *
+     * @param vin vehicle vin
+     * @param powerTrain the power train
+     * @param modelName the model name
+     * @param name the vehicle (nick)name
+     * @param licensePlate the license plate number
+     * @param featureStates the feature states
+     *
+     * @return command bytes
+     */
+    public static byte[] getCommandBytes(String vin,
+                                         PowerTrain powerTrain,
+                                         String modelName,
+                                         String name,
+                                         String licensePlate,
+                                         FeatureState[] featureStates) throws UnsupportedEncodingException {
+        byte[] bytes = Command.VehicleStatus.VEHICLE_STATUS.getIdentifierAndType();
+        bytes = Bytes.concatBytes(bytes, vin.getBytes("UTF-8"));
+
+        bytes = Bytes.concatBytes(bytes, powerTrain.getByte());
+
+        bytes = Bytes.concatBytes(bytes, (byte)modelName.length());
+        bytes = Bytes.concatBytes(bytes, modelName.getBytes("UTF-8"));
+
+        bytes = Bytes.concatBytes(bytes, (byte)name.length());
+        bytes = Bytes.concatBytes(bytes, name.getBytes("UTF-8"));
+
+        bytes = Bytes.concatBytes(bytes, (byte)licensePlate.length());
+        bytes = Bytes.concatBytes(bytes, licensePlate.getBytes("UTF-8"));
+
+        bytes = Bytes.concatBytes(bytes, (byte)featureStates.length);
+
+        for (int i = 0; i < featureStates.length; i++) {
+            byte[] capabilityBytes = featureStates[i].getBytes();
+            bytes = Bytes.concatBytes(bytes, capabilityBytes);
+        }
+
+        return bytes;
     }
 
     /**
