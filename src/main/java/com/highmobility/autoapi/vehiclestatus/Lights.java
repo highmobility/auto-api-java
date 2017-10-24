@@ -38,7 +38,21 @@ public class Lights extends FeatureState {
         return interiorLightActive;
     }
 
-    public Lights(byte[] bytes) throws CommandParseException {
+    public Lights(LightsState.FrontExteriorLightState frontExteriorLightState,
+                  boolean rearExteriorLightActive,
+                  boolean interiorLightActive) {
+        super(Command.Identifier.LIGHTS);
+        this.frontExteriorLightState = frontExteriorLightState;
+        this.rearExteriorLightActive = rearExteriorLightActive;
+        this.interiorLightActive = interiorLightActive;
+
+        bytes = getBytesWithOneByteLongFields(3);
+        bytes[3] = frontExteriorLightState.getByte();
+        bytes[4] = Bytes.boolToByte(rearExteriorLightActive);
+        bytes[5] = Bytes.boolToByte(interiorLightActive);
+    }
+
+    Lights(byte[] bytes) throws CommandParseException {
         super(Command.Identifier.LIGHTS);
 
         if (bytes.length != 6) throw new CommandParseException();
@@ -55,5 +69,7 @@ public class Lights extends FeatureState {
 
         rearExteriorLightActive = Bytes.getBool(bytes[4]);
         interiorLightActive = Bytes.getBool(bytes[5]);
+
+        this.bytes = bytes;
     }
 }

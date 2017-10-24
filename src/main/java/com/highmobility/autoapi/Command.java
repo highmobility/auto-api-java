@@ -1611,7 +1611,7 @@ public class Command {
                                            boolean interiorLightActive,
                                            int[] ambientColor) {
             byte[] command = CONTROL_LIGHTS.getIdentifierAndType();
-            command =  Bytes.concatBytes(command, frontExteriorLightState.byteValue());
+            command =  Bytes.concatBytes(command, frontExteriorLightState.getByte());
             command = Bytes.concatBytes(command, Bytes.getByte(rearExteriorLightActive));
             command = Bytes.concatBytes(command, Bytes.getByte(interiorLightActive));
 

@@ -13,17 +13,31 @@ public class TrunkState extends IncomingCommand {
      * The possible trunk lock states
      */
     public enum LockState {
-        LOCKED, UNLOCKED, UNSUPPORTED;
+        UNLOCKED((byte)0x00),
+        LOCKED((byte)0x01),
+        UNSUPPORTED((byte)0xFF);
 
         public static LockState fromByte(byte value) throws CommandParseException {
-            switch (value) {
-                case 0x00: return UNLOCKED;
-                case 0x01: return LOCKED;
-                case (byte)0xFF: return UNSUPPORTED;
+            LockState[] capabilities = LockState.values();
+
+            for (int i = 0; i < capabilities.length; i++) {
+                LockState capability = capabilities[i];
+                if (capability.getByte() == value) {
+                    return capability;
+                }
             }
 
-
             throw new CommandParseException();
+        }
+
+        private byte capabilityByte;
+
+        LockState(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
+        }
+
+        public byte getByte() {
+            return capabilityByte;
         }
     }
 
@@ -31,16 +45,31 @@ public class TrunkState extends IncomingCommand {
      * The possible trunk positions
      */
     public enum Position {
-        OPEN, CLOSED, UNSUPPORTED;
+        CLOSED((byte)0x00),
+        OPEN((byte)0x01),
+        UNSUPPORTED((byte)0xFF);
 
         public static Position fromByte(byte value) throws CommandParseException {
-            switch (value) {
-                case 0x00: return CLOSED;
-                case 0x01: return OPEN;
-                case (byte)0xFF: return UNSUPPORTED;
+            Position[] capabilities = Position.values();
+
+            for (int i = 0; i < capabilities.length; i++) {
+                Position capability = capabilities[i];
+                if (capability.getByte() == value) {
+                    return capability;
+                }
             }
 
             throw new CommandParseException();
+        }
+
+        private byte capabilityByte;
+
+        Position(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
+        }
+
+        public byte getByte() {
+            return capabilityByte;
         }
     }
 

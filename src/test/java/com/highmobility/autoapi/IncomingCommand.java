@@ -1,17 +1,5 @@
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.capability.AvailableCapability;
-import com.highmobility.autoapi.capability.AvailableGetStateCapability;
-import com.highmobility.autoapi.capability.ClimateCapability;
-import com.highmobility.autoapi.capability.FeatureCapability;
-import com.highmobility.autoapi.capability.HonkFlashCapability;
-import com.highmobility.autoapi.capability.LightsCapability;
-import com.highmobility.autoapi.capability.MessagingCapability;
-import com.highmobility.autoapi.capability.NotificationsCapability;
-import com.highmobility.autoapi.capability.RooftopCapability;
-import com.highmobility.autoapi.capability.TrunkAccessCapability;
-import com.highmobility.autoapi.capability.WindscreenCapability;
-import com.highmobility.autoapi.incoming.Capabilities;
 import com.highmobility.autoapi.incoming.ChargeState;
 import com.highmobility.autoapi.incoming.ClimateState;
 import com.highmobility.autoapi.incoming.ControlMode;
@@ -150,16 +138,16 @@ public class IncomingCommand {
         assertTrue(((LockState)command).getRearLeft() != null);
         assertTrue(((LockState)command).getRearRight() != null);
 
-        assertTrue(((LockState)command).getFrontLeft().getPosition() == DoorLockState.DoorPosition.OPEN);
+        assertTrue(((LockState)command).getFrontLeft().getPosition() == DoorLockState.Position.OPEN);
         assertTrue(((LockState)command).getFrontLeft().getLockState() == DoorLockState.LockState.UNLOCKED);
 
-        assertTrue(((LockState)command).getFrontRight().getPosition() == DoorLockState.DoorPosition.CLOSED);
+        assertTrue(((LockState)command).getFrontRight().getPosition() == DoorLockState.Position.CLOSED);
         assertTrue(((LockState)command).getFrontRight().getLockState() == DoorLockState.LockState.UNLOCKED);
 
-        assertTrue(((LockState)command).getRearRight().getPosition() == DoorLockState.DoorPosition.CLOSED);
+        assertTrue(((LockState)command).getRearRight().getPosition() == DoorLockState.Position.CLOSED);
         assertTrue(((LockState)command).getRearRight().getLockState() == DoorLockState.LockState.LOCKED);
 
-        assertTrue(((LockState)command).getRearLeft().getPosition() == DoorLockState.DoorPosition.OPEN);
+        assertTrue(((LockState)command).getRearLeft().getPosition() == DoorLockState.Position.OPEN);
         assertTrue(((LockState)command).getRearLeft().getLockState() == DoorLockState.LockState.LOCKED);
 
     }
@@ -183,10 +171,10 @@ public class IncomingCommand {
         assertTrue(((LockState)command).getRearLeft() == null);
         assertTrue(((LockState)command).getRearRight() == null);
 
-        assertTrue(((LockState)command).getFrontLeft().getPosition() == DoorLockState.DoorPosition.OPEN);
+        assertTrue(((LockState)command).getFrontLeft().getPosition() == DoorLockState.Position.OPEN);
         assertTrue(((LockState)command).getFrontLeft().getLockState() == DoorLockState.LockState.UNLOCKED);
 
-        assertTrue(((LockState)command).getFrontRight().getPosition() == DoorLockState.DoorPosition.CLOSED);
+        assertTrue(((LockState)command).getFrontRight().getPosition() == DoorLockState.Position.CLOSED);
         assertTrue(((LockState)command).getFrontRight().getLockState() == DoorLockState.LockState.UNLOCKED);
     }
 

@@ -18,19 +18,35 @@ public class ChargeState extends IncomingCommand {
      * The possible charge states
      */
     public enum ChargingState {
-        DISCONNECTED, PLUGGED_IN, CHARGING, CHARGING_COMPLETE;
+        DISCONNECTED((byte)0x00),
+        PLUGGED_IN((byte)0x01),
+        CHARGING((byte)0x02),
+        CHARGING_COMPLETE((byte)0x03);
 
-        public static ChargingState fromByte(byte value) throws CommandParseException {
-            switch (value) {
-                case 0x00: return DISCONNECTED;
-                case 0x01: return PLUGGED_IN;
-                case 0x02: return CHARGING;
-                case 0x03: return CHARGING_COMPLETE;
+        public static ChargingState fromByte(byte byteValue) throws CommandParseException {
+            ChargingState[] values = ChargingState.values();
+
+            for (int i = 0; i < values.length; i++) {
+                ChargingState state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
             }
 
             throw new CommandParseException();
         }
+
+        private byte capabilityByte;
+
+        ChargingState(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
+        }
+
+        public byte getByte() {
+            return capabilityByte;
+        }
     }
+
 
     /**
      * The possible charge port states

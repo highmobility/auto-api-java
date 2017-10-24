@@ -14,6 +14,16 @@ public class RooftopState extends FeatureState {
     float dimmingPercentage;
     float openPercentage;
 
+    public RooftopState(float dimmingPercentage, float openPercentage) {
+        super(Command.Identifier.ROOFTOP);
+        this.dimmingPercentage = dimmingPercentage;
+        this.openPercentage = openPercentage;
+
+        bytes = getBytesWithOneByteLongFields(2);
+        bytes[3] = (byte)(int)(dimmingPercentage * 100);
+        bytes[4] = (byte)(int)(openPercentage * 100);
+    }
+
     RooftopState(byte[] bytes) throws CommandParseException {
         super(Command.Identifier.ROOFTOP);
 
@@ -21,6 +31,7 @@ public class RooftopState extends FeatureState {
 
         dimmingPercentage =  (int)bytes[3] / 100f;
         openPercentage =  (int)bytes[4] / 100f;
+        this.bytes = bytes;
     }
 
     /**

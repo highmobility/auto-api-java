@@ -4,6 +4,8 @@ import com.highmobility.autoapi.CommandParseException;
 
 import com.highmobility.autoapi.DoorLockState;
 
+import java.util.ArrayList;
+
 /**
  * Created by ttiganik on 14/12/2016.
  */
@@ -11,8 +13,8 @@ import com.highmobility.autoapi.DoorLockState;
 public class DoorLocks extends FeatureState {
     DoorLockState frontLeft;
     DoorLockState frontRight;
-    DoorLockState rearLeft;
     DoorLockState rearRight;
+    DoorLockState rearLeft;
 
     /**
      *
@@ -32,18 +34,18 @@ public class DoorLocks extends FeatureState {
 
     /**
      *
-     * @return the current lock/position state of the rear left door
-     */
-    public DoorLockState getRearLeft() {
-        return rearLeft;
-    }
-
-    /**
-     *
      * @return the current lock/position state of the rear right door
      */
     public DoorLockState getRearRight() {
         return rearRight;
+    }
+
+    /**
+     *
+     * @return the current lock/position state of the rear left door
+     */
+    public DoorLockState getRearLeft() {
+        return rearLeft;
     }
 
     /**
@@ -70,6 +72,37 @@ public class DoorLocks extends FeatureState {
         return true;
     }
 
+    public DoorLocks(DoorLockState frontLeft,
+                     DoorLockState frontRight,
+                     DoorLockState rearRight,
+                     DoorLockState rearLeft) {
+        super(Identifier.DOOR_LOCKS);
+        this.frontLeft = frontLeft;
+        this.frontRight = frontRight;
+        this.rearRight = rearRight;
+        this.rearLeft = rearLeft;
+
+        ArrayList<DoorLockState> lockStates = new ArrayList<>();
+
+        if (frontLeft != null) { lockStates.add(frontLeft); }
+        if (frontRight != null) { lockStates.add(frontRight); }
+        if (rearLeft != null) { lockStates.add(rearRight); }
+        if (rearRight != null) { lockStates.add(rearLeft); }
+
+        bytes = getBytesWithMoreThanOneByteLongFields(1 + lockStates.size(), (lockStates.size() * 2));
+        bytes[2] = (byte) (1 + lockStates.size() * 3);
+        bytes[3] = (byte) lockStates.size();
+
+        int position = 4;
+        for (int i = 0; i < lockStates.size(); i++) {
+            DoorLockState state = lockStates.get(i);
+            bytes[position] = state.getLocation().getByte();
+            bytes[position + 1] = state.getPosition().getByte();
+            bytes[position + 2] = state.getLockState().getByte();
+            position += 3;
+        }
+    }
+
     public DoorLocks(byte[] bytes) throws CommandParseException {
         super(Identifier.DOOR_LOCKS);
 
@@ -79,21 +112,22 @@ public class DoorLocks extends FeatureState {
 
         for (int i = 0; i < numberOfDoors; i++) {
             byte location = bytes[position];
-            DoorLockState doorLockState = new DoorLockState(bytes[position + 1], bytes[position + 2]);
-            if (location == 0x00) {
+            DoorLockState doorLockState = new DoorLockState(location, bytes[position + 1], bytes[position + 2]);
+            if (doorLockState.getLocation() == DoorLockState.Location.FRONT_LEFT) {
                 frontLeft = doorLockState;
             }
-            else if (location == 0x01) {
+            else if (doorLockState.getLocation() == DoorLockState.Location.FRONT_RIGHT) {
                 frontRight = doorLockState;
             }
-            else if (location == 0x02) {
+            else if (doorLockState.getLocation() == DoorLockState.Location.REAR_RIGHT) {
                 rearRight = doorLockState;
             }
-            else if (location == 0x03) {
+            else if (doorLockState.getLocation() == DoorLockState.Location.REAR_LEFT) {
                 rearLeft = doorLockState;
             }
 
             position += 3;
         }
+        this.bytes = bytes;
     }
 }

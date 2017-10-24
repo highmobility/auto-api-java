@@ -6,6 +6,7 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.incoming.DiagnosticsState;
 import com.highmobility.utils.Bytes;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 
 /**
@@ -67,6 +68,36 @@ public class Diagnostics extends FeatureState {
         return washerFluidLevel;
     }
 
+    public Diagnostics(int mileage,
+                       int oilTemperature,
+                       int speed,
+                       int rpm,
+                       float fuelLevel,
+                       DiagnosticsState.WasherFluidLevel washerFluidLevel) {
+        super(Command.Identifier.DIAGNOSTICS);
+        this.mileage = mileage;
+        this.oilTemperature = oilTemperature;
+        this.speed = speed;
+        this.rpm = rpm;
+        this.fuelLevel = fuelLevel;
+        this.washerFluidLevel = washerFluidLevel;
+
+        byte[] mileageBytes = Bytes.intToBytes(mileage, 3);
+        byte[] oilTemperatureBytes = Bytes.intToBytes(oilTemperature, 2);
+        byte[] speedBytes = Bytes.intToBytes(speed, 2);
+        byte[] engineRpmBytes = Bytes.intToBytes(rpm, 2);
+
+        bytes = getBytesWithMoreThanOneByteLongFields(6, 5);
+
+        Bytes.setBytes(bytes, mileageBytes, 3);
+        Bytes.setBytes(bytes, oilTemperatureBytes, 6);
+        Bytes.setBytes(bytes, speedBytes, 8);
+        Bytes.setBytes(bytes, engineRpmBytes, 10);
+
+        bytes[12] = (byte)(int)(fuelLevel * 100);
+        bytes[13] = washerFluidLevel.getByte();
+    }
+
     Diagnostics(byte[] bytes) throws CommandParseException {
         super(Command.Identifier.DIAGNOSTICS);
 
@@ -79,5 +110,7 @@ public class Diagnostics extends FeatureState {
         fuelLevel = (int)bytes[12] / 100f;
         if (bytes[13] == 0x00) washerFluidLevel = DiagnosticsState.WasherFluidLevel.LOW;
         else washerFluidLevel = DiagnosticsState.WasherFluidLevel.FULL;
+
+        this.bytes = bytes;
     }
 }

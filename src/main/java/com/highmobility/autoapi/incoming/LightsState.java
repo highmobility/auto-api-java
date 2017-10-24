@@ -8,13 +8,31 @@ import com.highmobility.utils.Bytes;
  */
 public class LightsState extends IncomingCommand {
     public enum FrontExteriorLightState {
-        INACTIVE, ACTIVE, ACTIVE_WITH_FULL_BEAM;
+        INACTIVE((byte)(0x00)),
+        ACTIVE((byte)0x01),
+        ACTIVE_WITH_FULL_BEAM((byte)0x02);
 
-        public byte byteValue() {
-            if (this == INACTIVE) return 0x00;
-            else if (this == ACTIVE) return 0x01;
-            else if (this == ACTIVE_WITH_FULL_BEAM) return 0x02;
-            return 0x00;
+        public static FrontExteriorLightState fromByte(byte value) throws CommandParseException {
+            FrontExteriorLightState[] values = FrontExteriorLightState.values();
+
+            for (int i = 0; i < values.length; i++) {
+                FrontExteriorLightState capability = values[i];
+                if (capability.getByte() == value) {
+                    return capability;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
+        private byte capabilityByte;
+
+        FrontExteriorLightState(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
+        }
+
+        public byte getByte() {
+            return capabilityByte;
         }
     }
 

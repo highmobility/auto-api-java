@@ -13,15 +13,12 @@ import java.util.Arrays;
 public class Climate extends FeatureState {
     float insideTemperature;
     float outsideTemperature;
-
     boolean hvacActive;
     boolean defoggingActive;
+    float defrostingTemperature;
     boolean defrostingActive;
-
     boolean isAutoHvacConstant;
     boolean[] hvacActiveOnDays;
-
-    float defrostingTemperature;
 
     /**
      *
@@ -85,6 +82,45 @@ public class Climate extends FeatureState {
      */
     public boolean[] getHvacActiveOnDays() {
         return hvacActiveOnDays;
+    }
+
+    public Climate(float insideTemperature,
+                   float outsideTemperature,
+                   boolean hvacActive,
+                   boolean defoggingActive,
+                   boolean defrostingActive,
+                   float defrostingTemperature,
+                   boolean[] hvacActiveOnDays,
+                   boolean autoHvacConstant) {
+        super(Command.Identifier.CLIMATE);
+        this.insideTemperature = insideTemperature;
+        this.outsideTemperature = outsideTemperature;
+        this.hvacActive = hvacActive;
+        this.defoggingActive = defoggingActive;
+        this.defrostingActive = defrostingActive;
+        this.hvacActiveOnDays = hvacActiveOnDays;
+        this.defrostingTemperature = defrostingTemperature;
+
+        bytes = getBytesWithMoreThanOneByteLongFields(7, 9);
+        Bytes.setBytes(bytes, Bytes.floatToBytes(insideTemperature), 3);
+        Bytes.setBytes(bytes, Bytes.floatToBytes(outsideTemperature), 7);
+        bytes[11] = Bytes.boolToByte(hvacActive);
+        bytes[12] = Bytes.boolToByte(defoggingActive);
+        bytes[13] = Bytes.boolToByte(defrostingActive);
+        Bytes.setBytes(bytes, Bytes.floatToBytes(defrostingTemperature), 14);
+
+        byte result = 0;
+        for (int i = 0; i < hvacActiveOnDays.length; i++) {
+            if (hvacActiveOnDays[i]) {
+                result |= 1 << i;
+            }
+        }
+
+        if (autoHvacConstant) {
+            result |= 1 << 7;
+        }
+
+        bytes[18] = result;
     }
 
     Climate(byte[] bytes) {

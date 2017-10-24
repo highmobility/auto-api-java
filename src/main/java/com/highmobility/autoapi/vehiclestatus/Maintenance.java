@@ -11,16 +11,8 @@ import java.util.Arrays;
  */
 
 public class Maintenance extends FeatureState {
-    private int kilometersToNextService;
     private int daysToNextService;
-
-    /**
-     *
-     * @return Amount of kilometers until next servicing of the car
-     */
-    public int getKilometersToNextService() {
-        return kilometersToNextService;
-    }
+    private int kilometersToNextService;
 
     /**
      *
@@ -30,11 +22,34 @@ public class Maintenance extends FeatureState {
         return daysToNextService;
     }
 
+    /**
+     *
+     * @return Amount of kilometers until next servicing of the car
+     */
+    public int getKilometersToNextService() {
+        return kilometersToNextService;
+    }
+
+    public Maintenance(int daysToNextService, int kilometersToNextService) {
+        super(Command.Identifier.MAINTENANCE);
+        this.kilometersToNextService = kilometersToNextService;
+        this.daysToNextService = daysToNextService;
+
+        bytes = getBytesWithMoreThanOneByteLongFields(2, 3);
+        byte[] daysToNextServiceBytes = Bytes.intToBytes(daysToNextService, 2);
+        byte[] kilometersToNextServiceBytes = Bytes.intToBytes(kilometersToNextService, 3);
+
+        Bytes.setBytes(bytes, daysToNextServiceBytes, 3);
+        Bytes.setBytes(bytes, kilometersToNextServiceBytes, 5);
+    }
+
     public Maintenance(byte[] bytes) throws CommandParseException {
         super(Command.Identifier.MAINTENANCE);
 
         if (bytes.length != 8) throw new CommandParseException();
         daysToNextService = Bytes.getInt(Arrays.copyOfRange(bytes, 3, 3 + 2));
         kilometersToNextService = Bytes.getInt(Arrays.copyOfRange(bytes, 5, 5 + 3));
+
+        this.bytes = bytes;
     }
 }

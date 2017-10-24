@@ -9,7 +9,33 @@ import java.util.Arrays;
  * Created by root on 6/28/17.
  */
 public class DiagnosticsState extends IncomingCommand {
-    public enum WasherFluidLevel { LOW, FULL }
+    public enum WasherFluidLevel {
+        LOW((byte)0x00),
+        FULL((byte)0x01);
+
+        public static WasherFluidLevel fromByte(byte value) throws CommandParseException {
+            WasherFluidLevel[] values = WasherFluidLevel.values();
+
+            for (int i = 0; i < values.length; i++) {
+                WasherFluidLevel capability = values[i];
+                if (capability.getByte() == value) {
+                    return capability;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
+        private byte capabilityByte;
+
+        WasherFluidLevel(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
+        }
+
+        public byte getByte() {
+            return capabilityByte;
+        }
+    }
 
     int mileage;
     int oilTemperature;

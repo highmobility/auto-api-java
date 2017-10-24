@@ -18,10 +18,20 @@ public class Engine extends FeatureState {
         return on;
     }
 
+    public Engine(boolean on) {
+        super(Identifier.ENGINE);
+        this.on = on;
+
+        bytes = getBytesWithOneByteLongFields(1);
+        bytes[3] = Bytes.boolToByte(on);
+    }
+
     public Engine(byte[] bytes) throws CommandParseException {
         super(Identifier.ENGINE);
 
         if (bytes.length < 4) throw new CommandParseException();
         on = Bytes.getBool(bytes[3]);
+
+        this.bytes = bytes;
     }
 }

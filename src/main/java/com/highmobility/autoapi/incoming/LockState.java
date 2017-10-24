@@ -80,17 +80,17 @@ public class LockState extends IncomingCommand {
 
         for (int i = 0; i < numberOfDoors; i++) {
             byte location = bytes[position];
-            DoorLockState doorLockState = new DoorLockState(bytes[position + 1], bytes[position + 2]);
-            if (location == 0x00) {
+            DoorLockState doorLockState = new DoorLockState(location, bytes[position + 1], bytes[position + 2]);
+            if (doorLockState.getLocation() == DoorLockState.Location.FRONT_LEFT) {
                 frontLeft = doorLockState;
             }
-            else if (location == 0x01) {
+            else if (doorLockState.getLocation() == DoorLockState.Location.FRONT_RIGHT) {
                 frontRight = doorLockState;
             }
-            else if (location == 0x02) {
+            else if (doorLockState.getLocation() == DoorLockState.Location.REAR_RIGHT) {
                 rearRight = doorLockState;
             }
-            else if (location == 0x03) {
+            else if (doorLockState.getLocation() == DoorLockState.Location.REAR_LEFT) {
                 rearLeft = doorLockState;
             }
 

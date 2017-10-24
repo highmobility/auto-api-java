@@ -9,6 +9,7 @@ import com.highmobility.autoapi.CommandParseException;
 
 public class FeatureState {
     Command.Identifier feature;
+    byte[] bytes;
 
     FeatureState(Command.Identifier feature) {
         this.feature = feature;
@@ -42,13 +43,23 @@ public class FeatureState {
         return feature;
     }
 
-    public byte[] getBytes() {return null;} // override this
+    public byte[] getBytes() { return bytes; }
 
-    byte[] getBytesWithCapabilityCount(int capabilityCount) {
-        byte[] bytes = new byte[2 + capabilityCount];
+    byte[] getBytesWithOneByteLongFields(int fieldCount) {
+        byte[] bytes = new byte[3 + fieldCount];
         bytes[0] = feature.getIdentifier()[0];
         bytes[1] = feature.getIdentifier()[1];
-        bytes[2] = (byte) capabilityCount;
+        bytes[2] = (byte) fieldCount;
+        return bytes;
+    }
+
+    // extraBytesInFields: one byte is counted, so for instance if one field has 4 bytes, put 3 in the extraBytes.
+    // if 2 fields have 4 bytes, put 6
+    byte[] getBytesWithMoreThanOneByteLongFields(int fieldCount, int extraBytesInFields) {
+        byte[] bytes = new byte[3 + fieldCount + extraBytesInFields];
+        bytes[0] = feature.getIdentifier()[0];
+        bytes[1] = feature.getIdentifier()[1];
+        bytes[2] = (byte) (fieldCount + extraBytesInFields);
         return bytes;
     }
 }

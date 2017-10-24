@@ -11,94 +11,118 @@ import java.util.Date;
  */
 public class WindscreenState extends IncomingCommand {
     public enum WiperState {
-        INACTIVE, ACTIVE, AUTOMATIC;
+        INACTIVE((byte)0x00),
+        ACTIVE((byte)0x01),
+        AUTOMATIC((byte)0x02);
 
-        static WiperState fromByte(byte value) {
-            switch (value) {
-                case 0x00:
-                    return INACTIVE;
-                case 0x01:
-                    return ACTIVE;
-                case 0x02:
-                    return AUTOMATIC;
-                default: return INACTIVE;
+        public static WiperState fromByte(byte byteValue) throws CommandParseException {
+            WiperState[] values = WiperState.values();
+
+            for (int i = 0; i < values.length; i++) {
+                WiperState state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
             }
+
+            throw new CommandParseException();
         }
-    }
-    public enum WiperIntensity {
-        LEVEL_0, LEVEL_1, LEVEL_2, LEVEL_3;
 
-        static WiperIntensity fromByte(byte value) {
-            switch (value) {
-                case 0x00:
-                    return LEVEL_0;
-                case 0x01:
-                    return LEVEL_1;
-                case 0x02:
-                    return LEVEL_2;
-                case 0x03:
-                    return LEVEL_3;
-                default: return LEVEL_0;
-            }
-        }
-    }
-    public enum WindscreenDamage {
-        NO_IMPACT, IMPACT_NO_DAMAGE, DAMAGE_SMALLER_THAN_1, DAMAGE_LARGER_THAN_1;
+        private byte capabilityByte;
 
-        static WindscreenDamage fromByte(byte value) {
-            switch (value) {
-                case 0x00:
-                    return NO_IMPACT;
-                case 0x01:
-                    return IMPACT_NO_DAMAGE;
-                case 0x02:
-                    return DAMAGE_SMALLER_THAN_1;
-                case 0x03:
-                    return DAMAGE_LARGER_THAN_1;
-                default: return NO_IMPACT;
-            }
+        WiperState(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
         }
 
         public byte getByte() {
-            switch (this) {
-                case NO_IMPACT:
-                    return 0x00;
-                case IMPACT_NO_DAMAGE:
-                    return 0x01;
-                case DAMAGE_SMALLER_THAN_1:
-                    return 0x02;
-                case DAMAGE_LARGER_THAN_1:
-                    return 0x03;
-                default: return 0x00;
+            return capabilityByte;
+        }
+    }
+    public enum WiperIntensity {
+        LEVEL_0((byte)0x00),
+        LEVEL_1((byte)0x01),
+        LEVEL_2((byte)0x02),
+        LEVEL_3((byte)0x03);
+
+        public static WiperIntensity fromByte(byte byteValue) throws CommandParseException {
+            WiperIntensity[] values = WiperIntensity.values();
+
+            for (int i = 0; i < values.length; i++) {
+                WiperIntensity state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
             }
+
+            throw new CommandParseException();
+        }
+
+        private byte capabilityByte;
+
+        WiperIntensity(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
+        }
+
+        public byte getByte() {
+            return capabilityByte;
+        }
+    }
+    public enum WindscreenDamage {
+        NO_IMPACT((byte)0x00),
+        IMPACT_NO_DAMAGE((byte)0x01),
+        DAMAGE_SMALLER_THAN_1((byte)0x02),
+        DAMAGE_LARGER_THAN_1((byte)0x03);
+
+        public static WindscreenDamage fromByte(byte byteValue) throws CommandParseException {
+            WindscreenDamage[] values = WindscreenDamage.values();
+
+            for (int i = 0; i < values.length; i++) {
+                WindscreenDamage state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
+        private byte capabilityByte;
+
+        WindscreenDamage(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
+        }
+
+        public byte getByte() {
+            return capabilityByte;
         }
     }
 
     public enum WindscreenReplacementState {
-        UNKNOWN, REPLACEMENT_NOT_NEEDED, REPLACEMENT_NEEDED;
+        UNKNOWN((byte)0x00),
+        REPLACEMENT_NOT_NEEDED((byte)0x01),
+        REPLACEMENT_NEEDED((byte)0x02);
 
-        static WindscreenReplacementState fromByte(byte value) {
-            switch (value) {
-                case 0x00:
-                    return UNKNOWN;
-                case 0x01:
-                    return REPLACEMENT_NOT_NEEDED;
-                case 0x02:
-                    return REPLACEMENT_NEEDED;
-                default: return UNKNOWN;
+        public static WindscreenReplacementState fromByte(byte byteValue) throws CommandParseException {
+            WindscreenReplacementState[] values = WindscreenReplacementState.values();
+
+            for (int i = 0; i < values.length; i++) {
+                WindscreenReplacementState state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
             }
+
+            throw new CommandParseException();
+        }
+
+        private byte capabilityByte;
+
+        WindscreenReplacementState(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
         }
 
         public byte getByte() {
-            switch (this) {
-                case UNKNOWN:
-                    return 0x00;
-                case REPLACEMENT_NOT_NEEDED:
-                    return 0x01;
-                case REPLACEMENT_NEEDED:
-                    return 0x02;
-                default: return 0x00;
-            }
+            return capabilityByte;
         }
     }
 

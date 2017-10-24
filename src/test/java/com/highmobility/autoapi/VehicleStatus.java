@@ -140,16 +140,16 @@ public class VehicleStatus {
         assertTrue(((DoorLocks)state).getRearLeft() != null);
         assertTrue(((DoorLocks)state).getRearRight() != null);
 
-        assertTrue(((DoorLocks)state).getFrontLeft().getPosition() == DoorLockState.DoorPosition.OPEN);
+        assertTrue(((DoorLocks)state).getFrontLeft().getPosition() == DoorLockState.Position.OPEN);
         assertTrue(((DoorLocks)state).getFrontLeft().getLockState() == DoorLockState.LockState.UNLOCKED);
 
-        assertTrue(((DoorLocks)state).getFrontRight().getPosition() == DoorLockState.DoorPosition.CLOSED);
+        assertTrue(((DoorLocks)state).getFrontRight().getPosition() == DoorLockState.Position.CLOSED);
         assertTrue(((DoorLocks)state).getFrontRight().getLockState() == DoorLockState.LockState.UNLOCKED);
 
-        assertTrue(((DoorLocks)state).getRearRight().getPosition() == DoorLockState.DoorPosition.OPEN);
+        assertTrue(((DoorLocks)state).getRearRight().getPosition() == DoorLockState.Position.OPEN);
         assertTrue(((DoorLocks)state).getRearRight().getLockState() == DoorLockState.LockState.LOCKED);
 
-        assertTrue(((DoorLocks)state).getRearLeft().getPosition() == DoorLockState.DoorPosition.CLOSED);
+        assertTrue(((DoorLocks)state).getRearLeft().getPosition() == DoorLockState.Position.CLOSED);
         assertTrue(((DoorLocks)state).getRearLeft().getLockState() == DoorLockState.LockState.LOCKED);
     }
 
