@@ -52,6 +52,7 @@ artifactory {
 }
 
 dependencies {
+    compile('com.highmobility:hmkit-utils:1.0')
     compile('org.codehaus.groovy:groovy-all:2.4.4')
     compile fileTree(dir: 'libs', include: '*.jar')
 
