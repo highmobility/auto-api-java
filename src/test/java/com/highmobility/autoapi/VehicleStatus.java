@@ -129,7 +129,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.DOOR_LOCKS) {
+            if (iteratingState.getIdentifier() == Identifier.DOOR_LOCKS) {
                 state = iteratingState;
                 break;
             }
@@ -161,7 +161,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.TRUNK_ACCESS) {
+            if (iteratingState.getIdentifier() == Identifier.TRUNK_ACCESS) {
                 state = iteratingState;
                 break;
             }
@@ -181,7 +181,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.REMOTE_CONTROL) {
+            if (iteratingState.getIdentifier() == Identifier.REMOTE_CONTROL) {
                 state = iteratingState;
                 break;
             }
@@ -197,7 +197,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.CHARGING) {
+            if (iteratingState.getIdentifier() == Identifier.CHARGING) {
                 state = iteratingState;
                 break;
             }
@@ -216,7 +216,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.CLIMATE) {
+            if (iteratingState.getIdentifier() == Identifier.CLIMATE) {
                 state = iteratingState;
                 break;
             }
@@ -248,7 +248,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.VALET_MODE) {
+            if (iteratingState.getIdentifier() == Identifier.VALET_MODE) {
                 state = iteratingState;
                 break;
             }
@@ -264,7 +264,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.VEHICLE_LOCATION) {
+            if (iteratingState.getIdentifier() == Identifier.VEHICLE_LOCATION) {
                 state = iteratingState;
                 break;
             }
@@ -281,7 +281,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.ROOFTOP) {
+            if (iteratingState.getIdentifier() == Identifier.ROOFTOP) {
                 state = iteratingState;
                 break;
             }
@@ -298,7 +298,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.DIAGNOSTICS) {
+            if (iteratingState.getIdentifier() == Identifier.DIAGNOSTICS) {
                 state = iteratingState;
                 break;
             }
@@ -319,7 +319,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.MAINTENANCE) {
+            if (iteratingState.getIdentifier() == Identifier.MAINTENANCE) {
                 state = iteratingState;
                 break;
             }
@@ -336,7 +336,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.ENGINE) {
+            if (iteratingState.getIdentifier() == Identifier.ENGINE) {
                 state = iteratingState;
                 break;
             }
@@ -352,7 +352,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.LIGHTS) {
+            if (iteratingState.getIdentifier() == Identifier.LIGHTS) {
                 state = iteratingState;
                 break;
             }
@@ -370,7 +370,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.THEFT_ALARM) {
+            if (iteratingState.getIdentifier() == Identifier.THEFT_ALARM) {
                 state = iteratingState;
                 break;
             }
@@ -386,7 +386,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.PARKING_TICKET) {
+            if (iteratingState.getIdentifier() == Identifier.PARKING_TICKET) {
                 state = iteratingState;
                 break;
             }
@@ -416,7 +416,7 @@ public class VehicleStatus {
         FeatureState state = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.VEHICLE_TIME) {
+            if (iteratingState.getIdentifier() == Identifier.VEHICLE_TIME) {
                 state = iteratingState;
                 break;
             }
@@ -450,7 +450,7 @@ public class VehicleStatus {
         FeatureState featureState = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.WINDOWS) {
+            if (iteratingState.getIdentifier() == Identifier.WINDOWS) {
                 featureState = iteratingState;
                 break;
             }
@@ -488,7 +488,7 @@ public class VehicleStatus {
         FeatureState featureState = null;
         for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
             FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
-            if (iteratingState.getFeature() == Identifier.KEYFOB_POSITION) {
+            if (iteratingState.getIdentifier() == Identifier.KEYFOB_POSITION) {
                 featureState = iteratingState;
                 break;
             }
