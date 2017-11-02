@@ -1821,7 +1821,7 @@ public class Command {
          */
         public static byte[] notification(String notificationText, NotificationAction[] actions) throws UnsupportedEncodingException, IllegalArgumentException {
             byte[] command = NOTIFICATION.getIdentifierAndType();
-            command = Bytes.concatBytes(command, Bytes.intToTwoBytes(notificationText.length()));
+            command = Bytes.concatBytes(command, Bytes.intToBytes(notificationText.length(), 2));
             command = Bytes.concatBytes(command, notificationText.getBytes("UTF-8"));
             command = Bytes.concatBytes(command, (byte)actions.length);
 
@@ -1904,7 +1904,7 @@ public class Command {
             byte[] handleBytes = handle.getBytes("UTF-8");
 
 
-            byte[] messageLength = Bytes.intToTwoBytes(message.length());
+            byte[] messageLength = Bytes.intToBytes(message.length(), 2);
             byte[] messageBytes = message.getBytes("UTF-8");
 
             command = Bytes.concatBytes(command, handleLength);
@@ -1989,9 +1989,9 @@ public class Command {
             byte[] command = VIDEO_HANDOVER.getIdentifierAndType();
 
             byte[] urlBytes = url.getBytes("UTF-8");
-            command = Bytes.concatBytes(command, Bytes.intToTwoBytes(url.length()));
+            command = Bytes.concatBytes(command, Bytes.intToBytes(url.length(), 2));
             command = Bytes.concatBytes(command, urlBytes);
-            command = Bytes.concatBytes(command, Bytes.intToTwoBytes(startingSecond));
+            command = Bytes.concatBytes(command, Bytes.intToBytes(startingSecond, 2));
             command = Bytes.concatBytes(command, location.getByte());
 
             return command;
@@ -2056,7 +2056,7 @@ public class Command {
             byte[] command = LOAD_URL.getIdentifierAndType();
 
             byte[] urlBytes = url.getBytes("UTF-8");
-            command = Bytes.concatBytes(command, Bytes.intToTwoBytes(url.length()));
+            command = Bytes.concatBytes(command, Bytes.intToBytes(url.length(), 2));
             command = Bytes.concatBytes(command, urlBytes);
 
             return command;
@@ -2121,7 +2121,7 @@ public class Command {
             byte[] command = DISPLAY_IMAGE.getIdentifierAndType();
 
             byte[] urlBytes = url.getBytes("UTF-8");
-            command = Bytes.concatBytes(command, Bytes.intToTwoBytes(url.length()));
+            command = Bytes.concatBytes(command, Bytes.intToBytes(url.length(), 2));
             command = Bytes.concatBytes(command, urlBytes);
 
             return command;
