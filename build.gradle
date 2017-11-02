@@ -2,18 +2,59 @@ group 'com.highmobility'
 version '1.0.1'
 
 apply plugin: 'java'
-sourceCompatibility = 1.7
+apply plugin: 'maven'
+apply plugin: 'idea'
+apply plugin: "com.jfrog.artifactory"
+
+buildscript {
+    repositories {
+        jcenter()
+
+        flatDir {
+            dirs 'libs'
+        }
+    }
+    dependencies {
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
+    }
+}
 
 repositories {
-    mavenCentral()
+    jcenter()
+}
 
-    flatDir {
-        dirs 'libs'
+artifactory {
+    contextUrl = "${artifactory_contextUrl}"
+    //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        repository {
+            repoKey = 'gradle-dev-local'
+            username = "${artifactory_publisheruser}"
+            password = "${artifactory_publisherpassword}"
+            maven = true
+        }
+        defaults {
+            // Reference to Gradle configurations defined in the build script.
+            // This is how we tell the Artifactory Plugin which artifacts should be
+            // published to Artifactory.
+            publishConfigs('archives', 'published')
+            publishPom = true
+        }
+    }
+    resolve {
+        repository {
+            repoKey = 'gradle-dev'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+        }
     }
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile('com.highmobility:hmkit-utils:1.0')
     compile('org.codehaus.groovy:groovy-all:2.4.4')
     compile fileTree(dir: 'libs', include: '*.jar')
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
 }

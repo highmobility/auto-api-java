@@ -6,8 +6,6 @@ import com.highmobility.autoapi.WindowState;
 
 import java.util.concurrent.locks.Lock;
 
-import javafx.geometry.Pos;
-
 /**
  * Created by ttiganik on 12/12/2016.
  */
