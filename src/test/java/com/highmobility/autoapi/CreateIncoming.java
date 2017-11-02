@@ -244,13 +244,14 @@ public class CreateIncoming {
     }
 
     private Windscreen getWindscreen() {
-        Windscreen windscreen = new Windscreen(
-                WindscreenState.WiperState.AUTOMATIC,
-                WindscreenState.WiperIntensity.LEVEL_3,
-                WindscreenState.WindscreenDamage.DAMAGE_SMALLER_THAN_1
-
-        );
-        return windscreen;
+//        Windscreen windscreen = new Windscreen(
+//                WindscreenState.WiperState.AUTOMATIC,
+//                WindscreenState.WiperIntensity.LEVEL_3,
+//                WindscreenState.WindscreenDamage.DAMAGE_SMALLER_THAN_1
+//
+//        );
+//        return windscreen;
+        return null; // TODO:
     }
 
     @Test public void engine() throws Exception {

@@ -10,26 +10,34 @@ import com.highmobility.autoapi.CommandParseException;
  */
 public class KeyfobPosition extends IncomingCommand {
     public enum Position {
-        OUT_OF_RANGE, OUTSIDE_DRIVER_SIDE, OUTSIDE_IN_FRONT_OF_CAR, OUTSIDE_PASSENGER_SIDE,
-        OUTSIDE_BEHIND_CAR, INSIDE_CAR;
+        OUT_OF_RANGE((byte)0x00),
+        OUTSIDE_DRIVER_SIDE((byte)0x01),
+        OUTSIDE_IN_FRONT_OF_CAR((byte)0x02),
+        OUTSIDE_PASSENGER_SIDE((byte)0x03),
+        OUTSIDE_BEHIND_CAR((byte)0x04),
+        INSIDE_CAR((byte)0x05);
 
-        static Position fromByte(byte value) {
-            switch (value) {
-                case 0x00:
-                    return OUT_OF_RANGE;
-                case 0x01:
-                    return OUTSIDE_DRIVER_SIDE;
-                case 0x02:
-                    return OUTSIDE_IN_FRONT_OF_CAR;
-                case 0x03:
-                    return OUTSIDE_PASSENGER_SIDE;
-                case 0x04:
-                    return OUTSIDE_BEHIND_CAR;
-                case 0x05:
-                    return INSIDE_CAR;
+        public static Position fromByte(byte value) throws CommandParseException {
+            Position[] values = Position.values();
+
+            for (int i = 0; i < values.length; i++) {
+                Position possibleValue = values[i];
+                if (possibleValue.getByte() == value) {
+                    return possibleValue;
+                }
             }
 
-            return OUT_OF_RANGE;
+            throw new CommandParseException();
+        }
+
+        private byte value;
+
+        Position(byte value) {
+            this.value = value;
+        }
+
+        public byte getByte() {
+            return value;
         }
     }
 

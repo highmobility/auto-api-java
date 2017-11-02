@@ -35,6 +35,7 @@ public class FeatureState {
         else if (feature == Command.Identifier.PARKING_TICKET) return new ParkingTicket(bytes);
         else if (feature == Command.Identifier.VEHICLE_TIME) return new VehicleTime(bytes);
         else if (feature == Command.Identifier.WINDOWS) return new Windows(bytes);
+        else if (feature == Command.Identifier.KEYFOB_POSITION) return new KeyfobPosition(bytes);
 
         return null;
     }

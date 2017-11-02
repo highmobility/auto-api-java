@@ -4,6 +4,7 @@ import com.highmobility.autoapi.Command.Identifier;
 import com.highmobility.autoapi.incoming.*;
 import com.highmobility.autoapi.incoming.IncomingCommand;
 import com.highmobility.autoapi.vehiclestatus.*;
+import com.highmobility.autoapi.vehiclestatus.KeyfobPosition;
 import com.highmobility.autoapi.vehiclestatus.Maintenance;
 import com.highmobility.autoapi.vehiclestatus.ParkingTicket;
 import com.highmobility.autoapi.vehiclestatus.RooftopState;
@@ -21,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import static com.highmobility.autoapi.incoming.KeyfobPosition.Position.INSIDE_CAR;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -44,7 +46,7 @@ public class VehicleStatus {
             "4d7920436172" + // "My Car"
             "06"           + // License plate is 6 bytes
             "414243313233" + // "ABC123"
-            "10" +      // length
+            "11" +      // length
             "00200D04000100010000020101030001" + // door locks
             "0021020001" +
             "0023080200FF32bf19999a" +
@@ -60,7 +62,8 @@ public class VehicleStatus {
             "00460102" +
             "004720010e4265726c696e205061726b696e670363054F11010a11220A000000000000" +
             "00500811010a10200a0078" +
-            "004509040001010002000300"; // windows
+            "004509040001010002000300" + // windows
+            "00480105"; // keyfob
 
         byte[] bytes = Bytes.bytesFromHex(vehicleStatusHexString);
 
@@ -76,7 +79,7 @@ public class VehicleStatus {
 
     @Test
     public void states_size() {
-        assertTrue(vehicleStatus.getFeatureStates().length == 16);
+        assertTrue(vehicleStatus.getFeatureStates().length == 17);
     }
 
     @Test
@@ -478,5 +481,24 @@ public class VehicleStatus {
                 break;
             }
         }
+    }
+
+    @Test
+    public void keyfob() {
+        FeatureState featureState = null;
+        for (int i = 0; i < vehicleStatus.getFeatureStates().length; i++) {
+            FeatureState iteratingState = vehicleStatus.getFeatureStates()[i];
+            if (iteratingState.getFeature() == Identifier.KEYFOB_POSITION) {
+                featureState = iteratingState;
+                break;
+            }
+        }
+
+        assertTrue(featureState != null);
+        assertTrue(featureState.getClass() == KeyfobPosition.class);
+
+
+        KeyfobPosition position = (KeyfobPosition)featureState;
+        assertTrue(position.getPosition() == INSIDE_CAR);
     }
 }
