@@ -8,11 +8,11 @@ import com.highmobility.autoapi.CommandParseException;
  */
 
 public class FeatureState {
-    Command.Identifier feature;
+    Command.Identifier identifier;
     byte[] bytes;
 
-    FeatureState(Command.Identifier feature) {
-        this.feature = feature;
+    FeatureState(Command.Identifier identifier) {
+        this.identifier = identifier;
     }
 
     public static FeatureState fromBytes(byte[] bytes) throws CommandParseException {
@@ -40,16 +40,16 @@ public class FeatureState {
         return null;
     }
 
-    public Command.Identifier getFeature() {
-        return feature;
+    public Command.Identifier getIdentifier() {
+        return identifier;
     }
 
     public byte[] getBytes() { return bytes; }
 
     byte[] getBytesWithOneByteLongFields(int fieldCount) {
         byte[] bytes = new byte[3 + fieldCount];
-        bytes[0] = feature.getIdentifier()[0];
-        bytes[1] = feature.getIdentifier()[1];
+        bytes[0] = identifier.getIdentifier()[0];
+        bytes[1] = identifier.getIdentifier()[1];
         bytes[2] = (byte) fieldCount;
         return bytes;
     }
@@ -58,8 +58,8 @@ public class FeatureState {
     // if 2 fields have 4 bytes, put 6
     byte[] getBytesWithMoreThanOneByteLongFields(int fieldCount, int extraBytesInFields) {
         byte[] bytes = new byte[3 + fieldCount + extraBytesInFields];
-        bytes[0] = feature.getIdentifier()[0];
-        bytes[1] = feature.getIdentifier()[1];
+        bytes[0] = identifier.getIdentifier()[0];
+        bytes[1] = identifier.getIdentifier()[1];
         bytes[2] = (byte) (fieldCount + extraBytesInFields);
         return bytes;
     }

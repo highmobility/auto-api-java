@@ -54,7 +54,7 @@ public class VehicleStatus extends IncomingCommand {
      * @param modelName the model name
      * @param name the vehicle (nick)name
      * @param licensePlate the license plate number
-     * @param featureStates the feature states
+     * @param featureStates the identifier states
      *
      * @return command bytes
      */
