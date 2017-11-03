@@ -258,8 +258,8 @@ public class Command {
     public enum Capabilities implements Type {
         GET_CAPABILITIES((byte)0x00),
         CAPABILITIES((byte)0x01),
-        GET_CAPABILITY((byte)0x02),
-        CAPABILITY((byte)0x03);
+        GET_CAPABILITY((byte)0x03),
+        CAPABILITY((byte)0x04);
 
         /**
          * Get the vehicle capabilities. The car will respond with the Capabilities message that
