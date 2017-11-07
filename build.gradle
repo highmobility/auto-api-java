@@ -6,13 +6,11 @@ apply plugin: 'maven'
 apply plugin: 'idea'
 apply plugin: "com.jfrog.artifactory"
 
+sourceCompatibility = 1.7
+
 buildscript {
     repositories {
         jcenter()
-
-        flatDir {
-            dirs 'libs'
-        }
     }
     dependencies {
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
