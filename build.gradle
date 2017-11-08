@@ -17,8 +17,9 @@ buildscript {
     }
 }
 
+
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 artifactory {
@@ -50,9 +51,6 @@ artifactory {
 }
 
 dependencies {
-    compile('com.highmobility:hmkit-utils:1.0.1')
-    compile('org.codehaus.groovy:groovy-all:2.4.4')
-    compile fileTree(dir: 'libs', include: '*.jar')
-
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation 'junit:junit:4.12'
+    implementation('com.highmobility:hmkit-utils:1.+')
 }
