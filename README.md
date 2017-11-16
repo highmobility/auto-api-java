@@ -20,7 +20,7 @@ byte[] command = Command.DoorLocks.lockDoors(true);
 IncomingCommand subclasses are used to parse commands coming from the vehicle in a Mobile Device.
 They are also used to create these commands in the cloud.
 
-for example to parse an incoming command in a Mobile device:
+for example to parse an incoming command on a Mobile device:
 
 ```java
 try {
