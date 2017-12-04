@@ -18,6 +18,7 @@ import com.highmobility.autoapi.incoming.ParkingTicket;
 import com.highmobility.autoapi.incoming.RooftopState;
 import com.highmobility.autoapi.incoming.SendMessage;
 import com.highmobility.autoapi.incoming.TheftAlarmState;
+import com.highmobility.autoapi.incoming.TireState;
 import com.highmobility.autoapi.incoming.TrunkState;
 import com.highmobility.autoapi.incoming.ValetMode;
 import com.highmobility.autoapi.incoming.VehicleLocation;
@@ -31,6 +32,7 @@ import org.junit.Test;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -328,7 +330,19 @@ public class IncomingCommand {
 
     @Test
     public void diagnostics() {
-        byte[] bytes = Bytes.bytesFromHex("0033010249F00063003C09C45A0104004013d70a01401666660240166666034013d70a");
+        byte[] bytes = Bytes.bytesFromHex(
+                "003301" +
+                    "0068" +
+                    "0100030249F0" +
+                    "0200020063" +
+                    "030002003C" +
+                    "04000209C4" +
+                    "0500015A0600020109070004410c000008000440c66666" +
+                    "09000101" +
+                    "0A000B004013d70a4220000002EA" +
+                    "0A000B014013d70a4220000002EA" +
+                    "0A000B024013d70a4220000002EA" +
+                    "0A000B034013d70a4220000002EA");
 
         com.highmobility.autoapi.incoming.IncomingCommand command = null;
 
@@ -339,16 +353,117 @@ public class IncomingCommand {
         }
 
         assertTrue(command.getClass() == DiagnosticsState.class);
-        assertTrue(((DiagnosticsState)command).getMileage() == 150000);
-        assertTrue(((DiagnosticsState)command).getOilTemperature() == 99);
-        assertTrue(((DiagnosticsState)command).getSpeed() == 60);
-        assertTrue(((DiagnosticsState)command).getRpm() == 2500);
-        assertTrue(((DiagnosticsState)command).getFuelLevel() == .9f);
-        assertTrue(((DiagnosticsState)command).getWasherFluidLevel() == DiagnosticsState.WasherFluidLevel.FULL);
-        assertTrue(((DiagnosticsState)command).getFrontLeftTirePressure() == 2.31f);
-        assertTrue(((DiagnosticsState)command).getFrontRightTirePressure() == 2.35f);
-        assertTrue(((DiagnosticsState)command).getRearRightTirePressure() == 2.35f);
-        assertTrue(((DiagnosticsState)command).getRearLeftTirePressure() == 2.31f);
+        DiagnosticsState state = (DiagnosticsState)command;
+
+        assertTrue(state.getMileage() == 150000);
+        assertTrue(state.getOilTemperature() == 99);
+        assertTrue(state.getSpeed() == 60);
+        assertTrue(state.getRpm() == 2500);
+        assertTrue(state.getRange() == 265);
+        assertTrue(state.getFuelLevel() == .9f);
+        assertTrue(state.getWasherFluidLevel() == DiagnosticsState.WasherFluidLevel.FULL);
+
+        assertTrue(state.getTireStates().size() == 4);
+        boolean leftExists = false, rightExist = false, rearLeftExists = false, rearRightExists = false;
+
+        for (TireState tireState : state.getTireStates()) {
+            switch (tireState.getLocation()) {
+                case FRONT_LEFT:
+                    leftExists = true;
+                    assertTrue(tireState.getPressure() == 2.31f);
+                    assertTrue(tireState.getTemperature() == 40f);
+                    assertTrue(tireState.getRpm() == 746);
+                    break;
+                case FRONT_RIGHT:
+                    rightExist = true;
+                    assertTrue(tireState.getPressure() == 2.31f);
+                    assertTrue(tireState.getTemperature() == 40f);
+                    assertTrue(tireState.getRpm() == 746);
+                    break;
+                case REAR_RIGHT:
+                    rearRightExists = true;
+                    assertTrue(tireState.getPressure() == 2.31f);
+                    assertTrue(tireState.getTemperature() == 40f);
+                    assertTrue(tireState.getRpm() == 746);
+                    break;
+                case REAR_LEFT:
+                    rearLeftExists = true;
+                    assertTrue(tireState.getPressure() == 2.31f);
+                    assertTrue(tireState.getTemperature() == 40f);
+                    assertTrue(tireState.getRpm() == 746);
+                    break;
+            }
+        }
+
+        assertTrue(leftExists == true);
+        assertTrue(rightExist == true);
+        assertTrue(rearRightExists == true);
+        assertTrue(rearLeftExists == true);
+
+        assertTrue(state.getNonce() == null);
+        assertTrue(state.getSignature() == null);
+    }
+
+    @Test
+    public void diagnosticsMissingValues() {
+        byte[] bytes = Bytes.bytesFromHex(
+                "003301" +
+                        "0068" +
+                        "0100030249F0" +
+                        "0500015A0600020109070004410c000008000440c66666" +
+                        "0200020063" +
+                        "04000209C4" +
+                        "09000101" +
+                        "0A000B014013d70a4220000002EA" +
+                        "0A000B004013d70a4220000002EA" +
+                        "A000493242444337434834364D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6");
+
+        com.highmobility.autoapi.incoming.IncomingCommand command = null;
+
+        try {
+            command = com.highmobility.autoapi.incoming.IncomingCommand.create(bytes);
+        } catch (CommandParseException e) {
+            fail("init failed");
+        }
+
+        assertTrue(command.getClass() == DiagnosticsState.class);
+        DiagnosticsState state = (DiagnosticsState)command;
+
+        assertTrue(state.getMileage() == 150000);
+        assertTrue(state.getOilTemperature() == 99);
+        assertTrue(state.getSpeed() == null);
+        assertTrue(state.getRpm() == 2500);
+        assertTrue(state.getRange() == 265);
+        assertTrue(state.getFuelLevel() == .9f);
+        assertTrue(state.getWasherFluidLevel() == DiagnosticsState.WasherFluidLevel.FULL);
+
+        assertTrue(state.getTireStates().size() == 2);
+        boolean leftExists = false, rightExist = false, rearLeftExists = false, rearRightExists = false;
+
+        for (TireState tireState : state.getTireStates()) {
+            switch (tireState.getLocation()) {
+                case FRONT_LEFT:
+                    leftExists = true;
+                    assertTrue(tireState.getPressure() == 2.31f);
+                    assertTrue(tireState.getTemperature() == 40f);
+                    assertTrue(tireState.getRpm() == 746);
+                    break;
+                case FRONT_RIGHT:
+                    rightExist = true;
+                    assertTrue(tireState.getPressure() == 2.31f);
+                    assertTrue(tireState.getTemperature() == 40f);
+                    assertTrue(tireState.getRpm() == 746);
+                    break;
+            }
+        }
+
+        assertTrue(leftExists == true);
+        assertTrue(rightExist == true);
+        assertTrue(rearRightExists == false);
+        assertTrue(rearLeftExists == false);
+
+        assertTrue(Arrays.equals(state.getNonce(), Bytes.bytesFromHex("324244433743483436")));
+        assertTrue(Arrays.equals(state.getSignature(), Bytes.bytesFromHex("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6")));
     }
 
     @Test

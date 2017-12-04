@@ -109,28 +109,19 @@ public class IncomingCommand {
     byte type;
     byte[] bytes;
 
-    IncomingCommand(byte[] bytes) throws CommandParseException {
-        if (bytes.length == 0) return; // empty IncomingCommand
-        if (bytes.length < 3) throw new CommandParseException();
-        this.bytes = bytes;
-        identifier = Command.Identifier.fromIdentifier(bytes);
-        type = bytes[2];
-    }
+    byte[] nonce;
+    byte[] signature;
 
     public Command.Identifier getIdentifier() {
         return identifier;
     }
 
-    byte getType() {
-        return type;
+    public byte[] getNonce() {
+        return nonce;
     }
 
-    byte[] getIdentifierAndType() {
-        return Bytes.concatBytes(identifier.getIdentifier(), type);
-    }
-
-    byte[] getBytes() {
-        return bytes;
+    public byte[] getSignature() {
+        return signature;
     }
 
     /**
@@ -145,5 +136,38 @@ public class IncomingCommand {
         }
 
         return false;
+    }
+
+    IncomingCommand(byte[] bytes) throws CommandParseException {
+        if (bytes.length == 0) return; // empty IncomingCommand
+        if (bytes.length < 3) throw new CommandParseException();
+        this.bytes = bytes;
+        identifier = Command.Identifier.fromIdentifier(bytes);
+        type = bytes[2];
+    }
+
+    byte getType() {
+        return type;
+    }
+
+    byte[] getIdentifierAndType() {
+        return Bytes.concatBytes(identifier.getIdentifier(), type);
+    }
+
+    byte[] getBytes() {
+        return bytes;
+    }
+
+    void parseBaseProperty(int propertyValueStart, int propertySize) throws CommandParseException {
+        String prop = Bytes.hexFromBytes(Arrays.copyOfRange(bytes, propertyValueStart - 3, propertyValueStart + propertySize));
+        byte id = bytes[propertyValueStart - 3];
+        if (id == 0xFFFFFFA0) { // I dont know why this has to have FF
+            if (propertySize != 73 || bytes.length < propertyValueStart + propertySize) {
+                throw new CommandParseException();
+            }
+
+            nonce = Arrays.copyOfRange(bytes, propertyValueStart, propertyValueStart + 9);
+            signature = Arrays.copyOfRange(bytes, propertyValueStart + 9, propertyValueStart + 9 + 64);
+        }
     }
 }
