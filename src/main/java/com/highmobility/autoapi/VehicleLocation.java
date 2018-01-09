@@ -1,5 +1,6 @@
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -8,21 +9,23 @@ import com.highmobility.autoapi.property.Property;
 public class VehicleLocation extends Command {
     public static final Type TYPE = new Type(Identifier.VEHICLE_LOCATION, 0x01);
 
-    private float latitude;
-    private float longitude;
+    private CoordinatesProperty coordinates;
+    private Float heading;
 
     /**
-     * @return The latitude
+     *
+     * @return The vehicle coordinates
      */
-    public float getLatitude() {
-        return latitude;
+    public CoordinatesProperty getCoordinates() {
+        return coordinates;
     }
 
     /**
-     * @return The longitude
+     *
+     * @return The Heading
      */
-    public float getLongitude() {
-        return longitude;
+    public Float getHeading() {
+        return heading;
     }
 
     public VehicleLocation(byte[] bytes) throws CommandParseException {
@@ -32,12 +35,14 @@ public class VehicleLocation extends Command {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
-                    latitude = Property.getFloat(property.getValueBytes());
+                    coordinates = new CoordinatesProperty(property.getPropertyBytes());
                     break;
                 case 0x02:
-                    longitude = Property.getFloat(property.getValueBytes());
+                    heading = Property.getFloat(property.getValueBytes());
                     break;
             }
         }
     }
+
+
 }

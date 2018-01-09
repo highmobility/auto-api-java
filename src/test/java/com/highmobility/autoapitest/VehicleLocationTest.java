@@ -3,9 +3,7 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.GetValetMode;
 import com.highmobility.autoapi.GetVehicleLocation;
-import com.highmobility.autoapi.ValetMode;
 import com.highmobility.autoapi.VehicleLocation;
 import com.highmobility.utils.Bytes;
 
@@ -21,9 +19,7 @@ public class VehicleLocationTest {
     @Test
     public void state() {
         byte[] bytes = Bytes.bytesFromHex(
-                "003001" +
-                    "0100044252147d" +
-                    "02000441567ab1");
+                "0030010100084252147d41567ab10200044252147d");
 
         Command command = null;
 
@@ -35,8 +31,9 @@ public class VehicleLocationTest {
 
         assertTrue(command.getClass() == VehicleLocation.class);
         VehicleLocation state = (VehicleLocation) command;
-        assertTrue(state.getLatitude() == 52.520008f);
-        assertTrue(state.getLongitude() == 13.404954f);
+        assertTrue(state.getCoordinates().getLatitude() == 52.520008f);
+        assertTrue(state.getCoordinates().getLongitude() == 13.404954f);
+        assertTrue(state.getHeading() == 52.520008f);
     }
 
     @Test public void get() {
