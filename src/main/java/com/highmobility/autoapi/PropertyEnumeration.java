@@ -42,13 +42,11 @@ class PropertyEnumeration implements Enumeration {
         byte identifier;
         int size;
         int valueStart;
-        String hex; // TODO: delete
 
         public EnumeratedProperty(byte identifier, int size, int valueStart) {
             this.identifier = identifier;
             this.size = size;
             this.valueStart = valueStart;
-            hex = Bytes.hexFromBytes(Arrays.copyOfRange(PropertyEnumeration.this.bytes, valueStart, valueStart + size));
         }
     }
 }

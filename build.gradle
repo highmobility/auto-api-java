@@ -1,5 +1,5 @@
 group 'com.highmobility'
-version '1.0.4'
+version '1.5.0'
 
 apply plugin: 'java'
 apply plugin: 'maven'
@@ -27,7 +27,7 @@ artifactory {
     //The base Artifactory URL if not overridden by the publisher/resolver
     publish {
         repository {
-            repoKey = 'gradle-dev-local'
+            repoKey = 'gradle-release-local'
             username = "${artifactory_publisheruser}"
             password = "${artifactory_publisherpassword}"
             maven = true
@@ -52,5 +52,5 @@ artifactory {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    implementation('com.highmobility:hmkit-utils:1.+')
+    implementation('com.highmobility:hmkit-utils:1.0.+')
 }

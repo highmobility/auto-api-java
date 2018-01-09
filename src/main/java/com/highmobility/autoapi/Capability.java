@@ -1,5 +1,7 @@
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.CapabilityProperty;
+
 import java.util.Arrays;
 
 /**
@@ -7,16 +9,16 @@ import java.util.Arrays;
  */
 public class Capability extends Command {
     public static final Type TYPE = new Type(Identifier.CAPABILITIES, 0x04);
-    FeatureCapability capability;
+    CapabilityProperty capability;
 
-    public FeatureCapability getCapability() {
+    public CapabilityProperty getCapability() {
         return capability;
     }
 
     public Capability(byte[] bytes) throws CommandParseException {
          super(bytes);
          if (bytes.length < 8) return;
-         capability = FeatureCapability.fromBytes(Arrays.copyOfRange(bytes, 6, bytes.length));
+         capability = new CapabilityProperty(Arrays.copyOfRange(bytes, 3, bytes.length));
 
     }
 }

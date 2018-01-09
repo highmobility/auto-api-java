@@ -20,7 +20,7 @@ public class Type {
         return new byte[] { identifierAndType[0], identifierAndType[1] };
     }
 
-    byte getType() {
+    public byte getType() {
         return identifierAndType[2];
     }
 
@@ -33,6 +33,10 @@ public class Type {
         identifier = Identifier.fromBytes(identifierAndType[0], identifierAndType[1]);
     }
 
+    public Type(byte[] identifier, int type) {
+        this(Bytes.concatBytes(identifier, (byte) type));
+    }
+
     Type(Identifier identifier, int type) {
         this(identifier.getBytesWithType((byte) type));
     }
@@ -41,9 +45,6 @@ public class Type {
         this(new byte[] { (byte) identifierFirstByte, (byte) identifierSecondByte, (byte) type} );
     }
 
-    Type(byte[] identifier, int type) {
-        this(Bytes.concatBytes(identifier, (byte) type));
-    }
 
     @Override public boolean equals(Object obj) {
         return obj.getClass() == Type.class

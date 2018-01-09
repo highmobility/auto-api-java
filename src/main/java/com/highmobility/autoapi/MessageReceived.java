@@ -11,12 +11,18 @@ import java.util.ArrayList;
  * Notify the car that a message has been received. Depending on the car system, it will display or
  * read it loud to the driver.
  */
-public class MessageReceived extends CommandWithProperties { // TODO: verify that this subclass
-    // is needed
+public class MessageReceived extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MESSAGING, 0x00);
 
+    /**
+     *
+     * @param handle The message handle
+     * @param message The message
+     * @throws UnsupportedEncodingException When strings are of invalid format
+     * @throws IllegalArgumentException When all parameters are null
+     */
     public MessageReceived(String handle, String message) throws UnsupportedEncodingException,
-            CommandParseException {
+            IllegalArgumentException {
         super(TYPE, getProperties(handle, message));
     }
 
