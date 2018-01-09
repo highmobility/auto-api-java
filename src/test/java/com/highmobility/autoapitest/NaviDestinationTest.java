@@ -4,22 +4,13 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetNaviDestination;
-import com.highmobility.autoapi.GetVehicleTime;
 import com.highmobility.autoapi.NaviDestination;
 import com.highmobility.autoapi.SetNaviDestination;
-import com.highmobility.autoapi.VehicleTime;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -31,10 +22,7 @@ public class NaviDestinationTest {
     @Test
     public void state() {
         byte[] bytes = Bytes.bytesFromHex(
-                "003101" +
-                    "0100044252147d" +
-                    "02000441567ab1" +
-                    "0300064265726c696e");
+                "0031010100084252147d41567ab10200064265726c696e");
 
         Command command = null;
 
@@ -48,8 +36,8 @@ public class NaviDestinationTest {
         NaviDestination state = (NaviDestination) command;
 
         assertTrue(state.getName().equals("Berlin"));
-        assertTrue(state.getLatitude() == 52.520008f);
-        assertTrue(state.getLongitude() == 13.404954f);
+        assertTrue(state.getCoordinates().getLatitude() == 52.520008f);
+        assertTrue(state.getCoordinates().getLongitude() == 13.404954f);
     }
 
     @Test public void get() {

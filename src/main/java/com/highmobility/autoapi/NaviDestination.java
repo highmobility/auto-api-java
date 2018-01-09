@@ -1,5 +1,6 @@
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.io.UnsupportedEncodingException;
@@ -10,24 +11,20 @@ import java.io.UnsupportedEncodingException;
 public class NaviDestination extends Command {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x01);
 
-    private Float latitude;
-    private Float longitude;
+    private CoordinatesProperty coordinates;
     private String name;
 
     /**
-     * @return The latitude
+     * @return The coordinates
      */
-    public Float getLatitude() {
-        return latitude;
+    public CoordinatesProperty getCoordinates() {
+        return coordinates;
     }
 
     /**
-     * @return The longitude
+     *
+     * @return The name
      */
-    public Float getLongitude() {
-        return longitude;
-    }
-
     public String getName() {
         return name;
     }
@@ -39,12 +36,9 @@ public class NaviDestination extends Command {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
-                    latitude = Property.getFloat(property.getValueBytes());
+                    coordinates = new CoordinatesProperty(property.getPropertyBytes());
                     break;
                 case 0x02:
-                    longitude = Property.getFloat(property.getValueBytes());
-                    break;
-                case 0x03:
                     try {
                         name = Property.getString(property.getValueBytes());
                     } catch (UnsupportedEncodingException e) {
