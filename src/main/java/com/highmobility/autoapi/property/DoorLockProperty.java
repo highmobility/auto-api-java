@@ -1,6 +1,51 @@
-package com.highmobility.autoapi;
+package com.highmobility.autoapi.property;
 
-public class DoorLockState {
+import com.highmobility.autoapi.CommandParseException;
+
+public class DoorLockProperty extends Property {
+    Location location;
+    Position position;
+    LockState lockState;
+
+    /**
+     *
+     * @return The door location
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    /**
+     *
+     * @return The door position
+     */
+    public Position getPosition() {
+        return position;
+    }
+
+    /**
+     *
+     * @return The lock state
+     */
+    public LockState getLockState() {
+        return lockState;
+    }
+
+    public DoorLockProperty(byte[] bytes) throws CommandParseException {
+        this(Location.fromByte(bytes[3]), Position.fromByte(bytes[4]), LockState.fromByte(bytes[5]));
+    }
+
+    public DoorLockProperty(Location location, Position position, LockState lockState) {
+        super((byte) 0x01, 3);
+        this.location = location;
+        this.position = position;
+        this.lockState = lockState;
+
+        bytes[3] = location.getByte();
+        bytes[4] = position.getByte();
+        bytes[5] = lockState.getByte();
+    }
+
     /**
      * The door location
      */
@@ -94,49 +139,5 @@ public class DoorLockState {
         public byte getByte() {
             return capabilityByte;
         }
-    }
-
-    Location location;
-    Position position;
-    LockState lockState;
-
-    /**
-     *
-     * @return The door location
-     */
-    public Location getLocation() {
-        return location;
-    }
-
-    /**
-     *
-     * @return The door position
-     */
-    public Position getPosition() {
-        return position;
-    }
-
-    /**
-     *
-     * @return The lock state
-     */
-    public LockState getLockState() {
-        return lockState;
-    }
-
-    public DoorLockState(byte location, byte position, byte lockState) throws CommandParseException {
-        this.location = Location.fromByte(location);
-        this.position = Position.fromByte(position);
-        this.lockState = LockState.fromByte(lockState);
-    }
-
-    public DoorLockState(Location location, Position position, LockState lockState) {
-        this.location = location;
-        this.position = position;
-        this.lockState = lockState;
-    }
-
-    DoorLockState(byte[] bytes, int startingFrom) throws CommandParseException {
-        this(bytes[startingFrom], bytes[startingFrom + 1], bytes[startingFrom + 2]);
     }
 }

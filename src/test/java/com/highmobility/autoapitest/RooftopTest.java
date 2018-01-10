@@ -4,11 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlRooftop;
-import com.highmobility.autoapi.DoorLockState;
-import com.highmobility.autoapi.GetLockState;
 import com.highmobility.autoapi.GetRooftopState;
-import com.highmobility.autoapi.LockState;
-import com.highmobility.autoapi.LockUnlockDoors;
 import com.highmobility.autoapi.RooftopState;
 import com.highmobility.utils.Bytes;
 
