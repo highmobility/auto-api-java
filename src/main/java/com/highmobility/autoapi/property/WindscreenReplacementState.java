@@ -1,19 +1,17 @@
-package com.highmobility.autoapi.property.windscreen;
+package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
 
-public enum WiperState implements HMProperty {
-    INACTIVE((byte)0x00),
-    ACTIVE((byte)0x01),
-    AUTOMATIC((byte)0x02);
+public enum WindscreenReplacementState implements HMProperty {
+    UNKNOWN((byte)0x00),
+    REPLACEMENT_NOT_NEEDED((byte)0x01),
+    REPLACEMENT_NEEDED((byte)0x02);
 
-    public static WiperState fromByte(byte byteValue) throws CommandParseException {
-        WiperState[] values = WiperState.values();
+    public static WindscreenReplacementState fromByte(byte byteValue) throws CommandParseException {
+        WindscreenReplacementState[] values = WindscreenReplacementState.values();
 
         for (int i = 0; i < values.length; i++) {
-            WiperState state = values[i];
+            WindscreenReplacementState state = values[i];
             if (state.getByte() == byteValue) {
                 return state;
             }
@@ -24,7 +22,7 @@ public enum WiperState implements HMProperty {
 
     private byte value;
 
-    WiperState(byte value) {
+    WindscreenReplacementState(byte value) {
         this.value = value;
     }
 
@@ -33,7 +31,7 @@ public enum WiperState implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x01;
+        return 0x06;
     }
 
     @Override public int getPropertyLength() {

@@ -4,15 +4,13 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.SeatStateProperty;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * This message is sent when a Get Vehicle Time message is received by the car. The local time of
  * the car is returned, hence the UTC timezone offset is included as well.
  */
-public class SeatsState extends Command {
+public class SeatsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.SEATS, 0x01);
-
 
     SeatStateProperty[] seatsStates;
 

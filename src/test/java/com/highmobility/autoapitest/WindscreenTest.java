@@ -6,12 +6,12 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetWindscreenState;
 import com.highmobility.autoapi.SetWindscreenDamage;
 import com.highmobility.autoapi.WindscreenState;
-import com.highmobility.autoapi.property.windscreen.WindscreenDamage;
-import com.highmobility.autoapi.property.windscreen.WindscreenDamageZone;
-import com.highmobility.autoapi.property.windscreen.WindscreenDamageZoneMatrix;
-import com.highmobility.autoapi.property.windscreen.WindscreenReplacementState;
-import com.highmobility.autoapi.property.windscreen.WiperIntensity;
-import com.highmobility.autoapi.property.windscreen.WiperState;
+import com.highmobility.autoapi.property.WindscreenDamage;
+import com.highmobility.autoapi.property.WindscreenDamageZone;
+import com.highmobility.autoapi.property.WindscreenDamageZoneMatrix;
+import com.highmobility.autoapi.property.WindscreenReplacementState;
+import com.highmobility.autoapi.property.WiperIntensity;
+import com.highmobility.autoapi.property.WiperState;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;

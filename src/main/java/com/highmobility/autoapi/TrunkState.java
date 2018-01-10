@@ -1,5 +1,6 @@
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -7,13 +8,73 @@ import com.highmobility.autoapi.property.Property;
  * message is also sent when a Get Trunk State is received by the car. The new status is included in
  * the message payload and may be the result of user, device or car triggered action.
  */
-public class TrunkState extends Command {
+public class TrunkState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x01);
 
+    LockState lockState;
+    Position position;
+
     /**
-     * The possible trunk lock states
+     * @return the current lock status of the trunk
      */
-    public enum LockState {
+    public LockState getLockState() {
+        return lockState;
+    }
+
+    /**
+     * @return the current position of the trunk
+     */
+    public Position getPosition() {
+        return position;
+    }
+
+    public TrunkState(byte[] bytes) throws CommandParseException {
+        super(bytes);
+        for (int i = 0; i < getProperties().length; i++) {
+            Property property = getProperties()[i];
+            switch (property.getPropertyIdentifier()) {
+                case 0x01:
+                    lockState = LockState.fromByte(property.getValueByte());
+                    break;
+                case 0x02:
+                    position = Position.fromByte(property.getValueByte());
+                    break;
+            }
+        }
+    }
+
+    private TrunkState(Builder builder) {
+        super(TYPE, builder.getProperties());
+        lockState = builder.lockState;
+        position = builder.position;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private LockState lockState;
+        private Position position;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        public Builder setLockState(LockState lockState) {
+            this.lockState = lockState;
+            addProperty(lockState);
+            return this;
+        }
+
+        public Builder setPosition(Position position) {
+            this.position = position;
+            addProperty(position);
+            return this;
+        }
+
+        public TrunkState build() {
+            return new TrunkState(this);
+        }
+    }
+
+    public enum LockState implements HMProperty {
         UNLOCKED((byte) 0x00),
         LOCKED((byte) 0x01);
 
@@ -40,15 +101,20 @@ public class TrunkState extends Command {
             return value;
         }
 
-        public byte[] getPropertyBytes() {
-            return new byte[] { 0x01, 0x00, 0x01, value};
+        @Override public byte getPropertyIdentifier() {
+            return 0x01;
+        }
+
+        @Override public int getPropertyLength() {
+            return 1;
+        }
+
+        @Override public byte[] getPropertyBytes() {
+            return Property.getPropertyBytes(getPropertyIdentifier(), getPropertyLength(), value);
         }
     }
 
-    /**
-     * The possible trunk positions
-     */
-    public enum Position {
+    public enum Position implements HMProperty {
         CLOSED((byte) 0x00),
         OPEN((byte) 0x01);
 
@@ -75,40 +141,16 @@ public class TrunkState extends Command {
             return value;
         }
 
-        public byte[] getPropertyBytes() {
-            return new byte[] { 0x02, 0x00, 0x01, value};
+        @Override public byte getPropertyIdentifier() {
+            return 0x02;
         }
-    }
 
-    /**
-     * @return the current lock status of the trunk
-     */
-    public LockState getLockState() {
-        return lockState;
-    }
+        @Override public int getPropertyLength() {
+            return 1;
+        }
 
-    /**
-     * @return the current position of the trunk
-     */
-    public Position getPosition() {
-        return position;
-    }
-
-    LockState lockState;
-    Position position;
-
-    public TrunkState(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case 0x01:
-                    lockState = LockState.fromByte(property.getValueByte());
-                    break;
-                case 0x02:
-                    position = Position.fromByte(property.getValueByte());
-                    break;
-            }
+        @Override public byte[] getPropertyBytes() {
+            return Property.getPropertyBytes(getPropertyIdentifier(), getPropertyLength(), value);
         }
     }
 }

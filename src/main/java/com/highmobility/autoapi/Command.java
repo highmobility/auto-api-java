@@ -1,30 +1,8 @@
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class Command {
     byte[] bytes;
     Type type;
-
-    byte[] nonce;
-    byte[] signature;
-
-    Property[] properties;
-
-    public byte[] getNonce() {
-        return nonce;
-    }
-
-    public byte[] getSignature() {
-        return signature;
-    }
-
-    public byte[] getSignedBytes() {
-        return Arrays.copyOfRange(bytes, 0, bytes.length - 64 - 3);
-    }
 
     public Type getType() {
         return type;
@@ -32,13 +10,6 @@ public class Command {
 
     public byte[] getBytes() {
         return bytes;
-    }
-
-    /**
-     * @return All of the properties with raw values
-     */
-    public Property[] getProperties() {
-        return properties;
     }
 
     /**
@@ -54,34 +25,6 @@ public class Command {
         if (bytes.length < 3) throw new CommandParseException();
         this.bytes = bytes;
         type = new Type(bytes[0], bytes[1], bytes[2]);
-
-        ArrayList<Property> builder = new ArrayList<>();
-        PropertyEnumeration enumeration = new PropertyEnumeration(bytes);
-        while (enumeration.hasMoreElements()) {
-            PropertyEnumeration.EnumeratedProperty propertyEnumeration = enumeration.nextElement();
-            Property property = new Property(Arrays.copyOfRange(bytes, propertyEnumeration
-                    .valueStart - 3, propertyEnumeration.valueStart + propertyEnumeration.size));
-            builder.add(property);
-
-            if (property.getPropertyIdentifier() == 0xFFFFFFA0) { // dont know why just 0xA0 comparison
-                // does not work
-                if (propertyEnumeration.size != 9) {
-                    throw new CommandParseException();
-                }
-
-                nonce = Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
-                        propertyEnumeration.valueStart + propertyEnumeration.size);
-            } else if (property.getPropertyIdentifier() == 0xFFFFFFA1) {
-                if (propertyEnumeration.size != 64) {
-                    throw new CommandParseException();
-                }
-
-                signature = Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
-                        propertyEnumeration.valueStart + propertyEnumeration.size);
-            }
-        }
-
-        properties = builder.toArray(new Property[builder.size()]);
     }
 
     /**

@@ -7,7 +7,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * This message is sent when a Get Firmware Version is received by the car.
  */
-public class FirmwareVersion extends Command {
+public class FirmwareVersion extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FIRMWARE_VERSION, 0x01);
 
     String carSDKVersion;

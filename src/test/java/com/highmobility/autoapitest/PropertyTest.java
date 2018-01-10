@@ -3,6 +3,7 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
+import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.RooftopState;
 import com.highmobility.autoapi.property.IntProperty;
 import com.highmobility.autoapi.property.Property;
@@ -43,26 +44,32 @@ public class PropertyTest {
     }
 
     @Test public void nonce() {
-        Command command = getCommandWithSignature();
+        CommandWithProperties command = getCommandWithSignature();
         byte[] nonce = command.getNonce();
         assertTrue(Arrays.equals(nonce, Bytes.bytesFromHex("324244433743483436")));
     }
 
     @Test public void signature() {
-        Command command = getCommandWithSignature();
+        CommandWithProperties command = getCommandWithSignature();
         assertTrue(Arrays.equals(command.getSignature(), Bytes.bytesFromHex("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6")));
     }
 
     @Test public void signedBytes() {
-        Command command = getCommandWithSignature();
+        CommandWithProperties command = getCommandWithSignature();
         byte[] signedBytes = command.getSignedBytes();
         assertTrue(Arrays.equals(signedBytes, Bytes.bytesFromHex("00460101000101A00009324244433743483436")));
     }
 
-    Command getCommandWithSignature() {
+    CommandWithProperties getCommandWithSignature() {
         byte[] bytes = Bytes.bytesFromHex("00460101000101A00009324244433743483436A100404D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6");
         try {
-            return CommandResolver.resolve(bytes);
+            Command command = CommandResolver.resolve(bytes);
+
+            if (command instanceof CommandWithProperties) {
+                return (CommandWithProperties) command;
+            }
+
+            throw new CommandParseException();
         } catch (CommandParseException e) {
             fail();
             return null;
@@ -89,13 +96,13 @@ public class PropertyTest {
         RooftopState state = (RooftopState) command;
         assertTrue(state.getDimmingPercentage() == .01f);
         assertTrue(state.getOpenPercentage() == null);
-        assertTrue(command.getProperties().length == 2);
+        assertTrue(state.getProperties().length == 2);
 
         boolean foundUnknownProperty = false;
         boolean foundDimmingProperty = false;
 
-        for (int i = 0; i < command.getProperties().length; i++) {
-            Property property = command.getProperties()[i];
+        for (int i = 0; i < state.getProperties().length; i++) {
+            Property property = state.getProperties()[i];
             if (property.getPropertyIdentifier() == 0x1A) {
                 assertTrue(property.getPropertyLength() == 1);
                 assertTrue(Arrays.equals(property.getValueBytes(), new byte[] { 0x35 }));

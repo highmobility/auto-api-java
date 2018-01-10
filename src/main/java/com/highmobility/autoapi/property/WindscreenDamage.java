@@ -1,20 +1,18 @@
-package com.highmobility.autoapi.property.windscreen;
+package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
 
-public enum WiperIntensity implements HMProperty {
-    LEVEL_0((byte)0x00),
-    LEVEL_1((byte)0x01),
-    LEVEL_2((byte)0x02),
-    LEVEL_3((byte)0x03);
+public enum WindscreenDamage implements HMProperty {
+    NO_IMPACT((byte)0x00),
+    IMPACT_NO_DAMAGE((byte)0x01),
+    DAMAGE_SMALLER_THAN_1((byte)0x02),
+    DAMAGE_LARGER_THAN_1((byte)0x03);
 
-    public static WiperIntensity fromByte(byte byteValue) throws CommandParseException {
-        WiperIntensity[] values = WiperIntensity.values();
+    public static WindscreenDamage fromByte(byte byteValue) throws CommandParseException {
+        WindscreenDamage[] values = WindscreenDamage.values();
 
         for (int i = 0; i < values.length; i++) {
-            WiperIntensity state = values[i];
+            WindscreenDamage state = values[i];
             if (state.getByte() == byteValue) {
                 return state;
             }
@@ -25,7 +23,7 @@ public enum WiperIntensity implements HMProperty {
 
     private byte value;
 
-    WiperIntensity(byte value) {
+    WindscreenDamage(byte value) {
         this.value = value;
     }
 
@@ -34,7 +32,7 @@ public enum WiperIntensity implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x02;
+        return 0x03;
     }
 
     @Override public int getPropertyLength() {

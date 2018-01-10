@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * This message is sent when a Get Navi Destination message is received by the car.
  */
-public class NaviDestination extends Command {
+public class NaviDestination extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x01);
 
     private CoordinatesProperty coordinates;

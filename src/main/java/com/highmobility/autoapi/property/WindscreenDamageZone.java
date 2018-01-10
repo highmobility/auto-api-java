@@ -1,4 +1,4 @@
-package com.highmobility.autoapi.property.windscreen;
+package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;

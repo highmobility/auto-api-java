@@ -12,7 +12,7 @@ import com.highmobility.utils.Bytes;
  * Auto-HVAC (Heating, Ventilation and Air Conditioning) allows you to schedule times when HVAC is
  * triggered automatically to reach the desired driver temperature setting.
  */
-public class ClimateState extends Command {
+public class ClimateState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x01);
 
     Float insideTemperature;

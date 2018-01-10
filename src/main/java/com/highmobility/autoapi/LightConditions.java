@@ -5,7 +5,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * This message is sent when a Get Light Conditions is received by the car.
  */
-public class LightConditions extends Command {
+public class LightConditions extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHT_CONDITIONS, 0x01);
 
     Float outsideLight;

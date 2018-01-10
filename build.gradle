@@ -52,5 +52,5 @@ artifactory {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    implementation('com.highmobility:hmkit-utils:1.0.+')
+    implementation('com.highmobility:hmkit-utils:1.1.+')
 }

@@ -5,7 +5,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * This message is sent when a Get Weather Conditions is received by the car.
  */
-public class WeatherConditions extends Command {
+public class WeatherConditions extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WEATHER_CONDITIONS, 0x01);
 
     Float rainIntensity;

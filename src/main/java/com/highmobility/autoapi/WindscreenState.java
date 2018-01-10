@@ -1,21 +1,20 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.windscreen.WindscreenDamage;
-import com.highmobility.autoapi.property.windscreen.WindscreenDamageZone;
-import com.highmobility.autoapi.property.windscreen.WindscreenDamageZoneMatrix;
-import com.highmobility.autoapi.property.windscreen.WindscreenReplacementState;
-import com.highmobility.autoapi.property.windscreen.WiperIntensity;
-import com.highmobility.autoapi.property.windscreen.WiperState;
+import com.highmobility.autoapi.property.WindscreenDamage;
+import com.highmobility.autoapi.property.WindscreenDamageZone;
+import com.highmobility.autoapi.property.WindscreenDamageZoneMatrix;
+import com.highmobility.autoapi.property.WindscreenReplacementState;
+import com.highmobility.autoapi.property.WiperIntensity;
+import com.highmobility.autoapi.property.WiperState;
 
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * This message is sent when a Get Windscreen State message is received by the car. The wipers
  * intensity is indicated even if the car has automatic wipers activated.
  */
-public class WindscreenState extends Command {
+public class WindscreenState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x01);
 
     WiperState wiperState;

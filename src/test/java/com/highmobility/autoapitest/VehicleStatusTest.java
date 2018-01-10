@@ -6,10 +6,17 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetVehicleStatus;
 import com.highmobility.autoapi.TrunkState;
+import com.highmobility.autoapi.VehicleStatus;
+import com.highmobility.autoapi.property.CommandProperty;
+import com.highmobility.autoapi.property.IntProperty;
+import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -48,7 +55,7 @@ public class VehicleStatusTest {
     @Test
     public void properties() {
         assertTrue(vehicleStatus.getVin().equals("JF2SHBDC7CH451869"));
-        assertTrue(vehicleStatus.getPowerTrain() == com.highmobility.autoapi.VehicleStatus.PowerTrain.ALLELECTRIC);
+        assertTrue(vehicleStatus.getPowerTrain() == PowerTrain.ALLELECTRIC);
         assertTrue(vehicleStatus.getModelName().equals("Type X"));
         assertTrue(vehicleStatus.getName().equals("My Car"));
         assertTrue(vehicleStatus.getLicensePlate().equals("ABC123"));
@@ -91,5 +98,47 @@ public class VehicleStatusTest {
         }
 
         return null;
+    }
+
+    VehicleStatus.Builder getVehicleStatusBuilderWithoutSignature() throws UnsupportedEncodingException {
+        VehicleStatus.Builder builder = new VehicleStatus.Builder();
+        builder.setVin("JF2SHBDC7CH451869");
+        builder.setPowerTrain(PowerTrain.ALLELECTRIC);
+        builder.setModelName("Type X");
+        builder.setName("My Car");
+        builder.setLicensePlate("ABC123");
+        builder.setSalesDesignation("Package+");
+        builder.setModelYear(2017);
+        builder.setColor("Estoril Blau");
+//        builder.setPower(220);
+        // add an unknown property (power)
+        builder.addProperty(new IntProperty((byte) 0x09, 220, 2));
+        builder.setNumberOfDoors(5).setNumberOfSeats(5);
+
+        TrunkState.Builder trunkState = new TrunkState.Builder();
+        trunkState.setLockState(TrunkState.LockState.UNLOCKED);
+        trunkState.setPosition(TrunkState.Position.OPEN);
+        builder.addProperty(new CommandProperty(trunkState.build()));
+
+        ControlMode.Builder controlCommand = new ControlMode.Builder();
+        controlCommand.setMode(ControlMode.Mode.STARTED);
+        builder.addProperty(new CommandProperty(controlCommand.build()));
+        return builder;
+    }
+
+    @Test public void create() throws UnsupportedEncodingException {
+        VehicleStatus status = getVehicleStatusBuilderWithoutSignature().build();
+        byte[] command = status.getBytes();
+        assertTrue(Arrays.equals(command, Bytes.bytesFromHex("0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102")));
+    }
+
+    @Test public void createWithSignature() throws UnsupportedEncodingException {
+        VehicleStatus.Builder builder = getVehicleStatusBuilderWithoutSignature();
+        builder.setNonce(Bytes.bytesFromHex("324244433743483436"));
+        builder.setSignature(Bytes.bytesFromHex
+                ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
+        byte[] command = builder.build().getBytes();
+        assertTrue(Arrays.equals(command, Bytes.bytesFromHex
+                ("0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102A00009324244433743483436A100404D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6")));
     }
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * This message is sent when a Get Chassis Settings is received by the car.
  */
-public class ChassisSettings extends Command {
+public class ChassisSettings extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x01);
 
     DrivingMode drivingMode;

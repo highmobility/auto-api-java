@@ -7,7 +7,7 @@ import com.highmobility.autoapi.property.Property;
  * when the car is plugged in, disconnected, starts or stops charging, or when the charge limit
  * is changed.
  */
-public class ChargeState extends Command {
+public class ChargeState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x01);
 
     /**

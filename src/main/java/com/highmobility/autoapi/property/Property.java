@@ -17,6 +17,42 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 public class Property implements HMProperty {
     byte[] bytes;
 
+    Property(byte identifier, int valueSize) {
+        bytes = new byte[3 + valueSize];
+
+        bytes[0] = identifier;
+        if (valueSize > 255) {
+            byte[] lengthBytes = intToBytes(valueSize, 2);
+            bytes[1] = lengthBytes[0];
+            bytes[2] = lengthBytes[1];
+        }
+        else {
+            bytes[1] = 0x00;
+            bytes[2] = (byte) valueSize;
+        }
+    }
+
+    public Property(byte identifier, byte[] value) {
+        this(identifier, value.length);
+        Bytes.setBytes(bytes, value, 3);
+    }
+
+    public Property(byte[] bytes) throws CommandParseException {
+        if (bytes.length < 3) throw new CommandParseException();
+        this.bytes = bytes;
+    }
+
+    public byte[] getValueBytes() throws CommandParseException {
+        int length = getPropertyLength();
+        if (length > 0) return Arrays.copyOfRange(bytes, 3, 3 + length);
+        throw new CommandParseException();
+    }
+
+    public byte getValueByte() throws CommandParseException {
+        if (bytes.length == 4) return bytes[3];
+        throw new CommandParseException();
+    }
+
     @Override public byte getPropertyIdentifier() {
         return bytes[0];
     }
@@ -32,37 +68,6 @@ public class Property implements HMProperty {
 
     @Override  public byte[] getPropertyBytes() {
         return bytes;
-    }
-
-    public byte[] getValueBytes() throws CommandParseException {
-        int length = getPropertyLength();
-        if (length > 0) return Arrays.copyOfRange(bytes, 3, 3 + length);
-        throw new CommandParseException();
-    }
-
-    public byte getValueByte() throws CommandParseException {
-        if (bytes.length == 4) return bytes[3];
-        throw new CommandParseException();
-    }
-
-    Property(byte identifier, int valuesSize) {
-        bytes = new byte[3 + valuesSize];
-
-        bytes[0] = identifier;
-        if (valuesSize > 255) {
-            byte[] lengthBytes = intToBytes(valuesSize, 2);
-            bytes[1] = lengthBytes[0];
-            bytes[2] = lengthBytes[1];
-        }
-        else {
-            bytes[1] = 0x00;
-            bytes[2] = (byte) valuesSize;
-        }
-    }
-
-    public Property(byte[] bytes) throws CommandParseException {
-        if (bytes.length < 3) throw new CommandParseException();
-        this.bytes = bytes;
     }
 
     // helper methods

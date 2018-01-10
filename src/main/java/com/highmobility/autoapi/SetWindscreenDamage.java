@@ -1,9 +1,9 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.windscreen.WindscreenDamage;
-import com.highmobility.autoapi.property.windscreen.WindscreenDamageZone;
-import com.highmobility.autoapi.property.windscreen.WindscreenReplacementState;
+import com.highmobility.autoapi.property.WindscreenDamage;
+import com.highmobility.autoapi.property.WindscreenDamageZone;
+import com.highmobility.autoapi.property.WindscreenReplacementState;
 
 import java.util.ArrayList;
 import java.util.List;

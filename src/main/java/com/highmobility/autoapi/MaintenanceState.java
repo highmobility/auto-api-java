@@ -5,7 +5,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * This message is sent when a Get Vehicle Location message is received by the car.
  */
-public class MaintenanceState extends Command {
+public class MaintenanceState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MAINTENANCE, 0x01);
 
     private int kilometersToNextService;

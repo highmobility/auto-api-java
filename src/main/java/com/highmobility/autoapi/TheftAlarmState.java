@@ -5,7 +5,7 @@ import com.highmobility.autoapi.property.Property;
  * This is an evented message that is sent from the car every time the theft alarm state changes.
  * This message is also sent when a Get Theft Alarm State message is received by the car.
  */
-public class TheftAlarmState extends Command {
+public class TheftAlarmState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.THEFT_ALARM, 0x01);
 
     public enum State {

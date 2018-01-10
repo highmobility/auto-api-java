@@ -1,10 +1,8 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.SetWindscreenDamage;
 import com.highmobility.autoapi.VideoHandover;
 import com.highmobility.autoapi.property.ScreenLocation;
-import com.highmobility.autoapi.property.windscreen.WindscreenDamage;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;

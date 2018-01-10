@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * This message is sent when a Get Capabilities message is received by the car. The capabilities are
  * passed along as an array.
  */
-public class Capabilities extends Command {
+public class Capabilities extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CAPABILITIES, 0x01);
 
     CapabilityProperty[] capabilities;

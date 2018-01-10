@@ -6,7 +6,7 @@ import com.highmobility.autoapi.property.Property;
  * For different reasons a command sent to the car might not be successful. When this happens, a
  * failure message is sent to the smart device with details about what went wrong.
  */
-public class Failure extends Command {
+public class Failure extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FAILURE, 0x01);
 
     public enum Reason {

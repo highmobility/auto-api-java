@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * This message is sent when a Get Race State is received by the car.
  */
-public class RaceState extends Command {
+public class RaceState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.RACE, 0x01);
 
     AccelerationProperty[] accelerationProperties;
