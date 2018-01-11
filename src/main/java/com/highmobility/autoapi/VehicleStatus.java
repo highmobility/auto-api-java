@@ -42,6 +42,19 @@ public class VehicleStatus extends CommandWithProperties {
     }
 
     /**
+     * @return The specific states for the vehicle's features.
+     */
+    public CommandWithProperties getState(Type type) {
+        if (states == null) return null;
+        for (int i = 0; i < states.length; i++) {
+            CommandWithProperties command = states[i];
+            if (command.getType().equals(type)) return command;
+        }
+
+        return null;
+    }
+
+    /**
      * @return The vehicle's VIN number
      */
     public String getVin() {

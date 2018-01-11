@@ -38,8 +38,8 @@ public class VehicleStatusTest {
     public void setup() {
         try {
             Command command = CommandResolver.resolve(bytes);
-            if (command.is(com.highmobility.autoapi.VehicleStatus.TYPE)) {
-                vehicleStatus = (com.highmobility.autoapi.VehicleStatus) command;
+            if (command instanceof VehicleStatus) {
+                vehicleStatus = (VehicleStatus) command;
             }
             else {
                 fail();
@@ -69,6 +69,8 @@ public class VehicleStatusTest {
         assertTrue(vehicleStatus.getPower() == 220);
         assertTrue(vehicleStatus.getNumberOfDoors() == 5);
         assertTrue(vehicleStatus.getNumberOfSeats() == 5);
+
+        assertTrue(vehicleStatus.getState(TrunkState.TYPE) != null);
     }
 
     @Test public void get() throws CommandParseException {
