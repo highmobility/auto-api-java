@@ -8,49 +8,55 @@ Find the command name in auto api doc, then locate a class in com.highmobility.a
 the same name. Every command has a designated class and it is used for all of the common use cases:
 
 1. Parse the received command's bytes
-    ```java
-    byte[] bytes = ...
-    Command command = CommandResolver.resolve(bytes);
+```java
+byte[] bytes = ...
+Command command = CommandResolver.resolve(bytes);
 
-    VehicleStatus vehicleStatus;
-    Capabilities capabilities;
-    
-    if (command instanceof VehicleStatus) {
-        vehicleStatus = (VehicleStatus) command;
-    }
-    else if (command instanceof Capabilities) {
-        capabilities = (Capabilities) command;
-    }
-    ```
+VehicleStatus vehicleStatus;
+Capabilities capabilities;
+
+if (command instanceof VehicleStatus) {
+    vehicleStatus = (VehicleStatus) command;
+}
+else if (command instanceof Capabilities) {
+    capabilities = (Capabilities) command;
+}
+```
 
 2. Get a specific state from the vehicle status
-    ```java
-    LockState state = vehicleStatus.getState(LockState.TYPE);
-    if (state != null) {
+```java
+LockState state = vehicleStatus.getState(LockState.TYPE);
+if (state != null) {
 
-    }
-    ```
+}
+```
+
 3. Inspect whether the capability is supported for the vehicle
-    ```java
-    if (capabilities.isSupported(LockState.TYPE)) {
-        ...
-    }
-    ```
-4. send a command
-    ```java
-    byte[] commandBytes = new LockUnlockDoors(DoorLockProperty.LockState.LOCKED).getBytes();
-    sendCommand(commandBytes)
-    ```
-5. get a capability
-    ```java
-    byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
-    sendCommand(commandBytes)
-    ```
-6. check for the failed command's type
-    Failure failure;
-    if (failure.getFailedType.equals(LockUnlockDoors.TYPE) {
+```java
+if (capabilities.isSupported(LockState.TYPE)) {
+    ...
+}
+```
 
-    }
+4. send a command
+```java
+byte[] commandBytes = new LockUnlockDoors(DoorLockProperty.LockState.LOCKED).getBytes();
+sendCommand(commandBytes)
+```
+
+5. get a capability
+```java
+byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
+sendCommand(commandBytes)
+```
+
+6. check for the failed command's type
+```java
+Failure failure;
+if (failure.getFailedType.equals(LockUnlockDoors.TYPE) {
+
+}
+```
 
 Builder pattern is used to build commands with more properties, for instance Vehicle status:
 
