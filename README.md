@@ -38,23 +38,26 @@ if (capabilities.isSupported(LockState.TYPE)) {
 }
 ```
 
-## send a command ##
+## Send a command ##
 ```java
 byte[] commandBytes = new LockUnlockDoors(DoorLockProperty.LockState.LOCKED).getBytes();
 sendCommand(commandBytes)
 ```
 
-## get a capability ##
+## Get a capability ##
 ```java
 byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
 sendCommand(commandBytes)
 ```
 
-## check for the failed command's type ##
+## Check for the failed command's type ##
 ```java
 Failure failure;
-if (failure.getFailedType.equals(LockUnlockDoors.TYPE) {
-
+if (command instanceof Failure) {
+    failure = (Failure)command;
+    if (failure.getFailedType.equals(LockUnlockDoors.TYPE) {
+        // the lock unlock command failed
+    }
 }
 ```
 
@@ -121,40 +124,3 @@ Currently supported commands with the builder pattern:
 # Dependencies #
 
 * hmkit-utils.jar
-
-The main classes are IncomingCommand and Command.
-
-## Command ##
-Command class is used to create commands that are sent from Mobile Device to vehicle.
-
-For example to create a lock doors command.
-
-```java
-byte[] command = Command.DoorLocks.lockDoors(true);
-```
-
-## IncomingCommand ##
-
-IncomingCommand subclasses are used to parse commands coming from the vehicle in a Mobile Device.
-They are also used to create these commands in the cloud.
-
-for example to parse an incoming command on a Mobile device:
-
-```java
-try {
-    IncomingCommand command = IncomingCommand.create(bytes);
-
-    if (command.is(Command.VehicleStatus.VEHICLE_STATUS)) {
-        view.onVehicleStatusUpdate(vehicleStatus);
-    }
-} catch (CommandParseException e) {
-    e.printStackTrace();
-}
-```
-
-To create an Incoming Command, call the static method `getCommandBytes()` in that class. For example to create Capabilities command:
-
-```java
-public static byte[] getCommandBytes(FeatureCapability[] capabilities)
-```
-
