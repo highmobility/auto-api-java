@@ -1,19 +1,18 @@
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.IntProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  *
  * This is an evented command that is sent from the car every time the remote control mode changes.
- * It is also sent when a Get Control Mode is received by the car. The new mode is
+ * It is also sent when a Get Control ControlMode is received by the car. The new mode is
  * included in the command and may be the result of both user or car triggered action.
  */
 public class ControlMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x01);
 
-    Mode mode;
+    com.highmobility.autoapi.property.ControlMode mode;
     int angle;
 
     /**
@@ -28,7 +27,7 @@ public class ControlMode extends CommandWithProperties {
      *
      * @return the control mode
      */
-    public Mode getMode() {
+    public com.highmobility.autoapi.property.ControlMode getMode() {
         return mode;
     }
 
@@ -40,7 +39,7 @@ public class ControlMode extends CommandWithProperties {
 
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
-                    mode = Mode.fromByte(property.getValueByte());
+                    mode = com.highmobility.autoapi.property.ControlMode.fromByte(property.getValueByte());
                     break;
                 case 0x02:
                     angle = Property.getUnsignedInt(property.getValueBytes());
@@ -57,7 +56,7 @@ public class ControlMode extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private int angle;
-        private Mode mode;
+        private com.highmobility.autoapi.property.ControlMode mode;
 
         public Builder() {
             super(TYPE);
@@ -69,7 +68,7 @@ public class ControlMode extends CommandWithProperties {
             return this;
         }
 
-        public Builder setMode(Mode mode) {
+        public Builder setMode(com.highmobility.autoapi.property.ControlMode mode) {
             this.mode = mode;
             addProperty(mode);
             return this;
@@ -77,54 +76,6 @@ public class ControlMode extends CommandWithProperties {
 
         public ControlMode build() {
             return new ControlMode(this);
-        }
-    }
-
-    /**
-     * The possible control modes
-     */
-    public enum Mode implements HMProperty {
-        UNAVAILABLE((byte)0x00),
-        AVAILABLE((byte)0x01),
-        STARTED((byte)0x02),
-        FAILED_TO_START((byte)0x03),
-        ABORTED((byte)0x04),
-        ENDED((byte)0x05),
-        UNSUPPORTED((byte)0xFF);
-
-        public static Mode fromByte(byte value) throws CommandParseException {
-            Mode[] allValues = Mode.values();
-
-            for (int i = 0; i < allValues.length; i++) {
-                Mode value1 = allValues[i];
-                if (value1.getByte() == value) {
-                    return value1;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Mode(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-
-        @Override public byte getPropertyIdentifier() {
-            return 0x01;
-        }
-
-        @Override public int getPropertyLength() {
-            return 1;
-        }
-
-        @Override public byte[] getPropertyBytes() {
-            return Property.getPropertyBytes(getPropertyIdentifier(), getPropertyLength(), value);
         }
     }
 }

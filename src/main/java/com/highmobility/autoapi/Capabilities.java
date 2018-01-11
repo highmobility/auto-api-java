@@ -4,6 +4,8 @@ import com.highmobility.autoapi.property.CapabilityProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This message is sent when a Get Capabilities message is received by the car. The capabilities are
@@ -14,21 +16,6 @@ public class Capabilities extends CommandWithProperties {
 
     CapabilityProperty[] capabilities;
 
-    /*
-    // TODO
-    public static byte[] getCommandBytes(CapabilityProperty[] capabilities) {
-        byte[] bytes = Identifier.CAPABILITIES.getBytesWithType(TYPE);
-
-        bytes = Bytes.concatBytes(bytes, (byte) capabilities.length);
-
-        for (int i = 0; i < capabilities.length; i++) {
-            byte[] capabilityBytes = capabilities[i].getAllBytes();
-            bytes = Bytes.concatBytes(bytes, capabilityBytes);
-        }
-
-        return bytes;
-    }
-*/
     public boolean isSupported(Type type) {
         CapabilityProperty capability = getCapability(type);
         if (capability == null) return false;
@@ -80,5 +67,38 @@ public class Capabilities extends CommandWithProperties {
         }
 
         capabilities = builder.toArray(new CapabilityProperty[builder.size()]);
+    }
+
+    private Capabilities(Builder builder) {
+        super(TYPE, builder.getProperties());
+        capabilities = builder.capabilities.toArray(new CapabilityProperty[builder.capabilities.size()]);
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private List<CapabilityProperty> capabilities = new ArrayList<>();
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        public Builder setCapabilities(CapabilityProperty[] properties) {
+            capabilities.addAll(Arrays.asList(properties));
+
+            for (int i = 0; i < properties.length; i++) {
+                addProperty(properties[i]);
+            }
+
+            return this;
+        }
+
+        public Builder addCapability(CapabilityProperty capability) {
+            capabilities.add(capability);
+            addProperty(capability);
+            return this;
+        }
+
+        public Capabilities build() {
+            return new Capabilities(this);
+        }
     }
 }

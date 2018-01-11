@@ -8,6 +8,8 @@ import com.highmobility.autoapi.property.StringProperty;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This message is sent when a Get Vehicle Status is received by the car. The states are passed
@@ -185,7 +187,7 @@ public class VehicleStatus extends CommandWithProperties {
         power = builder.power;
         numberOfDoors = builder.numberOfDoors;
         numberOfSeats = builder.numberOfSeats;
-        states = builder.states;
+        states = builder.states.toArray(new CommandWithProperties[builder.states.size()]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
@@ -200,7 +202,7 @@ public class VehicleStatus extends CommandWithProperties {
         private Integer power;
         private Integer numberOfDoors;
         private Integer numberOfSeats;
-        private CommandWithProperties[] states;
+        private List<CommandWithProperties> states = new ArrayList<>();
 
         public Builder() {
             super(TYPE);
@@ -274,12 +276,18 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         public Builder setStates(CommandWithProperties[] states) {
-            this.states = states;
+            this.states.addAll(Arrays.asList(states));
 
             for (int i = 0; i < states.length; i++) {
-                addProperty(new CommandProperty((byte) 0x99, states[i]));
+                addProperty(new CommandProperty(states[i]));
             }
 
+            return this;
+        }
+
+        public Builder addState(CommandWithProperties state) {
+            addProperty(new CommandProperty(state));
+            states.add(state);
             return this;
         }
 

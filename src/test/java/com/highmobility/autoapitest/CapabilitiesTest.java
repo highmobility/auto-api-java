@@ -3,7 +3,6 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.ActivateDeactivateEmergencyFlasher;
 import com.highmobility.autoapi.ActivateDeactivateValetMode;
 import com.highmobility.autoapi.Capabilities;
-import com.highmobility.autoapi.Capability;
 import com.highmobility.autoapi.ChargeState;
 import com.highmobility.autoapi.ClimateState;
 import com.highmobility.autoapi.Command;
@@ -26,6 +25,7 @@ import com.highmobility.autoapi.GetVehicleLocation;
 import com.highmobility.autoapi.HonkAndFlash;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
+import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.LockUnlockDoors;
 import com.highmobility.autoapi.NaviDestination;
@@ -42,8 +42,10 @@ import com.highmobility.autoapi.StartStopHvac;
 import com.highmobility.autoapi.StartStopIonizing;
 import com.highmobility.autoapi.StopControlMode;
 import com.highmobility.autoapi.TrunkState;
+import com.highmobility.autoapi.Type;
 import com.highmobility.autoapi.ValetMode;
 import com.highmobility.autoapi.VehicleLocation;
+import com.highmobility.autoapi.property.CapabilityProperty;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -141,36 +143,36 @@ public class CapabilitiesTest {
 
     @Test
     public void climateCapability() {
-        byte[] message = Bytes.bytesFromHex("001004010009002400010203040506");
-        Capability capability = null;
+        byte[] message = Bytes.bytesFromHex("001001010009002400010203040506");
+        Capabilities capability = null;
         try {
-            capability = new Capability(message);
+            capability = (Capabilities) CommandResolver.resolve(message);
         } catch (CommandParseException e) {
             fail("climate capability init failed");
             e.printStackTrace();
         }
 
-        assertTrue(capability.getCapability().isSupported(GetClimateState.TYPE));
-        assertTrue(capability.getCapability().isSupported(ClimateState.TYPE));
-        assertTrue(capability.getCapability().isSupported(StartStopHvac.TYPE));
-        assertTrue(capability.getCapability().isSupported(StartStopDefogging.TYPE));
-        assertTrue(capability.getCapability().isSupported(StartStopDefrosting.TYPE));
-        assertTrue(capability.getCapability().isSupported(StartStopIonizing.TYPE));
+        assertTrue(capability.isSupported(GetClimateState.TYPE));
+        assertTrue(capability.isSupported(ClimateState.TYPE));
+        assertTrue(capability.isSupported(StartStopHvac.TYPE));
+        assertTrue(capability.isSupported(StartStopDefogging.TYPE));
+        assertTrue(capability.isSupported(StartStopDefrosting.TYPE));
+        assertTrue(capability.isSupported(StartStopIonizing.TYPE));
     }
 
     @Test
     public void heartRateCapability() {
-        byte[] message = Bytes.bytesFromHex("001004010003002902");
-        Capability capability = null;
+        byte[] message = Bytes.bytesFromHex("001001010003002902");
+        Capabilities capability = null;
         try {
-            capability = new Capability(message);
+            capability = (Capabilities) CommandResolver.resolve(message);
         }
         catch (CommandParseException e) {
             fail("climate capability init failed");
             e.printStackTrace();
         }
 
-        assertTrue(capability.getCapability().isSupported(SendHeartRate.TYPE));
+        assertTrue(capability.isSupported(SendHeartRate.TYPE));
     }
 
     @Test public void getCapabilities() {
@@ -183,5 +185,77 @@ public class CapabilitiesTest {
         byte[] waitingForBytes = Bytes.bytesFromHex("0010030029");
         byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+    }
+
+    @Test public void buildClimate() throws CommandParseException {
+        Capabilities.Builder builder = new Capabilities.Builder();
+
+        Type[] supportedTypes = new Type[] {
+                GetClimateState.TYPE,
+                ClimateState.TYPE,
+                SetClimateProfile.TYPE,
+                StartStopHvac.TYPE,
+                StartStopDefogging.TYPE,
+                StartStopDefrosting.TYPE,
+                StartStopIonizing.TYPE
+        };
+
+        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        builder.addCapability(property);
+
+        byte[] message = builder.build().getBytes();
+        assertTrue(Arrays.equals(message, Bytes.bytesFromHex("001001010009002400010203040506")));
+    }
+
+    @Test public void buildClimateAndRemoteControl() throws IllegalArgumentException {
+        Capabilities.Builder builder = new Capabilities.Builder();
+
+        Type[] climateSupportedTypes = new Type[] {
+                GetClimateState.TYPE,
+                ClimateState.TYPE,
+                SetClimateProfile.TYPE,
+                StartStopHvac.TYPE,
+                StartStopDefogging.TYPE,
+                StartStopDefrosting.TYPE,
+                StartStopIonizing.TYPE
+        };
+
+        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, climateSupportedTypes);
+        builder.addCapability(property);
+
+        Type[] remoteControlTypes = new Type[] {
+                GetControlMode.TYPE,
+                ControlMode.TYPE,
+                StartControlMode.TYPE,
+                StopControlMode.TYPE,
+                ControlCommand.TYPE
+        };
+
+        CapabilityProperty property2 = new CapabilityProperty(Identifier.REMOTE_CONTROL, remoteControlTypes);
+        builder.addCapability(property2);
+
+        byte[] message = builder.build().getBytes();
+        assertTrue(Arrays.equals(message, Bytes.bytesFromHex("00100101000900240001020304050601000700270001020304")));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void buildTypesFromDifferentCategories() {
+        Capabilities.Builder builder = new Capabilities.Builder();
+
+        Type[] supportedTypes = new Type[] {
+                GetClimateState.TYPE,
+                ClimateState.TYPE,
+                SetClimateProfile.TYPE,
+                StartStopHvac.TYPE,
+                StartStopDefogging.TYPE,
+                StartStopDefrosting.TYPE,
+                GetTrunkState.TYPE
+        };
+
+        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        builder.addCapability(property);
+
+        builder.build().getBytes();
+
     }
 }

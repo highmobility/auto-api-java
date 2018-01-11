@@ -34,7 +34,7 @@ public class RemoteControlTest {
         assertTrue(command.is(ControlMode.TYPE));
         ControlMode state = (ControlMode) command;
         assertTrue(state.getAngle() == 50);
-        assertTrue(state.getMode() == ControlMode.Mode.STARTED);
+        assertTrue(state.getMode() == com.highmobility.autoapi.property.ControlMode.STARTED);
     }
 
     @Test public void get() {

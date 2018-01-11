@@ -98,10 +98,6 @@ public class CommandWithProperties extends Command {
             bytes = Bytes.concatBytes(bytes, properties[i].getPropertyBytes());
         }
     }
-//
-//    CommandWithProperties(Type type, Builder builder) {
-//
-//    }
 
     public CommandWithProperties(byte[] bytes, boolean internal)  {
         super(bytes, internal);

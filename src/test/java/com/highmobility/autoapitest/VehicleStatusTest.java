@@ -20,6 +20,7 @@ import org.junit.Test;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
+import static com.highmobility.autoapi.property.ControlMode.STARTED;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -90,7 +91,7 @@ public class VehicleStatusTest {
         if (command == null) fail();
         if (command.is(ControlMode.TYPE) == false) fail();
         ControlMode state = (ControlMode) command;
-        assertTrue(state.getMode() == ControlMode.Mode.STARTED);
+        assertTrue(state.getMode() == STARTED);
     }
 
     Command getState(Class forClass) {
@@ -123,7 +124,7 @@ public class VehicleStatusTest {
         builder.addProperty(new CommandProperty(trunkState.build()));
 
         ControlMode.Builder controlCommand = new ControlMode.Builder();
-        controlCommand.setMode(ControlMode.Mode.STARTED);
+        controlCommand.setMode(STARTED);
         builder.addProperty(new CommandProperty(controlCommand.build()));
         return builder;
     }

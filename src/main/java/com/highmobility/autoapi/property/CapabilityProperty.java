@@ -1,7 +1,9 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.Type;
+import com.highmobility.utils.Bytes;
 
 import java.util.ArrayList;
 
@@ -9,6 +11,8 @@ import java.util.ArrayList;
  * Created by ttiganik on 14/10/2016.
  */
 public class CapabilityProperty extends Property {
+    static final byte defaultIdentifier     = 0x01;
+
     Type[] types;
 
     byte[] identifier;
@@ -57,6 +61,39 @@ public class CapabilityProperty extends Property {
         }
 
         types = builder.toArray(new Type[builder.size()]);
+    }
+
+    /**
+     *
+     * @param categoryIdentifier the 2 byte identifier of the category
+     * @param types All the types supported for the given category identifier
+     * @throws IllegalArgumentException when types are not from the same category or parameters are invalid
+     */
+    public CapabilityProperty(byte[] categoryIdentifier, Type[] types) throws IllegalArgumentException {
+        super(defaultIdentifier, getValue(categoryIdentifier, types));
+    }
+
+    /**
+     *
+     * @param categoryIdentifier the identifier of the category
+     * @param types All the types supported for the given category identifier
+     * @throws IllegalArgumentException when types are not from the same category or parameters are invalid
+     */
+    public CapabilityProperty(Identifier categoryIdentifier, Type[] types) throws IllegalArgumentException {
+        this(categoryIdentifier.getBytes(), types);
+    }
+
+    static byte[] getValue(byte[] categoryIdentifier, Type[] types) throws IllegalArgumentException {
+        byte[] bytes = new byte[2 + types.length];
+        Bytes.setBytes(bytes, categoryIdentifier, 0);
+        for (int i = 0; i < types.length; i++) {
+            Type type = types[i];
+            bytes[2 + i] = type.getType();
+            if (type.getIdentifierAndType()[0] != categoryIdentifier[0]
+                || type.getIdentifierAndType()[1] != categoryIdentifier[1]) throw new IllegalArgumentException();
+        }
+
+        return bytes;
     }
 
     byte[] getBytes() {

@@ -4,7 +4,7 @@ import com.highmobility.utils.Bytes;
 
 // used for generating type bytes, internally only.
 // will not use for public because unknown commands need support as well
-enum Identifier {
+public enum Identifier {
     FAILURE(new byte[] { 0x00, (byte)0x02 }),
     CAPABILITIES(new byte[] { 0x00, (byte)0x10 }),
     VEHICLE_STATUS(new byte[] { 0x00, (byte)0x11 }),
@@ -69,7 +69,7 @@ enum Identifier {
         this.identifier = identifier;
     }
     private byte[] identifier;
-    byte[] getBytes() {
+    public byte[] getBytes() {
         return identifier;
     }
 

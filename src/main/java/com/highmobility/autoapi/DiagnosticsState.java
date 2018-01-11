@@ -7,6 +7,7 @@ import com.highmobility.autoapi.property.WasherFluidLevel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * This message is sent when a Get Diagnostics State message is received by the car. The new status
@@ -223,7 +224,7 @@ public class DiagnosticsState extends CommandWithProperties {
         currentFuelConsumption = builder.currentFuelConsumption;
         tripFuelConsumption = builder.tripFuelConsumption;
         washerFluidLevel = builder.washerFluidLevel;
-        tireStates = builder.tireStates;
+        tireStates = builder.tireStates.toArray(new TireStateProperty[builder.tireStates.size()]);
         batteryVoltage = builder.batteryVoltage;
         adBlueLevel = builder.adBlueLevel;
         distanceDrivenSinceReset = builder.distanceDrivenSinceReset;
@@ -240,7 +241,7 @@ public class DiagnosticsState extends CommandWithProperties {
         private Float currentFuelConsumption;
         private Float tripFuelConsumption;
         private WasherFluidLevel washerFluidLevel;
-        private TireStateProperty[] tireStates = new TireStateProperty[0];
+        private List<TireStateProperty> tireStates = new ArrayList<>();
         private Float batteryVoltage;
         private Float adBlueLevel;
         private Integer distanceDrivenSinceReset;
@@ -306,7 +307,7 @@ public class DiagnosticsState extends CommandWithProperties {
         }
 
         public Builder setTireStates(TireStateProperty[] tireStates) {
-            this.tireStates = tireStates;
+            this.tireStates.addAll(Arrays.asList(tireStates));
 
             for (int i = 0; i < tireStates.length; i++) {
                 addProperty(tireStates[i]);
@@ -317,10 +318,7 @@ public class DiagnosticsState extends CommandWithProperties {
 
         public Builder addTireState(TireStateProperty tireState) {
             addProperty(tireState);
-
-            tireStates = Arrays.copyOf(tireStates, tireStates.length + 1);
-            tireStates[tireStates.length - 1] = tireState;
-
+            tireStates.add(tireState);
             return this;
         }
 

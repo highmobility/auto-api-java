@@ -8,7 +8,7 @@ public class Type {
     byte[] identifierAndType;
     Identifier identifier; // this is for debug purpose
 
-    byte[] getIdentifierAndType() {
+    public byte[] getIdentifierAndType() {
         return identifierAndType;
     }
 
