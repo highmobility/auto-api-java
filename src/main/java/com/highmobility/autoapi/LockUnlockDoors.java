@@ -9,6 +9,16 @@ import com.highmobility.autoapi.property.DoorLockProperty;
 public class LockUnlockDoors extends Command {
     public static final Type TYPE = new Type(Identifier.DOOR_LOCKS, 0x02);
 
+    DoorLockProperty.LockState lockState;
+
+    /**
+     *
+     * @return The door lock state
+     */
+    public DoorLockProperty.LockState getLockState() {
+        return lockState;
+    }
+
     public LockUnlockDoors(DoorLockProperty.LockState state) {
         super(TYPE.addByte(state.getByte()), true);
     }
@@ -16,5 +26,6 @@ public class LockUnlockDoors extends Command {
     LockUnlockDoors(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length != 4) throw new CommandParseException();
+        lockState = DoorLockProperty.LockState.fromByte(bytes[3]);
     }
 }

@@ -12,6 +12,7 @@ import com.highmobility.utils.Bytes;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.concurrent.locks.Lock;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -66,16 +67,26 @@ public class DoorLocksTest {
         assertTrue(rearLeftExists == true);
     }
 
-    @Test public void get() {
-        String waitingForBytes = "002000";
-        String commandBytes = Bytes.hexFromBytes(new GetLockState().getBytes());
-        assertTrue(waitingForBytes.equals(commandBytes));
+    @Test public void get() throws CommandParseException {
+        byte[] waitingForBytes = Bytes.bytesFromHex("002000");
+        byte[] commandBytes = new GetLockState().getBytes();
+        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+
+        Command command = CommandResolver.resolve(waitingForBytes);
+        assertTrue(command instanceof GetLockState);
     }
 
-    @Test public void lock() {
-        String waitingForBytes = "00200201";
-        String commandBytes = Bytes.hexFromBytes(new LockUnlockDoors(DoorLockProperty.LockState.LOCKED).getBytes());
-        assertTrue(waitingForBytes.equals(commandBytes));
+    @Test public void lock() throws CommandParseException {
+        byte[] waitingForBytes = Bytes.bytesFromHex("00200201");
+        byte[] commandBytes = new LockUnlockDoors(DoorLockProperty.LockState.LOCKED).getBytes();
+        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+
+        Command command = CommandResolver.resolve(waitingForBytes);
+        assertTrue(command instanceof LockUnlockDoors);
+
+        LockUnlockDoors state = (LockUnlockDoors)command;
+        assertTrue(state.getLockState() == DoorLockProperty.LockState.LOCKED);
+
     }
 
     @Test public void create() {
