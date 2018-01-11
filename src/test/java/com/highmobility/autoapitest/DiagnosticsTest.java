@@ -92,10 +92,13 @@ public class DiagnosticsTest {
 
     }
 
-    @Test public void get() {
+    @Test public void get() throws CommandParseException {
         String waitingForBytes = "003300";
         String commandBytes = Bytes.hexFromBytes(new GetDiagnosticsState().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        assertTrue(command instanceof GetDiagnosticsState);
     }
 
     @Test public void build() {

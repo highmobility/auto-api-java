@@ -38,10 +38,13 @@ public class TrunkAccessTest {
         assertTrue(state.getPosition() == TrunkPosition.OPEN);
     }
 
-    @Test public void get() {
+    @Test public void get() throws CommandParseException {
         String waitingForBytes = "002100";
         String commandBytes = Bytes.hexFromBytes(new GetTrunkState().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        assertTrue(command instanceof GetTrunkState);
     }
 
     @Test public void openClose() throws CommandParseException {
@@ -49,5 +52,12 @@ public class TrunkAccessTest {
         String commandBytes = Bytes.hexFromBytes(new OpenCloseTrunk(TrunkLockState.UNLOCKED,
                 TrunkPosition.OPEN).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        assertTrue(command instanceof OpenCloseTrunk);
+
+        OpenCloseTrunk state = (OpenCloseTrunk)command;
+        assertTrue(state.getState() == TrunkLockState.UNLOCKED);
+        assertTrue(state.getPosition() == TrunkPosition.OPEN);
     }
 }

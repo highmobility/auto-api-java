@@ -59,11 +59,14 @@ public class CommandResolver {
                 }
             }
             else if (bytesAreForIdentifier(bytes, Identifier.TRUNK_ACCESS)) {
-                if (bytesAreForType(bytes, GetTrunkState.TYPE)) {
+                if (bytesAreForType(bytes, TrunkState.TYPE)) {
+                    command = new TrunkState(bytes);
+                }
+                else if (bytesAreForType(bytes, GetTrunkState.TYPE)) {
                     command = new GetTrunkState(bytes);
                 }
-                else if (bytesAreForType(bytes, TrunkState.TYPE)) {
-                    command = new TrunkState(bytes);
+                else if (bytesAreForType(bytes, OpenCloseTrunk.TYPE)) {
+                    command = new OpenCloseTrunk(bytes);
                 }
             }
             else if (bytesAreForIdentifier(bytes, Identifier.CHARGING)) {

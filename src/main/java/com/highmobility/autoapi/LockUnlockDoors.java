@@ -21,6 +21,7 @@ public class LockUnlockDoors extends Command {
 
     public LockUnlockDoors(DoorLockProperty.LockState state) {
         super(TYPE.addByte(state.getByte()), true);
+        this.lockState = state;
     }
 
     LockUnlockDoors(byte[] bytes) throws CommandParseException {

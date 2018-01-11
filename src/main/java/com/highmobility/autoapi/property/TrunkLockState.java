@@ -6,6 +6,8 @@ public enum TrunkLockState implements HMProperty {
     UNLOCKED((byte) 0x00),
     LOCKED((byte) 0x01);
 
+    public static final byte defaultIdentifier = 0x01;
+
     public static TrunkLockState fromByte(byte value) throws CommandParseException {
         TrunkLockState[] allValues = TrunkLockState.values();
 
@@ -30,7 +32,7 @@ public enum TrunkLockState implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x01;
+        return defaultIdentifier;
     }
 
     @Override public int getPropertyLength() {

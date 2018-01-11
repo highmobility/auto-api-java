@@ -30,6 +30,8 @@ public class GetCapability extends Command {
 
     public GetCapability(Type type) {
         super(getBytes(type), true);
+        this.category = type.identifier;
+        this.categoryBytes = this.category.getBytes();
     }
 
     static byte[] getBytes(Type type) {

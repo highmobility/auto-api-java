@@ -6,6 +6,8 @@ public enum TrunkPosition implements HMProperty {
     CLOSED((byte) 0x00),
     OPEN((byte) 0x01);
 
+    public static final byte defaultIdentifier = 0x02;
+
     public static TrunkPosition fromByte(byte value) throws CommandParseException {
         TrunkPosition[] allValues = TrunkPosition.values();
 
@@ -30,7 +32,7 @@ public enum TrunkPosition implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x02;
+        return defaultIdentifier;
     }
 
     @Override public int getPropertyLength() {
