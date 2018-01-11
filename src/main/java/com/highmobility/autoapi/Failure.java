@@ -1,5 +1,6 @@
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.FailureReason;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -9,41 +10,8 @@ import com.highmobility.autoapi.property.Property;
 public class Failure extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FAILURE, 0x01);
 
-    public enum Reason {
-        UNSUPPORTED_CAPABILITY((byte) 0x00),
-        UNAUTHORIZED((byte) 0x01),
-        INCORRECT_STATE((byte) 0x02),
-        EXECUTION_TIMEOUT((byte) 0x03),
-        VEHICLE_ASLEEP((byte) 0x04),
-        INVALID_COMMAND((byte) 0x05);
-
-        public byte getByte() {
-            return reasonByte;
-        }
-
-        public static Reason fromByte(byte reasonByte) throws CommandParseException {
-            Reason[] allValues = Reason.values();
-
-            for (int i = 0; i < allValues.length; i++) {
-                Reason reason = allValues[i];
-
-                if (reason.getByte() == reasonByte) {
-                    return reason;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        Reason(byte reason) {
-            this.reasonByte = reason;
-        }
-
-        private byte reasonByte;
-    }
-
     private Type failedType;
-    private Reason failureReason;
+    private FailureReason failureReason;
 
     /**
      * @return The type of the command that failed. Do not mistake this for this(Failure) command's
@@ -56,7 +24,7 @@ public class Failure extends CommandWithProperties {
     /**
      * @return The failure reason
      */
-    public Reason getFailureReason() {
+    public FailureReason getFailureReason() {
         return failureReason;
     }
 
@@ -73,9 +41,40 @@ public class Failure extends CommandWithProperties {
                     break;
                 case 0x02:
                     // failure reason
-                    failureReason = Reason.fromByte(property.getValueByte());
+                    failureReason = FailureReason.fromByte(property.getValueByte());
                     break;
             }
+        }
+    }
+
+    private Failure(Builder builder) {
+        super(TYPE, builder.getProperties());
+        failureReason = builder.failureReason;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private FailureReason failureReason;
+        private Type failedType;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        public Builder setFailedType(Type type) {
+            this.failedType = type;
+            addProperty(new Property((byte) 0x01, type.getIdentifierAndType()));
+            return this;
+        }
+
+        public Builder setFailureReason(FailureReason failureReason) {
+            this.failureReason = failureReason;
+            addProperty(failureReason);
+            return this;
+        }
+
+
+        public Failure build() {
+            return new Failure(this);
         }
     }
 }
