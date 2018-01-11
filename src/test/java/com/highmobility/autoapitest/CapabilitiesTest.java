@@ -175,16 +175,24 @@ public class CapabilitiesTest {
         assertTrue(capability.isSupported(SendHeartRate.TYPE));
     }
 
-    @Test public void getCapabilities() {
+    @Test public void getCapabilities() throws CommandParseException {
         byte[] waitingForBytes = Bytes.bytesFromHex("001000");
         byte[] commandBytes = new GetCapabilities().getBytes();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+
+        Command command = CommandResolver.resolve(waitingForBytes);
+        assertTrue(command instanceof GetCapabilities);
     }
 
-    @Test public void getCapability() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("0010030029");
+    @Test public void getCapability() throws CommandParseException {
+        byte[] waitingForBytes = Bytes.bytesFromHex("0010020029");
         byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+
+        Command command = CommandResolver.resolve(waitingForBytes);
+        assertTrue(command instanceof GetCapability);
+        GetCapability get = (GetCapability)command;
+        assertTrue(get.getCapabilityIdentifier() == Identifier.HEART_RATE);
     }
 
     @Test public void buildClimate() throws CommandParseException {
@@ -253,9 +261,8 @@ public class CapabilitiesTest {
         };
 
         CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+
         builder.addCapability(property);
-
         builder.build().getBytes();
-
     }
 }

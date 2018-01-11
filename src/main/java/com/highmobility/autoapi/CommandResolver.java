@@ -55,7 +55,7 @@ public class CommandResolver {
                     command = new Capabilities(bytes);
                 }
                 else if (bytesAreForType(bytes, GetCapability.TYPE)) {
-                    command = new GetCapabilities(bytes);
+                    command = new GetCapability(bytes);
                 }
             }
             else if (bytesAreForIdentifier(bytes, Identifier.TRUNK_ACCESS)) {

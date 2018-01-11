@@ -71,10 +71,13 @@ public class VehicleStatusTest {
         assertTrue(vehicleStatus.getNumberOfSeats() == 5);
     }
 
-    @Test public void get() {
-        String waitingForBytes = "001100";
-        String commandBytes = Bytes.hexFromBytes(new GetVehicleStatus().getBytes());
-        assertTrue(waitingForBytes.equals(commandBytes));
+    @Test public void get() throws CommandParseException {
+        byte[] bytes = Bytes.bytesFromHex("001100");
+        byte[] commandBytes = new GetVehicleStatus().getBytes();
+        assertTrue(Arrays.equals(bytes, commandBytes));
+
+        Command command = CommandResolver.resolve(bytes);
+        assertTrue(command instanceof GetVehicleStatus);
     }
 
     @Test public void trunkState() {
