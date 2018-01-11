@@ -1,10 +1,12 @@
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.HMProperty;
+import com.highmobility.autoapi.property.IntProperty;
 import com.highmobility.autoapi.property.Property;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * This message is sent when a Get Diagnostics State message is received by the car. The new status
@@ -13,44 +15,20 @@ import java.util.Set;
 public class DiagnosticsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.DIAGNOSTICS, 0x01);
 
-    public enum WasherFluidLevel {
-        LOW((byte)0x00),
-        FULL((byte)0x01);
-
-        public static WasherFluidLevel fromByte(byte value) throws CommandParseException {
-            WasherFluidLevel[] values = WasherFluidLevel.values();
-
-            for (int i = 0; i < values.length; i++) {
-                WasherFluidLevel capability = values[i];
-                if (capability.getByte() == value) {
-                    return capability;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte capabilityByte;
-
-        WasherFluidLevel(byte capabilityByte) {
-            this.capabilityByte = capabilityByte;
-        }
-
-        public byte getByte() {
-            return capabilityByte;
-        }
-    }
-
     Integer mileage;
     Integer oilTemperature;
     Integer speed;
     Integer rpm;
-    Integer range;
     Float fuelLevel;
+    Integer range;
     Float currentFuelConsumption;
     Float tripFuelConsumption;
     WasherFluidLevel washerFluidLevel;
-    Set<TireState> tireStates;
+    TireStateProperty[] tireStates;
+    Float batteryVoltage;
+    Float adBlueLevel;
+    Integer distanceDrivenSinceReset;
+    Integer distanceDrivenSinceEngineStart;
 
     /**
      *
@@ -76,13 +54,6 @@ public class DiagnosticsState extends CommandWithProperties {
         return speed;
     }
 
-    /**
-     *
-     * @return The estimated range
-     */
-    public Integer getRange() {
-        return range;
-    }
 
     /**
      *
@@ -98,6 +69,14 @@ public class DiagnosticsState extends CommandWithProperties {
      */
     public Float getFuelLevel() {
         return fuelLevel;
+    }
+
+    /**
+     *
+     * @return The estimated range
+     */
+    public Integer getRange() {
+        return range;
     }
 
     /**
@@ -128,7 +107,7 @@ public class DiagnosticsState extends CommandWithProperties {
      *
      * @return The list of tire states that are available.
      */
-    public Set<TireState> getTireStates() {
+    public TireStateProperty[] getTireStates() {
         return tireStates;
     }
 
@@ -137,16 +116,49 @@ public class DiagnosticsState extends CommandWithProperties {
      * @param location The location of the tire.
      * @return The tire state.
      */
-    public TireState getTireState(TireState.Location location) {
-        for (TireState state: getTireStates()) {
+    public TireStateProperty getTireState(TireStateProperty.Location location) {
+        for (TireStateProperty state: getTireStates()) {
             if (state.getLocation() == location) return state;
         }
 
         return null;
     }
 
+    /**
+     *
+     * @return The battery voltage
+     */
+    public Float getBatteryVoltage() {
+        return batteryVoltage;
+    }
+
+    /**
+     *
+     * @return AdBlue level in liters
+     */
+    public Float getAdBlueLevel() {
+        return adBlueLevel;
+    }
+
+    /**
+     *
+     * @return The distance driven in km since reset
+     */
+    public Integer getDistanceDrivenSinceReset() {
+        return distanceDrivenSinceReset;
+    }
+
+    /**
+     *
+     * @return The distance driven in km since engine start
+     */
+    public Integer getDistanceDrivenSinceEngineStart() {
+        return distanceDrivenSinceEngineStart;
+    }
+
     public DiagnosticsState(byte[] bytes) throws CommandParseException {
         super(bytes);
+        ArrayList<TireStateProperty> tireStatesBuilder = new ArrayList<>();
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
@@ -179,13 +191,210 @@ public class DiagnosticsState extends CommandWithProperties {
                     washerFluidLevel = WasherFluidLevel.fromByte(property.getValueByte());
                     break;
                 case 0x0a:
-                    if (tireStates == null) tireStates = new HashSet<>();
-                    TireState state = new TireState(property.getValueBytes(), 0);
-                    tireStates.add(state);
+                    TireStateProperty state = new TireStateProperty(property.getValueBytes(), 0);
+                    tireStatesBuilder.add(state);
+                    break;
+                case 0x0b:
+                    batteryVoltage = Property.getFloat(property.getValueBytes());
+                    break;
+                case 0x0c:
+                    adBlueLevel = Property.getFloat(property.getValueBytes());
+                    break;
+                case 0x0d:
+                    distanceDrivenSinceReset = Property.getUnsignedInt(property.getValueBytes());
+                    break;
+                case 0x0e:
+                    distanceDrivenSinceEngineStart = Property.getUnsignedInt(property.getValueBytes());
                     break;
             }
         }
 
-        tireStates = Collections.unmodifiableSet(tireStates);
+        tireStates = tireStatesBuilder.toArray(new TireStateProperty[tireStatesBuilder.size()]);
+    }
+
+    public enum WasherFluidLevel implements HMProperty {
+        LOW((byte)0x00),
+        FULL((byte)0x01);
+
+        public static WasherFluidLevel fromByte(byte value) throws CommandParseException {
+            WasherFluidLevel[] values = WasherFluidLevel.values();
+
+            for (int i = 0; i < values.length; i++) {
+                WasherFluidLevel capability = values[i];
+                if (capability.getByte() == value) {
+                    return capability;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
+        private byte value;
+        private Byte identifier;
+
+        WasherFluidLevel(byte value) {
+            this.value = value;
+        }
+
+        public void setIdentifier(Byte identifier) {
+            this.identifier = identifier;
+        }
+
+        public byte getByte() {
+            return value;
+        }
+
+        @Override public byte getPropertyIdentifier() {
+            return identifier == null ? 0x01 : identifier;
+        }
+
+        @Override public int getPropertyLength() {
+            return 1;
+        }
+
+        @Override public byte[] getPropertyBytes() {
+            return Property.getPropertyBytes(getPropertyIdentifier(), getPropertyLength(), value);
+        }
+    }
+
+    private DiagnosticsState(Builder builder) {
+        super(TYPE, builder.getProperties());
+        mileage = builder.mileage;
+        oilTemperature = builder.oilTemperature;
+        speed = builder.speed;
+        rpm = builder.rpm;
+        range = builder.range;
+        fuelLevel = builder.fuelLevel;
+        currentFuelConsumption = builder.currentFuelConsumption;
+        tripFuelConsumption = builder.tripFuelConsumption;
+        washerFluidLevel = builder.washerFluidLevel;
+        tireStates = builder.tireStates;
+        batteryVoltage = builder.batteryVoltage;
+        adBlueLevel = builder.adBlueLevel;
+        distanceDrivenSinceReset = builder.distanceDrivenSinceReset;
+        distanceDrivenSinceEngineStart = builder.distanceDrivenSinceEngineStart;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private Integer mileage;
+        private Integer oilTemperature;
+        private Integer speed;
+        private Integer rpm;
+        private Float fuelLevel;
+        private Integer range;
+        private Float currentFuelConsumption;
+        private Float tripFuelConsumption;
+        private WasherFluidLevel washerFluidLevel;
+        private TireStateProperty[] tireStates = new TireStateProperty[0];
+        private Float batteryVoltage;
+        private Float adBlueLevel;
+        private Integer distanceDrivenSinceReset;
+        private Integer distanceDrivenSinceEngineStart;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        public Builder setMileage(Integer mileage) {
+            this.mileage = mileage;
+            addProperty(new IntProperty((byte) 0x01, mileage, 3));
+            return this;
+        }
+
+        public Builder setOilTemperature(Integer oilTemperature) {
+            this.oilTemperature = oilTemperature;
+            addProperty(new IntProperty((byte) 0x02, oilTemperature, 2));
+            return this;
+        }
+
+        public Builder setSpeed(Integer speed) {
+            this.speed = speed;
+            addProperty(new IntProperty((byte) 0x03, speed, 2));
+            return this;
+        }
+
+        public Builder setRpm(Integer rpm) {
+            this.rpm = rpm;
+            addProperty(new IntProperty((byte) 0x04, rpm, 2));
+            return this;
+        }
+
+        public Builder setFuelLevel(Float fuelLevel) {
+            this.fuelLevel = fuelLevel;
+            addProperty(new IntProperty((byte) 0x05, (int)(fuelLevel * 100), 1));
+            return this;
+        }
+
+        public Builder setRange(Integer range) {
+            this.range = range;
+            addProperty(new IntProperty((byte) 0x06, range, 2));
+            return this;
+        }
+
+        public Builder setCurrentFuelConsumption(Float currentFuelConsumption) {
+            this.currentFuelConsumption = currentFuelConsumption;
+            addProperty(new FloatProperty((byte) 0x07, currentFuelConsumption));
+            return this;
+        }
+
+        public Builder setTripFuelConsumption(Float tripFuelConsumption) {
+            this.tripFuelConsumption = tripFuelConsumption;
+            addProperty(new FloatProperty((byte) 0x08, tripFuelConsumption));
+            return this;
+        }
+
+        public Builder setWasherFluidLevel(WasherFluidLevel washerFluidLevel) {
+            this.washerFluidLevel = washerFluidLevel;
+            washerFluidLevel.setIdentifier((byte) 0x09);
+            addProperty(washerFluidLevel);
+            return this;
+        }
+
+        public Builder setTireStates(TireStateProperty[] tireStates) {
+            this.tireStates = tireStates;
+
+            for (int i = 0; i < tireStates.length; i++) {
+                addProperty(tireStates[i]);
+            }
+
+            return this;
+        }
+
+        public Builder addTireState(TireStateProperty tireState) {
+            addProperty(tireState);
+
+            tireStates = Arrays.copyOf(tireStates, tireStates.length + 1);
+            tireStates[tireStates.length - 1] = tireState;
+
+            return this;
+        }
+
+        public Builder setBatteryVoltage(Float batteryVoltage) {
+            this.batteryVoltage = batteryVoltage;
+            addProperty(new FloatProperty((byte) 0x0b, batteryVoltage));
+            return this;
+        }
+
+        public Builder setAdBlueLevel(Float adBlueLevel) {
+            this.adBlueLevel = adBlueLevel;
+            addProperty(new FloatProperty((byte) 0x0c, adBlueLevel));
+            return this;
+        }
+
+        public Builder setDistanceDrivenSinceReset(Integer distanceDrivenSinceReset) {
+            this.distanceDrivenSinceReset = distanceDrivenSinceReset;
+            addProperty(new IntProperty((byte) 0x0d, distanceDrivenSinceReset, 2));
+            return this;
+        }
+
+        public Builder setDistanceDrivenSinceEngineStart(Integer distanceDrivenSinceEngineStart) {
+            this.distanceDrivenSinceEngineStart = distanceDrivenSinceEngineStart;
+            addProperty(new IntProperty((byte) 0x0e, distanceDrivenSinceEngineStart, 2));
+            return this;
+        }
+
+        public DiagnosticsState build() {
+            return new DiagnosticsState(this);
+        }
     }
 }

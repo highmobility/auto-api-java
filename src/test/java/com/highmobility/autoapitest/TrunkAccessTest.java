@@ -3,11 +3,8 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.DiagnosticsState;
-import com.highmobility.autoapi.GetDiagnosticsState;
 import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.OpenCloseTrunk;
-import com.highmobility.autoapi.TireState;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.utils.Bytes;
 

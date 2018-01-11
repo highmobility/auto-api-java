@@ -4,6 +4,7 @@ import com.highmobility.autoapi.property.DoorLockProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * This is an evented message that is sent from the car every time the lock state changes. This
@@ -87,7 +88,7 @@ public class LockState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private DoorLockProperty[] states;
+        private DoorLockProperty[] states = new DoorLockProperty[0];
 
         public Builder() {
             super(TYPE);
@@ -102,18 +103,8 @@ public class LockState extends CommandWithProperties {
         }
 
         public Builder addDoorState(DoorLockProperty state) {
-            if (states == null) {
-                states = new DoorLockProperty[1];
-            }
-            else {
-                DoorLockProperty[] newStates = new DoorLockProperty[states.length + 1];
-                for (int i = 0; i < states.length; i++) {
-                    newStates[i] = states[i];
-                }
-                states = newStates;
-            }
-
             addProperty(state);
+            states = Arrays.copyOf(states, states.length + 1);
             states[states.length - 1] = state;
             return this;
         }
