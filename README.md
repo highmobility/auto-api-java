@@ -27,7 +27,7 @@ else if (command instanceof Capabilities) {
 ```java
 LockState state = vehicleStatus.getState(LockState.TYPE);
 if (state != null) {
-
+    ...
 }
 ```
 
