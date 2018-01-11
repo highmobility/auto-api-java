@@ -1,6 +1,6 @@
 # What is this repository for? #
 
-This repository is for building the jar that has the parsers for Auto API.
+This repository contains the java parsers for Auto API.
 
 # How to use create/parse commands #
 
