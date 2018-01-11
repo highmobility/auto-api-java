@@ -61,7 +61,7 @@ if (command instanceof Failure) {
 }
 ```
 
-## Builders for bigger commands ##
+## Builders for bigger commands(states) ##
 
 Builder pattern is used to build commands with more properties, for instance Vehicle status:
 
