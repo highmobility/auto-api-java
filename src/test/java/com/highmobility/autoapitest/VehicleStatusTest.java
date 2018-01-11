@@ -10,6 +10,8 @@ import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.IntProperty;
 import com.highmobility.autoapi.property.PowerTrain;
+import com.highmobility.autoapi.property.TrunkLockState;
+import com.highmobility.autoapi.property.TrunkPosition;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Before;
@@ -79,8 +81,8 @@ public class VehicleStatusTest {
         if (command == null) fail();
         if (command.is(TrunkState.TYPE) == false) fail();
         TrunkState trunkState = (TrunkState) command;
-        assertTrue(trunkState.getLockState() == TrunkState.LockState.UNLOCKED);
-        assertTrue(trunkState.getPosition() == TrunkState.Position.OPEN);
+        assertTrue(trunkState.getLockState() == TrunkLockState.UNLOCKED);
+        assertTrue(trunkState.getPosition() == TrunkPosition.OPEN);
     }
 
     @Test public void controlMode() {
@@ -116,8 +118,8 @@ public class VehicleStatusTest {
         builder.setNumberOfDoors(5).setNumberOfSeats(5);
 
         TrunkState.Builder trunkState = new TrunkState.Builder();
-        trunkState.setLockState(TrunkState.LockState.UNLOCKED);
-        trunkState.setPosition(TrunkState.Position.OPEN);
+        trunkState.setLockState(TrunkLockState.UNLOCKED);
+        trunkState.setPosition(TrunkPosition.OPEN);
         builder.addProperty(new CommandProperty(trunkState.build()));
 
         ControlMode.Builder controlCommand = new ControlMode.Builder();

@@ -6,6 +6,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
 import com.highmobility.autoapi.TireStateProperty;
+import com.highmobility.autoapi.property.WasherFluidLevel;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class DiagnosticsTest {
         assertTrue(state.getFuelLevel() == .9f);
         assertTrue(state.getCurrentFuelConsumption() == 8.75f);
         assertTrue(state.getTripFuelConsumption() == 6.2f);
-        assertTrue(state.getWasherFluidLevel() == DiagnosticsState.WasherFluidLevel.FULL);
+        assertTrue(state.getWasherFluidLevel() == WasherFluidLevel.FULL);
 
         assertTrue(state.getTireStates().length == 4);
         boolean leftExists = false, rightExist = false, rearLeftExists = false, rearRightExists = false;
@@ -107,7 +108,7 @@ public class DiagnosticsTest {
         builder.setRange(265);
         builder.setCurrentFuelConsumption(8.75f);
         builder.setTripFuelConsumption(6.2f);
-        builder.setWasherFluidLevel(DiagnosticsState.WasherFluidLevel.FULL);
+        builder.setWasherFluidLevel(WasherFluidLevel.FULL);
 
         builder.addTireState(new TireStateProperty(
                 TireStateProperty.Location.FRONT_LEFT, 2.31f, 40f, 746

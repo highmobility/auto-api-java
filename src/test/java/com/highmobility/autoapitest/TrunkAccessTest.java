@@ -6,6 +6,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.OpenCloseTrunk;
 import com.highmobility.autoapi.TrunkState;
+import com.highmobility.autoapi.property.TrunkLockState;
+import com.highmobility.autoapi.property.TrunkPosition;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -32,8 +34,8 @@ public class TrunkAccessTest {
 
         assertTrue(command.getClass() == TrunkState.class);
         TrunkState state = (TrunkState) command;
-        assertTrue(state.getLockState() == TrunkState.LockState.UNLOCKED);
-        assertTrue(state.getPosition() == TrunkState.Position.OPEN);
+        assertTrue(state.getLockState() == TrunkLockState.UNLOCKED);
+        assertTrue(state.getPosition() == TrunkPosition.OPEN);
     }
 
     @Test public void get() {
@@ -44,8 +46,8 @@ public class TrunkAccessTest {
 
     @Test public void openClose() throws CommandParseException {
         String waitingForBytes = "0021020100010002000101";
-        String commandBytes = Bytes.hexFromBytes(new OpenCloseTrunk(TrunkState.LockState.UNLOCKED,
-                TrunkState.Position.OPEN).getBytes());
+        String commandBytes = Bytes.hexFromBytes(new OpenCloseTrunk(TrunkLockState.UNLOCKED,
+                TrunkPosition.OPEN).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 }

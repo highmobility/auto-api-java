@@ -1,7 +1,8 @@
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.TrunkLockState;
+import com.highmobility.autoapi.property.TrunkPosition;
 
 /**
  * This is an evented message that is sent from the car every time the trunk state changes. This
@@ -11,20 +12,20 @@ import com.highmobility.autoapi.property.Property;
 public class TrunkState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x01);
 
-    LockState lockState;
-    Position position;
+    TrunkLockState lockState;
+    TrunkPosition position;
 
     /**
      * @return the current lock status of the trunk
      */
-    public LockState getLockState() {
+    public TrunkLockState getLockState() {
         return lockState;
     }
 
     /**
      * @return the current position of the trunk
      */
-    public Position getPosition() {
+    public TrunkPosition getPosition() {
         return position;
     }
 
@@ -34,10 +35,10 @@ public class TrunkState extends CommandWithProperties {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
-                    lockState = LockState.fromByte(property.getValueByte());
+                    lockState = TrunkLockState.fromByte(property.getValueByte());
                     break;
                 case 0x02:
-                    position = Position.fromByte(property.getValueByte());
+                    position = TrunkPosition.fromByte(property.getValueByte());
                     break;
             }
         }
@@ -50,20 +51,20 @@ public class TrunkState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private LockState lockState;
-        private Position position;
+        private TrunkLockState lockState;
+        private TrunkPosition position;
 
         public Builder() {
             super(TYPE);
         }
 
-        public Builder setLockState(LockState lockState) {
+        public Builder setLockState(TrunkLockState lockState) {
             this.lockState = lockState;
             addProperty(lockState);
             return this;
         }
 
-        public Builder setPosition(Position position) {
+        public Builder setPosition(TrunkPosition position) {
             this.position = position;
             addProperty(position);
             return this;
@@ -71,86 +72,6 @@ public class TrunkState extends CommandWithProperties {
 
         public TrunkState build() {
             return new TrunkState(this);
-        }
-    }
-
-    public enum LockState implements HMProperty {
-        UNLOCKED((byte) 0x00),
-        LOCKED((byte) 0x01);
-
-        public static LockState fromByte(byte value) throws CommandParseException {
-            LockState[] allValues = LockState.values();
-
-            for (int i = 0; i < allValues.length; i++) {
-                LockState value1 = allValues[i];
-                if (value1.getByte() == value) {
-                    return value1;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        LockState(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-
-        @Override public byte getPropertyIdentifier() {
-            return 0x01;
-        }
-
-        @Override public int getPropertyLength() {
-            return 1;
-        }
-
-        @Override public byte[] getPropertyBytes() {
-            return Property.getPropertyBytes(getPropertyIdentifier(), getPropertyLength(), value);
-        }
-    }
-
-    public enum Position implements HMProperty {
-        CLOSED((byte) 0x00),
-        OPEN((byte) 0x01);
-
-        public static Position fromByte(byte value) throws CommandParseException {
-            Position[] allValues = Position.values();
-
-            for (int i = 0; i < allValues.length; i++) {
-                Position value1 = allValues[i];
-                if (value1.getByte() == value) {
-                    return value1;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Position(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-
-        @Override public byte getPropertyIdentifier() {
-            return 0x02;
-        }
-
-        @Override public int getPropertyLength() {
-            return 1;
-        }
-
-        @Override public byte[] getPropertyBytes() {
-            return Property.getPropertyBytes(getPropertyIdentifier(), getPropertyLength(), value);
         }
     }
 }

@@ -2,6 +2,8 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ByteProperty;
 import com.highmobility.autoapi.property.HMProperty;
+import com.highmobility.autoapi.property.TrunkLockState;
+import com.highmobility.autoapi.property.TrunkPosition;
 
 import java.util.ArrayList;
 
@@ -20,11 +22,11 @@ public class OpenCloseTrunk extends CommandWithProperties {
      * @return The command bytes
      * @throws IllegalArgumentException If all arguments are null
      */
-    public OpenCloseTrunk(TrunkState.LockState state, TrunkState.Position position) {
+    public OpenCloseTrunk(TrunkLockState state, TrunkPosition position) {
          super(TYPE, getProperties(state, position));
     }
 
-    static HMProperty[] getProperties(TrunkState.LockState state, TrunkState.Position position) {
+    static HMProperty[] getProperties(TrunkLockState state, TrunkPosition position) {
         ArrayList<HMProperty> properties = new ArrayList<>();
 
         if (state != null) {
