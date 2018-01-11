@@ -7,7 +7,7 @@ This repository is for building the jar that has the parsers for Auto API.
 Find the command name in auto api doc, then locate a class in com.highmobility.autoapi package with
 the same name. Every command has a designated class and it is used for all of the common use cases:
 
-1. Parse the received command's bytes
+## Parse the received command's bytes ##
 ```java
 byte[] bytes = ...
 Command command = CommandResolver.resolve(bytes);
@@ -23,7 +23,7 @@ else if (command instanceof Capabilities) {
 }
 ```
 
-2. Get a specific state from the vehicle status
+## Get a specific state from the vehicle status ##
 ```java
 LockState state = vehicleStatus.getState(LockState.TYPE);
 if (state != null) {
@@ -31,26 +31,26 @@ if (state != null) {
 }
 ```
 
-3. Inspect whether the capability is supported for the vehicle
+## Inspect whether the capability is supported for the vehicle ##
 ```java
 if (capabilities.isSupported(LockState.TYPE)) {
     ...
 }
 ```
 
-4. send a command
+## send a command ##
 ```java
 byte[] commandBytes = new LockUnlockDoors(DoorLockProperty.LockState.LOCKED).getBytes();
 sendCommand(commandBytes)
 ```
 
-5. get a capability
+## get a capability ##
 ```java
 byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
 sendCommand(commandBytes)
 ```
 
-6. check for the failed command's type
+## check for the failed command's type ##
 ```java
 Failure failure;
 if (failure.getFailedType.equals(LockUnlockDoors.TYPE) {
@@ -109,13 +109,14 @@ byte[] command = builder.build().getBytes();
 ```
 
 Currently supported commands with the builder pattern:
-- [x] vehicleStatus
-- [x] doorLocks
-- [x] diagnostics
-- [x] failure
-- [x] capabilities
-- [x] trunk state
-- [x] remote control
+
+* vehicleStatus
+* doorLocks
+* diagnostics
+* failure
+* capabilities
+* trunk state
+* remote control
 
 # Dependencies #
 
