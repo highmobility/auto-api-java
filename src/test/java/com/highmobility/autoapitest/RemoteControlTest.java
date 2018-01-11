@@ -37,27 +37,43 @@ public class RemoteControlTest {
         assertTrue(state.getMode() == com.highmobility.autoapi.property.ControlMode.STARTED);
     }
 
-    @Test public void get() {
+    @Test public void get() throws CommandParseException {
         String waitingForBytes = "002700";
         String commandBytes = Bytes.hexFromBytes(new GetControlMode().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        assertTrue(command instanceof GetControlMode);
     }
 
-    @Test public void startControlMode() {
+    @Test public void startControlMode() throws CommandParseException {
         String waitingForBytes = "002702";
         String commandBytes = Bytes.hexFromBytes(new StartControlMode().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        assertTrue(command instanceof StartControlMode);
     }
 
-    @Test public void stopControlMode() {
+    @Test public void stopControlMode() throws CommandParseException {
         String waitingForBytes = "002703";
         String commandBytes = Bytes.hexFromBytes(new StopControlMode().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        assertTrue(command instanceof StopControlMode);
     }
 
-    @Test public void controlCommand() {
+    @Test public void controlCommand() throws CommandParseException {
         String waitingForBytes = "002704010001030200020032";
         String commandBytes = Bytes.hexFromBytes(new ControlCommand(3, 50).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        assertTrue(command instanceof ControlCommand);
+        ControlCommand state = (ControlCommand)command;
+
+        assertTrue(state.getAngle() == 50);
+        assertTrue(state.getSpeed() == 3);
     }
 }
