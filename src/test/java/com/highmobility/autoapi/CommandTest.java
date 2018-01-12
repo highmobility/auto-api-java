@@ -432,5 +432,4 @@ public class CommandTest {
         String commandBytes = Bytes.hexFromBytes(Command.KeyfobPosition.getKeyfobPosition());
         assertTrue(waitingForBytes.equalsIgnoreCase(commandBytes));
     }
-
 }

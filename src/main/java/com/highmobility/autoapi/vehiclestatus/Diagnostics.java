@@ -3,6 +3,7 @@ package com.highmobility.autoapi.vehiclestatus;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 
+import com.highmobility.autoapi.Property;
 import com.highmobility.autoapi.incoming.DiagnosticsState;
 import com.highmobility.utils.Bytes;
 
@@ -82,10 +83,10 @@ public class Diagnostics extends FeatureState {
         this.fuelLevel = fuelLevel;
         this.washerFluidLevel = washerFluidLevel;
 
-        byte[] mileageBytes = Bytes.intToBytes(mileage, 3);
-        byte[] oilTemperatureBytes = Bytes.intToBytes(oilTemperature, 2);
-        byte[] speedBytes = Bytes.intToBytes(speed, 2);
-        byte[] engineRpmBytes = Bytes.intToBytes(rpm, 2);
+        byte[] mileageBytes = Property.intToBytes(mileage, 3);
+        byte[] oilTemperatureBytes = Property.intToBytes(oilTemperature, 2);
+        byte[] speedBytes = Property.intToBytes(speed, 2);
+        byte[] engineRpmBytes = Property.intToBytes(rpm, 2);
 
         bytes = getBytesWithMoreThanOneByteLongFields(6, 5);
 
@@ -103,10 +104,10 @@ public class Diagnostics extends FeatureState {
 
         if (bytes.length < 14) throw new CommandParseException();
 
-        mileage = Bytes.getInt(Arrays.copyOfRange(bytes, 3, 3 + 3));
-        oilTemperature = Bytes.getInt(Arrays.copyOfRange(bytes, 6, 6 + 2));
-        speed = Bytes.getInt(Arrays.copyOfRange(bytes, 8, 8 + 2));
-        rpm = Bytes.getInt(Arrays.copyOfRange(bytes, 10, 10 + 2));
+        mileage = Property.getUnsignedInt(Arrays.copyOfRange(bytes, 3, 3 + 3));
+        oilTemperature = Property.getUnsignedInt(Arrays.copyOfRange(bytes, 6, 6 + 2));
+        speed = Property.getUnsignedInt(Arrays.copyOfRange(bytes, 8, 8 + 2));
+        rpm = Property.getUnsignedInt(Arrays.copyOfRange(bytes, 10, 10 + 2));
         fuelLevel = (int)bytes[12] / 100f;
         if (bytes[13] == 0x00) washerFluidLevel = DiagnosticsState.WasherFluidLevel.LOW;
         else washerFluidLevel = DiagnosticsState.WasherFluidLevel.FULL;

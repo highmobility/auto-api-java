@@ -1,6 +1,7 @@
 package com.highmobility.autoapi.incoming;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.Property;
 import com.highmobility.utils.Bytes;
 
 import java.util.Arrays;
@@ -138,10 +139,10 @@ public class DiagnosticsState extends IncomingCommand {
 
         if (bytes.length < 13) throw new CommandParseException();
 
-        mileage = Bytes.getInt(Arrays.copyOfRange(bytes, 3, 3 + 3));
-        oilTemperature = Bytes.getInt(Arrays.copyOfRange(bytes, 6, 6 + 2));
-        speed = Bytes.getInt(Arrays.copyOfRange(bytes, 8, 8 + 2));
-        rpm = Bytes.getInt(Arrays.copyOfRange(bytes, 10, 10 + 2));
+        mileage = Property.getUnsignedInt(Arrays.copyOfRange(bytes, 3, 3 + 3));
+        oilTemperature = Property.getUnsignedInt(Arrays.copyOfRange(bytes, 6, 6 + 2));
+        speed = Property.getUnsignedInt(Arrays.copyOfRange(bytes, 8, 8 + 2));
+        rpm = Property.getUnsignedInt(Arrays.copyOfRange(bytes, 10, 10 + 2));
         fuelLevel = (int)bytes[12] / 100f;
         if (bytes[13] == 0x00) washerFluidLevel = WasherFluidLevel.LOW;
         else washerFluidLevel = WasherFluidLevel.FULL;
@@ -151,7 +152,7 @@ public class DiagnosticsState extends IncomingCommand {
 
         for (int i = 0; i < numberOfTires; i++) {
             byte location = bytes[position];
-            Float pressure = Bytes.getFloat(Arrays.copyOfRange(bytes, position + 1, position + 1 + 4));
+            Float pressure = Property.getFloat(Arrays.copyOfRange(bytes, position + 1, position + 1 + 4));
 
             if (location == 0x00) {
                 frontLeftTirePressure = pressure;

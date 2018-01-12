@@ -1,5 +1,6 @@
 package com.highmobility.autoapi.incoming;
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.Property;
 import com.highmobility.utils.Bytes;
 
 import java.io.UnsupportedEncodingException;
@@ -92,11 +93,11 @@ public class ParkingTicket extends IncomingCommand {
         int ticketIdSize = bytes[position + operatorNameSize];
         position = position + operatorNameSize + 1;
 
-        operatorTicketId = Bytes.getInt(Arrays.copyOfRange(bytes, position, position + ticketIdSize));
+        operatorTicketId = Property.getUnsignedInt(Arrays.copyOfRange(bytes, position, position + ticketIdSize));
         position = position + ticketIdSize;
 
-        ticketStart = Bytes.getDate(Arrays.copyOfRange(bytes, position, position + 5));
+        ticketStart = Property.getDate(Arrays.copyOfRange(bytes, position, position + 5));
         position = position + 5;
-        ticketEnd = Bytes.getDate(Arrays.copyOfRange(bytes, position, position + 5));
+        ticketEnd = Property.getDate(Arrays.copyOfRange(bytes, position, position + 5));
     }
 }

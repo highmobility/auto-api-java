@@ -2,6 +2,7 @@ package com.highmobility.autoapi.incoming;
 
 import com.highmobility.autoapi.AutoHvacState;
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.Property;
 import com.highmobility.utils.Bytes;
 
 import java.nio.ByteBuffer;
@@ -43,11 +44,11 @@ public class ClimateState extends IncomingCommand {
 
         int hvacActiveOnDays = bytes[26];
 
-        autoHvacConstant = Bytes.getBit(hvacActiveOnDays, 7);
+        autoHvacConstant = Property.getBit(hvacActiveOnDays, 7);
         autoHvacStates = new AutoHvacState[7];
 
         for (int i = 0; i < 7; i ++) {
-            boolean active = Bytes.getBit(hvacActiveOnDays, i);
+            boolean active = Property.getBit(hvacActiveOnDays, i);
             int hour = bytes[27 + i * 2];
             int minute = bytes[27 + i * 2 + 1];
             autoHvacStates[i] = new AutoHvacState(active, i, hour, minute);

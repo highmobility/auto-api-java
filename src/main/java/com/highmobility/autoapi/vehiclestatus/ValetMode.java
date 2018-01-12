@@ -2,6 +2,7 @@ package com.highmobility.autoapi.vehiclestatus;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.Property;
 import com.highmobility.utils.Bytes;
 
 /**
@@ -23,7 +24,7 @@ public class ValetMode extends FeatureState {
         super(Command.Identifier.VALET_MODE);
         this.isActive = isActive;
         bytes = getBytesWithOneByteLongFields(1);
-        bytes[3] = Bytes.boolToByte(isActive);
+        bytes[3] = Property.boolToByte(isActive);
     }
 
     ValetMode(byte[] bytes) throws CommandParseException {

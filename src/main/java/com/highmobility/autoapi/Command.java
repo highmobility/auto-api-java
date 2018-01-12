@@ -405,7 +405,7 @@ public class Command {
          * @return the command bytes
          */
         public static byte[] lockDoors(boolean lock) {
-            return Bytes.concatBytes(LOCK_UNLOCK.getIdentifierAndType(), Bytes.getByte(lock));
+            return Bytes.concatBytes(LOCK_UNLOCK.getIdentifierAndType(), Property.getByte(lock));
         }
 
         static DoorLocks fromBytes(byte firstIdentifierByte, byte secondIdentifierByte, byte typeByte) {
@@ -608,7 +608,7 @@ public class Command {
          * @return the command bytes
          */
         public static byte[] startCharging(boolean start) {
-            return Bytes.concatBytes(START_STOP_CHARGING.getIdentifierAndType(), Bytes.getByte(start));
+            return Bytes.concatBytes(START_STOP_CHARGING.getIdentifierAndType(), Property.getByte(start));
         }
 
         /**
@@ -734,7 +734,7 @@ public class Command {
          * @return The command bytes
          */
         public static byte[] startHvac(boolean start) {
-            return Bytes.concatBytes(START_STOP_HVAC.getIdentifierAndType(), Bytes.getByte(start));
+            return Bytes.concatBytes(START_STOP_HVAC.getIdentifierAndType(), Property.getByte(start));
         }
 
         /**
@@ -745,7 +745,7 @@ public class Command {
          * @return The command bytes
          */
         public static byte[] startDefog(boolean start) {
-            return Bytes.concatBytes(START_STOP_DEFOGGING.getIdentifierAndType(), Bytes.getByte(start));
+            return Bytes.concatBytes(START_STOP_DEFOGGING.getIdentifierAndType(), Property.getByte(start));
         }
 
         /**
@@ -756,7 +756,7 @@ public class Command {
          * @return The command bytes
          */
         public static byte[] startDefrost(boolean start) {
-            return Bytes.concatBytes(START_STOP_DEFROSTING.getIdentifierAndType(), Bytes.getByte(start));
+            return Bytes.concatBytes(START_STOP_DEFROSTING.getIdentifierAndType(), Property.getByte(start));
         }
 
         static Climate fromBytes(byte firstIdentifierByte, byte secondIdentifierByte, byte typeByte) {
@@ -914,7 +914,7 @@ public class Command {
          * @return the command bytes
          */
         public static byte[] startEmergencyFlasher(boolean start) {
-            return Bytes.concatBytes(EMERGENCY_FLASHER.getIdentifierAndType(), Bytes.getByte(start));
+            return Bytes.concatBytes(EMERGENCY_FLASHER.getIdentifierAndType(), Property.getByte(start));
         }
 
         static HonkFlash fromBytes(byte firstIdentifierByte, byte secondIdentifierByte, byte typeByte) {
@@ -1080,7 +1080,7 @@ public class Command {
          */
         public static byte[] activateValetMode(boolean activate) {
             return Bytes.concatBytes(ACTIVATE_DEACTIVATE_VALET_MODE.getIdentifierAndType(),
-                    Bytes.getByte(activate));
+                    Property.getByte(activate));
         }
 
         static ValetMode fromBytes(byte firstIdentifierByte, byte secondIdentifierByte, byte typeByte) {
@@ -1541,7 +1541,7 @@ public class Command {
         }
 
         public static byte[] turnEngineOn(boolean on) {
-            return Bytes.concatBytes(TURN_ENGINE_ON_OFF.getIdentifierAndType(), Bytes.getByte(on));
+            return Bytes.concatBytes(TURN_ENGINE_ON_OFF.getIdentifierAndType(), Property.getByte(on));
         }
 
         static Engine fromBytes(byte firstIdentifierByte, byte secondIdentifierByte, byte typeByte) {
@@ -1612,8 +1612,8 @@ public class Command {
                                            int[] ambientColor) {
             byte[] command = CONTROL_LIGHTS.getIdentifierAndType();
             command =  Bytes.concatBytes(command, frontExteriorLightState.getByte());
-            command = Bytes.concatBytes(command, Bytes.getByte(rearExteriorLightActive));
-            command = Bytes.concatBytes(command, Bytes.getByte(interiorLightActive));
+            command = Bytes.concatBytes(command, Property.getByte(rearExteriorLightActive));
+            command = Bytes.concatBytes(command, Property.getByte(interiorLightActive));
 
             byte[] colorBytes = new byte[] {
                     (byte) ambientColor[0],
@@ -1821,7 +1821,7 @@ public class Command {
          */
         public static byte[] notification(String notificationText, NotificationAction[] actions) throws UnsupportedEncodingException, IllegalArgumentException {
             byte[] command = NOTIFICATION.getIdentifierAndType();
-            command = Bytes.concatBytes(command, Bytes.intToBytes(notificationText.length(), 2));
+            command = Bytes.concatBytes(command, Property.intToBytes(notificationText.length(), 2));
             command = Bytes.concatBytes(command, notificationText.getBytes("UTF-8"));
             command = Bytes.concatBytes(command, (byte)actions.length);
 
@@ -1904,7 +1904,7 @@ public class Command {
             byte[] handleBytes = handle.getBytes("UTF-8");
 
 
-            byte[] messageLength = Bytes.intToBytes(message.length(), 2);
+            byte[] messageLength = Property.intToBytes(message.length(), 2);
             byte[] messageBytes = message.getBytes("UTF-8");
 
             command = Bytes.concatBytes(command, handleLength);
@@ -1989,9 +1989,9 @@ public class Command {
             byte[] command = VIDEO_HANDOVER.getIdentifierAndType();
 
             byte[] urlBytes = url.getBytes("UTF-8");
-            command = Bytes.concatBytes(command, Bytes.intToBytes(url.length(), 2));
+            command = Bytes.concatBytes(command, Property.intToBytes(url.length(), 2));
             command = Bytes.concatBytes(command, urlBytes);
-            command = Bytes.concatBytes(command, Bytes.intToBytes(startingSecond, 2));
+            command = Bytes.concatBytes(command, Property.intToBytes(startingSecond, 2));
             command = Bytes.concatBytes(command, location.getByte());
 
             return command;
@@ -2056,7 +2056,7 @@ public class Command {
             byte[] command = LOAD_URL.getIdentifierAndType();
 
             byte[] urlBytes = url.getBytes("UTF-8");
-            command = Bytes.concatBytes(command, Bytes.intToBytes(url.length(), 2));
+            command = Bytes.concatBytes(command, Property.intToBytes(url.length(), 2));
             command = Bytes.concatBytes(command, urlBytes);
 
             return command;
@@ -2121,7 +2121,7 @@ public class Command {
             byte[] command = DISPLAY_IMAGE.getIdentifierAndType();
 
             byte[] urlBytes = url.getBytes("UTF-8");
-            command = Bytes.concatBytes(command, Bytes.intToBytes(url.length(), 2));
+            command = Bytes.concatBytes(command, Property.intToBytes(url.length(), 2));
             command = Bytes.concatBytes(command, urlBytes);
 
             return command;

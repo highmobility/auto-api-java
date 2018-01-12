@@ -1,10 +1,9 @@
 package com.highmobility.autoapi.incoming;
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.utils.Bytes;
+import com.highmobility.autoapi.Property;
 
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 /**
  * Created by ttiganik on 13/09/16.
@@ -28,6 +27,6 @@ public class VehicleTime extends IncomingCommand {
         super(bytes);
         if (bytes.length != 11) throw new CommandParseException();
 
-        vehicleTime = Bytes.getCalendar(Arrays.copyOfRange(bytes, 3, 11));
+        vehicleTime = Property.getCalendar(Arrays.copyOfRange(bytes, 3, 11));
     }
 }

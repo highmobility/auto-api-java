@@ -1,6 +1,7 @@
 package com.highmobility.autoapi.vehiclestatus;
 import com.highmobility.autoapi.Command.Identifier;
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.Property;
 import com.highmobility.utils.Bytes;
 
 import java.io.UnsupportedEncodingException;
@@ -76,11 +77,11 @@ public class ParkingTicket extends FeatureState {
         int ticketIdSize = bytes[position + operatorNameSize];
         position = position + operatorNameSize + 1;
 
-        operatorTicketId = Bytes.getInt(Arrays.copyOfRange(bytes, position, position + ticketIdSize));
+        operatorTicketId = Property.getUnsignedInt(Arrays.copyOfRange(bytes, position, position + ticketIdSize));
         position = position + ticketIdSize;
 
-        ticketStart = Bytes.getDate(Arrays.copyOfRange(bytes, position, position + 6));
+        ticketStart = Property.getDate(Arrays.copyOfRange(bytes, position, position + 6));
         position = position + 6;
-        ticketEnd = Bytes.getDate(Arrays.copyOfRange(bytes, position, position + 6));
+        ticketEnd = Property.getDate(Arrays.copyOfRange(bytes, position, position + 6));
     }
 }

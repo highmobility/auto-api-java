@@ -1,6 +1,7 @@
 package com.highmobility.autoapi.vehiclestatus;
 
 import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.Property;
 import com.highmobility.utils.Bytes;
 
 import java.nio.ByteBuffer;
@@ -102,12 +103,12 @@ public class Climate extends FeatureState {
         this.defrostingTemperature = defrostingTemperature;
 
         bytes = getBytesWithMoreThanOneByteLongFields(7, 9);
-        Bytes.setBytes(bytes, Bytes.floatToBytes(insideTemperature), 3);
-        Bytes.setBytes(bytes, Bytes.floatToBytes(outsideTemperature), 7);
-        bytes[11] = Bytes.boolToByte(hvacActive);
-        bytes[12] = Bytes.boolToByte(defoggingActive);
-        bytes[13] = Bytes.boolToByte(defrostingActive);
-        Bytes.setBytes(bytes, Bytes.floatToBytes(defrostingTemperature), 14);
+        Bytes.setBytes(bytes, Property.floatToBytes(insideTemperature), 3);
+        Bytes.setBytes(bytes, Property.floatToBytes(outsideTemperature), 7);
+        bytes[11] = Property.boolToByte(hvacActive);
+        bytes[12] = Property.boolToByte(defoggingActive);
+        bytes[13] = Property.boolToByte(defrostingActive);
+        Bytes.setBytes(bytes, Property.floatToBytes(defrostingTemperature), 14);
 
         byte result = 0;
         for (int i = 0; i < hvacActiveOnDays.length; i++) {
@@ -136,11 +137,11 @@ public class Climate extends FeatureState {
         defrostingTemperature = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 14, 14 + 4)).getFloat();
 
         int hvacActiveOnDays = bytes[18];
-        if (Bytes.getBit(hvacActiveOnDays, 7)) isAutoHvacConstant = true;
+        if (Property.getBit(hvacActiveOnDays, 7)) isAutoHvacConstant = true;
 
         this.hvacActiveOnDays = new boolean[7];
         for (int i = 0; i < 7; i++) {
-            this.hvacActiveOnDays[i] = Bytes.getBit(hvacActiveOnDays, i);
+            this.hvacActiveOnDays[i] = Property.getBit(hvacActiveOnDays, i);
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.highmobility.autoapi.incoming;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.utils.Bytes;
+import com.highmobility.autoapi.Property;
 
 import java.util.Arrays;
 
@@ -33,7 +33,7 @@ public class Maintenance extends IncomingCommand {
         super(bytes);
 
         if (bytes.length != 8) throw new CommandParseException();
-        daysToNextService = Bytes.getInt(Arrays.copyOfRange(bytes, 3, 3 + 2));
-        kilometersToNextService = Bytes.getInt(Arrays.copyOfRange(bytes, 5, 5 + 3));
+        daysToNextService = Property.getUnsignedInt(Arrays.copyOfRange(bytes, 3, 3 + 2));
+        kilometersToNextService = Property.getUnsignedInt(Arrays.copyOfRange(bytes, 5, 5 + 3));
     }
 }

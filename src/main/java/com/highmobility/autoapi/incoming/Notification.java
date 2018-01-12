@@ -1,6 +1,7 @@
 package com.highmobility.autoapi.incoming;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.NotificationAction;
+import com.highmobility.autoapi.Property;
 import com.highmobility.utils.Bytes;
 
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class Notification extends IncomingCommand {
         if (bytes.length < 3) throw new CommandParseException();
 
         byte[] lengthBytes = Arrays.copyOfRange(bytes, 3, 3 + 2);
-        int textLength = Bytes.getInt(lengthBytes);
+        int textLength = Property.getUnsignedInt(lengthBytes);
         text = new String(Arrays.copyOfRange(bytes, 5, 5 + textLength));
 
         int actionItemsCountPosition = 5 + textLength;

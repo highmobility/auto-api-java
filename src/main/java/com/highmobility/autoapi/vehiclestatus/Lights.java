@@ -2,6 +2,7 @@ package com.highmobility.autoapi.vehiclestatus;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.Property;
 import com.highmobility.autoapi.incoming.LightsState;
 import com.highmobility.utils.Bytes;
 
@@ -48,8 +49,8 @@ public class Lights extends FeatureState {
 
         bytes = getBytesWithOneByteLongFields(3);
         bytes[3] = frontExteriorLightState.getByte();
-        bytes[4] = Bytes.boolToByte(rearExteriorLightActive);
-        bytes[5] = Bytes.boolToByte(interiorLightActive);
+        bytes[4] = Property.boolToByte(rearExteriorLightActive);
+        bytes[5] = Property.boolToByte(interiorLightActive);
     }
 
     Lights(byte[] bytes) throws CommandParseException {
@@ -67,8 +68,8 @@ public class Lights extends FeatureState {
             frontExteriorLightState = LightsState.FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM;
         }
 
-        rearExteriorLightActive = Bytes.getBool(bytes[4]);
-        interiorLightActive = Bytes.getBool(bytes[5]);
+        rearExteriorLightActive = Property.getBool(bytes[4]);
+        interiorLightActive = Property.getBool(bytes[5]);
 
         this.bytes = bytes;
     }

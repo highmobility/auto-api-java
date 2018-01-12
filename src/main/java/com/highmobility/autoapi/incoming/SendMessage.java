@@ -1,6 +1,6 @@
 package com.highmobility.autoapi.incoming;
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.utils.Bytes;
+import com.highmobility.autoapi.Property;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -36,7 +36,7 @@ public class SendMessage extends IncomingCommand {
         try {
             recipientHandle = new String(Arrays.copyOfRange(bytes, 4, 4 + recipientSize), "UTF-8");
             int messageSizePosition = 4 + recipientSize;
-            int messageSize = Bytes.getInt(Arrays.copyOfRange(bytes, messageSizePosition, messageSizePosition + 2));
+            int messageSize = Property.getUnsignedInt(Arrays.copyOfRange(bytes, messageSizePosition, messageSizePosition + 2));
             text = new String(Arrays.copyOfRange(bytes, messageSizePosition + 2, messageSizePosition + 2 + messageSize), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new CommandParseException();

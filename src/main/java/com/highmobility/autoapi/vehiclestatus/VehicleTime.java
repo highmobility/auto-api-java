@@ -1,7 +1,7 @@
 package com.highmobility.autoapi.vehiclestatus;
 import com.highmobility.autoapi.Command.Identifier;
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.utils.Bytes;
+import com.highmobility.autoapi.Property;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -24,6 +24,6 @@ public class VehicleTime extends FeatureState {
     public VehicleTime(byte[] bytes) throws CommandParseException {
         super(Identifier.VEHICLE_TIME);
         if (bytes.length < 4) throw new CommandParseException();
-        time = Bytes.getCalendar(Arrays.copyOfRange(bytes, 3, 11));
+        time = Property.getCalendar(Arrays.copyOfRange(bytes, 3, 11));
     }
 }

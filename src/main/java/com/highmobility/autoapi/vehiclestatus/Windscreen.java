@@ -1,9 +1,9 @@
 package com.highmobility.autoapi.vehiclestatus;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.Property;
 import com.highmobility.autoapi.WindscreenDamagePosition;
 import com.highmobility.autoapi.incoming.WindscreenState;
-import com.highmobility.utils.Bytes;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -108,7 +108,7 @@ public class Windscreen extends FeatureState {
         windscreenDamage = WindscreenState.WindscreenDamage.fromByte(bytes[5]);
 
         windscreenReplacementState = WindscreenState.WindscreenReplacementState.fromByte(bytes[8]);
-        damageConfidence = (float) Bytes.getInt(bytes[9]) / 100f;
+        damageConfidence = (float) Property.getUnsignedInt(bytes[9]) / 100f;
 
         if (bytes[6] != 0x00) {
             int horizontalSize = bytes[6] >> 4;
@@ -123,6 +123,6 @@ public class Windscreen extends FeatureState {
                     verticalDamagePosition);
         }
 
-        damageDetectionTime = Bytes.getDate(Arrays.copyOfRange(bytes, 10, 10 + 6));
+        damageDetectionTime = Property.getDate(Arrays.copyOfRange(bytes, 10, 10 + 6));
     }
 }

@@ -1,6 +1,6 @@
 package com.highmobility.autoapi.incoming;
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.utils.Bytes;
+import com.highmobility.autoapi.Property;
 
 /**
  * Created by ttiganik on 13/09/16.
@@ -21,6 +21,6 @@ public class IgnitionState extends IncomingCommand {
 
         if (bytes.length < 4) throw new CommandParseException();
 
-        on = Bytes.getBool(bytes[3]);
+        on = Property.getBool(bytes[3]);
     }
 }

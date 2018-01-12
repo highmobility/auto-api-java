@@ -2,6 +2,7 @@ package com.highmobility.autoapi.vehiclestatus;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.Property;
 import com.highmobility.autoapi.incoming.ChargeState;
 import com.highmobility.utils.Bytes;
 
@@ -57,7 +58,7 @@ public class Charging extends FeatureState {
 
         bytes = getBytesWithMoreThanOneByteLongFields(4, 4);
         bytes[3] = chargingState.getByte();
-        byte[] estimatedRangeBytes = Bytes.intToBytes(estimatedRange, 2);
+        byte[] estimatedRangeBytes = Property.intToBytes(estimatedRange, 2);
         bytes[4] = estimatedRangeBytes[0];
         bytes[5] = estimatedRangeBytes[1];
         bytes[6] = (byte)(int)(batteryLevel * 100);

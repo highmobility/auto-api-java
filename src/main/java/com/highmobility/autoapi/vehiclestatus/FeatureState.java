@@ -54,7 +54,7 @@ public class FeatureState {
         return bytes;
     }
 
-    // extraBytesInFields: one byte is counted, so for instance if one field has 4 bytes, put 3 in the extraBytes.
+    // extraBytesInFields: one byte is counted, so for instance if one field has 4 bytes, put 3 in the extraProperty.
     // if 2 fields have 4 bytes, put 6
     byte[] getBytesWithMoreThanOneByteLongFields(int fieldCount, int extraBytesInFields) {
         byte[] bytes = new byte[3 + fieldCount + extraBytesInFields];

@@ -1,6 +1,7 @@
 package com.highmobility.autoapi.incoming;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.Property;
 import com.highmobility.utils.Bytes;
 
 /**
@@ -88,8 +89,8 @@ public class LightsState extends IncomingCommand {
             frontExteriorLightState = FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM;
         }
 
-        rearExteriorLightActive = Bytes.getBool(bytes[4]);
-        interiorLightActive = Bytes.getBool(bytes[5]);
+        rearExteriorLightActive = Property.getBool(bytes[4]);
+        interiorLightActive = Property.getBool(bytes[5]);
 
         ambientColor = new int[4];
 
