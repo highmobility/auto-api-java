@@ -1,0 +1,6 @@
+siteUrl = https://github.com/highmobility/hm-java-utils // TODO: add licenses, check documentation, push to github
+gitUrl = https://github.com/highmobility/hm-java-utils
+version = 1.5.0
+groupId = com.highmobility
+licenses = ['GPL-3.0'] // or something else
+id = hmkit-auto-api

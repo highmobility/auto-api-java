@@ -1,56 +1,32 @@
-group 'com.highmobility'
-version '1.5.0'
-
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'idea'
-apply plugin: "com.jfrog.artifactory"
-
-sourceCompatibility = 1.7
-
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
+        //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+        classpath 'com.github.dcendents:android-maven-plugin:1.2'
     }
 }
 
+apply plugin: 'java'
+
+def artifact = new Properties()
+artifact.load(new FileInputStream("deploy.settings"))
+
+group artifact.groupId
+version artifact.version
+
+sourceCompatibility = 1.8
 
 repositories {
-    mavenCentral()
-}
-
-artifactory {
-    contextUrl = "${artifactory_contextUrl}"
-    //The base Artifactory URL if not overridden by the publisher/resolver
-    publish {
-        repository {
-            repoKey = 'gradle-release-local'
-            username = "${artifactory_publisheruser}"
-            password = "${artifactory_publisherpassword}"
-            maven = true
-        }
-        defaults {
-            // Reference to Gradle configurations defined in the build script.
-            // This is how we tell the Artifactory Plugin which artifacts should be
-            // published to Artifactory.
-            publishConfigs('archives', 'published')
-            publishPom = true
-        }
-    }
-    resolve {
-        repository {
-            repoKey = 'gradle-dev'
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
-            maven = true
-        }
-    }
+    jcenter()
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
-    implementation('com.highmobility:hmkit-utils:1.1.+')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation('com.highmobility:hmkit-utils:1.1.4')
 }
+
+apply from: 'deploy.gradle'
