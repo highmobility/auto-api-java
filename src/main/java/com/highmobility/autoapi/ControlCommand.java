@@ -42,7 +42,6 @@ public class ControlCommand extends CommandWithProperties {
      * @param speed Speed in km/h, can range between -5 to 5 whereas a negative speed will
      *              reverse the car.
      * @param angle angle of the car.
-     * @return the command bytes
      * @throws IllegalArgumentException When all arguments are null or invalid
      */
     public ControlCommand(Integer speed, Integer angle)  {

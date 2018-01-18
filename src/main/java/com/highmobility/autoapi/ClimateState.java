@@ -151,11 +151,11 @@ public class ClimateState extends CommandWithProperties {
                 case 0x0A:
                     byte[] value = property.getValueBytes();
                     int hvacActiveOnDays = value[0];
-                    autoHvacConstant = Bytes.getBit(hvacActiveOnDays, 7);
+                    autoHvacConstant = Property.getBit(hvacActiveOnDays, 7);
                     autoHvacStates = new AutoHvacState[7];
 
                     for (int j = 0; j < 7; j++) {
-                        boolean active = Bytes.getBit(hvacActiveOnDays, j);
+                        boolean active = Property.getBit(hvacActiveOnDays, j);
                         int hour = value[1 + j * 2];
                         int minute = value[1 + j * 2 + 1];
                         autoHvacStates[j] = new AutoHvacState(active, j, hour, minute);

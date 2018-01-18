@@ -23,7 +23,6 @@ public class ControlLights extends CommandWithProperties {
      * @param interiorLightActive Interior light state
      * @param ambientColor Ambient color with rgba values from 0-255
      *
-     * @return the command bytes
      * @throws IllegalArgumentException If all arguments are null
      */
     public ControlLights(LightsState.FrontExteriorLightState frontExteriorLightState,

@@ -40,7 +40,7 @@ public class OpenCloseTrunk extends CommandWithProperties {
      *
      * @param state The trunk lock state.
      * @param position The trunk position.
-     * @return The command bytes
+     *
      * @throws IllegalArgumentException If all arguments are null
      */
     public OpenCloseTrunk(TrunkLockState state, TrunkPosition position) {

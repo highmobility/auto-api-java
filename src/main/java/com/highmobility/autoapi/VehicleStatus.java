@@ -42,7 +42,10 @@ public class VehicleStatus extends CommandWithProperties {
     }
 
     /**
-     * @return The specific states for the vehicle's features.
+     *
+     * @param type The type of the command.
+     *
+     * @return The state for the given Command type, if exists.
      */
     public CommandWithProperties getState(Type type) {
         if (states == null) return null;

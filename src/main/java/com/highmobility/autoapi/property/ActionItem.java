@@ -31,7 +31,7 @@ public class ActionItem implements HMProperty {
         this.name = name;
 
         bytes = new byte[]{ getPropertyIdentifier() };
-        bytes = Bytes.concatBytes(bytes, Bytes.intToBytes(getPropertyLength(), 2));
+        bytes = Bytes.concatBytes(bytes, Property.intToBytes(getPropertyLength(), 2));
         bytes = Bytes.concatBytes(bytes, (byte) getActionIdentifier());
         bytes = Bytes.concatBytes(bytes, name.getBytes(StringProperty.CHARSET));
     }

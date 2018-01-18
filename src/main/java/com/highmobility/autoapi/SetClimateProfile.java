@@ -21,7 +21,7 @@ public class SetClimateProfile extends CommandWithProperties {
      * @param autoHvacStates       The auto hvac states.
      * @param driverTemperature    The driver temperature.
      * @param passengerTemperature The passenger temperature.
-     * @return The command bytes
+     *
      * @throws IllegalArgumentException When all arguments are null
      */
     public SetClimateProfile(AutoHvacState[] autoHvacStates,

@@ -12,7 +12,6 @@ public class ActivateDeactivateValetMode extends Command {
     /**
      *
      * @param activate A boolean indicating whether to activate the valet mode.
-     * @return The command bytes
      */
     public ActivateDeactivateValetMode(boolean activate) {
         super(TYPE.addByte(Property.boolToByte(activate)), true);

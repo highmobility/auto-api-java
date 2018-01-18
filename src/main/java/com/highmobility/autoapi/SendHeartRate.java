@@ -11,7 +11,6 @@ public class SendHeartRate extends Command {
      * Send the driver heart rate to the car.
      *
      * @param heartRate The heart rate.
-     * @return The command bytes.
      */
     public SendHeartRate(int heartRate) {
         super(TYPE.addByte((byte) heartRate), true);

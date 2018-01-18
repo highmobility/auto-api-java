@@ -20,7 +20,7 @@ public class SetNaviDestination extends CommandWithProperties {
      * @param latitude the latitude of the destination
      * @param longitude the longitude of the destination
      * @param name the destination name
-     * @return the command bytes
+     * 
      * @throws UnsupportedEncodingException when the name string is in wrong format
      * @throws IllegalArgumentException if all arguments are null
      */
