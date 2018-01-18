@@ -1,6 +1,6 @@
-siteUrl = https://github.com/highmobility/hm-java-autoapi // TODO: add licenses, push to github
+siteUrl = https://github.com/highmobility/hm-java-autoapi
 gitUrl = https://github.com/highmobility/hm-java-autoapi
 version = 1.5.1
 groupId = com.highmobility
-licenses = ['GPL-3.0'] // or something else
+licenses = ['GPL-3.0']
 id = hmkit-auto-api
