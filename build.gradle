@@ -29,4 +29,7 @@ dependencies {
     implementation('com.highmobility:hmkit-utils:1.1.4')
 }
 
-apply from: 'deploy.gradle'
+// to push the artifacts, you need to add deploy.properties at project level
+// with bintray/artifactory credentials
+def deployPropertiesFile = file("deploy.properties")
+if (deployPropertiesFile.exists()) apply from: 'deploy.gradle'
