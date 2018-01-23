@@ -1,13 +1,33 @@
-# What is this repository for? #
+# HMKit Auto API
 
 This repository contains the java parsers for Auto API.
 
-# How to use create/parse commands #
+### Dependencies
+
+* hmkit-utils
+
+### Install
+
+Releases are pushed to jcenter. To include hmkit-oem in your project, add to build.gradle:
+
+```
+repositories {
+  jcenter()
+}
+
+dependencies {
+  implementation('com.highmobility:hmkit-oem:1.1.2')
+}
+```
+
+Find the latest version name in https://bintray.com/high-mobility/maven/hmkit-auto-api
+
+## How to create/parse commands
 
 Find the command name in auto api doc, then locate a class in com.highmobility.autoapi package with
 the same name. Every command has a designated class and it is used for all of the common use cases:
 
-## Parse the received command's bytes ##
+### Parse the received command's bytes
 ```java
 byte[] bytes = ...
 Command command = CommandResolver.resolve(bytes);
@@ -23,7 +43,7 @@ else if (command instanceof Capabilities) {
 }
 ```
 
-## Get a specific state from the vehicle status ##
+### Get a specific state from the vehicle status
 ```java
 LockState state = vehicleStatus.getState(LockState.TYPE);
 if (state != null) {
@@ -31,26 +51,26 @@ if (state != null) {
 }
 ```
 
-## Inspect whether the capability is supported for the vehicle ##
+### Inspect whether the capability is supported for the vehicle
 ```java
 if (capabilities.isSupported(LockState.TYPE)) {
     ...
 }
 ```
 
-## Send a command ##
+### Send a command
 ```java
 byte[] commandBytes = new LockUnlockDoors(DoorLockProperty.LockState.LOCKED).getBytes();
 sendCommand(commandBytes)
 ```
 
-## Get a capability ##
+### Get a capability
 ```java
 byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
 sendCommand(commandBytes)
 ```
 
-## Check for the failed command's type ##
+### Check for the failed command's type
 ```java
 Failure failure;
 if (command instanceof Failure) {
@@ -61,7 +81,7 @@ if (command instanceof Failure) {
 }
 ```
 
-## Builders for bigger commands(states) ##
+### Builders for bigger commands(states)
 
 Builder pattern is used to build commands with more properties, for instance Vehicle status:
 
@@ -122,7 +142,3 @@ Currently supported commands with the builder pattern:
 * capabilities
 * trunk state
 * remote control
-
-# Dependencies #
-
-* hmkit-utils.jar
