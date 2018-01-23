@@ -20,34 +20,32 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.utils.Bytes;
-
-import java.io.UnsupportedEncodingException;
+import com.highmobility.autoapi.property.Property;
 
 /**
- * Created by root on 6/29/17.
+ * Send an action to a previously received Notification message.
  */
+public class NotificationAction extends Command {
+    public static final Type TYPE = new Type(Identifier.NOTIFICATIONS, 0x01);
 
-public class NotificationAction {
-    public int getIdentifier() {
-        return identifier;
+    int actionIdentifier;
+
+    /**
+     * @return The identifier of selected action item
+     */
+    public int getActionIdentifier() {
+        return actionIdentifier;
     }
 
-    public String getText() {
-        return text;
+    public NotificationAction(int actionIdentifier) {
+        super(TYPE.addByte((byte) actionIdentifier), true);
+        this.actionIdentifier = actionIdentifier;
     }
 
-    int identifier;
-    String text;
+    public NotificationAction(byte[] bytes) throws CommandParseException {
+        super(bytes);
 
-    public NotificationAction(int identifier, String text) {
-        this.identifier = identifier;
-        this.text = text;
-    }
-
-    public byte[] getBytes() throws UnsupportedEncodingException {
-        byte[] command = new byte[] {(byte) identifier, (byte) text.length()};
-        command = Bytes.concatBytes(command, text.getBytes("UTF-8"));
-        return command;
+        if (bytes.length != 4) throw new CommandParseException();
+        actionIdentifier = Property.getUnsignedInt(bytes[3]);
     }
 }
