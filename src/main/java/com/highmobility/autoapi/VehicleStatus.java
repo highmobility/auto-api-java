@@ -157,7 +157,7 @@ public class VehicleStatus extends CommandWithProperties {
     VehicleStatus(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        ArrayList<Command> states = new ArrayList<>();
+        ArrayList<CommandWithProperties> states = new ArrayList<>();
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
@@ -199,7 +199,9 @@ public class VehicleStatus extends CommandWithProperties {
                     case (byte) 0x99:
                         byte[] commandBytes = property.getValueBytes();
                         Command command = CommandResolver.resolve(commandBytes);
-                        states.add(command);
+                        if (command instanceof CommandWithProperties) { // some commands might be corrupt, dont add these
+                            states.add((CommandWithProperties) command);
+                        }
                         break;
                 }
             } catch (UnsupportedEncodingException e) {

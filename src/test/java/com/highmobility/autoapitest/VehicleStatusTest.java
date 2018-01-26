@@ -40,8 +40,7 @@ public class VehicleStatusTest {
             Command command = CommandResolver.resolve(bytes);
             if (command instanceof VehicleStatus) {
                 vehicleStatus = (VehicleStatus) command;
-            }
-            else {
+            } else {
                 fail();
             }
         } catch (CommandParseException e) {
@@ -108,7 +107,8 @@ public class VehicleStatusTest {
         return null;
     }
 
-    VehicleStatus.Builder getVehicleStatusBuilderWithoutSignature() throws UnsupportedEncodingException {
+    VehicleStatus.Builder getVehicleStatusBuilderWithoutSignature() throws
+            UnsupportedEncodingException {
         VehicleStatus.Builder builder = new VehicleStatus.Builder();
         builder.setVin("JF2SHBDC7CH451869");
         builder.setPowerTrain(PowerTrain.ALLELECTRIC);
@@ -137,7 +137,8 @@ public class VehicleStatusTest {
     @Test public void create() throws UnsupportedEncodingException {
         VehicleStatus status = getVehicleStatusBuilderWithoutSignature().build();
         byte[] command = status.getBytes();
-        assertTrue(Arrays.equals(command, Bytes.bytesFromHex("0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102")));
+        assertTrue(Arrays.equals(command, Bytes.bytesFromHex
+                ("0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102")));
     }
 
     @Test public void createWithSignature() throws UnsupportedEncodingException {
@@ -148,5 +149,16 @@ public class VehicleStatusTest {
         byte[] command = builder.build().getBytes();
         assertTrue(Arrays.equals(command, Bytes.bytesFromHex
                 ("0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102A00009324244433743483436A100404D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6")));
+    }
+
+    @Test public void maiduTest() {
+        byte[] bytes = Bytes.bytesFromHex
+                ("0011010A000105991B002001010003000100010003010000010003020001010003030001");
+
+        try {
+            Command command = CommandResolver.resolve(bytes);
+        } catch (CommandParseException e) {
+            fail();
+        }
     }
 }

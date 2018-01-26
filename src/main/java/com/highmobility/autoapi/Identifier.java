@@ -69,11 +69,11 @@ public enum Identifier {
     WEATHER_CONDITIONS(new byte[] { 0x00, (byte)0x55 }),
     CHASSIS_SETTINGS(new byte[] { 0x00, (byte)0x53 });
 
-    static Identifier fromBytes(byte[] bytes) throws CommandParseException {
+    public static Identifier fromBytes(byte[] bytes) throws CommandParseException {
         return fromBytes(bytes[0], bytes[1]);
     }
 
-    static Identifier fromBytes(byte firstByte, byte secondByte) {
+    public static Identifier fromBytes(byte firstByte, byte secondByte) {
         Identifier[] allValues = Identifier.values();
 
         for (int i = 0; i < allValues.length; i++) {

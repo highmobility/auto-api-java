@@ -70,4 +70,8 @@ public class Type {
         return obj.getClass() == Type.class
                 && Arrays.equals(((Type)obj).getIdentifierAndType(), getIdentifierAndType());
     }
+
+    @Override public String toString() {
+        return Bytes.hexFromBytes(getIdentifierAndType());
+    }
 }
