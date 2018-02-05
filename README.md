@@ -130,6 +130,8 @@ byte[] bytesToBeSigned = builder.build().getSignedBytes();
 // sign it
 byte[] sig = Crypto.sign(bytesToBeSigned, privateKey);
 // add the signature property
+builder.setSignature(sig);
+// get the final bytes with signature
 byte[] command = builder.build().getBytes();
 ```
 
