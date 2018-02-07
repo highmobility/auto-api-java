@@ -34,12 +34,15 @@ public class StringProperty extends Property {
         Bytes.setBytes(bytes, stringBytes, 3);
     }
 
-    public static HMProperty[] getProperties(String url) throws
+    public static HMProperty[] getProperties(String value, byte identifier) throws
             UnsupportedEncodingException {
-        List<HMProperty> propertiesBuilder = new ArrayList<>();
+        HMProperty[] properties = null;
 
-        if (url != null) propertiesBuilder.add(new StringProperty((byte) 0x01, url));
+        if (value != null) {
+            properties = new HMProperty[1];
+            properties[0] = new StringProperty(identifier, value);
+        }
 
-        return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
+        return properties;
     }
 }

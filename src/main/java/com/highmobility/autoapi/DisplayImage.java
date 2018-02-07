@@ -36,7 +36,7 @@ public class DisplayImage extends CommandWithProperties {
      * @throws IllegalArgumentException        If the argument is not valid
      */
     public DisplayImage(String url) throws UnsupportedEncodingException {
-        super(TYPE, StringProperty.getProperties(url));
+        super(TYPE, StringProperty.getProperties(url, (byte) 0x01));
     }
 
     DisplayImage(byte[] bytes) throws CommandParseException {

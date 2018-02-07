@@ -393,6 +393,23 @@ public class CommandResolver {
                     command = new GetWeatherConditions(bytes);
                 }
             }
+            else if (bytesAreForIdentifier(bytes, Identifier.WIFI)) {
+                if (bytesAreForType(bytes, WifiState.TYPE)) {
+                    command = new WifiState(bytes);
+                }
+                else if (bytesAreForType(bytes, GetWifiState.TYPE)) {
+                    command = new GetWifiState(bytes);
+                }
+                else if (bytesAreForType(bytes, ConnectToNetwork.TYPE)) {
+                    command = new ConnectToNetwork(bytes);
+                }
+                else if (bytesAreForType(bytes, ForgetNetwork.TYPE)) {
+                    command = new ForgetNetwork(bytes);
+                }
+                else if (bytesAreForType(bytes, EnableDisableWifi.TYPE)) {
+                    command = new EnableDisableWifi(bytes);
+                }
+            }
             else {
                 return new Command(bytes);
             }

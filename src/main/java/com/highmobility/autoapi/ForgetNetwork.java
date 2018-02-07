@@ -25,22 +25,21 @@ import com.highmobility.autoapi.property.StringProperty;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Send a keystroke or entire sentences as input to the car head unit. This can act as an alternative
- * to the input devices that the car is equipped with.
+ * Forget a network that the car has previously connected to.
  */
-public class TextInput extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.TEXT_INPUT, 0x00);
+public class ForgetNetwork extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.WIFI, 0x03);
 
     /**
-     * @param text The text
-     * @throws UnsupportedEncodingException The url is not in UTF-8
-     * @throws IllegalArgumentException        If the argument is not valid
+     * Forget a network that the car has previously connected to.
+     * @param ssid The network name
+     * @throws UnsupportedEncodingException When input is in invalid format.
      */
-    public TextInput(String text) throws UnsupportedEncodingException {
-        super(TYPE, StringProperty.getProperties(text, (byte) 0x01));
+    public ForgetNetwork(String ssid) throws UnsupportedEncodingException {
+        super(TYPE, StringProperty.getProperties(ssid, (byte) 0x03));
     }
 
-    TextInput(byte[] bytes) throws CommandParseException {
+    ForgetNetwork(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

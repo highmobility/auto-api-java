@@ -38,6 +38,11 @@ public class StartParking extends CommandWithProperties {
     // 00470201000E4265726c696e205061726b696e67020008363438393432333303000811010a1122000000
     public static final Type TYPE = new Type(Identifier.PARKING_TICKET, 0x02);
 
+    /**
+     * Start parking.
+     *
+     * @throws UnsupportedEncodingException When strings are in invalid format.
+     */
     public StartParking(String operatorName, String operatorTicketId, Calendar startDate,
                         Calendar endDate) throws UnsupportedEncodingException {
         super(TYPE, getProperties(operatorName, operatorTicketId, startDate, endDate));

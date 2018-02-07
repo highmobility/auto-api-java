@@ -37,7 +37,7 @@ public class LoadUrl extends CommandWithProperties {
      * @throws IllegalArgumentException        If the argument is not valid
      */
     public LoadUrl(String url) throws UnsupportedEncodingException {
-        super(TYPE, StringProperty.getProperties(url));
+        super(TYPE, StringProperty.getProperties(url, (byte) 0x01));
     }
 
     LoadUrl(byte[] bytes) throws CommandParseException {

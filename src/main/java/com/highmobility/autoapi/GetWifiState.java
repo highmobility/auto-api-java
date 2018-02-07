@@ -20,27 +20,17 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.StringProperty;
-
-import java.io.UnsupportedEncodingException;
-
 /**
- * Send a keystroke or entire sentences as input to the car head unit. This can act as an alternative
- * to the input devices that the car is equipped with.
+ * Get the wi fi state of the car. The car will respond with the Wi Fi State message.
  */
-public class TextInput extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.TEXT_INPUT, 0x00);
+public class GetWifiState extends Command {
+    public static final Type TYPE = new Type(Identifier.WIFI, 0x00);
 
-    /**
-     * @param text The text
-     * @throws UnsupportedEncodingException The url is not in UTF-8
-     * @throws IllegalArgumentException        If the argument is not valid
-     */
-    public TextInput(String text) throws UnsupportedEncodingException {
-        super(TYPE, StringProperty.getProperties(text, (byte) 0x01));
+    public GetWifiState() {
+        super(TYPE);
     }
 
-    TextInput(byte[] bytes) throws CommandParseException {
+    GetWifiState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

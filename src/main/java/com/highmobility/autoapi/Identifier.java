@@ -67,7 +67,8 @@ public enum Identifier {
     PARKING_BRAKE(new byte[] { 0x00, (byte)0x58 }),
     LIGHT_CONDITIONS(new byte[] { 0x00, (byte)0x54 }),
     WEATHER_CONDITIONS(new byte[] { 0x00, (byte)0x55 }),
-    CHASSIS_SETTINGS(new byte[] { 0x00, (byte)0x53 });
+    CHASSIS_SETTINGS(new byte[] { 0x00, (byte)0x53 }),
+    WIFI(new byte[] { 0x00, (byte)0x59 });
 
     public static Identifier fromBytes(byte[] bytes) throws CommandParseException {
         return fromBytes(bytes[0], bytes[1]);
