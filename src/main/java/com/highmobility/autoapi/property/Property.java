@@ -45,8 +45,7 @@ public class Property implements HMProperty {
             byte[] lengthBytes = intToBytes(valueSize, 2);
             bytes[1] = lengthBytes[0];
             bytes[2] = lengthBytes[1];
-        }
-        else {
+        } else {
             bytes[1] = 0x00;
             bytes[2] = (byte) valueSize;
         }
@@ -62,12 +61,22 @@ public class Property implements HMProperty {
         this.bytes = bytes;
     }
 
+    /**
+     *
+     * @return The value bytes.
+     * @throws CommandParseException When there are no value bytes.
+     */
     public byte[] getValueBytes() throws CommandParseException {
         int length = getPropertyLength();
         if (length > 0) return Arrays.copyOfRange(bytes, 3, 3 + length);
         throw new CommandParseException();
     }
 
+    /**
+     *
+     * @return The one value byte.
+     * @throws CommandParseException When the property bytes length is not 4.
+     */
     public byte getValueByte() throws CommandParseException {
         if (bytes.length == 4) return bytes[3];
         throw new CommandParseException();
@@ -86,7 +95,11 @@ public class Property implements HMProperty {
         }
     }
 
-    @Override  public byte[] getPropertyBytes() {
+    /**
+     *
+     * @return All of the property bytes - with the identifier and length.
+     */
+    @Override public byte[] getPropertyBytes() {
         return bytes;
     }
 
@@ -113,7 +126,7 @@ public class Property implements HMProperty {
     }
 
     public static byte[] getIntProperty(byte identifier, int value, int length) {
-        byte[] bytes = new byte[] {
+        byte[] bytes = new byte[]{
                 identifier,
                 0x00,
                 (byte) length
@@ -135,7 +148,7 @@ public class Property implements HMProperty {
     public static byte[] longToBytes(long l) {
         byte[] result = new byte[8];
         for (int i = 7; i >= 0; i--) {
-            result[i] = (byte)(l & 0xFF);
+            result[i] = (byte) (l & 0xFF);
             l >>= 8;
         }
         return result;
@@ -166,29 +179,28 @@ public class Property implements HMProperty {
         return getUnsignedInt(bytes, 0, bytes.length);
     }
 
-    public static int getUnsignedInt(byte[] bytes, int at, int length) throws CommandParseException {
+    public static int getUnsignedInt(byte[] bytes, int at, int length) throws
+            CommandParseException {
         if (length == 4) {
             int result = ((0xFF & bytes[at]) << 24) | ((0xFF & bytes[at + 1]) << 16) |
                     ((0xFF & bytes[at + 2]) << 8) | (0xFF & bytes[at + 3]);
             return result;
-        }
-        else if (length == 3) {
-            int result = (bytes[at] & 0xff) << 16 | (bytes[at + 1] & 0xff) << 8 | (bytes[at + 2] & 0xff);
+        } else if (length == 3) {
+            int result = (bytes[at] & 0xff) << 16 | (bytes[at + 1] & 0xff) << 8 | (bytes[at + 2]
+                    & 0xff);
             return result;
-        }
-        else if (length == 2) {
+        } else if (length == 2) {
             int result = ((bytes[at] & 0xff) << 8) | (bytes[at + 1] & 0xff);
             return result;
-        }
-        else if (length == 1) {
-            return (int)bytes[at];
+        } else if (length == 1) {
+            return (int) bytes[at];
         }
 
         throw new CommandParseException();
     }
 
     public static int getSignedInt(byte value) {
-        return (int)value;
+        return (int) value;
     }
 
     public static int getSignedInt(byte[] bytes) throws IllegalArgumentException {
@@ -200,8 +212,7 @@ public class Property implements HMProperty {
     }
 
     /**
-     *
-     * @param value the valueBytes converted to byte[]
+     * @param value  the valueBytes converted to byte[]
      * @param length the returned byte[] length
      * @return the allBytes representing the valueBytes
      * @throws IllegalArgumentException when input is invalid
@@ -211,8 +222,7 @@ public class Property implements HMProperty {
 
         if (bytes.length == length) {
             return bytes;
-        }
-        else if (bytes.length < length) {
+        } else if (bytes.length < length) {
             // put the allBytes to last elements
             byte[] withZeroBytes = new byte[length];
 
@@ -221,8 +231,7 @@ public class Property implements HMProperty {
             }
 
             return withZeroBytes;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException();
         }
     }
@@ -243,7 +252,8 @@ public class Property implements HMProperty {
         return new String(bytes, CHARSET);
     }
 
-    public static String getString(byte[] bytes, int at, int length) throws UnsupportedEncodingException {
+    public static String getString(byte[] bytes, int at, int length) throws
+            UnsupportedEncodingException {
         return getString(Arrays.copyOfRange(bytes, at, at + length));
     }
 
@@ -258,12 +268,9 @@ public class Property implements HMProperty {
 
         if (bytes.length == 5) {
             c.set(2000 + bytes[0], bytes[1] - 1, bytes[2], bytes[3], bytes[4], 0x00);
-        }
-        else if (bytes.length == 6) {
+        } else if (bytes.length == 6) {
             c.set(2000 + bytes[0], bytes[1] - 1, bytes[2], bytes[3], bytes[4], bytes[5]);
-        }
-
-        else {
+        } else {
             throw new IllegalArgumentException();
         }
 
@@ -278,24 +285,43 @@ public class Property implements HMProperty {
         Calendar c = new GregorianCalendar();
 
         if (bytes.length >= at + 8) {
-            c.set(2000 + bytes[at], bytes[at + 1] - 1, bytes[at + 2], bytes[at + 3], bytes[at + 4], bytes[at + 5]);
-            int minutesOffset = getSignedInt(new byte[] {bytes[at + 6], bytes[at + 7]});
+            c.set(2000 + bytes[at], bytes[at + 1] - 1, bytes[at + 2], bytes[at + 3], bytes[at +
+                    4], bytes[at + 5]);
+            int minutesOffset = getSignedInt(new byte[]{bytes[at + 6], bytes[at + 7]});
 
             int msOffset = minutesOffset * 60 * 1000;
             String[] availableIds = TimeZone.getAvailableIDs(msOffset);
             if (availableIds.length == 0) {
                 c.setTimeZone(TimeZone.getTimeZone("UTC"));
-            }
-            else {
+            } else {
                 TimeZone timeZone = TimeZone.getTimeZone(availableIds[0]);
                 c.setTimeZone(timeZone);
             }
-        }
-        else {
+        } else {
             throw new IllegalArgumentException();
         }
 
         c.getTime(); // this is needed to set the right time...
         return c;
+    }
+
+    public static byte[] calendarToBytes(Calendar calendar) {
+        byte[] bytes = new byte[8];
+
+        bytes[0] = (byte) (calendar.get(Calendar.YEAR) - 2000);
+        bytes[1] = (byte) (calendar.get(Calendar.MONTH) + 1);
+        bytes[2] = (byte) calendar.get(Calendar.DAY_OF_MONTH);
+        bytes[3] = (byte) calendar.get(Calendar.HOUR_OF_DAY);
+        bytes[4] = (byte) calendar.get(Calendar.MINUTE);
+        bytes[5] = (byte) calendar.get(Calendar.SECOND);
+
+        int msOffset = calendar.getTimeZone().getRawOffset(); // in ms
+        int minuteOffset = msOffset / (60 * 1000);
+
+        byte[] bytesOffset = Property.intToBytes(minuteOffset, 2);
+        bytes[6] = bytesOffset[0];
+        bytes[7] = bytesOffset[1];
+
+        return bytes;
     }
 }

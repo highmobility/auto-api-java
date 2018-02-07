@@ -46,8 +46,8 @@ public class ParkingTicketTest {
         assertTrue(state.getOperatorName().equals("Berlin Parking"));
         assertTrue(state.getOperatorTicketId().equals("64894233"));
 
-        assertTrue(PropertyTest.dateIsSame(state.getTicketStartDate(), "2017-01-10T17:34:00"));
-        assertTrue(PropertyTest.dateIsSame(state.getTicketEndDate(), "2018-02-20T22:11:00"));
+        assertTrue(Utils.dateIsSame(state.getTicketStartDate(), "2017-01-10T17:34:00"));
+        assertTrue(Utils.dateIsSame(state.getTicketEndDate(), "2018-02-20T22:11:00"));
 
     }
 

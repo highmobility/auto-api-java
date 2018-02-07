@@ -20,6 +20,8 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ChargeMode;
+import com.highmobility.autoapi.property.ChargeTimer;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -29,57 +31,6 @@ import com.highmobility.autoapi.property.Property;
  */
 public class ChargeState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x01);
-
-    /**
-     * The possible charge states
-     */
-    public enum ChargingState {
-        DISCONNECTED((byte)0x00),
-        PLUGGED_IN((byte)0x01),
-        CHARGING((byte)0x02),
-        CHARGING_COMPLETE((byte)0x03);
-
-        public static ChargingState fromByte(byte byteValue) throws CommandParseException {
-            ChargingState[] values = ChargingState.values();
-
-            for (int i = 0; i < values.length; i++) {
-                ChargingState state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte capabilityByte;
-
-        ChargingState(byte capabilityByte) {
-            this.capabilityByte = capabilityByte;
-        }
-
-        public byte getByte() {
-            return capabilityByte;
-        }
-    }
-
-
-    /**
-     * The possible charge port states
-     */
-    public enum PortState {
-        CLOSED, OPEN, UNAVAILABLE;
-
-        public static PortState fromByte(byte value) throws CommandParseException {
-            switch (value) {
-                case 0x00: return CLOSED;
-                case 0x01: return OPEN;
-                case (byte)0xFF: return UNAVAILABLE;
-            }
-
-            throw new CommandParseException();
-        }
-    }
 
     ChargingState chargingState;
     Integer estimatedRange;
@@ -95,6 +46,9 @@ public class ChargeState extends CommandWithProperties {
 
     Float chargeRate;
     PortState chargePortState;
+
+    ChargeMode chargeMode;
+    ChargeTimer chargeTimer;
 
     /**
      *
@@ -185,6 +139,22 @@ public class ChargeState extends CommandWithProperties {
         return chargePortState;
     }
 
+    /**
+     *
+     * @return The charge mode
+     */
+    public ChargeMode getChargeMode() {
+        return chargeMode;
+    }
+
+    /**
+     *
+     * @return The charge timer
+     */
+    public ChargeTimer getChargeTimer() {
+        return chargeTimer;
+    }
+
     public ChargeState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
@@ -224,7 +194,64 @@ public class ChargeState extends CommandWithProperties {
                 case 0x0B:
                     chargePortState = PortState.fromByte(property.getValueByte());
                     break;
+                case 0x0C:
+                    chargeMode = ChargeMode.fromByte(property.getValueByte());
+                    break;
+                case 0x0D:
+                    chargeTimer = new ChargeTimer(property.getPropertyBytes());
+                    break;
             }
+        }
+    }
+
+    /**
+     * The possible charge states
+     */
+    public enum ChargingState {
+        DISCONNECTED((byte)0x00),
+        PLUGGED_IN((byte)0x01),
+        CHARGING((byte)0x02),
+        CHARGING_COMPLETE((byte)0x03);
+
+        public static ChargingState fromByte(byte byteValue) throws CommandParseException {
+            ChargingState[] values = ChargingState.values();
+
+            for (int i = 0; i < values.length; i++) {
+                ChargingState state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
+        private byte capabilityByte;
+
+        ChargingState(byte capabilityByte) {
+            this.capabilityByte = capabilityByte;
+        }
+
+        public byte getByte() {
+            return capabilityByte;
+        }
+    }
+
+
+    /**
+     * The possible charge port states
+     */
+    public enum PortState {
+        CLOSED, OPEN, UNAVAILABLE;
+
+        public static PortState fromByte(byte value) throws CommandParseException {
+            switch (value) {
+                case 0x00: return CLOSED;
+                case 0x01: return OPEN;
+                case (byte)0xFF: return UNAVAILABLE;
+            }
+
+            throw new CommandParseException();
         }
     }
 }

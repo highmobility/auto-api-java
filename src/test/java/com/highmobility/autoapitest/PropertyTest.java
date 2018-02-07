@@ -25,6 +25,9 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
 
 public class PropertyTest {
+
+
+
     @Test public void propertyLength() {
         IntProperty property = new IntProperty((byte) 0x01, 2, 2);
         assertTrue(Arrays.equals(property.getPropertyBytes(), new byte[]{ 0x01, 0x00, 0x02, 0x00, 0x02 }));
@@ -119,21 +122,5 @@ public class PropertyTest {
 
         assertTrue(foundDimmingProperty == true);
         assertTrue(foundUnknownProperty == true);
-    }
-
-    public static boolean dateIsSame(Calendar c, String date) throws ParseException {
-        float rawOffset = c.getTimeZone().getRawOffset();
-        float expectedRawOffset = 0;
-        assertTrue(rawOffset == expectedRawOffset);
-
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        Date commandDate = c.getTime();
-        Date expectedDate = format.parse(date);
-        String commandDateString = format.format(commandDate);
-        String expectedDateString = format.format(expectedDate);
-
-        return (commandDateString.equals(expectedDateString));
     }
 }

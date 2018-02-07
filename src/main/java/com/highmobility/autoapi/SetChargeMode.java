@@ -18,22 +18,25 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi;
 
-import com.highmobility.utils.Bytes;
+import com.highmobility.autoapi.property.ChargeMode;
 
-import java.util.Calendar;
+/**
+ * Set the charge mode of the car.
+ */
+public class SetChargeMode extends Command {
+    public static final Type TYPE = new Type(Identifier.CHARGING, 0x05);
 
-public class CalendarProperty extends Property {
-    Calendar calendar;
-
-    public Calendar getCalendar() {
-        return calendar;
+    /**
+     * Set the charge mode of the car.
+     * @param chargeMode The charge mode
+     */
+    public SetChargeMode(ChargeMode chargeMode) {
+        super(TYPE.addByte(chargeMode.getByte()), true);
     }
 
-    public CalendarProperty(byte identifier, Calendar calendar) {
-        super(identifier, 8);
-        this.calendar = calendar;
-        Bytes.setBytes(bytes, Property.calendarToBytes(calendar), 3);
+    SetChargeMode(byte[] bytes) throws CommandParseException {
+        super(bytes);
     }
 }
