@@ -36,6 +36,10 @@ public class Type {
         return Bytes.concatBytes(identifierAndType, extraByte);
     }
 
+    byte[] addBytes(byte[] extraBytes) {
+        return Bytes.concatBytes(identifierAndType, extraBytes);
+    }
+
     byte[] getIdentifier() {
         return new byte[] { identifierAndType[0], identifierAndType[1] };
     }

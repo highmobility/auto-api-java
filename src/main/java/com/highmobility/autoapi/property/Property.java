@@ -35,9 +35,9 @@ import java.util.TimeZone;
 import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 
 public class Property implements HMProperty {
-    byte[] bytes;
+    protected byte[] bytes;
 
-    Property(byte identifier, int valueSize) {
+    protected Property(byte identifier, int valueSize) {
         bytes = new byte[3 + valueSize];
 
         bytes[0] = identifier;
@@ -255,6 +255,10 @@ public class Property implements HMProperty {
     public static String getString(byte[] bytes, int at, int length) throws
             UnsupportedEncodingException {
         return getString(Arrays.copyOfRange(bytes, at, at + length));
+    }
+
+    public static byte[] stringToBytes(String string) throws UnsupportedEncodingException {
+        return string.getBytes();
     }
 
     // 5 allBytes eg yy mm dd mm ss. year is from 2000
