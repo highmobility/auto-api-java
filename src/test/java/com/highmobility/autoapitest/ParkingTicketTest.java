@@ -5,12 +5,9 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.EndParking;
 import com.highmobility.autoapi.GetParkingTicket;
-import com.highmobility.autoapi.OpenCloseWindows;
 import com.highmobility.autoapi.ParkingTicket;
 import com.highmobility.autoapi.StartParking;
 import com.highmobility.autoapi.property.ParkingTicketState;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.WindowState;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -46,8 +43,8 @@ public class ParkingTicketTest {
         assertTrue(state.getOperatorName().equals("Berlin Parking"));
         assertTrue(state.getOperatorTicketId().equals("64894233"));
 
-        assertTrue(Utils.dateIsSame(state.getTicketStartDate(), "2017-01-10T17:34:00"));
-        assertTrue(Utils.dateIsSame(state.getTicketEndDate(), "2018-02-20T22:11:00"));
+        assertTrue(TestUtils.dateIsSame(state.getTicketStartDate(), "2017-01-10T17:34:00"));
+        assertTrue(TestUtils.dateIsSame(state.getTicketEndDate(), "2018-02-20T22:11:00"));
 
     }
 

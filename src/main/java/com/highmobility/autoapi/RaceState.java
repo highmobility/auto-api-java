@@ -47,9 +47,10 @@ public class RaceState extends CommandWithProperties {
     Boolean espInterventionActive;
     BrakeTorqueVectoringProperty[] brakeTorqueVectorings;
 
-
     GearMode gearMode;
     Integer selectedGear;
+
+    Float brakePedalPosition;
 
     /**
      * @param accelerationType The acceleration type
@@ -151,6 +152,14 @@ public class RaceState extends CommandWithProperties {
         return selectedGear;
     }
 
+    /**
+     *
+     * @return The brake pedal position between 0-1, whereas 1 is full brakes
+     */
+    public Float getBrakePedalPosition() {
+        return brakePedalPosition;
+    }
+
     public RaceState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
@@ -197,6 +206,10 @@ public class RaceState extends CommandWithProperties {
                 case 0x0C:
                     selectedGear = Property.getUnsignedInt(property.getValueByte());
                     break;
+                case 0x0D:
+                    brakePedalPosition = Property.getUnsignedInt(property.getValueByte()) / 100f;
+                    break;
+
             }
         }
 

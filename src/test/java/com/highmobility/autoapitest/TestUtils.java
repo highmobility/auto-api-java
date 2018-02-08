@@ -10,7 +10,7 @@ import java.util.TimeZone;
 
 import static junit.framework.TestCase.assertTrue;
 
-public class Utils {
+public class TestUtils {
 
     public static boolean dateIsSame(Calendar c, String date) throws ParseException {
         float rawOffset = c.getTimeZone().getRawOffset();

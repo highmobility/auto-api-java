@@ -5,27 +5,19 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetChargeState;
-import com.highmobility.autoapi.GetTheftAlarmState;
 import com.highmobility.autoapi.SetChargeLimit;
 import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
-import com.highmobility.autoapi.SetTheftAlarm;
 import com.highmobility.autoapi.StartStopCharging;
-import com.highmobility.autoapi.TheftAlarmState;
 import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.ChargeTimer;
 import com.highmobility.utils.Bytes;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.SimpleTimeZone;
-import java.util.TimeZone;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -62,7 +54,7 @@ public class ChargingTest {
         assertTrue(state.getChargeMode() == ChargeMode.IMMEDIATE);
         assertTrue(state.getChargeTimer().getType() == ChargeTimer.Type.DEPARTURE_TIME);
         try {
-            assertTrue(Utils.dateIsSame(state.getChargeTimer().getTime(), "2018-01-10T16" +
+            assertTrue(TestUtils.dateIsSame(state.getChargeTimer().getTime(), "2018-01-10T16" +
                         ":32:05"));
         } catch (ParseException e) {
             fail();
@@ -96,7 +88,7 @@ public class ChargingTest {
     @Test public void setChargeTimer() {
         byte[] waitingForBytes = Bytes.bytesFromHex("0023060D00090212010a1020050000");
         try {
-            Calendar c = Utils.getCalendar("2018-01-10T16:32:05");
+            Calendar c = TestUtils.getCalendar("2018-01-10T16:32:05");
             byte[] commandBytes = new SetChargeTimer(ChargeTimer.Type.DEPARTURE_TIME, c).getBytes();
             assertTrue(Arrays.equals(waitingForBytes, commandBytes));
         } catch (ParseException e) {

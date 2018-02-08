@@ -7,7 +7,6 @@ import com.highmobility.autoapi.GetRaceState;
 import com.highmobility.autoapi.RaceState;
 import com.highmobility.autoapi.property.AccelerationProperty;
 import com.highmobility.autoapi.property.Axle;
-import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.utils.Bytes;
 
@@ -23,7 +22,7 @@ public class RaceTest {
     @Test
     public void state() {
         byte[] bytes = Bytes.bytesFromHex(
-                "005701010005003f5d2f1b01000501bf40c49c020001130300010004000162050001E20600044138f5c307000440d51eb808000103090001010A000201010B0001040C000104");
+                "005701010005003f5d2f1b01000501bf40c49c020001130300010004000162050001E20600044138f5c307000440d51eb808000103090001010A000201010B0001040C0001040D000101");
 
         Command command = null;
 
@@ -53,6 +52,7 @@ public class RaceTest {
         assertTrue(state.getBrakeTorqueVectoring(Axle.FRONT) == null);
         assertTrue(state.getGearMode() == GearMode.DRIVE);
         assertTrue(state.getSelectedGear() == 4);
+        assertTrue(state.getBrakePedalPosition() == .01f);
     }
 
     @Test public void get() {
