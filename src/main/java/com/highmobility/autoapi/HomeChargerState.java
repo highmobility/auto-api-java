@@ -141,8 +141,10 @@ public class HomeChargerState extends CommandWithProperties {
      * @return Price tariff for the given pricing type
      */
     public PriceTariff getPriceTariff(PriceTariff.PricingType pricingType) {
-        for (PriceTariff tariff : priceTariffs) {
-            if (tariff.getPricingType() == pricingType) return tariff;
+        if (priceTariffs != null) {
+            for (PriceTariff tariff : priceTariffs) {
+                if (tariff.getPricingType() == pricingType) return tariff;
+            }
         }
 
         return null;
@@ -203,7 +205,7 @@ public class HomeChargerState extends CommandWithProperties {
                     else priceTariffs = Arrays.copyOf(priceTariffs, priceTariffs.length + 1);
                     try {
                         priceTariffs[priceTariffs.length - 1] = new PriceTariff(property
-                                    .getPropertyBytes());
+                                .getPropertyBytes());
                     } catch (UnsupportedEncodingException e) {
                         throw new CommandParseException(CommandParseException
                                 .CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);

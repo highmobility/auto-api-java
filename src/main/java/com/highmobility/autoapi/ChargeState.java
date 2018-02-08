@@ -24,10 +24,12 @@ import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.ChargeTimer;
 import com.highmobility.autoapi.property.Property;
 
+import java.util.Arrays;
+
 /**
- * This message is sent when a Get Charge State message is received by the car. It is also sent
- * when the car is plugged in, disconnected, starts or stops charging, or when the charge limit
- * is changed.
+ * This message is sent when a Get Charge State message is received by the car. It is also sent when
+ * the car is plugged in, disconnected, starts or stops charging, or when the charge limit is
+ * changed.
  */
 public class ChargeState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x01);
@@ -48,10 +50,9 @@ public class ChargeState extends CommandWithProperties {
     PortState chargePortState;
 
     ChargeMode chargeMode;
-    ChargeTimer chargeTimer;
+    ChargeTimer[] chargeTimers;
 
     /**
-     *
      * @return The Charge State
      */
     public ChargingState getChargingState() {
@@ -59,7 +60,6 @@ public class ChargeState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Estimated range in km
      */
     public Integer getEstimatedRange() {
@@ -67,7 +67,6 @@ public class ChargeState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return battery level percentage
      */
     public Float getBatteryLevel() {
@@ -75,7 +74,6 @@ public class ChargeState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Battery current in AC
      */
     public Float getBatteryCurrentAC() {
@@ -83,7 +81,6 @@ public class ChargeState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Battery current in DC
      */
     public Float getBatteryCurrentDC() {
@@ -92,7 +89,6 @@ public class ChargeState extends CommandWithProperties {
 
 
     /**
-     *
      * @return Charger voltage in AC
      */
     public Float getChargerVoltageAC() {
@@ -100,7 +96,6 @@ public class ChargeState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Charger voltage in DC
      */
     public Float getChargerVoltageDC() {
@@ -108,7 +103,6 @@ public class ChargeState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Charge limit percentage
      */
     public Float getChargeLimit() {
@@ -116,7 +110,6 @@ public class ChargeState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return The time to complete the charge in minutes
      */
     public Integer getTimeToCompleteCharge() {
@@ -124,7 +117,6 @@ public class ChargeState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Charge rate in kW represented as 4-bytes per IEEE 754, when charging
      */
     public Float getChargeRate() {
@@ -132,7 +124,6 @@ public class ChargeState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Charge Port State
      */
     public PortState getChargePortState() {
@@ -140,7 +131,6 @@ public class ChargeState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return The charge mode
      */
     public ChargeMode getChargeMode() {
@@ -148,11 +138,23 @@ public class ChargeState extends CommandWithProperties {
     }
 
     /**
-     *
-     * @return The charge timer
+     * @return All of the set charge timers
      */
-    public ChargeTimer getChargeTimer() {
-        return chargeTimer;
+    public ChargeTimer[] getChargeTimers() {
+        return chargeTimers;
+    }
+
+    /**
+     * @param type The timer type
+     * @return The charge timer for the given type
+     */
+    public ChargeTimer getChargeTimer(ChargeTimer.Type type) {
+        if (chargeTimers != null) {
+            for (ChargeTimer timer : chargeTimers) {
+                if (timer.getType() == type) return timer;
+            }
+        }
+        return null;
     }
 
     public ChargeState(byte[] bytes) throws CommandParseException {
@@ -198,7 +200,10 @@ public class ChargeState extends CommandWithProperties {
                     chargeMode = ChargeMode.fromByte(property.getValueByte());
                     break;
                 case 0x0D:
-                    chargeTimer = new ChargeTimer(property.getPropertyBytes());
+                    if (chargeTimers == null) chargeTimers = new ChargeTimer[1];
+                    else chargeTimers = Arrays.copyOf(chargeTimers, chargeTimers.length + 1);
+                    chargeTimers[chargeTimers.length - 1] = new ChargeTimer(property
+                            .getPropertyBytes());
                     break;
             }
         }
@@ -208,10 +213,10 @@ public class ChargeState extends CommandWithProperties {
      * The possible charge states
      */
     public enum ChargingState {
-        DISCONNECTED((byte)0x00),
-        PLUGGED_IN((byte)0x01),
-        CHARGING((byte)0x02),
-        CHARGING_COMPLETE((byte)0x03);
+        DISCONNECTED((byte) 0x00),
+        PLUGGED_IN((byte) 0x01),
+        CHARGING((byte) 0x02),
+        CHARGING_COMPLETE((byte) 0x03);
 
         public static ChargingState fromByte(byte byteValue) throws CommandParseException {
             ChargingState[] values = ChargingState.values();
@@ -246,9 +251,12 @@ public class ChargeState extends CommandWithProperties {
 
         public static PortState fromByte(byte value) throws CommandParseException {
             switch (value) {
-                case 0x00: return CLOSED;
-                case 0x01: return OPEN;
-                case (byte)0xFF: return UNAVAILABLE;
+                case 0x00:
+                    return CLOSED;
+                case 0x01:
+                    return OPEN;
+                case (byte) 0xFF:
+                    return UNAVAILABLE;
             }
 
             throw new CommandParseException();

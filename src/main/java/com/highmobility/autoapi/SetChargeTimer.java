@@ -21,10 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ChargeTimer;
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
-
-import java.util.Calendar;
+import java.util.ArrayList;
 
 /**
  * Set the charge timer of the car. The message can include one of the different timer types or
@@ -33,17 +30,18 @@ import java.util.Calendar;
 public class SetChargeTimer extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x06);
 
-    public SetChargeTimer(ChargeTimer.Type type, Calendar time) {
-        super(TYPE, getProperties(type, time));
+    public SetChargeTimer(ChargeTimer[] chargeTimers) {
+        super(TYPE, validateTariffs(chargeTimers));
     }
 
-    static HMProperty[] getProperties(ChargeTimer.Type type, Calendar time) {
-        return new HMProperty[] { new ChargeTimer((byte) 0x0D, type, time) };
-    }
+    static ChargeTimer[] validateTariffs(ChargeTimer[] timers) throws IllegalArgumentException {
+        ArrayList<ChargeTimer.Type> types = new ArrayList<>(3);
+        for (ChargeTimer timer : timers) {
+            if (types.contains(timer.getType()) == false) types.add(timer.getType());
+            else throw new IllegalArgumentException("Duplicate timer types are not allowed");
+        }
 
-    public SetChargeTimer(Property[] properties) throws CommandParseException,
-            IllegalArgumentException {
-        super(TYPE, properties);
+        return timers;
     }
 
     SetChargeTimer(byte[] bytes) throws CommandParseException {
