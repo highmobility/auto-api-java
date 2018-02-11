@@ -108,6 +108,7 @@ public class CommandWithProperties extends Command {
 
         if (properties == null || properties.length == 0) throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
+        this.type = type;
         bytes = new byte[] {
                 type.getIdentifierAndType()[0],
                 type.getIdentifierAndType()[1],
