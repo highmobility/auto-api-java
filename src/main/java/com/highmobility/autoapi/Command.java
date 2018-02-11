@@ -57,5 +57,6 @@ public class Command {
 
     Command(Type type) {
         this.bytes = type.getIdentifierAndType();
+        this.type = type;
     }
 }
