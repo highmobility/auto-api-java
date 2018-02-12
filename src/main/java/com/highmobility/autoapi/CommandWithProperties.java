@@ -82,7 +82,7 @@ public class CommandWithProperties extends Command {
                     .valueStart - 3, propertyEnumeration.valueStart + propertyEnumeration.size));
             builder.add(property);
 
-            if (property.getPropertyIdentifier() == 0xFFFFFFA0) { // dont know why just 0xA0 comparison
+            if (property.getPropertyIdentifier() == (byte)0xA0) {
                 // does not work
                 if (propertyEnumeration.size != 9) {
                     throw new CommandParseException();
@@ -90,7 +90,7 @@ public class CommandWithProperties extends Command {
 
                 nonce = Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
                         propertyEnumeration.valueStart + propertyEnumeration.size);
-            } else if (property.getPropertyIdentifier() == 0xFFFFFFA1) {
+            } else if (property.getPropertyIdentifier() == (byte)0xA1) {
                 if (propertyEnumeration.size != 64) {
                     throw new CommandParseException();
                 }
@@ -115,7 +115,16 @@ public class CommandWithProperties extends Command {
         };
 
         for (int i = 0; i < properties.length; i++) {
-            bytes = Bytes.concatBytes(bytes, properties[i].getPropertyBytes());
+            HMProperty property = properties[i];
+            byte[] propertyBytes = property.getPropertyBytes();
+            bytes = Bytes.concatBytes(bytes, propertyBytes);
+
+            if (property.getPropertyIdentifier() == (byte)0xA0) {
+                nonce = Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length);
+            }
+            else if (property.getPropertyIdentifier() == (byte)0xA1) {
+                signature = Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length);
+            }
         }
     }
 

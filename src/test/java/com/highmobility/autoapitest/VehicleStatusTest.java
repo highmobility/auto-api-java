@@ -143,12 +143,17 @@ public class VehicleStatusTest {
 
     @Test public void createWithSignature() throws UnsupportedEncodingException {
         VehicleStatus.Builder builder = getVehicleStatusBuilderWithoutSignature();
-        builder.setNonce(Bytes.bytesFromHex("324244433743483436"));
-        builder.setSignature(Bytes.bytesFromHex
-                ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
-        byte[] command = builder.build().getBytes();
-        assertTrue(Arrays.equals(command, Bytes.bytesFromHex
-                ("0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102A00009324244433743483436A100404D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6")));
+        byte[] nonce = Bytes.bytesFromHex("324244433743483436");
+        builder.setNonce(nonce);
+        byte[] signature = Bytes.bytesFromHex
+                ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6");
+        builder.setSignature(signature);
+
+        VehicleStatus status = builder.build();
+        byte[] command = status.getBytes();
+        assertTrue(Arrays.equals(command, command));
+        assertTrue(Arrays.equals(status.getNonce(), nonce));
+        assertTrue(Arrays.equals(status.getSignature(), signature));
     }
 
     @Test public void maiduTest() {

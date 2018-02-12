@@ -22,8 +22,6 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.utils.Bytes;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class StringProperty extends Property {
     public static final String CHARSET = "UTF-8";

@@ -21,6 +21,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.Bytes;
 
 import java.io.UnsupportedEncodingException;
@@ -34,10 +35,17 @@ import java.util.TimeZone;
 
 import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 
+/**
+ * Property is a representation of some AutoAPI data. Specific data have specific subclasses like
+ * StringProperty and FloatProperty.
+ *
+ * Property has to have a value with a size greater or equal to 1.
+ */
 public class Property implements HMProperty {
     protected byte[] bytes;
 
-    protected Property(byte identifier, int valueSize) {
+    protected Property(byte identifier, int valueSize) throws ParseException {
+        if (valueSize == 0) throw new ParseException();
         bytes = new byte[3 + valueSize];
 
         bytes[0] = identifier;
@@ -51,25 +59,28 @@ public class Property implements HMProperty {
         }
     }
 
-    public Property(byte identifier, byte[] value) {
-        this(identifier, value.length);
+    /**
+     *
+     * @param identifier The identifier byte of the property.
+     * @param value The value of the property.
+     * @throws CommandParseException When the value is not set.
+     */
+    public Property(byte identifier, byte[] value) throws ParseException {
+        this(identifier, value != null ? value.length : 0);
         Bytes.setBytes(bytes, value, 3);
     }
 
     public Property(byte[] bytes) throws CommandParseException {
-        if (bytes.length < 3) throw new CommandParseException();
+        if (bytes.length < 4) throw new CommandParseException();
         this.bytes = bytes;
     }
 
     /**
      *
      * @return The value bytes.
-     * @throws CommandParseException When there are no value bytes.
      */
-    public byte[] getValueBytes() throws CommandParseException {
-        int length = getPropertyLength();
-        if (length > 0) return Arrays.copyOfRange(bytes, 3, 3 + length);
-        throw new CommandParseException();
+    public byte[] getValueBytes()  {
+        return Arrays.copyOfRange(bytes, 3, bytes.length);
     }
 
     /**
@@ -77,9 +88,8 @@ public class Property implements HMProperty {
      * @return The one value byte.
      * @throws CommandParseException When the property bytes length is not 4.
      */
-    public byte getValueByte() throws CommandParseException {
-        if (bytes.length == 4) return bytes[3];
-        throw new CommandParseException();
+    public byte getValueByte() {
+        return bytes[3];
     }
 
     @Override public byte getPropertyIdentifier() {
