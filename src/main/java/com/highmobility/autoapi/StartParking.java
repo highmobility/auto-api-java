@@ -35,12 +35,15 @@ import java.util.List;
  * the operator.
  */
 public class StartParking extends CommandWithProperties {
-    // 00470201000E4265726c696e205061726b696e67020008363438393432333303000811010a1122000000
     public static final Type TYPE = new Type(Identifier.PARKING_TICKET, 0x02);
 
     /**
      * Start parking.
      *
+     * @param operatorName     The operator name
+     * @param operatorTicketId The ticket id
+     * @param startDate        The parking start date
+     * @param endDate          The parking end date
      * @throws UnsupportedEncodingException When strings are in invalid format.
      */
     public StartParking(String operatorName, String operatorTicketId, Calendar startDate,
@@ -48,12 +51,14 @@ public class StartParking extends CommandWithProperties {
         super(TYPE, getProperties(operatorName, operatorTicketId, startDate, endDate));
     }
 
-    static HMProperty[] getProperties(String operatorName, String operatorTicketId, Calendar startDate,
-                                      Calendar endDate) throws UnsupportedEncodingException {
+    static HMProperty[] getProperties(String operatorName, String operatorTicketId, Calendar
+            startDate, Calendar endDate) throws UnsupportedEncodingException {
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 
-        if (operatorName != null) propertiesBuilder.add(new StringProperty((byte) 0x01, operatorName));
-        if (operatorTicketId != null) propertiesBuilder.add(new StringProperty((byte) 0x02, operatorTicketId));
+        if (operatorName != null)
+            propertiesBuilder.add(new StringProperty((byte) 0x01, operatorName));
+        if (operatorTicketId != null)
+            propertiesBuilder.add(new StringProperty((byte) 0x02, operatorTicketId));
         if (startDate != null) propertiesBuilder.add(new CalendarProperty((byte) 0x03, startDate));
         if (endDate != null) propertiesBuilder.add(new CalendarProperty((byte) 0x04, endDate));
 
