@@ -104,11 +104,10 @@ public class CommandWithProperties extends Command {
     }
 
     CommandWithProperties(Type type, HMProperty[] properties) throws IllegalArgumentException {
-        super( null, true);
+        super(type);
 
         if (properties == null || properties.length == 0) throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
-        this.type = type;
         bytes = new byte[] {
                 type.getIdentifierAndType()[0],
                 type.getIdentifierAndType()[1],

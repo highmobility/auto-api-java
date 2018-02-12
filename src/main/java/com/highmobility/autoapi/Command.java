@@ -31,7 +31,7 @@ public class Command {
     }
 
     /**
-     * This is used when we do not want to throw when we know the bytes are ok (we construct them
+     * InternalConstructor ones are used when we do not want to throw when we know the bytes are ok (we construct them
      * ourselves)
      */
     Command(byte[] bytes, boolean internalConstructor) {

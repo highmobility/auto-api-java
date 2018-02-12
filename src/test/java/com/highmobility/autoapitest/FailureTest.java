@@ -43,5 +43,6 @@ public class FailureTest {
         assertTrue(Arrays.equals(builtBytes, bytes));
         assertTrue(failure.getFailedType() == GetTrunkState.TYPE);
         assertTrue(failure.getFailureReason() == FailureReason.UNAUTHORIZED);
+        assertTrue(failure.getType() == Failure.TYPE);
     }
 }
