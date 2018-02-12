@@ -58,7 +58,6 @@ public class Command {
         return type.equals(this.type);
     }
 
-
     private void setTypeAndBytes(Type type) {
         this.type = type;
         this.bytes = type.getIdentifierAndType();

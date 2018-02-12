@@ -38,7 +38,10 @@ public class FailureTest {
         Failure.Builder builder = new Failure.Builder();
         builder.setFailedType(GetTrunkState.TYPE);
         builder.setFailureReason(FailureReason.UNAUTHORIZED);
-        byte[] builtBytes = builder.build().getBytes();
+        Failure failure = builder.build();
+        byte[] builtBytes = failure.getBytes();
         assertTrue(Arrays.equals(builtBytes, bytes));
+        assertTrue(failure.getFailedType() == GetTrunkState.TYPE);
+        assertTrue(failure.getFailureReason() == FailureReason.UNAUTHORIZED);
     }
 }

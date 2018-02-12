@@ -70,6 +70,7 @@ public class Failure extends CommandWithProperties {
     private Failure(Builder builder) {
         super(TYPE, builder.getProperties());
         failureReason = builder.failureReason;
+        failedType = builder.failedType;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
