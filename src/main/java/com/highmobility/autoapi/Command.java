@@ -20,9 +20,27 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.exception.ParseException;
+
 public class Command {
     byte[] bytes;
     Type type;
+
+    Command(byte[] bytes) {
+        setTypeAndBytes(bytes);
+    }
+
+    /**
+     * This is used when we do not want to throw when we know the bytes are ok (we construct them
+     * ourselves)
+     */
+    Command(byte[] bytes, boolean internalConstructor) {
+        setTypeAndBytes(bytes);
+    }
+
+    Command(Type type) {
+        setTypeAndBytes(type);
+    }
 
     public Type getType() {
         return type;
@@ -40,22 +58,16 @@ public class Command {
         return type.equals(this.type);
     }
 
-    Command(byte[] bytes) throws CommandParseException {
-        if (bytes == null || bytes.length == 0) return; // empty IncomingCommand
-        if (bytes.length < 3) throw new CommandParseException();
-        this.bytes = bytes;
-        type = new Type(bytes[0], bytes[1], bytes[2]);
-    }
 
-    /**
-     * This is used when we do not want to throw when we know the bytes are ok (we construct them
-     * ourselves)
-     */
-    Command(byte[] bytes, boolean internalConstructor) {
-        this.bytes = bytes;
-    }
-
-    Command(Type type) {
+    private void setTypeAndBytes(Type type) {
+        this.type = type;
         this.bytes = type.getIdentifierAndType();
+    }
+
+    private void setTypeAndBytes(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) return; // empty IncomingCommand
+        if (bytes.length < 3) throw new ParseException();
+        this.bytes = bytes;
+        this.type = new Type(bytes[0], bytes[1], bytes[2]);
     }
 }
