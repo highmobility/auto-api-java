@@ -21,10 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.WindowState;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This message is sent when a Get Gas Flap State message is received by the car.
@@ -44,8 +40,6 @@ public class GasFlapState extends CommandWithProperties {
 
     public GasFlapState(byte[] bytes) throws CommandParseException {
         super(bytes);
-
-        List<WindowState> builder = new ArrayList<>();
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];

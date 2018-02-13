@@ -21,9 +21,11 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.WindowProperty;
 import com.highmobility.autoapi.property.WindowState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -68,5 +70,42 @@ public class WindowsState extends CommandWithProperties {
         }
 
         windowStates = builder.toArray(new WindowState[builder.size()]);
+    }
+
+    private WindowsState(Builder builder) {
+        super(TYPE, builder.getProperties());
+        windowStates = builder.windowStates;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private WindowState[] windowStates;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        public Builder setWindowStates(WindowState[] windowStates) {
+            this.windowStates = windowStates;
+
+            for (int i = 0; i < windowStates.length; i++) {
+                addProperty(new WindowProperty(windowStates[i]));
+            }
+
+            return this;
+        }
+
+        public Builder addWindowState(WindowState windowState) {
+            if (windowStates == null) windowStates = new WindowState[1];
+            else windowStates = Arrays.copyOf(windowStates, windowStates.length + 1);
+
+            addProperty(new WindowProperty(windowState));
+            windowStates[windowStates.length - 1] = windowState;
+
+            return this;
+        }
+
+        public WindowsState build() {
+            return new WindowsState(this);
+        }
     }
 }

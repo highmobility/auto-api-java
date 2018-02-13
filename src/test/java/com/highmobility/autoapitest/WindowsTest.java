@@ -63,4 +63,17 @@ public class WindowsTest {
         byte[] bytes = new OpenCloseWindows(windowsStates).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
+
+    @Test public void build() {
+        byte[] expectedBytes = Bytes.bytesFromHex(
+                "0045010100020001010002010001000202000100020300");
+
+        WindowsState.Builder builder = new WindowsState.Builder();
+        builder.addWindowState(new WindowState(WindowState.Position.FRONT_LEFT, WindowState.State.OPEN));
+        builder.addWindowState(new WindowState(WindowState.Position.FRONT_RIGHT, WindowState.State.CLOSED));
+        builder.addWindowState(new WindowState(WindowState.Position.REAR_RIGHT, WindowState.State.CLOSED));
+        builder.addWindowState(new WindowState(WindowState.Position.REAR_LEFT, WindowState.State.CLOSED));
+
+        assertTrue(Arrays.equals(builder.build().getBytes(), expectedBytes));
+    }
 }

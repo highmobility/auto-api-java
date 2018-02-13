@@ -33,7 +33,7 @@ public class WindowProperty extends Property {
         this(new WindowState(WindowState.Position.fromByte(positionByte), WindowState.State.fromByte(stateByte)));
     }
 
-    public WindowProperty(WindowState state) throws CommandParseException {
+    public WindowProperty(WindowState state) {
         super((byte) 0x01, 2);
         this.state = state;
         bytes[3] = state.getPosition().getByte();
