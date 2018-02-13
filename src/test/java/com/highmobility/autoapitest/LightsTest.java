@@ -4,18 +4,14 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlLights;
-import com.highmobility.autoapi.ControlRooftop;
 import com.highmobility.autoapi.GetLightsState;
-import com.highmobility.autoapi.GetRooftopState;
 import com.highmobility.autoapi.LightsState;
-import com.highmobility.autoapi.RooftopState;
+import com.highmobility.autoapi.property.FrontExteriorLightState;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
 import java.util.Arrays;
-
-import javax.naming.ldap.Control;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -42,7 +38,8 @@ public class LightsTest {
 
         LightsState state = (LightsState) command;
         assertTrue(command.is(LightsState.TYPE));
-        assertTrue(state.getFrontExteriorLightState() == LightsState.FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM);
+        assertTrue(state.getFrontExteriorLightState() == FrontExteriorLightState
+                .ACTIVE_WITH_FULL_BEAM);
         assertTrue(state.isRearExteriorLightActive() == true);
         assertTrue(state.isInteriorLightActive() == false);
 
@@ -59,16 +56,37 @@ public class LightsTest {
 
     @Test public void control() throws CommandParseException {
         byte[] expecting = Bytes.bytesFromHex("003602" +
-                                                "01000102" +
-                                                "02000100" +
-                                                "03000100" +
-                                                "040003ff0000");
+                "01000102" +
+                "02000100" +
+                "03000100" +
+                "040003ff0000");
 
         byte[] bytes = new ControlLights(
-                LightsState.FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM
-                , false, false, new int[] { 255, 0, 0, 255 }
+                FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM
+                , false, false, new int[]{255, 0, 0, 255}
         ).getBytes();
 
         assertTrue(Arrays.equals(expecting, bytes));
+    }
+
+    @Test public void build() {
+        byte[] expectedBytes = Bytes.bytesFromHex(
+                "003601" +
+                        "01000102" +
+                        "02000101" +
+                        "03000100" +
+                        "040003ff0000");
+
+        LightsState.Builder builder = new LightsState.Builder();
+
+        builder.setFrontExteriorLightState(FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM);
+        builder.setRearExteriorLightActive(true);
+        builder.setInteriorLightActive(false);
+
+        int[] ambientColor = new int[]{0xFF, 0, 0};
+        builder.setAmbientColor(ambientColor);
+
+        byte[] actualBytes = builder.build().getBytes();
+        assertTrue(Arrays.equals(actualBytes, expectedBytes));
     }
 }

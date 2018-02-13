@@ -23,6 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.ByteProperty;
 import com.highmobility.autoapi.property.ColorProperty;
+import com.highmobility.autoapi.property.FrontExteriorLightState;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 
@@ -45,14 +46,14 @@ public class ControlLights extends CommandWithProperties {
      *
      * @throws IllegalArgumentException If all arguments are null
      */
-    public ControlLights(LightsState.FrontExteriorLightState frontExteriorLightState,
+    public ControlLights(FrontExteriorLightState frontExteriorLightState,
                                        Boolean rearExteriorLightActive,
                                        Boolean interiorLightActive,
                                        int[] ambientColor) {
         super(TYPE, getProperties(frontExteriorLightState, rearExteriorLightActive, interiorLightActive, ambientColor));
     }
 
-    static HMProperty[] getProperties(LightsState.FrontExteriorLightState frontExteriorLightState,
+    static HMProperty[] getProperties(FrontExteriorLightState frontExteriorLightState,
                                       Boolean rearExteriorLightActive,
                                       Boolean interiorLightActive,
                                       int[] ambientColor) {

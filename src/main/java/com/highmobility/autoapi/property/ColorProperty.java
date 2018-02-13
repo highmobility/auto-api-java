@@ -21,11 +21,16 @@
 package com.highmobility.autoapi.property;
 
 public class ColorProperty extends Property {
-    public ColorProperty(byte identifier, int[] value) throws IllegalArgumentException {
+    public ColorProperty(byte identifier, int[] ambientColor) throws IllegalArgumentException {
         super(identifier, 3);
-        if (value.length != 4) throw new IllegalArgumentException("Need 4 color values");
-        bytes[3] = (byte) value[0];
-        bytes[4] = (byte) value[1];
-        bytes[5] = (byte) value[2];
+
+        if (ambientColor.length != 4 && ambientColor.length != 3) {
+            // maybe later will add alpha as well
+            throw new IllegalArgumentException("Need rgb or rgba color values");
+        }
+
+        bytes[3] = (byte) ambientColor[0];
+        bytes[4] = (byte) ambientColor[1];
+        bytes[5] = (byte) ambientColor[2];
     }
 }

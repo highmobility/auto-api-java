@@ -20,6 +20,9 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.ColorProperty;
+import com.highmobility.autoapi.property.FrontExteriorLightState;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -28,34 +31,9 @@ import com.highmobility.autoapi.property.Property;
 public class LightsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHTS, 0x01);
 
-    public enum FrontExteriorLightState {
-        INACTIVE((byte)(0x00)),
-        ACTIVE((byte)0x01),
-        ACTIVE_WITH_FULL_BEAM((byte)0x02);
-
-        public static FrontExteriorLightState fromByte(byte value) throws CommandParseException {
-            FrontExteriorLightState[] values = FrontExteriorLightState.values();
-
-            for (int i = 0; i < values.length; i++) {
-                FrontExteriorLightState capability = values[i];
-                if (capability.getByte() == value) {
-                    return capability;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte capabilityByte;
-
-        FrontExteriorLightState(byte capabilityByte) {
-            this.capabilityByte = capabilityByte;
-        }
-
-        public byte getByte() {
-            return capabilityByte;
-        }
-    }
+    private static final byte REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER = 0x02;
+    private static final byte INTERIOR_LIGHT_ACTIVE_IDENTIFIER = 0x03;
+    private static final byte AMBIENT_COLOR_IDENTIFIER = 0x04;
 
     FrontExteriorLightState frontExteriorLightState;
     Boolean rearExteriorLightActive;
@@ -63,7 +41,6 @@ public class LightsState extends CommandWithProperties {
     int[] ambientColor;
 
     /**
-     *
      * @return Front exterior light state
      */
     public FrontExteriorLightState getFrontExteriorLightState() {
@@ -71,7 +48,6 @@ public class LightsState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Rear exterior light state
      */
     public Boolean isRearExteriorLightActive() {
@@ -79,7 +55,6 @@ public class LightsState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Interior light state
      */
     public Boolean isInteriorLightActive() {
@@ -87,7 +62,6 @@ public class LightsState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Ambient color in rgba values from 0-255
      */
     public int[] getAmbientColor() {
@@ -100,26 +74,75 @@ public class LightsState extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
-                    frontExteriorLightState = FrontExteriorLightState.fromByte(property.getValueByte());
+                case FrontExteriorLightState.IDENTIFIER:
+                    frontExteriorLightState = FrontExteriorLightState.fromByte(property
+                            .getValueByte());
                     break;
-                case 0x02:
+                case REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER:
                     rearExteriorLightActive = Property.getBool(property.getValueByte());
                     break;
-                case 0x03:
+                case INTERIOR_LIGHT_ACTIVE_IDENTIFIER:
                     interiorLightActive = Property.getBool(property.getValueByte());
                     break;
-                case 0x04:
+                case AMBIENT_COLOR_IDENTIFIER:
                     byte[] valueBytes = property.getValueBytes();
                     if (valueBytes.length != 3) throw new CommandParseException();
-                    ambientColor = new int[4];
 
+                    ambientColor = new int[4];
                     ambientColor[0] = valueBytes[0] & 0xFF;
                     ambientColor[1] = valueBytes[1] & 0xFF;
                     ambientColor[2] = valueBytes[2] & 0xFF;
                     ambientColor[3] = 255;
+
                     break;
             }
+        }
+    }
+
+    private LightsState(Builder builder) {
+        super(TYPE, builder.getProperties());
+        frontExteriorLightState = builder.frontExteriorLightState;
+        rearExteriorLightActive = builder.rearExteriorLightActive;
+        interiorLightActive = builder.interiorLightActive;
+        ambientColor = builder.ambientColor;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private FrontExteriorLightState frontExteriorLightState;
+        private Boolean rearExteriorLightActive;
+        private Boolean interiorLightActive;
+        private int[] ambientColor;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        public Builder setFrontExteriorLightState(FrontExteriorLightState frontExteriorLightState) {
+            this.frontExteriorLightState = frontExteriorLightState;
+            addProperty(frontExteriorLightState);
+            return this;
+        }
+
+        public Builder setRearExteriorLightActive(Boolean rearExteriorLightActive) {
+            this.rearExteriorLightActive = rearExteriorLightActive;
+            addProperty(new BooleanProperty(REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER, rearExteriorLightActive));
+            return this;
+        }
+
+        public Builder setInteriorLightActive(Boolean interiorLightActive) {
+            this.interiorLightActive = interiorLightActive;
+            addProperty(new BooleanProperty(INTERIOR_LIGHT_ACTIVE_IDENTIFIER, interiorLightActive));
+            return this;
+        }
+
+        public Builder setAmbientColor(int[] ambientColor) {
+            this.ambientColor = ambientColor;
+            addProperty(new ColorProperty(AMBIENT_COLOR_IDENTIFIER, ambientColor));
+            return this;
+        }
+
+        public LightsState build() {
+            return new LightsState(this);
         }
     }
 }
