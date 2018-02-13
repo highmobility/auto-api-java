@@ -22,7 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindowProperty;
-import com.highmobility.autoapi.property.WindowState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,18 +35,18 @@ import java.util.List;
 public class WindowsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDOWS, 0x01);
 
-    WindowState[] windowStates;
+    WindowProperty[] windowProperties;
 
     /**
      * @return All of the window states
      */
-    public WindowState[] getWindowStates() {
-        return windowStates;
+    public WindowProperty[] getWindowProperties() {
+        return windowProperties;
     }
 
-    public WindowState getWindowState(WindowState.Position position) {
-        for (int i = 0; i < windowStates.length; i++) {
-            if (windowStates[i].getPosition() == position) return windowStates[i];
+    public WindowProperty getWindowProperty(WindowProperty.Position position) {
+        for (int i = 0; i < windowProperties.length; i++) {
+            if (windowProperties[i].getPosition() == position) return windowProperties[i];
         }
 
         return null;
@@ -56,50 +55,50 @@ public class WindowsState extends CommandWithProperties {
     public WindowsState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        List<WindowState> builder = new ArrayList<>();
+        List<WindowProperty> builder = new ArrayList<>();
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
-                    WindowState state = new WindowState(property.getValueBytes()[0], property
+                    WindowProperty state = new WindowProperty(property.getValueBytes()[0], property
                             .getValueBytes()[1]);
                     builder.add(state);
                     break;
             }
         }
 
-        windowStates = builder.toArray(new WindowState[builder.size()]);
+        windowProperties = builder.toArray(new WindowProperty[builder.size()]);
     }
 
     private WindowsState(Builder builder) {
         super(TYPE, builder.getProperties());
-        windowStates = builder.windowStates;
+        windowProperties = builder.windowProperties;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private WindowState[] windowStates;
+        private WindowProperty[] windowProperties;
 
         public Builder() {
             super(TYPE);
         }
 
-        public Builder setWindowStates(WindowState[] windowStates) {
-            this.windowStates = windowStates;
+        public Builder setWindowProperties(WindowProperty[] windowProperties) {
+            this.windowProperties = windowProperties;
 
-            for (int i = 0; i < windowStates.length; i++) {
-                addProperty(new WindowProperty(windowStates[i]));
+            for (int i = 0; i < windowProperties.length; i++) {
+                addProperty(windowProperties[i]);
             }
 
             return this;
         }
 
-        public Builder addWindowState(WindowState windowState) {
-            if (windowStates == null) windowStates = new WindowState[1];
-            else windowStates = Arrays.copyOf(windowStates, windowStates.length + 1);
+        public Builder addWindowProperty(WindowProperty windowProperty) {
+            if (windowProperties == null) windowProperties = new WindowProperty[1];
+            else windowProperties = Arrays.copyOf(windowProperties, windowProperties.length + 1);
 
-            addProperty(new WindowProperty(windowState));
-            windowStates[windowStates.length - 1] = windowState;
+            addProperty(windowProperty);
+            windowProperties[windowProperties.length - 1] = windowProperty;
 
             return this;
         }

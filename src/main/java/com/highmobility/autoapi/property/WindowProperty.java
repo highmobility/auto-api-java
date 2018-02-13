@@ -23,28 +23,93 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 
 public class WindowProperty extends Property {
-    WindowState state;
+    public static final byte IDENTIFIER = 0x01;
+    Position position;
+    State state;
 
-    public WindowState getState() {
+    public Position getPosition() {
+        return position;
+    }
+
+    public State getState() {
         return state;
     }
 
-    public WindowProperty(byte positionByte, byte stateByte) throws CommandParseException {
-        this(new WindowState(WindowState.Position.fromByte(positionByte), WindowState.State.fromByte(stateByte)));
+    public WindowProperty(Position position, State state) {
+        super(IDENTIFIER, 2);
+        this.state = state;
+        this.position = position;
+        bytes[3] = position.getByte();
+        bytes[4] = state.getByte();
     }
 
-    public WindowProperty(WindowState state) {
-        super((byte) 0x01, 2);
-        this.state = state;
-        bytes[3] = state.getPosition().getByte();
-        bytes[4] = state.getState().getByte();
+    public WindowProperty(byte positionByte, byte stateByte) throws CommandParseException {
+        this(Position.fromByte(positionByte), State.fromByte(stateByte));
     }
 
     public WindowProperty(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length < 5) throw new CommandParseException();
-        WindowState.Position position = WindowState.Position.fromByte(bytes[3]);
-        WindowState.State windowState = WindowState.State.fromByte(bytes[4]);
-        this.state = new WindowState(position, windowState);
+        position = WindowProperty.Position.fromByte(bytes[3]);
+        state = WindowProperty.State.fromByte(bytes[4]);
+    }
+
+    public enum Position {
+        FRONT_LEFT((byte) 0x00),
+        FRONT_RIGHT((byte) 0x01),
+        REAR_RIGHT((byte) 0x02),
+        REAR_LEFT((byte) 0x03),
+        HATCH((byte) 0x04);
+
+        public static Position fromByte(byte value) throws CommandParseException {
+            Position[] allValues = Position.values();
+
+            for (int i = 0; i < allValues.length; i++) {
+                Position value1 = allValues[i];
+                if (value1.getByte() == value) {
+                    return value1;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
+        private byte value;
+
+        Position(byte value) {
+            this.value = value;
+        }
+
+        public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum State {
+        CLOSED((byte) 0x00),
+        OPEN((byte) 0x01);
+
+        public static State fromByte(byte value) throws CommandParseException {
+            State[] allValues = State.values();
+
+            for (int i = 0; i < allValues.length; i++) {
+                State value1 = allValues[i];
+                if (value1.getByte() == value) {
+                    return value1;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
+        private byte value;
+
+        State(byte value) {
+            this.value = value;
+        }
+
+        public byte getByte() {
+            return value;
+        }
     }
 }
