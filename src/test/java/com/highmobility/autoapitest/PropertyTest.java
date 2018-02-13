@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.RooftopState;
-import com.highmobility.autoapi.property.IntProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.utils.Bytes;
@@ -13,13 +13,7 @@ import com.highmobility.utils.Bytes;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
@@ -29,7 +23,7 @@ public class PropertyTest {
 
 
     @Test public void propertyLength() {
-        IntProperty property = new IntProperty((byte) 0x01, 2, 2);
+        IntegerProperty property = new IntegerProperty((byte) 0x01, 2, 2);
         assertTrue(Arrays.equals(property.getPropertyBytes(), new byte[]{ 0x01, 0x00, 0x02, 0x00, 0x02 }));
 
         String longString =

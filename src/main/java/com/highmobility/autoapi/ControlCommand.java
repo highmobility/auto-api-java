@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.IntProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
@@ -76,12 +76,12 @@ public class ControlCommand extends CommandWithProperties {
         if (speed != null) {
             if (speed > 5 || speed < -5) throw new IllegalArgumentException();
 
-            IntProperty prop = new IntProperty(speedIdentifier, speed, 1);
+            IntegerProperty prop = new IntegerProperty(speedIdentifier, speed, 1);
             properties.add(prop);
         }
 
         if (angle != null) {
-            IntProperty prop = new IntProperty(angleIdentifier, angle, 2);
+            IntegerProperty prop = new IntegerProperty(angleIdentifier, angle, 2);
             properties.add(prop);
         }
 

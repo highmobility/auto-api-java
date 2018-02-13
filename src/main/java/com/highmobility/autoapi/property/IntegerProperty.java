@@ -22,8 +22,8 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.utils.Bytes;
 
-public class IntProperty extends Property {
-    public IntProperty(byte identifier, int value, int length) {
+public class IntegerProperty extends Property {
+    public IntegerProperty(byte identifier, int value, int length) {
         super(identifier, length);
 
         if (length == 1) {

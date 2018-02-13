@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CommandProperty;
-import com.highmobility.autoapi.property.IntProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
@@ -285,7 +285,7 @@ public class VehicleStatus extends CommandWithProperties {
 
         public Builder setModelYear(Integer modelYear) {
             this.modelYear = modelYear;
-            addProperty(new IntProperty((byte) 0x07, modelYear, 2));
+            addProperty(new IntegerProperty((byte) 0x07, modelYear, 2));
             return this;
         }
 
@@ -297,19 +297,19 @@ public class VehicleStatus extends CommandWithProperties {
 
         public Builder setPower(Integer power) {
             this.power = power;
-            addProperty(new IntProperty((byte) 0x09, power, 2));
+            addProperty(new IntegerProperty((byte) 0x09, power, 2));
             return this;
         }
 
         public Builder setNumberOfDoors(Integer numberOfDoors) {
             this.numberOfDoors = numberOfDoors;
-            addProperty(new IntProperty((byte) 0x0a, numberOfDoors, 1));
+            addProperty(new IntegerProperty((byte) 0x0a, numberOfDoors, 1));
             return this;
         }
 
         public Builder setNumberOfSeats(Integer numberOfSeats) {
             this.numberOfSeats = numberOfSeats;
-            addProperty(new IntProperty((byte) 0x0b, numberOfSeats, 1));
+            addProperty(new IntegerProperty((byte) 0x0b, numberOfSeats, 1));
             return this;
         }
 

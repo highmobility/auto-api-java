@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.IntProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
@@ -47,12 +47,12 @@ public class ControlRooftop extends CommandWithProperties {
         List<Property> properties = new ArrayList<>();
 
         if (dimmingPercentage != null) {
-            IntProperty prop = new IntProperty((byte) 0x01, (int) (dimmingPercentage * 100f), 1);
+            IntegerProperty prop = new IntegerProperty((byte) 0x01, (int) (dimmingPercentage * 100f), 1);
             properties.add(prop);
         }
 
         if (openPercentage != null) {
-            IntProperty prop = new IntProperty((byte) 0x02, (int) (openPercentage * 100f), 1);
+            IntegerProperty prop = new IntegerProperty((byte) 0x02, (int) (openPercentage * 100f), 1);
             properties.add(prop);
         }
 

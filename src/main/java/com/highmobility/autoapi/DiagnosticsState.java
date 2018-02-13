@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.FloatProperty;
-import com.highmobility.autoapi.property.IntProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WasherFluidLevel;
 
@@ -273,37 +273,37 @@ public class DiagnosticsState extends CommandWithProperties {
 
         public Builder setMileage(Integer mileage) {
             this.mileage = mileage;
-            addProperty(new IntProperty((byte) 0x01, mileage, 3));
+            addProperty(new IntegerProperty((byte) 0x01, mileage, 3));
             return this;
         }
 
         public Builder setOilTemperature(Integer oilTemperature) {
             this.oilTemperature = oilTemperature;
-            addProperty(new IntProperty((byte) 0x02, oilTemperature, 2));
+            addProperty(new IntegerProperty((byte) 0x02, oilTemperature, 2));
             return this;
         }
 
         public Builder setSpeed(Integer speed) {
             this.speed = speed;
-            addProperty(new IntProperty((byte) 0x03, speed, 2));
+            addProperty(new IntegerProperty((byte) 0x03, speed, 2));
             return this;
         }
 
         public Builder setRpm(Integer rpm) {
             this.rpm = rpm;
-            addProperty(new IntProperty((byte) 0x04, rpm, 2));
+            addProperty(new IntegerProperty((byte) 0x04, rpm, 2));
             return this;
         }
 
         public Builder setFuelLevel(Float fuelLevel) {
             this.fuelLevel = fuelLevel;
-            addProperty(new IntProperty((byte) 0x05, (int)(fuelLevel * 100), 1));
+            addProperty(new IntegerProperty((byte) 0x05, (int)(fuelLevel * 100), 1));
             return this;
         }
 
         public Builder setRange(Integer range) {
             this.range = range;
-            addProperty(new IntProperty((byte) 0x06, range, 2));
+            addProperty(new IntegerProperty((byte) 0x06, range, 2));
             return this;
         }
 
@@ -356,13 +356,13 @@ public class DiagnosticsState extends CommandWithProperties {
 
         public Builder setDistanceDrivenSinceReset(Integer distanceDrivenSinceReset) {
             this.distanceDrivenSinceReset = distanceDrivenSinceReset;
-            addProperty(new IntProperty((byte) 0x0d, distanceDrivenSinceReset, 2));
+            addProperty(new IntegerProperty((byte) 0x0d, distanceDrivenSinceReset, 2));
             return this;
         }
 
         public Builder setDistanceDrivenSinceEngineStart(Integer distanceDrivenSinceEngineStart) {
             this.distanceDrivenSinceEngineStart = distanceDrivenSinceEngineStart;
-            addProperty(new IntProperty((byte) 0x0e, distanceDrivenSinceEngineStart, 2));
+            addProperty(new IntegerProperty((byte) 0x0e, distanceDrivenSinceEngineStart, 2));
             return this;
         }
 

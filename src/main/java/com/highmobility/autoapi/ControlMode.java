@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -84,7 +84,7 @@ public class ControlMode extends CommandWithProperties {
 
         public Builder setAngle(int angle) {
             this.angle = angle;
-            addProperty(new IntProperty((byte) 0x01, angle, 2));
+            addProperty(new IntegerProperty((byte) 0x01, angle, 2));
             return this;
         }
 

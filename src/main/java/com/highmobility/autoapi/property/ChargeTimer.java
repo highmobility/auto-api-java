@@ -25,7 +25,7 @@ import com.highmobility.utils.Bytes;
 import java.util.Calendar;
 
 public class ChargeTimer extends Property {
-    static final byte identifier = 0x0D;
+    public static final byte IDENTIFIER = 0x0D;
     Type type;
     Calendar time;
 
@@ -45,11 +45,11 @@ public class ChargeTimer extends Property {
     }
 
     public ChargeTimer(Type type, Calendar time) throws IllegalArgumentException {
-        this(identifier, type, time);
+        this(IDENTIFIER, type, time);
     }
 
-    public ChargeTimer(byte identifier, Type type, Calendar time) throws IllegalArgumentException {
-        super(identifier, 9);
+    public ChargeTimer(byte IDENTIFIER, Type type, Calendar time) throws IllegalArgumentException {
+        super(IDENTIFIER, 9);
         bytes[3] = type.getByte();
         Bytes.setBytes(bytes, Property.calendarToBytes(time), 4);
         this.type = type;

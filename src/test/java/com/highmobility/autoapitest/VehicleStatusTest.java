@@ -8,7 +8,7 @@ import com.highmobility.autoapi.GetVehicleStatus;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.property.CommandProperty;
-import com.highmobility.autoapi.property.IntProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.TrunkLockState;
 import com.highmobility.autoapi.property.TrunkPosition;
@@ -120,7 +120,7 @@ public class VehicleStatusTest {
         builder.setColor("Estoril Blau");
 //        builder.setPower(220);
         // add an unknown property (power)
-        builder.addProperty(new IntProperty((byte) 0x09, 220, 2));
+        builder.addProperty(new IntegerProperty((byte) 0x09, 220, 2));
         builder.setNumberOfDoors(5).setNumberOfSeats(5);
 
         TrunkState.Builder trunkState = new TrunkState.Builder();

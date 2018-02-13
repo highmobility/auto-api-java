@@ -22,6 +22,10 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.ChargeTimer;
+import com.highmobility.autoapi.property.ChargingState;
+import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PortState;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.Arrays;
@@ -33,6 +37,16 @@ import java.util.Arrays;
  */
 public class ChargeState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x01);
+
+    private static final byte ESTIMATED_RANGE_IDENTIFIER = 0x02;
+    private static final byte BATTERY_LEVEL_IDENTIFIER = 0x03;
+    private static final byte BATTERY_CURRENT_AC_IDENTIFIER = 0x04;
+    private static final byte BATTERY_CURRENT_DC_IDENTIFIER = 0x05;
+    private static final byte CHARGER_VOLTAGE_AC_IDENTIFIER = 0x06;
+    private static final byte CHARGER_VOLTAGE_DC_IDENTIFIER = 0x07;
+    private static final byte CHARGE_LIMIT_IDENTIFIER = 0x08;
+    private static final byte TIME_TO_COMPLETE_CHARGE_IDENTIFIER = 0x09;
+    private static final byte CHARGE_RATE_IDENTIFIER = 0x0A;
 
     ChargingState chargingState;
     Integer estimatedRange;
@@ -163,43 +177,43 @@ public class ChargeState extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case ChargingState.IDENTIFIER:
                     chargingState = ChargingState.fromByte(property.getValueByte());
                     break;
-                case 0x02:
+                case ESTIMATED_RANGE_IDENTIFIER:
                     estimatedRange = Property.getUnsignedInt(property.getValueBytes());
                     break;
-                case 0x03:
+                case BATTERY_LEVEL_IDENTIFIER:
                     batteryLevel = property.getValueByte() / 100f;
                     break;
-                case 0x04:
+                case BATTERY_CURRENT_AC_IDENTIFIER:
                     batteryCurrentAC = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x05:
+                case BATTERY_CURRENT_DC_IDENTIFIER:
                     batteryCurrentDC = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x06:
+                case CHARGER_VOLTAGE_AC_IDENTIFIER:
                     chargerVoltageAC = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x07:
+                case CHARGER_VOLTAGE_DC_IDENTIFIER:
                     chargerVoltageDC = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x08:
+                case CHARGE_LIMIT_IDENTIFIER:
                     chargeLimit = property.getValueByte() / 100f;
                     break;
-                case 0x09:
+                case TIME_TO_COMPLETE_CHARGE_IDENTIFIER:
                     timeToCompleteCharge = Property.getUnsignedInt(property.getValueBytes());
                     break;
-                case 0x0A:
+                case CHARGE_RATE_IDENTIFIER:
                     chargeRate = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x0B:
+                case PortState.IDENTIFIER:
                     chargePortState = PortState.fromByte(property.getValueByte());
                     break;
-                case 0x0C:
+                case ChargeMode.IDENTIFIER:
                     chargeMode = ChargeMode.fromByte(property.getValueByte());
                     break;
-                case 0x0D:
+                case ChargeTimer.IDENTIFIER:
                     if (chargeTimers == null) chargeTimers = new ChargeTimer[1];
                     else chargeTimers = Arrays.copyOf(chargeTimers, chargeTimers.length + 1);
                     chargeTimers[chargeTimers.length - 1] = new ChargeTimer(property
@@ -209,57 +223,134 @@ public class ChargeState extends CommandWithProperties {
         }
     }
 
-    /**
-     * The possible charge states
-     */
-    public enum ChargingState {
-        DISCONNECTED((byte) 0x00),
-        PLUGGED_IN((byte) 0x01),
-        CHARGING((byte) 0x02),
-        CHARGING_COMPLETE((byte) 0x03);
-
-        public static ChargingState fromByte(byte byteValue) throws CommandParseException {
-            ChargingState[] values = ChargingState.values();
-
-            for (int i = 0; i < values.length; i++) {
-                ChargingState state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte capabilityByte;
-
-        ChargingState(byte capabilityByte) {
-            this.capabilityByte = capabilityByte;
-        }
-
-        public byte getByte() {
-            return capabilityByte;
-        }
+    private ChargeState(Builder builder) {
+        super(TYPE, builder.getProperties());
+        chargingState = builder.chargingState;
+        estimatedRange = builder.estimatedRange;
+        batteryLevel = builder.batteryLevel;
+        batteryCurrentAC = builder.batteryCurrentAC;
+        batteryCurrentDC = builder.batteryCurrentDC;
+        chargerVoltageAC = builder.chargerVoltageAC;
+        chargerVoltageDC = builder.chargerVoltageDC;
+        chargeLimit = builder.chargeLimit;
+        timeToCompleteCharge = builder.timeToCompleteCharge;
+        chargeRate = builder.chargeRate;
+        chargePortState = builder.chargePortState;
+        chargeMode = builder.chargeMode;
+        chargeTimers = builder.chargeTimers;
     }
 
+    public static final class Builder extends CommandWithProperties.Builder {
+        private ChargingState chargingState;
+        private Integer estimatedRange;
+        private Float batteryLevel;
+        private Float batteryCurrentAC;
+        private Float batteryCurrentDC;
+        private Float chargerVoltageAC;
+        private Float chargerVoltageDC;
+        private Float chargeLimit;
+        private Integer timeToCompleteCharge;
+        private Float chargeRate;
+        private PortState chargePortState;
+        private ChargeMode chargeMode;
+        private ChargeTimer[] chargeTimers;
 
-    /**
-     * The possible charge port states
-     */
-    public enum PortState {
-        CLOSED, OPEN, UNAVAILABLE;
+        public Builder() {
+            super(TYPE);
+        }
 
-        public static PortState fromByte(byte value) throws CommandParseException {
-            switch (value) {
-                case 0x00:
-                    return CLOSED;
-                case 0x01:
-                    return OPEN;
-                case (byte) 0xFF:
-                    return UNAVAILABLE;
+        public Builder setChargingState(ChargingState chargingState) {
+            this.chargingState = chargingState;
+            addProperty(chargingState);
+            return this;
+        }
+
+        public Builder setEstimatedRange(Integer estimatedRange) {
+            this.estimatedRange = estimatedRange;
+            addProperty(new IntegerProperty(ESTIMATED_RANGE_IDENTIFIER, estimatedRange, 2));
+            return this;
+        }
+
+        public Builder setBatteryLevel(Float batteryLevel) {
+            this.batteryLevel = batteryLevel;
+            addProperty(new IntegerProperty(BATTERY_LEVEL_IDENTIFIER, (int)(batteryLevel * 100), 1));
+            return this;
+        }
+
+        public Builder setBatteryCurrentAC(Float batteryCurrentAC) {
+            this.batteryCurrentAC = batteryCurrentAC;
+            addProperty(new FloatProperty(BATTERY_CURRENT_AC_IDENTIFIER, batteryCurrentAC));
+            return this;
+        }
+
+        public Builder setBatteryCurrentDC(Float batteryCurrentDC) {
+            this.batteryCurrentDC = batteryCurrentDC;
+            addProperty(new FloatProperty(BATTERY_CURRENT_DC_IDENTIFIER, batteryCurrentDC));
+            return this;
+        }
+
+        public Builder setChargerVoltageAC(Float chargerVoltageAC) {
+            this.chargerVoltageAC = chargerVoltageAC;
+            addProperty(new FloatProperty(CHARGER_VOLTAGE_AC_IDENTIFIER, chargerVoltageAC));
+            return this;
+        }
+
+        public Builder setChargerVoltageDC(Float chargerVoltageDC) {
+            this.chargerVoltageDC = chargerVoltageDC;
+            addProperty(new FloatProperty(CHARGER_VOLTAGE_DC_IDENTIFIER, chargerVoltageDC));
+            return this;
+        }
+
+        public Builder setChargeLimit(Float chargeLimit) {
+            this.chargeLimit = chargeLimit;
+            addProperty(new IntegerProperty(CHARGE_LIMIT_IDENTIFIER, (int)(chargeLimit * 100), 1));
+            return this;
+        }
+
+        public Builder setTimeToCompleteCharge(Integer timeToCompleteCharge) {
+            this.timeToCompleteCharge = timeToCompleteCharge;
+            addProperty(new IntegerProperty(TIME_TO_COMPLETE_CHARGE_IDENTIFIER, timeToCompleteCharge, 2));
+            return this;
+        }
+
+        public Builder setChargeRate(Float chargeRate) {
+            this.chargeRate = chargeRate;
+            addProperty(new FloatProperty(CHARGE_RATE_IDENTIFIER, chargeRate));
+            return this;
+        }
+
+        public Builder setChargePortState(PortState chargePortState) {
+            this.chargePortState = chargePortState;
+            addProperty(chargePortState);
+            return this;
+        }
+
+        public Builder setChargeMode(ChargeMode chargeMode) {
+            this.chargeMode = chargeMode;
+            addProperty(chargeMode);
+            return this;
+        }
+
+        public Builder setChargeTimers(ChargeTimer[] chargeTimers) {
+            this.chargeTimers = chargeTimers;
+
+            for (int i = 0; i < chargeTimers.length; i++) {
+                addProperty(chargeTimers[i]);
             }
 
-            throw new CommandParseException();
+            return this;
+        }
+
+        public Builder addChargeTimer(ChargeTimer chargeTimer) {
+            if (chargeTimers == null) chargeTimers = new ChargeTimer[0];
+            chargeTimers = Arrays.copyOf(chargeTimers, chargeTimers.length + 1);
+            addProperty(chargeTimer);
+            chargeTimers[chargeTimers.length - 1] = chargeTimer;
+            return this;
+        }
+
+        public ChargeState build() {
+            return new ChargeState(this);
         }
     }
 }

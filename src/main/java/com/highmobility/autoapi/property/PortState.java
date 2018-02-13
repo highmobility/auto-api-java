@@ -22,18 +22,20 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum ChargeMode implements HMProperty {
-    IMMEDIATE((byte)0x00),
-    TIMER_BASED((byte)0x01),
-    INDUCTIVE((byte)0x02);
 
-    public static final byte IDENTIFIER = 0x0C;
+/**
+ * The possible charge port states
+ */
+public enum PortState implements HMProperty {
+    CLOSED((byte)0x00), OPEN((byte)0x01);
 
-    public static ChargeMode fromByte(byte byteValue) throws CommandParseException {
-        ChargeMode[] values = ChargeMode.values();
+    public static final byte IDENTIFIER = 0x0B;
+
+    public static PortState fromByte(byte byteValue) throws CommandParseException {
+        PortState[] values = PortState.values();
 
         for (int i = 0; i < values.length; i++) {
-            ChargeMode state = values[i];
+            PortState state = values[i];
             if (state.getByte() == byteValue) {
                 return state;
             }
@@ -44,7 +46,7 @@ public enum ChargeMode implements HMProperty {
 
     private byte value;
 
-    ChargeMode(byte value) {
+    PortState(byte value) {
         this.value = value;
     }
 

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.IntProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
@@ -48,12 +48,12 @@ public class HonkAndFlash extends CommandWithProperties {
         ArrayList<Property> properties = new ArrayList<>();
 
         if (seconds != null) {
-            IntProperty prop = new IntProperty((byte) 0x01, seconds, 1);
+            IntegerProperty prop = new IntegerProperty((byte) 0x01, seconds, 1);
             properties.add(prop);
         }
 
         if (lightFlashCount != null) {
-            IntProperty prop = new IntProperty((byte) 0x02, lightFlashCount, 1);
+            IntegerProperty prop = new IntegerProperty((byte) 0x02, lightFlashCount, 1);
             properties.add(prop);
         }
 
