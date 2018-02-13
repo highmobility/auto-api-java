@@ -10,6 +10,8 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -46,5 +48,15 @@ public class ParkingBrakeTest {
         String waitingForBytes = "00580200";
         String commandBytes = Bytes.hexFromBytes(new ActivateInactivateParkingBrake(false).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void build() {
+        byte[] expectedBytes = Bytes.bytesFromHex(
+                "00580101000101");
+
+        ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
+        builder.setIsActive(true);
+        byte[] actualBytes = builder.build().getBytes();
+        assertTrue(Arrays.equals(actualBytes, expectedBytes));
     }
 }

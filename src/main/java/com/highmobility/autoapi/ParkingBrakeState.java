@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -28,10 +29,11 @@ import com.highmobility.autoapi.property.Property;
 public class ParkingBrakeState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.PARKING_BRAKE, 0x01);
 
+    private static final byte ACTIVE_IDENTIFIER = 0x01;
+
     boolean active;
 
     /**
-     *
      * @return True if parking brake is active
      */
     public boolean isActive() {
@@ -44,10 +46,33 @@ public class ParkingBrakeState extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case ACTIVE_IDENTIFIER:
                     active = Property.getBool(property.getValueByte());
                     break;
             }
+        }
+    }
+
+    private ParkingBrakeState(Builder builder) {
+        super(TYPE, builder.getProperties());
+        active = builder.active;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private boolean active;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        public Builder setIsActive(boolean active) {
+            this.active = active;
+            addProperty(new BooleanProperty(ACTIVE_IDENTIFIER, active));
+            return this;
+        }
+
+        public ParkingBrakeState build() {
+            return new ParkingBrakeState(this);
         }
     }
 }
