@@ -137,10 +137,14 @@ byte[] command = builder.build().getBytes();
 
 Currently supported commands with the builder pattern:
 
-* vehicleStatus
-* doorLocks
-* diagnostics
-* failure
-* capabilities
-* trunk state
-* remote control
+* VehicleStatus
+* DoorLocks
+* Diagnostics
+* Failure
+* Capabilities
+* TrunkState
+* RemoteControl
+* LightsState
+* WindowsState
+* ParkingBrakeState
+* ChargeState
