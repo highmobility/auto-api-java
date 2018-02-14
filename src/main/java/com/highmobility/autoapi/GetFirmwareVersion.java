@@ -31,7 +31,7 @@ public class GetFirmwareVersion extends Command {
         super(TYPE);
     }
 
-    GetFirmwareVersion(byte[] bytes) throws CommandParseException {
+    GetFirmwareVersion(byte[] bytes) {
         super(bytes);
     }
 }
