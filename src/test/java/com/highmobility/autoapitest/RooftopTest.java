@@ -21,13 +21,9 @@ public class RooftopTest {
                     "01000101" +
                     "02000135");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(RooftopState.TYPE));
         RooftopState state = (RooftopState) command;
@@ -44,13 +40,9 @@ public class RooftopTest {
                     "01000164" +
                     "02000100");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(RooftopState.TYPE));
 

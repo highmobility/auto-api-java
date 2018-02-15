@@ -26,13 +26,9 @@ public class ValetModeTest {
                 "002801" +
                     "01000101");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == ValetMode.class);
         ValetMode state = (ValetMode) command;

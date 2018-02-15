@@ -21,13 +21,9 @@ public class WeatherConditionsTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00550101000164");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == WeatherConditions.class);
         WeatherConditions state = (WeatherConditions) command;

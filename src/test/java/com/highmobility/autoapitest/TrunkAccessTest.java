@@ -24,13 +24,8 @@ public class TrunkAccessTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "0021010100010002000101");
 
-        Command command = null;
-
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+        Command command = CommandResolver.resolve(bytes);
+        if (command == null) fail("init failed");
 
         assertTrue(command.getClass() == TrunkState.class);
         TrunkState state = (TrunkState) command;

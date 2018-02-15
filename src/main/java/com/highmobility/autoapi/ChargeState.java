@@ -171,54 +171,59 @@ public class ChargeState extends CommandWithProperties {
         return null;
     }
 
-    public ChargeState(byte[] bytes) throws CommandParseException {
+    public ChargeState(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case ChargingState.IDENTIFIER:
-                    chargingState = ChargingState.fromByte(property.getValueByte());
-                    break;
-                case ESTIMATED_RANGE_IDENTIFIER:
-                    estimatedRange = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-                case BATTERY_LEVEL_IDENTIFIER:
-                    batteryLevel = property.getValueByte() / 100f;
-                    break;
-                case BATTERY_CURRENT_AC_IDENTIFIER:
-                    batteryCurrentAC = Property.getFloat(property.getValueBytes());
-                    break;
-                case BATTERY_CURRENT_DC_IDENTIFIER:
-                    batteryCurrentDC = Property.getFloat(property.getValueBytes());
-                    break;
-                case CHARGER_VOLTAGE_AC_IDENTIFIER:
-                    chargerVoltageAC = Property.getFloat(property.getValueBytes());
-                    break;
-                case CHARGER_VOLTAGE_DC_IDENTIFIER:
-                    chargerVoltageDC = Property.getFloat(property.getValueBytes());
-                    break;
-                case CHARGE_LIMIT_IDENTIFIER:
-                    chargeLimit = property.getValueByte() / 100f;
-                    break;
-                case TIME_TO_COMPLETE_CHARGE_IDENTIFIER:
-                    timeToCompleteCharge = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-                case CHARGE_RATE_IDENTIFIER:
-                    chargeRate = Property.getFloat(property.getValueBytes());
-                    break;
-                case PortState.IDENTIFIER:
-                    chargePortState = PortState.fromByte(property.getValueByte());
-                    break;
-                case ChargeMode.IDENTIFIER:
-                    chargeMode = ChargeMode.fromByte(property.getValueByte());
-                    break;
-                case ChargeTimer.IDENTIFIER:
-                    if (chargeTimers == null) chargeTimers = new ChargeTimer[1];
-                    else chargeTimers = Arrays.copyOf(chargeTimers, chargeTimers.length + 1);
-                    chargeTimers[chargeTimers.length - 1] = new ChargeTimer(property
-                            .getPropertyBytes());
-                    break;
+            try {
+                switch (property.getPropertyIdentifier()) {
+                    case ChargingState.IDENTIFIER:
+                        chargingState = ChargingState.fromByte(property.getValueByte());
+                        break;
+                    case ESTIMATED_RANGE_IDENTIFIER:
+                        estimatedRange = Property.getUnsignedInt(property.getValueBytes());
+                        break;
+                    case BATTERY_LEVEL_IDENTIFIER:
+                        batteryLevel = property.getValueByte() / 100f;
+                        break;
+                    case BATTERY_CURRENT_AC_IDENTIFIER:
+                        batteryCurrentAC = Property.getFloat(property.getValueBytes());
+                        break;
+                    case BATTERY_CURRENT_DC_IDENTIFIER:
+                        batteryCurrentDC = Property.getFloat(property.getValueBytes());
+                        break;
+                    case CHARGER_VOLTAGE_AC_IDENTIFIER:
+                        chargerVoltageAC = Property.getFloat(property.getValueBytes());
+                        break;
+                    case CHARGER_VOLTAGE_DC_IDENTIFIER:
+                        chargerVoltageDC = Property.getFloat(property.getValueBytes());
+                        break;
+                    case CHARGE_LIMIT_IDENTIFIER:
+                        chargeLimit = property.getValueByte() / 100f;
+                        break;
+                    case TIME_TO_COMPLETE_CHARGE_IDENTIFIER:
+                        timeToCompleteCharge = Property.getUnsignedInt(property.getValueBytes());
+                        break;
+                    case CHARGE_RATE_IDENTIFIER:
+                        chargeRate = Property.getFloat(property.getValueBytes());
+                        break;
+                    case PortState.IDENTIFIER:
+                        chargePortState = PortState.fromByte(property.getValueByte());
+                        break;
+                    case ChargeMode.IDENTIFIER:
+                        chargeMode = ChargeMode.fromByte(property.getValueByte());
+                        break;
+                    case ChargeTimer.IDENTIFIER:
+                        if (chargeTimers == null) chargeTimers = new ChargeTimer[1];
+                        else chargeTimers = Arrays.copyOf(chargeTimers, chargeTimers.length + 1);
+                        chargeTimers[chargeTimers.length - 1] = new ChargeTimer(property
+                                .getPropertyBytes());
+                        break;
+                }
+            }
+            catch (Exception e) {
+                logger.error(getClass().getName(), e);
             }
         }
     }

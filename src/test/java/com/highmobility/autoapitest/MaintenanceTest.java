@@ -22,13 +22,9 @@ public class MaintenanceTest {
                 "01000201F5" +
                 "020003000E61");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == MaintenanceState.class);
         MaintenanceState state = (MaintenanceState) command;

@@ -29,13 +29,9 @@ public class VehicleTimeTest {
                 "005001" +
                     "01000811010A1020330078");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == VehicleTime.class);
         VehicleTime state = (VehicleTime) command;

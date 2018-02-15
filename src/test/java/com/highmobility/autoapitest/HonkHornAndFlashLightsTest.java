@@ -21,13 +21,9 @@ public class HonkHornAndFlashLightsTest {
                 "002601000401000102"
         );
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(FlashersState.TYPE));
         FlashersState state = (FlashersState) command;

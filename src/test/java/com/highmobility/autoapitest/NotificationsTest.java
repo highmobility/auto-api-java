@@ -25,13 +25,9 @@ public class NotificationsTest {
         byte[] bytes = Bytes.bytesFromHex
                 ("0038000100115374617274206e617669676174696f6e3f020003004e6f02000401596573");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == Notification.class);
         Notification state = (Notification) command;

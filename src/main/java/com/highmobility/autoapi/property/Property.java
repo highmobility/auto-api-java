@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.Bytes;
 
@@ -38,7 +37,7 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 /**
  * Property is a representation of some AutoAPI data. Specific data have specific subclasses like
  * StringProperty and FloatProperty.
- *
+ * <p>
  * Property has to have a value with a size greater or equal to 1.
  */
 public class Property implements HMProperty {
@@ -60,35 +59,37 @@ public class Property implements HMProperty {
     }
 
     /**
-     *
      * @param identifier The identifier byte of the property.
-     * @param value The value of the property.
-     * @throws CommandParseException When the value is not set.
+     * @param value      The value of the property.
+     * @throws ParseException When the value is not set.
      */
     public Property(byte identifier, byte[] value) throws ParseException {
         this(identifier, value != null ? value.length : 0);
         Bytes.setBytes(bytes, value, 3);
     }
 
-    public Property(byte[] bytes) throws CommandParseException {
-        if (bytes.length < 4) throw new CommandParseException();
+    public Property(byte[] bytes) throws ParseException {
+        if (bytes.length < 3) {
+            Bytes.bytesFromHex("aa"); // TODO: delete
+        }
+
+        if (bytes.length < 3) throw new ParseException();
         this.bytes = bytes;
     }
 
     /**
-     *
      * @return The value bytes.
      */
-    public byte[] getValueBytes()  {
+    public byte[] getValueBytes() {
+        if (bytes.length == 3) return new byte[0];
         return Arrays.copyOfRange(bytes, 3, bytes.length);
     }
 
     /**
-     *
-     * @return The one value byte.
-     * @throws CommandParseException When the property bytes length is not 4.
+     * @return The one value byte. Returns null if property has no value set.
      */
-    public byte getValueByte() {
+    public Byte getValueByte() {
+        if (bytes.length == 3) return null;
         return bytes[3];
     }
 
@@ -99,14 +100,13 @@ public class Property implements HMProperty {
     @Override public int getPropertyLength() {
         try {
             return Property.getUnsignedInt(bytes, 1, 2);
-        } catch (CommandParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
             return 0;
         }
     }
 
     /**
-     *
      * @return All of the property bytes - with the identifier and length.
      */
     @Override public byte[] getPropertyBytes() {
@@ -146,7 +146,8 @@ public class Property implements HMProperty {
         return Bytes.concatBytes(bytes, valueBytes);
     }
 
-    public static long getLong(byte[] b) {
+    public static long getLong(byte[] b) throws ParseException {
+        if (b.length < 8) throw new ParseException();
         long result = 0;
         for (int i = 0; i < 8; i++) {
             result <<= 8;
@@ -168,11 +169,12 @@ public class Property implements HMProperty {
         return ((n >> k) & 1) == 1;
     }
 
-    public static float getFloat(byte[] bytes) {
+    public static float getFloat(byte[] bytes) throws ParseException{
+        if (bytes.length < 4) throw new ParseException();
         return ByteBuffer.wrap(bytes).getFloat();
     }
 
-    public static float getFloat(byte[] bytes, int at) throws CommandParseException {
+    public static float getFloat(byte[] bytes, int at) throws ParseException {
         int intValue = getUnsignedInt(bytes, at, 4);
         return Float.intBitsToFloat(intValue);
     }
@@ -185,40 +187,42 @@ public class Property implements HMProperty {
         return value & 0xFF;
     }
 
-    public static int getUnsignedInt(byte[] bytes) throws CommandParseException {
+    public static int getUnsignedInt(byte[] bytes) throws ParseException {
         return getUnsignedInt(bytes, 0, bytes.length);
     }
 
     public static int getUnsignedInt(byte[] bytes, int at, int length) throws
-            CommandParseException {
-        if (length == 4) {
-            int result = ((0xFF & bytes[at]) << 24) | ((0xFF & bytes[at + 1]) << 16) |
-                    ((0xFF & bytes[at + 2]) << 8) | (0xFF & bytes[at + 3]);
-            return result;
-        } else if (length == 3) {
-            int result = (bytes[at] & 0xff) << 16 | (bytes[at + 1] & 0xff) << 8 | (bytes[at + 2]
-                    & 0xff);
-            return result;
-        } else if (length == 2) {
-            int result = ((bytes[at] & 0xff) << 8) | (bytes[at + 1] & 0xff);
-            return result;
-        } else if (length == 1) {
-            return (int) bytes[at];
+            ParseException {
+        if (bytes.length >= at + length) {
+            if (length == 4) {
+                int result = ((0xFF & bytes[at]) << 24) | ((0xFF & bytes[at + 1]) << 16) |
+                        ((0xFF & bytes[at + 2]) << 8) | (0xFF & bytes[at + 3]);
+                return result;
+            } else if (length == 3) {
+                int result = (bytes[at] & 0xff) << 16 | (bytes[at + 1] & 0xff) << 8 | (bytes[at + 2]
+                        & 0xff);
+                return result;
+            } else if (length == 2) {
+                int result = ((bytes[at] & 0xff) << 8) | (bytes[at + 1] & 0xff);
+                return result;
+            } else if (length == 1) {
+                return (int) bytes[at];
+            }
         }
 
-        throw new CommandParseException();
+        throw new ParseException();
     }
 
     public static int getSignedInt(byte value) {
         return (int) value;
     }
 
-    public static int getSignedInt(byte[] bytes) throws IllegalArgumentException {
-        if (bytes.length == 2) {
+    public static int getSignedInt(byte[] bytes) throws ParseException {
+        if (bytes.length >= 2) {
             return bytes[0] << 8 | bytes[1];
         }
 
-        throw new IllegalArgumentException();
+        throw new ParseException();
     }
 
     /**
@@ -227,7 +231,7 @@ public class Property implements HMProperty {
      * @return the allBytes representing the valueBytes
      * @throws IllegalArgumentException when input is invalid
      */
-    public static byte[] intToBytes(int value, int length) throws IllegalArgumentException {
+    public static byte[] intToBytes(int value, int length) throws ParseException {
         byte[] bytes = BigInteger.valueOf(value).toByteArray();
 
         if (bytes.length == length) {
@@ -242,7 +246,7 @@ public class Property implements HMProperty {
 
             return withZeroBytes;
         } else {
-            throw new IllegalArgumentException();
+            throw new ParseException();
         }
     }
 
@@ -268,11 +272,11 @@ public class Property implements HMProperty {
     }
 
     public static byte[] stringToBytes(String string) throws UnsupportedEncodingException {
-        return string.getBytes();
+        return string.getBytes(StringProperty.CHARSET);
     }
 
     // 5 allBytes eg yy mm dd mm ss. year is from 2000
-    public static Date getDate(byte[] bytes) throws IllegalArgumentException {
+    public static Date getDate(byte[] bytes) throws ParseException {
         for (int i = 0; i < bytes.length; i++) {
             if (i == bytes.length - 1 && bytes[i] == 0x00) return null; // all allBytes are 0x00
             else if (bytes[i] != 0x00) break; // one byte is not 0x00, some date is set
@@ -282,20 +286,20 @@ public class Property implements HMProperty {
 
         if (bytes.length == 5) {
             c.set(2000 + bytes[0], bytes[1] - 1, bytes[2], bytes[3], bytes[4], 0x00);
-        } else if (bytes.length == 6) {
+        } else if (bytes.length >= 6) {
             c.set(2000 + bytes[0], bytes[1] - 1, bytes[2], bytes[3], bytes[4], bytes[5]);
         } else {
-            throw new IllegalArgumentException();
+            throw new ParseException();
         }
 
         return c.getTime();
     }
 
-    public static Calendar getCalendar(byte[] bytes) throws IllegalArgumentException {
+    public static Calendar getCalendar(byte[] bytes) throws ParseException {
         return getCalendar(bytes, 0);
     }
 
-    public static Calendar getCalendar(byte[] bytes, int at) throws IllegalArgumentException {
+    public static Calendar getCalendar(byte[] bytes, int at) throws ParseException {
         Calendar c = new GregorianCalendar();
 
         if (bytes.length >= at + 8) {
@@ -312,14 +316,14 @@ public class Property implements HMProperty {
                 c.setTimeZone(timeZone);
             }
         } else {
-            throw new IllegalArgumentException();
+            throw new ParseException();
         }
 
         c.getTime(); // this is needed to set the right time...
         return c;
     }
 
-    public static byte[] calendarToBytes(Calendar calendar) {
+    public static byte[] calendarToBytes(Calendar calendar) throws ParseException {
         byte[] bytes = new byte[8];
 
         bytes[0] = (byte) (calendar.get(Calendar.YEAR) - 2000);

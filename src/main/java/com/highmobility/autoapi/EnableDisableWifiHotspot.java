@@ -32,7 +32,7 @@ public class EnableDisableWifiHotspot extends Command {
         super(TYPE.addByte(Property.boolToByte(activate)), true);
     }
 
-    EnableDisableWifiHotspot(byte[] bytes) throws CommandParseException {
+    EnableDisableWifiHotspot(byte[] bytes) {
         super(bytes);
     }
 }

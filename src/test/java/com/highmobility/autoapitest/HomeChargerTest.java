@@ -31,13 +31,9 @@ public class HomeChargerTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00600101000102020001010300010104000441380000050001010600084252147d41567ab107000C3f0000003f800000000000000800010109000C4368617267657220373631320A0001030B000A5a57337641524e5542650C000800455552409000000C0008024555523e99999a");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command instanceof HomeChargerState);
         HomeChargerState state = (HomeChargerState) command;

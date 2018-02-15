@@ -61,9 +61,15 @@ public class WindowsState extends CommandWithProperties {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
-                    WindowProperty state = new WindowProperty(property.getValueBytes()[0], property
-                            .getValueBytes()[1]);
-                    builder.add(state);
+                    try {
+                        WindowProperty state = new WindowProperty(property.getValueBytes()[0], property
+
+                                .getValueBytes()[1]);
+                        builder.add(state);
+                    }
+                    catch (CommandParseException e) {
+                        // ignore
+                    }
                     break;
             }
         }

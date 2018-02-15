@@ -6,6 +6,8 @@ import com.highmobility.autoapi.Capabilities;
 import com.highmobility.autoapi.ChargeState;
 import com.highmobility.autoapi.ClimateState;
 import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlCommand;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.ControlRooftop;
@@ -23,8 +25,6 @@ import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.GetValetMode;
 import com.highmobility.autoapi.GetVehicleLocation;
 import com.highmobility.autoapi.HonkAndFlash;
-import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.LockUnlockDoors;
@@ -58,18 +58,13 @@ import static org.junit.Assert.fail;
 public class CapabilitiesTest {
     @Test
     public void capabilities() {
-        byte[] bytes = Bytes.bytesFromHex("001001010005002000010201000500210001020100060023000102030100090024000102030405060100050025000102010006002600010203010007002700010203040100050028000102010003002902010004003000010100050031000102");
+        byte[] bytes = Bytes.bytesFromHex
+                ("001001010005002000010201000500210001020100060023000102030100090024000102030405060100050025000102010006002600010203010007002700010203040100050028000102010003002902010004003000010100050031000102");
 
-        Command command = null;
-
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(Capabilities.TYPE));
-        Capabilities capabilities = (Capabilities)command;
+        Capabilities capabilities = (Capabilities) command;
 
         assertTrue(capabilities.isSupported(GetLockState.TYPE));
         assertTrue(capabilities.isSupported(LockState.TYPE));
@@ -123,8 +118,9 @@ public class CapabilitiesTest {
     @Test
     public void oneUnknownCapability() {
         // 00 AB unknown
-        byte[] unknownCapabilitiesBytes = Bytes.bytesFromHex("00100101000500AB00010201000500210001020100060023000102030100090024000102030405060100050025000102010006002600010203010007002700010203040100050028000102010003002902010004003000010100050031000102");
-        Capabilities unknownCapabilities= null;
+        byte[] unknownCapabilitiesBytes = Bytes.bytesFromHex
+                ("00100101000500AB00010201000500210001020100060023000102030100090024000102030405060100050025000102010006002600010203010007002700010203040100050028000102010003002902010004003000010100050031000102");
+        Capabilities unknownCapabilities = null;
 
         try {
             unknownCapabilities = new Capabilities(unknownCapabilitiesBytes);
@@ -132,7 +128,8 @@ public class CapabilitiesTest {
             fail("unknowncapabilities init failed");
         }
 
-        assertTrue(unknownCapabilities.getCapabilities().length == 11); // unknown capa still added to array
+        assertTrue(unknownCapabilities.getCapabilities().length == 11); // unknown capa still
+        // added to array
 
         for (int i = 0; i < unknownCapabilities.getCapabilities().length; i++) {
             assertTrue(unknownCapabilities.getCapabilities()[i] != null);
@@ -145,12 +142,8 @@ public class CapabilitiesTest {
     public void climateCapability() {
         byte[] message = Bytes.bytesFromHex("001001010009002400010203040506");
         Capabilities capability = null;
-        try {
-            capability = (Capabilities) CommandResolver.resolve(message);
-        } catch (CommandParseException e) {
-            fail("climate capability init failed");
-            e.printStackTrace();
-        }
+        capability = (Capabilities) CommandResolver.resolve(message);
+        if (capability == null) fail();
 
         assertTrue(capability.isSupported(GetClimateState.TYPE));
         assertTrue(capability.isSupported(ClimateState.TYPE));
@@ -164,13 +157,9 @@ public class CapabilitiesTest {
     public void heartRateCapability() {
         byte[] message = Bytes.bytesFromHex("001001010003002902");
         Capabilities capability = null;
-        try {
-            capability = (Capabilities) CommandResolver.resolve(message);
-        }
-        catch (CommandParseException e) {
-            fail("climate capability init failed");
-            e.printStackTrace();
-        }
+
+        capability = (Capabilities) CommandResolver.resolve(message);
+        if (capability == null) fail();
 
         assertTrue(capability.isSupported(SendHeartRate.TYPE));
     }
@@ -191,14 +180,14 @@ public class CapabilitiesTest {
 
         Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof GetCapability);
-        GetCapability get = (GetCapability)command;
+        GetCapability get = (GetCapability) command;
         assertTrue(get.getCapabilityIdentifier() == Identifier.HEART_RATE);
     }
 
     @Test public void buildClimate() throws CommandParseException {
         Capabilities.Builder builder = new Capabilities.Builder();
 
-        Type[] supportedTypes = new Type[] {
+        Type[] supportedTypes = new Type[]{
                 GetClimateState.TYPE,
                 ClimateState.TYPE,
                 SetClimateProfile.TYPE,
@@ -218,7 +207,7 @@ public class CapabilitiesTest {
     @Test public void buildClimateAndRemoteControl() throws IllegalArgumentException {
         Capabilities.Builder builder = new Capabilities.Builder();
 
-        Type[] climateSupportedTypes = new Type[] {
+        Type[] climateSupportedTypes = new Type[]{
                 GetClimateState.TYPE,
                 ClimateState.TYPE,
                 SetClimateProfile.TYPE,
@@ -228,10 +217,11 @@ public class CapabilitiesTest {
                 StartStopIonizing.TYPE
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, climateSupportedTypes);
+        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE,
+                climateSupportedTypes);
         builder.addCapability(property);
 
-        Type[] remoteControlTypes = new Type[] {
+        Type[] remoteControlTypes = new Type[]{
                 GetControlMode.TYPE,
                 ControlMode.TYPE,
                 StartControlMode.TYPE,
@@ -239,18 +229,20 @@ public class CapabilitiesTest {
                 ControlCommand.TYPE
         };
 
-        CapabilityProperty property2 = new CapabilityProperty(Identifier.REMOTE_CONTROL, remoteControlTypes);
+        CapabilityProperty property2 = new CapabilityProperty(Identifier.REMOTE_CONTROL,
+                remoteControlTypes);
         builder.addCapability(property2);
 
         byte[] message = builder.build().getBytes();
-        assertTrue(Arrays.equals(message, Bytes.bytesFromHex("00100101000900240001020304050601000700270001020304")));
+        assertTrue(Arrays.equals(message, Bytes.bytesFromHex
+                ("00100101000900240001020304050601000700270001020304")));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void buildTypesFromDifferentCategories() {
         Capabilities.Builder builder = new Capabilities.Builder();
 
-        Type[] supportedTypes = new Type[] {
+        Type[] supportedTypes = new Type[]{
                 GetClimateState.TYPE,
                 ClimateState.TYPE,
                 SetClimateProfile.TYPE,

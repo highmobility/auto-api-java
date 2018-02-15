@@ -26,13 +26,9 @@ public class ChassisSettingsTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00530101000101020001010300040015251503000401171F110400031937E4");
 
-        com.highmobility.autoapi.Command command = null;
+        com.highmobility.autoapi.
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == ChassisSettings.class);
         ChassisSettings state = (ChassisSettings) command;

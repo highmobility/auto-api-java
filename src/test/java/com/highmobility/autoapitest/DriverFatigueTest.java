@@ -18,13 +18,9 @@ public class DriverFatigueTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00410101000100");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(DriverFatigueDetected.TYPE));
         DriverFatigueDetected state = (DriverFatigueDetected) command;

@@ -28,13 +28,9 @@ public class ParkingTicketTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "0047010100010102000E4265726c696e205061726b696e67030008363438393432333304000811010a1122000000050008120214160B000000");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(ParkingTicket.TYPE));
         ParkingTicket state = (ParkingTicket) command;

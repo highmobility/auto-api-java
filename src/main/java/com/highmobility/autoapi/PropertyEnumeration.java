@@ -20,21 +20,19 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.Bytes;
-
-import java.util.Arrays;
 import java.util.Enumeration;
 
 class PropertyEnumeration implements Enumeration {
     private int cursor;
     private final byte[] bytes;
 
-    public PropertyEnumeration(byte[] bytes) throws CommandParseException {
+    public PropertyEnumeration(byte[] bytes) {
         this(bytes, 3);
     }
 
-    public PropertyEnumeration(byte[] bytes, int cursor) throws CommandParseException {
+    public PropertyEnumeration(byte[] bytes, int cursor) {
         this.bytes = bytes;
         this.cursor = cursor;
     }
@@ -50,7 +48,7 @@ class PropertyEnumeration implements Enumeration {
 
         try {
             propertySize = Property.getUnsignedInt(bytes, cursor + 1, 2);
-        } catch (CommandParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 

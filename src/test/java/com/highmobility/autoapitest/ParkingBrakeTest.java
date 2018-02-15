@@ -24,13 +24,9 @@ public class ParkingBrakeTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00580101000101");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == ParkingBrakeState.class);
         ParkingBrakeState state = (ParkingBrakeState) command;

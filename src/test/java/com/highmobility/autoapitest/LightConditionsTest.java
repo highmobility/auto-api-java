@@ -21,13 +21,9 @@ public class LightConditionsTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00540101000447d8cc000200043e800000");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == LightConditions.class);
         LightConditions state = (LightConditions) command;

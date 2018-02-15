@@ -22,7 +22,12 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.exception.ParseException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Command {
+    static final Logger logger = LoggerFactory.getLogger(Command.class);
+
     byte[] bytes;
     Type type;
 

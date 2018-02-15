@@ -24,13 +24,9 @@ public class NaviDestinationTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "0031010100084252147d41567ab10200064265726c696e");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == NaviDestination.class);
         NaviDestination state = (NaviDestination) command;

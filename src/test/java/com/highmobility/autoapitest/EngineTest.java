@@ -22,13 +22,9 @@ public class EngineTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00350101000101");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(IgnitionState.TYPE));
         IgnitionState state = (IgnitionState) command;

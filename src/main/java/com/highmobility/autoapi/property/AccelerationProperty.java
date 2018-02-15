@@ -78,12 +78,12 @@ public class AccelerationProperty extends Property {
 
     public AccelerationProperty(byte[] bytes) throws CommandParseException {
         super(bytes);
-
+        if (bytes.length < 8) throw new CommandParseException();
         accelerationType = AccelerationType.fromByte(bytes[3]);
         acceleration = Property.getFloat(Arrays.copyOfRange(bytes, 4, 8));
     }
 
-    public AccelerationProperty(byte identifier, AccelerationType type, float acceleration) throws UnsupportedEncodingException {
+    public AccelerationProperty(byte identifier, AccelerationType type, float acceleration) {
         super(identifier, 5);
         bytes[3] = type.getByte();
         Bytes.setBytes(bytes, Property.floatToBytes(acceleration), 4);

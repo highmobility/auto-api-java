@@ -19,6 +19,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ClimateTest {
     @Test
@@ -26,13 +27,9 @@ public class ClimateTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "002401010004419800000200044140000003000441ac000004000441ac00000500010106000100070001000800010009000441ac00000A000F6000000000000000000000071E071E");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            Assert.fail("init failed");
-        }
+        Command command = CommandResolver.resolve(bytes);
+        if (command == null) fail();
 
         assertTrue(command.is(ClimateState.TYPE));
         ClimateState state = (ClimateState) command;

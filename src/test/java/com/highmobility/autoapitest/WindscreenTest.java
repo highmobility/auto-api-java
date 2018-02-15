@@ -33,13 +33,9 @@ public class WindscreenTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "0042010100010202000103030001020400014305000112060001020700015f08000811010a1020050000");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(WindscreenState.TYPE) && command.getClass().equals(WindscreenState.class));
         WindscreenState state = (WindscreenState)command;

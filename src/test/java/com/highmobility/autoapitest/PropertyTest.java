@@ -79,13 +79,9 @@ public class PropertyTest {
                     "01000101" +
                     "1A000135");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(RooftopState.TYPE));
 

@@ -21,13 +21,9 @@ public class FirmwareVersionTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "000301010003010f2102000C6274737461636b2d7561727403000976312e352d70726f64");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(FirmwareVersion.TYPE));
         FirmwareVersion state = (FirmwareVersion) command;

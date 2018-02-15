@@ -6,9 +6,10 @@ This repository contains the java parsers for Auto API.
 
 * hmkit-utils
 
+
 ### Install
 
-Releases are pushed to jcenter. To include hmkit-oem in your project, add to build.gradle:
+Releases are pushed to jcenter. To include hmkit-auto-api in your project, add to build.gradle:
 
 ```
 repositories {
@@ -18,6 +19,12 @@ repositories {
 dependencies {
   implementation('com.highmobility:hmkit-auto-api:1.6.0')
 }
+```
+
+SLF4J is used for logging. Add slf4j binding to see the logs, for example:
+
+```
+implementation 'org.slf4j:slf4j-simple:1.8.0-beta1'
 ```
 
 Find the latest version name in https://bintray.com/high-mobility/maven/hmkit-auto-api

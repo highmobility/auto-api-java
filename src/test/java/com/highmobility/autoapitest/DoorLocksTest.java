@@ -23,13 +23,9 @@ public class DoorLocksTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "002001010003000100010003010000010003020001010003030001");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(LockState.TYPE));
         LockState state = (LockState) command;

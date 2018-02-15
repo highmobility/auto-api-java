@@ -26,13 +26,9 @@ public class LightsTest {
                         "03000100" +
                         "040003ff0000");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(LightsState.TYPE));
 

@@ -21,13 +21,9 @@ public class FuelingTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00400101000101");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(GasFlapState.TYPE));
         GasFlapState state = (GasFlapState) command;

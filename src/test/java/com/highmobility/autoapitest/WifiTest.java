@@ -28,13 +28,9 @@ public class WifiTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "0059010100010102000101030004484f4d4504000103");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == WifiState.class);
         WifiState state = (WifiState)command;

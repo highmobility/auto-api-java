@@ -26,13 +26,9 @@ public class MessagingTest {
                     "01000e2b31203535352d3535352d353535" +
                     "02000d48656c6c6f20796f7520746f6f");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == SendMessage.class);
         SendMessage state = (SendMessage) command;

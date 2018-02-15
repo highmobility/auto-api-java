@@ -31,13 +31,9 @@ public class SeatsTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "005601010003000101010003010000");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == SeatsState.class);
         SeatsState state = (SeatsState) command;

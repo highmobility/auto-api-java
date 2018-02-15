@@ -22,13 +22,9 @@ public class OffRoadTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "005201010002000A02000132");
 
-        Command command = null;
 
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (CommandParseException e) {
-            fail("init failed");
-        }
+
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == OffRoadState.class);
         OffRoadState state = (OffRoadState) command;

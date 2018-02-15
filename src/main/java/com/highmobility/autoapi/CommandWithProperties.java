@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.Bytes;
@@ -69,7 +70,7 @@ public class CommandWithProperties extends Command {
         return properties;
     }
 
-    public CommandWithProperties(byte[] bytes) throws CommandParseException {
+    public CommandWithProperties(byte[] bytes) {
         super(bytes);
         if (bytes.length < 7) throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
@@ -84,17 +85,12 @@ public class CommandWithProperties extends Command {
 
             if (property.getPropertyIdentifier() == (byte)0xA0) {
                 // does not work
-                if (propertyEnumeration.size != 9) {
-                    throw new CommandParseException();
-                }
+                if (propertyEnumeration.size != 9) continue; // invalid signature length, just ignore
 
                 nonce = Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
                         propertyEnumeration.valueStart + propertyEnumeration.size);
             } else if (property.getPropertyIdentifier() == (byte)0xA1) {
-                if (propertyEnumeration.size != 64) {
-                    throw new CommandParseException();
-                }
-
+                if (propertyEnumeration.size != 64) continue; // ignore invalid length
                 signature = Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
                         propertyEnumeration.valueStart + propertyEnumeration.size);
             }
