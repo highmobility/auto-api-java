@@ -103,6 +103,8 @@ public class CapabilityProperty extends Property {
      */
     public CapabilityProperty(byte[] categoryIdentifier, Type[] types) throws IllegalArgumentException {
         super(defaultIdentifier, getValue(categoryIdentifier, types));
+
+        this.types = types;
     }
 
     /**
