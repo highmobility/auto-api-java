@@ -49,10 +49,10 @@ public class Capabilities extends CommandWithProperties {
      */
     public CapabilityProperty getCapability(Type type) {
         for (int i = 0; i < capabilities.length; i++) {
-            CapabilityProperty capa = capabilities[i];
-            if (capa.getIdentifierBytes()[0] == type.getIdentifier()[0]
-                    && capa.getIdentifierBytes()[1] == type.getIdentifier()[1]) {
-                return capa;
+            CapabilityProperty capability = capabilities[i];
+            if (capability.getIdentifierBytes()[0] == type.getIdentifier()[0]
+                    && capability.getIdentifierBytes()[1] == type.getIdentifier()[1]) {
+                return capability;
             }
         }
 
@@ -66,7 +66,7 @@ public class Capabilities extends CommandWithProperties {
         return capabilities;
     }
 
-    public Capabilities(byte[] bytes) throws CommandParseException {
+    public Capabilities(byte[] bytes) {
         super(bytes);
         ArrayList<CapabilityProperty> builder = new ArrayList<>();
         for (int i = 0; i < getProperties().length; i++) {
@@ -91,6 +91,7 @@ public class Capabilities extends CommandWithProperties {
 
     private Capabilities(Builder builder) {
         super(TYPE, builder.getProperties());
+
         capabilities = builder.capabilities.toArray(new CapabilityProperty[builder.capabilities.size()]);
     }
 

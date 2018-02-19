@@ -11,6 +11,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlCommand;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.ControlRooftop;
+import com.highmobility.autoapi.EnableDisableWifi;
 import com.highmobility.autoapi.FlashersState;
 import com.highmobility.autoapi.GetCapabilities;
 import com.highmobility.autoapi.GetCapability;
@@ -121,13 +122,7 @@ public class CapabilitiesTest {
         byte[] unknownCapabilitiesBytes = Bytes.bytesFromHex
                 ("00100101000500AB00010201000500210001020100060023000102030100090024000102030405060100050025000102010006002600010203010007002700010203040100050028000102010003002902010004003000010100050031000102");
         Capabilities unknownCapabilities = null;
-
-        try {
-            unknownCapabilities = new Capabilities(unknownCapabilitiesBytes);
-        } catch (CommandParseException e) {
-            fail("unknowncapabilities init failed");
-        }
-
+        unknownCapabilities = new Capabilities(unknownCapabilitiesBytes);
         assertTrue(unknownCapabilities.getCapabilities().length == 11); // unknown capa still
         // added to array
 
@@ -144,7 +139,7 @@ public class CapabilitiesTest {
         Capabilities capability = null;
         capability = (Capabilities) CommandResolver.resolve(message);
         if (capability == null) fail();
-
+        assertTrue(capability.getCapability(GetClimateState.TYPE) != null);
         assertTrue(capability.isSupported(GetClimateState.TYPE));
         assertTrue(capability.isSupported(ClimateState.TYPE));
         assertTrue(capability.isSupported(StartStopHvac.TYPE));
@@ -164,7 +159,7 @@ public class CapabilitiesTest {
         assertTrue(capability.isSupported(SendHeartRate.TYPE));
     }
 
-    @Test public void getCapabilities() throws CommandParseException {
+    @Test public void getCapabilities() {
         byte[] waitingForBytes = Bytes.bytesFromHex("001000");
         byte[] commandBytes = new GetCapabilities().getBytes();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
@@ -173,7 +168,7 @@ public class CapabilitiesTest {
         assertTrue(command instanceof GetCapabilities);
     }
 
-    @Test public void getCapability() throws CommandParseException {
+    @Test public void getCapability() {
         byte[] waitingForBytes = Bytes.bytesFromHex("0010020029");
         byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
@@ -184,10 +179,10 @@ public class CapabilitiesTest {
         assertTrue(get.getCapabilityIdentifier() == Identifier.HEART_RATE);
     }
 
-    @Test public void buildClimate() throws CommandParseException {
+    @Test public void buildClimate() {
         Capabilities.Builder builder = new Capabilities.Builder();
 
-        Type[] supportedTypes = new Type[]{
+        Type[] supportedTypes = new Type[] {
                 GetClimateState.TYPE,
                 ClimateState.TYPE,
                 SetClimateProfile.TYPE,
@@ -199,9 +194,13 @@ public class CapabilitiesTest {
 
         CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
         builder.addCapability(property);
-
-        byte[] message = builder.build().getBytes();
+        Capabilities capabilities = builder.build();
+        byte[] message = capabilities.getBytes();
         assertTrue(Arrays.equals(message, Bytes.bytesFromHex("001001010009002400010203040506")));
+        assertTrue(capabilities.getCapability(GetClimateState.TYPE) != null);
+        assertTrue(capabilities.getCapability(EnableDisableWifi.TYPE) == null);
+        assertTrue(capabilities.getCapabilities().length == 1);
+
     }
 
     @Test public void buildClimateAndRemoteControl() throws IllegalArgumentException {

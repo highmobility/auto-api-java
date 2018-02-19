@@ -38,7 +38,6 @@ public class CapabilityProperty extends Property {
     byte[] identifierBytes;
     Identifier identifier;
 
-
     /**
      *
      * @return All of the command types supported for this category
@@ -103,6 +102,9 @@ public class CapabilityProperty extends Property {
      */
     public CapabilityProperty(byte[] categoryIdentifier, Type[] types) throws IllegalArgumentException {
         super(defaultIdentifier, getValue(categoryIdentifier, types));
+        this.identifierBytes = categoryIdentifier;
+        this.identifier = Identifier.fromBytes(categoryIdentifier);
+        this.types = types;
     }
 
     /**

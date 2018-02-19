@@ -72,7 +72,7 @@ public enum Identifier {
     HOME_CHARGER(new byte[] { 0x00, (byte)0x60 })
     ;
 
-    public static Identifier fromBytes(byte[] bytes) throws CommandParseException {
+    public static Identifier fromBytes(byte[] bytes) {
         return fromBytes(bytes[0], bytes[1]);
     }
 
