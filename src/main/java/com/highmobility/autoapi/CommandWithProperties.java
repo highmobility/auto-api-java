@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.Bytes;
@@ -29,12 +28,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * CommandWithProperties expects at least 1 property and no size for the whole command.
- * It is used for constructing commands with properties.
+ * Used for commands with properties.
  */
 public class CommandWithProperties extends Command {
-    static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be null";
-
     Property[] properties;
     byte[] nonce;
     byte[] signature;
@@ -72,7 +68,6 @@ public class CommandWithProperties extends Command {
 
     public CommandWithProperties(byte[] bytes) {
         super(bytes);
-        if (bytes.length < 7) throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
         ArrayList<Property> builder = new ArrayList<>();
         PropertyEnumeration enumeration = new PropertyEnumeration(bytes);
@@ -102,13 +97,7 @@ public class CommandWithProperties extends Command {
     CommandWithProperties(Type type, HMProperty[] properties) throws IllegalArgumentException {
         super(type);
 
-        if (properties == null || properties.length == 0) throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
-
-        bytes = new byte[] {
-                type.getIdentifierAndType()[0],
-                type.getIdentifierAndType()[1],
-                type.getIdentifierAndType()[2]
-        };
+        bytes = type.getIdentifierAndType();
 
         for (int i = 0; i < properties.length; i++) {
             HMProperty property = properties[i];
@@ -121,6 +110,22 @@ public class CommandWithProperties extends Command {
             else if (property.getPropertyIdentifier() == (byte)0xA1) {
                 signature = Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length);
             }
+        }
+    }
+
+    CommandWithProperties(Builder builder) throws IllegalArgumentException {
+        super(builder.type);
+
+        this.nonce = builder.nonce;
+        this.signature = builder.signature;
+        bytes = type.getIdentifierAndType();
+
+        HMProperty[] properties = builder.getProperties();
+
+        for (int i = 0; i < properties.length; i++) {
+            HMProperty property = properties[i];
+            byte[] propertyBytes = property.getPropertyBytes();
+            bytes = Bytes.concatBytes(bytes, propertyBytes);
         }
     }
 
@@ -155,18 +160,8 @@ public class CommandWithProperties extends Command {
             return this;
         }
 
-//        public Builder setProperties(Property[] properties) {
-//            this.propertiesBuilder = new ArrayList<>(properties.length);
-//
-//            for (int i = 0; i < properties.length; i++) {
-//                propertiesBuilder.set(i, properties[i]);
-//            }
-//
-//            return this;
-//        }
-
         public CommandWithProperties build() {
-            return new CommandWithProperties(type, getProperties());
+            return new CommandWithProperties(this);
         }
 
         protected HMProperty[] getProperties() {

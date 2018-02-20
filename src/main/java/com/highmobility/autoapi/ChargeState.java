@@ -35,7 +35,7 @@ import java.util.Arrays;
  * the car is plugged in, disconnected, starts or stops charging, or when the charge limit is
  * changed.
  */
-public class ChargeState extends CommandWithProperties {
+public class ChargeState extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x01);
 
     private static final byte ESTIMATED_RANGE_IDENTIFIER = 0x02;
@@ -229,7 +229,7 @@ public class ChargeState extends CommandWithProperties {
     }
 
     private ChargeState(Builder builder) {
-        super(TYPE, builder.getProperties());
+        super(builder);
         chargingState = builder.chargingState;
         estimatedRange = builder.estimatedRange;
         batteryLevel = builder.batteryLevel;

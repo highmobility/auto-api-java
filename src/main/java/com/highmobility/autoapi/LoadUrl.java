@@ -28,7 +28,7 @@ import java.io.UnsupportedEncodingException;
  * Load a URL in the head unit browser. A URL shortener can be used in other cases. Note that for the
  * car emulator the URL has to be for a secure site (HTTPS).
  */
-public class LoadUrl extends CommandWithProperties {
+public class LoadUrl extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.BROWSER, 0x00);
 
     /**

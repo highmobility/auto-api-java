@@ -32,7 +32,7 @@ import java.util.Calendar;
  * 0x00 Ended also when the parking ticket has never been set. Afterwards the car always keeps the
  * last parking ticket information.
  */
-public class ParkingTicket extends CommandWithProperties {
+public class ParkingTicket extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.PARKING_TICKET, 0x01);
 
     String operatorName;

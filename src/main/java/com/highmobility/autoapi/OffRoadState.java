@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * This message is sent when a Get Offroad State is received by the car.
  */
-public class OffRoadState extends CommandWithProperties {
+public class OffRoadState extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.OFF_ROAD, 0x01);
 
     Integer routeIncline;

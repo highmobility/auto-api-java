@@ -19,9 +19,6 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
 
 public class PropertyTest {
-
-
-
     @Test public void propertyLength() {
         IntegerProperty property = new IntegerProperty((byte) 0x01, 2, 2);
         assertTrue(Arrays.equals(property.getPropertyBytes(), new byte[]{ 0x01, 0x00, 0x02, 0x00, 0x02 }));

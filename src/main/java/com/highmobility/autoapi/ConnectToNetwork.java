@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Connect the car to a Wi-Fi network.
  */
-public class ConnectToNetwork extends CommandWithProperties {
+public class ConnectToNetwork extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x02);
 
     /**
@@ -57,7 +57,7 @@ public class ConnectToNetwork extends CommandWithProperties {
         return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
     }
 
-    ConnectToNetwork(byte[] bytes) throws CommandParseException {
+    ConnectToNetwork(byte[] bytes) {
         super(bytes);
     }
 }

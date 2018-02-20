@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * This message is sent when a Get Lights State message is received by the car.
  */
-public class LightsState extends CommandWithProperties {
+public class LightsState extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.LIGHTS, 0x01);
 
     private static final byte REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER = 0x02;
@@ -100,7 +100,7 @@ public class LightsState extends CommandWithProperties {
     }
 
     private LightsState(Builder builder) {
-        super(TYPE, builder.getProperties());
+        super(builder);
         frontExteriorLightState = builder.frontExteriorLightState;
         rearExteriorLightActive = builder.rearExteriorLightActive;
         interiorLightActive = builder.interiorLightActive;

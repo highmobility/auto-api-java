@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi.property.HomeCharger;
 
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.Bytes;
@@ -60,7 +61,7 @@ public class PriceTariff extends Property {
 
     public PriceTariff(byte[] bytes) throws CommandParseException, UnsupportedEncodingException {
         super(bytes);
-
+        if (bytes.length != 11) throw new CommandParseException();
         pricingType = PricingType.fromByte(bytes[3]);
         currency = Property.getString(bytes, 4, 3);
         price = Property.getFloat(bytes, 7);
@@ -91,7 +92,7 @@ public class PriceTariff extends Property {
         PER_MINUTE((byte)0x01),
         PER_KWH((byte)0x02);
 
-        public static PricingType fromByte(byte byteValue) throws CommandParseException {
+        public static PricingType fromByte(byte byteValue) {
             PricingType[] values = PricingType.values();
 
             for (int i = 0; i < values.length; i++) {
@@ -101,7 +102,7 @@ public class PriceTariff extends Property {
                 }
             }
 
-            throw new CommandParseException();
+            return null;
         }
 
         private byte value;

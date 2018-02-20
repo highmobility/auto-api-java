@@ -29,7 +29,7 @@ import java.io.UnsupportedEncodingException;
  * This message is sent when a Wi Fi State message is received by the car. The new state is included
  * in the message payload and may be the result of user, device or car triggered action.
  */
-public class WifiState extends CommandWithProperties {
+public class WifiState extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x01);
 
     Boolean enabled;

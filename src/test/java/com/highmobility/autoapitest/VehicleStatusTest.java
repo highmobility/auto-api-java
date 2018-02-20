@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetVehicleStatus;
+import com.highmobility.autoapi.TheftAlarmState;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.WindowsState;
@@ -165,5 +166,23 @@ public class VehicleStatusTest {
         // one window property will fail to parse
         assertTrue(vs.getState(WindowsState.TYPE).getProperties().length == 5);
         assertTrue(((WindowsState)vs.getState(WindowsState.TYPE)).getWindowProperties().length == 4);
+    }
+
+    @Test public void zeroProperties() {
+        VehicleStatus.Builder builder = new VehicleStatus.Builder();
+        VehicleStatus vs = builder.build();
+        testEmptyCommand(vs);
+        assertTrue(vs.getBytes().length == 3);
+        assertTrue(vs.getBytes().length == 3);
+
+        byte[] incBytes = Bytes.bytesFromHex("00110100");
+        Command command = CommandResolver.resolve(incBytes);
+        testEmptyCommand((VehicleStatus) command);
+    }
+
+    void testEmptyCommand(VehicleStatus vs) {
+        assertTrue(vs.getStates().length == 0);
+        assertTrue(vs.getNumberOfDoors() == null);
+        assertTrue(vs.getState(TheftAlarmState.TYPE) == null);
     }
 }

@@ -34,13 +34,6 @@ public class StringProperty extends Property {
 
     public static HMProperty[] getProperties(String value, byte identifier) throws
             UnsupportedEncodingException {
-        HMProperty[] properties = null;
-
-        if (value != null) {
-            properties = new HMProperty[1];
-            properties[0] = new StringProperty(identifier, value);
-        }
-
-        return properties;
+        return new HMProperty[] { new StringProperty(identifier, value) };
     }
 }

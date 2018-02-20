@@ -33,7 +33,7 @@ import java.util.List;
  * result is sent through the Windscreen State message. Damage confidence percentage is
  * automatically set to either 0% or 100%.
  */
-public class SetWindscreenDamage extends CommandWithProperties {
+public class SetWindscreenDamage extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x02);
 
     public SetWindscreenDamage(WindscreenDamage damage, WindscreenDamageZone zone,

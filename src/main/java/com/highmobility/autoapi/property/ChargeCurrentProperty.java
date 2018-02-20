@@ -50,6 +50,7 @@ public class ChargeCurrentProperty extends Property {
 
     public ChargeCurrentProperty(byte[] bytes) throws CommandParseException {
         super(bytes);
+        if (bytes.length != 15) throw new CommandParseException();
         chargeCurrent = Property.getFloat(bytes, 3);
         maximumValue = Property.getFloat(bytes, 7);
         minimumValue = Property.getFloat(bytes, 11);

@@ -28,7 +28,7 @@ import java.io.UnsupportedEncodingException;
  * Message to be sent by the smart device. This could be a response to a received message or input
  * through voice by the driver.
  */
-public class SendMessage extends CommandWithProperties {
+public class SendMessage extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.MESSAGING, 0x01);
 
     String recipientHandle;

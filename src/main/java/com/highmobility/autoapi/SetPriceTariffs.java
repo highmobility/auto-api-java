@@ -27,7 +27,7 @@ import java.util.ArrayList;
 /**
  * Set the price tariffs of the home charger.
  */
-public class SetPriceTariffs extends CommandWithProperties {
+public class SetPriceTariffs extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x03);
 
     /**

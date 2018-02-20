@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * This message is sent when a Get Vehicle Time message is received by the car. The local time of
  * the car is returned, hence the UTC timezone offset is included as well.
  */
-public class SeatsState extends CommandWithProperties {
+public class SeatsState extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.SEATS, 0x01);
 
     SeatStateProperty[] seatsStates;

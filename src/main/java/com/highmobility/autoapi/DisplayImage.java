@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * Display an image in the head unit by providing the image URL.
  */
-public class DisplayImage extends CommandWithProperties {
+public class DisplayImage extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.GRAPHICS, 0x00);
 
     /**

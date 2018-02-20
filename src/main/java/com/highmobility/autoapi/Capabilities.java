@@ -90,8 +90,7 @@ public class Capabilities extends CommandWithProperties {
     }
 
     private Capabilities(Builder builder) {
-        super(TYPE, builder.getProperties());
-
+        super(builder);
         capabilities = builder.capabilities.toArray(new CapabilityProperty[builder.capabilities.size()]);
     }
 

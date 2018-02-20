@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * This message is sent when a Get Parking Brake State message is received by the car.
  */
-public class ParkingBrakeState extends CommandWithProperties {
+public class ParkingBrakeState extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.PARKING_BRAKE, 0x01);
 
     private static final byte ACTIVE_IDENTIFIER = 0x01;
@@ -54,7 +54,7 @@ public class ParkingBrakeState extends CommandWithProperties {
     }
 
     private ParkingBrakeState(Builder builder) {
-        super(TYPE, builder.getProperties());
+        super(builder);
         active = builder.active;
     }
 

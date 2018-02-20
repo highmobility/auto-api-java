@@ -28,7 +28,7 @@ import java.io.UnsupportedEncodingException;
  * Send a keystroke or entire sentences as input to the car head unit. This can act as an alternative
  * to the input devices that the car is equipped with.
  */
-public class TextInput extends CommandWithProperties {
+public class TextInput extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.TEXT_INPUT, 0x00);
 
     /**

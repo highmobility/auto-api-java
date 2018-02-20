@@ -213,7 +213,7 @@ public class VehicleStatus extends CommandWithProperties {
     }
 
     private VehicleStatus(Builder builder) {
-        super(TYPE, builder.getProperties());
+        super(builder);
         vin = builder.vin;
         powerTrain = builder.powerTrain;
         modelName = builder.modelName;

@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * Set the charge timer of the car. The message can include one of the different timer types or
  * all.
  */
-public class SetChargeTimer extends CommandWithProperties {
+public class SetChargeTimer extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x06);
 
     public SetChargeTimer(ChargeTimer[] chargeTimers) {

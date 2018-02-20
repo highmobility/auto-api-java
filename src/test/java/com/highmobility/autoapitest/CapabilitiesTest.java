@@ -22,6 +22,7 @@ import com.highmobility.autoapi.GetFlashersState;
 import com.highmobility.autoapi.GetLockState;
 import com.highmobility.autoapi.GetNaviDestination;
 import com.highmobility.autoapi.GetRooftopState;
+import com.highmobility.autoapi.GetTheftAlarmState;
 import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.GetValetMode;
 import com.highmobility.autoapi.GetVehicleLocation;
@@ -46,6 +47,7 @@ import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.Type;
 import com.highmobility.autoapi.ValetMode;
 import com.highmobility.autoapi.VehicleLocation;
+import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.property.CapabilityProperty;
 import com.highmobility.utils.Bytes;
 
@@ -255,5 +257,21 @@ public class CapabilitiesTest {
 
         builder.addCapability(property);
         builder.build().getBytes();
+    }
+
+    @Test public void zeroProperties() {
+        Capabilities.Builder builder = new Capabilities.Builder();
+        Capabilities capabilities = builder.build();
+        testEmptyCommand(capabilities);
+        assertTrue(capabilities.getBytes().length == 3);
+
+        byte[] incBytes = Bytes.bytesFromHex("00100100");
+        Command command = CommandResolver.resolve(incBytes);
+        testEmptyCommand((Capabilities) command);
+    }
+
+    void testEmptyCommand(Capabilities capabilities) {
+        assertTrue(capabilities.getCapabilities().length == 0);
+        assertTrue(capabilities.getCapability(GetTheftAlarmState.TYPE) == null);
     }
 }

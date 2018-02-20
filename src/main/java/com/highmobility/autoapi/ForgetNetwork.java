@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * Forget a network that the car has previously connected to.
  */
-public class ForgetNetwork extends CommandWithProperties {
+public class ForgetNetwork extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x03);
 
     /**
@@ -39,7 +39,7 @@ public class ForgetNetwork extends CommandWithProperties {
         super(TYPE, StringProperty.getProperties(ssid, (byte) 0x03));
     }
 
-    ForgetNetwork(byte[] bytes) throws CommandParseException {
+    ForgetNetwork(byte[] bytes) {
         super(bytes);
     }
 }

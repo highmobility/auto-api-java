@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * This is an evented message that is sent by the car every time the relative position of the keyfob
  * changes. This message is also sent when a Get Keyfob Position message is received by the car.
  */
-public class KeyfobPosition extends CommandWithProperties {
+public class KeyfobPosition extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.KEYFOB_POSITION, 0x01);
 
     com.highmobility.autoapi.property.KeyfobPosition keyfobPosition;

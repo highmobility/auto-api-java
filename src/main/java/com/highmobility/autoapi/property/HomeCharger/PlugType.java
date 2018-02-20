@@ -30,7 +30,7 @@ public enum PlugType implements HMProperty {
     COMBINED_CHARGING_SYSTEM((byte)0x02),
     CHADEMO((byte)0x02);
 
-    public static PlugType fromByte(byte byteValue) throws CommandParseException {
+    public static PlugType fromByte(byte byteValue) {
         PlugType[] values = PlugType.values();
 
         for (int i = 0; i < values.length; i++) {
@@ -40,7 +40,7 @@ public enum PlugType implements HMProperty {
             }
         }
 
-        throw new CommandParseException();
+        return null;
     }
 
     private byte value;

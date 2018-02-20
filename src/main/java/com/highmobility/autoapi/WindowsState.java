@@ -32,7 +32,7 @@ import java.util.List;
  * message is also sent when a Get Windows State is received by the car. The new status is included
  * in the message payload and may be the result of user, device or car triggered action.
  */
-public class WindowsState extends CommandWithProperties {
+public class WindowsState extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.WINDOWS, 0x01);
 
     WindowProperty[] windowProperties;
@@ -78,7 +78,7 @@ public class WindowsState extends CommandWithProperties {
     }
 
     private WindowsState(Builder builder) {
-        super(TYPE, builder.getProperties());
+        super(builder);
         windowProperties = builder.windowProperties;
     }
 

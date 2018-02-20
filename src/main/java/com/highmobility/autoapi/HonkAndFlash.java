@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * at the time. It is also possible to pass in how many times the lights should be flashed and how
  * many seconds the horn should be honked.
  */
-public class HonkAndFlash extends CommandWithProperties {
+public class HonkAndFlash extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x02);
 
     /**
