@@ -28,7 +28,7 @@ public class ChassisSettingsTest {
 
         com.highmobility.autoapi.
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.getClass() == ChassisSettings.class);
         ChassisSettings state = (ChassisSettings) command;

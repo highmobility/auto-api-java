@@ -25,7 +25,7 @@ public class DoorLocksTest {
 
 
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.is(LockState.TYPE));
         LockState state = (LockState) command;

@@ -27,7 +27,7 @@ public class NotificationsTest {
 
 
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.getClass() == Notification.class);
         Notification state = (Notification) command;
@@ -68,7 +68,7 @@ public class NotificationsTest {
         byte[] bytes = Bytes.bytesFromHex
                 ("003801FE");
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
         assertTrue(command.getClass() == NotificationAction.class);
         NotificationAction state = (NotificationAction) command;
         assertTrue(state.getActionIdentifier() == 254);
@@ -86,7 +86,7 @@ public class NotificationsTest {
         byte[] bytes = Bytes.bytesFromHex
                 ("003802");
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
         assertTrue(command.is(ClearNotification.TYPE));
     }
 

@@ -10,6 +10,7 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class HonkHornAndFlashLightsTest {
@@ -21,7 +22,7 @@ public class HonkHornAndFlashLightsTest {
 
 
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) { fail();}
 
         assertTrue(command.is(FlashersState.TYPE));
         FlashersState state = (FlashersState) command;

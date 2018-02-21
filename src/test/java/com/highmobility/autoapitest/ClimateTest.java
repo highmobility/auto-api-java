@@ -28,7 +28,7 @@ public class ClimateTest {
                 "002401010004419800000200044140000003000441ac000004000441ac00000500010106000100070001000800010009000441ac00000A000F6000000000000000000000071E071E");
 
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
         if (command == null) fail();
 
         assertTrue(command.is(ClimateState.TYPE));

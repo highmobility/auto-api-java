@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi.property.HomeCharger;
 
-import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.Bytes;

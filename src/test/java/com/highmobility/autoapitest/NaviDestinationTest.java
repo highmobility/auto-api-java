@@ -26,7 +26,7 @@ public class NaviDestinationTest {
 
 
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.getClass() == NaviDestination.class);
         NaviDestination state = (NaviDestination) command;

@@ -23,7 +23,7 @@ public class LightConditionsTest {
 
 
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.getClass() == LightConditions.class);
         LightConditions state = (LightConditions) command;

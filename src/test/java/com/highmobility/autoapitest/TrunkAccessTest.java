@@ -20,11 +20,11 @@ import static org.junit.Assert.fail;
  */
 public class TrunkAccessTest {
     @Test
-    public void state() {
+    public void state() throws CommandParseException {
         byte[] bytes = Bytes.bytesFromHex(
                 "0021010100010002000101");
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
         if (command == null) fail("init failed");
 
         assertTrue(command.getClass() == TrunkState.class);

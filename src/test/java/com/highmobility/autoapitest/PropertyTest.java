@@ -57,7 +57,7 @@ public class PropertyTest {
     CommandWithProperties getCommandWithSignature() {
         byte[] bytes = Bytes.bytesFromHex("00460101000101A00009324244433743483436A100404D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6");
         try {
-            Command command = CommandResolver.resolve(bytes);
+            Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
             if (command instanceof CommandWithProperties) {
                 return (CommandWithProperties) command;
@@ -78,7 +78,7 @@ public class PropertyTest {
 
 
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.is(RooftopState.TYPE));
 

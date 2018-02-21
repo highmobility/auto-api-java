@@ -24,7 +24,7 @@ public class EngineTest {
 
 
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.is(IgnitionState.TYPE));
         IgnitionState state = (IgnitionState) command;

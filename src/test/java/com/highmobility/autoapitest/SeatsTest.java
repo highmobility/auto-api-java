@@ -33,7 +33,7 @@ public class SeatsTest {
 
 
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.getClass() == SeatsState.class);
         SeatsState state = (SeatsState) command;

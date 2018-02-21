@@ -1,8 +1,6 @@
 package com.highmobility.autoapitest;
 
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.TextInput;
-import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -25,8 +23,7 @@ public class TextInputTest {
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
-
-    @Test(expected = ParseException.class) public void textInputNoLetters() throws UnsupportedEncodingException {
+    @Test public void textInputNoLetters() throws UnsupportedEncodingException {
         byte[] waitingForBytes = Bytes.bytesFromHex("004400010000");
         byte[] bytes = new TextInput("").getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));

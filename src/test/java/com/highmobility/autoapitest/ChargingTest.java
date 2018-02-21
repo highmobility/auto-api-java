@@ -31,7 +31,7 @@ public class ChargingTest {
                 "0023010100010202000200FF03000132040004bf19999a050004bf19999a06000443c8000007000443cd00000800015A090002003C0A0004000000000B000101"
                         + "0C000100" + "0D00090212010A1020050000" + "0D00090112010A1020060000");
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.is(ChargeState.TYPE));
         ChargeState state = (ChargeState) command;

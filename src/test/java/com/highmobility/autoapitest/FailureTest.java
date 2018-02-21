@@ -19,7 +19,7 @@ public class FailureTest {
     public void failure() {
         byte[] bytes = Bytes.bytesFromHex("00020101000300210002000101");
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
         if (command == null) fail();
 
         assertTrue(command.is(Failure.TYPE));

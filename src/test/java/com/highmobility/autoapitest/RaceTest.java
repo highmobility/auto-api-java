@@ -26,7 +26,7 @@ public class RaceTest {
 
 
 
-        Command command = CommandResolver.resolve(bytes);
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.getClass() == RaceState.class);
         RaceState state = (RaceState) command;
