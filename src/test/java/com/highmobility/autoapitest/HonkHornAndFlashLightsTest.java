@@ -17,16 +17,14 @@ public class HonkHornAndFlashLightsTest {
     @Test
     public void state() {
         byte[] bytes = Bytes.bytesFromHex(
-                "002601000401000102"
+                "00260101000100"
         );
-
-
 
         Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) { fail();}
 
         assertTrue(command.is(FlashersState.TYPE));
         FlashersState state = (FlashersState) command;
-        assertTrue(state.getState() == FlashersState.State.LEFT_ACTIVE);
+        assertTrue(state.getState() == FlashersState.State.INACTIVE);
     }
 
     @Test public void get() {

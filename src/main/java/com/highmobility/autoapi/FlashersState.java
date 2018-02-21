@@ -68,7 +68,7 @@ public class FlashersState extends Command {
 
     FlashersState(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length != 9) throw new CommandParseException();
-        state = State.fromByte(bytes[8]);
+        if (bytes.length != 7) throw new CommandParseException();
+        state = State.fromByte(bytes[6]);
     }
 }

@@ -26,6 +26,7 @@ public class CommandResolver {
      *
      * @param bytes the raw command bytes.
      * @return The parsed command. Check its class to understand which command was received.
+     * @throws CommandParseException If some bytes are invalid.
      */
     public static Command resolve(byte[] bytes) throws CommandParseException {
         Command command = null;
