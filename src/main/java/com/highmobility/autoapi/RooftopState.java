@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -28,6 +29,8 @@ import com.highmobility.autoapi.property.Property;
  */
 public class RooftopState extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.ROOFTOP, 0x01);
+    static final byte DIMMING_IDENTIFIER = 0x01;
+    static final byte OPEN_IDENTIFIER = 0x02;
 
     Float dimmingPercentage;
     Float openPercentage;
@@ -54,13 +57,44 @@ public class RooftopState extends CommandWithExistingProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case DIMMING_IDENTIFIER:
                     dimmingPercentage = Property.getUnsignedInt(property.getValueByte()) / 100f;
                     break;
-                case 0x02:
+                case OPEN_IDENTIFIER:
                     openPercentage = Property.getUnsignedInt(property.getValueByte()) / 100f;
                     break;
             }
+        }
+    }
+
+    private RooftopState(Builder builder) {
+        super(builder);
+        openPercentage = builder.openPercentage;
+        dimmingPercentage = builder.dimmingPercentage;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private Float openPercentage;
+        private Float dimmingPercentage;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        public Builder setOpenPercentage(Float openPercentage) {
+            this.openPercentage = openPercentage;
+            addProperty(new IntegerProperty(OPEN_IDENTIFIER, Property.floatToIntPercentage(openPercentage), 1));
+            return this;
+        }
+
+        public Builder setDimmingPercentage(Float dimmingPercentage) {
+            this.dimmingPercentage = dimmingPercentage;
+            addProperty(new IntegerProperty(DIMMING_IDENTIFIER, Property.floatToIntPercentage(dimmingPercentage), 1));
+            return this;
+        }
+
+        public RooftopState build() {
+            return new RooftopState(this);
         }
     }
 }

@@ -21,8 +21,6 @@ public class VehicleLocationTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "0030010100084252147d41567ab10200044252147d");
 
-
-
         Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.getClass() == VehicleLocation.class);

@@ -181,6 +181,10 @@ public class Property implements HMProperty {
         return ByteBuffer.allocate(4).putFloat(value).array();
     }
 
+    public static int floatToIntPercentage(float value) {
+        return Math.round(value * 100f);
+    }
+
     public static int getUnsignedInt(byte value) {
         return value & 0xFF;
     }

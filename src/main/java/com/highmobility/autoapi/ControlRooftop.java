@@ -34,9 +34,8 @@ public class ControlRooftop extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.ROOFTOP, 0x02);
 
     /**
-     *
      * @param dimmingPercentage The dimming percentage
-     * @param openPercentage The rooftop open percentage
+     * @param openPercentage    The rooftop open percentage
      * @throws IllegalArgumentException When both arguments are null
      */
     public ControlRooftop(Float dimmingPercentage, Float openPercentage) {
@@ -47,12 +46,14 @@ public class ControlRooftop extends CommandWithExistingProperties {
         List<Property> properties = new ArrayList<>();
 
         if (dimmingPercentage != null) {
-            IntegerProperty prop = new IntegerProperty((byte) 0x01, (int) (dimmingPercentage * 100f), 1);
+            IntegerProperty prop = new IntegerProperty(RooftopState.DIMMING_IDENTIFIER, Property
+                    .floatToIntPercentage(dimmingPercentage), 1);
             properties.add(prop);
         }
 
         if (openPercentage != null) {
-            IntegerProperty prop = new IntegerProperty((byte) 0x02, (int) (openPercentage * 100f), 1);
+            IntegerProperty prop = new IntegerProperty(RooftopState.OPEN_IDENTIFIER, Property
+                    .floatToIntPercentage(openPercentage), 1);
             properties.add(prop);
         }
 

@@ -297,7 +297,7 @@ public class DiagnosticsState extends CommandWithExistingProperties {
 
         public Builder setFuelLevel(Float fuelLevel) {
             this.fuelLevel = fuelLevel;
-            addProperty(new IntegerProperty((byte) 0x05, (int)(fuelLevel * 100), 1));
+            addProperty(new IntegerProperty((byte) 0x05, Property.floatToIntPercentage(fuelLevel), 1));
             return this;
         }
 

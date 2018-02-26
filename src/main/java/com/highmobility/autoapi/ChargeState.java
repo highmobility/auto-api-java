@@ -278,7 +278,7 @@ public class ChargeState extends CommandWithExistingProperties {
 
         public Builder setBatteryLevel(Float batteryLevel) {
             this.batteryLevel = batteryLevel;
-            addProperty(new IntegerProperty(BATTERY_LEVEL_IDENTIFIER, (int)(batteryLevel * 100), 1));
+            addProperty(new IntegerProperty(BATTERY_LEVEL_IDENTIFIER, Property.floatToIntPercentage(batteryLevel), 1));
             return this;
         }
 
@@ -308,7 +308,7 @@ public class ChargeState extends CommandWithExistingProperties {
 
         public Builder setChargeLimit(Float chargeLimit) {
             this.chargeLimit = chargeLimit;
-            addProperty(new IntegerProperty(CHARGE_LIMIT_IDENTIFIER, (int)(chargeLimit * 100), 1));
+            addProperty(new IntegerProperty(CHARGE_LIMIT_IDENTIFIER, Property.floatToIntPercentage(chargeLimit), 1));
             return this;
         }
 
