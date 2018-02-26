@@ -25,6 +25,7 @@ import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.utils.Bytes;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -198,9 +199,14 @@ public class VehicleStatus extends CommandWithProperties {
                         break;
                     case (byte) 0x99:
                         byte[] commandBytes = property.getValueBytes();
-                        Command command = CommandResolver.resolve(commandBytes);
-                        if (command instanceof CommandWithProperties) { // some commands might be corrupt, dont add these
-                            states.add((CommandWithProperties) command);
+                        try {
+                            Command command = CommandResolver.resolve(commandBytes);
+                            if (command instanceof CommandWithProperties) { // some commands might be corrupt, dont add these
+                                states.add((CommandWithProperties) command);
+                            }
+                        }
+                        catch (Exception e) {
+                            logger.info("invalid state " + Bytes.hexFromBytes(commandBytes));
                         }
                         break;
                 }

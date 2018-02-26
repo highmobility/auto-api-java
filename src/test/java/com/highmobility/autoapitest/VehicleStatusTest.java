@@ -75,7 +75,7 @@ public class VehicleStatusTest {
         assertTrue(vehicleStatus.getState(TrunkState.TYPE) != null);
     }
 
-    @Test public void get() throws CommandParseException {
+    @Test public void get() {
         byte[] bytes = Bytes.bytesFromHex("001100");
         byte[] commandBytes = new GetVehicleStatus().getBytes();
         assertTrue(Arrays.equals(bytes, commandBytes));
@@ -235,5 +235,15 @@ public class VehicleStatusTest {
         } catch (Exception e) {
             fail();
         }
+    }
+
+    @Test public void testOneStateInvalidDoesNotMatter() throws CommandParseException {
+        byte[] bytes = Bytes.bytesFromHex
+                ("00110101001131484D393634363634483442424646343902000101030009546F6E697320636172040012556E6976657273616C2054657374204361720500094F5054494D49535436"
+                + "99000400400100" // invalid gasflap state
+                + "99000700580101000101"); // valid parking brake state
+
+        VehicleStatus command = (VehicleStatus) CommandResolver.resolve(bytes);
+        assertTrue(command.getStates().length == 1);
     }
 }

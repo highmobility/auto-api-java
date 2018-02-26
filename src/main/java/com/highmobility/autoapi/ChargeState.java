@@ -27,6 +27,7 @@ import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PortState;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.utils.Bytes;
 
 import java.util.Arrays;
 
@@ -223,7 +224,7 @@ public class ChargeState extends CommandWithExistingProperties {
                 }
             }
             catch (Exception e) {
-                logger.error(getClass().getName(), e);
+                logger.info("invalid " + Bytes.hexFromBytes(bytes));
             }
         }
     }

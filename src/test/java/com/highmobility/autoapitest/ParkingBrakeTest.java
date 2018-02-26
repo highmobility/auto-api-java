@@ -2,7 +2,6 @@ package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.ActivateInactivateParkingBrake;
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetParkingBrakeState;
 import com.highmobility.autoapi.ParkingBrakeState;
@@ -25,8 +24,12 @@ public class ParkingBrakeTest {
                 "00580101000101");
 
 
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == ParkingBrakeState.class);
         ParkingBrakeState state = (ParkingBrakeState) command;
@@ -42,7 +45,8 @@ public class ParkingBrakeTest {
 
     @Test public void inactivate() {
         String waitingForBytes = "00580200";
-        String commandBytes = Bytes.hexFromBytes(new ActivateInactivateParkingBrake(false).getBytes());
+        String commandBytes = Bytes.hexFromBytes(new ActivateInactivateParkingBrake(false)
+                .getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
