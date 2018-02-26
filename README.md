@@ -155,3 +155,4 @@ Currently supported commands with the builder pattern:
 * WindowsState
 * ParkingBrakeState
 * ChargeState
+* RooftopState
