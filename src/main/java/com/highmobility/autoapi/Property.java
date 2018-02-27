@@ -20,6 +20,8 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.exception.ParseException;
+import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.utils.Bytes;
 
 import java.io.UnsupportedEncodingException;
@@ -180,11 +182,16 @@ public class Property {
         return (byte) (value == false ? 0x00 : 0x01);
     }
 
-    public static String getString(byte[] bytes) throws UnsupportedEncodingException {
-        return new String(bytes, "UTF-8");
+    public static String getString(byte[] bytes) {
+        try {
+            return new String(bytes, StringProperty.CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            throw new ParseException();
+        }
     }
 
-    public static String getString(byte[] bytes, int at, int length) throws UnsupportedEncodingException {
+    public static String getString(byte[] bytes, int at, int length) {
         return getString(Arrays.copyOfRange(bytes, at, at + length));
     }
 

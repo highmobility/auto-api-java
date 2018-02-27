@@ -340,7 +340,13 @@ public class CommandResolver {
                 command = new DriverFatigueDetected(bytes);
             } else if (bytesAreForType(bytes, WakeUp.TYPE)) {
                 command = new WakeUp(bytes);
-            } else {
+            } else if (bytesAreForType(bytes, DisplayImage.TYPE)) {
+                command = new DisplayImage(bytes);
+            }
+            else if (bytesAreForType(bytes, TextInput.TYPE)) {
+                command = new TextInput(bytes);
+            }
+            else {
                 command = new Command(bytes);
             }
         } catch (

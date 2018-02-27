@@ -28,15 +28,26 @@ import com.highmobility.autoapi.property.StringProperty;
 public class DisplayImage extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.GRAPHICS, 0x00);
 
+    String url;
+
     /**
-     * @param url The url of the image that will be loaded to head unit
+     * @return The url of the image that should be loaded to head unit.
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * @param url The url of the image that should be loaded to head unit.
      * @throws IllegalArgumentException If the argument is not valid
      */
     public DisplayImage(String url) {
         super(TYPE, StringProperty.getProperties(url, (byte) 0x01));
+        this.url = url;
     }
 
     DisplayImage(byte[] bytes) {
         super(bytes);
+        this.url = Property.getString(bytes, 6, bytes.length - 6);
     }
 }

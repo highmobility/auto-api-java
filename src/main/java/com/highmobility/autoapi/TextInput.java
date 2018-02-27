@@ -29,9 +29,18 @@ import com.highmobility.autoapi.property.StringProperty;
 public class TextInput extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.TEXT_INPUT, 0x00);
 
+    String text;
+
+    /**
+     *
+     * @return The text
+     */
+    public String getText() {
+        return text;
+    }
+
     /**
      * @param text The text
-     * @throws IllegalArgumentException If the argument is not valid
      */
     public TextInput(String text) {
         super(TYPE, StringProperty.getProperties(text, (byte) 0x01));
@@ -39,5 +48,6 @@ public class TextInput extends CommandWithExistingProperties {
 
     TextInput(byte[] bytes) {
         super(bytes);
+        text = Property.getString(bytes, 6, bytes.length - 6);
     }
 }
