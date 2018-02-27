@@ -22,8 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * This message is sent when a Get Firmware Version is received by the car.
  */
@@ -46,7 +44,7 @@ public class FirmwareVersion extends CommandWithExistingProperties {
         return applicationVersion;
     }
 
-    public FirmwareVersion(byte[] bytes) throws CommandParseException {
+    public FirmwareVersion(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {
@@ -54,23 +52,15 @@ public class FirmwareVersion extends CommandWithExistingProperties {
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
                     byte[] value = property.getValueBytes();
-                    carSDKVersion = (int)value[0] + "." +
-                                    (int)value[1] + "." +
-                                    (int)value[2];
+                    carSDKVersion = (int) value[0] + "." +
+                            (int) value[1] + "." +
+                            (int) value[2];
                     break;
                 case 0x02:
-                    try {
-                        carSDKBuild = Property.getString(property.getValueBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException.CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    carSDKBuild = Property.getString(property.getValueBytes());
                     break;
                 case 0x03:
-                    try {
-                        applicationVersion = Property.getString(property.getValueBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException.CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    applicationVersion = Property.getString(property.getValueBytes());
                     break;
             }
         }

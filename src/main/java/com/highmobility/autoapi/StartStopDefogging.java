@@ -32,7 +32,7 @@ public class StartStopDefogging extends Command {
         super(TYPE.addByte(Property.boolToByte(start)), true);
     }
 
-    StartStopDefogging(byte[] bytes) throws CommandParseException {
+    StartStopDefogging(byte[] bytes) {
         super(bytes);
     }
 }

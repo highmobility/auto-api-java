@@ -22,8 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.StringProperty;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * Load a URL in the head unit browser. A URL shortener can be used in other cases. Note that for the
  * car emulator the URL has to be for a secure site (HTTPS).
@@ -33,14 +31,13 @@ public class LoadUrl extends CommandWithExistingProperties {
 
     /**
      * @param url The url that will be loaded to head unit
-     * @throws UnsupportedEncodingException The url is not in UTF-8
      * @throws IllegalArgumentException        If the argument is not valid
      */
-    public LoadUrl(String url) throws UnsupportedEncodingException {
+    public LoadUrl(String url) {
         super(TYPE, StringProperty.getProperties(url, (byte) 0x01));
     }
 
-    LoadUrl(byte[] bytes) throws CommandParseException {
+    LoadUrl(byte[] bytes) {
         super(bytes);
     }
 }

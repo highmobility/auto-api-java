@@ -36,7 +36,7 @@ public class SetChargeLimit extends Command {
         super(Identifier.CHARGING.getBytesWithType(TYPE, (byte) (percentage * 100)), true);
     }
 
-    SetChargeLimit(byte[] bytes) throws CommandParseException {
+    SetChargeLimit(byte[] bytes) {
         super(bytes);
     }
 }

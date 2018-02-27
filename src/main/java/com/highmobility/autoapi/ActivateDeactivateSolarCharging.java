@@ -32,7 +32,7 @@ public class ActivateDeactivateSolarCharging extends Command {
         super(TYPE.addByte(Property.boolToByte(activate)), true);
     }
 
-    ActivateDeactivateSolarCharging(byte[] bytes) throws CommandParseException {
+    ActivateDeactivateSolarCharging(byte[] bytes) {
         super(bytes);
     }
 }

@@ -82,7 +82,7 @@ public class ControlLights extends CommandWithExistingProperties {
         return properties.toArray(new Property[properties.size()]);
     }
 
-    ControlLights(byte[] bytes) throws CommandParseException {
+    ControlLights(byte[] bytes) {
         super(bytes);
     }
 }

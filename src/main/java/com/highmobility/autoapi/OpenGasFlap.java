@@ -26,12 +26,11 @@ package com.highmobility.autoapi;
 public class OpenGasFlap extends Command {
     public static final Type TYPE = new Type(Identifier.FUELING, 0x02);
 
-    public OpenGasFlap() throws CommandParseException {
+    public OpenGasFlap() {
         super(TYPE);
     }
 
-    OpenGasFlap(byte[] bytes) throws CommandParseException {
+    OpenGasFlap(byte[] bytes) {
         super(bytes);
-        if (bytes.length != 4) throw new CommandParseException();
     }
 }

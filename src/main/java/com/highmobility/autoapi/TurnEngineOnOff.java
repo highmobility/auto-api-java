@@ -33,7 +33,7 @@ public class TurnEngineOnOff extends Command {
         super(TYPE.addByte(Property.boolToByte(on)), true);
     }
 
-    TurnEngineOnOff(byte[] bytes) throws CommandParseException {
+    TurnEngineOnOff(byte[] bytes) {
         super(bytes);
     }
 }

@@ -34,11 +34,16 @@ public class FuelingTest {
         byte[] waitingForBytes = Bytes.bytesFromHex("004000");
         byte[] bytes = new GetGasFlapState().getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
+
+        GetGasFlapState get = (GetGasFlapState) CommandResolver.resolve(waitingForBytes);
     }
 
     @Test public void open() throws CommandParseException {
         byte[] waitingForBytes = Bytes.bytesFromHex("004002");
         byte[] bytes = new OpenGasFlap().getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
+
+        OpenGasFlap openGasFlap = (OpenGasFlap) CommandResolver.resolve(waitingForBytes);
+        assertTrue(Arrays.equals(openGasFlap.getBytes(), waitingForBytes));
     }
 }

@@ -23,8 +23,6 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * This message is sent when a Wi Fi State message is received by the car. The new state is included
  * in the message payload and may be the result of user, device or car triggered action.
@@ -67,11 +65,7 @@ public class WifiState extends CommandWithExistingProperties {
                     connected = Property.getBool(property.getValueByte());
                     break;
                 case 0x03:
-                    try {
-                        ssid = Property.getString(property.getValueBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException.CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    ssid = Property.getString(property.getValueBytes());
                     break;
                 case 0x04:
                     security = NetworkSecurity.fromByte(property.getValueByte());

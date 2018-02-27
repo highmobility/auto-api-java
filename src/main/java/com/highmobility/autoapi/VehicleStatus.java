@@ -27,7 +27,6 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.utils.Bytes;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -63,9 +62,7 @@ public class VehicleStatus extends CommandWithProperties {
     }
 
     /**
-     *
      * @param type The type of the command.
-     *
      * @return The state for the given Command type, if exists.
      */
     public CommandWithProperties getState(Type type) {
@@ -201,17 +198,17 @@ public class VehicleStatus extends CommandWithProperties {
                         byte[] commandBytes = property.getValueBytes();
                         try {
                             Command command = CommandResolver.resolve(commandBytes);
-                            if (command instanceof CommandWithProperties) { // some commands might be corrupt, dont add these
+                            if (command instanceof CommandWithProperties) { // some commands
+                                // might be corrupt, dont add these
                                 states.add((CommandWithProperties) command);
                             }
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             logger.info("invalid state " + Bytes.hexFromBytes(commandBytes));
                         }
                         break;
                 }
-            } catch (UnsupportedEncodingException e) {
-                throw new CommandParseException(CommandParseException.CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
+            } catch (Exception e) {
+                logger.info(Bytes.hexFromBytes(property.getPropertyBytes()) + " " + e.toString());
             }
         }
 
@@ -252,7 +249,7 @@ public class VehicleStatus extends CommandWithProperties {
             super(TYPE);
         }
 
-        public Builder setVin(String vin) throws UnsupportedEncodingException {
+        public Builder setVin(String vin) {
             this.vin = vin;
             addProperty(new StringProperty((byte) 0x01, vin));
             return this;
@@ -264,26 +261,25 @@ public class VehicleStatus extends CommandWithProperties {
             return this;
         }
 
-        public Builder setModelName(String modelName) throws UnsupportedEncodingException {
+        public Builder setModelName(String modelName) {
             this.modelName = modelName;
             addProperty(new StringProperty((byte) 0x03, modelName));
             return this;
         }
 
-        public Builder setName(String name) throws UnsupportedEncodingException {
+        public Builder setName(String name) {
             this.name = name;
             addProperty(new StringProperty((byte) 0x04, name));
             return this;
         }
 
-        public Builder setLicensePlate(String licensePlate) throws UnsupportedEncodingException {
+        public Builder setLicensePlate(String licensePlate) {
             this.licensePlate = licensePlate;
             addProperty(new StringProperty((byte) 0x05, licensePlate));
             return this;
         }
 
-        public Builder setSalesDesignation(String salesDesignation) throws
-                UnsupportedEncodingException {
+        public Builder setSalesDesignation(String salesDesignation) {
             this.salesDesignation = salesDesignation;
             addProperty(new StringProperty((byte) 0x06, salesDesignation));
             return this;
@@ -295,7 +291,7 @@ public class VehicleStatus extends CommandWithProperties {
             return this;
         }
 
-        public Builder setColor(String color) throws UnsupportedEncodingException {
+        public Builder setColor(String color) {
             this.color = color;
             addProperty(new StringProperty((byte) 0x08, color));
             return this;

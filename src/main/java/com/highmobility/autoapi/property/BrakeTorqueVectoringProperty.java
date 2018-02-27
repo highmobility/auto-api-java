@@ -22,8 +22,6 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-import java.io.UnsupportedEncodingException;
-
 public class BrakeTorqueVectoringProperty extends Property {
     Axle axle;
     boolean active;
@@ -51,9 +49,9 @@ public class BrakeTorqueVectoringProperty extends Property {
         active = Property.getBool(bytes[4]);
     }
 
-    public BrakeTorqueVectoringProperty(byte identifier, Axle type, boolean active) throws UnsupportedEncodingException {
+    public BrakeTorqueVectoringProperty(byte identifier, Axle axle, boolean active) {
         super(identifier, 5);
-        bytes[3] = type.getByte();
+        bytes[3] = axle.getByte();
         bytes[4] = Property.boolToByte(active);
     }
 }

@@ -32,7 +32,7 @@ public class StartControlMode extends Command {
         super(TYPE.getIdentifierAndType(), true);
     }
 
-    StartControlMode(byte[] bytes) throws CommandParseException {
+    StartControlMode(byte[] bytes) {
         super(bytes);
     }
 }

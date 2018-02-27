@@ -23,7 +23,6 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.Bytes;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class AccelerationProperty extends Property {

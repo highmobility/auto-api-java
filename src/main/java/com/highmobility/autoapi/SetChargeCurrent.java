@@ -34,7 +34,7 @@ public class SetChargeCurrent extends Command {
         super(TYPE.addBytes(Property.floatToBytes(chargeCurrent)), true);
     }
 
-    SetChargeCurrent(byte[] bytes) throws CommandParseException {
+    SetChargeCurrent(byte[] bytes) {
         super(bytes);
     }
 }

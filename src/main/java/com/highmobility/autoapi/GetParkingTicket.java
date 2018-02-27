@@ -30,7 +30,7 @@ public class GetParkingTicket extends Command {
         super(TYPE);
     }
 
-    GetParkingTicket(byte[] bytes) throws CommandParseException {
+    GetParkingTicket(byte[] bytes) {
         super(bytes);
     }
 }

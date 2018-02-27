@@ -32,7 +32,7 @@ public class SetDrivingMode extends Command {
         super(TYPE.addByte(drivingMode.getByte()), true);
     }
 
-    SetDrivingMode(byte[] bytes) throws CommandParseException {
+    SetDrivingMode(byte[] bytes) {
         super(bytes);
     }
 }

@@ -30,7 +30,7 @@ public class GetTheftAlarmState extends Command {
         super(TYPE);
     }
 
-    GetTheftAlarmState(byte[] bytes) throws CommandParseException {
+    GetTheftAlarmState(byte[] bytes) {
         super(bytes);
     }
 }

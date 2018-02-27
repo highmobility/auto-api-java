@@ -20,22 +20,24 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.utils.Bytes;
+
 public class CommandResolver {
     /**
-     * Try to parse the command bytes to a more specific Command subclass.
+     * Try to parse the command bytes to a more specific Command subclass. Check the returned
+     * object's instance type (instanceOf) to understand which command was received.
      *
      * @param bytes the raw command bytes.
-     * @return The parsed command. Check its class to understand which command was received.
-     * @throws CommandParseException If some bytes are invalid.
+     * @return The parsed command.
      */
-    public static Command resolve(byte[] bytes) throws CommandParseException {
+    public static Command resolve(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) return new Command(bytes);
+        if (bytes.length < 3) return null;
         Command command = null;
 
-        if (bytes.length > 2) {
-            if (bytesAreForIdentifier(bytes, Identifier.FAILURE)) {
-                if (bytesAreForType(bytes, Failure.TYPE)) {
-                    command = new Failure(bytes);
-                }
+        try {
+            if (bytesAreForType(bytes, Failure.TYPE)) {
+                command = new Failure(bytes);
             } else if (bytesAreForIdentifier(bytes, Identifier.DIAGNOSTICS)) {
                 if (bytesAreForType(bytes, GetDiagnosticsState.TYPE)) {
                     command = new GetDiagnosticsState(bytes);
@@ -230,8 +232,6 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, OpenGasFlap.TYPE)) {
                     command = new OpenGasFlap(bytes);
                 }
-            } else if (bytesAreForType(bytes, DriverFatigueDetected.TYPE)) {
-                command = new DriverFatigueDetected(bytes);
             } else if (bytesAreForIdentifier(bytes, Identifier.PARKING_TICKET)) {
                 if (bytesAreForType(bytes, GetParkingTicket.TYPE)) {
                     command = new GetParkingTicket(bytes);
@@ -332,13 +332,27 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, SetPriceTariffs.TYPE)) {
                     command = new SetPriceTariffs(bytes);
                 }
+            } else if (bytesAreForType(bytes, LoadUrl.TYPE)) {
+                command = new LoadUrl(bytes);
+            } else if (bytesAreForType(bytes, VideoHandover.TYPE)) {
+                command = new VideoHandover(bytes);
+            } else if (bytesAreForType(bytes, DriverFatigueDetected.TYPE)) {
+                command = new DriverFatigueDetected(bytes);
+            } else if (bytesAreForType(bytes, WakeUp.TYPE)) {
+                command = new WakeUp(bytes);
             } else {
-                return new Command(bytes);
+                command = new Command(bytes);
             }
-        } else if (bytes.length == 0) {
+        } catch (
+                Exception e)
+
+        {
+            // the identifier is known but the command's parser class threw an exception.
+            // return the base class.
+            Command.logger.info("Failed to parse command " + Bytes.hexFromBytes(Bytes
+                    .trimmedBytes(bytes, 3)) + ".. " + e.toString());
             command = new Command(bytes);
         }
-
 
         return command;
     }

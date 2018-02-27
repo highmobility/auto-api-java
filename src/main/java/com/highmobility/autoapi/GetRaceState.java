@@ -30,7 +30,7 @@ public class GetRaceState extends Command {
         super(TYPE);
     }
 
-    GetRaceState(byte[] bytes) throws CommandParseException {
+    GetRaceState(byte[] bytes) {
         super(bytes);
     }
 }

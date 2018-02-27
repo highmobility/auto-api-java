@@ -93,7 +93,7 @@ public class ClimateTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void setClimateProfile() throws CommandParseException {
+    @Test public void setClimateProfile() {
         byte[] waitingForBytes = Bytes.bytesFromHex(
                 "00240201000F6000000000000000000000071E071E02000441ac000003000441ac0000");
 

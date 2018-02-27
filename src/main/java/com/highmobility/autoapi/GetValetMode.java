@@ -31,7 +31,7 @@ public class GetValetMode extends Command {
         super(TYPE);
     }
 
-    GetValetMode(byte[] bytes) throws CommandParseException {
+    GetValetMode(byte[] bytes) {
         super(bytes);
     }
 }

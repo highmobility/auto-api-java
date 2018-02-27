@@ -32,7 +32,7 @@ public class GetLockState extends Command {
         super(TYPE);
     }
 
-    GetLockState(byte[] bytes) throws CommandParseException {
+    GetLockState(byte[] bytes) {
         super(bytes);
     }
 }

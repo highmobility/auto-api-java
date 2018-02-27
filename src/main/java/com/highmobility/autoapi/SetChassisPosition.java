@@ -34,7 +34,7 @@ public class SetChassisPosition extends Command {
         super(TYPE.addByte(position.byteValue()), true);
     }
 
-    SetChassisPosition(byte[] bytes) throws CommandParseException {
+    SetChassisPosition(byte[] bytes) {
         super(bytes);
     }
 }

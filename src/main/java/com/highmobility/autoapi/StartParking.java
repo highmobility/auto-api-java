@@ -24,7 +24,6 @@ import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.StringProperty;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -44,15 +43,14 @@ public class StartParking extends CommandWithExistingProperties {
      * @param operatorTicketId The ticket id
      * @param startDate        The parking start date
      * @param endDate          The parking end date
-     * @throws UnsupportedEncodingException When strings are in invalid format.
      */
     public StartParking(String operatorName, String operatorTicketId, Calendar startDate,
-                        Calendar endDate) throws UnsupportedEncodingException {
+                        Calendar endDate) {
         super(TYPE, getProperties(operatorName, operatorTicketId, startDate, endDate));
     }
 
     static HMProperty[] getProperties(String operatorName, String operatorTicketId, Calendar
-            startDate, Calendar endDate) throws UnsupportedEncodingException {
+            startDate, Calendar endDate) {
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 
         if (operatorName != null)
@@ -65,7 +63,7 @@ public class StartParking extends CommandWithExistingProperties {
         return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
     }
 
-    StartParking(byte[] bytes) throws CommandParseException {
+    StartParking(byte[] bytes) {
         super(bytes);
     }
 }

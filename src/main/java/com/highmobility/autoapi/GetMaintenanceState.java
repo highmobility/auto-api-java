@@ -30,7 +30,7 @@ public class GetMaintenanceState extends Command {
         super(TYPE);
     }
 
-    GetMaintenanceState(byte[] bytes) throws CommandParseException {
+    GetMaintenanceState(byte[] bytes) {
         super(bytes);
     }
 }

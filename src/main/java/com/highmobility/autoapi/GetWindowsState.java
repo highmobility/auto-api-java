@@ -31,7 +31,7 @@ public class GetWindowsState extends Command {
         super(TYPE);
     }
 
-    public GetWindowsState(byte[] bytes) throws CommandParseException {
+    public GetWindowsState(byte[] bytes) {
         super(bytes);
     }
 }

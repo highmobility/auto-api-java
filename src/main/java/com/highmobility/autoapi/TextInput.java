@@ -22,25 +22,22 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.StringProperty;
 
-import java.io.UnsupportedEncodingException;
-
 /**
- * Send a keystroke or entire sentences as input to the car head unit. This can act as an alternative
- * to the input devices that the car is equipped with.
+ * Send a keystroke or entire sentences as input to the car head unit. This can act as an
+ * alternative to the input devices that the car is equipped with.
  */
 public class TextInput extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.TEXT_INPUT, 0x00);
 
     /**
      * @param text The text
-     * @throws UnsupportedEncodingException The url is not in UTF-8
-     * @throws IllegalArgumentException        If the argument is not valid
+     * @throws IllegalArgumentException If the argument is not valid
      */
-    public TextInput(String text) throws UnsupportedEncodingException {
+    public TextInput(String text) {
         super(TYPE, StringProperty.getProperties(text, (byte) 0x01));
     }
 
-    TextInput(byte[] bytes) throws CommandParseException {
+    TextInput(byte[] bytes) {
         super(bytes);
     }
 }

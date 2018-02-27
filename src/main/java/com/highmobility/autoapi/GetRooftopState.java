@@ -30,7 +30,7 @@ public class GetRooftopState extends Command {
         super(TYPE);
     }
 
-    GetRooftopState(byte[] bytes) throws CommandParseException {
+    GetRooftopState(byte[] bytes) {
         super(bytes);
     }
 }

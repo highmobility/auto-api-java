@@ -59,7 +59,7 @@ public class StartStopSportChrono extends Command {
         super(TYPE.addByte(command.getByte()), true);
     }
 
-    StartStopSportChrono(byte[] bytes) throws CommandParseException {
+    StartStopSportChrono(byte[] bytes) {
         super(bytes);
     }
 }

@@ -20,20 +20,27 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.Bytes;
 import java.io.UnsupportedEncodingException;
 
 public class StringProperty extends Property {
     public static final String CHARSET = "UTF-8";
 
-    public StringProperty(byte identifier, String value) throws UnsupportedEncodingException {
+    public StringProperty(byte identifier, String value) {
         super(identifier, value.length());
-        byte[] stringBytes = value.getBytes(CHARSET);
+        byte[] stringBytes;
+        try {
+            stringBytes = value.getBytes(CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            Command.logger.info(CHARSET + " charset not supported.");
+            throw new ParseException();
+        }
         Bytes.setBytes(bytes, stringBytes, 3);
     }
 
-    public static HMProperty[] getProperties(String value, byte identifier) throws
-            UnsupportedEncodingException {
+    public static HMProperty[] getProperties(String value, byte identifier) {
         return new HMProperty[] { new StringProperty(identifier, value) };
     }
 }

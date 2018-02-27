@@ -34,7 +34,7 @@ public class StartStopHvac extends Command {
         super(TYPE.addByte(Property.boolToByte(start)), true);
     }
 
-    StartStopHvac(byte[] bytes) throws CommandParseException {
+    StartStopHvac(byte[] bytes) {
         super(bytes);
     }
 }

@@ -39,7 +39,7 @@ public class IgnitionState extends CommandWithExistingProperties {
         return on;
     }
 
-    public IgnitionState(byte[] bytes) throws CommandParseException {
+    public IgnitionState(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {

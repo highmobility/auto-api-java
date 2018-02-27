@@ -48,7 +48,7 @@ public class VehicleLocation extends CommandWithExistingProperties {
         return heading;
     }
 
-    public VehicleLocation(byte[] bytes) throws CommandParseException {
+    public VehicleLocation(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {

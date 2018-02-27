@@ -44,7 +44,7 @@ public class SetChargeTimer extends CommandWithExistingProperties {
         return timers;
     }
 
-    SetChargeTimer(byte[] bytes) throws CommandParseException {
+    SetChargeTimer(byte[] bytes) {
         super(bytes);
     }
 }

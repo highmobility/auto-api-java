@@ -30,7 +30,7 @@ public class GetSeatsState extends Command {
         super(TYPE);
     }
 
-    GetSeatsState(byte[] bytes) throws CommandParseException {
+    GetSeatsState(byte[] bytes) {
         super(bytes);
     }
 }

@@ -60,7 +60,7 @@ public class ControlRooftop extends CommandWithExistingProperties {
         return properties.toArray(new Property[properties.size()]);
     }
 
-    ControlRooftop(byte[] bytes) throws CommandParseException {
+    ControlRooftop(byte[] bytes) {
         super(bytes);
     }
 }

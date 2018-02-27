@@ -31,7 +31,7 @@ public class EndParking extends Command {
         super(TYPE);
     }
 
-    EndParking(byte[] bytes) throws CommandParseException {
+    EndParking(byte[] bytes) {
         super(bytes);
     }
 }

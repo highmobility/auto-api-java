@@ -48,7 +48,7 @@ public class SetPriceTariffs extends CommandWithExistingProperties {
         return tariffs;
     }
 
-    SetPriceTariffs(byte[] bytes) throws CommandParseException {
+    SetPriceTariffs(byte[] bytes) {
         super(bytes);
     }
 }

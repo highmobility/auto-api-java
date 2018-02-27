@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.ControlMode;
@@ -20,7 +19,6 @@ import com.highmobility.utils.Bytes;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import static com.highmobility.autoapi.property.ControlMode.STARTED;
@@ -115,8 +113,7 @@ public class VehicleStatusTest {
         return null;
     }
 
-    VehicleStatus.Builder getVehicleStatusBuilderWithoutSignature() throws
-            UnsupportedEncodingException {
+    VehicleStatus.Builder getVehicleStatusBuilderWithoutSignature() {
         VehicleStatus.Builder builder = new VehicleStatus.Builder();
         builder.setVin("JF2SHBDC7CH451869");
         builder.setPowerTrain(PowerTrain.ALLELECTRIC);
@@ -142,14 +139,14 @@ public class VehicleStatusTest {
         return builder;
     }
 
-    @Test public void create() throws UnsupportedEncodingException {
+    @Test public void create() {
         VehicleStatus status = getVehicleStatusBuilderWithoutSignature().build();
         byte[] command = status.getBytes();
         assertTrue(Arrays.equals(command, Bytes.bytesFromHex
                 ("0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102")));
     }
 
-    @Test public void createWithSignature() throws UnsupportedEncodingException {
+    @Test public void createWithSignature() {
         VehicleStatus.Builder builder = getVehicleStatusBuilderWithoutSignature();
         byte[] nonce = Bytes.bytesFromHex("324244433743483436");
         builder.setNonce(nonce);
@@ -237,11 +234,11 @@ public class VehicleStatusTest {
         }
     }
 
-    @Test public void testOneStateInvalidDoesNotMatter() throws CommandParseException {
+    @Test public void testOneStateInvalidDoesNotMatter() {
         byte[] bytes = Bytes.bytesFromHex
                 ("00110101001131484D393634363634483442424646343902000101030009546F6E697320636172040012556E6976657273616C2054657374204361720500094F5054494D49535436"
-                + "99000400400100" // invalid gasflap state
-                + "99000700580101000101"); // valid parking brake state
+                        + "99000400400100" // invalid gasflap state
+                        + "99000700580101000101"); // valid parking brake state
 
         VehicleStatus command = (VehicleStatus) CommandResolver.resolve(bytes);
         assertTrue(command.getStates().length == 1);

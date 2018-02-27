@@ -21,10 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
@@ -38,16 +36,13 @@ public class MessageReceived extends CommandWithExistingProperties {
      *
      * @param handle The message handle
      * @param message The message
-     * @throws UnsupportedEncodingException When strings are of invalid format
      * @throws IllegalArgumentException When all parameters are null
      */
-    public MessageReceived(String handle, String message) throws UnsupportedEncodingException,
-            IllegalArgumentException {
+    public MessageReceived(String handle, String message) {
         super(TYPE, getProperties(handle, message));
     }
 
-    static HMProperty[] getProperties(String handle, String message) throws
-            UnsupportedEncodingException {
+    static HMProperty[] getProperties(String handle, String message) {
         ArrayList<HMProperty> properties = new ArrayList<>();
 
         if (handle != null) {
@@ -63,12 +58,7 @@ public class MessageReceived extends CommandWithExistingProperties {
         return (properties.toArray(new HMProperty[properties.size()]));
     }
 
-    public MessageReceived(Property[] properties) throws CommandParseException,
-            IllegalArgumentException {
-        super(TYPE, properties);
-    }
-
-    MessageReceived(byte[] bytes) throws CommandParseException {
+    MessageReceived(byte[] bytes) {
         super(bytes);
     }
 }

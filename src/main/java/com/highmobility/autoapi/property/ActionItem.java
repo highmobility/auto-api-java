@@ -23,8 +23,6 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.Bytes;
 
-import java.io.UnsupportedEncodingException;
-
 public class ActionItem implements HMProperty {
     byte[] bytes;
     int actionIdentifier;
@@ -46,17 +44,17 @@ public class ActionItem implements HMProperty {
         return name;
     }
 
-    public ActionItem(int actionIdentifier, String name) throws UnsupportedEncodingException {
+    public ActionItem(int actionIdentifier, String name) {
         this.actionIdentifier = actionIdentifier;
         this.name = name;
 
         bytes = new byte[]{ getPropertyIdentifier() };
         bytes = Bytes.concatBytes(bytes, Property.intToBytes(getPropertyLength(), 2));
         bytes = Bytes.concatBytes(bytes, (byte) getActionIdentifier());
-        bytes = Bytes.concatBytes(bytes, name.getBytes(StringProperty.CHARSET));
+        bytes = Bytes.concatBytes(bytes, Property.stringToBytes(name));
     }
 
-    public ActionItem(byte[] bytes) throws CommandParseException, UnsupportedEncodingException {
+    public ActionItem(byte[] bytes) throws CommandParseException {
         if (bytes.length < 5) throw new CommandParseException();
         this.bytes = bytes;
 

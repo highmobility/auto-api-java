@@ -79,7 +79,7 @@ public class Capabilities extends CommandWithProperties {
                         CapabilityProperty capability = new CapabilityProperty(property.getPropertyBytes());
                         builder.add(capability);
                     }
-                    catch (CommandParseException e) {
+                    catch (Exception e) {
                         // don't use unknown capability
                     }
                     break;

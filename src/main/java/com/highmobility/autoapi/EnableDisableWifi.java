@@ -34,7 +34,7 @@ public class EnableDisableWifi extends Command {
         super(TYPE.addByte(Property.boolToByte(enable)), true);
     }
 
-    EnableDisableWifi(byte[] bytes) throws CommandParseException {
+    EnableDisableWifi(byte[] bytes) {
         super(bytes);
     }
 }

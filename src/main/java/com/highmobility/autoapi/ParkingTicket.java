@@ -23,7 +23,6 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.ParkingTicketState;
 import com.highmobility.autoapi.property.Property;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
 /**
@@ -42,7 +41,6 @@ public class ParkingTicket extends CommandWithExistingProperties {
     ParkingTicketState state;
 
     /**
-     *
      * @return The ticket state
      */
     public ParkingTicketState getState() {
@@ -50,7 +48,6 @@ public class ParkingTicket extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return The operator name
      */
     public String getOperatorName() {
@@ -58,7 +55,6 @@ public class ParkingTicket extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return The ticket id
      */
     public String getOperatorTicketId() {
@@ -66,7 +62,6 @@ public class ParkingTicket extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return Ticket start date
      */
     public Calendar getTicketStartDate() {
@@ -74,7 +69,6 @@ public class ParkingTicket extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return Ticket end date. null if not set
      */
     public Calendar getTicketEndDate() {
@@ -91,18 +85,10 @@ public class ParkingTicket extends CommandWithExistingProperties {
                     state = ParkingTicketState.fromByte(property.getValueByte());
                     break;
                 case 0x02:
-                    try {
-                        operatorName = Property.getString(property.getValueBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException.CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    operatorName = Property.getString(property.getValueBytes());
                     break;
                 case 0x03:
-                    try {
-                        operatorTicketId = Property.getString(property.getValueBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException.CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    operatorTicketId = Property.getString(property.getValueBytes());
                     break;
                 case 0x04:
                     ticketStart = Property.getCalendar(property.getValueBytes());

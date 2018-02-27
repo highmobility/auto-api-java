@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Command {
-    static final Logger logger = LoggerFactory.getLogger(Command.class);
+    public static final Logger logger = LoggerFactory.getLogger(Command.class);
 
     byte[] bytes;
     Type type;

@@ -37,7 +37,7 @@ public class SetWindscreenDamage extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x02);
 
     public SetWindscreenDamage(WindscreenDamage damage, WindscreenDamageZone zone,
-                               WindscreenReplacementState replacementState) throws CommandParseException {
+                               WindscreenReplacementState replacementState) {
         super(TYPE, getProperties(damage, zone, replacementState));
     }
 

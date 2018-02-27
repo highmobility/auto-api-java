@@ -23,8 +23,6 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.Property;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * This message is sent when a Get Navi Destination message is received by the car.
  */
@@ -42,14 +40,13 @@ public class NaviDestination extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return The name
      */
     public String getName() {
         return name;
     }
 
-    public NaviDestination(byte[] bytes) throws CommandParseException {
+    public NaviDestination(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {
@@ -59,11 +56,7 @@ public class NaviDestination extends CommandWithExistingProperties {
                     coordinates = new CoordinatesProperty(property.getPropertyBytes());
                     break;
                 case 0x02:
-                    try {
-                        name = Property.getString(property.getValueBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException.CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    name = Property.getString(property.getValueBytes());
                     break;
             }
         }

@@ -22,8 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * Message to be sent by the smart device. This could be a response to a received message or input
  * through voice by the driver.
@@ -48,25 +46,17 @@ public class SendMessage extends CommandWithExistingProperties {
         return text;
     }
 
-    public SendMessage(byte[] bytes) throws CommandParseException {
+    public SendMessage(byte[] bytes) {
         super(bytes);
-        
+
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
-                    try {
-                        recipientHandle = Property.getString(property.getValueBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException.CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    recipientHandle = Property.getString(property.getValueBytes());
                     break;
                 case 0x02:
-                    try {
-                        text = Property.getString(property.getValueBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException.CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    text = Property.getString(property.getValueBytes());
                     break;
             }
         }

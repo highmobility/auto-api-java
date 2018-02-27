@@ -46,7 +46,7 @@ public class OffRoadState extends CommandWithExistingProperties {
         return wheelSuspension;
     }
 
-    public OffRoadState(byte[] bytes) throws CommandParseException {
+    public OffRoadState(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {

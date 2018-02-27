@@ -37,7 +37,7 @@ public class WeatherConditions extends CommandWithExistingProperties {
         return rainIntensity;
     }
 
-    public WeatherConditions(byte[] bytes) throws CommandParseException {
+    public WeatherConditions(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {

@@ -47,7 +47,7 @@ public class LightConditions extends CommandWithExistingProperties {
         return insideLight;
     }
 
-    public LightConditions(byte[] bytes) throws CommandParseException {
+    public LightConditions(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {

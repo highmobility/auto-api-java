@@ -24,7 +24,6 @@ import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.StringProperty;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,17 +36,15 @@ public class ConnectToNetwork extends CommandWithExistingProperties {
     /**
      * Connect the car to a Wi-Fi network.
      *
-     * @param ssid The network SSID formatted in UTF-8
+     * @param ssid     The network SSID formatted in UTF-8
      * @param security Network security
      * @param password The password formatted in UTF-8
-     * @throws UnsupportedEncodingException When a string is in invalid format.
      */
-    public ConnectToNetwork(String ssid, NetworkSecurity security, String password) throws
-            UnsupportedEncodingException {
+    public ConnectToNetwork(String ssid, NetworkSecurity security, String password) {
         super(TYPE, getProperties(ssid, security, password));
     }
 
-    static HMProperty[] getProperties(String ssid, NetworkSecurity security, String password) throws UnsupportedEncodingException {
+    static HMProperty[] getProperties(String ssid, NetworkSecurity security, String password) {
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 
         if (ssid != null) propertiesBuilder.add(new StringProperty((byte) 0x03, ssid));

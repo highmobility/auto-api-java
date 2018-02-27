@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.Bytes;
 
 import java.io.UnsupportedEncodingException;
@@ -67,10 +68,6 @@ public class Property implements HMProperty {
     }
 
     public Property(byte[] bytes) throws IllegalArgumentException {
-        if (bytes.length < 3) {
-            Bytes.bytesFromHex("aa"); // TODO: delete
-        }
-
         if (bytes.length < 3) throw new IllegalArgumentException();
         this.bytes = bytes;
     }
@@ -264,17 +261,26 @@ public class Property implements HMProperty {
         return (byte) (value == false ? 0x00 : 0x01);
     }
 
-    public static String getString(byte[] bytes) throws UnsupportedEncodingException {
-        return new String(bytes, CHARSET);
+    public static String getString(byte[] bytes) {
+        try {
+            return new String(bytes, CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            throw new ParseException();
+        }
     }
 
-    public static String getString(byte[] bytes, int at, int length) throws
-            UnsupportedEncodingException {
+    public static String getString(byte[] bytes, int at, int length) {
         return getString(Arrays.copyOfRange(bytes, at, at + length));
     }
 
-    public static byte[] stringToBytes(String string) throws UnsupportedEncodingException {
-        return string.getBytes(StringProperty.CHARSET);
+    public static byte[] stringToBytes(String string) {
+        try {
+            return string.getBytes(StringProperty.CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            throw new ParseException();
+        }
     }
 
     // 5 allBytes eg yy mm dd mm ss. year is from 2000

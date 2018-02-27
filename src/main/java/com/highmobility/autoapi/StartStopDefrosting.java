@@ -33,7 +33,7 @@ public class StartStopDefrosting extends Command {
     }
 
 
-    StartStopDefrosting(byte[] bytes) throws CommandParseException {
+    StartStopDefrosting(byte[] bytes) {
         super(bytes);
     }
 }

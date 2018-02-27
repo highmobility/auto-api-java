@@ -30,7 +30,7 @@ public class GetHomeChargerState extends Command {
         super(TYPE);
     }
 
-    GetHomeChargerState(byte[] bytes) throws CommandParseException {
+    GetHomeChargerState(byte[] bytes) {
         super(bytes);
     }
 }

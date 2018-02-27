@@ -11,7 +11,6 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import static junit.framework.TestCase.assertTrue;
@@ -26,8 +25,12 @@ public class NotificationsTest {
                 ("0038000100115374617274206e617669676174696f6e3f020003004e6f02000401596573");
 
 
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == Notification.class);
         Notification state = (Notification) command;
@@ -45,30 +48,28 @@ public class NotificationsTest {
         byte[] bytes = Bytes.bytesFromHex
                 ("0038000100115374617274206e617669676174696f6e3f020003004e6f02000401596573");
 
-        try {
-            ActionItem action1 = null, action2 = null;
-            action1 = new ActionItem(0, "No");
-            action2 = new ActionItem(1, "Yes");
-            ActionItem[] actions = new ActionItem[] { action1, action2 };
-            Notification notification = new Notification("Start navigation?", actions);
 
-            // we expect that properties are ordered in this test. It should not matter really
-            assertTrue(Arrays.equals(notification.getBytes(), bytes));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            fail();
-        } catch (CommandParseException e) {
-            e.printStackTrace();
-            fail();
-        }
+        ActionItem action1 = null, action2 = null;
+        action1 = new ActionItem(0, "No");
+        action2 = new ActionItem(1, "Yes");
+        ActionItem[] actions = new ActionItem[]{action1, action2};
+        Notification notification = new Notification("Start navigation?", actions);
+
+        // we expect that properties are ordered in this test. It should not matter really
+        assertTrue(Arrays.equals(notification.getBytes(), bytes));
     }
 
 
-    @Test public void incomingNotificationAction() throws CommandParseException {
+    @Test public void incomingNotificationAction() {
         byte[] bytes = Bytes.bytesFromHex
                 ("003801FE");
 
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
         assertTrue(command.getClass() == NotificationAction.class);
         NotificationAction state = (NotificationAction) command;
         assertTrue(state.getActionIdentifier() == 254);
@@ -82,11 +83,16 @@ public class NotificationsTest {
         assertTrue(Arrays.equals(expecting, bytes));
     }
 
-    @Test public void incomingClear() throws CommandParseException {
+    @Test public void incomingClear() {
         byte[] bytes = Bytes.bytesFromHex
                 ("003802");
 
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
         assertTrue(command.is(ClearNotification.TYPE));
     }
 

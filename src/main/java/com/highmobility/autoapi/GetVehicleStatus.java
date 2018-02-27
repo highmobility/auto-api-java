@@ -30,7 +30,7 @@ public class GetVehicleStatus extends Command {
         super(TYPE);
     }
 
-    GetVehicleStatus(byte[] bytes) throws CommandParseException {
+    GetVehicleStatus(byte[] bytes) {
         super(bytes);
     }
 }

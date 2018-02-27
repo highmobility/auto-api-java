@@ -33,7 +33,7 @@ public class OpenCloseWindows extends CommandWithExistingProperties {
         super(TYPE, windowProperties);
     }
 
-    OpenCloseWindows(byte[] bytes) throws CommandParseException {
+    OpenCloseWindows(byte[] bytes) {
         super(bytes);
     }
 }

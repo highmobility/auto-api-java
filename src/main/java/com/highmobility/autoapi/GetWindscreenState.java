@@ -30,7 +30,7 @@ public class GetWindscreenState extends Command {
         super(TYPE);
     }
 
-    public GetWindscreenState(byte[] bytes) throws CommandParseException {
+    public GetWindscreenState(byte[] bytes) {
         super(bytes);
     }
 }

@@ -40,7 +40,7 @@ public class ParkingBrakeState extends CommandWithExistingProperties {
         return active;
     }
 
-    public ParkingBrakeState(byte[] bytes) throws CommandParseException {
+    public ParkingBrakeState(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {

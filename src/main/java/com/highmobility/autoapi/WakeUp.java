@@ -32,7 +32,7 @@ public class WakeUp extends Command {
         super(TYPE.getIdentifierAndType(), true);
     }
 
-    WakeUp(byte[] bytes) throws CommandParseException {
+    WakeUp(byte[] bytes) {
         super(bytes);
     }
 }

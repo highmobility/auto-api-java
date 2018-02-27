@@ -22,8 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.StringProperty;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * Forget a network that the car has previously connected to.
  */
@@ -33,9 +31,8 @@ public class ForgetNetwork extends CommandWithExistingProperties {
     /**
      * Forget a network that the car has previously connected to.
      * @param ssid The network name
-     * @throws UnsupportedEncodingException When input is in invalid format.
      */
-    public ForgetNetwork(String ssid) throws UnsupportedEncodingException {
+    public ForgetNetwork(String ssid) {
         super(TYPE, StringProperty.getProperties(ssid, (byte) 0x03));
     }
 

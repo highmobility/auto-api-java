@@ -33,7 +33,7 @@ public class ActivateDeactivateEmergencyFlasher extends Command {
         super(TYPE.addByte(Property.boolToByte(activate)), true);
     }
 
-    ActivateDeactivateEmergencyFlasher(byte[] bytes) throws CommandParseException {
+    ActivateDeactivateEmergencyFlasher(byte[] bytes) {
         super(bytes);
     }
 }

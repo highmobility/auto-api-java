@@ -12,7 +12,6 @@ import com.highmobility.utils.Bytes;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.concurrent.locks.Lock;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -63,7 +62,7 @@ public class DoorLocksTest {
         assertTrue(rearLeftExists == true);
     }
 
-    @Test public void get() throws CommandParseException {
+    @Test public void get() {
         byte[] waitingForBytes = Bytes.bytesFromHex("002000");
         byte[] commandBytes = new GetLockState().getBytes();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
@@ -72,7 +71,7 @@ public class DoorLocksTest {
         assertTrue(command instanceof GetLockState);
     }
 
-    @Test public void lock() throws CommandParseException {
+    @Test public void lock() {
         byte[] waitingForBytes = Bytes.bytesFromHex("00200201");
         byte[] commandBytes = new LockUnlockDoors(DoorLockProperty.LockState.LOCKED).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));

@@ -61,7 +61,7 @@ public class GetCapability extends Command {
         return bytes;
     }
 
-    GetCapability(byte[] bytes) throws CommandParseException {
+    GetCapability(byte[] bytes) {
         super(bytes);
         categoryBytes = Arrays.copyOfRange(bytes, 3, 5);
         category = Identifier.fromBytes(categoryBytes);

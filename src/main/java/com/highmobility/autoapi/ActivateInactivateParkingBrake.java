@@ -37,7 +37,7 @@ public class ActivateInactivateParkingBrake extends Command {
         super(TYPE.addByte(Property.boolToByte(activate)), true);
     }
 
-    ActivateInactivateParkingBrake(byte[] bytes) throws CommandParseException {
+    ActivateInactivateParkingBrake(byte[] bytes) {
         super(bytes);
     }
 }

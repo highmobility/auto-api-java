@@ -24,8 +24,6 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.Bytes;
 
-import java.io.UnsupportedEncodingException;
-
 public class PriceTariff extends Property {
     private static final byte identifier = 0x0C;
     private static final int valueSize = 8;
@@ -35,7 +33,6 @@ public class PriceTariff extends Property {
     float price;
 
     /**
-     *
      * @return Pricing type
      */
     public PricingType getPricingType() {
@@ -43,7 +40,6 @@ public class PriceTariff extends Property {
     }
 
     /**
-     *
      * @return The currency alphabetic code per ISO 4217
      */
     public String getCurrency() {
@@ -51,14 +47,13 @@ public class PriceTariff extends Property {
     }
 
     /**
-     *
      * @return The price
      */
     public float getPrice() {
         return price;
     }
 
-    public PriceTariff(byte[] bytes) throws CommandParseException, UnsupportedEncodingException {
+    public PriceTariff(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length != 11) throw new CommandParseException();
         pricingType = PricingType.fromByte(bytes[3]);
@@ -66,8 +61,7 @@ public class PriceTariff extends Property {
         price = Property.getFloat(bytes, 7);
     }
 
-    public PriceTariff(PricingType pricingType, String currency, float price) throws
-            UnsupportedEncodingException {
+    public PriceTariff(PricingType pricingType, String currency, float price) {
         super(identifier, valueSize);
         bytes[3] = pricingType.getByte();
         Bytes.setBytes(bytes, Property.stringToBytes(currency), 4);
@@ -87,9 +81,9 @@ public class PriceTariff extends Property {
     }
 
     public enum PricingType {
-        STARTING_FEE((byte)0x00),
-        PER_MINUTE((byte)0x01),
-        PER_KWH((byte)0x02);
+        STARTING_FEE((byte) 0x00),
+        PER_MINUTE((byte) 0x01),
+        PER_KWH((byte) 0x02);
 
         public static PricingType fromByte(byte byteValue) {
             PricingType[] values = PricingType.values();

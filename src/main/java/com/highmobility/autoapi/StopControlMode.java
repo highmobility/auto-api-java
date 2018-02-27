@@ -31,7 +31,7 @@ public class StopControlMode extends Command {
         super(TYPE.getIdentifierAndType(), true);
     }
 
-    StopControlMode(byte[] bytes) throws CommandParseException {
+    StopControlMode(byte[] bytes) {
         super(bytes);
     }
 }

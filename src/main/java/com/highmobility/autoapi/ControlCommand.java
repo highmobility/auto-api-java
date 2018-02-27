@@ -88,7 +88,7 @@ public class ControlCommand extends CommandWithExistingProperties {
         return properties.toArray(new Property[properties.size()]);
     }
 
-    ControlCommand(byte[] bytes) throws CommandParseException {
+    ControlCommand(byte[] bytes) {
         super(bytes);
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];

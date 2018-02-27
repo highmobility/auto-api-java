@@ -22,8 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.StringProperty;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * Display an image in the head unit by providing the image URL.
  */
@@ -32,14 +30,13 @@ public class DisplayImage extends CommandWithExistingProperties {
 
     /**
      * @param url The url of the image that will be loaded to head unit
-     * @throws UnsupportedEncodingException The url is not in UTF-8
-     * @throws IllegalArgumentException        If the argument is not valid
+     * @throws IllegalArgumentException If the argument is not valid
      */
-    public DisplayImage(String url) throws UnsupportedEncodingException {
+    public DisplayImage(String url) {
         super(TYPE, StringProperty.getProperties(url, (byte) 0x01));
     }
 
-    DisplayImage(byte[] bytes) throws CommandParseException {
+    DisplayImage(byte[] bytes) {
         super(bytes);
     }
 }

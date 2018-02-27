@@ -69,10 +69,10 @@ public class SpringRateProperty extends Property {
         minimumPossibleRate = Property.getUnsignedInt(bytes[6]);
     }
 
-    public SpringRateProperty(byte identifier, Axle type, Integer springRate, Integer
-            maximumPossibleRate, Integer minimumPossibleRate) throws UnsupportedEncodingException {
+    public SpringRateProperty(byte identifier, Axle axle, Integer springRate, Integer
+            maximumPossibleRate, Integer minimumPossibleRate) {
         super(identifier, 5);
-        bytes[3] = type.getByte();
+        bytes[3] = axle.getByte();
         bytes[4] = springRate.byteValue();
         bytes[5] = maximumPossibleRate.byteValue();
         bytes[6] = minimumPossibleRate.byteValue();

@@ -38,7 +38,7 @@ public class SetSpringRate extends Command {
         return Bytes.concatBytes(bytes, new byte[] { axle.getByte(), (byte)springRate });
     }
 
-    SetSpringRate(byte[] bytes) throws CommandParseException {
+    SetSpringRate(byte[] bytes) {
         super(bytes);
     }
 }

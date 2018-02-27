@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.EndParking;
 import com.highmobility.autoapi.GetParkingTicket;
@@ -12,7 +11,6 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -50,7 +48,7 @@ public class ParkingTicketTest {
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
-    @Test public void startParking() throws UnsupportedEncodingException {
+    @Test public void startParking() {
         byte[] waitingForBytes = Bytes.bytesFromHex("00470201000E4265726c696e205061726b696e67020008363438393432333303000811010a112200003C");
 
         Calendar startDate = new GregorianCalendar();

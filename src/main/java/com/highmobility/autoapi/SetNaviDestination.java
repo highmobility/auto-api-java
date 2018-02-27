@@ -25,7 +25,6 @@ import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,21 +35,16 @@ public class SetNaviDestination extends CommandWithExistingProperties {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x02);
 
     /**
-     *
-     * @param latitude the latitude of the destination
+     * @param latitude  the latitude of the destination
      * @param longitude the longitude of the destination
-     * @param name the destination name
-     * 
-     * @throws UnsupportedEncodingException when the name string is in wrong format
+     * @param name      the destination name
      * @throws IllegalArgumentException if all arguments are null
      */
-    public SetNaviDestination(Float latitude, Float longitude, String name)
-            throws UnsupportedEncodingException {
+    public SetNaviDestination(Float latitude, Float longitude, String name) {
         super(TYPE, getProperties(latitude, longitude, name));
     }
 
-    static HMProperty[] getProperties(Float latitude, Float longitude, String name)
-            throws UnsupportedEncodingException {
+    static HMProperty[] getProperties(Float latitude, Float longitude, String name) {
         List<Property> properties = new ArrayList<>();
 
         if (latitude != null) {
@@ -71,11 +65,7 @@ public class SetNaviDestination extends CommandWithExistingProperties {
         return properties.toArray(new Property[properties.size()]);
     }
 
-    public SetNaviDestination(Property[] properties) throws CommandParseException, IllegalArgumentException {
-        super(TYPE, properties);
-    }
-
-    SetNaviDestination(byte[] bytes) throws CommandParseException {
+    SetNaviDestination(byte[] bytes) {
         super(bytes);
     }
 }

@@ -30,7 +30,7 @@ public class GetOffroadState extends Command {
         super(TYPE.getIdentifierAndType(), true);
     }
 
-    GetOffroadState(byte[] bytes) throws CommandParseException {
+    GetOffroadState(byte[] bytes) {
         super(bytes);
     }
 }

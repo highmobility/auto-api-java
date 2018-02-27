@@ -6,7 +6,6 @@ import com.highmobility.autoapi.Capabilities;
 import com.highmobility.autoapi.ChargeState;
 import com.highmobility.autoapi.ClimateState;
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlCommand;
 import com.highmobility.autoapi.ControlMode;
@@ -47,7 +46,6 @@ import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.Type;
 import com.highmobility.autoapi.ValetMode;
 import com.highmobility.autoapi.VehicleLocation;
-import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.property.CapabilityProperty;
 import com.highmobility.utils.Bytes;
 
@@ -64,7 +62,12 @@ public class CapabilitiesTest {
         byte[] bytes = Bytes.bytesFromHex
                 ("001001010005002000010201000500210001020100060023000102030100090024000102030405060100050025000102010006002600010203010007002700010203040100050028000102010003002902010004003000010100050031000102");
 
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.is(Capabilities.TYPE));
         Capabilities capabilities = (Capabilities) command;
@@ -139,11 +142,7 @@ public class CapabilitiesTest {
     public void climateCapability() {
         byte[] message = Bytes.bytesFromHex("001001010009002400010203040506");
         Capabilities capability = null;
-        try {
-            capability = (Capabilities) CommandResolver.resolve(message);
-        } catch (CommandParseException e) {
-            e.printStackTrace();
-        }
+        capability = (Capabilities) CommandResolver.resolve(message);
         if (capability == null) fail();
         assertTrue(capability.getCapability(GetClimateState.TYPE) != null);
         assertTrue(capability.isSupported(GetClimateState.TYPE));
@@ -158,12 +157,7 @@ public class CapabilitiesTest {
     public void heartRateCapability() {
         byte[] message = Bytes.bytesFromHex("001001010003002902");
         Capabilities capability = null;
-
-        try {
-            capability = (Capabilities) CommandResolver.resolve(message);
-        } catch (CommandParseException e) {
-            e.printStackTrace();
-        }
+        capability = (Capabilities) CommandResolver.resolve(message);
         if (capability == null) fail();
 
         assertTrue(capability.isSupported(SendHeartRate.TYPE));
@@ -174,7 +168,12 @@ public class CapabilitiesTest {
         byte[] commandBytes = new GetCapabilities().getBytes();
         assertTrue(Arrays.equals(bytes, commandBytes));
 
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
         assertTrue(command instanceof GetCapabilities);
     }
 
@@ -183,7 +182,12 @@ public class CapabilitiesTest {
         byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
         assertTrue(Arrays.equals(bytes, commandBytes));
 
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
         assertTrue(command instanceof GetCapability);
         GetCapability get = (GetCapability) command;
         assertTrue(get.getCapabilityIdentifier() == Identifier.HEART_RATE);
@@ -192,7 +196,7 @@ public class CapabilitiesTest {
     @Test public void buildClimate() {
         Capabilities.Builder builder = new Capabilities.Builder();
 
-        Type[] supportedTypes = new Type[] {
+        Type[] supportedTypes = new Type[]{
                 GetClimateState.TYPE,
                 ClimateState.TYPE,
                 SetClimateProfile.TYPE,
@@ -274,7 +278,12 @@ public class CapabilitiesTest {
         assertTrue(capabilities.getBytes().length == 3);
 
         byte[] bytes = Bytes.bytesFromHex("00100100");
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
         testEmptyCommand((Capabilities) command);
     }
 

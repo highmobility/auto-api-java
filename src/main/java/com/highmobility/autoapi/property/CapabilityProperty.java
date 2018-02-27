@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.Type;
 import com.highmobility.utils.Bytes;
@@ -76,7 +75,7 @@ public class CapabilityProperty extends Property {
         return identifier;
     }
 
-    public CapabilityProperty(byte[] bytes) throws CommandParseException {
+    public CapabilityProperty(byte[] bytes) {
         super(bytes);
 
         int propertyLength = Property.getUnsignedInt(bytes, 1, 2);

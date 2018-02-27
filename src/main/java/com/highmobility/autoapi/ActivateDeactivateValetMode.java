@@ -37,7 +37,7 @@ public class ActivateDeactivateValetMode extends Command {
         super(TYPE.addByte(Property.boolToByte(activate)), true);
     }
 
-    ActivateDeactivateValetMode(byte[] bytes) throws CommandParseException {
+    ActivateDeactivateValetMode(byte[] bytes) {
         super(bytes);
     }
 }

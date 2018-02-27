@@ -22,8 +22,6 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-import java.io.UnsupportedEncodingException;
-
 public class SeatStateProperty extends Property {
     public enum Position {
         FRONT_LEFT((byte)0x00),
@@ -93,7 +91,7 @@ public class SeatStateProperty extends Property {
     }
 
     public SeatStateProperty(byte identifier, Position position, boolean personDetected,
-                             boolean seatbeltFastened) throws UnsupportedEncodingException {
+                             boolean seatbeltFastened) {
         super(identifier, 5);
         bytes[3] = position.getByte();
         bytes[4] = Property.boolToByte(personDetected);

@@ -36,7 +36,7 @@ public class SetChargeMode extends Command {
         super(TYPE.addByte(chargeMode.getByte()), true);
     }
 
-    SetChargeMode(byte[] bytes) throws CommandParseException {
+    SetChargeMode(byte[] bytes) {
         super(bytes);
     }
 }

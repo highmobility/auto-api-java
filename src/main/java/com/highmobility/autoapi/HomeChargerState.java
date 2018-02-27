@@ -29,7 +29,6 @@ import com.highmobility.autoapi.property.HomeCharger.PriceTariff;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
@@ -182,34 +181,20 @@ public class HomeChargerState extends CommandWithExistingProperties {
                     hotspotEnabled = Property.getBool(property.getValueByte());
                     break;
                 case 0x09:
-                    try {
-                        hotspotSsid = Property.getString(property.getValueBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException
-                                .CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    hotspotSsid = Property.getString(property.getValueBytes());
                     break;
                 case 0x0A:
                     hotspotSecurity = NetworkSecurity.fromByte(property.getValueByte());
                     break;
                 case 0x0B:
-                    try {
-                        hotspotPassword = Property.getString(property.getValueBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException
-                                .CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    hotspotPassword = Property.getString(property.getValueBytes());
                     break;
                 case 0x0C:
                     if (getPriceTariffs() == null) priceTariffs = new PriceTariff[1];
                     else priceTariffs = Arrays.copyOf(priceTariffs, priceTariffs.length + 1);
-                    try {
-                        priceTariffs[priceTariffs.length - 1] = new PriceTariff(property
-                                .getPropertyBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException
-                                .CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+
+                    priceTariffs[priceTariffs.length - 1] = new PriceTariff(property
+                            .getPropertyBytes());
                     break;
             }
         }

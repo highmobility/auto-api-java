@@ -30,7 +30,7 @@ package com.highmobility.autoapi;
         super(TYPE);
     }
 
-    GetNaviDestination(byte[] bytes) throws CommandParseException {
+    GetNaviDestination(byte[] bytes) {
         super(bytes);
     }
 }

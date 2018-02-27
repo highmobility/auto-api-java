@@ -36,7 +36,7 @@ public class SendHeartRate extends Command {
         super(TYPE.addByte((byte) heartRate), true);
     }
 
-    public SendHeartRate(byte[] bytes) throws CommandParseException {
+    public SendHeartRate(byte[] bytes) {
         super(bytes);
     }
 }

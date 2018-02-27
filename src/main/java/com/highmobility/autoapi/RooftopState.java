@@ -51,7 +51,7 @@ public class RooftopState extends CommandWithExistingProperties {
         return openPercentage;
     }
 
-    RooftopState(byte[] bytes) throws CommandParseException {
+    RooftopState(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {

@@ -19,10 +19,7 @@
  */
 
 package com.highmobility.autoapi.property;
-
-import com.highmobility.autoapi.CommandParseException;
-
-import java.io.UnsupportedEncodingException;
+import com.highmobility.utils.Bytes;
 
 public class CoordinatesProperty extends Property {
     float latitude;
@@ -44,19 +41,16 @@ public class CoordinatesProperty extends Property {
         return longitude;
     }
 
-    public CoordinatesProperty(byte[] bytes) throws CommandParseException {
+    public CoordinatesProperty(byte[] bytes) {
         super(bytes);
 
         latitude = Property.getFloat(bytes, 3);
         longitude = Property.getFloat(bytes, 7);
     }
 
-    public CoordinatesProperty(byte identifier, Axle type, Integer springRate, Integer
-            maximumPossibleRate, Integer minimumPossibleRate) throws UnsupportedEncodingException {
-        super(identifier, 5);
-        bytes[3] = type.getByte();
-        bytes[4] = springRate.byteValue();
-        bytes[5] = maximumPossibleRate.byteValue();
-        bytes[6] = minimumPossibleRate.byteValue();
+    public CoordinatesProperty(byte identifier, float latitude, float longitude) {
+        super(identifier, 8);
+        Bytes.setBytes(bytes, Property.floatToBytes(latitude), 3);
+        Bytes.setBytes(bytes, Property.floatToBytes(longitude), 7);
     }
 }

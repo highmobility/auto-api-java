@@ -30,7 +30,7 @@ public class GetChassisSettings extends Command {
         super(TYPE);
     }
 
-    GetChassisSettings(byte[] bytes) throws CommandParseException {
+    GetChassisSettings(byte[] bytes) {
         super(bytes);
     }
 }

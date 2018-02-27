@@ -25,7 +25,6 @@ import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
@@ -62,8 +61,7 @@ public class Notification extends CommandWithExistingProperties {
         return null;
     }
 
-    public Notification(String text, ActionItem[] actions) throws
-            UnsupportedEncodingException, CommandParseException {
+    public Notification(String text, ActionItem[] actions) {
         super(TYPE, getProperties(text, actions));
         this.text = text;
         this.actions = actions;
@@ -77,19 +75,11 @@ public class Notification extends CommandWithExistingProperties {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case 0x01: {
-                    try {
-                        text = Property.getString(property.getValueBytes());
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException.CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    text = Property.getString(property.getValueBytes());
                     break;
                 }
                 case 0x02: {
-                    try {
-                        actionsBuilder.add(new ActionItem(property.getPropertyBytes()));
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CommandParseException(CommandParseException.CommandExceptionCode.UNSUPPORTED_VALUE_TYPE);
-                    }
+                    actionsBuilder.add(new ActionItem(property.getPropertyBytes()));
                     break;
                 }
             }
@@ -98,8 +88,7 @@ public class Notification extends CommandWithExistingProperties {
         actions = actionsBuilder.toArray(new ActionItem[actionsBuilder.size()]);
     }
 
-    static HMProperty[] getProperties(String text, ActionItem[] actions) throws
-            UnsupportedEncodingException {
+    static HMProperty[] getProperties(String text, ActionItem[] actions) {
         HMProperty[] properties = new HMProperty[actions.length + 1];
         properties[0] = new StringProperty((byte) 0x01, text);
 
