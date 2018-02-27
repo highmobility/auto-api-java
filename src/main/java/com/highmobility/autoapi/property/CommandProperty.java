@@ -20,17 +20,17 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.CommandWithProperties;
+import com.highmobility.autoapi.Command;
 import com.highmobility.utils.Bytes;
 
 public class CommandProperty extends Property {
     private static final byte defaultIdentifier = (byte)0x99;
 
-    public CommandProperty(CommandWithProperties value) {
-        this(defaultIdentifier, value);
+    public CommandProperty(Command command) {
+        this(defaultIdentifier, command);
     }
 
-    public CommandProperty(byte identifier, CommandWithProperties value) {
+    public CommandProperty(byte identifier, Command value) {
         super(identifier, value.getBytes().length);
         Bytes.setBytes(bytes, value.getBytes(), 3);
     }

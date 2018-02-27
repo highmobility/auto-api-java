@@ -196,9 +196,9 @@ public class VehicleStatusTest {
         }
         VehicleStatus vs = (VehicleStatus) command;
         // one window property will fail to parse
-        assertTrue(vs.getState(WindowsState.TYPE).getProperties().length == 5);
-        assertTrue(((WindowsState) vs.getState(WindowsState.TYPE)).getWindowProperties().length
-                == 4);
+        WindowsState ws = (WindowsState)vs.getState(WindowsState.TYPE);
+        assertTrue(ws.getProperties().length == 5);
+        assertTrue(ws.getWindowProperties().length == 4);
     }
 
     @Test public void zeroProperties() {
@@ -234,13 +234,13 @@ public class VehicleStatusTest {
         }
     }
 
-    @Test public void testOneStateInvalidDoesNotMatter() {
+    @Test public void testOneInvalidVsStateDoesNotMatter() {
         byte[] bytes = Bytes.bytesFromHex
                 ("00110101001131484D393634363634483442424646343902000101030009546F6E697320636172040012556E6976657273616C2054657374204361720500094F5054494D49535436"
                         + "99000400400100" // invalid gasflap state
                         + "99000700580101000101"); // valid parking brake state
 
         VehicleStatus command = (VehicleStatus) CommandResolver.resolve(bytes);
-        assertTrue(command.getStates().length == 1);
+        assertTrue(command.getStates().length == 2); // invalid command is added as a base command class
     }
 }

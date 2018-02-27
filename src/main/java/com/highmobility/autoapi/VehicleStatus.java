@@ -39,7 +39,7 @@ import java.util.List;
 public class VehicleStatus extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VEHICLE_STATUS, 0x01);
 
-    CommandWithProperties[] states;
+    Command[] states;
 
     String vin;
     PowerTrain powerTrain;
@@ -57,7 +57,7 @@ public class VehicleStatus extends CommandWithProperties {
     /**
      * @return The specific states for the vehicle's features.
      */
-    public CommandWithProperties[] getStates() {
+    public Command[] getStates() {
         return states;
     }
 
@@ -65,10 +65,10 @@ public class VehicleStatus extends CommandWithProperties {
      * @param type The type of the command.
      * @return The state for the given Command type, if exists.
      */
-    public CommandWithProperties getState(Type type) {
+    public Command getState(Type type) {
         if (states == null) return null;
         for (int i = 0; i < states.length; i++) {
-            CommandWithProperties command = states[i];
+            Command command = states[i];
             if (command.getType().equals(type)) return command;
         }
 
@@ -152,10 +152,10 @@ public class VehicleStatus extends CommandWithProperties {
         return numberOfSeats;
     }
 
-    VehicleStatus(byte[] bytes) throws CommandParseException {
+    VehicleStatus(byte[] bytes) {
         super(bytes);
 
-        ArrayList<CommandWithProperties> states = new ArrayList<>();
+        ArrayList<Command> states = new ArrayList<>();
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
@@ -198,10 +198,7 @@ public class VehicleStatus extends CommandWithProperties {
                         byte[] commandBytes = property.getValueBytes();
                         try {
                             Command command = CommandResolver.resolve(commandBytes);
-                            if (command instanceof CommandWithProperties) { // some commands
-                                // might be corrupt, dont add these
-                                states.add((CommandWithProperties) command);
-                            }
+                            if (command != null) states.add(command);
                         } catch (Exception e) {
                             logger.info("invalid state " + Bytes.hexFromBytes(commandBytes));
                         }
@@ -212,7 +209,7 @@ public class VehicleStatus extends CommandWithProperties {
             }
         }
 
-        this.states = states.toArray(new CommandWithProperties[states.size()]);
+        this.states = states.toArray(new Command[states.size()]);
     }
 
     private VehicleStatus(Builder builder) {
@@ -243,7 +240,7 @@ public class VehicleStatus extends CommandWithProperties {
         private Integer power;
         private Integer numberOfDoors;
         private Integer numberOfSeats;
-        private List<CommandWithProperties> states = new ArrayList<>();
+        private List<Command> states = new ArrayList<>();
 
         public Builder() {
             super(TYPE);
@@ -315,7 +312,8 @@ public class VehicleStatus extends CommandWithProperties {
             return this;
         }
 
-        public Builder setStates(CommandWithProperties[] states) {
+        public Builder setStates(Command[] states) {
+            this.states.clear();
             this.states.addAll(Arrays.asList(states));
 
             for (int i = 0; i < states.length; i++) {
@@ -325,7 +323,7 @@ public class VehicleStatus extends CommandWithProperties {
             return this;
         }
 
-        public Builder addState(CommandWithProperties state) {
+        public Builder addState(Command state) {
             addProperty(new CommandProperty(state));
             states.add(state);
             return this;

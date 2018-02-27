@@ -342,17 +342,12 @@ public class CommandResolver {
                 command = new WakeUp(bytes);
             } else if (bytesAreForType(bytes, DisplayImage.TYPE)) {
                 command = new DisplayImage(bytes);
-            }
-            else if (bytesAreForType(bytes, TextInput.TYPE)) {
+            } else if (bytesAreForType(bytes, TextInput.TYPE)) {
                 command = new TextInput(bytes);
-            }
-            else {
+            } else {
                 command = new Command(bytes);
             }
-        } catch (
-                Exception e)
-
-        {
+        } catch (Exception e) {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
             Command.logger.info("Failed to parse command " + Bytes.hexFromBytes(Bytes
