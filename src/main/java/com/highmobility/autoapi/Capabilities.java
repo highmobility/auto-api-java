@@ -89,9 +89,15 @@ public class Capabilities extends CommandWithProperties {
         capabilities = builder.toArray(new CapabilityProperty[builder.size()]);
     }
 
+    @Override protected boolean propertiesExpected() {
+        return false;
+    }
+
     private Capabilities(Builder builder) {
         super(builder);
         capabilities = builder.capabilities.toArray(new CapabilityProperty[builder.capabilities.size()]);
+    @Override public boolean isState() {
+        return true;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {

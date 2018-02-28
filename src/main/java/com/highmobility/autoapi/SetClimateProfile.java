@@ -32,7 +32,7 @@ import java.util.ArrayList;
  * Set the climate profile. The result is sent through the evented Climate State message with the
  * new state.
  */
-public class SetClimateProfile extends CommandWithExistingProperties {
+public class SetClimateProfile extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x02);
 
     /**

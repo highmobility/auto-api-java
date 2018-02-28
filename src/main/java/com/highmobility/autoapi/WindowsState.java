@@ -77,6 +77,10 @@ public class WindowsState extends CommandWithProperties {
         windowProperties = builder.toArray(new WindowProperty[builder.size()]);
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     private WindowsState(Builder builder) {
         super(builder);
         windowProperties = builder.windowProperties;

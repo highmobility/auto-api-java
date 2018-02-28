@@ -62,6 +62,6 @@ public class RaceTest {
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("005701");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((RaceState)state).getGearMode() == null);
+        assertTrue(((RaceState) state).getGearMode() == null);
     }
 }

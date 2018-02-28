@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Set the rooftop state. The result is sent through the evented Rooftop State message.
  */
-public class ControlRooftop extends CommandWithExistingProperties {
+public class ControlRooftop extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.ROOFTOP, 0x02);
 
     /**

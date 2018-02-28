@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Set the navigation destination. This will be forwarded to the navigation system of the car.
  */
-public class SetNaviDestination extends CommandWithExistingProperties {
+public class SetNaviDestination extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x02);
 
     /**

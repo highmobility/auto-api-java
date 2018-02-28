@@ -29,7 +29,6 @@ public class FlashersState extends CommandWithProperties {
     State state;
 
     /**
-     *
      * @return The flashers state.
      */
     public State getState() {
@@ -49,11 +48,15 @@ public class FlashersState extends CommandWithProperties {
         }
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     public enum State {
-        INACTIVE((byte)0x00),
-        EMERGENCY_ACTIVE((byte)0x01),
-        LEFT_ACTIVE((byte)0x02),
-        RIGHT_ACTIVE((byte)0x03);
+        INACTIVE((byte) 0x00),
+        EMERGENCY_ACTIVE((byte) 0x01),
+        LEFT_ACTIVE((byte) 0x02),
+        RIGHT_ACTIVE((byte) 0x03);
 
         public static State fromByte(byte value) throws CommandParseException {
             State[] allValues = State.values();

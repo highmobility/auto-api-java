@@ -51,4 +51,8 @@ public class ValetMode extends CommandWithProperties {
             }
         }
     }
+
+    @Override public boolean isState() {
+        return true;
+    }
 }

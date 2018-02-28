@@ -28,6 +28,7 @@ import com.highmobility.autoapi.property.HomeCharger.PlugType;
 import com.highmobility.autoapi.property.HomeCharger.PriceTariff;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.utils.Bytes;
 
 import java.util.Arrays;
 
@@ -149,54 +150,63 @@ public class HomeChargerState extends CommandWithProperties {
         return null;
     }
 
-    public HomeChargerState(byte[] bytes) throws CommandParseException {
+    public HomeChargerState(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case 0x01:
-                    charging = Charging.fromByte(property.getValueByte());
-                    break;
-                case 0x02:
-                    authenticationMechanism = AuthenticationMechanism.fromByte(property
-                            .getValueByte());
-                    break;
-                case 0x03:
-                    plugType = PlugType.fromByte(property.getValueByte());
-                    break;
-                case 0x04:
-                    chargingPower = Property.getFloat(property.getValueBytes());
-                    break;
-                case 0x05:
-                    solarChargingActive = Property.getBool(property.getValueByte());
-                    break;
-                case 0x06:
-                    location = new CoordinatesProperty(property.getPropertyBytes());
-                    break;
-                case 0x07:
-                    chargeCurrent = new ChargeCurrentProperty(property.getPropertyBytes());
-                    break;
-                case 0x08:
-                    hotspotEnabled = Property.getBool(property.getValueByte());
-                    break;
-                case 0x09:
-                    hotspotSsid = Property.getString(property.getValueBytes());
-                    break;
-                case 0x0A:
-                    hotspotSecurity = NetworkSecurity.fromByte(property.getValueByte());
-                    break;
-                case 0x0B:
-                    hotspotPassword = Property.getString(property.getValueBytes());
-                    break;
-                case 0x0C:
-                    if (getPriceTariffs() == null) priceTariffs = new PriceTariff[1];
-                    else priceTariffs = Arrays.copyOf(priceTariffs, priceTariffs.length + 1);
+            try {
+                switch (property.getPropertyIdentifier()) {
+                    case 0x01:
+                        charging = Charging.fromByte(property.getValueByte());
+                        break;
+                    case 0x02:
+                        authenticationMechanism = AuthenticationMechanism.fromByte(property
+                                .getValueByte());
+                        break;
+                    case 0x03:
+                        plugType = PlugType.fromByte(property.getValueByte());
+                        break;
+                    case 0x04:
+                        chargingPower = Property.getFloat(property.getValueBytes());
+                        break;
+                    case 0x05:
+                        solarChargingActive = Property.getBool(property.getValueByte());
+                        break;
+                    case 0x06:
+                        location = new CoordinatesProperty(property.getPropertyBytes());
+                        break;
+                    case 0x07:
+                        chargeCurrent = new ChargeCurrentProperty(property.getPropertyBytes());
+                        break;
+                    case 0x08:
+                        hotspotEnabled = Property.getBool(property.getValueByte());
+                        break;
+                    case 0x09:
+                        hotspotSsid = Property.getString(property.getValueBytes());
+                        break;
+                    case 0x0A:
+                        hotspotSecurity = NetworkSecurity.fromByte(property.getValueByte());
+                        break;
+                    case 0x0B:
+                        hotspotPassword = Property.getString(property.getValueBytes());
+                        break;
+                    case 0x0C:
+                        if (getPriceTariffs() == null) priceTariffs = new PriceTariff[1];
+                        else priceTariffs = Arrays.copyOf(priceTariffs, priceTariffs.length + 1);
 
-                    priceTariffs[priceTariffs.length - 1] = new PriceTariff(property
-                            .getPropertyBytes());
-                    break;
+                        priceTariffs[priceTariffs.length - 1] = new PriceTariff(property
+                                .getPropertyBytes());
+                        break;
+                }
+            }
+            catch (Exception e) {
+                logger.info("invalid property " + Bytes.hexFromBytes(property.getPropertyBytes()));
             }
         }
+    }
+
+    @Override public boolean isState() {
+        return true;
     }
 }

@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Set the lights state. The result is sent through the Lights State message.
  */
-public class ControlLights extends CommandWithExistingProperties {
+public class ControlLights extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHTS, 0x02);
 
     /**

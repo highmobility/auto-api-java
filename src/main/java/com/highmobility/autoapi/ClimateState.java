@@ -123,7 +123,7 @@ public class ClimateState extends CommandWithProperties {
         return autoHvacStates;
     }
 
-    ClimateState(byte[] bytes) throws CommandParseException {
+    ClimateState(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {
@@ -172,5 +172,9 @@ public class ClimateState extends CommandWithProperties {
                     break;
             }
         }
+    }
+
+    @Override public boolean isState() {
+        return true;
     }
 }

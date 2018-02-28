@@ -68,6 +68,10 @@ public class ControlMode extends CommandWithProperties {
         }
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     private ControlMode(Builder builder) {
         super(builder);
         angle = builder.angle;

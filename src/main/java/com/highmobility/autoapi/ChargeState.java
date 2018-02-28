@@ -229,6 +229,10 @@ public class ChargeState extends CommandWithProperties {
         }
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     private ChargeState(Builder builder) {
         super(builder);
         chargingState = builder.chargingState;

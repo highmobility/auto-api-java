@@ -33,7 +33,7 @@ import java.util.List;
  * is sent through the evented Parking Ticket message. The end time can be left unset depending on
  * the operator.
  */
-public class StartParking extends CommandWithExistingProperties {
+public class StartParking extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.PARKING_TICKET, 0x02);
 
     /**

@@ -49,4 +49,8 @@ public class WeatherConditions extends CommandWithProperties {
             }
         }
     }
+
+    @Override public boolean isState() {
+        return true;
+    }
 }

@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Message to be sent by the smart device. This could be a response to a received message or input
  * through voice by the driver.
  */
-public class SendMessage extends CommandWithExistingProperties {
+public class SendMessage extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MESSAGING, 0x01);
 
     String recipientHandle;

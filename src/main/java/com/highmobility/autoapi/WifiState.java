@@ -73,4 +73,8 @@ public class WifiState extends CommandWithProperties {
             }
         }
     }
+
+    @Override public boolean isState() {
+        return true;
+    }
 }

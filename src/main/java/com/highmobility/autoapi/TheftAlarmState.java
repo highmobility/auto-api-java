@@ -76,4 +76,8 @@ public class TheftAlarmState extends CommandWithProperties {
             }
         }
     }
+
+    @Override public boolean isState() {
+        return true;
+    }
 }

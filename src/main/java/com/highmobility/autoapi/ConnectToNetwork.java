@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Connect the car to a Wi-Fi network.
  */
-public class ConnectToNetwork extends CommandWithExistingProperties {
+public class ConnectToNetwork extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x02);
 
     /**

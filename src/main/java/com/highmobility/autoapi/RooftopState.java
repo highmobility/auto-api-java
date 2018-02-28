@@ -67,6 +67,10 @@ public class RooftopState extends CommandWithProperties {
         }
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     private RooftopState(Builder builder) {
         super(builder);
         openPercentage = builder.openPercentage;

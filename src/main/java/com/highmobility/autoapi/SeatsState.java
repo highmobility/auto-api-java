@@ -72,4 +72,8 @@ public class SeatsState extends CommandWithProperties {
 
         seatsStates = seatStateProperties.toArray(new SeatStateProperty[seatStateProperties.size()]);
     }
+
+    @Override public boolean isState() {
+        return true;
+    }
 }

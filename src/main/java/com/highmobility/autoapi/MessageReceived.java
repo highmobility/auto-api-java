@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * Notify the car that a message has been received. Depending on the car system, it will display or
  * read it loud to the driver.
  */
-public class MessageReceived extends CommandWithExistingProperties {
+public class MessageReceived extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MESSAGING, 0x00);
 
     /**

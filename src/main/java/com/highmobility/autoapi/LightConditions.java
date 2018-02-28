@@ -32,7 +32,6 @@ public class LightConditions extends CommandWithProperties {
     Float insideLight;
 
     /**
-     *
      * @return Measured outside illuminance in lux
      */
     public Float getOutsideLight() {
@@ -40,7 +39,6 @@ public class LightConditions extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Measured inside illuminance in lux
      */
     public Float getInsideLight() {
@@ -61,5 +59,9 @@ public class LightConditions extends CommandWithProperties {
                     break;
             }
         }
+    }
+
+    @Override public boolean isState() {
+        return true;
     }
 }

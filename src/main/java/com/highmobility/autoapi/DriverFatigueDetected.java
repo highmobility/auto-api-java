@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * An evented message that notifies about driver fatigue. Sent continously when level 1 or higher.
  */
-public class DriverFatigueDetected extends CommandWithExistingProperties {
+public class DriverFatigueDetected extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.DRIVER_FATIGUE, 0x01);
 
     FatigueLevel fatigueLevel;

@@ -151,4 +151,8 @@ public class WindscreenState extends CommandWithProperties {
             }
         }
     }
+
+    @Override public boolean isState() {
+        return true;
+    }
 }

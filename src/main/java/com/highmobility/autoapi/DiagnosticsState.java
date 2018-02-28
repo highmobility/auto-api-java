@@ -233,6 +233,10 @@ public class DiagnosticsState extends CommandWithProperties {
         tireStates = tireStatesBuilder.toArray(new TireStateProperty[tireStatesBuilder.size()]);
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     private DiagnosticsState(Builder builder) {
         super(builder);
         mileage = builder.mileage;

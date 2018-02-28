@@ -103,6 +103,10 @@ public class LockState extends CommandWithProperties {
         lockStates = builder.toArray(new DoorLockProperty[builder.size()]);
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     private LockState(Builder builder) {
         super(builder);
         lockStates = builder.states.toArray(new DoorLockProperty[builder.states.size()]);

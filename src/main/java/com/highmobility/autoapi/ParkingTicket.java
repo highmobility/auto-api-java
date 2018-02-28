@@ -99,4 +99,8 @@ public class ParkingTicket extends CommandWithProperties {
             }
         }
     }
+
+    @Override public boolean isState() {
+        return true;
+    }
 }

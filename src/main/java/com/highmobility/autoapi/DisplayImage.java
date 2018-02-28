@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.StringProperty;
 /**
  * Display an image in the head unit by providing the image URL.
  */
-public class DisplayImage extends CommandWithExistingProperties {
+public class DisplayImage extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.GRAPHICS, 0x00);
 
     String url;

@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * Send a notification to the car or smart device. The notification can have action items that the
  * user can respond with.
  */
-public class Notification extends CommandWithExistingProperties {
+public class Notification extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.NOTIFICATIONS, 0x00);
 
     String text;

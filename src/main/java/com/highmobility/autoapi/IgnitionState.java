@@ -51,4 +51,8 @@ public class IgnitionState extends CommandWithProperties {
             }
         }
     }
+
+    @Override public boolean isState() {
+        return true;
+    }
 }

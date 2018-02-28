@@ -212,6 +212,10 @@ public class VehicleStatus extends CommandWithProperties {
         this.states = states.toArray(new Command[states.size()]);
     }
 
+    @Override protected boolean propertiesExpected() {
+        return false;
+    }
+
     private VehicleStatus(Builder builder) {
         super(builder);
         vin = builder.vin;

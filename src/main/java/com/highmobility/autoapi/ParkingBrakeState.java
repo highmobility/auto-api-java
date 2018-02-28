@@ -53,6 +53,10 @@ public class ParkingBrakeState extends CommandWithProperties {
         }
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     private ParkingBrakeState(Builder builder) {
         super(builder);
         active = builder.active;

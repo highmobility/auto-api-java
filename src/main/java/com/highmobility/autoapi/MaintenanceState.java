@@ -32,7 +32,6 @@ public class MaintenanceState extends CommandWithProperties {
     private Integer daysToNextService;
 
     /**
-     *
      * @return Amount of kilometers until next servicing of the car
      */
     public Integer getKilometersToNextService() {
@@ -40,7 +39,6 @@ public class MaintenanceState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Number of days until next servicing of the car, whereas negative is overdue
      */
     public Integer getDaysToNextService() {
@@ -61,5 +59,9 @@ public class MaintenanceState extends CommandWithProperties {
                     break;
             }
         }
+    }
+
+    @Override public boolean isState() {
+        return true;
     }
 }

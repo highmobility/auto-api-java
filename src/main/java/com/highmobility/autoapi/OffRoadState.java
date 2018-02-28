@@ -61,4 +61,8 @@ public class OffRoadState extends CommandWithProperties {
             }
         }
     }
+
+    @Override public boolean isState() {
+        return true;
+    }
 }

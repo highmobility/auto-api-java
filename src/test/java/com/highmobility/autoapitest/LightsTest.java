@@ -26,7 +26,6 @@ public class LightsTest {
                         "03000100" +
                         "040003ff0000");
 
-
         Command command = null;
         try {
             command = CommandResolver.resolve(bytes);
@@ -93,6 +92,6 @@ public class LightsTest {
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("003601");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((LightsState)state).getAmbientColor() == null);
+        assertTrue(((LightsState) state).getAmbientColor() == null);
     }
 }

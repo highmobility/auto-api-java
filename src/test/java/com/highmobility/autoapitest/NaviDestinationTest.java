@@ -66,6 +66,6 @@ public class NaviDestinationTest {
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("003101");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((NaviDestination)state).getName() == null);
+        assertTrue(((NaviDestination) state).getName() == null);
     }
 }

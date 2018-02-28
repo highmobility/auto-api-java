@@ -64,6 +64,10 @@ public class TrunkState extends CommandWithProperties {
         }
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     private TrunkState(Builder builder) {
         super(builder);
         lockState = builder.lockState;

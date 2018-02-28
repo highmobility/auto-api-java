@@ -99,6 +99,10 @@ public class LightsState extends CommandWithProperties {
         }
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     private LightsState(Builder builder) {
         super(builder);
         frontExteriorLightState = builder.frontExteriorLightState;
@@ -125,7 +129,8 @@ public class LightsState extends CommandWithProperties {
 
         public Builder setRearExteriorLightActive(Boolean rearExteriorLightActive) {
             this.rearExteriorLightActive = rearExteriorLightActive;
-            addProperty(new BooleanProperty(REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER, rearExteriorLightActive));
+            addProperty(new BooleanProperty(REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER,
+                    rearExteriorLightActive));
             return this;
         }
 

@@ -32,7 +32,7 @@ import java.util.List;
  * Hand over a video from smart device to car headunit to be shown in the car display. The emulator
  * supports HTML5 video player formats .mp4 and .webm.
  */
-public class VideoHandover extends CommandWithExistingProperties {
+public class VideoHandover extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VIDEO_HANDOVER, 0x00);
 
     /**

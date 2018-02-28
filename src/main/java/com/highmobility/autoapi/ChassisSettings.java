@@ -102,4 +102,8 @@ public class ChassisSettings extends CommandWithProperties {
 
         springRates = springRateProperties.toArray(new SpringRateProperty[springRateProperties.size()]);
     }
+
+    @Override public boolean isState() {
+        return true;
+    }
 }

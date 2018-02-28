@@ -32,7 +32,7 @@ import java.util.List;
  * controls remain the same. If the car does not receive the command every second it will stop the
  * control mode.
  */
-public class ControlCommand extends CommandWithExistingProperties {
+public class ControlCommand extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x04);
     private static final byte speedIdentifier = 0x01;
     private static final byte angleIdentifier = 0x02;

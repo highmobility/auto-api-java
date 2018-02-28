@@ -61,4 +61,8 @@ public class NaviDestination extends CommandWithProperties {
             }
         }
     }
+
+    @Override public boolean isState() {
+        return true;
+    }
 }

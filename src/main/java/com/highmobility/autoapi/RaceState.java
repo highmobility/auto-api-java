@@ -153,7 +153,6 @@ public class RaceState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return The brake pedal position between 0-1, whereas 1 is full brakes
      */
     public Float getBrakePedalPosition() {
@@ -191,7 +190,8 @@ public class RaceState extends CommandWithProperties {
                     yawRate = Property.getFloat(property.getValueBytes());
                     break;
                 case 0x08:
-                    rearSuspensionSteering = Property.getUnsignedInt(property.getValueByte()) / 100f;
+                    rearSuspensionSteering = Property.getUnsignedInt(property.getValueByte()) /
+                            100f;
                     break;
                 case 0x09:
                     espInterventionActive = Property.getBool(property.getValueByte());
@@ -218,5 +218,9 @@ public class RaceState extends CommandWithProperties {
 
         this.brakeTorqueVectorings = brakeTorqueVectoringProperties.toArray(
                 new BrakeTorqueVectoringProperty[brakeTorqueVectoringProperties.size()]);
+    }
+
+    @Override public boolean isState() {
+        return true;
     }
 }
