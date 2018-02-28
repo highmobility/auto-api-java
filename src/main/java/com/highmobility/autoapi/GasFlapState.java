@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * This message is sent when a Get Gas Flap State message is received by the car.
  */
-public class GasFlapState extends CommandWithExistingProperties {
+public class GasFlapState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FUELING, 0x01);
 
     com.highmobility.autoapi.property.GasFlapState state;

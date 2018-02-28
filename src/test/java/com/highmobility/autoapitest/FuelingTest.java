@@ -21,9 +21,12 @@ public class FuelingTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00400101000101");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.is(GasFlapState.TYPE));
         GasFlapState state = (GasFlapState) command;
@@ -35,15 +38,21 @@ public class FuelingTest {
         byte[] bytes = new GetGasFlapState().getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
-        GetGasFlapState get = (GetGasFlapState) CommandResolver.resolve(waitingForBytes);
+        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof GetGasFlapState);
     }
 
-    @Test public void open() throws CommandParseException {
+    @Test public void open() {
         byte[] waitingForBytes = Bytes.bytesFromHex("004002");
         byte[] bytes = new OpenGasFlap().getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
         OpenGasFlap openGasFlap = (OpenGasFlap) CommandResolver.resolve(waitingForBytes);
         assertTrue(Arrays.equals(openGasFlap.getBytes(), waitingForBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("004001");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((GasFlapState)state).getState() == null);
     }
 }
