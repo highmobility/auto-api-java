@@ -26,14 +26,17 @@ public class ParkingTicketTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "0047010100010102000E4265726c696e205061726b696e67030008363438393432333304000811010a1122000000050008120214160B000000");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.is(ParkingTicket.TYPE));
         ParkingTicket state = (ParkingTicket) command;
 
-        assertTrue(((ParkingTicket)command).getState() == ParkingTicketState.STARTED);
+        assertTrue(((ParkingTicket) command).getState() == ParkingTicketState.STARTED);
         assertTrue(state.getOperatorName().equals("Berlin Parking"));
         assertTrue(state.getOperatorTicketId().equals("64894233"));
 
@@ -49,7 +52,8 @@ public class ParkingTicketTest {
     }
 
     @Test public void startParking() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("00470201000E4265726c696e205061726b696e67020008363438393432333303000811010a112200003C");
+        byte[] waitingForBytes = Bytes.bytesFromHex
+                ("00470201000E4265726c696e205061726b696e67020008363438393432333303000811010a112200003C");
 
         Calendar startDate = new GregorianCalendar();
         startDate.set(2017, 0, 10, 17, 34, 0);
@@ -64,5 +68,11 @@ public class ParkingTicketTest {
 
         byte[] bytes = new EndParking().getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("004701");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((ParkingTicket)state).getState() == null);
     }
 }

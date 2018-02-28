@@ -51,4 +51,10 @@ public class HonkHornAndFlashLightsTest {
         String commandBytes = Bytes.hexFromBytes(new ActivateDeactivateEmergencyFlasher(true).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("002601");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((FlashersState)state).getState() == null);
+    }
 }

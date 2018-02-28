@@ -29,17 +29,17 @@ import com.highmobility.autoapi.property.Property;
  * It is also sent when a Get Control ControlMode is received by the car. The new mode is
  * included in the command and may be the result of both user or car triggered action.
  */
-public class ControlMode extends CommandWithExistingProperties {
+public class ControlMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x01);
 
     com.highmobility.autoapi.property.ControlMode mode;
-    int angle;
+    Integer angle;
 
     /**
      *
      * @return the angle
      */
-    public int getAngle() {
+    public Integer getAngle() {
         return angle;
     }
 

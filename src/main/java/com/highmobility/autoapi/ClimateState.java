@@ -22,17 +22,16 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.AutoHvacState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.Bytes;
 
 /**
  * This message is sent when a Get Climate State message is received by the car. It is also sent
  * once the HVAC system has been turned on/off, when the defrosting/defogging states change or when
  * the profile is updated.
- *
+ * <p>
  * Auto-HVAC (Heating, Ventilation and Air Conditioning) allows you to schedule times when HVAC is
  * triggered automatically to reach the desired driver temperature setting.
  */
-public class ClimateState extends CommandWithExistingProperties {
+public class ClimateState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x01);
 
     Float insideTemperature;
@@ -48,7 +47,6 @@ public class ClimateState extends CommandWithExistingProperties {
     AutoHvacState[] autoHvacStates;
 
     /**
-     *
      * @return Inside temperature.
      */
     public Float getInsideTemperature() {
@@ -56,7 +54,6 @@ public class ClimateState extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return Outside temperature.
      */
     public Float getOutsideTemperature() {
@@ -64,7 +61,6 @@ public class ClimateState extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return Driver temperature setting.
      */
     public Float getDriverTemperatureSetting() {
@@ -72,7 +68,6 @@ public class ClimateState extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return Passenger temperature setting.
      */
     public Float getPassengerTemperatureSetting() {
@@ -80,7 +75,6 @@ public class ClimateState extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return Whether HVAC is active or not
      */
     public Boolean isHvacActive() {
@@ -88,7 +82,6 @@ public class ClimateState extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return Whether defogging is active or not.
      */
     public Boolean isDefoggingActive() {
@@ -96,7 +89,6 @@ public class ClimateState extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return Whether defrosting is active or not.
      */
     public Boolean isDefrostingActive() {
@@ -104,7 +96,6 @@ public class ClimateState extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return Whether ionising is active or not.
      */
     public Boolean isIonisingActive() {
@@ -112,7 +103,6 @@ public class ClimateState extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return The defrosting temperature
      */
     public Float getDefrostingTemperature() {
@@ -120,7 +110,6 @@ public class ClimateState extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return Whether autoHVAC is constant(based on the car surroundings)
      */
     public Boolean isAutoHvacConstant() {
@@ -128,7 +117,6 @@ public class ClimateState extends CommandWithExistingProperties {
     }
 
     /**
-     *
      * @return Array of AutoHvacState's that describe if and when the AutoHVAC is active.
      */
     public AutoHvacState[] getAutoHvacStates() {

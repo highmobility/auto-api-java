@@ -1,10 +1,8 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetOffroadState;
-import com.highmobility.autoapi.GetRaceState;
 import com.highmobility.autoapi.OffRoadState;
 import com.highmobility.utils.Bytes;
 
@@ -22,9 +20,12 @@ public class OffRoadTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "005201010002000A02000132");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == OffRoadState.class);
         OffRoadState state = (OffRoadState) command;
@@ -36,5 +37,11 @@ public class OffRoadTest {
         String waitingForBytes = "005200";
         String commandBytes = Bytes.hexFromBytes(new GetOffroadState().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("005201");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((OffRoadState)state).getRouteIncline() == null);
     }
 }

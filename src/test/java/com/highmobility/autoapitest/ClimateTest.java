@@ -118,4 +118,10 @@ public class ClimateTest {
 
         assertTrue(Arrays.equals(commandBytes, waitingForBytes));
     }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("002401");
+        ClimateState state = (ClimateState) CommandResolver.resolve(bytes);
+        assertTrue(state.getAutoHvacStates() == null);
+    }
 }

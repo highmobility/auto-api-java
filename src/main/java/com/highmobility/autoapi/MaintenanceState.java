@@ -25,17 +25,17 @@ import com.highmobility.autoapi.property.Property;
 /**
  * This message is sent when a Get Vehicle Location message is received by the car.
  */
-public class MaintenanceState extends CommandWithExistingProperties {
+public class MaintenanceState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MAINTENANCE, 0x01);
 
-    private int kilometersToNextService;
-    private int daysToNextService;
+    private Integer kilometersToNextService;
+    private Integer daysToNextService;
 
     /**
      *
      * @return Amount of kilometers until next servicing of the car
      */
-    public int getKilometersToNextService() {
+    public Integer getKilometersToNextService() {
         return kilometersToNextService;
     }
 
@@ -43,7 +43,7 @@ public class MaintenanceState extends CommandWithExistingProperties {
      *
      * @return Number of days until next servicing of the car, whereas negative is overdue
      */
-    public int getDaysToNextService() {
+    public Integer getDaysToNextService() {
         return daysToNextService;
     }
 

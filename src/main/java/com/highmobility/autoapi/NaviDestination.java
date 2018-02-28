@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * This message is sent when a Get Navi Destination message is received by the car.
  */
-public class NaviDestination extends CommandWithExistingProperties {
+public class NaviDestination extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x01);
 
     private CoordinatesProperty coordinates;

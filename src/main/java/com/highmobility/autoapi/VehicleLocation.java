@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * This message is sent when a Get Vehicle Location message is received by the car.
  */
-public class VehicleLocation extends CommandWithExistingProperties {
+public class VehicleLocation extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VEHICLE_LOCATION, 0x01);
 
     private CoordinatesProperty coordinates;

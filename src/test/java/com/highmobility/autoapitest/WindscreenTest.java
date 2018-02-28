@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetWindscreenState;
 import com.highmobility.autoapi.SetWindscreenDamage;
@@ -34,16 +33,22 @@ public class WindscreenTest {
                 "0042010100010202000103030001020400014305000112060001020700015f08000811010a1020050000");
 
 
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
-
-        assertTrue(command.is(WindscreenState.TYPE) && command.getClass().equals(WindscreenState.class));
-        WindscreenState state = (WindscreenState)command;
+        assertTrue(command.is(WindscreenState.TYPE) && command.getClass().equals(WindscreenState
+                .class));
+        WindscreenState state = (WindscreenState) command;
 
         assertTrue(state.getWiperState() == WiperState.AUTOMATIC);
         assertTrue(state.getWiperIntensity() == WiperIntensity.LEVEL_3);
         assertTrue(state.getWindscreenDamage() == WindscreenDamage.DAMAGE_SMALLER_THAN_1);
-        assertTrue(state.getWindscreenReplacementState() == WindscreenReplacementState.REPLACEMENT_NEEDED);
+        assertTrue(state.getWindscreenReplacementState() == WindscreenReplacementState
+                .REPLACEMENT_NEEDED);
 
         WindscreenDamageZone zone = state.getWindscreenDamageZone();
         assertTrue(zone.getDamageZoneX() == 1);
@@ -80,7 +85,7 @@ public class WindscreenTest {
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
-    @Test public void setNoDamage() throws CommandParseException {
+    @Test public void setNoDamage() {
         byte[] waitingForBytes = Bytes.bytesFromHex("00420203000101");
 
         byte[] bytes = new SetWindscreenDamage(WindscreenDamage.IMPACT_NO_DAMAGE,
@@ -88,15 +93,22 @@ public class WindscreenTest {
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
-    @Test public void setDamage() throws CommandParseException {
+    @Test public void setDamage() {
         byte[] waitingForBytes = Bytes.bytesFromHex("004202030001010500012306000101");
 
         WindscreenDamage damage = WindscreenDamage.IMPACT_NO_DAMAGE;
         WindscreenDamageZone zone = new WindscreenDamageZone(2, 3);
-        WindscreenReplacementState replacementState = WindscreenReplacementState.REPLACEMENT_NOT_NEEDED;
+        WindscreenReplacementState replacementState = WindscreenReplacementState
+                .REPLACEMENT_NOT_NEEDED;
         byte[] bytes = new SetWindscreenDamage(damage, zone, replacementState).getBytes();
 
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("004201");
+        WindscreenState state = (WindscreenState) CommandResolver.resolve(bytes);
+        assertTrue(state.getDamageConfidence() == null);
     }
 }

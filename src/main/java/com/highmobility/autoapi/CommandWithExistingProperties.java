@@ -3,7 +3,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.HMProperty;
 
 /**
- * Used for commands that require at least 1 property to be set.
+ * Used for commands that require at least 1 property.
  */
 public class CommandWithExistingProperties extends CommandWithProperties {
     static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be null";

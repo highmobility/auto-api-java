@@ -34,7 +34,7 @@ import java.util.Calendar;
  * This message is sent when a Get Windscreen State message is received by the car. The wipers
  * intensity is indicated even if the car has automatic wipers activated.
  */
-public class WindscreenState extends CommandWithExistingProperties {
+public class WindscreenState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x01);
 
     WiperState wiperState;
@@ -98,7 +98,7 @@ public class WindscreenState extends CommandWithExistingProperties {
      *
      * @return Damage confidence
      */
-    public float getDamageConfidence() {
+    public Float getDamageConfidence() {
         return damageConfidence;
     }
 

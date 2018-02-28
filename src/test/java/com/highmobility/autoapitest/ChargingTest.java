@@ -151,4 +151,10 @@ public class ChargingTest {
             fail();
         }
     }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("002301");
+        ChargeState state = (ChargeState) CommandResolver.resolve(bytes);
+        assertTrue(state.getBatteryCurrentAC() == null);
+    }
 }

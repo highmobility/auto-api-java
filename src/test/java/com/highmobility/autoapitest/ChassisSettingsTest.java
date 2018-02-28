@@ -1,7 +1,7 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.ChassisSettings;
-import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetChassisSettings;
 import com.highmobility.autoapi.SetChassisPosition;
@@ -26,9 +26,13 @@ public class ChassisSettingsTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00530101000101020001010300040015251503000401171F110400031937E4");
 
-        com.highmobility.autoapi.
+        com.highmobility.autoapi.Command command = null;
 
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == ChassisSettings.class);
         ChassisSettings state = (ChassisSettings) command;
@@ -47,7 +51,6 @@ public class ChassisSettingsTest {
         assertTrue(state.getChassisPosition().getPosition() == 25);
         assertTrue(state.getChassisPosition().getMaximumPossibleValue() == 55);
         assertTrue(state.getChassisPosition().getMinimumPossibleValue() == -28);
-
     }
 
     @Test public void get() {
@@ -58,7 +61,8 @@ public class ChassisSettingsTest {
 
     @Test public void setDrivingMode() {
         String waitingForBytes = "00530203";
-        String commandBytes = Bytes.hexFromBytes(new SetDrivingMode(DrivingMode.SPORT_PLUS).getBytes());
+        String commandBytes = Bytes.hexFromBytes(new SetDrivingMode(DrivingMode.SPORT_PLUS)
+                .getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
@@ -79,5 +83,11 @@ public class ChassisSettingsTest {
         String waitingForBytes = "00530532";
         String commandBytes = Bytes.hexFromBytes(new SetChassisPosition(50).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("005301");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((ChassisSettings) state).getChassisPosition() == null);
     }
 }

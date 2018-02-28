@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetIgnitionState;
 import com.highmobility.autoapi.IgnitionState;
@@ -22,9 +21,12 @@ public class EngineTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00350101000101");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.is(IgnitionState.TYPE));
         IgnitionState state = (IgnitionState) command;
@@ -41,5 +43,11 @@ public class EngineTest {
         String waitingForBytes = "00350201";
         String commandBytes = Bytes.hexFromBytes(new TurnEngineOnOff(true).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("003501");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((IgnitionState)state).isOn() == null);
     }
 }

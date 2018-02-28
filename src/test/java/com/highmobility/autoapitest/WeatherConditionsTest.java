@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetWeatherConditions;
 import com.highmobility.autoapi.WeatherConditions;
@@ -21,9 +20,12 @@ public class WeatherConditionsTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00550101000164");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == WeatherConditions.class);
         WeatherConditions state = (WeatherConditions) command;
@@ -34,5 +36,11 @@ public class WeatherConditionsTest {
         String waitingForBytes = "005500";
         String commandBytes = Bytes.hexFromBytes(new GetWeatherConditions().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("005501");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((WeatherConditions)state).getRainIntensity() == null);
     }
 }

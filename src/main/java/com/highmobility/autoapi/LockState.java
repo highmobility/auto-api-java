@@ -32,7 +32,7 @@ import java.util.List;
  * message is also sent when a Get Lock State is received by the car. The new status is included in
  * the message payload and may be the result of user, device or car triggered action.
  */
-public class LockState extends CommandWithExistingProperties {
+public class LockState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.DOOR_LOCKS, 0x01);
 
     DoorLockProperty[] lockStates;

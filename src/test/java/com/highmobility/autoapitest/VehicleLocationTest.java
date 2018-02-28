@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetVehicleLocation;
 import com.highmobility.autoapi.VehicleLocation;
@@ -21,7 +20,12 @@ public class VehicleLocationTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "0030010100084252147d41567ab10200044252147d");
 
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == VehicleLocation.class);
         VehicleLocation state = (VehicleLocation) command;
@@ -34,5 +38,11 @@ public class VehicleLocationTest {
         String waitingForBytes = "003000";
         String commandBytes = Bytes.hexFromBytes(new GetVehicleLocation().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("003001");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((VehicleLocation)state).getCoordinates() == null);
     }
 }

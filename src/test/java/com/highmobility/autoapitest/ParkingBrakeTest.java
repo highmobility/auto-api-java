@@ -23,7 +23,6 @@ public class ParkingBrakeTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00580101000101");
 
-
         Command command = null;
         try {
             command = CommandResolver.resolve(bytes);
@@ -58,5 +57,11 @@ public class ParkingBrakeTest {
         builder.setIsActive(true);
         byte[] actualBytes = builder.build().getBytes();
         assertTrue(Arrays.equals(actualBytes, expectedBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("005801");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((ParkingBrakeState)state).isActive() == null);
     }
 }

@@ -1,12 +1,11 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.property.DoorLockProperty;
 import com.highmobility.autoapi.GetLockState;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.LockUnlockDoors;
+import com.highmobility.autoapi.property.DoorLockProperty;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -22,14 +21,18 @@ public class DoorLocksTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "002001010003000100010003010000010003020001010003030001");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.is(LockState.TYPE));
         LockState state = (LockState) command;
         assertTrue(state.getLockStates().length == 4);
-        boolean leftExists = false, rightExist = false, rearLeftExists = false, rearRightExists = false;
+        boolean leftExists = false, rightExist = false, rearLeftExists = false, rearRightExists =
+                false;
 
         for (DoorLockProperty tireState : state.getLockStates()) {
             switch (tireState.getLocation()) {
@@ -79,29 +82,36 @@ public class DoorLocksTest {
         Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof LockUnlockDoors);
 
-        LockUnlockDoors state = (LockUnlockDoors)command;
+        LockUnlockDoors state = (LockUnlockDoors) command;
         assertTrue(state.getLockState() == DoorLockProperty.LockState.LOCKED);
 
     }
 
     @Test public void create() {
         LockState.Builder builder = new LockState.Builder();
-        builder.addDoorState(new DoorLockProperty(  DoorLockProperty.Location.FRONT_LEFT,
+        builder.addDoorState(new DoorLockProperty(DoorLockProperty.Location.FRONT_LEFT,
                 DoorLockProperty.Position.OPEN,
                 DoorLockProperty.LockState.UNLOCKED));
 
-        builder.addDoorState(new DoorLockProperty(  DoorLockProperty.Location.FRONT_RIGHT,
+        builder.addDoorState(new DoorLockProperty(DoorLockProperty.Location.FRONT_RIGHT,
                 DoorLockProperty.Position.CLOSED,
                 DoorLockProperty.LockState.UNLOCKED));
 
-        builder.addDoorState(new DoorLockProperty(  DoorLockProperty.Location.REAR_RIGHT,
+        builder.addDoorState(new DoorLockProperty(DoorLockProperty.Location.REAR_RIGHT,
                 DoorLockProperty.Position.CLOSED,
                 DoorLockProperty.LockState.LOCKED));
 
-        builder.addDoorState(new DoorLockProperty(  DoorLockProperty.Location.REAR_LEFT,
+        builder.addDoorState(new DoorLockProperty(DoorLockProperty.Location.REAR_LEFT,
                 DoorLockProperty.Position.CLOSED,
                 DoorLockProperty.LockState.LOCKED));
 
-        assertTrue(Arrays.equals(builder.build().getBytes(), Bytes.bytesFromHex("002001010003000100010003010000010003020001010003030001")));
+        assertTrue(Arrays.equals(builder.build().getBytes(), Bytes.bytesFromHex
+                ("002001010003000100010003010000010003020001010003030001")));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("002001");
+        LockState state = (LockState) CommandResolver.resolve(bytes);
+        assertTrue(state.getLockStates().length == 0);
     }
 }

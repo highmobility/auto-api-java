@@ -180,4 +180,10 @@ public class DiagnosticsTest {
         assertTrue(state.getNonce() == null);
         assertTrue(state.getSignature() == null);
      */
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("003301");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((DiagnosticsState)state).getTripFuelConsumption() == null);
+    }
 }

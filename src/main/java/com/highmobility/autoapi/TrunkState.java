@@ -29,7 +29,7 @@ import com.highmobility.autoapi.property.TrunkPosition;
  * message is also sent when a Get Trunk State is received by the car. The new status is included in
  * the message payload and may be the result of user, device or car triggered action.
  */
-public class TrunkState extends CommandWithExistingProperties {
+public class TrunkState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x01);
 
     TrunkLockState lockState;

@@ -20,12 +20,16 @@ public class RemoteControlTest {
     public void controlMode() {
         byte[] bytes = Bytes.bytesFromHex(
                 "002701" +
-                    "01000102" +
-                    "0200020032");
+                        "01000102" +
+                        "0200020032");
 
 
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.is(ControlMode.TYPE));
         ControlMode state = (ControlMode) command;
@@ -67,9 +71,15 @@ public class RemoteControlTest {
 
         Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
         assertTrue(command instanceof ControlCommand);
-        ControlCommand state = (ControlCommand)command;
+        ControlCommand state = (ControlCommand) command;
 
         assertTrue(state.getAngle() == 50);
         assertTrue(state.getSpeed() == 3);
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("002701");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((ControlMode)state).getAngle() == null);
     }
 }

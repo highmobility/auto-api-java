@@ -2,12 +2,8 @@ package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.ActivateDeactivateValetMode;
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.GetValetMode;
-import com.highmobility.autoapi.OpenCloseTrunk;
-import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.ValetMode;
 import com.highmobility.utils.Bytes;
 
@@ -24,11 +20,14 @@ public class ValetModeTest {
     public void state() {
         byte[] bytes = Bytes.bytesFromHex(
                 "002801" +
-                    "01000101");
+                        "01000101");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == ValetMode.class);
         ValetMode state = (ValetMode) command;
@@ -45,5 +44,11 @@ public class ValetModeTest {
         String waitingForBytes = "00280201";
         String commandBytes = Bytes.hexFromBytes(new ActivateDeactivateValetMode(true).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("002801");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((ValetMode)state).isActive() == null);
     }
 }

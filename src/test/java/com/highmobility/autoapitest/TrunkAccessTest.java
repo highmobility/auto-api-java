@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
  */
 public class TrunkAccessTest {
     @Test
-    public void state() throws CommandParseException {
+    public void state() {
         byte[] bytes = Bytes.bytesFromHex(
                 "0021010100010002000101");
 
@@ -33,7 +33,7 @@ public class TrunkAccessTest {
         assertTrue(state.getPosition() == TrunkPosition.OPEN);
     }
 
-    @Test public void get() throws CommandParseException {
+    @Test public void get() {
         String waitingForBytes = "002100";
         String commandBytes = Bytes.hexFromBytes(new GetTrunkState().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -42,7 +42,7 @@ public class TrunkAccessTest {
         assertTrue(command instanceof GetTrunkState);
     }
 
-    @Test public void openClose() throws CommandParseException {
+    @Test public void openClose() {
         String waitingForBytes = "0021020100010002000101";
         String commandBytes = Bytes.hexFromBytes(new OpenCloseTrunk(TrunkLockState.UNLOCKED,
                 TrunkPosition.OPEN).getBytes());
@@ -54,5 +54,11 @@ public class TrunkAccessTest {
         OpenCloseTrunk state = (OpenCloseTrunk)command;
         assertTrue(state.getState() == TrunkLockState.UNLOCKED);
         assertTrue(state.getPosition() == TrunkPosition.OPEN);
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("002101");
+        TrunkState state = (TrunkState) CommandResolver.resolve(bytes);
+        assertTrue(state.getLockState() == null);
     }
 }

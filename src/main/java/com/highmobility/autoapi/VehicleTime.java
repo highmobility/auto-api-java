@@ -28,7 +28,7 @@ import java.util.Calendar;
  * This message is sent when a Get Vehicle Time message is received by the car. The local time of
  * the car is returned, hence the UTC timezone offset is included as well.
  */
-public class VehicleTime extends CommandWithExistingProperties {
+public class VehicleTime extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VEHICLE_TIME, 0x01);
 
     Calendar vehicleTime;

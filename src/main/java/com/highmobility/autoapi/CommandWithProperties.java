@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Used for commands with properties.
+ * Used for commands with properties. Can have 0 properties.
  */
 public class CommandWithProperties extends Command {
     Property[] properties;

@@ -69,4 +69,10 @@ public class WifiTest {
         byte[] commandBytes = new EnableDisableWifi(false).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
     }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("005901");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((WifiState)state).getSecurity() == null);
+    }
 }

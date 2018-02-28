@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * This message is sent when a Get Lights State message is received by the car.
  */
-public class LightsState extends CommandWithExistingProperties {
+public class LightsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHTS, 0x01);
 
     private static final byte REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER = 0x02;

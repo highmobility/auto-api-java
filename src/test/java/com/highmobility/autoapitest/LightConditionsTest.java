@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetLightConditions;
 import com.highmobility.autoapi.LightConditions;
@@ -21,9 +20,12 @@ public class LightConditionsTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00540101000447d8cc000200043e800000");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == LightConditions.class);
         LightConditions state = (LightConditions) command;
@@ -35,5 +37,11 @@ public class LightConditionsTest {
         String waitingForBytes = "005400";
         String commandBytes = Bytes.hexFromBytes(new GetLightConditions().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("005401");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((LightConditions)state).getOutsideLight() == null);
     }
 }

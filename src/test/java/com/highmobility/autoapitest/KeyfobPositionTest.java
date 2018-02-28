@@ -1,11 +1,8 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.GetIgnitionState;
 import com.highmobility.autoapi.GetKeyfobPosition;
-import com.highmobility.autoapi.IgnitionState;
 import com.highmobility.autoapi.KeyfobPosition;
 import com.highmobility.utils.Bytes;
 
@@ -23,18 +20,28 @@ public class KeyfobPositionTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "00480101000105");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.is(KeyfobPosition.TYPE));
         KeyfobPosition state = (KeyfobPosition) command;
-        assertTrue(state.getKeyfobPosition() == com.highmobility.autoapi.property.KeyfobPosition.INSIDE_CAR);
+        assertTrue(state.getKeyfobPosition() == com.highmobility.autoapi.property.KeyfobPosition
+                .INSIDE_CAR);
     }
 
     @Test public void get() {
         String waitingForBytes = "004800";
         String commandBytes = Bytes.hexFromBytes(new GetKeyfobPosition().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("004801");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((KeyfobPosition)state).getKeyfobPosition() == null);
     }
 }

@@ -278,12 +278,7 @@ public class CapabilitiesTest {
         assertTrue(capabilities.getBytes().length == 3);
 
         byte[] bytes = Bytes.bytesFromHex("00100100");
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
         testEmptyCommand((Capabilities) command);
     }
 

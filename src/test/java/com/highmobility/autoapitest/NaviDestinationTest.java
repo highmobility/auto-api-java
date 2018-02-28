@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetNaviDestination;
 import com.highmobility.autoapi.NaviDestination;
@@ -24,9 +23,12 @@ public class NaviDestinationTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "0031010100084252147d41567ab10200064265726c696e");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == NaviDestination.class);
         NaviDestination state = (NaviDestination) command;
@@ -59,5 +61,11 @@ public class NaviDestinationTest {
         }
 
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("003101");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((NaviDestination)state).getName() == null);
     }
 }

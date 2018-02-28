@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetRaceState;
 import com.highmobility.autoapi.RaceState;
@@ -24,9 +23,12 @@ public class RaceTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "005701010005003f5d2f1b01000501bf40c49c020001130300010004000162050001E20600044138f5c307000440d51eb808000103090001010A000201010B0001040C0001040D000101");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == RaceState.class);
         RaceState state = (RaceState) command;
@@ -55,5 +57,11 @@ public class RaceTest {
         String waitingForBytes = "005700";
         String commandBytes = Bytes.hexFromBytes(new GetRaceState().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("005701");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((RaceState)state).getGearMode() == null);
     }
 }

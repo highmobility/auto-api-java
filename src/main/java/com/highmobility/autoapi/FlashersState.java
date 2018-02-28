@@ -23,8 +23,31 @@ package com.highmobility.autoapi;
 /**
  * This message is sent when a Get Flashers State message is received by the car.
  */
-public class FlashersState extends Command {
+public class FlashersState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x01);
+
+    State state;
+
+    /**
+     *
+     * @return The flashers state.
+     */
+    public State getState() {
+        return state;
+    }
+
+    FlashersState(byte[] bytes) throws CommandParseException {
+        super(bytes);
+
+        for (int i = 0; i < getProperties().length; i++) {
+            com.highmobility.autoapi.property.Property property = getProperties()[i];
+            switch (property.getPropertyIdentifier()) {
+                case 0x01:
+                    state = State.fromByte(property.getValueByte());
+                    break;
+            }
+        }
+    }
 
     public enum State {
         INACTIVE((byte)0x00),
@@ -54,21 +77,5 @@ public class FlashersState extends Command {
         public byte getByte() {
             return value;
         }
-    }
-
-    State state;
-
-    /**
-     *
-     * @return The flashers state.
-     */
-    public State getState() {
-        return state;
-    }
-
-    FlashersState(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length != 7) throw new CommandParseException();
-        state = State.fromByte(bytes[6]);
     }
 }

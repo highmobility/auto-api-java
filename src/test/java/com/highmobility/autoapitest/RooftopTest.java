@@ -77,4 +77,10 @@ public class RooftopTest {
         assertTrue(state.getDimmingPercentage() == .01f);
         assertTrue(state.getOpenPercentage() == .53f);
     }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("002501");
+        RooftopState state = (RooftopState) CommandResolver.resolve(bytes);
+        assertTrue(state.getOpenPercentage() == null);
+    }
 }

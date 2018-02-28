@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetMaintenanceState;
 import com.highmobility.autoapi.MaintenanceState;
@@ -23,8 +22,12 @@ public class MaintenanceTest {
                 "020003000E61");
 
 
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == MaintenanceState.class);
         MaintenanceState state = (MaintenanceState) command;
@@ -36,5 +39,11 @@ public class MaintenanceTest {
         String waitingForBytes = "003400";
         String commandBytes = Bytes.hexFromBytes(new GetMaintenanceState().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("003401");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((MaintenanceState)state).getKilometersToNextService() == null);
     }
 }

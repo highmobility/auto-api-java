@@ -27,8 +27,12 @@ public class LightsTest {
                         "040003ff0000");
 
 
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.is(LightsState.TYPE));
 
@@ -84,5 +88,11 @@ public class LightsTest {
 
         byte[] actualBytes = builder.build().getBytes();
         assertTrue(Arrays.equals(actualBytes, expectedBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("003601");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((LightsState)state).getAmbientColor() == null);
     }
 }

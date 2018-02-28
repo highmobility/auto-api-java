@@ -35,7 +35,7 @@ import java.util.Arrays;
  * This message is sent when a Home Charger State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
-public class HomeChargerState extends CommandWithExistingProperties {
+public class HomeChargerState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x01);
 
     Charging charging;

@@ -16,10 +16,14 @@ public class TheftAlarmTest {
     @Test
     public void state() {
         byte[] bytes = Bytes.bytesFromHex(
-                "004601" +
-                        "01000101");
+                "00460101000101");
 
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
         if (command == null) fail();
 
         assertTrue(command.is(TheftAlarmState.TYPE));
@@ -38,5 +42,11 @@ public class TheftAlarmTest {
         String commandBytes = Bytes.hexFromBytes(new SetTheftAlarm(TheftAlarmState.State
                 .TRIGGERED).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("004601");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((TheftAlarmState)state).getState() == null);
     }
 }

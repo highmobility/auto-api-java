@@ -1,7 +1,12 @@
 package com.highmobility.autoapitest;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandResolver;
+import com.highmobility.autoapi.GetVehicleTime;
+import com.highmobility.autoapi.VehicleTime;
+import com.highmobility.utils.Bytes;
+
+import org.junit.Test;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -10,14 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.GetVehicleTime;
-import com.highmobility.autoapi.VehicleTime;
-import com.highmobility.utils.Bytes;
-
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -27,11 +26,14 @@ public class VehicleTimeTest {
     public void state() {
         byte[] bytes = Bytes.bytesFromHex(
                 "005001" +
-                    "01000811010A1020330078");
+                        "01000811010A1020330078");
 
-
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.getClass() == VehicleTime.class);
         VehicleTime state = (VehicleTime) command;
@@ -58,5 +60,11 @@ public class VehicleTimeTest {
         String waitingForBytes = "005000";
         String commandBytes = Bytes.hexFromBytes(new GetVehicleTime().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void state0Properties() {
+        byte[] bytes = Bytes.bytesFromHex("005001");
+        Command state = CommandResolver.resolve(bytes);
+        assertTrue(((VehicleTime)state).getVehicleTime() == null);
     }
 }
