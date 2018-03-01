@@ -30,7 +30,7 @@ public class SetSpringRate extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x04);
 
     public SetSpringRate(Axle axle, int springRate) {
-        super(getValues(axle, springRate), true);
+        super(getValues(axle, springRate));
     }
 
     static byte[] getValues(Axle axle, int springRate) {

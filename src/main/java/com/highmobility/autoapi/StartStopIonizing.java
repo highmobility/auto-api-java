@@ -29,7 +29,7 @@ public class StartStopIonizing extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x06);
 
     public StartStopIonizing(boolean start) {
-        super(TYPE.addByte(Property.boolToByte(start)), true);
+        super(TYPE.addByte(Property.boolToByte(start)));
     }
 
     StartStopIonizing(byte[] bytes) throws CommandParseException {

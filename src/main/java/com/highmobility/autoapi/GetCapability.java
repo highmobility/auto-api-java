@@ -49,7 +49,7 @@ public class GetCapability extends Command {
     }
 
     public GetCapability(Type type) {
-        super(getBytes(type), true);
+        super(getBytes(type));
         this.category = type.identifier;
         this.categoryBytes = this.category.getBytes();
     }

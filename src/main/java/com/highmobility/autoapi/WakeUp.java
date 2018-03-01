@@ -29,7 +29,7 @@ public class WakeUp extends Command {
     public static final Type TYPE = new Type(Identifier.WAKE_UP, 0x02);
 
     public WakeUp() {
-        super(TYPE.getIdentifierAndType(), true);
+        super(TYPE.getIdentifierAndType());
     }
 
     WakeUp(byte[] bytes) {

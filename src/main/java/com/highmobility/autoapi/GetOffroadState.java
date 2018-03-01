@@ -27,7 +27,7 @@ public class GetOffroadState extends Command {
     public static final Type TYPE = new Type(Identifier.OFF_ROAD, 0x00);
 
     public GetOffroadState() {
-        super(TYPE.getIdentifierAndType(), true);
+        super(TYPE.getIdentifierAndType());
     }
 
     GetOffroadState(byte[] bytes) {

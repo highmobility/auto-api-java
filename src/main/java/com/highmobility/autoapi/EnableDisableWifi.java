@@ -31,7 +31,7 @@ public class EnableDisableWifi extends Command {
      * @param enable Desired wifi state.
      */
     public EnableDisableWifi(boolean enable) {
-        super(TYPE.addByte(Property.boolToByte(enable)), true);
+        super(TYPE.addByte(Property.boolToByte(enable)));
     }
 
     EnableDisableWifi(byte[] bytes) {

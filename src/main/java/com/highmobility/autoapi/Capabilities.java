@@ -52,7 +52,13 @@ public class Capabilities extends CommandWithProperties {
             CapabilityProperty capability = capabilities[i];
             if (capability.getIdentifierBytes()[0] == type.getIdentifier()[0]
                     && capability.getIdentifierBytes()[1] == type.getIdentifier()[1]) {
-                return capability;
+                Type[] types = capability.getTypes();
+                for (int j = 0; j < types.length; j++) {
+                    Type existingType = types[j];
+                    if (existingType.getType() == type.getType()) {
+                        return capability;
+                    }
+                }
             }
         }
 
@@ -74,12 +80,10 @@ public class Capabilities extends CommandWithProperties {
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
                     try {
-                        // to make the map work, all capabilities need to be mapped to a constant key.
-                        // cannot get from map with a byte[]
-                        CapabilityProperty capability = new CapabilityProperty(property.getPropertyBytes());
+                        CapabilityProperty capability = new CapabilityProperty(property
+                                .getPropertyBytes());
                         builder.add(capability);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         // don't use unknown capability
                     }
                     break;
@@ -95,7 +99,10 @@ public class Capabilities extends CommandWithProperties {
 
     private Capabilities(Builder builder) {
         super(builder);
-        capabilities = builder.capabilities.toArray(new CapabilityProperty[builder.capabilities.size()]);
+        capabilities = builder.capabilities.toArray(new CapabilityProperty[builder.capabilities
+                .size()]);
+    }
+
     @Override public boolean isState() {
         return true;
     }

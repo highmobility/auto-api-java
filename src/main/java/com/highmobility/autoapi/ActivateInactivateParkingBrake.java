@@ -34,7 +34,7 @@ public class ActivateInactivateParkingBrake extends Command {
      * @param activate Boolean indicating whether to activate parking brake.
      */
     public ActivateInactivateParkingBrake(boolean activate) {
-        super(TYPE.addByte(Property.boolToByte(activate)), true);
+        super(TYPE.addByte(Property.boolToByte(activate)));
     }
 
     ActivateInactivateParkingBrake(byte[] bytes) {

@@ -31,7 +31,7 @@ public class StartStopHvac extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x03);
 
     public StartStopHvac(boolean start) {
-        super(TYPE.addByte(Property.boolToByte(start)), true);
+        super(TYPE.addByte(Property.boolToByte(start)));
     }
 
     StartStopHvac(byte[] bytes) {

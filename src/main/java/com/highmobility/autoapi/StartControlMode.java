@@ -29,7 +29,7 @@ public class StartControlMode extends Command {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x02);
 
     public StartControlMode() {
-        super(TYPE.getIdentifierAndType(), true);
+        super(TYPE.getIdentifierAndType());
     }
 
     StartControlMode(byte[] bytes) {

@@ -31,7 +31,7 @@ public class SetChassisPosition extends Command {
      * @param position The chassis position in mm calculated from the lowest point
      */
     public SetChassisPosition(Integer position) {
-        super(TYPE.addByte(position.byteValue()), true);
+        super(TYPE.addByte(position.byteValue()));
     }
 
     SetChassisPosition(byte[] bytes) {

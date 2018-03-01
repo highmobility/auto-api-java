@@ -29,7 +29,7 @@ public class SetDrivingMode extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x02);
 
     public SetDrivingMode(DrivingMode drivingMode) {
-        super(TYPE.addByte(drivingMode.getByte()), true);
+        super(TYPE.addByte(drivingMode.getByte()));
     }
 
     SetDrivingMode(byte[] bytes) {

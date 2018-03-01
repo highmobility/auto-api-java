@@ -30,7 +30,7 @@ public class ActivateDeactivateEmergencyFlasher extends Command {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x03);
 
     public ActivateDeactivateEmergencyFlasher(boolean activate) {
-        super(TYPE.addByte(Property.boolToByte(activate)), true);
+        super(TYPE.addByte(Property.boolToByte(activate)));
     }
 
     ActivateDeactivateEmergencyFlasher(byte[] bytes) {

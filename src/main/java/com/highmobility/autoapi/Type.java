@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.utils.Bytes;
-
 import java.util.Arrays;
 
 public class Type {
@@ -30,18 +29,6 @@ public class Type {
 
     public byte[] getIdentifierAndType() {
         return identifierAndType;
-    }
-
-    byte[] addByte(byte extraByte) {
-        return Bytes.concatBytes(identifierAndType, extraByte);
-    }
-
-    byte[] addBytes(byte[] extraBytes) {
-        return Bytes.concatBytes(identifierAndType, extraBytes);
-    }
-
-    byte[] getIdentifier() {
-        return new byte[] { identifierAndType[0], identifierAndType[1] };
     }
 
     public byte getType() {
@@ -69,6 +56,21 @@ public class Type {
         this(new byte[] { (byte) identifierFirstByte, (byte) identifierSecondByte, (byte) type} );
     }
 
+    byte[] addByte(byte extraByte) {
+        return Bytes.concatBytes(identifierAndType, extraByte);
+    }
+
+    byte[] addBytes(byte[] extraBytes) {
+        return Bytes.concatBytes(identifierAndType, extraBytes);
+    }
+
+    byte[] getIdentifier() {
+        return new byte[] { identifierAndType[0], identifierAndType[1] };
+    }
+
+//    boolean isGetStateCommand() {
+//        return identifier == 0x00 && type !=
+//    }
 
     @Override public boolean equals(Object obj) {
         return obj.getClass() == Type.class

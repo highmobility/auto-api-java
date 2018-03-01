@@ -34,7 +34,7 @@ public class GetCapabilities extends Command {
         super(TYPE);
     }
 
-    GetCapabilities(byte[] bytes) throws CommandParseException {
+    GetCapabilities(byte[] bytes) {
         super(bytes);
     }
 }

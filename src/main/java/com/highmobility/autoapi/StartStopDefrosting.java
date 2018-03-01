@@ -29,7 +29,7 @@ public class StartStopDefrosting extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x05);
 
     public StartStopDefrosting(boolean start) {
-        super(TYPE.addByte(Property.boolToByte(start)), true);
+        super(TYPE.addByte(Property.boolToByte(start)));
     }
 
 

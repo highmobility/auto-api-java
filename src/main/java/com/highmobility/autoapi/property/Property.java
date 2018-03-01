@@ -44,17 +44,7 @@ public class Property implements HMProperty {
     protected byte[] bytes;
 
     protected Property(byte identifier, int valueSize) {
-        bytes = new byte[3 + valueSize];
-
-        bytes[0] = identifier;
-        if (valueSize > 255) {
-            byte[] lengthBytes = intToBytes(valueSize, 2);
-            bytes[1] = lengthBytes[0];
-            bytes[2] = lengthBytes[1];
-        } else if (valueSize != 0) {
-            bytes[1] = 0x00;
-            bytes[2] = (byte) valueSize;
-        }
+        this.bytes = baseBytes(identifier, valueSize);
     }
 
     /**
@@ -86,6 +76,22 @@ public class Property implements HMProperty {
     public Byte getValueByte() {
         if (bytes.length == 3) return null;
         return bytes[3];
+    }
+
+    protected byte[] baseBytes(byte identifier, int valueSize) {
+        byte[] bytes = new byte[3 + valueSize];
+
+        bytes[0] = identifier;
+        if (valueSize > 255) {
+            byte[] lengthBytes = intToBytes(valueSize, 2);
+            bytes[1] = lengthBytes[0];
+            bytes[2] = lengthBytes[1];
+        } else if (valueSize != 0) {
+            bytes[1] = 0x00;
+            bytes[2] = (byte) valueSize;
+        }
+
+        return bytes;
     }
 
     @Override public byte getPropertyIdentifier() {

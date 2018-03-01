@@ -271,6 +271,51 @@ public class CapabilitiesTest {
         builder.build().getBytes();
     }
 
+    @Test public void buildAddStateAutomaticallyWithGet() {
+        Capabilities.Builder builder = new Capabilities.Builder();
+
+        Type[] supportedTypes = new Type[]{
+                GetClimateState.TYPE,
+        };
+
+        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        builder.addCapability(property);
+        Capabilities capabilities = builder.build();
+        assertTrue(capabilities.isSupported(ClimateState.TYPE));
+
+        byte[] bytes = Bytes.bytesFromHex("00100101000400240001");
+        assertTrue(Arrays.equals(capabilities.getBytes(), bytes));
+    }
+
+    @Test public void buildDontAddStateAutomaticallyWithGetAndState() {
+        Capabilities.Builder builder = new Capabilities.Builder();
+
+        Type[] supportedTypes = new Type[]{
+                GetClimateState.TYPE,
+                ClimateState.TYPE
+        };
+
+        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        builder.addCapability(property);
+        Capabilities capabilities = builder.build();
+        assertTrue(capabilities.getCapability(GetClimateState.TYPE).getTypes().length == 2);
+    }
+
+    @Test public void handleUnknownCapability() {
+        Capabilities.Builder builder = new Capabilities.Builder();
+
+        Type[] supportedTypes = new Type[]{
+                GetClimateState.TYPE,
+                ClimateState.TYPE,
+                new Type(Identifier.CLIMATE.getBytes(), 0x22)
+        };
+
+        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        builder.addCapability(property);
+        Capabilities capabilities = builder.build();
+        assertTrue(capabilities.getCapability(GetClimateState.TYPE).getTypes().length == 3);
+    }
+
     @Test public void zeroProperties() {
         Capabilities.Builder builder = new Capabilities.Builder();
         Capabilities capabilities = builder.build();

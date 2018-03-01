@@ -33,7 +33,7 @@ public class SetChargeMode extends Command {
      * @param chargeMode The charge mode
      */
     public SetChargeMode(ChargeMode chargeMode) {
-        super(TYPE.addByte(chargeMode.getByte()), true);
+        super(TYPE.addByte(chargeMode.getByte()));
     }
 
     SetChargeMode(byte[] bytes) {

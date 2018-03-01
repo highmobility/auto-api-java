@@ -33,7 +33,7 @@ public class SetChargeLimit extends Command {
      * @param percentage The charge limit percentage
      */
     public SetChargeLimit(float percentage) throws IllegalArgumentException {
-        super(Identifier.CHARGING.getBytesWithType(TYPE, (byte) (percentage * 100)), true);
+        super(Identifier.CHARGING.getBytesWithType(TYPE, (byte) (percentage * 100)));
     }
 
     SetChargeLimit(byte[] bytes) {

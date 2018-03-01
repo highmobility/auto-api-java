@@ -30,7 +30,7 @@ public class TurnEngineOnOff extends Command {
     public static final Type TYPE = new Type(Identifier.ENGINE, 0x02);
 
     public TurnEngineOnOff(boolean on)  {
-        super(TYPE.addByte(Property.boolToByte(on)), true);
+        super(TYPE.addByte(Property.boolToByte(on)));
     }
 
     TurnEngineOnOff(byte[] bytes) {

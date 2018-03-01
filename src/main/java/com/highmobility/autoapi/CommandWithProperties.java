@@ -147,10 +147,6 @@ public class CommandWithProperties extends Command {
         }
     }
 
-    public CommandWithProperties(byte[] bytes, boolean internal) {
-        super(bytes, internal);
-    }
-
     public static class Builder {
         private Type type;
         private byte[] nonce;

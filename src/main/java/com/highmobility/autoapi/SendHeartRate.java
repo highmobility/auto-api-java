@@ -33,7 +33,7 @@ public class SendHeartRate extends Command {
      * @param heartRate The heart rate.
      */
     public SendHeartRate(int heartRate) {
-        super(TYPE.addByte((byte) heartRate), true);
+        super(TYPE.addByte((byte) heartRate));
     }
 
     public SendHeartRate(byte[] bytes) {

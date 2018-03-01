@@ -31,7 +31,7 @@ public class SetChargeCurrent extends Command {
      * @param chargeCurrent The charge current
      */
     public SetChargeCurrent(float chargeCurrent) {
-        super(TYPE.addBytes(Property.floatToBytes(chargeCurrent)), true);
+        super(TYPE.addBytes(Property.floatToBytes(chargeCurrent)));
     }
 
     SetChargeCurrent(byte[] bytes) {

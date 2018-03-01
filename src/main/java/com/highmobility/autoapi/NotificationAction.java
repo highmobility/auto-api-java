@@ -38,7 +38,7 @@ public class NotificationAction extends Command {
     }
 
     public NotificationAction(int actionIdentifier) {
-        super(TYPE.addByte((byte) actionIdentifier), true);
+        super(TYPE.addByte((byte) actionIdentifier));
         this.actionIdentifier = actionIdentifier;
     }
 

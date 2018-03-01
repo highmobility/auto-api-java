@@ -40,7 +40,7 @@ public class LockUnlockDoors extends Command {
     }
 
     public LockUnlockDoors(DoorLockProperty.LockState state) {
-        super(TYPE.addByte(state.getByte()), true);
+        super(TYPE.addByte(state.getByte()));
         this.lockState = state;
     }
 

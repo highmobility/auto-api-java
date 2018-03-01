@@ -35,14 +35,6 @@ public class Command {
         setTypeAndBytes(bytes);
     }
 
-    /**
-     * InternalConstructor ones are used when we do not want to throw when we know the bytes are ok (we construct them
-     * ourselves)
-     */
-    Command(byte[] bytes, boolean internalConstructor) {
-        setTypeAndBytes(bytes);
-    }
-
     Command(Type type) {
         setTypeAndBytes(type);
     }

@@ -56,7 +56,7 @@ public class StartStopSportChrono extends Command {
     }
 
     public StartStopSportChrono(Command command) {
-        super(TYPE.addByte(command.getByte()), true);
+        super(TYPE.addByte(command.getByte()));
     }
 
     StartStopSportChrono(byte[] bytes) {

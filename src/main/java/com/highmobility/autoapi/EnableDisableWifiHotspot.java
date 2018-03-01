@@ -29,7 +29,7 @@ public class EnableDisableWifiHotspot extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x05);
 
     public EnableDisableWifiHotspot(boolean activate) {
-        super(TYPE.addByte(Property.boolToByte(activate)), true);
+        super(TYPE.addByte(Property.boolToByte(activate)));
     }
 
     EnableDisableWifiHotspot(byte[] bytes) {

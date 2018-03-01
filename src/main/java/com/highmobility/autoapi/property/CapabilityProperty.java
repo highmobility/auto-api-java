@@ -25,6 +25,7 @@ import com.highmobility.autoapi.Type;
 import com.highmobility.utils.Bytes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by ttiganik on 14/10/2016.
@@ -104,6 +105,30 @@ public class CapabilityProperty extends Property {
         this.identifierBytes = categoryIdentifier;
         this.identifier = Identifier.fromBytes(categoryIdentifier);
         this.types = types;
+
+        // add the state (0x01) if get state exists(0x00) and 0x01 already doesn't exist.
+        boolean getStateExists = false, stateExists = false;
+        for (int i = 0; i < types.length; i++) {
+            Type type = types[i];
+            if (type.getType() == 0x00) {
+                getStateExists = true;
+            }
+            if (type.getType() == 0x01) stateExists = true;
+        }
+
+        if (getStateExists && stateExists == false) {
+            types = Arrays.copyOf(types, types.length + 1);
+            byte[] typeBytes = new byte[3];
+            Bytes.setBytes(typeBytes, categoryIdentifier, 0);
+            typeBytes[2] = 0x01;
+            Type stateType = new Type(typeBytes);
+            types[types.length - 1] = stateType;
+            this.types = types;
+            byte[] newValue = getValue(categoryIdentifier, types);
+            byte[] newBytes = baseBytes(defaultIdentifier, newValue.length);
+            Bytes.setBytes(newBytes, newValue, 3);
+            this.bytes = newBytes;
+        }
     }
 
     /**

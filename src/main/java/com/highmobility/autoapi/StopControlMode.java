@@ -28,7 +28,7 @@ public class StopControlMode extends Command {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x03);
 
     public StopControlMode() {
-        super(TYPE.getIdentifierAndType(), true);
+        super(TYPE.getIdentifierAndType());
     }
 
     StopControlMode(byte[] bytes) {
