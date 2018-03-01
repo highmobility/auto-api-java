@@ -53,7 +53,7 @@ public class LightsTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void control() throws CommandParseException {
+    @Test public void control() {
         byte[] expecting = Bytes.bytesFromHex("003602" +
                 "01000102" +
                 "02000100" +

@@ -31,7 +31,7 @@ public class GetTrunkState extends Command {
         super(TYPE);
     }
 
-    GetTrunkState(byte[] bytes) throws CommandParseException {
+    GetTrunkState(byte[] bytes) {
         super(bytes);
     }
 }

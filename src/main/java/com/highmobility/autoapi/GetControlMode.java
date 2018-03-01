@@ -30,7 +30,7 @@ public class GetControlMode extends Command {
         super(TYPE);
     }
 
-    GetControlMode(byte[] bytes) throws CommandParseException {
+    GetControlMode(byte[] bytes) {
         super(bytes);
     }
 }

@@ -58,7 +58,7 @@ public class WindowsTest {
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
-    @Test public void openClose() throws CommandParseException {
+    @Test public void openClose() {
         byte[] waitingForBytes = Bytes.bytesFromHex("00450201000200010100020101");
         WindowProperty[] windowsStates = new WindowProperty[2];
         windowsStates[0] = new WindowProperty(WindowProperty.Position.FRONT_LEFT, WindowProperty

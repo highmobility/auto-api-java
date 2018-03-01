@@ -31,7 +31,7 @@ public class GetIgnitionState extends Command {
         super(TYPE);
     }
 
-    GetIgnitionState(byte[] bytes) throws CommandParseException {
+    GetIgnitionState(byte[] bytes) {
         super(bytes);
     }
 }

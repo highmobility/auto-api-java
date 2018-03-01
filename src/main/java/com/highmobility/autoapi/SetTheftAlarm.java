@@ -27,7 +27,7 @@ public class SetTheftAlarm extends Command {
         super(TYPE.addByte(state.getByte()));
     }
 
-    SetTheftAlarm(byte[] bytes) throws CommandParseException {
+    SetTheftAlarm(byte[] bytes) {
         super(bytes);
     }
 }

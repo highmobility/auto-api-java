@@ -33,7 +33,7 @@ public class StartStopCharging extends Command {
         super(TYPE.addByte(Property.boolToByte(start)));
     }
 
-    StartStopCharging(byte[] bytes) throws CommandParseException {
+    StartStopCharging(byte[] bytes) {
         super(bytes);
     }
 }

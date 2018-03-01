@@ -37,7 +37,7 @@ public class RemoteControlTest {
         assertTrue(state.getMode() == com.highmobility.autoapi.property.ControlMode.STARTED);
     }
 
-    @Test public void get() throws CommandParseException {
+    @Test public void get() {
         String waitingForBytes = "002700";
         String commandBytes = Bytes.hexFromBytes(new GetControlMode().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -46,7 +46,7 @@ public class RemoteControlTest {
         assertTrue(command instanceof GetControlMode);
     }
 
-    @Test public void startControlMode() throws CommandParseException {
+    @Test public void startControlMode() {
         String waitingForBytes = "002702";
         String commandBytes = Bytes.hexFromBytes(new StartControlMode().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -55,7 +55,7 @@ public class RemoteControlTest {
         assertTrue(command instanceof StartControlMode);
     }
 
-    @Test public void stopControlMode() throws CommandParseException {
+    @Test public void stopControlMode() {
         String waitingForBytes = "002703";
         String commandBytes = Bytes.hexFromBytes(new StopControlMode().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -64,7 +64,7 @@ public class RemoteControlTest {
         assertTrue(command instanceof StopControlMode);
     }
 
-    @Test public void controlCommand() throws CommandParseException {
+    @Test public void controlCommand() {
         String waitingForBytes = "002704010001030200020032";
         String commandBytes = Bytes.hexFromBytes(new ControlCommand(3, 50).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));

@@ -32,7 +32,7 @@ public class StartStopIonizing extends Command {
         super(TYPE.addByte(Property.boolToByte(start)));
     }
 
-    StartStopIonizing(byte[] bytes) throws CommandParseException {
+    StartStopIonizing(byte[] bytes) {
         super(bytes);
     }
 }

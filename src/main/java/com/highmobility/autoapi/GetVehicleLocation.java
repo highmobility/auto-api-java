@@ -31,7 +31,7 @@ public class GetVehicleLocation extends Command {
         super(TYPE);
     }
 
-    GetVehicleLocation(byte[] bytes) throws CommandParseException {
+    GetVehicleLocation(byte[] bytes) {
         super(bytes);
     }
 }

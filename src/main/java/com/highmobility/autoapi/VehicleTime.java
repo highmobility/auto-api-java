@@ -41,7 +41,7 @@ public class VehicleTime extends CommandWithProperties {
         return vehicleTime;
     }
 
-    public VehicleTime(byte[] bytes) throws CommandParseException {
+    public VehicleTime(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {
