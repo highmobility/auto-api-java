@@ -31,7 +31,7 @@ import java.util.Arrays;
  * Created by ttiganik on 14/10/2016.
  */
 public class CapabilityProperty extends Property {
-    static final byte defaultIdentifier     = 0x01;
+    static final byte defaultIdentifier = 0x01;
 
     Type[] types;
 
@@ -39,7 +39,6 @@ public class CapabilityProperty extends Property {
     Identifier identifier;
 
     /**
-     *
      * @return All of the command types supported for this category
      */
     public Type[] getTypes() {
@@ -47,7 +46,6 @@ public class CapabilityProperty extends Property {
     }
 
     /**
-     *
      * @param type The Type of the command to check for
      * @return True if command is supported
      */
@@ -60,7 +58,6 @@ public class CapabilityProperty extends Property {
     }
 
     /**
-     *
      * @return The command's category identifier
      */
     public byte[] getIdentifierBytes() {
@@ -80,7 +77,7 @@ public class CapabilityProperty extends Property {
         super(bytes);
 
         int propertyLength = Property.getUnsignedInt(bytes, 1, 2);
-        identifierBytes = new byte[] { bytes[3], bytes[4] };
+        identifierBytes = new byte[]{bytes[3], bytes[4]};
         identifier = Identifier.fromBytes(identifierBytes);
         if (propertyLength < 3) return;
 
@@ -95,60 +92,63 @@ public class CapabilityProperty extends Property {
     }
 
     /**
-     *
      * @param categoryIdentifier the 2 byte identifier of the category
-     * @param types All the types supported for the given category identifier
-     * @throws IllegalArgumentException when types are not from the same category or parameters are invalid
+     * @param types              All the types supported for the given category identifier
+     * @throws IllegalArgumentException when types are not from the same category or parameters are
+     *                                  invalid
      */
-    public CapabilityProperty(byte[] categoryIdentifier, Type[] types) throws IllegalArgumentException {
+    public CapabilityProperty(byte[] categoryIdentifier, Type[] types) throws
+            IllegalArgumentException {
         super(defaultIdentifier, getValue(categoryIdentifier, types));
         this.identifierBytes = categoryIdentifier;
         this.identifier = Identifier.fromBytes(categoryIdentifier);
         this.types = types;
 
-        // add the state (0x01) if get state exists(0x00) and 0x01 already doesn't exist.
-        boolean getStateExists = false, stateExists = false;
+        // add the state (0x01) if get state exists(0x00) and 0x01 doesn't exist.
+        Type getCommand = null;
+        boolean stateExists = false;
         for (int i = 0; i < types.length; i++) {
             Type type = types[i];
-            if (type.getType() == 0x00) {
-                getStateExists = true;
-            }
+            if (type.getType() == 0x00) getCommand = type;
             if (type.getType() == 0x01) stateExists = true;
         }
 
-        if (getStateExists && stateExists == false) {
-            types = Arrays.copyOf(types, types.length + 1);
-            byte[] typeBytes = new byte[3];
-            Bytes.setBytes(typeBytes, categoryIdentifier, 0);
-            typeBytes[2] = 0x01;
-            Type stateType = new Type(typeBytes);
-            types[types.length - 1] = stateType;
-            this.types = types;
-            byte[] newValue = getValue(categoryIdentifier, types);
-            byte[] newBytes = baseBytes(defaultIdentifier, newValue.length);
-            Bytes.setBytes(newBytes, newValue, 3);
-            this.bytes = newBytes;
+        if (getCommand != null && stateExists == false) {
+            Type stateCommand = getCommand.getStateCommand();
+            if (stateCommand != null) {
+                Type[] newTypes = Arrays.copyOf(types, types.length + 1);
+                newTypes[newTypes.length - 1] = stateCommand;
+
+                byte[] newValue = getValue(categoryIdentifier, newTypes);
+                byte[] newBytes = baseBytes(defaultIdentifier, newValue.length);
+                Bytes.setBytes(newBytes, newValue, 3);
+                this.bytes = newBytes;
+                this.types = newTypes;
+            }
         }
     }
 
     /**
-     *
      * @param categoryIdentifier the identifier of the category
-     * @param types All the types supported for the given category identifier
-     * @throws IllegalArgumentException when types are not from the same category or parameters are invalid
+     * @param types              All the types supported for the given category identifier
+     * @throws IllegalArgumentException when types are not from the same category or parameters are
+     *                                  invalid
      */
-    public CapabilityProperty(Identifier categoryIdentifier, Type[] types) throws IllegalArgumentException {
+    public CapabilityProperty(Identifier categoryIdentifier, Type[] types) throws
+            IllegalArgumentException {
         this(categoryIdentifier.getBytes(), types);
     }
 
-    static byte[] getValue(byte[] categoryIdentifier, Type[] types) throws IllegalArgumentException {
+    static byte[] getValue(byte[] categoryIdentifier, Type[] types) throws
+            IllegalArgumentException {
         byte[] bytes = new byte[2 + types.length];
         Bytes.setBytes(bytes, categoryIdentifier, 0);
         for (int i = 0; i < types.length; i++) {
             Type type = types[i];
             bytes[2 + i] = type.getType();
             if (type.getIdentifierAndType()[0] != categoryIdentifier[0]
-                || type.getIdentifierAndType()[1] != categoryIdentifier[1]) throw new IllegalArgumentException();
+                    || type.getIdentifierAndType()[1] != categoryIdentifier[1])
+                throw new IllegalArgumentException();
         }
 
         return bytes;

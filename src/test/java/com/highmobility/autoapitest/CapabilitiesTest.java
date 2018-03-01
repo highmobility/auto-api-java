@@ -30,6 +30,7 @@ import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.LockUnlockDoors;
 import com.highmobility.autoapi.NaviDestination;
+import com.highmobility.autoapi.Notification;
 import com.highmobility.autoapi.OpenCloseTrunk;
 import com.highmobility.autoapi.RooftopState;
 import com.highmobility.autoapi.SendHeartRate;
@@ -287,7 +288,7 @@ public class CapabilitiesTest {
         assertTrue(Arrays.equals(capabilities.getBytes(), bytes));
     }
 
-    @Test public void buildDontAddStateAutomaticallyWithGetAndState() {
+    @Test public void buildDontAddStateAutomaticallyWhenStateAlreadyExists() {
         Capabilities.Builder builder = new Capabilities.Builder();
 
         Type[] supportedTypes = new Type[]{
@@ -299,6 +300,19 @@ public class CapabilitiesTest {
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
         assertTrue(capabilities.getCapability(GetClimateState.TYPE).getTypes().length == 2);
+    }
+
+    @Test public void buildDontAddStateAutomaticallyWithNonGetStateType() {
+        Capabilities.Builder builder = new Capabilities.Builder();
+
+        Type[] supportedTypes = new Type[]{
+                Notification.TYPE,
+        };
+
+        CapabilityProperty property = new CapabilityProperty(Identifier.NOTIFICATIONS, supportedTypes);
+        builder.addCapability(property);
+        Capabilities capabilities = builder.build();
+        assertTrue(capabilities.getCapability(Notification.TYPE).getTypes().length == 1);
     }
 
     @Test public void handleUnknownCapability() {

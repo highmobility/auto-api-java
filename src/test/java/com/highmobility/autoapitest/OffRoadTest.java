@@ -3,7 +3,7 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetOffroadState;
-import com.highmobility.autoapi.OffRoadState;
+import com.highmobility.autoapi.OffroadState;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -27,8 +27,8 @@ public class OffRoadTest {
             fail();
         }
 
-        assertTrue(command.getClass() == OffRoadState.class);
-        OffRoadState state = (OffRoadState) command;
+        assertTrue(command.getClass() == OffroadState.class);
+        OffroadState state = (OffroadState) command;
         assertTrue(state.getRouteIncline() == 10);
         assertTrue(state.getWheelSuspension() == .5f);
     }
@@ -42,6 +42,6 @@ public class OffRoadTest {
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("005201");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((OffRoadState)state).getRouteIncline() == null);
+        assertTrue(((OffroadState)state).getRouteIncline() == null);
     }
 }

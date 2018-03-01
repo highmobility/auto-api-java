@@ -103,9 +103,6 @@ public class Capabilities extends CommandWithProperties {
                 .size()]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
 
     public static final class Builder extends CommandWithProperties.Builder {
         private List<CapabilityProperty> capabilities = new ArrayList<>();

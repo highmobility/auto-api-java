@@ -261,8 +261,8 @@ public class CommandResolver {
                     command = new GetRaceState(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.OFF_ROAD)) {
-                if (bytesAreForType(bytes, OffRoadState.TYPE)) {
-                    command = new OffRoadState(bytes);
+                if (bytesAreForType(bytes, OffroadState.TYPE)) {
+                    command = new OffroadState(bytes);
                 } else if (bytesAreForType(bytes, GetOffroadState.TYPE)) {
                     command = new GetOffroadState(bytes);
                 }
