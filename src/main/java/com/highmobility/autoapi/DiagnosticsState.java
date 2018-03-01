@@ -36,6 +36,21 @@ import java.util.List;
 public class DiagnosticsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.DIAGNOSTICS, 0x01);
 
+    private static final byte MILEAGE_IDENTIFIER = 0x01;
+    private static final byte OIL_TEMPERATURE_IDENTIFIER = 0x02;
+    private static final byte SPEED_IDENTIFIER = 0x03;
+    private static final byte RPM_IDENTIFIER = 0x04;
+    private static final byte FUEL_LEVEL_IDENTIFIER = 0x05;
+    private static final byte RANGE_IDENTIFIER = 0x06;
+    private static final byte CURRENT_FUEL_CONSUMPTION_IDENTIFIER = 0x07;
+    private static final byte TRIP_FUEL_CONSUMPTION_IDENTIFIER = 0x08;
+    private static final byte WASHER_FLUID_LEVEL_IDENTIFIER = 0x09;
+    private static final byte BATTERY_VOLTAGE_IDENTIFIER = 0x0B;
+    private static final byte AD_BLUE_LEVEL_IDENTIFIER = 0x0C;
+    private static final byte DISTANCE_DRIVEN_SINCE_RESET_IDENTIFIER = 0x0D;
+    private static final byte DISTANCE_DRIVEN_SINCE_ENGINE_START_IDENTIFIER = 0x0E;
+    private static final byte FUEL_VOLUME_IDENTIFIER = 0x0F;
+
     Integer mileage;
     Integer oilTemperature;
     Integer speed;
@@ -50,6 +65,7 @@ public class DiagnosticsState extends CommandWithProperties {
     Float adBlueLevel;
     Integer distanceDrivenSinceReset;
     Integer distanceDrivenSinceEngineStart;
+    Float fuelVolume;
 
     /**
      *
@@ -177,6 +193,14 @@ public class DiagnosticsState extends CommandWithProperties {
         return distanceDrivenSinceEngineStart;
     }
 
+    /**
+     *
+     * @return The fuel volume measured in liters
+     */
+    public Float getFuelVolume() {
+        return fuelVolume;
+    }
+
     public DiagnosticsState(byte[] bytes) throws CommandParseException {
         super(bytes);
         ArrayList<TireStateProperty> tireStatesBuilder = new ArrayList<>();
@@ -184,48 +208,51 @@ public class DiagnosticsState extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case MILEAGE_IDENTIFIER:
                     mileage = Property.getUnsignedInt(property.getValueBytes());
                     break;
-                case 0x02:
+                case OIL_TEMPERATURE_IDENTIFIER:
                     oilTemperature = Property.getUnsignedInt(property.getValueBytes());
                     break;
-                case 0x03:
+                case SPEED_IDENTIFIER:
                     speed = Property.getUnsignedInt(property.getValueBytes());
                     break;
-                case 0x04:
+                case RPM_IDENTIFIER:
                     rpm = Property.getUnsignedInt(property.getValueBytes());
                     break;
-                case 0x05:
+                case FUEL_LEVEL_IDENTIFIER:
                     fuelLevel = Property.getUnsignedInt(property.getValueBytes()) / 100f;
                     break;
-                case 0x06:
+                case RANGE_IDENTIFIER:
                     range = Property.getUnsignedInt(property.getValueBytes());
                     break;
-                case 0x07:
+                case CURRENT_FUEL_CONSUMPTION_IDENTIFIER:
                     currentFuelConsumption = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x08:
+                case TRIP_FUEL_CONSUMPTION_IDENTIFIER:
                     tripFuelConsumption = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x09:
+                case WASHER_FLUID_LEVEL_IDENTIFIER:
                     washerFluidLevel = WasherFluidLevel.fromByte(property.getValueByte());
                     break;
-                case 0x0a:
+                case TireStateProperty.identifier:
                     TireStateProperty state = new TireStateProperty(property.getValueBytes(), 0);
                     tireStatesBuilder.add(state);
                     break;
-                case 0x0b:
+                case BATTERY_VOLTAGE_IDENTIFIER:
                     batteryVoltage = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x0c:
+                case AD_BLUE_LEVEL_IDENTIFIER:
                     adBlueLevel = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x0d:
+                case DISTANCE_DRIVEN_SINCE_RESET_IDENTIFIER:
                     distanceDrivenSinceReset = Property.getUnsignedInt(property.getValueBytes());
                     break;
-                case 0x0e:
+                case DISTANCE_DRIVEN_SINCE_ENGINE_START_IDENTIFIER:
                     distanceDrivenSinceEngineStart = Property.getUnsignedInt(property.getValueBytes());
+                    break;
+                case FUEL_VOLUME_IDENTIFIER:
+                    fuelVolume = Property.getFloat(property.getValueBytes());
                     break;
             }
         }
@@ -253,6 +280,7 @@ public class DiagnosticsState extends CommandWithProperties {
         adBlueLevel = builder.adBlueLevel;
         distanceDrivenSinceReset = builder.distanceDrivenSinceReset;
         distanceDrivenSinceEngineStart = builder.distanceDrivenSinceEngineStart;
+        fuelVolume = builder.fuelVolume;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
@@ -270,6 +298,7 @@ public class DiagnosticsState extends CommandWithProperties {
         private Float adBlueLevel;
         private Integer distanceDrivenSinceReset;
         private Integer distanceDrivenSinceEngineStart;
+        private Float fuelVolume;
 
         public Builder() {
             super(TYPE);
@@ -277,55 +306,55 @@ public class DiagnosticsState extends CommandWithProperties {
 
         public Builder setMileage(Integer mileage) {
             this.mileage = mileage;
-            addProperty(new IntegerProperty((byte) 0x01, mileage, 3));
+            addProperty(new IntegerProperty(MILEAGE_IDENTIFIER, mileage, 3));
             return this;
         }
 
         public Builder setOilTemperature(Integer oilTemperature) {
             this.oilTemperature = oilTemperature;
-            addProperty(new IntegerProperty((byte) 0x02, oilTemperature, 2));
+            addProperty(new IntegerProperty(OIL_TEMPERATURE_IDENTIFIER, oilTemperature, 2));
             return this;
         }
 
         public Builder setSpeed(Integer speed) {
             this.speed = speed;
-            addProperty(new IntegerProperty((byte) 0x03, speed, 2));
+            addProperty(new IntegerProperty(SPEED_IDENTIFIER, speed, 2));
             return this;
         }
 
         public Builder setRpm(Integer rpm) {
             this.rpm = rpm;
-            addProperty(new IntegerProperty((byte) 0x04, rpm, 2));
+            addProperty(new IntegerProperty(RPM_IDENTIFIER, rpm, 2));
             return this;
         }
 
         public Builder setFuelLevel(Float fuelLevel) {
             this.fuelLevel = fuelLevel;
-            addProperty(new IntegerProperty((byte) 0x05, Property.floatToIntPercentage(fuelLevel), 1));
+            addProperty(new IntegerProperty(FUEL_LEVEL_IDENTIFIER, Property.floatToIntPercentage(fuelLevel), 1));
             return this;
         }
 
         public Builder setRange(Integer range) {
             this.range = range;
-            addProperty(new IntegerProperty((byte) 0x06, range, 2));
+            addProperty(new IntegerProperty(RANGE_IDENTIFIER, range, 2));
             return this;
         }
 
         public Builder setCurrentFuelConsumption(Float currentFuelConsumption) {
             this.currentFuelConsumption = currentFuelConsumption;
-            addProperty(new FloatProperty((byte) 0x07, currentFuelConsumption));
+            addProperty(new FloatProperty(CURRENT_FUEL_CONSUMPTION_IDENTIFIER, currentFuelConsumption));
             return this;
         }
 
         public Builder setTripFuelConsumption(Float tripFuelConsumption) {
             this.tripFuelConsumption = tripFuelConsumption;
-            addProperty(new FloatProperty((byte) 0x08, tripFuelConsumption));
+            addProperty(new FloatProperty(TRIP_FUEL_CONSUMPTION_IDENTIFIER, tripFuelConsumption));
             return this;
         }
 
         public Builder setWasherFluidLevel(WasherFluidLevel washerFluidLevel) {
             this.washerFluidLevel = washerFluidLevel;
-            washerFluidLevel.setIdentifier((byte) 0x09);
+            washerFluidLevel.setIdentifier(WASHER_FLUID_LEVEL_IDENTIFIER);
             addProperty(washerFluidLevel);
             return this;
         }
@@ -348,25 +377,31 @@ public class DiagnosticsState extends CommandWithProperties {
 
         public Builder setBatteryVoltage(Float batteryVoltage) {
             this.batteryVoltage = batteryVoltage;
-            addProperty(new FloatProperty((byte) 0x0b, batteryVoltage));
+            addProperty(new FloatProperty(BATTERY_VOLTAGE_IDENTIFIER, batteryVoltage));
             return this;
         }
 
         public Builder setAdBlueLevel(Float adBlueLevel) {
             this.adBlueLevel = adBlueLevel;
-            addProperty(new FloatProperty((byte) 0x0c, adBlueLevel));
+            addProperty(new FloatProperty(AD_BLUE_LEVEL_IDENTIFIER, adBlueLevel));
             return this;
         }
 
         public Builder setDistanceDrivenSinceReset(Integer distanceDrivenSinceReset) {
             this.distanceDrivenSinceReset = distanceDrivenSinceReset;
-            addProperty(new IntegerProperty((byte) 0x0d, distanceDrivenSinceReset, 2));
+            addProperty(new IntegerProperty(DISTANCE_DRIVEN_SINCE_RESET_IDENTIFIER, distanceDrivenSinceReset, 2));
             return this;
         }
 
         public Builder setDistanceDrivenSinceEngineStart(Integer distanceDrivenSinceEngineStart) {
             this.distanceDrivenSinceEngineStart = distanceDrivenSinceEngineStart;
-            addProperty(new IntegerProperty((byte) 0x0e, distanceDrivenSinceEngineStart, 2));
+            addProperty(new IntegerProperty(DISTANCE_DRIVEN_SINCE_ENGINE_START_IDENTIFIER, distanceDrivenSinceEngineStart, 2));
+            return this;
+        }
+
+        public Builder setFuelVolume(Float fuelVolume) {
+            this.fuelVolume = fuelVolume;
+            addProperty(new FloatProperty(FUEL_VOLUME_IDENTIFIER, fuelVolume));
             return this;
         }
 

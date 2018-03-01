@@ -22,7 +22,8 @@ import static org.junit.Assert.fail;
 public class DiagnosticsTest {
     @Test public void state() {
         byte[] bytes = Bytes.bytesFromHex(
-                "0033010100030249F00200020063030002003C04000209C40500015A0600020109070004410c000008000440c66666090001010A000B004013d70a4220000002EA0A000B014013d70a4220000002EA0A000B024013d70a4220000002EA0A000B034013d70a4220000002EA0B0004414000000C00043F0000000D000205DC0E0002000A");
+                "0033010100030249F00200020063030002003C04000209C40500015A0600020109070004410c000008000440c66666090001010A000B004013d70a4220000002EA0A000B014013d70a4220000002EA0A000B024013d70a4220000002EA0A000B034013d70a4220000002EA0B0004414000000C00043F0000000D000205DC0E0002000A" +
+        "0F0004420E0000");
 
 
 
@@ -40,6 +41,7 @@ public class DiagnosticsTest {
         assertTrue(state.getCurrentFuelConsumption() == 8.75f);
         assertTrue(state.getTripFuelConsumption() == 6.2f);
         assertTrue(state.getWasherFluidLevel() == WasherFluidLevel.FULL);
+        assertTrue(state.getFuelVolume() == 35.5f);
 
         assertTrue(state.getTireStates().length == 4);
         boolean leftExists = false, rightExist = false, rearLeftExists = false, rearRightExists = false;
@@ -88,7 +90,7 @@ public class DiagnosticsTest {
 
     }
 
-    @Test public void get() throws CommandParseException {
+    @Test public void get() {
         String waitingForBytes = "003300";
         String commandBytes = Bytes.hexFromBytes(new GetDiagnosticsState().getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -126,60 +128,11 @@ public class DiagnosticsTest {
         builder.setAdBlueLevel(.5f);
         builder.setDistanceDrivenSinceReset(1500);
         builder.setDistanceDrivenSinceEngineStart(10);
+        builder.setFuelVolume(35.5f);
 
         byte[] bytes = builder.build().getBytes();
-        assertTrue(Arrays.equals(bytes, Bytes.bytesFromHex("0033010100030249F00200020063030002003C04000209C40500015A0600020109070004410c000008000440c66666090001010A000B004013d70a4220000002EA0A000B014013d70a4220000002EA0A000B024013d70a4220000002EA0A000B034013d70a4220000002EA0B0004414000000C00043F0000000D000205DC0E0002000A")));
+        assertTrue(Arrays.equals(bytes, Bytes.bytesFromHex("0033010100030249F00200020063030002003C04000209C40500015A0600020109070004410c000008000440c66666090001010A000B004013d70a4220000002EA0A000B014013d70a4220000002EA0A000B024013d70a4220000002EA0A000B034013d70a4220000002EA0B0004414000000C00043F0000000D000205DC0E0002000A0F0004420E0000")));
     }
-
-    /*
-        assertTrue(state.getMileage() == 150000);
-        assertTrue(state.getOilTemperature() == 99);
-        assertTrue(state.getSpeed() == 60);
-        assertTrue(state.getRpm() == 2500);
-        assertTrue(state.getRange() == 265);
-        assertTrue(state.getFuelLevel() == .9f);
-        assertTrue(state.getWasherFluidLevel() == DiagnosticsState.WasherFluidLevel.FULL);
-
-        assertTrue(state.getTireStates().size() == 4);
-        boolean leftExists = false, rightExist = false, rearLeftExists = false, rearRightExists = false;
-
-        for (TireStateProperty tireState : state.getTireStates()) {
-            switch (tireState.getLocation()) {
-                case FRONT_LEFT:
-                    leftExists = true;
-                    assertTrue(tireState.getPressure() == 2.31f);
-                    assertTrue(tireState.getTemperature() == 40f);
-                    assertTrue(tireState.getRpm() == 746);
-                    break;
-                case FRONT_RIGHT:
-                    rightExist = true;
-                    assertTrue(tireState.getPressure() == 2.31f);
-                    assertTrue(tireState.getTemperature() == 40f);
-                    assertTrue(tireState.getRpm() == 746);
-                    break;
-                case REAR_RIGHT:
-                    rearRightExists = true;
-                    assertTrue(tireState.getPressure() == 2.31f);
-                    assertTrue(tireState.getTemperature() == 40f);
-                    assertTrue(tireState.getRpm() == 746);
-                    break;
-                case REAR_LEFT:
-                    rearLeftExists = true;
-                    assertTrue(tireState.getPressure() == 2.31f);
-                    assertTrue(tireState.getTemperature() == 40f);
-                    assertTrue(tireState.getRpm() == 746);
-                    break;
-            }
-        }
-
-        assertTrue(leftExists == true);
-        assertTrue(rightExist == true);
-        assertTrue(rearRightExists == true);
-        assertTrue(rearLeftExists == true);
-
-        assertTrue(state.getNonce() == null);
-        assertTrue(state.getSignature() == null);
-     */
 
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("003301");
