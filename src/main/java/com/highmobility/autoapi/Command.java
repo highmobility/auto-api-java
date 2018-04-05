@@ -878,7 +878,7 @@ public class Command {
     }
 
     /**
-     * Commands for the Honk Horn & Flash Lights category of the Auto API.
+     * Commands for the Honk Horn and Flash Lights category of the Auto API.
      */
     public enum HonkFlash implements Type {
         HONK_FLASH((byte)0x00),
