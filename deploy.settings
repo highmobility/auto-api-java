@@ -4,3 +4,4 @@ version = 1.0.4
 groupId = com.highmobility
 licenses = ['GPL-3.0']
 id = hmkit-auto-api
+repo = gradle-00
