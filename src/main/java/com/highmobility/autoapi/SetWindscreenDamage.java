@@ -36,6 +36,12 @@ import java.util.List;
 public class SetWindscreenDamage extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x02);
 
+    /**
+     *
+     * @param damage The damage size
+     * @param zone The damage zone
+     * @param replacementState The replacement state
+     */
     public SetWindscreenDamage(WindscreenDamage damage, WindscreenDamageZone zone,
                                WindscreenReplacementState replacementState) {
         super(TYPE, getProperties(damage, zone, replacementState));
