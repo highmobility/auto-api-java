@@ -78,6 +78,14 @@ public class Property implements HMProperty {
         return bytes[3];
     }
 
+    /**
+     * Set a new identifier for the property
+     * @param identifier The identifier
+     */
+    public void setIdentifier(byte identifier) {
+        bytes[0] = identifier;
+    }
+
     protected byte[] baseBytes(byte identifier, int valueSize) {
         byte[] bytes = new byte[3 + valueSize];
 

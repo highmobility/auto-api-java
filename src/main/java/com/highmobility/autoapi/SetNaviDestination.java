@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
@@ -35,30 +35,24 @@ public class SetNaviDestination extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x02);
 
     /**
-     * @param latitude  the latitude of the destination
-     * @param longitude the longitude of the destination
-     * @param name      the destination name
+     * @param coordinates   the destination coordinates. Property identifier is not needed.
+     * @param name          the destination name
      * @throws IllegalArgumentException if all arguments are null
      */
-    public SetNaviDestination(Float latitude, Float longitude, String name) {
-        super(TYPE, getProperties(latitude, longitude, name));
+    public SetNaviDestination(CoordinatesProperty coordinates, String name) {
+        super(TYPE, getProperties(coordinates, name));
     }
 
-    static HMProperty[] getProperties(Float latitude, Float longitude, String name) {
+    static HMProperty[] getProperties(CoordinatesProperty coordinates, String name) {
         List<Property> properties = new ArrayList<>();
 
-        if (latitude != null) {
-            Property prop = new FloatProperty((byte) 0x01, latitude);
-            properties.add(prop);
-        }
-
-        if (longitude != null) {
-            Property prop = new FloatProperty((byte) 0x02, longitude);
-            properties.add(prop);
+        if (coordinates != null) {
+            coordinates.setIdentifier((byte) 0x01);
+            properties.add(coordinates);
         }
 
         if (name != null) {
-            Property prop = new StringProperty((byte) 0x03, name);
+            Property prop = new StringProperty((byte) 0x02, name);
             properties.add(prop);
         }
 

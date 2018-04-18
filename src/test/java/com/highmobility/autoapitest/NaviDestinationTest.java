@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetNaviDestination;
 import com.highmobility.autoapi.NaviDestination;
 import com.highmobility.autoapi.SetNaviDestination;
+import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -45,16 +46,12 @@ public class NaviDestinationTest {
     }
 
     @Test public void set() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("003102" +
-                "0100044252147d" +
-                "02000441567ab1" +
-                "0300064265726c696e");
+        byte[] waitingForBytes = Bytes.bytesFromHex
+                ("0031020100084252147D41567AB10200064265726C696E");
 
         byte[] commandBytes = null;
         try {
-            commandBytes = new SetNaviDestination(
-                    52.520008f,
-                    13.404954f,
+            commandBytes = new SetNaviDestination(new CoordinatesProperty(52.520008f, 13.404954f),
                     "Berlin").getBytes();
         } catch (Exception e) {
             fail();

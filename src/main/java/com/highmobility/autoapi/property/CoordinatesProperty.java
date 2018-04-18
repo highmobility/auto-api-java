@@ -47,6 +47,10 @@ public class CoordinatesProperty extends Property {
         latitude = Property.getFloat(bytes, 3);
         longitude = Property.getFloat(bytes, 7);
     }
+    
+    public CoordinatesProperty(float latitude, float longitude) {
+        this((byte) 0x00, latitude, longitude);
+    }
 
     public CoordinatesProperty(byte identifier, float latitude, float longitude) {
         super(identifier, 8);
