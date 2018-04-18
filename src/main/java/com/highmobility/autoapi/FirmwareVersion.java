@@ -32,14 +32,26 @@ public class FirmwareVersion extends CommandWithProperties {
     String carSDKBuild;
     String applicationVersion;
 
+    /**
+     *
+     * @return The car SDK version
+     */
     public String getCarSDKVersion() {
         return carSDKVersion;
     }
 
+    /**
+     *
+     * @return The car SDK build
+     */
     public String getCarSDKBuild() {
         return carSDKBuild;
     }
 
+    /**
+     *
+     * @return The application version
+     */
     public String getApplicationVersion() {
         return applicationVersion;
     }

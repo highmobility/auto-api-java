@@ -45,7 +45,7 @@ public class LockState extends CommandWithProperties {
     }
 
     /**
-     * Get the door lock state for for door location
+     * Get the door lock state for a door location
      *
      * @param location The location of the door
      * @return The DoorLockProperty

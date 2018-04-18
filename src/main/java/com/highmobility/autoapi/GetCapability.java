@@ -48,6 +48,10 @@ public class GetCapability extends Command {
         return category;
     }
 
+    /**
+     *
+     * @param type The feature type
+     */
     public GetCapability(Type type) {
         super(getBytes(type));
         this.category = type.identifier;
