@@ -30,11 +30,11 @@ public class DoorLocksTest {
 
         assertTrue(command.is(LockState.TYPE));
         LockState state = (LockState) command;
-        assertTrue(state.getLockStates().length == 4);
+        assertTrue(state.getDoorLockStates().length == 4);
         boolean leftExists = false, rightExist = false, rearLeftExists = false, rearRightExists =
                 false;
 
-        for (DoorLockProperty tireState : state.getLockStates()) {
+        for (DoorLockProperty tireState : state.getDoorLockStates()) {
             switch (tireState.getLocation()) {
                 case FRONT_LEFT:
                     leftExists = true;
@@ -89,19 +89,19 @@ public class DoorLocksTest {
 
     @Test public void create() {
         LockState.Builder builder = new LockState.Builder();
-        builder.addDoorState(new DoorLockProperty(DoorLockProperty.Location.FRONT_LEFT,
+        builder.addDoorLockState(new DoorLockProperty(DoorLockProperty.Location.FRONT_LEFT,
                 DoorLockProperty.Position.OPEN,
                 DoorLockProperty.LockState.UNLOCKED));
 
-        builder.addDoorState(new DoorLockProperty(DoorLockProperty.Location.FRONT_RIGHT,
+        builder.addDoorLockState(new DoorLockProperty(DoorLockProperty.Location.FRONT_RIGHT,
                 DoorLockProperty.Position.CLOSED,
                 DoorLockProperty.LockState.UNLOCKED));
 
-        builder.addDoorState(new DoorLockProperty(DoorLockProperty.Location.REAR_RIGHT,
+        builder.addDoorLockState(new DoorLockProperty(DoorLockProperty.Location.REAR_RIGHT,
                 DoorLockProperty.Position.CLOSED,
                 DoorLockProperty.LockState.LOCKED));
 
-        builder.addDoorState(new DoorLockProperty(DoorLockProperty.Location.REAR_LEFT,
+        builder.addDoorLockState(new DoorLockProperty(DoorLockProperty.Location.REAR_LEFT,
                 DoorLockProperty.Position.CLOSED,
                 DoorLockProperty.LockState.LOCKED));
 
@@ -112,6 +112,6 @@ public class DoorLocksTest {
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("002001");
         LockState state = (LockState) CommandResolver.resolve(bytes);
-        assertTrue(state.getLockStates().length == 0);
+        assertTrue(state.getDoorLockStates().length == 0);
     }
 }

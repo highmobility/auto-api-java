@@ -50,7 +50,7 @@ public class Failure extends CommandWithProperties {
 
     public Failure(byte[] bytes) throws CommandParseException {
         super(bytes);
-        
+
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
@@ -81,18 +81,23 @@ public class Failure extends CommandWithProperties {
             super(TYPE);
         }
 
+        /**
+         * Set the type of the failed command.
+         */
         public Builder setFailedType(Type type) {
             this.failedType = type;
             addProperty(new Property((byte) 0x01, type.getIdentifierAndType()));
             return this;
         }
 
+        /**
+         * Set the failure reason.
+         */
         public Builder setFailureReason(FailureReason failureReason) {
             this.failureReason = failureReason;
             addProperty(failureReason);
             return this;
         }
-
 
         public Failure build() {
             return new Failure(this);

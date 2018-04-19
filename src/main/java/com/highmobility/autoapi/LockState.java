@@ -39,8 +39,17 @@ public class LockState extends CommandWithProperties {
 
     /**
      * @return Set of lock states for each of the doors.
+     * @deprecated use {@link #getDoorLockStates()} instead.
      */
+    @Deprecated
     public DoorLockProperty[] getLockStates() {
+        return lockStates;
+    }
+
+    /**
+     * @return Set of lock states for each of the doors.
+     */
+    public DoorLockProperty[] getDoorLockStates() {
         return lockStates;
     }
 
@@ -51,7 +60,7 @@ public class LockState extends CommandWithProperties {
      * @return The DoorLockProperty
      */
     public DoorLockProperty getDoorLockState(DoorLockProperty.Location location) {
-        for (DoorLockProperty state : getLockStates()) {
+        for (DoorLockProperty state : getDoorLockStates()) {
             if (state.getLocation() == location) return state;
         }
 
@@ -119,7 +128,10 @@ public class LockState extends CommandWithProperties {
             super(TYPE);
         }
 
-        public Builder setDoorStates(DoorLockProperty[] states) {
+        /**
+         * Add an array of door lock states.
+         */
+        public Builder addDoorLockStates(DoorLockProperty[] states) {
             this.states.addAll(Arrays.asList(states));
 
             for (int i = 0; i < states.length; i++) {
@@ -129,10 +141,33 @@ public class LockState extends CommandWithProperties {
             return this;
         }
 
-        public Builder addDoorState(DoorLockProperty state) {
+        /**
+         * Add one door lock state.
+         */
+        public Builder addDoorLockState(DoorLockProperty state) {
             addProperty(state);
             this.states.add(state);
             return this;
+        }
+
+        /**
+         * Add an array of door lock states.
+         *
+         * @deprecated use {@link #addDoorLockStates(DoorLockProperty[])} instead.
+         */
+        @Deprecated
+        public Builder setDoorStates(DoorLockProperty[] states) {
+            return addDoorLockStates(states);
+        }
+
+        /**
+         * Add one door lock state.
+         *
+         * @deprecated use {@link #addDoorLockState(DoorLockProperty)} instead.
+         */
+        @Deprecated
+        public Builder addDoorState(DoorLockProperty state) {
+            return addDoorLockState(state);
         }
 
         public LockState build() {
