@@ -77,7 +77,7 @@ public class DiagnosticsState extends CommandWithProperties {
 
     /**
      *
-     * @return Engine oil temperature in Celsius, whereas can be negative
+     * @return The engine oil temperature in Celsius, whereas can be negative
      */
     public Integer getOilTemperature() {
         return oilTemperature;
@@ -90,11 +90,10 @@ public class DiagnosticsState extends CommandWithProperties {
     public Integer getSpeed() {
         return speed;
     }
-
-
+    
     /**
      *
-     * @return RPM of the Engine
+     * @return The RPM of the engine
      */
     public Integer getRpm() {
         return rpm;
@@ -102,7 +101,7 @@ public class DiagnosticsState extends CommandWithProperties {
 
     /**
      *
-     * @return Fuel level percentage between 0-100
+     * @return The Fuel level percentage between 0-100
      */
     public Float getFuelLevel() {
         return fuelLevel;

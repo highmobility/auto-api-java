@@ -47,14 +47,14 @@ public class LockState extends CommandWithProperties {
     }
 
     /**
-     * @return Set of lock states for each of the doors.
+     * @return All of the lock states.
      */
     public DoorLockProperty[] getDoorLockStates() {
         return lockStates;
     }
 
     /**
-     * Get the door lock state for a door location
+     * Get the lock state for a specific door.
      *
      * @param location The location of the door
      * @return The DoorLockProperty
@@ -68,7 +68,9 @@ public class LockState extends CommandWithProperties {
     }
 
     /**
-     * @return true if all doors are closed and locked, otherwise false
+     * Get the lock state of the car.
+     *
+     * @return true if all doors are closed and locked, otherwise false.
      */
     public boolean isLocked() {
         DoorLockProperty frontLeft = getDoorLockState(DoorLockProperty.Location.FRONT_LEFT);

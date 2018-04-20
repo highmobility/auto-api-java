@@ -21,7 +21,8 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the lock state of the car. The car will respond with the Lock State message.
+ * This message is sent to get the lock state of the car. The car will respond with a Lock State
+ * message.
  */
 public class GetLockState extends Command {
     public static final Type TYPE = new Type(Identifier.DOOR_LOCKS, 0x00);
