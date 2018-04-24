@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the lights state. The car will respond with the Lights State message.
+ * Command to request the lights state. The car will respond with the Lights State message.
  */
 public class GetLightsState extends Command {
     public static final Type TYPE = new Type(Identifier.LIGHTS, 0x00);

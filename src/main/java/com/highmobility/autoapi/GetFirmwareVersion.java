@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the firmware version. The car will respond with the Firmware Version message. No permissions
+ * Command to request the firmware version. The car will respond with the Firmware Version message. No permissions
  * are needed for this other than an authenticated state.
  */
 public class GetFirmwareVersion extends Command {

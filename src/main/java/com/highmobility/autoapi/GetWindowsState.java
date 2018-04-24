@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the windows states, which are either open or closed. The car will respond with the Windows
+ * Command to request the windows states, which are either open or closed. The car will respond with the Windows
  * State message.
  */
 public class GetWindowsState extends Command {

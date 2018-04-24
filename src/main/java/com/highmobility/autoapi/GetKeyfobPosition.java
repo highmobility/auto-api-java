@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the keyfob position relative to the car. The car will respond with the Keyfob Position
+ * Command to request the keyfob position relative to the car. The car will respond with the Keyfob Position
  * message.
  */
 public class GetKeyfobPosition extends Command {

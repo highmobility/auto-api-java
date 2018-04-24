@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the offroad state. The car will respond with the Offroad State message.
+ * Command to request the offroad state. The car will respond with the Offroad State message.
  */
 public class GetOffroadState extends Command {
     public static final Type TYPE = new Type(Identifier.OFF_ROAD, 0x00);

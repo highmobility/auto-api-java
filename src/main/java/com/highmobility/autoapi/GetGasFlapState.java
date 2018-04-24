@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the gas flap state. The car will respond with the Gas Flap message.
+ * Command to request the gas flap state. The car will respond with the Gas Flap message.
  */
 public class GetGasFlapState extends Command {
     public static final Type TYPE = new Type(Identifier.FUELING, 0x00);

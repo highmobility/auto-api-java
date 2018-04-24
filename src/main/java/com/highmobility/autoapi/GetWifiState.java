@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the wi fi state of the car. The car will respond with the Wi Fi State message.
+ * Command to request the wi fi state of the car. The car will respond with the Wi Fi State message.
  */
 public class GetWifiState extends Command {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x00);

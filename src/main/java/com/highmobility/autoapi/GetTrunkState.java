@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the trunk state, if it's locked/unlocked and closed/open. The car will respond with the Trunk
+ * Command to request the trunk state, if it's locked/unlocked and closed/open. The car will respond with the Trunk
  * State message.
  */
 public class GetTrunkState extends Command {

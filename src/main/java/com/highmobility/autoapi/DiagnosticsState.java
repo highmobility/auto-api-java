@@ -23,6 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.TireStateProperty;
 import com.highmobility.autoapi.property.WasherFluidLevel;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class DiagnosticsState extends CommandWithProperties {
     public Integer getSpeed() {
         return speed;
     }
-    
+
     /**
      *
      * @return The RPM of the engine

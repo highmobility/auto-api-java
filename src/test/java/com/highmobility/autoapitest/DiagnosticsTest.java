@@ -1,11 +1,10 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
-import com.highmobility.autoapi.TireStateProperty;
+import com.highmobility.autoapi.property.TireStateProperty;
 import com.highmobility.autoapi.property.WasherFluidLevel;
 import com.highmobility.utils.Bytes;
 

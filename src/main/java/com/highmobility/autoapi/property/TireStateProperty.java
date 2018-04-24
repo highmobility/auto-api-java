@@ -18,13 +18,13 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi;
+package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.Bytes;
 
 public class TireStateProperty extends Property {
-    static final byte identifier = (byte) 0x0A;
+    public static final byte identifier = (byte) 0x0A;
     Location location;
     Float pressure;
     Float temperature;
@@ -58,7 +58,7 @@ public class TireStateProperty extends Property {
         return rpm;
     }
 
-    TireStateProperty(byte[] bytes, int startingFrom) throws CommandParseException {
+    public TireStateProperty(byte[] bytes, int startingFrom) throws CommandParseException {
         super(bytes);
         location = Location.fromByte(bytes[startingFrom]);
         pressure = Property.getFloat(bytes, startingFrom + 1);

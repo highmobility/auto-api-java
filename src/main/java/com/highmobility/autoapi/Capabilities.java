@@ -103,7 +103,6 @@ public class Capabilities extends CommandWithProperties {
                 .size()]);
     }
 
-
     public static final class Builder extends CommandWithProperties.Builder {
         private List<CapabilityProperty> capabilities = new ArrayList<>();
 
@@ -111,19 +110,50 @@ public class Capabilities extends CommandWithProperties {
             super(TYPE);
         }
 
-        public Builder setCapabilities(CapabilityProperty[] properties) {
-            capabilities.addAll(Arrays.asList(properties));
+        /**
+         * Add an array of capabilities.
+         *
+         * @param capabilities The capabilities.
+         * @return The builder.
+         */
+        public Builder addCapabilities(CapabilityProperty[] capabilities) {
+            this.capabilities.addAll(Arrays.asList(capabilities));
 
-            for (int i = 0; i < properties.length; i++) {
-                addProperty(properties[i]);
+            for (int i = 0; i < capabilities.length; i++) {
+                addProperty(capabilities[i]);
             }
 
             return this;
         }
 
+        /**
+         * Add a capability.
+         *
+         * @param capability The capability.
+         * @return The builder.
+         */
         public Builder addCapability(CapabilityProperty capability) {
             capabilities.add(capability);
             addProperty(capability);
+            return this;
+        }
+
+
+        /**
+         * Add an array of capabilities.
+         *
+         * @param capabilities The capabilities.
+         * @return The builder.
+         * @deprecated use {@link #addCapabilities(CapabilityProperty[])} instead.
+         */
+        @Deprecated
+        public Builder setCapabilities(CapabilityProperty[] capabilities) {
+            this.capabilities.addAll(Arrays.asList(capabilities));
+
+            for (int i = 0; i < capabilities.length; i++) {
+                addProperty(capabilities[i]);
+            }
+
             return this;
         }
 

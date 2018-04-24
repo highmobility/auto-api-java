@@ -132,6 +132,9 @@ public class LockState extends CommandWithProperties {
 
         /**
          * Add an array of door lock states.
+         *
+         * @param states The lock states.
+         * @return The builder.
          */
         public Builder addDoorLockStates(DoorLockProperty[] states) {
             this.states.addAll(Arrays.asList(states));
@@ -145,6 +148,9 @@ public class LockState extends CommandWithProperties {
 
         /**
          * Add one door lock state.
+         *
+         * @param state The lock state.
+         * @return The builder.
          */
         public Builder addDoorLockState(DoorLockProperty state) {
             addProperty(state);
@@ -155,6 +161,8 @@ public class LockState extends CommandWithProperties {
         /**
          * Add an array of door lock states.
          *
+         * @param states The states
+         * @return The builder
          * @deprecated use {@link #addDoorLockStates(DoorLockProperty[])} instead.
          */
         @Deprecated
@@ -165,6 +173,8 @@ public class LockState extends CommandWithProperties {
         /**
          * Add one door lock state.
          *
+         * @param state The lock state.
+         * @return The buidler.
          * @deprecated use {@link #addDoorLockState(DoorLockProperty)} instead.
          */
         @Deprecated

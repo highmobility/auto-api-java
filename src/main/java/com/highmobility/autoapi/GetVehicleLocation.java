@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the vehicle location, which will return the latest recorded coordinates of the car. The car
+ * Command to request the vehicle location, which will return the latest recorded coordinates of the car. The car
  * will respond with the Vehicle Location message.
  */
 public class GetVehicleLocation extends Command {

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the ignition state, which is either on or off. The car will respond with the Ignition State
+ * Command to request the ignition state, which is either on or off. The car will respond with the Ignition State
  * message.
  */
 public class GetIgnitionState extends Command {

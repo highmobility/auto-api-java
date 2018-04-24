@@ -25,8 +25,8 @@ import com.highmobility.utils.Bytes;
 import java.util.Arrays;
 
 /**
- * Get the capability of a certain feature. The car will respond with the Capability message - to
- * what extent the capability is supported, if at all.
+ * Command to request the capability of a certain feature. The car will respond with the
+ * Capabilities message.
  */
 public class GetCapability extends Command {
     public static final Type TYPE = new Type(Identifier.CAPABILITIES, 0x02);
@@ -49,7 +49,6 @@ public class GetCapability extends Command {
     }
 
     /**
-     *
      * @param type The feature type
      */
     public GetCapability(Type type) {

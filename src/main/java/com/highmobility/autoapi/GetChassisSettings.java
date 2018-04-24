@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the chassis settings. The car will respond with the Chassis Settings message.
+ * Command to request the chassis settings. The car will respond with the Chassis Settings message.
  */
 public class GetChassisSettings extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x00);

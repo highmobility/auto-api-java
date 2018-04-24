@@ -28,6 +28,32 @@ import com.highmobility.autoapi.property.Property;
 public class TheftAlarmState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.THEFT_ALARM, 0x01);
 
+    State state;
+
+    /**
+     * @return Theft alarm state
+     */
+    public State getState() {
+        return state;
+    }
+
+    public TheftAlarmState(byte[] bytes) throws CommandParseException {
+        super(bytes);
+
+        for (int i = 0; i < getProperties().length; i++) {
+            Property property = getProperties()[i];
+            switch (property.getPropertyIdentifier()) {
+                case 0x01:
+                    state = State.fromByte(property.getValueByte());
+                    break;
+            }
+        }
+    }
+
+    @Override public boolean isState() {
+        return true;
+    }
+
     public enum State {
         NOT_ARMED((byte) 0x00), ARMED((byte) 0x01), TRIGGERED((byte) 0x02);
 
@@ -53,31 +79,5 @@ public class TheftAlarmState extends CommandWithProperties {
         public byte getByte() {
             return value;
         }
-    }
-
-    State state;
-
-    /**
-     * @return Theft alarm state
-     */
-    public State getState() {
-        return state;
-    }
-
-    public TheftAlarmState(byte[] bytes) throws CommandParseException {
-        super(bytes);
-
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case 0x01:
-                    state = State.fromByte(property.getValueByte());
-                    break;
-            }
-        }
-    }
-
-    @Override public boolean isState() {
-        return true;
     }
 }

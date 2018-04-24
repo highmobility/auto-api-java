@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the state of the flashers. The car will respond with the Flashers State message.
+ * Command to request the state of the flashers. The car will respond with the Flashers State message.
  */
 public class GetFlashersState extends Command {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x00);

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the race state. The car will respond with the Race State message.
+ * Command to request the race state. The car will respond with the Race State message.
  */
 public class GetRaceState extends Command {
     public static final Type TYPE = new Type(Identifier.RACE, 0x00);

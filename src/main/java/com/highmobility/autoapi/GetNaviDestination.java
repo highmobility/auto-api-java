@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Get the current navigation destination. The car will respond with the Navi Destination message.
+ * Command to request the current navigation destination. The car will respond with the Navi Destination message.
 */
  public class GetNaviDestination extends Command {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x00);

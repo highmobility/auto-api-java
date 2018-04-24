@@ -83,6 +83,9 @@ public class Failure extends CommandWithProperties {
 
         /**
          * Set the type of the failed command.
+         *
+         * @param type The failed type.
+         * @return The builder.
          */
         public Builder setFailedType(Type type) {
             this.failedType = type;
@@ -92,6 +95,9 @@ public class Failure extends CommandWithProperties {
 
         /**
          * Set the failure reason.
+         *
+         * @param failureReason The failure reason.
+         * @return The builder.
          */
         public Builder setFailureReason(FailureReason failureReason) {
             this.failureReason = failureReason;
