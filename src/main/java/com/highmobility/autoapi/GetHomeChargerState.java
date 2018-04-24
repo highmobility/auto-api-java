@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Command to request the home charger state of the car. The car will respond with the Home Charger State message.
+ * Command to request the home charger state of the car. The car will respond with the Home Charger State command.
  */
 public class GetHomeChargerState extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x00);

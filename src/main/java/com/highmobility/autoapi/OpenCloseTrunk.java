@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 /**
  * Unlock/Lock and Open/Close the trunk. The result is not received by the ack but instead sent
- * through the evented Trunk State message.
+ * through the evented Trunk State command.
  */
 public class OpenCloseTrunk extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x02);

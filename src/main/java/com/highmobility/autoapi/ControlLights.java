@@ -31,13 +31,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Set the lights state. The result is sent through the Lights State message.
+ * Set the lights state. The result is sent through the Lights State command.
  */
 public class ControlLights extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHTS, 0x02);
 
     /**
-     * Set the lights state. The result is sent through the Lights State message.
+     * Set the lights state. The result is sent through the Lights State command.
      *
      * @param frontExteriorLightState Front exterior light state
      * @param rearExteriorLightActive Rear exterior light state

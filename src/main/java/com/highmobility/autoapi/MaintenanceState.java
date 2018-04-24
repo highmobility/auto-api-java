@@ -23,7 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * This message is sent when a Get Vehicle Location message is received by the car.
+ * Command sent when a Get Vehicle Location command is received by the car.
  */
 public class MaintenanceState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MAINTENANCE, 0x01);

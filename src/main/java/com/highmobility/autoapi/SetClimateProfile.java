@@ -29,7 +29,7 @@ import com.highmobility.autoapi.property.Property;
 import java.util.ArrayList;
 
 /**
- * Set the climate profile. The result is sent through the evented Climate State message with the
+ * Set the climate profile. The result is sent through the evented Climate State command with the
  * new state.
  */
 public class SetClimateProfile extends CommandWithProperties {

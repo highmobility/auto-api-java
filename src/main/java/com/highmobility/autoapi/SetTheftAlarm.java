@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 /**
  * Turn off, arm or trigger the theft alarm of the car. The result is sent through the evented Theft
- * Alarm State message.
+ * Alarm State command.
  */
 public class SetTheftAlarm extends Command {
     public static final Type TYPE = new Type(Identifier.THEFT_ALARM, 0x02);

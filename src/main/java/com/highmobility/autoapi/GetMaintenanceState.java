@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Command to request the vehicle status. The car will respond with the Vehicle Status message.
+ * Command to request the vehicle status. The car will respond with the Vehicle Status command.
  */
 public class GetMaintenanceState extends Command {
     public static final Type TYPE = new Type(Identifier.MAINTENANCE, 0x00);

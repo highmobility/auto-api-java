@@ -23,8 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.WindowProperty;
 
 /**
- * Open or close the windows. Either one or all windows can be controlled with the same message. The
- * result is not received by the ack but instead sent through the evented Windows State message.
+ * Open or close the windows. Either one or all windows can be controlled with the same command. The
+ * result is not received by the ack but instead sent through the evented Windows State command.
  */
 public class OpenCloseWindows extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDOWS, 0x02);

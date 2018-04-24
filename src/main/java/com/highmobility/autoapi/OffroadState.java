@@ -23,7 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * This message is sent when a Get Offroad State is received by the car.
+ * Command sent when a Get Offroad State is received by the car.
  */
 public class OffroadState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.OFF_ROAD, 0x01);

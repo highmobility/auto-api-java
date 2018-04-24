@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Command to request the charge state. The car will respond with the Charge State message.
+ * Command to request the charge state. The car will respond with the Charge State command.
  */
 public class GetChargeState extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x00);

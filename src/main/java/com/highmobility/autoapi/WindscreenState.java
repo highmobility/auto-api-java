@@ -31,7 +31,7 @@ import com.highmobility.autoapi.property.WiperState;
 import java.util.Calendar;
 
 /**
- * This message is sent when a Get Windscreen State message is received by the car. The wipers
+ * Command sent when a Get Windscreen State command is received by the car. The wipers
  * intensity is indicated even if the car has automatic wipers activated.
  */
 public class WindscreenState extends CommandWithProperties {

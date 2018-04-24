@@ -24,8 +24,8 @@ import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * This is an evented message that is sent from the car every time the rooftop state changes. This
- * message is also sent when a Get Rooftop State is received by the car.
+ * This is an evented command that is sent from the car every time the rooftop state changes. This
+ * command is also sent when a Get Rooftop State is received by the car.
  */
 public class RooftopState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.ROOFTOP, 0x01);

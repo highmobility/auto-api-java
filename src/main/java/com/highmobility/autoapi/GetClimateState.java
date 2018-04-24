@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Command to request the climate state. The car will respond with the Climate State message.
+ * Command to request the climate state. The car will respond with the Climate State command.
  */
 public class GetClimateState extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x00);

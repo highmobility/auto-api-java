@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 
 /**
  * For different reasons a command sent to the car might not be successful. When this happens, a
- * failure message is sent to the smart device with details about what went wrong.
+ * failure command is sent to the smart device with details about what went wrong.
  */
 public class Failure extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FAILURE, 0x01);
@@ -55,7 +55,7 @@ public class Failure extends CommandWithProperties {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
-                    // failed message
+                    // failed command
                     byte[] value = property.getValueBytes();
                     failedType = new Type(value[0], value[1], value[2]);
                     break;

@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This message is sent when a Get Capabilities message is received by the car. The capabilities are
+ * Command sent when a Get Capabilities command is received by the car. The capabilities are
  * passed along as an array.
  */
 public class Capabilities extends CommandWithProperties {

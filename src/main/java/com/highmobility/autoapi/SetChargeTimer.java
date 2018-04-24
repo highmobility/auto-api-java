@@ -24,7 +24,7 @@ import com.highmobility.autoapi.property.ChargeTimer;
 import java.util.ArrayList;
 
 /**
- * Set the charge timer of the car. The message can include one of the different timer types or
+ * Set the charge timer of the car. The command can include one of the different timer types or
  * all.
  */
 public class SetChargeTimer extends CommandWithProperties {

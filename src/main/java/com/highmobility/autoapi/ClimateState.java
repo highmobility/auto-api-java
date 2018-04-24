@@ -24,7 +24,7 @@ import com.highmobility.autoapi.property.AutoHvacState;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * This message is sent when a Get Climate State message is received by the car. It is also sent
+ * Command sent when a Get Climate State command is received by the car. It is also sent
  * once the HVAC system has been turned on/off, when the defrosting/defogging states change or when
  * the profile is updated.
  * <p>

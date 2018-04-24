@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * This message is sent when a Get Flashers State message is received by the car.
+ * Command sent when a Get Flashers State command is received by the car.
  */
 public class FlashersState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x01);

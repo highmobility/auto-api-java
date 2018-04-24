@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Command to request the windsreen state. The car will respond with the Windscreen State message.
+ * Command to request the windsreen state. The car will respond with the Windscreen State command.
  */
 public class GetWindscreenState extends Command {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x00);

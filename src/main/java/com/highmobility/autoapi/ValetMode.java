@@ -23,8 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * This is an evented message that is sent from the car every time the valet mode changes. This
- * message is also sent when a Get Valet Mode message is received by the car.
+ * This is an evented command that is sent from the car every time the valet mode changes. This
+ * command is also sent when a Get Valet Mode command is received by the car.
  */
 public class ValetMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x01);

@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 /**
  * Command to request the trunk state, if it's locked/unlocked and closed/open. The car will respond with the Trunk
- * State message.
+ * State command.
  */
 public class GetTrunkState extends Command {
     public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x00);

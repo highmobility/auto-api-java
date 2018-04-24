@@ -32,7 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This message is sent when a Get Vehicle Status is received by the car. The states are passed
+ * Command sent when a Get Vehicle Status is received by the car. The states are passed
  * along as an array of all states that the vehicle possesses. No states are included for
  * Capabilities that are unsupported.
  */
@@ -251,8 +251,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set the VIN.
-         *
          * @param vin The VIN.
          * @return The builder.
          */
@@ -263,8 +261,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set the power train.
-         *
          * @param powerTrain The power train.
          * @return The builder.
          */
@@ -275,7 +271,7 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * @param modelName
+         * @param modelName The model name.
          * @return The builder.
          */
         public Builder setModelName(String modelName) {
@@ -285,8 +281,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set the vehicle name.
-         *
          * @param name The vehicle name.
          * @return The builder.
          */
@@ -297,8 +291,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set the license plate.
-         *
          * @param licensePlate The license plate number.
          * @return The builder.
          */
@@ -309,8 +301,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set the sales designation.
-         *
          * @param salesDesignation The sales designation.
          * @return The builder.
          */
@@ -321,8 +311,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set the model year.
-         *
          * @param modelYear The model year.
          * @return The builder.
          */
@@ -333,8 +321,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set the color name.
-         *
          * @param color The color name
          * @return The builder.
          * @deprecated use {@link #setColorName(String)} instead
@@ -347,8 +333,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set the color name.
-         *
          * @param color The color name
          * @return The builder.
          */
@@ -359,8 +343,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set the power of the car measured in kw.
-         *
          * @param power
          * @return The builder.
          */
@@ -371,8 +353,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set the number of doors.
-         *
          * @param numberOfDoors The number of doors
          * @return The builder.
          */
@@ -383,8 +363,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set the number of seats.
-         *
          * @param numberOfSeats The number of seats.
          * @return The builder.
          */
@@ -395,8 +373,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Add an array of states.
-         *
          * @param states The states.
          * @return The builder
          */
@@ -411,8 +387,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Set new states.
-         *
          * @param states
          * @return The builder.
          * @deprecated use {@link #addStates(Command[] states)} instead
@@ -430,8 +404,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Add a state.
-         *
          * @param state The state.
          * @return The builder.
          */

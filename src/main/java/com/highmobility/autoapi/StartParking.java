@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * Start parking. This clears the last parking ticket information and starts a new one. The result
- * is sent through the evented Parking Ticket message. The end time can be left unset depending on
+ * is sent through the evented Parking Ticket command. The end time can be left unset depending on
  * the operator.
  */
 public class StartParking extends CommandWithProperties {

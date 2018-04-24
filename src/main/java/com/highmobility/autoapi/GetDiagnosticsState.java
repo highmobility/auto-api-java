@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Command to request the diagnostics state of the car. The car will respond with the Diagnostics State message.
+ * Command to request the diagnostics state of the car. The car will respond with the Diagnostics State command.
  */
 public class GetDiagnosticsState extends Command {
     public static final Type TYPE = new Type(Identifier.DIAGNOSTICS, 0x00);

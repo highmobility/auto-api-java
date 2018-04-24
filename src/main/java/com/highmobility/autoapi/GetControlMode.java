@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Command to request the current remote control mode. The car will respond with the Control Mode message.
+ * Command to request the current remote control mode. The car will respond with the Control Mode command.
  */
 public class GetControlMode extends Command {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x00);

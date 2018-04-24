@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Command to request the vehicle capabilities. The car will respond with the Capabilities message
+ * Command to request the vehicle capabilities. The car will respond with the Capabilities command
  * that manifests all different APIs that are enabled on the specific car. It is good practice to
  * only inspect the vehicle capabilities the first time when access is gained. The capabilities are
  * fixed for each car type and will not change between every session unless the user meanwhile

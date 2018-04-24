@@ -23,7 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * This is an evented message that is sent from the car every time the ignition state changes. This
+ * This is an evented command that is sent from the car every time the ignition state changes. This
  * message is also sent when a Get Ignition State is received by the car. The new status is included
  * in the message payload and may be the result of user, device or car triggered action.
  */

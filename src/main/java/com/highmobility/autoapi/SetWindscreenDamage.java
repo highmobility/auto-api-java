@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * Set the windscreen damage. This is for instance used to reset the glass damage or correct it. The
- * result is sent through the Windscreen State message. Damage confidence percentage is
+ * result is sent through the Windscreen State command. Damage confidence percentage is
  * automatically set to either 0% or 100%.
  */
 public class SetWindscreenDamage extends CommandWithProperties {

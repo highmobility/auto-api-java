@@ -26,7 +26,7 @@ import java.util.Arrays;
 
 /**
  * Command to request the capability of a certain feature. The car will respond with the
- * Capabilities message.
+ * Capabilities command.
  */
 public class GetCapability extends Command {
     public static final Type TYPE = new Type(Identifier.CAPABILITIES, 0x02);

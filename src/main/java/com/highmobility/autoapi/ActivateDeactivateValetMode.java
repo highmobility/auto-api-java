@@ -23,7 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * Activate or deacticate valet mode. The result is sent through the evented Valet Mode message with
+ * Activate or deacticate valet mode. The result is sent through the evented Valet Mode command with
  * either the mode 0x00 Deactivated or 0x01 Activated.
  */
 public class ActivateDeactivateValetMode extends Command {

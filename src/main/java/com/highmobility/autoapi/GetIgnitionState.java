@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 /**
  * Command to request the ignition state, which is either on or off. The car will respond with the Ignition State
- * message.
+ * command.
  */
 public class GetIgnitionState extends Command {
     public static final Type TYPE = new Type(Identifier.ENGINE, 0x00);

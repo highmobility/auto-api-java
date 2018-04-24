@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Set the chassis position. The result is sent through the Chassis Settings message.
+ * Set the chassis position. The result is sent through the Chassis Settings command.
  */
 public class SetChassisPosition extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x05);

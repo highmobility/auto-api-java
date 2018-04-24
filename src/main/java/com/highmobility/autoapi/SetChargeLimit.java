@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 /**
  * Set the charge limit, to which point the car will charge itself. The result is sent through the
- * evented Charge State message.
+ * evented Charge State command.
  */
 public class SetChargeLimit extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x03);
