@@ -55,7 +55,7 @@ public class VehicleStatus extends CommandWithProperties {
     Integer numberOfSeats;
 
     /**
-     * @return The specific states for the vehicle's features.
+     * @return All of the states.
      */
     public Command[] getStates() {
         return states;
@@ -250,72 +250,174 @@ public class VehicleStatus extends CommandWithProperties {
             super(TYPE);
         }
 
+        /**
+         * Set the VIN.
+         *
+         * @param vin The VIN.
+         * @return The builder.
+         */
         public Builder setVin(String vin) {
             this.vin = vin;
             addProperty(new StringProperty((byte) 0x01, vin));
             return this;
         }
 
+        /**
+         * Set the power train.
+         *
+         * @param powerTrain The power train.
+         * @return The builder.
+         */
         public Builder setPowerTrain(PowerTrain powerTrain) {
             this.powerTrain = powerTrain;
             addProperty(powerTrain);
             return this;
         }
 
+        /**
+         * @param modelName
+         * @return The builder.
+         */
         public Builder setModelName(String modelName) {
             this.modelName = modelName;
             addProperty(new StringProperty((byte) 0x03, modelName));
             return this;
         }
 
+        /**
+         * Set the vehicle name.
+         *
+         * @param name The vehicle name.
+         * @return The builder.
+         */
         public Builder setName(String name) {
             this.name = name;
             addProperty(new StringProperty((byte) 0x04, name));
             return this;
         }
 
+        /**
+         * Set the license plate.
+         *
+         * @param licensePlate The license plate number.
+         * @return The builder.
+         */
         public Builder setLicensePlate(String licensePlate) {
             this.licensePlate = licensePlate;
             addProperty(new StringProperty((byte) 0x05, licensePlate));
             return this;
         }
 
+        /**
+         * Set the sales designation.
+         *
+         * @param salesDesignation The sales designation.
+         * @return The builder.
+         */
         public Builder setSalesDesignation(String salesDesignation) {
             this.salesDesignation = salesDesignation;
             addProperty(new StringProperty((byte) 0x06, salesDesignation));
             return this;
         }
 
+        /**
+         * Set the model year.
+         *
+         * @param modelYear The model year.
+         * @return The builder.
+         */
         public Builder setModelYear(Integer modelYear) {
             this.modelYear = modelYear;
             addProperty(new IntegerProperty((byte) 0x07, modelYear, 2));
             return this;
         }
 
+        /**
+         * Set the color name.
+         *
+         * @param color The color name
+         * @return The builder.
+         * @deprecated use {@link #setColorName(String)} instead
+         */
+        @Deprecated
         public Builder setColor(String color) {
             this.color = color;
             addProperty(new StringProperty((byte) 0x08, color));
             return this;
         }
 
+        /**
+         * Set the color name.
+         *
+         * @param color The color name
+         * @return The builder.
+         */
+        public Builder setColorName(String color) {
+            this.color = color;
+            addProperty(new StringProperty((byte) 0x08, color));
+            return this;
+        }
+
+        /**
+         * Set the power of the car measured in kw.
+         *
+         * @param power
+         * @return The builder.
+         */
         public Builder setPower(Integer power) {
             this.power = power;
             addProperty(new IntegerProperty((byte) 0x09, power, 2));
             return this;
         }
 
+        /**
+         * Set the number of doors.
+         *
+         * @param numberOfDoors The number of doors
+         * @return The builder.
+         */
         public Builder setNumberOfDoors(Integer numberOfDoors) {
             this.numberOfDoors = numberOfDoors;
             addProperty(new IntegerProperty((byte) 0x0a, numberOfDoors, 1));
             return this;
         }
 
+        /**
+         * Set the number of seats.
+         *
+         * @param numberOfSeats The number of seats.
+         * @return The builder.
+         */
         public Builder setNumberOfSeats(Integer numberOfSeats) {
             this.numberOfSeats = numberOfSeats;
             addProperty(new IntegerProperty((byte) 0x0b, numberOfSeats, 1));
             return this;
         }
 
+        /**
+         * Add an array of states.
+         *
+         * @param states The states.
+         * @return The builder
+         */
+        public Builder addStates(Command[] states) {
+            this.states.addAll(Arrays.asList(states));
+
+            for (int i = 0; i < states.length; i++) {
+                addProperty(new CommandProperty(states[i]));
+            }
+
+            return this;
+        }
+
+        /**
+         * Set new states.
+         *
+         * @param states
+         * @return The builder.
+         * @deprecated use {@link #addStates(Command[] states)} instead
+         */
+        @Deprecated
         public Builder setStates(Command[] states) {
             this.states.clear();
             this.states.addAll(Arrays.asList(states));
@@ -327,6 +429,12 @@ public class VehicleStatus extends CommandWithProperties {
             return this;
         }
 
+        /**
+         * Add a state.
+         *
+         * @param state The state.
+         * @return The builder.
+         */
         public Builder addState(Command state) {
             addProperty(new CommandProperty(state));
             states.add(state);
