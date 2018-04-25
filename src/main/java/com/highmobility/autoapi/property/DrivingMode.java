@@ -52,7 +52,7 @@ public enum DrivingMode implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x02;
+        return 0x01;
     }
 
     @Override public int getPropertyLength() {

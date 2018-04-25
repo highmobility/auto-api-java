@@ -21,7 +21,6 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import java.io.UnsupportedEncodingException;
 
 public class SpringRateProperty extends Property {
     Axle axle;
@@ -69,9 +68,14 @@ public class SpringRateProperty extends Property {
         minimumPossibleRate = Property.getUnsignedInt(bytes[6]);
     }
 
+    public SpringRateProperty(Axle axle, Integer springRate, Integer
+            maximumPossibleRate, Integer minimumPossibleRate) {
+        this((byte) 0x00, axle, springRate, maximumPossibleRate, minimumPossibleRate);
+    }
+
     public SpringRateProperty(byte identifier, Axle axle, Integer springRate, Integer
             maximumPossibleRate, Integer minimumPossibleRate) {
-        super(identifier, 5);
+        super(identifier, 4);
         bytes[3] = axle.getByte();
         bytes[4] = springRate.byteValue();
         bytes[5] = maximumPossibleRate.byteValue();

@@ -26,6 +26,28 @@ package com.highmobility.autoapi;
 public class StartStopSportChrono extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x03);
 
+    Command command;
+
+    /**
+     * @return The chronometer command.
+     */
+    public Command getCommand() {
+        return command;
+    }
+
+    /**
+     * @param command The chronometer command.
+     */
+    public StartStopSportChrono(Command command) {
+        super(TYPE.addByte(command.getByte()));
+        this.command = command;
+    }
+
+    StartStopSportChrono(byte[] bytes) throws CommandParseException {
+        super(bytes);
+        this.command = Command.fromByte(bytes[3]);
+    }
+
     public enum Command {
         START((byte) 0x00),
         STOP((byte) 0x01),
@@ -53,13 +75,5 @@ public class StartStopSportChrono extends Command {
         public byte getByte() {
             return value;
         }
-    }
-
-    public StartStopSportChrono(Command command) {
-        super(TYPE.addByte(command.getByte()));
-    }
-
-    StartStopSportChrono(byte[] bytes) {
-        super(bytes);
     }
 }

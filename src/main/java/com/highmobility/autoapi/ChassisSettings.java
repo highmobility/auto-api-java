@@ -21,12 +21,15 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Axle;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.ChassisPositionProperty;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.SpringRateProperty;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Command sent when a Get Chassis Settings is received by the car.
@@ -34,13 +37,17 @@ import java.util.ArrayList;
 public class ChassisSettings extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x01);
 
+    public static final byte DRIVING_MODE_IDENTIFIER = 0x01;
+    public static final byte SPORT_CHRONO_ACTIVE_IDENTIFIER = 0x02;
+    public static final byte SPRING_RATE_PROPERTIES_IDENTIFIER = 0x03;
+    public static final byte CHASSIS_POSITION_IDENTIFIER = 0x04;
+
     DrivingMode drivingMode;
     Boolean sportChronoActive;
     SpringRateProperty[] springRates;
     ChassisPositionProperty chassisPosition;
 
     /**
-     *
      * @return The driving mode
      */
     public DrivingMode getDrivingMode() {
@@ -48,7 +55,6 @@ public class ChassisSettings extends CommandWithProperties {
     }
 
     /**
-     *
      * @return Boolean indicating whether the sport chronometer is active
      */
     public Boolean isSportChronoActive() {
@@ -56,7 +62,6 @@ public class ChassisSettings extends CommandWithProperties {
     }
 
     /**
-     *
      * @param axle The spring rate's axle.
      * @return The spring rate for the given axle. Null if does not exists.
      */
@@ -70,7 +75,13 @@ public class ChassisSettings extends CommandWithProperties {
     }
 
     /**
-     *
+     * @return All of the spring rates.
+     */
+    public SpringRateProperty[] getSpringRates() {
+        return springRates;
+    }
+
+    /**
      * @return The chassis position
      */
     public ChassisPositionProperty getChassisPosition() {
@@ -85,25 +96,109 @@ public class ChassisSettings extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case DRIVING_MODE_IDENTIFIER:
                     drivingMode = DrivingMode.fromByte(property.getValueByte());
-                break;
-                case 0x02:
+                    break;
+                case SPORT_CHRONO_ACTIVE_IDENTIFIER:
                     sportChronoActive = Property.getBool(property.getValueByte());
-                break;
-                case 0x03:
+                    break;
+                case SPRING_RATE_PROPERTIES_IDENTIFIER:
                     springRateProperties.add(new SpringRateProperty(property.getPropertyBytes()));
-                break;
-                case 0x04:
+                    break;
+                case CHASSIS_POSITION_IDENTIFIER:
                     chassisPosition = new ChassisPositionProperty(property.getPropertyBytes());
-                break;
+                    break;
             }
         }
 
-        springRates = springRateProperties.toArray(new SpringRateProperty[springRateProperties.size()]);
+        springRates = springRateProperties.toArray(new SpringRateProperty[springRateProperties
+                .size()]);
     }
 
     @Override public boolean isState() {
         return true;
+    }
+
+    private ChassisSettings(Builder builder) {
+        super(builder);
+        drivingMode = builder.drivingMode;
+        sportChronoActive = builder.sportChronoActive;
+        chassisPosition = builder.chassisPosition;
+        springRates = builder.springRates.toArray(new SpringRateProperty[builder.springRates
+                .size()]);
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private DrivingMode drivingMode;
+        private Boolean sportChronoActive;
+        private List<SpringRateProperty> springRates = new ArrayList<>();
+        private ChassisPositionProperty chassisPosition;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param drivingMode Set the driving mode.
+         * @return The builder.
+         */
+        public Builder setDrivingMode(DrivingMode drivingMode) {
+            this.drivingMode = drivingMode;
+            addProperty(drivingMode);
+            return this;
+        }
+
+        /**
+         * @param sportChronoActive Set the sport chronometer state.
+         * @return The builder.
+         */
+        public Builder setSportChronoActive(Boolean sportChronoActive) {
+            this.sportChronoActive = sportChronoActive;
+            addProperty(new BooleanProperty(SPORT_CHRONO_ACTIVE_IDENTIFIER, sportChronoActive));
+            return this;
+        }
+
+        /**
+         * @param chassisPosition The chassis position.
+         * @return The builder.
+         */
+        public Builder setChassisPosition(ChassisPositionProperty chassisPosition) {
+            this.chassisPosition = chassisPosition;
+            chassisPosition.setIdentifier(CHASSIS_POSITION_IDENTIFIER);
+            addProperty(chassisPosition);
+            return this;
+        }
+
+        /**
+         * Add an array of spring rates.
+         *
+         * @param springRates The spring rates.
+         * @return The builder.
+         */
+        public Builder addSpringRates(SpringRateProperty[] springRates) {
+            this.springRates.addAll(Arrays.asList(springRates));
+
+            for (int i = 0; i < springRates.length; i++) {
+                springRates[i].setIdentifier(SPRING_RATE_PROPERTIES_IDENTIFIER);
+                addProperty(springRates[i]);
+            }
+
+            return this;
+        }
+
+        /**
+         * @param springRate A spring rate.
+         * @return The builder.
+         */
+        public Builder addSpringRate(SpringRateProperty springRate) {
+            springRate.setIdentifier(SPRING_RATE_PROPERTIES_IDENTIFIER);
+            this.springRates.add(springRate);
+            addProperty(springRate);
+            return this;
+        }
+
+        public ChassisSettings build() {
+            return new ChassisSettings(this);
+        }
     }
 }

@@ -82,12 +82,20 @@ public class TrunkState extends CommandWithProperties {
             super(TYPE);
         }
 
+        /**
+         * @param lockState The lock state of the trunk.
+         * @return The builder.
+         */
         public Builder setLockState(TrunkLockState lockState) {
             this.lockState = lockState;
             addProperty(lockState);
             return this;
         }
 
+        /**
+         * @param position The position of the trunk.
+         * @return The builder.
+         */
         public Builder setPosition(TrunkPosition position) {
             this.position = position;
             addProperty(position);

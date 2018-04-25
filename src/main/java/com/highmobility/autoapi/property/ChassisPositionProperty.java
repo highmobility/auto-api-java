@@ -55,10 +55,15 @@ public class ChassisPositionProperty extends Property {
 
     public ChassisPositionProperty(byte identifier, Integer position, Integer
             maximumPossibleRate, Integer minimumPossibleRate) {
-        super(identifier, 5);
+        super(identifier, 3);
 
         bytes[3] = position.byteValue();
         bytes[4] = maximumPossibleRate.byteValue();
         bytes[5] = minimumPossibleRate.byteValue();
+    }
+
+    public ChassisPositionProperty(Integer position, Integer
+            maximumPossibleRate, Integer minimumPossibleRate) {
+        this((byte) 0x00, position, maximumPossibleRate, minimumPossibleRate);
     }
 }

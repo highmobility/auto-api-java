@@ -21,6 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Axle;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.Bytes;
 
 /**
@@ -29,16 +30,37 @@ import com.highmobility.utils.Bytes;
 public class SetSpringRate extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x04);
 
+    Axle axle;
+    Integer springRate;
+
+    /**
+     * @return The axle.
+     */
+    public Axle getAxle() {
+        return axle;
+    }
+
+    /**
+     * @return The suspension spring rate in N/mm.
+     */
+    public Integer getSpringRate() {
+        return springRate;
+    }
+
     public SetSpringRate(Axle axle, int springRate) {
         super(getValues(axle, springRate));
+        this.axle = axle;
+        this.springRate = springRate;
     }
 
     static byte[] getValues(Axle axle, int springRate) {
         byte[] bytes = TYPE.getIdentifierAndType();
-        return Bytes.concatBytes(bytes, new byte[] { axle.getByte(), (byte)springRate });
+        return Bytes.concatBytes(bytes, new byte[]{axle.getByte(), (byte) springRate});
     }
 
-    SetSpringRate(byte[] bytes) {
+    SetSpringRate(byte[] bytes) throws CommandParseException {
         super(bytes);
+        axle = Axle.fromByte(bytes[3]);
+        springRate = Property.getUnsignedInt(bytes[4]);
     }
 }

@@ -32,7 +32,7 @@ public class LockUnlockDoors extends Command {
     DoorLockProperty.LockState lockState;
 
     /**
-     * @return The requested door lock state
+     * @return The door lock state
      */
     public DoorLockProperty.LockState getLockState() {
         return lockState;

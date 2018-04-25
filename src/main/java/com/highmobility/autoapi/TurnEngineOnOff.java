@@ -32,7 +32,7 @@ public class TurnEngineOnOff extends Command {
     boolean on;
 
     /**
-     * @return The requested ignition state.
+     * @return The ignition state.
      */
     public boolean isOn() {
         return on;

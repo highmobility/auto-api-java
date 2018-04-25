@@ -32,9 +32,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Command sent when a Get Vehicle Status is received by the car. The states are passed
- * along as an array of all states that the vehicle possesses. No states are included for
- * Capabilities that are unsupported.
+ * Command sent when a Get Vehicle Status is received by the car. The states are passed along as an
+ * array of all states that the vehicle possesses. No states are included for Capabilities that are
+ * unsupported.
  */
 public class VehicleStatus extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VEHICLE_STATUS, 0x01);
@@ -373,6 +373,8 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
+         * Add an array of states.
+         *
          * @param states The states.
          * @return The builder
          */
@@ -387,7 +389,7 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * @param states
+         * @param states The states
          * @return The builder.
          * @deprecated use {@link #addStates(Command[] states)} instead
          */
@@ -404,7 +406,9 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * @param state The state.
+         * Add a state.
+         *
+         * @param state A state.
          * @return The builder.
          */
         public Builder addState(Command state) {

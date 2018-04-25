@@ -29,8 +29,8 @@ import com.highmobility.autoapi.property.TrunkPosition;
 import java.util.ArrayList;
 
 /**
- * Unlock/Lock and Open/Close the trunk. The result is not received by the ack but instead sent
- * through the evented Trunk State command.
+ * Unlock/Lock and Open/Close the trunk. The result is received through the evented Trunk State
+ * command.
  */
 public class OpenCloseTrunk extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x02);
@@ -39,14 +39,14 @@ public class OpenCloseTrunk extends CommandWithProperties {
     TrunkPosition position;
 
     /**
-     * @return The requested trunk lock state
+     * @return The trunk lock state
      */
     public TrunkLockState getState() {
         return state;
     }
 
     /**
-     * @return The requested trunk position
+     * @return The trunk position
      */
     public TrunkPosition getPosition() {
         return position;

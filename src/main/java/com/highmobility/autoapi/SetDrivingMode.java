@@ -28,11 +28,25 @@ import com.highmobility.autoapi.property.DrivingMode;
 public class SetDrivingMode extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x02);
 
-    public SetDrivingMode(DrivingMode drivingMode) {
-        super(TYPE.addByte(drivingMode.getByte()));
+    DrivingMode drivingMode;
+
+    /**
+     * @return The driving mode.
+     */
+    public DrivingMode getDrivingMode() {
+        return drivingMode;
     }
 
-    SetDrivingMode(byte[] bytes) {
+    /**
+     * @param drivingMode The driving mode.
+     */
+    public SetDrivingMode(DrivingMode drivingMode) {
+        super(TYPE.addByte(drivingMode.getByte()));
+        this.drivingMode = drivingMode;
+    }
+
+    SetDrivingMode(byte[] bytes) throws CommandParseException {
         super(bytes);
+        this.drivingMode = DrivingMode.fromByte(bytes[3]);
     }
 }

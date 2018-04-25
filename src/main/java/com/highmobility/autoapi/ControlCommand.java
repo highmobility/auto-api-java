@@ -42,7 +42,7 @@ public class ControlCommand extends CommandWithProperties {
 
     /**
      *
-     * @return The requested speed in km/h, can range between -5 to 5 whereas a negative speed will
+     * @return The speed in km/h, can range between -5 to 5 whereas a negative speed will
      *              reverse the car.
      */
     public Integer getSpeed() {
@@ -51,7 +51,7 @@ public class ControlCommand extends CommandWithProperties {
 
     /**
      *
-     * @return The requested angle of the car
+     * @return The angle of the car
      */
     public Integer getAngle() {
         return angle;

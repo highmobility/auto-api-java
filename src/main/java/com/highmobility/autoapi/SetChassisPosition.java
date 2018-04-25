@@ -20,21 +20,43 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
+
 /**
  * Set the chassis position. The result is sent through the Chassis Settings command.
  */
 public class SetChassisPosition extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x05);
 
+    int position;
+
     /**
-     *
-     * @param position The chassis position in mm calculated from the lowest point
+     * @return The chassis position in mm calculated from the lowest point.
      */
+    public int getPosition() {
+        return position;
+    }
+
+    /**
+     * @param position The chassis position in mm calculated from the lowest point
+     * @deprecated use @{{@link #SetChassisPosition(int)}} instead
+     */
+    @Deprecated
     public SetChassisPosition(Integer position) {
         super(TYPE.addByte(position.byteValue()));
+        this.position = position;
+    }
+
+    /**
+     * @param position The chassis position in mm calculated from the lowest point
+     */
+    public SetChassisPosition(int position) {
+        super(TYPE.addByte(Property.intToBytes(position, 1)[0]));
+        this.position = position;
     }
 
     SetChassisPosition(byte[] bytes) {
         super(bytes);
+        this.position = Property.getUnsignedInt(bytes[3]);
     }
 }
