@@ -23,8 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * This is an evented command that is sent from the car every time the valet mode changes. This
- * command is also sent when a Get Valet Mode command is received by the car.
+ * Command sent from the car every time the valet mode changes or when a Get Valet Mode command is
+ * received.
  */
 public class ValetMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x01);
@@ -32,7 +32,6 @@ public class ValetMode extends CommandWithProperties {
     Boolean active;
 
     /**
-     *
      * @return A boolean indicating whether the valet mode is active or not.
      */
     public Boolean isActive() {

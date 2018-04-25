@@ -28,9 +28,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This is an evented command that is sent from the car every time the lock state changes. This
- * command is also sent when a Get Lock State is received by the car. The new status is included in
- * the command payload and may be the result of user, device or car triggered action.
+ * Command sent from the car every time the lock state changes or when a Get Lock State is received.
+ * The new status is included in the command payload and may be the result of user, device or car
+ * triggered action.
  */
 public class LockState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.DOOR_LOCKS, 0x01);

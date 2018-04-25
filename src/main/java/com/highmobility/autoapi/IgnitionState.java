@@ -20,20 +20,22 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * This is an evented command that is sent from the car every time the ignition state changes. This
- * message is also sent when a Get Ignition State is received by the car. The new status is included
- * in the message payload and may be the result of user, device or car triggered action.
+ * Command sent from the car every time the ignition state changes or when a Get Ignition State is
+ * received. The new status is included in the message payload and may be the result of user, device
+ * or car triggered action.
  */
 public class IgnitionState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.ENGINE, 0x01);
+    private static final byte ON_IDENTIFIER = 0x01;
 
     Boolean on;
 
     /**
-     * @return the ignition state
+     * @return The ignition state.
      */
     public Boolean isOn() {
         return on;
@@ -45,7 +47,7 @@ public class IgnitionState extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case ON_IDENTIFIER:
                     on = Property.getBool(property.getValueByte());
                     break;
             }
@@ -54,5 +56,32 @@ public class IgnitionState extends CommandWithProperties {
 
     @Override public boolean isState() {
         return true;
+    }
+
+    private IgnitionState(Builder builder) {
+        super(builder);
+        on = builder.on;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private Boolean on;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param isOn The ignition state.
+         * @return The builder.
+         */
+        public Builder setIsOn(boolean isOn) {
+            this.on = isOn;
+            addProperty(new BooleanProperty(ON_IDENTIFIER, isOn));
+            return this;
+        }
+
+        public IgnitionState build() {
+            return new IgnitionState(this);
+        }
     }
 }

@@ -32,7 +32,7 @@ import com.highmobility.utils.Bytes;
 import java.util.Arrays;
 
 /**
- * Command sent when a Get Charge State command is received by the car. It is also sent when
+ * Command sent when a Get Charge State command is received by the car or when
  * the car is plugged in, disconnected, starts or stops charging, or when the charge limit is
  * changed.
  */

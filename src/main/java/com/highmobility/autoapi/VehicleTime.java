@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 import java.util.Calendar;
 
 /**
- * This message is sent when a Get Vehicle Time message is received by the car. The local time of
+ * This command is sent when a Get Vehicle Time message is received by the car. The local time of
  * the car is returned, hence the UTC timezone offset is included as well.
  */
 public class VehicleTime extends CommandWithProperties {

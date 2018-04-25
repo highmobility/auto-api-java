@@ -23,7 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.DoorLockProperty;
 
 /**
- * Attempt to lock or unlock all doors of the car. The car will respond with the updated lock state in
+ * Command to lock or unlock all doors of the car. The car will respond with the updated lock state in
  * a Lock State message.
  */
 public class LockUnlockDoors extends Command {

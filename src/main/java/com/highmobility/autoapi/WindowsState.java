@@ -28,9 +28,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This is an evented command that is sent from the car every time the windows state changes. This
- * command is also sent when a Get Windows State is received by the car. The new status is included
- * in the command payload and may be the result of user, device or car triggered action.
+ * Command sent from the car every time the windows state changes or when a Get Windows State is
+ * received. The new status is included in the command payload and may be the result of user, device
+ * or car triggered action.
  */
 public class WindowsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDOWS, 0x01);
@@ -62,12 +62,12 @@ public class WindowsState extends CommandWithProperties {
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
                     try {
-                        WindowProperty state = new WindowProperty(property.getValueBytes()[0], property
+                        WindowProperty state = new WindowProperty(property.getValueBytes()[0],
+                                property
 
-                                .getValueBytes()[1]);
+                                        .getValueBytes()[1]);
                         builder.add(state);
-                    }
-                    catch (CommandParseException e) {
+                    } catch (CommandParseException e) {
                         // ignore
                     }
                     break;

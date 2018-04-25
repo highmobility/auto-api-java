@@ -24,9 +24,9 @@ import com.highmobility.autoapi.property.AutoHvacState;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * Command sent when a Get Climate State command is received by the car. It is also sent
- * once the HVAC system has been turned on/off, when the defrosting/defogging states change or when
- * the profile is updated.
+ * Command sent when a Get Climate State command is received by the car. Also sent once the HVAC
+ * system has been turned on/off, when the defrosting/defogging states change or when the profile is
+ * updated.
  * <p>
  * Auto-HVAC (Heating, Ventilation and Air Conditioning) allows you to schedule times when HVAC is
  * triggered automatically to reach the desired driver temperature setting.

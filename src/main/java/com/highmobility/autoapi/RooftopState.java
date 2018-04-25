@@ -24,8 +24,8 @@ import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * This is an evented command that is sent from the car every time the rooftop state changes. This
- * command is also sent when a Get Rooftop State is received by the car.
+ * Command sent from the car every time the rooftop state changes or when a Get Rooftop State is
+ * received.
  */
 public class RooftopState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.ROOFTOP, 0x01);
@@ -36,7 +36,6 @@ public class RooftopState extends CommandWithProperties {
     Float openPercentage;
 
     /**
-     *
      * @return The dim percentage of the rooftop.
      */
     public Float getDimmingPercentage() {
@@ -44,7 +43,6 @@ public class RooftopState extends CommandWithProperties {
     }
 
     /**
-     *
      * @return The percentage of how much the rooftop is open.
      */
     public Float getOpenPercentage() {
@@ -87,13 +85,15 @@ public class RooftopState extends CommandWithProperties {
 
         public Builder setOpenPercentage(Float openPercentage) {
             this.openPercentage = openPercentage;
-            addProperty(new IntegerProperty(OPEN_IDENTIFIER, Property.floatToIntPercentage(openPercentage), 1));
+            addProperty(new IntegerProperty(OPEN_IDENTIFIER, Property.floatToIntPercentage
+                    (openPercentage), 1));
             return this;
         }
 
         public Builder setDimmingPercentage(Float dimmingPercentage) {
             this.dimmingPercentage = dimmingPercentage;
-            addProperty(new IntegerProperty(DIMMING_IDENTIFIER, Property.floatToIntPercentage(dimmingPercentage), 1));
+            addProperty(new IntegerProperty(DIMMING_IDENTIFIER, Property.floatToIntPercentage
+                    (dimmingPercentage), 1));
             return this;
         }
 

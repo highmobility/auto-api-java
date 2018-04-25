@@ -87,7 +87,7 @@ public class DoorLocksTest {
 
     }
 
-    @Test public void create() {
+    @Test public void builder() {
         LockState.Builder builder = new LockState.Builder();
         builder.addDoorLockState(new DoorLockProperty(DoorLockProperty.Location.FRONT_LEFT,
                 DoorLockProperty.Position.OPEN,

@@ -35,12 +35,10 @@ import java.util.ArrayList;
 public class OpenCloseTrunk extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x02);
 
-
     TrunkLockState state;
     TrunkPosition position;
 
     /**
-     *
      * @return The requested trunk lock state
      */
     public TrunkLockState getState() {
@@ -48,7 +46,6 @@ public class OpenCloseTrunk extends CommandWithProperties {
     }
 
     /**
-     *
      * @return The requested trunk position
      */
     public TrunkPosition getPosition() {
@@ -58,15 +55,14 @@ public class OpenCloseTrunk extends CommandWithProperties {
     /**
      * Create the command from lock state and position. One of the properties can be null.
      *
-     * @param state The trunk lock state.
+     * @param state    The trunk lock state.
      * @param position The trunk position.
-     *
      * @throws IllegalArgumentException If all arguments are null
      */
     public OpenCloseTrunk(TrunkLockState state, TrunkPosition position) {
-         super(TYPE, getProperties(state, position));
-         this.state = state;
-         this.position = position;
+        super(TYPE, getProperties(state, position));
+        this.state = state;
+        this.position = position;
     }
 
     static HMProperty[] getProperties(TrunkLockState state, TrunkPosition position) {
@@ -76,7 +72,7 @@ public class OpenCloseTrunk extends CommandWithProperties {
             properties.add(new ByteProperty(TrunkLockState.defaultIdentifier, state.getByte()));
         }
 
-        if (position!= null) {
+        if (position != null) {
             properties.add(new ByteProperty(TrunkPosition.defaultIdentifier, position.getByte()));
         }
 
@@ -89,8 +85,7 @@ public class OpenCloseTrunk extends CommandWithProperties {
             Property property = properties[i];
             if (property.getPropertyIdentifier() == TrunkLockState.defaultIdentifier) {
                 state = TrunkLockState.fromByte(property.getValueByte());
-            }
-            else if (property.getPropertyIdentifier() == TrunkPosition.defaultIdentifier) {
+            } else if (property.getPropertyIdentifier() == TrunkPosition.defaultIdentifier) {
                 position = TrunkPosition.fromByte(property.getValueByte());
             }
         }

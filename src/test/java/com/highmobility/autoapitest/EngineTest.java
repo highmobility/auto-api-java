@@ -9,6 +9,8 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -43,11 +45,28 @@ public class EngineTest {
         String waitingForBytes = "00350201";
         String commandBytes = Bytes.hexFromBytes(new TurnEngineOnOff(true).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        TurnEngineOnOff incoming = (TurnEngineOnOff) CommandResolver.resolve(Bytes.bytesFromHex
+                (waitingForBytes));
+        assertTrue(incoming.isOn() == true);
     }
 
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("003501");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((IgnitionState)state).isOn() == null);
+        assertTrue(((IgnitionState) state).isOn() == null);
+    }
+
+    @Test public void build() {
+        byte[] bytes = Bytes.bytesFromHex("00350101000101");
+
+        IgnitionState.Builder builder = new IgnitionState.Builder();
+        builder.setIsOn(true);
+
+        IgnitionState state = builder.build();
+        byte[] builtBytes = state.getBytes();
+        assertTrue(Arrays.equals(builtBytes, bytes));
+        assertTrue(state.isOn() == true);
+        assertTrue(state.getType() == IgnitionState.TYPE);
     }
 }

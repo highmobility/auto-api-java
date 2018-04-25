@@ -23,8 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * This is an evented command that is sent by the car every time the relative position of the keyfob
- * changes. This command is also sent when a Get Keyfob Position command is received by the car.
+ * Command sent by the car every time the relative position of the keyfob
+ * changes or when a Get Keyfob Position command is received.
  */
 public class KeyfobPosition extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.KEYFOB_POSITION, 0x01);

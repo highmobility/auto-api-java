@@ -8,6 +8,8 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -20,7 +22,6 @@ public class MaintenanceTest {
         byte[] bytes = Bytes.bytesFromHex("003401" +
                 "01000201F5" +
                 "020003000E61");
-
 
         Command command = null;
         try {
@@ -44,6 +45,20 @@ public class MaintenanceTest {
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("003401");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((MaintenanceState)state).getKilometersToNextService() == null);
+        assertTrue(((MaintenanceState) state).getKilometersToNextService() == null);
+    }
+
+    @Test public void build() {
+        byte[] bytes = Bytes.bytesFromHex("00340101000201F5020003000E61");
+
+        MaintenanceState.Builder builder = new MaintenanceState.Builder();
+        builder.setDaysToNextService(501);
+        builder.setKilometersToNextService(3681);
+        MaintenanceState state = builder.build();
+        byte[] builtBytes = state.getBytes();
+        assertTrue(Arrays.equals(builtBytes, bytes));
+        assertTrue(state.getDaysToNextService() == 501);
+        assertTrue(state.getKilometersToNextService() == 3681);
+        assertTrue(state.getType() == MaintenanceState.TYPE);
     }
 }

@@ -24,10 +24,9 @@ import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
- *
- * This is an evented command that is sent from the car every time the remote control mode changes.
- * It is also sent when a Get Control ControlMode is received by the car. The new mode is
- * included in the command and may be the result of both user or car triggered action.
+ * Command sent from the car every time the remote control mode changes or when a Get Control
+ * ControlMode is received. The new mode is included in the command and may be the result of both
+ * user or car triggered action.
  */
 public class ControlMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x01);
@@ -36,7 +35,6 @@ public class ControlMode extends CommandWithProperties {
     Integer angle;
 
     /**
-     *
      * @return the angle
      */
     public Integer getAngle() {
@@ -44,7 +42,6 @@ public class ControlMode extends CommandWithProperties {
     }
 
     /**
-     *
      * @return the control mode
      */
     public com.highmobility.autoapi.property.ControlMode getMode() {
@@ -59,7 +56,8 @@ public class ControlMode extends CommandWithProperties {
 
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
-                    mode = com.highmobility.autoapi.property.ControlMode.fromByte(property.getValueByte());
+                    mode = com.highmobility.autoapi.property.ControlMode.fromByte(property
+                            .getValueByte());
                     break;
                 case 0x02:
                     angle = Property.getUnsignedInt(property.getValueBytes());

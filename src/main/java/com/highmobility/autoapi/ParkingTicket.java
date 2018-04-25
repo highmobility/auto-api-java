@@ -26,10 +26,9 @@ import com.highmobility.autoapi.property.Property;
 import java.util.Calendar;
 
 /**
- * This is an evented command that is sent from the car every time the parking ticket state changes.
- * This message is also sent when a Get Parking Ticket message is received by the car. The state is
- * 0x00 Ended also when the parking ticket has never been set. Afterwards the car always keeps the
- * last parking ticket information.
+ * Command sent from the car every time the parking ticket state changes. or when a Get Parking
+ * Ticket message is received. The state is 0x00 Ended also when the parking ticket has never been
+ * set. Afterwards the car always keeps the last parking ticket information.
  */
 public class ParkingTicket extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.PARKING_TICKET, 0x01);

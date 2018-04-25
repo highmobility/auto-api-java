@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.FrontExteriorLightState;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * This message is sent when a Get Lights State message is received by the car.
+ * This command is sent when a Get Lights State message is received by the car.
  */
 public class LightsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHTS, 0x01);

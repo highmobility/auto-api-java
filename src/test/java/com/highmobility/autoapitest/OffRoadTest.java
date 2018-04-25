@@ -8,6 +8,8 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -43,5 +45,19 @@ public class OffRoadTest {
         byte[] bytes = Bytes.bytesFromHex("005201");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((OffroadState)state).getRouteIncline() == null);
+    }
+
+    @Test public void build() {
+        byte[] bytes = Bytes.bytesFromHex("005201010002000A02000132");
+
+        OffroadState.Builder builder = new OffroadState.Builder();
+        builder.setRouteIncline(10);
+        builder.setWheelSuspension(.5f);
+        OffroadState state = builder.build();
+        byte[] builtBytes = state.getBytes();
+        assertTrue(Arrays.equals(builtBytes, bytes));
+        assertTrue(state.getRouteIncline() == 10);
+        assertTrue(state.getWheelSuspension() == .5f);
+        assertTrue(state.getType() == OffroadState.TYPE);
     }
 }
