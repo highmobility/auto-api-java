@@ -20,8 +20,12 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.AutoHvacProperty;
 import com.highmobility.autoapi.property.AutoHvacState;
+import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.utils.Bytes;
 
 /**
  * Command sent when a Get Climate State command is received by the car. Also sent once the HVAC
@@ -34,6 +38,17 @@ import com.highmobility.autoapi.property.Property;
 public class ClimateState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x01);
 
+    private static final byte INSIDE_TEMPERATURE_IDENTIFIER = 0x01;
+    private static final byte OUTSIDE_TEMPERATURE_IDENTIFIER = 0x02;
+    private static final byte DRIVER_TEMPERATURE_SETTING_IDENTIFIER = 0x03;
+    private static final byte PASSENGER_TEMPERATURE_SETTING_IDENTIFIER = 0x04;
+    private static final byte HVAC_ACTIVE_IDENTIFIER = 0x05;
+    private static final byte DEFOGGING_ACTIVE_IDENTIFIER = 0x06;
+    private static final byte DEFROSTING_ACTIVE_IDENTIFIER = 0x07;
+    private static final byte IONISING_ACTIVE_IDENTIFIER = 0x08;
+    private static final byte DEFROSTING_TEMPERATURE_IDENTIFIER = 0x09;
+    private static final byte HVAC_PROFILE_IDENTIFIER = 0x0A;
+
     Float insideTemperature;
     Float outsideTemperature;
     Float driverTemperatureSetting;
@@ -45,6 +60,7 @@ public class ClimateState extends CommandWithProperties {
     Float defrostingTemperature;
     Boolean autoHvacConstant;
     AutoHvacState[] autoHvacStates;
+    AutoHvacProperty autoHvacState;
 
     /**
      * @return Inside temperature.
@@ -111,52 +127,65 @@ public class ClimateState extends CommandWithProperties {
 
     /**
      * @return Whether autoHVAC is constant(based on the car surroundings)
+     * @deprecated use {@link #getAutoHvacState()} instead
      */
+    @Deprecated
     public Boolean isAutoHvacConstant() {
         return autoHvacConstant;
     }
 
     /**
-     * @return Array of AutoHvacState's that describe if and when the AutoHVAC is active.
+     * @return Array of State's that describe if and when the AutoHVAC is active.
+     * @deprecated use {@link #getAutoHvacState()} instead
      */
+    @Deprecated
     public AutoHvacState[] getAutoHvacStates() {
         return autoHvacStates;
     }
 
-    ClimateState(byte[] bytes) {
+    /**
+     * @return The Auto HVAC state.
+     */
+    public AutoHvacProperty getAutoHvacState() {
+        return autoHvacState;
+    }
+
+    ClimateState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
+
+                Command.logger.info(Bytes.hexFromBytes(property.getPropertyBytes()));
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case INSIDE_TEMPERATURE_IDENTIFIER:
                     insideTemperature = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x02:
+                case OUTSIDE_TEMPERATURE_IDENTIFIER:
                     outsideTemperature = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x03:
+                case DRIVER_TEMPERATURE_SETTING_IDENTIFIER:
                     driverTemperatureSetting = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x04:
+                case PASSENGER_TEMPERATURE_SETTING_IDENTIFIER:
                     passengerTemperatureSetting = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x05:
+                case HVAC_ACTIVE_IDENTIFIER:
                     hvacActive = Property.getBool(property.getValueByte());
                     break;
-                case 0x06:
+                case DEFOGGING_ACTIVE_IDENTIFIER:
                     defoggingActive = Property.getBool(property.getValueByte());
                     break;
-                case 0x07:
+                case DEFROSTING_ACTIVE_IDENTIFIER:
                     defrostingActive = Property.getBool(property.getValueByte());
                     break;
-                case 0x08:
+                case IONISING_ACTIVE_IDENTIFIER:
                     ionisingActive = Property.getBool(property.getValueByte());
                     break;
-                case 0x09:
+                case DEFROSTING_TEMPERATURE_IDENTIFIER:
                     defrostingTemperature = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x0A:
+                case HVAC_PROFILE_IDENTIFIER:
                     byte[] value = property.getValueBytes();
                     int hvacActiveOnDays = value[0];
                     autoHvacConstant = Property.getBit(hvacActiveOnDays, 7);
@@ -169,6 +198,7 @@ public class ClimateState extends CommandWithProperties {
                         autoHvacStates[j] = new AutoHvacState(active, j, hour, minute);
                     }
 
+                    autoHvacState = new AutoHvacProperty(property.getPropertyBytes());
                     break;
             }
         }
@@ -176,5 +206,102 @@ public class ClimateState extends CommandWithProperties {
 
     @Override public boolean isState() {
         return true;
+    }
+
+    private ClimateState(Builder builder) {
+        super(builder);
+        insideTemperature = builder.insideTemperature;
+        outsideTemperature = builder.outsideTemperature;
+        driverTemperatureSetting = builder.driverTemperatureSetting;
+        passengerTemperatureSetting = builder.passengerTemperatureSetting;
+        hvacActive = builder.hvacActive;
+        defoggingActive = builder.defoggingActive;
+        defrostingActive = builder.defrostingActive;
+        ionisingActive = builder.ionisingActive;
+        defrostingTemperature = builder.defrostingTemperature;
+        autoHvacState = builder.autoHvacState;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private Float insideTemperature;
+        private Float outsideTemperature;
+        private Float driverTemperatureSetting;
+        private Float passengerTemperatureSetting;
+        private Boolean hvacActive;
+        private Boolean defoggingActive;
+        private Boolean defrostingActive;
+        private Boolean ionisingActive;
+        private Float defrostingTemperature;
+
+        private AutoHvacProperty autoHvacState;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        public Builder setInsideTemperature(Float insideTemperature) {
+            this.insideTemperature = insideTemperature;
+            addProperty(new FloatProperty(INSIDE_TEMPERATURE_IDENTIFIER, insideTemperature));
+            return this;
+        }
+
+        public Builder setOutsideTemperature(Float outsideTemperature) {
+            this.outsideTemperature = outsideTemperature;
+            addProperty(new FloatProperty(OUTSIDE_TEMPERATURE_IDENTIFIER, outsideTemperature));
+            return this;
+        }
+
+        public Builder setDriverTemperatureSetting(Float driverTemperatureSetting) {
+            this.driverTemperatureSetting = driverTemperatureSetting;
+            addProperty(new FloatProperty(DRIVER_TEMPERATURE_SETTING_IDENTIFIER, driverTemperatureSetting));
+            return this;
+        }
+
+        public Builder setPassengerTemperatureSetting(Float passengerTemperatureSetting) {
+            this.passengerTemperatureSetting = passengerTemperatureSetting;
+            addProperty(new FloatProperty(PASSENGER_TEMPERATURE_SETTING_IDENTIFIER, passengerTemperatureSetting));
+            return this;
+        }
+
+        public Builder setHvacActive(Boolean hvacActive) {
+            this.hvacActive = hvacActive;
+            addProperty(new BooleanProperty(HVAC_ACTIVE_IDENTIFIER, hvacActive));
+            return this;
+        }
+
+        public Builder setDefoggingActive(Boolean defoggingActive) {
+            this.defoggingActive = defoggingActive;
+            addProperty(new BooleanProperty(DEFOGGING_ACTIVE_IDENTIFIER, defoggingActive));
+            return this;
+        }
+
+        public Builder setDefrostingActive(Boolean defrostingActive) {
+            this.defrostingActive = defrostingActive;
+            addProperty(new BooleanProperty(DEFROSTING_ACTIVE_IDENTIFIER, defrostingActive));
+            return this;
+        }
+
+        public Builder setIonisingActive(Boolean ionisingActive) {
+            this.ionisingActive = ionisingActive;
+            addProperty(new BooleanProperty(IONISING_ACTIVE_IDENTIFIER, ionisingActive));
+            return this;
+        }
+
+        public Builder setDefrostingTemperature(Float defrostingTemperature) {
+            this.defrostingTemperature = defrostingTemperature;
+            addProperty(new FloatProperty(DEFROSTING_TEMPERATURE_IDENTIFIER, defrostingTemperature));
+            return this;
+        }
+
+        public Builder setAutoHvacState(AutoHvacProperty autoHvacState) {
+            this.autoHvacState = autoHvacState;
+            autoHvacState.setIdentifier(HVAC_PROFILE_IDENTIFIER);
+            addProperty(autoHvacState);
+            return this;
+        }
+
+        public ClimateState build() {
+            return new ClimateState(this);
+        }
     }
 }

@@ -2,7 +2,6 @@ package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.ClimateState;
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetClimateState;
 import com.highmobility.autoapi.SetClimateProfile;
@@ -10,10 +9,10 @@ import com.highmobility.autoapi.StartStopDefogging;
 import com.highmobility.autoapi.StartStopDefrosting;
 import com.highmobility.autoapi.StartStopHvac;
 import com.highmobility.autoapi.StartStopIonizing;
+import com.highmobility.autoapi.property.AutoHvacProperty;
 import com.highmobility.autoapi.property.AutoHvacState;
 import com.highmobility.utils.Bytes;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -27,13 +26,17 @@ public class ClimateTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "002401010004419800000200044140000003000441ac000004000441ac00000500010106000100070001000800010009000441ac00000A000F6000000000000000000000071E071E");
 
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
         if (command == null) fail();
 
         assertTrue(command.is(ClimateState.TYPE));
         ClimateState state = (ClimateState) command;
-        
+
         assertTrue(command.getClass() == ClimateState.class);
         assertTrue(state.getInsideTemperature() == 19f);
         assertTrue(state.getOutsideTemperature() == 12f);
@@ -43,6 +46,7 @@ public class ClimateTest {
         assertTrue(state.isHvacActive() == true);
         assertTrue(state.isDefoggingActive() == false);
         assertTrue(state.isDefrostingActive() == false);
+        assertTrue(state.isIonisingActive() == false);
         assertTrue(state.getDefrostingTemperature() == 21.5f);
 
         assertTrue(state.isAutoHvacConstant() == false);
@@ -50,17 +54,30 @@ public class ClimateTest {
         assertTrue(autoHvacStates != null);
         assertTrue(autoHvacStates.length == 7);
 
-        assertTrue(autoHvacStates[0].isActive() == false);
+        assertTrue(state.getAutoHvacState().isConstant() == false);
+        AutoHvacProperty.WeekdayState[] weekdayWeekdayStates = state.getAutoHvacState().getStates();
+        assertTrue(weekdayWeekdayStates != null);
+        assertTrue(weekdayWeekdayStates.length == 7);
 
+        assertTrue(autoHvacStates[0].isActive() == false);
         assertTrue(autoHvacStates[5].isActive() == true);
         assertTrue(autoHvacStates[5].getDay() == 5);
         assertTrue(autoHvacStates[5].getStartHour() == 7);
         assertTrue(autoHvacStates[5].getStartMinute() == 30);
-
         assertTrue(autoHvacStates[6].isActive() == true);
         assertTrue(autoHvacStates[6].getDay() == 6);
         assertTrue(autoHvacStates[6].getStartHour() == 7);
         assertTrue(autoHvacStates[6].getStartMinute() == 30);
+
+        assertTrue(weekdayWeekdayStates[0].isActive() == false);
+        assertTrue(weekdayWeekdayStates[5].isActive() == true);
+        assertTrue(weekdayWeekdayStates[5].getDay() == 5);
+        assertTrue(weekdayWeekdayStates[5].getStartHour() == 7);
+        assertTrue(weekdayWeekdayStates[5].getStartMinute() == 30);
+        assertTrue(weekdayWeekdayStates[6].isActive() == true);
+        assertTrue(weekdayWeekdayStates[6].getDay() == 6);
+        assertTrue(weekdayWeekdayStates[6].getStartHour() == 7);
+        assertTrue(weekdayWeekdayStates[6].getStartMinute() == 30);
     }
 
     @Test public void get() {
@@ -97,22 +114,24 @@ public class ClimateTest {
         byte[] waitingForBytes = Bytes.bytesFromHex(
                 "00240201000F6000000000000000000000071E071E02000441ac000003000441ac0000");
 
-        AutoHvacState[] states = new AutoHvacState[7];
+        AutoHvacProperty.WeekdayState[] weekdayWeekdayStates = new AutoHvacProperty.WeekdayState[7];
         for (int i = 0; i < 7; i++) {
-            AutoHvacState state;
-            if (i < 5)
-                state = new AutoHvacState(false, i, 0, 0);
-            else
-                state = new AutoHvacState(true, i, 7, 30);
+            AutoHvacProperty.WeekdayState weekdayState;
+            if (i < 5) {
+                weekdayState = new AutoHvacProperty.WeekdayState(false, i, 0, 0);
+            } else {
+                weekdayState = new AutoHvacProperty.WeekdayState(true, i, 7, 30);
+            }
 
-            states[i] = state;
+            weekdayWeekdayStates[i] = weekdayState;
         }
+        AutoHvacProperty autoHvac = new AutoHvacProperty(weekdayWeekdayStates, false);
 
         float driverTemp = 21.5f;
         float passengerTemp = 21.5f;
 
         byte[] commandBytes = new SetClimateProfile(
-                states,
+                autoHvac,
                 driverTemp,
                 passengerTemp).getBytes();
 
@@ -123,5 +142,41 @@ public class ClimateTest {
         byte[] bytes = Bytes.bytesFromHex("002401");
         ClimateState state = (ClimateState) CommandResolver.resolve(bytes);
         assertTrue(state.getAutoHvacStates() == null);
+    }
+
+    @Test public void build() {
+        byte[] expectedBytes = Bytes.bytesFromHex(
+                "002401010004419800000200044140000003000441ac000004000441ac00000500010106000100070001000800010009000441ac00000A000F6000000000000000000000071E071E");
+        ClimateState.Builder builder = new ClimateState.Builder();
+
+        builder.setInsideTemperature(19f);
+
+        builder.setOutsideTemperature(12f);
+        builder.setDriverTemperatureSetting(21.5f);
+        builder.setPassengerTemperatureSetting(21.5f);
+
+        builder.setHvacActive(true);
+        builder.setDefoggingActive(false);
+        builder.setDefrostingActive(false);
+        builder.setIonisingActive(false);
+        builder.setDefrostingTemperature(21.5f);
+
+        AutoHvacProperty.WeekdayState[] weekdayWeekdayStates = new AutoHvacProperty.WeekdayState[7];
+        for (int i = 0; i < 7; i++) {
+            AutoHvacProperty.WeekdayState weekdayState;
+            if (i < 5) {
+                weekdayState = new AutoHvacProperty.WeekdayState(false, i, 0, 0);
+            } else {
+                weekdayState = new AutoHvacProperty.WeekdayState(true, i, 7, 30);
+            }
+
+            weekdayWeekdayStates[i] = weekdayState;
+        }
+        AutoHvacProperty autoHvac = new AutoHvacProperty(weekdayWeekdayStates, false);
+        builder.setAutoHvacState(autoHvac);
+
+        ClimateState command = builder.build();
+        byte[] bytes = command.getBytes();
+        assertTrue(Arrays.equals(bytes, expectedBytes));
     }
 }

@@ -23,7 +23,7 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 
 /**
- * The possible charge states
+ * The possible charge weekdayStates
  */
 public enum ChargingState implements HMProperty {
     DISCONNECTED((byte) 0x00),

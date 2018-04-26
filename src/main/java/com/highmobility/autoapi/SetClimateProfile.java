@@ -20,8 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.AutoHvacState;
-import com.highmobility.autoapi.property.ClimateProfileProperty;
+import com.highmobility.autoapi.property.AutoHvacProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
@@ -38,26 +37,25 @@ public class SetClimateProfile extends CommandWithProperties {
     /**
      * Create a set climate profile command. At least one parameter is expected not to be null.
      *
-     * @param autoHvacStates       The auto hvac states.
+     * @param autoHvacState        The auto hvac state.
      * @param driverTemperature    The driver temperature.
      * @param passengerTemperature The passenger temperature.
-     *
      * @throws IllegalArgumentException When all arguments are null
      */
-    public SetClimateProfile(AutoHvacState[] autoHvacStates,
-                                           Float driverTemperature,
-                                           Float passengerTemperature) {
-        super(TYPE, getProperties(autoHvacStates, driverTemperature, passengerTemperature));
+    public SetClimateProfile(AutoHvacProperty autoHvacState,
+                             Float driverTemperature,
+                             Float passengerTemperature) {
+        super(TYPE, getProperties(autoHvacState, driverTemperature, passengerTemperature));
     }
 
-    static HMProperty[] getProperties(AutoHvacState[] autoHvacStates,
+    static HMProperty[] getProperties(AutoHvacProperty autoHvacState,
                                       Float driverTemperature,
                                       Float passengerTemperature) {
         ArrayList<Property> properties = new ArrayList<>();
 
-        if (autoHvacStates != null) {
-            ClimateProfileProperty prop = new ClimateProfileProperty((byte) 0x01, autoHvacStates);
-            properties.add(prop);
+        if (autoHvacState != null) {
+            autoHvacState.setIdentifier((byte) 0x01);
+            properties.add(autoHvacState);
         }
 
         if (driverTemperature != null) {
@@ -71,10 +69,5 @@ public class SetClimateProfile extends CommandWithProperties {
         }
 
         return properties.toArray(new Property[properties.size()]);
-    }
-
-    SetClimateProfile(Property[] properties) throws CommandParseException,
-            IllegalArgumentException {
-        super(TYPE, properties);
     }
 }
