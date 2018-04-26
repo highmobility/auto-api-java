@@ -373,30 +373,11 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * Add an array of states.
-         *
-         * @param states The states.
-         * @return The builder
-         */
-        public Builder addStates(Command[] states) {
-            this.states.addAll(Arrays.asList(states));
-
-            for (int i = 0; i < states.length; i++) {
-                addProperty(new CommandProperty(states[i]));
-            }
-
-            return this;
-        }
-
-        /**
          * @param states The states
          * @return The builder.
-         * @deprecated use {@link #addStates(Command[] states)} instead
          */
-        @Deprecated
         public Builder setStates(Command[] states) {
-            this.states.clear();
-            this.states.addAll(Arrays.asList(states));
+            this.states = Arrays.asList(states);
 
             for (int i = 0; i < states.length; i++) {
                 addProperty(new CommandProperty(states[i]));

@@ -111,22 +111,6 @@ public class Capabilities extends CommandWithProperties {
         }
 
         /**
-         * Add an array of capabilities.
-         *
-         * @param capabilities The capabilities.
-         * @return The builder.
-         */
-        public Builder addCapabilities(CapabilityProperty[] capabilities) {
-            this.capabilities.addAll(Arrays.asList(capabilities));
-
-            for (int i = 0; i < capabilities.length; i++) {
-                addProperty(capabilities[i]);
-            }
-
-            return this;
-        }
-
-        /**
          * Add a capability.
          *
          * @param capability The capability.
@@ -140,15 +124,14 @@ public class Capabilities extends CommandWithProperties {
 
 
         /**
-         * Add an array of capabilities.
+         * Set the capabilities.
          *
          * @param capabilities The capabilities.
          * @return The builder.
-         * @deprecated use {@link #addCapabilities(CapabilityProperty[])} instead.
          */
         @Deprecated
         public Builder setCapabilities(CapabilityProperty[] capabilities) {
-            this.capabilities.addAll(Arrays.asList(capabilities));
+            this.capabilities = Arrays.asList(capabilities);
 
             for (int i = 0; i < capabilities.length; i++) {
                 addProperty(capabilities[i]);

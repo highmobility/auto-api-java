@@ -29,11 +29,22 @@ import com.highmobility.autoapi.property.Property;
 public class StartStopCharging extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x02);
 
-    public StartStopCharging (boolean start) {
+    boolean start;
+
+    /**
+     * @return Indication on whether to start the charging.
+     */
+    public boolean getStart() {
+        return start;
+    }
+
+    public StartStopCharging(boolean start) {
         super(TYPE.addByte(Property.boolToByte(start)));
+        this.start = start;
     }
 
     StartStopCharging(byte[] bytes) {
         super(bytes);
+        this.start = Property.getBool(bytes[3]);
     }
 }

@@ -27,16 +27,27 @@ package com.highmobility.autoapi;
 public class SetChargeLimit extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x03);
 
+    float percentage;
+
+    /**
+     * @return The charge limit percentage.
+     */
+    public float getChargeLimit() {
+        return percentage;
+    }
+
     /**
      * Get the set charge limit command bytes.
      *
-     * @param percentage The charge limit percentage
+     * @param percentage The charge limit percentage.
      */
     public SetChargeLimit(float percentage) throws IllegalArgumentException {
         super(Identifier.CHARGING.getBytesWithType(TYPE, (byte) (percentage * 100)));
+        this.percentage = percentage;
     }
 
     SetChargeLimit(byte[] bytes) {
         super(bytes);
+        this.percentage = Property.getUnsignedInt(bytes[3]) / 100f;
     }
 }

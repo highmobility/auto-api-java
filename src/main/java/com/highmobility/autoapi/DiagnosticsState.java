@@ -31,9 +31,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Command sent when a Get Diagnostics State command is received by the car. The new status
- * is included in the command payload and may be the result of user, device or car triggered
- * action.
+ * Command sent when a Get Diagnostics State command is received by the car. The new status is
+ * included in the command payload and may be the result of user, device or car triggered action.
  */
 public class DiagnosticsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.DIAGNOSTICS, 0x01);
@@ -390,27 +389,9 @@ public class DiagnosticsState extends CommandWithProperties {
          *
          * @param tireStates The tire states.
          * @return The builder.
-         * @deprecated use {@link #addTireStates(TireStateProperty[])} instead
          */
-        @Deprecated
         public Builder setTireStates(TireStateProperty[] tireStates) {
-            this.tireStates.addAll(Arrays.asList(tireStates));
-
-            for (int i = 0; i < tireStates.length; i++) {
-                addProperty(tireStates[i]);
-            }
-
-            return this;
-        }
-
-        /**
-         * Add an array of tire states.
-         *
-         * @param tireStates The tire states.
-         * @return The builder.
-         */
-        public Builder addTireStates(TireStateProperty[] tireStates) {
-            this.tireStates.addAll(Arrays.asList(tireStates));
+            this.tireStates = Arrays.asList(tireStates);
 
             for (int i = 0; i < tireStates.length; i++) {
                 addProperty(tireStates[i]);
@@ -423,7 +404,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * Add a single tire state.
          *
          * @param tireState The tire state.
-         * @return
+         * @return The builder.
          */
         public Builder addTireState(TireStateProperty tireState) {
             addProperty(tireState);
@@ -433,7 +414,7 @@ public class DiagnosticsState extends CommandWithProperties {
 
         /**
          * @param batteryVoltage The battery voltage.
-         * @return
+         * @return The builder.
          */
         public Builder setBatteryVoltage(Float batteryVoltage) {
             this.batteryVoltage = batteryVoltage;
@@ -443,7 +424,7 @@ public class DiagnosticsState extends CommandWithProperties {
 
         /**
          * @param adBlueLevel The adBlue level in liters.
-         * @return
+         * @return The builder.
          */
         public Builder setAdBlueLevel(Float adBlueLevel) {
             this.adBlueLevel = adBlueLevel;

@@ -74,7 +74,7 @@ public class HomeChargerState extends CommandWithProperties {
     }
 
     /**
-     * @return Charging power in kW formatted in 4-bytes per IEEE 754
+     * @return Charging power in kW
      */
     public Float getChargingPower() {
         return chargingPower;

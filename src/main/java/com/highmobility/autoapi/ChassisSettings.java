@@ -170,13 +170,13 @@ public class ChassisSettings extends CommandWithProperties {
         }
 
         /**
-         * Add an array of spring rates.
+         * Set the spring rates.
          *
          * @param springRates The spring rates.
          * @return The builder.
          */
-        public Builder addSpringRates(SpringRateProperty[] springRates) {
-            this.springRates.addAll(Arrays.asList(springRates));
+        public Builder setSpringRates(SpringRateProperty[] springRates) {
+            this.springRates = Arrays.asList(springRates);
 
             for (int i = 0; i < springRates.length; i++) {
                 springRates[i].setIdentifier(SPRING_RATE_PROPERTIES_IDENTIFIER);
@@ -187,6 +187,8 @@ public class ChassisSettings extends CommandWithProperties {
         }
 
         /**
+         * Add a single spring rate.
+         *
          * @param springRate A spring rate.
          * @return The builder.
          */

@@ -28,15 +28,27 @@ import com.highmobility.autoapi.property.ChargeMode;
 public class SetChargeMode extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x05);
 
+    ChargeMode chargeMode;
+
+    /**
+     * @return The charge mode.
+     */
+    public ChargeMode getChargeMode() {
+        return chargeMode;
+    }
+
     /**
      * Set the charge mode of the car.
-     * @param chargeMode The charge mode
+     *
+     * @param chargeMode The charge mode.
      */
     public SetChargeMode(ChargeMode chargeMode) {
         super(TYPE.addByte(chargeMode.getByte()));
+        this.chargeMode = chargeMode;
     }
 
-    SetChargeMode(byte[] bytes) {
+    SetChargeMode(byte[] bytes) throws CommandParseException {
         super(bytes);
+        this.chargeMode = ChargeMode.fromByte(bytes[3]);
     }
 }
