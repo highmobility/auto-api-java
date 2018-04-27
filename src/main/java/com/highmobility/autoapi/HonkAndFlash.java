@@ -33,27 +33,47 @@ import java.util.ArrayList;
  */
 public class HonkAndFlash extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x02);
+    private static final int SECONDS_IDENTIFER = 0x01;
+    private static final int COUNT_IDENTIFER = 0x02;
+
+    private Integer lightFlashCount;
+    private Integer seconds;
 
     /**
-     *
-     * @param seconds How many seconds the horn should be honked
-     * @param lightFlashCount How many times the lights should be flashed
+     * @return How many seconds the horn should be honked.
+     */
+    public Integer getSeconds() {
+        return seconds;
+    }
+
+    /**
+     * @return How many times the lights should be flashed.
+     */
+    public Integer getLightFlashCount() {
+        return lightFlashCount;
+    }
+
+    /**
+     * @param seconds         How many seconds the horn should be honked.
+     * @param lightFlashCount How many times the lights should be flashed.
      * @throws IllegalArgumentException If both arguments are null
      */
     public HonkAndFlash(Integer seconds, Integer lightFlashCount) {
         super(TYPE, getProperties(seconds, lightFlashCount));
+        this.seconds = seconds;
+        this.lightFlashCount = lightFlashCount;
     }
 
     static HMProperty[] getProperties(Integer seconds, Integer lightFlashCount) {
         ArrayList<Property> properties = new ArrayList<>();
 
         if (seconds != null) {
-            IntegerProperty prop = new IntegerProperty((byte) 0x01, seconds, 1);
+            IntegerProperty prop = new IntegerProperty((byte) SECONDS_IDENTIFER, seconds, 1);
             properties.add(prop);
         }
 
         if (lightFlashCount != null) {
-            IntegerProperty prop = new IntegerProperty((byte) 0x02, lightFlashCount, 1);
+            IntegerProperty prop = new IntegerProperty((byte) COUNT_IDENTIFER, lightFlashCount, 1);
             properties.add(prop);
         }
 
@@ -62,5 +82,15 @@ public class HonkAndFlash extends CommandWithProperties {
 
     HonkAndFlash(byte[] bytes) {
         super(bytes);
+        for (Property property : properties) {
+            switch (property.getPropertyIdentifier()) {
+                case SECONDS_IDENTIFER:
+                    seconds = Property.getUnsignedInt(property.getValueByte());
+                    break;
+                case COUNT_IDENTIFER:
+                    lightFlashCount = Property.getUnsignedInt(property.getValueByte());
+                    break;
+            }
+        }
     }
 }

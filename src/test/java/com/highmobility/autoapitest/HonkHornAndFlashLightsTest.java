@@ -10,6 +10,8 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
@@ -20,7 +22,12 @@ public class HonkHornAndFlashLightsTest {
                 "00260101000100"
         );
 
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) { fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
 
         assertTrue(command.is(FlashersState.TYPE));
         FlashersState state = (FlashersState) command;
@@ -37,6 +44,10 @@ public class HonkHornAndFlashLightsTest {
         String waitingForBytes = "0026020100010002000103";
         String commandBytes = Bytes.hexFromBytes(new HonkAndFlash(0, 3).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        HonkAndFlash command = (HonkAndFlash) CommandResolver.resolveHex(waitingForBytes);
+        assertTrue(command.getSeconds() == 0);
+        assertTrue(command.getLightFlashCount() == 3);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -44,17 +55,28 @@ public class HonkHornAndFlashLightsTest {
         new HonkAndFlash(null, null);
     }
 
-
     @Test public void activateDeactivate() {
         String waitingForBytes = "00260301";
 
-        String commandBytes = Bytes.hexFromBytes(new ActivateDeactivateEmergencyFlasher(true).getBytes());
+        String commandBytes = Bytes.hexFromBytes(new ActivateDeactivateEmergencyFlasher(true)
+                .getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        ActivateDeactivateEmergencyFlasher command = (ActivateDeactivateEmergencyFlasher) CommandResolver.resolveHex(waitingForBytes);
+        assertTrue(command.activate() == true);
     }
 
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("002601");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((FlashersState)state).getState() == null);
+        assertTrue(((FlashersState) state).getState() == null);
     }
+
+    @Test public void builder() {
+        FlashersState.Builder builder = new FlashersState.Builder();
+        builder.setState(FlashersState.State.INACTIVE);
+        assertTrue(Arrays.equals(builder.build().getBytes(), Bytes.bytesFromHex
+                ("00260101000100")));
+    }
+
 }

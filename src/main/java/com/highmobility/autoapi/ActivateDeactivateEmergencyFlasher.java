@@ -28,12 +28,22 @@ import com.highmobility.autoapi.property.Property;
  */
 public class ActivateDeactivateEmergencyFlasher extends Command {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x03);
+    boolean activate;
+
+    /**
+     * @return Whether flasher should be activated.
+     */
+    public boolean activate() {
+        return activate;
+    }
 
     public ActivateDeactivateEmergencyFlasher(boolean activate) {
         super(TYPE.addByte(Property.boolToByte(activate)));
+        this.activate = activate;
     }
 
     ActivateDeactivateEmergencyFlasher(byte[] bytes) {
         super(bytes);
+        activate = Property.getBool(bytes[3]);
     }
 }

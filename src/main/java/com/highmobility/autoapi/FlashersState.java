@@ -20,12 +20,15 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.HMProperty;
+import com.highmobility.autoapi.property.Property;
+
 /**
  * Command sent when a Get Flashers State command is received by the car.
  */
 public class FlashersState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x01);
-
+    private static final byte STATE_IDENTIFIER = 0x01;
     State state;
 
     /**
@@ -39,9 +42,9 @@ public class FlashersState extends CommandWithProperties {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {
-            com.highmobility.autoapi.property.Property property = getProperties()[i];
+            Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case STATE_IDENTIFIER:
                     state = State.fromByte(property.getValueByte());
                     break;
             }
@@ -52,7 +55,7 @@ public class FlashersState extends CommandWithProperties {
         return true;
     }
 
-    public enum State {
+    public enum State implements HMProperty {
         INACTIVE((byte) 0x00),
         EMERGENCY_ACTIVE((byte) 0x01),
         LEFT_ACTIVE((byte) 0x02),
@@ -79,6 +82,45 @@ public class FlashersState extends CommandWithProperties {
 
         public byte getByte() {
             return value;
+        }
+
+        @Override public byte getPropertyIdentifier() {
+            return STATE_IDENTIFIER;
+        }
+
+        @Override public int getPropertyLength() {
+            return 1;
+        }
+
+        @Override public byte[] getPropertyBytes() {
+            return Property.getPropertyBytes(getPropertyIdentifier(), getPropertyLength(), value);
+        }
+    }
+
+    private FlashersState(Builder builder) {
+        super(builder);
+        state = builder.state;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private State state;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param state The flashers state.
+         * @return The builder.
+         */
+        public Builder setState(State state) {
+            this.state = state;
+            addProperty(state);
+            return this;
+        }
+
+        public FlashersState build() {
+            return new FlashersState(this);
         }
     }
 }
