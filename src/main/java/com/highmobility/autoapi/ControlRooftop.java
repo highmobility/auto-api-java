@@ -25,7 +25,6 @@ import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -82,9 +81,7 @@ public class ControlRooftop extends CommandWithProperties {
     ControlRooftop(byte[] bytes) {
         super(bytes);
 
-        Enumeration e = getPropertiesEnumeration();
-        while (e.hasMoreElements()) {
-            Property prop = (Property) e.nextElement();
+        for (Property prop : properties) {
             switch (prop.getPropertyIdentifier()) {
                 case RooftopState.DIMMING_IDENTIFIER:
                     dimmingPercentage = Property.getUnsignedInt(prop.getValueByte()) / 100f;

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Command to start the control mode of the car. The result is not received by the ack but instead
+ * Command to start the control mode of the car. The result is
  * sent through the evented Control Mode message with either the mode 0x02 Control Started or 0x03
  * Control Failed to Start
  */

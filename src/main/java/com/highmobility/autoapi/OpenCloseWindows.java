@@ -20,20 +20,58 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindowProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Open or close the windows. Either one or all windows can be controlled with the same command. The
- * result is not received by the ack but instead sent through the evented Windows State command.
+ * result is sent through the evented Windows State command.
  */
 public class OpenCloseWindows extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDOWS, 0x02);
 
-    public OpenCloseWindows(WindowProperty[] windowProperties) {
-        super(TYPE, windowProperties);
+    private WindowProperty[] windowProperties;
+
+    /**
+     * @return The window properties.
+     */
+    public WindowProperty[] getWindowProperties() {
+        return windowProperties;
     }
 
-    OpenCloseWindows(byte[] bytes) {
+    /**
+     * Get the window property for a window position.
+     *
+     * @param position The window position.
+     * @return The window property.
+     */
+    public WindowProperty getWindowProperty(WindowProperty.Position position) {
+        for (int i = 0; i < windowProperties.length; i++) {
+            WindowProperty prop = windowProperties[i];
+            if (prop.getPosition() == position) return prop;
+        }
+
+        return null;
+    }
+
+    public OpenCloseWindows(WindowProperty[] windowProperties) {
+        super(TYPE, windowProperties);
+        this.windowProperties = windowProperties;
+    }
+
+    OpenCloseWindows(byte[] bytes) throws CommandParseException {
         super(bytes);
+        List<WindowProperty> builder = new ArrayList();
+        for (Property property : properties) {
+            if (property.getPropertyIdentifier() == 0x01)
+                builder.add(new WindowProperty(
+                        WindowProperty.Position.fromByte(property.getPropertyBytes()[3]),
+                        WindowProperty.State.fromByte(property.getPropertyBytes()[4])));
+        }
+
+        windowProperties = builder.toArray(new WindowProperty[builder.size()]);
     }
 }

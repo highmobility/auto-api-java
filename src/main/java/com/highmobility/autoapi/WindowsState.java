@@ -93,6 +93,10 @@ public class WindowsState extends CommandWithProperties {
             super(TYPE);
         }
 
+        /**
+         * @param windowProperties The window properties.
+         * @return The builder.
+         */
         public Builder setWindowProperties(WindowProperty[] windowProperties) {
             this.windowProperties = windowProperties;
 
@@ -103,6 +107,12 @@ public class WindowsState extends CommandWithProperties {
             return this;
         }
 
+        /**
+         * Add a single window property.
+         *
+         * @param windowProperty A window property.
+         * @return The builder.
+         */
         public Builder addWindowProperty(WindowProperty windowProperty) {
             if (windowProperties == null) windowProperties = new WindowProperty[1];
             else windowProperties = Arrays.copyOf(windowProperties, windowProperties.length + 1);

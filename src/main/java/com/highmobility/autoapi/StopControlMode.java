@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Stop the control mode of the car. The result is not received by the ack but instead sent through
+ * Stop the control mode of the car. The result is  sent through
  * the evented Control Mode command with the mode 0x05 Control Ended.
  */
 public class StopControlMode extends Command {

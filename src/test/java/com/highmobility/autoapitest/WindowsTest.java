@@ -68,6 +68,12 @@ public class WindowsTest {
 
         byte[] bytes = new OpenCloseWindows(windowsStates).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
+
+        OpenCloseWindows command = (OpenCloseWindows) CommandResolver.resolve(waitingForBytes);
+        WindowProperty[] states = command.getWindowProperties();
+        assertTrue(states.length == 2);
+        assertTrue(command.getWindowProperty(WindowProperty.Position.FRONT_LEFT).getState() == WindowProperty.State.OPEN);
+        assertTrue(command.getWindowProperty(WindowProperty.Position.FRONT_RIGHT).getState() == WindowProperty.State.OPEN);
     }
 
     @Test public void build() {
