@@ -25,6 +25,7 @@ import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -33,13 +34,31 @@ import java.util.List;
 public class ControlRooftop extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.ROOFTOP, 0x02);
 
+    private Float dimmingPercentage;
+    private Float openPercentage;
+
     /**
-     * @param dimmingPercentage The dimming percentage
-     * @param openPercentage    The rooftop open percentage
-     * @throws IllegalArgumentException When both arguments are null
+     * @return The dimming percentage.
+     */
+    public Float getDimmingPercentage() {
+        return dimmingPercentage;
+    }
+
+    /**
+     * @return The open percentage.
+     */
+    public Float getOpenPercentage() {
+        return openPercentage;
+    }
+
+    /**
+     * @param dimmingPercentage The dimming percentage.
+     * @param openPercentage    The rooftop open percentage.
      */
     public ControlRooftop(Float dimmingPercentage, Float openPercentage) {
         super(TYPE, getProperties(dimmingPercentage, openPercentage));
+        this.dimmingPercentage = dimmingPercentage;
+        this.openPercentage = openPercentage;
     }
 
     static HMProperty[] getProperties(Float dimmingPercentage, Float openPercentage) {
@@ -62,5 +81,18 @@ public class ControlRooftop extends CommandWithProperties {
 
     ControlRooftop(byte[] bytes) {
         super(bytes);
+
+        Enumeration e = getPropertiesEnumeration();
+        while (e.hasMoreElements()) {
+            Property prop = (Property) e.nextElement();
+            switch (prop.getPropertyIdentifier()) {
+                case RooftopState.DIMMING_IDENTIFIER:
+                    dimmingPercentage = Property.getUnsignedInt(prop.getValueByte()) / 100f;
+                    break;
+                case RooftopState.OPEN_IDENTIFIER:
+                    openPercentage = Property.getUnsignedInt(prop.getValueByte()) / 100f;
+                    break;
+            }
+        }
     }
 }

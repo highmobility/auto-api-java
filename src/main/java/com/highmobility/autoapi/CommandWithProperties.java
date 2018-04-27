@@ -24,8 +24,10 @@ import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.Bytes;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 
 /**
  * Used for commands with properties. Can have 0 properties.
@@ -80,6 +82,22 @@ public class CommandWithProperties extends Command {
         return properties;
     }
 
+    public Enumeration getPropertiesEnumeration() {
+        return (new Enumeration() {
+            int size = getProperties().length;
+
+            int cursor;
+
+            public boolean hasMoreElements() {
+                return (cursor < size);
+            }
+
+            public Object nextElement() {
+                return Array.get(getProperties(), cursor++);
+            }
+        });
+    }
+
     public Property getProperty(byte identifier) {
         for (int i = 0; i < properties.length; i++) {
             Property prop = properties[i];
@@ -88,6 +106,8 @@ public class CommandWithProperties extends Command {
 
         return null;
     }
+
+
 
     public CommandWithProperties(byte[] bytes) {
         super(bytes);

@@ -64,6 +64,10 @@ public class RooftopTest {
 
         String commandBytes = Bytes.hexFromBytes(new ControlRooftop(.1f, .53f).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        ControlRooftop command = (ControlRooftop) CommandResolver.resolveHex(waitingForBytes);
+        assertTrue(command.getDimmingPercentage() == .1f);
+        assertTrue(command.getOpenPercentage() == .53f);
     }
 
     @Test public void stateBuilder() {

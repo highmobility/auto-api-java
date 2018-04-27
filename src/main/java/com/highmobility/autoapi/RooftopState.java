@@ -83,6 +83,10 @@ public class RooftopState extends CommandWithProperties {
             super(TYPE);
         }
 
+        /**
+         * @param openPercentage The open percentage.
+         * @return The builder.
+         */
         public Builder setOpenPercentage(Float openPercentage) {
             this.openPercentage = openPercentage;
             addProperty(new IntegerProperty(OPEN_IDENTIFIER, Property.floatToIntPercentage
@@ -90,6 +94,10 @@ public class RooftopState extends CommandWithProperties {
             return this;
         }
 
+        /**
+         * @param dimmingPercentage The dimming percentage.
+         * @return The builder.
+         */
         public Builder setDimmingPercentage(Float dimmingPercentage) {
             this.dimmingPercentage = dimmingPercentage;
             addProperty(new IntegerProperty(DIMMING_IDENTIFIER, Property.floatToIntPercentage
