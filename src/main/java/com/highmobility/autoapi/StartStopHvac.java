@@ -30,11 +30,22 @@ import com.highmobility.autoapi.property.Property;
 public class StartStopHvac extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x03);
 
+    /**
+     * @return Whether to start the HVAC.
+     */
+    public boolean start() {
+        return start;
+    }
+
+    private final boolean start;
+
     public StartStopHvac(boolean start) {
         super(TYPE.addByte(Property.boolToByte(start)));
+        this.start = start;
     }
 
     StartStopHvac(byte[] bytes) {
         super(bytes);
+        start = Property.getBool(bytes[3]);
     }
 }

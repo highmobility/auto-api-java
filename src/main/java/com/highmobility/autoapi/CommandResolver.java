@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.utils.Base64;
 import com.highmobility.utils.Bytes;
 
 public class CommandResolver {
@@ -101,14 +102,16 @@ public class CommandResolver {
                     command = new GetClimateState(bytes);
                 } else if (bytesAreForType(bytes, ClimateState.TYPE)) {
                     command = new ClimateState(bytes);
-                } else if (bytesAreForType(bytes, StartStopIonizing.TYPE)) {
-                    command = new StartStopIonizing(bytes);
+                } else if (bytesAreForType(bytes, StartStopIonising.TYPE)) {
+                    command = new StartStopIonising(bytes);
                 } else if (bytesAreForType(bytes, StartStopHvac.TYPE)) {
                     command = new StartStopHvac(bytes);
                 } else if (bytesAreForType(bytes, StartStopDefrosting.TYPE)) {
                     command = new StartStopDefrosting(bytes);
                 } else if (bytesAreForType(bytes, StartStopDefogging.TYPE)) {
                     command = new StartStopDefogging(bytes);
+                } else if (bytesAreForType(bytes, SetClimateProfile.TYPE)) {
+                    command = new SetClimateProfile(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.ROOFTOP)) {
                 if (bytesAreForType(bytes, GetRooftopState.TYPE)) {
@@ -345,9 +348,14 @@ public class CommandResolver {
             } else if (bytesAreForType(bytes, TextInput.TYPE)) {
                 command = new TextInput(bytes);
             } else {
+                Command.logger.info("Unknown command " + Bytes.hexFromBytes(Bytes
+                        .trimmedBytes(bytes, 3)) + ".. ");
                 command = new Command(bytes);
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e)
+
+        {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
             Command.logger.info("Failed to parse command " + Bytes.hexFromBytes(Bytes
@@ -356,6 +364,14 @@ public class CommandResolver {
         }
 
         return command;
+    }
+
+    public static Command resolveBase64(String base64) {
+        return resolve(Base64.decode(base64));
+    }
+
+    public static Command resolveHex(String hexBytes) {
+        return resolve(Bytes.bytesFromHex(hexBytes));
     }
 
     static boolean bytesAreForIdentifier(byte[] bytes, Identifier identifier) {

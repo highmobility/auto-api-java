@@ -80,6 +80,15 @@ public class CommandWithProperties extends Command {
         return properties;
     }
 
+    public Property getProperty(byte identifier) {
+        for (int i = 0; i < properties.length; i++) {
+            Property prop = properties[i];
+            if (prop.getPropertyIdentifier() == identifier) return prop;
+        }
+
+        return null;
+    }
+
     public CommandWithProperties(byte[] bytes) {
         super(bytes);
         if (propertiesExpected() && bytes.length < 7)

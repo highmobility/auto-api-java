@@ -24,15 +24,20 @@ import com.highmobility.autoapi.property.Property;
 
 /**
  * Manually start or stop ionising. The result is sent through the evented Climate State command.
+ * @deprecated use {@link StartStopIonising} instead
  */
+@Deprecated
 public class StartStopIonizing extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x06);
+    private final boolean start;
 
     public StartStopIonizing(boolean start) {
         super(TYPE.addByte(Property.boolToByte(start)));
+        this.start = start;
     }
 
     StartStopIonizing(byte[] bytes) {
         super(bytes);
+        start = Property.getBool(bytes[3]);
     }
 }

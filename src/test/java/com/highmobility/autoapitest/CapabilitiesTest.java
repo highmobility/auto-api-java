@@ -41,7 +41,7 @@ import com.highmobility.autoapi.StartStopCharging;
 import com.highmobility.autoapi.StartStopDefogging;
 import com.highmobility.autoapi.StartStopDefrosting;
 import com.highmobility.autoapi.StartStopHvac;
-import com.highmobility.autoapi.StartStopIonizing;
+import com.highmobility.autoapi.StartStopIonising;
 import com.highmobility.autoapi.StopControlMode;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.Type;
@@ -92,7 +92,7 @@ public class CapabilitiesTest {
         assertTrue(capabilities.isSupported(StartStopHvac.TYPE));
         assertTrue(capabilities.isSupported(StartStopDefogging.TYPE));
         assertTrue(capabilities.isSupported(StartStopDefrosting.TYPE));
-        assertTrue(capabilities.isSupported(StartStopIonizing.TYPE));
+        assertTrue(capabilities.isSupported(StartStopIonising.TYPE));
 
         assertTrue(capabilities.isSupported(GetRooftopState.TYPE));
         assertTrue(capabilities.isSupported(RooftopState.TYPE));
@@ -151,7 +151,7 @@ public class CapabilitiesTest {
         assertTrue(capability.isSupported(StartStopHvac.TYPE));
         assertTrue(capability.isSupported(StartStopDefogging.TYPE));
         assertTrue(capability.isSupported(StartStopDefrosting.TYPE));
-        assertTrue(capability.isSupported(StartStopIonizing.TYPE));
+        assertTrue(capability.isSupported(StartStopIonising.TYPE));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class CapabilitiesTest {
                 StartStopHvac.TYPE,
                 StartStopDefogging.TYPE,
                 StartStopDefrosting.TYPE,
-                StartStopIonizing.TYPE
+                StartStopIonising.TYPE
         };
 
         CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
@@ -228,7 +228,7 @@ public class CapabilitiesTest {
                 StartStopHvac.TYPE,
                 StartStopDefogging.TYPE,
                 StartStopDefrosting.TYPE,
-                StartStopIonizing.TYPE
+                StartStopIonising.TYPE
         };
 
         CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE,

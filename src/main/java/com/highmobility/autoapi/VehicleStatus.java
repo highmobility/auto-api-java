@@ -321,7 +321,7 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * @param color The color name
+         * @param color The color name.
          * @return The builder.
          * @deprecated use {@link #setColorName(String)} instead
          */
@@ -343,7 +343,7 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * @param power
+         * @param power The power in kw.
          * @return The builder.
          */
         public Builder setPower(Integer power) {
@@ -353,7 +353,7 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * @param numberOfDoors The number of doors
+         * @param numberOfDoors The number of doors.
          * @return The builder.
          */
         public Builder setNumberOfDoors(Integer numberOfDoors) {
@@ -373,7 +373,7 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * @param states The states
+         * @param states The states.
          * @return The builder.
          */
         public Builder setStates(Command[] states) {

@@ -23,26 +23,26 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * Manually start or stop defrosting. The result is sent through the evented Climate State message.
+ * Manually start or stop ionising. The result is sent through the evented Climate State command.
  */
-public class StartStopDefrosting extends Command {
-    public static final Type TYPE = new Type(Identifier.CLIMATE, 0x05);
-    private final boolean start;
+public class StartStopIonising extends Command {
+    public static final Type TYPE = new Type(Identifier.CLIMATE, 0x06);
 
     /**
-     * @return Whether to start the defrosting.
+     * @return Whether ionising should start.
      */
     public boolean start() {
         return start;
     }
 
+    private final boolean start;
 
-    public StartStopDefrosting(boolean start) {
+    public StartStopIonising(boolean start) {
         super(TYPE.addByte(Property.boolToByte(start)));
         this.start = start;
     }
 
-    StartStopDefrosting(byte[] bytes) {
+    StartStopIonising(byte[] bytes) {
         super(bytes);
         start = Property.getBool(bytes[3]);
     }

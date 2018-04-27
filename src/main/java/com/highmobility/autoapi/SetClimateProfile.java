@@ -34,18 +34,50 @@ import java.util.ArrayList;
 public class SetClimateProfile extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x02);
 
+    private static final byte AUTO_HVAC_IDENTIFIER = 0x01;
+    private static final byte DRIVER_TEMP_IDENTIFIER = 0x02;
+    private static final byte PASSENGER_TEMP_IDENTIFIER = 0x03;
+
+    private AutoHvacProperty autoHvacState;
+    private Float driverTemperature;
+    private Float passengerTemperature;
+
+    /**
+     * @return The Auto HVAC state.
+     */
+    public AutoHvacProperty getAutoHvacState() {
+        return autoHvacState;
+    }
+
+    /**
+     * @return The driver temperature.
+     */
+    public Float getDriverTemperature() {
+        return driverTemperature;
+    }
+
+    /**
+     * @return The passenger temperature.
+     */
+    public Float getPassengerTemperature() {
+        return passengerTemperature;
+    }
+
     /**
      * Create a set climate profile command. At least one parameter is expected not to be null.
      *
-     * @param autoHvacState        The auto hvac state.
+     * @param autoHvacState        The Auto HVAC state.
      * @param driverTemperature    The driver temperature.
-     * @param passengerTemperature The passenger temperature.
+     * @param passengerTemperature The driver temperature.
      * @throws IllegalArgumentException When all arguments are null
      */
     public SetClimateProfile(AutoHvacProperty autoHvacState,
                              Float driverTemperature,
                              Float passengerTemperature) {
         super(TYPE, getProperties(autoHvacState, driverTemperature, passengerTemperature));
+        this.autoHvacState = autoHvacState;
+        this.driverTemperature = driverTemperature;
+        this.passengerTemperature = passengerTemperature;
     }
 
     static HMProperty[] getProperties(AutoHvacProperty autoHvacState,
@@ -54,20 +86,41 @@ public class SetClimateProfile extends CommandWithProperties {
         ArrayList<Property> properties = new ArrayList<>();
 
         if (autoHvacState != null) {
-            autoHvacState.setIdentifier((byte) 0x01);
+            autoHvacState.setIdentifier(AUTO_HVAC_IDENTIFIER);
             properties.add(autoHvacState);
         }
 
         if (driverTemperature != null) {
-            FloatProperty prop = new FloatProperty((byte) 0x02, driverTemperature);
+            FloatProperty prop = new FloatProperty(DRIVER_TEMP_IDENTIFIER, driverTemperature);
             properties.add(prop);
         }
 
         if (passengerTemperature != null) {
-            FloatProperty prop = new FloatProperty((byte) 0x03, passengerTemperature);
+            FloatProperty prop = new FloatProperty(PASSENGER_TEMP_IDENTIFIER, passengerTemperature);
             properties.add(prop);
         }
 
         return properties.toArray(new Property[properties.size()]);
+    }
+
+    public SetClimateProfile(byte[] bytes) throws CommandParseException {
+        super(bytes);
+        Property[] properties = getProperties();
+
+        for (int i = 0; i < properties.length; i++) {
+            Property prop = properties[i];
+
+            switch (prop.getPropertyIdentifier()) {
+                case AUTO_HVAC_IDENTIFIER:
+                    autoHvacState = new AutoHvacProperty(prop.getPropertyBytes());
+                    break;
+                case DRIVER_TEMP_IDENTIFIER:
+                    driverTemperature = Property.getFloat(prop.getValueBytes());
+                    break;
+                case PASSENGER_TEMP_IDENTIFIER:
+                    passengerTemperature = Property.getFloat(prop.getValueBytes());
+                    break;
+            }
+        }
     }
 }

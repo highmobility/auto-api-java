@@ -333,7 +333,7 @@ public class DiagnosticsState extends CommandWithProperties {
 
         /**
          * @param fuelLevel The fuel level percentage between 0 and 1.
-         * @return
+         * @return The builder.
          */
         public Builder setFuelLevel(Float fuelLevel) {
             this.fuelLevel = fuelLevel;

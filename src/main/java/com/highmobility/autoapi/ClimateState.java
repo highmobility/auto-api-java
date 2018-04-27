@@ -63,35 +63,35 @@ public class ClimateState extends CommandWithProperties {
     AutoHvacProperty autoHvacState;
 
     /**
-     * @return Inside temperature.
+     * @return The inside temperature.
      */
     public Float getInsideTemperature() {
         return insideTemperature;
     }
 
     /**
-     * @return Outside temperature.
+     * @return The outside temperature.
      */
     public Float getOutsideTemperature() {
         return outsideTemperature;
     }
 
     /**
-     * @return Driver temperature setting.
+     * @return The driver temperature setting.
      */
     public Float getDriverTemperatureSetting() {
         return driverTemperatureSetting;
     }
 
     /**
-     * @return Passenger temperature setting.
+     * @return The passenger temperature setting.
      */
     public Float getPassengerTemperatureSetting() {
         return passengerTemperatureSetting;
     }
 
     /**
-     * @return Whether HVAC is active or not
+     * @return Whether HVAC is active or not.
      */
     public Boolean isHvacActive() {
         return hvacActive;
@@ -119,7 +119,7 @@ public class ClimateState extends CommandWithProperties {
     }
 
     /**
-     * @return The defrosting temperature
+     * @return The defrosting temperature.
      */
     public Float getDefrostingTemperature() {
         return defrostingTemperature;
@@ -156,7 +156,6 @@ public class ClimateState extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
 
-                Command.logger.info(Bytes.hexFromBytes(property.getPropertyBytes()));
             switch (property.getPropertyIdentifier()) {
                 case INSIDE_TEMPERATURE_IDENTIFIER:
                     insideTemperature = Property.getFloat(property.getValueBytes());
@@ -239,60 +238,110 @@ public class ClimateState extends CommandWithProperties {
             super(TYPE);
         }
 
+        /**
+         *
+         * @param insideTemperature The inside temperature.
+         * @return The builder.
+         */
         public Builder setInsideTemperature(Float insideTemperature) {
             this.insideTemperature = insideTemperature;
             addProperty(new FloatProperty(INSIDE_TEMPERATURE_IDENTIFIER, insideTemperature));
             return this;
         }
 
+        /**
+         *
+         * @param outsideTemperature The outside temperature.
+         * @return The builder.
+         */
         public Builder setOutsideTemperature(Float outsideTemperature) {
             this.outsideTemperature = outsideTemperature;
             addProperty(new FloatProperty(OUTSIDE_TEMPERATURE_IDENTIFIER, outsideTemperature));
             return this;
         }
 
+        /**
+         *
+         * @param driverTemperatureSetting The driver temperature.
+         * @return The builder.
+         */
         public Builder setDriverTemperatureSetting(Float driverTemperatureSetting) {
             this.driverTemperatureSetting = driverTemperatureSetting;
             addProperty(new FloatProperty(DRIVER_TEMPERATURE_SETTING_IDENTIFIER, driverTemperatureSetting));
             return this;
         }
 
+        /**
+         *
+         * @param passengerTemperatureSetting The passenger temperature setting.
+         * @return The builder.
+         */
         public Builder setPassengerTemperatureSetting(Float passengerTemperatureSetting) {
             this.passengerTemperatureSetting = passengerTemperatureSetting;
             addProperty(new FloatProperty(PASSENGER_TEMPERATURE_SETTING_IDENTIFIER, passengerTemperatureSetting));
             return this;
         }
 
+        /**
+         *
+         * @param hvacActive Whether HVAC is active or not.
+         * @return The builder.
+         */
         public Builder setHvacActive(Boolean hvacActive) {
             this.hvacActive = hvacActive;
             addProperty(new BooleanProperty(HVAC_ACTIVE_IDENTIFIER, hvacActive));
             return this;
         }
 
+        /**
+         *
+         * @param defoggingActive Whether defogging is active or not.
+         * @return The builder.
+         */
         public Builder setDefoggingActive(Boolean defoggingActive) {
             this.defoggingActive = defoggingActive;
             addProperty(new BooleanProperty(DEFOGGING_ACTIVE_IDENTIFIER, defoggingActive));
             return this;
         }
 
+        /**
+         *
+         * @param defrostingActive Whether defrosting is active or not.
+         * @return The builder.
+         */
         public Builder setDefrostingActive(Boolean defrostingActive) {
             this.defrostingActive = defrostingActive;
             addProperty(new BooleanProperty(DEFROSTING_ACTIVE_IDENTIFIER, defrostingActive));
             return this;
         }
 
+        /**
+         *
+         * @param ionisingActive Whether ionising is active or not.
+         * @return The builder.
+         */
         public Builder setIonisingActive(Boolean ionisingActive) {
             this.ionisingActive = ionisingActive;
             addProperty(new BooleanProperty(IONISING_ACTIVE_IDENTIFIER, ionisingActive));
             return this;
         }
 
+        /**
+         *
+         * @param defrostingTemperature The defrosting temperature
+         * @return The builder.
+         */
         public Builder setDefrostingTemperature(Float defrostingTemperature) {
             this.defrostingTemperature = defrostingTemperature;
             addProperty(new FloatProperty(DEFROSTING_TEMPERATURE_IDENTIFIER, defrostingTemperature));
             return this;
         }
 
+        /**
+         *
+         * @param autoHvacState The Auto HVAC state.
+         * @return The builder.
+         */
         public Builder setAutoHvacState(AutoHvacProperty autoHvacState) {
             this.autoHvacState = autoHvacState;
             autoHvacState.setIdentifier(HVAC_PROFILE_IDENTIFIER);

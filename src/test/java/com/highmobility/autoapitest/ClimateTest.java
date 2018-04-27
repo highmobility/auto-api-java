@@ -8,9 +8,10 @@ import com.highmobility.autoapi.SetClimateProfile;
 import com.highmobility.autoapi.StartStopDefogging;
 import com.highmobility.autoapi.StartStopDefrosting;
 import com.highmobility.autoapi.StartStopHvac;
-import com.highmobility.autoapi.StartStopIonizing;
+import com.highmobility.autoapi.StartStopIonising;
 import com.highmobility.autoapi.property.AutoHvacProperty;
 import com.highmobility.autoapi.property.AutoHvacState;
+import com.highmobility.utils.Base64;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -90,24 +91,38 @@ public class ClimateTest {
         String waitingForBytes = "00240401";
         String commandBytes = Bytes.hexFromBytes(new StartStopDefogging(true).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        StartStopDefogging command = (StartStopDefogging) CommandResolver.resolveHex
+                (waitingForBytes);
+        assertTrue(command.start() == true);
     }
 
     @Test public void startStopDefrosting() {
         String waitingForBytes = "00240501";
         String commandBytes = Bytes.hexFromBytes(new StartStopDefrosting(true).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        StartStopDefrosting command = (StartStopDefrosting) CommandResolver.resolveHex
+                (waitingForBytes);
+        assertTrue(command.start() == true);
     }
 
     @Test public void startStopHvac() {
         String waitingForBytes = "00240300";
         String commandBytes = Bytes.hexFromBytes(new StartStopHvac(false).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        StartStopHvac command = (StartStopHvac) CommandResolver.resolveHex(waitingForBytes);
+        assertTrue(command.start() == false);
     }
 
-    @Test public void startStopIonizing() {
+    @Test public void StartStopIonising() {
         String waitingForBytes = "00240600";
-        String commandBytes = Bytes.hexFromBytes(new StartStopIonizing(false).getBytes());
+        String commandBytes = Bytes.hexFromBytes(new StartStopIonising(false).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        StartStopIonising command = (StartStopIonising) CommandResolver.resolveHex(waitingForBytes);
+        assertTrue(command.start() == false);
     }
 
     @Test public void setClimateProfile() {
@@ -136,12 +151,30 @@ public class ClimateTest {
                 passengerTemp).getBytes();
 
         assertTrue(Arrays.equals(commandBytes, waitingForBytes));
+
+        SetClimateProfile profile = (SetClimateProfile) CommandResolver.resolveBase64(Base64.encode(waitingForBytes));
+        assertTrue(profile.getDriverTemperature() == 21.5f);
+        assertTrue(profile.getPassengerTemperature() == 21.5f);
+
+        assertTrue(profile.getAutoHvacState().isConstant() == false);
+        weekdayWeekdayStates = profile.getAutoHvacState().getStates();
+        assertTrue(weekdayWeekdayStates != null);
+        assertTrue(weekdayWeekdayStates.length == 7);
+        assertTrue(weekdayWeekdayStates[0].isActive() == false);
+        assertTrue(weekdayWeekdayStates[5].isActive() == true);
+        assertTrue(weekdayWeekdayStates[5].getDay() == 5);
+        assertTrue(weekdayWeekdayStates[5].getStartHour() == 7);
+        assertTrue(weekdayWeekdayStates[5].getStartMinute() == 30);
+        assertTrue(weekdayWeekdayStates[6].isActive() == true);
+        assertTrue(weekdayWeekdayStates[6].getDay() == 6);
+        assertTrue(weekdayWeekdayStates[6].getStartHour() == 7);
+        assertTrue(weekdayWeekdayStates[6].getStartMinute() == 30);
     }
 
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("002401");
         ClimateState state = (ClimateState) CommandResolver.resolve(bytes);
-        assertTrue(state.getAutoHvacStates() == null);
+        assertTrue(state.getAutoHvacState() == null);
     }
 
     @Test public void build() {

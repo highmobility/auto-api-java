@@ -28,11 +28,22 @@ import com.highmobility.autoapi.property.Property;
 public class StartStopDefogging extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x04);
 
+    /**
+     * @return Whether to start the defogging.
+     */
+    public boolean start() {
+        return start;
+    }
+
+    private final boolean start;
+
     public StartStopDefogging(boolean start) {
         super(TYPE.addByte(Property.boolToByte(start)));
+        this.start = start;
     }
 
     StartStopDefogging(byte[] bytes) {
         super(bytes);
+        start = Property.getBool(bytes[3]);
     }
 }
