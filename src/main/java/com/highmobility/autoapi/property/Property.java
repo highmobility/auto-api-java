@@ -62,6 +62,10 @@ public class Property implements HMProperty {
         this.bytes = bytes;
     }
 
+    public int getSize() {
+        return Property.getUnsignedInt(bytes, 1, 2);
+    }
+
     /**
      * @return The value bytes.
      */

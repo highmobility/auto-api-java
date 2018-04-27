@@ -41,28 +41,28 @@ public class LightsState extends CommandWithProperties {
     int[] ambientColor;
 
     /**
-     * @return Front exterior light state
+     * @return The front exterior light state.
      */
     public FrontExteriorLightState getFrontExteriorLightState() {
         return frontExteriorLightState;
     }
 
     /**
-     * @return Rear exterior light state
+     * @return The rear exterior light state.
      */
     public Boolean isRearExteriorLightActive() {
         return rearExteriorLightActive;
     }
 
     /**
-     * @return Interior light state
+     * @return The interior light state.
      */
     public Boolean isInteriorLightActive() {
         return interiorLightActive;
     }
 
     /**
-     * @return Ambient color in rgba values from 0-255
+     * @return The ambient color, in rgba values from 0-255.
      */
     public int[] getAmbientColor() {
         return ambientColor;
@@ -121,12 +121,20 @@ public class LightsState extends CommandWithProperties {
             super(TYPE);
         }
 
+        /**
+         * @param frontExteriorLightState The front exterior light state.
+         * @return The builder.
+         */
         public Builder setFrontExteriorLightState(FrontExteriorLightState frontExteriorLightState) {
             this.frontExteriorLightState = frontExteriorLightState;
             addProperty(frontExteriorLightState);
             return this;
         }
 
+        /**
+         * @param rearExteriorLightActive Whether exterior lights are active.
+         * @return The builder.
+         */
         public Builder setRearExteriorLightActive(Boolean rearExteriorLightActive) {
             this.rearExteriorLightActive = rearExteriorLightActive;
             addProperty(new BooleanProperty(REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER,
@@ -134,12 +142,20 @@ public class LightsState extends CommandWithProperties {
             return this;
         }
 
+        /**
+         * @param interiorLightActive Whether interior lights are active.
+         * @return The builder.
+         */
         public Builder setInteriorLightActive(Boolean interiorLightActive) {
             this.interiorLightActive = interiorLightActive;
             addProperty(new BooleanProperty(INTERIOR_LIGHT_ACTIVE_IDENTIFIER, interiorLightActive));
             return this;
         }
 
+        /**
+         * @param ambientColor The ambient color, in rgba values from 0-255.
+         * @return The builder.
+         */
         public Builder setAmbientColor(int[] ambientColor) {
             this.ambientColor = ambientColor;
             addProperty(new ColorProperty(AMBIENT_COLOR_IDENTIFIER, ambientColor));

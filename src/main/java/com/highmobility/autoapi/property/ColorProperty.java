@@ -20,8 +20,20 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.CommandParseException;
+
 public class ColorProperty extends Property {
-    public ColorProperty(byte identifier, int[] ambientColor) throws IllegalArgumentException {
+    public ColorProperty(int[] ambientColor) {
+        this((byte) 0x00, ambientColor);
+    }
+
+    public int[] getAmbientColor() {
+        return ambientColor;
+    }
+
+    int[] ambientColor;
+
+    public ColorProperty(byte identifier, int[] ambientColor) {
         super(identifier, 3);
 
         if (ambientColor.length != 4 && ambientColor.length != 3) {
@@ -32,5 +44,18 @@ public class ColorProperty extends Property {
         bytes[3] = (byte) ambientColor[0];
         bytes[4] = (byte) ambientColor[1];
         bytes[5] = (byte) ambientColor[2];
+
+        this.ambientColor = ambientColor;
+    }
+
+    public ColorProperty(byte[] bytes) throws CommandParseException {
+        super(bytes);
+        if (bytes.length < 6) throw new CommandParseException();
+        ambientColor = new int[4];
+        for (int i = 0; i < 3; i++) {
+            ambientColor[i] = Property.getUnsignedInt(bytes[i + 3]);
+        }
+
+        if (getSize() == 3) ambientColor[3] = 255;
     }
 }

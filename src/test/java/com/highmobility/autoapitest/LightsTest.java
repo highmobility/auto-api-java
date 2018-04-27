@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlLights;
 import com.highmobility.autoapi.GetLightsState;
@@ -66,6 +65,13 @@ public class LightsTest {
         ).getBytes();
 
         assertTrue(Arrays.equals(expecting, bytes));
+
+        ControlLights command = (ControlLights) CommandResolver.resolve(expecting);
+        assertTrue(command.getFrontExteriorLightState() == FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM);
+        assertTrue(command.getRearExteriorLightActive() == false);
+        assertTrue(command.getInteriorLightActive() == false);
+        assertTrue(Arrays.equals(command.getAmbientColor(), new int[]{255, 0, 0, 255}));
+
     }
 
     @Test public void build() {
