@@ -58,11 +58,25 @@ public class NaviDestinationTest {
         }
 
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+
+        SetNaviDestination command = (SetNaviDestination) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getName().equals("Berlin"));
+        assertTrue(command.getCoordinates().getLatitude() == 52.520008f);
+        assertTrue(command.getCoordinates().getLongitude() == 13.404954f);
     }
 
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("003101");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((NaviDestination) state).getName() == null);
+    }
+
+    @Test public void build() {
+        NaviDestination.Builder builder = new NaviDestination.Builder();
+        builder.setCoordinates(new CoordinatesProperty(52.520008f, 13.404954f));
+        builder.setName("Berlin");
+        byte[] bytes = builder.build().getBytes();
+        assertTrue(Arrays.equals(bytes, Bytes.bytesFromHex("0031010100084252147d41567ab10200064265726c696e")));
+
     }
 }

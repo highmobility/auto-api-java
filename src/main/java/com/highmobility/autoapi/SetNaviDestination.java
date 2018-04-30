@@ -34,25 +34,47 @@ import java.util.List;
 public class SetNaviDestination extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x02);
 
+    private static final byte COORDINATES_IDENTIFIER = 0x01;
+    private static final byte NAME_IDENTIFIER = 0x02;
+
+    private CoordinatesProperty coordinates;
+    private String name;
+
     /**
-     * @param coordinates   the destination coordinates. Property identifier is not needed.
-     * @param name          the destination name
+     * @return The destination coordinates.
+     */
+    public CoordinatesProperty getCoordinates() {
+        return coordinates;
+    }
+
+    /**
+     * @return The destination name.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param coordinates The destination coordinates.
+     * @param name        The destination name.
      * @throws IllegalArgumentException if all arguments are null
      */
     public SetNaviDestination(CoordinatesProperty coordinates, String name) {
         super(TYPE, getProperties(coordinates, name));
+        this.coordinates = coordinates;
+        this.name = name;
     }
 
     static HMProperty[] getProperties(CoordinatesProperty coordinates, String name) {
         List<Property> properties = new ArrayList<>();
 
         if (coordinates != null) {
-            coordinates.setIdentifier((byte) 0x01);
+            coordinates.setIdentifier(COORDINATES_IDENTIFIER);
             properties.add(coordinates);
         }
 
         if (name != null) {
-            Property prop = new StringProperty((byte) 0x02, name);
+            Property prop = new StringProperty(NAME_IDENTIFIER, name);
             properties.add(prop);
         }
 
@@ -61,5 +83,15 @@ public class SetNaviDestination extends CommandWithProperties {
 
     SetNaviDestination(byte[] bytes) {
         super(bytes);
+        for (Property property : properties) {
+            switch (property.getPropertyIdentifier()) {
+                case COORDINATES_IDENTIFIER:
+                    coordinates = new CoordinatesProperty(property.getPropertyBytes());
+                    break;
+                case NAME_IDENTIFIER:
+                    name = Property.getString(property.getValueBytes());
+                    break;
+            }
+        }
     }
 }

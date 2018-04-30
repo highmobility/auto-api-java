@@ -56,5 +56,7 @@ public class CoordinatesProperty extends Property {
         super(identifier, 8);
         Bytes.setBytes(bytes, Property.floatToBytes(latitude), 3);
         Bytes.setBytes(bytes, Property.floatToBytes(longitude), 7);
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

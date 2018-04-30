@@ -22,6 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.StringProperty;
 
 /**
  * Command sent when a Get Navi Destination command is received by the car.
@@ -29,18 +30,21 @@ import com.highmobility.autoapi.property.Property;
 public class NaviDestination extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x01);
 
+    private static final byte COORDINATES_IDENTIFIER = 0x01;
+    private static final byte NAME_IDENTIFIER = 0x02;
+
     private CoordinatesProperty coordinates;
     private String name;
 
     /**
-     * @return The coordinates
+     * @return The coordinates.
      */
     public CoordinatesProperty getCoordinates() {
         return coordinates;
     }
 
     /**
-     * @return The name
+     * @return The name.
      */
     public String getName() {
         return name;
@@ -52,10 +56,10 @@ public class NaviDestination extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case COORDINATES_IDENTIFIER:
                     coordinates = new CoordinatesProperty(property.getPropertyBytes());
                     break;
-                case 0x02:
+                case NAME_IDENTIFIER:
                     name = Property.getString(property.getValueBytes());
                     break;
             }
@@ -64,5 +68,45 @@ public class NaviDestination extends CommandWithProperties {
 
     @Override public boolean isState() {
         return true;
+    }
+
+    private NaviDestination(Builder builder) {
+        super(builder);
+        name = builder.name;
+        coordinates = builder.coordinates;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private String name;
+        private CoordinatesProperty coordinates;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param coordinates The coordinates.
+         * @return The builder.
+         */
+        public Builder setCoordinates(CoordinatesProperty coordinates) {
+            this.coordinates = coordinates;
+            coordinates.setIdentifier(COORDINATES_IDENTIFIER);
+            addProperty(coordinates);
+            return this;
+        }
+
+        /**
+         * @param name The name.
+         * @return The builder.
+         */
+        public Builder setName(String name) {
+            this.name = name;
+            addProperty(new StringProperty(NAME_IDENTIFIER, name));
+            return this;
+        }
+
+        public NaviDestination build() {
+            return new NaviDestination(this);
+        }
     }
 }
