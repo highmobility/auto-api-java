@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -27,11 +28,11 @@ import com.highmobility.autoapi.property.Property;
  */
 public class WeatherConditions extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WEATHER_CONDITIONS, 0x01);
-
+    private static final byte RAIN_IDENTIFIER = 0x01;
     Float rainIntensity;
 
     /**
-     * @return Measured raining intensity percentage, whereas 0 is no rain and 1 is maximum rain
+     * @return The rain intensity percentage.
      */
     public Float getRainIntensity() {
         return rainIntensity;
@@ -43,7 +44,7 @@ public class WeatherConditions extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case RAIN_IDENTIFIER:
                     rainIntensity = Property.getUnsignedInt(property.getValueByte()) / 100f;
                     break;
             }
@@ -52,5 +53,32 @@ public class WeatherConditions extends CommandWithProperties {
 
     @Override public boolean isState() {
         return true;
+    }
+
+    private WeatherConditions(Builder builder) {
+        super(builder);
+        rainIntensity = builder.rainIntensity;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private Float rainIntensity;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param rainIntensity The rain intensity percentage.
+         * @return The builder.
+         */
+        public Builder setRainIntensity(Float rainIntensity) {
+            this.rainIntensity = rainIntensity;
+            addProperty(new IntegerProperty(RAIN_IDENTIFIER, Property.floatToIntPercentage(rainIntensity), 1));
+            return this;
+        }
+
+        public WeatherConditions build() {
+            return new WeatherConditions(this);
+        }
     }
 }

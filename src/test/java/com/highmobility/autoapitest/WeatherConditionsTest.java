@@ -8,6 +8,8 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -42,5 +44,12 @@ public class WeatherConditionsTest {
         byte[] bytes = Bytes.bytesFromHex("005501");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((WeatherConditions)state).getRainIntensity() == null);
+    }
+
+    @Test public void builder() {
+        WeatherConditions.Builder builder = new WeatherConditions.Builder();
+        builder.setRainIntensity(1f);
+        byte[] bytes = builder.build().getBytes();
+        assertTrue(Arrays.equals(bytes, Bytes.bytesFromHex("00550101000164")));
     }
 }

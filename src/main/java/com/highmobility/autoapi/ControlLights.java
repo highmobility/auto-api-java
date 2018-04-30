@@ -68,7 +68,7 @@ public class ControlLights extends CommandWithProperties {
     }
 
     /**
-     * @return Ambient color with rgba values from 0-255.
+     * @return Ambient color, in rgba values from 0-255.
      */
     public int[] getAmbientColor() {
         return ambientColor;
