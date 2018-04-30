@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -24,9 +25,7 @@ import static org.junit.Assert.fail;
 public class VehicleTimeTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
-                "005001" +
-                        "01000811010A1020330078");
+        byte[] bytes = Bytes.bytesFromHex("00500101000811010A1020330078");
 
         Command command = null;
         try {
@@ -65,6 +64,15 @@ public class VehicleTimeTest {
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("005001");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((VehicleTime)state).getVehicleTime() == null);
+        assertTrue(((VehicleTime) state).getVehicleTime() == null);
+    }
+
+    @Test public void build() throws ParseException {
+        VehicleTime.Builder builder = new VehicleTime.Builder();
+        Calendar c = TestUtils.getCalendar("2017-01-10T14:32:51", 120);
+        builder.setVehicleTime(c);
+        byte[] bytes = builder.build().getBytes();
+        assertTrue(Arrays.equals(bytes, Bytes.bytesFromHex("00500101000811010A1020330078")));
+
     }
 }

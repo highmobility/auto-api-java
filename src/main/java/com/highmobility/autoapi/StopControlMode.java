@@ -21,8 +21,7 @@
 package com.highmobility.autoapi;
 
 /**
- * Stop the control mode of the car. The result is  sent through
- * the evented Control Mode command with the mode 0x05 Control Ended.
+ * Stop the control mode of the car. The result is  sent through the evented Control Mode command.
  */
 public class StopControlMode extends Command {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x03);

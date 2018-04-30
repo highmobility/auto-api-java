@@ -36,11 +36,18 @@ public class TestUtils {
         return format;
     }
 
-    public static Calendar getCalendar(String dateString) throws ParseException {
+    public static Calendar getCalendar(String dateString, int timeZoneMinuteOffset) throws
+            ParseException {
         Date date = getFormat().parse(dateString);
         Calendar c = new GregorianCalendar();
         c.setTime(date);
-        c.setTimeZone(TimeZone.getTimeZone("UTC"));
+        c.setTimeZone(TimeZone.getTimeZone(TimeZone.getAvailableIDs(timeZoneMinuteOffset * 60 *
+                1000)[0]));
+
         return c;
+    }
+
+    public static Calendar getCalendar(String dateString) throws ParseException {
+        return getCalendar(dateString, 0);
     }
 }

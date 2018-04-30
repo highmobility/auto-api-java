@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.Calendar;
@@ -34,8 +35,7 @@ public class VehicleTime extends CommandWithProperties {
     Calendar vehicleTime;
 
     /**
-     *
-     * @return Vehicle time
+     * @return The vehicle time.
      */
     public Calendar getVehicleTime() {
         return vehicleTime;
@@ -56,5 +56,32 @@ public class VehicleTime extends CommandWithProperties {
 
     @Override public boolean isState() {
         return true;
+    }
+
+    private VehicleTime(Builder builder) {
+        super(builder);
+        vehicleTime = builder.vehicleTime;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        Calendar vehicleTime;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param vehicleTime The vehicle time.
+         * @return The builder.
+         */
+        public Builder setVehicleTime(Calendar vehicleTime) {
+            this.vehicleTime = vehicleTime;
+            addProperty(new CalendarProperty((byte) 0x01, vehicleTime));
+            return this;
+        }
+
+        public VehicleTime build() {
+            return new VehicleTime(this);
+        }
     }
 }
