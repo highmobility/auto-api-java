@@ -4,9 +4,12 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetVehicleLocation;
 import com.highmobility.autoapi.VehicleLocation;
+import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
+
+import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -43,6 +46,15 @@ public class VehicleLocationTest {
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("003001");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((VehicleLocation)state).getCoordinates() == null);
+        assertTrue(((VehicleLocation) state).getCoordinates() == null);
+    }
+
+    @Test public void build() {
+        VehicleLocation.Builder builder = new VehicleLocation.Builder();
+        CoordinatesProperty coordinates = new CoordinatesProperty(52.520008f, 13.404954f);
+        builder.setCoordinates(coordinates);
+        builder.setHeading(52.520008f);
+        assertTrue(Arrays.equals(builder.build().getBytes(), Bytes.bytesFromHex
+                ("0030010100084252147d41567ab10200044252147d")));
     }
 }

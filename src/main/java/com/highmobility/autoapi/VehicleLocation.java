@@ -21,6 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CoordinatesProperty;
+import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -29,20 +30,21 @@ import com.highmobility.autoapi.property.Property;
 public class VehicleLocation extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VEHICLE_LOCATION, 0x01);
 
+    private static final byte COORDINATES_IDENTIFIER = 0x01;
+    private static final byte HEADING_IDENTIFIER = 0x02;
+
     private CoordinatesProperty coordinates;
     private Float heading;
 
     /**
-     *
-     * @return The vehicle coordinates
+     * @return The vehicle coordinates.
      */
     public CoordinatesProperty getCoordinates() {
         return coordinates;
     }
 
     /**
-     *
-     * @return The Heading
+     * @return The heading.
      */
     public Float getHeading() {
         return heading;
@@ -54,10 +56,10 @@ public class VehicleLocation extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case COORDINATES_IDENTIFIER:
                     coordinates = new CoordinatesProperty(property.getPropertyBytes());
                     break;
-                case 0x02:
+                case HEADING_IDENTIFIER:
                     heading = Property.getFloat(property.getValueBytes());
                     break;
             }
@@ -66,5 +68,45 @@ public class VehicleLocation extends CommandWithProperties {
 
     @Override public boolean isState() {
         return true;
+    }
+
+    private VehicleLocation(Builder builder) {
+        super(builder);
+        heading = builder.heading;
+        coordinates = builder.coordinates;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private Float heading;
+        private CoordinatesProperty coordinates;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param heading The heading.
+         * @return The builder.
+         */
+        public Builder setHeading(Float heading) {
+            this.heading = heading;
+            addProperty(new FloatProperty(HEADING_IDENTIFIER, heading));
+            return this;
+        }
+
+        /**
+         * @param coordinates The vehicle coordinates.
+         * @return The builder.
+         */
+        public Builder setCoordinates(CoordinatesProperty coordinates) {
+            this.coordinates = coordinates;
+            coordinates.setIdentifier(COORDINATES_IDENTIFIER);
+            addProperty(coordinates);
+            return this;
+        }
+
+        public VehicleLocation build() {
+            return new VehicleLocation(this);
+        }
     }
 }
