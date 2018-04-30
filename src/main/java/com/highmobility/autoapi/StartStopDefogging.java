@@ -29,7 +29,7 @@ public class StartStopDefogging extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x04);
 
     /**
-     * @return Whether to start the defogging.
+     * @return Whether defogging should be started
      */
     public boolean start() {
         return start;

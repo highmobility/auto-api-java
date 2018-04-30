@@ -30,7 +30,7 @@ public class StartStopDefrosting extends Command {
     private final boolean start;
 
     /**
-     * @return Whether to start the defrosting.
+     * @return Whether defrosting should be started.
      */
     public boolean start() {
         return start;

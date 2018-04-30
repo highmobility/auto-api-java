@@ -31,7 +31,7 @@ public class StartStopHvac extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x03);
 
     /**
-     * @return Whether to start the HVAC.
+     * @return Whether HVAC should be started.
      */
     public boolean start() {
         return start;
