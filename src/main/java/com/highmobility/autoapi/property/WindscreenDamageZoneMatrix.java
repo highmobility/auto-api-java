@@ -20,9 +20,6 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
-
 /**
  * Created by root on 6/29/17.
  */
@@ -62,7 +59,6 @@ public class WindscreenDamageZoneMatrix implements HMProperty {
     }
 
     @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), getPropertyLength(),
-                getSizeByte());
+        return Property.getPropertyBytes(getPropertyIdentifier(), getSizeByte());
     }
 }

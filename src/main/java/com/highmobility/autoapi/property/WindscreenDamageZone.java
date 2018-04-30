@@ -20,9 +20,6 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
-
 public class WindscreenDamageZone implements HMProperty {
     int damageZoneX;
     int damageZoneY;
@@ -41,7 +38,6 @@ public class WindscreenDamageZone implements HMProperty {
     }
 
     /**
-     *
      * @return The vertical position of the zone from the bottom, starting from index 1
      */
     public int getDamageZoneY() {
@@ -66,7 +62,6 @@ public class WindscreenDamageZone implements HMProperty {
     }
 
     @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), getPropertyLength(),
-                getPositionByte());
+        return Property.getPropertyBytes(getPropertyIdentifier(), getPositionByte());
     }
 }

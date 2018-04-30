@@ -9,6 +9,8 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -42,11 +44,22 @@ public class TheftAlarmTest {
         String commandBytes = Bytes.hexFromBytes(new SetTheftAlarm(TheftAlarmState.State
                 .TRIGGERED).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        SetTheftAlarm command = (SetTheftAlarm) CommandResolver.resolveHex(waitingForBytes);
+        assertTrue(command.getState() == TheftAlarmState.State.TRIGGERED);
+    }
+
+    @Test public void build() {
+        TheftAlarmState.Builder builder = new TheftAlarmState.Builder();
+        builder.setState(TheftAlarmState.State.ARMED);
+        TheftAlarmState state = builder.build();
+        assertTrue(Arrays.equals(state.getBytes(), Bytes.bytesFromHex("00460101000101")));
+        assertTrue(state.getState() == TheftAlarmState.State.ARMED);
     }
 
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("004601");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((TheftAlarmState)state).getState() == null);
+        assertTrue(((TheftAlarmState) state).getState() == null);
     }
 }

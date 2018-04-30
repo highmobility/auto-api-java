@@ -62,6 +62,6 @@ public enum FrontExteriorLightState implements HMProperty {
     }
 
     @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), getPropertyLength(), value);
+        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

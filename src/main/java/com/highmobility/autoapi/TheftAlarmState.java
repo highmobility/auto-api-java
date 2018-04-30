@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -32,7 +33,7 @@ public class TheftAlarmState extends CommandWithProperties {
     State state;
 
     /**
-     * @return Theft alarm state
+     * @return Theft alarm state.
      */
     public State getState() {
         return state;
@@ -55,7 +56,7 @@ public class TheftAlarmState extends CommandWithProperties {
         return true;
     }
 
-    public enum State {
+    public enum State implements HMProperty {
         NOT_ARMED((byte) 0x00), ARMED((byte) 0x01), TRIGGERED((byte) 0x02);
 
         public static State fromByte(byte value) throws CommandParseException {
@@ -79,6 +80,45 @@ public class TheftAlarmState extends CommandWithProperties {
 
         public byte getByte() {
             return value;
+        }
+
+        @Override public byte getPropertyIdentifier() {
+            return 0x01;
+        }
+
+        @Override public int getPropertyLength() {
+            return 1;
+        }
+
+        @Override public byte[] getPropertyBytes() {
+            return Property.getPropertyBytes(getPropertyIdentifier(), value);
+        }
+    }
+
+    private TheftAlarmState(Builder builder) {
+        super(builder);
+        state = builder.state;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private State state;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param state The theft alarm state.
+         * @return The builder.
+         */
+        public Builder setState(State state) {
+            this.state = state;
+            addProperty(state);
+            return this;
+        }
+
+        public TheftAlarmState build() {
+            return new TheftAlarmState(this);
         }
     }
 }

@@ -128,10 +128,10 @@ public class Property implements HMProperty {
 
     // helper methods
 
-    public static byte[] getPropertyBytes(byte identifier, int length, byte value) throws IllegalArgumentException {
+    public static byte[] getPropertyBytes(byte identifier, byte value) throws IllegalArgumentException {
         byte[] bytes = new byte[4];
         bytes[0] = identifier;
-        byte[] lengthBytes = intToBytes(length, 2);
+        byte[] lengthBytes = intToBytes(1, 2);
         bytes[1] = lengthBytes[0];
         bytes[2] = lengthBytes[1];
         bytes[3] = value;
