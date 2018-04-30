@@ -9,6 +9,8 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -19,8 +21,7 @@ public class ValetModeTest {
     @Test
     public void state() {
         byte[] bytes = Bytes.bytesFromHex(
-                "002801" +
-                        "01000101");
+                "00280101000101");
 
         Command command = null;
         try {
@@ -44,11 +45,22 @@ public class ValetModeTest {
         String waitingForBytes = "00280201";
         String commandBytes = Bytes.hexFromBytes(new ActivateDeactivateValetMode(true).getBytes());
         assertTrue(waitingForBytes.equals(commandBytes));
+
+        ActivateDeactivateValetMode command = (ActivateDeactivateValetMode) CommandResolver
+                .resolve(Bytes.bytesFromHex(waitingForBytes));
+        assertTrue(command.activate() == true);
     }
 
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("002801");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((ValetMode)state).isActive() == null);
+        assertTrue(((ValetMode) state).isActive() == null);
+    }
+
+    @Test public void builder() {
+        ValetMode.Builder builder = new ValetMode.Builder();
+        builder.setActive(true);
+        byte[] bytes = builder.build().getBytes();
+        assertTrue(Arrays.equals(bytes, Bytes.bytesFromHex("00280101000101")));
     }
 }

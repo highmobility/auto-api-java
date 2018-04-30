@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -29,10 +30,12 @@ import com.highmobility.autoapi.property.Property;
 public class ValetMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x01);
 
+    private static final byte ACTIVE_IDENTIFIER = 0x01;
+
     Boolean active;
 
     /**
-     * @return A boolean indicating whether the valet mode is active or not.
+     * @return The valet mode state.
      */
     public Boolean isActive() {
         return active;
@@ -44,7 +47,7 @@ public class ValetMode extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case ACTIVE_IDENTIFIER:
                     active = Property.getBool(property.getValueByte());
                     break;
             }
@@ -53,5 +56,32 @@ public class ValetMode extends CommandWithProperties {
 
     @Override public boolean isState() {
         return true;
+    }
+
+    private ValetMode(Builder builder) {
+        super(builder);
+        active = builder.active;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private boolean active;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param active The valet mode state.
+         * @return The builder.
+         */
+        public Builder setActive(boolean active) {
+            this.active = active;
+            addProperty(new BooleanProperty(ACTIVE_IDENTIFIER, active));
+            return this;
+        }
+
+        public ValetMode build() {
+            return new ValetMode(this);
+        }
     }
 }

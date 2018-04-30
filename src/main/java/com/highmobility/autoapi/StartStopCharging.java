@@ -32,7 +32,7 @@ public class StartStopCharging extends Command {
     boolean start;
 
     /**
-     * @return Indication on whether to start the charging.
+     * @return Whether charging should start.
      */
     public boolean getStart() {
         return start;

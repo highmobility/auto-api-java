@@ -42,7 +42,6 @@ public enum Identifier {
     VEHICLE_LOCATION(new byte[] { 0x00, (byte)0x30 }),
     VEHICLE_TIME(new byte[] { 0x00, (byte)0x50 }),
     NAVI_DESTINATION(new byte[] { 0x00, (byte)0x31 }),
-    DELIVERED_PARCELS(new byte[] { 0x00, (byte)0x32 }),
     DIAGNOSTICS(new byte[] { 0x00, (byte)0x33 }),
     MAINTENANCE(new byte[] { 0x00, (byte)0x34 }),
     ENGINE(new byte[] { 0x00, (byte)0x35 }),

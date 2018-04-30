@@ -23,21 +23,32 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * Activate or deacticate valet mode. The result is sent through the evented Valet Mode command with
- * either the mode 0x00 Deactivated or 0x01 Activated.
+ * Activate or deactivate valet mode. The result is sent through the evented Valet Mode command.
  */
 public class ActivateDeactivateValetMode extends Command {
     public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x02);
 
+    boolean activate;
+
     /**
-     *
-     * @param activate A boolean indicating whether to activate the valet mode.
+     * @return Whether valet mode should be activated.
+     */
+    public boolean activate() {
+        return activate;
+    }
+
+    /**
+     * @param activate Whether valet mode should be activated.
      */
     public ActivateDeactivateValetMode(boolean activate) {
         super(TYPE.addByte(Property.boolToByte(activate)));
+        this.activate = activate;
     }
 
-    ActivateDeactivateValetMode(byte[] bytes) {
+    ActivateDeactivateValetMode(byte[] bytes) throws CommandParseException {
         super(bytes);
+        if (bytes.length < 4) throw new CommandParseException();
+        this.activate = Property.getBool(bytes[3]);
     }
+
 }

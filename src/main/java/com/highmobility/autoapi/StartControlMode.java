@@ -21,9 +21,8 @@
 package com.highmobility.autoapi;
 
 /**
- * Command to start the control mode of the car. The result is
- * sent through the evented Control Mode message with either the mode 0x02 Control Started or 0x03
- * Control Failed to Start
+ * Command to start the control mode of the car. The result is sent through the evented Control Mode
+ * command.
  */
 public class StartControlMode extends Command {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x02);
