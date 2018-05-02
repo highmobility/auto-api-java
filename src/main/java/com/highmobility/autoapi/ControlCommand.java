@@ -41,16 +41,14 @@ public class ControlCommand extends CommandWithProperties {
     Integer angle;
 
     /**
-     *
-     * @return The speed in km/h, can range between -5 to 5 whereas a negative speed will
-     *              reverse the car.
+     * @return The speed in km/h, can range between -5 to 5 whereas a negative speed will reverse
+     * the car.
      */
     public Integer getSpeed() {
         return speed;
     }
 
     /**
-     *
      * @return The angle of the car
      */
     public Integer getAngle() {
@@ -58,13 +56,12 @@ public class ControlCommand extends CommandWithProperties {
     }
 
     /**
-     *
-     * @param speed Speed in km/h, can range between -5 to 5 whereas a negative speed will
-     *              reverse the car.
+     * @param speed Speed in km/h, can range between -5 to 5 whereas a negative speed will reverse
+     *              the car.
      * @param angle angle of the car.
      * @throws IllegalArgumentException When all arguments are null or invalid
      */
-    public ControlCommand(Integer speed, Integer angle)  {
+    public ControlCommand(Integer speed, Integer angle) {
         super(TYPE, getProperties(speed, angle));
         this.speed = speed;
         this.angle = angle;

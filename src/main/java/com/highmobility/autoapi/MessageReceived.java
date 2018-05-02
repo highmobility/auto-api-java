@@ -21,37 +21,59 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
 import java.util.ArrayList;
 
 /**
- * Notify the car that a message has been received. Depending on the car system, it will display or
- * read it loud to the driver.
+ * Command to notify the car that a message has been received. Depending on the car system, it will
+ * display or read it loud to the driver.
  */
 public class MessageReceived extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MESSAGING, 0x00);
 
+    private static final byte RECIPIENT_IDENTIFIER = 0x01;
+    private static final byte MESSAGE_IDENTIFIER = 0x02;
+
+    private String handle;
+    private String message;
+
     /**
-     *
-     * @param handle The message handle
-     * @param message The message
+     * @return The sender handle (e.g. phone number).
+     */
+    public String getSenderHandle() {
+        return handle;
+    }
+
+    /**
+     * @return The message content text
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * @param senderHandle  The sender handle (e.g. phone number).
+     * @param message The message content text.
      * @throws IllegalArgumentException When all parameters are null
      */
-    public MessageReceived(String handle, String message) {
-        super(TYPE, getProperties(handle, message));
+    public MessageReceived(String senderHandle, String message) {
+        super(TYPE, getProperties(senderHandle, message));
+        this.handle = senderHandle;
+        this.message = message;
     }
 
     static HMProperty[] getProperties(String handle, String message) {
         ArrayList<HMProperty> properties = new ArrayList<>();
 
         if (handle != null) {
-            StringProperty prop = new StringProperty((byte) 0x01, handle);
+            StringProperty prop = new StringProperty(RECIPIENT_IDENTIFIER, handle);
             properties.add(prop);
         }
 
         if (message != null) {
-            StringProperty prop = new StringProperty((byte) 0x02, message);
+            StringProperty prop = new StringProperty(MESSAGE_IDENTIFIER, message);
             properties.add(prop);
         }
 
@@ -60,5 +82,16 @@ public class MessageReceived extends CommandWithProperties {
 
     MessageReceived(byte[] bytes) {
         super(bytes);
+
+        for (Property property : properties) {
+            switch (property.getPropertyIdentifier()) {
+                case RECIPIENT_IDENTIFIER:
+                    handle = Property.getString(property.getValueBytes());
+                    break;
+                case MESSAGE_IDENTIFIER:
+                    message = Property.getString(property.getValueBytes());
+                    break;
+            }
+        }
     }
 }

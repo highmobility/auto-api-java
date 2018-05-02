@@ -32,7 +32,6 @@ public class TextInput extends CommandWithProperties {
     String text;
 
     /**
-     *
      * @return The text
      */
     public String getText() {

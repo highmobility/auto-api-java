@@ -39,14 +39,14 @@ public class OpenCloseTrunk extends CommandWithProperties {
     TrunkPosition position;
 
     /**
-     * @return The trunk lock state
+     * @return The trunk lock state.
      */
     public TrunkLockState getState() {
         return state;
     }
 
     /**
-     * @return The trunk position
+     * @return The trunk position.
      */
     public TrunkPosition getPosition() {
         return position;

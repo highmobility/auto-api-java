@@ -21,29 +21,42 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.StringProperty;
 
 /**
- * Message to be sent by the smart device. This could be a response to a received message or input
- * through voice by the driver.
+ * Command to tell the smart device to send a message. This could be a response to a received
+ * message or input through voice by the driver.
  */
 public class SendMessage extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MESSAGING, 0x01);
 
+    private static final byte RECIPIENT_IDENTIFIER = 0x01;
+    private static final byte MESSAGE_IDENTIFIER = 0x02;
+
     String recipientHandle;
-    String text;
+    String message;
 
     /**
-     * @return The recipient handle (e.g. phone number)
+     * @return The recipient handle (e.g. phone number).
      */
     public String getRecipientHandle() {
         return recipientHandle;
     }
 
     /**
-     * @return The text message
+     * @return The message content text.
      */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * @return The message content text.
+     * @deprecated use {@link #getMessage()} instead
+     */
+    @Deprecated
     public String getText() {
-        return text;
+        return message;
     }
 
     public SendMessage(byte[] bytes) {
@@ -52,13 +65,52 @@ public class SendMessage extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case RECIPIENT_IDENTIFIER:
                     recipientHandle = Property.getString(property.getValueBytes());
                     break;
-                case 0x02:
-                    text = Property.getString(property.getValueBytes());
+                case MESSAGE_IDENTIFIER:
+                    message = Property.getString(property.getValueBytes());
                     break;
             }
+        }
+    }
+
+    private SendMessage(Builder builder) {
+        super(builder);
+        message = builder.message;
+        recipientHandle = builder.recipientHandle;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private String message;
+        private String recipientHandle;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param message The message content text.
+         * @return The builder.
+         */
+        public Builder setMessage(String message) {
+            this.message = message;
+            addProperty(new StringProperty(MESSAGE_IDENTIFIER, message));
+            return this;
+        }
+
+        /**
+         * @param recipientHandle The recipient handle (e.g. phone number).
+         * @return The builder.
+         */
+        public Builder setRecipientHandle(String recipientHandle) {
+            this.recipientHandle = recipientHandle;
+            addProperty(new StringProperty(RECIPIENT_IDENTIFIER, recipientHandle));
+            return this;
+        }
+
+        public SendMessage build() {
+            return new SendMessage(this);
         }
     }
 }

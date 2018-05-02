@@ -36,14 +36,14 @@ public class TrunkState extends CommandWithProperties {
     TrunkPosition position;
 
     /**
-     * @return the current lock status of the trunk
+     * @return the current lock status of the trunk.
      */
     public TrunkLockState getLockState() {
         return lockState;
     }
 
     /**
-     * @return the current position of the trunk
+     * @return the current position of the trunk.
      */
     public TrunkPosition getPosition() {
         return position;

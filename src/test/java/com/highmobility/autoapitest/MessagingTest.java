@@ -24,7 +24,6 @@ public class MessagingTest {
                         "01000e2b31203535352d3535352d353535" +
                         "02000d48656c6c6f20796f7520746f6f");
 
-
         Command command = null;
         try {
             command = CommandResolver.resolve(bytes);
@@ -47,5 +46,19 @@ public class MessagingTest {
         commandBytes = new MessageReceived("+1 555-555-555", "Hello").getBytes();
 
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+
+        MessageReceived command = (MessageReceived) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getSenderHandle().equals("+1 555-555-555"));
+        assertTrue(command.getMessage().equals("Hello"));
+    }
+
+    @Test public void build() {
+        SendMessage.Builder builder = new SendMessage.Builder();
+        builder.setRecipientHandle("+1 555-555-555");
+        builder.setMessage("Hello you too");
+        byte[] bytes = builder.build().getBytes();
+        assertTrue(Arrays.equals(bytes, Bytes.bytesFromHex("003701" +
+                "01000e2b31203535352d3535352d353535" +
+                "02000d48656c6c6f20796f7520746f6f")));
     }
 }
