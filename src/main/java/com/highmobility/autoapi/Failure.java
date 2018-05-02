@@ -34,15 +34,14 @@ public class Failure extends CommandWithProperties {
     private FailureReason failureReason;
 
     /**
-     * @return The type of the command that failed. Do not mistake this for this(Failure) command's
-     * identifier {@link #getType }
+     * @return The type of the command that failed.
      */
     public Type getFailedType() {
         return failedType;
     }
 
     /**
-     * @return The failure reason
+     * @return The failure reason.
      */
     public FailureReason getFailureReason() {
         return failureReason;

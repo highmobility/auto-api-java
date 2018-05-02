@@ -23,7 +23,8 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.Bytes;
 
-public class ActionItem implements HMProperty {
+public class ActionItem extends Property {
+    public static final byte IDENTIFIER = 0x02;
     byte[] bytes;
     int actionIdentifier;
     String name;
@@ -45,6 +46,7 @@ public class ActionItem implements HMProperty {
     }
 
     public ActionItem(int actionIdentifier, String name) {
+        super(IDENTIFIER, 1 + name.length());
         this.actionIdentifier = actionIdentifier;
         this.name = name;
 
@@ -55,15 +57,15 @@ public class ActionItem implements HMProperty {
     }
 
     public ActionItem(byte[] bytes) throws CommandParseException {
+        super(bytes);
         if (bytes.length < 5) throw new CommandParseException();
         this.bytes = bytes;
-
         actionIdentifier = bytes[3];
         name = Property.getString(bytes, 4, bytes.length - 4);
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x02;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {

@@ -26,6 +26,8 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Send a notification to the car or smart device. The notification can have action items that the
@@ -34,18 +36,20 @@ import java.util.ArrayList;
 public class Notification extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.NOTIFICATIONS, 0x00);
 
+    private static final byte TEXT_IDENTIFIER = 0x01;
+
     String text;
     ActionItem[] actions;
 
     /**
-     * @return Notification text
+     * @return Notification text.
      */
     public String getText() {
         return text;
     }
 
     /**
-     * @return Notification actions
+     * @return Notification action items.
      */
     public ActionItem[] getActions() {
         return actions;
@@ -74,11 +78,11 @@ public class Notification extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01: {
+                case TEXT_IDENTIFIER: {
                     text = Property.getString(property.getValueBytes());
                     break;
                 }
-                case 0x02: {
+                case ActionItem.IDENTIFIER: {
                     actionsBuilder.add(new ActionItem(property.getPropertyBytes()));
                     break;
                 }
@@ -90,12 +94,65 @@ public class Notification extends CommandWithProperties {
 
     static HMProperty[] getProperties(String text, ActionItem[] actions) {
         HMProperty[] properties = new HMProperty[actions.length + 1];
-        properties[0] = new StringProperty((byte) 0x01, text);
+        properties[0] = new StringProperty(TEXT_IDENTIFIER, text);
 
         for (int i = 0; i < actions.length; i++) {
             properties[i + 1] = actions[i];
         }
 
         return properties;
+    }
+
+    private Notification(Builder builder) {
+        super(builder);
+        actions = builder.actions.toArray(new ActionItem[builder.actions.size()]);
+        text = builder.text;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private List<ActionItem> actions = new ArrayList<>();
+        String text;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param actions The notification action items.
+         * @return The builder.
+         */
+        public Builder setActions(ActionItem[] actions) {
+            this.actions = Arrays.asList(actions);
+            for (int i = 0; i < actions.length; i++) {
+                addProperty(actions[i]);
+            }
+            return this;
+        }
+
+        /**
+         * Add a single notification action item.
+         *
+         * @param action The notification action item.
+         * @return The builder.
+         */
+        public Builder addAction(ActionItem action) {
+            this.actions.add(action);
+            addProperty(action);
+            return this;
+        }
+
+        /**
+         * @param text The notification text.
+         * @return The builder.
+         */
+        public Builder setText(String text) {
+            this.text = text;
+            addProperty(new StringProperty(TEXT_IDENTIFIER, text));
+            return this;
+        }
+
+        public Notification build() {
+            return new Notification(this);
+        }
     }
 }

@@ -28,8 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Command sent when a Get Capabilities command is received by the car. The capabilities are
- * passed along as an array.
+ * Command sent when a Get Capabilities command is received by the car.
  */
 public class Capabilities extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CAPABILITIES, 0x01);
@@ -44,6 +43,8 @@ public class Capabilities extends CommandWithProperties {
     }
 
     /**
+     * Get the capability for a specific command type.
+     *
      * @param type The type of the capability.
      * @return The capability if exists, otherwise null
      */
@@ -121,7 +122,6 @@ public class Capabilities extends CommandWithProperties {
             addProperty(capability);
             return this;
         }
-
 
         /**
          * Set the capabilities.

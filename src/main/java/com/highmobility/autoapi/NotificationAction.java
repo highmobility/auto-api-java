@@ -31,7 +31,7 @@ public class NotificationAction extends Command {
     int actionIdentifier;
 
     /**
-     * @return The identifier of selected action item
+     * @return The identifier of selected action item.
      */
     public int getActionIdentifier() {
         return actionIdentifier;
@@ -47,5 +47,34 @@ public class NotificationAction extends Command {
 
         if (bytes.length != 4) throw new CommandParseException();
         actionIdentifier = Property.getUnsignedInt(bytes[3]);
+    }
+
+    private NotificationAction(Builder builder) {
+        super(builder.getBytes());
+        actionIdentifier = builder.actionIdentifier;
+    }
+
+    public static final class Builder {
+        private int actionIdentifier;
+
+        public Builder() {
+        }
+
+        /**
+         * @param actionIdentifier The identifier of selected action item.
+         * @return The builder.
+         */
+        public Builder setActionIdentifier(int actionIdentifier) {
+            this.actionIdentifier = actionIdentifier;
+            return this;
+        }
+
+        public NotificationAction build() {
+            return new NotificationAction(this);
+        }
+
+        byte[] getBytes() {
+            return TYPE.addByte((byte) actionIdentifier);
+        }
     }
 }
