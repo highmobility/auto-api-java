@@ -29,7 +29,7 @@ import java.util.Calendar;
 
 /**
  * Command sent from the car every time the parking ticket state changes. or when a Get Parking
- * Ticket message is received. The state is 0x00 Ended also when the parking ticket has never been
+ * Ticket message is received. The state is Ended also when the parking ticket has never been
  * set. Afterwards the car always keeps the last parking ticket information.
  */
 public class ParkingTicket extends CommandWithProperties {
