@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.GetGasFlapState;
@@ -33,6 +32,13 @@ public class FuelingTest {
         assertTrue(state.getState() == com.highmobility.autoapi.property.GasFlapState.OPEN);
     }
 
+    @Test public void build() {
+        GasFlapState.Builder builder = new GasFlapState.Builder();
+        builder.setState(com.highmobility.autoapi.property.GasFlapState.OPEN);
+        GasFlapState state = builder.build();
+        assertTrue(Arrays.equals(state.getBytes(), Bytes.bytesFromHex("00400101000101")));
+    }
+
     @Test public void get() {
         byte[] waitingForBytes = Bytes.bytesFromHex("004000");
         byte[] bytes = new GetGasFlapState().getBytes();
@@ -53,6 +59,6 @@ public class FuelingTest {
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("004001");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((GasFlapState)state).getState() == null);
+        assertTrue(((GasFlapState) state).getState() == null);
     }
 }

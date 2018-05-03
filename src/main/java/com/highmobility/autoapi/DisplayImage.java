@@ -39,7 +39,6 @@ public class DisplayImage extends CommandWithProperties {
 
     /**
      * @param url The url of the image that should be loaded to head unit.
-     * @throws IllegalArgumentException If the argument is not valid
      */
     public DisplayImage(String url) {
         super(TYPE, StringProperty.getProperties(url, (byte) 0x01));
@@ -48,6 +47,7 @@ public class DisplayImage extends CommandWithProperties {
 
     DisplayImage(byte[] bytes) {
         super(bytes);
-        this.url = Property.getString(bytes, 6, bytes.length - 6);
+        com.highmobility.autoapi.property.Property urlProp = getProperty((byte) 0x01);
+        if (urlProp != null) url = Property.getString(urlProp.getValueBytes());
     }
 }

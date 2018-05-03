@@ -32,14 +32,14 @@ public class TextInput extends CommandWithProperties {
     String text;
 
     /**
-     * @return The text
+     * @return The text.
      */
     public String getText() {
         return text;
     }
 
     /**
-     * @param text The text
+     * @param text The text.
      */
     public TextInput(String text) {
         super(TYPE, StringProperty.getProperties(text, (byte) 0x01));
@@ -47,6 +47,7 @@ public class TextInput extends CommandWithProperties {
 
     TextInput(byte[] bytes) {
         super(bytes);
-        text = Property.getString(bytes, 6, bytes.length - 6);
+        com.highmobility.autoapi.property.Property urlProp = getProperty((byte) 0x01);
+        if (urlProp != null) text = Property.getString(urlProp.getValueBytes());
     }
 }

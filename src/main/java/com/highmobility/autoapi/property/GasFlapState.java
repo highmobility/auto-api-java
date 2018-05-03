@@ -26,6 +26,8 @@ public enum GasFlapState implements HMProperty {
     CLOSED((byte)0x00),
     OPEN((byte)0x01);
 
+    public static final byte IDENTIFIER = 0x01;
+
     public static GasFlapState fromByte(byte byteValue) throws CommandParseException {
         GasFlapState[] values = GasFlapState.values();
 
@@ -50,7 +52,7 @@ public enum GasFlapState implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x01;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {
