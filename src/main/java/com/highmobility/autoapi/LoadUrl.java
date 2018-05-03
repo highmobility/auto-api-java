@@ -20,24 +20,36 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
 /**
- * Load a URL in the head unit browser. A URL shortener can be used in other cases. Note that for the
- * car emulator the URL has to be for a secure site (HTTPS).
+ * Load a URL in the head unit browser. A URL shortener can be used in other cases. Note that for
+ * the car emulator the URL has to be for a secure site (HTTPS).
  */
 public class LoadUrl extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.BROWSER, 0x00);
 
+    private String url;
+
     /**
-     * @param url The url that will be loaded to head unit
-     * @throws IllegalArgumentException        If the argument is not valid
+     * @return The url that should be loaded to head unit.
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * @param url The url that should be loaded to head unit.
      */
     public LoadUrl(String url) {
         super(TYPE, StringProperty.getProperties(url, (byte) 0x01));
+        this.url = url;
     }
 
     LoadUrl(byte[] bytes) {
         super(bytes);
+        Property urlProp = getProperty((byte) 0x01);
+        if (urlProp != null) url = Property.getString(urlProp.getValueBytes());
     }
 }

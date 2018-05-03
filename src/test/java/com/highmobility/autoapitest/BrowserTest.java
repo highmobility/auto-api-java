@@ -18,5 +18,8 @@ public class BrowserTest {
         byte[] bytes = new LoadUrl("https://google.com").getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
         assertTrue(CommandResolver.resolve(waitingForBytes) instanceof LoadUrl);
+
+        LoadUrl command = (LoadUrl) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getUrl().equals("https://google.com"));
     }
 }
