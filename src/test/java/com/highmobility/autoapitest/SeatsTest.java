@@ -9,6 +9,8 @@ import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -32,15 +34,28 @@ public class SeatsTest {
         SeatsState state = (SeatsState) command;
         assertTrue(state.getSeatState(SeatStateProperty.Position.FRONT_LEFT).isPersonDetected()
                 == true);
-        assertTrue(state.getSeatState(SeatStateProperty.Position.FRONT_LEFT).isSeatbeltFastened()
+        assertTrue(state.getSeatState(SeatStateProperty.Position.FRONT_LEFT).isSeatBeltFastened()
                 == true);
 
         assertTrue(state.getSeatState(SeatStateProperty.Position.FRONT_RIGHT).isPersonDetected()
                 == false);
-        assertTrue(state.getSeatState(SeatStateProperty.Position.FRONT_RIGHT).isSeatbeltFastened
+        assertTrue(state.getSeatState(SeatStateProperty.Position.FRONT_RIGHT).isSeatBeltFastened
                 () == false);
 
         assertTrue(state.getSeatsStates().length == 2);
+    }
+
+    @Test public void build() {
+        SeatsState.Builder builder = new SeatsState.Builder();
+        SeatStateProperty seat1 = new SeatStateProperty(SeatStateProperty.Position.FRONT_LEFT,
+                true, true);
+        SeatStateProperty seat2 = new SeatStateProperty(SeatStateProperty.Position.FRONT_RIGHT,
+                false, false);
+        builder.addSeatState(seat1).addSeatState(seat2);
+        SeatsState state = builder.build();
+
+        assertTrue(Arrays.equals(state.getBytes(), Bytes.bytesFromHex
+                ("005601010003000101010003010000")));
     }
 
     @Test public void get() {
@@ -52,6 +67,6 @@ public class SeatsTest {
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("005601");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((SeatsState)state).getSeatsStates().length == 0);
+        assertTrue(((SeatsState) state).getSeatsStates().length == 0);
     }
 }

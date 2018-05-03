@@ -24,10 +24,12 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.SeatStateProperty;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * This command is sent when a Get Vehicle Time message is received by the car. The local time of
- * the car is returned, hence the UTC timezone offset is included as well.
+ * This message is sent when a Get Seats State message is received by the car. The new state is included
+ * in the message payload and may be the result of user, device or car triggered action.
  */
 public class SeatsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.SEATS, 0x01);
@@ -35,7 +37,6 @@ public class SeatsState extends CommandWithProperties {
     SeatStateProperty[] seatsStates;
 
     /**
-     *
      * @return All of the available seats states
      */
     public SeatStateProperty[] getSeatsStates() {
@@ -43,7 +44,6 @@ public class SeatsState extends CommandWithProperties {
     }
 
     /**
-     *
      * @param position The seat position
      * @return A seat state for the given position
      */
@@ -70,10 +70,55 @@ public class SeatsState extends CommandWithProperties {
             }
         }
 
-        seatsStates = seatStateProperties.toArray(new SeatStateProperty[seatStateProperties.size()]);
+        seatsStates = seatStateProperties.toArray(new SeatStateProperty[seatStateProperties.size
+                ()]);
     }
 
     @Override public boolean isState() {
         return true;
+    }
+
+    private SeatsState(Builder builder) {
+        super(builder);
+        seatsStates = builder.seatsStates.toArray(new SeatStateProperty[builder.seatsStates.size
+                ()]);
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        List<SeatStateProperty> seatsStates = new ArrayList<>();
+
+        /**
+         * @param seatsStates All the seat states.
+         * @return The builder.
+         */
+        public Builder setSeatsStates(SeatStateProperty[] seatsStates) {
+            this.seatsStates = Arrays.asList(seatsStates);
+            this.propertiesBuilder.clear();
+            for (SeatStateProperty seatsState : seatsStates) {
+                addProperty(seatsState);
+            }
+
+            return this;
+        }
+
+        /**
+         * Add a single seat state.
+         *
+         * @param seatsState The seat property.
+         * @return The builder.
+         */
+        public Builder addSeatState(SeatStateProperty seatsState) {
+            seatsStates.add(seatsState);
+            addProperty(seatsState);
+            return this;
+        }
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        public SeatsState build() {
+            return new SeatsState(this);
+        }
     }
 }

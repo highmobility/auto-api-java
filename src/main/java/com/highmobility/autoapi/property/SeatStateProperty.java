@@ -23,12 +23,65 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 
 public class SeatStateProperty extends Property {
+    private static final byte IDENTIFIER = 0x01;
+
+    Position position;
+    boolean personDetected;
+    boolean seatBeltFastened;
+
+    /**
+     * @return The position of the seat.
+     */
+    public Position getPosition() {
+        return position;
+    }
+
+    /**
+     * @return Whether a person is detected on the seat.
+     */
+    public boolean isPersonDetected() {
+        return personDetected;
+    }
+
+    /**
+     * @return Whether seat belt is fastened.
+     */
+    public boolean isSeatBeltFastened() {
+        return seatBeltFastened;
+    }
+
+    public SeatStateProperty(byte[] bytes) throws CommandParseException {
+        super(bytes);
+
+        position = Position.fromByte(bytes[3]);
+        personDetected = Property.getBool(bytes[4]);
+        seatBeltFastened = Property.getBool(bytes[4]);
+    }
+
+    public SeatStateProperty(Position position, boolean personDetected,
+                             boolean seatBeltFastened) {
+        super(IDENTIFIER, 3);
+        bytes[3] = position.getByte();
+        bytes[4] = Property.boolToByte(personDetected);
+        bytes[5] = Property.boolToByte(seatBeltFastened);
+
+    }
+
+    public SeatStateProperty(byte identifier, Position position, boolean personDetected,
+                             boolean seatbeltFastened) {
+        super(identifier, 3);
+        bytes[3] = position.getByte();
+        bytes[4] = Property.boolToByte(personDetected);
+        bytes[5] = Property.boolToByte(seatbeltFastened);
+
+    }
+
     public enum Position {
-        FRONT_LEFT((byte)0x00),
-        FRONT_RIGHT((byte)0x01),
-        REAR_LEFT((byte)0x02),
-        REAR_RIGHT((byte)0x03),
-        REAR_CENTER((byte)0x04);
+        FRONT_LEFT((byte) 0x00),
+        FRONT_RIGHT((byte) 0x01),
+        REAR_LEFT((byte) 0x02),
+        REAR_RIGHT((byte) 0x03),
+        REAR_CENTER((byte) 0x04);
 
         public static Position fromByte(byte byteValue) throws CommandParseException {
             Position[] values = Position.values();
@@ -52,50 +105,5 @@ public class SeatStateProperty extends Property {
         public byte getByte() {
             return value;
         }
-    }
-
-    /**
-     *
-     * @return The position of the seat
-     */
-    public Position getPosition() {
-        return position;
-    }
-
-    /**
-     *
-     * @return Person detected
-     */
-    public boolean isPersonDetected() {
-        return personDetected;
-    }
-
-    /**
-     *
-     * @return Seatbelt fastened
-     */
-    public boolean isSeatbeltFastened() {
-        return seatbeltFastened;
-    }
-
-    Position position;
-    boolean personDetected;
-    boolean seatbeltFastened;
-
-    public SeatStateProperty(byte[] bytes) throws CommandParseException {
-        super(bytes);
-
-        position = Position.fromByte(bytes[3]);
-        personDetected = Property.getBool(bytes[4]);
-        seatbeltFastened = Property.getBool(bytes[4]);
-    }
-
-    public SeatStateProperty(byte identifier, Position position, boolean personDetected,
-                             boolean seatbeltFastened) {
-        super(identifier, 5);
-        bytes[3] = position.getByte();
-        bytes[4] = Property.boolToByte(personDetected);
-        bytes[5] = Property.boolToByte(seatbeltFastened);
-
     }
 }
