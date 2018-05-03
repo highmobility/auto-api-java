@@ -23,9 +23,11 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 
 public enum WindscreenReplacementState implements HMProperty {
-    UNKNOWN((byte)0x00),
-    REPLACEMENT_NOT_NEEDED((byte)0x01),
-    REPLACEMENT_NEEDED((byte)0x02);
+    UNKNOWN((byte) 0x00),
+    REPLACEMENT_NOT_NEEDED((byte) 0x01),
+    REPLACEMENT_NEEDED((byte) 0x02);
+
+    public static final byte IDENTIFIER = 0x06;
 
     public static WindscreenReplacementState fromByte(byte byteValue) throws CommandParseException {
         WindscreenReplacementState[] values = WindscreenReplacementState.values();
@@ -51,7 +53,7 @@ public enum WindscreenReplacementState implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x06;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {

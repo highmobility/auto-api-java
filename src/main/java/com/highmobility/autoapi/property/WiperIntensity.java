@@ -28,6 +28,8 @@ public enum WiperIntensity implements HMProperty {
     LEVEL_2((byte)0x02),
     LEVEL_3((byte)0x03);
 
+    public static final byte IDENTIFIER = 0x02;
+
     public static WiperIntensity fromByte(byte byteValue) throws CommandParseException {
         WiperIntensity[] values = WiperIntensity.values();
 
@@ -52,7 +54,7 @@ public enum WiperIntensity implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x02;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {

@@ -21,6 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindscreenDamage;
 import com.highmobility.autoapi.property.WindscreenDamageZone;
 import com.highmobility.autoapi.property.WindscreenReplacementState;
@@ -36,24 +37,63 @@ import java.util.List;
 public class SetWindscreenDamage extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x02);
 
+    private WindscreenDamage damage;
+    private WindscreenDamageZone zone;
+    private WindscreenReplacementState replacementState;
+
     /**
-     *
-     * @param damage The damage size
-     * @param zone The damage zone
+     * @return The windscreen damage.
+     */
+    public WindscreenDamage getDamage() {
+        return damage;
+    }
+
+    /**
+     * @return The windscreen damage zone.
+     */
+    public WindscreenDamageZone getZone() {
+        return zone;
+    }
+
+    /**
+     * @return The windscreen replacement state.
+     */
+    public WindscreenReplacementState getReplacementState() {
+        return replacementState;
+    }
+
+    /**
+     * @param damage           The damage size
+     * @param zone             The damage zone
      * @param replacementState The replacement state
      */
     public SetWindscreenDamage(WindscreenDamage damage, WindscreenDamageZone zone,
                                WindscreenReplacementState replacementState) {
         super(TYPE, getProperties(damage, zone, replacementState));
+        this.damage = damage;
+        this.zone = zone;
+        this.replacementState = replacementState;
     }
 
     SetWindscreenDamage(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length != 4) throw new CommandParseException();
+        for (Property property : properties) {
+            switch (property.getPropertyIdentifier()) {
+                case WindscreenDamage.IDENTIFIER:
+                    damage = WindscreenDamage.fromByte(property.getValueByte());
+                    break;
+                case WindscreenDamageZone.IDENTIFIER:
+                    zone = new WindscreenDamageZone(property.getValueByte());
+                    break;
+                case WindscreenReplacementState.IDENTIFIER:
+                    replacementState = WindscreenReplacementState.fromByte(property.getValueByte());
+                    break;
+            }
+        }
     }
 
     static HMProperty[] getProperties(WindscreenDamage damage, WindscreenDamageZone zone,
-                                    WindscreenReplacementState replacementState) {
+                                      WindscreenReplacementState replacementState) {
 
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 

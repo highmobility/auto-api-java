@@ -21,6 +21,8 @@
 package com.highmobility.autoapi.property;
 
 public class WindscreenDamageZone implements HMProperty {
+    public static final byte IDENTIFIER = 0x05;
+
     int damageZoneX;
     int damageZoneY;
 
@@ -54,7 +56,7 @@ public class WindscreenDamageZone implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x05;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {

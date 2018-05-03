@@ -20,6 +20,8 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.CalendarProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindscreenDamage;
 import com.highmobility.autoapi.property.WindscreenDamageZone;
@@ -31,11 +33,14 @@ import com.highmobility.autoapi.property.WiperState;
 import java.util.Calendar;
 
 /**
- * Command sent when a Get Windscreen State command is received by the car. The wipers
- * intensity is indicated even if the car has automatic wipers activated.
+ * Command sent when a Get Windscreen State command is received by the car. The wipers intensity is
+ * indicated even if the car has automatic wipers activated.
  */
 public class WindscreenState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x01);
+
+    public static final byte DAMAGE_CONFIDENCE_IDENTIFIER = 0x07;
+    public static final byte DAMAGE_DETECTION_TIME_IDENTIFIER = 0x08;
 
     WiperState wiperState;
     WiperIntensity wiperIntensity;
@@ -47,64 +52,56 @@ public class WindscreenState extends CommandWithProperties {
     Calendar damageDetectionTime;
 
     /**
-     *
-     * @return Wiper state
+     * @return The wiper state.
      */
     public WiperState getWiperState() {
         return wiperState;
     }
 
     /**
-     *
-     * @return Wiper intensity
+     * @return The wiper intensity.
      */
     public WiperIntensity getWiperIntensity() {
         return wiperIntensity;
     }
 
     /**
-     *
-     * @return Windscreen damage
+     * @return The windscreen damage.
      */
     public WindscreenDamage getWindscreenDamage() {
         return windscreenDamage;
     }
 
     /**
-     *
-     * @return Windscreen damage position, as viewed from inside the car.
+     * @return The windscreen damage position, as viewed from inside the car.
      */
     public WindscreenDamageZone getWindscreenDamageZone() {
         return windscreenDamageZone;
     }
 
     /**
-     *
-     * @return The Windscreen Zone Matrix
+     * @return The windscreen zone matrix, as viewed from inside the car.
      */
     public WindscreenDamageZoneMatrix getWindscreenDamageZoneMatrix() {
         return windscreenDamageZoneMatrix;
     }
 
     /**
-     *
-     * @return Windscreen replacement state
+     * @return The windscreen replacement state.
      */
     public WindscreenReplacementState getWindscreenReplacementState() {
         return windscreenReplacementState;
     }
 
     /**
-     *
-     * @return Damage confidence
+     * @return The damage confidence.
      */
     public Float getDamageConfidence() {
         return damageConfidence;
     }
 
     /**
-     *
-     * @return Damage detection time
+     * @return The damage detection time.
      */
     public Calendar getDamageDetectionTime() {
         return damageDetectionTime;
@@ -116,34 +113,36 @@ public class WindscreenState extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case WiperState.IDENTIFIER:
                     // active
                     wiperState = WiperState.fromByte(property.getValueByte());
                     break;
-                case 0x02:
+                case WiperIntensity.IDENTIFIER:
                     // intensity
                     wiperIntensity = WiperIntensity.fromByte(property.getValueByte());
                     break;
-                case 0x03:
+                case WindscreenDamage.IDENTIFIER:
                     // damage
                     windscreenDamage = WindscreenDamage.fromByte(property.getValueByte());
                     break;
-                case 0x04:
+                case WindscreenDamageZoneMatrix.IDENTIFIER:
                     // zone matrix
-                    windscreenDamageZoneMatrix = new WindscreenDamageZoneMatrix(property.getValueByte());
+                    windscreenDamageZoneMatrix = new WindscreenDamageZoneMatrix(property
+                            .getValueByte());
                     break;
-                case 0x05:
+                case WindscreenDamageZone.IDENTIFIER:
                     // damage zone
                     windscreenDamageZone = new WindscreenDamageZone(property.getValueByte());
                     break;
-                case 0x06:
-                    windscreenReplacementState = WindscreenReplacementState.fromByte(property.getValueByte());
+                case WindscreenReplacementState.IDENTIFIER:
+                    windscreenReplacementState = WindscreenReplacementState.fromByte(property
+                            .getValueByte());
                     // replacement
                     break;
-                case 0x07:
+                case DAMAGE_CONFIDENCE_IDENTIFIER:
                     damageConfidence = Property.getUnsignedInt(property.getValueByte()) / 100f;
                     break;
-                case 0x08:
+                case DAMAGE_DETECTION_TIME_IDENTIFIER:
                     damageDetectionTime = Property.getCalendar(property.getValueBytes());
                     // detection time
                     break;
@@ -154,5 +153,122 @@ public class WindscreenState extends CommandWithProperties {
 
     @Override public boolean isState() {
         return true;
+    }
+
+    private WindscreenState(Builder builder) {
+        super(builder);
+        wiperState = builder.wiperState;
+        wiperIntensity = builder.wiperIntensity;
+        windscreenDamage = builder.windscreenDamage;
+        windscreenDamageZone = builder.windscreenDamageZone;
+        windscreenDamageZoneMatrix = builder.windscreenDamageZoneMatrix;
+        windscreenReplacementState = builder.windscreenReplacementState;
+        damageConfidence = builder.damageConfidence;
+        damageDetectionTime = builder.damageDetectionTime;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private WiperState wiperState;
+        private WiperIntensity wiperIntensity;
+        private WindscreenDamage windscreenDamage;
+        private WindscreenDamageZone windscreenDamageZone;
+        private WindscreenDamageZoneMatrix windscreenDamageZoneMatrix;
+        private WindscreenReplacementState windscreenReplacementState;
+        private Float damageConfidence;
+        private Calendar damageDetectionTime;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param wiperState The wiper state.
+         * @return The builder.
+         */
+        public Builder setWiperState(WiperState wiperState) {
+            this.wiperState = wiperState;
+            addProperty(wiperState);
+            return this;
+        }
+
+        /**
+         * @param wiperIntensity The wipers intensity.
+         * @return The builder.
+         */
+        public Builder setWiperIntensity(WiperIntensity wiperIntensity) {
+            this.wiperIntensity = wiperIntensity;
+            addProperty(wiperIntensity);
+            return this;
+        }
+
+        /**
+         * @param windscreenDamage The windscreen damage.
+         * @return The builder.
+         */
+        public Builder setWindscreenDamage(WindscreenDamage windscreenDamage) {
+            this.windscreenDamage = windscreenDamage;
+            addProperty(windscreenDamage);
+            return this;
+        }
+
+        /**
+         * @param windscreenDamageZone The windscreen damage position, as viewed from inside the
+         *                             car.
+         * @return The builder.
+         */
+        public Builder setWindscreenDamageZone(WindscreenDamageZone windscreenDamageZone) {
+            this.windscreenDamageZone = windscreenDamageZone;
+            addProperty(windscreenDamageZone);
+            return this;
+        }
+
+        /**
+         * @param windscreenDamageZoneMatrix The windscreen damage zone matrix, as viewed from
+         *                                   inside the car.
+         * @return The builder.
+         */
+        public Builder setWindscreenDamageZoneMatrix(WindscreenDamageZoneMatrix
+                                                             windscreenDamageZoneMatrix) {
+            this.windscreenDamageZoneMatrix = windscreenDamageZoneMatrix;
+            addProperty(windscreenDamageZoneMatrix);
+            return this;
+        }
+
+        /**
+         * @param windscreenReplacementState The windscreen replacement state.
+         * @return The builder.
+         */
+        public Builder setWindscreenReplacementState(WindscreenReplacementState
+                                                             windscreenReplacementState) {
+            this.windscreenReplacementState = windscreenReplacementState;
+            addProperty(windscreenReplacementState);
+            return this;
+        }
+
+        /**
+         * @param damageConfidence The damage confidence.
+         * @return The builder.
+         */
+        public Builder setDamageConfidence(Float damageConfidence) {
+            this.damageConfidence = damageConfidence;
+            addProperty(new IntegerProperty(DAMAGE_CONFIDENCE_IDENTIFIER, Property
+                    .floatToIntPercentage(damageConfidence), 1));
+            return this;
+        }
+
+        /**
+         * @param damageDetectionTime The damage detection time.
+         * @return The builder.
+         */
+        public Builder setDamageDetectionTime(Calendar damageDetectionTime) {
+            this.damageDetectionTime = damageDetectionTime;
+            addProperty(new CalendarProperty(DAMAGE_DETECTION_TIME_IDENTIFIER,
+                    damageDetectionTime));
+            return this;
+        }
+
+        public WindscreenState build() {
+            return new WindscreenState(this);
+        }
     }
 }

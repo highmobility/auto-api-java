@@ -32,7 +32,6 @@ public class WindscreenTest {
         byte[] bytes = Bytes.bytesFromHex(
                 "0042010100010202000103030001020400014305000112060001020700015f08000811010a1020050000");
 
-
         Command command = null;
         try {
             command = CommandResolver.resolve(bytes);
@@ -59,7 +58,6 @@ public class WindscreenTest {
         assertTrue(matrix.getWindscreenSizeVertical() == 3);
 
         assertTrue(state.getDamageConfidence() == .95f);
-        //2017-07-29T14:09:31+00:00
 
         Calendar c = state.getDamageDetectionTime();
 
@@ -79,6 +77,30 @@ public class WindscreenTest {
         }
     }
 
+    @Test public void build() throws ParseException {
+        WindscreenState.Builder builder = new WindscreenState.Builder();
+
+        builder.setWiperState(WiperState.AUTOMATIC);
+        builder.setWiperIntensity(WiperIntensity.LEVEL_3);
+        builder.setWindscreenDamage(WindscreenDamage.DAMAGE_SMALLER_THAN_1);
+        WindscreenDamageZoneMatrix matrix = new WindscreenDamageZoneMatrix(4, 3);
+        builder.setWindscreenDamageZoneMatrix(matrix);
+        WindscreenDamageZone zone = new WindscreenDamageZone(1, 2);
+        builder.setWindscreenDamageZone(zone);
+        builder.setWindscreenReplacementState(WindscreenReplacementState.REPLACEMENT_NEEDED);
+
+        builder.setDamageConfidence(.95f);
+
+        //2017-07-29T14:09:31+00:00
+        Calendar date = TestUtils.getCalendar("2017-01-10T16:32:05");
+        builder.setDamageDetectionTime(date);
+
+        WindscreenState command = builder.build();
+        assertTrue(Arrays.equals(command.getBytes(), Bytes.bytesFromHex
+                ("0042010100010202000103030001020400014305000112060001020700015f08000811010a1020050000")));
+
+    }
+
     @Test public void get() {
         byte[] waitingForBytes = Bytes.bytesFromHex("004200");
         byte[] bytes = new GetWindscreenState().getBytes();
@@ -91,6 +113,12 @@ public class WindscreenTest {
         byte[] bytes = new SetWindscreenDamage(WindscreenDamage.IMPACT_NO_DAMAGE,
                 null, null).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
+
+        SetWindscreenDamage command = (SetWindscreenDamage) CommandResolver.resolve
+                (waitingForBytes);
+        assertTrue(command.getDamage() == WindscreenDamage.IMPACT_NO_DAMAGE);
+        assertTrue(command.getZone() == null);
+        assertTrue(command.getReplacementState() == null);
     }
 
     @Test public void setDamage() {
@@ -104,6 +132,13 @@ public class WindscreenTest {
 
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
+        SetWindscreenDamage command = (SetWindscreenDamage) CommandResolver.resolve
+                (waitingForBytes);
+        assertTrue(command.getDamage() == WindscreenDamage.IMPACT_NO_DAMAGE);
+        assertTrue(command.getZone().getDamageZoneX() == 2);
+        assertTrue(command.getZone().getDamageZoneY() == 3);
+        assertTrue(command.getReplacementState() == WindscreenReplacementState
+                .REPLACEMENT_NOT_NEEDED);
     }
 
     @Test public void state0Properties() {

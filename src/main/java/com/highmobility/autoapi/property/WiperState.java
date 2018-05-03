@@ -27,6 +27,8 @@ public enum WiperState implements HMProperty {
     ACTIVE((byte)0x01),
     AUTOMATIC((byte)0x02);
 
+    public static final byte IDENTIFIER = 0x01;
+
     public static WiperState fromByte(byte byteValue) throws CommandParseException {
         WiperState[] values = WiperState.values();
 
@@ -51,7 +53,7 @@ public enum WiperState implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x01;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {

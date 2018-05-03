@@ -28,6 +28,8 @@ public enum WindscreenDamage implements HMProperty {
     DAMAGE_SMALLER_THAN_1((byte)0x02),
     DAMAGE_LARGER_THAN_1((byte)0x03);
 
+    public static final byte IDENTIFIER = 0x03;
+
     public static WindscreenDamage fromByte(byte byteValue) throws CommandParseException {
         WindscreenDamage[] values = WindscreenDamage.values();
 
@@ -52,7 +54,7 @@ public enum WindscreenDamage implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x03;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {
