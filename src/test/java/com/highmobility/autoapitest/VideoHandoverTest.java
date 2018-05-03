@@ -1,5 +1,6 @@
 package com.highmobility.autoapitest;
 
+import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.VideoHandover;
 import com.highmobility.autoapi.property.ScreenLocation;
 import com.highmobility.utils.Bytes;
@@ -17,5 +18,10 @@ public class VideoHandoverTest {
         byte[] bytes = new VideoHandover("https://www.youtube.com/watch?v=yWVB7U6mX2Y", 90,
                 ScreenLocation.FRONT).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
+
+        VideoHandover command = (VideoHandover) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getUrl().equals("https://www.youtube.com/watch?v=yWVB7U6mX2Y"));
+        assertTrue(command.getLocation() == ScreenLocation.FRONT);
+        assertTrue(command.getStartingSecond() == 90);
     }
 }

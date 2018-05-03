@@ -22,6 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.ScreenLocation;
 import com.highmobility.autoapi.property.StringProperty;
 
@@ -35,28 +36,71 @@ import java.util.List;
 public class VideoHandover extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VIDEO_HANDOVER, 0x00);
 
+    public static final byte URL_IDENTIFIER = 0x01;
+    public static final byte STARTING_SECOND_IDENTIFIER = 0x02;
+
+    private String url;
+    private Integer startingSecond;
+    private ScreenLocation location;
+
     /**
-     * @param url            The video url
-     * @param location       The screen location
-     * @param startingSecond The starting second of the video
-     * @throws IllegalArgumentException When both arguments are null
+     * @return The video url.
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * @return The starting second.
+     */
+    public Integer getStartingSecond() {
+        return startingSecond;
+    }
+
+    /**
+     * @return The screen location.
+     */
+    public ScreenLocation getLocation() {
+        return location;
+    }
+
+    /**
+     * @param url            The video url.
+     * @param location       The screen location.
+     * @param startingSecond The starting second of the video.
      */
     public VideoHandover(String url, Integer startingSecond, ScreenLocation location) {
         super(TYPE, getProperties(url, startingSecond, location));
+        this.url = url;
+        this.startingSecond = startingSecond;
+        this.location = location;
     }
 
-    VideoHandover(byte[] bytes) {
+    VideoHandover(byte[] bytes) throws CommandParseException {
         super(bytes);
+        for (Property property : properties) {
+            switch (property.getPropertyIdentifier()) {
+                case URL_IDENTIFIER:
+                    url = Property.getString(property.getValueBytes());
+                    break;
+                case STARTING_SECOND_IDENTIFIER:
+                    startingSecond = Property.getUnsignedInt(property.getValueBytes());
+                    break;
+                case ScreenLocation.IDENTIFIER:
+                    location = ScreenLocation.fromByte(property.getValueByte());
+                    break;
+            }
+        }
     }
 
     static HMProperty[] getProperties(String url, Integer startingSecond, ScreenLocation location) {
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 
-        if (url != null) propertiesBuilder.add(new StringProperty((byte) 0x01, url));
+        if (url != null) propertiesBuilder.add(new StringProperty(URL_IDENTIFIER, url));
         if (startingSecond != null)
-            propertiesBuilder.add(new IntegerProperty((byte) 0x02, startingSecond, 2));
+            propertiesBuilder.add(new IntegerProperty(STARTING_SECOND_IDENTIFIER, startingSecond,
+                    2));
         if (location != null) propertiesBuilder.add(location);
-
         return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
     }
 }
