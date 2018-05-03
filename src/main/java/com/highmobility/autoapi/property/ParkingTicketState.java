@@ -26,6 +26,8 @@ public enum ParkingTicketState implements HMProperty {
     ENDED((byte)0x00),
     STARTED((byte)0x01);
 
+    public static final byte IDENTIFIER = 0x01;
+
     public static ParkingTicketState fromByte(byte byteValue) throws CommandParseException {
         ParkingTicketState[] values = ParkingTicketState.values();
 
@@ -50,7 +52,7 @@ public enum ParkingTicketState implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x01;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {

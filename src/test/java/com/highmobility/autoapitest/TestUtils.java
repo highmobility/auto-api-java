@@ -25,6 +25,19 @@ public class TestUtils {
         return (commandDateString.equals(expectedDateString));
     }
 
+    /**
+     * This does not consider time zone.
+     */
+    public static boolean dateIsSameIgnoreTimezone(Calendar c1, Calendar c2) {
+        if (c1.get(Calendar.YEAR) != c2.get(Calendar.YEAR)) return false;
+        if (c1.get(Calendar.MONTH) != c2.get(Calendar.MONTH)) return false;
+        if (c1.get(Calendar.DAY_OF_MONTH) != c2.get(Calendar.DAY_OF_MONTH)) return false;
+        if (c1.get(Calendar.HOUR_OF_DAY) != c2.get(Calendar.HOUR_OF_DAY)) return false;
+        if (c1.get(Calendar.MINUTE) != c2.get(Calendar.MINUTE)) return false;
+        if (c1.get(Calendar.SECOND) != c2.get(Calendar.SECOND)) return false;
+        return true;
+    }
+
     private static DateFormat format;
 
     public static DateFormat getFormat() {

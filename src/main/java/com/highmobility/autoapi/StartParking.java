@@ -22,6 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.HMProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
 import java.util.ArrayList;
@@ -36,6 +37,44 @@ import java.util.List;
 public class StartParking extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.PARKING_TICKET, 0x02);
 
+    public static final byte OPERATOR_NAME_IDENTIFIER = 0x01;
+    public static final byte OPERATOR_TICKET_ID_IDENTIFIER = 0x02;
+    public static final byte START_DATE_IDENTIFIER = 0x03;
+    public static final byte END_DATE_IDENTIFIER = 0x04;
+
+    private String operatorName;
+    private String operatorTicketId;
+    private Calendar startDate;
+    private Calendar endDate;
+
+    /**
+     * @return The operator name.
+     */
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    /**
+     * @return The operator ticket id.
+     */
+    public String getOperatorTicketId() {
+        return operatorTicketId;
+    }
+
+    /**
+     * @return The start date.
+     */
+    public Calendar getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * @return The end date.
+     */
+    public Calendar getEndDate() {
+        return endDate;
+    }
+
     /**
      * Start parking.
      *
@@ -47,6 +86,10 @@ public class StartParking extends CommandWithProperties {
     public StartParking(String operatorName, String operatorTicketId, Calendar startDate,
                         Calendar endDate) {
         super(TYPE, getProperties(operatorName, operatorTicketId, startDate, endDate));
+        this.operatorName = operatorName;
+        this.operatorTicketId = operatorTicketId;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     static HMProperty[] getProperties(String operatorName, String operatorTicketId, Calendar
@@ -54,16 +97,35 @@ public class StartParking extends CommandWithProperties {
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 
         if (operatorName != null)
-            propertiesBuilder.add(new StringProperty((byte) 0x01, operatorName));
+            propertiesBuilder.add(new StringProperty(OPERATOR_NAME_IDENTIFIER, operatorName));
         if (operatorTicketId != null)
-            propertiesBuilder.add(new StringProperty((byte) 0x02, operatorTicketId));
-        if (startDate != null) propertiesBuilder.add(new CalendarProperty((byte) 0x03, startDate));
-        if (endDate != null) propertiesBuilder.add(new CalendarProperty((byte) 0x04, endDate));
+            propertiesBuilder.add(new StringProperty(OPERATOR_TICKET_ID_IDENTIFIER,
+                    operatorTicketId));
+        if (startDate != null)
+            propertiesBuilder.add(new CalendarProperty(START_DATE_IDENTIFIER, startDate));
+        if (endDate != null)
+            propertiesBuilder.add(new CalendarProperty(END_DATE_IDENTIFIER, endDate));
 
         return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
     }
 
     StartParking(byte[] bytes) {
         super(bytes);
+        for (Property property : properties) {
+            switch (property.getPropertyIdentifier()) {
+                case OPERATOR_NAME_IDENTIFIER:
+                    operatorName = Property.getString(property.getValueBytes());
+                    break;
+                case OPERATOR_TICKET_ID_IDENTIFIER:
+                    operatorTicketId = Property.getString(property.getValueBytes());
+                    break;
+                case START_DATE_IDENTIFIER:
+                    startDate = Property.getCalendar(property.getValueBytes());
+                    break;
+                case END_DATE_IDENTIFIER:
+                    endDate = Property.getCalendar(property.getValueBytes());
+                    break;
+            }
+        }
     }
 }

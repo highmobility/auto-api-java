@@ -42,7 +42,20 @@ public class ParkingTicketTest {
 
         assertTrue(TestUtils.dateIsSame(state.getTicketStartDate(), "2017-01-10T17:34:00"));
         assertTrue(TestUtils.dateIsSame(state.getTicketEndDate(), "2018-02-20T22:11:00"));
+    }
 
+    @Test public void build() throws ParseException {
+        ParkingTicket.Builder builder = new ParkingTicket.Builder();
+
+        builder.setState(ParkingTicketState.STARTED);
+        builder.setOperatorName("Berlin Parking");
+        builder.setOperatorTicketId("64894233");
+        builder.setTicketStart(TestUtils.getCalendar("2017-01-10T17:34:00"));
+        builder.setTicketEnd(TestUtils.getCalendar("2018-02-20T22:11:00"));
+
+        ParkingTicket command = builder.build();
+        assertTrue(Arrays.equals(command.getBytes(), Bytes.bytesFromHex
+                ("0047010100010102000E4265726c696e205061726b696e67030008363438393432333304000811010a1122000000050008120214160B000000")));
     }
 
     @Test public void get() {
@@ -51,16 +64,26 @@ public class ParkingTicketTest {
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
-    @Test public void startParking() {
+    @Test public void startParking() throws ParseException {
         byte[] waitingForBytes = Bytes.bytesFromHex
                 ("00470201000E4265726c696e205061726b696e67020008363438393432333303000811010a112200003C");
 
         Calendar startDate = new GregorianCalendar();
         startDate.set(2017, 0, 10, 17, 34, 0);
-        startDate.setTimeZone(new SimpleTimeZone(3600000, "CET"));
+        long timeZoneOffset = 3600000;
+        startDate.setTimeZone(new SimpleTimeZone((int) timeZoneOffset, "CET"));
 
         byte[] bytes = new StartParking("Berlin Parking", "64894233", startDate, null).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
+
+        StartParking command = (StartParking) CommandResolver.resolve(waitingForBytes);
+        Calendar expected = TestUtils.getCalendar("2017-01-10T16:34:00", (int) (timeZoneOffset /
+                60 / 1000));
+
+        assertTrue(TestUtils.dateIsSameIgnoreTimezone(command.getStartDate(), expected));
+        assertTrue(command.getEndDate() == null);
+        assertTrue(command.getOperatorName().equals("Berlin Parking"));
+        assertTrue(command.getOperatorTicketId().equals("64894233"));
     }
 
     @Test public void endParking() {
@@ -73,6 +96,6 @@ public class ParkingTicketTest {
     @Test public void state0Properties() {
         byte[] bytes = Bytes.bytesFromHex("004701");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((ParkingTicket)state).getState() == null);
+        assertTrue(((ParkingTicket) state).getState() == null);
     }
 }
