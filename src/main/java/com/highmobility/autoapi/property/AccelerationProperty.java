@@ -26,6 +26,7 @@ import com.highmobility.utils.Bytes;
 import java.util.Arrays;
 
 public class AccelerationProperty extends Property {
+    public static final byte IDENTIFIER = 0x01;
     public enum AccelerationType {
         LONGITUDINAL((byte)0x00),
         LATERAL((byte)0x01),
@@ -80,6 +81,10 @@ public class AccelerationProperty extends Property {
         if (bytes.length < 8) throw new CommandParseException();
         accelerationType = AccelerationType.fromByte(bytes[3]);
         acceleration = Property.getFloat(Arrays.copyOfRange(bytes, 4, 8));
+    }
+
+    public AccelerationProperty(AccelerationType type, float acceleration) {
+        this(IDENTIFIER, type, acceleration);
     }
 
     public AccelerationProperty(byte identifier, AccelerationType type, float acceleration) {

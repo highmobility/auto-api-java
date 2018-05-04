@@ -23,11 +23,11 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 
 public class BrakeTorqueVectoringProperty extends Property {
+    public static final byte IDENTIFIER = 0x0A;
     Axle axle;
     boolean active;
 
     /**
-     *
      * @return The axle.
      */
     public Axle getAxle() {
@@ -35,7 +35,6 @@ public class BrakeTorqueVectoringProperty extends Property {
     }
 
     /**
-     *
      * @return Whether brake torque vectoring is active or not.
      */
     public boolean isActive() {
@@ -49,8 +48,12 @@ public class BrakeTorqueVectoringProperty extends Property {
         active = Property.getBool(bytes[4]);
     }
 
+    public BrakeTorqueVectoringProperty(Axle axle, boolean active) {
+        this(IDENTIFIER, axle, active);
+    }
+
     public BrakeTorqueVectoringProperty(byte identifier, Axle axle, boolean active) {
-        super(identifier, 5);
+        super(identifier, 2);
         bytes[3] = axle.getByte();
         bytes[4] = Property.boolToByte(active);
     }

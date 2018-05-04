@@ -22,11 +22,17 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.AccelerationProperty;
 import com.highmobility.autoapi.property.Axle;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
+import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.GearMode;
+import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Command sent when a Get Race State is received by the car.
@@ -34,15 +40,26 @@ import java.util.ArrayList;
 public class RaceState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.RACE, 0x01);
 
+    private static final byte UNDER_STEERING_IDENTIFIER = 0x02;
+    private static final byte OVER_STEERING_IDENTIFIER = 0x03;
+    private static final byte GAS_PEDAL_POSITION_IDENTIFIER = 0x04;
+    private static final byte STEERING_ANGLE_IDENTIFIER = 0x05;
+    private static final byte BRAKE_PRESSURE_IDENTIFIER = 0x06;
+    private static final byte YAW_RATE_IDENTIFIER = 0x07;
+    private static final byte REAR_SUSPENSION_STEERING_IDENTIFIER = 0x08;
+    private static final byte ESP_INTERVENTION_ACTIVE_IDENTIFIER = 0x09;
+    private static final byte SELECTED_GEAR_IDENTIFIER = 0x0C;
+    private static final byte BRAKE_PEDAL_POSITION_IDENTIFIER = 0x0D;
+
     AccelerationProperty[] accelerationProperties;
-    AccelerationProperty lateralAcceleration;
-    Float understeering;
-    Float oversteering;
+
+    Float underSteering;
+    Float overSteering;
     Float gasPedalPosition;
-    Float steeringAngle;
+    Integer steeringAngle;
     Float brakePressure;
     Float yawRate;
-    Float rearSuspensionSteering;
+    Integer rearSuspensionSteering;
 
     Boolean espInterventionActive;
     BrakeTorqueVectoringProperty[] brakeTorqueVectorings;
@@ -53,7 +70,7 @@ public class RaceState extends CommandWithProperties {
     Float brakePedalPosition;
 
     /**
-     * @param accelerationType The acceleration type
+     * @param accelerationType The acceleration type.
      * @return Acceleration for the given acceleration type. Null if doesnt exist.
      */
     public AccelerationProperty getAcceleration(AccelerationProperty.AccelerationType
@@ -67,23 +84,30 @@ public class RaceState extends CommandWithProperties {
     }
 
     /**
-     * @return The understeering percentage between 0-1 whereas up to .2 is considered OK, up to .3
-     * marginal, over .3 critical
+     * @return All of the accelerations.
      */
-    public Float getUndersteering() {
-        return understeering;
+    public AccelerationProperty[] getAccelerationProperties() {
+        return accelerationProperties;
     }
 
     /**
-     * @return The oversteering percentage between 0-1 whereas up to .2 is considered OK, up to .3
-     * marginal, over .3 critical
+     * @return The under steering percentage between 0-1 whereas up to .2 is considered OK, up to .3
+     * marginal, over .3 critical.
      */
-    public Float getOversteering() {
-        return oversteering;
+    public Float getUnderSteering() {
+        return underSteering;
     }
 
     /**
-     * @return The gas pedal position between 0-1, whereas 1 is full throttle
+     * @return The over steering percentage between 0-1 whereas up to .2 is considered OK, up to .3
+     * marginal, over .3 critical.
+     */
+    public Float getOverSteering() {
+        return overSteering;
+    }
+
+    /**
+     * @return The gas pedal position between 0-1, whereas 1 is full throttle.
      */
     public Float getGasPedalPosition() {
         return gasPedalPosition;
@@ -91,43 +115,43 @@ public class RaceState extends CommandWithProperties {
 
     /**
      * @return The steering angle in degrees, whereas 0 degrees is straight ahead, positive number
-     * to the left and negative number to the right
+     * to the left and negative number to the right.
      */
-    public Float getSteeringAngle() {
+    public Integer getSteeringAngle() {
         return steeringAngle;
     }
 
     /**
-     * @return Brake pressure in bar, whereas 100bar is max value, full brake
+     * @return The Brake pressure in bar, whereas 100bar is max value, full brake.
      */
     public Float getBrakePressure() {
         return brakePressure;
     }
 
     /**
-     * @return Yaw rate in degrees per second [°/s]
+     * @return The yaw rate in degrees per second [°/s].
      */
     public Float getYawRate() {
         return yawRate;
     }
 
     /**
-     * @return Rear suspension steering in degrees
+     * @return The rear suspension steering in degrees.
      */
-    public Float getRearSuspensionSteering() {
+    public Integer getRearSuspensionSteering() {
         return rearSuspensionSteering;
     }
 
     /**
-     * @return ESP (Electronic Stability Program) intervention state
+     * @return The ESP (Electronic Stability Program) intervention state.
      */
     public Boolean isEspInterventionActive() {
         return espInterventionActive;
     }
 
     /**
-     * @param axle The axle
-     * @return Brake Torque Vectoring for the given axle. Null if doesnt exist.
+     * @param axle The axle.
+     * @return The Brake Torque Vectoring for the given axle. Null if doesn't exist.
      */
     public BrakeTorqueVectoringProperty getBrakeTorqueVectoring(Axle axle) {
         for (int i = 0; i < brakeTorqueVectorings.length; i++) {
@@ -139,21 +163,28 @@ public class RaceState extends CommandWithProperties {
     }
 
     /**
-     * @return The gear mode
+     * @return All of the brake torque vectorings.
+     */
+    public BrakeTorqueVectoringProperty[] getBrakeTorqueVectorings() {
+        return brakeTorqueVectorings;
+    }
+
+    /**
+     * @return The gear mode.
      */
     public GearMode getGearMode() {
         return gearMode;
     }
 
     /**
-     * @return The selected gear
+     * @return The selected gear.
      */
     public Integer getSelectedGear() {
         return selectedGear;
     }
 
     /**
-     * @return The brake pedal position between 0-1, whereas 1 is full brakes
+     * @return The brake pedal position between 0-1, whereas 1 is full brakes.
      */
     public Float getBrakePedalPosition() {
         return brakePedalPosition;
@@ -167,46 +198,45 @@ public class RaceState extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case AccelerationProperty.IDENTIFIER:
                     accelerationProperties.add(
                             new AccelerationProperty(property.getPropertyBytes()));
                     break;
-                case 0x02:
-                    understeering = Property.getUnsignedInt(property.getValueByte()) / 100f;
+                case UNDER_STEERING_IDENTIFIER:
+                    underSteering = Property.getUnsignedInt(property.getValueByte()) / 100f;
                     break;
-                case 0x03:
-                    oversteering = Property.getUnsignedInt(property.getValueByte()) / 100f;
+                case OVER_STEERING_IDENTIFIER:
+                    overSteering = Property.getUnsignedInt(property.getValueByte()) / 100f;
                     break;
-                case 0x04:
+                case GAS_PEDAL_POSITION_IDENTIFIER:
                     gasPedalPosition = Property.getUnsignedInt(property.getValueByte()) / 100f;
                     break;
-                case 0x05:
-                    steeringAngle = Property.getSignedInt(property.getValueByte()) / 100f;
+                case STEERING_ANGLE_IDENTIFIER:
+                    steeringAngle = Property.getSignedInt(property.getValueByte());
                     break;
-                case 0x06:
+                case BRAKE_PRESSURE_IDENTIFIER:
                     brakePressure = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x07:
+                case YAW_RATE_IDENTIFIER:
                     yawRate = Property.getFloat(property.getValueBytes());
                     break;
-                case 0x08:
-                    rearSuspensionSteering = Property.getUnsignedInt(property.getValueByte()) /
-                            100f;
+                case REAR_SUSPENSION_STEERING_IDENTIFIER:
+                    rearSuspensionSteering = Property.getUnsignedInt(property.getValueByte());
                     break;
-                case 0x09:
+                case ESP_INTERVENTION_ACTIVE_IDENTIFIER:
                     espInterventionActive = Property.getBool(property.getValueByte());
                     break;
-                case 0x0A:
+                case BrakeTorqueVectoringProperty.IDENTIFIER:
                     brakeTorqueVectoringProperties.add(
                             new BrakeTorqueVectoringProperty(property.getPropertyBytes()));
                     break;
-                case 0x0B:
+                case GearMode.IDENTIFIER:
                     gearMode = GearMode.fromByte(property.getValueByte());
                     break;
-                case 0x0C:
+                case SELECTED_GEAR_IDENTIFIER:
                     selectedGear = Property.getUnsignedInt(property.getValueByte());
                     break;
-                case 0x0D:
+                case BRAKE_PEDAL_POSITION_IDENTIFIER:
                     brakePedalPosition = Property.getUnsignedInt(property.getValueByte()) / 100f;
                     break;
 
@@ -222,5 +252,215 @@ public class RaceState extends CommandWithProperties {
 
     @Override public boolean isState() {
         return true;
+    }
+
+    private RaceState(Builder builder) {
+        super(builder);
+        accelerationProperties = builder.accelerationProperties.toArray(new
+                AccelerationProperty[builder.accelerationProperties.size()]);
+        underSteering = builder.underSteering;
+        overSteering = builder.overSteering;
+        gasPedalPosition = builder.gasPedalPosition;
+        steeringAngle = builder.steeringAngle;
+        brakePressure = builder.brakePressure;
+        yawRate = builder.yawRate;
+        rearSuspensionSteering = builder.rearSuspensionSteering;
+        espInterventionActive = builder.espInterventionActive;
+        brakeTorqueVectorings = builder.brakeTorqueVectorings.toArray(new
+                BrakeTorqueVectoringProperty[builder.brakeTorqueVectorings.size()]);
+        gearMode = builder.gearMode;
+        selectedGear = builder.selectedGear;
+        brakePedalPosition = builder.brakePedalPosition;
+    }
+
+    public static final class Builder extends CommandWithProperties.Builder {
+        private List<AccelerationProperty> accelerationProperties = new ArrayList<>();
+
+        private Float underSteering;
+        private Float overSteering;
+        private Float gasPedalPosition;
+        private Integer steeringAngle;
+        private Float brakePressure;
+        private Float yawRate;
+        private Integer rearSuspensionSteering;
+        private Boolean espInterventionActive;
+        private List<BrakeTorqueVectoringProperty> brakeTorqueVectorings = new ArrayList<>();
+        private GearMode gearMode;
+        private Integer selectedGear;
+        private Float brakePedalPosition;
+
+        public Builder() {
+            super(TYPE);
+        }
+
+        /**
+         * @param accelerationProperties All of the accelerations.
+         * @return The builder.
+         */
+        public Builder setAccelerationProperties(AccelerationProperty[] accelerationProperties) {
+            this.accelerationProperties = Arrays.asList(accelerationProperties);
+            for (AccelerationProperty accelerationProperty : accelerationProperties) {
+                addProperty(accelerationProperty);
+            }
+            return this;
+        }
+
+        /**
+         * Add a single acceleration property.
+         *
+         * @param accelerationProperty The acceleration property.
+         * @return The builder.
+         */
+        public Builder addAccelerationProperty(AccelerationProperty accelerationProperty) {
+            this.accelerationProperties.add(accelerationProperty);
+            addProperty(accelerationProperty);
+            return this;
+        }
+
+        /**
+         * @param underSteering The under steering percentage between 0-1 whereas up to .2 is
+         *                      considered OK, up to .3 * marginal, over .3 critical.
+         * @return The builder.
+         */
+        public Builder setUnderSteering(Float underSteering) {
+            this.underSteering = underSteering;
+            addProperty(new PercentageProperty(UNDER_STEERING_IDENTIFIER, underSteering));
+            return this;
+        }
+
+        /**
+         * @param overSteering The over steering percentage between 0-1 whereas up to .2 is
+         *                     considered OK, up to .3 marginal, over .3 critical
+         * @return The builder.
+         */
+        public Builder setOverSteering(Float overSteering) {
+            this.overSteering = overSteering;
+            // TODO: 04/05/2018 change other floatToIntPercentage as well (in other commands)
+            addProperty(new PercentageProperty(OVER_STEERING_IDENTIFIER, overSteering));
+            return this;
+        }
+
+        /**
+         * @param gasPedalPosition The gas pedal position between 0-1, whereas 1 is full throttle.
+         * @return The builder.
+         */
+        public Builder setGasPedalPosition(Float gasPedalPosition) {
+            this.gasPedalPosition = gasPedalPosition;
+            addProperty(new PercentageProperty(GAS_PEDAL_POSITION_IDENTIFIER, gasPedalPosition));
+            return this;
+        }
+
+        /**
+         * @param steeringAngle The steering angle in degrees, whereas 0 degrees is straight ahead,
+         *                      positive number to the left and negative number to the right.
+         * @return The builder.
+         */
+        public Builder setSteeringAngle(Integer steeringAngle) {
+            this.steeringAngle = steeringAngle;
+            addProperty(new IntegerProperty(STEERING_ANGLE_IDENTIFIER, steeringAngle, 1));
+            return this;
+        }
+
+        /**
+         * @param brakePressure The brake pressure in bar, whereas 100bar is max value, full brake.
+         * @return The builder.
+         */
+        public Builder setBrakePressure(Float brakePressure) {
+            this.brakePressure = brakePressure;
+            addProperty(new FloatProperty(BRAKE_PRESSURE_IDENTIFIER, brakePressure));
+            return this;
+        }
+
+        /**
+         * @param yawRate The yaw rate in degrees per second [°/s].
+         * @return The builder.
+         */
+        public Builder setYawRate(Float yawRate) {
+            this.yawRate = yawRate;
+            addProperty(new FloatProperty(YAW_RATE_IDENTIFIER, yawRate));
+            return this;
+        }
+
+        /**
+         * @param rearSuspensionSteering The rear suspension steering in degrees.
+         * @return The builder
+         */
+        public Builder setRearSuspensionSteering(Integer rearSuspensionSteering) {
+            this.rearSuspensionSteering = rearSuspensionSteering;
+            addProperty(new IntegerProperty(REAR_SUSPENSION_STEERING_IDENTIFIER,
+                    rearSuspensionSteering, 1));
+            return this;
+        }
+
+        /**
+         * @param espInterventionActive The ESP (Electronic Stability Program) intervention state.
+         * @return The builder.
+         */
+        public Builder setEspInterventionActive(Boolean espInterventionActive) {
+            this.espInterventionActive = espInterventionActive;
+            addProperty(new BooleanProperty(ESP_INTERVENTION_ACTIVE_IDENTIFIER,
+                    espInterventionActive));
+            return this;
+        }
+
+        /**
+         * @param brakeTorqueVectorings The brake torque vectorings.
+         * @return The builder.
+         */
+        public Builder setBrakeTorqueVectorings(BrakeTorqueVectoringProperty[]
+                                                        brakeTorqueVectorings) {
+            this.brakeTorqueVectorings = Arrays.asList(brakeTorqueVectorings);
+            for (BrakeTorqueVectoringProperty brakeTorqueVectoring : brakeTorqueVectorings) {
+                addProperty(brakeTorqueVectoring);
+            }
+            return this;
+        }
+
+        /**
+         * Add a single brake torque vectoring property.
+         *
+         * @param brakeTorqueVectoring The brake torque vectoring.
+         * @return The builder.
+         */
+        public Builder addBrakeTorqueVectoring(BrakeTorqueVectoringProperty brakeTorqueVectoring) {
+            this.brakeTorqueVectorings.add(brakeTorqueVectoring);
+            addProperty(brakeTorqueVectoring);
+            return this;
+        }
+
+        /**
+         * @param gearMode The gear mode.
+         * @return The builder.
+         */
+        public Builder setGearMode(GearMode gearMode) {
+            this.gearMode = gearMode;
+            addProperty(gearMode);
+            return this;
+        }
+
+        /**
+         * @param selectedGear The selected gear.
+         * @return The builder.
+         */
+        public Builder setSelectedGear(Integer selectedGear) {
+            this.selectedGear = selectedGear;
+            addProperty(new IntegerProperty(SELECTED_GEAR_IDENTIFIER, selectedGear, 1));
+            return this;
+        }
+
+        /**
+         * @param brakePedalPosition The brake pedal position.
+         * @return The builder.
+         */
+        public Builder setBrakePedalPosition(Float brakePedalPosition) {
+            this.brakePedalPosition = brakePedalPosition;
+            addProperty(new PercentageProperty(BRAKE_PEDAL_POSITION_IDENTIFIER,
+                    brakePedalPosition));
+            return this;
+        }
+
+        public RaceState build() {
+            return new RaceState(this);
+        }
     }
 }

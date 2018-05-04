@@ -31,6 +31,8 @@ public enum GearMode implements HMProperty {
     LOW_GEAR((byte)0x05),
     SPORT((byte)0x06);
 
+    public static final byte IDENTIFIER = 0x0B;
+
     public static GearMode fromByte(byte byteValue) throws CommandParseException {
         GearMode[] values = GearMode.values();
 
@@ -55,7 +57,7 @@ public enum GearMode implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x0B;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {

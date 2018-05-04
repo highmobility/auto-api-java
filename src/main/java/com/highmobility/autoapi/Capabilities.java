@@ -129,7 +129,6 @@ public class Capabilities extends CommandWithProperties {
          * @param capabilities The capabilities.
          * @return The builder.
          */
-        @Deprecated
         public Builder setCapabilities(CapabilityProperty[] capabilities) {
             this.capabilities = Arrays.asList(capabilities);
 
