@@ -22,6 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
 import java.util.ArrayList;
@@ -32,29 +33,73 @@ import java.util.List;
  */
 public class ConnectToNetwork extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x02);
+    public static final byte PASSWORD_IDENTIFIER = 0x05;
+    private String ssid;
+    private NetworkSecurity security;
+    private String password;
+
+    /**
+     * @return The network SSID.
+     */
+    public String getSsid() {
+        return ssid;
+    }
+
+    /**
+     * @return The network security.
+     */
+    public NetworkSecurity getSecurity() {
+        return security;
+    }
+
+    /**
+     * @return The network password.
+     */
+    public String getPassword() {
+        return password;
+    }
 
     /**
      * Connect the car to a Wi-Fi network.
      *
-     * @param ssid     The network SSID formatted in UTF-8
-     * @param security Network security
-     * @param password The password formatted in UTF-8
+     * @param ssid     The network SSID.
+     * @param security Network security.
+     * @param password The password.
      */
     public ConnectToNetwork(String ssid, NetworkSecurity security, String password) {
         super(TYPE, getProperties(ssid, security, password));
+        this.ssid = ssid;
+        this.security = security;
+        this.password = password;
     }
 
     static HMProperty[] getProperties(String ssid, NetworkSecurity security, String password) {
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 
-        if (ssid != null) propertiesBuilder.add(new StringProperty((byte) 0x03, ssid));
+        if (ssid != null)
+            propertiesBuilder.add(new StringProperty(WifiState.SSID_IDENTIFIER, ssid));
         if (security != null) propertiesBuilder.add(security);
-        if (password != null) propertiesBuilder.add(new StringProperty((byte) 0x05, password));
+        if (password != null)
+            propertiesBuilder.add(new StringProperty(PASSWORD_IDENTIFIER, password));
 
         return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
     }
 
-    ConnectToNetwork(byte[] bytes) {
+    ConnectToNetwork(byte[] bytes) throws CommandParseException {
         super(bytes);
+
+        for (Property property : properties) {
+            switch (property.getPropertyIdentifier()) {
+                case WifiState.SSID_IDENTIFIER:
+                    ssid = Property.getString(property.getValueBytes());
+                    break;
+                case NetworkSecurity.IDENTIFIER:
+                    security = NetworkSecurity.fromByte(property.getValueByte());
+                    break;
+                case PASSWORD_IDENTIFIER:
+                    password = Property.getString(property.getValueBytes());
+                    break;
+            }
+        }
     }
 }

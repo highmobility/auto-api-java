@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
 /**
@@ -28,15 +29,31 @@ import com.highmobility.autoapi.property.StringProperty;
 public class ForgetNetwork extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x03);
 
+    private String ssid;
+
+    /**
+     * @return The network SSID.
+     */
+    public String getSsid() {
+        return ssid;
+    }
+
     /**
      * Forget a network that the car has previously connected to.
-     * @param ssid The network name
+     *
+     * @param ssid The network name.
      */
     public ForgetNetwork(String ssid) {
-        super(TYPE, StringProperty.getProperties(ssid, (byte) 0x03));
+        super(TYPE, StringProperty.getProperties(ssid, WifiState.SSID_IDENTIFIER));
+        this.ssid = ssid;
     }
 
     ForgetNetwork(byte[] bytes) {
         super(bytes);
+        for (Property property : properties) {
+            if (property.getPropertyIdentifier() == WifiState.SSID_IDENTIFIER) {
+                ssid = Property.getString(property.getValueBytes());
+            }
+        }
     }
 }

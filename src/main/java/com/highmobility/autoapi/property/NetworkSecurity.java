@@ -28,6 +28,9 @@ public enum NetworkSecurity implements HMProperty {
     WPA_WPA2_PERSONAL((byte) 0x02),
     WPA2_PERSONAL((byte) 0x03);
 
+    public static final byte IDENTIFIER = 0x04;
+
+
     public static NetworkSecurity fromByte(byte value) throws CommandParseException {
         NetworkSecurity[] values = NetworkSecurity.values();
 
@@ -53,7 +56,7 @@ public enum NetworkSecurity implements HMProperty {
 
 
     @Override public byte getPropertyIdentifier() {
-        return 0x04;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {

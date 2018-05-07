@@ -26,15 +26,27 @@ package com.highmobility.autoapi;
 public class EnableDisableWifi extends Command {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x04);
 
+    private boolean enable;
+
+    /**
+     * @return Whether Wi-Fi should be enabled.
+     */
+    public boolean enable() {
+        return enable;
+    }
+
     /**
      * Enable or disable Wi-Fi completely.
-     * @param enable Desired wifi state.
+     *
+     * @param enable Whether Wi-Fi should be enabled.
      */
     public EnableDisableWifi(boolean enable) {
         super(TYPE.addByte(Property.boolToByte(enable)));
+        this.enable = enable;
     }
 
     EnableDisableWifi(byte[] bytes) {
         super(bytes);
+        enable = Property.getBool(bytes[3]);
     }
 }
