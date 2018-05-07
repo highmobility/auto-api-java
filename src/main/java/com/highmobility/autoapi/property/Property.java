@@ -57,7 +57,7 @@ public class Property implements HMProperty {
         Bytes.setBytes(bytes, value, 3);
     }
 
-    public Property(byte[] bytes) throws IllegalArgumentException {
+    public Property(byte[] bytes) {
         if (bytes.length < 3) throw new IllegalArgumentException();
         this.bytes = bytes;
     }

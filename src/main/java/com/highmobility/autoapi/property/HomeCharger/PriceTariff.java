@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.Bytes;
 
 public class PriceTariff extends Property {
-    private static final byte identifier = 0x0C;
+    public static final byte IDENTIFIER = 0x0C;
     private static final int valueSize = 8;
 
     PricingType pricingType;
@@ -33,21 +33,21 @@ public class PriceTariff extends Property {
     float price;
 
     /**
-     * @return Pricing type
+     * @return The pricing type.
      */
     public PricingType getPricingType() {
         return pricingType;
     }
 
     /**
-     * @return The currency alphabetic code per ISO 4217
+     * @return The currency alphabetic code per ISO 4217.
      */
     public String getCurrency() {
         return currency;
     }
 
     /**
-     * @return The price
+     * @return The price.
      */
     public float getPrice() {
         return price;
@@ -62,7 +62,7 @@ public class PriceTariff extends Property {
     }
 
     public PriceTariff(PricingType pricingType, String currency, float price) {
-        super(identifier, valueSize);
+        super(IDENTIFIER, valueSize);
         bytes[3] = pricingType.getByte();
         Bytes.setBytes(bytes, Property.stringToBytes(currency), 4);
         Bytes.setBytes(bytes, Property.floatToBytes(price), 7);
@@ -73,7 +73,7 @@ public class PriceTariff extends Property {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return identifier;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {

@@ -25,16 +25,25 @@ package com.highmobility.autoapi;
  */
 public class SetChargeCurrent extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x02);
+    private float current;
 
     /**
-     *
-     * @param chargeCurrent The charge current
+     * @return The charge current.
+     */
+    public float getCurrent() {
+        return current;
+    }
+
+    /**
+     * @param chargeCurrent The charge current.
      */
     public SetChargeCurrent(float chargeCurrent) {
         super(TYPE.addBytes(Property.floatToBytes(chargeCurrent)));
+        this.current = chargeCurrent;
     }
 
-    SetChargeCurrent(byte[] bytes) {
+    SetChargeCurrent(byte[] bytes) throws CommandParseException {
         super(bytes);
+        current = Property.getFloat(bytes, 3);
     }
 }

@@ -28,11 +28,22 @@ import com.highmobility.autoapi.property.Property;
 public class ActivateDeactivateSolarCharging extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x04);
 
+    /**
+     * @return Whether to activate the solar charging.
+     */
+    public boolean activate() {
+        return activate;
+    }
+
+    private boolean activate;
+
     public ActivateDeactivateSolarCharging(boolean activate) {
         super(TYPE.addByte(Property.boolToByte(activate)));
+        this.activate = activate;
     }
 
     ActivateDeactivateSolarCharging(byte[] bytes) {
         super(bytes);
+        activate = Property.getBool(bytes[3]);
     }
 }

@@ -38,7 +38,7 @@ public class WifiTest {
         assertTrue(state.isEnabled() == true);
         assertTrue(state.isConnected() == true);
         assertTrue(state.getSsid().equals("HOME"));
-        assertTrue(state.getSecurity() == NetworkSecurity.WPA2_PERSONAL);
+        assertTrue(state.getSecurity() == NetworkSecurity.Type.WPA2_PERSONAL);
     }
 
     @Test public void build() {
@@ -47,7 +47,7 @@ public class WifiTest {
         builder.setEnabled(true);
         builder.setConnected(true);
         builder.setSsid("HOME");
-        builder.setSecurity(NetworkSecurity.WPA2_PERSONAL);
+        builder.setSecurity(NetworkSecurity.Type.WPA2_PERSONAL);
 
         WifiState state = builder.build();
         assertTrue(Arrays.equals(state.getBytes(), Bytes.bytesFromHex
@@ -64,13 +64,14 @@ public class WifiTest {
         byte[] waitingForBytes = Bytes.bytesFromHex
                 ("005902030004484f4d450400010305000A5a57337641524e554265");
         byte[] commandBytes = null;
-        commandBytes = new ConnectToNetwork("HOME", NetworkSecurity.WPA2_PERSONAL, "ZW3vARNUBe")
+        commandBytes = new ConnectToNetwork("HOME", NetworkSecurity.Type
+                .WPA2_PERSONAL, "ZW3vARNUBe")
                 .getBytes();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
         ConnectToNetwork command = (ConnectToNetwork) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getSsid().equals("HOME"));
-        assertTrue(command.getSecurity() == NetworkSecurity.WPA2_PERSONAL);
+        assertTrue(command.getSecurity() == NetworkSecurity.Type.WPA2_PERSONAL);
         assertTrue(command.getPassword().equals("ZW3vARNUBe"));
     }
 

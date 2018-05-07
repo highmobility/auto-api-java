@@ -28,11 +28,22 @@ import com.highmobility.autoapi.property.Property;
 public class EnableDisableWifiHotspot extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x05);
 
-    public EnableDisableWifiHotspot(boolean activate) {
-        super(TYPE.addByte(Property.boolToByte(activate)));
+    /**
+     * @return Whether to enable the Wi-Fi hotspot.
+     */
+    public boolean enable() {
+        return enable;
+    }
+
+    private boolean enable;
+
+    public EnableDisableWifiHotspot(boolean enable) {
+        super(TYPE.addByte(Property.boolToByte(enable)));
+        this.enable = enable;
     }
 
     EnableDisableWifiHotspot(byte[] bytes) {
         super(bytes);
+        enable = Property.getBool(bytes[3]);
     }
 }

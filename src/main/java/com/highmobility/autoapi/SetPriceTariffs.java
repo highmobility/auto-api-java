@@ -21,8 +21,10 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HomeCharger.PriceTariff;
+import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Set the price tariffs of the home charger.
@@ -30,25 +32,57 @@ import java.util.ArrayList;
 public class SetPriceTariffs extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x03);
 
+    private PriceTariff[] priceTariffs;
+
     /**
+     * @return All of the price tariffs.
+     */
+    public PriceTariff[] getPriceTariffs() {
+        return priceTariffs;
+    }
+
+    /**
+     * Get the price tariff for a pricing type.
      *
+     * @param type The pricing type.
+     * @return The price tariff, if exists.
+     */
+    public PriceTariff getPriceTariff(PriceTariff.PricingType type) {
+        for (PriceTariff priceTariff : priceTariffs) {
+            if (priceTariff.getPricingType() == type) return priceTariff;
+        }
+        return null;
+    }
+
+    /**
      * @param priceTariffs The price tariffs of the different pricing types.
      */
     public SetPriceTariffs(PriceTariff[] priceTariffs) throws IllegalArgumentException {
         super(TYPE, validateTariffs(priceTariffs));
+        this.priceTariffs = priceTariffs;
     }
 
     static PriceTariff[] validateTariffs(PriceTariff[] tariffs) throws IllegalArgumentException {
         ArrayList<PriceTariff.PricingType> types = new ArrayList<>(3);
         for (PriceTariff tariff : tariffs) {
-            if (types.contains(tariff.getPricingType()) == false) types.add(tariff.getPricingType());
+            if (types.contains(tariff.getPricingType()) == false)
+                types.add(tariff.getPricingType());
             else throw new IllegalArgumentException("Duplicate pricing type of the pricing tariff");
         }
 
         return tariffs;
     }
 
-    SetPriceTariffs(byte[] bytes) {
+    SetPriceTariffs(byte[] bytes) throws CommandParseException {
         super(bytes);
+        List<PriceTariff> builder = new ArrayList<>();
+
+        for (Property property : properties) {
+            if (property.getPropertyIdentifier() == PriceTariff.IDENTIFIER) {
+                builder.add(new PriceTariff(property.getPropertyBytes()));
+            }
+        }
+
+        priceTariffs = builder.toArray(new PriceTariff[builder.size()]);
     }
 }

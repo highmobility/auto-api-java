@@ -34,11 +34,12 @@ public class WifiState extends CommandWithProperties {
     private static final byte ENABLED_IDENTIFIER = 0x01;
     private static final byte CONNECTED_IDENTIFIER = 0x02;
     public static final byte SSID_IDENTIFIER = 0x03;
+    public static final byte SECURITY_IDENTIFIER = 0x04;
 
     Boolean enabled;
     Boolean connected;
     String ssid;
-    NetworkSecurity security;
+    NetworkSecurity.Type security;
 
     /**
      * @return Whether Wi-Fi is enabled.
@@ -64,7 +65,7 @@ public class WifiState extends CommandWithProperties {
     /**
      * @return The network security.
      */
-    public NetworkSecurity getSecurity() {
+    public NetworkSecurity.Type getSecurity() {
         return security;
     }
 
@@ -83,8 +84,8 @@ public class WifiState extends CommandWithProperties {
                 case SSID_IDENTIFIER:
                     ssid = Property.getString(property.getValueBytes());
                     break;
-                case NetworkSecurity.IDENTIFIER:
-                    security = NetworkSecurity.fromByte(property.getValueByte());
+                case SECURITY_IDENTIFIER:
+                    security = NetworkSecurity.Type.fromByte(property.getValueByte());
                     break;
             }
         }
@@ -106,7 +107,7 @@ public class WifiState extends CommandWithProperties {
         private Boolean enabled;
         private Boolean connected;
         private String ssid;
-        private NetworkSecurity security;
+        private NetworkSecurity.Type security;
 
         public Builder() {
             super(TYPE);
@@ -146,9 +147,10 @@ public class WifiState extends CommandWithProperties {
          * @param security The network security.
          * @return The builder.
          */
-        public Builder setSecurity(NetworkSecurity security) {
+        public Builder setSecurity(NetworkSecurity.Type security) {
             this.security = security;
-            addProperty(security);
+            NetworkSecurity prop = new NetworkSecurity(SECURITY_IDENTIFIER, security);
+            addProperty(prop);
             return this;
         }
 

@@ -27,6 +27,7 @@ import com.highmobility.autoapi.property.Property;
 public enum AuthenticationMechanism implements HMProperty {
     PIN((byte)0x00),
     APP((byte)0x01);
+    public static final byte IDENTIFIER = 0x02;
 
     public static AuthenticationMechanism fromByte(byte byteValue) throws CommandParseException {
         AuthenticationMechanism[] values = AuthenticationMechanism.values();
@@ -52,7 +53,7 @@ public enum AuthenticationMechanism implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x02;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {

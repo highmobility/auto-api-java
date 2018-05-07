@@ -25,9 +25,10 @@ import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 
 public enum Charging implements HMProperty {
-    DISCONNECTED((byte)0x00),
-    PLUGGED_IN((byte)0x01),
-    CHARGING((byte)0x02);
+    DISCONNECTED((byte) 0x00),
+    PLUGGED_IN((byte) 0x01),
+    CHARGING((byte) 0x02);
+    public static final byte IDENTIFIER = 0x01;
 
     public static Charging fromByte(byte byteValue) throws CommandParseException {
         Charging[] values = Charging.values();
@@ -53,7 +54,7 @@ public enum Charging implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return 0x01;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {

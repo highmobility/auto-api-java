@@ -21,8 +21,11 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.utils.Bytes;
 
 public class ChargeCurrentProperty extends Property {
+    public static final byte IDENTIFIER = 0x07;
+
     float chargeCurrent;
     float maximumValue;
     float minimumValue;
@@ -46,6 +49,17 @@ public class ChargeCurrentProperty extends Property {
      */
     public float getMinimumValue() {
         return minimumValue;
+    }
+
+    public ChargeCurrentProperty(float chargeCurrent, float maximumValue, float minimumValue) {
+        super(IDENTIFIER, 12);
+        Bytes.setBytes(bytes, Property.floatToBytes(chargeCurrent), 3);
+        Bytes.setBytes(bytes, Property.floatToBytes(maximumValue), 7);
+        Bytes.setBytes(bytes, Property.floatToBytes(minimumValue), 11);
+
+        this.chargeCurrent = chargeCurrent;
+        this.maximumValue = maximumValue;
+        this.minimumValue = minimumValue;
     }
 
     public ChargeCurrentProperty(byte[] bytes) throws CommandParseException {
