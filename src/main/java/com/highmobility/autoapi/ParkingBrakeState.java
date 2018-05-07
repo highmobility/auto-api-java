@@ -34,7 +34,7 @@ public class ParkingBrakeState extends CommandWithProperties {
     Boolean active;
 
     /**
-     * @return True if parking brake is active
+     * @return Whether parking brake is active.
      */
     public Boolean isActive() {
         return active;
@@ -69,6 +69,10 @@ public class ParkingBrakeState extends CommandWithProperties {
             super(TYPE);
         }
 
+        /**
+         * @param active The parking brake state.
+         * @return The builder.
+         */
         public Builder setIsActive(boolean active) {
             this.active = active;
             addProperty(new BooleanProperty(ACTIVE_IDENTIFIER, active));

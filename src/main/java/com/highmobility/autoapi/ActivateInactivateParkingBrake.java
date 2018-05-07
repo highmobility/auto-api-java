@@ -29,15 +29,25 @@ import com.highmobility.autoapi.property.Property;
 public class ActivateInactivateParkingBrake extends Command {
     public static final Type TYPE = new Type(Identifier.PARKING_BRAKE, 0x02);
 
+    private boolean activate;
+
     /**
-     *
+     * @return Whether the parking brake should be activated.
+     */
+    public boolean activate() {
+        return activate;
+    }
+
+    /**
      * @param activate Boolean indicating whether to activate parking brake.
      */
     public ActivateInactivateParkingBrake(boolean activate) {
         super(TYPE.addByte(Property.boolToByte(activate)));
+        this.activate = activate;
     }
 
     ActivateInactivateParkingBrake(byte[] bytes) {
         super(bytes);
+        this.activate = Property.getBool(bytes[3]);
     }
 }

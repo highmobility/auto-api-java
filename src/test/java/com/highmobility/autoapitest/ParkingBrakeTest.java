@@ -33,7 +33,6 @@ public class ParkingBrakeTest {
         assertTrue(command.getClass() == ParkingBrakeState.class);
         ParkingBrakeState state = (ParkingBrakeState) command;
         assertTrue(state.isActive() == true);
-
     }
 
     @Test public void get() {
@@ -43,10 +42,14 @@ public class ParkingBrakeTest {
     }
 
     @Test public void inactivate() {
-        String waitingForBytes = "00580200";
-        String commandBytes = Bytes.hexFromBytes(new ActivateInactivateParkingBrake(false)
-                .getBytes());
-        assertTrue(waitingForBytes.equals(commandBytes));
+        byte[] waitingForBytes = Bytes.bytesFromHex("00580201");
+        byte[] commandBytes = new ActivateInactivateParkingBrake(true)
+                .getBytes();
+        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+
+        ActivateInactivateParkingBrake command = (ActivateInactivateParkingBrake) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.activate() == true);
+        assertTrue(Arrays.equals(command.getBytes(), waitingForBytes));
     }
 
     @Test public void build() {
