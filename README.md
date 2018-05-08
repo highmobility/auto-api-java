@@ -141,18 +141,3 @@ builder.setSignature(sig);
 // get the final bytes with signature
 byte[] command = builder.build().getBytes();
 ```
-
-Currently supported commands with the builder pattern:
-
-* VehicleStatus
-* DoorLocks
-* Diagnostics
-* Failure
-* Capabilities
-* TrunkState
-* RemoteControl
-* LightsState
-* WindowsState
-* ParkingBrakeState
-* ChargeState
-* RooftopState
