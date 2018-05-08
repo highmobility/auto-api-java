@@ -200,6 +200,10 @@ public class Property implements HMProperty {
         return Math.round(value * 100f);
     }
 
+    public static float getPercentage(byte value) {
+        return getUnsignedInt(value) / 100f;
+    }
+
     public static int getUnsignedInt(byte value) {
         return value & 0xFF;
     }

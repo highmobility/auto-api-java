@@ -28,7 +28,7 @@ public enum BrakeFluidLevel implements HMProperty {
     LOW((byte)0x00),
     FULL((byte)0x01);
 
-    private static final byte IDENTIFIER = 0x14;
+    public static final byte IDENTIFIER = 0x14;
 
     public static BrakeFluidLevel fromByte(byte byteValue) throws CommandParseException {
         BrakeFluidLevel[] values = BrakeFluidLevel.values();
