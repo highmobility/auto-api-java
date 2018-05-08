@@ -18,21 +18,25 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.HMProperty;
+import com.highmobility.autoapi.property.Property;
 
-public enum WasherFluidLevel implements HMProperty {
+public enum BrakeFluidLevel implements HMProperty {
     LOW((byte)0x00),
     FULL((byte)0x01);
 
-    public static WasherFluidLevel fromByte(byte value) throws CommandParseException {
-        WasherFluidLevel[] values = WasherFluidLevel.values();
+    private static final byte IDENTIFIER = 0x14;
+
+    public static BrakeFluidLevel fromByte(byte byteValue) throws CommandParseException {
+        BrakeFluidLevel[] values = BrakeFluidLevel.values();
 
         for (int i = 0; i < values.length; i++) {
-            WasherFluidLevel capability = values[i];
-            if (capability.getByte() == value) {
-                return capability;
+            BrakeFluidLevel state = values[i];
+            if (state.getByte() == byteValue) {
+                return state;
             }
         }
 
@@ -40,14 +44,9 @@ public enum WasherFluidLevel implements HMProperty {
     }
 
     private byte value;
-    private Byte identifier;
 
-    WasherFluidLevel(byte value) {
+    BrakeFluidLevel(byte value) {
         this.value = value;
-    }
-
-    public void setIdentifier(Byte identifier) {
-        this.identifier = identifier;
     }
 
     public byte getByte() {
@@ -55,7 +54,7 @@ public enum WasherFluidLevel implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return identifier == null ? 0x01 : identifier;
+        return IDENTIFIER;
     }
 
     @Override public int getPropertyLength() {
@@ -63,6 +62,6 @@ public enum WasherFluidLevel implements HMProperty {
     }
 
     @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
+        return Property.getPropertyBytes(IDENTIFIER, value);
     }
 }

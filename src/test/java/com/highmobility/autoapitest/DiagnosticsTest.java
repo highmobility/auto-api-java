@@ -4,8 +4,8 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
-import com.highmobility.autoapi.property.TireStateProperty;
-import com.highmobility.autoapi.property.WasherFluidLevel;
+import com.highmobility.autoapi.property.diagnostics.TireStateProperty;
+import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -22,9 +22,8 @@ public class DiagnosticsTest {
     @Test public void state() {
         byte[] bytes = Bytes.bytesFromHex(
                 "0033010100030249F00200020063030002003C04000209C40500015A0600020109070004410c000008000440c66666090001010A000B004013d70a4220000002EA0A000B014013d70a4220000002EA0A000B024013d70a4220000002EA0A000B034013d70a4220000002EA0B0004414000000C00043F0000000D000205DC0E0002000A" +
-        "0F0004420E0000");
-
-
+        "0F0004420E0000" +
+        "10000101110002001412000444bb94cd13000446d7860014000100150001141600010A1700020041"); // l7
 
         Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
@@ -41,6 +40,17 @@ public class DiagnosticsTest {
         assertTrue(state.getTripFuelConsumption() == 6.2f);
         assertTrue(state.getWasherFluidLevel() == WasherFluidLevel.FULL);
         assertTrue(state.getFuelVolume() == 35.5f);
+
+
+        assertTrue(state.getAntiLockBraking() == true);
+        assertTrue(state.getEngineCoolantTemperature() == );
+        assertTrue(state.getEngineTotalOperatingHours() == );
+        assertTrue(state.getEngineTotalFuelConsumption() == );
+        assertTrue(state.getBrakeFluidLevel() == );
+        assertTrue(state.getEngineTorque() == );
+        assertTrue(state.getEngineLoad() == );
+        assertTrue(state.getWheelBasedSpeed() == );
+
 
         assertTrue(state.getTireStates().length == 4);
         boolean leftExists = false, rightExist = false, rearLeftExists = false, rearRightExists = false;

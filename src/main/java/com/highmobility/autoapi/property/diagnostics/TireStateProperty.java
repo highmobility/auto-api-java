@@ -18,9 +18,10 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.Bytes;
 
 public class TireStateProperty extends Property {

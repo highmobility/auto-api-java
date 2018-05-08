@@ -23,8 +23,9 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.TireStateProperty;
-import com.highmobility.autoapi.property.WasherFluidLevel;
+import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
+import com.highmobility.autoapi.property.diagnostics.TireStateProperty;
+import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,6 +68,16 @@ public class DiagnosticsState extends CommandWithProperties {
     Integer distanceDrivenSinceReset;
     Integer distanceDrivenSinceEngineStart;
     Float fuelVolume;
+
+    // level7
+    Boolean isAntiLockBrakingActive; // Anti-lock braking system (ABS) state 0x10
+    Integer engineCoolantTemperature; // Engine coolant temperature in Celsius, whereas can be negative 0x11
+    Float engineTotalOperatingHours; // The accumulated time of engine operation 0x12
+    Float engineTotalFuelConsumption; // The accumulated lifespan fuel consumption in liters 0x13
+    BrakeFluidLevel brakeFluidLevel; // Brake fluid level 0x14
+    Float engineTorque;
+    Float engineLoad;
+    Float wheelBasedSpeed;
 
     /**
      * @return The car mileage (odometer) in km
@@ -187,6 +198,38 @@ public class DiagnosticsState extends CommandWithProperties {
         return fuelVolume;
     }
 
+    public Float getAntiLockBraking() {
+        return antiLockBraking;
+    }
+
+    public Float getEngineCoolantTemperature() {
+        return engineCoolantTemperature;
+    }
+
+    public Float getEngineTotalOperatingHours() {
+        return engineTotalOperatingHours;
+    }
+
+    public Float getEngineTotalFuelConsumption() {
+        return engineTotalFuelConsumption;
+    }
+
+    public Float getBrakeFluidLevel() {
+        return brakeFluidLevel;
+    }
+
+    public Float getEngineTorque() {
+        return engineTorque;
+    }
+
+    public Float getEngineLoad() {
+        return engineLoad;
+    }
+
+    public Float getWheelBasedSpeed() {
+        return wheelBasedSpeed;
+    }
+
     public DiagnosticsState(byte[] bytes) throws CommandParseException {
         super(bytes);
         ArrayList<TireStateProperty> tireStatesBuilder = new ArrayList<>();
@@ -289,6 +332,10 @@ public class DiagnosticsState extends CommandWithProperties {
 
         public Builder() {
             super(TYPE);
+        }
+
+        public DiagnosticsState build() {
+            return new DiagnosticsState(this);
         }
 
         /**
@@ -462,10 +509,6 @@ public class DiagnosticsState extends CommandWithProperties {
             this.fuelVolume = fuelVolume;
             addProperty(new FloatProperty(FUEL_VOLUME_IDENTIFIER, fuelVolume));
             return this;
-        }
-
-        public DiagnosticsState build() {
-            return new DiagnosticsState(this);
         }
     }
 }
