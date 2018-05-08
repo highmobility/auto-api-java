@@ -42,7 +42,7 @@ public enum WasherFluidLevel implements HMProperty {
     }
 
     private byte value;
-    private Byte identifier;
+    private Byte identifier = 0x01;
 
     WasherFluidLevel(byte value) {
         this.value = value;
@@ -57,7 +57,7 @@ public enum WasherFluidLevel implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return identifier == null ? 0x01 : identifier;
+        return identifier;
     }
 
     @Override public int getPropertyLength() {

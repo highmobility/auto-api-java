@@ -61,7 +61,7 @@ public class HomeChargerState extends CommandWithProperties {
     ChargeCurrentProperty chargeCurrent;
     Boolean hotspotEnabled;
     String hotspotSsid;
-    NetworkSecurity.Type hotspotSecurity;
+    NetworkSecurity hotspotSecurity;
     String hotspotPassword;
     PriceTariff[] priceTariffs;
 
@@ -131,7 +131,7 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return The hotspot security.
      */
-    public NetworkSecurity.Type getHotspotSecurity() {
+    public NetworkSecurity getHotspotSecurity() {
         return hotspotSecurity;
     }
 
@@ -199,7 +199,7 @@ public class HomeChargerState extends CommandWithProperties {
                         hotspotSsid = Property.getString(property.getValueBytes());
                         break;
                     case HOTSPOT_SECURITY_IDENTIFIER:
-                        hotspotSecurity = NetworkSecurity.Type.fromByte(property.getValueByte());
+                        hotspotSecurity = NetworkSecurity.fromByte(property.getValueByte());
                         break;
                     case HOTSPOT_PASSWORD_IDENTIFIER:
                         hotspotPassword = Property.getString(property.getValueBytes());
@@ -248,7 +248,7 @@ public class HomeChargerState extends CommandWithProperties {
         private ChargeCurrentProperty chargeCurrent;
         private Boolean hotspotEnabled;
         private String hotspotSsid;
-        private NetworkSecurity.Type hotspotSecurity;
+        private NetworkSecurity hotspotSecurity;
         private String hotspotPassword;
         private List<PriceTariff> priceTariffs = new ArrayList<>();
 
@@ -351,11 +351,10 @@ public class HomeChargerState extends CommandWithProperties {
          * @param hotspotSecurity The hotspot security.
          * @return The builder.
          */
-        public Builder setHotspotSecurity(NetworkSecurity.Type hotspotSecurity) {
+        public Builder setHotspotSecurity(NetworkSecurity hotspotSecurity) {
             this.hotspotSecurity = hotspotSecurity;
-            NetworkSecurity prop = new NetworkSecurity(HOTSPOT_SECURITY_IDENTIFIER,
-                    hotspotSecurity);
-            addProperty(prop);
+            hotspotSecurity.setIdentifier(HOTSPOT_SECURITY_IDENTIFIER);
+            addProperty(hotspotSecurity);
             return this;
         }
 

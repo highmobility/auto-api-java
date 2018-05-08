@@ -54,7 +54,7 @@ public class HomeChargerTest {
 
         assertTrue(state.isHotspotEnabled() == true);
         assertTrue(state.getHotspotSsid().equals("Charger 7612"));
-        assertTrue(state.getHotspotSecurity() == NetworkSecurity.Type.WPA2_PERSONAL);
+        assertTrue(state.getHotspotSecurity() == NetworkSecurity.WPA2_PERSONAL);
         assertTrue(state.getHotspotPassword().equals("ZW3vARNUBe"));
 
         assertTrue(state.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getPrice() == 4.5f);
@@ -79,7 +79,7 @@ public class HomeChargerTest {
         builder.setChargeCurrent(new ChargeCurrentProperty(.5f, 1f, 0f));
         builder.setHotspotEnabled(true);
         builder.setHotspotSsid("Charger 7612");
-        builder.setHotspotSecurity(NetworkSecurity.Type.WPA2_PERSONAL);
+        builder.setHotspotSecurity(NetworkSecurity.WPA2_PERSONAL);
         builder.setHotspotPassword("ZW3vARNUBe");
 
         builder.addPriceTariff(new PriceTariff(PriceTariff.PricingType.STARTING_FEE, "EUR", 4.5f));

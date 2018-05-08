@@ -39,7 +39,7 @@ public class WifiState extends CommandWithProperties {
     Boolean enabled;
     Boolean connected;
     String ssid;
-    NetworkSecurity.Type security;
+    NetworkSecurity security;
 
     /**
      * @return Whether Wi-Fi is enabled.
@@ -65,7 +65,7 @@ public class WifiState extends CommandWithProperties {
     /**
      * @return The network security.
      */
-    public NetworkSecurity.Type getSecurity() {
+    public NetworkSecurity getSecurity() {
         return security;
     }
 
@@ -85,7 +85,7 @@ public class WifiState extends CommandWithProperties {
                     ssid = Property.getString(property.getValueBytes());
                     break;
                 case SECURITY_IDENTIFIER:
-                    security = NetworkSecurity.Type.fromByte(property.getValueByte());
+                    security = NetworkSecurity.fromByte(property.getValueByte());
                     break;
             }
         }
@@ -107,7 +107,7 @@ public class WifiState extends CommandWithProperties {
         private Boolean enabled;
         private Boolean connected;
         private String ssid;
-        private NetworkSecurity.Type security;
+        private NetworkSecurity security;
 
         public Builder() {
             super(TYPE);
@@ -147,10 +147,10 @@ public class WifiState extends CommandWithProperties {
          * @param security The network security.
          * @return The builder.
          */
-        public Builder setSecurity(NetworkSecurity.Type security) {
+        public Builder setSecurity(NetworkSecurity security) {
             this.security = security;
-            NetworkSecurity prop = new NetworkSecurity(SECURITY_IDENTIFIER, security);
-            addProperty(prop);
+            security.setIdentifier(SECURITY_IDENTIFIER);
+            addProperty(security);
             return this;
         }
 

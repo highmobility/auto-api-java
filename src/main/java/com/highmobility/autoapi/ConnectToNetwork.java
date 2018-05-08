@@ -36,7 +36,7 @@ public class ConnectToNetwork extends CommandWithProperties {
     public static final byte PASSWORD_IDENTIFIER = 0x05;
 
     private String ssid;
-    private NetworkSecurity.Type security;
+    private NetworkSecurity security;
     private String password;
 
     /**
@@ -49,7 +49,7 @@ public class ConnectToNetwork extends CommandWithProperties {
     /**
      * @return The network security.
      */
-    public NetworkSecurity.Type getSecurity() {
+    public NetworkSecurity getSecurity() {
         return security;
     }
 
@@ -67,20 +67,22 @@ public class ConnectToNetwork extends CommandWithProperties {
      * @param security Network security.
      * @param password The password.
      */
-    public ConnectToNetwork(String ssid, NetworkSecurity.Type security, String password) {
+    public ConnectToNetwork(String ssid, NetworkSecurity security, String password) {
         super(TYPE, getProperties(ssid, security, password));
         this.ssid = ssid;
         this.security = security;
         this.password = password;
     }
 
-    static HMProperty[] getProperties(String ssid, NetworkSecurity.Type security, String password) {
+    static HMProperty[] getProperties(String ssid, NetworkSecurity security, String password) {
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 
         if (ssid != null)
             propertiesBuilder.add(new StringProperty(WifiState.SSID_IDENTIFIER, ssid));
-        if (security != null)
-            propertiesBuilder.add(new NetworkSecurity(WifiState.SECURITY_IDENTIFIER, security));
+        if (security != null) {
+            security.setIdentifier(WifiState.SECURITY_IDENTIFIER);
+            propertiesBuilder.add(security);
+        }
         if (password != null)
             propertiesBuilder.add(new StringProperty(PASSWORD_IDENTIFIER, password));
 
@@ -96,7 +98,7 @@ public class ConnectToNetwork extends CommandWithProperties {
                     ssid = Property.getString(property.getValueBytes());
                     break;
                 case WifiState.SECURITY_IDENTIFIER:
-                    security = NetworkSecurity.Type.fromByte(property.getValueByte());
+                    security = NetworkSecurity.fromByte(property.getValueByte());
                     break;
                 case PASSWORD_IDENTIFIER:
                     password = Property.getString(property.getValueBytes());
