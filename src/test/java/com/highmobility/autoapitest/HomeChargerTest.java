@@ -10,10 +10,10 @@ import com.highmobility.autoapi.SetChargeCurrent;
 import com.highmobility.autoapi.SetPriceTariffs;
 import com.highmobility.autoapi.property.ChargeCurrentProperty;
 import com.highmobility.autoapi.property.CoordinatesProperty;
-import com.highmobility.autoapi.property.HomeCharger.AuthenticationMechanism;
-import com.highmobility.autoapi.property.HomeCharger.Charging;
-import com.highmobility.autoapi.property.HomeCharger.PlugType;
-import com.highmobility.autoapi.property.HomeCharger.PriceTariff;
+import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
+import com.highmobility.autoapi.property.homecharger.Charging;
+import com.highmobility.autoapi.property.homecharger.PlugType;
+import com.highmobility.autoapi.property.homecharger.PriceTariff;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.utils.Bytes;
 

@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HomeCharger.PriceTariff;
+import com.highmobility.autoapi.property.homecharger.PriceTariff;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;

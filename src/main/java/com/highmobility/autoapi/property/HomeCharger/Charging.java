@@ -18,7 +18,7 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property.HomeCharger;
+package com.highmobility.autoapi.property.homecharger;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.HMProperty;
