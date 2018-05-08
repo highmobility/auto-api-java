@@ -22,62 +22,51 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public class NetworkSecurity extends Property {
-    Type type;
+public enum NetworkSecurity implements HMProperty {
+    NONE((byte) 0x00),
+    WEP((byte) 0x01),
+    WPA_WPA2_PERSONAL((byte) 0x02),
+    WPA2_PERSONAL((byte) 0x03);
 
-    /**
-     * @return The network security type.
-     */
-    public Type getType() {
-        return type;
+    public static NetworkSecurity fromByte(byte value) throws CommandParseException {
+        NetworkSecurity[] values = NetworkSecurity.values();
+
+        for (int i = 0; i < values.length; i++) {
+            NetworkSecurity type = values[i];
+            if (type.getByte() == value) {
+                return type;
+            }
+        }
+
+        throw new CommandParseException();
     }
 
-    public NetworkSecurity(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        type = Type.fromByte(bytes[3]);
+    private byte value;
+    private byte identifier = 0x00;
+
+
+    public byte getByte() {
+        return value;
     }
 
-    public NetworkSecurity(Type type) {
-        this((byte) 0x00, type);
+    public void setIdentifier(byte identifier) {
+        this.identifier = identifier;
     }
 
-    public NetworkSecurity(byte identifier, Type type) {
-        super(identifier, 1);
-        bytes[3] = type.getByte();
-        this.type = type;
+    NetworkSecurity(byte value) {
+        this.value = value;
+    }
+
+    @Override public byte getPropertyIdentifier() {
+        return identifier;
     }
 
     @Override public int getPropertyLength() {
         return 1;
     }
 
-    public enum Type {
-        NONE((byte) 0x00),
-        WEP((byte) 0x01),
-        WPA_WPA2_PERSONAL((byte) 0x02),
-        WPA2_PERSONAL((byte) 0x03);
-
-        public static Type fromByte(byte value) throws CommandParseException {
-            Type[] values = Type.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Type type = values[i];
-                if (type.getByte() == value) {
-                    return type;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Type(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
+    @Override public byte[] getPropertyBytes() {
+        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
+
 }
