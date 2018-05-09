@@ -51,6 +51,11 @@ public class RaceState extends CommandWithProperties {
     private static final byte SELECTED_GEAR_IDENTIFIER = 0x0C;
     private static final byte BRAKE_PEDAL_POSITION_IDENTIFIER = 0x0D;
 
+    private static final byte BRAKE_PEDAL_SWITCH_IDENTIFIER = 0x0E;
+    private static final byte CLUTCH_PEDAL_SWITCH_IDENTIFIER = 0x0F;
+    private static final byte ACCELERATOR_PEDAL_IDLE_SWITCH_IDENTIFIER = 0x10;
+    private static final byte ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER = 0x11;
+
     AccelerationProperty[] accelerationProperties;
 
     Float underSteering;
@@ -60,14 +65,16 @@ public class RaceState extends CommandWithProperties {
     Float brakePressure;
     Float yawRate;
     Integer rearSuspensionSteering;
-
     Boolean espInterventionActive;
     BrakeTorqueVectoringProperty[] brakeTorqueVectorings;
-
     GearMode gearMode;
     Integer selectedGear;
-
     Float brakePedalPosition;
+    // level7
+    Boolean brakePedalSwitchActive;
+    Boolean clutchPedalSwitchActive;
+    Boolean acceleratorPedalIdleSwitchActive;
+    Boolean acceleratorPedalKickdownSwitchActive;
 
     /**
      * @param accelerationType The acceleration type.
@@ -190,6 +197,34 @@ public class RaceState extends CommandWithProperties {
         return brakePedalPosition;
     }
 
+    /**
+     * @return The brake pedal switch state.
+     */
+    public Boolean isBrakePedalSwitchActive() {
+        return brakePedalSwitchActive;
+    }
+
+    /**
+     * @return The clutch pedal switch state.
+     */
+    public Boolean isClutchPedalSwitchActive() {
+        return clutchPedalSwitchActive;
+    }
+
+    /**
+     * @return The accelerator pedal idle switch state. If active, pedal is fully released.
+     */
+    public Boolean isAcceleratorPedalIdleSwitchActive() {
+        return acceleratorPedalIdleSwitchActive;
+    }
+
+    /**
+     * @return The accelerator pedal kickdown switch state. If active, pedal is fully depressed.
+     */
+    public Boolean isAcceleratorPedalKickdownSwitchActive() {
+        return acceleratorPedalKickdownSwitchActive;
+    }
+
     public RaceState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
@@ -239,7 +274,19 @@ public class RaceState extends CommandWithProperties {
                 case BRAKE_PEDAL_POSITION_IDENTIFIER:
                     brakePedalPosition = Property.getUnsignedInt(property.getValueByte()) / 100f;
                     break;
-
+                case BRAKE_PEDAL_SWITCH_IDENTIFIER:
+                    brakePedalSwitchActive = Property.getBool(property.getValueByte());
+                    break;
+                case CLUTCH_PEDAL_SWITCH_IDENTIFIER:
+                    clutchPedalSwitchActive = Property.getBool(property.getValueByte());
+                    break;
+                case ACCELERATOR_PEDAL_IDLE_SWITCH_IDENTIFIER:
+                    acceleratorPedalIdleSwitchActive = Property.getBool(property.getValueByte());
+                    break;
+                case ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER:
+                    acceleratorPedalKickdownSwitchActive = Property.getBool(property.getValueByte
+                            ());
+                    break;
             }
         }
 
@@ -271,6 +318,11 @@ public class RaceState extends CommandWithProperties {
         gearMode = builder.gearMode;
         selectedGear = builder.selectedGear;
         brakePedalPosition = builder.brakePedalPosition;
+
+        brakePedalSwitchActive = builder.brakePedalSwitchActive;
+        clutchPedalSwitchActive = builder.clutchPedalSwitchActive;
+        acceleratorPedalIdleSwitchActive = builder.acceleratorPedalIdleSwitchActive;
+        acceleratorPedalKickdownSwitchActive = builder.acceleratorPedalKickdownSwitchActive;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
@@ -288,6 +340,11 @@ public class RaceState extends CommandWithProperties {
         private GearMode gearMode;
         private Integer selectedGear;
         private Float brakePedalPosition;
+
+        private Boolean brakePedalSwitchActive;
+        private Boolean clutchPedalSwitchActive;
+        private Boolean acceleratorPedalIdleSwitchActive;
+        private Boolean acceleratorPedalKickdownSwitchActive;
 
         public Builder() {
             super(TYPE);
@@ -456,6 +513,51 @@ public class RaceState extends CommandWithProperties {
             this.brakePedalPosition = brakePedalPosition;
             addProperty(new PercentageProperty(BRAKE_PEDAL_POSITION_IDENTIFIER,
                     brakePedalPosition));
+            return this;
+        }
+        
+        /**
+         * @param brakePedalSwitchActive The brake pedal switch state.
+         * @return The builder.
+         */
+        public Builder setBrakePedalSwitchActive(Boolean brakePedalSwitchActive) {
+            this.brakePedalSwitchActive = brakePedalSwitchActive;
+            addProperty(new BooleanProperty(BRAKE_PEDAL_SWITCH_IDENTIFIER, brakePedalSwitchActive));
+            return this;
+        }
+
+        /**
+         * @param clutchPedalSwitchActive The clutch pedal switch state.
+         * @return The builder.
+         */
+        public Builder setClutchPedalSwitchActive(Boolean clutchPedalSwitchActive) {
+            this.clutchPedalSwitchActive = clutchPedalSwitchActive;
+            addProperty(new BooleanProperty(CLUTCH_PEDAL_SWITCH_IDENTIFIER,
+                    clutchPedalSwitchActive));
+            return this;
+        }
+
+        /**
+         * @param acceleratorPedalIdleSwitchActive The accelerator pedal idle switch state. If
+         *                                         active, pedal is fully released.
+         * @return The builder.
+         */
+        public Builder setAcceleratorPedalIdleSwitchActive(Boolean acceleratorPedalIdleSwitchActive) {
+            this.acceleratorPedalIdleSwitchActive = acceleratorPedalIdleSwitchActive;
+            addProperty(new BooleanProperty(ACCELERATOR_PEDAL_IDLE_SWITCH_IDENTIFIER,
+                    acceleratorPedalIdleSwitchActive));
+            return this;
+        }
+
+        /**
+         * @param acceleratorPedalKickdownSwitchActive The accelerator pedal kickdown switch state.
+         *                                             If active, pedal is fully depressed.
+         * @return The builder.
+         */
+        public Builder setAcceleratorPedalKickdownSwitchActive(Boolean acceleratorPedalKickdownSwitchActive) {
+            this.acceleratorPedalKickdownSwitchActive = acceleratorPedalKickdownSwitchActive;
+            addProperty(new BooleanProperty(ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER,
+                    acceleratorPedalKickdownSwitchActive));
             return this;
         }
 

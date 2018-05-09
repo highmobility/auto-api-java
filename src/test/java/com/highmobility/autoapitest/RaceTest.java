@@ -24,7 +24,8 @@ public class RaceTest {
     @Test
     public void state() {
         byte[] bytes = Bytes.bytesFromHex(
-                "005701010005003f5d2f1b01000501bf40c49c020001130300010004000162050001E20600044138f5c307000440d51eb808000103090001010A000201010B0001040C0001040D000101");
+                "005701010005003f5d2f1b01000501bf40c49c020001130300010004000162050001E20600044138f5c307000440d51eb808000103090001010A000201010B0001040C0001040D000101" +
+                        "0E0001010F0001011000010111000101" /*level7*/);
 
         Command command = null;
         try {
@@ -54,6 +55,11 @@ public class RaceTest {
         assertTrue(state.getGearMode() == GearMode.DRIVE);
         assertTrue(state.getSelectedGear() == 4);
         assertTrue(state.getBrakePedalPosition() == .01f);
+
+        assertTrue(state.isBrakePedalSwitchActive() == true);
+        assertTrue(state.isClutchPedalSwitchActive() == true);
+        assertTrue(state.isAcceleratorPedalIdleSwitchActive() == true);
+        assertTrue(state.isAcceleratorPedalKickdownSwitchActive() == true);
     }
 
     @Test public void build() {
@@ -76,9 +82,15 @@ public class RaceTest {
         builder.setSelectedGear(4);
         builder.setBrakePedalPosition(.01f);
 
+        builder.setBrakePedalSwitchActive(true);
+        builder.setClutchPedalSwitchActive(true);
+        builder.setAcceleratorPedalIdleSwitchActive(true);
+        builder.setAcceleratorPedalKickdownSwitchActive(true);
+
         RaceState state = builder.build();
         assertTrue(Arrays.equals(state.getBytes(), Bytes.bytesFromHex
-                ("005701010005003f5d2f1b01000501bf40c49c020001130300010004000162050001E20600044138f5c307000440d51eb808000103090001010A000201010B0001040C0001040D000101")));
+                ("005701010005003f5d2f1b01000501bf40c49c020001130300010004000162050001E20600044138f5c307000440d51eb808000103090001010A000201010B0001040C0001040D000101" +
+                        "0E0001010F0001011000010111000101" /*level7*/)));
     }
 
     @Test public void get() {
