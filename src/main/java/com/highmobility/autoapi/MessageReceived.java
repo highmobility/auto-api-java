@@ -47,15 +47,15 @@ public class MessageReceived extends CommandWithProperties {
     }
 
     /**
-     * @return The message content text
+     * @return The message content text.
      */
     public String getMessage() {
         return message;
     }
 
     /**
-     * @param senderHandle  The sender handle (e.g. phone number).
-     * @param message The message content text.
+     * @param senderHandle The sender handle (e.g. phone number).
+     * @param message      The message content text.
      * @throws IllegalArgumentException When all parameters are null
      */
     public MessageReceived(String senderHandle, String message) {

@@ -20,37 +20,48 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.Bytes;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.Calendar;
 
 /**
  * Used for commands with properties. Can have 0 properties.
  */
 public class CommandWithProperties extends Command {
     static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be null";
+    private static final byte NONCE_IDENTIFIER = (byte) 0xA0;
+    private static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
+    private static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
 
     Property[] properties;
     byte[] nonce;
     byte[] signature;
+    Calendar timestamp;
 
     /**
-     * @return The nonce for the signature
+     * @return The nonce for the signature.
      */
     public byte[] getNonce() {
         return nonce;
     }
 
     /**
-     * @return The signature for the signed bytes(the whole command except the signature property)
+     * @return The signature for the signed bytes(the whole command except the signature property).
      */
     public byte[] getSignature() {
         return signature;
+    }
+
+    /**
+     * @return Timestamp of when the data was transmitted from the car.
+     */
+    public Calendar getTimestamp() {
+        return timestamp;
     }
 
     /**
@@ -105,17 +116,18 @@ public class CommandWithProperties extends Command {
                     .valueStart - 3, propertyEnumeration.valueStart + propertyEnumeration.size));
             builder.add(property);
 
-            if (property.getPropertyIdentifier() == (byte) 0xA0) {
-                // does not work
+            if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
                 if (propertyEnumeration.size != 9)
-                    continue; // invalid signature length, just ignore
+                    continue; // invalid nonce length, just ignore
 
                 nonce = Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
                         propertyEnumeration.valueStart + propertyEnumeration.size);
-            } else if (property.getPropertyIdentifier() == (byte) 0xA1) {
+            } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
                 if (propertyEnumeration.size != 64) continue; // ignore invalid length
                 signature = Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
                         propertyEnumeration.valueStart + propertyEnumeration.size);
+            } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
+                timestamp = Property.getCalendar(bytes, propertyEnumeration.valueStart);
             }
         }
 
@@ -134,10 +146,12 @@ public class CommandWithProperties extends Command {
             byte[] propertyBytes = property.getPropertyBytes();
             bytes = Bytes.concatBytes(bytes, propertyBytes);
 
-            if (property.getPropertyIdentifier() == (byte) 0xA0) {
+            if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
                 nonce = Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length);
-            } else if (property.getPropertyIdentifier() == (byte) 0xA1) {
+            } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
                 signature = Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length);
+            } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
+                timestamp = Property.getCalendar(propertyBytes, 3);
             }
         }
     }
@@ -147,6 +161,8 @@ public class CommandWithProperties extends Command {
 
         this.nonce = builder.nonce;
         this.signature = builder.signature;
+        this.timestamp = builder.timestamp;
+
         bytes = type.getIdentifierAndType();
 
         HMProperty[] properties = builder.getProperties();
@@ -162,6 +178,9 @@ public class CommandWithProperties extends Command {
         private Type type;
         private byte[] nonce;
         private byte[] signature;
+
+        private Calendar timestamp;
+
         protected ArrayList<HMProperty> propertiesBuilder = new ArrayList<>();
 
         public Builder(Type type) {
@@ -173,15 +192,34 @@ public class CommandWithProperties extends Command {
             return this;
         }
 
+        /**
+         * @param nonce The nonce used for the signature.
+         * @return The nonce.
+         */
         public Builder setNonce(byte[] nonce) {
             this.nonce = nonce;
             addProperty(new Property((byte) 0xA0, nonce));
             return this;
         }
 
+        /**
+         * @param signature The signature for the signed bytes(the whole command except the
+         *                  signature property)
+         * @return The builder.
+         */
         public Builder setSignature(byte[] signature) {
             this.signature = signature;
             addProperty(new Property((byte) 0xA1, signature));
+            return this;
+        }
+
+        /**
+         * @param timestamp The timestamp of when the data was transmitted from the car.
+         * @return The builder.
+         */
+        public Builder setTimestamp(Calendar timestamp) {
+            this.timestamp = timestamp;
+            addProperty(new CalendarProperty(TIMESTAMP_IDENTIFIER, timestamp));
             return this;
         }
 
