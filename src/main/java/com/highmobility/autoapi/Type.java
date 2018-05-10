@@ -59,6 +59,7 @@ public class Type {
         stateCommands.put(GetHomeChargerState.TYPE, HomeChargerState.TYPE);
         stateCommands.put(GetGasFlapState.TYPE, GasFlapState.TYPE);
         stateCommands.put(GetFirmwareVersion.TYPE, FirmwareVersion.TYPE);
+        stateCommands.put(GetDashboardLights.TYPE, DashboardLights.TYPE);
     }
 
     byte[] identifierAndType;

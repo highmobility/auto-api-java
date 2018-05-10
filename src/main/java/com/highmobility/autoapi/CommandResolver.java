@@ -335,6 +335,12 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, SetPriceTariffs.TYPE)) {
                     command = new SetPriceTariffs(bytes);
                 }
+            } else if (bytesAreForIdentifier(bytes, Identifier.DASHBOARD_LIGHTS)) {
+                if (bytesAreForType(bytes, DashboardLights.TYPE)) {
+                    command = new DashboardLights(bytes);
+                } else if (bytesAreForType(bytes, GetDashboardLights.TYPE)) {
+                    command = new GetDashboardLights(bytes);
+                }
             } else if (bytesAreForType(bytes, LoadUrl.TYPE)) {
                 command = new LoadUrl(bytes);
             } else if (bytesAreForType(bytes, VideoHandover.TYPE)) {
