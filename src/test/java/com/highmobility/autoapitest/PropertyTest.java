@@ -43,7 +43,7 @@ public class PropertyTest {
         byte[] nonce = command.getNonce();
         assertTrue(Arrays.equals(nonce, Bytes.bytesFromHex("324244433743483436")));
 
-        // builder with #signature()
+        // build with #signature()
     }
 
     @Test public void signature() {

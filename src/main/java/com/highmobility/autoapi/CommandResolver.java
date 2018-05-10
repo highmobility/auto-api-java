@@ -341,6 +341,14 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, GetDashboardLights.TYPE)) {
                     command = new GetDashboardLights(bytes);
                 }
+            } else if (bytesAreForIdentifier(bytes, Identifier.START_STOP)) {
+                if (bytesAreForType(bytes, GetStartStopState.TYPE)) {
+                    command = new GetStartStopState(bytes);
+                } else if (bytesAreForType(bytes, StartStopState.TYPE)) {
+                    command = new StartStopState(bytes);
+                } else if (bytesAreForType(bytes, ActivateDeactivateStartStop.TYPE)) {
+                    command = new ActivateDeactivateStartStop(bytes);
+                }
             } else if (bytesAreForType(bytes, LoadUrl.TYPE)) {
                 command = new LoadUrl(bytes);
             } else if (bytesAreForType(bytes, VideoHandover.TYPE)) {

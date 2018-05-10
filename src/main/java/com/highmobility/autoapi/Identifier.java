@@ -69,7 +69,8 @@ public enum Identifier {
     CHASSIS_SETTINGS(new byte[]{0x00, (byte) 0x53}),
     WIFI(new byte[]{0x00, (byte) 0x59}),
     HOME_CHARGER(new byte[]{0x00, (byte) 0x60}),
-    DASHBOARD_LIGHTS(new byte[]{0x00, (byte) 0x61});
+    DASHBOARD_LIGHTS(new byte[]{0x00, (byte) 0x61}),
+    START_STOP(new byte[]{0x00, (byte) 0x63});
 
     public static Identifier fromBytes(byte[] bytes) {
         return fromBytes(bytes[0], bytes[1]);

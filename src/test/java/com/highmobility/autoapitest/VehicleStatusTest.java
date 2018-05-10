@@ -123,7 +123,7 @@ public class VehicleStatusTest {
         builder.setSalesDesignation("Package+");
         builder.setModelYear(2017);
         builder.setColor("Estoril Blau");
-//        builder.setPower(220);
+//        build.setPower(220);
         // add an unknown property (power)
         builder.addProperty(new IntegerProperty((byte) 0x09, 220, 2));
         builder.setNumberOfDoors(5).setNumberOfSeats(5);
