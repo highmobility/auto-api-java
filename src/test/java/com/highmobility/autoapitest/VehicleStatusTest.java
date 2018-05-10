@@ -30,7 +30,8 @@ import static org.junit.Assert.fail;
  */
 public class VehicleStatusTest {
     byte[] bytes = Bytes.bytesFromHex(
-            "0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102"
+            "0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102" +
+                    "0C0004402000000D000200F50E000101" // l7
     );
 
     com.highmobility.autoapi.VehicleStatus vehicleStatus;
@@ -71,6 +72,16 @@ public class VehicleStatusTest {
         assertTrue(vehicleStatus.getNumberOfSeats() == 5);
 
         assertTrue(vehicleStatus.getState(TrunkState.TYPE) != null);
+
+        assertTrue(vehicleStatus.getEngineVolume() == 2.5f);
+        assertTrue(vehicleStatus.getMaxTorque() == 245);
+        assertTrue(vehicleStatus.getGearBox() == VehicleStatus.Gearbox.AUTOMATIC);
+    }
+
+    @Test public void build() {
+        VehicleStatus status = getVehicleStatusBuilderWithoutSignature().build();
+        byte[] command = status.getBytes();
+        assertTrue(Arrays.equals(command, bytes));
     }
 
     @Test public void get() {
@@ -122,7 +133,8 @@ public class VehicleStatusTest {
         builder.setLicensePlate("ABC123");
         builder.setSalesDesignation("Package+");
         builder.setModelYear(2017);
-        builder.setColor("Estoril Blau");
+
+        builder.setColorName("Estoril Blau");
 //        build.setPower(220);
         // add an unknown property (power)
         builder.addProperty(new IntegerProperty((byte) 0x09, 220, 2));
@@ -136,14 +148,13 @@ public class VehicleStatusTest {
         ControlMode.Builder controlCommand = new ControlMode.Builder();
         controlCommand.setMode(STARTED);
         builder.addProperty(new CommandProperty(controlCommand.build()));
-        return builder;
-    }
 
-    @Test public void create() {
-        VehicleStatus status = getVehicleStatusBuilderWithoutSignature().build();
-        byte[] command = status.getBytes();
-        assertTrue(Arrays.equals(command, Bytes.bytesFromHex
-                ("0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102")));
+        // l7
+        builder.setEngineVolume(2.5f);
+        builder.setMaxTorque(245);
+        builder.setGearBox(VehicleStatus.Gearbox.AUTOMATIC);
+
+        return builder;
     }
 
     @Test public void createWithSignature() {
@@ -196,7 +207,7 @@ public class VehicleStatusTest {
         }
         VehicleStatus vs = (VehicleStatus) command;
         // one window property will fail to parse
-        WindowsState ws = (WindowsState)vs.getState(WindowsState.TYPE);
+        WindowsState ws = (WindowsState) vs.getState(WindowsState.TYPE);
         assertTrue(ws.getProperties().length == 5);
         assertTrue(ws.getWindowProperties().length == 4);
     }
@@ -241,6 +252,7 @@ public class VehicleStatusTest {
                         + "99000700580101000101"); // valid parking brake state
 
         VehicleStatus command = (VehicleStatus) CommandResolver.resolve(bytes);
-        assertTrue(command.getStates().length == 2); // invalid command is added as a base command class
+        assertTrue(command.getStates().length == 2); // invalid command is added as a base
+        // command class
     }
 }

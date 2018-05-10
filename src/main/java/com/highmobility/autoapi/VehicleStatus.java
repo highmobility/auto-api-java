@@ -21,6 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CommandProperty;
+import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.Property;
@@ -39,6 +41,23 @@ import java.util.List;
 public class VehicleStatus extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VEHICLE_STATUS, 0x01);
 
+    private static final byte VIN_IDENTIFIER = 0x01;
+    private static final byte POWER_TRAIN_IDENTIFIER = 0x02;
+    private static final byte MODEL_NAME_IDENTIFIER = 0x03;
+    private static final byte NAME_IDENTIFIER = 0x04;
+    private static final byte LICENSE_PLATE_IDENTIFIER = 0x05;
+    private static final byte SALES_DESIGNATION_IDENTIFIER = 0x06;
+    private static final byte MODEL_YEAR_IDENTIFIER = 0x07;
+    private static final byte COLOR_IDENTIFIER = 0x08;
+    private static final byte POWER_IDENTIFIER = 0x09;
+    private static final byte NUMBER_OF_DOORS_IDENTIFIER = 0x0A;
+    private static final byte NUMBER_OF_SEATS_IDENTIFIER = 0x0B;
+    private static final byte COMMAND_IDENTIFIER = (byte) 0x99;
+
+    private static final byte ENGINE_VOLUME_IDENTIFIER = 0x0C;
+    private static final byte MAX_TORQUE_IDENTIFIER = 0x0D;
+    private static final byte GEARBOX_IDENTIFIER = 0x0E;
+
     Command[] states;
 
     String vin;
@@ -53,6 +72,11 @@ public class VehicleStatus extends CommandWithProperties {
     Integer power;
     Integer numberOfDoors;
     Integer numberOfSeats;
+
+    // l7
+    Float engineVolume; // 0c The engine volume displacement in liters
+    Integer maxTorque; // 0d maximum engine torque in Nm
+    Gearbox gearBox; // 0e Gearbox type
 
     /**
      * @return All of the states.
@@ -152,6 +176,27 @@ public class VehicleStatus extends CommandWithProperties {
         return numberOfSeats;
     }
 
+    /**
+     * @return The engine volume displacement in liters.
+     */
+    public Float getEngineVolume() {
+        return engineVolume;
+    }
+
+    /**
+     * @return The maximum engine torque in Nm.
+     */
+    public Integer getMaxTorque() {
+        return maxTorque;
+    }
+
+    /**
+     * @return The gearbox type.
+     */
+    public Gearbox getGearBox() {
+        return gearBox;
+    }
+
     VehicleStatus(byte[] bytes) {
         super(bytes);
 
@@ -161,40 +206,40 @@ public class VehicleStatus extends CommandWithProperties {
             Property property = getProperties()[i];
             try {
                 switch (property.getPropertyIdentifier()) {
-                    case 0x01:
+                    case VIN_IDENTIFIER:
                         vin = Property.getString(property.getValueBytes());
                         break;
-                    case 0x02:
+                    case POWER_TRAIN_IDENTIFIER:
                         powerTrain = PowerTrain.fromByte(property.getValueByte());
                         break;
-                    case 0x03:
+                    case MODEL_NAME_IDENTIFIER:
                         modelName = Property.getString(property.getValueBytes());
                         break;
-                    case 0x04:
+                    case NAME_IDENTIFIER:
                         name = Property.getString(property.getValueBytes());
                         break;
-                    case 0x05:
+                    case LICENSE_PLATE_IDENTIFIER:
                         licensePlate = Property.getString(property.getValueBytes());
                         break;
-                    case 0x06:
+                    case SALES_DESIGNATION_IDENTIFIER:
                         salesDesignation = Property.getString(property.getValueBytes());
                         break;
-                    case 0x07:
+                    case MODEL_YEAR_IDENTIFIER:
                         modelYear = Property.getUnsignedInt(property.getValueBytes());
                         break;
-                    case 0x08:
+                    case COLOR_IDENTIFIER:
                         color = Property.getString(property.getValueBytes());
                         break;
-                    case 0x09:
+                    case POWER_IDENTIFIER:
                         power = Property.getUnsignedInt(property.getValueBytes());
                         break;
-                    case 0x0A:
+                    case NUMBER_OF_DOORS_IDENTIFIER:
                         numberOfDoors = Property.getUnsignedInt(property.getValueBytes());
                         break;
-                    case 0x0B:
+                    case NUMBER_OF_SEATS_IDENTIFIER:
                         numberOfSeats = Property.getUnsignedInt(property.getValueBytes());
                         break;
-                    case (byte) 0x99:
+                    case COMMAND_IDENTIFIER:
                         byte[] commandBytes = property.getValueBytes();
                         try {
                             Command command = CommandResolver.resolve(commandBytes);
@@ -202,6 +247,15 @@ public class VehicleStatus extends CommandWithProperties {
                         } catch (Exception e) {
                             logger.info("invalid state " + Bytes.hexFromBytes(commandBytes));
                         }
+                        break;
+                    case ENGINE_VOLUME_IDENTIFIER:
+                        engineVolume = Property.getFloat(property.getValueBytes());
+                        break;
+                    case MAX_TORQUE_IDENTIFIER:
+                        maxTorque = Property.getUnsignedInt(property.getValueBytes());
+                        break;
+                    case GEARBOX_IDENTIFIER:
+                        gearBox = Gearbox.fromByte(property.getValueByte());
                         break;
                 }
             } catch (Exception e) {
@@ -246,6 +300,10 @@ public class VehicleStatus extends CommandWithProperties {
         private Integer numberOfSeats;
         private List<Command> states = new ArrayList<>();
 
+        private Float engineVolume;
+        private Integer maxTorque;
+        private Gearbox gearBox;
+
         public Builder() {
             super(TYPE);
         }
@@ -256,7 +314,7 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setVin(String vin) {
             this.vin = vin;
-            addProperty(new StringProperty((byte) 0x01, vin));
+            addProperty(new StringProperty(VIN_IDENTIFIER, vin));
             return this;
         }
 
@@ -276,7 +334,7 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setModelName(String modelName) {
             this.modelName = modelName;
-            addProperty(new StringProperty((byte) 0x03, modelName));
+            addProperty(new StringProperty(MODEL_NAME_IDENTIFIER, modelName));
             return this;
         }
 
@@ -286,7 +344,7 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setName(String name) {
             this.name = name;
-            addProperty(new StringProperty((byte) 0x04, name));
+            addProperty(new StringProperty(NAME_IDENTIFIER, name));
             return this;
         }
 
@@ -296,7 +354,7 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setLicensePlate(String licensePlate) {
             this.licensePlate = licensePlate;
-            addProperty(new StringProperty((byte) 0x05, licensePlate));
+            addProperty(new StringProperty(LICENSE_PLATE_IDENTIFIER, licensePlate));
             return this;
         }
 
@@ -306,7 +364,7 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setSalesDesignation(String salesDesignation) {
             this.salesDesignation = salesDesignation;
-            addProperty(new StringProperty((byte) 0x06, salesDesignation));
+            addProperty(new StringProperty(SALES_DESIGNATION_IDENTIFIER, salesDesignation));
             return this;
         }
 
@@ -316,7 +374,7 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setModelYear(Integer modelYear) {
             this.modelYear = modelYear;
-            addProperty(new IntegerProperty((byte) 0x07, modelYear, 2));
+            addProperty(new IntegerProperty(MODEL_YEAR_IDENTIFIER, modelYear, 2));
             return this;
         }
 
@@ -338,7 +396,7 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setColorName(String color) {
             this.color = color;
-            addProperty(new StringProperty((byte) 0x08, color));
+            addProperty(new StringProperty(COLOR_IDENTIFIER, color));
             return this;
         }
 
@@ -348,7 +406,7 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setPower(Integer power) {
             this.power = power;
-            addProperty(new IntegerProperty((byte) 0x09, power, 2));
+            addProperty(new IntegerProperty(POWER_IDENTIFIER, power, 2));
             return this;
         }
 
@@ -358,7 +416,7 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setNumberOfDoors(Integer numberOfDoors) {
             this.numberOfDoors = numberOfDoors;
-            addProperty(new IntegerProperty((byte) 0x0a, numberOfDoors, 1));
+            addProperty(new IntegerProperty(NUMBER_OF_DOORS_IDENTIFIER, numberOfDoors, 1));
             return this;
         }
 
@@ -368,7 +426,7 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setNumberOfSeats(Integer numberOfSeats) {
             this.numberOfSeats = numberOfSeats;
-            addProperty(new IntegerProperty((byte) 0x0b, numberOfSeats, 1));
+            addProperty(new IntegerProperty(NUMBER_OF_SEATS_IDENTIFIER, numberOfSeats, 1));
             return this;
         }
 
@@ -398,8 +456,79 @@ public class VehicleStatus extends CommandWithProperties {
             return this;
         }
 
+        /**
+         * @param engineVolume The engine volume displacement in liters.
+         * @return The builder.
+         */
+        public Builder setEngineVolume(Float engineVolume) {
+            this.engineVolume = engineVolume;
+            addProperty(new FloatProperty(ENGINE_VOLUME_IDENTIFIER, engineVolume));
+            return this;
+        }
+
+        /**
+         * @param maxTorque The maximum engine torque in Nm.
+         * @return The builder.
+         */
+        public Builder setMaxTorque(Integer maxTorque) {
+            this.maxTorque = maxTorque;
+            addProperty(new IntegerProperty(MAX_TORQUE_IDENTIFIER, maxTorque, 2));
+            return this;
+        }
+
+        /**
+         * @param gearBox The gearbox type.
+         * @return The builder.
+         */
+        public Builder setGearBox(Gearbox gearBox) {
+            this.gearBox = gearBox;
+            addProperty(gearBox);
+            return this;
+        }
+
         public VehicleStatus build() {
             return new VehicleStatus(this);
+        }
+    }
+
+    public enum Gearbox implements HMProperty {
+        MANUAL((byte) 0x00),
+        AUTOMATIC((byte) 0x01),
+        SEMI_AUTOMATIC((byte) 0x02);
+
+        public static Gearbox fromByte(byte value) throws CommandParseException {
+            Gearbox[] values = Gearbox.values();
+
+            for (int i = 0; i < values.length; i++) {
+                Gearbox value1 = values[i];
+                if (value1.getByte() == value) {
+                    return value1;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
+        private byte value;
+
+        Gearbox(byte value) {
+            this.value = value;
+        }
+
+        public byte getByte() {
+            return value;
+        }
+
+        @Override public byte getPropertyIdentifier() {
+            return GEARBOX_IDENTIFIER;
+        }
+
+        @Override public int getPropertyLength() {
+            return 1;
+        }
+
+        @Override public byte[] getPropertyBytes() {
+            return Property.getPropertyBytes(getPropertyIdentifier(), value);
         }
     }
 }
