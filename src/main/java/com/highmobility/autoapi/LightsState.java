@@ -34,11 +34,17 @@ public class LightsState extends CommandWithProperties {
     private static final byte REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER = 0x02;
     private static final byte INTERIOR_LIGHT_ACTIVE_IDENTIFIER = 0x03;
     private static final byte AMBIENT_COLOR_IDENTIFIER = 0x04;
+    private static final byte REVERSE_LIGHT_IDENTIFIER = 0x05;
+    private static final byte EMERGENCY_BRAKE_LIGHT_IDENTIFIER = 0x06;
 
     FrontExteriorLightState frontExteriorLightState;
     Boolean rearExteriorLightActive;
     Boolean interiorLightActive;
     int[] ambientColor;
+
+    // l7
+    Boolean reverseLightActive;
+    Boolean emergencyBrakeLightActive;
 
     /**
      * @return The front exterior light state.
@@ -68,6 +74,20 @@ public class LightsState extends CommandWithProperties {
         return ambientColor;
     }
 
+    /**
+     * @return The reverse light state.
+     */
+    public Boolean isReverseLightActive() {
+        return reverseLightActive;
+    }
+
+    /**
+     * @return The emergency brake light state.
+     */
+    public Boolean isEmergencyBrakeLightActive() {
+        return emergencyBrakeLightActive;
+    }
+
     public LightsState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
@@ -95,6 +115,14 @@ public class LightsState extends CommandWithProperties {
                     ambientColor[3] = 255;
 
                     break;
+                case REVERSE_LIGHT_IDENTIFIER:
+                    reverseLightActive = Property.getBool(property.getValueByte());
+                    break;
+
+                case EMERGENCY_BRAKE_LIGHT_IDENTIFIER:
+                    emergencyBrakeLightActive = Property.getBool(property.getValueByte());
+                    break;
+
             }
         }
     }
@@ -109,6 +137,8 @@ public class LightsState extends CommandWithProperties {
         rearExteriorLightActive = builder.rearExteriorLightActive;
         interiorLightActive = builder.interiorLightActive;
         ambientColor = builder.ambientColor;
+        reverseLightActive = builder.reverseLightActive;
+        emergencyBrakeLightActive = builder.emergencyBrakeLightActive;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
@@ -116,6 +146,9 @@ public class LightsState extends CommandWithProperties {
         private Boolean rearExteriorLightActive;
         private Boolean interiorLightActive;
         private int[] ambientColor;
+
+        private boolean reverseLightActive;
+        private boolean emergencyBrakeLightActive;
 
         public Builder() {
             super(TYPE);
@@ -159,6 +192,27 @@ public class LightsState extends CommandWithProperties {
         public Builder setAmbientColor(int[] ambientColor) {
             this.ambientColor = ambientColor;
             addProperty(new ColorProperty(AMBIENT_COLOR_IDENTIFIER, ambientColor));
+            return this;
+        }
+
+        /**
+         * @param reverseLightActive The reverse light state.
+         * @return The builder.
+         */
+        public Builder setReverseLightActive(boolean reverseLightActive) {
+            this.reverseLightActive = reverseLightActive;
+            addProperty(new BooleanProperty(REVERSE_LIGHT_IDENTIFIER, reverseLightActive));
+            return this;
+        }
+
+        /**
+         * @param emergencyBrakeLightActive The emergency brake light state.
+         * @return The builder.
+         */
+        public Builder setEmergencyBrakeLightActive(boolean emergencyBrakeLightActive) {
+            this.emergencyBrakeLightActive = emergencyBrakeLightActive;
+            addProperty(new BooleanProperty(EMERGENCY_BRAKE_LIGHT_IDENTIFIER,
+                    emergencyBrakeLightActive));
             return this;
         }
 

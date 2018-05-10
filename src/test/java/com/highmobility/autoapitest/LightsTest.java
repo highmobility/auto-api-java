@@ -16,14 +16,16 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class LightsTest {
+    byte[] bytes = Bytes.bytesFromHex(
+            "003601" +
+                    "01000102" +
+                    "02000101" +
+                    "03000100" +
+                    "040003ff0000" +
+                    "0500010106000101" /*l7*/);
+
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
-                "003601" +
-                        "01000102" +
-                        "02000101" +
-                        "03000100" +
-                        "040003ff0000");
 
         Command command = null;
         try {
@@ -44,6 +46,25 @@ public class LightsTest {
         assertTrue(state.getAmbientColor()[0] == 0xFF);
         assertTrue(state.getAmbientColor()[1] == 0);
         assertTrue(state.getAmbientColor()[2] == 0);
+
+        assertTrue(state.isReverseLightActive() == true);
+        assertTrue(state.isEmergencyBrakeLightActive() == true);
+    }
+
+    @Test public void build() {
+        LightsState.Builder builder = new LightsState.Builder();
+
+        builder.setFrontExteriorLightState(FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM);
+        builder.setRearExteriorLightActive(true);
+        builder.setInteriorLightActive(false);
+
+        int[] ambientColor = new int[]{0xFF, 0, 0};
+        builder.setAmbientColor(ambientColor);
+        builder.setReverseLightActive(true);
+        builder.setEmergencyBrakeLightActive(true);
+
+        byte[] actualBytes = builder.build().getBytes();
+        assertTrue(Arrays.equals(actualBytes, bytes));
     }
 
     @Test public void get() {
@@ -67,32 +88,12 @@ public class LightsTest {
         assertTrue(Arrays.equals(expecting, bytes));
 
         ControlLights command = (ControlLights) CommandResolver.resolve(expecting);
-        assertTrue(command.getFrontExteriorLightState() == FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM);
+        assertTrue(command.getFrontExteriorLightState() == FrontExteriorLightState
+                .ACTIVE_WITH_FULL_BEAM);
         assertTrue(command.getRearExteriorLightActive() == false);
         assertTrue(command.getInteriorLightActive() == false);
         assertTrue(Arrays.equals(command.getAmbientColor(), new int[]{255, 0, 0, 255}));
 
-    }
-
-    @Test public void build() {
-        byte[] expectedBytes = Bytes.bytesFromHex(
-                "003601" +
-                        "01000102" +
-                        "02000101" +
-                        "03000100" +
-                        "040003ff0000");
-
-        LightsState.Builder builder = new LightsState.Builder();
-
-        builder.setFrontExteriorLightState(FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM);
-        builder.setRearExteriorLightActive(true);
-        builder.setInteriorLightActive(false);
-
-        int[] ambientColor = new int[]{0xFF, 0, 0};
-        builder.setAmbientColor(ambientColor);
-
-        byte[] actualBytes = builder.build().getBytes();
-        assertTrue(Arrays.equals(actualBytes, expectedBytes));
     }
 
     @Test public void state0Properties() {
