@@ -18,11 +18,10 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class EngineTest {
+    byte[] bytes = Bytes.bytesFromHex(
+            "0035010100010102000101");
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
-                "00350101000101");
-
         Command command = null;
         try {
             command = CommandResolver.resolve(bytes);
@@ -33,6 +32,7 @@ public class EngineTest {
         assertTrue(command.is(IgnitionState.TYPE));
         IgnitionState state = (IgnitionState) command;
         assertTrue(state.isOn() == true);
+        assertTrue(state.isAccessoriesIgnitionOn() == true);
     }
 
     @Test public void get() {
@@ -58,15 +58,15 @@ public class EngineTest {
     }
 
     @Test public void build() {
-        byte[] bytes = Bytes.bytesFromHex("00350101000101");
-
         IgnitionState.Builder builder = new IgnitionState.Builder();
         builder.setIsOn(true);
+        builder.setAccessoriesIgnition(true);
 
         IgnitionState state = builder.build();
         byte[] builtBytes = state.getBytes();
         assertTrue(Arrays.equals(builtBytes, bytes));
         assertTrue(state.isOn() == true);
+        assertTrue(state.isAccessoriesIgnitionOn() == true);
         assertTrue(state.getType() == IgnitionState.TYPE);
     }
 }

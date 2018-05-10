@@ -31,14 +31,23 @@ import com.highmobility.autoapi.property.Property;
 public class IgnitionState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.ENGINE, 0x01);
     private static final byte ON_IDENTIFIER = 0x01;
+    private static final byte ACCESSORIES_IDENTIFIER = 0x02;
 
     Boolean on;
+    Boolean accessoriesIgnition;
 
     /**
      * @return The ignition state.
      */
     public Boolean isOn() {
         return on;
+    }
+
+    /**
+     * @return Whether ignition state is powering on accessories such as radio.
+     */
+    public Boolean isAccessoriesIgnitionOn() {
+        return accessoriesIgnition;
     }
 
     public IgnitionState(byte[] bytes) {
@@ -49,6 +58,9 @@ public class IgnitionState extends CommandWithProperties {
             switch (property.getPropertyIdentifier()) {
                 case ON_IDENTIFIER:
                     on = Property.getBool(property.getValueByte());
+                    break;
+                case ACCESSORIES_IDENTIFIER:
+                    accessoriesIgnition = Property.getBool(property.getValueByte());
                     break;
             }
         }
@@ -61,10 +73,12 @@ public class IgnitionState extends CommandWithProperties {
     private IgnitionState(Builder builder) {
         super(builder);
         on = builder.on;
+        accessoriesIgnition = builder.accessoriesIgnition;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
         private Boolean on;
+        private Boolean accessoriesIgnition;
 
         public Builder() {
             super(TYPE);
@@ -77,6 +91,17 @@ public class IgnitionState extends CommandWithProperties {
         public Builder setIsOn(boolean isOn) {
             this.on = isOn;
             addProperty(new BooleanProperty(ON_IDENTIFIER, isOn));
+            return this;
+        }
+
+        /**
+         * @param accessoriesIgnition Whether ignition state is powering on accessories such as
+         *                            radio.
+         * @return The builder.
+         */
+        public Builder setAccessoriesIgnition(Boolean accessoriesIgnition) {
+            this.accessoriesIgnition = accessoriesIgnition;
+            addProperty(new BooleanProperty(ACCESSORIES_IDENTIFIER, accessoriesIgnition));
             return this;
         }
 
