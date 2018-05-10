@@ -349,6 +349,14 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, ActivateDeactivateStartStop.TYPE)) {
                     command = new ActivateDeactivateStartStop(bytes);
                 }
+            } else if (bytesAreForIdentifier(bytes, Identifier.CRUISE_CONTROL)) {
+                if (bytesAreForType(bytes, GetCruiseControlState.TYPE)) {
+                    command = new GetCruiseControlState(bytes);
+                } else if (bytesAreForType(bytes, CruiseControlState.TYPE)) {
+                    command = new CruiseControlState(bytes);
+                } else if (bytesAreForType(bytes, ActivateDeactivateCruiseControl.TYPE)) {
+                    command = new ActivateDeactivateCruiseControl(bytes);
+                }
             } else if (bytesAreForType(bytes, LoadUrl.TYPE)) {
                 command = new LoadUrl(bytes);
             } else if (bytesAreForType(bytes, VideoHandover.TYPE)) {
