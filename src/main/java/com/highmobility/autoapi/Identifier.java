@@ -70,8 +70,9 @@ public enum Identifier {
     WIFI(new byte[]{0x00, (byte) 0x59}),
     HOME_CHARGER(new byte[]{0x00, (byte) 0x60}),
     DASHBOARD_LIGHTS(new byte[]{0x00, (byte) 0x61}),
-    START_STOP(new byte[]{0x00, (byte) 0x63}),
     CRUISE_CONTROL(new byte[]{0x00, (byte) 0x62}),
+    START_STOP(new byte[]{0x00, (byte) 0x63}),
+    TACHOGRAPH(new byte[]{0x00, (byte) 0x64}),
     POWER_TAKE_OFF(new byte[]{0x00, (byte) 0x65});
 
     public static Identifier fromBytes(byte[] bytes) {

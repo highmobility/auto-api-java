@@ -48,8 +48,8 @@ public class ChargeTimer extends Property {
         this(IDENTIFIER, type, time);
     }
 
-    public ChargeTimer(byte IDENTIFIER, Type type, Calendar time) throws IllegalArgumentException {
-        super(IDENTIFIER, 9);
+    public ChargeTimer(byte identifier, Type type, Calendar time) throws IllegalArgumentException {
+        super(identifier, 9);
         bytes[3] = type.getByte();
         Bytes.setBytes(bytes, Property.calendarToBytes(time), 4);
         this.type = type;

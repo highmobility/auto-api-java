@@ -365,6 +365,12 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, ActivateDeactivatePowerTakeoff.TYPE)) {
                     command = new ActivateDeactivatePowerTakeoff(bytes);
                 }
+            } else if (bytesAreForIdentifier(bytes, Identifier.TACHOGRAPH)) {
+                if (bytesAreForType(bytes, TachographState.TYPE)) {
+                    command = new TachographState(bytes);
+                } else if (bytesAreForType(bytes, GetTachographState.TYPE)) {
+                    command = new GetTachographState(bytes);
+                }
             } else if (bytesAreForType(bytes, LoadUrl.TYPE)) {
                 command = new LoadUrl(bytes);
             } else if (bytesAreForType(bytes, VideoHandover.TYPE)) {
