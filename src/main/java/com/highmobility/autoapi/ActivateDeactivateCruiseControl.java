@@ -68,5 +68,7 @@ public class ActivateDeactivateCruiseControl extends Command {
 
     ActivateDeactivateCruiseControl(byte[] bytes) {
         super(bytes);
+
+        // no telematics
     }
 }

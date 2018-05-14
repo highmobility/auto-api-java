@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -27,7 +28,7 @@ import com.highmobility.autoapi.property.Property;
  * automatically shut down and restart the internal combustion engine when the car is stopped. The
  * result is sent through the Start-Stop State message.
  */
-public class ActivateDeactivateStartStop extends Command {
+public class ActivateDeactivateStartStop extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.START_STOP, 0x02);
     boolean activate;
 
@@ -39,12 +40,15 @@ public class ActivateDeactivateStartStop extends Command {
     }
 
     public ActivateDeactivateStartStop(boolean activate) {
-        super(TYPE.addByte(Property.boolToByte(activate)));
+        super(TYPE.addProperty(new BooleanProperty((byte) 0x01, activate)));
         this.activate = activate;
     }
 
     ActivateDeactivateStartStop(byte[] bytes) {
         super(bytes);
-        activate = Property.getBool(bytes[3]);
+        for (Property property : properties) {
+            if (property.getPropertyIdentifier() == 0x01)
+                activate = Property.getBool(property.getValueByte());
+        }
     }
 }

@@ -48,7 +48,7 @@ public class StartStopTest {
     }
 
     @Test public void activateDeactivate() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("00630201");
+        byte[] waitingForBytes = Bytes.bytesFromHex("00630201000101");
 
         byte[] commandBytes = new ActivateDeactivateStartStop(true).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));

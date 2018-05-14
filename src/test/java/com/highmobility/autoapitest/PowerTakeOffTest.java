@@ -48,7 +48,7 @@ public class PowerTakeOffTest {
     }
 
     @Test public void activateDeactivate() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("00650201");
+        byte[] waitingForBytes = Bytes.bytesFromHex("00650201000101");
         byte[] commandBytes = new ActivateDeactivatePowerTakeoff(true).getBytes();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
         ActivateDeactivatePowerTakeoff command = (ActivateDeactivatePowerTakeoff) CommandResolver
