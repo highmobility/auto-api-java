@@ -18,34 +18,40 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi;
+package com.highmobility.autoapi.property.doors;
 
-import com.highmobility.autoapi.property.doors.DoorLock;
+import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.Property;
 
-/**
- * Command to lock or unlock all doors of the car. The car will respond with the updated
- * lock state in a Lock State message.
- */
-public class LockUnlockDoors extends Command {
-    public static final Type TYPE = new Type(Identifier.DOOR_LOCKS, 0x02);
-
+public class DoorLockState extends Property {
+    DoorLocation doorLocation;
     DoorLock doorLock;
 
     /**
-     * @return The lock state.
+     * @return The door location.
+     */
+    public DoorLocation getDoorLocation() {
+        return doorLocation;
+    }
+
+    /**
+     * @return The door lock state.
      */
     public DoorLock getDoorLock() {
         return doorLock;
     }
 
-    public LockUnlockDoors(DoorLock doorLockState) {
-        super(TYPE.addByte(doorLockState.getByte()));
-        this.doorLock = doorLockState;
+    public DoorLockState(byte[] bytes) throws CommandParseException {
+        this(DoorLocation.fromByte(bytes[3]), DoorLock.fromByte
+                (bytes[4]));
     }
 
-    LockUnlockDoors(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length != 4) throw new CommandParseException();
-        doorLock = DoorLock.fromByte(bytes[3]);
+    public DoorLockState(DoorLocation doorLocation, DoorLock doorLock) {
+        super((byte) 0x01, 2);
+        this.doorLocation = doorLocation;
+        this.doorLock = doorLock;
+
+        bytes[3] = doorLocation.getByte();
+        bytes[4] = doorLock.getByte();
     }
 }

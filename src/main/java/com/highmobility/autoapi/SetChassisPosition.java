@@ -39,7 +39,7 @@ public class SetChassisPosition extends Command {
 
     /**
      * @param position The chassis position in mm calculated from the lowest point
-     * @deprecated use @{{@link #SetChassisPosition(int)}} instead
+     * @deprecated use {@link #SetChassisPosition(int)} instead
      */
     @Deprecated
     public SetChassisPosition(Integer position) {

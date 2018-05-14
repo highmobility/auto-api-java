@@ -21,14 +21,18 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.doors.DoorLockAndPositionState;
 
+/**
+ * @deprecated use {@link DoorLockAndPositionState} instead
+ */
+@Deprecated
 public class DoorLockProperty extends Property {
     Location location;
     Position position;
     LockState lockState;
 
     /**
-     *
      * @return The door location
      */
     public Location getLocation() {
@@ -36,7 +40,6 @@ public class DoorLockProperty extends Property {
     }
 
     /**
-     *
      * @return The door position
      */
     public Position getPosition() {
@@ -44,7 +47,6 @@ public class DoorLockProperty extends Property {
     }
 
     /**
-     *
      * @return The lock state
      */
     public LockState getLockState() {
@@ -52,7 +54,8 @@ public class DoorLockProperty extends Property {
     }
 
     public DoorLockProperty(byte[] bytes) throws CommandParseException {
-        this(Location.fromByte(bytes[3]), Position.fromByte(bytes[4]), LockState.fromByte(bytes[5]));
+        this(Location.fromByte(bytes[3]), Position.fromByte(bytes[4]), LockState.fromByte
+                (bytes[5]));
     }
 
     public DoorLockProperty(Location location, Position position, LockState lockState) {
@@ -70,10 +73,10 @@ public class DoorLockProperty extends Property {
      * The door location
      */
     public enum Location {
-        FRONT_LEFT((byte)0x00),
-        FRONT_RIGHT((byte)0x01),
-        REAR_RIGHT((byte)0x02),
-        REAR_LEFT((byte)0x03);
+        FRONT_LEFT((byte) 0x00),
+        FRONT_RIGHT((byte) 0x01),
+        REAR_RIGHT((byte) 0x02),
+        REAR_LEFT((byte) 0x03);
 
         public static Location fromByte(byte value) throws CommandParseException {
             Location[] allValues = Location.values();
@@ -103,8 +106,8 @@ public class DoorLockProperty extends Property {
      * The possible positions of a car door
      */
     public enum Position {
-        CLOSED((byte)0x00),
-        OPEN((byte)0x01);
+        CLOSED((byte) 0x00),
+        OPEN((byte) 0x01);
 
         public static Position fromByte(byte value) throws CommandParseException {
             Position[] capabilities = Position.values();
@@ -134,8 +137,8 @@ public class DoorLockProperty extends Property {
      * The possible states of the car lock.
      */
     public enum LockState {
-        UNLOCKED((byte)0x00),
-        LOCKED((byte)0x01);
+        UNLOCKED((byte) 0x00),
+        LOCKED((byte) 0x01);
 
         public static LockState fromByte(byte value) throws CommandParseException {
             LockState[] capabilities = LockState.values();
