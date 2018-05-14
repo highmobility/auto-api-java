@@ -18,11 +18,12 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class VehicleLocationTest {
+    byte[] bytes = Bytes.bytesFromHex(
+            "0030010100084252147d41567ab10200044252147d"
+                    + "03000443058000");
+
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
-                "0030010100084252147d41567ab10200044252147d");
-
         Command command = null;
         try {
             command = CommandResolver.resolve(bytes);
@@ -35,6 +36,7 @@ public class VehicleLocationTest {
         assertTrue(state.getCoordinates().getLatitude() == 52.520008f);
         assertTrue(state.getCoordinates().getLongitude() == 13.404954f);
         assertTrue(state.getHeading() == 52.520008f);
+        assertTrue(state.getAltitude() == 133.5f);
     }
 
     @Test public void get() {
@@ -54,7 +56,7 @@ public class VehicleLocationTest {
         CoordinatesProperty coordinates = new CoordinatesProperty(52.520008f, 13.404954f);
         builder.setCoordinates(coordinates);
         builder.setHeading(52.520008f);
-        assertTrue(Arrays.equals(builder.build().getBytes(), Bytes.bytesFromHex
-                ("0030010100084252147d41567ab10200044252147d")));
+        builder.setAltitude(133.5f);
+        assertTrue(Arrays.equals(builder.build().getBytes(), bytes));
     }
 }

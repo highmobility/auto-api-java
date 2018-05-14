@@ -32,9 +32,12 @@ public class VehicleLocation extends CommandWithProperties {
 
     private static final byte COORDINATES_IDENTIFIER = 0x01;
     private static final byte HEADING_IDENTIFIER = 0x02;
+    private static final byte ALTITUDE_IDENTIFIER = 0x03;
 
     private CoordinatesProperty coordinates;
     private Float heading;
+
+    private Float altitude;
 
     /**
      * @return The vehicle coordinates.
@@ -50,6 +53,13 @@ public class VehicleLocation extends CommandWithProperties {
         return heading;
     }
 
+    /**
+     * @return The altitude in meters above the WGS 84 reference ellipsoid.
+     */
+    public Float getAltitude() {
+        return altitude;
+    }
+
     public VehicleLocation(byte[] bytes) {
         super(bytes);
 
@@ -61,6 +71,9 @@ public class VehicleLocation extends CommandWithProperties {
                     break;
                 case HEADING_IDENTIFIER:
                     heading = Property.getFloat(property.getValueBytes());
+                    break;
+                case ALTITUDE_IDENTIFIER:
+                    altitude = Property.getFloat(property.getValueBytes());
                     break;
             }
         }
@@ -74,11 +87,14 @@ public class VehicleLocation extends CommandWithProperties {
         super(builder);
         heading = builder.heading;
         coordinates = builder.coordinates;
+        altitude = builder.altitude;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
         private Float heading;
         private CoordinatesProperty coordinates;
+
+        private Float altitude;
 
         public Builder() {
             super(TYPE);
@@ -88,7 +104,7 @@ public class VehicleLocation extends CommandWithProperties {
          * @param heading The heading.
          * @return The builder.
          */
-        public Builder setHeading(Float heading) {
+        public Builder setHeading(float heading) {
             this.heading = heading;
             addProperty(new FloatProperty(HEADING_IDENTIFIER, heading));
             return this;
@@ -102,6 +118,16 @@ public class VehicleLocation extends CommandWithProperties {
             this.coordinates = coordinates;
             coordinates.setIdentifier(COORDINATES_IDENTIFIER);
             addProperty(coordinates);
+            return this;
+        }
+
+        /**
+         * @param altitude The altitude in meters above the WGS 84 reference ellipsoid
+         * @return The builder.
+         */
+        public Builder setAltitude(float altitude) {
+            this.altitude = altitude;
+            addProperty(new FloatProperty(ALTITUDE_IDENTIFIER, altitude));
             return this;
         }
 
