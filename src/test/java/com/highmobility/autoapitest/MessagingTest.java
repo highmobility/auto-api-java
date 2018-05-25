@@ -4,6 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.MessageReceived;
 import com.highmobility.autoapi.SendMessage;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -19,7 +20,7 @@ import static org.junit.Assert.fail;
 public class MessagingTest {
     @Test
     public void send() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "003701" +
                         "01000e2b31203535352d3535352d353535" +
                         "02000d48656c6c6f20796f7520746f6f");
@@ -38,12 +39,12 @@ public class MessagingTest {
     }
 
     @Test public void received() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("003700" +
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("003700" +
                 "01000e2b31203535352d3535352d353535" +
                 "02000548656c6c6f");
 
         byte[] commandBytes = null;
-        commandBytes = new MessageReceived("+1 555-555-555", "Hello").getBytes();
+        commandBytes = new MessageReceived("+1 555-555-555", "Hello").getByteArray();
 
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
@@ -56,8 +57,8 @@ public class MessagingTest {
         SendMessage.Builder builder = new SendMessage.Builder();
         builder.setRecipientHandle("+1 555-555-555");
         builder.setMessage("Hello you too");
-        byte[] bytes = builder.build().getBytes();
-        assertTrue(Arrays.equals(bytes, Bytes.bytesFromHex("003701" +
+        byte[] bytes = builder.build().getByteArray();
+        assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("003701" +
                 "01000e2b31203535352d3535352d353535" +
                 "02000d48656c6c6f20796f7520746f6f")));
     }

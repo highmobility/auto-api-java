@@ -1,11 +1,10 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DriverFatigueDetected;
 import com.highmobility.autoapi.property.FatigueLevel;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import org.junit.Test;
 
@@ -15,7 +14,7 @@ import static org.junit.Assert.fail;
 public class DriverFatigueTest {
     @Test
     public void detected() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "00410101000100");
 
 

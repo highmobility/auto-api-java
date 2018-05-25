@@ -9,6 +9,7 @@ import com.highmobility.autoapi.RooftopState;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -41,27 +42,27 @@ public class PropertyTest {
     @Test public void nonce() {
         CommandWithProperties command = getCommandWithSignature();
         byte[] nonce = command.getNonce();
-        assertTrue(Arrays.equals(nonce, Bytes.bytesFromHex("324244433743483436")));
+        assertTrue(Arrays.equals(nonce, ByteUtils.bytesFromHex("324244433743483436")));
 
         // build with #signature()
     }
 
     @Test public void signature() {
         CommandWithProperties command = getCommandWithSignature();
-        assertTrue(Arrays.equals(command.getSignature(), Bytes.bytesFromHex
+        assertTrue(Arrays.equals(command.getSignature(), ByteUtils.bytesFromHex
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6")));
 
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
         builder.setIsActive(true);
-        builder.setNonce(Bytes.bytesFromHex("324244433743483436"));
-        builder.setSignature(Bytes.bytesFromHex
+        builder.setNonce(ByteUtils.bytesFromHex("324244433743483436"));
+        builder.setSignature(ByteUtils.bytesFromHex
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
         ParkingBrakeState state = builder.build();
-        assertTrue(Arrays.equals(state.getBytes(), command.getBytes()));
+        assertTrue(state.equals(command));
     }
 
     @Test public void timestamp() throws ParseException {
-        byte[] bytes = Bytes.bytesFromHex(parkingBrakeCommand + "A2000811010A1122000000");
+        byte[] bytes = ByteUtils.bytesFromHex(parkingBrakeCommand + "A2000811010A1122000000");
         String expectedDate = "2017-01-10T17:34:00";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
         assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
@@ -71,18 +72,18 @@ public class PropertyTest {
         builder.setIsActive(true);
         builder.setTimestamp(calendar);
         ParkingBrakeState state = builder.build();
-        assertTrue(Arrays.equals(state.getBytes(), bytes));
+        assertTrue(state.equals(bytes));
     }
 
     @Test public void signedBytes() {
         CommandWithProperties command = getCommandWithSignature();
         byte[] signedBytes = command.getSignedBytes();
-        assertTrue(Arrays.equals(signedBytes, Bytes.bytesFromHex
+        assertTrue(Arrays.equals(signedBytes, ByteUtils.bytesFromHex
                 (parkingBrakeCommand + "A00009324244433743483436")));
     }
 
     CommandWithProperties getCommandWithSignature() {
-        byte[] bytes = Bytes.bytesFromHex
+        byte[] bytes = ByteUtils.bytesFromHex
                 (parkingBrakeCommand +
                         "A00009324244433743483436A100404D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6");
         try {
@@ -105,7 +106,7 @@ public class PropertyTest {
     }
 
     @Test public void unknownProperty() throws CommandParseException {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "002501" +
                         "01000101" +
                         "1A000135");
@@ -133,13 +134,13 @@ public class PropertyTest {
             if (property.getPropertyIdentifier() == 0x1A) {
                 assertTrue(property.getPropertyLength() == 1);
                 assertTrue(Arrays.equals(property.getValueBytes(), new byte[]{0x35}));
-                assertTrue(Arrays.equals(property.getPropertyBytes(), Bytes.bytesFromHex
+                assertTrue(Arrays.equals(property.getPropertyBytes(), ByteUtils.bytesFromHex
                         ("1A000135")));
                 foundUnknownProperty = true;
             } else if (property.getPropertyIdentifier() == 0x01) {
                 assertTrue(property.getPropertyLength() == 1);
                 assertTrue(Arrays.equals(property.getValueBytes(), new byte[]{0x01}));
-                assertTrue(Arrays.equals(property.getPropertyBytes(), Bytes.bytesFromHex
+                assertTrue(Arrays.equals(property.getPropertyBytes(), ByteUtils.bytesFromHex
                         ("01000101")));
                 foundDimmingProperty = true;
             }

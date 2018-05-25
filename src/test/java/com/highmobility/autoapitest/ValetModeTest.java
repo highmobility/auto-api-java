@@ -5,7 +5,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetValetMode;
 import com.highmobility.autoapi.ValetMode;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
 public class ValetModeTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "00280101000101");
 
         Command command = null;
@@ -37,22 +37,22 @@ public class ValetModeTest {
 
     @Test public void get() {
         String waitingForBytes = "002800";
-        String commandBytes = Bytes.hexFromBytes(new GetValetMode().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetValetMode().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void activate() {
         String waitingForBytes = "00280201";
-        String commandBytes = Bytes.hexFromBytes(new ActivateDeactivateValetMode(true).getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new ActivateDeactivateValetMode(true).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         ActivateDeactivateValetMode command = (ActivateDeactivateValetMode) CommandResolver
-                .resolve(Bytes.bytesFromHex(waitingForBytes));
+                .resolve(ByteUtils.bytesFromHex(waitingForBytes));
         assertTrue(command.activate() == true);
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("002801");
+        byte[] bytes = ByteUtils.bytesFromHex("002801");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((ValetMode) state).isActive() == null);
     }
@@ -60,7 +60,7 @@ public class ValetModeTest {
     @Test public void builder() {
         ValetMode.Builder builder = new ValetMode.Builder();
         builder.setActive(true);
-        byte[] bytes = builder.build().getBytes();
-        assertTrue(Arrays.equals(bytes, Bytes.bytesFromHex("00280101000101")));
+        byte[] bytes = builder.build().getByteArray();
+        assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("00280101000101")));
     }
 }

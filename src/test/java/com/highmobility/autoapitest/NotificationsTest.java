@@ -6,6 +6,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Notification;
 import com.highmobility.autoapi.NotificationAction;
 import com.highmobility.autoapi.property.ActionItem;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -20,7 +21,7 @@ import static junit.framework.TestCase.fail;
  */
 public class NotificationsTest {
     @Test public void incomingNotification() {
-        byte[] bytes = Bytes.bytesFromHex
+        byte[] bytes = ByteUtils.bytesFromHex
                 ("0038000100115374617274206e617669676174696f6e3f020003004e6f02000401596573");
 
         Command command = null;
@@ -42,7 +43,7 @@ public class NotificationsTest {
     }
 
     @Test public void outgoingNotification() {
-        byte[] bytes = Bytes.bytesFromHex
+        byte[] bytes = ByteUtils.bytesFromHex
                 ("0038000100115374617274206e617669676174696f6e3f020003004e6f02000401596573");
 
         ActionItem action1 = null, action2 = null;
@@ -52,7 +53,7 @@ public class NotificationsTest {
         Notification notification = new Notification("Start navigation?", actions);
 
         // we expect that properties are ordered in this test. It should not matter really
-        assertTrue(Arrays.equals(notification.getBytes(), bytes));
+        assertTrue(Arrays.equals(notification.getByteArray(), bytes));
     }
 
     @Test public void buildNotification() {
@@ -67,7 +68,7 @@ public class NotificationsTest {
         builder.setActions(actions);
 
         Notification command = builder.build();
-        assertTrue(Arrays.equals(command.getBytes(), Bytes.bytesFromHex
+        assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex
                 ("0038000100115374617274206e617669676174696f6e3f020003004e6f02000401596573")));
         assertTrue(command.getActions().length == 2);
 
@@ -77,13 +78,13 @@ public class NotificationsTest {
         builder2.addAction(actions[1]);
 
         Notification command2 = builder2.build();
-        assertTrue(Arrays.equals(command2.getBytes(), Bytes.bytesFromHex
+        assertTrue(Arrays.equals(command2.getByteArray(), ByteUtils.bytesFromHex
                 ("0038000100115374617274206e617669676174696f6e3f020003004e6f02000401596573")));
         assertTrue(command2.getActions().length == 2);
     }
 
     @Test public void incomingNotificationAction() {
-        byte[] bytes = Bytes.bytesFromHex
+        byte[] bytes = ByteUtils.bytesFromHex
                 ("003801FE");
 
         Command command = null;
@@ -98,9 +99,9 @@ public class NotificationsTest {
     }
 
     @Test public void outgoingNotificationAction() {
-        byte[] expecting = Bytes.bytesFromHex
+        byte[] expecting = ByteUtils.bytesFromHex
                 ("003801FE");
-        byte[] bytes = new NotificationAction(254).getBytes();
+        byte[] bytes = new NotificationAction(254).getByteArray();
         assertTrue(Arrays.equals(expecting, bytes));
 
         NotificationAction action = (NotificationAction) CommandResolver.resolve(expecting);
@@ -112,11 +113,11 @@ public class NotificationsTest {
         builder.setActionIdentifier(254);
         NotificationAction command = builder.build();
         assertTrue(command.getActionIdentifier() == 254);
-        assertTrue(Arrays.equals(command.getBytes(), Bytes.bytesFromHex("003801FE")));
+        assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex("003801FE")));
     }
 
     @Test public void incomingClear() {
-        byte[] bytes = Bytes.bytesFromHex
+        byte[] bytes = ByteUtils.bytesFromHex
                 ("003802");
 
         Command command = null;
@@ -129,8 +130,8 @@ public class NotificationsTest {
     }
 
     @Test public void outgoingClear() {
-        byte[] bytes = Bytes.bytesFromHex
+        byte[] bytes = ByteUtils.bytesFromHex
                 ("003802");
-        assertTrue(Arrays.equals(new ClearNotification().getBytes(), bytes));
+        assertTrue(Arrays.equals(new ClearNotification().getByteArray(), bytes));
     }
 }

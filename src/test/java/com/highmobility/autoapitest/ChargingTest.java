@@ -12,6 +12,7 @@ import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.ChargeTimer;
 import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.PortState;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -26,7 +27,7 @@ import static org.junit.Assert.fail;
 public class ChargingTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "0023010100010202000200FF03000132040004bf19999a050004bf19999a06000443c8000007000443cd00000800015A090002003C0A0004000000000B0001010C0001000D00090212010A10200500000D00090112010A1020060000");
 
         Command command = null;
@@ -66,7 +67,7 @@ public class ChargingTest {
 
     @Test public void get() {
         String waitingForBytes = "002300";
-        String commandBytes = Bytes.hexFromBytes(new GetChargeState().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetChargeState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
@@ -83,7 +84,7 @@ public class ChargingTest {
     }
 
     @Test public void build() {
-        byte[] expectedBytes = Bytes.bytesFromHex(
+        byte[] expectedBytes = ByteUtils.bytesFromHex(
                 "0023010100010202000200FF03000132040004bf19999a050004bf19999a06000443c8000007000443cd00000800015A090002003C0A0004000000000B0001010C0001000D00090212010A10200500000D00090112010A1020060000");
         ChargeState.Builder builder = new ChargeState.Builder();
         builder.setChargingState(ChargingState.CHARGING);
@@ -110,7 +111,7 @@ public class ChargingTest {
             builder.addChargeTimer(timer2);
 
             ChargeState state = builder.build();
-            byte[] resultBytes = state.getBytes();
+            byte[] resultBytes = state.getByteArray();
             assertTrue(Arrays.equals(resultBytes, expectedBytes));
         } catch (ParseException e) {
             e.printStackTrace();
@@ -119,24 +120,24 @@ public class ChargingTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("002301");
+        byte[] bytes = ByteUtils.bytesFromHex("002301");
         ChargeState state = (ChargeState) CommandResolver.resolve(bytes);
         assertTrue(state.getBatteryCurrentAC() == null);
     }
 
     @Test public void setChargeLimit() {
         String waitingForBytes = "0023035A";
-        String commandBytes = Bytes.hexFromBytes(new SetChargeLimit(.9f).getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new SetChargeLimit(.9f).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        SetChargeLimit command = (SetChargeLimit) CommandResolver.resolve(Bytes.bytesFromHex
+        SetChargeLimit command = (SetChargeLimit) CommandResolver.resolve(ByteUtils.bytesFromHex
                 (waitingForBytes));
         assertTrue(command.getChargeLimit() == .9f);
     }
 
     @Test public void startStopCharging() {
         String waitingForBytes = "00230201";
-        String commandBytes = Bytes.hexFromBytes(new StartStopCharging(true).getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new StartStopCharging(true).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         StartStopCharging command = (StartStopCharging) CommandResolver.resolve(Bytes
@@ -146,17 +147,17 @@ public class ChargingTest {
 
     @Test public void setChargeMode() {
         String waitingForBytes = "00230502";
-        String commandBytes = Bytes.hexFromBytes(new SetChargeMode(ChargeMode.INDUCTIVE).getBytes
+        String commandBytes = ByteUtils.hexFromBytes(new SetChargeMode(ChargeMode.INDUCTIVE).getByteArray
                 ());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        SetChargeMode command = (SetChargeMode) CommandResolver.resolve(Bytes.bytesFromHex
+        SetChargeMode command = (SetChargeMode) CommandResolver.resolve(ByteUtils.bytesFromHex
                 (waitingForBytes));
         assertTrue(command.getChargeMode() == ChargeMode.INDUCTIVE);
     }
 
     @Test public void setChargeTimer() throws ParseException {
-        byte[] waitingForBytes = Bytes.bytesFromHex
+        byte[] waitingForBytes = ByteUtils.bytesFromHex
                 ("0023060D00090212010a10200500000D00090113010a1020070000");
 
         try {
@@ -167,7 +168,7 @@ public class ChargingTest {
             timers[0] = new ChargeTimer(ChargeTimer.Type.DEPARTURE_TIME, c);
             timers[1] = new ChargeTimer(ChargeTimer.Type.PREFERRED_END_TIME, c2);
 
-            byte[] commandBytes = new SetChargeTimer(timers).getBytes();
+            byte[] commandBytes = new SetChargeTimer(timers).getByteArray();
             assertTrue(Arrays.equals(waitingForBytes, commandBytes));
         } catch (ParseException e) {
             fail();

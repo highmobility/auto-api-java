@@ -11,7 +11,7 @@ import com.highmobility.autoapi.property.WindscreenDamageZoneMatrix;
 import com.highmobility.autoapi.property.WindscreenReplacementState;
 import com.highmobility.autoapi.property.WiperIntensity;
 import com.highmobility.autoapi.property.WiperState;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ import static org.junit.Assert.fail;
 public class WindscreenTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "0042010100010202000103030001020400014305000112060001020700015f08000811010a1020050000");
 
         Command command = null;
@@ -96,22 +96,22 @@ public class WindscreenTest {
         builder.setDamageDetectionTime(date);
 
         WindscreenState command = builder.build();
-        assertTrue(Arrays.equals(command.getBytes(), Bytes.bytesFromHex
+        assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex
                 ("0042010100010202000103030001020400014305000112060001020700015f08000811010a1020050000")));
 
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("004200");
-        byte[] bytes = new GetWindscreenState().getBytes();
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("004200");
+        byte[] bytes = new GetWindscreenState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
     @Test public void setNoDamage() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("00420203000101");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("00420203000101");
 
         byte[] bytes = new SetWindscreenDamage(WindscreenDamage.IMPACT_NO_DAMAGE,
-                null, null).getBytes();
+                null, null).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
         SetWindscreenDamage command = (SetWindscreenDamage) CommandResolver.resolve
@@ -122,13 +122,13 @@ public class WindscreenTest {
     }
 
     @Test public void setDamage() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("004202030001010500012306000101");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("004202030001010500012306000101");
 
         WindscreenDamage damage = WindscreenDamage.IMPACT_NO_DAMAGE;
         WindscreenDamageZone zone = new WindscreenDamageZone(2, 3);
         WindscreenReplacementState replacementState = WindscreenReplacementState
                 .REPLACEMENT_NOT_NEEDED;
-        byte[] bytes = new SetWindscreenDamage(damage, zone, replacementState).getBytes();
+        byte[] bytes = new SetWindscreenDamage(damage, zone, replacementState).getByteArray();
 
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
@@ -142,7 +142,7 @@ public class WindscreenTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("004201");
+        byte[] bytes = ByteUtils.bytesFromHex("004201");
         WindscreenState state = (WindscreenState) CommandResolver.resolve(bytes);
         assertTrue(state.getDamageConfidence() == null);
     }

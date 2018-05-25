@@ -5,6 +5,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.CruiseControlState;
 import com.highmobility.autoapi.GetCruiseControlState;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -15,7 +16,7 @@ import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class CruiseControlTest {
-    byte[] bytes = Bytes.bytesFromHex("0062010100010102000101030002003C04000100050002003C");
+    byte[] bytes = ByteUtils.bytesFromHex("0062010100010102000101030002003C04000100050002003C");
 
     @Test
     public void state() {
@@ -37,14 +38,14 @@ public class CruiseControlTest {
 
     @Test public void get() {
         String waitingForBytes = "006200";
-        String commandBytes = Bytes.hexFromBytes(new GetCruiseControlState().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetCruiseControlState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void activateDeactivate() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("00620201000101020002003C");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("00620201000101020002003C");
         byte[] commandBytes = new ActivateDeactivateCruiseControl(true, 60)
-                .getBytes();
+                .getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
     }
 }

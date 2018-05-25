@@ -5,6 +5,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetParkingBrakeState;
 import com.highmobility.autoapi.ParkingBrakeState;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -20,7 +21,7 @@ import static org.junit.Assert.fail;
 public class ParkingBrakeTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "00580101000101");
 
         Command command = null;
@@ -37,33 +38,33 @@ public class ParkingBrakeTest {
 
     @Test public void get() {
         String waitingForBytes = "005800";
-        String commandBytes = Bytes.hexFromBytes(new GetParkingBrakeState().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetParkingBrakeState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void inactivate() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("00580201");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("00580201");
         byte[] commandBytes = new ActivateInactivateParkingBrake(true)
-                .getBytes();
+                .getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
         ActivateInactivateParkingBrake command = (ActivateInactivateParkingBrake) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.activate() == true);
-        assertTrue(Arrays.equals(command.getBytes(), waitingForBytes));
+        assertTrue(Arrays.equals(command.getByteArray(), waitingForBytes));
     }
 
     @Test public void build() {
-        byte[] expectedBytes = Bytes.bytesFromHex(
+        byte[] expectedBytes = ByteUtils.bytesFromHex(
                 "00580101000101");
 
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
         builder.setIsActive(true);
-        byte[] actualBytes = builder.build().getBytes();
+        byte[] actualBytes = builder.build().getByteArray();
         assertTrue(Arrays.equals(actualBytes, expectedBytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("005801");
+        byte[] bytes = ByteUtils.bytesFromHex("005801");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((ParkingBrakeState)state).isActive() == null);
     }

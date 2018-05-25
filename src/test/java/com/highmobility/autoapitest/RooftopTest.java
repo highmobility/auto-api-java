@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlRooftop;
 import com.highmobility.autoapi.GetRooftopState;
 import com.highmobility.autoapi.RooftopState;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import org.junit.Test;
 
@@ -17,12 +17,10 @@ import static org.junit.Assert.fail;
 public class RooftopTest {
     @Test
     public void state_random() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "002501" +
                     "01000101" +
                     "02000135");
-
-
 
         Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
@@ -36,7 +34,7 @@ public class RooftopTest {
 
     @Test
     public void state_opaque() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "002501" +
                     "01000164" +
                     "02000100");
@@ -53,7 +51,7 @@ public class RooftopTest {
 
     @Test public void get() {
         String waitingForBytes = "002500";
-        String commandBytes = Bytes.hexFromBytes(new GetRooftopState().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetRooftopState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
@@ -62,7 +60,7 @@ public class RooftopTest {
                                 "0100010A" +
                                 "02000135";
 
-        String commandBytes = Bytes.hexFromBytes(new ControlRooftop(.1f, .53f).getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new ControlRooftop(.1f, .53f).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         ControlRooftop command = (ControlRooftop) CommandResolver.resolveHex(waitingForBytes);
@@ -71,19 +69,19 @@ public class RooftopTest {
     }
 
     @Test public void stateBuilder() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("0025010100010102000135");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("0025010100010102000135");
         RooftopState.Builder builder = new RooftopState.Builder();
         builder.setDimmingPercentage(.01f);
         builder.setOpenPercentage(.53f);
         RooftopState state = builder.build();
-        byte[] actualBytes = state.getBytes();
+        byte[] actualBytes = state.getByteArray();
         assertTrue(Arrays.equals(actualBytes, waitingForBytes));
         assertTrue(state.getDimmingPercentage() == .01f);
         assertTrue(state.getOpenPercentage() == .53f);
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("002501");
+        byte[] bytes = ByteUtils.bytesFromHex("002501");
         RooftopState state = (RooftopState) CommandResolver.resolve(bytes);
         assertTrue(state.getOpenPercentage() == null);
     }

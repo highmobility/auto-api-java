@@ -21,7 +21,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 public class CommandProperty extends Property {
     private static final byte defaultIdentifier = (byte)0x99;
@@ -31,7 +31,7 @@ public class CommandProperty extends Property {
     }
 
     public CommandProperty(byte identifier, Command value) {
-        super(identifier, value.getBytes().length);
-        Bytes.setBytes(bytes, value.getBytes(), 3);
+        super(identifier, value.getByteArray().length);
+        ByteUtils.setBytes(bytes, value.getByteArray(), 3);
     }
 }

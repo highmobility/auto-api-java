@@ -7,7 +7,7 @@ import com.highmobility.autoapi.GetDiagnosticsState;
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.TireStateProperty;
 import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class DiagnosticsTest {
-    static byte[] stateBytes = Bytes.bytesFromHex(
+    static byte[] stateBytes = ByteUtils.bytesFromHex(
             "0033010100030249F00200020063030002003C04000209C40500015A0600020109070004410c000008000440c66666090001010A000B004013d70a4220000002EA0A000B014013d70a4220000002EA0A000B024013d70a4220000002EA0A000B034013d70a4220000002EA0B0004414000000C00043F0000000D000205DC0E0002000A" +
                     "0F0004420E0000" +
                     "10000101110002001412000444bb94cd13000446d7860014000100150001141600010A1700020041"); // l7
@@ -98,10 +98,10 @@ public class DiagnosticsTest {
 
     @Test public void get() {
         String waitingForBytes = "003300";
-        String commandBytes = Bytes.hexFromBytes(new GetDiagnosticsState().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetDiagnosticsState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        Command command = CommandResolver.resolve(ByteUtils.bytesFromHex(waitingForBytes));
         assertTrue(command instanceof GetDiagnosticsState);
     }
 
@@ -145,12 +145,12 @@ public class DiagnosticsTest {
         builder.setEngineLoad(.1f);
         builder.setWheelBasedSpeed(65);
 
-        byte[] bytes = builder.build().getBytes();
+        byte[] bytes = builder.build().getByteArray();
         assertTrue(Arrays.equals(bytes, stateBytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("003301");
+        byte[] bytes = ByteUtils.bytesFromHex("003301");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((DiagnosticsState)state).getTripFuelConsumption() == null);
     }

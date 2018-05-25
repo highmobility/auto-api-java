@@ -6,6 +6,7 @@ import com.highmobility.autoapi.GetNaviDestination;
 import com.highmobility.autoapi.NaviDestination;
 import com.highmobility.autoapi.SetNaviDestination;
 import com.highmobility.autoapi.property.CoordinatesProperty;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -21,7 +22,7 @@ import static org.junit.Assert.fail;
 public class NaviDestinationTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "0031010100084252147d41567ab10200064265726c696e");
 
         Command command = null;
@@ -41,18 +42,17 @@ public class NaviDestinationTest {
 
     @Test public void get() {
         String waitingForBytes = "003100";
-        String commandBytes = Bytes.hexFromBytes(new GetNaviDestination().getBytes());
-        assertTrue(waitingForBytes.equals(commandBytes));
+        assertTrue(new GetNaviDestination().equals(waitingForBytes));
     }
 
     @Test public void set() {
-        byte[] waitingForBytes = Bytes.bytesFromHex
+        byte[] waitingForBytes = ByteUtils.bytesFromHex
                 ("0031020100084252147D41567AB10200064265726C696E");
 
         byte[] commandBytes = null;
         try {
             commandBytes = new SetNaviDestination(new CoordinatesProperty(52.520008f, 13.404954f),
-                    "Berlin").getBytes();
+                    "Berlin").getByteArray();
         } catch (Exception e) {
             fail();
         }
@@ -66,7 +66,7 @@ public class NaviDestinationTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("003101");
+        byte[] bytes = ByteUtils.bytesFromHex("003101");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((NaviDestination) state).getName() == null);
     }
@@ -75,8 +75,8 @@ public class NaviDestinationTest {
         NaviDestination.Builder builder = new NaviDestination.Builder();
         builder.setCoordinates(new CoordinatesProperty(52.520008f, 13.404954f));
         builder.setName("Berlin");
-        byte[] bytes = builder.build().getBytes();
-        assertTrue(Arrays.equals(bytes, Bytes.bytesFromHex("0031010100084252147d41567ab10200064265726c696e")));
+        byte[] bytes = builder.build().getByteArray();
+        assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("0031010100084252147d41567ab10200064265726c696e")));
 
     }
 }

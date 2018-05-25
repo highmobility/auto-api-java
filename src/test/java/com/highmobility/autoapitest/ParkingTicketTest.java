@@ -7,7 +7,7 @@ import com.highmobility.autoapi.GetParkingTicket;
 import com.highmobility.autoapi.ParkingTicket;
 import com.highmobility.autoapi.StartParking;
 import com.highmobility.autoapi.property.ParkingTicketState;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ import static org.junit.Assert.fail;
 public class ParkingTicketTest {
     @Test
     public void state() throws ParseException {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "0047010100010102000E4265726c696e205061726b696e67030008363438393432333304000811010a1122000000050008120214160B000000");
 
         Command command = null;
@@ -54,18 +54,18 @@ public class ParkingTicketTest {
         builder.setTicketEnd(TestUtils.getCalendar("2018-02-20T22:11:00"));
 
         ParkingTicket command = builder.build();
-        assertTrue(Arrays.equals(command.getBytes(), Bytes.bytesFromHex
+        assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex
                 ("0047010100010102000E4265726c696e205061726b696e67030008363438393432333304000811010a1122000000050008120214160B000000")));
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("004700");
-        byte[] bytes = new GetParkingTicket().getBytes();
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("004700");
+        byte[] bytes = new GetParkingTicket().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
     @Test public void startParking() throws ParseException {
-        byte[] waitingForBytes = Bytes.bytesFromHex
+        byte[] waitingForBytes = ByteUtils.bytesFromHex
                 ("00470201000E4265726c696e205061726b696e67020008363438393432333303000811010a112200003C");
 
         Calendar startDate = new GregorianCalendar();
@@ -73,7 +73,7 @@ public class ParkingTicketTest {
         long timeZoneOffset = 3600000;
         startDate.setTimeZone(new SimpleTimeZone((int) timeZoneOffset, "CET"));
 
-        byte[] bytes = new StartParking("Berlin Parking", "64894233", startDate, null).getBytes();
+        byte[] bytes = new StartParking("Berlin Parking", "64894233", startDate, null).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
         StartParking command = (StartParking) CommandResolver.resolve(waitingForBytes);
@@ -87,14 +87,14 @@ public class ParkingTicketTest {
     }
 
     @Test public void endParking() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("004703");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("004703");
 
-        byte[] bytes = new EndParking().getBytes();
+        byte[] bytes = new EndParking().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("004701");
+        byte[] bytes = ByteUtils.bytesFromHex("004701");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((ParkingTicket) state).getState() == null);
     }

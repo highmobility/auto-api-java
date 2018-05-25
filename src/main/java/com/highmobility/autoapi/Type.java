@@ -21,6 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -121,6 +122,6 @@ public class Type {
     }
 
     @Override public String toString() {
-        return Bytes.hexFromBytes(getIdentifierAndType());
+        return ByteUtils.hexFromBytes(getIdentifierAndType());
     }
 }

@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetKeyfobPosition;
 import com.highmobility.autoapi.KeyfobPosition;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ import static org.junit.Assert.fail;
 public class KeyfobPositionTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "00480101000105");
 
         Command command = null;
@@ -35,12 +35,12 @@ public class KeyfobPositionTest {
 
     @Test public void get() {
         String waitingForBytes = "004800";
-        String commandBytes = Bytes.hexFromBytes(new GetKeyfobPosition().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetKeyfobPosition().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("004801");
+        byte[] bytes = ByteUtils.bytesFromHex("004801");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((KeyfobPosition)state).getKeyfobPosition() == null);
     }

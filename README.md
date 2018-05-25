@@ -131,7 +131,7 @@ A signature and a nonce can be added to any of the command's builders:
 ```java
 VehicleStatus.Builder builder = getVehicleStatusBuilderWithoutSignature();
 // set the nonce
-builder.setNonce(Bytes.bytesFromHex("324244433743483436"));
+builder.setNonce(ByteUtils.bytesFromHex("324244433743483436"));
 // get the temporary data that needs to be signed
 byte[] bytesToBeSigned = builder.build().getSignedBytes();
 // sign it

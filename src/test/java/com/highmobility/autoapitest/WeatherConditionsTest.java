@@ -4,6 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetWeatherConditions;
 import com.highmobility.autoapi.WeatherConditions;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -19,7 +20,7 @@ import static org.junit.Assert.fail;
 public class WeatherConditionsTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "00550101000164");
 
         Command command = null;
@@ -36,12 +37,12 @@ public class WeatherConditionsTest {
 
     @Test public void get() {
         String waitingForBytes = "005500";
-        String commandBytes = Bytes.hexFromBytes(new GetWeatherConditions().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetWeatherConditions().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("005501");
+        byte[] bytes = ByteUtils.bytesFromHex("005501");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((WeatherConditions)state).getRainIntensity() == null);
     }
@@ -49,7 +50,7 @@ public class WeatherConditionsTest {
     @Test public void builder() {
         WeatherConditions.Builder builder = new WeatherConditions.Builder();
         builder.setRainIntensity(1f);
-        byte[] bytes = builder.build().getBytes();
-        assertTrue(Arrays.equals(bytes, Bytes.bytesFromHex("00550101000164")));
+        byte[] bytes = builder.build().getByteArray();
+        assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("00550101000164")));
     }
 }

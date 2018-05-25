@@ -21,6 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.utils.Base64;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 public class CommandResolver {
@@ -384,7 +385,7 @@ public class CommandResolver {
             } else if (bytesAreForType(bytes, TextInput.TYPE)) {
                 command = new TextInput(bytes);
             } else {
-                Command.logger.info("Unknown command " + Bytes.hexFromBytes(Bytes
+                Command.logger.info("Unknown command " + ByteUtils.hexFromBytes(Bytes
                         .trimmedBytes(bytes, 3)) + ".. ");
                 command = new Command(bytes);
             }
@@ -394,7 +395,7 @@ public class CommandResolver {
         {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
-            Command.logger.info("Failed to parse command " + Bytes.hexFromBytes(Bytes
+            Command.logger.info("Failed to parse command " + ByteUtils.hexFromBytes(Bytes
                     .trimmedBytes(bytes, 3)) + ".. " + e.toString());
             command = new Command(bytes);
         }
@@ -407,7 +408,7 @@ public class CommandResolver {
     }
 
     public static Command resolveHex(String hexBytes) {
-        return resolve(Bytes.bytesFromHex(hexBytes));
+        return resolve(ByteUtils.bytesFromHex(hexBytes));
     }
 
     static boolean bytesAreForIdentifier(byte[] bytes, Identifier identifier) {

@@ -15,7 +15,7 @@ import com.highmobility.autoapi.property.homecharger.Charging;
 import com.highmobility.autoapi.property.homecharger.PlugType;
 import com.highmobility.autoapi.property.homecharger.PriceTariff;
 import com.highmobility.autoapi.property.NetworkSecurity;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import org.junit.Test;
 
@@ -27,7 +27,7 @@ import static org.junit.Assert.fail;
 public class HomeChargerTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "00600101000102020001010300010104000441380000050001010600084252147d41567ab107000C3f0000003f800000000000000800010109000C4368617267657220373631320A0001030B000A5a57337641524e5542650C000800455552409000000C0008024555523e99999a");
 
         Command command = null;
@@ -85,19 +85,19 @@ public class HomeChargerTest {
         builder.addPriceTariff(new PriceTariff(PriceTariff.PricingType.STARTING_FEE, "EUR", 4.5f));
         builder.addPriceTariff(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR", .3f));
         HomeChargerState command = builder.build();
-        assertTrue(Arrays.equals(command.getBytes(), Bytes.bytesFromHex
+        assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex
                 ("00600101000102020001010300010104000441380000050001010600084252147d41567ab107000C3f0000003f800000000000000800010109000C4368617267657220373631320A0001030B000A5a57337641524e5542650C000800455552409000000C0008024555523e99999a")));
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("006000");
-        byte[] commandBytes = new GetHomeChargerState().getBytes();
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("006000");
+        byte[] commandBytes = new GetHomeChargerState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
     }
 
     @Test public void setChargeCurrent() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("0060023f000000");
-        byte[] commandBytes = new SetChargeCurrent(.5f).getBytes();
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("0060023f000000");
+        byte[] commandBytes = new SetChargeCurrent(.5f).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
         SetChargeCurrent command = (SetChargeCurrent) CommandResolver.resolve(waitingForBytes);
@@ -105,7 +105,7 @@ public class HomeChargerTest {
     }
 
     @Test public void setPriceTariffs() {
-        byte[] waitingForBytes = Bytes.bytesFromHex
+        byte[] waitingForBytes = ByteUtils.bytesFromHex
                 ("0060030C000800455552409000000C0008024555523e99999a");
 
         PriceTariff[] tariffs = new PriceTariff[2];
@@ -113,7 +113,7 @@ public class HomeChargerTest {
         tariffs[0] = new PriceTariff(PriceTariff.PricingType.STARTING_FEE, "EUR", 4.5f);
         tariffs[1] = new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR", .3f);
 
-        byte[] commandBytes = new SetPriceTariffs(tariffs).getBytes();
+        byte[] commandBytes = new SetPriceTariffs(tariffs).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
         SetPriceTariffs command = (SetPriceTariffs) CommandResolver.resolve(waitingForBytes);
@@ -135,12 +135,12 @@ public class HomeChargerTest {
         tariffs[0] = new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR", 4.5f);
         tariffs[1] = new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR", .3f);
 
-        new SetPriceTariffs(tariffs).getBytes();
+        new SetPriceTariffs(tariffs).getByteArray();
     }
 
     @Test public void activateSolarCharging() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("00600401");
-        byte[] commandBytes = new ActivateDeactivateSolarCharging(true).getBytes();
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("00600401");
+        byte[] commandBytes = new ActivateDeactivateSolarCharging(true).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
         ActivateDeactivateSolarCharging command = (ActivateDeactivateSolarCharging)
@@ -149,8 +149,8 @@ public class HomeChargerTest {
     }
 
     @Test public void enableWifi() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("00600501");
-        byte[] commandBytes = new EnableDisableWifiHotspot(true).getBytes();
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("00600501");
+        byte[] commandBytes = new EnableDisableWifiHotspot(true).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
         EnableDisableWifiHotspot command = (EnableDisableWifiHotspot) CommandResolver.resolve
@@ -159,7 +159,7 @@ public class HomeChargerTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("006001");
+        byte[] bytes = ByteUtils.bytesFromHex("006001");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((HomeChargerState) state).getChargeCurrent() == null);
     }

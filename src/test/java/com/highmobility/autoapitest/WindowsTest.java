@@ -7,6 +7,7 @@ import com.highmobility.autoapi.GetWindowsState;
 import com.highmobility.autoapi.OpenCloseWindows;
 import com.highmobility.autoapi.WindowsState;
 import com.highmobility.autoapi.property.WindowProperty;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -19,7 +20,7 @@ import static org.junit.Assert.fail;
 public class WindowsTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "0045010100020001010002010001000202000100020300");
 
 
@@ -53,20 +54,20 @@ public class WindowsTest {
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("004500");
-        byte[] bytes = new GetWindowsState().getBytes();
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("004500");
+        byte[] bytes = new GetWindowsState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
     @Test public void openClose() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("00450201000200010100020101");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("00450201000200010100020101");
         WindowProperty[] windowsStates = new WindowProperty[2];
         windowsStates[0] = new WindowProperty(WindowProperty.Position.FRONT_LEFT, WindowProperty
                 .State.OPEN);
         windowsStates[1] = new WindowProperty(WindowProperty.Position.FRONT_RIGHT, WindowProperty
                 .State.OPEN);
 
-        byte[] bytes = new OpenCloseWindows(windowsStates).getBytes();
+        byte[] bytes = new OpenCloseWindows(windowsStates).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
         OpenCloseWindows command = (OpenCloseWindows) CommandResolver.resolve(waitingForBytes);
@@ -77,7 +78,7 @@ public class WindowsTest {
     }
 
     @Test public void build() {
-        byte[] expectedBytes = Bytes.bytesFromHex(
+        byte[] expectedBytes = ByteUtils.bytesFromHex(
                 "0045010100020001010002010001000202000100020300");
 
         WindowsState.Builder builder = new WindowsState.Builder();
@@ -90,11 +91,11 @@ public class WindowsTest {
         builder.addWindowProperty(new WindowProperty(WindowProperty.Position.REAR_LEFT,
                 WindowProperty.State.CLOSED));
 
-        assertTrue(Arrays.equals(builder.build().getBytes(), expectedBytes));
+        assertTrue(Arrays.equals(builder.build().getByteArray(), expectedBytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("004501");
+        byte[] bytes = ByteUtils.bytesFromHex("004501");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((WindowsState)state).getWindowProperties().length == 0);
     }

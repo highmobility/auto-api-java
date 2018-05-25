@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetIgnitionState;
 import com.highmobility.autoapi.IgnitionState;
 import com.highmobility.autoapi.TurnEngineOnOff;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class EngineTest {
-    byte[] bytes = Bytes.bytesFromHex(
+    byte[] bytes = ByteUtils.bytesFromHex(
             "0035010100010102000101");
     @Test
     public void state() {
@@ -37,22 +37,22 @@ public class EngineTest {
 
     @Test public void get() {
         String waitingForBytes = "003500";
-        String commandBytes = Bytes.hexFromBytes(new GetIgnitionState().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetIgnitionState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void set() {
         String waitingForBytes = "00350201";
-        String commandBytes = Bytes.hexFromBytes(new TurnEngineOnOff(true).getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new TurnEngineOnOff(true).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        TurnEngineOnOff incoming = (TurnEngineOnOff) CommandResolver.resolve(Bytes.bytesFromHex
+        TurnEngineOnOff incoming = (TurnEngineOnOff) CommandResolver.resolve(ByteUtils.bytesFromHex
                 (waitingForBytes));
         assertTrue(incoming.isOn() == true);
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("003501");
+        byte[] bytes = ByteUtils.bytesFromHex("003501");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((IgnitionState) state).isOn() == null);
     }
@@ -63,7 +63,7 @@ public class EngineTest {
         builder.setAccessoriesIgnition(true);
 
         IgnitionState state = builder.build();
-        byte[] builtBytes = state.getBytes();
+        byte[] builtBytes = state.getByteArray();
         assertTrue(Arrays.equals(builtBytes, bytes));
         assertTrue(state.isOn() == true);
         assertTrue(state.isAccessoriesIgnitionOn() == true);

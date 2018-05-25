@@ -1,13 +1,13 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlCommand;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetControlMode;
 import com.highmobility.autoapi.StartControlMode;
 import com.highmobility.autoapi.StopControlMode;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 import org.junit.Test;
@@ -18,11 +18,10 @@ import static org.junit.Assert.assertTrue;
 public class RemoteControlTest {
     @Test
     public void controlMode() {
-        byte[] bytes = Bytes.bytesFromHex(
+        byte[] bytes = ByteUtils.bytesFromHex(
                 "002701" +
                         "01000102" +
                         "0200020032");
-
 
         Command command = null;
         try {
@@ -39,37 +38,33 @@ public class RemoteControlTest {
 
     @Test public void get() {
         String waitingForBytes = "002700";
-        String commandBytes = Bytes.hexFromBytes(new GetControlMode().getBytes());
-        assertTrue(waitingForBytes.equals(commandBytes));
 
-        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        assertTrue(new GetControlMode().equals(waitingForBytes));
+        Command command = CommandResolver.resolveHex(waitingForBytes);
         assertTrue(command instanceof GetControlMode);
     }
 
     @Test public void startControlMode() {
         String waitingForBytes = "002702";
-        String commandBytes = Bytes.hexFromBytes(new StartControlMode().getBytes());
-        assertTrue(waitingForBytes.equals(commandBytes));
-
-        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        assertTrue(new StartControlMode().equals(waitingForBytes));
+        Command command = CommandResolver.resolveHex(waitingForBytes);
         assertTrue(command instanceof StartControlMode);
     }
 
     @Test public void stopControlMode() {
         String waitingForBytes = "002703";
-        String commandBytes = Bytes.hexFromBytes(new StopControlMode().getBytes());
-        assertTrue(waitingForBytes.equals(commandBytes));
+        assertTrue(new StopControlMode().equals(waitingForBytes));
 
-        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        Command command = CommandResolver.resolveHex(waitingForBytes);
         assertTrue(command instanceof StopControlMode);
     }
 
     @Test public void controlCommand() {
         String waitingForBytes = "002704010001030200020032";
-        String commandBytes = Bytes.hexFromBytes(new ControlCommand(3, 50).getBytes());
-        assertTrue(waitingForBytes.equals(commandBytes));
 
-        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        assertTrue(new ControlCommand(3, 50).equals(waitingForBytes));
+
+        Command command = CommandResolver.resolveHex(waitingForBytes);
         assertTrue(command instanceof ControlCommand);
         ControlCommand state = (ControlCommand) command;
 
@@ -78,8 +73,8 @@ public class RemoteControlTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("002701");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((ControlMode)state).getAngle() == null);
+        String bytes = "002701";
+        Command state = CommandResolver.resolveHex(bytes);
+        assertTrue(((ControlMode) state).getAngle() == null);
     }
 }
