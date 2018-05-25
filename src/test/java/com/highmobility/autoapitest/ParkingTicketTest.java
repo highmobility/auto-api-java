@@ -8,6 +8,7 @@ import com.highmobility.autoapi.ParkingTicket;
 import com.highmobility.autoapi.StartParking;
 import com.highmobility.autoapi.property.ParkingTicketState;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ import static org.junit.Assert.fail;
 public class ParkingTicketTest {
     @Test
     public void state() throws ParseException {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "0047010100010102000E4265726c696e205061726b696e67030008363438393432333304000811010a1122000000050008120214160B000000");
 
         Command command = null;
@@ -65,8 +66,8 @@ public class ParkingTicketTest {
     }
 
     @Test public void startParking() throws ParseException {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex
-                ("00470201000E4265726c696e205061726b696e67020008363438393432333303000811010a112200003C");
+        Bytes waitingForBytes = new Bytes(
+                "00470201000E4265726c696e205061726b696e67020008363438393432333303000811010a112200003C");
 
         Calendar startDate = new GregorianCalendar();
         startDate.set(2017, 0, 10, 17, 34, 0);
@@ -74,7 +75,7 @@ public class ParkingTicketTest {
         startDate.setTimeZone(new SimpleTimeZone((int) timeZoneOffset, "CET"));
 
         byte[] bytes = new StartParking("Berlin Parking", "64894233", startDate, null).getByteArray();
-        assertTrue(Arrays.equals(waitingForBytes, bytes));
+        assertTrue(waitingForBytes.equals(bytes));
 
         StartParking command = (StartParking) CommandResolver.resolve(waitingForBytes);
         Calendar expected = TestUtils.getCalendar("2017-01-10T16:34:00", (int) (timeZoneOffset /
@@ -94,7 +95,7 @@ public class ParkingTicketTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("004701");
+        Bytes bytes = new Bytes("004701");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((ParkingTicket) state).getState() == null);
     }

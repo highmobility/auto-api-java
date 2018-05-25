@@ -10,7 +10,7 @@ import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -62,7 +62,7 @@ public class PropertyTest {
     }
 
     @Test public void timestamp() throws ParseException {
-        byte[] bytes = ByteUtils.bytesFromHex(parkingBrakeCommand + "A2000811010A1122000000");
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A2000811010A1122000000");
         String expectedDate = "2017-01-10T17:34:00";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
         assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
@@ -83,7 +83,7 @@ public class PropertyTest {
     }
 
     CommandWithProperties getCommandWithSignature() {
-        byte[] bytes = ByteUtils.bytesFromHex
+        Bytes bytes = new Bytes
                 (parkingBrakeCommand +
                         "A00009324244433743483436A100404D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6");
         try {
@@ -106,7 +106,7 @@ public class PropertyTest {
     }
 
     @Test public void unknownProperty() throws CommandParseException {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "002501" +
                         "01000101" +
                         "1A000135");

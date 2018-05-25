@@ -34,7 +34,7 @@ public class ChassisSettingsTest {
         com.highmobility.autoapi.Command command = null;
 
         try {
-            command = CommandResolver.resolve(bytes);
+            command = CommandResolver.resolveBytes(bytes);
         } catch (Exception e) {
             fail();
         }
@@ -69,7 +69,7 @@ public class ChassisSettingsTest {
         String commandBytes = ByteUtils.hexFromBytes(new SetDrivingMode(DrivingMode.SPORT_PLUS).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        SetDrivingMode drivingMode = (SetDrivingMode) CommandResolver.resolve(ByteUtils.bytesFromHex(waitingForBytes));
+        SetDrivingMode drivingMode = (SetDrivingMode) CommandResolver.resolveBytes(ByteUtils.bytesFromHex(waitingForBytes));
         assertTrue( drivingMode.getDrivingMode() == DrivingMode.SPORT_PLUS);
     }
 
@@ -79,7 +79,7 @@ public class ChassisSettingsTest {
                 .Command.START).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        StartStopSportChrono command = (StartStopSportChrono) CommandResolver.resolve(ByteUtils.bytesFromHex(waitingForBytes));
+        StartStopSportChrono command = (StartStopSportChrono) CommandResolver.resolveBytes(ByteUtils.bytesFromHex(waitingForBytes));
         assertTrue(command.getCommand() == StartStopSportChrono.Command.START);
     }
 
@@ -88,7 +88,7 @@ public class ChassisSettingsTest {
         String commandBytes = ByteUtils.hexFromBytes(new SetSpringRate(Axle.REAR, 25).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        SetSpringRate command = (SetSpringRate) CommandResolver.resolve(ByteUtils.bytesFromHex(waitingForBytes));
+        SetSpringRate command = (SetSpringRate) CommandResolver.resolveBytes(ByteUtils.bytesFromHex(waitingForBytes));
         assertTrue(command.getAxle() == Axle.REAR);
         assertTrue(command.getSpringRate() == 25);
     }
@@ -98,13 +98,13 @@ public class ChassisSettingsTest {
         String commandBytes = ByteUtils.hexFromBytes(new SetChassisPosition(50).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        SetChassisPosition command = (SetChassisPosition) CommandResolver.resolve(ByteUtils.bytesFromHex(waitingForBytes));
+        SetChassisPosition command = (SetChassisPosition) CommandResolver.resolveBytes(ByteUtils.bytesFromHex(waitingForBytes));
         assertTrue(command.getPosition() == 50);
     }
 
     @Test public void state0Properties() {
         byte[] bytes = ByteUtils.bytesFromHex("005301");
-        Command state = CommandResolver.resolve(bytes);
+        Command state = CommandResolver.resolveBytes(bytes);
         assertTrue(((ChassisSettings) state).getChassisPosition() == null);
     }
 

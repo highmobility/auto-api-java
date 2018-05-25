@@ -242,7 +242,7 @@ public class VehicleStatus extends CommandWithProperties {
                     case COMMAND_IDENTIFIER:
                         byte[] commandBytes = property.getValueBytes();
                         try {
-                            Command command = CommandResolver.resolve(commandBytes);
+                            Command command = CommandResolver.resolveBytes(commandBytes);
                             if (command != null) states.add(command);
                         } catch (Exception e) {
                             logger.info("invalid state " + ByteUtils.hexFromBytes(commandBytes));

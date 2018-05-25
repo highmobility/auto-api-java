@@ -23,6 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.utils.Bytes;
 
 import java.util.ArrayList;
@@ -144,7 +145,7 @@ public class CommandWithProperties extends Command {
         for (int i = 0; i < properties.length; i++) {
             HMProperty property = properties[i];
             byte[] propertyBytes = property.getPropertyBytes();
-            bytes = Bytes.concatBytes(bytes, propertyBytes);
+            bytes = ByteUtils.concatBytes(bytes, propertyBytes);
 
             if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
                 nonce = Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length);

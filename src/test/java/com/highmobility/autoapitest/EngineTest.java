@@ -6,10 +6,9 @@ import com.highmobility.autoapi.GetIgnitionState;
 import com.highmobility.autoapi.IgnitionState;
 import com.highmobility.autoapi.TurnEngineOnOff;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -18,7 +17,7 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class EngineTest {
-    byte[] bytes = ByteUtils.bytesFromHex(
+    Bytes bytes = new Bytes(
             "0035010100010102000101");
     @Test
     public void state() {
@@ -42,17 +41,16 @@ public class EngineTest {
     }
 
     @Test public void set() {
-        String waitingForBytes = "00350201";
-        String commandBytes = ByteUtils.hexFromBytes(new TurnEngineOnOff(true).getByteArray());
+        Bytes waitingForBytes = new Bytes("00350201");
+        Bytes commandBytes = new TurnEngineOnOff(true);
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        TurnEngineOnOff incoming = (TurnEngineOnOff) CommandResolver.resolve(ByteUtils.bytesFromHex
-                (waitingForBytes));
+        TurnEngineOnOff incoming = (TurnEngineOnOff) CommandResolver.resolve(waitingForBytes);
         assertTrue(incoming.isOn() == true);
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("003501");
+        Bytes bytes = new Bytes("003501");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((IgnitionState) state).isOn() == null);
     }
@@ -63,8 +61,8 @@ public class EngineTest {
         builder.setAccessoriesIgnition(true);
 
         IgnitionState state = builder.build();
-        byte[] builtBytes = state.getByteArray();
-        assertTrue(Arrays.equals(builtBytes, bytes));
+
+        assertTrue(state.equals(bytes));
         assertTrue(state.isOn() == true);
         assertTrue(state.isAccessoriesIgnitionOn() == true);
         assertTrue(state.getType() == IgnitionState.TYPE);

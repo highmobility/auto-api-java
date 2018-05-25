@@ -22,7 +22,7 @@ public class TheftAlarmTest {
 
         Command command = null;
         try {
-            command = CommandResolver.resolve(bytes);
+            command = CommandResolver.resolveBytes(bytes);
         } catch (Exception e) {
             fail();
         }
@@ -59,7 +59,7 @@ public class TheftAlarmTest {
 
     @Test public void state0Properties() {
         byte[] bytes = ByteUtils.bytesFromHex("004601");
-        Command state = CommandResolver.resolve(bytes);
+        Command state = CommandResolver.resolveBytes(bytes);
         assertTrue(((TheftAlarmState) state).getState() == null);
     }
 }

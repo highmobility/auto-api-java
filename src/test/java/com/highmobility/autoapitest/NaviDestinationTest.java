@@ -7,7 +7,7 @@ import com.highmobility.autoapi.NaviDestination;
 import com.highmobility.autoapi.SetNaviDestination;
 import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ import static org.junit.Assert.fail;
 public class NaviDestinationTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "0031010100084252147d41567ab10200064265726c696e");
 
         Command command = null;
@@ -59,7 +59,7 @@ public class NaviDestinationTest {
 
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
-        SetNaviDestination command = (SetNaviDestination) CommandResolver.resolve(waitingForBytes);
+        SetNaviDestination command = (SetNaviDestination) CommandResolver.resolveBytes(waitingForBytes);
         assertTrue(command.getName().equals("Berlin"));
         assertTrue(command.getCoordinates().getLatitude() == 52.520008f);
         assertTrue(command.getCoordinates().getLongitude() == 13.404954f);
@@ -67,7 +67,7 @@ public class NaviDestinationTest {
 
     @Test public void state0Properties() {
         byte[] bytes = ByteUtils.bytesFromHex("003101");
-        Command state = CommandResolver.resolve(bytes);
+        Command state = CommandResolver.resolveBytes(bytes);
         assertTrue(((NaviDestination) state).getName() == null);
     }
 

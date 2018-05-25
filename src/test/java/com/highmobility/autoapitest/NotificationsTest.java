@@ -7,7 +7,7 @@ import com.highmobility.autoapi.Notification;
 import com.highmobility.autoapi.NotificationAction;
 import com.highmobility.autoapi.property.ActionItem;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ import static junit.framework.TestCase.fail;
  */
 public class NotificationsTest {
     @Test public void incomingNotification() {
-        byte[] bytes = ByteUtils.bytesFromHex
+        Bytes bytes = new Bytes
                 ("0038000100115374617274206e617669676174696f6e3f020003004e6f02000401596573");
 
         Command command = null;
@@ -84,8 +84,8 @@ public class NotificationsTest {
     }
 
     @Test public void incomingNotificationAction() {
-        byte[] bytes = ByteUtils.bytesFromHex
-                ("003801FE");
+        Bytes bytes = new Bytes(
+                "003801FE");
 
         Command command = null;
         try {
@@ -99,12 +99,12 @@ public class NotificationsTest {
     }
 
     @Test public void outgoingNotificationAction() {
-        byte[] expecting = ByteUtils.bytesFromHex
+        Bytes waitingForBytes = new Bytes
                 ("003801FE");
         byte[] bytes = new NotificationAction(254).getByteArray();
-        assertTrue(Arrays.equals(expecting, bytes));
+        assertTrue(waitingForBytes.equals(bytes));
 
-        NotificationAction action = (NotificationAction) CommandResolver.resolve(expecting);
+        NotificationAction action = (NotificationAction) CommandResolver.resolve(waitingForBytes);
         assertTrue(action.getActionIdentifier() == 254);
     }
 
@@ -117,12 +117,12 @@ public class NotificationsTest {
     }
 
     @Test public void incomingClear() {
-        byte[] bytes = ByteUtils.bytesFromHex
+        Bytes waitingForBytes = new Bytes
                 ("003802");
 
         Command command = null;
         try {
-            command = CommandResolver.resolve(bytes);
+            command = CommandResolver.resolve(waitingForBytes);
         } catch (Exception e) {
             fail();
         }

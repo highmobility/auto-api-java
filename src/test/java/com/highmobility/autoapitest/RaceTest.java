@@ -9,6 +9,7 @@ import com.highmobility.autoapi.property.Axle;
 import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ import static org.junit.Assert.fail;
 public class RaceTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "005701010005003f5d2f1b01000501bf40c49c020001130300010004000162050001E20600044138f5c307000440d51eb808000103090001010A000201010B0001040C0001040D000101" +
                         "0E0001010F0001011000010111000101" /*level7*/);
 
@@ -100,7 +101,7 @@ public class RaceTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("005701");
+        Bytes bytes = new Bytes("005701");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((RaceState) state).getGearMode() == null);
     }

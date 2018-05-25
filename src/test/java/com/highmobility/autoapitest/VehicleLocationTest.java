@@ -6,6 +6,7 @@ import com.highmobility.autoapi.GetVehicleLocation;
 import com.highmobility.autoapi.VehicleLocation;
 import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class VehicleLocationTest {
-    byte[] bytes = ByteUtils.bytesFromHex(
+    Bytes bytes = new Bytes(
             "0030010100084252147d41567ab10200044252147d"
                     + "03000443058000");
 
@@ -46,7 +47,7 @@ public class VehicleLocationTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("003001");
+        Bytes bytes = new Bytes("003001");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((VehicleLocation) state).getCoordinates() == null);
     }
@@ -57,6 +58,6 @@ public class VehicleLocationTest {
         builder.setCoordinates(coordinates);
         builder.setHeading(52.520008f);
         builder.setAltitude(133.5f);
-        assertTrue(Arrays.equals(builder.build().getByteArray(), bytes));
+        assertTrue(builder.build().equals(bytes));
     }
 }

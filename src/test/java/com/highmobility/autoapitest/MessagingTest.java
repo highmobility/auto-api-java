@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.MessageReceived;
 import com.highmobility.autoapi.SendMessage;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
 public class MessagingTest {
     @Test
     public void send() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "003701" +
                         "01000e2b31203535352d3535352d353535" +
                         "02000d48656c6c6f20796f7520746f6f");
@@ -39,14 +39,14 @@ public class MessagingTest {
     }
 
     @Test public void received() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("003700" +
+        Bytes waitingForBytes = new Bytes("003700" +
                 "01000e2b31203535352d3535352d353535" +
                 "02000548656c6c6f");
 
         byte[] commandBytes = null;
         commandBytes = new MessageReceived("+1 555-555-555", "Hello").getByteArray();
 
-        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+        assertTrue(waitingForBytes.equals(commandBytes));
 
         MessageReceived command = (MessageReceived) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getSenderHandle().equals("+1 555-555-555"));

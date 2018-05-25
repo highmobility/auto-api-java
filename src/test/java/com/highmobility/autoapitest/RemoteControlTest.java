@@ -7,8 +7,7 @@ import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetControlMode;
 import com.highmobility.autoapi.StartControlMode;
 import com.highmobility.autoapi.StopControlMode;
-import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -18,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 public class RemoteControlTest {
     @Test
     public void controlMode() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "002701" +
                         "01000102" +
                         "0200020032");

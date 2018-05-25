@@ -7,6 +7,7 @@ import com.highmobility.autoapi.GetLightsState;
 import com.highmobility.autoapi.LightsState;
 import com.highmobility.autoapi.property.FrontExteriorLightState;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class LightsTest {
-    byte[] bytes = ByteUtils.bytesFromHex(
+    Bytes bytes = new Bytes(
             "003601" +
                     "01000102" +
                     "02000101" +
@@ -63,8 +64,8 @@ public class LightsTest {
         builder.setReverseLightActive(true);
         builder.setEmergencyBrakeLightActive(true);
 
-        byte[] actualBytes = builder.build().getByteArray();
-        assertTrue(Arrays.equals(actualBytes, bytes));
+        Bytes actualBytes = builder.build();
+        assertTrue(actualBytes.equals(bytes));
     }
 
     @Test public void get() {
@@ -74,7 +75,7 @@ public class LightsTest {
     }
 
     @Test public void control() {
-        byte[] expecting = ByteUtils.bytesFromHex("003602" +
+        Bytes waitingForBytes = new Bytes("003602" +
                 "01000102" +
                 "02000100" +
                 "03000100" +
@@ -85,9 +86,9 @@ public class LightsTest {
                 , false, false, new int[]{255, 0, 0, 255}
         ).getByteArray();
 
-        assertTrue(Arrays.equals(expecting, bytes));
+        assertTrue(waitingForBytes.equals(bytes));
 
-        ControlLights command = (ControlLights) CommandResolver.resolve(expecting);
+        ControlLights command = (ControlLights) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getFrontExteriorLightState() == FrontExteriorLightState
                 .ACTIVE_WITH_FULL_BEAM);
         assertTrue(command.getRearExteriorLightActive() == false);
@@ -97,8 +98,8 @@ public class LightsTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("003601");
-        Command state = CommandResolver.resolve(bytes);
+        Bytes waitingForBytes = new Bytes("003601");
+        Command state = CommandResolver.resolve(waitingForBytes);
         assertTrue(((LightsState) state).getAmbientColor() == null);
     }
 }

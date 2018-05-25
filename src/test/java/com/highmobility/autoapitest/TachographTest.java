@@ -8,6 +8,7 @@ import com.highmobility.autoapi.property.DriverCard;
 import com.highmobility.autoapi.property.DriverTimeState;
 import com.highmobility.autoapi.property.DriverWorkingState;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class TachographTest {
-    byte[] bytes = ByteUtils.bytesFromHex
+    Bytes bytes = new Bytes
             ("0064010100020102010002020002000201020200020206030002010103000202010400010105000100060001000700020050");
 
     @Test
@@ -75,14 +76,14 @@ public class TachographTest {
         builder.setVehicleSpeed(80);
 
         TachographState state = builder.build();
-        assertTrue(Arrays.equals(state.getByteArray(), bytes));
+        assertTrue(state.equals(bytes));
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("006400");
+        Bytes waitingForBytes = new Bytes("006400");
         byte[] commandBytes = new GetTachographState().getByteArray();
 
-        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+        assertTrue(waitingForBytes.equals(commandBytes));
         assertTrue(CommandResolver.resolve(waitingForBytes) instanceof GetTachographState);
     }
 }

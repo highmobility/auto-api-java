@@ -6,6 +6,7 @@ import com.highmobility.autoapi.GetSeatsState;
 import com.highmobility.autoapi.SeatsState;
 import com.highmobility.autoapi.property.SeatStateProperty;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ import static org.junit.Assert.fail;
 public class SeatsTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "005601010003000101010003010000");
 
         Command command = null;
@@ -65,7 +66,7 @@ public class SeatsTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("005601");
+        Bytes bytes = new Bytes("005601");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((SeatsState) state).getSeatsStates().length == 0);
     }

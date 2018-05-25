@@ -6,6 +6,7 @@ import com.highmobility.autoapi.ControlRooftop;
 import com.highmobility.autoapi.GetRooftopState;
 import com.highmobility.autoapi.RooftopState;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ import static org.junit.Assert.fail;
 public class RooftopTest {
     @Test
     public void state_random() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "002501" +
                     "01000101" +
                     "02000135");
@@ -34,7 +35,7 @@ public class RooftopTest {
 
     @Test
     public void state_opaque() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "002501" +
                     "01000164" +
                     "02000100");
@@ -81,7 +82,7 @@ public class RooftopTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("002501");
+        Bytes bytes = new Bytes("002501");
         RooftopState state = (RooftopState) CommandResolver.resolve(bytes);
         assertTrue(state.getOpenPercentage() == null);
     }

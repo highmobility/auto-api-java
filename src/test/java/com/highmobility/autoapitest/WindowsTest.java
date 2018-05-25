@@ -1,14 +1,13 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetWindowsState;
 import com.highmobility.autoapi.OpenCloseWindows;
 import com.highmobility.autoapi.WindowsState;
 import com.highmobility.autoapi.property.WindowProperty;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -20,7 +19,7 @@ import static org.junit.Assert.fail;
 public class WindowsTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "0045010100020001010002010001000202000100020300");
 
 
@@ -60,7 +59,7 @@ public class WindowsTest {
     }
 
     @Test public void openClose() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("00450201000200010100020101");
+        Bytes waitingForBytes = new Bytes("00450201000200010100020101");
         WindowProperty[] windowsStates = new WindowProperty[2];
         windowsStates[0] = new WindowProperty(WindowProperty.Position.FRONT_LEFT, WindowProperty
                 .State.OPEN);
@@ -68,7 +67,7 @@ public class WindowsTest {
                 .State.OPEN);
 
         byte[] bytes = new OpenCloseWindows(windowsStates).getByteArray();
-        assertTrue(Arrays.equals(waitingForBytes, bytes));
+        assertTrue(waitingForBytes.equals(bytes));
 
         OpenCloseWindows command = (OpenCloseWindows) CommandResolver.resolve(waitingForBytes);
         WindowProperty[] states = command.getWindowProperties();
@@ -95,7 +94,7 @@ public class WindowsTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("004501");
+        Bytes bytes = new Bytes("004501");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((WindowsState)state).getWindowProperties().length == 0);
     }

@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetOffroadState;
 import com.highmobility.autoapi.OffroadState;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ import static org.junit.Assert.fail;
 public class OffRoadTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "005201010002000A02000132");
 
         Command command = null;
@@ -43,7 +44,7 @@ public class OffRoadTest {
 
     @Test public void state0Properties() {
         byte[] bytes = ByteUtils.bytesFromHex("005201");
-        Command state = CommandResolver.resolve(bytes);
+        Command state = CommandResolver.resolveBytes(bytes);
         assertTrue(((OffroadState)state).getRouteIncline() == null);
     }
 

@@ -22,9 +22,10 @@ package com.highmobility.autoapi;
 
 import com.highmobility.utils.Base64;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 public class CommandResolver {
+
     /**
      * Try to parse the command bytes to a more specific Command subclass. Check the returned
      * object's instance type (instanceOf) to understand which command was received.
@@ -32,7 +33,18 @@ public class CommandResolver {
      * @param bytes the raw command bytes.
      * @return The parsed command.
      */
-    public static Command resolve(byte[] bytes) {
+    public static Command resolve(Bytes bytes) {
+        return resolveBytes(bytes.getByteArray());
+    }
+
+    /**
+     * Try to parse the command bytes to a more specific Command subclass. Check the returned
+     * object's instance type (instanceOf) to understand which command was received.
+     *
+     * @param bytes the raw command bytes.
+     * @return The parsed command.
+     */
+    public static Command resolveBytes(byte[] bytes) {
         if (bytes == null || bytes.length == 0) return new Command(bytes);
         if (bytes.length < 3) return null;
         Command command = null;
@@ -385,7 +397,7 @@ public class CommandResolver {
             } else if (bytesAreForType(bytes, TextInput.TYPE)) {
                 command = new TextInput(bytes);
             } else {
-                Command.logger.info("Unknown command " + ByteUtils.hexFromBytes(Bytes
+                Command.logger.info("Unknown command " + ByteUtils.hexFromBytes(ByteUtils
                         .trimmedBytes(bytes, 3)) + ".. ");
                 command = new Command(bytes);
             }
@@ -395,7 +407,7 @@ public class CommandResolver {
         {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
-            Command.logger.info("Failed to parse command " + ByteUtils.hexFromBytes(Bytes
+            Command.logger.info("Failed to parse command " + ByteUtils.hexFromBytes(ByteUtils
                     .trimmedBytes(bytes, 3)) + ".. " + e.toString());
             command = new Command(bytes);
         }
@@ -404,11 +416,11 @@ public class CommandResolver {
     }
 
     public static Command resolveBase64(String base64) {
-        return resolve(Base64.decode(base64));
+        return resolveBytes(Base64.decode(base64));
     }
 
     public static Command resolveHex(String hexBytes) {
-        return resolve(ByteUtils.bytesFromHex(hexBytes));
+        return resolveBytes(ByteUtils.bytesFromHex(hexBytes));
     }
 
     static boolean bytesAreForIdentifier(byte[] bytes, Identifier identifier) {

@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetLightConditions;
 import com.highmobility.autoapi.LightConditions;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ import static org.junit.Assert.fail;
 public class LightConditionsTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "00540101000447d8cc000200043e800000");
 
         Command command = null;
@@ -40,7 +41,7 @@ public class LightConditionsTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("005401");
+        Bytes bytes = new Bytes("005401");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((LightConditions)state).getOutsideLight() == null);
     }

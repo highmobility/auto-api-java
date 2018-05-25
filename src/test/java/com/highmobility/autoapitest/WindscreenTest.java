@@ -12,6 +12,7 @@ import com.highmobility.autoapi.property.WindscreenReplacementState;
 import com.highmobility.autoapi.property.WiperIntensity;
 import com.highmobility.autoapi.property.WiperState;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -29,7 +30,7 @@ import static org.junit.Assert.fail;
 public class WindscreenTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "0042010100010202000103030001020400014305000112060001020700015f08000811010a1020050000");
 
         Command command = null;
@@ -108,11 +109,11 @@ public class WindscreenTest {
     }
 
     @Test public void setNoDamage() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("00420203000101");
+        Bytes waitingForBytes = new Bytes("00420203000101");
 
         byte[] bytes = new SetWindscreenDamage(WindscreenDamage.IMPACT_NO_DAMAGE,
                 null, null).getByteArray();
-        assertTrue(Arrays.equals(waitingForBytes, bytes));
+        assertTrue(waitingForBytes.equals(bytes));
 
         SetWindscreenDamage command = (SetWindscreenDamage) CommandResolver.resolve
                 (waitingForBytes);
@@ -132,7 +133,7 @@ public class WindscreenTest {
 
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
-        SetWindscreenDamage command = (SetWindscreenDamage) CommandResolver.resolve
+        SetWindscreenDamage command = (SetWindscreenDamage) CommandResolver.resolveBytes
                 (waitingForBytes);
         assertTrue(command.getDamage() == WindscreenDamage.IMPACT_NO_DAMAGE);
         assertTrue(command.getZone().getDamageZoneX() == 2);
@@ -142,7 +143,7 @@ public class WindscreenTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("004201");
+        Bytes bytes = new Bytes("004201");
         WindscreenState state = (WindscreenState) CommandResolver.resolve(bytes);
         assertTrue(state.getDamageConfidence() == null);
     }

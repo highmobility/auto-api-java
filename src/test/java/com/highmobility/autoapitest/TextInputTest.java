@@ -32,7 +32,7 @@ public class TextInputTest {
 
     @Test public void resolve() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("004400010003796573");
-        Command command = CommandResolver.resolve(waitingForBytes);
+        Command command = CommandResolver.resolveBytes(waitingForBytes);
         assertTrue(command instanceof TextInput);
         assertTrue(((TextInput)command).getText().equals("yes"));
     }

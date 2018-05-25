@@ -7,6 +7,7 @@ import com.highmobility.autoapi.FlashersState;
 import com.highmobility.autoapi.GetFlashersState;
 import com.highmobility.autoapi.HonkAndFlash;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 public class HonkHornAndFlashLightsTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "00260101000100"
         );
 
@@ -67,8 +68,8 @@ public class HonkHornAndFlashLightsTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("002601");
-        Command state = CommandResolver.resolve(bytes);
+        Bytes waitingForBytes = new Bytes("002601");
+        Command state = CommandResolver.resolve(waitingForBytes);
         assertTrue(((FlashersState) state).getState() == null);
     }
 

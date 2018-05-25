@@ -8,10 +8,9 @@ import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.TireStateProperty;
 import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -20,12 +19,12 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class DiagnosticsTest {
-    static byte[] stateBytes = ByteUtils.bytesFromHex(
+    Bytes bytes = new Bytes(
             "0033010100030249F00200020063030002003C04000209C40500015A0600020109070004410c000008000440c66666090001010A000B004013d70a4220000002EA0A000B014013d70a4220000002EA0A000B024013d70a4220000002EA0A000B034013d70a4220000002EA0B0004414000000C00043F0000000D000205DC0E0002000A" +
                     "0F0004420E0000" +
                     "10000101110002001412000444bb94cd13000446d7860014000100150001141600010A1700020041"); // l7
     @Test public void state() {
-        Command command = null;try {    command = CommandResolver.resolve(stateBytes);}catch(Exception e) {    fail();}
+        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
         assertTrue(command.getClass() == DiagnosticsState.class);
         DiagnosticsState state = (DiagnosticsState)command;
@@ -97,11 +96,11 @@ public class DiagnosticsTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "003300";
+        Bytes waitingForBytes = new Bytes("003300");
         String commandBytes = ByteUtils.hexFromBytes(new GetDiagnosticsState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        Command command = CommandResolver.resolve(ByteUtils.bytesFromHex(waitingForBytes));
+        Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof GetDiagnosticsState);
     }
 
@@ -144,13 +143,11 @@ public class DiagnosticsTest {
         builder.setEngineTorque(.2f);
         builder.setEngineLoad(.1f);
         builder.setWheelBasedSpeed(65);
-
-        byte[] bytes = builder.build().getByteArray();
-        assertTrue(Arrays.equals(bytes, stateBytes));
+        assertTrue(builder.build().equals(bytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("003301");
+        Bytes bytes = new Bytes("003301");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((DiagnosticsState)state).getTripFuelConsumption() == null);
     }

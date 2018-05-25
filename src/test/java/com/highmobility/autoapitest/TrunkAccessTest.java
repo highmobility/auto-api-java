@@ -8,6 +8,7 @@ import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.property.TrunkLockState;
 import com.highmobility.autoapi.property.TrunkPosition;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ import static org.junit.Assert.fail;
 public class TrunkAccessTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "0021010100010002000101");
 
         Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
@@ -33,21 +34,21 @@ public class TrunkAccessTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "002100";
-        String commandBytes = ByteUtils.hexFromBytes(new GetTrunkState().getByteArray());
+        Bytes waitingForBytes = new Bytes("002100");
+        Bytes commandBytes = new GetTrunkState();
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        Command command = CommandResolver.resolve(ByteUtils.bytesFromHex(waitingForBytes));
+        Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof GetTrunkState);
     }
 
     @Test public void openClose() {
-        String waitingForBytes = "0021020100010002000101";
+        Bytes waitingForBytes = new Bytes("0021020100010002000101");
         String commandBytes = ByteUtils.hexFromBytes(new OpenCloseTrunk(TrunkLockState.UNLOCKED,
                 TrunkPosition.OPEN).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        Command command = CommandResolver.resolve(ByteUtils.bytesFromHex(waitingForBytes));
+        Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof OpenCloseTrunk);
 
         OpenCloseTrunk state = (OpenCloseTrunk)command;
@@ -56,7 +57,7 @@ public class TrunkAccessTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("002101");
+        Bytes bytes = new Bytes("002101");
         TrunkState state = (TrunkState) CommandResolver.resolve(bytes);
         assertTrue(state.getLockState() == null);
     }

@@ -6,6 +6,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetValetMode;
 import com.highmobility.autoapi.ValetMode;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ import static org.junit.Assert.fail;
 public class ValetModeTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "00280101000101");
 
         Command command = null;
@@ -42,17 +43,17 @@ public class ValetModeTest {
     }
 
     @Test public void activate() {
-        String waitingForBytes = "00280201";
+        Bytes waitingForBytes = new Bytes("00280201");
         String commandBytes = ByteUtils.hexFromBytes(new ActivateDeactivateValetMode(true).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         ActivateDeactivateValetMode command = (ActivateDeactivateValetMode) CommandResolver
-                .resolve(ByteUtils.bytesFromHex(waitingForBytes));
+                .resolve(waitingForBytes);
         assertTrue(command.activate() == true);
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("002801");
+        Bytes bytes = new Bytes("002801");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((ValetMode) state).isActive() == null);
     }

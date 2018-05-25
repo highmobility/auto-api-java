@@ -6,10 +6,9 @@ import com.highmobility.autoapi.DashboardLights;
 import com.highmobility.autoapi.GetDashboardLights;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -18,7 +17,7 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class DashboardLightsTest {
-    byte[] bytes = ByteUtils.bytesFromHex(
+    Bytes bytes = new Bytes(
             "006101010002000001000202010100020F030100021500");
 
     @Test
@@ -60,7 +59,7 @@ public class DashboardLightsTest {
                 DashboardLight.State.RED));
         builder.addLight(new DashboardLight(DashboardLight.Type.ENGINE_OIL_LEVEL, DashboardLight
                 .State.INACTIVE));
-        byte[] actualBytes = builder.build().getByteArray();
-        assertTrue(Arrays.equals(actualBytes, bytes));
+
+        assertTrue(builder.build().equals(bytes));
     }
 }

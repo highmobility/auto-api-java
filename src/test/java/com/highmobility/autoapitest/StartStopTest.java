@@ -5,17 +5,15 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetStartStopState;
 import com.highmobility.autoapi.StartStopState;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class StartStopTest {
-    byte[] bytes = ByteUtils.bytesFromHex(
+    Bytes bytes = new Bytes(
             "00630101000101"
     );
 
@@ -36,22 +34,22 @@ public class StartStopTest {
     @Test public void build() {
         StartStopState.Builder builder = new StartStopState.Builder();
         builder.setIsActive(true);
-        assertTrue(Arrays.equals(builder.build().getByteArray(), bytes));
+        assertTrue(builder.build().equals(bytes));
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("006300");
-        byte[] commandBytes = new GetStartStopState().getByteArray();
+        Bytes waitingForBytes = new Bytes("006300");
+        Bytes commandBytes = new GetStartStopState();
 
-        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+        assertTrue(waitingForBytes.equals(commandBytes));
         assertTrue(CommandResolver.resolve(waitingForBytes) instanceof GetStartStopState);
     }
 
     @Test public void activateDeactivate() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("00630201000101");
+        Bytes waitingForBytes = new Bytes("00630201000101");
 
         byte[] commandBytes = new ActivateDeactivateStartStop(true).getByteArray();
-        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+        assertTrue(waitingForBytes.equals(commandBytes));
 
         ActivateDeactivateStartStop command = (ActivateDeactivateStartStop) CommandResolver
                 .resolve(waitingForBytes);

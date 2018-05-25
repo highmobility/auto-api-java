@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetWeatherConditions;
 import com.highmobility.autoapi.WeatherConditions;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
 public class WeatherConditionsTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "00550101000164");
 
         Command command = null;
@@ -42,7 +42,7 @@ public class WeatherConditionsTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("005501");
+        Bytes bytes = new Bytes("005501");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((WeatherConditions)state).getRainIntensity() == null);
     }

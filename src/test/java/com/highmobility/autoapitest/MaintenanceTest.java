@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetMaintenanceState;
 import com.highmobility.autoapi.MaintenanceState;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ import static org.junit.Assert.fail;
 public class MaintenanceTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex("003401" +
+        Bytes bytes = new Bytes("003401" +
                 "01000201F5" +
                 "020003000E61");
 
@@ -43,7 +44,7 @@ public class MaintenanceTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("003401");
+        Bytes bytes = new Bytes("003401");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((MaintenanceState) state).getKilometersToNextService() == null);
     }

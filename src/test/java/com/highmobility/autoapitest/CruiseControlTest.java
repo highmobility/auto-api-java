@@ -6,7 +6,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.CruiseControlState;
 import com.highmobility.autoapi.GetCruiseControlState;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class CruiseControlTest {
-    byte[] bytes = ByteUtils.bytesFromHex("0062010100010102000101030002003C04000100050002003C");
+    Bytes bytes = new Bytes("0062010100010102000101030002003C04000100050002003C");
 
     @Test
     public void state() {

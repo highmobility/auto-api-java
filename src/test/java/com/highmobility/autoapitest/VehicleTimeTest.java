@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetVehicleTime;
 import com.highmobility.autoapi.VehicleTime;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -26,7 +26,7 @@ import static org.junit.Assert.fail;
 public class VehicleTimeTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex("00500101000811010A1020330078");
+        Bytes bytes = new Bytes("00500101000811010A1020330078");
 
         Command command = null;
         try {
@@ -63,7 +63,7 @@ public class VehicleTimeTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("005001");
+        Bytes bytes = new Bytes("005001");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((VehicleTime) state).getVehicleTime() == null);
     }

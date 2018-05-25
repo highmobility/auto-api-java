@@ -6,7 +6,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetParkingBrakeState;
 import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ import static org.junit.Assert.fail;
 public class ParkingBrakeTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "00580101000101");
 
         Command command = null;
@@ -43,14 +43,14 @@ public class ParkingBrakeTest {
     }
 
     @Test public void inactivate() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("00580201");
+        Bytes waitingForBytes = new Bytes("00580201");
         byte[] commandBytes = new ActivateInactivateParkingBrake(true)
                 .getByteArray();
-        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+        assertTrue(waitingForBytes.equals(commandBytes));
 
         ActivateInactivateParkingBrake command = (ActivateInactivateParkingBrake) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.activate() == true);
-        assertTrue(Arrays.equals(command.getByteArray(), waitingForBytes));
+        assertTrue(command.equals(waitingForBytes));
     }
 
     @Test public void build() {
@@ -64,7 +64,7 @@ public class ParkingBrakeTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("005801");
+        Bytes bytes = new Bytes("005801");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((ParkingBrakeState)state).isActive() == null);
     }

@@ -9,7 +9,7 @@ import com.highmobility.autoapi.GetWifiState;
 import com.highmobility.autoapi.WifiState;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ import static org.junit.Assert.fail;
 public class WifiTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "0059010100010102000101030004484f4d4504000103");
 
         Command command = null;
@@ -62,13 +62,13 @@ public class WifiTest {
     }
 
     @Test public void connectToNetwork() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex
-                ("005902030004484f4d450400010305000A5a57337641524e554265");
+        Bytes waitingForBytes = new Bytes(
+                "005902030004484f4d450400010305000A5a57337641524e554265");
         byte[] commandBytes = null;
         commandBytes = new ConnectToNetwork("HOME", NetworkSecurity
                 .WPA2_PERSONAL, "ZW3vARNUBe")
                 .getByteArray();
-        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+        assertTrue(waitingForBytes.equals(commandBytes));
 
         ConnectToNetwork command = (ConnectToNetwork) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getSsid().equals("HOME"));
@@ -82,7 +82,7 @@ public class WifiTest {
 
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
-        ForgetNetwork command = (ForgetNetwork) CommandResolver.resolve(waitingForBytes);
+        ForgetNetwork command = (ForgetNetwork) CommandResolver.resolveBytes(waitingForBytes);
         assertTrue(command.getSsid().equals("HOME"));
     }
 
@@ -91,12 +91,12 @@ public class WifiTest {
         byte[] commandBytes = new EnableDisableWifi(true).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
-        EnableDisableWifi command = (EnableDisableWifi) CommandResolver.resolve(waitingForBytes);
+        EnableDisableWifi command = (EnableDisableWifi) CommandResolver.resolveBytes(waitingForBytes);
         assertTrue(command.enable() == true);
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("005901");
+        Bytes bytes = new Bytes("005901");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((WifiState) state).getSecurity() == null);
     }

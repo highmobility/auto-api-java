@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.FirmwareVersion;
 import com.highmobility.autoapi.GetFirmwareVersion;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ import static org.junit.Assert.fail;
 public class FirmwareVersionTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "000301010003010f2102000C6274737461636b2d7561727403000976312e352d70726f64");
 
         Command command = null;

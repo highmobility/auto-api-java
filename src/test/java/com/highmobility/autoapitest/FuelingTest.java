@@ -6,6 +6,7 @@ import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.GetGasFlapState;
 import com.highmobility.autoapi.OpenGasFlap;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ import static org.junit.Assert.fail;
 public class FuelingTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "00400101000101");
 
         Command command = null;
@@ -43,7 +44,7 @@ public class FuelingTest {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("004000");
         byte[] bytes = new GetGasFlapState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
-        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof GetGasFlapState);
+        assertTrue(CommandResolver.resolveBytes(waitingForBytes) instanceof GetGasFlapState);
     }
 
     @Test public void open() {
@@ -51,12 +52,12 @@ public class FuelingTest {
         byte[] bytes = new OpenGasFlap().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
-        OpenGasFlap openGasFlap = (OpenGasFlap) CommandResolver.resolve(waitingForBytes);
+        OpenGasFlap openGasFlap = (OpenGasFlap) CommandResolver.resolveBytes(waitingForBytes);
         assertTrue(Arrays.equals(openGasFlap.getByteArray(), waitingForBytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("004001");
+        Bytes bytes = new Bytes("004001");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((GasFlapState) state).getState() == null);
     }
