@@ -21,6 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -73,7 +74,7 @@ public class WeatherConditions extends CommandWithProperties {
          */
         public Builder setRainIntensity(Float rainIntensity) {
             this.rainIntensity = rainIntensity;
-            addProperty(new IntegerProperty(RAIN_IDENTIFIER, Property.floatToIntPercentage(rainIntensity), 1));
+            addProperty(new PercentageProperty(RAIN_IDENTIFIER, rainIntensity));
             return this;
         }
 

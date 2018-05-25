@@ -21,6 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -89,8 +90,7 @@ public class RooftopState extends CommandWithProperties {
          */
         public Builder setOpenPercentage(Float openPercentage) {
             this.openPercentage = openPercentage;
-            addProperty(new IntegerProperty(OPEN_IDENTIFIER, Property.floatToIntPercentage
-                    (openPercentage), 1));
+            addProperty(new PercentageProperty(OPEN_IDENTIFIER, openPercentage));
             return this;
         }
 
@@ -100,8 +100,7 @@ public class RooftopState extends CommandWithProperties {
          */
         public Builder setDimmingPercentage(Float dimmingPercentage) {
             this.dimmingPercentage = dimmingPercentage;
-            addProperty(new IntegerProperty(DIMMING_IDENTIFIER, Property.floatToIntPercentage
-                    (dimmingPercentage), 1));
+            addProperty(new PercentageProperty(DIMMING_IDENTIFIER, dimmingPercentage));
             return this;
         }
 
