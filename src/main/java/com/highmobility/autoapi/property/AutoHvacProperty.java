@@ -64,7 +64,7 @@ public class AutoHvacProperty extends Property {
         if (weekdayWeekdayStates.length != 7) throw new IllegalArgumentException("Less than 7 auto hvac weekdayStates");
 
         byte autoHvacDatesByte = 0;
-        if (isConstant) autoHvacDatesByte = (byte) (autoHvacDatesByte | (1 << 7)); // TODO: test
+        if (isConstant) autoHvacDatesByte = (byte) (autoHvacDatesByte | (1 << 7));
 
         for (int i = 0; i < 7; i++) {
             if (weekdayWeekdayStates[i].isActive()) {

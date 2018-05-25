@@ -179,7 +179,7 @@ public class ClimateTest {
 
     @Test public void build() {
         byte[] expectedBytes = ByteUtils.bytesFromHex(
-                "002401010004419800000200044140000003000441ac000004000441ac00000500010106000100070001000800010009000441ac00000A000F6000000000000000000000071E071E");
+                "002401010004419800000200044140000003000441ac000004000441ac00000500010106000100070001000800010009000441ac00000A000FE000000000000000000000071E071E");
         ClimateState.Builder builder = new ClimateState.Builder();
 
         builder.setInsideTemperature(19f);
@@ -205,7 +205,7 @@ public class ClimateTest {
 
             weekdayWeekdayStates[i] = weekdayState;
         }
-        AutoHvacProperty autoHvac = new AutoHvacProperty(weekdayWeekdayStates, false);
+        AutoHvacProperty autoHvac = new AutoHvacProperty(weekdayWeekdayStates, true);
         builder.setAutoHvacState(autoHvac);
 
         ClimateState command = builder.build();
