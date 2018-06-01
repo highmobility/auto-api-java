@@ -13,7 +13,7 @@ import com.highmobility.autoapi.property.ChargeTimer;
 import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.PortState;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import org.junit.Test;
 
@@ -140,7 +140,7 @@ public class ChargingTest {
         String commandBytes = ByteUtils.hexFromBytes(new StartStopCharging(true).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        StartStopCharging command = (StartStopCharging) CommandResolver.resolve(Bytes
+        StartStopCharging command = (StartStopCharging) CommandResolver.resolve(ByteUtils
                 .bytesFromHex(waitingForBytes));
         assertTrue(command.getStart() == true);
     }

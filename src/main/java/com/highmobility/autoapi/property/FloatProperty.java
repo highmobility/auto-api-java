@@ -20,11 +20,11 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 public class FloatProperty extends Property {
     public FloatProperty(byte identifier, float value) {
         super(identifier, 4);
-        Bytes.setBytes(bytes, floatToBytes(value), 3);
+        ByteUtils.setBytes(bytes, floatToBytes(value), 3);
     }
 }

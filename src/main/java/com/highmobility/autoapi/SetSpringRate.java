@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Axle;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 /**
  * Set the spring rate. The result is sent through the Chassis Settings message.
@@ -55,7 +55,7 @@ public class SetSpringRate extends Command {
 
     static byte[] getValues(Axle axle, int springRate) {
         byte[] bytes = TYPE.getIdentifierAndType();
-        return Bytes.concatBytes(bytes, new byte[]{axle.getByte(), (byte) springRate});
+        return ByteUtils.concatBytes(bytes, new byte[]{axle.getByte(), (byte) springRate});
     }
 
     SetSpringRate(byte[] bytes) throws CommandParseException {

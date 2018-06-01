@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -89,7 +89,7 @@ public class Type {
     }
 
     public Type(byte[] identifier, int type) {
-        this(Bytes.concatBytes(identifier, (byte) type));
+        this(ByteUtils.concatBytes(identifier, (byte) type));
     }
 
     Type(Identifier identifier, int type) {
@@ -101,7 +101,7 @@ public class Type {
     }
 
     byte[] addByte(byte extraByte) {
-        return Bytes.concatBytes(identifierAndType, extraByte);
+        return ByteUtils.concatBytes(identifierAndType, extraByte);
     }
 
     byte[] addProperty(HMProperty property) {
@@ -109,7 +109,7 @@ public class Type {
     }
 
     byte[] addBytes(byte[] extraBytes) {
-        return Bytes.concatBytes(identifierAndType, extraBytes);
+        return ByteUtils.concatBytes(identifierAndType, extraBytes);
     }
 
     byte[] getIdentifier() {

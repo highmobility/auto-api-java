@@ -21,7 +21,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import java.util.Arrays;
 
@@ -90,6 +90,6 @@ public class AccelerationProperty extends Property {
     public AccelerationProperty(byte identifier, AccelerationType type, float acceleration) {
         super(identifier, 5);
         bytes[3] = type.getByte();
-        Bytes.setBytes(bytes, Property.floatToBytes(acceleration), 4);
+        ByteUtils.setBytes(bytes, Property.floatToBytes(acceleration), 4);
     }
 }

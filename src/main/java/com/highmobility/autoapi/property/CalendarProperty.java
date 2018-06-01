@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import java.util.Calendar;
 
@@ -34,6 +34,6 @@ public class CalendarProperty extends Property {
     public CalendarProperty(byte identifier, Calendar calendar) {
         super(identifier, 8);
         this.calendar = calendar;
-        Bytes.setBytes(bytes, Property.calendarToBytes(calendar), 3);
+        ByteUtils.setBytes(bytes, Property.calendarToBytes(calendar), 3);
     }
 }

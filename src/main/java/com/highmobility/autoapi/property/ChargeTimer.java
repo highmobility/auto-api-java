@@ -21,7 +21,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 import java.util.Calendar;
 
 public class ChargeTimer extends Property {
@@ -51,7 +51,7 @@ public class ChargeTimer extends Property {
     public ChargeTimer(byte identifier, Type type, Calendar time) throws IllegalArgumentException {
         super(identifier, 9);
         bytes[3] = type.getByte();
-        Bytes.setBytes(bytes, Property.calendarToBytes(time), 4);
+        ByteUtils.setBytes(bytes, Property.calendarToBytes(time), 4);
         this.type = type;
         this.time = time;
     }

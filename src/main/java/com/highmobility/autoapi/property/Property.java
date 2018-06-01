@@ -21,7 +21,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.exception.ParseException;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -54,7 +54,7 @@ public class Property implements HMProperty {
      */
     public Property(byte identifier, byte[] value) {
         this(identifier, value != null ? value.length : 0);
-        Bytes.setBytes(bytes, value, 3);
+        ByteUtils.setBytes(bytes, value, 3);
     }
 
     public Property(byte[] bytes) {
@@ -144,7 +144,7 @@ public class Property implements HMProperty {
         byte[] lengthBytes = intToBytes(length, 2);
         bytes[1] = lengthBytes[0];
         bytes[2] = lengthBytes[1];
-        bytes = Bytes.concatBytes(bytes, value);
+        bytes = ByteUtils.concatBytes(bytes, value);
         return bytes;
     }
 
@@ -156,7 +156,7 @@ public class Property implements HMProperty {
         };
 
         byte[] valueBytes = intToBytes(value, length);
-        return Bytes.concatBytes(bytes, valueBytes);
+        return ByteUtils.concatBytes(bytes, valueBytes);
     }
 
     public static long getLong(byte[] b) throws IllegalArgumentException {

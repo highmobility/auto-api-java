@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.exception.ParseException;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 import java.io.UnsupportedEncodingException;
 
 public class StringProperty extends Property {
@@ -37,7 +37,7 @@ public class StringProperty extends Property {
             Command.logger.info(CHARSET + " charset not supported.");
             throw new ParseException();
         }
-        Bytes.setBytes(bytes, stringBytes, 3);
+        ByteUtils.setBytes(bytes, stringBytes, 3);
     }
 
     public static HMProperty[] getProperties(String value, byte identifier) {

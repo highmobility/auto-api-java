@@ -21,7 +21,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 public class ActionItem extends Property {
     public static final byte IDENTIFIER = 0x02;
@@ -51,9 +51,9 @@ public class ActionItem extends Property {
         this.name = name;
 
         bytes = new byte[]{ getPropertyIdentifier() };
-        bytes = Bytes.concatBytes(bytes, Property.intToBytes(getPropertyLength(), 2));
-        bytes = Bytes.concatBytes(bytes, (byte) getActionIdentifier());
-        bytes = Bytes.concatBytes(bytes, Property.stringToBytes(name));
+        bytes = ByteUtils.concatBytes(bytes, Property.intToBytes(getPropertyLength(), 2));
+        bytes = ByteUtils.concatBytes(bytes, (byte) getActionIdentifier());
+        bytes = ByteUtils.concatBytes(bytes, Property.stringToBytes(name));
     }
 
     public ActionItem(byte[] bytes) throws CommandParseException {
