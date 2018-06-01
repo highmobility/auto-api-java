@@ -1,6 +1,6 @@
 siteUrl = https://github.com/highmobility/hm-java-auto-api
 gitUrl = https://github.com/highmobility/hm-java-auto-api
-version = 1.7.1-dev
+version = 1.7.1
 groupId = com.highmobility
 licenses = ['GPL-3.0']
 id = hmkit-auto-api
