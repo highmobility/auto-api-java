@@ -4,11 +4,10 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.FirmwareVersion;
 import com.highmobility.autoapi.GetFirmwareVersion;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -19,7 +18,7 @@ import static org.junit.Assert.fail;
 public class FirmwareVersionTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "000301010003010f2102000C6274737461636b2d7561727403000976312e352d70726f64");
 
         Command command = null;
@@ -44,14 +43,13 @@ public class FirmwareVersionTest {
         builder.setApplicationVersion("v1.5-prod");
 
         FirmwareVersion command = builder.build();
-        assertTrue(Arrays.equals(command.getBytes(), Bytes.bytesFromHex
-                ("000301010003010f2102000C6274737461636b2d7561727403000976312e352d70726f64")));
+        assertTrue(command.equals
+                ("000301010003010f2102000C6274737461636b2d7561727403000976312e352d70726f64"));
         // 000301010007312E31352E333302000C6274737461636B2D7561727403000976312E352D70726F64
     }
 
     @Test public void get() {
         String waitingForBytes = "000300";
-        String commandBytes = Bytes.hexFromBytes(new GetFirmwareVersion().getBytes());
-        assertTrue(waitingForBytes.equals(commandBytes));
+        assertTrue(new GetFirmwareVersion().equals(waitingForBytes));
     }
 }

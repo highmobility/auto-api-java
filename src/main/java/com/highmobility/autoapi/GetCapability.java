@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import java.util.Arrays;
 
@@ -59,8 +59,8 @@ public class GetCapability extends Command {
 
     static byte[] getBytes(Type type) {
         byte[] bytes = new byte[5];
-        Bytes.setBytes(bytes, TYPE.getIdentifierAndType(), 0);
-        Bytes.setBytes(bytes, type.getIdentifier(), 3);
+        ByteUtils.setBytes(bytes, TYPE.getIdentifierAndType(), 0);
+        ByteUtils.setBytes(bytes, type.getIdentifier(), 3);
         return bytes;
     }
 

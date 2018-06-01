@@ -452,8 +452,7 @@ public class DiagnosticsState extends CommandWithProperties {
          */
         public Builder setFuelLevel(Float fuelLevel) {
             this.fuelLevel = fuelLevel;
-            addProperty(new IntegerProperty(FUEL_LEVEL_IDENTIFIER, Property.floatToIntPercentage
-                    (fuelLevel), 1));
+            addProperty(new PercentageProperty(FUEL_LEVEL_IDENTIFIER, fuelLevel));
             return this;
         }
 

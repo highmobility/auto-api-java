@@ -21,30 +21,28 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.exception.ParseException;
+import com.highmobility.value.Bytes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Command {
+public class Command extends Bytes {
     public static final Logger logger = LoggerFactory.getLogger(Command.class);
 
-    byte[] bytes;
     Type type;
 
     Command(byte[] bytes) {
+        super(bytes);
         setTypeAndBytes(bytes);
     }
 
     Command(Type type) {
-        setTypeAndBytes(type);
+        super(type.getIdentifierAndType());
+        this.type = type;
     }
 
     public Type getType() {
         return type;
-    }
-
-    public byte[] getBytes() {
-        return bytes;
     }
 
     /**
@@ -55,15 +53,9 @@ public class Command {
         return type.equals(this.type);
     }
 
-    private void setTypeAndBytes(Type type) {
-        this.type = type;
-        this.bytes = type.getIdentifierAndType();
-    }
-
     private void setTypeAndBytes(byte[] bytes) {
         if (bytes == null || bytes.length == 0) return; // empty IncomingCommand
         if (bytes.length < 3) throw new ParseException();
-        this.bytes = bytes;
         this.type = new Type(bytes[0], bytes[1], bytes[2]);
     }
 }

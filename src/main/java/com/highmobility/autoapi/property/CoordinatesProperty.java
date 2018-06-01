@@ -19,7 +19,7 @@
  */
 
 package com.highmobility.autoapi.property;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 public class CoordinatesProperty extends Property {
     float latitude;
@@ -54,8 +54,8 @@ public class CoordinatesProperty extends Property {
 
     public CoordinatesProperty(byte identifier, float latitude, float longitude) {
         super(identifier, 8);
-        Bytes.setBytes(bytes, Property.floatToBytes(latitude), 3);
-        Bytes.setBytes(bytes, Property.floatToBytes(longitude), 7);
+        ByteUtils.setBytes(bytes, Property.floatToBytes(latitude), 3);
+        ByteUtils.setBytes(bytes, Property.floatToBytes(longitude), 7);
         this.latitude = latitude;
         this.longitude = longitude;
     }

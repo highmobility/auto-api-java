@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 /**
  * Activate or deactivate cruise control. The result is sent through the Cruise Control State
@@ -59,9 +59,9 @@ public class ActivateDeactivateCruiseControl extends Command {
         BooleanProperty activeProp = new BooleanProperty((byte) 0x01, activate);
         IntegerProperty speedProp = new IntegerProperty((byte) 0x02, speed, 2);
 
-        Bytes.setBytes(bytes, TYPE.getIdentifierAndType(), 0);
-        Bytes.setBytes(bytes, activeProp.getPropertyBytes(), 3);
-        Bytes.setBytes(bytes, speedProp.getPropertyBytes(), 7);
+        ByteUtils.setBytes(bytes, TYPE.getIdentifierAndType(), 0);
+        ByteUtils.setBytes(bytes, activeProp.getPropertyBytes(), 3);
+        ByteUtils.setBytes(bytes, speedProp.getPropertyBytes(), 7);
 
         return bytes;
     }

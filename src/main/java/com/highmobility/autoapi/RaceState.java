@@ -392,7 +392,6 @@ public class RaceState extends CommandWithProperties {
          */
         public Builder setOverSteering(Float overSteering) {
             this.overSteering = overSteering;
-            // TODO: 04/05/2018 change other floatToIntPercentage as well (in other commands)
             addProperty(new PercentageProperty(OVER_STEERING_IDENTIFIER, overSteering));
             return this;
         }

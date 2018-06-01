@@ -4,7 +4,8 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetOffroadState;
 import com.highmobility.autoapi.OffroadState;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ import static org.junit.Assert.fail;
 public class OffRoadTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "005201010002000A02000132");
 
         Command command = null;
@@ -37,24 +38,24 @@ public class OffRoadTest {
 
     @Test public void get() {
         String waitingForBytes = "005200";
-        String commandBytes = Bytes.hexFromBytes(new GetOffroadState().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetOffroadState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("005201");
+        byte[] bytes = ByteUtils.bytesFromHex("005201");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((OffroadState)state).getRouteIncline() == null);
     }
 
     @Test public void build() {
-        byte[] bytes = Bytes.bytesFromHex("005201010002000A02000132");
+        byte[] bytes = ByteUtils.bytesFromHex("005201010002000A02000132");
 
         OffroadState.Builder builder = new OffroadState.Builder();
         builder.setRouteIncline(10);
         builder.setWheelSuspension(.5f);
         OffroadState state = builder.build();
-        byte[] builtBytes = state.getBytes();
+        byte[] builtBytes = state.getByteArray();
         assertTrue(Arrays.equals(builtBytes, bytes));
         assertTrue(state.getRouteIncline() == 10);
         assertTrue(state.getWheelSuspension() == .5f);

@@ -31,7 +31,7 @@ import com.highmobility.autoapi.property.homecharger.PriceTariff;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -213,7 +213,7 @@ public class HomeChargerState extends CommandWithProperties {
                         break;
                 }
             } catch (Exception e) {
-                logger.info("invalid property " + Bytes.hexFromBytes(property.getPropertyBytes()));
+                logger.info("invalid property " + ByteUtils.hexFromBytes(property.getPropertyBytes()));
             }
         }
     }

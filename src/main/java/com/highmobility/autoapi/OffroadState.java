@@ -21,6 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -102,7 +103,7 @@ public class OffroadState extends CommandWithProperties {
          */
         public Builder setWheelSuspension(Float wheelSuspension) {
             this.wheelSuspension = wheelSuspension;
-            addProperty(new IntegerProperty(WHEEL_ID, Property.floatToIntPercentage(wheelSuspension), 1));
+            addProperty(new PercentageProperty(WHEEL_ID, wheelSuspension));
             return this;
         }
 

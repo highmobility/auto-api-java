@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property.homecharger;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 public class PriceTariff extends Property {
     public static final byte IDENTIFIER = 0x0C;
@@ -64,8 +64,8 @@ public class PriceTariff extends Property {
     public PriceTariff(PricingType pricingType, String currency, float price) {
         super(IDENTIFIER, valueSize);
         bytes[3] = pricingType.getByte();
-        Bytes.setBytes(bytes, Property.stringToBytes(currency), 4);
-        Bytes.setBytes(bytes, Property.floatToBytes(price), 7);
+        ByteUtils.setBytes(bytes, Property.stringToBytes(currency), 4);
+        ByteUtils.setBytes(bytes, Property.floatToBytes(price), 7);
 
         this.pricingType = pricingType;
         this.currency = currency;

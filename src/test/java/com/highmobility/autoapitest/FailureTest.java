@@ -5,7 +5,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Failure;
 import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.property.FailureReason;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ import static org.junit.Assert.fail;
 public class FailureTest {
     @Test
     public void failure() {
-        byte[] bytes = Bytes.bytesFromHex("00020101000300210002000101");
+        Bytes bytes = new Bytes("00020101000300210002000101");
 
         Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
         if (command == null) fail();
@@ -29,12 +30,12 @@ public class FailureTest {
     }
 
     @Test public void build() {
-        byte[] bytes = Bytes.bytesFromHex("00020101000300210002000101");
+        byte[] bytes = ByteUtils.bytesFromHex("00020101000300210002000101");
         Failure.Builder builder = new Failure.Builder();
         builder.setFailedType(GetTrunkState.TYPE);
         builder.setFailureReason(FailureReason.UNAUTHORIZED);
         Failure failure = builder.build();
-        byte[] builtBytes = failure.getBytes();
+        byte[] builtBytes = failure.getByteArray();
         assertTrue(Arrays.equals(builtBytes, bytes));
         assertTrue(failure.getFailedType() == GetTrunkState.TYPE);
         assertTrue(failure.getFailureReason() == FailureReason.UNAUTHORIZED);

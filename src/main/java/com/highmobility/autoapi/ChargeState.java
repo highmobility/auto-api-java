@@ -25,9 +25,10 @@ import com.highmobility.autoapi.property.ChargeTimer;
 import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.PortState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -225,7 +226,7 @@ public class ChargeState extends CommandWithProperties {
                         break;
                 }
             } catch (Exception e) {
-                logger.info("invalid " + Bytes.hexFromBytes(bytes));
+                logger.info("invalid " + ByteUtils.hexFromBytes(bytes));
             }
         }
     }
@@ -296,8 +297,7 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setBatteryLevel(Float batteryLevel) {
             this.batteryLevel = batteryLevel;
-            addProperty(new IntegerProperty(BATTERY_LEVEL_IDENTIFIER, Property
-                    .floatToIntPercentage(batteryLevel), 1));
+            addProperty(new PercentageProperty(BATTERY_LEVEL_IDENTIFIER, batteryLevel));
             return this;
         }
 
@@ -347,8 +347,7 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setChargeLimit(Float chargeLimit) {
             this.chargeLimit = chargeLimit;
-            addProperty(new IntegerProperty(CHARGE_LIMIT_IDENTIFIER, Property
-                    .floatToIntPercentage(chargeLimit), 1));
+            addProperty(new PercentageProperty(CHARGE_LIMIT_IDENTIFIER, chargeLimit));
             return this;
         }
 

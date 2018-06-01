@@ -25,7 +25,6 @@ import com.highmobility.autoapi.property.AutoHvacState;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.Bytes;
 
 /**
  * Command sent when a Get Climate State command is received by the car. Also sent once the HVAC

@@ -27,7 +27,7 @@ import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -245,7 +245,7 @@ public class VehicleStatus extends CommandWithProperties {
                             Command command = CommandResolver.resolve(commandBytes);
                             if (command != null) states.add(command);
                         } catch (Exception e) {
-                            logger.info("invalid state " + Bytes.hexFromBytes(commandBytes));
+                            logger.info("invalid state " + ByteUtils.hexFromBytes(commandBytes));
                         }
                         break;
                     case ENGINE_VOLUME_IDENTIFIER:
@@ -259,7 +259,7 @@ public class VehicleStatus extends CommandWithProperties {
                         break;
                 }
             } catch (Exception e) {
-                logger.info(Bytes.hexFromBytes(property.getPropertyBytes()) + " " + e.toString());
+                logger.info(ByteUtils.hexFromBytes(property.getPropertyBytes()) + " " + e.toString());
             }
         }
 

@@ -5,7 +5,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetSeatsState;
 import com.highmobility.autoapi.SeatsState;
 import com.highmobility.autoapi.property.SeatStateProperty;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ import static org.junit.Assert.fail;
 public class SeatsTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "005601010003000101010003010000");
 
         Command command = null;
@@ -54,18 +55,18 @@ public class SeatsTest {
         builder.addSeatState(seat1).addSeatState(seat2);
         SeatsState state = builder.build();
 
-        assertTrue(Arrays.equals(state.getBytes(), Bytes.bytesFromHex
+        assertTrue(Arrays.equals(state.getByteArray(), ByteUtils.bytesFromHex
                 ("005601010003000101010003010000")));
     }
 
     @Test public void get() {
         String waitingForBytes = "005600";
-        String commandBytes = Bytes.hexFromBytes(new GetSeatsState().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetSeatsState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("005601");
+        Bytes bytes = new Bytes("005601");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((SeatsState) state).getSeatsStates().length == 0);
     }

@@ -5,17 +5,16 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetPowerTakeOffState;
 import com.highmobility.autoapi.PowerTakeOffState;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class PowerTakeOffTest {
-    byte[] bytes = Bytes.bytesFromHex(
+    Bytes bytes = new Bytes(
             "0065010100010102000101"
     );
 
@@ -38,19 +37,19 @@ public class PowerTakeOffTest {
         PowerTakeOffState.Builder builder = new PowerTakeOffState.Builder();
         builder.setIsActive(true);
         builder.setIsEngaged(true);
-        assertTrue(Arrays.equals(builder.build().getBytes(), bytes));
+        assertTrue(builder.build().equals(bytes));
     }
 
     @Test public void get() {
         String waitingForBytes = "006500";
-        String commandBytes = Bytes.hexFromBytes(new GetPowerTakeOffState().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetPowerTakeOffState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void activateDeactivate() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("00650201000101");
-        byte[] commandBytes = new ActivateDeactivatePowerTakeoff(true).getBytes();
-        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+        Bytes waitingForBytes = new Bytes("00650201000101");
+        byte[] commandBytes = new ActivateDeactivatePowerTakeoff(true).getByteArray();
+        assertTrue(waitingForBytes.equals(commandBytes));
         ActivateDeactivatePowerTakeoff command = (ActivateDeactivatePowerTakeoff) CommandResolver
                 .resolve(waitingForBytes);
         assertTrue(command.activate() == true);

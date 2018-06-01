@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 public class IntegerProperty extends Property {
     public IntegerProperty(byte identifier, int value, int length) {
@@ -30,7 +30,7 @@ public class IntegerProperty extends Property {
             bytes[3] = (byte)value;
         }
         else {
-            Bytes.setBytes(bytes, intToBytes(value, length), 3);
+            ByteUtils.setBytes(bytes, intToBytes(value, length), 3);
         }
     }
 }

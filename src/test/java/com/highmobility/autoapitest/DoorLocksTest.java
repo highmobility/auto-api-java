@@ -5,14 +5,11 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetLockState;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.LockUnlockDoors;
-
 import com.highmobility.autoapi.property.doors.DoorLockAndPositionState;
 import com.highmobility.autoapi.property.doors.DoorLockState;
-import com.highmobility.utils.Bytes;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static com.highmobility.autoapi.property.doors.DoorLocation.FRONT_LEFT;
 import static com.highmobility.autoapi.property.doors.DoorLocation.FRONT_RIGHT;
@@ -26,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class DoorLocksTest {
-    byte[] bytes = Bytes.bytesFromHex(
+    Bytes bytes = new Bytes(
             "002001010003000100010003010000010003020001010003030001" +
                     "0200020001" + "0200020100" + // front left and right inside locks
                     "0300020201" + "0300020300"); // rear right and left outside locks
@@ -98,22 +95,22 @@ public class DoorLocksTest {
         builder.addOutsideLockState(new DoorLockState(REAR_RIGHT, LOCKED));
         builder.addOutsideLockState(new DoorLockState(REAR_LEFT, UNLOCKED));
 
-        assertTrue(Arrays.equals(builder.build().getBytes(), bytes));
+        assertTrue(builder.build().equals(bytes));
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("002000");
-        byte[] commandBytes = new GetLockState().getBytes();
-        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+        Bytes bytes = new Bytes("002000");
+        Bytes commandBytes = new GetLockState();
+        assertTrue(bytes.equals(commandBytes));
 
-        Command command = CommandResolver.resolve(waitingForBytes);
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(command instanceof GetLockState);
     }
 
     @Test public void lock() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("00200201");
-        byte[] commandBytes = new LockUnlockDoors(LOCKED).getBytes();
-        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+        Bytes waitingForBytes = new Bytes("00200201");
+        byte[] commandBytes = new LockUnlockDoors(LOCKED).getByteArray();
+        assertTrue(waitingForBytes.equals(commandBytes));
 
         Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof LockUnlockDoors);
@@ -124,7 +121,7 @@ public class DoorLocksTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("002001");
+        Bytes bytes = new Bytes("002001");
         LockState state = (LockState) CommandResolver.resolve(bytes);
         assertTrue(state.getDoorLockAndPositionStates().length == 0);
     }

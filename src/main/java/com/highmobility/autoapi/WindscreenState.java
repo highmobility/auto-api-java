@@ -22,6 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindscreenDamage;
 import com.highmobility.autoapi.property.WindscreenDamageZone;
@@ -251,8 +252,7 @@ public class WindscreenState extends CommandWithProperties {
          */
         public Builder setDamageConfidence(Float damageConfidence) {
             this.damageConfidence = damageConfidence;
-            addProperty(new IntegerProperty(DAMAGE_CONFIDENCE_IDENTIFIER, Property
-                    .floatToIntPercentage(damageConfidence), 1));
+            addProperty(new PercentageProperty(DAMAGE_CONFIDENCE_IDENTIFIER, damageConfidence));
             return this;
         }
 

@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.Type;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -121,7 +121,7 @@ public class CapabilityProperty extends Property {
 
                 byte[] newValue = getValue(categoryIdentifier, newTypes);
                 byte[] newBytes = baseBytes(defaultIdentifier, newValue.length);
-                Bytes.setBytes(newBytes, newValue, 3);
+                ByteUtils.setBytes(newBytes, newValue, 3);
                 this.bytes = newBytes;
                 this.types = newTypes;
             }
@@ -142,7 +142,7 @@ public class CapabilityProperty extends Property {
     static byte[] getValue(byte[] categoryIdentifier, Type[] types) throws
             IllegalArgumentException {
         byte[] bytes = new byte[2 + types.length];
-        Bytes.setBytes(bytes, categoryIdentifier, 0);
+        ByteUtils.setBytes(bytes, categoryIdentifier, 0);
         for (int i = 0; i < types.length; i++) {
             Type type = types[i];
             bytes[2 + i] = type.getType();

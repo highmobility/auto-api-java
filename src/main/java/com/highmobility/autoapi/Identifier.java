@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 /**
  * Used for identifying known auto api categories
@@ -103,11 +103,11 @@ public enum Identifier {
     }
     
     byte[] getBytesWithType(Type type) {
-        return Bytes.concatBytes(identifier, type.getType());
+        return ByteUtils.concatBytes(identifier, type.getType());
     }
 
     byte[] getBytesWithType(byte type) {
-        return Bytes.concatBytes(identifier, type);
+        return ByteUtils.concatBytes(identifier, type);
     }
 
     byte[] getBytesWithType(Type type, byte extraValue) {

@@ -1,14 +1,14 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.OpenCloseTrunk;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.property.TrunkLockState;
 import com.highmobility.autoapi.property.TrunkPosition;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ import static org.junit.Assert.fail;
 public class TrunkAccessTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "0021010100010002000101");
 
         Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
@@ -34,21 +34,21 @@ public class TrunkAccessTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "002100";
-        String commandBytes = Bytes.hexFromBytes(new GetTrunkState().getBytes());
+        Bytes waitingForBytes = new Bytes("002100");
+        Bytes commandBytes = new GetTrunkState();
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof GetTrunkState);
     }
 
     @Test public void openClose() {
-        String waitingForBytes = "0021020100010002000101";
-        String commandBytes = Bytes.hexFromBytes(new OpenCloseTrunk(TrunkLockState.UNLOCKED,
-                TrunkPosition.OPEN).getBytes());
+        Bytes waitingForBytes = new Bytes("0021020100010002000101");
+        String commandBytes = ByteUtils.hexFromBytes(new OpenCloseTrunk(TrunkLockState.UNLOCKED,
+                TrunkPosition.OPEN).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        Command command = CommandResolver.resolve(Bytes.bytesFromHex(waitingForBytes));
+        Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof OpenCloseTrunk);
 
         OpenCloseTrunk state = (OpenCloseTrunk)command;
@@ -57,7 +57,7 @@ public class TrunkAccessTest {
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("002101");
+        Bytes bytes = new Bytes("002101");
         TrunkState state = (TrunkState) CommandResolver.resolve(bytes);
         assertTrue(state.getLockState() == null);
     }

@@ -22,11 +22,19 @@ sourceCompatibility = 1.8
 
 repositories {
     jcenter()
+    maven {
+        url "http://jfrog.high-mobility.com/artifactory/gradle-dev-local/"
+        credentials {
+            username System.properties['devReadUser']
+            password System.properties['devReadPassword']
+        }
+    }
 }
 
 dependencies {
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation group: 'junit', name: 'junit', version: '4.12'
-    implementation 'com.highmobility:hmkit-utils:1.1.5'
+    implementation('com.highmobility:hmkit-utils:1.2.0')
     implementation 'org.slf4j:slf4j-api:1.7.5'
     testImplementation 'org.slf4j:slf4j-simple:1.7.5'
 }
@@ -37,8 +45,8 @@ apply plugin: 'maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.jfrog.artifactory'
 
-version=artifact.version
-group=artifact.groupId
+version = artifact.version
+group = artifact.groupId
 
 install {
     repositories.mavenInstaller {

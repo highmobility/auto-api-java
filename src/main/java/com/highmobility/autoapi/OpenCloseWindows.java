@@ -24,7 +24,6 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindowProperty;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Open or close the windows. Either one or all windows can be controlled with the same command. The
@@ -64,7 +63,8 @@ public class OpenCloseWindows extends CommandWithProperties {
 
     OpenCloseWindows(byte[] bytes) throws CommandParseException {
         super(bytes);
-        List<WindowProperty> builder = new ArrayList();
+        ArrayList builder = new ArrayList();
+
         for (Property property : properties) {
             if (property.getPropertyIdentifier() == 0x01)
                 builder.add(new WindowProperty(
@@ -72,6 +72,6 @@ public class OpenCloseWindows extends CommandWithProperties {
                         WindowProperty.State.fromByte(property.getPropertyBytes()[4])));
         }
 
-        windowProperties = builder.toArray(new WindowProperty[builder.size()]);
+        windowProperties = (WindowProperty[]) builder.toArray(new WindowProperty[builder.size()]);
     }
 }

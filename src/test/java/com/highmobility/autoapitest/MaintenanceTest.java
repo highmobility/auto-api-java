@@ -4,7 +4,8 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetMaintenanceState;
 import com.highmobility.autoapi.MaintenanceState;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ import static org.junit.Assert.fail;
 public class MaintenanceTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex("003401" +
+        Bytes bytes = new Bytes("003401" +
                 "01000201F5" +
                 "020003000E61");
 
@@ -38,24 +39,24 @@ public class MaintenanceTest {
 
     @Test public void get() {
         String waitingForBytes = "003400";
-        String commandBytes = Bytes.hexFromBytes(new GetMaintenanceState().getBytes());
+        String commandBytes = ByteUtils.hexFromBytes(new GetMaintenanceState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("003401");
+        Bytes bytes = new Bytes("003401");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((MaintenanceState) state).getKilometersToNextService() == null);
     }
 
     @Test public void build() {
-        byte[] bytes = Bytes.bytesFromHex("00340101000201F5020003000E61");
+        byte[] bytes = ByteUtils.bytesFromHex("00340101000201F5020003000E61");
 
         MaintenanceState.Builder builder = new MaintenanceState.Builder();
         builder.setDaysToNextService(501);
         builder.setKilometersToNextService(3681);
         MaintenanceState state = builder.build();
-        byte[] builtBytes = state.getBytes();
+        byte[] builtBytes = state.getByteArray();
         assertTrue(Arrays.equals(builtBytes, bytes));
         assertTrue(state.getDaysToNextService() == 501);
         assertTrue(state.getKilometersToNextService() == 3681);

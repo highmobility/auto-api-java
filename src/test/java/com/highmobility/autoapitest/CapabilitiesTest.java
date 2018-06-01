@@ -48,7 +48,7 @@ import com.highmobility.autoapi.Type;
 import com.highmobility.autoapi.ValetMode;
 import com.highmobility.autoapi.VehicleLocation;
 import com.highmobility.autoapi.property.CapabilityProperty;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import org.junit.Test;
 
@@ -60,7 +60,7 @@ import static org.junit.Assert.fail;
 public class CapabilitiesTest {
     @Test
     public void capabilities() {
-        byte[] bytes = Bytes.bytesFromHex
+        byte[] bytes = ByteUtils.bytesFromHex
                 ("001001010005002000010201000500210001020100060023000102030100090024000102030405060100050025000102010006002600010203010007002700010203040100050028000102010003002902010004003000010100050031000102");
 
         Command command = null;
@@ -125,7 +125,7 @@ public class CapabilitiesTest {
     @Test
     public void oneUnknownCapability() {
         // 00 AB unknown
-        byte[] unknownCapabilitiesBytes = Bytes.bytesFromHex
+        byte[] unknownCapabilitiesBytes = ByteUtils.bytesFromHex
                 ("00100101000500AB00010201000500210001020100060023000102030100090024000102030405060100050025000102010006002600010203010007002700010203040100050028000102010003002902010004003000010100050031000102");
         Capabilities unknownCapabilities = null;
         unknownCapabilities = new Capabilities(unknownCapabilitiesBytes);
@@ -141,7 +141,7 @@ public class CapabilitiesTest {
 
     @Test
     public void climateCapability() {
-        byte[] message = Bytes.bytesFromHex("001001010009002400010203040506");
+        byte[] message = ByteUtils.bytesFromHex("001001010009002400010203040506");
         Capabilities capability = null;
         capability = (Capabilities) CommandResolver.resolve(message);
         if (capability == null) fail();
@@ -156,7 +156,7 @@ public class CapabilitiesTest {
 
     @Test
     public void heartRateCapability() {
-        byte[] message = Bytes.bytesFromHex("001001010003002902");
+        byte[] message = ByteUtils.bytesFromHex("001001010003002902");
         Capabilities capability = null;
         capability = (Capabilities) CommandResolver.resolve(message);
         if (capability == null) fail();
@@ -165,8 +165,8 @@ public class CapabilitiesTest {
     }
 
     @Test public void getCapabilities() {
-        byte[] bytes = Bytes.bytesFromHex("001000");
-        byte[] commandBytes = new GetCapabilities().getBytes();
+        byte[] bytes = ByteUtils.bytesFromHex("001000");
+        byte[] commandBytes = new GetCapabilities().getByteArray();
         assertTrue(Arrays.equals(bytes, commandBytes));
 
         Command command = null;
@@ -179,8 +179,8 @@ public class CapabilitiesTest {
     }
 
     @Test public void getCapability() {
-        byte[] bytes = Bytes.bytesFromHex("0010020029");
-        byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
+        byte[] bytes = ByteUtils.bytesFromHex("0010020029");
+        byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getByteArray();
         assertTrue(Arrays.equals(bytes, commandBytes));
 
         Command command = null;
@@ -210,8 +210,8 @@ public class CapabilitiesTest {
         CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
-        byte[] message = capabilities.getBytes();
-        assertTrue(Arrays.equals(message, Bytes.bytesFromHex("001001010009002400010203040506")));
+        byte[] message = capabilities.getByteArray();
+        assertTrue(Arrays.equals(message, ByteUtils.bytesFromHex("001001010009002400010203040506")));
         assertTrue(capabilities.getCapability(GetClimateState.TYPE) != null);
         assertTrue(capabilities.getCapability(EnableDisableWifi.TYPE) == null);
         assertTrue(capabilities.getCapabilities().length == 1);
@@ -247,8 +247,8 @@ public class CapabilitiesTest {
                 remoteControlTypes);
         builder.addCapability(property2);
 
-        byte[] message = builder.build().getBytes();
-        assertTrue(Arrays.equals(message, Bytes.bytesFromHex
+        byte[] message = builder.build().getByteArray();
+        assertTrue(Arrays.equals(message, ByteUtils.bytesFromHex
                 ("00100101000900240001020304050601000700270001020304")));
     }
 
@@ -269,7 +269,7 @@ public class CapabilitiesTest {
         CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
 
         builder.addCapability(property);
-        builder.build().getBytes();
+        builder.build().getByteArray();
     }
 
     @Test public void buildAddStateAutomaticallyWithGet() {
@@ -284,8 +284,8 @@ public class CapabilitiesTest {
         Capabilities capabilities = builder.build();
         assertTrue(capabilities.isSupported(ClimateState.TYPE));
 
-        byte[] bytes = Bytes.bytesFromHex("00100101000400240001");
-        assertTrue(Arrays.equals(capabilities.getBytes(), bytes));
+        byte[] bytes = ByteUtils.bytesFromHex("00100101000400240001");
+        assertTrue(Arrays.equals(capabilities.getByteArray(), bytes));
     }
 
     @Test public void buildDontAddStateAutomaticallyWhenStateAlreadyExists() {
@@ -334,9 +334,9 @@ public class CapabilitiesTest {
         Capabilities.Builder builder = new Capabilities.Builder();
         Capabilities capabilities = builder.build();
         testEmptyCommand(capabilities);
-        assertTrue(capabilities.getBytes().length == 3);
+        assertTrue(capabilities.getByteArray().length == 3);
 
-        byte[] bytes = Bytes.bytesFromHex("00100100");
+        byte[] bytes = ByteUtils.bytesFromHex("00100100");
         Command command = CommandResolver.resolve(bytes);
         testEmptyCommand((Capabilities) command);
     }

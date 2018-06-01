@@ -5,7 +5,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.GetGasFlapState;
 import com.highmobility.autoapi.OpenGasFlap;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ import static org.junit.Assert.fail;
 public class FuelingTest {
     @Test
     public void state() {
-        byte[] bytes = Bytes.bytesFromHex(
+        Bytes bytes = new Bytes(
                 "00400101000101");
 
         Command command = null;
@@ -36,28 +37,27 @@ public class FuelingTest {
         GasFlapState.Builder builder = new GasFlapState.Builder();
         builder.setState(com.highmobility.autoapi.property.GasFlapState.OPEN);
         GasFlapState state = builder.build();
-        assertTrue(Arrays.equals(state.getBytes(), Bytes.bytesFromHex("00400101000101")));
+        assertTrue(state.equals("00400101000101"));
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("004000");
-        byte[] bytes = new GetGasFlapState().getBytes();
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("004000");
+        byte[] bytes = new GetGasFlapState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
-
         assertTrue(CommandResolver.resolve(waitingForBytes) instanceof GetGasFlapState);
     }
 
     @Test public void open() {
-        byte[] waitingForBytes = Bytes.bytesFromHex("004002");
-        byte[] bytes = new OpenGasFlap().getBytes();
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("004002");
+        byte[] bytes = new OpenGasFlap().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
         OpenGasFlap openGasFlap = (OpenGasFlap) CommandResolver.resolve(waitingForBytes);
-        assertTrue(Arrays.equals(openGasFlap.getBytes(), waitingForBytes));
+        assertTrue(Arrays.equals(openGasFlap.getByteArray(), waitingForBytes));
     }
 
     @Test public void state0Properties() {
-        byte[] bytes = Bytes.bytesFromHex("004001");
+        Bytes bytes = new Bytes("004001");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((GasFlapState) state).getState() == null);
     }
