@@ -67,7 +67,7 @@ if (capabilities.isSupported(LockState.TYPE)) {
 
 ### Send a command
 ```java
-byte[] commandBytes = new LockUnlockDoors(DoorLockProperty.LockState.LOCKED).getBytes();
+byte[] commandBytes = new LockUnlockDoors(DoorLock.LOCKED).getBytes();
 sendCommand(commandBytes)
 ```
 

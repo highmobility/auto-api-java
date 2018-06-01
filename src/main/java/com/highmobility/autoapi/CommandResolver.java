@@ -34,7 +34,7 @@ public class CommandResolver {
      * @return The parsed command.
      */
     public static Command resolve(Bytes bytes) {
-        return resolveBytes(bytes.getByteArray());
+        return resolve(bytes.getByteArray());
     }
 
     /**
@@ -44,7 +44,7 @@ public class CommandResolver {
      * @param bytes the raw command bytes.
      * @return The parsed command.
      */
-    public static Command resolveBytes(byte[] bytes) {
+    public static Command resolve(byte[] bytes) {
         if (bytes == null || bytes.length == 0) return new Command(bytes);
         if (bytes.length < 3) return null;
         Command command = null;
@@ -416,11 +416,11 @@ public class CommandResolver {
     }
 
     public static Command resolveBase64(String base64) {
-        return resolveBytes(Base64.decode(base64));
+        return resolve(Base64.decode(base64));
     }
 
     public static Command resolveHex(String hexBytes) {
-        return resolveBytes(ByteUtils.bytesFromHex(hexBytes));
+        return resolve(ByteUtils.bytesFromHex(hexBytes));
     }
 
     static boolean bytesAreForIdentifier(byte[] bytes, Identifier identifier) {

@@ -133,7 +133,7 @@ public class WindscreenTest {
 
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
-        SetWindscreenDamage command = (SetWindscreenDamage) CommandResolver.resolveBytes
+        SetWindscreenDamage command = (SetWindscreenDamage) CommandResolver.resolve
                 (waitingForBytes);
         assertTrue(command.getDamage() == WindscreenDamage.IMPACT_NO_DAMAGE);
         assertTrue(command.getZone().getDamageZoneX() == 2);

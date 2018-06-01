@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 public class TireStateProperty extends Property {
     public static final byte identifier = (byte) 0x0A;
@@ -74,9 +74,9 @@ public class TireStateProperty extends Property {
     static byte[] getValue(Location location, float pressure, float temperature, int rpm) {
         byte[] value = new byte[11];
         value[0] = location.getByte();
-        Bytes.setBytes(value, Property.floatToBytes(pressure), 1);
-        Bytes.setBytes(value, Property.floatToBytes(temperature), 5);
-        Bytes.setBytes(value, Property.intToBytes(rpm, 2), 9);
+        ByteUtils.setBytes(value, Property.floatToBytes(pressure), 1);
+        ByteUtils.setBytes(value, Property.floatToBytes(temperature), 5);
+        ByteUtils.setBytes(value, Property.intToBytes(rpm, 2), 9);
         return value;
     }
 

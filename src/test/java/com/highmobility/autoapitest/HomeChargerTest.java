@@ -101,7 +101,7 @@ public class HomeChargerTest {
         byte[] commandBytes = new SetChargeCurrent(.5f).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
-        SetChargeCurrent command = (SetChargeCurrent) CommandResolver.resolveBytes(waitingForBytes);
+        SetChargeCurrent command = (SetChargeCurrent) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getCurrent() == .5f);
     }
 
@@ -117,7 +117,7 @@ public class HomeChargerTest {
         byte[] commandBytes = new SetPriceTariffs(tariffs).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
-        SetPriceTariffs command = (SetPriceTariffs) CommandResolver.resolveBytes(waitingForBytes);
+        SetPriceTariffs command = (SetPriceTariffs) CommandResolver.resolve(waitingForBytes);
 
 
         assertTrue(command.getPriceTariffs().length == 2);

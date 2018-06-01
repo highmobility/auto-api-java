@@ -32,7 +32,7 @@ public class ChargingTest {
 
         Command command = null;
         try {
-            command = CommandResolver.resolveBytes(bytes);
+            command = CommandResolver.resolve(bytes);
         } catch (Exception e) {
             fail();
         }
@@ -121,7 +121,7 @@ public class ChargingTest {
 
     @Test public void state0Properties() {
         byte[] bytes = ByteUtils.bytesFromHex("002301");
-        ChargeState state = (ChargeState) CommandResolver.resolveBytes(bytes);
+        ChargeState state = (ChargeState) CommandResolver.resolve(bytes);
         assertTrue(state.getBatteryCurrentAC() == null);
     }
 
@@ -130,7 +130,7 @@ public class ChargingTest {
         String commandBytes = ByteUtils.hexFromBytes(new SetChargeLimit(.9f).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        SetChargeLimit command = (SetChargeLimit) CommandResolver.resolveBytes(ByteUtils.bytesFromHex
+        SetChargeLimit command = (SetChargeLimit) CommandResolver.resolve(ByteUtils.bytesFromHex
                 (waitingForBytes));
         assertTrue(command.getChargeLimit() == .9f);
     }
@@ -140,7 +140,7 @@ public class ChargingTest {
         String commandBytes = ByteUtils.hexFromBytes(new StartStopCharging(true).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        StartStopCharging command = (StartStopCharging) CommandResolver.resolveBytes(Bytes
+        StartStopCharging command = (StartStopCharging) CommandResolver.resolve(Bytes
                 .bytesFromHex(waitingForBytes));
         assertTrue(command.getStart() == true);
     }
@@ -151,7 +151,7 @@ public class ChargingTest {
                 ());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        SetChargeMode command = (SetChargeMode) CommandResolver.resolveBytes(ByteUtils.bytesFromHex
+        SetChargeMode command = (SetChargeMode) CommandResolver.resolve(ByteUtils.bytesFromHex
                 (waitingForBytes));
         assertTrue(command.getChargeMode() == ChargeMode.INDUCTIVE);
     }
@@ -174,7 +174,7 @@ public class ChargingTest {
             fail();
         }
 
-        SetChargeTimer command = (SetChargeTimer) CommandResolver.resolveBytes(waitingForBytes);
+        SetChargeTimer command = (SetChargeTimer) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getChargeTimers().length == 2);
 
         Calendar departureTime = command.getChargeTimer(ChargeTimer.Type.DEPARTURE_TIME).getTime();

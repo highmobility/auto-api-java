@@ -44,7 +44,7 @@ public class FuelingTest {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("004000");
         byte[] bytes = new GetGasFlapState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
-        assertTrue(CommandResolver.resolveBytes(waitingForBytes) instanceof GetGasFlapState);
+        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof GetGasFlapState);
     }
 
     @Test public void open() {
@@ -52,7 +52,7 @@ public class FuelingTest {
         byte[] bytes = new OpenGasFlap().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
-        OpenGasFlap openGasFlap = (OpenGasFlap) CommandResolver.resolveBytes(waitingForBytes);
+        OpenGasFlap openGasFlap = (OpenGasFlap) CommandResolver.resolve(waitingForBytes);
         assertTrue(Arrays.equals(openGasFlap.getByteArray(), waitingForBytes));
     }
 

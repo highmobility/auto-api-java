@@ -65,7 +65,7 @@ public class CapabilitiesTest {
 
         Command command = null;
         try {
-            command = CommandResolver.resolveBytes(bytes);
+            command = CommandResolver.resolve(bytes);
         } catch (Exception e) {
             fail();
         }
@@ -143,7 +143,7 @@ public class CapabilitiesTest {
     public void climateCapability() {
         byte[] message = ByteUtils.bytesFromHex("001001010009002400010203040506");
         Capabilities capability = null;
-        capability = (Capabilities) CommandResolver.resolveBytes(message);
+        capability = (Capabilities) CommandResolver.resolve(message);
         if (capability == null) fail();
         assertTrue(capability.getCapability(GetClimateState.TYPE) != null);
         assertTrue(capability.isSupported(GetClimateState.TYPE));
@@ -158,7 +158,7 @@ public class CapabilitiesTest {
     public void heartRateCapability() {
         byte[] message = ByteUtils.bytesFromHex("001001010003002902");
         Capabilities capability = null;
-        capability = (Capabilities) CommandResolver.resolveBytes(message);
+        capability = (Capabilities) CommandResolver.resolve(message);
         if (capability == null) fail();
 
         assertTrue(capability.isSupported(SendHeartRate.TYPE));
@@ -171,7 +171,7 @@ public class CapabilitiesTest {
 
         Command command = null;
         try {
-            command = CommandResolver.resolveBytes(bytes);
+            command = CommandResolver.resolve(bytes);
         } catch (Exception e) {
             fail();
         }
@@ -185,7 +185,7 @@ public class CapabilitiesTest {
 
         Command command = null;
         try {
-            command = CommandResolver.resolveBytes(bytes);
+            command = CommandResolver.resolve(bytes);
         } catch (Exception e) {
             fail();
         }
@@ -337,7 +337,7 @@ public class CapabilitiesTest {
         assertTrue(capabilities.getByteArray().length == 3);
 
         byte[] bytes = ByteUtils.bytesFromHex("00100100");
-        Command command = CommandResolver.resolveBytes(bytes);
+        Command command = CommandResolver.resolve(bytes);
         testEmptyCommand((Capabilities) command);
     }
 

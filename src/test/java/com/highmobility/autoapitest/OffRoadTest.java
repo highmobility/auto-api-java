@@ -44,7 +44,7 @@ public class OffRoadTest {
 
     @Test public void state0Properties() {
         byte[] bytes = ByteUtils.bytesFromHex("005201");
-        Command state = CommandResolver.resolveBytes(bytes);
+        Command state = CommandResolver.resolve(bytes);
         assertTrue(((OffroadState)state).getRouteIncline() == null);
     }
 

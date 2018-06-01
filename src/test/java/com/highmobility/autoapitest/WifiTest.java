@@ -82,7 +82,7 @@ public class WifiTest {
 
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
-        ForgetNetwork command = (ForgetNetwork) CommandResolver.resolveBytes(waitingForBytes);
+        ForgetNetwork command = (ForgetNetwork) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getSsid().equals("HOME"));
     }
 
@@ -91,7 +91,7 @@ public class WifiTest {
         byte[] commandBytes = new EnableDisableWifi(true).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
-        EnableDisableWifi command = (EnableDisableWifi) CommandResolver.resolveBytes(waitingForBytes);
+        EnableDisableWifi command = (EnableDisableWifi) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.enable() == true);
     }
 

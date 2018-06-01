@@ -16,11 +16,10 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class LightConditionsTest {
+    Bytes bytes = new Bytes(
+            "00540101000447d8cc000200043e800000");
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "00540101000447d8cc000200043e800000");
-
         Command command = null;
         try {
             command = CommandResolver.resolve(bytes);
@@ -32,6 +31,14 @@ public class LightConditionsTest {
         LightConditions state = (LightConditions) command;
         assertTrue(state.getOutsideLight() == 111000f);
         assertTrue(state.getInsideLight() == .25f);
+    }
+
+    @Test public void build() {
+        LightConditions.Builder builder = new LightConditions.Builder();
+        builder.setOutsideLight(111000f);
+        builder.setInsideLight(.25f);
+        Command command = builder.build();
+        assertTrue(command.equals(bytes));
     }
 
     @Test public void get() {
