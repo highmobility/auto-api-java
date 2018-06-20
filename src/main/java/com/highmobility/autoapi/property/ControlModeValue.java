@@ -23,25 +23,22 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 
 /**
- * The possible control modes
- *
- * @deprecated use {@link ControlModeValue} instead.
+ * The possible control mode values.
  */
-@Deprecated
-public enum ControlMode implements HMProperty {
-    UNAVAILABLE((byte) 0x00),
-    AVAILABLE((byte) 0x01),
-    STARTED((byte) 0x02),
-    FAILED_TO_START((byte) 0x03),
-    ABORTED((byte) 0x04),
-    ENDED((byte) 0x05),
-    UNSUPPORTED((byte) 0xFF);
+public enum ControlModeValue implements HMProperty {
+    UNAVAILABLE((byte)0x00),
+    AVAILABLE((byte)0x01),
+    STARTED((byte)0x02),
+    FAILED_TO_START((byte)0x03),
+    ABORTED((byte)0x04),
+    ENDED((byte)0x05),
+    UNSUPPORTED((byte)0xFF);
 
-    public static ControlMode fromByte(byte value) throws CommandParseException {
-        ControlMode[] allValues = ControlMode.values();
+    public static ControlModeValue fromByte(byte value) throws CommandParseException {
+        ControlModeValue[] allValues = ControlModeValue.values();
 
         for (int i = 0; i < allValues.length; i++) {
-            ControlMode value1 = allValues[i];
+            ControlModeValue value1 = allValues[i];
             if (value1.getByte() == value) {
                 return value1;
             }
@@ -52,7 +49,7 @@ public enum ControlMode implements HMProperty {
 
     private byte value;
 
-    ControlMode(byte value) {
+    ControlModeValue(byte value) {
         this.value = value;
     }
 

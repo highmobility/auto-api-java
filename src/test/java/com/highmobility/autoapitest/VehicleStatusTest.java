@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static com.highmobility.autoapi.property.ControlMode.STARTED;
+import static com.highmobility.autoapi.property.ControlModeValue.STARTED;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
