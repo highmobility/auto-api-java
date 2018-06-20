@@ -178,10 +178,6 @@ public class Property implements HMProperty {
         return result;
     }
 
-    public static boolean getBit(int n, int k) {
-        return ((n >> k) & 1) == 1;
-    }
-
     public static float getFloat(byte[] bytes) throws IllegalArgumentException {
         if (bytes.length < 4) throw new IllegalArgumentException();
         return ByteBuffer.wrap(bytes).getFloat();

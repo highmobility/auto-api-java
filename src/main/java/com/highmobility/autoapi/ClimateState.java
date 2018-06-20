@@ -25,6 +25,7 @@ import com.highmobility.autoapi.property.AutoHvacState;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.utils.ByteUtils;
 
 /**
  * Command sent when a Get Climate State command is received by the car. Also sent once the HVAC
@@ -57,8 +58,6 @@ public class ClimateState extends CommandWithProperties {
     Boolean defrostingActive;
     Boolean ionisingActive;
     Float defrostingTemperature;
-    Boolean autoHvacConstant;
-    AutoHvacState[] autoHvacStates;
     AutoHvacProperty autoHvacState;
 
     /**
@@ -125,24 +124,6 @@ public class ClimateState extends CommandWithProperties {
     }
 
     /**
-     * @return Whether autoHVAC is constant(based on the car surroundings)
-     * @deprecated use {@link #getAutoHvacState()} instead
-     */
-    @Deprecated
-    public Boolean isAutoHvacConstant() {
-        return autoHvacConstant;
-    }
-
-    /**
-     * @return Array of State's that describe if and when the AutoHVAC is active.
-     * @deprecated use {@link #getAutoHvacState()} instead
-     */
-    @Deprecated
-    public AutoHvacState[] getAutoHvacStates() {
-        return autoHvacStates;
-    }
-
-    /**
      * @return The Auto HVAC state.
      */
     public AutoHvacProperty getAutoHvacState() {
@@ -185,15 +166,12 @@ public class ClimateState extends CommandWithProperties {
                     break;
                 case HVAC_PROFILE_IDENTIFIER:
                     byte[] value = property.getValueBytes();
-                    int hvacActiveOnDays = value[0];
-                    autoHvacConstant = Property.getBit(hvacActiveOnDays, 7);
-                    autoHvacStates = new AutoHvacState[7];
+                    byte hvacActiveOnDays = value[0];
 
                     for (int j = 0; j < 7; j++) {
-                        boolean active = Property.getBit(hvacActiveOnDays, j);
+                        boolean active = ByteUtils.getBit(hvacActiveOnDays, j);
                         int hour = value[1 + j * 2];
                         int minute = value[1 + j * 2 + 1];
-                        autoHvacStates[j] = new AutoHvacState(active, j, hour, minute);
                     }
 
                     autoHvacState = new AutoHvacProperty(property.getPropertyBytes());

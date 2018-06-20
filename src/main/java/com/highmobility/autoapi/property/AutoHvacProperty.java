@@ -21,6 +21,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.utils.ByteUtils;
 
 /**
  * AutoHvacProperty expects 7 weekdayStates for 7 days, even if its not active on some of the days.
@@ -83,12 +84,12 @@ public class AutoHvacProperty extends Property {
     public AutoHvacProperty(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length != 18) throw new CommandParseException();
-        int hvacActiveOnDays = bytes[3];
-        isConstant = Property.getBit(hvacActiveOnDays, 7);
+        byte hvacActiveOnDays = bytes[3];
+        isConstant = ByteUtils.getBit(hvacActiveOnDays, 7);
         weekdayWeekdayStates = new WeekdayState[7];
 
         for (int j = 0; j < 7; j++) {
-            boolean active = Property.getBit(hvacActiveOnDays, j);
+            boolean active = ByteUtils.getBit(hvacActiveOnDays, j);
             int hour = bytes[4 + j * 2];
             int minute = bytes[4 + j * 2 + 1];
             weekdayWeekdayStates[j] = new WeekdayState(active, j, hour, minute);
