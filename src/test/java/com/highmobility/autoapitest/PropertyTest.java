@@ -41,21 +41,21 @@ public class PropertyTest {
 
     @Test public void nonce() {
         CommandWithProperties command = getCommandWithSignature();
-        byte[] nonce = command.getNonce();
-        assertTrue(Arrays.equals(nonce, ByteUtils.bytesFromHex("324244433743483436")));
+        Bytes nonce = command.getNonce();
+        assertTrue(nonce.equals("324244433743483436"));
 
         // build with #signature()
     }
 
     @Test public void signature() {
         CommandWithProperties command = getCommandWithSignature();
-        assertTrue(Arrays.equals(command.getSignature(), ByteUtils.bytesFromHex
-                ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6")));
+        assertTrue(command.getSignature().equals
+                ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
 
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
         builder.setIsActive(true);
-        builder.setNonce(ByteUtils.bytesFromHex("324244433743483436"));
-        builder.setSignature(ByteUtils.bytesFromHex
+        builder.setNonce(new Bytes("324244433743483436"));
+        builder.setSignature(new Bytes
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
         ParkingBrakeState state = builder.build();
         assertTrue(state.equals(command));
@@ -77,8 +77,8 @@ public class PropertyTest {
 
     @Test public void signedBytes() {
         CommandWithProperties command = getCommandWithSignature();
-        byte[] signedBytes = command.getSignedBytes();
-        assertTrue(Arrays.equals(signedBytes, ByteUtils.bytesFromHex
+        Bytes signedBytes = command.getSignedBytes();
+        assertTrue(signedBytes.equals(new Bytes
                 (parkingBrakeCommand + "A00009324244433743483436")));
     }
 

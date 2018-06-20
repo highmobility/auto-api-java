@@ -22,6 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -55,6 +56,16 @@ public class Property implements HMProperty {
     public Property(byte identifier, byte[] value) {
         this(identifier, value != null ? value.length : 0);
         ByteUtils.setBytes(bytes, value, 3);
+    }
+
+    /**
+     * @param identifier The identifier byte of the property.
+     * @param value      The value of the property.
+     * @throws IllegalArgumentException When the value is not set.
+     */
+    public Property(byte identifier, Bytes value) {
+        this(identifier, value != null ? value.getLength() : 0);
+        ByteUtils.setBytes(bytes, value.getByteArray(), 3);
     }
 
     public Property(byte[] bytes) {

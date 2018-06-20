@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-  implementation('com.highmobility:hmkit-auto-api:1.6.8')
+  implementation('com.highmobility:hmkit-auto-api:1.8.0')
 }
 ```
 
@@ -67,13 +67,13 @@ if (capabilities.isSupported(LockState.TYPE)) {
 
 ### Send a command
 ```java
-byte[] commandBytes = new LockUnlockDoors(DoorLock.LOCKED).getBytes();
+Bytes commandBytes = new LockUnlockDoors(DoorLock.LOCKED).getBytes();
 sendCommand(commandBytes)
 ```
 
 ### Get a capability
 ```java
-byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
+Bytes commandBytes = new GetCapability(SendHeartRate.TYPE).getBytes();
 sendCommand(commandBytes)
 ```
 
@@ -112,18 +112,18 @@ builder.setNumberOfDoors(5).setNumberOfSeats(5);
 
 // use builders from other commands to append them to vehicle status
 TrunkState.Builder trunkState = new TrunkState.Builder();
-trunkState.setLockState(TrunkState.LockState.UNLOCKED);
-trunkState.setPosition(TrunkState.Position.OPEN);
+trunkState.setLockState(TrunkLockState.UNLOCKED);
+trunkState.setPosition(TrunkPosition.OPEN);
 builder.addProperty(new CommandProperty(trunkState.build()));
 
 ControlMode.Builder controlCommand = new ControlMode.Builder();
-controlCommand.setMode(ControlMode.Mode.STARTED);
+controlCommand.setMode(ControlModeValue.STARTED);
 builder.addProperty(new CommandProperty(controlCommand.build()));
 
 // build the actual vehicleStatus command
 VehicleStatus status = builder.build();
-// get the bytes that can now be forwarded to the device
-byte[] command = status.getBytes();
+// get the raw bytes of the vehicle status
+byte[] command = status.getByteArray();
 ```
 
 A signature and a nonce can be added to any of the command's builders:
@@ -131,13 +131,13 @@ A signature and a nonce can be added to any of the command's builders:
 ```java
 VehicleStatus.Builder builder = getVehicleStatusBuilderWithoutSignature();
 // set the nonce
-builder.setNonce(ByteUtils.bytesFromHex("324244433743483436"));
+builder.setNonce(new Bytes("324244433743483436"));
 // get the temporary data that needs to be signed
-byte[] bytesToBeSigned = builder.build().getSignedBytes();
+Bytes bytesToBeSigned = builder.build().getSignedBytes();
 // sign it
-byte[] sig = Crypto.sign(bytesToBeSigned, privateKey);
+Bytes sig = Crypto.sign(bytesToBeSigned, privateKey);
 // add the signature property
 builder.setSignature(sig);
 // get the final bytes with signature
-byte[] command = builder.build().getBytes();
+Bytes command = builder.build();
 ```
