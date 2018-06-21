@@ -39,16 +39,6 @@ public class SetChassisPosition extends Command {
 
     /**
      * @param position The chassis position in mm calculated from the lowest point
-     * @deprecated use {@link #SetChassisPosition(int)} instead
-     */
-    @Deprecated
-    public SetChassisPosition(Integer position) {
-        super(TYPE.addByte(position.byteValue()));
-        this.position = position;
-    }
-
-    /**
-     * @param position The chassis position in mm calculated from the lowest point
      */
     public SetChassisPosition(int position) {
         super(TYPE.addByte(Property.intToBytes(position, 1)[0]));

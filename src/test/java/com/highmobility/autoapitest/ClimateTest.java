@@ -10,7 +10,6 @@ import com.highmobility.autoapi.StartStopDefrosting;
 import com.highmobility.autoapi.StartStopHvac;
 import com.highmobility.autoapi.StartStopIonising;
 import com.highmobility.autoapi.property.AutoHvacProperty;
-import com.highmobility.autoapi.property.AutoHvacState;
 import com.highmobility.utils.Base64;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;

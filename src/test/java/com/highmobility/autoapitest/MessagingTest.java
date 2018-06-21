@@ -35,7 +35,7 @@ public class MessagingTest {
         assertTrue(command.getClass() == SendMessage.class);
         SendMessage state = (SendMessage) command;
         assertTrue(state.getRecipientHandle().equals("+1 555-555-555"));
-        assertTrue(state.getText().equals("Hello you too"));
+        assertTrue(state.getMessage().equals("Hello you too"));
     }
 
     @Test public void received() {
