@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.DoorLockProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.doors.DoorLocation;
 import com.highmobility.autoapi.property.doors.DoorLockAndPositionState;
@@ -43,36 +42,9 @@ public class LockState extends CommandWithProperties {
     private static final byte INSIDE_LOCK_IDENTIFIER = 0x02;
     private static final byte OUTSIDE_LOCK_IDENTIFIER = 0x03;
 
-    DoorLockProperty[] lockStates;
-
     DoorLockAndPositionState[] doorLockAndPositionStates;
     DoorLockState[] insideDoorLockStates;
     DoorLockState[] outsideDoorLockStates;
-
-    /**
-     * @return The lock and position states for all of the doors.
-     * @deprecated use {@link #getDoorLockAndPositionStates()} instead.
-     */
-    @Deprecated
-    public DoorLockProperty[] getDoorLockStates() {
-        return lockStates;
-    }
-
-    /**
-     * Get the lock and position state for a specific door.
-     *
-     * @param location The location of the door.
-     * @return The lock and position state.
-     * @deprecated use {@link #getDoorLockAndPositionState(DoorLocation)}
-     */
-    @Deprecated
-    public DoorLockProperty getDoorLockState(DoorLockProperty.Location location) {
-        for (DoorLockProperty state : getDoorLockStates()) {
-            if (state.getLocation() == location) return state;
-        }
-
-        return null;
-    }
 
     /**
      * @return The lock and position states for all of the doors.
@@ -157,7 +129,6 @@ public class LockState extends CommandWithProperties {
     public LockState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        ArrayList<DoorLockProperty> builder = new ArrayList<>();
         ArrayList<DoorLockAndPositionState> lockAndPositionStatesBuilder = new ArrayList<>();
         ArrayList<DoorLockState> insideLocksBuilder = new ArrayList<>();
         ArrayList<DoorLockState> outsideLocksBuilder = new ArrayList<>();
@@ -166,7 +137,6 @@ public class LockState extends CommandWithProperties {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case DoorLockAndPositionState.IDENTIFIER:
-                    builder.add(new DoorLockProperty(property.getPropertyBytes()));
                     lockAndPositionStatesBuilder.add(new DoorLockAndPositionState(property
                             .getPropertyBytes()));
                     break;
@@ -179,7 +149,6 @@ public class LockState extends CommandWithProperties {
             }
         }
 
-        lockStates = builder.toArray(new DoorLockProperty[builder.size()]);
         doorLockAndPositionStates = lockAndPositionStatesBuilder.toArray(new
                 DoorLockAndPositionState[lockAndPositionStatesBuilder.size()]);
         insideDoorLockStates = insideLocksBuilder.toArray(new DoorLockState[insideLocksBuilder
@@ -194,7 +163,6 @@ public class LockState extends CommandWithProperties {
 
     private LockState(Builder builder) {
         super(builder);
-        lockStates = builder.states.toArray(new DoorLockProperty[builder.states.size()]);
 
         doorLockAndPositionStates = builder.lockAndPositionStates.toArray(new
                 DoorLockAndPositionState[builder.lockAndPositionStates.size()]);
@@ -205,46 +173,12 @@ public class LockState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private List<DoorLockProperty> states = new ArrayList<>();
-
         private List<DoorLockAndPositionState> lockAndPositionStates = new ArrayList<>();
         private List<DoorLockState> insideLockStates = new ArrayList<>();
         private List<DoorLockState> outsideLockStates = new ArrayList<>();
 
         public Builder() {
             super(TYPE);
-        }
-
-        /**
-         * Set the door lock states.
-         *
-         * @param states The lock states.
-         * @return The builder.
-         * @deprecated use {@link #setLockAndPositionStates(DoorLockAndPositionState[])} instead.
-         */
-        @Deprecated
-        public Builder setDoorLockStates(DoorLockProperty[] states) {
-            this.states = Arrays.asList(states);
-
-            for (int i = 0; i < states.length; i++) {
-                addProperty(states[i]);
-            }
-
-            return this;
-        }
-
-        /**
-         * Add one door lock state.
-         *
-         * @param state The lock state.
-         * @return The builder.
-         * @deprecated use {@link #addLockAndPositionState(DoorLockAndPositionState)} instead.
-         */
-        @Deprecated
-        public Builder addDoorLockState(DoorLockProperty state) {
-            addProperty(state);
-            this.states.add(state);
-            return this;
         }
 
         /**

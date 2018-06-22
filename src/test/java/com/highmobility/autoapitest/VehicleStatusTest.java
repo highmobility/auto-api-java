@@ -14,7 +14,6 @@ import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.TrunkLockState;
 import com.highmobility.autoapi.property.TrunkPosition;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.Before;
@@ -22,7 +21,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static com.highmobility.autoapi.property.ControlMode.STARTED;
+import static com.highmobility.autoapi.property.ControlModeValue.STARTED;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -35,7 +34,7 @@ public class VehicleStatusTest {
                     "0C0004402000000D000200F50E000101" // l7
     );
 
-    com.highmobility.autoapi.VehicleStatus vehicleStatus;
+    VehicleStatus vehicleStatus;
 
     @Before
     public void setup() {
@@ -159,17 +158,17 @@ public class VehicleStatusTest {
 
     @Test public void createWithSignature() {
         VehicleStatus.Builder builder = getVehicleStatusBuilderWithoutSignature();
-        byte[] nonce = ByteUtils.bytesFromHex("324244433743483436");
+        Bytes nonce = new Bytes("324244433743483436");
         builder.setNonce(nonce);
-        byte[] signature = ByteUtils.bytesFromHex
+        Bytes signature = new Bytes
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6");
         builder.setSignature(signature);
 
         VehicleStatus status = builder.build();
         byte[] command = status.getByteArray();
         assertTrue(Arrays.equals(command, command));
-        assertTrue(Arrays.equals(status.getNonce(), nonce));
-        assertTrue(Arrays.equals(status.getSignature(), signature));
+        assertTrue(status.getNonce().equals(nonce));
+        assertTrue(status.getSignature().equals(signature));
     }
 
     @Test public void maiduTest() {

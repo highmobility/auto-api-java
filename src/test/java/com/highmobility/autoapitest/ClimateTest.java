@@ -10,7 +10,6 @@ import com.highmobility.autoapi.StartStopDefrosting;
 import com.highmobility.autoapi.StartStopHvac;
 import com.highmobility.autoapi.StartStopIonising;
 import com.highmobility.autoapi.property.AutoHvacProperty;
-import com.highmobility.autoapi.property.AutoHvacState;
 import com.highmobility.utils.Base64;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -51,25 +50,12 @@ public class ClimateTest {
         assertTrue(state.isIonisingActive() == false);
         assertTrue(state.getDefrostingTemperature() == 21.5f);
 
-        assertTrue(state.isAutoHvacConstant() == false);
-        AutoHvacState[] autoHvacStates = state.getAutoHvacStates();
-        assertTrue(autoHvacStates != null);
-        assertTrue(autoHvacStates.length == 7);
+
 
         assertTrue(state.getAutoHvacState().isConstant() == false);
         AutoHvacProperty.WeekdayState[] weekdayWeekdayStates = state.getAutoHvacState().getStates();
         assertTrue(weekdayWeekdayStates != null);
         assertTrue(weekdayWeekdayStates.length == 7);
-
-        assertTrue(autoHvacStates[0].isActive() == false);
-        assertTrue(autoHvacStates[5].isActive() == true);
-        assertTrue(autoHvacStates[5].getDay() == 5);
-        assertTrue(autoHvacStates[5].getStartHour() == 7);
-        assertTrue(autoHvacStates[5].getStartMinute() == 30);
-        assertTrue(autoHvacStates[6].isActive() == true);
-        assertTrue(autoHvacStates[6].getDay() == 6);
-        assertTrue(autoHvacStates[6].getStartHour() == 7);
-        assertTrue(autoHvacStates[6].getStartMinute() == 30);
 
         assertTrue(weekdayWeekdayStates[0].isActive() == false);
         assertTrue(weekdayWeekdayStates[5].isActive() == true);

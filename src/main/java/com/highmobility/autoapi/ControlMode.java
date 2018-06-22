@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ControlModeValue;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
@@ -31,7 +32,7 @@ import com.highmobility.autoapi.property.Property;
 public class ControlMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x01);
 
-    com.highmobility.autoapi.property.ControlMode mode;
+    ControlModeValue mode;
     Integer angle;
 
     /**
@@ -44,7 +45,7 @@ public class ControlMode extends CommandWithProperties {
     /**
      * @return the control mode
      */
-    public com.highmobility.autoapi.property.ControlMode getMode() {
+    public ControlModeValue getMode() {
         return mode;
     }
 
@@ -56,8 +57,7 @@ public class ControlMode extends CommandWithProperties {
 
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
-                    mode = com.highmobility.autoapi.property.ControlMode.fromByte(property
-                            .getValueByte());
+                    mode = ControlModeValue.fromByte(property.getValueByte());
                     break;
                 case 0x02:
                     angle = Property.getUnsignedInt(property.getValueBytes());
@@ -78,7 +78,7 @@ public class ControlMode extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private int angle;
-        private com.highmobility.autoapi.property.ControlMode mode;
+        private ControlModeValue mode;
 
         public Builder() {
             super(TYPE);
@@ -90,7 +90,7 @@ public class ControlMode extends CommandWithProperties {
             return this;
         }
 
-        public Builder setMode(com.highmobility.autoapi.property.ControlMode mode) {
+        public Builder setMode(ControlModeValue mode) {
             this.mode = mode;
             addProperty(mode);
             return this;

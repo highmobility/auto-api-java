@@ -50,15 +50,6 @@ public class SendMessage extends CommandWithProperties {
         return message;
     }
 
-    /**
-     * @return The message content text.
-     * @deprecated use {@link #getMessage()} instead
-     */
-    @Deprecated
-    public String getText() {
-        return message;
-    }
-
     public SendMessage(byte[] bytes) {
         super(bytes);
 

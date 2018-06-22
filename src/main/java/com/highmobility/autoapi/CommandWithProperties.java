@@ -24,7 +24,7 @@ import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,21 +40,21 @@ public class CommandWithProperties extends Command {
     private static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
 
     Property[] properties;
-    byte[] nonce;
-    byte[] signature;
+    Bytes nonce;
+    Bytes signature;
     Calendar timestamp;
 
     /**
      * @return The nonce for the signature.
      */
-    public byte[] getNonce() {
+    public Bytes getNonce() {
         return nonce;
     }
 
     /**
      * @return The signature for the signed bytes(the whole command except the signature property).
      */
-    public byte[] getSignature() {
+    public Bytes getSignature() {
         return signature;
     }
 
@@ -68,8 +68,8 @@ public class CommandWithProperties extends Command {
     /**
      * @return The bytes that are signed with the signature
      */
-    public byte[] getSignedBytes() {
-        return Arrays.copyOfRange(bytes, 0, bytes.length - 64 - 3);
+    public Bytes getSignedBytes() {
+        return new Bytes(Arrays.copyOfRange(bytes, 0, bytes.length - 64 - 3));
     }
 
     /**
@@ -121,12 +121,12 @@ public class CommandWithProperties extends Command {
                 if (propertyEnumeration.size != 9)
                     continue; // invalid nonce length, just ignore
 
-                nonce = Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
-                        propertyEnumeration.valueStart + propertyEnumeration.size);
+                nonce = new Bytes(Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
+                        propertyEnumeration.valueStart + propertyEnumeration.size));
             } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
                 if (propertyEnumeration.size != 64) continue; // ignore invalid length
-                signature = Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
-                        propertyEnumeration.valueStart + propertyEnumeration.size);
+                signature = new Bytes(Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
+                        propertyEnumeration.valueStart + propertyEnumeration.size));
             } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
                 timestamp = Property.getCalendar(bytes, propertyEnumeration.valueStart);
             }
@@ -148,9 +148,9 @@ public class CommandWithProperties extends Command {
             bytes = ByteUtils.concatBytes(bytes, propertyBytes);
 
             if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
-                nonce = Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length);
+                nonce = new Bytes(Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length));
             } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
-                signature = Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length);
+                signature = new Bytes(Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length));
             } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
                 timestamp = Property.getCalendar(propertyBytes, 3);
             }
@@ -177,8 +177,8 @@ public class CommandWithProperties extends Command {
 
     public static class Builder {
         private Type type;
-        private byte[] nonce;
-        private byte[] signature;
+        private Bytes nonce;
+        private Bytes signature;
 
         private Calendar timestamp;
 
@@ -197,7 +197,7 @@ public class CommandWithProperties extends Command {
          * @param nonce The nonce used for the signature.
          * @return The nonce.
          */
-        public Builder setNonce(byte[] nonce) {
+        public Builder setNonce(Bytes nonce) {
             this.nonce = nonce;
             addProperty(new Property((byte) 0xA0, nonce));
             return this;
@@ -208,7 +208,7 @@ public class CommandWithProperties extends Command {
          *                  signature property)
          * @return The builder.
          */
-        public Builder setSignature(byte[] signature) {
+        public Builder setSignature(Bytes signature) {
             this.signature = signature;
             addProperty(new Property((byte) 0xA1, signature));
             return this;

@@ -382,18 +382,6 @@ public class VehicleStatus extends CommandWithProperties {
         }
 
         /**
-         * @param color The color name.
-         * @return The builder.
-         * @deprecated use {@link #setColorName(String)} instead
-         */
-        @Deprecated
-        public Builder setColor(String color) {
-            this.color = color;
-            addProperty(new StringProperty((byte) 0x08, color));
-            return this;
-        }
-
-        /**
          * @param color The color name
          * @return The builder.
          */

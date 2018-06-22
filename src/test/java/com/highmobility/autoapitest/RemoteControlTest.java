@@ -7,6 +7,7 @@ import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetControlMode;
 import com.highmobility.autoapi.StartControlMode;
 import com.highmobility.autoapi.StopControlMode;
+import com.highmobility.autoapi.property.ControlModeValue;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class RemoteControlTest {
         assertTrue(command.is(ControlMode.TYPE));
         ControlMode state = (ControlMode) command;
         assertTrue(state.getAngle() == 50);
-        assertTrue(state.getMode() == com.highmobility.autoapi.property.ControlMode.STARTED);
+        assertTrue(state.getMode() == ControlModeValue.STARTED);
     }
 
     @Test public void get() {
