@@ -22,12 +22,13 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.ByteUtils;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class Type {
     static HashMap<Type, Type> stateCommands;
+
     static {
         stateCommands = new HashMap<>();
         stateCommands.put(GetDiagnosticsState.TYPE, DiagnosticsState.TYPE);
@@ -71,6 +72,10 @@ public class Type {
         return identifierAndType;
     }
 
+    public byte[] getIdentifier() {
+        return new byte[]{identifierAndType[0], identifierAndType[1]};
+    }
+
     public byte getType() {
         return identifierAndType[2];
     }
@@ -80,7 +85,6 @@ public class Type {
     }
 
     /**
-     *
      * @param identifierAndType 2 identifier bytes and 1 type byte
      */
     public Type(byte[] identifierAndType) {
@@ -97,7 +101,7 @@ public class Type {
     }
 
     Type(int identifierFirstByte, int identifierSecondByte, int type) {
-        this(new byte[] { (byte) identifierFirstByte, (byte) identifierSecondByte, (byte) type} );
+        this(new byte[]{(byte) identifierFirstByte, (byte) identifierSecondByte, (byte) type});
     }
 
     byte[] addByte(byte extraByte) {
@@ -112,13 +116,9 @@ public class Type {
         return ByteUtils.concatBytes(identifierAndType, extraBytes);
     }
 
-    byte[] getIdentifier() {
-        return new byte[] { identifierAndType[0], identifierAndType[1] };
-    }
-
     @Override public boolean equals(Object obj) {
         return obj.getClass() == Type.class
-                && Arrays.equals(((Type)obj).getIdentifierAndType(), getIdentifierAndType());
+                && Arrays.equals(((Type) obj).getIdentifierAndType(), getIdentifierAndType());
     }
 
     @Override public String toString() {

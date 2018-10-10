@@ -401,10 +401,7 @@ public class CommandResolver {
                         .trimmedBytes(bytes, 3)) + ".. ");
                 command = new Command(bytes);
             }
-        } catch (
-                Exception e)
-
-        {
+        } catch (Exception e) {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
             Command.logger.info("Failed to parse command " + ByteUtils.hexFromBytes(ByteUtils
@@ -415,12 +412,37 @@ public class CommandResolver {
         return command;
     }
 
+    /**
+     * Try to parse the command bytes to a more specific Command subclass. Check the returned
+     * object's instance type (instanceOf) to understand which command was received.
+     *
+     * @param base64 the raw command bytes in base64.
+     * @return The parsed command.
+     */
     public static Command resolveBase64(String base64) {
         return resolve(Base64.decode(base64));
     }
 
+    /**
+     * Try to parse the command bytes to a more specific Command subclass. Check the returned
+     * object's instance type (instanceOf) to understand which command was received.
+     *
+     * @param hexBytes the raw command bytes in hex.
+     * @return The parsed command.
+     */
     public static Command resolveHex(String hexBytes) {
         return resolve(ByteUtils.bytesFromHex(hexBytes));
+    }
+
+    /**
+     * Try to parse the command bytes to a more specific Command subclass. Check the returned
+     * object's instance type (instanceOf) to understand which command was received.
+     *
+     * @param value the raw command bytes in hex or base64.
+     * @return The parsed command.
+     */
+    public static Command resolve(String value) {
+        return resolve(new Bytes(value));
     }
 
     static boolean bytesAreForIdentifier(byte[] bytes, Identifier identifier) {
