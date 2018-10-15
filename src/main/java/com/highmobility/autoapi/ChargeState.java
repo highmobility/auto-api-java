@@ -23,11 +23,15 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.ChargeTimer;
 import com.highmobility.autoapi.property.ChargingState;
+import com.highmobility.autoapi.property.charging.ChargingTimer;
+import com.highmobility.autoapi.property.charging.DepartureTime;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.charging.PlugType;
 import com.highmobility.autoapi.property.PortState;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Time;
 import com.highmobility.utils.ByteUtils;
 
 import java.util.ArrayList;
@@ -51,7 +55,16 @@ public class ChargeState extends CommandWithProperties {
     private static final byte TIME_TO_COMPLETE_CHARGE_IDENTIFIER = 0x09;
     private static final byte CHARGE_RATE_IDENTIFIER = 0x0A;
 
-    ChargingState chargingState;
+    private static final byte MAX_CHARGING_CURRENT = 0x0E;
+    private static final byte PLUG_TYPE = 0x0F;
+    private static final byte CHARGING_WINDOW_CHOSEN = 0x10;
+    private static final byte DEPARTURE_TIMES = 0x11;
+    private static final byte REDUCTION_OF_CHARGING_CURRENT_TIMES = 0x13;
+    private static final byte BATTERY_TEMPERATURE = 0x14;
+    private static final byte TIMERS = 0x15;
+    private static final byte PLUGGED_IN = 0x16;
+    private static final byte STATE = 0x17;
+
     Integer estimatedRange;
     Float batteryLevel;
     Float batteryCurrentAC;
@@ -63,109 +76,170 @@ public class ChargeState extends CommandWithProperties {
     Float chargeLimit;
     Integer timeToCompleteCharge;
 
-    Float chargeRate;
+    Float chargingRate;
     PortState chargePortState;
 
     ChargeMode chargeMode;
     ChargeTimer[] chargeTimers;
 
-    /**
-     * @return The charge state
-     */
-    public ChargingState getChargingState() {
-        return chargingState;
-    }
+    Float maxChargingCurrent;
+    PlugType plugType;
+    Boolean chargingWindowChosen;
+    DepartureTime[] departureTimes;
+
+    Time[] reductionOfChargingCurrentTimes;
+    Float batteryTemperature;
+    ChargingTimer[] timers;
+    Boolean pluggedIn;
+    ChargingState activeState;
 
     /**
-     * @return The estimated range in km
+     * @return The estimated range in km.
      */
     public Integer getEstimatedRange() {
         return estimatedRange;
     }
 
     /**
-     * @return The battery level percentage
+     * @return The battery level percentage.
      */
     public Float getBatteryLevel() {
         return batteryLevel;
     }
 
     /**
-     * @return The battery current in AC
+     * @return The battery current in AC.
      */
     public Float getBatteryCurrentAC() {
         return batteryCurrentAC;
     }
 
     /**
-     * @return The battery current in DC
+     * @return The battery current in DC.
      */
     public Float getBatteryCurrentDC() {
         return batteryCurrentDC;
     }
 
     /**
-     * @return The Charger voltage in AC
+     * @return The Charger voltage in AC.
      */
     public Float getChargerVoltageAC() {
         return chargerVoltageAC;
     }
 
     /**
-     * @return The Charger voltage in DC
+     * @return The Charger voltage in DC.
      */
     public Float getChargerVoltageDC() {
         return chargerVoltageDC;
     }
 
     /**
-     * @return The Charge limit percentage
+     * @return The Charge limit percentage.
      */
     public Float getChargeLimit() {
         return chargeLimit;
     }
 
     /**
-     * @return The time to complete the charge in minutes
+     * @return The time to complete the charge in minutes.
      */
     public Integer getTimeToCompleteCharge() {
         return timeToCompleteCharge;
     }
 
     /**
-     * @return The charge rate in kW, when charging
+     * @return The charging rate in kW, when charging.
+     * @deprecated use {@link #getChargingRate} instead.
      */
+    @Deprecated
     public Float getChargeRate() {
-        return chargeRate;
+        return chargingRate;
     }
 
     /**
-     * @return The charge port state
+     * @return The charging rate in kW, when charging.
+     */
+    public Float getChargingRate() {
+        return chargingRate;
+    }
+
+    /**
+     * @return The charge port state.
      */
     public PortState getChargePortState() {
         return chargePortState;
     }
 
     /**
-     * @return The charge mode
+     * @return The charge mode.
      */
     public ChargeMode getChargeMode() {
         return chargeMode;
     }
 
+    // TODO: 15/10/2018 implement
+
     /**
-     * @return All of the charge timers
+     * @return The maximum charging current.
      */
+    public Float getMaxChargingCurrent() {
+        return maxChargingCurrent;
+    }
+
+    /**
+     * @return The plug type.
+     */
+    public PlugType getPlugType() {
+        return plugType;
+    }
+
+    /**
+     * @return Indication on whether charging window is chosen.
+     */
+    public Boolean getChargingWindowChosen() {
+        return chargingWindowChosen;
+    }
+
+    /**
+     * @return The departure times.
+     */
+    public DepartureTime[] getDepartureTimes() {
+        return departureTimes;
+    }
+
+    /**
+     * @return The reduction of charging current times.
+     */
+    public Time[] getReductionOfChargingCurrentTimes() {
+        return reductionOfChargingCurrentTimes;
+    }
+
+    /**
+     * @return The battery temperature in Celsius.
+     */
+    public Float getBatteryTemperature() {
+        return batteryTemperature;
+    }
+
+    /**
+     * @return All of the charge timers.
+     * @deprecated use {@link #getTimers()} instead.
+     */
+    @Deprecated
     public ChargeTimer[] getChargeTimers() {
         return chargeTimers;
     }
 
     /**
-     * Get the charge timer for the given type
+     * Get the charge timer for the given type.
      *
-     * @param type The charge timer type
-     * @return The charge timer
+     * @param type The charge timer type.
+     * @return The charge timer.
+     * @deprecated use {@link #getTimer(ChargingTimer.Type)} instead.
      */
+    @Deprecated
     public ChargeTimer getChargeTimer(ChargeTimer.Type type) {
         if (chargeTimers != null) {
             for (ChargeTimer timer : chargeTimers) {
@@ -173,6 +247,52 @@ public class ChargeState extends CommandWithProperties {
             }
         }
         return null;
+    }
+
+    /**
+     * @return The charging timers.
+     */
+    public ChargingTimer[] getTimers() {
+        return timers;
+    }
+
+    /**
+     * Get the charge timer for the given type.
+     *
+     * @param type The charge timer type.
+     * @return The charge timer.
+     */
+    public ChargingTimer getTimer(ChargingTimer.Type type) {
+        if (timers != null) {
+            for (ChargingTimer timer : timers) {
+                if (timer.getType() == type) return timer;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return The plugged in state.
+     */
+    public Boolean getPluggedIn() {
+        return pluggedIn;
+    }
+
+    /**
+     * @return The charging active state.
+     */
+    public ChargingState getActiveState() { // TODO: 15/10/2018 rename to ChargingActiveState? in
+        // doc ActiveState
+        return activeState;
+    }
+
+    /**
+     * @return The charging active state.
+     * @deprecated use {@link #getActiveState} instead.
+     */
+    @Deprecated
+    public ChargingState getChargingState() {
+        return activeState;
     }
 
     public ChargeState(byte[] bytes) {
@@ -183,7 +303,7 @@ public class ChargeState extends CommandWithProperties {
             try {
                 switch (property.getPropertyIdentifier()) {
                     case ChargingState.IDENTIFIER:
-                        chargingState = ChargingState.fromByte(property.getValueByte());
+                        activeState = ChargingState.fromByte(property.getValueByte());
                         break;
                     case ESTIMATED_RANGE_IDENTIFIER:
                         estimatedRange = Property.getUnsignedInt(property.getValueBytes());
@@ -210,7 +330,7 @@ public class ChargeState extends CommandWithProperties {
                         timeToCompleteCharge = Property.getUnsignedInt(property.getValueBytes());
                         break;
                     case CHARGE_RATE_IDENTIFIER:
-                        chargeRate = Property.getFloat(property.getValueBytes());
+                        chargingRate = Property.getFloat(property.getValueBytes());
                         break;
                     case PortState.IDENTIFIER:
                         chargePortState = PortState.fromByte(property.getValueByte());
@@ -219,6 +339,7 @@ public class ChargeState extends CommandWithProperties {
                         chargeMode = ChargeMode.fromByte(property.getValueByte());
                         break;
                     case ChargeTimer.IDENTIFIER:
+                        // TODO: 15/10/2018 populate both timers and chargetimers
                         if (chargeTimers == null) chargeTimers = new ChargeTimer[1];
                         else chargeTimers = Arrays.copyOf(chargeTimers, chargeTimers.length + 1);
                         chargeTimers[chargeTimers.length - 1] = new ChargeTimer(property
@@ -237,7 +358,7 @@ public class ChargeState extends CommandWithProperties {
 
     private ChargeState(Builder builder) {
         super(builder);
-        chargingState = builder.chargingState;
+        activeState = builder.chargingState;
         estimatedRange = builder.estimatedRange;
         batteryLevel = builder.batteryLevel;
         batteryCurrentAC = builder.batteryCurrentAC;
@@ -246,7 +367,7 @@ public class ChargeState extends CommandWithProperties {
         chargerVoltageDC = builder.chargerVoltageDC;
         chargeLimit = builder.chargeLimit;
         timeToCompleteCharge = builder.timeToCompleteCharge;
-        chargeRate = builder.chargeRate;
+        chargingRate = builder.chargeRate;
         chargePortState = builder.chargePortState;
         chargeMode = builder.chargeMode;
         chargeTimers = builder.chargeTimers.toArray(new ChargeTimer[builder.chargeTimers.size()]);

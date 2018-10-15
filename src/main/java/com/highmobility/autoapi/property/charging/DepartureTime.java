@@ -18,37 +18,40 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi;
+package com.highmobility.autoapi.property.charging;
 
-import com.highmobility.autoapi.property.ChargeMode;
+import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Time;
 
-/**
- * Set the charge mode of the car.
- */
-public class SetChargeMode extends Command {
-    public static final Type TYPE = new Type(Identifier.CHARGING, 0x15);
-
-    ChargeMode chargeMode;
+public class DepartureTime extends Property {
+    private static final byte IDENTIFIER = 0x11;
+    boolean active;
+    Time time;
 
     /**
-     * @return The charge mode.
+     * @return The activation state.
      */
-    public ChargeMode getChargeMode() {
-        return chargeMode;
+    public boolean isActive() {
+        return active;
     }
 
     /**
-     * Set the charge mode of the car.
-     *
-     * @param chargeMode The charge mode.
+     * @return The departure time.
      */
-    public SetChargeMode(ChargeMode chargeMode) {
-        super(TYPE.addByte(chargeMode.getByte()));
-        this.chargeMode = chargeMode;
+    public Time getTime() {
+        return time;
     }
 
-    SetChargeMode(byte[] bytes) throws CommandParseException {
+    public DepartureTime(boolean active, int time) {
+        super(IDENTIFIER, 3);
+        bytes[3] = Property.boolToByte(active);
+        // TODO: 12/10/2018  
+    }
+
+    public DepartureTime(byte[] bytes) throws CommandParseException {
         super(bytes);
-        this.chargeMode = ChargeMode.fromByte(bytes[3]);
+        if (bytes.length < 6) throw new CommandParseException();
+        // TODO: 12/10/2018
     }
 }

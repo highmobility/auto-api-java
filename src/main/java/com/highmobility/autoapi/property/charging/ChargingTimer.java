@@ -18,19 +18,18 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.charging.ChargingTimer;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 
 import java.util.Calendar;
 
 /**
- * @deprecated use {@link ChargingTimer} instead.
+ * The charging timer.
  */
-@Deprecated
-public class ChargeTimer extends Property {
+public class ChargingTimer extends Property {
     public static final byte IDENTIFIER = 0x15;
     Type type;
     Calendar time;
@@ -43,18 +42,19 @@ public class ChargeTimer extends Property {
         return time;
     }
 
-    public ChargeTimer(byte[] bytes) throws CommandParseException {
+    public ChargingTimer(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes == null || bytes.length < 12) throw new CommandParseException();
         type = Type.fromByte(bytes[3]);
         time = Property.getCalendar(bytes, 4);
     }
 
-    public ChargeTimer(Type type, Calendar time) throws IllegalArgumentException {
+    public ChargingTimer(Type type, Calendar time) throws IllegalArgumentException {
         this(IDENTIFIER, type, time);
     }
 
-    public ChargeTimer(byte identifier, Type type, Calendar time) throws IllegalArgumentException {
+    public ChargingTimer(byte identifier, Type type, Calendar time) throws
+            IllegalArgumentException {
         super(identifier, 9);
         bytes[3] = type.getByte();
         ByteUtils.setBytes(bytes, Property.calendarToBytes(time), 4);

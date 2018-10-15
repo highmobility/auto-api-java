@@ -13,7 +13,7 @@ import com.highmobility.autoapi.property.ChargeTimer;
 import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.PortState;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -27,8 +27,8 @@ import static org.junit.Assert.fail;
 public class ChargingTest {
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
-                "0023010100010202000200FF03000132040004bf19999a050004bf19999a06000443c8000007000443cd00000800015A090002003C0A0004000000000B0001010C0001000D00090212010A10200500000D00090112010A1020060000");
+        Bytes bytes = new Bytes(
+                "002301020200FF0301320404bf19999a0504bf19999a060443c80000070443cd000008015A09023C0A04000000000B01010C01000E0441c800000F010110010011030110201302000014044219999a15090212010A1020050000160101170101");
 
         Command command = null;
         try {
@@ -39,7 +39,7 @@ public class ChargingTest {
 
         assertTrue(command.is(ChargeState.TYPE));
         ChargeState state = (ChargeState) command;
-        assertTrue(state.getChargingState() == ChargingState.CHARGING);
+        assertTrue(state.getActiveState() == ChargingState.CHARGING);
         assertTrue(state.getEstimatedRange() == 255);
         assertTrue(state.getBatteryLevel() == .5f);
         assertTrue(state.getBatteryCurrentAC() == -.6f);
@@ -48,9 +48,32 @@ public class ChargingTest {
         assertTrue(state.getChargerVoltageDC() == 410f);
         assertTrue(state.getChargeLimit() == .9f);
         assertTrue(state.getTimeToCompleteCharge() == 60);
-        assertTrue(state.getChargeRate() == 0f);
+        assertTrue(state.getChargingRate() == 0f);
         assertTrue(state.getChargePortState() == PortState.OPEN);
         assertTrue(state.getChargeMode() == ChargeMode.IMMEDIATE);
+
+        /**
+         * estimatedRange
+         * batteryLevel
+         * batteryCurrentAc
+         * batteryCurrentDc
+         * chargerVoltageAc
+         * chargerVoltageDc
+         * chargeLimit
+         * timeToCompleteCharge
+         * chargingRateKw
+         * chargePortState
+         * chargeMode
+         * maxChargingCurrent
+         * plugType
+         * chargingWindowChosen
+         * departureTimes
+         * reductionTimes
+         * batteryTemperature
+         * timers
+         * pluggedIn
+         * activeState
+         */
 
         try {
             Calendar departureDate = state.getChargeTimer(ChargeTimer.Type.DEPARTURE_TIME)
@@ -84,7 +107,7 @@ public class ChargingTest {
     }
 
     @Test public void build() {
-        byte[] expectedBytes = ByteUtils.bytesFromHex(
+        Bytes expectedBytes = new Bytes(
                 "0023010100010202000200FF03000132040004bf19999a050004bf19999a06000443c8000007000443cd00000800015A090002003C0A0004000000000B0001010C0001000D00090212010A10200500000D00090112010A1020060000");
         ChargeState.Builder builder = new ChargeState.Builder();
         builder.setChargingState(ChargingState.CHARGING);
@@ -111,8 +134,7 @@ public class ChargingTest {
             builder.addChargeTimer(timer2);
 
             ChargeState state = builder.build();
-            byte[] resultBytes = state.getByteArray();
-            assertTrue(Arrays.equals(resultBytes, expectedBytes));
+            assertTrue(state.equals(expectedBytes));
         } catch (ParseException e) {
             e.printStackTrace();
             fail();

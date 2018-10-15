@@ -18,28 +18,26 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.HMProperty;
+import com.highmobility.autoapi.property.Property;
 
 /**
- * The possible charging states.
+ * The possible plugged in states.
  */
-public enum ChargingState implements HMProperty {
-    NOT_CHARGING((byte) 0x00),
-    CHARGING((byte) 0x01),
-    CHARGING_COMPLETE((byte) 0x02),
-    INITIALISING((byte) 0x03),
-    CHARGING_PAUSED((byte) 0x04),
-    CHARGING_ERROR((byte) 0x05);
+public enum PluggedInState implements HMProperty {
+    DISCONNECTED((byte) 0x00),
+    PLUGGED_IN((byte) 0x01);
 
-    public static final byte IDENTIFIER = 0x17;
+    public static final byte IDENTIFIER = 0x16;
 
-    public static ChargingState fromByte(byte byteValue) throws CommandParseException {
-        ChargingState[] values = ChargingState.values();
+    public static PluggedInState fromByte(byte byteValue) throws CommandParseException {
+        PluggedInState[] values = PluggedInState.values();
 
         for (int i = 0; i < values.length; i++) {
-            ChargingState state = values[i];
+            PluggedInState state = values[i];
             if (state.getByte() == byteValue) {
                 return state;
             }
@@ -50,7 +48,7 @@ public enum ChargingState implements HMProperty {
 
     private byte value;
 
-    ChargingState(byte value) {
+    PluggedInState(byte value) {
         this.value = value;
     }
 

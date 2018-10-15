@@ -48,14 +48,14 @@ public class ChassisSettings extends CommandWithProperties {
     ChassisPositionProperty chassisPosition;
 
     /**
-     * @return The driving mode
+     * @return The driving mode.
      */
     public DrivingMode getDrivingMode() {
         return drivingMode;
     }
 
     /**
-     * @return Boolean indicating whether the sport chronometer is active
+     * @return Boolean indicating whether the sport chronometer is active.
      */
     public Boolean isSportChronoActive() {
         return sportChronoActive;
