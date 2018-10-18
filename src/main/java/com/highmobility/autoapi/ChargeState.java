@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
-import com.highmobility.autoapi.property.PortState;
+import com.highmobility.autoapi.property.ChargePortState;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.TimeProperty;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
@@ -57,6 +57,7 @@ public class ChargeState extends CommandWithProperties {
     private static final byte CHARGE_LIMIT_IDENTIFIER = 0x08;
     private static final byte TIME_TO_COMPLETE_CHARGE_IDENTIFIER = 0x09;
     private static final byte CHARGE_RATE_IDENTIFIER = 0x0A;
+    private static final byte CHARGE_PORT_STATE_IDENTIFIER = 0x0B;
     private static final byte CHARGE_MODE_IDENTIFIER = 0x0C;
 
     private static final byte MAX_CHARGING_CURRENT_IDENTIFIER = 0x0E;
@@ -80,7 +81,7 @@ public class ChargeState extends CommandWithProperties {
     Integer timeToCompleteCharge;
 
     Float chargingRate;
-    PortState chargePortState;
+    ChargePortState chargeChargePortState;
 
     ChargeMode chargeMode;
 
@@ -161,8 +162,8 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The charge port state.
      */
-    @Nullable public PortState getChargePortState() {
-        return chargePortState;
+    @Nullable public ChargePortState getChargeChargePortState() {
+        return chargeChargePortState;
     }
 
     /**
@@ -290,8 +291,8 @@ public class ChargeState extends CommandWithProperties {
                     case CHARGE_RATE_IDENTIFIER:
                         chargingRate = Property.getFloat(property.getValueBytes());
                         break;
-                    case PortState.IDENTIFIER:
-                        chargePortState = PortState.fromByte(property.getValueByte());
+                    case CHARGE_PORT_STATE_IDENTIFIER:
+                        chargeChargePortState = ChargePortState.fromByte(property.getValueByte());
                         break;
                     case CHARGE_MODE_IDENTIFIER:
                         chargeMode = ChargeMode.fromByte(property.getValueByte());
@@ -347,7 +348,7 @@ public class ChargeState extends CommandWithProperties {
         chargeLimit = builder.chargeLimit;
         timeToCompleteCharge = builder.timeToCompleteCharge;
         chargingRate = builder.chargingRate;
-        chargePortState = builder.chargePortState;
+        chargeChargePortState = builder.chargePortState;
         chargeMode = builder.chargeMode;
         maxChargingCurrent = builder.maxChargingCurrent;
         plugType = builder.plugType;
@@ -375,7 +376,7 @@ public class ChargeState extends CommandWithProperties {
         private Integer timeToCompleteCharge;
 
         private Float chargingRate;
-        private PortState chargePortState;
+        private ChargePortState chargePortState;
 
         private ChargeMode chargeMode;
         private Float maxChargingCurrent;
@@ -498,8 +499,9 @@ public class ChargeState extends CommandWithProperties {
          * @param chargePortState The charge port state.
          * @return The builder.
          */
-        public Builder setChargePortState(PortState chargePortState) {
+        public Builder setChargePortState(ChargePortState chargePortState) {
             this.chargePortState = chargePortState;
+            chargePortState.setIdentifier(CHARGE_PORT_STATE_IDENTIFIER);
             addProperty(chargePortState);
             return this;
         }

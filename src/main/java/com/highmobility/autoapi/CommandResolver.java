@@ -105,6 +105,8 @@ public class CommandResolver {
                     command = new StartStopCharging(bytes);
                 } else if (bytesAreForType(bytes, SetChargeLimit.TYPE)) {
                     command = new SetChargeLimit(bytes);
+                } else if (bytesAreForType(bytes, OpenCloseChargePort.TYPE)) {
+                    command = new OpenCloseChargePort(bytes);
                 } else if (bytesAreForType(bytes, SetChargeMode.TYPE)) {
                     command = new SetChargeMode(bytes);
                 } else if (bytesAreForType(bytes, SetChargeTimer.TYPE)) {
@@ -406,8 +408,10 @@ public class CommandResolver {
             // return the base class.
             Command.logger.info("Failed to parse command " + ByteUtils.hexFromBytes(ByteUtils
                     .trimmedBytes(bytes, 3)) + ".. " + e.toString());
-            command = new Command(bytes);
         }
+
+        // The identifier was unknown. Return the base class.
+        if (command == null) command = new Command(bytes);
 
         return command;
     }

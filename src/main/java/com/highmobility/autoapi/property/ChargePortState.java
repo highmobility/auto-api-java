@@ -26,16 +26,14 @@ import com.highmobility.autoapi.CommandParseException;
 /**
  * The possible charge port states
  */
-public enum PortState implements HMProperty {
+public enum ChargePortState implements HMProperty {
     CLOSED((byte)0x00), OPEN((byte)0x01);
 
-    public static final byte IDENTIFIER = 0x0B;
-
-    public static PortState fromByte(byte byteValue) throws CommandParseException {
-        PortState[] values = PortState.values();
+    public static ChargePortState fromByte(byte byteValue) throws CommandParseException {
+        ChargePortState[] values = ChargePortState.values();
 
         for (int i = 0; i < values.length; i++) {
-            PortState state = values[i];
+            ChargePortState state = values[i];
             if (state.getByte() == byteValue) {
                 return state;
             }
@@ -46,7 +44,9 @@ public enum PortState implements HMProperty {
 
     private byte value;
 
-    PortState(byte value) {
+    private byte identifier;
+
+    ChargePortState(byte value) {
         this.value = value;
     }
 
@@ -54,8 +54,12 @@ public enum PortState implements HMProperty {
         return value;
     }
 
+    public void setIdentifier(byte identifier) {
+        this.identifier = identifier;
+    }
+
     @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
+        return identifier;
     }
 
     @Override public int getPropertyLength() {

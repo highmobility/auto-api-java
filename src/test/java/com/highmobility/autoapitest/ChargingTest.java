@@ -4,13 +4,14 @@ import com.highmobility.autoapi.ChargeState;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetChargeState;
+import com.highmobility.autoapi.OpenCloseChargePort;
 import com.highmobility.autoapi.SetChargeLimit;
 import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.StartStopCharging;
 import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.ChargingState;
-import com.highmobility.autoapi.property.PortState;
+import com.highmobility.autoapi.property.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
 import com.highmobility.autoapi.property.charging.DepartureTime;
 import com.highmobility.autoapi.property.charging.PlugType;
@@ -62,7 +63,7 @@ public class ChargingTest {
         assertTrue(state.getTimeToCompleteCharge() == 60);
         assertTrue(state.getChargeLimit() == .9f);
         assertTrue(state.getChargingRate() == 0f);
-        assertTrue(state.getChargePortState() == PortState.OPEN);
+        assertTrue(state.getChargeChargePortState() == ChargePortState.OPEN);
         assertTrue(state.getChargeMode() == ChargeMode.IMMEDIATE);
 
         assertTrue(state.getMaxChargingCurrent() == 25);
@@ -140,7 +141,7 @@ public class ChargingTest {
         builder.setChargeLimit(.9f);
         builder.setTimeToCompleteCharge(60);
         builder.setChargingRate(0f);
-        builder.setChargePortState(PortState.OPEN);
+        builder.setChargePortState(ChargePortState.OPEN);
         builder.setChargeMode(ChargeMode.IMMEDIATE);
 
         builder.setMaxChargingCurrent(25f);
@@ -185,6 +186,17 @@ public class ChargingTest {
 
         SetChargeLimit command = (SetChargeLimit) CommandResolver.resolve(expected);
         assertTrue(command.getChargeLimit() == .9f);
+    }
+
+    @Test public void openCloseChargePort() {
+        // TODO: 18/10/2018 fix doc
+        Bytes expected = new Bytes("00231401000101");
+
+        Bytes commandBytes = new OpenCloseChargePort(ChargePortState.OPEN);
+        assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
+
+        OpenCloseChargePort command = (OpenCloseChargePort) CommandResolver.resolve(expected);
+        assertTrue(command.getChargePortState() == ChargePortState.OPEN);
     }
 
     @Test public void startStopCharging() {
