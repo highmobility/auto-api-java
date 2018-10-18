@@ -1,8 +1,5 @@
-package com.highmobility.autoapi.value;
+package com.highmobility.autoapi.property.value;
 
-/**
- * Local time with hours and minutes.
- */
 public class Time {
     int hour;
     int minute;
@@ -15,6 +12,7 @@ public class Time {
     public Time(byte[] bytes) {
         if (bytes.length < 2 || bytes[0] < 0 || bytes[0] > 23 || bytes[1] < 0 || bytes[0] > 59)
             throw new IllegalArgumentException();
+
         this.hour = bytes[0];
         this.minute = bytes[1];
     }

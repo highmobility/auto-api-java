@@ -20,6 +20,8 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
+
 /**
  * Set the charge current of the home charger.
  */
@@ -42,7 +44,7 @@ public class SetChargeCurrent extends Command {
         this.current = chargeCurrent;
     }
 
-    SetChargeCurrent(byte[] bytes) throws CommandParseException {
+    SetChargeCurrent(byte[] bytes) {
         super(bytes);
         current = Property.getFloat(bytes, 3);
     }

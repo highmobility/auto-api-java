@@ -22,7 +22,9 @@ package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.Time;
+import com.highmobility.autoapi.property.value.Time;
+
+import java.util.Arrays;
 
 public class DepartureTime extends Property {
     private static final byte IDENTIFIER = 0x11;
@@ -43,15 +45,18 @@ public class DepartureTime extends Property {
         return time;
     }
 
-    public DepartureTime(boolean active, int time) {
+    public DepartureTime(boolean active, Time time) {
         super(IDENTIFIER, 3);
         bytes[3] = Property.boolToByte(active);
-        // TODO: 12/10/2018  
+        bytes[4] = (byte) time.getHour();
+        bytes[5] = (byte) time.getMinute();
+        this.time = time;
     }
 
     public DepartureTime(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length < 6) throw new CommandParseException();
-        // TODO: 12/10/2018
+        active = Property.getBool(bytes[3]);
+        time = new Time(Arrays.copyOfRange(bytes, 4, 6));
     }
 }

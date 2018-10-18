@@ -25,12 +25,15 @@ import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import static com.highmobility.autoapi.property.StringProperty.CHARSET;

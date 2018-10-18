@@ -26,6 +26,9 @@ import com.highmobility.value.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 public class Command extends Bytes {
     public static final Logger logger = LoggerFactory.getLogger(Command.class);
 
@@ -57,5 +60,12 @@ public class Command extends Bytes {
         if (bytes == null || bytes.length == 0) return; // empty IncomingCommand
         if (bytes.length < 3) throw new ParseException();
         this.type = new Type(bytes[0], bytes[1], bytes[2]);
+    }
+
+    <K> K[] createOrAddToArray(K[] array, K objectAdded) {
+        if (array == null) array = (K[]) Array.newInstance(objectAdded.getClass(), 1);
+        else array = Arrays.copyOf(array, array.length + 1);
+        array[array.length - 1] = objectAdded;
+        return array;
     }
 }
