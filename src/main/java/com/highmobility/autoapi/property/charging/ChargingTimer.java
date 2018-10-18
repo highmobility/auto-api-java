@@ -21,6 +21,7 @@
 package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 
@@ -30,7 +31,6 @@ import java.util.Calendar;
  * The charging timer.
  */
 public class ChargingTimer extends Property {
-    public static final byte IDENTIFIER = 0x15;
     Type type;
     Calendar time;
 
@@ -50,11 +50,10 @@ public class ChargingTimer extends Property {
     }
 
     public ChargingTimer(Type type, Calendar time) throws IllegalArgumentException {
-        this(IDENTIFIER, type, time);
+        this(SetChargeTimer.PROPERTY_IDENTIFIER, type, time);
     }
 
-    public ChargingTimer(byte identifier, Type type, Calendar time) throws
-            IllegalArgumentException {
+    public ChargingTimer(byte identifier, Type type, Calendar time) {
         super(identifier, 9);
         bytes[3] = type.getByte();
         ByteUtils.setBytes(bytes, Property.calendarToBytes(time), 4);

@@ -4,7 +4,10 @@ import com.highmobility.autoapi.ChargeState;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetChargeState;
+import com.highmobility.autoapi.SetChargeLimit;
+import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
+import com.highmobility.autoapi.StartStopCharging;
 import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.PortState;
@@ -174,67 +177,65 @@ public class ChargingTest {
         assertTrue(state.getBatteryCurrentAC() == null);
     }
 
-    // TODO: 17/10/2018 uncomment/fix tests
-    /*@Test public void setChargeLimit() {
-        String waitingForBytes = "0023035A";
-        String commandBytes = ByteUtils.hexFromBytes(new SetChargeLimit(.9f).getByteArray());
-        assertTrue(waitingForBytes.equals(commandBytes));
+    @Test public void setChargeLimit() {
+        Bytes expected = new Bytes("0023130100015A");
 
-        SetChargeLimit command = (SetChargeLimit) CommandResolver.resolve(ByteUtils.bytesFromHex
-                (waitingForBytes));
+        Bytes commandBytes = new SetChargeLimit(.9f);
+        assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
+
+        SetChargeLimit command = (SetChargeLimit) CommandResolver.resolve(expected);
         assertTrue(command.getChargeLimit() == .9f);
     }
 
     @Test public void startStopCharging() {
-        String waitingForBytes = "00230201";
-        String commandBytes = ByteUtils.hexFromBytes(new StartStopCharging(true).getByteArray());
+        Bytes waitingForBytes = new Bytes("00231201000101");
+        Bytes commandBytes = new StartStopCharging(true);
+
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        StartStopCharging command = (StartStopCharging) CommandResolver.resolve(ByteUtils
-                .bytesFromHex(waitingForBytes));
+        StartStopCharging command = (StartStopCharging) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getStart() == true);
     }
 
     @Test public void setChargeMode() {
-        String waitingForBytes = "00230502";
-        String commandBytes = ByteUtils.hexFromBytes(new SetChargeMode(ChargeMode.INDUCTIVE)
-        .getByteArray
-                ());
-        assertTrue(waitingForBytes.equals(commandBytes));
+        Bytes waitingForBytes = new Bytes("00231501000102"); // TODO: 18/10/2018 fix in docs (15
+        // vs 5 in example)
+        Bytes commandBytes = new SetChargeMode(ChargeMode.INDUCTIVE);
 
-        SetChargeMode command = (SetChargeMode) CommandResolver.resolve(ByteUtils.bytesFromHex
-                (waitingForBytes));
+        assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
+        SetChargeMode command = (SetChargeMode) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getChargeMode() == ChargeMode.INDUCTIVE);
     }
 
+    @Test(expected = IllegalArgumentException.class) public void setChargeModeThrowsOnImmediate() {
+        // TODO: 18/10/2018
+        new SetChargeMode(ChargeMode.IMMEDIATE);
+    }
+
     @Test public void SetChargeTimer() throws ParseException {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex
-                ("0023060D00090212010a10200500000D00090113010a1020070000");
+        Bytes waitingForBytes = new Bytes
+                ("0023160D00090212010a10200500000D00090113010a1020070000"); // TODO: 18/10/2018
+        // update doc, has 06 instead of 16 as identifier
 
-        try {
-            Calendar c = TestUtils.getCalendar("2018-01-10T16:32:05");
-            Calendar c2 = TestUtils.getCalendar("2019-01-10T16:32:07");
+        Calendar c = TestUtils.getCalendar("2018-01-10T16:32:05");
+        Calendar c2 = TestUtils.getCalendar("2019-01-10T16:32:07");
 
-            ChargingTimer[] timers = new ChargingTimer[2];
-            timers[0] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
-            timers[1] = new ChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME, c2);
+        ChargingTimer[] timers = new ChargingTimer[2];
+        timers[0] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
+        timers[1] = new ChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME, c2);
 
-            byte[] commandBytes = new SetChargeTimer(timers).getByteArray();
-            assertTrue(Arrays.equals(waitingForBytes, commandBytes));
-        } catch (ParseException e) {
-            fail();
-        }
+        Command commandBytes = new SetChargeTimer(timers);
+        assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
 
         SetChargeTimer command = (SetChargeTimer) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getChargingTimers().length == 2);
 
         Calendar departureTime = command.getChargingTimer(ChargingTimer.Type.DEPARTURE_TIME)
-        .getTime();
+                .getTime();
         Calendar preferredEndTime = command.getChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME)
                 .getTime();
 
         assertTrue(TestUtils.dateIsSame(departureTime, "2018-01-10T16:32:05"));
         assertTrue(TestUtils.dateIsSame(preferredEndTime, "2019-01-10T16:32:07"));
     }
-    */
 }

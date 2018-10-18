@@ -31,7 +31,9 @@ import java.util.List;
  * all.
  */
 public class SetChargeTimer extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.CHARGING, 0x06);
+    public static final Type TYPE = new Type(Identifier.CHARGING, 0x16);
+
+    public static final byte PROPERTY_IDENTIFIER = 0x0D;
 
     ChargingTimer[] timers;
 
@@ -57,16 +59,17 @@ public class SetChargeTimer extends CommandWithProperties {
         return null;
     }
 
-    public SetChargeTimer(ChargingTimer[] ChargingTimers) {
-        super(TYPE, validateTariffs(ChargingTimers));
-        this.timers = ChargingTimers;
+    public SetChargeTimer(ChargingTimer[] timers) {
+        super(TYPE, validateTimers(timers));
+        this.timers = timers;
     }
 
-    static ChargingTimer[] validateTariffs(ChargingTimer[] timers) throws IllegalArgumentException {
+    static ChargingTimer[] validateTimers(ChargingTimer[] timers) throws IllegalArgumentException {
         ArrayList<ChargingTimer.Type> types = new ArrayList<>(3);
         for (ChargingTimer timer : timers) {
             if (types.contains(timer.getType()) == false) types.add(timer.getType());
             else throw new IllegalArgumentException("Duplicate timer types are not allowed");
+            timer.setIdentifier(PROPERTY_IDENTIFIER);
         }
 
         return timers;

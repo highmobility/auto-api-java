@@ -27,8 +27,6 @@ public enum ChargeMode implements HMProperty {
     TIMER_BASED((byte)0x01),
     INDUCTIVE((byte)0x02);
 
-    public static final byte IDENTIFIER = 0x0C;
-
     public static ChargeMode fromByte(byte byteValue) throws CommandParseException {
         ChargeMode[] values = ChargeMode.values();
 
@@ -43,9 +41,14 @@ public enum ChargeMode implements HMProperty {
     }
 
     private byte value;
+    private byte identifier;
 
     ChargeMode(byte value) {
         this.value = value;
+    }
+
+    public void setIdentifier(byte identifier) {
+        this.identifier = identifier;
     }
 
     public byte getByte() {
@@ -53,7 +56,7 @@ public enum ChargeMode implements HMProperty {
     }
 
     @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
+        return identifier;
     }
 
     @Override public int getPropertyLength() {

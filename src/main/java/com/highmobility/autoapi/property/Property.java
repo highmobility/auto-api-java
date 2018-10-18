@@ -363,7 +363,7 @@ public class Property implements HMProperty {
         return c;
     }
 
-    public static byte[] calendarToBytes(Calendar calendar) throws IllegalArgumentException {
+    public static byte[] calendarToBytes(Calendar calendar) {
         byte[] bytes = new byte[8];
 
         bytes[0] = (byte) (calendar.get(Calendar.YEAR) - 2000);

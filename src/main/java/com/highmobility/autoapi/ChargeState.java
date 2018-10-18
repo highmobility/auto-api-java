@@ -57,6 +57,7 @@ public class ChargeState extends CommandWithProperties {
     private static final byte CHARGE_LIMIT_IDENTIFIER = 0x08;
     private static final byte TIME_TO_COMPLETE_CHARGE_IDENTIFIER = 0x09;
     private static final byte CHARGE_RATE_IDENTIFIER = 0x0A;
+    private static final byte CHARGE_MODE_IDENTIFIER = 0x0C;
 
     private static final byte MAX_CHARGING_CURRENT_IDENTIFIER = 0x0E;
     private static final byte PLUG_TYPE_IDENTIFIER = 0x0F;
@@ -64,6 +65,7 @@ public class ChargeState extends CommandWithProperties {
     private static final byte DEPARTURE_TIMES_IDENTIFIER = 0x11;
     private static final byte REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER = 0x13;
     private static final byte BATTERY_TEMPERATURE_IDENTIFIER = 0x14;
+    private static final byte TIMER_IDENTIFIER = 0x15;
     private static final byte PLUGGED_IN_IDENTIFIER = 0x16;
 
     Integer estimatedRange;
@@ -291,7 +293,7 @@ public class ChargeState extends CommandWithProperties {
                     case PortState.IDENTIFIER:
                         chargePortState = PortState.fromByte(property.getValueByte());
                         break;
-                    case ChargeMode.IDENTIFIER:
+                    case CHARGE_MODE_IDENTIFIER:
                         chargeMode = ChargeMode.fromByte(property.getValueByte());
                         break;
                     case MAX_CHARGING_CURRENT_IDENTIFIER:
@@ -318,7 +320,7 @@ public class ChargeState extends CommandWithProperties {
                     case PLUGGED_IN_IDENTIFIER:
                         pluggedIn = Property.getBool(property.getValueByte());
                         break;
-                    case ChargingTimer.IDENTIFIER:
+                    case TIMER_IDENTIFIER:
                         timers = createOrAddToArray(timers, new ChargingTimer(property
                                 .getPropertyBytes()));
                         break;
@@ -508,6 +510,7 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setChargeMode(ChargeMode chargeMode) {
             this.chargeMode = chargeMode;
+            chargeMode.setIdentifier(CHARGE_MODE_IDENTIFIER);
             addProperty(chargeMode);
             return this;
         }
@@ -580,6 +583,8 @@ public class ChargeState extends CommandWithProperties {
             this.timers = Arrays.asList(chargingTimers);
 
             for (int i = 0; i < chargingTimers.length; i++) {
+                ChargingTimer timer = chargingTimers[i];
+                timer.setIdentifier(TIMER_IDENTIFIER);
                 addProperty(chargingTimers[i]);
             }
 
@@ -594,6 +599,7 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder addTimer(ChargingTimer timer) {
             this.timers.add(timer);
+            timer.setIdentifier(TIMER_IDENTIFIER);
             addProperty(timer);
             return this;
         }

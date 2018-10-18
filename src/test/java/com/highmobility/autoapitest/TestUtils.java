@@ -69,7 +69,7 @@ public class TestUtils {
         return getCalendar(dateString, 0);
     }
 
-    public static boolean bytesTheSame(ChargeState state, Bytes bytes) {
+    public static boolean bytesTheSame(Bytes state, Bytes bytes) {
         for (int i = 0; i < state.getLength(); i++) {
             byte stateByte = state.getByteArray()[i];
 
@@ -80,9 +80,9 @@ public class TestUtils {
 
             byte otherByte = bytes.getByteArray()[i];
             if (stateByte != otherByte) {
-                System.out.println("bytes not equal at index " + i + " state byte: " + ByteUtils
-                        .hexFromBytes(new byte[stateByte]) + " expected byte: " + " " + ByteUtils
-                        .hexFromBytes(new byte[otherByte]) +
+                System.out.println("bytes not equal at index " + i + ". expected: " + ByteUtils
+                        .hexFromBytes(new byte[]{otherByte}) +", actual: " + ByteUtils
+                        .hexFromBytes(new byte[]{stateByte})  +
                         "\nbytes1: " + ByteUtils.hexFromBytes(Arrays.copyOf
                         (bytes.getByteArray(), i + 1)) +
                         "\nbytes2: " + ByteUtils.hexFromBytes(Arrays.copyOf(state
