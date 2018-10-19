@@ -10,8 +10,8 @@ import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.StartStopCharging;
 import com.highmobility.autoapi.property.ChargeMode;
-import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.ChargePortState;
+import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
 import com.highmobility.autoapi.property.charging.DepartureTime;
 import com.highmobility.autoapi.property.charging.PlugType;
@@ -25,7 +25,6 @@ import java.text.ParseException;
 import java.util.Calendar;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ChargingTest {
     Bytes bytes = new Bytes(
@@ -45,12 +44,8 @@ public class ChargingTest {
     @Test
     public void state() throws ParseException {
         Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
 
+        command = CommandResolver.resolve(bytes);
         assertTrue(command.is(ChargeState.TYPE));
         ChargeState state = (ChargeState) command;
 

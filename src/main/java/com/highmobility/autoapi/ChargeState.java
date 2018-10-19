@@ -22,11 +22,11 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.ChargeMode;
+import com.highmobility.autoapi.property.ChargePortState;
 import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
-import com.highmobility.autoapi.property.ChargePortState;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.TimeProperty;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
@@ -34,6 +34,7 @@ import com.highmobility.autoapi.property.charging.DepartureTime;
 import com.highmobility.autoapi.property.charging.PlugType;
 import com.highmobility.autoapi.property.value.Time;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -197,14 +198,14 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The departure times.
      */
-    @Nullable public DepartureTime[] getDepartureTimes() {
+    public DepartureTime[] getDepartureTimes() {
         return departureTimes;
     }
 
     /**
      * @return The reduction of charging current times.
      */
-    @Nullable public Time[] getReductionOfChargingCurrentTimes() {
+    public Time[] getReductionOfChargingCurrentTimes() {
         return reductionOfChargingCurrentTimes;
     }
 
@@ -218,7 +219,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The charging timers.
      */
-    @Nullable public ChargingTimer[] getTimers() {
+    public ChargingTimer[] getTimers() {
         return timers;
     }
 
@@ -254,6 +255,10 @@ public class ChargeState extends CommandWithProperties {
 
     public ChargeState(byte[] bytes) {
         super(bytes);
+
+        ArrayList<DepartureTime> departureTimes = new ArrayList<>();
+        ArrayList<Time> reductionOfChargingCurrentTimes = new ArrayList<>();
+        ArrayList<ChargingTimer> timers = new ArrayList<>();
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
@@ -306,13 +311,11 @@ public class ChargeState extends CommandWithProperties {
                         chargingWindowChosen = Property.getBool(property.getValueByte());
                         break;
                     case DEPARTURE_TIMES_IDENTIFIER:
-                        departureTimes = createOrAddToArray(departureTimes, new
-                                DepartureTime(property.getPropertyBytes()));
+                        DepartureTime time = new DepartureTime(property.getPropertyBytes());
+                        departureTimes.add(time);
                         break;
                     case REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER:
-                        reductionOfChargingCurrentTimes = createOrAddToArray
-                                (reductionOfChargingCurrentTimes, new Time(property
-                                        .getValueBytes()));
+                        reductionOfChargingCurrentTimes.add(new Time(property.getValueBytes()));
                         break;
                     case BATTERY_TEMPERATURE_IDENTIFIER:
                         batteryTemperature = Property.getFloat(property.getValueBytes());
@@ -321,15 +324,19 @@ public class ChargeState extends CommandWithProperties {
                         pluggedIn = Property.getBool(property.getValueByte());
                         break;
                     case TIMER_IDENTIFIER:
-                        timers = createOrAddToArray(timers, new ChargingTimer(property
-                                .getPropertyBytes()));
+                        timers.add(new ChargingTimer(property.getPropertyBytes()));
                         break;
                 }
             } catch (Exception e) {
-                logger.info("Failed to parse command:" + ByteUtils.hexFromBytes(bytes) + " " + e
-                        .getMessage());
+                logger.info("Failed to parse command:" + ByteUtils.hexFromBytes(bytes) + ", " +
+                        "property: " + new Bytes(property.getPropertyBytes()) + e.getMessage());
             }
         }
+
+        this.departureTimes = departureTimes.toArray(new DepartureTime[departureTimes.size()]);
+        this.reductionOfChargingCurrentTimes = reductionOfChargingCurrentTimes.toArray(new
+                Time[reductionOfChargingCurrentTimes.size()]);
+        this.timers = timers.toArray(new ChargingTimer[timers.size()]);
     }
 
     @Override public boolean isState() {
