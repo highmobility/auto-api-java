@@ -189,7 +189,6 @@ public class ChargingTest {
     }
 
     @Test public void openCloseChargePort() {
-        // TODO: 18/10/2018 fix doc
         Bytes expected = new Bytes("00231401000101");
 
         Bytes commandBytes = new OpenCloseChargePort(ChargePortState.OPEN);
@@ -210,8 +209,7 @@ public class ChargingTest {
     }
 
     @Test public void setChargeMode() {
-        Bytes waitingForBytes = new Bytes("00231501000102"); // TODO: 18/10/2018 fix in docs (15
-        // vs 5 in example)
+        Bytes waitingForBytes = new Bytes("00231501000102");
         Bytes commandBytes = new SetChargeMode(ChargeMode.INDUCTIVE);
 
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
@@ -220,15 +218,12 @@ public class ChargingTest {
     }
 
     @Test(expected = IllegalArgumentException.class) public void setChargeModeThrowsOnImmediate() {
-        // TODO: 18/10/2018
         new SetChargeMode(ChargeMode.IMMEDIATE);
     }
 
     @Test public void SetChargeTimer() throws ParseException {
         Bytes waitingForBytes = new Bytes
-                ("0023160D00090212010a10200500000D00090113010a1020070000"); // TODO: 18/10/2018
-        // update doc, has 06 instead of 16 as identifier
-
+                ("0023160D00090212010a10200500000D00090113010a1020070000");
         Calendar c = TestUtils.getCalendar("2018-01-10T16:32:05");
         Calendar c2 = TestUtils.getCalendar("2019-01-10T16:32:07");
 

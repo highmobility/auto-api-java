@@ -248,8 +248,7 @@ public class ChargeState extends CommandWithProperties {
      * @return The charging active state.
      */
     @Nullable
-    public ChargingState getActiveState() { // TODO: 15/10/2018 rename to ChargingActiveState? in
-        // doc ActiveState
+    public ChargingState getActiveState() {
         return activeState;
     }
 
