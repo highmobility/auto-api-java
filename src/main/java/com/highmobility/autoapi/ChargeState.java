@@ -28,10 +28,10 @@ import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.TimeProperty;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
 import com.highmobility.autoapi.property.charging.DepartureTime;
 import com.highmobility.autoapi.property.charging.PlugType;
+import com.highmobility.autoapi.property.charging.ReductionTime;
 import com.highmobility.autoapi.property.value.Time;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -91,7 +91,7 @@ public class ChargeState extends CommandWithProperties {
     Boolean chargingWindowChosen;
     DepartureTime[] departureTimes;
 
-    Time[] reductionOfChargingCurrentTimes;
+    ReductionTime[] reductionOfChargingCurrentTimes;
     Float batteryTemperature;
     ChargingTimer[] timers;
     Boolean pluggedIn;
@@ -205,7 +205,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The reduction of charging current times.
      */
-    public Time[] getReductionOfChargingCurrentTimes() {
+    public ReductionTime[] getReductionOfChargingCurrentTimes() {
         return reductionOfChargingCurrentTimes;
     }
 
@@ -257,7 +257,7 @@ public class ChargeState extends CommandWithProperties {
         super(bytes);
 
         ArrayList<DepartureTime> departureTimes = new ArrayList<>();
-        ArrayList<Time> reductionOfChargingCurrentTimes = new ArrayList<>();
+        ArrayList<ReductionTime> reductionOfChargingCurrentTimes = new ArrayList<>();
         ArrayList<ChargingTimer> timers = new ArrayList<>();
 
         for (int i = 0; i < getProperties().length; i++) {
@@ -315,7 +315,7 @@ public class ChargeState extends CommandWithProperties {
                         departureTimes.add(time);
                         break;
                     case REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER:
-                        reductionOfChargingCurrentTimes.add(new Time(property.getValueBytes()));
+                        reductionOfChargingCurrentTimes.add(new ReductionTime(property.getPropertyBytes()));
                         break;
                     case BATTERY_TEMPERATURE_IDENTIFIER:
                         batteryTemperature = Property.getFloat(property.getValueBytes());
@@ -335,7 +335,7 @@ public class ChargeState extends CommandWithProperties {
 
         this.departureTimes = departureTimes.toArray(new DepartureTime[departureTimes.size()]);
         this.reductionOfChargingCurrentTimes = reductionOfChargingCurrentTimes.toArray(new
-                Time[reductionOfChargingCurrentTimes.size()]);
+                ReductionTime[reductionOfChargingCurrentTimes.size()]);
         this.timers = timers.toArray(new ChargingTimer[timers.size()]);
     }
 
@@ -362,7 +362,7 @@ public class ChargeState extends CommandWithProperties {
         departureTimes = builder.departureTimes.toArray(new
                 DepartureTime[builder.departureTimes.size()]);
         reductionOfChargingCurrentTimes = builder.reductionOfChargingCurrentTimes.toArray(new
-                Time[builder.reductionOfChargingCurrentTimes.size()]);
+                ReductionTime[builder.reductionOfChargingCurrentTimes.size()]);
         batteryTemperature = builder.batteryTemperature;
         timers = builder.timers.toArray(new ChargingTimer[builder.timers.size()]);
         pluggedIn = builder.pluggedIn;
@@ -390,7 +390,7 @@ public class ChargeState extends CommandWithProperties {
         private Boolean chargingWindowChosen;
         private List<DepartureTime> departureTimes = new ArrayList<>();
 
-        private List<Time> reductionOfChargingCurrentTimes = new ArrayList<>();
+        private List<ReductionTime> reductionOfChargingCurrentTimes = new ArrayList<>();
         private Float batteryTemperature;
         private List<ChargingTimer> timers = new ArrayList<>();
         private Boolean pluggedIn;
@@ -558,21 +558,22 @@ public class ChargeState extends CommandWithProperties {
             return this;
         }
 
-        public Builder setReductionOfChargingCurrentTimes(Time[] reductionOfChargingCurrentTimes) {
+        public Builder setReductionOfChargingCurrentTimes(ReductionTime[] reductionOfChargingCurrentTimes) {
             this.reductionOfChargingCurrentTimes = Arrays.asList(reductionOfChargingCurrentTimes);
 
             for (int i = 0; i < reductionOfChargingCurrentTimes.length; i++) {
-                addProperty(new TimeProperty(REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER,
-                        reductionOfChargingCurrentTimes[i]));
+                ReductionTime time = reductionOfChargingCurrentTimes[i];
+                time.setIdentifier(REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER);
+                addProperty(time);
             }
 
             return this;
         }
 
-        public Builder addReductionOfChargingCurrentTime(Time reductionOfChargingCurrentTime) {
+        public Builder addReductionOfChargingCurrentTime(ReductionTime reductionOfChargingCurrentTime) {
+            reductionOfChargingCurrentTime.setIdentifier(REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER);
             this.reductionOfChargingCurrentTimes.add(reductionOfChargingCurrentTime);
-            addProperty(new TimeProperty(REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER,
-                    reductionOfChargingCurrentTime));
+            addProperty(reductionOfChargingCurrentTime);
             return this;
 
         }

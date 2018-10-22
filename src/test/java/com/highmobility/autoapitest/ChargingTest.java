@@ -8,6 +8,7 @@ import com.highmobility.autoapi.OpenCloseChargePort;
 import com.highmobility.autoapi.SetChargeLimit;
 import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
+import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
 import com.highmobility.autoapi.StartStopCharging;
 import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.ChargePortState;
@@ -15,6 +16,8 @@ import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
 import com.highmobility.autoapi.property.charging.DepartureTime;
 import com.highmobility.autoapi.property.charging.PlugType;
+import com.highmobility.autoapi.property.charging.ReductionTime;
+import com.highmobility.autoapi.property.value.StartStop;
 import com.highmobility.autoapi.property.value.Time;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -33,8 +36,8 @@ public class ChargingTest {
                     + "0E000441c800000F00010110000100"
                     + "110003011020" // departure times
                     + "110003001220"
-                    + "1300020000" // reduction times
-                    + "1300021010"
+                    + "130003000000" // reduction times
+                    + "130003011020"
                     + "1400044219999a"
                     + "1500090212010A1020050000" // timers
                     + "1500090112010A1020060000"
@@ -83,11 +86,13 @@ public class ChargingTest {
         timeExists = 0;
         assertTrue(state.getReductionOfChargingCurrentTimes().length == 2);
 
-        for (Time time : state.getReductionOfChargingCurrentTimes()) {
-            if (time.getHour() == 0 && time.getMinute() == 0) {
+        for (ReductionTime time : state.getReductionOfChargingCurrentTimes()) {
+            if (time.getTime().getHour() == 0 && time.getTime().getMinute() == 0 && time
+                    .getStartStop() == StartStop.START) {
                 timeExists++;
             }
-            if (time.getHour() == 16 && time.getMinute() == 16) {
+            if (time.getTime().getHour() == 16 && time.getTime().getMinute() == 32 && time
+                    .getStartStop() == StartStop.STOP) {
                 timeExists++;
             }
         }
@@ -146,8 +151,10 @@ public class ChargingTest {
         builder.addDepartureTime(new DepartureTime(true, new Time(16, 32)));
         builder.addDepartureTime(new DepartureTime(false, new Time(18, 32)));
 
-        builder.addReductionOfChargingCurrentTime(new Time(0, 0));
-        builder.addReductionOfChargingCurrentTime(new Time(16, 16));
+        builder.addReductionOfChargingCurrentTime(new ReductionTime(StartStop.START, new Time(0,
+                0)));
+        builder.addReductionOfChargingCurrentTime(new ReductionTime(StartStop.STOP, new Time(16,
+                32)));
 
         builder.setBatteryTemperature(38.4f);
 
@@ -239,5 +246,29 @@ public class ChargingTest {
 
         assertTrue(TestUtils.dateIsSame(departureTime, "2018-01-10T16:32:05"));
         assertTrue(TestUtils.dateIsSame(preferredEndTime, "2019-01-10T16:32:07"));
+    }
+
+    @Test public void SetReductionTimes() {
+        Bytes waitingForBytes = new Bytes("002317" +
+                "010003000000" + // reduction times
+                "010003011020");
+
+        ReductionTime[] timers = new ReductionTime[2];
+        timers[0] = new ReductionTime(StartStop.START, new Time(0, 0));
+        timers[1] = new ReductionTime(StartStop.STOP, new Time(16, 32));
+
+        Command commandBytes = new SetReductionOfChargingCurrentTimes(timers);
+        assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
+
+        SetReductionOfChargingCurrentTimes command = (SetReductionOfChargingCurrentTimes)
+                CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getReductionTimes().length == 2);
+
+        assertTrue(command.getReductionTimes()[0].getStartStop() == StartStop.START);
+        assertTrue(command.getReductionTimes()[0].getTime().equals(new Time(0, 0)));
+
+        assertTrue(command.getReductionTimes()[1].getStartStop() == StartStop.STOP);
+        assertTrue(command.getReductionTimes()[1].getTime().equals(new Time(16, 32)));
+
     }
 }

@@ -1,12 +1,20 @@
 package com.highmobility.autoapi.property.value;
 
-public class Time {
+import com.highmobility.value.Bytes;
+
+public class Time extends Bytes {
     int hour;
     int minute;
 
     public Time(int hour, int minute) {
-        this.hour = hour;
-        this.minute = minute;
+        this(getInitBytes(hour, minute));
+    }
+
+    static byte[] getInitBytes(int hour, int minute) {
+        byte[] bytes = new byte[2];
+        bytes[0] = (byte) hour;
+        bytes[1] = (byte) minute;
+        return bytes;
     }
 
     public Time(byte[] bytes) {
@@ -15,6 +23,7 @@ public class Time {
 
         this.hour = bytes[0];
         this.minute = bytes[1];
+        this.bytes = bytes;
     }
 
     /**
@@ -29,5 +38,11 @@ public class Time {
      */
     public int getMinute() {
         return minute;
+    }
+
+    @Override public boolean equals(Object obj) {
+        if (obj instanceof Time == false) return false;
+        Time otherTime = (Time) obj;
+        return otherTime.getHour() == this.getHour() && otherTime.getMinute() == this.getMinute();
     }
 }
