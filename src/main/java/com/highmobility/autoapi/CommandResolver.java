@@ -111,6 +111,8 @@ public class CommandResolver {
                     command = new SetChargeMode(bytes);
                 } else if (bytesAreForType(bytes, SetChargeTimer.TYPE)) {
                     command = new SetChargeTimer(bytes);
+                } else if (bytesAreForType(bytes, SetReductionOfChargingCurrentTimes.TYPE)) {
+                    command = new SetReductionOfChargingCurrentTimes(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.CLIMATE)) {
                 if (bytesAreForType(bytes, GetClimateState.TYPE)) {

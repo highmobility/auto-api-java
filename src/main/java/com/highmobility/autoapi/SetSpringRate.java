@@ -22,13 +22,14 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Axle;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.autoapi.property.SpringRateProperty;
 
 /**
  * Set the spring rate. The result is sent through the Chassis Settings message.
  */
-public class SetSpringRate extends Command {
-    public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x04);
+public class SetSpringRate extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x14);
+    private static final byte PROPERTY_IDENTIFIER = 0x01;
 
     Axle axle;
     Integer springRate;
@@ -54,13 +55,18 @@ public class SetSpringRate extends Command {
     }
 
     static byte[] getValues(Axle axle, int springRate) {
-        byte[] bytes = TYPE.getIdentifierAndType();
-        return ByteUtils.concatBytes(bytes, new byte[]{axle.getByte(), (byte) springRate});
+        Property prop = new SpringRateProperty(axle, springRate);
+        prop.setIdentifier(PROPERTY_IDENTIFIER);
+        return TYPE.addProperty(prop);
     }
 
     SetSpringRate(byte[] bytes) throws CommandParseException {
         super(bytes);
-        axle = Axle.fromByte(bytes[3]);
-        springRate = Property.getUnsignedInt(bytes[4]);
+        Property prop = getProperty(PROPERTY_IDENTIFIER);
+        if (prop != null) {
+            axle = Axle.fromByte(prop.getValueBytes()[0]);
+            springRate = Property.getUnsignedInt(prop.getValueBytes()[1]);
+
+        }
     }
 }

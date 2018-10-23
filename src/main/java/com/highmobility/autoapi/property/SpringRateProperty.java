@@ -25,8 +25,6 @@ import com.highmobility.autoapi.CommandParseException;
 public class SpringRateProperty extends Property {
     Axle axle;
     Integer springRate;
-    Integer maximumPossibleRate;
-    Integer minimumPossibleRate;
 
     /**
      * @return The axle.
@@ -36,49 +34,26 @@ public class SpringRateProperty extends Property {
     }
 
     /**
-     *
      * @return The suspension spring rate in N/mm
      */
     public Integer getSpringRate() {
         return springRate;
     }
 
-    /**
-     *
-     * @return The maximum possible value for the spring rate
-     */
-    public Integer getMaximumPossibleRate() {
-        return maximumPossibleRate;
-    }
-
-    /**
-     *
-     * @return The minimum possible value for the spring rate
-     */
-    public Integer getMinimumPossibleRate() {
-        return minimumPossibleRate;
-    }
-
     public SpringRateProperty(byte[] bytes) throws CommandParseException {
         super(bytes);
-
+        if (bytes.length != 5) throw new CommandParseException();
         axle = Axle.fromByte(bytes[3]);
         springRate = Property.getUnsignedInt(bytes[4]);
-        maximumPossibleRate = Property.getUnsignedInt(bytes[5]);
-        minimumPossibleRate = Property.getUnsignedInt(bytes[6]);
     }
 
-    public SpringRateProperty(Axle axle, Integer springRate, Integer
-            maximumPossibleRate, Integer minimumPossibleRate) {
-        this((byte) 0x00, axle, springRate, maximumPossibleRate, minimumPossibleRate);
+    public SpringRateProperty(Axle axle, Integer springRate) {
+        this((byte) 0x00, axle, springRate);
     }
 
-    public SpringRateProperty(byte identifier, Axle axle, Integer springRate, Integer
-            maximumPossibleRate, Integer minimumPossibleRate) {
-        super(identifier, 4);
+    public SpringRateProperty(byte identifier, Axle axle, Integer springRate) {
+        super(identifier, 2);
         bytes[3] = axle.getByte();
         bytes[4] = springRate.byteValue();
-        bytes[5] = maximumPossibleRate.byteValue();
-        bytes[6] = minimumPossibleRate.byteValue();
     }
 }
