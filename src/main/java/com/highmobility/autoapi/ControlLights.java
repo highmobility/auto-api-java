@@ -34,7 +34,7 @@ import java.util.List;
  * Set the lights state. The result is sent through the Lights State command.
  */
 public class ControlLights extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.LIGHTS, 0x02);
+    public static final Type TYPE = new Type(Identifier.LIGHTS, 0x12);
 
     private static final byte FRONT_EXTERIOR_LIGHT_STATE_IDENTIFIER = 0x01;
     private static final byte REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER = 0x02;

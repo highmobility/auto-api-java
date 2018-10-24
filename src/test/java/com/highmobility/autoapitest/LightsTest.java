@@ -75,18 +75,14 @@ public class LightsTest {
     }
 
     @Test public void control() {
-        Bytes waitingForBytes = new Bytes("003602" +
-                "01000102" +
-                "02000100" +
-                "03000100" +
-                "040003ff0000");
+        Bytes waitingForBytes = new Bytes("003612010001020200010003000100040003ff0000");
 
-        byte[] bytes = new ControlLights(
+        Bytes bytes = new ControlLights(
                 FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM
                 , false, false, new int[]{255, 0, 0, 255}
-        ).getByteArray();
+        );
 
-        assertTrue(waitingForBytes.equals(bytes));
+        assertTrue(TestUtils.bytesTheSame(waitingForBytes, bytes));
 
         ControlLights command = (ControlLights) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getFrontExteriorLightState() == FrontExteriorLightState
@@ -94,7 +90,6 @@ public class LightsTest {
         assertTrue(command.getRearExteriorLightActive() == false);
         assertTrue(command.getInteriorLightActive() == false);
         assertTrue(Arrays.equals(command.getAmbientColor(), new int[]{255, 0, 0, 255}));
-
     }
 
     @Test public void state0Properties() {
