@@ -54,6 +54,15 @@ public class Property implements HMProperty {
     /**
      * @param identifier The identifier byte of the property.
      * @param value      The value of the property.
+     */
+    public Property(byte identifier, byte value) {
+        this(identifier, 1);
+        bytes[3] = value;
+    }
+
+    /**
+     * @param identifier The identifier byte of the property.
+     * @param value      The value of the property.
      * @throws IllegalArgumentException When the value is not set.
      */
     public Property(byte identifier, byte[] value) {
@@ -257,6 +266,8 @@ public class Property implements HMProperty {
     }
 
     /**
+     * This works for both negative and positive ints.
+     *
      * @param value  the valueBytes converted to byte[]
      * @param length the returned byte[] length
      * @return the allBytes representing the valueBytes

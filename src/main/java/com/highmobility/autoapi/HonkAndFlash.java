@@ -33,8 +33,8 @@ import java.util.ArrayList;
  */
 public class HonkAndFlash extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x02);
-    private static final int SECONDS_IDENTIFER = 0x01;
-    private static final int COUNT_IDENTIFER = 0x02;
+    private static final int SECONDS_IDENTIFIER = 0x01;
+    private static final int COUNT_IDENTIFIER = 0x02;
 
     private Integer lightFlashCount;
     private Integer seconds;
@@ -68,12 +68,12 @@ public class HonkAndFlash extends CommandWithProperties {
         ArrayList<Property> properties = new ArrayList<>();
 
         if (seconds != null) {
-            IntegerProperty prop = new IntegerProperty((byte) SECONDS_IDENTIFER, seconds, 1);
+            IntegerProperty prop = new IntegerProperty((byte) SECONDS_IDENTIFIER, seconds, 1);
             properties.add(prop);
         }
 
         if (lightFlashCount != null) {
-            IntegerProperty prop = new IntegerProperty((byte) COUNT_IDENTIFER, lightFlashCount, 1);
+            IntegerProperty prop = new IntegerProperty((byte) COUNT_IDENTIFIER, lightFlashCount, 1);
             properties.add(prop);
         }
 
@@ -84,10 +84,10 @@ public class HonkAndFlash extends CommandWithProperties {
         super(bytes);
         for (Property property : properties) {
             switch (property.getPropertyIdentifier()) {
-                case SECONDS_IDENTIFER:
+                case SECONDS_IDENTIFIER:
                     seconds = Property.getUnsignedInt(property.getValueByte());
                     break;
-                case COUNT_IDENTIFER:
+                case COUNT_IDENTIFIER:
                     lightFlashCount = Property.getUnsignedInt(property.getValueByte());
                     break;
             }
