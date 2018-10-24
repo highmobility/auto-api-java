@@ -32,7 +32,7 @@ import java.util.ArrayList;
  * many seconds the horn should be honked.
  */
 public class HonkAndFlash extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x02);
+    public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x12);
     private static final int SECONDS_IDENTIFIER = 0x01;
     private static final int COUNT_IDENTIFIER = 0x02;
 
