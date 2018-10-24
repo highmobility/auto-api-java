@@ -43,8 +43,15 @@ public class CruiseControlTest {
     }
 
     @Test public void activateDeactivate() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("00620201000101020002003C");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("00621201000101020002003C");
         byte[] commandBytes = new ActivateDeactivateCruiseControl(true, 60)
+                .getByteArray();
+        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+    }
+
+    @Test public void deactivate() {
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("00621201000100");
+        byte[] commandBytes = new ActivateDeactivateCruiseControl(false, null)
                 .getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
     }
