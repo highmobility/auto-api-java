@@ -5,17 +5,17 @@ import com.highmobility.autoapi.CommandParseException;
 /**
  * The tire location.
  */
-public enum Location {
+public enum TireLocation {
     FRONT_LEFT((byte) 0x00),
     FRONT_RIGHT((byte) 0x01),
     REAR_RIGHT((byte) 0x02),
     REAR_LEFT((byte) 0x03);
 
-    public static Location fromByte(byte value) throws CommandParseException {
-        Location[] values = Location.values();
+    public static TireLocation fromByte(byte value) throws CommandParseException {
+        TireLocation[] values = TireLocation.values();
 
         for (int i = 0; i < values.length; i++) {
-            Location value1 = values[i];
+            TireLocation value1 = values[i];
             if (value1.getByte() == value) {
                 return value1;
             }
@@ -26,7 +26,7 @@ public enum Location {
 
     private byte value;
 
-    Location(byte value) {
+    TireLocation(byte value) {
         this.value = value;
     }
 

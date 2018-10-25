@@ -32,7 +32,7 @@ import com.highmobility.autoapi.property.diagnostics.TirePressure;
 import com.highmobility.autoapi.property.diagnostics.TireTemperature;
 import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.WheelRpm;
-import com.highmobility.autoapi.property.value.Location;
+import com.highmobility.autoapi.property.value.TireLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -270,13 +270,13 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * Get the tire pressure for a tire.
      *
-     * @param location The tire location
+     * @param tireLocation The tire location
      * @return The tire pressure.
      */
-    @Nullable public TirePressure getTirePressure(Location location) {
+    @Nullable public TirePressure getTirePressure(TireLocation tireLocation) {
         for (int i = 0; i < tirePressures.length; i++) {
             TirePressure pressure = tirePressures[i];
-            if (pressure.getLocation() == location) return pressure;
+            if (pressure.getTireLocation() == tireLocation) return pressure;
         }
 
         return null;
@@ -292,13 +292,13 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * The tire temperature for a tire.
      *
-     * @param location The tire location.
+     * @param tireLocation The tire location.
      * @return The tire temperature.
      */
-    @Nullable public TireTemperature getTireTemperature(Location location) {
+    @Nullable public TireTemperature getTireTemperature(TireLocation tireLocation) {
         for (int i = 0; i < tireTemperatures.length; i++) {
             TireTemperature temperature = tireTemperatures[i];
-            if (temperature.getLocation() == location) return temperature;
+            if (temperature.getTireLocation() == tireLocation) return temperature;
         }
 
         return null;
@@ -314,13 +314,13 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * The tire temperature for a tire.
      *
-     * @param location The tire location.
+     * @param tireLocation The tire location.
      * @return The tire temperature.
      */
-    @Nullable public WheelRpm getWheelRpm(Location location) {
+    @Nullable public WheelRpm getWheelRpm(TireLocation tireLocation) {
         for (int i = 0; i < wheelRpms.length; i++) {
             WheelRpm wheelRpm = wheelRpms[i];
-            if (wheelRpm.getLocation() == location) return wheelRpm;
+            if (wheelRpm.getTireLocation() == tireLocation) return wheelRpm;
         }
 
         return null;

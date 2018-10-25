@@ -22,18 +22,18 @@ package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.value.Location;
+import com.highmobility.autoapi.property.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
 
 public class TirePressure extends Property {
-    Location location;
+    TireLocation tireLocation;
     float pressure;
 
     /**
      * @return The tire location
      */
-    public Location getLocation() {
-        return location;
+    public TireLocation getTireLocation() {
+        return tireLocation;
     }
 
     /**
@@ -43,11 +43,11 @@ public class TirePressure extends Property {
         return pressure;
     }
 
-    public TirePressure(Location location, float pressure) {
+    public TirePressure(TireLocation tireLocation, float pressure) {
         super((byte) 0x00, 5);
-        this.location = location;
+        this.tireLocation = tireLocation;
         this.pressure = pressure;
-        bytes[3] = location.getByte();
+        bytes[3] = tireLocation.getByte();
         ByteUtils.setBytes(bytes, Property.floatToBytes(pressure), 4);
     }
 
@@ -55,7 +55,7 @@ public class TirePressure extends Property {
         super(bytes);
         if (bytes.length < 8) throw new CommandParseException();
 
-        this.location = Location.fromByte(bytes[3]);
+        this.tireLocation = TireLocation.fromByte(bytes[3]);
         this.pressure = Property.getFloat(bytes, 4);
     }
 }

@@ -11,7 +11,7 @@ import com.highmobility.autoapi.property.diagnostics.TirePressure;
 import com.highmobility.autoapi.property.diagnostics.TireTemperature;
 import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.WheelRpm;
-import com.highmobility.autoapi.property.value.Location;
+import com.highmobility.autoapi.property.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -106,10 +106,10 @@ public class DiagnosticsTest {
         for (TirePressure pressure : state.getTirePressures()) {
             if (pressure.getPressure() != 2.31f) fail();
 
-            if (pressure.getLocation() == Location.FRONT_LEFT) propertyCount++;
-            if (pressure.getLocation() == Location.FRONT_RIGHT) propertyCount++;
-            if (pressure.getLocation() == Location.REAR_RIGHT) propertyCount++;
-            if (pressure.getLocation() == Location.REAR_LEFT) propertyCount++;
+            if (pressure.getTireLocation() == TireLocation.FRONT_LEFT) propertyCount++;
+            if (pressure.getTireLocation() == TireLocation.FRONT_RIGHT) propertyCount++;
+            if (pressure.getTireLocation() == TireLocation.REAR_RIGHT) propertyCount++;
+            if (pressure.getTireLocation() == TireLocation.REAR_LEFT) propertyCount++;
         }
 
         assertTrue(propertyCount == 4);
@@ -118,10 +118,10 @@ public class DiagnosticsTest {
         for (TireTemperature tireTemperature : state.getTireTemperatures()) {
             if (tireTemperature.getTemperature() != 40f) fail();
 
-            if (tireTemperature.getLocation() == Location.FRONT_LEFT) propertyCount++;
-            if (tireTemperature.getLocation() == Location.FRONT_RIGHT) propertyCount++;
-            if (tireTemperature.getLocation() == Location.REAR_RIGHT) propertyCount++;
-            if (tireTemperature.getLocation() == Location.REAR_LEFT) propertyCount++;
+            if (tireTemperature.getTireLocation() == TireLocation.FRONT_LEFT) propertyCount++;
+            if (tireTemperature.getTireLocation() == TireLocation.FRONT_RIGHT) propertyCount++;
+            if (tireTemperature.getTireLocation() == TireLocation.REAR_RIGHT) propertyCount++;
+            if (tireTemperature.getTireLocation() == TireLocation.REAR_LEFT) propertyCount++;
         }
 
         assertTrue(propertyCount == 4);
@@ -130,10 +130,10 @@ public class DiagnosticsTest {
         for (WheelRpm wheelRpm : state.getWheelRpms()) {
             if (wheelRpm.getRpm() != 746) fail();
 
-            if (wheelRpm.getLocation() == Location.FRONT_LEFT) propertyCount++;
-            if (wheelRpm.getLocation() == Location.FRONT_RIGHT) propertyCount++;
-            if (wheelRpm.getLocation() == Location.REAR_RIGHT) propertyCount++;
-            if (wheelRpm.getLocation() == Location.REAR_LEFT) propertyCount++;
+            if (wheelRpm.getTireLocation() == TireLocation.FRONT_LEFT) propertyCount++;
+            if (wheelRpm.getTireLocation() == TireLocation.FRONT_RIGHT) propertyCount++;
+            if (wheelRpm.getTireLocation() == TireLocation.REAR_RIGHT) propertyCount++;
+            if (wheelRpm.getTireLocation() == TireLocation.REAR_LEFT) propertyCount++;
         }
 
         assertTrue(propertyCount == 4);
@@ -198,20 +198,20 @@ public class DiagnosticsTest {
         builder.addCheckControlMessage(msg1);
         builder.addCheckControlMessage(msg2);
 
-        builder.addTirePressure(new TirePressure(Location.FRONT_LEFT, 2.31f));
-        builder.addTirePressure(new TirePressure(Location.FRONT_RIGHT, 2.31f));
-        builder.addTirePressure(new TirePressure(Location.REAR_RIGHT, 2.31f));
-        builder.addTirePressure(new TirePressure(Location.REAR_LEFT, 2.31f));
+        builder.addTirePressure(new TirePressure(TireLocation.FRONT_LEFT, 2.31f));
+        builder.addTirePressure(new TirePressure(TireLocation.FRONT_RIGHT, 2.31f));
+        builder.addTirePressure(new TirePressure(TireLocation.REAR_RIGHT, 2.31f));
+        builder.addTirePressure(new TirePressure(TireLocation.REAR_LEFT, 2.31f));
 
-        builder.addTireTemperature(new TireTemperature(Location.FRONT_LEFT, 40f));
-        builder.addTireTemperature(new TireTemperature(Location.FRONT_RIGHT, 40f));
-        builder.addTireTemperature(new TireTemperature(Location.REAR_RIGHT, 40f));
-        builder.addTireTemperature(new TireTemperature(Location.REAR_LEFT, 40f));
+        builder.addTireTemperature(new TireTemperature(TireLocation.FRONT_LEFT, 40f));
+        builder.addTireTemperature(new TireTemperature(TireLocation.FRONT_RIGHT, 40f));
+        builder.addTireTemperature(new TireTemperature(TireLocation.REAR_RIGHT, 40f));
+        builder.addTireTemperature(new TireTemperature(TireLocation.REAR_LEFT, 40f));
 
-        builder.addWheelRpm(new WheelRpm(Location.FRONT_LEFT, 746));
-        builder.addWheelRpm(new WheelRpm(Location.FRONT_RIGHT, 746));
-        builder.addWheelRpm(new WheelRpm(Location.REAR_RIGHT, 746));
-        builder.addWheelRpm(new WheelRpm(Location.REAR_LEFT, 746));
+        builder.addWheelRpm(new WheelRpm(TireLocation.FRONT_LEFT, 746));
+        builder.addWheelRpm(new WheelRpm(TireLocation.FRONT_RIGHT, 746));
+        builder.addWheelRpm(new WheelRpm(TireLocation.REAR_RIGHT, 746));
+        builder.addWheelRpm(new WheelRpm(TireLocation.REAR_LEFT, 746));
 
         DiagnosticsTroubleCode code1 = new DiagnosticsTroubleCode(2, "C1116FA", "RDU_212FR",
                 "PENDING");
