@@ -22,6 +22,9 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
+// TODO: 25/10/2018 delete
+
+/*
 public class SeatStateProperty extends Property {
     private static final byte IDENTIFIER = 0x01;
 
@@ -29,23 +32,29 @@ public class SeatStateProperty extends Property {
     boolean personDetected;
     boolean seatBeltFastened;
 
-    /**
+    */
+/**
      * @return The position of the seat.
-     */
+     *//*
+
     public Position getPosition() {
         return position;
     }
 
-    /**
+    */
+/**
      * @return Whether a person is detected on the seat.
-     */
+     *//*
+
     public boolean isPersonDetected() {
         return personDetected;
     }
 
-    /**
+    */
+/**
      * @return Whether seat belt is fastened.
-     */
+     *//*
+
     public boolean isSeatBeltFastened() {
         return seatBeltFastened;
     }
@@ -106,4 +115,4 @@ public class SeatStateProperty extends Property {
             return value;
         }
     }
-}
+}*/
