@@ -77,6 +77,7 @@ public class LightsTest {
     @Test public void control() {
         Bytes waitingForBytes = new Bytes("003612010001020200010003000100040003ff0000");
 
+
         Bytes bytes = new ControlLights(FrontExteriorLightState.ACTIVE_WITH_FULL_BEAM, false,
                 false, new int[]{255, 0, 0, 255});
 
