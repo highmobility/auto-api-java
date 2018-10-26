@@ -20,20 +20,18 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.TimeZone;
 
 import static com.highmobility.autoapi.property.StringProperty.CHARSET;
@@ -41,12 +39,10 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 /**
  * Property is a representation of some AutoAPI data. Specific data have specific subclasses like
  * StringProperty and FloatProperty.
- *
+ * <p>
  * Property has to have a value with a size greater or equal to 1.
  */
-public class Property implements HMProperty {
-    protected byte[] bytes;
-
+public class Property extends Bytes implements HMProperty {
     protected Property(byte identifier, int valueSize) {
         this.bytes = baseBytes(identifier, valueSize);
     }
@@ -107,10 +103,15 @@ public class Property implements HMProperty {
 
     /**
      * Set a new identifier for the property
+     *
      * @param identifier The identifier
      */
     public void setIdentifier(byte identifier) {
         bytes[0] = identifier;
+    }
+
+    public void logFailedToParse() {
+        Command.logger.info("Failed to parse property: " + toString());
     }
 
     protected byte[] baseBytes(byte identifier, int valueSize) {
@@ -151,7 +152,8 @@ public class Property implements HMProperty {
 
     // helper methods
 
-    public static byte[] getPropertyBytes(byte identifier, byte value) throws IllegalArgumentException {
+    public static byte[] getPropertyBytes(byte identifier, byte value) throws
+            IllegalArgumentException {
         byte[] bytes = new byte[4];
         bytes[0] = identifier;
         byte[] lengthBytes = intToBytes(1, 2);
@@ -161,7 +163,8 @@ public class Property implements HMProperty {
         return bytes;
     }
 
-    public static byte[] getPropertyBytes(byte identifier, int length, byte[] value) throws IllegalArgumentException {
+    public static byte[] getPropertyBytes(byte identifier, int length, byte[] value) throws
+            IllegalArgumentException {
         byte[] bytes = new byte[3];
         bytes[0] = identifier;
         byte[] lengthBytes = intToBytes(length, 2);
@@ -171,7 +174,8 @@ public class Property implements HMProperty {
         return bytes;
     }
 
-    public static byte[] getIntProperty(byte identifier, int value, int length) throws IllegalArgumentException {
+    public static byte[] getIntProperty(byte identifier, int value, int length) throws
+            IllegalArgumentException {
         byte[] bytes = new byte[]{
                 identifier,
                 0x00,

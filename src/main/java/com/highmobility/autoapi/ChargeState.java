@@ -328,8 +328,7 @@ public class ChargeState extends CommandWithProperties {
                         break;
                 }
             } catch (Exception e) {
-                logger.info("Failed to parse command:" + ByteUtils.hexFromBytes(bytes) + ", " +
-                        "property: " + new Bytes(property.getPropertyBytes()) + e.getMessage());
+                property.logFailedToParse();
             }
         }
 

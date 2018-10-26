@@ -233,8 +233,8 @@ public class CommandResolver {
                     command = new GetWindowsState(bytes);
                 } else if (bytesAreForType(bytes, WindowsState.TYPE)) {
                     command = new WindowsState(bytes);
-                } else if (bytesAreForType(bytes, OpenCloseWindows.TYPE)) {
-                    command = new OpenCloseWindows(bytes);
+                } else if (bytesAreForType(bytes, ControlWindows.TYPE)) {
+                    command = new ControlWindows(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.WINDSCREEN)) {
                 if (bytesAreForType(bytes, GetWindscreenState.TYPE)) {

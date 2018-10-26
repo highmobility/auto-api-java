@@ -333,7 +333,7 @@ public class DiagnosticsState extends CommandWithProperties {
         return troubleCodes;
     }
 
-    public DiagnosticsState(byte[] bytes) throws CommandParseException {
+    public DiagnosticsState(byte[] bytes) {
         super(bytes);
 
         ArrayList<CheckControlMessage> checkControlMessages = new ArrayList<>();
@@ -344,86 +344,93 @@ public class DiagnosticsState extends CommandWithProperties {
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case MILEAGE_IDENTIFIER:
-                    mileage = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-                case OIL_TEMPERATURE_IDENTIFIER:
-                    oilTemperature = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-                case SPEED_IDENTIFIER:
-                    speed = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-                case RPM_IDENTIFIER:
-                    rpm = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-                case FUEL_LEVEL_IDENTIFIER:
-                    fuelLevel = Property.getUnsignedInt(property.getValueBytes()) / 100f;
-                    break;
-                case RANGE_IDENTIFIER:
-                    range = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-                case WASHER_FLUID_LEVEL_IDENTIFIER:
-                    washerFluidLevel = WasherFluidLevel.fromByte(property.getValueByte());
-                    break;
-                case BATTERY_VOLTAGE_IDENTIFIER:
-                    batteryVoltage = Property.getFloat(property.getValueBytes());
-                    break;
-                case AD_BLUE_LEVEL_IDENTIFIER:
-                    adBlueLevel = Property.getFloat(property.getValueBytes());
-                    break;
-                case DISTANCE_DRIVEN_SINCE_RESET_IDENTIFIER:
-                    distanceDrivenSinceReset = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-                case DISTANCE_DRIVEN_SINCE_ENGINE_START_IDENTIFIER:
-                    distanceDrivenSinceEngineStart = Property.getUnsignedInt(property
-                            .getValueBytes());
-                    break;
-                case FUEL_VOLUME_IDENTIFIER:
-                    fuelVolume = Property.getFloat(property.getValueBytes());
-                    break;
-                case ANTI_LOCK_BRAKING_ACTIVE_IDENTIFIER:
-                    antiLockBrakingActive = Property.getBool(property.getValueByte());
-                    break;
-                case ENGINE_COOLANT_TEMPERATURE_IDENTIFIER:
-                    engineCoolantTemperature = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-                case ENGINE_TOTAL_OPERATING_HOURS_IDENTIFIER:
-                    engineTotalOperatingHours = Property.getFloat(property.getValueBytes());
-                    break;
-                case ENGINE_TOTAL_FUEL_CONSUMPTION_IDENTIFIER:
-                    engineTotalFuelConsumption = Property.getFloat(property.getValueBytes());
-                    break;
-                case BrakeFluidLevel.IDENTIFIER:
-                    brakeFluidLevel = BrakeFluidLevel.fromByte(property.getValueByte());
-                    break;
-                case ENGINE_TORQUE_IDENTIFIER:
-                    engineTorque = Property.getPercentage(property.getValueByte());
-                    break;
-                case ENGINE_LOAD_IDENTIFIER:
-                    engineLoad = Property.getPercentage(property.getValueByte());
-                    break;
-                case WHEEL_BASE_SPEED_IDENTIFIER:
-                    wheelBasedSpeed = Property.getSignedInt(property.getValueBytes());
-                    break;
-                case IDENTIFIER_BATTERY_LEVEL:
-                    batteryLevel = Property.getPercentage(property.getValueByte());
-                    break;
-                case IDENTIFIER_CHECK_CONTROL_MESSAGES:
-                    checkControlMessages.add(new CheckControlMessage(property.getPropertyBytes()));
-                    break;
-                case IDENTIFIER_TIRE_PRESSURES:
-                    tirePressures.add(new TirePressure(property.getPropertyBytes()));
-                    break;
-                case IDENTIFIER_TIRE_TEMPERATURES:
-                    tireTemperatures.add(new TireTemperature(property.getPropertyBytes()));
-                    break;
-                case IDENTIFIER_WHEEL_RPM:
-                    wheelRpms.add(new WheelRpm(property.getPropertyBytes()));
-                    break;
-                case IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE:
-                    troubleCodes.add(new DiagnosticsTroubleCode(property.getPropertyBytes()));
-                    break;
+            try {
+                switch (property.getPropertyIdentifier()) {
+                    case MILEAGE_IDENTIFIER:
+                        mileage = Property.getUnsignedInt(property.getValueBytes());
+                        break;
+                    case OIL_TEMPERATURE_IDENTIFIER:
+                        oilTemperature = Property.getUnsignedInt(property.getValueBytes());
+                        break;
+                    case SPEED_IDENTIFIER:
+                        speed = Property.getUnsignedInt(property.getValueBytes());
+                        break;
+                    case RPM_IDENTIFIER:
+                        rpm = Property.getUnsignedInt(property.getValueBytes());
+                        break;
+                    case FUEL_LEVEL_IDENTIFIER:
+                        fuelLevel = Property.getUnsignedInt(property.getValueBytes()) / 100f;
+                        break;
+                    case RANGE_IDENTIFIER:
+                        range = Property.getUnsignedInt(property.getValueBytes());
+                        break;
+                    case WASHER_FLUID_LEVEL_IDENTIFIER:
+                        washerFluidLevel = WasherFluidLevel.fromByte(property.getValueByte());
+                        break;
+                    case BATTERY_VOLTAGE_IDENTIFIER:
+                        batteryVoltage = Property.getFloat(property.getValueBytes());
+                        break;
+                    case AD_BLUE_LEVEL_IDENTIFIER:
+                        adBlueLevel = Property.getFloat(property.getValueBytes());
+                        break;
+                    case DISTANCE_DRIVEN_SINCE_RESET_IDENTIFIER:
+                        distanceDrivenSinceReset = Property.getUnsignedInt(property.getValueBytes
+                                ());
+                        break;
+                    case DISTANCE_DRIVEN_SINCE_ENGINE_START_IDENTIFIER:
+                        distanceDrivenSinceEngineStart = Property.getUnsignedInt(property
+                                .getValueBytes());
+                        break;
+                    case FUEL_VOLUME_IDENTIFIER:
+                        fuelVolume = Property.getFloat(property.getValueBytes());
+                        break;
+                    case ANTI_LOCK_BRAKING_ACTIVE_IDENTIFIER:
+                        antiLockBrakingActive = Property.getBool(property.getValueByte());
+                        break;
+                    case ENGINE_COOLANT_TEMPERATURE_IDENTIFIER:
+                        engineCoolantTemperature = Property.getUnsignedInt(property.getValueBytes
+                                ());
+                        break;
+                    case ENGINE_TOTAL_OPERATING_HOURS_IDENTIFIER:
+                        engineTotalOperatingHours = Property.getFloat(property.getValueBytes());
+                        break;
+                    case ENGINE_TOTAL_FUEL_CONSUMPTION_IDENTIFIER:
+                        engineTotalFuelConsumption = Property.getFloat(property.getValueBytes());
+                        break;
+                    case BrakeFluidLevel.IDENTIFIER:
+                        brakeFluidLevel = BrakeFluidLevel.fromByte(property.getValueByte());
+                        break;
+                    case ENGINE_TORQUE_IDENTIFIER:
+                        engineTorque = Property.getPercentage(property.getValueByte());
+                        break;
+                    case ENGINE_LOAD_IDENTIFIER:
+                        engineLoad = Property.getPercentage(property.getValueByte());
+                        break;
+                    case WHEEL_BASE_SPEED_IDENTIFIER:
+                        wheelBasedSpeed = Property.getSignedInt(property.getValueBytes());
+                        break;
+                    case IDENTIFIER_BATTERY_LEVEL:
+                        batteryLevel = Property.getPercentage(property.getValueByte());
+                        break;
+                    case IDENTIFIER_CHECK_CONTROL_MESSAGES:
+                        checkControlMessages.add(new CheckControlMessage(property
+                                .getPropertyBytes()));
+                        break;
+                    case IDENTIFIER_TIRE_PRESSURES:
+                        tirePressures.add(new TirePressure(property.getPropertyBytes()));
+                        break;
+                    case IDENTIFIER_TIRE_TEMPERATURES:
+                        tireTemperatures.add(new TireTemperature(property.getPropertyBytes()));
+                        break;
+                    case IDENTIFIER_WHEEL_RPM:
+                        wheelRpms.add(new WheelRpm(property.getPropertyBytes()));
+                        break;
+                    case IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE:
+                        troubleCodes.add(new DiagnosticsTroubleCode(property.getPropertyBytes()));
+                        break;
+                }
+            } catch (CommandParseException e) {
+                property.logFailedToParse();
             }
         }
 

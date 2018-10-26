@@ -24,7 +24,6 @@ import com.highmobility.autoapi.property.AutoHvacProperty;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.ByteUtils;
 
 /**
  * Command sent when a Get Climate State command is received by the car. Also sent once the HVAC
@@ -129,52 +128,46 @@ public class ClimateState extends CommandWithProperties {
         return autoHvacState;
     }
 
-    ClimateState(byte[] bytes) throws CommandParseException {
+    ClimateState(byte[] bytes) {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
-
-            switch (property.getPropertyIdentifier()) {
-                case INSIDE_TEMPERATURE_IDENTIFIER:
-                    insideTemperature = Property.getFloat(property.getValueBytes());
-                    break;
-                case OUTSIDE_TEMPERATURE_IDENTIFIER:
-                    outsideTemperature = Property.getFloat(property.getValueBytes());
-                    break;
-                case DRIVER_TEMPERATURE_SETTING_IDENTIFIER:
-                    driverTemperatureSetting = Property.getFloat(property.getValueBytes());
-                    break;
-                case PASSENGER_TEMPERATURE_SETTING_IDENTIFIER:
-                    passengerTemperatureSetting = Property.getFloat(property.getValueBytes());
-                    break;
-                case HVAC_ACTIVE_IDENTIFIER:
-                    hvacActive = Property.getBool(property.getValueByte());
-                    break;
-                case DEFOGGING_ACTIVE_IDENTIFIER:
-                    defoggingActive = Property.getBool(property.getValueByte());
-                    break;
-                case DEFROSTING_ACTIVE_IDENTIFIER:
-                    defrostingActive = Property.getBool(property.getValueByte());
-                    break;
-                case IONISING_ACTIVE_IDENTIFIER:
-                    ionisingActive = Property.getBool(property.getValueByte());
-                    break;
-                case DEFROSTING_TEMPERATURE_IDENTIFIER:
-                    defrostingTemperature = Property.getFloat(property.getValueBytes());
-                    break;
-                case HVAC_PROFILE_IDENTIFIER:
-                    byte[] value = property.getValueBytes();
-                    byte hvacActiveOnDays = value[0];
-
-                    for (int j = 0; j < 7; j++) {
-                        boolean active = ByteUtils.getBit(hvacActiveOnDays, j);
-                        int hour = value[1 + j * 2];
-                        int minute = value[1 + j * 2 + 1];
-                    }
-
-                    autoHvacState = new AutoHvacProperty(property.getPropertyBytes());
-                    break;
+            try {
+                switch (property.getPropertyIdentifier()) {
+                    case INSIDE_TEMPERATURE_IDENTIFIER:
+                        insideTemperature = Property.getFloat(property.getValueBytes());
+                        break;
+                    case OUTSIDE_TEMPERATURE_IDENTIFIER:
+                        outsideTemperature = Property.getFloat(property.getValueBytes());
+                        break;
+                    case DRIVER_TEMPERATURE_SETTING_IDENTIFIER:
+                        driverTemperatureSetting = Property.getFloat(property.getValueBytes());
+                        break;
+                    case PASSENGER_TEMPERATURE_SETTING_IDENTIFIER:
+                        passengerTemperatureSetting = Property.getFloat(property.getValueBytes());
+                        break;
+                    case HVAC_ACTIVE_IDENTIFIER:
+                        hvacActive = Property.getBool(property.getValueByte());
+                        break;
+                    case DEFOGGING_ACTIVE_IDENTIFIER:
+                        defoggingActive = Property.getBool(property.getValueByte());
+                        break;
+                    case DEFROSTING_ACTIVE_IDENTIFIER:
+                        defrostingActive = Property.getBool(property.getValueByte());
+                        break;
+                    case IONISING_ACTIVE_IDENTIFIER:
+                        ionisingActive = Property.getBool(property.getValueByte());
+                        break;
+                    case DEFROSTING_TEMPERATURE_IDENTIFIER:
+                        defrostingTemperature = Property.getFloat(property.getValueBytes());
+                        break;
+                    case HVAC_PROFILE_IDENTIFIER:
+                        autoHvacState = new AutoHvacProperty(property.getPropertyBytes());
+                        break;
+                }
+            } catch (Exception e) {
+                property.logFailedToParse();
             }
         }
     }
@@ -215,7 +208,6 @@ public class ClimateState extends CommandWithProperties {
         }
 
         /**
-         *
          * @param insideTemperature The inside temperature.
          * @return The builder.
          */
@@ -226,7 +218,6 @@ public class ClimateState extends CommandWithProperties {
         }
 
         /**
-         *
          * @param outsideTemperature The outside temperature.
          * @return The builder.
          */
@@ -237,29 +228,28 @@ public class ClimateState extends CommandWithProperties {
         }
 
         /**
-         *
          * @param driverTemperatureSetting The driver temperature.
          * @return The builder.
          */
         public Builder setDriverTemperatureSetting(Float driverTemperatureSetting) {
             this.driverTemperatureSetting = driverTemperatureSetting;
-            addProperty(new FloatProperty(DRIVER_TEMPERATURE_SETTING_IDENTIFIER, driverTemperatureSetting));
+            addProperty(new FloatProperty(DRIVER_TEMPERATURE_SETTING_IDENTIFIER,
+                    driverTemperatureSetting));
             return this;
         }
 
         /**
-         *
          * @param passengerTemperatureSetting The passenger temperature setting.
          * @return The builder.
          */
         public Builder setPassengerTemperatureSetting(Float passengerTemperatureSetting) {
             this.passengerTemperatureSetting = passengerTemperatureSetting;
-            addProperty(new FloatProperty(PASSENGER_TEMPERATURE_SETTING_IDENTIFIER, passengerTemperatureSetting));
+            addProperty(new FloatProperty(PASSENGER_TEMPERATURE_SETTING_IDENTIFIER,
+                    passengerTemperatureSetting));
             return this;
         }
 
         /**
-         *
          * @param hvacActive Whether HVAC is active or not.
          * @return The builder.
          */
@@ -270,7 +260,6 @@ public class ClimateState extends CommandWithProperties {
         }
 
         /**
-         *
          * @param defoggingActive Whether defogging is active or not.
          * @return The builder.
          */
@@ -281,7 +270,6 @@ public class ClimateState extends CommandWithProperties {
         }
 
         /**
-         *
          * @param defrostingActive Whether defrosting is active or not.
          * @return The builder.
          */
@@ -292,7 +280,6 @@ public class ClimateState extends CommandWithProperties {
         }
 
         /**
-         *
          * @param ionisingActive Whether ionising is active or not.
          * @return The builder.
          */
@@ -303,18 +290,17 @@ public class ClimateState extends CommandWithProperties {
         }
 
         /**
-         *
          * @param defrostingTemperature The defrosting temperature
          * @return The builder.
          */
         public Builder setDefrostingTemperature(Float defrostingTemperature) {
             this.defrostingTemperature = defrostingTemperature;
-            addProperty(new FloatProperty(DEFROSTING_TEMPERATURE_IDENTIFIER, defrostingTemperature));
+            addProperty(new FloatProperty(DEFROSTING_TEMPERATURE_IDENTIFIER,
+                    defrostingTemperature));
             return this;
         }
 
         /**
-         *
          * @param autoHvacState The Auto HVAC state.
          * @return The builder.
          */
