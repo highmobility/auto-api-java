@@ -127,8 +127,10 @@ public class CommandResolver {
                     command = new StartStopDefrosting(bytes);
                 } else if (bytesAreForType(bytes, StartStopDefogging.TYPE)) {
                     command = new StartStopDefogging(bytes);
-                } else if (bytesAreForType(bytes, SetClimateProfile.TYPE)) {
-                    command = new SetClimateProfile(bytes);
+                } else if (bytesAreForType(bytes, SetHvacStartingTimes.TYPE)) {
+                    command = new SetHvacStartingTimes(bytes);
+                } else if (bytesAreForType(bytes, SetTemperatureSettings.TYPE)) {
+                    command = new SetTemperatureSettings(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.ROOFTOP)) {
                 if (bytesAreForType(bytes, GetRooftopState.TYPE)) {

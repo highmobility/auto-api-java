@@ -217,7 +217,8 @@ public class MaintenanceState extends CommandWithProperties {
         this.automaticTeleserviceCallDate = builder.automaticTeleserviceCallDate;
         this.teleserviceBatteryCallDate = builder.teleserviceBatteryCallDate;
         this.nextInspectionDate = builder.nextInspectionDate;
-        this.conditionBasedServices = builder.conditionBasedServices.toArray(new ConditionBasedService[0]);
+        this.conditionBasedServices = builder.conditionBasedServices.toArray(new
+                ConditionBasedService[0]);
         this.brakeFluidChangeDate = builder.brakeFluidChangeDate;
     }
 

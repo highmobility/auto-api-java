@@ -35,7 +35,7 @@ import com.highmobility.autoapi.OpenCloseTrunk;
 import com.highmobility.autoapi.RooftopState;
 import com.highmobility.autoapi.SendHeartRate;
 import com.highmobility.autoapi.SetChargeLimit;
-import com.highmobility.autoapi.SetClimateProfile;
+import com.highmobility.autoapi.SetHvacStartingTimes;
 import com.highmobility.autoapi.StartControlMode;
 import com.highmobility.autoapi.StartStopCharging;
 import com.highmobility.autoapi.StartStopDefogging;
@@ -88,7 +88,7 @@ public class CapabilitiesTest {
 
         assertTrue(capabilities.isSupported(GetClimateState.TYPE));
         assertTrue(capabilities.isSupported(ClimateState.TYPE));
-        assertTrue(capabilities.isSupported(SetClimateProfile.TYPE));
+        assertTrue(capabilities.isSupported(SetHvacStartingTimes.TYPE));
         assertTrue(capabilities.isSupported(StartStopHvac.TYPE));
         assertTrue(capabilities.isSupported(StartStopDefogging.TYPE));
         assertTrue(capabilities.isSupported(StartStopDefrosting.TYPE));
@@ -200,7 +200,7 @@ public class CapabilitiesTest {
         Type[] supportedTypes = new Type[]{
                 GetClimateState.TYPE,
                 ClimateState.TYPE,
-                SetClimateProfile.TYPE,
+                SetHvacStartingTimes.TYPE,
                 StartStopHvac.TYPE,
                 StartStopDefogging.TYPE,
                 StartStopDefrosting.TYPE,
@@ -224,7 +224,7 @@ public class CapabilitiesTest {
         Type[] climateSupportedTypes = new Type[]{
                 GetClimateState.TYPE,
                 ClimateState.TYPE,
-                SetClimateProfile.TYPE,
+                SetHvacStartingTimes.TYPE,
                 StartStopHvac.TYPE,
                 StartStopDefogging.TYPE,
                 StartStopDefrosting.TYPE,
@@ -259,7 +259,7 @@ public class CapabilitiesTest {
         Type[] supportedTypes = new Type[]{
                 GetClimateState.TYPE,
                 ClimateState.TYPE,
-                SetClimateProfile.TYPE,
+                SetHvacStartingTimes.TYPE,
                 StartStopHvac.TYPE,
                 StartStopDefogging.TYPE,
                 StartStopDefrosting.TYPE,

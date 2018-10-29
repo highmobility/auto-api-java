@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -27,8 +28,9 @@ import com.highmobility.autoapi.property.Property;
  * cooling, defrosting and defogging as appropriate. The result is sent through the evented Climate
  * State message.
  */
-public class StartStopHvac extends Command {
-    public static final Type TYPE = new Type(Identifier.CLIMATE, 0x03);
+public class StartStopHvac extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.CLIMATE, 0x13);
+    private static final byte IDENTIFIER = 0x01;
 
     /**
      * @return Whether HVAC should be started.
@@ -40,12 +42,14 @@ public class StartStopHvac extends Command {
     private final boolean start;
 
     public StartStopHvac(boolean start) {
-        super(TYPE.addByte(Property.boolToByte(start)));
+        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, start)));
         this.start = start;
     }
 
-    StartStopHvac(byte[] bytes) {
+    StartStopHvac(byte[] bytes) throws CommandParseException {
         super(bytes);
-        start = Property.getBool(bytes[3]);
+        Property prop = getProperty(IDENTIFIER);
+        if (prop == null) throw new CommandParseException();
+        start = Property.getBool(prop.getValueByte());
     }
 }
