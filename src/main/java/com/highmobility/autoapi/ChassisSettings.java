@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Axle;
+import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.IntegerProperty;

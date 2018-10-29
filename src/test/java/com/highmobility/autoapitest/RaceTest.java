@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetRaceState;
 import com.highmobility.autoapi.RaceState;
 import com.highmobility.autoapi.property.AccelerationProperty;
-import com.highmobility.autoapi.property.Axle;
+import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.utils.ByteUtils;

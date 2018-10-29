@@ -93,7 +93,7 @@ public class WindscreenTest {
         builder.setDamageConfidence(.95f);
 
         //2017-07-29T14:09:31+00:00
-        Calendar date = TestUtils.getCalendar("2017-01-10T16:32:05");
+        Calendar date = TestUtils.getUTCCalendar("2017-01-10T16:32:05");
         builder.setDamageDetectionTime(date);
 
         WindscreenState command = builder.build();

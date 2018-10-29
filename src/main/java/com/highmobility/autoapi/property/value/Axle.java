@@ -18,7 +18,7 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi.property.value;
 
 import com.highmobility.autoapi.CommandParseException;
 

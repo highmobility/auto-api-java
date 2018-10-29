@@ -8,7 +8,7 @@ import com.highmobility.autoapi.SetChassisPosition;
 import com.highmobility.autoapi.SetDrivingMode;
 import com.highmobility.autoapi.SetSpringRate;
 import com.highmobility.autoapi.StartStopSportChrono;
-import com.highmobility.autoapi.property.Axle;
+import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.SpringRateProperty;
 import com.highmobility.autoapi.property.value.StartStop;

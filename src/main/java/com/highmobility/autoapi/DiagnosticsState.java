@@ -430,7 +430,7 @@ public class DiagnosticsState extends CommandWithProperties {
                         break;
                 }
             } catch (CommandParseException e) {
-                property.logFailedToParse();
+                property.printFailedToParse(e);
             }
         }
 

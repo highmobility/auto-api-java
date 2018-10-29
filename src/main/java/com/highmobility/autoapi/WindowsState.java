@@ -97,7 +97,7 @@ public class WindowsState extends CommandWithProperties {
                         break;
                 }
             } catch (CommandParseException e) {
-                property.logFailedToParse();
+                property.printFailedToParse();
             }
         }
 

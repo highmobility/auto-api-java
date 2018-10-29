@@ -167,7 +167,7 @@ public class ClimateState extends CommandWithProperties {
                         break;
                 }
             } catch (Exception e) {
-                property.logFailedToParse();
+                property.printFailedToParse(e);
             }
         }
     }

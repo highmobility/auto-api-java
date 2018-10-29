@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.AccelerationProperty;
-import com.highmobility.autoapi.property.Axle;
+import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
 import com.highmobility.autoapi.property.FloatProperty;

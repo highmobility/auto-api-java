@@ -65,9 +65,9 @@ public class PropertyTest {
         Bytes bytes = new Bytes(parkingBrakeCommand + "A2000811010A1122000000");
         String expectedDate = "2017-01-10T17:34:00";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
-        assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
+        assertTrue(TestUtils.dateIsSameUTC(command.getTimestamp(), expectedDate));
 
-        Calendar calendar = TestUtils.getCalendar(expectedDate);
+        Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
         builder.setIsActive(true);
         builder.setTimestamp(calendar);

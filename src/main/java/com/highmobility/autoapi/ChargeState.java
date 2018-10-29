@@ -32,9 +32,6 @@ import com.highmobility.autoapi.property.charging.ChargingTimer;
 import com.highmobility.autoapi.property.charging.DepartureTime;
 import com.highmobility.autoapi.property.charging.PlugType;
 import com.highmobility.autoapi.property.charging.ReductionTime;
-import com.highmobility.autoapi.property.value.Time;
-import com.highmobility.utils.ByteUtils;
-import com.highmobility.value.Bytes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -328,7 +325,7 @@ public class ChargeState extends CommandWithProperties {
                         break;
                 }
             } catch (Exception e) {
-                property.logFailedToParse();
+                property.printFailedToParse();
             }
         }
 

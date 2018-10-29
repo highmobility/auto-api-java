@@ -103,10 +103,10 @@ public class ChargingTest {
 
         assertTrue(state.getTimers().length == 2);
         Calendar departureDate = state.getTimer(ChargingTimer.Type.DEPARTURE_TIME).getTime();
-        assertTrue(TestUtils.dateIsSame(departureDate, "2018-01-10T16:32:05"));
+        assertTrue(TestUtils.dateIsSameUTC(departureDate, "2018-01-10T16:32:05"));
 
         Calendar preferredEndTime = state.getTimer(ChargingTimer.Type.PREFERRED_END_TIME).getTime();
-        assertTrue(TestUtils.dateIsSame(preferredEndTime, "2018-01-10T16:32:06"));
+        assertTrue(TestUtils.dateIsSameUTC(preferredEndTime, "2018-01-10T16:32:06"));
 
         assertTrue(state.getPluggedIn() == true);
         assertTrue(state.getActiveState() == ChargingState.CHARGING);
@@ -120,7 +120,7 @@ public class ChargingTest {
 
     @Test(expected = IllegalArgumentException.class) public void failSameChargingTimers() {
         try {
-            Calendar c = TestUtils.getCalendar("2018-01-10T16:32:05");
+            Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
             ChargingTimer[] timers = new ChargingTimer[2];
             timers[0] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
             timers[1] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
@@ -158,8 +158,8 @@ public class ChargingTest {
 
         builder.setBatteryTemperature(38.4f);
 
-        Calendar departureDate = TestUtils.getCalendar("2018-01-10T16:32:05");
-        Calendar preferredEndTime = TestUtils.getCalendar("2018-01-10T16:32:06");
+        Calendar departureDate = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
+        Calendar preferredEndTime = TestUtils.getUTCCalendar("2018-01-10T16:32:06");
         ChargingTimer timer = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME,
                 departureDate);
         ChargingTimer timer2 = new ChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME,
@@ -226,8 +226,8 @@ public class ChargingTest {
     @Test public void SetChargeTimer() throws ParseException {
         Bytes waitingForBytes = new Bytes
                 ("0023160D00090212010a10200500000D00090113010a1020070000");
-        Calendar c = TestUtils.getCalendar("2018-01-10T16:32:05");
-        Calendar c2 = TestUtils.getCalendar("2019-01-10T16:32:07");
+        Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
+        Calendar c2 = TestUtils.getUTCCalendar("2019-01-10T16:32:07");
 
         ChargingTimer[] timers = new ChargingTimer[2];
         timers[0] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
@@ -244,8 +244,8 @@ public class ChargingTest {
         Calendar preferredEndTime = command.getChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME)
                 .getTime();
 
-        assertTrue(TestUtils.dateIsSame(departureTime, "2018-01-10T16:32:05"));
-        assertTrue(TestUtils.dateIsSame(preferredEndTime, "2019-01-10T16:32:07"));
+        assertTrue(TestUtils.dateIsSameUTC(departureTime, "2018-01-10T16:32:05"));
+        assertTrue(TestUtils.dateIsSameUTC(preferredEndTime, "2019-01-10T16:32:07"));
     }
 
     @Test public void SetReductionTimes() {

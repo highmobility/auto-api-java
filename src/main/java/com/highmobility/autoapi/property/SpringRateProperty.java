@@ -21,6 +21,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.value.Axle;
 
 public class SpringRateProperty extends Property {
     Axle axle;
