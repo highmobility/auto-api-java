@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.AccelerationProperty;
-import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
 import com.highmobility.autoapi.property.FloatProperty;
@@ -29,6 +28,7 @@ import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.value.Axle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +56,8 @@ public class RaceState extends CommandWithProperties {
     private static final byte ACCELERATOR_PEDAL_IDLE_SWITCH_IDENTIFIER = 0x10;
     private static final byte ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER = 0x11;
 
+    private static final byte IDENTIFIER_VEHICLE_MOVING = 0x12;
+
     AccelerationProperty[] accelerationProperties;
 
     Float underSteering;
@@ -75,6 +77,8 @@ public class RaceState extends CommandWithProperties {
     Boolean clutchPedalSwitchActive;
     Boolean acceleratorPedalIdleSwitchActive;
     Boolean acceleratorPedalKickdownSwitchActive;
+    // level8
+    Boolean vehicleMoving;
 
     /**
      * @param accelerationType The acceleration type.
@@ -225,6 +229,13 @@ public class RaceState extends CommandWithProperties {
         return acceleratorPedalKickdownSwitchActive;
     }
 
+    /**
+     * @return The vehicle moving state.
+     */
+    public Boolean isVehicleMoving() {
+        return vehicleMoving;
+    }
+
     public RaceState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
@@ -287,6 +298,9 @@ public class RaceState extends CommandWithProperties {
                     acceleratorPedalKickdownSwitchActive = Property.getBool(property.getValueByte
                             ());
                     break;
+                case IDENTIFIER_VEHICLE_MOVING:
+                    vehicleMoving = Property.getBool(property.getValueByte());
+                    break;
             }
         }
 
@@ -323,6 +337,7 @@ public class RaceState extends CommandWithProperties {
         clutchPedalSwitchActive = builder.clutchPedalSwitchActive;
         acceleratorPedalIdleSwitchActive = builder.acceleratorPedalIdleSwitchActive;
         acceleratorPedalKickdownSwitchActive = builder.acceleratorPedalKickdownSwitchActive;
+        vehicleMoving = builder.vehicleMoving;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
@@ -345,6 +360,8 @@ public class RaceState extends CommandWithProperties {
         private Boolean clutchPedalSwitchActive;
         private Boolean acceleratorPedalIdleSwitchActive;
         private Boolean acceleratorPedalKickdownSwitchActive;
+
+        public Boolean vehicleMoving;
 
         public Builder() {
             super(TYPE);
@@ -514,7 +531,7 @@ public class RaceState extends CommandWithProperties {
                     brakePedalPosition));
             return this;
         }
-        
+
         /**
          * @param brakePedalSwitchActive The brake pedal switch state.
          * @return The builder.
@@ -557,6 +574,16 @@ public class RaceState extends CommandWithProperties {
             this.acceleratorPedalKickdownSwitchActive = acceleratorPedalKickdownSwitchActive;
             addProperty(new BooleanProperty(ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER,
                     acceleratorPedalKickdownSwitchActive));
+            return this;
+        }
+
+        /**
+         * @param vehicleMoving The vehicle moving state.
+         * @return The builder.
+         */
+        public Builder setVehicleMoving(Boolean vehicleMoving) {
+            this.vehicleMoving = vehicleMoving;
+            addProperty(new BooleanProperty(IDENTIFIER_VEHICLE_MOVING, vehicleMoving));
             return this;
         }
 

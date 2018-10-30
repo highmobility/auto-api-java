@@ -5,15 +5,13 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetRaceState;
 import com.highmobility.autoapi.RaceState;
 import com.highmobility.autoapi.property.AccelerationProperty;
-import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
 import com.highmobility.autoapi.property.GearMode;
+import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -22,11 +20,14 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class RaceTest {
+    Bytes bytes = new Bytes(
+            "005701010005003f5d2f1b01000501bf40c49c020001130300010004000162050001E20600044138f5c307000440d51eb808000103090001010A000201010B0001040C0001040D000101" +
+                    "0E0001010F0001011000010111000101" /*level7*/ +
+                    "12000101" /* level8 */
+    );
+
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "005701010005003f5d2f1b01000501bf40c49c020001130300010004000162050001E20600044138f5c307000440d51eb808000103090001010A000201010B0001040C0001040D000101" +
-                        "0E0001010F0001011000010111000101" /*level7*/);
 
         Command command = null;
         try {
@@ -61,6 +62,8 @@ public class RaceTest {
         assertTrue(state.isClutchPedalSwitchActive() == true);
         assertTrue(state.isAcceleratorPedalIdleSwitchActive() == true);
         assertTrue(state.isAcceleratorPedalKickdownSwitchActive() == true);
+
+        assertTrue(state.isVehicleMoving() == true);
     }
 
     @Test public void build() {
@@ -87,11 +90,10 @@ public class RaceTest {
         builder.setClutchPedalSwitchActive(true);
         builder.setAcceleratorPedalIdleSwitchActive(true);
         builder.setAcceleratorPedalKickdownSwitchActive(true);
+        builder.setVehicleMoving(true);
 
         RaceState state = builder.build();
-        assertTrue(Arrays.equals(state.getByteArray(), ByteUtils.bytesFromHex
-                ("005701010005003f5d2f1b01000501bf40c49c020001130300010004000162050001E20600044138f5c307000440d51eb808000103090001010A000201010B0001040C0001040D000101" +
-                        "0E0001010F0001011000010111000101" /*level7*/)));
+        assertTrue(state.equals(bytes));
     }
 
     @Test public void get() {
