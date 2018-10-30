@@ -24,10 +24,11 @@ import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindscreenDamage;
 import com.highmobility.autoapi.property.WindscreenDamageZone;
-import com.highmobility.autoapi.property.WindscreenReplacementState;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Set the windscreen damage. This is for instance used to reset the glass damage or correct it. The
@@ -35,44 +36,34 @@ import java.util.List;
  * automatically set to either 0% or 100%.
  */
 public class SetWindscreenDamage extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x02);
+    public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x12);
 
     private WindscreenDamage damage;
     private WindscreenDamageZone zone;
-    private WindscreenReplacementState replacementState;
 
     /**
      * @return The windscreen damage.
      */
-    public WindscreenDamage getDamage() {
+    @Nullable public WindscreenDamage getDamage() {
         return damage;
     }
 
     /**
      * @return The windscreen damage zone.
      */
-    public WindscreenDamageZone getZone() {
+    @Nullable public WindscreenDamageZone getZone() {
         return zone;
     }
 
     /**
-     * @return The windscreen replacement state.
+     * @param damage The damage size
+     * @param zone   The damage zone
      */
-    public WindscreenReplacementState getReplacementState() {
-        return replacementState;
-    }
-
-    /**
-     * @param damage           The damage size
-     * @param zone             The damage zone
-     * @param replacementState The replacement state
-     */
-    public SetWindscreenDamage(WindscreenDamage damage, WindscreenDamageZone zone,
-                               WindscreenReplacementState replacementState) {
-        super(TYPE, getProperties(damage, zone, replacementState));
+    public SetWindscreenDamage(@Nullable WindscreenDamage damage, @Nullable WindscreenDamageZone
+            zone) {
+        super(TYPE, getProperties(damage, zone));
         this.damage = damage;
         this.zone = zone;
-        this.replacementState = replacementState;
     }
 
     SetWindscreenDamage(byte[] bytes) throws CommandParseException {
@@ -85,21 +76,15 @@ public class SetWindscreenDamage extends CommandWithProperties {
                 case WindscreenDamageZone.IDENTIFIER:
                     zone = new WindscreenDamageZone(property.getValueByte());
                     break;
-                case WindscreenReplacementState.IDENTIFIER:
-                    replacementState = WindscreenReplacementState.fromByte(property.getValueByte());
-                    break;
             }
         }
     }
 
-    static HMProperty[] getProperties(WindscreenDamage damage, WindscreenDamageZone zone,
-                                      WindscreenReplacementState replacementState) {
-
+    static HMProperty[] getProperties(WindscreenDamage damage, WindscreenDamageZone zone) {
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 
         if (damage != null) propertiesBuilder.add(damage);
         if (zone != null) propertiesBuilder.add(zone);
-        if (replacementState != null) propertiesBuilder.add(replacementState);
 
         return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
     }

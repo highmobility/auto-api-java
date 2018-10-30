@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.maintenance.ConditionBasedService;
@@ -264,7 +263,7 @@ public class MaintenanceState extends CommandWithProperties {
             addProperty(new IntegerProperty(DAYS_IDENTIFIER, daysToNextService, 2));
             return this;
         }
-
+/*
         public Builder setCbsReportsCount(Integer cbsReportsCount) {
             this.cbsReportsCount = cbsReportsCount;
             addProperty(new IntegerProperty(IDENTIFIER_CBS_REPORTS_COUNT, cbsReportsCount, 1));
@@ -338,6 +337,7 @@ public class MaintenanceState extends CommandWithProperties {
                     brakeFluidChangeDate));
             return this;
         }
+        */
 
         public MaintenanceState build() {
             return new MaintenanceState(this);

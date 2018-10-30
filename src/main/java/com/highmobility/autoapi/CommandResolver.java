@@ -245,6 +245,10 @@ public class CommandResolver {
                     command = new WindscreenState(bytes);
                 } else if (bytesAreForType(bytes, SetWindscreenDamage.TYPE)) {
                     command = new SetWindscreenDamage(bytes);
+                } else if (bytesAreForType(bytes, SetWindscreenReplacementNeeded.TYPE)) {
+                    command = new SetWindscreenReplacementNeeded(bytes);
+                } else if (bytesAreForType(bytes, ControlWipers.TYPE)) {
+                    command = new ControlWipers(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.FUELING)) {
                 if (bytesAreForType(bytes, GetGasFlapState.TYPE)) {
@@ -407,7 +411,10 @@ public class CommandResolver {
                         .trimmedBytes(bytes, 3)) + ".. ");
                 command = new Command(bytes);
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e)
+
+        {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
             Command.logger.info("Failed to parse command " + ByteUtils.hexFromBytes(ByteUtils
@@ -415,7 +422,9 @@ public class CommandResolver {
         }
 
         // The identifier was unknown. Return the base class.
-        if (command == null) command = new Command(bytes);
+        if (command == null) command = new
+
+                Command(bytes);
 
         return command;
     }

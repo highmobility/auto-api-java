@@ -27,8 +27,6 @@ public enum WindscreenReplacementState implements HMProperty {
     REPLACEMENT_NOT_NEEDED((byte) 0x01),
     REPLACEMENT_NEEDED((byte) 0x02);
 
-    public static final byte IDENTIFIER = 0x06;
-
     public static WindscreenReplacementState fromByte(byte byteValue) throws CommandParseException {
         WindscreenReplacementState[] values = WindscreenReplacementState.values();
 
@@ -43,6 +41,7 @@ public enum WindscreenReplacementState implements HMProperty {
     }
 
     private byte value;
+    private byte identifier;
 
     WindscreenReplacementState(byte value) {
         this.value = value;
@@ -52,8 +51,13 @@ public enum WindscreenReplacementState implements HMProperty {
         return value;
     }
 
+    public WindscreenReplacementState setIdentifier(byte identifier) {
+        this.identifier = identifier;
+        return this;
+    }
+
     @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
+        return identifier;
     }
 
     @Override public int getPropertyLength() {

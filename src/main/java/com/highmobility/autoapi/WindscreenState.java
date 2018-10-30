@@ -42,6 +42,8 @@ public class WindscreenState extends CommandWithProperties {
 
     public static final byte DAMAGE_CONFIDENCE_IDENTIFIER = 0x07;
     public static final byte DAMAGE_DETECTION_TIME_IDENTIFIER = 0x08;
+    public static final byte WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER = 0x06;
+
 
     WiperState wiperState;
     WiperIntensity wiperIntensity;
@@ -135,7 +137,7 @@ public class WindscreenState extends CommandWithProperties {
                     // damage zone
                     windscreenDamageZone = new WindscreenDamageZone(property.getValueByte());
                     break;
-                case WindscreenReplacementState.IDENTIFIER:
+                case WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER:
                     windscreenReplacementState = WindscreenReplacementState.fromByte(property
                             .getValueByte());
                     // replacement

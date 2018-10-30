@@ -29,6 +29,7 @@ import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Used for commands with properties. Can have 0 properties.
@@ -135,7 +136,7 @@ public class CommandWithProperties extends Command {
         properties = builder.toArray(new Property[builder.size()]);
     }
 
-    CommandWithProperties(Type type, HMProperty[] properties) throws IllegalArgumentException {
+    CommandWithProperties(Type type, HMProperty[] properties) {
         super(type);
         if (propertiesExpected() && (properties == null || properties.length == 0))
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
@@ -155,6 +156,10 @@ public class CommandWithProperties extends Command {
                 timestamp = Property.getCalendar(propertyBytes, 3);
             }
         }
+    }
+
+    CommandWithProperties(Type type, List<HMProperty> properties) {
+        this(type, properties.toArray(new HMProperty[0]));
     }
 
     CommandWithProperties(Builder builder) throws IllegalArgumentException {
