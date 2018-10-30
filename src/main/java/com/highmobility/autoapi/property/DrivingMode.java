@@ -23,10 +23,11 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 
 public enum DrivingMode implements HMProperty {
-    REGULAR((byte)0x00),
-    ECO((byte)0x01),
-    SPORT((byte)0x02),
-    SPORT_PLUS((byte)0x03);
+    REGULAR((byte) 0x00),
+    ECO((byte) 0x01),
+    SPORT((byte) 0x02),
+    SPORT_PLUS((byte) 0x03),
+    ECO_PLUS((byte) 0x04);
 
     public static DrivingMode fromByte(byte byteValue) throws CommandParseException {
         DrivingMode[] values = DrivingMode.values();

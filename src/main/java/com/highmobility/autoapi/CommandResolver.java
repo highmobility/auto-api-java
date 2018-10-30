@@ -406,6 +406,12 @@ public class CommandResolver {
                 command = new DisplayImage(bytes);
             } else if (bytesAreForType(bytes, TextInput.TYPE)) {
                 command = new TextInput(bytes);
+            } else if (bytesAreForIdentifier(bytes, Identifier.USAGE)) {
+                if (bytesAreForType(bytes, GetUsage.TYPE)) {
+                    command = new GetUsage(bytes);
+                } else if (bytesAreForType(bytes, Usage.TYPE)) {
+                    command = new Usage(bytes);
+                }
             } else {
                 Command.logger.info("Unknown command " + ByteUtils.hexFromBytes(ByteUtils
                         .trimmedBytes(bytes, 3)) + ".. ");

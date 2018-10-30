@@ -236,71 +236,78 @@ public class RaceState extends CommandWithProperties {
         return vehicleMoving;
     }
 
-    public RaceState(byte[] bytes) throws CommandParseException {
+    public RaceState(byte[] bytes) {
         super(bytes);
 
         ArrayList<AccelerationProperty> accelerationProperties = new ArrayList<>();
         ArrayList<BrakeTorqueVectoringProperty> brakeTorqueVectoringProperties = new ArrayList<>();
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case AccelerationProperty.IDENTIFIER:
-                    accelerationProperties.add(
-                            new AccelerationProperty(property.getPropertyBytes()));
-                    break;
-                case UNDER_STEERING_IDENTIFIER:
-                    underSteering = Property.getUnsignedInt(property.getValueByte()) / 100f;
-                    break;
-                case OVER_STEERING_IDENTIFIER:
-                    overSteering = Property.getUnsignedInt(property.getValueByte()) / 100f;
-                    break;
-                case GAS_PEDAL_POSITION_IDENTIFIER:
-                    gasPedalPosition = Property.getUnsignedInt(property.getValueByte()) / 100f;
-                    break;
-                case STEERING_ANGLE_IDENTIFIER:
-                    steeringAngle = Property.getSignedInt(property.getValueByte());
-                    break;
-                case BRAKE_PRESSURE_IDENTIFIER:
-                    brakePressure = Property.getFloat(property.getValueBytes());
-                    break;
-                case YAW_RATE_IDENTIFIER:
-                    yawRate = Property.getFloat(property.getValueBytes());
-                    break;
-                case REAR_SUSPENSION_STEERING_IDENTIFIER:
-                    rearSuspensionSteering = Property.getUnsignedInt(property.getValueByte());
-                    break;
-                case ESP_INTERVENTION_ACTIVE_IDENTIFIER:
-                    espInterventionActive = Property.getBool(property.getValueByte());
-                    break;
-                case BrakeTorqueVectoringProperty.IDENTIFIER:
-                    brakeTorqueVectoringProperties.add(
-                            new BrakeTorqueVectoringProperty(property.getPropertyBytes()));
-                    break;
-                case GearMode.IDENTIFIER:
-                    gearMode = GearMode.fromByte(property.getValueByte());
-                    break;
-                case SELECTED_GEAR_IDENTIFIER:
-                    selectedGear = Property.getUnsignedInt(property.getValueByte());
-                    break;
-                case BRAKE_PEDAL_POSITION_IDENTIFIER:
-                    brakePedalPosition = Property.getUnsignedInt(property.getValueByte()) / 100f;
-                    break;
-                case BRAKE_PEDAL_SWITCH_IDENTIFIER:
-                    brakePedalSwitchActive = Property.getBool(property.getValueByte());
-                    break;
-                case CLUTCH_PEDAL_SWITCH_IDENTIFIER:
-                    clutchPedalSwitchActive = Property.getBool(property.getValueByte());
-                    break;
-                case ACCELERATOR_PEDAL_IDLE_SWITCH_IDENTIFIER:
-                    acceleratorPedalIdleSwitchActive = Property.getBool(property.getValueByte());
-                    break;
-                case ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER:
-                    acceleratorPedalKickdownSwitchActive = Property.getBool(property.getValueByte
-                            ());
-                    break;
-                case IDENTIFIER_VEHICLE_MOVING:
-                    vehicleMoving = Property.getBool(property.getValueByte());
-                    break;
+            try {
+                switch (property.getPropertyIdentifier()) {
+                    case AccelerationProperty.IDENTIFIER:
+                        accelerationProperties.add(
+                                new AccelerationProperty(property.getPropertyBytes()));
+                        break;
+                    case UNDER_STEERING_IDENTIFIER:
+                        underSteering = Property.getUnsignedInt(property.getValueByte()) / 100f;
+                        break;
+                    case OVER_STEERING_IDENTIFIER:
+                        overSteering = Property.getUnsignedInt(property.getValueByte()) / 100f;
+                        break;
+                    case GAS_PEDAL_POSITION_IDENTIFIER:
+                        gasPedalPosition = Property.getUnsignedInt(property.getValueByte()) / 100f;
+                        break;
+                    case STEERING_ANGLE_IDENTIFIER:
+                        steeringAngle = Property.getSignedInt(property.getValueByte());
+                        break;
+                    case BRAKE_PRESSURE_IDENTIFIER:
+                        brakePressure = Property.getFloat(property.getValueBytes());
+                        break;
+                    case YAW_RATE_IDENTIFIER:
+                        yawRate = Property.getFloat(property.getValueBytes());
+                        break;
+                    case REAR_SUSPENSION_STEERING_IDENTIFIER:
+                        rearSuspensionSteering = Property.getUnsignedInt(property.getValueByte());
+                        break;
+                    case ESP_INTERVENTION_ACTIVE_IDENTIFIER:
+                        espInterventionActive = Property.getBool(property.getValueByte());
+                        break;
+                    case BrakeTorqueVectoringProperty.IDENTIFIER:
+                        brakeTorqueVectoringProperties.add(
+                                new BrakeTorqueVectoringProperty(property.getPropertyBytes()));
+                        break;
+                    case GearMode.IDENTIFIER:
+                        gearMode = GearMode.fromByte(property.getValueByte());
+                        break;
+                    case SELECTED_GEAR_IDENTIFIER:
+                        selectedGear = Property.getUnsignedInt(property.getValueByte());
+                        break;
+                    case BRAKE_PEDAL_POSITION_IDENTIFIER:
+                        brakePedalPosition = Property.getUnsignedInt(property.getValueByte()) /
+                                100f;
+
+                        break;
+                    case BRAKE_PEDAL_SWITCH_IDENTIFIER:
+                        brakePedalSwitchActive = Property.getBool(property.getValueByte());
+                        break;
+                    case CLUTCH_PEDAL_SWITCH_IDENTIFIER:
+                        clutchPedalSwitchActive = Property.getBool(property.getValueByte());
+                        break;
+                    case ACCELERATOR_PEDAL_IDLE_SWITCH_IDENTIFIER:
+                        acceleratorPedalIdleSwitchActive = Property.getBool(property.getValueByte
+                                ());
+                        break;
+                    case ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER:
+                        acceleratorPedalKickdownSwitchActive = Property.getBool(property
+                                .getValueByte());
+                        break;
+                    case IDENTIFIER_VEHICLE_MOVING:
+                        vehicleMoving = Property.getBool(property.getValueByte());
+                        break;
+                }
+            } catch (Exception e) {
+                property.printFailedToParse(e);
             }
         }
 

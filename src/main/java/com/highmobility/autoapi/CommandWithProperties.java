@@ -29,6 +29,7 @@ import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -134,6 +135,7 @@ public class CommandWithProperties extends Command {
         }
 
         properties = builder.toArray(new Property[builder.size()]);
+        iterator = new PropertiesIterator();
     }
 
     CommandWithProperties(Type type, HMProperty[] properties) {
@@ -236,5 +238,51 @@ public class CommandWithProperties extends Command {
         protected HMProperty[] getProperties() {
             return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
         }
+    }
+
+    // used to catch the property parsing exception. Only used when parsing incoming bytes.
+    protected PropertiesIterator iterator;
+
+    protected class PropertiesIterator implements Iterator<Property> {
+        private int currentSize;
+
+        PropertiesIterator() {
+            this.currentSize = CommandWithProperties.this.properties.length;
+        }
+
+        private int currentIndex = 0;
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex < currentSize && properties[currentIndex] != null;
+        }
+
+        @Override
+        public Property next() {
+            return properties[currentIndex++];
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        public void parseNext(CheckedPropertyIteration consumer) {
+            Property next = next();
+            try {
+                consumer.iterate(next);
+            } catch (Exception e) {
+                next.printFailedToParse(e);
+            }
+        }
+    }
+
+    @FunctionalInterface
+    public interface CheckedPropertyIteration<T> {
+        void iterate(T t) throws Exception;
+    }
+    
+    protected interface PropertyIteration {
+        void iterate(CheckedPropertyIteration property);
     }
 }

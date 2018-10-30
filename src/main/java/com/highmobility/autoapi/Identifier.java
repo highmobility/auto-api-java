@@ -73,7 +73,8 @@ public enum Identifier {
     CRUISE_CONTROL(new byte[]{0x00, (byte) 0x62}),
     START_STOP(new byte[]{0x00, (byte) 0x63}),
     TACHOGRAPH(new byte[]{0x00, (byte) 0x64}),
-    POWER_TAKE_OFF(new byte[]{0x00, (byte) 0x65});
+    POWER_TAKE_OFF(new byte[]{0x00, (byte) 0x65}),
+    USAGE(new byte[]{0x00, (byte) 0x68});
 
     public static Identifier fromBytes(byte[] bytes) {
         return fromBytes(bytes[0], bytes[1]);

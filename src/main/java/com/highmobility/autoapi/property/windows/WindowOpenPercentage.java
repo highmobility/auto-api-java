@@ -37,7 +37,7 @@ public class WindowOpenPercentage extends Property {
     static byte[] getBytes(WindowLocation location, Float openPercentage) {
         byte[] value = new byte[2];
         value[0] = location.getByte();
-        value[1] = (byte) Property.floatToIntPercentage(openPercentage);
+        value[1] = Property.floatToIntPercentageByte(openPercentage);
         return value;
     }
 }

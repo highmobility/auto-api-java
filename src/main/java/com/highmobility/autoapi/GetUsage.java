@@ -18,14 +18,19 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi;
 
 /**
- * Input is float 0-1, but sets the byte to 0-100 int.
+ * Get the usage of the car. The car will respond with the Usage message.
  */
-public class PercentageProperty extends Property {
-    public PercentageProperty(byte identifier, float value) {
-        super(identifier, 1);
-        bytes[3] = Property.floatToIntPercentageByte(value);
+public class GetUsage extends Command {
+    public static final Type TYPE = new Type(Identifier.USAGE, 0x00);
+
+    public GetUsage() {
+        super(TYPE);
+    }
+
+    GetUsage(byte[] bytes) {
+        super(bytes);
     }
 }

@@ -228,6 +228,10 @@ public class Property extends Bytes implements HMProperty {
         return Math.round(value * 100f);
     }
 
+    public static byte floatToIntPercentageByte(float value) {
+        return (byte)Math.round(value * 100f);
+    }
+
     public static float getPercentage(byte value) {
         return getUnsignedInt(value) / 100f;
     }
