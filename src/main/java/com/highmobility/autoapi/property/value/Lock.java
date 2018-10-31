@@ -1,19 +1,19 @@
-package com.highmobility.autoapi.property.doors;
+package com.highmobility.autoapi.property.value;
 
 import com.highmobility.autoapi.CommandParseException;
 
 /**
  * The possible states of the car doorLock.
  */
-public enum DoorLock {
+public enum Lock {
     UNLOCKED((byte) 0x00),
     LOCKED((byte) 0x01);
 
-    public static DoorLock fromByte(byte value) throws CommandParseException {
-        DoorLock[] values = DoorLock.values();
+    public static Lock fromByte(byte value) throws CommandParseException {
+        Lock[] values = Lock.values();
 
         for (int i = 0; i < values.length; i++) {
-            DoorLock value1 = values[i];
+            Lock value1 = values[i];
             if (value1.getByte() == value) {
                 return value1;
             }
@@ -24,7 +24,7 @@ public enum DoorLock {
 
     private byte value;
 
-    DoorLock(byte value) {
+    Lock(byte value) {
         this.value = value;
     }
 

@@ -93,8 +93,8 @@ public class CommandResolver {
                     command = new TrunkState(bytes);
                 } else if (bytesAreForType(bytes, GetTrunkState.TYPE)) {
                     command = new GetTrunkState(bytes);
-                } else if (bytesAreForType(bytes, OpenCloseTrunk.TYPE)) {
-                    command = new OpenCloseTrunk(bytes);
+                } else if (bytesAreForType(bytes, ControlTrunk.TYPE)) {
+                    command = new ControlTrunk(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.CHARGING)) {
                 if (bytesAreForType(bytes, GetChargeState.TYPE)) {

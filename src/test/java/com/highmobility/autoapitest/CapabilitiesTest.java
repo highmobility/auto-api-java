@@ -31,7 +31,7 @@ import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.LockUnlockDoors;
 import com.highmobility.autoapi.NaviDestination;
 import com.highmobility.autoapi.Notification;
-import com.highmobility.autoapi.OpenCloseTrunk;
+import com.highmobility.autoapi.ControlTrunk;
 import com.highmobility.autoapi.RooftopState;
 import com.highmobility.autoapi.SendHeartRate;
 import com.highmobility.autoapi.SetChargeLimit;
@@ -78,7 +78,7 @@ public class CapabilitiesTest {
         assertTrue(capabilities.isSupported(LockUnlockDoors.TYPE));
 
         assertTrue(capabilities.isSupported(GetTrunkState.TYPE));
-        assertTrue(capabilities.isSupported(OpenCloseTrunk.TYPE));
+        assertTrue(capabilities.isSupported(ControlTrunk.TYPE));
         assertTrue(capabilities.isSupported(TrunkState.TYPE));
 
         assertTrue(capabilities.isSupported(GetChargeState.TYPE));

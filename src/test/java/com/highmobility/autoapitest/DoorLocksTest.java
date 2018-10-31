@@ -16,8 +16,8 @@ import static com.highmobility.autoapi.property.doors.DoorLocation.FRONT_LEFT;
 import static com.highmobility.autoapi.property.doors.DoorLocation.FRONT_RIGHT;
 import static com.highmobility.autoapi.property.doors.DoorLocation.REAR_LEFT;
 import static com.highmobility.autoapi.property.doors.DoorLocation.REAR_RIGHT;
-import static com.highmobility.autoapi.property.doors.DoorLock.LOCKED;
-import static com.highmobility.autoapi.property.doors.DoorLock.UNLOCKED;
+import static com.highmobility.autoapi.property.value.Lock.LOCKED;
+import static com.highmobility.autoapi.property.value.Lock.UNLOCKED;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 

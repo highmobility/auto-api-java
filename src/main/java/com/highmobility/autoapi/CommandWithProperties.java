@@ -267,22 +267,17 @@ public class CommandWithProperties extends Command {
             throw new UnsupportedOperationException();
         }
 
-        public void parseNext(CheckedPropertyIteration consumer) {
-            Property next = next();
+        public void parseNext(PropertyIteration next) {
+            Property nextProperty = next();
             try {
-                consumer.iterate(next);
+                next.iterate(nextProperty);
             } catch (Exception e) {
-                next.printFailedToParse(e);
+                nextProperty.printFailedToParse(e);
             }
         }
     }
 
-    @FunctionalInterface
-    public interface CheckedPropertyIteration<T> {
-        void iterate(T t) throws Exception;
-    }
-    
-    protected interface PropertyIteration {
-        void iterate(CheckedPropertyIteration property);
+    public interface PropertyIteration {
+        void iterate(Property t) throws Exception;
     }
 }

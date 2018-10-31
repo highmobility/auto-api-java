@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.doors.DoorLock;
+import com.highmobility.autoapi.property.value.Lock;
 
 /**
  * Command to lock or unlock all doors of the car. The car will respond with the updated lock state
@@ -32,24 +32,24 @@ public class LockUnlockDoors extends CommandWithProperties {
 
     private static final byte IDENTIFIER = 0x01;
 
-    DoorLock doorLock;
+    Lock doorLock;
 
     /**
      * @return The lock state.
      */
-    public DoorLock getDoorLock() {
+    public Lock getDoorLock() {
         return doorLock;
     }
 
-    public LockUnlockDoors(DoorLock doorLockState) {
-        super(TYPE.addProperty(new Property(IDENTIFIER, doorLockState.getByte())));
-        this.doorLock = doorLockState;
+    public LockUnlockDoors(Lock doorLock) {
+        super(TYPE.addProperty(new Property(IDENTIFIER, doorLock.getByte())));
+        this.doorLock = doorLock;
     }
 
     LockUnlockDoors(byte[] bytes) throws CommandParseException {
         super(bytes);
         Property prop = getProperty(IDENTIFIER);
         if (prop == null) throw new CommandParseException();
-        doorLock = DoorLock.fromByte(prop.getValueByte());
+        doorLock = Lock.fromByte(prop.getValueByte());
     }
 }

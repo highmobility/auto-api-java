@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.doors.DoorPosition;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.highmobility.autoapi.property.doors.DoorLock.UNLOCKED;
+import static com.highmobility.autoapi.property.value.Lock.UNLOCKED;
 
 /**
  * Command sent from the car every time the lock state changes or when a Get Lock State is received.

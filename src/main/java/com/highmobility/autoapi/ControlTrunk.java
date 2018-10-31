@@ -22,72 +22,78 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ByteProperty;
 import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.TrunkLockState;
-import com.highmobility.autoapi.property.TrunkPosition;
+import com.highmobility.autoapi.property.value.Lock;
+import com.highmobility.autoapi.property.value.Position;
 
 import java.util.ArrayList;
+
+import javax.annotation.Nullable;
 
 /**
  * Unlock/Lock and Open/Close the trunk. The result is received through the evented Trunk State
  * command.
  */
-public class OpenCloseTrunk extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x02);
+public class ControlTrunk extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x12);
 
-    TrunkLockState state;
-    TrunkPosition position;
+    private static final byte IDENTIFIER_LOCK = 0x01;
+    private static final byte IDENTIFIER_POSITION = 0x02;
+
+    Lock lock;
+    Position position;
 
     /**
      * @return The trunk lock state.
      */
-    public TrunkLockState getState() {
-        return state;
+    @Nullable public Lock getLock() {
+        return lock;
     }
 
     /**
      * @return The trunk position.
      */
-    public TrunkPosition getPosition() {
+    @Nullable public Position getPosition() {
         return position;
     }
 
     /**
      * Create the command from lock state and position. One of the properties can be null.
      *
-     * @param state    The trunk lock state.
+     * @param lock     The trunk lock state.
      * @param position The trunk position.
      * @throws IllegalArgumentException If all arguments are null
      */
-    public OpenCloseTrunk(TrunkLockState state, TrunkPosition position) {
-        super(TYPE, getProperties(state, position));
-        this.state = state;
+    public ControlTrunk(@Nullable Lock lock, @Nullable Position position) {
+        super(TYPE, getProperties(lock, position));
+        this.lock = lock;
         this.position = position;
     }
 
-    static HMProperty[] getProperties(TrunkLockState state, TrunkPosition position) {
+    static HMProperty[] getProperties(Lock state, Position position) {
         ArrayList<HMProperty> properties = new ArrayList<>();
 
         if (state != null) {
-            properties.add(new ByteProperty(TrunkLockState.defaultIdentifier, state.getByte()));
+            properties.add(new ByteProperty(IDENTIFIER_LOCK, state.getByte()));
         }
 
         if (position != null) {
-            properties.add(new ByteProperty(TrunkPosition.defaultIdentifier, position.getByte()));
+            properties.add(new ByteProperty(IDENTIFIER_POSITION, position.getByte()));
         }
 
         return properties.toArray(new HMProperty[properties.size()]);
     }
 
-    OpenCloseTrunk(byte[] bytes) throws CommandParseException {
+    ControlTrunk(byte[] bytes) {
         super(bytes);
-        for (int i = 0; i < properties.length; i++) {
-            Property property = properties[i];
-            if (property.getPropertyIdentifier() == TrunkLockState.defaultIdentifier) {
-                state = TrunkLockState.fromByte(property.getValueByte());
-            } else if (property.getPropertyIdentifier() == TrunkPosition.defaultIdentifier) {
-                position = TrunkPosition.fromByte(property.getValueByte());
-            }
+
+        while (iterator.hasNext()) {
+            iterator.parseNext(prop -> {
+                if (prop.getPropertyIdentifier() == IDENTIFIER_LOCK) {
+                    lock = Lock.fromByte(prop.getValueByte());
+                } else if (prop.getPropertyIdentifier() == IDENTIFIER_POSITION) {
+                    position = Position.fromByte(prop.getValueByte());
+                }
+            });
         }
     }
 }

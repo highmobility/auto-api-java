@@ -2,11 +2,11 @@ package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
+import com.highmobility.autoapi.ControlTrunk;
 import com.highmobility.autoapi.GetTrunkState;
-import com.highmobility.autoapi.OpenCloseTrunk;
 import com.highmobility.autoapi.TrunkState;
-import com.highmobility.autoapi.property.TrunkLockState;
-import com.highmobility.autoapi.property.TrunkPosition;
+import com.highmobility.autoapi.property.value.Lock;
+import com.highmobility.autoapi.property.value.Position;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -24,13 +24,18 @@ public class TrunkAccessTest {
         Bytes bytes = new Bytes(
                 "0021010100010002000101");
 
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
+        Command command = null;
+        try {
+            command = CommandResolver.resolve(bytes);
+        } catch (Exception e) {
+            fail();
+        }
         if (command == null) fail("init failed");
 
         assertTrue(command.getClass() == TrunkState.class);
         TrunkState state = (TrunkState) command;
-        assertTrue(state.getLockState() == TrunkLockState.UNLOCKED);
-        assertTrue(state.getPosition() == TrunkPosition.OPEN);
+        assertTrue(state.getLockState() == Lock.UNLOCKED);
+        assertTrue(state.getPosition() == Position.OPEN);
     }
 
     @Test public void get() {
@@ -42,18 +47,19 @@ public class TrunkAccessTest {
         assertTrue(command instanceof GetTrunkState);
     }
 
-    @Test public void openClose() {
-        Bytes waitingForBytes = new Bytes("0021020100010002000101");
-        String commandBytes = ByteUtils.hexFromBytes(new OpenCloseTrunk(TrunkLockState.UNLOCKED,
-                TrunkPosition.OPEN).getByteArray());
+    @Test public void control() {
+        Bytes waitingForBytes = new Bytes("002112" +
+                "01000100" +
+                "02000101");
+        Command commandBytes = new ControlTrunk(Lock.UNLOCKED, Position.OPEN);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         Command command = CommandResolver.resolve(waitingForBytes);
-        assertTrue(command instanceof OpenCloseTrunk);
+        assertTrue(command instanceof ControlTrunk);
 
-        OpenCloseTrunk state = (OpenCloseTrunk)command;
-        assertTrue(state.getState() == TrunkLockState.UNLOCKED);
-        assertTrue(state.getPosition() == TrunkPosition.OPEN);
+        ControlTrunk state = (ControlTrunk) command;
+        assertTrue(state.getLock() == Lock.UNLOCKED);
+        assertTrue(state.getPosition() == Position.OPEN);
     }
 
     @Test public void state0Properties() {
