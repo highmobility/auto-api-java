@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlWindows;
 import com.highmobility.autoapi.GetWindowsState;
 import com.highmobility.autoapi.WindowsState;
+import com.highmobility.autoapi.property.value.Position;
 import com.highmobility.autoapi.property.windows.WindowLocation;
 import com.highmobility.autoapi.property.windows.WindowOpenPercentage;
 import com.highmobility.autoapi.property.windows.WindowPosition;
@@ -40,9 +41,9 @@ public class WindowsTest {
                 .18f);
 
         assertTrue(state.getWindowPosition(WindowLocation.REAR_RIGHT).getPosition()
-                == WindowPosition.Position.OPEN);
+                == Position.OPEN);
         assertTrue(state.getWindowPosition(WindowLocation.REAR_LEFT).getPosition() ==
-                WindowPosition.Position.CLOSED);
+                Position.CLOSED);
     }
 
     @Test public void get() {
@@ -58,10 +59,8 @@ public class WindowsTest {
         );
 
         WindowPosition[] windowsStates = new WindowPosition[2];
-        windowsStates[0] = new WindowPosition(WindowLocation.FRONT_LEFT, WindowPosition
-                .Position.OPEN);
-        windowsStates[1] = new WindowPosition(WindowLocation.FRONT_RIGHT, WindowPosition
-                .Position.OPEN);
+        windowsStates[0] = new WindowPosition(WindowLocation.FRONT_LEFT, Position.OPEN);
+        windowsStates[1] = new WindowPosition(WindowLocation.FRONT_RIGHT, Position.OPEN);
 
         Bytes bytes = new ControlWindows(windowsStates);
         assertTrue(TestUtils.bytesTheSame(bytes, waitingForBytes));
@@ -70,9 +69,9 @@ public class WindowsTest {
         WindowPosition[] states = command.getWindowPositions();
         assertTrue(states.length == 2);
         assertTrue(command.getWindowPosition(WindowLocation.FRONT_LEFT).getPosition() ==
-                WindowPosition.Position.OPEN);
+                Position.OPEN);
         assertTrue(command.getWindowPosition(WindowLocation.FRONT_RIGHT).getPosition() ==
-                WindowPosition.Position.OPEN);
+                Position.OPEN);
     }
 
     @Test public void build() {
@@ -82,9 +81,9 @@ public class WindowsTest {
         builder.addWindowOpenPercentage(new WindowOpenPercentage(WindowLocation.REAR_LEFT,
                 .18f));
         builder.addWindowPosition(new WindowPosition(WindowLocation.REAR_RIGHT,
-                WindowPosition.Position.OPEN));
+                Position.OPEN));
         builder.addWindowPosition(new WindowPosition(WindowLocation.REAR_LEFT,
-                WindowPosition.Position.CLOSED));
+                Position.CLOSED));
         WindowsState state = builder.build();
 
         assertTrue(state.getWindowOpenPercentages().length == 2);

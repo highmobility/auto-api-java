@@ -30,14 +30,14 @@ public class DoorLockState extends Property {
     /**
      * @return The door location.
      */
-    public DoorLocation getDoorLocation() {
+    public DoorLocation getLocation() {
         return doorLocation;
     }
 
     /**
      * @return The door lock state.
      */
-    public DoorLock getDoorLock() {
+    public DoorLock getLock() {
         return doorLock;
     }
 

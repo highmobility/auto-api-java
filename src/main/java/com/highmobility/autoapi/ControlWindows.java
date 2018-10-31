@@ -21,6 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.value.Position;
 import com.highmobility.autoapi.property.windows.WindowLocation;
 import com.highmobility.autoapi.property.windows.WindowPosition;
 
@@ -78,7 +79,7 @@ public class ControlWindows extends CommandWithProperties {
             if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER)
                 builder.add(new WindowPosition(
                         WindowLocation.fromByte(property.getPropertyBytes()[3]),
-                        WindowPosition.Position.fromByte(property.getPropertyBytes()[4])
+                        Position.fromByte(property.getPropertyBytes()[4])
                 ));
         }
 

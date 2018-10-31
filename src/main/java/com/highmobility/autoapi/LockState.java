@@ -22,14 +22,13 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.doors.DoorLocation;
-import com.highmobility.autoapi.property.doors.DoorLockAndPositionState;
 import com.highmobility.autoapi.property.doors.DoorLockState;
+import com.highmobility.autoapi.property.doors.DoorPosition;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static com.highmobility.autoapi.property.doors.DoorLock.LOCKED;
+import static com.highmobility.autoapi.property.doors.DoorLock.UNLOCKED;
 
 /**
  * Command sent from the car every time the lock state changes or when a Get Lock State is received.
@@ -41,57 +40,17 @@ public class LockState extends CommandWithProperties {
 
     private static final byte INSIDE_LOCK_IDENTIFIER = 0x02;
     private static final byte OUTSIDE_LOCK_IDENTIFIER = 0x03;
+    private static final byte POSITION_IDENTIFIER = 0x04;
 
-    DoorLockAndPositionState[] doorLockAndPositionStates;
-    DoorLockState[] insideDoorLockStates;
-    DoorLockState[] outsideDoorLockStates;
-
-    /**
-     * @return The lock and position states for all of the doors.
-     */
-    public DoorLockAndPositionState[] getDoorLockAndPositionStates() {
-        return doorLockAndPositionStates;
-    }
-
-    /**
-     * Get the lock and position state for a specific door.
-     *
-     * @param doorLocation The doorLocation of the door.
-     * @return The lock and position state.
-     */
-    public DoorLockAndPositionState getDoorLockAndPositionState(DoorLocation doorLocation) {
-        for (DoorLockAndPositionState lockAndPositionState : doorLockAndPositionStates) {
-            if (lockAndPositionState.getDoorLocation() == doorLocation) return lockAndPositionState;
-        }
-        return null;
-    }
-
-    /**
-     * @return The inside door lock states.
-     */
-    public DoorLockState[] getInsideDoorLockStates() {
-        return insideDoorLockStates;
-    }
-
-    /**
-     * Get the inside lock state for a specific door.
-     *
-     * @param doorLocation The door doorLocation.
-     * @return The inside lock state.
-     */
-    public DoorLockState getInsideDoorLockState(DoorLocation doorLocation) {
-        for (DoorLockState insideLockState : insideDoorLockStates) {
-            if (insideLockState.getDoorLocation() == doorLocation) return insideLockState;
-        }
-
-        return null;
-    }
+    DoorLockState[] insideLocks;
+    DoorLockState[] locks;
+    DoorPosition[] positions;
 
     /**
      * @return The outside door lock states.
      */
-    public DoorLockState[] getOutsideDoorLockStates() {
-        return outsideDoorLockStates;
+    public DoorLockState[] getLocks() {
+        return locks;
     }
 
     /**
@@ -100,28 +59,63 @@ public class LockState extends CommandWithProperties {
      * @param doorLocation The door doorLocation.
      * @return The outside lock state.
      */
-    public DoorLockState getOutsideDoorLockState(DoorLocation doorLocation) {
-        for (DoorLockState outsideLockState : outsideDoorLockStates) {
-            if (outsideLockState.getDoorLocation() == doorLocation) return outsideLockState;
+    public DoorLockState getLock(DoorLocation doorLocation) {
+        for (DoorLockState outsideLockState : locks) {
+            if (outsideLockState.getLocation() == doorLocation) return outsideLockState;
         }
         return null;
     }
 
     /**
-     * Get the lock state of the car.
+     * @return The inside door lock states.
+     */
+    public DoorLockState[] getInsideLocks() {
+        return insideLocks;
+    }
+
+    /**
+     * Get the inside lock state for a specific door.
      *
-     * @return true if all doors are closed and locked, otherwise false.
+     * @param doorLocation The door doorLocation.
+     * @return The inside lock state.
+     */
+    public DoorLockState getInsideLock(DoorLocation doorLocation) {
+        for (DoorLockState insideLockState : insideLocks) {
+            if (insideLockState.getLocation() == doorLocation) return insideLockState;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return The outside door lock states.
+     */
+    public DoorPosition[] getPositions() {
+        return positions;
+    }
+
+    /**
+     * Get the outside lock state for a specific door.
+     *
+     * @param doorLocation The door doorLocation.
+     * @return The outside lock state.
+     */
+    public DoorPosition getPosition(DoorLocation doorLocation) {
+        for (DoorPosition position : positions) {
+            if (position.getLocation() == doorLocation) return position;
+        }
+        return null;
+    }
+
+    /**
+     * @return Whether all of the outside door locks are locked.
      */
     public boolean isLocked() {
-        DoorLockAndPositionState frontLeft = getDoorLockAndPositionState(DoorLocation.FRONT_LEFT);
-        DoorLockAndPositionState frontRight = getDoorLockAndPositionState(DoorLocation.FRONT_RIGHT);
-        DoorLockAndPositionState rearRight = getDoorLockAndPositionState(DoorLocation.REAR_RIGHT);
-        DoorLockAndPositionState rearLeft = getDoorLockAndPositionState(DoorLocation.REAR_LEFT);
-
-        if (frontLeft != null && frontLeft.getDoorLock() != LOCKED) return false;
-        if (frontRight != null && frontRight.getDoorLock() != LOCKED) return false;
-        if (rearRight != null && rearRight.getDoorLock() != LOCKED) return false;
-        if (rearLeft != null && rearLeft.getDoorLock() != LOCKED) return false;
+        for (DoorLockState lock : locks) {
+            if (lock.getLock() == UNLOCKED) {
+                return false;
+            }
+        }
 
         return true;
     }
@@ -129,16 +123,15 @@ public class LockState extends CommandWithProperties {
     public LockState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        ArrayList<DoorLockAndPositionState> lockAndPositionStatesBuilder = new ArrayList<>();
         ArrayList<DoorLockState> insideLocksBuilder = new ArrayList<>();
         ArrayList<DoorLockState> outsideLocksBuilder = new ArrayList<>();
+        ArrayList<DoorPosition> lockAndPositionStatesBuilder = new ArrayList<>();
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case DoorLockAndPositionState.IDENTIFIER:
-                    lockAndPositionStatesBuilder.add(new DoorLockAndPositionState(property
-                            .getPropertyBytes()));
+                case POSITION_IDENTIFIER:
+                    lockAndPositionStatesBuilder.add(new DoorPosition(property.getPropertyBytes()));
                     break;
                 case INSIDE_LOCK_IDENTIFIER:
                     insideLocksBuilder.add(new DoorLockState(property.getPropertyBytes()));
@@ -149,12 +142,10 @@ public class LockState extends CommandWithProperties {
             }
         }
 
-        doorLockAndPositionStates = lockAndPositionStatesBuilder.toArray(new
-                DoorLockAndPositionState[lockAndPositionStatesBuilder.size()]);
-        insideDoorLockStates = insideLocksBuilder.toArray(new DoorLockState[insideLocksBuilder
-                .size()]);
-        outsideDoorLockStates = outsideLocksBuilder.toArray(new DoorLockState[outsideLocksBuilder
-                .size()]);
+        positions = lockAndPositionStatesBuilder.toArray(new
+                DoorPosition[lockAndPositionStatesBuilder.size()]);
+        insideLocks = insideLocksBuilder.toArray(new DoorLockState[insideLocksBuilder.size()]);
+        locks = outsideLocksBuilder.toArray(new DoorLockState[outsideLocksBuilder.size()]);
     }
 
     @Override public boolean isState() {
@@ -164,56 +155,53 @@ public class LockState extends CommandWithProperties {
     private LockState(Builder builder) {
         super(builder);
 
-        doorLockAndPositionStates = builder.lockAndPositionStates.toArray(new
-                DoorLockAndPositionState[builder.lockAndPositionStates.size()]);
-        insideDoorLockStates = builder.insideLockStates.toArray(new DoorLockState[builder
-                .insideLockStates.size()]);
-        outsideDoorLockStates = builder.outsideLockStates.toArray(new DoorLockState[builder
-                .outsideLockStates.size()]);
+        positions = builder.positions.toArray(new DoorPosition[builder.positions.size()]);
+        insideLocks = builder.insideLocks.toArray(new DoorLockState[builder.insideLocks.size()]);
+        locks = builder.locks.toArray(new DoorLockState[builder.locks.size()]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private List<DoorLockAndPositionState> lockAndPositionStates = new ArrayList<>();
-        private List<DoorLockState> insideLockStates = new ArrayList<>();
-        private List<DoorLockState> outsideLockStates = new ArrayList<>();
+        private List<DoorPosition> positions = new ArrayList<>();
+        private List<DoorLockState> insideLocks = new ArrayList<>();
+        private List<DoorLockState> locks = new ArrayList<>();
 
         public Builder() {
             super(TYPE);
         }
 
         /**
-         * @param lockAndPositionStates The lock and position states for all doors.
+         * @param positions The position states for all doors.
          * @return The builder.
          */
-        public Builder setLockAndPositionStates(DoorLockAndPositionState[] lockAndPositionStates) {
-            this.lockAndPositionStates = Arrays.asList(lockAndPositionStates);
-            for (DoorLockAndPositionState lockAndPositionState : lockAndPositionStates) {
-                addProperty(lockAndPositionState);
+        public Builder setPositions(DoorPosition[] positions) {
+            this.positions.clear();
+            for (DoorPosition position : positions) {
+                addPosition(position);
             }
             return this;
         }
 
         /**
-         * Add the lock and position state for a door.
+         * Add the position state for a door.
          *
-         * @param lockAndPositionState The lock and position state.
+         * @param position The lock and position state.
          * @return The builder.
          */
-        public Builder addLockAndPositionState(DoorLockAndPositionState lockAndPositionState) {
-            this.lockAndPositionStates.add(lockAndPositionState);
-            addProperty(lockAndPositionState);
+        public Builder addPosition(DoorPosition position) {
+            this.positions.add(position);
+            position.setIdentifier(POSITION_IDENTIFIER);
+            addProperty(position);
             return this;
         }
 
         /**
-         * @param insideLockStates The inside lock states for all of the doors.
+         * @param insideLocks The inside lock states for all of the doors.
          * @return The builder.
          */
-        public Builder setInsideLockStates(DoorLockState[] insideLockStates) {
-            this.insideLockStates = Arrays.asList(insideLockStates);
-            for (DoorLockState insideLockState : insideLockStates) {
-                insideLockState.setIdentifier(INSIDE_LOCK_IDENTIFIER);
-                addProperty(insideLockState);
+        public Builder setInsideLocks(DoorLockState[] insideLocks) {
+            this.insideLocks.clear();
+            for (DoorLockState insideLockState : insideLocks) {
+                addInsideLock(insideLockState);
             }
             return this;
         }
@@ -224,36 +212,35 @@ public class LockState extends CommandWithProperties {
          * @param insideLock The lock state.
          * @return The builder.
          */
-        public Builder addInsideLockState(DoorLockState insideLock) {
-            this.insideLockStates.add(insideLock);
+        public Builder addInsideLock(DoorLockState insideLock) {
+            this.insideLocks.add(insideLock);
             insideLock.setIdentifier(INSIDE_LOCK_IDENTIFIER);
             addProperty(insideLock);
             return this;
         }
 
         /**
-         * @param outsideLockStates The outside lock states for all of the doors.
+         * @param locks The lock states for all of the doors.
          * @return The builder.
          */
-        public Builder setOutsideLockStates(DoorLockState[] outsideLockStates) {
-            this.outsideLockStates = Arrays.asList(outsideLockStates);
-            for (DoorLockState outsideLockState : outsideLockStates) {
-                outsideLockState.setIdentifier(OUTSIDE_LOCK_IDENTIFIER);
-                addOutsideLockState(outsideLockState);
+        public Builder setLocks(DoorLockState[] locks) {
+            this.locks.clear();
+            for (DoorLockState lock : locks) {
+                addLock(lock);
             }
             return this;
         }
 
         /**
-         * Add the outside lock state for a door.
+         * Add the lock state for a door.
          *
-         * @param outsideLock The lock state.
+         * @param lockState The lock state.
          * @return The builder.
          */
-        public Builder addOutsideLockState(DoorLockState outsideLock) {
-            this.outsideLockStates.add(outsideLock);
-            outsideLock.setIdentifier(OUTSIDE_LOCK_IDENTIFIER);
-            addProperty(outsideLock);
+        public Builder addLock(DoorLockState lockState) {
+            this.locks.add(lockState);
+            lockState.setIdentifier(OUTSIDE_LOCK_IDENTIFIER);
+            addProperty(lockState);
             return this;
         }
 
