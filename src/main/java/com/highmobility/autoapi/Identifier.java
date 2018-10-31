@@ -29,6 +29,7 @@ public enum Identifier {
     FAILURE(new byte[]{0x00, (byte) 0x02}),
     CAPABILITIES(new byte[]{0x00, (byte) 0x10}),
     VEHICLE_STATUS(new byte[]{0x00, (byte) 0x11}),
+    HISTORICAL(new byte[]{0x00, (byte) 0x12}),
     DOOR_LOCKS(new byte[]{0x00, (byte) 0x20}),
     TRUNK_ACCESS(new byte[]{0x00, (byte) 0x21}),
     WAKE_UP(new byte[]{0x00, (byte) 0x22}),

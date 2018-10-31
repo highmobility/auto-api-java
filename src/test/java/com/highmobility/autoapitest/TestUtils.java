@@ -125,6 +125,9 @@ public class TestUtils {
                         (bytes.getByteArray(), i + 1)) +
                         "\nbytes2: " + ByteUtils.hexFromBytes(Arrays.copyOf(state
                         .getByteArray(), i + 1)));
+
+                System.out.println("bytes1: " + bytes);
+                System.out.println("bytes2: " + state);
                 return false;
             }
         }

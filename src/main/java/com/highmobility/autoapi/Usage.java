@@ -208,10 +208,8 @@ public class Usage extends CommandWithProperties {
         ArrayList<DrivingModeActivationPeriod> drivingModeActivationPeriods = new ArrayList<>();
         ArrayList<DrivingModeEnergyConsumption> drivingModeEnergyConsumptions = new ArrayList<>();
 
-        while (iterator.hasNext()) {
-            iterator.parseNext(o -> {
-                Property prop = (Property) o;
-
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(prop -> {
                 // TODO: 30/10/2018 test failed property
                 switch (prop.getPropertyIdentifier()) {
                     case IDENTIFIER_AVERAGE_WEEKLY_DISTANCE:

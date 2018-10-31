@@ -64,6 +64,12 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, VehicleStatus.TYPE)) {
                     command = new VehicleStatus(bytes);
                 }
+            } else if (bytesAreForIdentifier(bytes, Identifier.HISTORICAL)) {
+                if (bytesAreForType(bytes, GetHistoricalStates.TYPE)) {
+                    command = new GetHistoricalStates(bytes);
+                } else if (bytesAreForType(bytes, HistoricalStates.TYPE)) {
+                    command = new HistoricalStates(bytes);
+                }
             } else if (bytesAreForIdentifier(bytes, Identifier.DOOR_LOCKS)) {
                 if (bytesAreForType(bytes, GetLockState.TYPE)) {
                     command = new GetLockState(bytes);

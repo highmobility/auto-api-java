@@ -78,6 +78,8 @@ public class CommandWithProperties extends Command {
      * States are commands that describe some properties of the vehicle. They are usually returned
      * after the state changes, as a response for a get command or as a state in {@link
      * VehicleStatus#getStates()}.
+     * <p>
+     * States can have 0 or more properties.
      *
      * @return True if command is a state.
      */
@@ -135,7 +137,7 @@ public class CommandWithProperties extends Command {
         }
 
         properties = builder.toArray(new Property[builder.size()]);
-        iterator = new PropertiesIterator();
+        propertiesIterator = new PropertiesIterator();
     }
 
     CommandWithProperties(Type type, HMProperty[] properties) {
@@ -241,7 +243,7 @@ public class CommandWithProperties extends Command {
     }
 
     // used to catch the property parsing exception. Only used when parsing incoming bytes.
-    protected PropertiesIterator iterator;
+    protected PropertiesIterator propertiesIterator;
 
     protected class PropertiesIterator implements Iterator<Property> {
         private int currentSize;
