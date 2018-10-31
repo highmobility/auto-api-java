@@ -29,7 +29,8 @@ import com.highmobility.autoapi.property.Property;
  * result is sent through the Start-Stop State message.
  */
 public class ActivateDeactivateStartStop extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.START_STOP, 0x02);
+    public static final Type TYPE = new Type(Identifier.START_STOP, 0x12);
+    private static final byte IDENTIFIER = 0x01;
     boolean activate;
 
     /**
@@ -40,15 +41,14 @@ public class ActivateDeactivateStartStop extends CommandWithProperties {
     }
 
     public ActivateDeactivateStartStop(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty((byte) 0x01, activate)));
+        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
         this.activate = activate;
     }
 
-    ActivateDeactivateStartStop(byte[] bytes) {
+    ActivateDeactivateStartStop(byte[] bytes) throws CommandParseException {
         super(bytes);
-        for (Property property : properties) {
-            if (property.getPropertyIdentifier() == 0x01)
-                activate = Property.getBool(property.getValueByte());
-        }
+        Property prop = getProperty(IDENTIFIER);
+        if (prop == null) throw new CommandParseException();
+        activate = Property.getBool(prop.getValueByte());
     }
 }
