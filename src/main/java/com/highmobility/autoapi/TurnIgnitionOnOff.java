@@ -20,14 +20,16 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * Command to turn the car engine on or off. The result is sent through the evented Ignition State
+ * Command to turn the car ignition on or off. The result is sent through the evented Ignition State
  * command.
  */
-public class TurnEngineOnOff extends Command {
-    public static final Type TYPE = new Type(Identifier.ENGINE, 0x02);
+public class TurnIgnitionOnOff extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.ENGINE, 0x12);
+    private static final byte IDENTIFIER = 0x01;
 
     boolean on;
 
@@ -38,13 +40,15 @@ public class TurnEngineOnOff extends Command {
         return on;
     }
 
-    public TurnEngineOnOff(boolean on) {
-        super(TYPE.addByte(Property.boolToByte(on)));
+    public TurnIgnitionOnOff(boolean on) {
+        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, on)));
         this.on = on;
     }
 
-    TurnEngineOnOff(byte[] bytes) {
+    TurnIgnitionOnOff(byte[] bytes) throws CommandParseException {
         super(bytes);
-        this.on = Property.getBool(bytes[3]);
+        Property prop = getProperty(IDENTIFIER);
+        if (prop == null) throw new CommandParseException();
+        this.on = Property.getBool(prop.getValueByte());
     }
 }

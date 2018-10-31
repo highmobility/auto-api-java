@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetIgnitionState;
 import com.highmobility.autoapi.IgnitionState;
-import com.highmobility.autoapi.TurnEngineOnOff;
+import com.highmobility.autoapi.TurnIgnitionOnOff;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -41,11 +41,11 @@ public class EngineTest {
     }
 
     @Test public void set() {
-        Bytes waitingForBytes = new Bytes("00350201");
-        Bytes commandBytes = new TurnEngineOnOff(true);
+        Bytes waitingForBytes = new Bytes("00351201000101");
+        Bytes commandBytes = new TurnIgnitionOnOff(true);
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        TurnEngineOnOff incoming = (TurnEngineOnOff) CommandResolver.resolve(waitingForBytes);
+        TurnIgnitionOnOff incoming = (TurnIgnitionOnOff) CommandResolver.resolve(waitingForBytes);
         assertTrue(incoming.isOn() == true);
     }
 

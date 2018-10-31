@@ -205,8 +205,8 @@ public class CommandResolver {
                     command = new IgnitionState(bytes);
                 } else if (bytesAreForType(bytes, GetIgnitionState.TYPE)) {
                     command = new GetIgnitionState(bytes);
-                } else if (bytesAreForType(bytes, TurnEngineOnOff.TYPE)) {
-                    command = new TurnEngineOnOff(bytes);
+                } else if (bytesAreForType(bytes, TurnIgnitionOnOff.TYPE)) {
+                    command = new TurnIgnitionOnOff(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.LIGHTS)) {
                 if (bytesAreForType(bytes, LightsState.TYPE)) {
