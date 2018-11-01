@@ -2,11 +2,8 @@ package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.GetKeyfobPosition;
 import com.highmobility.autoapi.GetMobileState;
-import com.highmobility.autoapi.KeyFobPosition;
 import com.highmobility.autoapi.MobileState;
-import com.highmobility.autoapi.property.KeyFobPositionProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
