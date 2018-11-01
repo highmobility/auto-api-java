@@ -275,8 +275,8 @@ public class CommandResolver {
                     command = new EndParking(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.KEYFOB_POSITION)) {
-                if (bytesAreForType(bytes, KeyfobPosition.TYPE)) {
-                    command = new KeyfobPosition(bytes);
+                if (bytesAreForType(bytes, KeyFobPosition.TYPE)) {
+                    command = new KeyFobPosition(bytes);
                 } else if (bytesAreForType(bytes, GetKeyfobPosition.TYPE)) {
                     command = new GetKeyfobPosition(bytes);
                 }
@@ -418,15 +418,18 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, Usage.TYPE)) {
                     command = new Usage(bytes);
                 }
+            } else if (bytesAreForIdentifier(bytes, Identifier.MOBILE)) {
+                if (bytesAreForType(bytes, GetMobileState.TYPE)) {
+                    command = new GetMobileState(bytes);
+                } else if (bytesAreForType(bytes, MobileState.TYPE)) {
+                    command = new MobileState(bytes);
+                }
             } else {
                 Command.logger.info("Unknown command " + ByteUtils.hexFromBytes(ByteUtils
                         .trimmedBytes(bytes, 3)) + ".. ");
                 command = new Command(bytes);
             }
-        } catch (
-                Exception e)
-
-        {
+        } catch (Exception e) {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
             Command.logger.info("Failed to parse command " + ByteUtils.hexFromBytes(ByteUtils
@@ -434,9 +437,7 @@ public class CommandResolver {
         }
 
         // The identifier was unknown. Return the base class.
-        if (command == null) command = new
-
-                Command(bytes);
+        if (command == null) command = new Command(bytes);
 
         return command;
     }

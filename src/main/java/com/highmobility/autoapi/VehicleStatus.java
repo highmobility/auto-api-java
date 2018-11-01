@@ -78,6 +78,12 @@ public class VehicleStatus extends CommandWithProperties {
     Integer maxTorque; // 0d maximum engine torque in Nm
     Gearbox gearBox; // 0e Gearbox type
 
+    /*// l8
+    DisplayUnit displayUnit;
+    DriverSeatLocation driverSeatLocation;
+    String[] equipments;*/
+    // TODO:
+
     /**
      * @return All of the states.
      */

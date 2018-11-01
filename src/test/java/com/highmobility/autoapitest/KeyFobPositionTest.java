@@ -16,7 +16,7 @@ import static org.junit.Assert.fail;
 /**
  * Created by ttiganik on 15/09/16.
  */
-public class KeyFobPositionPropertyTest {
+public class KeyFobPositionTest {
     @Test
     public void state() {
         Bytes bytes = new Bytes("00480101000105");
