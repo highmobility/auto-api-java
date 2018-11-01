@@ -34,7 +34,7 @@ import java.util.List;
 public class SetNaviDestination extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x02);
 
-    private static final byte COORDINATES_IDENTIFIER = 0x01;
+    private static final byte COORDINATES_IDENTIFIER = 0x07;
     private static final byte NAME_IDENTIFIER = 0x02;
 
     private CoordinatesProperty coordinates;

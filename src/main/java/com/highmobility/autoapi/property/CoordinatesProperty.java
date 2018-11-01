@@ -48,7 +48,7 @@ public class CoordinatesProperty extends Property {
         longitude = Property.getDouble(bytes, 11);
     }
     
-    public CoordinatesProperty(float latitude, float longitude) {
+    public CoordinatesProperty(double latitude, double longitude) {
         this((byte) 0x00, latitude, longitude);
     }
 

@@ -14,30 +14,26 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
  */
 public class NaviDestinationTest {
+    Bytes bytes = new Bytes(
+            "003101" +
+                    "070010404A428F9F44D445402ACF562174C4CE" +
+                    "0200064265726C696E");
+
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "0031010100084252147d41567ab10200064265726c696e");
-
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == NaviDestination.class);
         NaviDestination state = (NaviDestination) command;
 
         assertTrue(state.getName().equals("Berlin"));
-        assertTrue(state.getCoordinates().getLatitude() == 52.520008f);
-        assertTrue(state.getCoordinates().getLongitude() == 13.404954f);
+        assertTrue(state.getCoordinates().getLatitude() == 52.520008);
+        assertTrue(state.getCoordinates().getLongitude() == 13.404954);
     }
 
     @Test public void get() {
@@ -46,23 +42,19 @@ public class NaviDestinationTest {
     }
 
     @Test public void set() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex
-                ("0031020100084252147D41567AB10200064265726C696E");
+        Bytes waitingForBytes = new Bytes("003102" +
+                "070010404A428F9F44D445402ACF562174C4CE" +
+                "0200064265726c696e");
 
-        byte[] commandBytes = null;
-        try {
-            commandBytes = new SetNaviDestination(new CoordinatesProperty(52.520008f, 13.404954f),
-                    "Berlin").getByteArray();
-        } catch (Exception e) {
-            fail();
-        }
+        Bytes commandBytes = new SetNaviDestination(new CoordinatesProperty(52.520008, 13.404954),
+                "Berlin");
 
-        assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+        assertTrue(TestUtils.bytesTheSame(waitingForBytes, commandBytes));
 
         SetNaviDestination command = (SetNaviDestination) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getName().equals("Berlin"));
-        assertTrue(command.getCoordinates().getLatitude() == 52.520008f);
-        assertTrue(command.getCoordinates().getLongitude() == 13.404954f);
+        assertTrue(command.getCoordinates().getLatitude() == 52.520008);
+        assertTrue(command.getCoordinates().getLongitude() == 13.404954);
     }
 
     @Test public void state0Properties() {
@@ -73,10 +65,9 @@ public class NaviDestinationTest {
 
     @Test public void build() {
         NaviDestination.Builder builder = new NaviDestination.Builder();
-        builder.setCoordinates(new CoordinatesProperty(52.520008f, 13.404954f));
+        builder.setCoordinates(new CoordinatesProperty(52.520008, 13.404954));
         builder.setName("Berlin");
-        byte[] bytes = builder.build().getByteArray();
-        assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("0031010100084252147d41567ab10200064265726c696e")));
-
+        Command state = builder.build();
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 }
