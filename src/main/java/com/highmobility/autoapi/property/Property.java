@@ -191,14 +191,20 @@ public class Property extends Bytes implements HMProperty {
         return ByteUtils.concatBytes(bytes, valueBytes);
     }
 
-    public static long getLong(byte[] b) throws IllegalArgumentException {
-        if (b.length < 8) throw new IllegalArgumentException();
+    public static long getLong(byte[] b, int at) throws IllegalArgumentException {
+        if (b.length - at < 8) throw new IllegalArgumentException();
+
         long result = 0;
-        for (int i = 0; i < 8; i++) {
+        for (int i = at; i < at + 8; i++) {
             result <<= 8;
             result |= (b[i] & 0xFF);
         }
+
         return result;
+    }
+
+    public static long getLong(byte[] b) throws IllegalArgumentException {
+        return getLong(b, 0);
     }
 
     public static byte[] longToBytes(long l) {
@@ -212,7 +218,7 @@ public class Property extends Bytes implements HMProperty {
 
     public static float getFloat(byte[] bytes) throws IllegalArgumentException {
         if (bytes.length < 4) throw new IllegalArgumentException();
-        return ByteBuffer.wrap(bytes).getFloat();
+        return Float.intBitsToFloat(getUnsignedInt(bytes, 0, 4));
     }
 
     public static float getFloat(byte[] bytes, int at) throws IllegalArgumentException {
@@ -224,12 +230,28 @@ public class Property extends Bytes implements HMProperty {
         return ByteBuffer.allocate(4).putFloat(value).array();
     }
 
+    public static double getDouble(byte[] bytes) throws IllegalArgumentException {
+        if (bytes.length < 8) throw new IllegalArgumentException();
+        return Double.longBitsToDouble(getLong(bytes));
+    }
+
+    public static double getDouble(byte[] bytes, int at) throws IllegalArgumentException {
+        return Double.longBitsToDouble(getLong(bytes, at));
+    }
+
+    public static byte[] doubleToBytes(double value) {
+        long bits = Double.doubleToLongBits(value);
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(bits);
+        return buffer.array();
+    }
+
     public static int floatToIntPercentage(float value) {
         return Math.round(value * 100f);
     }
 
     public static byte floatToIntPercentageByte(float value) {
-        return (byte)Math.round(value * 100f);
+        return (byte) Math.round(value * 100f);
     }
 
     public static float getPercentage(byte value) {

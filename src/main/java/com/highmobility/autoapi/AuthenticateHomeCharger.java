@@ -24,30 +24,34 @@ import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * Enable or disable the home charger Wi-Fi Hotspot.
+ * Authenticate or expire the charging session. Only if the session is authenticated can the
+ * charging be started by the vehicle.
  */
-public class EnableDisableWifiHotspot extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x15);
+public class AuthenticateHomeCharger extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x16);
     private static final byte IDENTIFIER = 0x01;
 
+    private boolean authenticate;
+
     /**
-     * @return Whether to enable the Wi-Fi hotspot.
+     * @return Whether to authenticate or not.
      */
-    public boolean enable() {
-        return enable;
+    public boolean getAuthenticate() {
+        return authenticate;
     }
 
-    private boolean enable;
-
-    public EnableDisableWifiHotspot(boolean enable) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, enable)));
-        this.enable = enable;
+    /**
+     * @param authenticate Authentication state.
+     */
+    public AuthenticateHomeCharger(boolean authenticate) {
+        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, authenticate)));
+        this.authenticate = authenticate;
     }
 
-    EnableDisableWifiHotspot(byte[] bytes) throws CommandParseException {
+    AuthenticateHomeCharger(byte[] bytes) throws CommandParseException {
         super(bytes);
         Property prop = getProperty(IDENTIFIER);
         if (prop == null) throw new CommandParseException();
-        enable = Property.getBool(prop.getValueByte());
+        authenticate = Property.getBool(prop.getValueByte());
     }
 }

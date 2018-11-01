@@ -20,13 +20,16 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Set the charge current of the home charger.
  */
-public class SetChargeCurrent extends Command {
-    public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x02);
+public class SetChargeCurrent extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x12);
+    private static final byte IDENTIFIER = 0x01;
+
     private float current;
 
     /**
@@ -40,12 +43,14 @@ public class SetChargeCurrent extends Command {
      * @param chargeCurrent The charge current.
      */
     public SetChargeCurrent(float chargeCurrent) {
-        super(TYPE.addBytes(Property.floatToBytes(chargeCurrent)));
+        super(TYPE.addProperty(new FloatProperty(IDENTIFIER, chargeCurrent)));
         this.current = chargeCurrent;
     }
 
-    SetChargeCurrent(byte[] bytes) {
+    SetChargeCurrent(byte[] bytes) throws CommandParseException {
         super(bytes);
-        current = Property.getFloat(bytes, 3);
+        Property prop = getProperty(IDENTIFIER);
+        if (prop == null) throw new CommandParseException();
+        current = Property.getFloat(prop.getValueBytes());
     }
 }

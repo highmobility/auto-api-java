@@ -25,9 +25,6 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 
 public class PriceTariff extends Property {
-    public static final byte IDENTIFIER = 0x0C;
-    private static final int valueSize = 8;
-
     PricingType pricingType;
     String currency;
     float price;
@@ -40,7 +37,7 @@ public class PriceTariff extends Property {
     }
 
     /**
-     * @return The currency alphabetic code per ISO 4217.
+     * @return The currency name.
      */
     public String getCurrency() {
         return currency;
@@ -55,29 +52,22 @@ public class PriceTariff extends Property {
 
     public PriceTariff(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length != 11) throw new CommandParseException();
+        if (bytes.length < 11) throw new CommandParseException();
         pricingType = PricingType.fromByte(bytes[3]);
-        currency = Property.getString(bytes, 4, 3);
-        price = Property.getFloat(bytes, 7);
+        price = Property.getFloat(bytes, 4);
+        currency = Property.getString(bytes, 8, bytes.length - 8);
     }
 
     public PriceTariff(PricingType pricingType, String currency, float price) {
-        super(IDENTIFIER, valueSize);
+        super((byte) 0x01, 5 + currency.length());
+        if (currency.length() < 3) throw new IllegalArgumentException("Currency length needs to be > 3");
         bytes[3] = pricingType.getByte();
-        ByteUtils.setBytes(bytes, Property.stringToBytes(currency), 4);
-        ByteUtils.setBytes(bytes, Property.floatToBytes(price), 7);
+        ByteUtils.setBytes(bytes, Property.floatToBytes(price), 4);
+        ByteUtils.setBytes(bytes, Property.stringToBytes(currency), 8);
 
         this.pricingType = pricingType;
         this.currency = currency;
         this.price = price;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return valueSize;
     }
 
     public enum PricingType {

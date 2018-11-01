@@ -363,6 +363,8 @@ public class CommandResolver {
                     command = new SetChargeCurrent(bytes);
                 } else if (bytesAreForType(bytes, SetPriceTariffs.TYPE)) {
                     command = new SetPriceTariffs(bytes);
+                } else if (bytesAreForType(bytes, AuthenticateHomeCharger.TYPE)) {
+                    command = new AuthenticateHomeCharger(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.DASHBOARD_LIGHTS)) {
                 if (bytesAreForType(bytes, DashboardLights.TYPE)) {
