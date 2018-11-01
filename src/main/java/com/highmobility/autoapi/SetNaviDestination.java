@@ -28,6 +28,8 @@ import com.highmobility.autoapi.property.StringProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Set the navigation destination. This will be forwarded to the navigation system of the car.
  */
@@ -50,7 +52,7 @@ public class SetNaviDestination extends CommandWithProperties {
     /**
      * @return The destination name.
      */
-    public String getName() {
+    @Nullable public String getName() {
         return name;
     }
 
@@ -59,7 +61,7 @@ public class SetNaviDestination extends CommandWithProperties {
      * @param name        The destination name.
      * @throws IllegalArgumentException if all arguments are null
      */
-    public SetNaviDestination(CoordinatesProperty coordinates, String name) {
+    public SetNaviDestination(CoordinatesProperty coordinates, @Nullable String name) {
         super(TYPE, getProperties(coordinates, name));
         this.coordinates = coordinates;
         this.name = name;

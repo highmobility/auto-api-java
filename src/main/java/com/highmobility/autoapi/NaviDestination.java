@@ -24,6 +24,8 @@ import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent when a Get Navi Destination command is received by the car.
  */
@@ -39,14 +41,14 @@ public class NaviDestination extends CommandWithProperties {
     /**
      * @return The coordinates.
      */
-    public CoordinatesProperty getCoordinates() {
+    @Nullable public CoordinatesProperty getCoordinates() {
         return coordinates;
     }
 
     /**
      * @return The name.
      */
-    public String getName() {
+    @Nullable public String getName() {
         return name;
     }
 
