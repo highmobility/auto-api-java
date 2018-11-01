@@ -3,7 +3,8 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetKeyfobPosition;
-import com.highmobility.autoapi.KeyfobPosition;
+import com.highmobility.autoapi.KeyFobPosition;
+import com.highmobility.autoapi.property.KeyFobPositionProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -15,7 +16,7 @@ import static org.junit.Assert.fail;
 /**
  * Created by ttiganik on 15/09/16.
  */
-public class KeyfobPositionTest {
+public class KeyFobPositionPropertyTest {
     @Test
     public void state() {
         Bytes bytes = new Bytes("00480101000105");
@@ -27,9 +28,9 @@ public class KeyfobPositionTest {
             fail();
         }
 
-        assertTrue(command.is(KeyfobPosition.TYPE));
-        KeyfobPosition state = (KeyfobPosition) command;
-        assertTrue(state.getKeyfobPosition() == com.highmobility.autoapi.property.KeyfobPosition
+        assertTrue(command.is(KeyFobPosition.TYPE));
+        KeyFobPosition state = (KeyFobPosition) command;
+        assertTrue(state.getKeyFobPosition() == KeyFobPositionProperty
                 .INSIDE_CAR);
     }
 
@@ -42,6 +43,6 @@ public class KeyfobPositionTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("004801");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((KeyfobPosition)state).getKeyfobPosition() == null);
+        assertTrue(((KeyFobPosition)state).getKeyFobPosition() == null);
     }
 }

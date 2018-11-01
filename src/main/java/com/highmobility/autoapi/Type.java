@@ -49,7 +49,7 @@ public class Type {
         stateCommands.put(GetFlashersState.TYPE, FlashersState.TYPE);
         stateCommands.put(GetWifiState.TYPE, WifiState.TYPE);
         stateCommands.put(GetControlMode.TYPE, ControlMode.TYPE);
-        stateCommands.put(GetKeyfobPosition.TYPE, KeyfobPosition.TYPE);
+        stateCommands.put(GetKeyfobPosition.TYPE, KeyFobPosition.TYPE);
         stateCommands.put(GetParkingBrakeState.TYPE, ParkingBrakeState.TYPE);
         stateCommands.put(GetParkingTicket.TYPE, ParkingTicket.TYPE);
         stateCommands.put(GetTheftAlarmState.TYPE, TheftAlarmState.TYPE);

@@ -20,29 +20,30 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.KeyFobPositionProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Command sent by the car every time the relative position of the keyfob
- * changes or when a Get Keyfob Position command is received.
+ * changes or when a Get Key fob Position command is received.
  */
-public class KeyfobPosition extends CommandWithProperties {
+public class KeyFobPosition extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.KEYFOB_POSITION, 0x01);
 
-    com.highmobility.autoapi.property.KeyfobPosition keyfobPosition;
+    KeyFobPositionProperty keyFobPosition;
 
-    public com.highmobility.autoapi.property.KeyfobPosition getKeyfobPosition() {
-        return keyfobPosition;
+    public KeyFobPositionProperty getKeyFobPosition() {
+        return keyFobPosition;
     }
 
-    public KeyfobPosition(byte[] bytes) throws CommandParseException {
+    public KeyFobPosition(byte[] bytes) throws CommandParseException {
         super(bytes);
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case 0x01:
-                    keyfobPosition = com.highmobility.autoapi.property.KeyfobPosition.fromByte(
+                    keyFobPosition = KeyFobPositionProperty.fromByte(
                             property.getValueByte()
                     );
                     break;

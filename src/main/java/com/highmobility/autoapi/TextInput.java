@@ -48,7 +48,7 @@ public class TextInput extends CommandWithProperties {
 
     TextInput(byte[] bytes) {
         super(bytes);
-        com.highmobility.autoapi.property.Property urlProp = getProperty((byte) 0x01);
+        Property urlProp = getProperty((byte) 0x01);
         if (urlProp != null) text = Property.getString(urlProp.getValueBytes());
     }
 }

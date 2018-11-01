@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.GasFlapStateProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -28,12 +29,12 @@ import com.highmobility.autoapi.property.Property;
 public class GasFlapState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FUELING, 0x01);
 
-    com.highmobility.autoapi.property.GasFlapState state;
+    GasFlapStateProperty state;
 
     /**
      * @return The gas flap state.
      */
-    public com.highmobility.autoapi.property.GasFlapState getState() {
+    public GasFlapStateProperty getState() {
         return state;
     }
 
@@ -43,8 +44,8 @@ public class GasFlapState extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case com.highmobility.autoapi.property.GasFlapState.IDENTIFIER:
-                    state = com.highmobility.autoapi.property.GasFlapState.fromByte(property
+                case GasFlapStateProperty.IDENTIFIER:
+                    state = GasFlapStateProperty.fromByte(property
                             .getValueByte());
                     break;
             }
@@ -60,13 +61,13 @@ public class GasFlapState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        com.highmobility.autoapi.property.GasFlapState state;
+        GasFlapStateProperty state;
 
         /**
          * @param state The gas flap state.
          * @return The builder.
          */
-        public Builder setState(com.highmobility.autoapi.property.GasFlapState state) {
+        public Builder setState(GasFlapStateProperty state) {
             this.state = state;
             addProperty(state);
             return this;

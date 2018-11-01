@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.GetGasFlapState;
 import com.highmobility.autoapi.OpenGasFlap;
+import com.highmobility.autoapi.property.GasFlapStateProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -30,12 +31,12 @@ public class FuelingTest {
 
         assertTrue(command.is(GasFlapState.TYPE));
         GasFlapState state = (GasFlapState) command;
-        assertTrue(state.getState() == com.highmobility.autoapi.property.GasFlapState.OPEN);
+        assertTrue(state.getState() == GasFlapStateProperty.OPEN);
     }
 
     @Test public void build() {
         GasFlapState.Builder builder = new GasFlapState.Builder();
-        builder.setState(com.highmobility.autoapi.property.GasFlapState.OPEN);
+        builder.setState(GasFlapStateProperty.OPEN);
         GasFlapState state = builder.build();
         assertTrue(state.equals("00400101000101"));
     }
