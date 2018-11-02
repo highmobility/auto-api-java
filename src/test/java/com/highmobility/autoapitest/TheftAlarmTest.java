@@ -40,13 +40,13 @@ public class TheftAlarmTest {
     }
 
     @Test public void setAlarm() {
-        String waitingForBytes = "00460202";
+        String waitingForBytes = "00461201000101";
         String commandBytes = ByteUtils.hexFromBytes(new SetTheftAlarm(TheftAlarmState.State
-                .TRIGGERED).getByteArray());
+                .ARMED).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         SetTheftAlarm command = (SetTheftAlarm) CommandResolver.resolveHex(waitingForBytes);
-        assertTrue(command.getState() == TheftAlarmState.State.TRIGGERED);
+        assertTrue(command.getState() == TheftAlarmState.State.ARMED);
     }
 
     @Test public void build() {
