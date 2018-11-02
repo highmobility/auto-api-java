@@ -20,17 +20,22 @@
 
 package com.highmobility.autoapi;
 
-/**
- * Open the gas flap of the car. This is possible even if the car is locked.
- */
-public class OpenGasFlap extends Command {
-    public static final Type TYPE = new Type(Identifier.FUELING, 0x02);
+import com.highmobility.autoapi.property.GasFlapStateProperty;
+import com.highmobility.autoapi.property.Property;
 
-    public OpenGasFlap() {
-        super(TYPE);
+/**
+ * Open or close the gas flap of the car.
+ */
+public class OpenCloseGasFlap extends Command {
+    public static final Type TYPE = new Type(Identifier.FUELING, 0x12);
+
+    private static final byte IDENTIFIER = 0x01;
+    
+    public OpenCloseGasFlap(GasFlapStateProperty gasFlapState) {
+        super(TYPE.addProperty(new Property(IDENTIFIER, gasFlapState.getByte())));
     }
 
-    OpenGasFlap(byte[] bytes) {
+    OpenCloseGasFlap(byte[] bytes) {
         super(bytes);
     }
 }

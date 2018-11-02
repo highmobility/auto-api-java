@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.GetGasFlapState;
-import com.highmobility.autoapi.OpenGasFlap;
+import com.highmobility.autoapi.OpenCloseGasFlap;
 import com.highmobility.autoapi.property.GasFlapStateProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -49,12 +49,14 @@ public class FuelingTest {
     }
 
     @Test public void open() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("004002");
-        byte[] bytes = new OpenGasFlap().getByteArray();
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("004012" +
+                "01000101");
+
+        byte[] bytes = new OpenCloseGasFlap(GasFlapStateProperty.OPEN).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
-        OpenGasFlap openGasFlap = (OpenGasFlap) CommandResolver.resolve(waitingForBytes);
-        assertTrue(Arrays.equals(openGasFlap.getByteArray(), waitingForBytes));
+        OpenCloseGasFlap openCloseGasFlap = (OpenCloseGasFlap) CommandResolver.resolve(waitingForBytes);
+        assertTrue(Arrays.equals(openCloseGasFlap.getByteArray(), waitingForBytes));
     }
 
     @Test public void state0Properties() {

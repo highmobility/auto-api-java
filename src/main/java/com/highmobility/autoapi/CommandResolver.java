@@ -261,8 +261,8 @@ public class CommandResolver {
                     command = new GetGasFlapState(bytes);
                 } else if (bytesAreForType(bytes, GasFlapState.TYPE)) {
                     command = new GasFlapState(bytes);
-                } else if (bytesAreForType(bytes, OpenGasFlap.TYPE)) {
-                    command = new OpenGasFlap(bytes);
+                } else if (bytesAreForType(bytes, OpenCloseGasFlap.TYPE)) {
+                    command = new OpenCloseGasFlap(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.PARKING_TICKET)) {
                 if (bytesAreForType(bytes, GetParkingTicket.TYPE)) {
@@ -323,8 +323,8 @@ public class CommandResolver {
                     command = new ParkingBrakeState(bytes);
                 } else if (bytesAreForType(bytes, GetParkingBrakeState.TYPE)) {
                     command = new GetParkingBrakeState(bytes);
-                } else if (bytesAreForType(bytes, ActivateInactivateParkingBrake.TYPE)) {
-                    command = new ActivateInactivateParkingBrake(bytes);
+                } else if (bytesAreForType(bytes, SetParkingBrake.TYPE)) {
+                    command = new SetParkingBrake(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.LIGHT_CONDITIONS)) {
                 if (bytesAreForType(bytes, LightConditions.TYPE)) {

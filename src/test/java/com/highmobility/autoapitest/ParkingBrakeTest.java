@@ -1,6 +1,6 @@
 package com.highmobility.autoapitest;
 
-import com.highmobility.autoapi.ActivateInactivateParkingBrake;
+import com.highmobility.autoapi.SetParkingBrake;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetParkingBrakeState;
@@ -42,13 +42,12 @@ public class ParkingBrakeTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void inactivate() {
-        Bytes waitingForBytes = new Bytes("00580201");
-        byte[] commandBytes = new ActivateInactivateParkingBrake(true)
-                .getByteArray();
-        assertTrue(waitingForBytes.equals(commandBytes));
+    @Test public void setParkingBrake() {
+        Bytes waitingForBytes = new Bytes("00581201000101");
+        Bytes commandBytes = new SetParkingBrake(true);
+        assertTrue(TestUtils.bytesTheSame(waitingForBytes, commandBytes));
 
-        ActivateInactivateParkingBrake command = (ActivateInactivateParkingBrake) CommandResolver.resolve(waitingForBytes);
+        SetParkingBrake command = (SetParkingBrake) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.activate() == true);
         assertTrue(command.equals(waitingForBytes));
     }

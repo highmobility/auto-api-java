@@ -20,14 +20,16 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Turn on or off the parking brake. The result is sent through the evented Parking Brake State
  * message.
  */
-public class ActivateInactivateParkingBrake extends Command {
-    public static final Type TYPE = new Type(Identifier.PARKING_BRAKE, 0x02);
+public class SetParkingBrake extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.PARKING_BRAKE, 0x12);
+    private static final byte IDENTIFIER = 0x01;
 
     private boolean activate;
 
@@ -41,13 +43,15 @@ public class ActivateInactivateParkingBrake extends Command {
     /**
      * @param activate Boolean indicating whether to activate parking brake.
      */
-    public ActivateInactivateParkingBrake(boolean activate) {
-        super(TYPE.addByte(Property.boolToByte(activate)));
+    public SetParkingBrake(boolean activate) {
+        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
         this.activate = activate;
     }
 
-    ActivateInactivateParkingBrake(byte[] bytes) {
+    SetParkingBrake(byte[] bytes) throws CommandParseException {
         super(bytes);
-        this.activate = Property.getBool(bytes[3]);
+        Property prop = getProperty(IDENTIFIER);
+        if (prop == null) throw new CommandParseException();
+        this.activate = Property.getBool(prop.getValueByte());
     }
 }
