@@ -20,13 +20,16 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Send an action to a previously received Notification message.
  */
-public class NotificationAction extends Command {
-    public static final Type TYPE = new Type(Identifier.NOTIFICATIONS, 0x01);
+public class NotificationAction extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.NOTIFICATIONS, 0x11);
+
+    private static final byte IDENTIFIER = 0x01;
 
     int actionIdentifier;
 
@@ -38,26 +41,29 @@ public class NotificationAction extends Command {
     }
 
     public NotificationAction(int actionIdentifier) {
-        super(TYPE.addByte((byte) actionIdentifier));
+        super(TYPE.addProperty(new IntegerProperty(IDENTIFIER, actionIdentifier, 1)));
         this.actionIdentifier = actionIdentifier;
     }
 
     public NotificationAction(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        if (bytes.length != 4) throw new CommandParseException();
-        actionIdentifier = Property.getUnsignedInt(bytes[3]);
+        Property prop = getProperty(IDENTIFIER);
+        if (prop == null) throw new CommandParseException();
+
+        actionIdentifier = Property.getUnsignedInt(prop.getValueByte());
     }
 
     private NotificationAction(Builder builder) {
-        super(builder.getBytes());
+        super(builder);
         actionIdentifier = builder.actionIdentifier;
     }
 
-    public static final class Builder {
+    public static final class Builder extends CommandWithProperties.Builder {
         private int actionIdentifier;
 
         public Builder() {
+            super(TYPE);
         }
 
         /**
@@ -66,6 +72,7 @@ public class NotificationAction extends Command {
          */
         public Builder setActionIdentifier(int actionIdentifier) {
             this.actionIdentifier = actionIdentifier;
+            addProperty(new IntegerProperty(IDENTIFIER, actionIdentifier, 1));
             return this;
         }
 
@@ -73,8 +80,5 @@ public class NotificationAction extends Command {
             return new NotificationAction(this);
         }
 
-        byte[] getBytes() {
-            return TYPE.addByte((byte) actionIdentifier);
-        }
     }
 }
