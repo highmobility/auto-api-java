@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindscreenDamage;

@@ -8,6 +8,7 @@ import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.autoapi.RooftopState;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -73,6 +74,23 @@ public class PropertyTest {
         builder.setTimestamp(calendar);
         ParkingBrakeState state = builder.build();
         assertTrue(state.equals(bytes));
+    }
+
+    @Test public void propertyTimestamp() throws ParseException {
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000A11010A11220000000450");
+        String expectedDate = "2017-01-10T17:34:00+0000";
+        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
+
+        PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];
+        assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
+        assertTrue(timestamp.getAdditionalData().equals("50"));
+
+        // TBODO:
+        /*ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
+        builder.setIsActive(true);
+        builder.setPropertyTimestamps(calendar);
+        ParkingBrakeState state = builder.build();
+        assertTrue(state.equals(bytes));*/
     }
 
     @Test public void signedBytes() {

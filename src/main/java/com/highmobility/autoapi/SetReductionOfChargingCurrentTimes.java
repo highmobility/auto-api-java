@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ReductionTime;
 

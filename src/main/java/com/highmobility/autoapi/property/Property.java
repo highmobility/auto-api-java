@@ -104,7 +104,7 @@ public class Property extends Bytes implements HMProperty {
     /**
      * Set a new identifier for the property
      *
-     * @param identifier The identifier
+     * @param identifier The identifier.
      */
     public void setIdentifier(byte identifier) {
         bytes[0] = identifier;
