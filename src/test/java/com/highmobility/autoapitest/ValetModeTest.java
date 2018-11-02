@@ -43,8 +43,8 @@ public class ValetModeTest {
     }
 
     @Test public void activate() {
-        Bytes waitingForBytes = new Bytes("00280201");
-        String commandBytes = ByteUtils.hexFromBytes(new ActivateDeactivateValetMode(true).getByteArray());
+        Bytes waitingForBytes = new Bytes("00281201000101");
+        Bytes commandBytes = new ActivateDeactivateValetMode(true);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         ActivateDeactivateValetMode command = (ActivateDeactivateValetMode) CommandResolver
