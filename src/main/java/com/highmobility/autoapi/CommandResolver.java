@@ -165,8 +165,6 @@ public class CommandResolver {
                     command = new GetControlMode(bytes);
                 } else if (bytesAreForType(bytes, StartControlMode.TYPE)) {
                     command = new StartControlMode(bytes);
-                } else if (bytesAreForType(bytes, StopControlMode.TYPE)) {
-                    command = new StopControlMode(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.VALET_MODE)) {
                 if (bytesAreForType(bytes, ValetMode.TYPE)) {

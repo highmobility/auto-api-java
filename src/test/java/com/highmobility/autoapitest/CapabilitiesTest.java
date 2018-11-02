@@ -42,7 +42,6 @@ import com.highmobility.autoapi.StartStopDefogging;
 import com.highmobility.autoapi.StartStopDefrosting;
 import com.highmobility.autoapi.StartStopHvac;
 import com.highmobility.autoapi.StartStopIonising;
-import com.highmobility.autoapi.StopControlMode;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.Type;
 import com.highmobility.autoapi.ValetMode;
@@ -106,7 +105,7 @@ public class CapabilitiesTest {
         assertTrue(capabilities.isSupported(GetControlMode.TYPE));
         assertTrue(capabilities.isSupported(ControlMode.TYPE));
         assertTrue(capabilities.isSupported(StartControlMode.TYPE));
-        assertTrue(capabilities.isSupported(StopControlMode.TYPE));
+        /*assertTrue(capabilities.isSupported(StopControlMode.TYPE));*/
         assertTrue(capabilities.isSupported(ControlCommand.TYPE));
 
         assertTrue(capabilities.isSupported(GetValetMode.TYPE));
@@ -239,7 +238,7 @@ public class CapabilitiesTest {
                 GetControlMode.TYPE,
                 ControlMode.TYPE,
                 StartControlMode.TYPE,
-                StopControlMode.TYPE,
+                /*StopControlMode.TYPE,*/
                 ControlCommand.TYPE
         };
 
