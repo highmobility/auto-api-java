@@ -12,6 +12,9 @@ import com.highmobility.autoapi.WindowsState;
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PowerTrain;
+import com.highmobility.autoapi.property.value.DisplayUnit;
+import com.highmobility.autoapi.property.value.DriverSeatLocation;
+import com.highmobility.autoapi.property.value.Gearbox;
 import com.highmobility.autoapi.property.value.Lock;
 import com.highmobility.autoapi.property.value.Position;
 import com.highmobility.value.Bytes;
@@ -31,10 +34,16 @@ import static org.junit.Assert.fail;
 public class VehicleStatusTest {
     Bytes bytes = new Bytes(
             "0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102" +
-                    "0C0004402000000D000200F50E000101" // l7
+                    // l7
+                    "0C0004402000000D000200F50E000101" +
+                    // l8
+                    "0F000100" + // display unit km
+                    "10000100" + // driver seat left
+                    "11000F5061726B696E672073656E736F7273" + // Parking sensors
+                    "1100104175746F6D6174696320776970657273" // Automatic wipers
     );
 
-    VehicleStatus vehicleStatus;
+    VehicleStatus builder;
 
     @Before
     public void setup() {
@@ -45,7 +54,7 @@ public class VehicleStatusTest {
             fail();
         }
         if (command != null && command instanceof VehicleStatus) {
-            vehicleStatus = (VehicleStatus) command;
+            builder = (VehicleStatus) command;
         } else {
             fail();
         }
@@ -53,29 +62,38 @@ public class VehicleStatusTest {
 
     @Test
     public void states_size() {
-        assertTrue(vehicleStatus.getStates().length == 2);
+        assertTrue(builder.getStates().length == 2);
     }
 
     @Test
     public void properties() {
-        assertTrue(vehicleStatus.getVin().equals("JF2SHBDC7CH451869"));
-        assertTrue(vehicleStatus.getPowerTrain() == PowerTrain.ALLELECTRIC);
-        assertTrue(vehicleStatus.getModelName().equals("Type X"));
-        assertTrue(vehicleStatus.getName().equals("My Car"));
-        assertTrue(vehicleStatus.getLicensePlate().equals("ABC123"));
+        assertTrue(builder.getVin().equals("JF2SHBDC7CH451869"));
+        assertTrue(builder.getPowerTrain() == PowerTrain.ALLELECTRIC);
+        assertTrue(builder.getModelName().equals("Type X"));
+        assertTrue(builder.getName().equals("My Car"));
+        assertTrue(builder.getLicensePlate().equals("ABC123"));
 
-        assertTrue(vehicleStatus.getSalesDesignation().equals("Package+"));
-        assertTrue(vehicleStatus.getModelYear() == 2017);
-        assertTrue(vehicleStatus.getColorName().equals("Estoril Blau"));
-        assertTrue(vehicleStatus.getPower() == 220);
-        assertTrue(vehicleStatus.getNumberOfDoors() == 5);
-        assertTrue(vehicleStatus.getNumberOfSeats() == 5);
+        assertTrue(builder.getSalesDesignation().equals("Package+"));
+        assertTrue(builder.getModelYear() == 2017);
+        assertTrue(builder.getColorName().equals("Estoril Blau"));
+        assertTrue(builder.getPower() == 220);
+        assertTrue(builder.getNumberOfDoors() == 5);
+        assertTrue(builder.getNumberOfSeats() == 5);
 
-        assertTrue(vehicleStatus.getState(TrunkState.TYPE) != null);
+        assertTrue(builder.getState(TrunkState.TYPE) != null);
 
-        assertTrue(vehicleStatus.getEngineVolume() == 2.5f);
-        assertTrue(vehicleStatus.getMaxTorque() == 245);
-        assertTrue(vehicleStatus.getGearBox() == VehicleStatus.Gearbox.AUTOMATIC);
+        assertTrue(builder.getEngineVolume() == 2.5f);
+        assertTrue(builder.getMaxTorque() == 245);
+        assertTrue(builder.getGearBox() == Gearbox.AUTOMATIC);
+
+        assertTrue(builder.getDisplayUnit() == DisplayUnit.KM);
+        assertTrue(builder.getDriverSeatLocation() == DriverSeatLocation.LEFT);
+        assertTrue(builder.getEquipments().length == 2);
+        int count = 0;
+        for (String s : builder.getEquipments()) {
+            if (s.equals("Parking sensors") || s.equals("Automatic wipers")) count++;
+        }
+        assertTrue(count == 2);
     }
 
     @Test public void build() {
@@ -115,8 +133,8 @@ public class VehicleStatusTest {
     }
 
     Command getState(Class forClass) {
-        for (int i = 0; i < vehicleStatus.getStates().length; i++) {
-            Command command = vehicleStatus.getStates()[i];
+        for (int i = 0; i < builder.getStates().length; i++) {
+            Command command = builder.getStates()[i];
             if (command.getClass().equals(forClass)) return command;
         }
 
@@ -151,7 +169,13 @@ public class VehicleStatusTest {
         // l7
         builder.setEngineVolume(2.5f);
         builder.setMaxTorque(245);
-        builder.setGearBox(VehicleStatus.Gearbox.AUTOMATIC);
+        builder.setGearBox(Gearbox.AUTOMATIC);
+
+        // l8
+        builder.setDisplayUnit(DisplayUnit.KM);
+        builder.setDriverSeatLocation(DriverSeatLocation.LEFT);
+        builder.addEquipment("Parking sensors");
+        builder.addEquipment("Automatic wipers");
 
         return builder;
     }
@@ -174,24 +198,13 @@ public class VehicleStatusTest {
     @Test public void maiduTest() {
         Bytes bytes = new Bytes
                 ("0011010A000105991B002001010003000100010003010000010003020001010003030001");
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
     }
 
     @Test public void maiduTestTwo() {
         Bytes bytes = new Bytes
                 ("00110131484D31363241363748333232393645460208757573206175746F21452D436C61737320436F6D666F7274202620506572736F6E616C69736174696F6E000400230800001C50BF19999A00330B000BB8001200000000500000200D04000001010001020001030001003008425210E741561BEA");
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(((CommandWithProperties) command).getProperties().length != 0);
     }
 
