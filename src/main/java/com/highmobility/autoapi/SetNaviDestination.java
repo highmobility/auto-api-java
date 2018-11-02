@@ -59,7 +59,6 @@ public class SetNaviDestination extends CommandWithProperties {
     /**
      * @param coordinates The destination coordinates.
      * @param name        The destination name.
-     * @throws IllegalArgumentException if all arguments are null
      */
     public SetNaviDestination(CoordinatesProperty coordinates, @Nullable String name) {
         super(TYPE, getProperties(coordinates, name));
@@ -70,10 +69,10 @@ public class SetNaviDestination extends CommandWithProperties {
     static HMProperty[] getProperties(CoordinatesProperty coordinates, String name) {
         List<Property> properties = new ArrayList<>();
 
-        if (coordinates != null) {
-            coordinates.setIdentifier(COORDINATES_IDENTIFIER);
-            properties.add(coordinates);
-        }
+        if (coordinates == null) throw new IllegalArgumentException();
+
+        coordinates.setIdentifier(COORDINATES_IDENTIFIER);
+        properties.add(coordinates);
 
         if (name != null) {
             Property prop = new StringProperty(NAME_IDENTIFIER, name);

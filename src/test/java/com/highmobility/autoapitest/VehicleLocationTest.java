@@ -10,8 +10,6 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -20,8 +18,10 @@ import static org.junit.Assert.fail;
  */
 public class VehicleLocationTest {
     Bytes bytes = new Bytes(
-            "0030010100084252147d41567ab10200044252147d"
-                    + "03000443058000");
+            "003001" +
+                    "040010404A428F9F44D445402ACF562174C4CE" +
+                    "050008402ABD80C308FEAC" +
+                    "0600084060B00000000000");
 
     @Test
     public void state() {
@@ -34,10 +34,10 @@ public class VehicleLocationTest {
 
         assertTrue(command.getClass() == VehicleLocation.class);
         VehicleLocation state = (VehicleLocation) command;
-        assertTrue(state.getCoordinates().getLatitude() == 52.520008f);
-        assertTrue(state.getCoordinates().getLongitude() == 13.404954f);
-        assertTrue(state.getHeading() == 52.520008f);
-        assertTrue(state.getAltitude() == 133.5f);
+        assertTrue(state.getCoordinates().getLatitude() == 52.520008);
+        assertTrue(state.getCoordinates().getLongitude() == 13.404954);
+        assertTrue(state.getHeading() == 13.370123);
+        assertTrue(state.getAltitude() == 133.5);
     }
 
     @Test public void get() {
@@ -54,10 +54,10 @@ public class VehicleLocationTest {
 
     @Test public void build() {
         VehicleLocation.Builder builder = new VehicleLocation.Builder();
-        CoordinatesProperty coordinates = new CoordinatesProperty(52.520008f, 13.404954f);
+        CoordinatesProperty coordinates = new CoordinatesProperty(52.520008, 13.404954);
         builder.setCoordinates(coordinates);
-        builder.setHeading(52.520008f);
-        builder.setAltitude(133.5f);
+        builder.setHeading(13.370123);
+        builder.setAltitude(133.5);
         assertTrue(builder.build().equals(bytes));
     }
 }

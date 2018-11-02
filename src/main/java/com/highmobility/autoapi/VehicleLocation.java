@@ -21,8 +21,10 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CoordinatesProperty;
-import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.autoapi.property.Property;
+
+import javax.annotation.Nullable;
 
 /**
  * This command is sent when a Get Vehicle Location message is received by the car.
@@ -30,33 +32,32 @@ import com.highmobility.autoapi.property.Property;
 public class VehicleLocation extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VEHICLE_LOCATION, 0x01);
 
-    private static final byte COORDINATES_IDENTIFIER = 0x01;
-    private static final byte HEADING_IDENTIFIER = 0x02;
-    private static final byte ALTITUDE_IDENTIFIER = 0x03;
+    private static final byte COORDINATES_IDENTIFIER = 0x04;
+    private static final byte HEADING_IDENTIFIER = 0x05;
+    private static final byte ALTITUDE_IDENTIFIER = 0x06;
 
     private CoordinatesProperty coordinates;
-    private Float heading;
-
-    private Float altitude;
+    private Double heading;
+    private Double altitude;
 
     /**
      * @return The vehicle coordinates.
      */
-    public CoordinatesProperty getCoordinates() {
+    @Nullable public CoordinatesProperty getCoordinates() {
         return coordinates;
     }
 
     /**
      * @return The heading.
      */
-    public Float getHeading() {
+    @Nullable public Double getHeading() {
         return heading;
     }
 
     /**
      * @return The altitude in meters above the WGS 84 reference ellipsoid.
      */
-    public Float getAltitude() {
+    @Nullable public Double getAltitude() {
         return altitude;
     }
 
@@ -70,10 +71,10 @@ public class VehicleLocation extends CommandWithProperties {
                     coordinates = new CoordinatesProperty(property.getPropertyBytes());
                     break;
                 case HEADING_IDENTIFIER:
-                    heading = Property.getFloat(property.getValueBytes());
+                    heading = Property.getDouble(property.getValueBytes());
                     break;
                 case ALTITUDE_IDENTIFIER:
-                    altitude = Property.getFloat(property.getValueBytes());
+                    altitude = Property.getDouble(property.getValueBytes());
                     break;
             }
         }
@@ -91,10 +92,9 @@ public class VehicleLocation extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Float heading;
         private CoordinatesProperty coordinates;
-
-        private Float altitude;
+        private Double heading;
+        private Double altitude;
 
         public Builder() {
             super(TYPE);
@@ -104,9 +104,9 @@ public class VehicleLocation extends CommandWithProperties {
          * @param heading The heading.
          * @return The builder.
          */
-        public Builder setHeading(float heading) {
+        public Builder setHeading(double heading) {
             this.heading = heading;
-            addProperty(new FloatProperty(HEADING_IDENTIFIER, heading));
+            addProperty(new DoubleProperty(HEADING_IDENTIFIER, heading));
             return this;
         }
 
@@ -125,9 +125,9 @@ public class VehicleLocation extends CommandWithProperties {
          * @param altitude The altitude in meters above the WGS 84 reference ellipsoid
          * @return The builder.
          */
-        public Builder setAltitude(float altitude) {
+        public Builder setAltitude(double altitude) {
             this.altitude = altitude;
-            addProperty(new FloatProperty(ALTITUDE_IDENTIFIER, altitude));
+            addProperty(new DoubleProperty(ALTITUDE_IDENTIFIER, altitude));
             return this;
         }
 
