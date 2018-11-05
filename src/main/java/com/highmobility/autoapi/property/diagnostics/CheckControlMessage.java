@@ -55,7 +55,7 @@ public class CheckControlMessage extends Property {
     }
 
     public CheckControlMessage(int id, int remainingTime, String text, String status) {
-        super((byte) 0x00, 8 + text.length() + status.length());
+        super((byte) 0x00, 9 + text.length() + status.length());
 
         this.id = id;
         this.remainingTime = remainingTime;
@@ -65,9 +65,18 @@ public class CheckControlMessage extends Property {
         ByteUtils.setBytes(bytes, Property.intToBytes(id, 2), 3);
         ByteUtils.setBytes(bytes, Property.intToBytes(remainingTime, 4), 5);
 
-        ByteUtils.setBytes(bytes, Property.intToBytes(text.length(), 2), 9);
-        ByteUtils.setBytes(bytes, Property.stringToBytes(text), 11);
-        ByteUtils.setBytes(bytes, Property.stringToBytes(status), 11 + text.length());
+        int textPosition = 9;
+        int textLength = text.length();
+        bytes[textPosition] = (byte) textLength;
+        ByteUtils.setBytes(bytes, Property.intToBytes(textLength, 2), textPosition);
+        textPosition += 2;
+        ByteUtils.setBytes(bytes, Property.stringToBytes(text), textPosition);
+
+        textPosition += textLength;
+        textLength = status.length();
+        bytes[textPosition] = (byte) textLength;
+        textPosition += 1;
+        ByteUtils.setBytes(bytes, Property.stringToBytes(status), textPosition);
     }
 
     public CheckControlMessage(byte[] bytes) {
@@ -75,9 +84,16 @@ public class CheckControlMessage extends Property {
 
         this.id = Property.getUnsignedInt(bytes, 3, 2);
         this.remainingTime = Property.getUnsignedInt(bytes, 5, 4);
-        int textSize = Property.getUnsignedInt(bytes, 9, 2);
-        this.text = Property.getString(bytes, 11, textSize);
-        int statusLocation = 11 + textSize;
-        this.status = Property.getString(bytes, statusLocation, bytes.length - statusLocation);
+
+
+        int textPosition = 9;
+        int textLength = Property.getUnsignedInt(bytes, textPosition, 2);
+        textPosition+=2;
+        this.text = Property.getString(bytes, textPosition, textLength);
+
+        textPosition += textLength;
+        textLength = Property.getUnsignedInt(bytes, textPosition, 1);
+        textPosition++;
+        this.status = Property.getString(bytes, textPosition, textLength);
     }
 }

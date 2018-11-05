@@ -342,9 +342,8 @@ public class DiagnosticsState extends CommandWithProperties {
         ArrayList<WheelRpm> wheelRpms = new ArrayList<>();
         ArrayList<DiagnosticsTroubleCode> troubleCodes = new ArrayList<>();
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            try {
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
                 switch (property.getPropertyIdentifier()) {
                     case MILEAGE_IDENTIFIER:
                         mileage = Property.getUnsignedInt(property.getValueBytes());
@@ -428,10 +427,9 @@ public class DiagnosticsState extends CommandWithProperties {
                     case IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE:
                         troubleCodes.add(new DiagnosticsTroubleCode(property.getPropertyBytes()));
                         break;
+
                 }
-            } catch (CommandParseException e) {
-                property.printFailedToParse(e);
-            }
+            });
         }
 
         this.checkControlMessages = checkControlMessages.toArray(new

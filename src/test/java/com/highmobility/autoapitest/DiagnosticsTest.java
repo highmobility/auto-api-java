@@ -29,9 +29,9 @@ public class DiagnosticsTest {
                     "0F0004420E0000" +
                     /*level7*/"10000101110002001412000444bb94cd13000446d7860014000100150001141600010A1700020041" +
                     /*level8*/"18000138" +
-                    "190019000100019C78000C436865636b20656e67696e65416c657274" + // check control
+                    "19001A000100019C78000C436865636B20656E67696E6505416C657274" + // check control
                     // message 1
-                    "19001A000100019C78000C436865636b20656e67696e65416c65727474" + // check
+                    "19001B000100019C78000C436865636B20656E67696E6506416C65727474" + // check
                     // control message 2
                     "1A0005004013d70a1A0005014013d70a1A0005024013d70a1A0005034013d70a" + // tire
                     // pressure
@@ -43,12 +43,7 @@ public class DiagnosticsTest {
     );
 
     @Test public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == DiagnosticsState.class);
         DiagnosticsState state = (DiagnosticsState) command;
