@@ -50,7 +50,7 @@ public class DiagnosticsTroubleCode extends Property {
     }
 
     public DiagnosticsTroubleCode(int numberOfOccurences, String id, String ecuId, String status) {
-        super((byte) 0x00, 3 + id.length() + ecuId.length() + status.length());
+        super((byte) 0x00, 4 + id.length() + ecuId.length() + status.length());
 
         this.numberOfOccurences = numberOfOccurences;
         this.id = id;
@@ -58,23 +58,44 @@ public class DiagnosticsTroubleCode extends Property {
         this.status = status;
 
         bytes[3] = (byte) numberOfOccurences;
-        bytes[4] = (byte) id.length();
-        bytes[5] = (byte) ecuId.length();
 
-        ByteUtils.setBytes(bytes, Property.stringToBytes(id), 6);
-        ByteUtils.setBytes(bytes, Property.stringToBytes(ecuId), 6 + id.length());
-        ByteUtils.setBytes(bytes, Property.stringToBytes(status), 6 + id.length() + ecuId.length());
+        int textPosition = 4;
+        int textLength = id.length();
+        bytes[textPosition] = (byte) textLength;
+        textPosition++;
+        ByteUtils.setBytes(bytes, Property.stringToBytes(id), textPosition);
+
+        textPosition += textLength;
+        textLength = ecuId.length();
+        bytes[textPosition] = (byte) textLength;
+        textPosition += 1;
+        ByteUtils.setBytes(bytes, Property.stringToBytes(ecuId), textPosition);
+
+        textPosition += textLength;
+        textLength = status.length();
+        bytes[textPosition] = (byte) textLength;
+        textPosition += 1;
+        ByteUtils.setBytes(bytes, Property.stringToBytes(status), textPosition);
     }
 
     public DiagnosticsTroubleCode(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length < 6) throw new CommandParseException();
         this.numberOfOccurences = bytes[3];
-        int idLength = bytes[4];
-        int ecuIdLength = bytes[5];
-        id = Property.getString(bytes, 6, idLength);
-        ecuId = Property.getString(bytes, 6 + idLength, ecuIdLength);
-        int statusPosition = 6 + idLength + ecuIdLength;
-        status = Property.getString(bytes, statusPosition, bytes.length - statusPosition);
+
+        int textPosition = 4;
+        int textLength = Property.getUnsignedInt(bytes, textPosition, 1);
+        textPosition++;
+        this.id = Property.getString(bytes, textPosition, textLength);
+
+        textPosition += textLength;
+        textLength = Property.getUnsignedInt(bytes, textPosition, 1);
+        textPosition++;
+        this.ecuId = Property.getString(bytes, textPosition, textLength);
+
+        textPosition += textLength;
+        textLength = Property.getUnsignedInt(bytes, textPosition, 1);
+        textPosition++;
+        this.status = Property.getString(bytes, textPosition, textLength);
     }
 }
