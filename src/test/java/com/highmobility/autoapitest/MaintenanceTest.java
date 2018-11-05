@@ -32,8 +32,8 @@ public class MaintenanceTest {
                     "080008120B170A2132003C" +
                     "090008120B170A2132003C" +
                     "0A0008120B170A2132003C" +
-                    "0B00121305000300000B4272616B6520666C756964" +
-                    "0B00191303002001001256656869636C6520696E7370656374696F6E" +
+                    "0B00401305000300000B4272616B6520666C756964002C4E657874206368616E676520617420737065636966696564206461746520617420746865206C61746573742E" +
+                    "0B004F1303002001001256656869636C6520696E7370656374696F6E00344E657874206D616E6461746F72792076656869636C6520696E7370656374696F6E206F6E2073706563696669656420646174652E" +
                     "0C0008120B170A2132003C"
     );
 
@@ -73,14 +73,16 @@ public class MaintenanceTest {
                     conditionBasedService.getDate().getMonth().getValue() == 5 &&
                     conditionBasedService.getIdentifier() == 3 &&
                     conditionBasedService.getDueStatus() == ConditionBasedService.DueStatus.OK &&
-                    conditionBasedService.getText().equals("Brake fluid"))
+                    conditionBasedService.getText().equals("Brake fluid") &&
+                    conditionBasedService.getDescription().equals("Next change at specified date at the latest."))
                     ||
                     (conditionBasedService.getDate().getYear() == 2019 &&
                             conditionBasedService.getDate().getMonth().getValue() == 3 &&
                             conditionBasedService.getIdentifier() == 32 &&
                             conditionBasedService.getDueStatus() == ConditionBasedService
                                     .DueStatus.PENDING &&
-                            conditionBasedService.getText().equals("Vehicle inspection"))
+                            conditionBasedService.getText().equals("Vehicle inspection") &&
+                            conditionBasedService.getDescription().equals("Next mandatory vehicle inspection on specified date."))
                     ) {
                 count++;
             }

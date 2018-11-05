@@ -33,23 +33,24 @@ public class ConditionBasedService extends Property {
     Integer id;
     DueStatus dueStatus;
     String text;
+    String description;
 
     /**
-     * @return
+     * @return The date.
      */
     public LocalDate getDate() {
         return date;
     }
 
     /**
-     * @return
+     * @return The identifier.
      */
     public Integer getIdentifier() {
         return id;
     }
 
     /**
-     * @return
+     * @return The text.
      */
     public String getText() {
         return text;
@@ -62,6 +63,13 @@ public class ConditionBasedService extends Property {
         return dueStatus;
     }
 
+    /**
+     * @return The CBS description.
+     */
+    public String getDescription() {
+        return description;
+    }
+
     public ConditionBasedService(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length < 10) throw new CommandParseException();
@@ -71,10 +79,19 @@ public class ConditionBasedService extends Property {
         this.date = LocalDate.of(year, month, 1);
         this.id = Property.getUnsignedInt(bytes, 5, 2);
         this.dueStatus = DueStatus.fromByte(bytes[7]);
-        this.text = Property.getString(bytes, 10, bytes.length - 10);
+
+        int textPosition = 8;
+        int textLength = Property.getUnsignedInt(bytes, textPosition, 2);
+        textPosition += 2;
+        this.text = Property.getString(bytes, textPosition, textLength);
+        textPosition += textLength;
+        textLength = Property.getUnsignedInt(bytes, textPosition, 2);
+        textPosition += 2;
+        this.description = Property.getString(bytes, textPosition, textLength);
     }
 
-    public ConditionBasedService(LocalDate date, int id, DueStatus dueStatus, String text) {
+    ConditionBasedService(LocalDate date, int id, DueStatus dueStatus, String text) {
+        // TBODO:
         super(IDENTIFIER, 7 + text.length());
         bytes[3] = (byte) (date.getYear() - 2000);
         bytes[4] = (byte) date.getMonth().getValue();
@@ -112,5 +129,4 @@ public class ConditionBasedService extends Property {
             return value;
         }
     }
-
 }

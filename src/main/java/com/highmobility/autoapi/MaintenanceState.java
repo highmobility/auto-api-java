@@ -149,9 +149,9 @@ public class MaintenanceState extends CommandWithProperties {
     public MaintenanceState(byte[] bytes) {
         super(bytes);
         ArrayList<ConditionBasedService> conditionBasedServices = new ArrayList<>();
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            try {
+
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
                 switch (property.getPropertyIdentifier()) {
                     case DAYS_IDENTIFIER:
                         daysToNextService = Property.getUnsignedInt(property.getValueBytes());
@@ -195,13 +195,11 @@ public class MaintenanceState extends CommandWithProperties {
                         brakeFluidChangeDate = Property.getCalendar(property.getValueBytes());
                         break;
                 }
-            } catch (Exception e) {
-                property.printFailedToParse(e);
-            }
-
-            this.conditionBasedServices = conditionBasedServices.toArray(new
-                    ConditionBasedService[0]);
+            });
         }
+
+        this.conditionBasedServices = conditionBasedServices.toArray(new
+                ConditionBasedService[0]);
     }
 
     private MaintenanceState(Builder builder) {
