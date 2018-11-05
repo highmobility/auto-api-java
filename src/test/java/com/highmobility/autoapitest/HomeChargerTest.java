@@ -42,8 +42,8 @@ public class HomeChargerTest {
                     "0F00043F800000" +
                     "10000400000000" +
                     "110010404A428F9F44D445402ACF562174C4CE" +
-                    "1200080040900000455552" +
-                    "12000B023E99999A526970706C65"
+                    "120009004090000003455552" +
+                    "12000C023E99999A06526970706C65"
     );
 
     @Test
@@ -133,9 +133,8 @@ public class HomeChargerTest {
     @Test public void setPriceTariffs() {
         Bytes bytes = new Bytes(
                 "006013" +
-                        "0C00080040900000455552" +
-                        "0C0008023e99999a455552");
-        // TODO: 01/11/2018 verify the example is correct when fixed in dev center
+                        "0C0009004090000003455552" +
+                        "0C0009023e99999a03455552");
 
         PriceTariff[] tariffs = new PriceTariff[2];
 
@@ -143,7 +142,7 @@ public class HomeChargerTest {
         tariffs[1] = new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR", .3f);
 
         Command cmd = new SetPriceTariffs(tariffs);
-        assertTrue(TestUtils.bytesTheSame(bytes, cmd));
+        assertTrue(TestUtils.bytesTheSame(cmd, bytes));
 
         SetPriceTariffs command = (SetPriceTariffs) CommandResolver.resolve(bytes);
 

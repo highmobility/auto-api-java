@@ -52,18 +52,20 @@ public class PriceTariff extends Property {
 
     public PriceTariff(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 11) throw new CommandParseException();
+        if (bytes.length < 10) throw new CommandParseException();
         pricingType = PricingType.fromByte(bytes[3]);
         price = Property.getFloat(bytes, 4);
-        currency = Property.getString(bytes, 8, bytes.length - 8);
+        int currencyLength = Property.getUnsignedInt(bytes, 8, 1);
+        currency = Property.getString(bytes, 9, currencyLength);
     }
 
     public PriceTariff(PricingType pricingType, String currency, float price) {
-        super((byte) 0x01, 5 + currency.length());
+        super((byte) 0x00, 5 + 1 + currency.length());
         if (currency.length() < 3) throw new IllegalArgumentException("Currency length needs to be > 3");
         bytes[3] = pricingType.getByte();
         ByteUtils.setBytes(bytes, Property.floatToBytes(price), 4);
-        ByteUtils.setBytes(bytes, Property.stringToBytes(currency), 8);
+        ByteUtils.setBytes(bytes, Property.intToBytes(currency.length(), 1), 8);
+        ByteUtils.setBytes(bytes, Property.stringToBytes(currency), 9);
 
         this.pricingType = pricingType;
         this.currency = currency;
