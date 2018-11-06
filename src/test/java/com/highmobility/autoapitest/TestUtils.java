@@ -17,7 +17,8 @@ import static junit.framework.TestCase.assertTrue;
 public class TestUtils {
 
     public static boolean dateIsSame(Calendar c, String date) throws ParseException {
-        Date expectedDate = setFormat(date).parse(date);
+        DateFormat format = getFormat(date);
+        Date expectedDate = format.parse(date);
 
         Calendar expectedCalendar = Calendar.getInstance();
         expectedCalendar.setTime(expectedDate);
@@ -34,14 +35,11 @@ public class TestUtils {
         return (commandDateString.equals(expectedDateString));
     }
 
-    public static DateFormat setFormat(String date) {
-        if (format == null) {
-            format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-            String offset = date.substring(19);
-            TimeZone tz = TimeZone.getTimeZone("GMT" + offset);
-            format.setTimeZone(tz);
-        }
-
+    public static DateFormat getFormat(String date) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        String offset = date.substring(19);
+        TimeZone tz = TimeZone.getTimeZone("GMT" + offset);
+        format.setTimeZone(tz);
         return format;
     }
 
@@ -73,14 +71,11 @@ public class TestUtils {
         return true;
     }
 
-    private static DateFormat format;
+//    private static DateFormat format;
 
     public static DateFormat getUTCFormat() {
-        if (format == null) {
-            format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            format.setTimeZone(TimeZone.getTimeZone("UTC"));
-        }
-
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
         return format;
     }
 
@@ -100,7 +95,8 @@ public class TestUtils {
     }
 
     public static Calendar getCalendar(String dateString) throws ParseException {
-        Date date = setFormat(dateString).parse(dateString);
+        DateFormat format = getFormat(dateString);
+        Date date = format.parse(dateString);
         Calendar c = new GregorianCalendar();
         c.setTime(date);
         c.setTimeZone(format.getTimeZone());

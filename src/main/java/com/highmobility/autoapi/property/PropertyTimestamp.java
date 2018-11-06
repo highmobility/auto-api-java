@@ -54,7 +54,7 @@ public class PropertyTimestamp extends Property {
     }
 
     /**
-     * @return Additional data.
+     * @return Additional data. Full property bytes if does exist.
      */
     @Nullable public Bytes getAdditionalData() {
         return additionalData;

@@ -94,6 +94,21 @@ public class CommandWithProperties extends Command {
     }
 
     /**
+     * @param property The property
+     * @return The property timestamp for a property.
+     */
+    @Nullable public PropertyTimestamp getPropertyTimestamp(Property property) {
+        for (PropertyTimestamp propertyTimestamp : propertyTimestamps) {
+            if (propertyTimestamp.getAdditionalData() != null &&
+                    propertyTimestamp.getAdditionalData().equals(property)) {
+                return propertyTimestamp;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @return The bytes that are signed with the signature
      */
     public Bytes getSignedBytes() {

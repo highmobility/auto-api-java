@@ -77,13 +77,16 @@ public class PropertyTest {
     }
 
     @Test public void propertyTimestamp() throws ParseException {
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000A11010A11220000000450");
+        // size 9 + full prop size
+        String parkingStateProperty = "01000101";
+
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000D11010A112200000004" + parkingStateProperty);
         String expectedDate = "2017-01-10T17:34:00+0000";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
 
         PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];
         assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
-        assertTrue(timestamp.getAdditionalData().equals("50"));
+        assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
 
         // TBODO:
         /*ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();

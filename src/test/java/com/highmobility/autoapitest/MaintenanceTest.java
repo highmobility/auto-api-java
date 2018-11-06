@@ -14,7 +14,6 @@ import org.junit.Test;
 import java.text.ParseException;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -39,12 +38,7 @@ public class MaintenanceTest {
 
     @Test
     public void state() throws ParseException {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == MaintenanceState.class);
         MaintenanceState state = (MaintenanceState) command;
@@ -74,7 +68,8 @@ public class MaintenanceTest {
                     conditionBasedService.getIdentifier() == 3 &&
                     conditionBasedService.getDueStatus() == ConditionBasedService.DueStatus.OK &&
                     conditionBasedService.getText().equals("Brake fluid") &&
-                    conditionBasedService.getDescription().equals("Next change at specified date at the latest."))
+                    conditionBasedService.getDescription().equals("Next change at specified date " +
+                            "at the latest."))
                     ||
                     (conditionBasedService.getDate().getYear() == 2019 &&
                             conditionBasedService.getDate().getMonth().getValue() == 3 &&
@@ -82,7 +77,8 @@ public class MaintenanceTest {
                             conditionBasedService.getDueStatus() == ConditionBasedService
                                     .DueStatus.PENDING &&
                             conditionBasedService.getText().equals("Vehicle inspection") &&
-                            conditionBasedService.getDescription().equals("Next mandatory vehicle inspection on specified date."))
+                            conditionBasedService.getDescription().equals("Next mandatory vehicle" +
+                                    " inspection on specified date."))
                     ) {
                 count++;
             }

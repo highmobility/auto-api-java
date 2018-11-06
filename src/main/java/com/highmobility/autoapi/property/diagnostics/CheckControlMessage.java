@@ -85,7 +85,6 @@ public class CheckControlMessage extends Property {
         this.id = Property.getUnsignedInt(bytes, 3, 2);
         this.remainingTime = Property.getUnsignedInt(bytes, 5, 4);
 
-
         int textPosition = 9;
         int textLength = Property.getUnsignedInt(bytes, textPosition, 2);
         textPosition+=2;

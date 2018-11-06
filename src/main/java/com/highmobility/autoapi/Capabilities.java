@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CapabilityProperty;
-import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,19 +75,17 @@ public class Capabilities extends CommandWithProperties {
     public Capabilities(byte[] bytes) {
         super(bytes);
         ArrayList<CapabilityProperty> builder = new ArrayList<>();
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case 0x01:
-                    try {
+
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
+                switch (property.getPropertyIdentifier()) {
+                    case 0x01:
                         CapabilityProperty capability = new CapabilityProperty(property
                                 .getPropertyBytes());
                         builder.add(capability);
-                    } catch (Exception e) {
-                        // don't use unknown capability
-                    }
-                    break;
-            }
+                        break;
+                }
+            });
         }
 
         capabilities = builder.toArray(new CapabilityProperty[builder.size()]);
