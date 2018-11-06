@@ -75,7 +75,7 @@ public class GetHistoricalStates extends CommandWithProperties {
         return bytes;
     }
 
-    public GetHistoricalStates(byte[] bytes) {
+    GetHistoricalStates(byte[] bytes) {
         super(bytes);
         // TBODO: 31/10/2018
     }
