@@ -45,7 +45,7 @@ public class ActivateDeactivateCruiseControl extends Command {
     /**
      * @return The target speed in km/h.
      */
-    public Integer speed() {
+    @Nullable public Integer getSpeed() {
         return speed;
     }
 

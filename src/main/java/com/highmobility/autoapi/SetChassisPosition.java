@@ -46,9 +46,10 @@ public class SetChassisPosition extends CommandWithProperties {
         this.position = position;
     }
 
-    SetChassisPosition(byte[] bytes) {
+    SetChassisPosition(byte[] bytes) throws CommandParseException {
         super(bytes);
         Property prop = getProperty(PROPERTY_IDENTIFIER);
-        if (prop != null) this.position = Property.getSignedInt(prop.getValueByte());
+        if (prop == null) throw new CommandParseException();
+        this.position = Property.getSignedInt(prop.getValueByte());
     }
 }

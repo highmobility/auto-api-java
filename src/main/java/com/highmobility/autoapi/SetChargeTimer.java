@@ -65,6 +65,8 @@ public class SetChargeTimer extends CommandWithProperties {
     }
 
     static ChargingTimer[] validateTimers(ChargingTimer[] timers) throws IllegalArgumentException {
+        if (timers.length == 0) throw new IllegalArgumentException();
+        
         ArrayList<ChargingTimer.Type> types = new ArrayList<>(3);
         for (ChargingTimer timer : timers) {
             if (types.contains(timer.getType()) == false) types.add(timer.getType());

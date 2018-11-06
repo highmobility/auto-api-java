@@ -44,7 +44,7 @@ public class SetWindscreenDamage extends CommandWithProperties {
     /**
      * @return The windscreen damage.
      */
-    @Nullable public WindscreenDamage getDamage() {
+    public WindscreenDamage getDamage() {
         return damage;
     }
 
@@ -59,8 +59,7 @@ public class SetWindscreenDamage extends CommandWithProperties {
      * @param damage The damage size
      * @param zone   The damage zone
      */
-    public SetWindscreenDamage(@Nullable WindscreenDamage damage, @Nullable WindscreenDamageZone
-            zone) {
+    public SetWindscreenDamage(WindscreenDamage damage, @Nullable WindscreenDamageZone zone) {
         super(TYPE, getProperties(damage, zone));
         this.damage = damage;
         this.zone = zone;

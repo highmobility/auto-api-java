@@ -26,6 +26,8 @@ import com.highmobility.autoapi.property.StringProperty;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nullable;
+
 /**
  * Command to notify the car that a message has been received. Depending on the car system, it will
  * display or read it loud to the driver.
@@ -42,7 +44,7 @@ public class MessageReceived extends CommandWithProperties {
     /**
      * @return The sender handle (e.g. phone number).
      */
-    public String getSenderHandle() {
+    @Nullable public String getSenderHandle() {
         return handle;
     }
 
@@ -56,9 +58,8 @@ public class MessageReceived extends CommandWithProperties {
     /**
      * @param senderHandle The sender handle (e.g. phone number).
      * @param message      The message content text.
-     * @throws IllegalArgumentException When all parameters are null
      */
-    public MessageReceived(String senderHandle, String message) {
+    public MessageReceived(@Nullable String senderHandle, String message) {
         super(TYPE, getProperties(senderHandle, message));
         this.handle = senderHandle;
         this.message = message;

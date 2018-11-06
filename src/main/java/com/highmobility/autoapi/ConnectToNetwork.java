@@ -28,6 +28,8 @@ import com.highmobility.autoapi.property.StringProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Connect the car to a Wi-Fi network.
  */
@@ -56,7 +58,7 @@ public class ConnectToNetwork extends CommandWithProperties {
     /**
      * @return The network password.
      */
-    public String getPassword() {
+    @Nullable public String getPassword() {
         return password;
     }
 
@@ -67,7 +69,7 @@ public class ConnectToNetwork extends CommandWithProperties {
      * @param security Network security.
      * @param password The password.
      */
-    public ConnectToNetwork(String ssid, NetworkSecurity security, String password) {
+    public ConnectToNetwork(String ssid, NetworkSecurity security, @Nullable String password) {
         super(TYPE, getProperties(ssid, security, password));
         this.ssid = ssid;
         this.security = security;

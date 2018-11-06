@@ -29,6 +29,8 @@ import com.highmobility.autoapi.property.StringProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Hand over a video from smart device to car headunit to be shown in the car display. The emulator
  * supports HTML5 video player formats .mp4 and .webm.
@@ -53,14 +55,14 @@ public class VideoHandover extends CommandWithProperties {
     /**
      * @return The starting second.
      */
-    public Integer getStartingSecond() {
+    @Nullable public Integer getStartingSecond() {
         return startingSecond;
     }
 
     /**
      * @return The screen location.
      */
-    public ScreenLocation getLocation() {
+    @Nullable public ScreenLocation getLocation() {
         return location;
     }
 
@@ -69,7 +71,7 @@ public class VideoHandover extends CommandWithProperties {
      * @param location       The screen location.
      * @param startingSecond The starting second of the video.
      */
-    public VideoHandover(String url, Integer startingSecond, ScreenLocation location) {
+    public VideoHandover(String url, @Nullable Integer startingSecond, @Nullable ScreenLocation location) {
         super(TYPE, getProperties(url, startingSecond, location));
         this.url = url;
         this.startingSecond = startingSecond;

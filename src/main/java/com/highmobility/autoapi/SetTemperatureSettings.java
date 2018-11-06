@@ -25,6 +25,8 @@ import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nullable;
+
 /**
  * Set the preferred temperature settings. The result is sent through the Climate State message.
  */
@@ -39,26 +41,26 @@ public class SetTemperatureSettings extends CommandWithProperties {
     /**
      * @return The driver temperature.
      */
-    public Float getDriverTemperature() {
+    @Nullable public Float getDriverTemperature() {
         return driverTemperature;
     }
 
     /**
      * @return The passenger temperature.
      */
-    public Float getPassengerTemperature() {
+    @Nullable public Float getPassengerTemperature() {
         return passengerTemperature;
     }
 
     /**
      * @return The rear temperature.
      */
-    public Float getRearTemperature() {
+    @Nullable public Float getRearTemperature() {
         return rearTemperature;
     }
 
-    public SetTemperatureSettings(Float driverTemperature, Float passengerTemperature, Float
-            rearTemperature) {
+    public SetTemperatureSettings(@Nullable Float driverTemperature, @Nullable Float
+            passengerTemperature, @Nullable Float rearTemperature) {
         super(TYPE, getProperties(driverTemperature, passengerTemperature, rearTemperature));
         this.driverTemperature = driverTemperature;
         this.passengerTemperature = passengerTemperature;

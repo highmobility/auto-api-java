@@ -41,7 +41,7 @@ public class ControlWipers extends CommandWithProperties {
     /**
      * @return The wipers state.
      */
-    @Nullable public WiperState getState() {
+    public WiperState getState() {
         return state;
     }
 
@@ -52,7 +52,7 @@ public class ControlWipers extends CommandWithProperties {
         return intensity;
     }
 
-    public ControlWipers(@Nullable WiperState state, @Nullable WiperIntensity intensity) {
+    public ControlWipers(WiperState state, @Nullable WiperIntensity intensity) {
         super(TYPE, getProperties(state, intensity));
         this.state = state;
         this.intensity = intensity;
@@ -75,9 +75,10 @@ public class ControlWipers extends CommandWithProperties {
     ControlWipers(byte[] bytes) throws CommandParseException {
         super(bytes);
         Property state = getProperty(WiperState.IDENTIFIER);
-        Property intensity = getProperty(WiperIntensity.IDENTIFIER);
+        if (state == null) throw new CommandParseException();
+        this.state = WiperState.fromByte(state.getValueByte());
 
-        if (state != null) this.state = WiperState.fromByte(state.getValueByte());
+        Property intensity = getProperty(WiperIntensity.IDENTIFIER);
         if (intensity != null) this.intensity = WiperIntensity.fromByte(intensity.getValueByte());
     }
 }

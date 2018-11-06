@@ -27,6 +27,8 @@ import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
 
+import javax.annotation.Nullable;
+
 /**
  * Get historical states. The car will respond with the Historical States message.
  */
@@ -45,15 +47,15 @@ public class GetHistoricalStates extends CommandWithProperties {
         return identifier;
     }
 
-    public Calendar getStartDate() {
+    @Nullable public Calendar getStartDate() {
         return startDate;
     }
 
-    public Calendar getEndDate() {
+    @Nullable public Calendar getEndDate() {
         return endDate;
     }
 
-    public GetHistoricalStates(Identifier identifier, Calendar startDate, Calendar endDate) {
+    public GetHistoricalStates(Identifier identifier, @Nullable Calendar startDate, @Nullable Calendar endDate) {
         super(TYPE.addBytes(getBytes(identifier, startDate, endDate)));
         this.identifier = identifier;
         this.startDate = startDate;
