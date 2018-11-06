@@ -23,7 +23,6 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
 

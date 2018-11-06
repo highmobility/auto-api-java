@@ -32,6 +32,8 @@ import com.highmobility.autoapi.property.WiperState;
 
 import java.util.Calendar;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent when a Get Windscreen State command is received by the car. The wipers intensity is
  * indicated even if the car has automatic wipers activated.
@@ -56,56 +58,56 @@ public class WindscreenState extends CommandWithProperties {
     /**
      * @return The wiper state.
      */
-    public WiperState getWiperState() {
+    @Nullable public WiperState getWiperState() {
         return wiperState;
     }
 
     /**
      * @return The wiper intensity.
      */
-    public WiperIntensity getWiperIntensity() {
+    @Nullable public WiperIntensity getWiperIntensity() {
         return wiperIntensity;
     }
 
     /**
      * @return The windscreen damage.
      */
-    public WindscreenDamage getWindscreenDamage() {
+    @Nullable public WindscreenDamage getWindscreenDamage() {
         return windscreenDamage;
     }
 
     /**
      * @return The windscreen damage position, as viewed from inside the car.
      */
-    public WindscreenDamageZone getWindscreenDamageZone() {
+    @Nullable public WindscreenDamageZone getWindscreenDamageZone() {
         return windscreenDamageZone;
     }
 
     /**
      * @return The windscreen zone matrix, as viewed from inside the car.
      */
-    public WindscreenDamageZoneMatrix getWindscreenDamageZoneMatrix() {
+    @Nullable public WindscreenDamageZoneMatrix getWindscreenDamageZoneMatrix() {
         return windscreenDamageZoneMatrix;
     }
 
     /**
      * @return The windscreen replacement state.
      */
-    public WindscreenReplacementState getWindscreenReplacementState() {
+    @Nullable public WindscreenReplacementState getWindscreenReplacementState() {
         return windscreenReplacementState;
     }
 
     /**
      * @return The damage confidence.
      */
-    public Float getDamageConfidence() {
+    @Nullable public Float getDamageConfidence() {
         return damageConfidence;
     }
 
     /**
      * @return The damage detection time.
      */
-    public Calendar getDamageDetectionTime() {
+    @Nullable public Calendar getDamageDetectionTime() {
         return damageDetectionTime;
     }
 

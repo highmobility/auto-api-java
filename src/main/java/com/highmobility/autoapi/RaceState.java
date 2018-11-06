@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent when a Get Race State is received by the car.
  */
@@ -84,7 +86,7 @@ public class RaceState extends CommandWithProperties {
      * @param accelerationType The acceleration type.
      * @return Acceleration for the given acceleration type. Null if doesnt exist.
      */
-    public AccelerationProperty getAcceleration(AccelerationProperty.AccelerationType
+    @Nullable public AccelerationProperty getAcceleration(AccelerationProperty.AccelerationType
                                                         accelerationType) {
         for (int i = 0; i < accelerationProperties.length; i++) {
             AccelerationProperty property = accelerationProperties[i];
@@ -105,7 +107,7 @@ public class RaceState extends CommandWithProperties {
      * @return The under steering percentage between 0-1 whereas up to .2 is considered OK, up to .3
      * marginal, over .3 critical.
      */
-    public Float getUnderSteering() {
+    @Nullable public Float getUnderSteering() {
         return underSteering;
     }
 
@@ -113,14 +115,14 @@ public class RaceState extends CommandWithProperties {
      * @return The over steering percentage between 0-1 whereas up to .2 is considered OK, up to .3
      * marginal, over .3 critical.
      */
-    public Float getOverSteering() {
+    @Nullable public Float getOverSteering() {
         return overSteering;
     }
 
     /**
      * @return The gas pedal position between 0-1, whereas 1 is full throttle.
      */
-    public Float getGasPedalPosition() {
+    @Nullable public Float getGasPedalPosition() {
         return gasPedalPosition;
     }
 
@@ -128,35 +130,35 @@ public class RaceState extends CommandWithProperties {
      * @return The steering angle in degrees, whereas 0 degrees is straight ahead, positive number
      * to the left and negative number to the right.
      */
-    public Integer getSteeringAngle() {
+    @Nullable public Integer getSteeringAngle() {
         return steeringAngle;
     }
 
     /**
      * @return The Brake pressure in bar, whereas 100bar is max value, full brake.
      */
-    public Float getBrakePressure() {
+    @Nullable public Float getBrakePressure() {
         return brakePressure;
     }
 
     /**
      * @return The yaw rate in degrees per second [°/s].
      */
-    public Float getYawRate() {
+    @Nullable public Float getYawRate() {
         return yawRate;
     }
 
     /**
      * @return The rear suspension steering in degrees.
      */
-    public Integer getRearSuspensionSteering() {
+    @Nullable public Integer getRearSuspensionSteering() {
         return rearSuspensionSteering;
     }
 
     /**
      * @return The ESP (Electronic Stability Program) intervention state.
      */
-    public Boolean isEspInterventionActive() {
+    @Nullable public Boolean isEspInterventionActive() {
         return espInterventionActive;
     }
 
@@ -164,7 +166,7 @@ public class RaceState extends CommandWithProperties {
      * @param axle The axle.
      * @return The Brake Torque Vectoring for the given axle. Null if doesn't exist.
      */
-    public BrakeTorqueVectoringProperty getBrakeTorqueVectoring(Axle axle) {
+    @Nullable public BrakeTorqueVectoringProperty getBrakeTorqueVectoring(Axle axle) {
         for (int i = 0; i < brakeTorqueVectorings.length; i++) {
             BrakeTorqueVectoringProperty property = brakeTorqueVectorings[i];
             if (property.getAxle() == axle) return property;
@@ -183,56 +185,56 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return The gear mode.
      */
-    public GearMode getGearMode() {
+    @Nullable public GearMode getGearMode() {
         return gearMode;
     }
 
     /**
      * @return The selected gear.
      */
-    public Integer getSelectedGear() {
+    @Nullable public Integer getSelectedGear() {
         return selectedGear;
     }
 
     /**
      * @return The brake pedal position between 0-1, whereas 1 is full brakes.
      */
-    public Float getBrakePedalPosition() {
+    @Nullable public Float getBrakePedalPosition() {
         return brakePedalPosition;
     }
 
     /**
      * @return The brake pedal switch state.
      */
-    public Boolean isBrakePedalSwitchActive() {
+    @Nullable public Boolean isBrakePedalSwitchActive() {
         return brakePedalSwitchActive;
     }
 
     /**
      * @return The clutch pedal switch state.
      */
-    public Boolean isClutchPedalSwitchActive() {
+    @Nullable public Boolean isClutchPedalSwitchActive() {
         return clutchPedalSwitchActive;
     }
 
     /**
      * @return The accelerator pedal idle switch state. If active, pedal is fully released.
      */
-    public Boolean isAcceleratorPedalIdleSwitchActive() {
+    @Nullable public Boolean isAcceleratorPedalIdleSwitchActive() {
         return acceleratorPedalIdleSwitchActive;
     }
 
     /**
      * @return The accelerator pedal kickdown switch state. If active, pedal is fully depressed.
      */
-    public Boolean isAcceleratorPedalKickdownSwitchActive() {
+    @Nullable public Boolean isAcceleratorPedalKickdownSwitchActive() {
         return acceleratorPedalKickdownSwitchActive;
     }
 
     /**
      * @return The vehicle moving state.
      */
-    public Boolean isVehicleMoving() {
+    @Nullable public Boolean isVehicleMoving() {
         return vehicleMoving;
     }
 

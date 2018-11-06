@@ -28,6 +28,8 @@ import com.highmobility.autoapi.property.maintenance.TeleserviceAvailability;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent when a Get Maintenance State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
@@ -65,84 +67,84 @@ public class MaintenanceState extends CommandWithProperties {
     /**
      * @return The amount of kilometers until next servicing of the car
      */
-    public Integer getKilometersToNextService() {
+    @Nullable public Integer getKilometersToNextService() {
         return kilometersToNextService;
     }
 
     /**
      * @return The number of days until next servicing of the car, whereas negative is overdue
      */
-    public Integer getDaysToNextService() {
+    @Nullable public Integer getDaysToNextService() {
         return daysToNextService;
     }
 
     /**
      * @return The number of CBS reports.
      */
-    public Integer getCbsReportsCount() {
+    @Nullable public Integer getCbsReportsCount() {
         return cbsReportsCount;
     }
 
     /**
      * @return The number of Months until exhaust inspection.
      */
-    public Integer getMonthsToExhaustInspection() {
+    @Nullable public Integer getMonthsToExhaustInspection() {
         return monthsToExhaustInspection;
     }
 
     /**
      * @return The Teleservice availability.
      */
-    public TeleserviceAvailability getTeleserviceAvailability() {
+    @Nullable public TeleserviceAvailability getTeleserviceAvailability() {
         return teleserviceAvailability;
     }
 
     /**
      * @return The service distance threshold in km.
      */
-    public Integer getServiceDistanceThreshold() {
+    @Nullable public Integer getServiceDistanceThreshold() {
         return serviceDistanceThreshold;
     }
 
     /**
      * @return The service time threshold in weeks.
      */
-    public Integer getServiceTimeThreshold() {
+    @Nullable public Integer getServiceTimeThreshold() {
         return serviceTimeThreshold;
     }
 
     /**
      * @return The automatic Teleservice call date.
      */
-    public Calendar getAutomaticTeleserviceCallDate() {
+    @Nullable public Calendar getAutomaticTeleserviceCallDate() {
         return automaticTeleserviceCallDate;
     }
 
     /**
      * @return The Teleservice battery call date.
      */
-    public Calendar getTeleserviceBatteryCallDate() {
+    @Nullable public Calendar getTeleserviceBatteryCallDate() {
         return teleserviceBatteryCallDate;
     }
 
     /**
      * @return The next inspection date.
      */
-    public Calendar getNextInspectionDate() {
+    @Nullable public Calendar getNextInspectionDate() {
         return nextInspectionDate;
     }
 
     /**
      * @return The condition based services.
      */
-    public ConditionBasedService[] getConditionBasedServices() {
+    @Nullable public ConditionBasedService[] getConditionBasedServices() {
         return conditionBasedServices;
     }
 
     /**
      * @return The brake fluid change date.
      */
-    public Calendar getBrakeFluidChangeDate() {
+    @Nullable public Calendar getBrakeFluidChangeDate() {
         return brakeFluidChangeDate;
     }
 

@@ -23,6 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * This message is sent when a Power Take-Off State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
@@ -38,14 +40,14 @@ public class PowerTakeOffState extends CommandWithProperties {
     /**
      * @return Whether the power take-off is active.
      */
-    public Boolean isActive() {
+    @Nullable public Boolean isActive() {
         return active;
     }
 
     /**
      * @return Whether at least one Power Take-Off drive is engaged.
      */
-    public Boolean isEngaged() {
+    @Nullable public Boolean isEngaged() {
         return engaged;
     }
 

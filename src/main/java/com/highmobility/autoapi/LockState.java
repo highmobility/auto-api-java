@@ -28,6 +28,8 @@ import com.highmobility.autoapi.property.doors.DoorPosition;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import static com.highmobility.autoapi.property.value.Lock.UNLOCKED;
 
 /**
@@ -59,7 +61,7 @@ public class LockState extends CommandWithProperties {
      * @param doorLocation The door doorLocation.
      * @return The outside lock state.
      */
-    public DoorLockState getLock(DoorLocation doorLocation) {
+    @Nullable public DoorLockState getLock(DoorLocation doorLocation) {
         for (DoorLockState outsideLockState : locks) {
             if (outsideLockState.getLocation() == doorLocation) return outsideLockState;
         }
@@ -79,7 +81,7 @@ public class LockState extends CommandWithProperties {
      * @param doorLocation The door doorLocation.
      * @return The inside lock state.
      */
-    public DoorLockState getInsideLock(DoorLocation doorLocation) {
+    @Nullable public DoorLockState getInsideLock(DoorLocation doorLocation) {
         for (DoorLockState insideLockState : insideLocks) {
             if (insideLockState.getLocation() == doorLocation) return insideLockState;
         }
@@ -100,7 +102,7 @@ public class LockState extends CommandWithProperties {
      * @param doorLocation The door doorLocation.
      * @return The outside lock state.
      */
-    public DoorPosition getPosition(DoorLocation doorLocation) {
+    @Nullable public DoorPosition getPosition(DoorLocation doorLocation) {
         for (DoorPosition position : positions) {
             if (position.getLocation() == doorLocation) return position;
         }

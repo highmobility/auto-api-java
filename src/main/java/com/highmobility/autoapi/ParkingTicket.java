@@ -27,6 +27,8 @@ import com.highmobility.autoapi.property.StringProperty;
 
 import java.util.Calendar;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent from the car every time the parking ticket state changes. or when a Get Parking
  * Ticket message is received. The state is Ended also when the parking ticket has never been
@@ -49,35 +51,35 @@ public class ParkingTicket extends CommandWithProperties {
     /**
      * @return The ticket state.
      */
-    public ParkingTicketState getState() {
+    @Nullable public ParkingTicketState getState() {
         return state;
     }
 
     /**
      * @return The operator name.
      */
-    public String getOperatorName() {
+    @Nullable public String getOperatorName() {
         return operatorName;
     }
 
     /**
      * @return The ticket id.
      */
-    public String getOperatorTicketId() {
+    @Nullable public String getOperatorTicketId() {
         return operatorTicketId;
     }
 
     /**
      * @return Ticket start date.
      */
-    public Calendar getTicketStartDate() {
+    @Nullable public Calendar getTicketStartDate() {
         return ticketStart;
     }
 
     /**
      * @return Ticket end date.
      */
-    public Calendar getTicketEndDate() {
+    @Nullable public Calendar getTicketEndDate() {
         return ticketEnd;
     }
 

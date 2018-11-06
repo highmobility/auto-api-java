@@ -25,6 +25,8 @@ import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent when a Wi-Fi State command is received by the car. The new state is included in the
  * command payload and may be the result of user, device or car triggered action.
@@ -44,28 +46,28 @@ public class WifiState extends CommandWithProperties {
     /**
      * @return Whether Wi-Fi is enabled.
      */
-    public Boolean isEnabled() {
+    @Nullable public Boolean isEnabled() {
         return enabled;
     }
 
     /**
      * @return Whether Wi-Fi is connected.
      */
-    public Boolean isConnected() {
+    @Nullable public Boolean isConnected() {
         return connected;
     }
 
     /**
      * @return The network SSID.
      */
-    public String getSsid() {
+    @Nullable public String getSsid() {
         return ssid;
     }
 
     /**
      * @return The network security.
      */
-    public NetworkSecurity getSecurity() {
+    @Nullable public NetworkSecurity getSecurity() {
         return security;
     }
 

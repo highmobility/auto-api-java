@@ -24,6 +24,8 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Lock;
 import com.highmobility.autoapi.property.value.Position;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent from the car every time the trunk state changes or when a Get Trunk State is
  * received. The new status is included in the command payload and may be the result of user, device
@@ -41,14 +43,14 @@ public class TrunkState extends CommandWithProperties {
     /**
      * @return the current lock status of the trunk.
      */
-    public Lock getLockState() {
+    @Nullable public Lock getLockState() {
         return lock;
     }
 
     /**
      * @return the current position of the trunk.
      */
-    public Position getPosition() {
+    @Nullable public Position getPosition() {
         return position;
     }
 

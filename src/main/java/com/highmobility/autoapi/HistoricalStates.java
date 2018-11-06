@@ -22,6 +22,8 @@ package com.highmobility.autoapi;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nullable;
+
 /**
  * This message is sent when a Get Historical States is received. The states are passed along as an
  * array of all states for the given period.
@@ -48,7 +50,6 @@ public class HistoricalStates extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == STATE_IDENTIFIER) {
-                    // TODO: 31/10/2018 remove cast
                     CommandWithProperties state = (CommandWithProperties) CommandResolver.resolve
                             (p.getValueBytes());
                     builder.add(state);

@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * This message is sent when a Get Tachograph State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
@@ -65,7 +67,7 @@ public class TachographState extends CommandWithProperties {
      * @param driverNumber The driver number.
      * @return The driver working state.
      */
-    public DriverWorkingState getDriverWorkingState(int driverNumber) {
+    @Nullable public DriverWorkingState getDriverWorkingState(int driverNumber) {
         for (int i = 0; i < driverWorkingStates.length; i++) {
             DriverWorkingState state = driverWorkingStates[i];
             if (state.getDriverNumber() == driverNumber) return state;
@@ -86,7 +88,7 @@ public class TachographState extends CommandWithProperties {
      * @param driverNumber The driver number.
      * @return The driver time state.
      */
-    public DriverTimeState getDriverTimeState(int driverNumber) {
+    @Nullable public DriverTimeState getDriverTimeState(int driverNumber) {
         for (int i = 0; i < driverTimeStates.length; i++) {
             DriverTimeState state = driverTimeStates[i];
             if (state.getDriverNumber() == driverNumber) return state;
@@ -107,7 +109,7 @@ public class TachographState extends CommandWithProperties {
      * @param driverNumber The driver number.
      * @return The driver card.
      */
-    public DriverCard getDriverCard(int driverNumber) {
+    @Nullable public DriverCard getDriverCard(int driverNumber) {
         for (int i = 0; i < driverCards.length; i++) {
             DriverCard state = driverCards[i];
             if (state.getDriverNumber() == driverNumber) return state;
@@ -118,28 +120,28 @@ public class TachographState extends CommandWithProperties {
     /**
      * @return Whether vehicle motion is detected.
      */
-    public Boolean isVehicleMotionDetected() {
+    @Nullable public Boolean isVehicleMotionDetected() {
         return vehicleMotionDetected;
     }
 
     /**
      * @return Whether vehicle is overspeeding.
      */
-    public Boolean isVehicleOverspeeding() {
+    @Nullable public Boolean isVehicleOverspeeding() {
         return vehicleOverspeed;
     }
 
     /**
      * @return The vehicle direction.
      */
-    public VehicleDirection getVehicleDirection() {
+    @Nullable public VehicleDirection getVehicleDirection() {
         return vehicleDirection;
     }
 
     /**
      * @return The tachograph vehicle speed in km/h.
      */
-    public Integer getVehicleSpeed() {
+    @Nullable public Integer getVehicleSpeed() {
         return vehicleSpeed;
     }
 

@@ -25,6 +25,8 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.rooftop.ConvertibleRoofState;
 import com.highmobility.autoapi.rooftop.SunroofTiltState;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent from the car every time the rooftop state changes or when a Get Rooftop State is
  * received.
@@ -45,28 +47,28 @@ public class RooftopState extends CommandWithProperties {
     /**
      * @return The dim percentage of the rooftop.
      */
-    public Float getDimmingPercentage() {
+    @Nullable public Float getDimmingPercentage() {
         return dimmingPercentage;
     }
 
     /**
      * @return The percentage of how much the rooftop is open.
      */
-    public Float getOpenPercentage() {
+    @Nullable public Float getOpenPercentage() {
         return openPercentage;
     }
 
     /**
      * @return The convertible roof state.
      */
-    public ConvertibleRoofState getConvertibleRoofState() {
+    @Nullable public ConvertibleRoofState getConvertibleRoofState() {
         return convertibleRoofState;
     }
 
     /**
      * @return The sunroof tilt state.
      */
-    public SunroofTiltState getSunroofTiltState() {
+    @Nullable public SunroofTiltState getSunroofTiltState() {
         return sunroofTiltState;
     }
 

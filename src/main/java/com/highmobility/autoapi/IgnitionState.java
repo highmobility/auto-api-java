@@ -23,6 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent from the car every time the ignition state changes or when a Get Ignition State is
  * received. The new status is included in the message payload and may be the result of user, device
@@ -39,14 +41,14 @@ public class IgnitionState extends CommandWithProperties {
     /**
      * @return The ignition state.
      */
-    public Boolean isOn() {
+    @Nullable public Boolean isOn() {
         return on;
     }
 
     /**
      * @return Whether ignition state is powering on accessories such as radio.
      */
-    public Boolean isAccessoriesIgnitionOn() {
+    @Nullable public Boolean isAccessoriesIgnitionOn() {
         return accessoriesIgnition;
     }
 

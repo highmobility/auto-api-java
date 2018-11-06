@@ -24,6 +24,8 @@ import com.highmobility.autoapi.property.ControlModeValue;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent from the car every time the remote control mode changes or when a Get Control
  * ControlMode is received. The new mode is included in the command and may be the result of both
@@ -38,14 +40,14 @@ public class ControlMode extends CommandWithProperties {
     /**
      * @return the angle
      */
-    public Integer getAngle() {
+    @Nullable public Integer getAngle() {
         return angle;
     }
 
     /**
      * @return the control mode
      */
-    public ControlModeValue getMode() {
+    @Nullable public ControlModeValue getMode() {
         return mode;
     }
 

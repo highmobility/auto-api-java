@@ -25,6 +25,8 @@ import com.highmobility.autoapi.property.ColorProperty;
 import com.highmobility.autoapi.property.FrontExteriorLightState;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * This command is sent when a Get Lights State message is received by the car.
  */
@@ -49,42 +51,42 @@ public class LightsState extends CommandWithProperties {
     /**
      * @return The front exterior light state.
      */
-    public FrontExteriorLightState getFrontExteriorLightState() {
+    @Nullable public FrontExteriorLightState getFrontExteriorLightState() {
         return frontExteriorLightState;
     }
 
     /**
      * @return The rear exterior light state.
      */
-    public Boolean isRearExteriorLightActive() {
+    @Nullable public Boolean isRearExteriorLightActive() {
         return rearExteriorLightActive;
     }
 
     /**
      * @return The interior light state.
      */
-    public Boolean isInteriorLightActive() {
+    @Nullable public Boolean isInteriorLightActive() {
         return interiorLightActive;
     }
 
     /**
      * @return The ambient color, in rgba values from 0-255.
      */
-    public int[] getAmbientColor() {
+    @Nullable public int[] getAmbientColor() {
         return ambientColor;
     }
 
     /**
      * @return The reverse light state.
      */
-    public Boolean isReverseLightActive() {
+    @Nullable public Boolean isReverseLightActive() {
         return reverseLightActive;
     }
 
     /**
      * @return The emergency brake light state.
      */
-    public Boolean isEmergencyBrakeLightActive() {
+    @Nullable public Boolean isEmergencyBrakeLightActive() {
         return emergencyBrakeLightActive;
     }
 

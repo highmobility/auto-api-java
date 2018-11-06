@@ -34,6 +34,8 @@ import com.highmobility.utils.ByteUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent when a Get Vehicle Status is received by the car. The states are passed along as an
  * array of all states that the vehicle possesses. No states are included for Capabilities that are
@@ -99,7 +101,7 @@ public class VehicleStatus extends CommandWithProperties {
      * @param type The type of the command.
      * @return The state for the given Command type, if exists.
      */
-    public Command getState(Type type) {
+    @Nullable public Command getState(Type type) {
         if (states == null) return null;
         for (int i = 0; i < states.length; i++) {
             Command command = states[i];
@@ -112,112 +114,112 @@ public class VehicleStatus extends CommandWithProperties {
     /**
      * @return The vehicle's VIN number
      */
-    public String getVin() {
+    @Nullable public String getVin() {
         return vin;
     }
 
     /**
      * @return The vehicle's power train
      */
-    public PowerTrain getPowerTrain() {
+    @Nullable public PowerTrain getPowerTrain() {
         return powerTrain;
     }
 
     /**
      * @return The vehicle's model name
      */
-    public String getModelName() {
+    @Nullable public String getModelName() {
         return modelName;
     }
 
     /**
      * @return The vehicle's name
      */
-    public String getName() {
+    @Nullable public String getName() {
         return name;
     }
 
     /**
      * @return The vehicle's license plate
      */
-    public String getLicensePlate() {
+    @Nullable public String getLicensePlate() {
         return licensePlate;
     }
 
     /**
      * @return The sales designation of the model
      */
-    public String getSalesDesignation() {
+    @Nullable public String getSalesDesignation() {
         return salesDesignation;
     }
 
     /**
      * @return The car model manufacturing year number
      */
-    public Integer getModelYear() {
+    @Nullable public Integer getModelYear() {
         return modelYear;
     }
 
     /**
      * @return The color name
      */
-    public String getColorName() {
+    @Nullable public String getColorName() {
         return color;
     }
 
     /**
      * @return The power of the car measured in kw
      */
-    public Integer getPower() {
+    @Nullable public Integer getPower() {
         return power;
     }
 
     /**
      * @return The number of doors
      */
-    public Integer getNumberOfDoors() {
+    @Nullable public Integer getNumberOfDoors() {
         return numberOfDoors;
     }
 
     /**
      * @return The number of seats
      */
-    public Integer getNumberOfSeats() {
+    @Nullable public Integer getNumberOfSeats() {
         return numberOfSeats;
     }
 
     /**
      * @return The engine volume displacement in liters.
      */
-    public Float getEngineVolume() {
+    @Nullable public Float getEngineVolume() {
         return engineVolume;
     }
 
     /**
      * @return The maximum engine torque in Nm.
      */
-    public Integer getMaxTorque() {
+    @Nullable public Integer getMaxTorque() {
         return maxTorque;
     }
 
     /**
      * @return The gearbox type.
      */
-    public Gearbox getGearBox() {
+    @Nullable public Gearbox getGearBox() {
         return gearBox;
     }
 
     /**
      * @return The display unit.
      */
-    public DisplayUnit getDisplayUnit() {
+    @Nullable public DisplayUnit getDisplayUnit() {
         return displayUnit;
     }
 
     /**
      * @return The driver seat location.
      */
-    public DriverSeatLocation getDriverSeatLocation() {
+    @Nullable public DriverSeatLocation getDriverSeatLocation() {
         return driverSeatLocation;
     }
 

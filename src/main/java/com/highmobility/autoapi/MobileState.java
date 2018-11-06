@@ -31,12 +31,12 @@ import javax.annotation.Nullable;
 public class MobileState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MOBILE, 0x01);
     private static final byte IDENTIFIER = 0x01;
-    Boolean connected;
+    boolean connected;
 
     /**
      * @return Whether mobile phone is connected.
      */
-    @Nullable public Boolean isConnected() {
+    public boolean isConnected() {
         // not mandatory
         return connected;
     }

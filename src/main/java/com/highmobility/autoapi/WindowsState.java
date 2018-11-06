@@ -20,13 +20,14 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.windows.WindowLocation;
 import com.highmobility.autoapi.property.windows.WindowOpenPercentage;
 import com.highmobility.autoapi.property.windows.WindowPosition;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Command sent from the car every time the windows state changes or when a Get Windows State is
@@ -53,7 +54,7 @@ public class WindowsState extends CommandWithProperties {
      * @param location The window location.
      * @return The window position.
      */
-    public WindowPosition getWindowPosition(WindowLocation location) {
+    @Nullable public WindowPosition getWindowPosition(WindowLocation location) {
         for (WindowPosition windowPosition : windowPositions) {
             if (windowPosition.getLocation() == location) return windowPosition;
         }
@@ -71,7 +72,7 @@ public class WindowsState extends CommandWithProperties {
      * @param location The window location.
      * @return The window open percentage.
      */
-    public WindowOpenPercentage getWindowOpenPercentage(WindowLocation location) {
+    @Nullable public WindowOpenPercentage getWindowOpenPercentage(WindowLocation location) {
         for (WindowOpenPercentage windowOpenPercentage : windowOpenPercentages) {
             if (windowOpenPercentage.getLocation() == location) return windowOpenPercentage;
         }
@@ -84,9 +85,8 @@ public class WindowsState extends CommandWithProperties {
         List<WindowPosition> positionBuilder = new ArrayList<>();
         List<WindowOpenPercentage> openBuilder = new ArrayList<>();
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            try {
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
                 // if one property parsing fails, just dont add it
                 switch (property.getPropertyIdentifier()) {
                     case IDENTIFIER_WINDOW_OPEN_PERCENTAGES:
@@ -96,9 +96,7 @@ public class WindowsState extends CommandWithProperties {
                         positionBuilder.add(new WindowPosition(property.getPropertyBytes()));
                         break;
                 }
-            } catch (CommandParseException e) {
-                property.printFailedToParse();
-            }
+            });
         }
 
         windowPositions = positionBuilder.toArray(new WindowPosition[0]);
