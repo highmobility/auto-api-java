@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum FailureReason implements HMProperty {
+public enum FailureReason {
     UNSUPPORTED_CAPABILITY((byte) 0x00),
     UNAUTHORIZED((byte) 0x01),
     INCORRECT_STATE((byte) 0x02),
@@ -53,16 +53,4 @@ public enum FailureReason implements HMProperty {
     }
 
     private byte value;
-
-    @Override public byte getPropertyIdentifier() {
-        return 0x02;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
-    }
 }

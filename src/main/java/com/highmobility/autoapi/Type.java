@@ -63,6 +63,8 @@ public class Type {
         stateCommands.put(GetGasFlapState.TYPE, GasFlapState.TYPE);
         stateCommands.put(GetFirmwareVersion.TYPE, FirmwareVersion.TYPE);
         stateCommands.put(GetDashboardLights.TYPE, DashboardLights.TYPE);
+        stateCommands.put(GetUsage.TYPE, Usage.TYPE);
+        stateCommands.put(GetHistoricalStates.TYPE, HistoricalStates.TYPE);
     }
 
     byte[] identifierAndType;

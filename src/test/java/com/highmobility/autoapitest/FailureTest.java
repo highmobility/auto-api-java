@@ -5,38 +5,38 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Failure;
 import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.property.FailureReason;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class FailureTest {
+    Bytes bytes = new Bytes("000201" +
+            "0100020021" +
+            "02000100" +
+            "03000101" +
+            "04000954727920616761696E"
+    );
+
     @Test
     public void failure() {
-        Bytes bytes = new Bytes("00020101000300210002000101");
-
-        Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
-        if (command == null) fail();
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(Failure.TYPE));
         Failure failure = (Failure) command;
         assertTrue(failure.getFailedType().equals(GetTrunkState.TYPE));
         assertTrue(failure.getFailureReason() == FailureReason.UNAUTHORIZED);
+        assertTrue(failure.getFailureDescription().equals("Try again"));
     }
 
     @Test public void build() {
-        byte[] bytes = ByteUtils.bytesFromHex("00020101000300210002000101");
         Failure.Builder builder = new Failure.Builder();
         builder.setFailedType(GetTrunkState.TYPE);
         builder.setFailureReason(FailureReason.UNAUTHORIZED);
+        builder.setFailureDescription("Try again");
         Failure failure = builder.build();
-        byte[] builtBytes = failure.getByteArray();
-        assertTrue(Arrays.equals(builtBytes, bytes));
+        assertTrue(TestUtils.bytesTheSame(failure, bytes));
         assertTrue(failure.getFailedType() == GetTrunkState.TYPE);
         assertTrue(failure.getFailureReason() == FailureReason.UNAUTHORIZED);
         assertTrue(failure.getType() == Failure.TYPE);
