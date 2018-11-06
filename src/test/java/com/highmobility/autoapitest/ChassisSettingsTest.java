@@ -8,9 +8,9 @@ import com.highmobility.autoapi.SetChassisPosition;
 import com.highmobility.autoapi.SetDrivingMode;
 import com.highmobility.autoapi.SetSpringRate;
 import com.highmobility.autoapi.StartStopSportChrono;
-import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.SpringRateProperty;
+import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.autoapi.property.value.StartStop;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -75,7 +75,8 @@ public class ChassisSettingsTest {
 
     @Test public void startChrono() {
         String waitingForBytes = "00531301000100";
-        String commandBytes = ByteUtils.hexFromBytes(new StartStopSportChrono(StartStop.START).getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new StartStopSportChrono(StartStop.START)
+                .getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         StartStopSportChrono command = (StartStopSportChrono) CommandResolver.resolve(ByteUtils
@@ -84,15 +85,31 @@ public class ChassisSettingsTest {
     }
 
     @Test public void setSpringRate() {
-        String waitingForBytes = "0053140100020119";
-        String commandBytes = ByteUtils.hexFromBytes(new SetSpringRate(Axle.REAR, 25)
-                .getByteArray());
+        Bytes waitingForBytes = new Bytes("005314" +
+                "0100020119");
+
+        SpringRateProperty prop = new SpringRateProperty(Axle.REAR, 25);
+        SpringRateProperty[] props = new SpringRateProperty[1];
+        props[0] = prop;
+        Bytes commandBytes = new SetSpringRate(props);
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        SetSpringRate command = (SetSpringRate) CommandResolver.resolve(ByteUtils.bytesFromHex
-                (waitingForBytes));
-        assertTrue(command.getAxle() == Axle.REAR);
-        assertTrue(command.getSpringRate() == 25);
+        SetSpringRate command = (SetSpringRate) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getSpringRates().length == 1);
+        assertTrue(command.getSpringRate(Axle.REAR).getSpringRate() == 25);
+    }
+
+    @Test public void setSpringRate0Properties() {
+        Bytes waitingForBytes = new Bytes("005314");
+
+
+        SpringRateProperty[] props = new SpringRateProperty[0];
+        Bytes commandBytes = new SetSpringRate(props);
+        assertTrue(waitingForBytes.equals(commandBytes));
+
+        SetSpringRate command = (SetSpringRate) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getSpringRates().length == 0);
+
     }
 
     @Test public void setChassisPosition() {
@@ -107,7 +124,8 @@ public class ChassisSettingsTest {
 
     @Test public void setNegativeChassisPosition() {
         String waitingForBytes = "005315010001E4";
-        String commandBytes = ByteUtils.hexFromBytes(new SetChassisPosition(-28).getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new SetChassisPosition(-28).getByteArray
+                ());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         SetChassisPosition command = (SetChassisPosition) CommandResolver.resolve(ByteUtils

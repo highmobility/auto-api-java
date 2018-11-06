@@ -63,7 +63,6 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
 
     SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 9) throw new CommandParseException();
 
         List<ReductionTime> builder = new ArrayList<>();
 
@@ -75,5 +74,9 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
         }
 
         reductionTimes = builder.toArray(new ReductionTime[builder.size()]);
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return false;
     }
 }

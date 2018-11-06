@@ -3,6 +3,7 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.ChargeState;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
+import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.GetChargeState;
 import com.highmobility.autoapi.OpenCloseChargePort;
 import com.highmobility.autoapi.SetChargeLimit;
@@ -269,6 +270,17 @@ public class ChargingTest {
 
         assertTrue(command.getReductionTimes()[1].getStartStop() == StartStop.STOP);
         assertTrue(command.getReductionTimes()[1].getTime().equals(new Time(16, 32)));
+    }
+
+    @Test public void SetReductionTimes0Properties() {
+        Bytes waitingForBytes = new Bytes("002317");
+
+        ReductionTime[] timers = new ReductionTime[0];
+        SetReductionOfChargingCurrentTimes commandBytes = new SetReductionOfChargingCurrentTimes(timers);
+        assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
+        SetReductionOfChargingCurrentTimes command = (SetReductionOfChargingCurrentTimes)
+                CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getProperties().length == 0);
 
     }
 }

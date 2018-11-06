@@ -92,4 +92,8 @@ public class SetHvacStartingTimes extends CommandWithProperties {
 
         hvacStartingTimes = builder.toArray(new HvacStartingTime[0]);
     }
+
+    @Override protected boolean propertiesExpected() {
+        return false;
+    }
 }

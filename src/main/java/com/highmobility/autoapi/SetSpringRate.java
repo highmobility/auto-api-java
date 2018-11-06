@@ -20,9 +20,12 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.value.Axle;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.SpringRateProperty;
+import com.highmobility.autoapi.property.value.Axle;
+
+import java.util.ArrayList;
+
+import javax.annotation.Nullable;
 
 /**
  * Set the spring rate. The result is sent through the Chassis Settings message.
@@ -31,42 +34,53 @@ public class SetSpringRate extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x14);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
 
-    Axle axle;
-    Integer springRate;
+    SpringRateProperty[] springRates;
 
-    /**
-     * @return The axle.
-     */
-    public Axle getAxle() {
-        return axle;
+    public SpringRateProperty[] getSpringRates() {
+        return springRates;
     }
 
     /**
-     * @return The suspension spring rate in N/mm.
+     * @param axle The axle.
+     * @return The spring rate for the given axle.
      */
-    public Integer getSpringRate() {
-        return springRate;
-    }
-
-    public SetSpringRate(Axle axle, int springRate) {
-        super(getValues(axle, springRate));
-        this.axle = axle;
-        this.springRate = springRate;
-    }
-
-    static byte[] getValues(Axle axle, int springRate) {
-        Property prop = new SpringRateProperty(axle, springRate);
-        prop.setIdentifier(PROPERTY_IDENTIFIER);
-        return TYPE.addProperty(prop);
-    }
-
-    SetSpringRate(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        Property prop = getProperty(PROPERTY_IDENTIFIER);
-        if (prop != null) {
-            axle = Axle.fromByte(prop.getValueBytes()[0]);
-            springRate = Property.getUnsignedInt(prop.getValueBytes()[1]);
-
+    @Nullable public SpringRateProperty getSpringRate(Axle axle) {
+        for (SpringRateProperty springRate : springRates) {
+            if (springRate.getAxle() == axle) return springRate;
         }
+
+        return null;
+    }
+
+    public SetSpringRate(SpringRateProperty[] springRates) {
+        super(TYPE, getValues(springRates));
+        this.springRates = springRates;
+    }
+
+    static SpringRateProperty[] getValues(SpringRateProperty[] springRates) {
+        for (SpringRateProperty springRate : springRates) {
+            springRate.setIdentifier(PROPERTY_IDENTIFIER);
+        }
+
+        return springRates;
+    }
+
+    SetSpringRate(byte[] bytes) {
+        super(bytes);
+        ArrayList<SpringRateProperty> builder = new ArrayList<>();
+
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
+                    builder.add(new SpringRateProperty(p.getPropertyBytes()));
+                }
+            });
+        }
+
+        springRates = builder.toArray(new SpringRateProperty[0]);
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return false;
     }
 }

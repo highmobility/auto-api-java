@@ -156,6 +156,15 @@ public class HomeChargerTest {
         assertTrue(command.getPriceTariff(PriceTariff.PricingType.PER_KWH).getPrice() == .3f);
     }
 
+    @Test public void setPriceTariffs0Properties() {
+        Bytes bytes = new Bytes("006013");
+        PriceTariff[] tariffs = new PriceTariff[0];
+        Command cmd = new SetPriceTariffs(tariffs);
+        assertTrue(TestUtils.bytesTheSame(cmd, bytes));
+        SetPriceTariffs command = (SetPriceTariffs) CommandResolver.resolve(bytes);
+        assertTrue(command.getPriceTariffs().length == 0);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void failSamePriceTariffTypes() {
 

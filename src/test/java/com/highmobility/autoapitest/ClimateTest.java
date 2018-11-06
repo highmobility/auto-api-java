@@ -153,6 +153,15 @@ public class ClimateTest {
                 (new Time(8, 10)));
     }
 
+    @Test public void setClimateProfile0Properties() {
+        Bytes bytes = new Bytes("002412");
+        HvacStartingTime[] times = new HvacStartingTime[0];
+        Bytes commandBytes = new SetHvacStartingTimes(times);
+        assertTrue(TestUtils.bytesTheSame(commandBytes, bytes));
+        SetHvacStartingTimes profile = (SetHvacStartingTimes) CommandResolver.resolve(bytes);
+        assertTrue(profile.getHvacStartingTimes().length == 0);
+    }
+
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("002401");
         ClimateState state = (ClimateState) CommandResolver.resolve(bytes);

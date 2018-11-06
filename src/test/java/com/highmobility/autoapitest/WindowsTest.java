@@ -74,6 +74,18 @@ public class WindowsTest {
                 Position.OPEN);
     }
 
+    @Test public void control0Properties() {
+        Bytes waitingForBytes = new Bytes("004512");
+
+        WindowPosition[] windowsStates = new WindowPosition[0];
+        Bytes bytes = new ControlWindows(windowsStates);
+        assertTrue(TestUtils.bytesTheSame(bytes, waitingForBytes));
+
+        ControlWindows command = (ControlWindows) CommandResolver.resolve(waitingForBytes);
+        WindowPosition[] states = command.getWindowPositions();
+        assertTrue(states.length == 0);
+    }
+
     @Test public void build() {
         WindowsState.Builder builder = new WindowsState.Builder();
         builder.addWindowOpenPercentage(new WindowOpenPercentage(WindowLocation.REAR_RIGHT,

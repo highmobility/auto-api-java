@@ -31,7 +31,6 @@ import java.util.List;
  */
 public class SetPriceTariffs extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x13);
-    private static final byte IDENTIFIER = 0x01;
     private static final byte IDENTIFIER_TARIFF = 0x0C;
 
     private PriceTariff[] priceTariffs;
@@ -87,5 +86,9 @@ public class SetPriceTariffs extends CommandWithProperties {
         }
 
         priceTariffs = builder.toArray(new PriceTariff[builder.size()]);
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return false;
     }
 }

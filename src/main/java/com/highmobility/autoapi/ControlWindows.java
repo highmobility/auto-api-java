@@ -85,4 +85,8 @@ public class ControlWindows extends CommandWithProperties {
 
         windowPositions = builder.toArray(new WindowPosition[0]);
     }
+
+    @Override protected boolean propertiesExpected() {
+        return false;
+    }
 }
