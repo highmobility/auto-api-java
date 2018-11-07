@@ -42,19 +42,34 @@ public class GetHistoricalStates extends CommandWithProperties {
     private Calendar startDate;
     private Calendar endDate;
 
+    /**
+     * @return The identifier of the command historical states are requested for.
+     */
     public Identifier getIdentifier() {
         return identifier;
     }
 
+    /**
+     * @return The start date of the historical states.
+     */
     @Nullable public Calendar getStartDate() {
         return startDate;
     }
 
+    /**
+     * @return The end date of the historical states.
+     */
     @Nullable public Calendar getEndDate() {
         return endDate;
     }
 
-    public GetHistoricalStates(Identifier identifier, @Nullable Calendar startDate, @Nullable Calendar endDate) {
+    /**
+     * @param identifier The identifier of the command historical states are requested for.
+     * @param startDate  The start date of the historical states.
+     * @param endDate    The end date of the historical states.
+     */
+    public GetHistoricalStates(Identifier identifier, @Nullable Calendar startDate, @Nullable
+            Calendar endDate) {
         super(TYPE.addBytes(getBytes(identifier, startDate, endDate)));
         this.identifier = identifier;
         this.startDate = startDate;
@@ -65,13 +80,18 @@ public class GetHistoricalStates extends CommandWithProperties {
         byte[] bytes = new byte[5 + 11 + 11];
 
         Property identifierProperty = new Property(IDENTIFIER_CAPABILITY, identifier.getBytes());
-        CalendarProperty startDateProp = new CalendarProperty(IDENTIFIER_START_DATE, startDate);
-        CalendarProperty endDateProp = new CalendarProperty(IDENTIFIER_END_DATE, endDate);
-
         ByteUtils.setBytes(bytes, identifierProperty.getByteArray(), 0);
-        byte[] a =  startDateProp.getByteArray();
-        ByteUtils.setBytes(bytes, startDateProp.getByteArray(), 5);
-        ByteUtils.setBytes(bytes, endDateProp.getByteArray(), 16);
+
+        if (startDate != null) {
+            CalendarProperty startDateProp = new CalendarProperty(IDENTIFIER_START_DATE, startDate);
+            ByteUtils.setBytes(bytes, startDateProp.getByteArray(), 5);
+        }
+
+        if (endDate != null) {
+            CalendarProperty endDateProp = new CalendarProperty(IDENTIFIER_END_DATE, endDate);
+            ByteUtils.setBytes(bytes, endDateProp.getByteArray(), 16);
+        }
+
         return bytes;
     }
 
