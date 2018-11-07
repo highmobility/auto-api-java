@@ -45,14 +45,9 @@ public class SetChargeMode extends CommandWithProperties {
      * @throws IllegalArgumentException for {@link ChargeMode#IMMEDIATE}.
      */
     public SetChargeMode(ChargeMode chargeMode) {
-        super(getBytes(chargeMode));
+        super(TYPE.addProperty(new Property(PROPERTY_IDENTIFIER, chargeMode.getByte())));
         if (chargeMode == ChargeMode.IMMEDIATE) throw new IllegalArgumentException();
         this.chargeMode = chargeMode;
-    }
-
-    static byte[] getBytes(ChargeMode chargeMode) {
-        chargeMode.setIdentifier(PROPERTY_IDENTIFIER);
-        return TYPE.addProperty(chargeMode);
     }
 
 

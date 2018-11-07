@@ -67,6 +67,8 @@ public class ChargeState extends CommandWithProperties {
     private static final byte TIMER_IDENTIFIER = 0x15;
     private static final byte PLUGGED_IN_IDENTIFIER = 0x16;
 
+    private static final byte IDENTIFIER_STATE = 0x17;
+
     Integer estimatedRange;
     Float batteryLevel;
     Float batteryCurrentAC;
@@ -262,7 +264,7 @@ public class ChargeState extends CommandWithProperties {
 
             try {
                 switch (property.getPropertyIdentifier()) {
-                    case ChargingState.IDENTIFIER:
+                    case IDENTIFIER_STATE:
                         activeState = ChargingState.fromByte(property.getValueByte());
                         break;
                     case ESTIMATED_RANGE_IDENTIFIER:
@@ -312,7 +314,8 @@ public class ChargeState extends CommandWithProperties {
                         departureTimes.add(time);
                         break;
                     case REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER:
-                        reductionOfChargingCurrentTimes.add(new ReductionTime(property.getPropertyBytes()));
+                        reductionOfChargingCurrentTimes.add(new ReductionTime(property
+                                .getPropertyBytes()));
                         break;
                     case BATTERY_TEMPERATURE_IDENTIFIER:
                         batteryTemperature = Property.getFloat(property.getValueBytes());
@@ -401,7 +404,7 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setActiveState(ChargingState activeState) {
             this.activeState = activeState;
-            addProperty(activeState);
+            addProperty(new Property(IDENTIFIER_STATE, activeState.getByte()));
             return this;
         }
 
@@ -503,7 +506,7 @@ public class ChargeState extends CommandWithProperties {
         public Builder setChargePortState(ChargePortState chargePortState) {
             this.chargePortState = chargePortState;
             chargePortState.setIdentifier(CHARGE_PORT_STATE_IDENTIFIER);
-            addProperty(chargePortState);
+            addProperty(new Property(CHARGE_PORT_STATE_IDENTIFIER, chargePortState.getByte()));
             return this;
         }
 
@@ -513,8 +516,7 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setChargeMode(ChargeMode chargeMode) {
             this.chargeMode = chargeMode;
-            chargeMode.setIdentifier(CHARGE_MODE_IDENTIFIER);
-            addProperty(chargeMode);
+            addProperty(new Property(CHARGE_MODE_IDENTIFIER, chargeMode.getByte()));
             return this;
         }
 
@@ -526,7 +528,7 @@ public class ChargeState extends CommandWithProperties {
 
         public Builder setPlugType(PlugType plugType) {
             this.plugType = plugType;
-            addProperty(plugType);
+            addProperty(new Property(PLUG_TYPE_IDENTIFIER, plugType.getByte()));
             return this;
         }
 
@@ -553,7 +555,8 @@ public class ChargeState extends CommandWithProperties {
             return this;
         }
 
-        public Builder setReductionOfChargingCurrentTimes(ReductionTime[] reductionOfChargingCurrentTimes) {
+        public Builder setReductionOfChargingCurrentTimes(ReductionTime[]
+                                                                  reductionOfChargingCurrentTimes) {
             this.reductionOfChargingCurrentTimes = Arrays.asList(reductionOfChargingCurrentTimes);
 
             for (int i = 0; i < reductionOfChargingCurrentTimes.length; i++) {
@@ -565,8 +568,10 @@ public class ChargeState extends CommandWithProperties {
             return this;
         }
 
-        public Builder addReductionOfChargingCurrentTime(ReductionTime reductionOfChargingCurrentTime) {
-            reductionOfChargingCurrentTime.setIdentifier(REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER);
+        public Builder addReductionOfChargingCurrentTime(ReductionTime
+                                                                 reductionOfChargingCurrentTime) {
+            reductionOfChargingCurrentTime.setIdentifier
+                    (REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER);
             this.reductionOfChargingCurrentTimes.add(reductionOfChargingCurrentTime);
             addProperty(reductionOfChargingCurrentTime);
             return this;

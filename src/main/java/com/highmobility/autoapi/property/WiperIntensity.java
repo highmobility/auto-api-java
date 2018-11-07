@@ -22,13 +22,11 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum WiperIntensity implements HMProperty {
+public enum WiperIntensity {
     LEVEL_0((byte)0x00),
     LEVEL_1((byte)0x01),
     LEVEL_2((byte)0x02),
     LEVEL_3((byte)0x03);
-
-    public static final byte IDENTIFIER = 0x02;
 
     public static WiperIntensity fromByte(byte byteValue) throws CommandParseException {
         WiperIntensity[] values = WiperIntensity.values();
@@ -51,17 +49,5 @@ public enum WiperIntensity implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

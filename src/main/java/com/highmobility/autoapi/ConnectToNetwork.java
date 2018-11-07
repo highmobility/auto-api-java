@@ -81,9 +81,9 @@ public class ConnectToNetwork extends CommandWithProperties {
 
         if (ssid != null)
             propertiesBuilder.add(new StringProperty(WifiState.SSID_IDENTIFIER, ssid));
+
         if (security != null) {
-            security.setIdentifier(WifiState.SECURITY_IDENTIFIER);
-            propertiesBuilder.add(security);
+            propertiesBuilder.add(new Property(WifiState.SECURITY_IDENTIFIER, security.getByte()));
         }
         if (password != null)
             propertiesBuilder.add(new StringProperty(PASSWORD_IDENTIFIER, password));

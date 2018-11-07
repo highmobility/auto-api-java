@@ -151,8 +151,7 @@ public class WifiState extends CommandWithProperties {
          */
         public Builder setSecurity(NetworkSecurity security) {
             this.security = security;
-            security.setIdentifier(SECURITY_IDENTIFIER);
-            addProperty(security);
+            addProperty(new Property(SECURITY_IDENTIFIER, security.getByte()));
             return this;
         }
 

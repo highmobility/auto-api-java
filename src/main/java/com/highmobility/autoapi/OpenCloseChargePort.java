@@ -45,7 +45,7 @@ public class OpenCloseChargePort extends CommandWithProperties {
 
     static byte[] getBytes(ChargePortState chargePortState) {
         chargePortState.setIdentifier(PROPERTY_IDENTIFIER);
-        return TYPE.addProperty(chargePortState);
+        return TYPE.addProperty(new Property(PROPERTY_IDENTIFIER, chargePortState.getByte()));
     }
 
     OpenCloseChargePort(byte[] bytes) throws CommandParseException {

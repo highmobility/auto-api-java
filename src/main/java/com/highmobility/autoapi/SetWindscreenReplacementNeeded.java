@@ -50,8 +50,7 @@ public class SetWindscreenReplacementNeeded extends CommandWithProperties {
     }
 
     static HMProperty getProperty(WindscreenReplacementState state) {
-        state.setIdentifier(IDENTIFIER);
-        return state;
+        return new Property(IDENTIFIER, state.getByte());
     }
 
     SetWindscreenReplacementNeeded(byte[] bytes) throws CommandParseException {

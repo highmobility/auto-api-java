@@ -35,6 +35,9 @@ import javax.annotation.Nullable;
 public class ControlWipers extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x14);
 
+    private static final byte IDENTIFIER_WIPER_STATE = 0x01;
+    private static final byte IDENTIFIER_WIPER_INTENSITY = 0x02;
+
     private WiperState state;
     private WiperIntensity intensity;
 
@@ -61,24 +64,21 @@ public class ControlWipers extends CommandWithProperties {
     static HMProperty[] getProperties(WiperState state, WiperIntensity intensity) {
         ArrayList<HMProperty> builder = new ArrayList<>();
 
-        if (state != null) {
-            builder.add(state);
-        }
+        if (state != null) builder.add(new Property(IDENTIFIER_WIPER_STATE, state.getByte()));
 
-        if (intensity != null) {
-            builder.add(intensity);
-        }
+        if (intensity != null)
+            builder.add(new Property(IDENTIFIER_WIPER_INTENSITY, intensity.getByte()));
 
         return builder.toArray(new HMProperty[0]);
     }
 
     ControlWipers(byte[] bytes) throws CommandParseException {
         super(bytes);
-        Property state = getProperty(WiperState.IDENTIFIER);
+        Property state = getProperty(IDENTIFIER_WIPER_STATE);
         if (state == null) throw new CommandParseException();
         this.state = WiperState.fromByte(state.getValueByte());
 
-        Property intensity = getProperty(WiperIntensity.IDENTIFIER);
+        Property intensity = getProperty(IDENTIFIER_WIPER_INTENSITY);
         if (intensity != null) this.intensity = WiperIntensity.fromByte(intensity.getValueByte());
     }
 }

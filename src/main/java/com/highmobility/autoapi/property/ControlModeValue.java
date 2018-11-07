@@ -25,7 +25,7 @@ import com.highmobility.autoapi.CommandParseException;
 /**
  * The possible control mode values.
  */
-public enum ControlModeValue implements HMProperty {
+public enum ControlModeValue {
     UNAVAILABLE((byte)0x00),
     AVAILABLE((byte)0x01),
     STARTED((byte)0x02),
@@ -55,17 +55,5 @@ public enum ControlModeValue implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return 0x01;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

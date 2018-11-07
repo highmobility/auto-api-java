@@ -38,6 +38,7 @@ public class LightsState extends CommandWithProperties {
     private static final byte AMBIENT_COLOR_IDENTIFIER = 0x04;
     private static final byte REVERSE_LIGHT_IDENTIFIER = 0x05;
     private static final byte EMERGENCY_BRAKE_LIGHT_IDENTIFIER = 0x06;
+    private static final byte IDENTIFIER_FRONT_EXTERIOR = 0x01;
 
     FrontExteriorLightState frontExteriorLightState;
     Boolean rearExteriorLightActive;
@@ -96,7 +97,7 @@ public class LightsState extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(property -> {
                 switch (property.getPropertyIdentifier()) {
-                    case FrontExteriorLightState.IDENTIFIER:
+                    case IDENTIFIER_FRONT_EXTERIOR:
                         frontExteriorLightState = FrontExteriorLightState.fromByte(property
                                 .getValueByte());
                         break;
@@ -162,7 +163,7 @@ public class LightsState extends CommandWithProperties {
          */
         public Builder setFrontExteriorLightState(FrontExteriorLightState frontExteriorLightState) {
             this.frontExteriorLightState = frontExteriorLightState;
-            addProperty(frontExteriorLightState);
+            addProperty(new Property(IDENTIFIER_FRONT_EXTERIOR, frontExteriorLightState.getByte()));
             return this;
         }
 

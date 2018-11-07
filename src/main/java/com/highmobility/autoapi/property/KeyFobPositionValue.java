@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum KeyFobPositionProperty implements HMProperty {
+public enum KeyFobPositionValue {
     OUT_OF_RANGE((byte)0x00),
     OUTSIDE_DRIVER_SIDE((byte)0x01),
     OUTSIDE_IN_FRONT_OF_CAR((byte)0x02),
@@ -30,11 +30,11 @@ public enum KeyFobPositionProperty implements HMProperty {
     OUTSIDE_BEHIND_CAR((byte)0x04),
     INSIDE_CAR((byte)0x05);
 
-    public static KeyFobPositionProperty fromByte(byte value) throws CommandParseException {
-        KeyFobPositionProperty[] values = KeyFobPositionProperty.values();
+    public static KeyFobPositionValue fromByte(byte value) throws CommandParseException {
+        KeyFobPositionValue[] values = KeyFobPositionValue.values();
 
         for (int i = 0; i < values.length; i++) {
-            KeyFobPositionProperty possibleValue = values[i];
+            KeyFobPositionValue possibleValue = values[i];
             if (possibleValue.getByte() == value) {
                 return possibleValue;
             }
@@ -45,23 +45,11 @@ public enum KeyFobPositionProperty implements HMProperty {
 
     private byte value;
 
-    KeyFobPositionProperty(byte value) {
+    KeyFobPositionValue(byte value) {
         this.value = value;
     }
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return 0x01;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

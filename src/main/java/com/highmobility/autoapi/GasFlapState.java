@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.GasFlapStateProperty;
+import com.highmobility.autoapi.property.GasFlapStateValue;
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
@@ -32,12 +32,12 @@ public class GasFlapState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FUELING, 0x01);
     private static final byte IDENTIFIER = 0x01;
 
-    GasFlapStateProperty state;
+    GasFlapStateValue state;
 
     /**
      * @return The gas flap state.
      */
-    @Nullable public GasFlapStateProperty getState() {
+    @Nullable public GasFlapStateValue getState() {
         return state;
     }
 
@@ -45,7 +45,7 @@ public class GasFlapState extends CommandWithProperties {
         super(bytes);
 
         Property p = getProperty(IDENTIFIER);
-        if (p != null) state = GasFlapStateProperty.fromByte(p.getValueByte());
+        if (p != null) state = GasFlapStateValue.fromByte(p.getValueByte());
     }
 
     @Override public boolean isState() {
@@ -57,13 +57,13 @@ public class GasFlapState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        GasFlapStateProperty state;
+        GasFlapStateValue state;
 
         /**
          * @param state The gas flap state.
          * @return The builder.
          */
-        public Builder setState(GasFlapStateProperty state) {
+        public Builder setState(GasFlapStateValue state) {
             this.state = state;
             addProperty(new Property(IDENTIFIER, state.getByte()));
             return this;

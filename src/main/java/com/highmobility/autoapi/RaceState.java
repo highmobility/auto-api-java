@@ -59,6 +59,7 @@ public class RaceState extends CommandWithProperties {
     private static final byte ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER = 0x11;
 
     private static final byte IDENTIFIER_VEHICLE_MOVING = 0x12;
+    public static final byte IDENTIFIER_GEAR_MODE = 0x0B;
 
     AccelerationProperty[] accelerationProperties;
 
@@ -279,7 +280,7 @@ public class RaceState extends CommandWithProperties {
                         brakeTorqueVectoringProperties.add(
                                 new BrakeTorqueVectoringProperty(property.getPropertyBytes()));
                         break;
-                    case GearMode.IDENTIFIER:
+                    case IDENTIFIER_GEAR_MODE:
                         gearMode = GearMode.fromByte(property.getValueByte());
                         break;
                     case SELECTED_GEAR_IDENTIFIER:
@@ -515,7 +516,7 @@ public class RaceState extends CommandWithProperties {
          */
         public Builder setGearMode(GearMode gearMode) {
             this.gearMode = gearMode;
-            addProperty(gearMode);
+            addProperty(new Property(IDENTIFIER_GEAR_MODE, gearMode.getByte()));
             return this;
         }
 

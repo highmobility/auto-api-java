@@ -238,7 +238,7 @@ public class ChassisSettings extends CommandWithProperties {
          */
         public Builder setDrivingMode(DrivingMode drivingMode) {
             this.drivingMode = drivingMode;
-            addProperty(drivingMode);
+            addProperty(new Property(DRIVING_MODE_IDENTIFIER, drivingMode.getByte()));
             return this;
         }
 

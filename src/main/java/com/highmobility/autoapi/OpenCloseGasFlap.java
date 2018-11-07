@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.GasFlapStateProperty;
+import com.highmobility.autoapi.property.GasFlapStateValue;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -31,7 +31,7 @@ public class OpenCloseGasFlap extends Command {
 
     private static final byte IDENTIFIER = 0x01;
     
-    public OpenCloseGasFlap(GasFlapStateProperty gasFlapState) {
+    public OpenCloseGasFlap(GasFlapStateValue gasFlapState) {
         super(TYPE.addProperty(new Property(IDENTIFIER, gasFlapState.getByte())));
     }
 

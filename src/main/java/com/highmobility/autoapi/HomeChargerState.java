@@ -44,12 +44,16 @@ import javax.annotation.Nullable;
 public class HomeChargerState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x01);
 
+    private static final byte IDENTIFIER_CHARGING = 0x01;
+    private static final byte IDENTIFIER_PLUG_TYPE = 0x03;
+
     private static final byte CHARGING_POWER_IDENTIFIER = 0x04;
     private static final byte SOLAR_CHARGING_ACTIVE_IDENTIFIER = 0x05;
     private static final byte HOTSPOT_ENABLED_IDENTIFIER = 0x08;
     private static final byte HOTSPOT_SSID_IDENTIFIER = 0x09;
     private static final byte HOTSPOT_SECURITY_IDENTIFIER = 0x0A;
     private static final byte HOTSPOT_PASSWORD_IDENTIFIER = 0x0B;
+    private static final byte IDENTIFIER_AUTHENTICATION_MECHANISM = 0x02;
 
     private static final byte IDENTIFIER_AUTHENTICATION_STATE = 0x0D;
     private static final byte IDENTIFIER_CHARGE_CURRENT_DC = 0x0E;
@@ -203,14 +207,14 @@ public class HomeChargerState extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(property -> {
                 switch (property.getPropertyIdentifier()) {
-                    case Charging.IDENTIFIER:
+                    case IDENTIFIER_CHARGING:
                         charging = Charging.fromByte(property.getValueByte());
                         break;
-                    case AuthenticationMechanism.IDENTIFIER:
+                    case IDENTIFIER_AUTHENTICATION_MECHANISM:
                         authenticationMechanism = AuthenticationMechanism.fromByte(property
                                 .getValueByte());
                         break;
-                    case PlugType.IDENTIFIER:
+                    case IDENTIFIER_PLUG_TYPE:
                         plugType = PlugType.fromByte(property.getValueByte());
                         break;
                     case CHARGING_POWER_IDENTIFIER:
@@ -297,7 +301,7 @@ public class HomeChargerState extends CommandWithProperties {
          */
         public Builder setCharging(Charging charging) {
             this.charging = charging;
-            addProperty(charging);
+            addProperty(new Property(IDENTIFIER_CHARGING, charging.getByte()));
             return this;
         }
 
@@ -307,7 +311,7 @@ public class HomeChargerState extends CommandWithProperties {
          */
         public Builder setAuthenticationMechanism(AuthenticationMechanism authenticationMechanism) {
             this.authenticationMechanism = authenticationMechanism;
-            addProperty(authenticationMechanism);
+            addProperty(new Property(IDENTIFIER_AUTHENTICATION_MECHANISM, authenticationMechanism.getByte()));
             return this;
         }
 
@@ -317,7 +321,7 @@ public class HomeChargerState extends CommandWithProperties {
          */
         public Builder setPlugType(PlugType plugType) {
             this.plugType = plugType;
-            addProperty(plugType);
+            addProperty(new Property(IDENTIFIER_PLUG_TYPE, plugType.getByte()));
             return this;
         }
 
@@ -367,8 +371,7 @@ public class HomeChargerState extends CommandWithProperties {
          */
         public Builder setHotspotSecurity(NetworkSecurity hotspotSecurity) {
             this.hotspotSecurity = hotspotSecurity;
-            hotspotSecurity.setIdentifier(HOTSPOT_SECURITY_IDENTIFIER);
-            addProperty(hotspotSecurity);
+            addProperty(new Property(HOTSPOT_SECURITY_IDENTIFIER, hotspotSecurity.getByte()));
             return this;
         }
 

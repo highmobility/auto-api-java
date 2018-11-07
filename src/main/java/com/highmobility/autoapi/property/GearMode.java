@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum GearMode implements HMProperty {
+public enum GearMode {
     MANUAL((byte)0x00),
     PARK((byte)0x01),
     REVERSE((byte)0x02),
@@ -30,8 +30,6 @@ public enum GearMode implements HMProperty {
     DRIVE((byte)0x04),
     LOW_GEAR((byte)0x05),
     SPORT((byte)0x06);
-
-    public static final byte IDENTIFIER = 0x0B;
 
     public static GearMode fromByte(byte byteValue) throws CommandParseException {
         GearMode[] values = GearMode.values();
@@ -54,17 +52,5 @@ public enum GearMode implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

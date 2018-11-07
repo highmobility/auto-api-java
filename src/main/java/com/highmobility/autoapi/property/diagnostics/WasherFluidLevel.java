@@ -21,12 +21,10 @@
 package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
 
-public enum WasherFluidLevel implements HMProperty {
-    LOW((byte)0x00),
-    FULL((byte)0x01);
+public enum WasherFluidLevel {
+    LOW((byte) 0x00),
+    FULL((byte) 0x01);
 
     public static WasherFluidLevel fromByte(byte value) throws CommandParseException {
         WasherFluidLevel[] values = WasherFluidLevel.values();
@@ -42,29 +40,12 @@ public enum WasherFluidLevel implements HMProperty {
     }
 
     private byte value;
-    private Byte identifier = 0x01;
 
     WasherFluidLevel(byte value) {
         this.value = value;
     }
 
-    public void setIdentifier(Byte identifier) {
-        this.identifier = identifier;
-    }
-
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return identifier;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

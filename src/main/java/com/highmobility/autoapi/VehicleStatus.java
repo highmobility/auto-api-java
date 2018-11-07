@@ -377,7 +377,7 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setPowerTrain(PowerTrain powerTrain) {
             this.powerTrain = powerTrain;
-            addProperty(powerTrain);
+            addProperty(new Property(POWER_TRAIN_IDENTIFIER, powerTrain.getByte()));
             return this;
         }
 

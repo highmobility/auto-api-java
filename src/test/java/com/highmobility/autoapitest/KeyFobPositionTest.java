@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetKeyfobPosition;
 import com.highmobility.autoapi.KeyFobPosition;
-import com.highmobility.autoapi.property.KeyFobPositionProperty;
+import com.highmobility.autoapi.property.KeyFobPositionValue;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -30,7 +30,7 @@ public class KeyFobPositionTest {
 
         assertTrue(command.is(KeyFobPosition.TYPE));
         KeyFobPosition state = (KeyFobPosition) command;
-        assertTrue(state.getKeyFobPosition() == KeyFobPositionProperty
+        assertTrue(state.getKeyFobPosition() == KeyFobPositionValue
                 .INSIDE_CAR);
     }
 

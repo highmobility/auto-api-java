@@ -21,10 +21,8 @@
 package com.highmobility.autoapi.property.maintenance;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
 
-public enum TeleserviceAvailability implements HMProperty {
+public enum TeleserviceAvailability {
     PENDING((byte)0x00),
     IDLE((byte)0x01),
     SUCCESSFUL((byte)0x02),
@@ -53,17 +51,5 @@ public enum TeleserviceAvailability implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

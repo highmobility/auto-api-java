@@ -22,12 +22,10 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum WiperState implements HMProperty {
+public enum WiperState {
     INACTIVE((byte)0x00),
     ACTIVE((byte)0x01),
     AUTOMATIC((byte)0x02);
-
-    public static final byte IDENTIFIER = 0x01;
 
     public static WiperState fromByte(byte byteValue) throws CommandParseException {
         WiperState[] values = WiperState.values();
@@ -50,17 +48,5 @@ public enum WiperState implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

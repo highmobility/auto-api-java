@@ -75,6 +75,9 @@ public class DiagnosticsState extends CommandWithProperties {
     private static final byte IDENTIFIER_WHEEL_RPM = 0x1C;
     private static final byte IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE = 0x1D;
 
+    private static final byte IDENTIFIER_BRAKE_FLUID = 0x14;
+
+
     Integer mileage;
     Integer oilTemperature;
     Integer speed;
@@ -396,7 +399,7 @@ public class DiagnosticsState extends CommandWithProperties {
                     case ENGINE_TOTAL_FUEL_CONSUMPTION_IDENTIFIER:
                         engineTotalFuelConsumption = Property.getFloat(property.getValueBytes());
                         break;
-                    case BrakeFluidLevel.IDENTIFIER:
+                    case IDENTIFIER_BRAKE_FLUID:
                         brakeFluidLevel = BrakeFluidLevel.fromByte(property.getValueByte());
                         break;
                     case ENGINE_TORQUE_IDENTIFIER:
@@ -582,8 +585,7 @@ public class DiagnosticsState extends CommandWithProperties {
          */
         public Builder setWasherFluidLevel(WasherFluidLevel washerFluidLevel) {
             this.washerFluidLevel = washerFluidLevel;
-            washerFluidLevel.setIdentifier(WASHER_FLUID_LEVEL_IDENTIFIER);
-            addProperty(washerFluidLevel);
+            addProperty(new Property(WASHER_FLUID_LEVEL_IDENTIFIER, washerFluidLevel.getByte()));
             return this;
         }
 
@@ -691,7 +693,7 @@ public class DiagnosticsState extends CommandWithProperties {
          */
         public Builder setBrakeFluidLevel(BrakeFluidLevel brakeFluidLevel) {
             this.brakeFluidLevel = brakeFluidLevel;
-            addProperty(brakeFluidLevel);
+            addProperty(new Property(IDENTIFIER_BRAKE_FLUID, brakeFluidLevel.getByte()));
             return this;
         }
 

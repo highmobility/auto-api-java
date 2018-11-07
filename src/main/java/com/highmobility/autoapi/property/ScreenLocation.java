@@ -22,10 +22,9 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum ScreenLocation implements HMProperty {
+public enum ScreenLocation {
     FRONT((byte) 0x00),
     REAR((byte) 0x01);
-    public static final byte IDENTIFIER = 0x03;
 
     public static ScreenLocation fromByte(byte byteValue) throws CommandParseException {
         ScreenLocation[] values = ScreenLocation.values();
@@ -48,17 +47,5 @@ public enum ScreenLocation implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

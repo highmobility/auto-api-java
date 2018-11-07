@@ -26,7 +26,7 @@ import com.highmobility.autoapi.CommandParseException;
 /**
  * The possible charge port states
  */
-public enum ChargePortState implements HMProperty {
+public enum ChargePortState {
     CLOSED((byte)0x00), OPEN((byte)0x01);
 
     public static ChargePortState fromByte(byte byteValue) throws CommandParseException {
@@ -56,17 +56,5 @@ public enum ChargePortState implements HMProperty {
 
     public void setIdentifier(byte identifier) {
         this.identifier = identifier;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return identifier;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

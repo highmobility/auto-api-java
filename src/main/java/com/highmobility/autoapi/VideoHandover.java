@@ -40,6 +40,7 @@ public class VideoHandover extends CommandWithProperties {
 
     public static final byte URL_IDENTIFIER = 0x01;
     public static final byte STARTING_SECOND_IDENTIFIER = 0x02;
+    public static final byte IDENTIFIER_SCREEN_LOCATION = 0x03;
 
     private String url;
     private Integer startingSecond;
@@ -88,7 +89,7 @@ public class VideoHandover extends CommandWithProperties {
                 case STARTING_SECOND_IDENTIFIER:
                     startingSecond = Property.getUnsignedInt(property.getValueBytes());
                     break;
-                case ScreenLocation.IDENTIFIER:
+                case IDENTIFIER_SCREEN_LOCATION:
                     location = ScreenLocation.fromByte(property.getValueByte());
                     break;
             }
@@ -102,7 +103,7 @@ public class VideoHandover extends CommandWithProperties {
         if (startingSecond != null)
             propertiesBuilder.add(new IntegerProperty(STARTING_SECOND_IDENTIFIER, startingSecond,
                     2));
-        if (location != null) propertiesBuilder.add(location);
+        if (location != null) propertiesBuilder.add(new Property(IDENTIFIER_SCREEN_LOCATION, location.getByte()));
         return propertiesBuilder.toArray(new HMProperty[0]);
     }
 }

@@ -4,7 +4,7 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 
-public enum WindowLocation implements HMProperty {
+public enum WindowLocation {
     FRONT_LEFT((byte) 0x00),
     FRONT_RIGHT((byte) 0x01),
     REAR_RIGHT((byte) 0x02),
@@ -42,17 +42,5 @@ public enum WindowLocation implements HMProperty {
     public WindowLocation setIdentifier(byte identifier) {
         this.identifier = identifier;
         return this;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return identifier;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }
