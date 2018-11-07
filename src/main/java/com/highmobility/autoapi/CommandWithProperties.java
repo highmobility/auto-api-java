@@ -79,6 +79,7 @@ public class CommandWithProperties extends Command {
     }
 
     /**
+     * @param identifier The property identifier the timestamps are returned for.
      * @return An array of timestamps for a property identifier.
      */
     public PropertyTimestamp[] getPropertyTimestamps(byte identifier) {

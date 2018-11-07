@@ -137,6 +137,7 @@ public class ClimateState extends CommandWithProperties {
     }
 
     /**
+     * @param weekday The weekday of the hvac starting times.
      * @return The HVAC weekday starting times.
      */
     @Nullable public HvacStartingTime getHvacStartingTime(HvacStartingTime.Weekday weekday) {

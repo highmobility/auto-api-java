@@ -122,7 +122,7 @@ public class WindowsState extends CommandWithProperties {
         }
 
         /**
-         * @param windowPositions
+         * @param windowPositions The window positions.
          * @return The builder.
          */
         public Builder setWindowPositions(WindowPosition[] windowPositions) {
@@ -136,7 +136,7 @@ public class WindowsState extends CommandWithProperties {
         }
 
         /**
-         * @param windowOpenPercentages
+         * @param windowOpenPercentages The window open percentages.
          * @return The builder.
          */
         public Builder setWindowOpenPercentages(WindowOpenPercentage[] windowOpenPercentages) {
@@ -150,7 +150,7 @@ public class WindowsState extends CommandWithProperties {
         }
 
         /**
-         * @param windowPosition
+         * @param windowPosition A window position.
          * @return The builder.
          */
         public Builder addWindowPosition(WindowPosition windowPosition) {
@@ -161,7 +161,7 @@ public class WindowsState extends CommandWithProperties {
         }
 
         /**
-         * @param windowOpenPercentage
+         * @param windowOpenPercentage A window open percentage.
          * @return The builder.
          */
         public Builder addWindowOpenPercentage(WindowOpenPercentage windowOpenPercentage) {

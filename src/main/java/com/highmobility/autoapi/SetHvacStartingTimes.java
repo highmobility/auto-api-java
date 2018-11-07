@@ -47,6 +47,7 @@ public class SetHvacStartingTimes extends CommandWithProperties {
     }
 
     /**
+     * @param weekday Weekday of the HVAC starting time.
      * @return The Auto HVAC state.
      */
     @Nullable public HvacStartingTime getHvacStartingTime(HvacStartingTime.Weekday weekday) {
