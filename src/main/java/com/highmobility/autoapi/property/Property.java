@@ -59,21 +59,18 @@ public class Property extends Bytes implements HMProperty {
     /**
      * @param identifier The identifier byte of the property.
      * @param value      The value of the property.
-     * @throws IllegalArgumentException When the value is not set.
      */
     public Property(byte identifier, byte[] value) {
         this(identifier, value != null ? value.length : 0);
-        ByteUtils.setBytes(bytes, value, 3);
+        if (value != null) ByteUtils.setBytes(bytes, value, 3);
     }
 
     /**
      * @param identifier The identifier byte of the property.
      * @param value      The value of the property.
-     * @throws IllegalArgumentException When the value is not set.
      */
     public Property(byte identifier, Bytes value) {
-        this(identifier, value != null ? value.getLength() : 0);
-        ByteUtils.setBytes(bytes, value.getByteArray(), 3);
+        this(identifier, value.getByteArray());
     }
 
     public Property(byte[] bytes) {
@@ -115,7 +112,8 @@ public class Property extends Bytes implements HMProperty {
     }
 
     public void printFailedToParse(Exception e) {
-        Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e.getClass().getSimpleName() + ": " + e
+        Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
+                .getClass().getSimpleName() + ": " + e
                 .getMessage()) : ""));
     }
 

@@ -2,12 +2,9 @@ package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.GetRaceState;
 import com.highmobility.autoapi.GetUsage;
-import com.highmobility.autoapi.RaceState;
 import com.highmobility.autoapi.Usage;
 import com.highmobility.autoapi.property.DrivingMode;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;

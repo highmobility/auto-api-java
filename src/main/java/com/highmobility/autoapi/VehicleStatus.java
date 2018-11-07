@@ -325,7 +325,7 @@ public class VehicleStatus extends CommandWithProperties {
         power = builder.power;
         numberOfDoors = builder.numberOfDoors;
         numberOfSeats = builder.numberOfSeats;
-        states = builder.states.toArray(new CommandWithProperties[0]);
+        states = builder.states.toArray(new Command[0]);
         engineVolume = builder.engineVolume;
         maxTorque = builder.maxTorque;
         gearBox = builder.gearBox;

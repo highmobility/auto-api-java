@@ -18,7 +18,7 @@ public class Time extends Bytes {
     }
 
     public Time(byte[] bytes) {
-        if (bytes.length < 2 || bytes[0] < 0 || bytes[0] > 23 || bytes[1] < 0 || bytes[0] > 59)
+        if (bytes.length < 2 || bytes[0] < 0 || bytes[0] > 23 || bytes[1] < 0 || bytes[1] > 59)
             throw new IllegalArgumentException();
 
         this.hour = bytes[0];

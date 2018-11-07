@@ -221,7 +221,8 @@ public class ClimateState extends CommandWithProperties {
         defrostingActive = builder.defrostingActive;
         ionisingActive = builder.ionisingActive;
         defrostingTemperature = builder.defrostingTemperature;
-
+        hvacStartingTimes = builder.hvacStartingTimes.toArray(new HvacStartingTime[0]);
+        rearTemperatureSetting = builder.rearTemperatureSetting;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {

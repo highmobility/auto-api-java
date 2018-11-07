@@ -3,7 +3,6 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.ChargeState;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.GetChargeState;
 import com.highmobility.autoapi.OpenCloseChargePort;
 import com.highmobility.autoapi.SetChargeLimit;

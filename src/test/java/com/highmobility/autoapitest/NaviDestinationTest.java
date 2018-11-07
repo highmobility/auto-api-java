@@ -11,8 +11,6 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.assertTrue;
 
 /**

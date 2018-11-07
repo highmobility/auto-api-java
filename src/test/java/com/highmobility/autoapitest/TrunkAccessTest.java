@@ -7,7 +7,6 @@ import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.property.value.Lock;
 import com.highmobility.autoapi.property.value.Position;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;

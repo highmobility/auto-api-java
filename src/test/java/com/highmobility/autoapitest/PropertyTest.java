@@ -181,4 +181,9 @@ public class PropertyTest {
         assertTrue(foundDimmingProperty == true);
         assertTrue(foundUnknownProperty == true);
     }
+
+    @Test public void emptyValueProperty() {
+        Bytes bytes = new Bytes("");
+        new Property((byte) 0x00, bytes);
+    }
 }
