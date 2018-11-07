@@ -90,42 +90,42 @@ public class LightsState extends CommandWithProperties {
         return emergencyBrakeLightActive;
     }
 
-    public LightsState(byte[] bytes) throws CommandParseException {
+    public LightsState(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case FrontExteriorLightState.IDENTIFIER:
-                    frontExteriorLightState = FrontExteriorLightState.fromByte(property
-                            .getValueByte());
-                    break;
-                case REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER:
-                    rearExteriorLightActive = Property.getBool(property.getValueByte());
-                    break;
-                case INTERIOR_LIGHT_ACTIVE_IDENTIFIER:
-                    interiorLightActive = Property.getBool(property.getValueByte());
-                    break;
-                case AMBIENT_COLOR_IDENTIFIER:
-                    byte[] valueBytes = property.getValueBytes();
-                    if (valueBytes.length != 3) throw new CommandParseException();
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
+                switch (property.getPropertyIdentifier()) {
+                    case FrontExteriorLightState.IDENTIFIER:
+                        frontExteriorLightState = FrontExteriorLightState.fromByte(property
+                                .getValueByte());
+                        break;
+                    case REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER:
+                        rearExteriorLightActive = Property.getBool(property.getValueByte());
+                        break;
+                    case INTERIOR_LIGHT_ACTIVE_IDENTIFIER:
+                        interiorLightActive = Property.getBool(property.getValueByte());
+                        break;
+                    case AMBIENT_COLOR_IDENTIFIER:
+                        byte[] valueBytes = property.getValueBytes();
+                        if (valueBytes.length != 3) throw new CommandParseException();
 
-                    ambientColor = new int[4];
-                    ambientColor[0] = valueBytes[0] & 0xFF;
-                    ambientColor[1] = valueBytes[1] & 0xFF;
-                    ambientColor[2] = valueBytes[2] & 0xFF;
-                    ambientColor[3] = 255;
+                        ambientColor = new int[4];
+                        ambientColor[0] = valueBytes[0] & 0xFF;
+                        ambientColor[1] = valueBytes[1] & 0xFF;
+                        ambientColor[2] = valueBytes[2] & 0xFF;
+                        ambientColor[3] = 255;
 
-                    break;
-                case REVERSE_LIGHT_IDENTIFIER:
-                    reverseLightActive = Property.getBool(property.getValueByte());
-                    break;
+                        break;
+                    case REVERSE_LIGHT_IDENTIFIER:
+                        reverseLightActive = Property.getBool(property.getValueByte());
+                        break;
 
-                case EMERGENCY_BRAKE_LIGHT_IDENTIFIER:
-                    emergencyBrakeLightActive = Property.getBool(property.getValueByte());
-                    break;
-
-            }
+                    case EMERGENCY_BRAKE_LIGHT_IDENTIFIER:
+                        emergencyBrakeLightActive = Property.getBool(property.getValueByte());
+                        break;
+                }
+            });
         }
     }
 

@@ -23,40 +23,36 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent from the car every time the theft alarm state changes or when a Get Theft Alarm
  * State command is received.
  */
 public class TheftAlarmState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.THEFT_ALARM, 0x01);
+    private static final byte IDENTIFIER = 0x01;
 
     State state;
 
     /**
      * @return Theft alarm state.
      */
-    public State getState() {
+    @Nullable public State getState() {
         return state;
     }
 
     public TheftAlarmState(byte[] bytes) throws CommandParseException {
         super(bytes);
-
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case 0x01:
-                    state = State.fromByte(property.getValueByte());
-                    break;
-            }
-        }
+        Property p = getProperty(IDENTIFIER);
+        if (p != null) state = State.fromByte(p.getValueByte());
     }
 
     @Override public boolean isState() {
         return true;
     }
 
-    public enum State implements HMProperty {
+    public enum State {
         NOT_ARMED((byte) 0x00), ARMED((byte) 0x01), TRIGGERED((byte) 0x02);
 
         public static State fromByte(byte value) throws CommandParseException {
@@ -81,18 +77,6 @@ public class TheftAlarmState extends CommandWithProperties {
         public byte getByte() {
             return value;
         }
-
-        @Override public byte getPropertyIdentifier() {
-            return 0x01;
-        }
-
-        @Override public int getPropertyLength() {
-            return 1;
-        }
-
-        @Override public byte[] getPropertyBytes() {
-            return Property.getPropertyBytes(getPropertyIdentifier(), value);
-        }
     }
 
     private TheftAlarmState(Builder builder) {
@@ -113,7 +97,7 @@ public class TheftAlarmState extends CommandWithProperties {
          */
         public Builder setState(State state) {
             this.state = state;
-            addProperty(state);
+            addProperty(new Property(IDENTIFIER, state.getByte()));
             return this;
         }
 

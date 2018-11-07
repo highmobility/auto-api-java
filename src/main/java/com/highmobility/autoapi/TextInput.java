@@ -46,9 +46,10 @@ public class TextInput extends CommandWithProperties {
         super(TYPE, StringProperty.getProperties(text, (byte) 0x01));
     }
 
-    TextInput(byte[] bytes) {
+    TextInput(byte[] bytes) throws CommandParseException {
         super(bytes);
         Property urlProp = getProperty((byte) 0x01);
-        if (urlProp != null) text = Property.getString(urlProp.getValueBytes());
+        if (urlProp == null) throw new CommandParseException();
+        text = Property.getString(urlProp.getValueBytes());
     }
 }

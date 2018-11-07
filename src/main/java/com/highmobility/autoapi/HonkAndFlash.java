@@ -26,6 +26,8 @@ import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nullable;
+
 /**
  * Honk the horn and/or flash the blinker lights. This can be done simultaneously or just one action
  * at the time. It is also possible to pass in how many times the lights should be flashed and how
@@ -42,23 +44,22 @@ public class HonkAndFlash extends CommandWithProperties {
     /**
      * @return How many seconds the horn should be honked.
      */
-    public Integer getSeconds() {
+    @Nullable public Integer getSeconds() {
         return seconds;
     }
 
     /**
      * @return How many times the lights should be flashed.
      */
-    public Integer getLightFlashCount() {
+    @Nullable public Integer getLightFlashCount() {
         return lightFlashCount;
     }
 
     /**
      * @param seconds         How many seconds the horn should be honked.
      * @param lightFlashCount How many times the lights should be flashed.
-     * @throws IllegalArgumentException If both arguments are null
      */
-    public HonkAndFlash(Integer seconds, Integer lightFlashCount) {
+    public HonkAndFlash(@Nullable Integer seconds, @Nullable Integer lightFlashCount) {
         super(TYPE, getProperties(seconds, lightFlashCount));
         this.seconds = seconds;
         this.lightFlashCount = lightFlashCount;

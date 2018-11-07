@@ -25,6 +25,8 @@ import com.highmobility.autoapi.property.Property;
 
 import java.util.Calendar;
 
+import javax.annotation.Nullable;
+
 /**
  * This command is sent when a Get Vehicle Time message is received by the car. The local time of
  * the car is returned, hence the UTC timezone offset is included as well.
@@ -37,21 +39,14 @@ public class VehicleTime extends CommandWithProperties {
     /**
      * @return The vehicle time.
      */
-    public Calendar getVehicleTime() {
+    @Nullable public Calendar getVehicleTime() {
         return vehicleTime;
     }
 
     public VehicleTime(byte[] bytes) {
         super(bytes);
-
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case 0x01:
-                    vehicleTime = Property.getCalendar(property.getValueBytes());
-                    break;
-            }
-        }
+        Property p = getProperty((byte) 0x01);
+        if (p != null) vehicleTime = Property.getCalendar(p.getValueBytes());
     }
 
     @Override public boolean isState() {

@@ -56,7 +56,7 @@ public class Failure extends CommandWithProperties {
     /**
      * @return The failed type byte.
      */
-    public byte getFailedTypeByte() {
+    public Byte getFailedTypeByte() {
         return failedTypeByte;
     }
 

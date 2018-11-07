@@ -23,6 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent when a Get Weather Conditions is received by the car.
  */
@@ -34,21 +36,15 @@ public class WeatherConditions extends CommandWithProperties {
     /**
      * @return The rain intensity percentage.
      */
-    public Float getRainIntensity() {
+    @Nullable  public Float getRainIntensity() {
         return rainIntensity;
     }
 
     public WeatherConditions(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case RAIN_IDENTIFIER:
-                    rainIntensity = Property.getUnsignedInt(property.getValueByte()) / 100f;
-                    break;
-            }
-        }
+        Property p = getProperty((byte) 0x01);
+        if (p != null) rainIntensity = Property.getPercentage(p.getValueByte());
     }
 
     @Override public boolean isState() {

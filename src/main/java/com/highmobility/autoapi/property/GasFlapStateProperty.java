@@ -22,11 +22,9 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum GasFlapStateProperty implements HMProperty {
+public enum GasFlapStateProperty {
     CLOSED((byte)0x00),
     OPEN((byte)0x01);
-
-    public static final byte IDENTIFIER = 0x01;
 
     public static GasFlapStateProperty fromByte(byte byteValue) throws CommandParseException {
         GasFlapStateProperty[] values = GasFlapStateProperty.values();
@@ -49,17 +47,5 @@ public enum GasFlapStateProperty implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

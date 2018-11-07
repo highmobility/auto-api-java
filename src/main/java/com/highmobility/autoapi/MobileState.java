@@ -37,7 +37,6 @@ public class MobileState extends CommandWithProperties {
      * @return Whether mobile phone is connected.
      */
     @Nullable public Boolean isConnected() {
-        // not mandatory
         return connected;
     }
 
