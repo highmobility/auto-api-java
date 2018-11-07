@@ -186,4 +186,9 @@ public class PropertyTest {
         Bytes bytes = new Bytes("");
         new Property((byte) 0x00, bytes);
     }
+
+    @Test public void nullString() {
+        new StringProperty((byte) 0x00, null);
+        new StringProperty((byte) 0x00, "");
+    }
 }
