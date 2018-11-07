@@ -54,9 +54,9 @@ public class PropertyTimestamp extends Property {
     }
 
     /**
-     * @return Additional data. Full property bytes if does exist.
+     * @return Additional data. Full property bytes if exists.
      */
-    @Nullable public Bytes getAdditionalData() {
+    public Bytes getAdditionalData() {
         return additionalData;
     }
 
@@ -65,9 +65,7 @@ public class PropertyTimestamp extends Property {
         if (bytes.length < 12) throw new CommandParseException();
         timestamp = Property.getCalendar(bytes, 3);
         timestampPropertyIdentifier = bytes[11];
-        if (bytes.length >= 12) {
-            additionalData = new Bytes(Arrays.copyOfRange(bytes, 12, bytes.length));
-        }
+        additionalData = new Bytes(Arrays.copyOfRange(bytes, 12, bytes.length));
     }
 
     public PropertyTimestamp(Calendar timestamp, byte timestampPropertyIdentifier, @Nullable
