@@ -329,10 +329,10 @@ public class ChargeState extends CommandWithProperties {
             }
         }
 
-        this.departureTimes = departureTimes.toArray(new DepartureTime[departureTimes.size()]);
+        this.departureTimes = departureTimes.toArray(new DepartureTime[0]);
         this.reductionOfChargingCurrentTimes = reductionOfChargingCurrentTimes.toArray(new
-                ReductionTime[reductionOfChargingCurrentTimes.size()]);
-        this.timers = timers.toArray(new ChargingTimer[timers.size()]);
+                ReductionTime[0]);
+        this.timers = timers.toArray(new ChargingTimer[0]);
     }
 
     @Override public boolean isState() {
@@ -355,12 +355,11 @@ public class ChargeState extends CommandWithProperties {
         maxChargingCurrent = builder.maxChargingCurrent;
         plugType = builder.plugType;
         chargingWindowChosen = builder.chargingWindowChosen;
-        departureTimes = builder.departureTimes.toArray(new
-                DepartureTime[builder.departureTimes.size()]);
+        departureTimes = builder.departureTimes.toArray(new DepartureTime[0]);
         reductionOfChargingCurrentTimes = builder.reductionOfChargingCurrentTimes.toArray(new
-                ReductionTime[builder.reductionOfChargingCurrentTimes.size()]);
+                ReductionTime[0]);
         batteryTemperature = builder.batteryTemperature;
-        timers = builder.timers.toArray(new ChargingTimer[builder.timers.size()]);
+        timers = builder.timers.toArray(new ChargingTimer[0]);
         pluggedIn = builder.pluggedIn;
         activeState = builder.activeState;
     }

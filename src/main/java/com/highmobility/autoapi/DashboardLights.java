@@ -70,7 +70,7 @@ public class DashboardLights extends CommandWithProperties {
             }
         }
 
-        lights = builder.toArray(new DashboardLight[builder.size()]);
+        lights = builder.toArray(new DashboardLight[0]);
     }
 
     @Override public boolean isState() {
@@ -79,7 +79,7 @@ public class DashboardLights extends CommandWithProperties {
 
     private DashboardLights(Builder builder) {
         super(builder);
-        lights = builder.lights.toArray(new DashboardLight[builder.lights.size()]);
+        lights = builder.lights.toArray(new DashboardLight[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {

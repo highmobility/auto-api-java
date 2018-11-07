@@ -53,7 +53,7 @@ public class BrakeTorqueVectoringProperty extends Property {
         this(IDENTIFIER, axle, active);
     }
 
-    public BrakeTorqueVectoringProperty(byte identifier, Axle axle, boolean active) {
+    BrakeTorqueVectoringProperty(byte identifier, Axle axle, boolean active) {
         super(identifier, 2);
         bytes[3] = axle.getByte();
         bytes[4] = Property.boolToByte(active);

@@ -82,7 +82,7 @@ public class ControlCommand extends CommandWithProperties {
             properties.add(prop);
         }
 
-        return properties.toArray(new Property[properties.size()]);
+        return properties.toArray(new Property[0]);
     }
 
     ControlCommand(byte[] bytes) {

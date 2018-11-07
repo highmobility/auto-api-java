@@ -22,8 +22,6 @@ package com.highmobility.autoapi;
 
 import java.util.ArrayList;
 
-import javax.annotation.Nullable;
-
 /**
  * This message is sent when a Get Historical States is received. The states are passed along as an
  * array of all states for the given period.

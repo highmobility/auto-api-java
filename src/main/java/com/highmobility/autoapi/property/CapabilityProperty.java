@@ -88,7 +88,7 @@ public class CapabilityProperty extends Property {
             builder.add(type);
         }
 
-        types = builder.toArray(new Type[builder.size()]);
+        types = builder.toArray(new Type[0]);
     }
 
     /**

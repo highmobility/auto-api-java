@@ -186,7 +186,7 @@ public class CommandWithProperties extends Command {
             }
         }
 
-        properties = builder.toArray(new Property[builder.size()]);
+        properties = builder.toArray(new Property[0]);
         propertiesIterator = new PropertiesIterator();
         this.propertyTimestamps = propertyTimestamps.toArray(new PropertyTimestamp[0]);
     }
@@ -296,7 +296,7 @@ public class CommandWithProperties extends Command {
         }
 
         protected HMProperty[] getProperties() {
-            return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
+            return propertiesBuilder.toArray(new HMProperty[0]);
         }
     }
 

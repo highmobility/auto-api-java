@@ -179,10 +179,9 @@ public class TachographState extends CommandWithProperties {
             }
         }
 
-        driverTimeStates = timeStateBuilder.toArray(new DriverTimeState[timeStateBuilder.size()]);
-        driverWorkingStates = workingStateBuilder.toArray(new
-                DriverWorkingState[workingStateBuilder.size()]);
-        driverCards = cardsBuilder.toArray(new DriverCard[cardsBuilder.size()]);
+        driverTimeStates = timeStateBuilder.toArray(new DriverTimeState[0]);
+        driverWorkingStates = workingStateBuilder.toArray(new DriverWorkingState[0]);
+        driverCards = cardsBuilder.toArray(new DriverCard[0]);
     }
 
     @Override public boolean isState() {
@@ -192,11 +191,9 @@ public class TachographState extends CommandWithProperties {
     private TachographState(Builder builder) {
         super(builder);
 
-        this.driverTimeStates = builder.driverTimeStates.toArray(new DriverTimeState[builder
-                .driverTimeStates.size()]);
-        this.driverWorkingStates = builder.driverWorkingStates.toArray(new
-                DriverWorkingState[builder.driverWorkingStates.size()]);
-        this.driverCards = builder.driverCards.toArray(new DriverCard[builder.driverCards.size()]);
+        this.driverTimeStates = builder.driverTimeStates.toArray(new DriverTimeState[0]);
+        this.driverWorkingStates = builder.driverWorkingStates.toArray(new DriverWorkingState[0]);
+        this.driverCards = builder.driverCards.toArray(new DriverCard[0]);
         this.vehicleMotionDetected = builder.vehicleMotionDetected;
         this.vehicleOverspeed = builder.vehicleOverspeed;
         this.vehicleDirection = builder.vehicleDirection;

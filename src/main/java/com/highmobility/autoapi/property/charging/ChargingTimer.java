@@ -44,7 +44,7 @@ public class ChargingTimer extends Property {
 
     public ChargingTimer(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes == null || bytes.length < 12) throw new CommandParseException();
+        if (bytes.length < 12) throw new CommandParseException();
         type = Type.fromByte(bytes[3]);
         time = Property.getCalendar(bytes, 4);
     }

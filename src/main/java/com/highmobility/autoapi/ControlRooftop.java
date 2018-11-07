@@ -116,7 +116,7 @@ public class ControlRooftop extends CommandWithProperties {
             properties.add(sunroofTiltState);
         }
 
-        return properties.toArray(new HMProperty[properties.size()]);
+        return properties.toArray(new HMProperty[0]);
     }
 
     ControlRooftop(byte[] bytes) throws CommandParseException {

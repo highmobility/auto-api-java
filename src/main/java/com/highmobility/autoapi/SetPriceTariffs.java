@@ -85,7 +85,7 @@ public class SetPriceTariffs extends CommandWithProperties {
             }
         }
 
-        priceTariffs = builder.toArray(new PriceTariff[builder.size()]);
+        priceTariffs = builder.toArray(new PriceTariff[0]);
     }
 
     @Override protected boolean propertiesExpected() {

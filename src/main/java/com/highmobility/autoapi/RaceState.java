@@ -314,10 +314,10 @@ public class RaceState extends CommandWithProperties {
         }
 
         this.accelerationProperties = accelerationProperties.toArray(
-                new AccelerationProperty[accelerationProperties.size()]);
+                new AccelerationProperty[0]);
 
         this.brakeTorqueVectorings = brakeTorqueVectoringProperties.toArray(
-                new BrakeTorqueVectoringProperty[brakeTorqueVectoringProperties.size()]);
+                new BrakeTorqueVectoringProperty[0]);
     }
 
     @Override public boolean isState() {
@@ -326,8 +326,7 @@ public class RaceState extends CommandWithProperties {
 
     private RaceState(Builder builder) {
         super(builder);
-        accelerationProperties = builder.accelerationProperties.toArray(new
-                AccelerationProperty[builder.accelerationProperties.size()]);
+        accelerationProperties = builder.accelerationProperties.toArray(new AccelerationProperty[0]);
         underSteering = builder.underSteering;
         overSteering = builder.overSteering;
         gasPedalPosition = builder.gasPedalPosition;
@@ -337,7 +336,7 @@ public class RaceState extends CommandWithProperties {
         rearSuspensionSteering = builder.rearSuspensionSteering;
         espInterventionActive = builder.espInterventionActive;
         brakeTorqueVectorings = builder.brakeTorqueVectorings.toArray(new
-                BrakeTorqueVectoringProperty[builder.brakeTorqueVectorings.size()]);
+                BrakeTorqueVectoringProperty[0]);
         gearMode = builder.gearMode;
         selectedGear = builder.selectedGear;
         brakePedalPosition = builder.brakePedalPosition;

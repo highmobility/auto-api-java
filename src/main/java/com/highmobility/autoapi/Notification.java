@@ -106,16 +106,14 @@ public class Notification extends CommandWithProperties {
             }
         }
 
-        actions = actionsBuilder.toArray(new ActionItem[actionsBuilder.size()]);
+        actions = actionsBuilder.toArray(new ActionItem[0]);
     }
 
     static HMProperty[] getProperties(String text, ActionItem[] actions, Integer receivedAction) {
         HMProperty[] properties = new HMProperty[actions.length + 2];
         properties[0] = new StringProperty(TEXT_IDENTIFIER, text);
 
-        for (int i = 0; i < actions.length; i++) {
-            properties[i + 1] = actions[i];
-        }
+        System.arraycopy(actions, 0, properties, 1, actions.length);
 
         properties[properties.length - 1] = new IntegerProperty(RECEIVED_ACTION_IDENTIFIER,
                 receivedAction, 1);
@@ -125,7 +123,7 @@ public class Notification extends CommandWithProperties {
 
     private Notification(Builder builder) {
         super(builder);
-        actions = builder.actions.toArray(new ActionItem[builder.actions.size()]);
+        actions = builder.actions.toArray(new ActionItem[0]);
         text = builder.text;
         receivedAction = builder.receivedAction;
     }

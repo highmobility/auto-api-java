@@ -304,7 +304,7 @@ public class VehicleStatus extends CommandWithProperties {
             });
         }
 
-        this.states = states.toArray(new Command[states.size()]);
+        this.states = states.toArray(new Command[0]);
         this.equipments = equipments.toArray(new String[states.size()]);
     }
 

@@ -85,6 +85,6 @@ public class SetWindscreenDamage extends CommandWithProperties {
         if (damage != null) propertiesBuilder.add(damage);
         if (zone != null) propertiesBuilder.add(zone);
 
-        return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
+        return propertiesBuilder.toArray(new HMProperty[0]);
     }
 }

@@ -272,7 +272,7 @@ public class HomeChargerState extends CommandWithProperties {
         hotspotSsid = builder.hotspotSsid;
         hotspotSecurity = builder.hotspotSecurity;
         hotspotPassword = builder.hotspotPassword;
-        priceTariffs = builder.priceTariffs.toArray(new PriceTariff[builder.priceTariffs.size()]);
+        priceTariffs = builder.priceTariffs.toArray(new PriceTariff[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {

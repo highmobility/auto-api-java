@@ -103,6 +103,6 @@ public class VideoHandover extends CommandWithProperties {
             propertiesBuilder.add(new IntegerProperty(STARTING_SECOND_IDENTIFIER, startingSecond,
                     2));
         if (location != null) propertiesBuilder.add(location);
-        return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
+        return propertiesBuilder.toArray(new HMProperty[0]);
     }
 }

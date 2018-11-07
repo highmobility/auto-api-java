@@ -432,13 +432,11 @@ public class DiagnosticsState extends CommandWithProperties {
             });
         }
 
-        this.checkControlMessages = checkControlMessages.toArray(new
-                CheckControlMessage[checkControlMessages.size()]);
-        this.tirePressures = tirePressures.toArray(new TirePressure[tirePressures.size()]);
-        this.tireTemperatures = tireTemperatures.toArray(new TireTemperature[tireTemperatures
-                .size()]);
-        this.wheelRpms = wheelRpms.toArray(new WheelRpm[wheelRpms.size()]);
-        this.troubleCodes = troubleCodes.toArray(new DiagnosticsTroubleCode[troubleCodes.size()]);
+        this.checkControlMessages = checkControlMessages.toArray(new CheckControlMessage[0]);
+        this.tirePressures = tirePressures.toArray(new TirePressure[0]);
+        this.tireTemperatures = tireTemperatures.toArray(new TireTemperature[0]);
+        this.wheelRpms = wheelRpms.toArray(new WheelRpm[0]);
+        this.troubleCodes = troubleCodes.toArray(new DiagnosticsTroubleCode[0]);
     }
 
     @Override public boolean isState() {
@@ -473,15 +471,11 @@ public class DiagnosticsState extends CommandWithProperties {
         // level 8
         batteryLevel = builder.batteryLevel;
 
-        checkControlMessages = builder.checkControlMessages.toArray(new
-                CheckControlMessage[builder.checkControlMessages.size()]);
-        tirePressures = builder.tirePressures.toArray(new TirePressure[builder.tirePressures.size
-                ()]);
-        tireTemperatures = builder.tireTemperatures.toArray(new TireTemperature[builder
-                .tireTemperatures.size()]);
-        wheelRpms = builder.wheelRpms.toArray(new WheelRpm[builder.wheelRpms.size()]);
-        troubleCodes = builder.troubleCodes.toArray(new DiagnosticsTroubleCode[builder
-                .troubleCodes.size()]);
+        checkControlMessages = builder.checkControlMessages.toArray(new CheckControlMessage[0]);
+        tirePressures = builder.tirePressures.toArray(new TirePressure[0]);
+        tireTemperatures = builder.tireTemperatures.toArray(new TireTemperature[0]);
+        wheelRpms = builder.wheelRpms.toArray(new WheelRpm[0]);
+        troubleCodes = builder.troubleCodes.toArray(new DiagnosticsTroubleCode[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {

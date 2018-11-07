@@ -77,7 +77,7 @@ public class Property extends Bytes implements HMProperty {
     }
 
     public Property(byte[] bytes) {
-        if (bytes.length < 3) throw new IllegalArgumentException();
+        if (bytes == null || bytes.length < 3) throw new IllegalArgumentException();
         this.bytes = bytes;
     }
 
@@ -328,7 +328,7 @@ public class Property extends Bytes implements HMProperty {
     }
 
     public static boolean getBool(byte value) {
-        return value == 0x00 ? false : true;
+        return value != 0x00;
     }
 
     public static byte boolToByte(boolean value) {

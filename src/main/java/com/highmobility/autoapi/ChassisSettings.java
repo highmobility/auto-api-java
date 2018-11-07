@@ -193,12 +193,9 @@ public class ChassisSettings extends CommandWithProperties {
             }
         }
 
-        this.currentSpringRates = currentSpringRates.toArray(new
-                SpringRateProperty[currentSpringRates.size()]);
-        this.minimumSpringRates = minimumSpringRates.toArray(new
-                SpringRateProperty[minimumSpringRates.size()]);
-        this.maximumSpringRates = maximumSpringRates.toArray(new
-                SpringRateProperty[maximumSpringRates.size()]);
+        this.currentSpringRates = currentSpringRates.toArray(new SpringRateProperty[0]);
+        this.minimumSpringRates = minimumSpringRates.toArray(new SpringRateProperty[0]);
+        this.maximumSpringRates = maximumSpringRates.toArray(new SpringRateProperty[0]);
     }
 
     @Override public boolean isState() {
@@ -210,12 +207,9 @@ public class ChassisSettings extends CommandWithProperties {
         drivingMode = builder.drivingMode;
         sportChronoActive = builder.sportChronoActive;
 
-        currentSpringRates = builder.currentSpringRates.toArray(new SpringRateProperty[builder
-                .currentSpringRates.size()]);
-        minimumSpringRates = builder.minimumSpringRates.toArray(new SpringRateProperty[builder
-                .minimumSpringRates.size()]);
-        maximumSpringRates = builder.maximumSpringRates.toArray(new SpringRateProperty[builder
-                .maximumSpringRates.size()]);
+        currentSpringRates = builder.currentSpringRates.toArray(new SpringRateProperty[0]);
+        minimumSpringRates = builder.minimumSpringRates.toArray(new SpringRateProperty[0]);
+        maximumSpringRates = builder.maximumSpringRates.toArray(new SpringRateProperty[0]);
 
         currentChassisPosition = builder.currentChassisPosition;
         minimumChassisPosition = builder.minimumChassisPosition;

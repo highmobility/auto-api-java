@@ -108,7 +108,7 @@ public class StartParking extends CommandWithProperties {
         if (endDate != null)
             propertiesBuilder.add(new CalendarProperty(END_DATE_IDENTIFIER, endDate));
 
-        return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
+        return propertiesBuilder.toArray(new HMProperty[0]);
     }
 
     StartParking(byte[] bytes) throws CommandParseException {

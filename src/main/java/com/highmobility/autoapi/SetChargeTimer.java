@@ -88,6 +88,6 @@ public class SetChargeTimer extends CommandWithProperties {
             }
         }
 
-        timers = builder.toArray(new ChargingTimer[builder.size()]);
+        timers = builder.toArray(new ChargingTimer[0]);
     }
 }

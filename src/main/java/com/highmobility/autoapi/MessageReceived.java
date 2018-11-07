@@ -78,7 +78,7 @@ public class MessageReceived extends CommandWithProperties {
             properties.add(prop);
         }
 
-        return (properties.toArray(new HMProperty[properties.size()]));
+        return (properties.toArray(new HMProperty[0]));
     }
 
     MessageReceived(byte[] bytes) {

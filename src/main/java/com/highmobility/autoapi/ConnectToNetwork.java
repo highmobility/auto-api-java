@@ -88,7 +88,7 @@ public class ConnectToNetwork extends CommandWithProperties {
         if (password != null)
             propertiesBuilder.add(new StringProperty(PASSWORD_IDENTIFIER, password));
 
-        return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
+        return propertiesBuilder.toArray(new HMProperty[0]);
     }
 
     ConnectToNetwork(byte[] bytes) throws CommandParseException {

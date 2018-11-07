@@ -144,10 +144,9 @@ public class LockState extends CommandWithProperties {
             }
         }
 
-        positions = lockAndPositionStatesBuilder.toArray(new
-                DoorPosition[lockAndPositionStatesBuilder.size()]);
-        insideLocks = insideLocksBuilder.toArray(new DoorLockState[insideLocksBuilder.size()]);
-        locks = outsideLocksBuilder.toArray(new DoorLockState[outsideLocksBuilder.size()]);
+        positions = lockAndPositionStatesBuilder.toArray(new DoorPosition[0]);
+        insideLocks = insideLocksBuilder.toArray(new DoorLockState[0]);
+        locks = outsideLocksBuilder.toArray(new DoorLockState[0]);
     }
 
     @Override public boolean isState() {
@@ -157,9 +156,9 @@ public class LockState extends CommandWithProperties {
     private LockState(Builder builder) {
         super(builder);
 
-        positions = builder.positions.toArray(new DoorPosition[builder.positions.size()]);
-        insideLocks = builder.insideLocks.toArray(new DoorLockState[builder.insideLocks.size()]);
-        locks = builder.locks.toArray(new DoorLockState[builder.locks.size()]);
+        positions = builder.positions.toArray(new DoorPosition[0]);
+        insideLocks = builder.insideLocks.toArray(new DoorLockState[0]);
+        locks = builder.locks.toArray(new DoorLockState[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {

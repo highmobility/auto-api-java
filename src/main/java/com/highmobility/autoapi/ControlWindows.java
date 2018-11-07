@@ -73,7 +73,7 @@ public class ControlWindows extends CommandWithProperties {
 
     ControlWindows(byte[] bytes) throws CommandParseException {
         super(bytes);
-        ArrayList<WindowPosition> builder = new ArrayList();
+        ArrayList<WindowPosition> builder = new ArrayList<>();
 
         for (Property property : properties) {
             if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER)

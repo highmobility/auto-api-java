@@ -80,7 +80,7 @@ public class ControlTrunk extends CommandWithProperties {
             properties.add(new ByteProperty(IDENTIFIER_POSITION, position.getByte()));
         }
 
-        return properties.toArray(new HMProperty[properties.size()]);
+        return properties.toArray(new HMProperty[0]);
     }
 
     ControlTrunk(byte[] bytes) {

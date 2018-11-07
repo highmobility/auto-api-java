@@ -73,7 +73,7 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
             }
         }
 
-        reductionTimes = builder.toArray(new ReductionTime[builder.size()]);
+        reductionTimes = builder.toArray(new ReductionTime[0]);
     }
 
     @Override protected boolean propertiesExpected() {
