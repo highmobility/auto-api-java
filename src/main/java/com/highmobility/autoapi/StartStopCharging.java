@@ -20,15 +20,16 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Start or stop charging, which can only be controlled when the car is plugged in. The result is
  * sent through the evented Charge State command.
  */
-public class StartStopCharging extends Command {
-    public static final Type TYPE = new Type(Identifier.CHARGING, 0x02);
-
+public class StartStopCharging extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.CHARGING, 0x12);
+    private static final byte ACTIVE_STATE_IDENTIFIER = 0x01;
     boolean start;
 
     /**
@@ -39,12 +40,22 @@ public class StartStopCharging extends Command {
     }
 
     public StartStopCharging(boolean start) {
-        super(TYPE.addByte(Property.boolToByte(start)));
+        super(TYPE.addProperty(new BooleanProperty(ACTIVE_STATE_IDENTIFIER, start)));
         this.start = start;
     }
 
     StartStopCharging(byte[] bytes) {
         super(bytes);
+
+        for (int i = 0; i < getProperties().length; i++) {
+            Property property = getProperties()[i];
+            switch (property.getPropertyIdentifier()) {
+                case ACTIVE_STATE_IDENTIFIER:
+                    start = Property.getBool(property.getValueByte());
+                    break;
+            }
+        }
+
         this.start = Property.getBool(bytes[3]);
     }
 }

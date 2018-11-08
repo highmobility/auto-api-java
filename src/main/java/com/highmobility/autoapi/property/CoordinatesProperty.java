@@ -22,14 +22,14 @@ package com.highmobility.autoapi.property;
 import com.highmobility.utils.ByteUtils;
 
 public class CoordinatesProperty extends Property {
-    float latitude;
-    float longitude;
+    double latitude;
+    double longitude;
 
     /**
      *
      * @return The latitude
      */
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
@@ -37,25 +37,25 @@ public class CoordinatesProperty extends Property {
      *
      * @return The longitude
      */
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
     public CoordinatesProperty(byte[] bytes) {
         super(bytes);
 
-        latitude = Property.getFloat(bytes, 3);
-        longitude = Property.getFloat(bytes, 7);
+        latitude = Property.getDouble(bytes, 3);
+        longitude = Property.getDouble(bytes, 11);
     }
     
-    public CoordinatesProperty(float latitude, float longitude) {
+    public CoordinatesProperty(double latitude, double longitude) {
         this((byte) 0x00, latitude, longitude);
     }
 
-    public CoordinatesProperty(byte identifier, float latitude, float longitude) {
-        super(identifier, 8);
-        ByteUtils.setBytes(bytes, Property.floatToBytes(latitude), 3);
-        ByteUtils.setBytes(bytes, Property.floatToBytes(longitude), 7);
+    public CoordinatesProperty(byte identifier, double latitude, double longitude) {
+        super(identifier, 16);
+        ByteUtils.setBytes(bytes, Property.doubleToBytes(latitude), 3);
+        ByteUtils.setBytes(bytes, Property.doubleToBytes(longitude), 11);
         this.latitude = latitude;
         this.longitude = longitude;
     }

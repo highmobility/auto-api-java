@@ -46,13 +46,13 @@ public class StartStopTest {
     }
 
     @Test public void activateDeactivate() {
-        Bytes waitingForBytes = new Bytes("00630201000101");
+        Bytes waitingForBytes = new Bytes("00631201000100");
 
-        byte[] commandBytes = new ActivateDeactivateStartStop(true).getByteArray();
-        assertTrue(waitingForBytes.equals(commandBytes));
+        Bytes commandBytes = new ActivateDeactivateStartStop(false);
+        assertTrue(TestUtils.bytesTheSame(waitingForBytes, commandBytes));
 
         ActivateDeactivateStartStop command = (ActivateDeactivateStartStop) CommandResolver
                 .resolve(waitingForBytes);
-        assertTrue(command.activate() == true);
+        assertTrue(command.activate() == false);
     }
 }

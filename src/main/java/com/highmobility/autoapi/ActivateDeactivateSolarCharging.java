@@ -20,13 +20,15 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Activate or deactivate charging from solar power.
  */
-public class ActivateDeactivateSolarCharging extends Command {
-    public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x04);
+public class ActivateDeactivateSolarCharging extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x14);
+    private static final byte IDENTIFIER = 0x01;
 
     /**
      * @return Whether to activate the solar charging.
@@ -38,12 +40,14 @@ public class ActivateDeactivateSolarCharging extends Command {
     private boolean activate;
 
     public ActivateDeactivateSolarCharging(boolean activate) {
-        super(TYPE.addByte(Property.boolToByte(activate)));
+        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
         this.activate = activate;
     }
 
-    ActivateDeactivateSolarCharging(byte[] bytes) {
+    ActivateDeactivateSolarCharging(byte[] bytes) throws CommandParseException {
         super(bytes);
-        activate = Property.getBool(bytes[3]);
+        Property property = getProperty(IDENTIFIER);
+        if (property == null) throw new CommandParseException();
+        activate = Property.getBool(property.getValueByte());
     }
 }

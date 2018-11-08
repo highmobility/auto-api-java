@@ -22,13 +22,11 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum WindscreenDamage implements HMProperty {
+public enum WindscreenDamage {
     NO_IMPACT((byte)0x00),
     IMPACT_NO_DAMAGE((byte)0x01),
     DAMAGE_SMALLER_THAN_1((byte)0x02),
     DAMAGE_LARGER_THAN_1((byte)0x03);
-
-    public static final byte IDENTIFIER = 0x03;
 
     public static WindscreenDamage fromByte(byte byteValue) throws CommandParseException {
         WindscreenDamage[] values = WindscreenDamage.values();
@@ -51,17 +49,5 @@ public enum WindscreenDamage implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

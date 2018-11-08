@@ -8,6 +8,7 @@ import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.autoapi.RooftopState;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -65,14 +66,45 @@ public class PropertyTest {
         Bytes bytes = new Bytes(parkingBrakeCommand + "A2000811010A1122000000");
         String expectedDate = "2017-01-10T17:34:00";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
-        assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
+        assertTrue(TestUtils.dateIsSameUTC(command.getTimestamp(), expectedDate));
 
-        Calendar calendar = TestUtils.getCalendar(expectedDate);
+        Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
         builder.setIsActive(true);
         builder.setTimestamp(calendar);
         ParkingBrakeState state = builder.build();
         assertTrue(state.equals(bytes));
+    }
+
+    @Test public void propertyTimestamp() throws ParseException {
+        // size 9 + full prop size
+        String parkingStateProperty = "01000101";
+
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000D11010A112200000004" +
+                parkingStateProperty);
+        String expectedDate = "2017-01-10T17:34:00+0000";
+        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
+
+        PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];
+        assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
+        assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
+
+        // TBODO:
+        /*ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
+        builder.setIsActive(true);
+        builder.setPropertyTimestamps(calendar);
+        ParkingBrakeState state = builder.build();
+        assertTrue(state.equals(bytes));*/
+    }
+
+    @Test public void propertyTimestampNoData() throws ParseException {
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000911010A112200000004");
+        String expectedDate = "2017-01-10T17:34:00+0000";
+        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
+
+        PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];
+        assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
+        assertTrue(timestamp.getAdditionalData().getLength() == 0);
     }
 
     @Test public void signedBytes() {
@@ -148,5 +180,15 @@ public class PropertyTest {
 
         assertTrue(foundDimmingProperty == true);
         assertTrue(foundUnknownProperty == true);
+    }
+
+    @Test public void emptyValueProperty() {
+        Bytes bytes = new Bytes("");
+        new Property((byte) 0x00, bytes);
+    }
+
+    @Test public void nullString() {
+        new StringProperty((byte) 0x00, null);
+        new StringProperty((byte) 0x00, "");
     }
 }

@@ -24,6 +24,8 @@ import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent when a Get Offroad State is received by the car.
  */
@@ -39,7 +41,7 @@ public class OffroadState extends CommandWithProperties {
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.
      */
-    public Integer getRouteIncline() {
+    @Nullable public Integer getRouteIncline() {
         return routeIncline;
     }
 
@@ -47,7 +49,7 @@ public class OffroadState extends CommandWithProperties {
      * @return The wheel suspension level percentage, whereas 0 is no suspension and 1 maximum.
      * suspension
      */
-    public Float getWheelSuspension() {
+    @Nullable public Float getWheelSuspension() {
         return wheelSuspension;
     }
 

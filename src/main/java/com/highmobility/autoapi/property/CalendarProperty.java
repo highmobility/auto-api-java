@@ -25,7 +25,7 @@ import com.highmobility.utils.ByteUtils;
 import java.util.Calendar;
 
 public class CalendarProperty extends Property {
-    Calendar calendar;
+    private Calendar calendar;
 
     public Calendar getCalendar() {
         return calendar;

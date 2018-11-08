@@ -20,16 +20,18 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Manually start or stop defogging. The result is sent through the evented Climate State message.
  */
-public class StartStopDefogging extends Command {
-    public static final Type TYPE = new Type(Identifier.CLIMATE, 0x04);
+public class StartStopDefogging extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.CLIMATE, 0x14);
+    private static final byte IDENTIFIER = 0x01;
 
     /**
-     * @return Whether defogging should be started
+     * @return Whether defogging should be started.
      */
     public boolean start() {
         return start;
@@ -38,12 +40,14 @@ public class StartStopDefogging extends Command {
     private final boolean start;
 
     public StartStopDefogging(boolean start) {
-        super(TYPE.addByte(Property.boolToByte(start)));
+        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, start)));
         this.start = start;
     }
 
-    StartStopDefogging(byte[] bytes) {
+    StartStopDefogging(byte[] bytes) throws CommandParseException {
         super(bytes);
-        start = Property.getBool(bytes[3]);
+        Property prop = getProperty(IDENTIFIER);
+        if (prop == null) throw new CommandParseException();
+        start = Property.getBool(prop.getValueByte());
     }
 }

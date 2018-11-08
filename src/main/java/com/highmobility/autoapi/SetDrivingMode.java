@@ -21,13 +21,14 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.DrivingMode;
+import com.highmobility.autoapi.property.Property;
 
 /**
  * Set the driving mode. The result is sent through the Chassis Settings command.
  */
-public class SetDrivingMode extends Command {
-    public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x02);
-
+public class SetDrivingMode extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x12);
+    private static final byte IDENTIFIER = 0x01;
     DrivingMode drivingMode;
 
     /**
@@ -41,12 +42,13 @@ public class SetDrivingMode extends Command {
      * @param drivingMode The driving mode.
      */
     public SetDrivingMode(DrivingMode drivingMode) {
-        super(TYPE.addByte(drivingMode.getByte()));
+        super(TYPE.addProperty(new Property(IDENTIFIER, drivingMode.getByte())));
         this.drivingMode = drivingMode;
     }
 
     SetDrivingMode(byte[] bytes) throws CommandParseException {
         super(bytes);
-        this.drivingMode = DrivingMode.fromByte(bytes[3]);
+        Property prop = getProperty(IDENTIFIER);
+        if (prop != null) this.drivingMode = DrivingMode.fromByte(prop.getValueByte());
     }
 }

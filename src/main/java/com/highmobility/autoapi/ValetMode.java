@@ -23,6 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent from the car every time the valet mode changes or when a Get Valet Mode command is
  * received.
@@ -37,21 +39,15 @@ public class ValetMode extends CommandWithProperties {
     /**
      * @return The valet mode state.
      */
-    public Boolean isActive() {
+    @Nullable public Boolean isActive() {
         return active;
     }
 
     public ValetMode(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case ACTIVE_IDENTIFIER:
-                    active = Property.getBool(property.getValueByte());
-                    break;
-            }
-        }
+        Property p = getProperty((byte) 0x01);
+        if (p != null) active = Property.getBool(p.getValueByte());
     }
 
     @Override public boolean isState() {

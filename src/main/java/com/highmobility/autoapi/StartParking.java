@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Start parking. This clears the last parking ticket information and starts a new one. The result
  * is sent through the evented Parking Ticket command. The end time can be left unset depending on
@@ -50,7 +52,7 @@ public class StartParking extends CommandWithProperties {
     /**
      * @return The operator name.
      */
-    public String getOperatorName() {
+    @Nullable public String getOperatorName() {
         return operatorName;
     }
 
@@ -71,7 +73,7 @@ public class StartParking extends CommandWithProperties {
     /**
      * @return The end date.
      */
-    public Calendar getEndDate() {
+    @Nullable public Calendar getEndDate() {
         return endDate;
     }
 
@@ -83,8 +85,8 @@ public class StartParking extends CommandWithProperties {
      * @param startDate        The parking start date
      * @param endDate          The parking end date
      */
-    public StartParking(String operatorName, String operatorTicketId, Calendar startDate,
-                        Calendar endDate) {
+    public StartParking(@Nullable String operatorName, String operatorTicketId, Calendar startDate,
+                        @Nullable Calendar endDate) {
         super(TYPE, getProperties(operatorName, operatorTicketId, startDate, endDate));
         this.operatorName = operatorName;
         this.operatorTicketId = operatorTicketId;
@@ -106,10 +108,10 @@ public class StartParking extends CommandWithProperties {
         if (endDate != null)
             propertiesBuilder.add(new CalendarProperty(END_DATE_IDENTIFIER, endDate));
 
-        return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
+        return propertiesBuilder.toArray(new HMProperty[0]);
     }
 
-    StartParking(byte[] bytes) {
+    StartParking(byte[] bytes) throws CommandParseException {
         super(bytes);
         for (Property property : properties) {
             switch (property.getPropertyIdentifier()) {
@@ -127,5 +129,7 @@ public class StartParking extends CommandWithProperties {
                     break;
             }
         }
+
+        if (operatorTicketId == null || startDate == null) throw new CommandParseException();
     }
 }

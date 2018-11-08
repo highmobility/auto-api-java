@@ -24,6 +24,8 @@ import com.highmobility.autoapi.property.ControlModeValue;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent from the car every time the remote control mode changes or when a Get Control
  * ControlMode is received. The new mode is included in the command and may be the result of both
@@ -31,6 +33,8 @@ import com.highmobility.autoapi.property.Property;
  */
 public class ControlMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x01);
+    private static final byte IDENTIFIER_MODE = 0x01;
+    private static final byte IDENTIFIER_ANGLE = 0x02;
 
     ControlModeValue mode;
     Integer angle;
@@ -38,14 +42,14 @@ public class ControlMode extends CommandWithProperties {
     /**
      * @return the angle
      */
-    public Integer getAngle() {
+    @Nullable public Integer getAngle() {
         return angle;
     }
 
     /**
      * @return the control mode
      */
-    public ControlModeValue getMode() {
+    @Nullable public ControlModeValue getMode() {
         return mode;
     }
 
@@ -56,10 +60,10 @@ public class ControlMode extends CommandWithProperties {
             Property property = getProperties()[i];
 
             switch (property.getPropertyIdentifier()) {
-                case 0x01:
+                case IDENTIFIER_MODE:
                     mode = ControlModeValue.fromByte(property.getValueByte());
                     break;
-                case 0x02:
+                case IDENTIFIER_ANGLE:
                     angle = Property.getUnsignedInt(property.getValueBytes());
                     break;
             }
@@ -86,13 +90,13 @@ public class ControlMode extends CommandWithProperties {
 
         public Builder setAngle(int angle) {
             this.angle = angle;
-            addProperty(new IntegerProperty((byte) 0x01, angle, 2));
+            addProperty(new IntegerProperty(IDENTIFIER_ANGLE, angle, 2));
             return this;
         }
 
         public Builder setMode(ControlModeValue mode) {
             this.mode = mode;
-            addProperty(mode);
+            addProperty(new Property(IDENTIFIER_MODE, mode.getByte()));
             return this;
         }
 

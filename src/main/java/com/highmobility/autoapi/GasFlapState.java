@@ -20,35 +20,32 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.GasFlapStateValue;
 import com.highmobility.autoapi.property.Property;
+
+import javax.annotation.Nullable;
 
 /**
  * Command sent when a Get Gas Flap State command is received by the car.
  */
 public class GasFlapState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FUELING, 0x01);
+    private static final byte IDENTIFIER = 0x01;
 
-    com.highmobility.autoapi.property.GasFlapState state;
+    GasFlapStateValue state;
 
     /**
      * @return The gas flap state.
      */
-    public com.highmobility.autoapi.property.GasFlapState getState() {
+    @Nullable public GasFlapStateValue getState() {
         return state;
     }
 
     public GasFlapState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case com.highmobility.autoapi.property.GasFlapState.IDENTIFIER:
-                    state = com.highmobility.autoapi.property.GasFlapState.fromByte(property
-                            .getValueByte());
-                    break;
-            }
-        }
+        Property p = getProperty(IDENTIFIER);
+        if (p != null) state = GasFlapStateValue.fromByte(p.getValueByte());
     }
 
     @Override public boolean isState() {
@@ -60,15 +57,15 @@ public class GasFlapState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        com.highmobility.autoapi.property.GasFlapState state;
+        GasFlapStateValue state;
 
         /**
          * @param state The gas flap state.
          * @return The builder.
          */
-        public Builder setState(com.highmobility.autoapi.property.GasFlapState state) {
+        public Builder setState(GasFlapStateValue state) {
             this.state = state;
-            addProperty(state);
+            addProperty(new Property(IDENTIFIER, state.getByte()));
             return this;
         }
 

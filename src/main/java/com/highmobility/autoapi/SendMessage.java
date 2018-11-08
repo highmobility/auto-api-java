@@ -23,6 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
+import javax.annotation.Nullable;
+
 /**
  * Command to tell the smart device to send a message. This could be a response to a received
  * message or input through voice by the driver.
@@ -39,14 +41,14 @@ public class SendMessage extends CommandWithProperties {
     /**
      * @return The recipient handle (e.g. phone number).
      */
-    public String getRecipientHandle() {
+    @Nullable public String getRecipientHandle() {
         return recipientHandle;
     }
 
     /**
      * @return The message content text.
      */
-    public String getMessage() {
+    @Nullable public String getMessage() {
         return message;
     }
 
@@ -64,6 +66,10 @@ public class SendMessage extends CommandWithProperties {
                     break;
             }
         }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return false;
     }
 
     private SendMessage(Builder builder) {

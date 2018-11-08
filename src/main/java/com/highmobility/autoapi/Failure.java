@@ -22,6 +22,9 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.FailureReason;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.StringProperty;
+
+import javax.annotation.Nullable;
 
 /**
  * For different reasons a command sent to the car might not be successful. When this happens, a
@@ -30,8 +33,32 @@ import com.highmobility.autoapi.property.Property;
 public class Failure extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FAILURE, 0x01);
 
+    private static final byte IDENTIFIER_IDENTIFIER = 0x01;
+    private static final byte IDENTIFIER_TYPE = 0x02;
+    private static final byte IDENTIFIER_FAILURE_REASON = 0x03;
+    private static final byte IDENTIFIER_FAILURE_DESCRIPTION = 0x04;
+
+    byte[] identifier;
+    Byte failedTypeByte;
+
     private Type failedType;
     private FailureReason failureReason;
+
+    private String failureDescription;
+
+    /**
+     * @return The failed identifier bytes.
+     */
+    public byte[] getFailedIdentifier() {
+        return identifier;
+    }
+
+    /**
+     * @return The failed type byte.
+     */
+    public Byte getFailedTypeByte() {
+        return failedTypeByte;
+    }
 
     /**
      * @return The type of the command that failed.
@@ -47,34 +74,51 @@ public class Failure extends CommandWithProperties {
         return failureReason;
     }
 
-    public Failure(byte[] bytes) throws CommandParseException {
+    /**
+     * @return The failure description.
+     */
+    @Nullable public String getFailureDescription() {
+        return failureDescription;
+    }
+
+    public Failure(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case 0x01:
-                    // failed command
-                    byte[] value = property.getValueBytes();
-                    failedType = new Type(value[0], value[1], value[2]);
-                    break;
-                case 0x02:
-                    // failure reason
-                    failureReason = FailureReason.fromByte(property.getValueByte());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
+                switch (property.getPropertyIdentifier()) {
+                    case IDENTIFIER_IDENTIFIER:
+                        identifier = property.getValueBytes();
+                        break;
+                    case IDENTIFIER_TYPE:
+                        failedTypeByte = property.getValueByte();
+                        break;
+                    case IDENTIFIER_FAILURE_REASON:
+                        failureReason = FailureReason.fromByte(property.getValueByte());
+                        break;
+                    case IDENTIFIER_FAILURE_DESCRIPTION:
+                        failureDescription = Property.getString(property.getValueBytes());
+                        break;
+
+                }
+            });
         }
+
+        if (identifier != null && failedTypeByte != null)
+            failedType = new Type(identifier, failedTypeByte);
     }
 
     private Failure(Builder builder) {
         super(builder);
         failureReason = builder.failureReason;
         failedType = builder.failedType;
+        failureDescription = builder.failureDescription;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
         private FailureReason failureReason;
         private Type failedType;
+        private String failureDescription;
 
         public Builder() {
             super(TYPE);
@@ -88,7 +132,8 @@ public class Failure extends CommandWithProperties {
          */
         public Builder setFailedType(Type type) {
             this.failedType = type;
-            addProperty(new Property((byte) 0x01, type.getIdentifierAndType()));
+            addProperty(new Property(IDENTIFIER_IDENTIFIER, type.getIdentifier()));
+            addProperty(new Property(IDENTIFIER_TYPE, type.getType()));
             return this;
         }
 
@@ -100,7 +145,17 @@ public class Failure extends CommandWithProperties {
          */
         public Builder setFailureReason(FailureReason failureReason) {
             this.failureReason = failureReason;
-            addProperty(failureReason);
+            addProperty(new Property(IDENTIFIER_FAILURE_REASON, failureReason.getByte()));
+            return this;
+        }
+
+        /**
+         * @param description The failure description.
+         * @return The builder.
+         */
+        public Builder setFailureDescription(String description) {
+            this.failureDescription = description;
+            addProperty(new StringProperty(IDENTIFIER_FAILURE_DESCRIPTION, description));
             return this;
         }
 

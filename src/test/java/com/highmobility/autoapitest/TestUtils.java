@@ -1,8 +1,12 @@
 package com.highmobility.autoapitest;
 
+import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -13,14 +17,43 @@ import static junit.framework.TestCase.assertTrue;
 public class TestUtils {
 
     public static boolean dateIsSame(Calendar c, String date) throws ParseException {
+        DateFormat format = getFormat(date);
+        Date expectedDate = format.parse(date);
+
+        Calendar expectedCalendar = Calendar.getInstance();
+        expectedCalendar.setTime(expectedDate);
+        expectedCalendar.setTimeZone(format.getTimeZone());
+        Date commandDate = c.getTime();
+
         float rawOffset = c.getTimeZone().getRawOffset();
+        float expectedRawOffset = expectedCalendar.getTimeZone().getRawOffset();
+        assertTrue(rawOffset == expectedRawOffset);
+
+        String commandDateString = getUTCFormat().format(commandDate);
+        String expectedDateString = getUTCFormat().format(expectedDate);
+
+        return (commandDateString.equals(expectedDateString));
+    }
+
+    public static DateFormat getFormat(String date) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        String offset = date.substring(19);
+        TimeZone tz = TimeZone.getTimeZone("GMT" + offset);
+        format.setTimeZone(tz);
+        return format;
+    }
+
+    public static boolean dateIsSameUTC(Calendar c, String date) throws ParseException {
+        float rawOffset = c.getTimeZone().getRawOffset();
+
+        Date expectedDate = getUTCFormat().parse(date);
+        Date commandDate = c.getTime();
+
         float expectedRawOffset = 0;
         assertTrue(rawOffset == expectedRawOffset);
 
-        Date expectedDate = getFormat().parse(date);
-        Date commandDate = c.getTime();
-        String commandDateString = getFormat().format(commandDate);
-        String expectedDateString = getFormat().format(expectedDate);
+        String commandDateString = getUTCFormat().format(commandDate);
+        String expectedDateString = getUTCFormat().format(expectedDate);
 
         return (commandDateString.equals(expectedDateString));
     }
@@ -38,20 +71,17 @@ public class TestUtils {
         return true;
     }
 
-    private static DateFormat format;
+//    private static DateFormat format;
 
-    public static DateFormat getFormat() {
-        if (format == null) {
-            format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            format.setTimeZone(TimeZone.getTimeZone("UTC"));
-        }
-
+    public static DateFormat getUTCFormat() {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
         return format;
     }
 
-    public static Calendar getCalendar(String dateString, int timeZoneMinuteOffset) throws
+    public static Calendar getUTCCalendar(String dateString, int timeZoneMinuteOffset) throws
             ParseException {
-        Date date = getFormat().parse(dateString);
+        Date date = getUTCFormat().parse(dateString);
         Calendar c = new GregorianCalendar();
         c.setTime(date);
         c.setTimeZone(TimeZone.getTimeZone(TimeZone.getAvailableIDs(timeZoneMinuteOffset * 60 *
@@ -60,7 +90,49 @@ public class TestUtils {
         return c;
     }
 
+    public static Calendar getUTCCalendar(String dateString) throws ParseException {
+        return getUTCCalendar(dateString, 0);
+    }
+
     public static Calendar getCalendar(String dateString) throws ParseException {
-        return getCalendar(dateString, 0);
+        DateFormat format = getFormat(dateString);
+        Date date = format.parse(dateString);
+        Calendar c = new GregorianCalendar();
+        c.setTime(date);
+        c.setTimeZone(format.getTimeZone());
+        return c;
+    }
+
+    public static boolean bytesTheSame(Bytes state, Bytes bytes) {
+        for (int i = 0; i < state.getLength(); i++) {
+            byte stateByte = state.getByteArray()[i];
+
+            if (bytes.getByteArray().length < i + 1) {
+                System.out.println("state bytes has more bytes");
+                return false;
+            }
+
+            byte otherByte = bytes.getByteArray()[i];
+            if (stateByte != otherByte) {
+                System.out.println("bytes not equal at index " + i + ". expected: " + ByteUtils
+                        .hexFromBytes(new byte[]{otherByte}) + ", actual: " + ByteUtils
+                        .hexFromBytes(new byte[]{stateByte}) +
+                        "\nbytes1: " + ByteUtils.hexFromBytes(Arrays.copyOf
+                        (bytes.getByteArray(), i + 1)) +
+                        "\nbytes2: " + ByteUtils.hexFromBytes(Arrays.copyOf(state
+                        .getByteArray(), i + 1)));
+
+                System.out.println("bytes1: " + bytes);
+                System.out.println("bytes2: " + state);
+                return false;
+            }
+        }
+
+        if (bytes.getLength() > state.getLength()) {
+            System.out.println("expected bytes has more bytes");
+            return false;
+        }
+
+        return true;
     }
 }

@@ -21,21 +21,21 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.ChargeCurrentProperty;
 import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.NetworkSecurity;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.property.homecharger.Charging;
 import com.highmobility.autoapi.property.homecharger.PlugType;
 import com.highmobility.autoapi.property.homecharger.PriceTariff;
-import com.highmobility.autoapi.property.NetworkSecurity;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
-import com.highmobility.utils.ByteUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * This command is sent when a Home Charger State message is received by the car. The new state is
@@ -44,102 +44,139 @@ import java.util.List;
 public class HomeChargerState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x01);
 
+    private static final byte IDENTIFIER_CHARGING = 0x01;
+    private static final byte IDENTIFIER_PLUG_TYPE = 0x03;
+
     private static final byte CHARGING_POWER_IDENTIFIER = 0x04;
     private static final byte SOLAR_CHARGING_ACTIVE_IDENTIFIER = 0x05;
-    private static final byte LOCATION_IDENTIFIER = 0x06;
     private static final byte HOTSPOT_ENABLED_IDENTIFIER = 0x08;
     private static final byte HOTSPOT_SSID_IDENTIFIER = 0x09;
     private static final byte HOTSPOT_SECURITY_IDENTIFIER = 0x0A;
     private static final byte HOTSPOT_PASSWORD_IDENTIFIER = 0x0B;
+    private static final byte IDENTIFIER_AUTHENTICATION_MECHANISM = 0x02;
+
+    private static final byte IDENTIFIER_AUTHENTICATION_STATE = 0x0D;
+    private static final byte IDENTIFIER_CHARGE_CURRENT_DC = 0x0E;
+    private static final byte IDENTIFIER_MAXIMUM_CHARGE_CURRENT = 0x0F;
+    private static final byte IDENTIFIER_MINIMUM_CHARGE_CURRENT = 0x10;
+    private static final byte IDENTIFIER_COORDINATES = 0x11;
+    private static final byte IDENTIFIER_PRICING_TARIFFS = 0x12;
 
     Charging charging;
     AuthenticationMechanism authenticationMechanism;
     PlugType plugType;
     Float chargingPower;
     Boolean solarChargingActive;
-    CoordinatesProperty location;
-    ChargeCurrentProperty chargeCurrent;
     Boolean hotspotEnabled;
     String hotspotSsid;
     NetworkSecurity hotspotSecurity;
     String hotspotPassword;
+
+    // level8
+    Boolean authenticated;
+    Float chargeCurrentDC;
+    Float maximumChargeCurrent;
+    Float minimumChargeCurrent;
+    CoordinatesProperty coordinates;
+
     PriceTariff[] priceTariffs;
 
     /**
      * @return The charging state.
      */
-    public Charging getCharging() {
+    @Nullable public Charging getCharging() {
         return charging;
     }
 
     /**
      * @return The authentication mechanism.
      */
-    public AuthenticationMechanism getAuthenticationMechanism() {
+    @Nullable public AuthenticationMechanism getAuthenticationMechanism() {
         return authenticationMechanism;
     }
 
     /**
      * @return The plug type.
      */
-    public PlugType getPlugType() {
+    @Nullable public PlugType getPlugType() {
         return plugType;
     }
 
     /**
      * @return Charging power in kW.
      */
-    public Float getChargingPower() {
+    @Nullable public Float getChargingPower() {
         return chargingPower;
     }
 
     /**
      * @return Solar charging state.
      */
-    public Boolean isSolarChargingActive() {
+    @Nullable public Boolean isSolarChargingActive() {
         return solarChargingActive;
-    }
-
-    /**
-     * @return The location of the home charger.
-     */
-    public CoordinatesProperty getLocation() {
-        return location;
-    }
-
-    /**
-     * @return The charge current.
-     */
-    public ChargeCurrentProperty getChargeCurrent() {
-        return chargeCurrent;
     }
 
     /**
      * @return The hotspot state.
      */
-    public Boolean isHotspotEnabled() {
+    @Nullable public Boolean isHotspotEnabled() {
         return hotspotEnabled;
     }
 
     /**
      * @return The hotspot SSID.
      */
-    public String getHotspotSsid() {
+    @Nullable public String getHotspotSsid() {
         return hotspotSsid;
     }
 
     /**
      * @return The hotspot security.
      */
-    public NetworkSecurity getHotspotSecurity() {
+    @Nullable public NetworkSecurity getHotspotSecurity() {
         return hotspotSecurity;
     }
 
     /**
      * @return The hotspot password.
      */
-    public String getHotspotPassword() {
+    @Nullable public String getHotspotPassword() {
         return hotspotPassword;
+    }
+
+    /**
+     * @return The authentication state.
+     */
+    @Nullable public Boolean isAuthenticated() {
+        return authenticated;
+    }
+
+    /**
+     * @return The charge current (DC).
+     */
+    @Nullable public Float getChargeCurrent() {
+        return chargeCurrentDC;
+    }
+
+    /**
+     * @return The maximum possible charge current.
+     */
+    @Nullable public Float getMaximumChargeCurrent() {
+        return maximumChargeCurrent;
+    }
+
+    /**
+     * @return The minimal possible charge current.
+     */
+    @Nullable public Float getMinimumChargeCurrent() {
+        return minimumChargeCurrent;
+    }
+
+    /**
+     * @return The coordinates.
+     */
+    @Nullable public CoordinatesProperty getCoordinates() {
+        return coordinates;
     }
 
     /**
@@ -153,7 +190,7 @@ public class HomeChargerState extends CommandWithProperties {
      * @param pricingType The pricing type.
      * @return Price tariff for the given pricing type.
      */
-    public PriceTariff getPriceTariff(PriceTariff.PricingType pricingType) {
+    @Nullable public PriceTariff getPriceTariff(PriceTariff.PricingType pricingType) {
         if (priceTariffs != null) {
             for (PriceTariff tariff : priceTariffs) {
                 if (tariff.getPricingType() == pricingType) return tariff;
@@ -165,19 +202,19 @@ public class HomeChargerState extends CommandWithProperties {
 
     public HomeChargerState(byte[] bytes) {
         super(bytes);
+        ArrayList<PriceTariff> tariffs = new ArrayList<>();
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            try {
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
                 switch (property.getPropertyIdentifier()) {
-                    case Charging.IDENTIFIER:
+                    case IDENTIFIER_CHARGING:
                         charging = Charging.fromByte(property.getValueByte());
                         break;
-                    case AuthenticationMechanism.IDENTIFIER:
+                    case IDENTIFIER_AUTHENTICATION_MECHANISM:
                         authenticationMechanism = AuthenticationMechanism.fromByte(property
                                 .getValueByte());
                         break;
-                    case PlugType.IDENTIFIER:
+                    case IDENTIFIER_PLUG_TYPE:
                         plugType = PlugType.fromByte(property.getValueByte());
                         break;
                     case CHARGING_POWER_IDENTIFIER:
@@ -185,12 +222,6 @@ public class HomeChargerState extends CommandWithProperties {
                         break;
                     case SOLAR_CHARGING_ACTIVE_IDENTIFIER:
                         solarChargingActive = Property.getBool(property.getValueByte());
-                        break;
-                    case LOCATION_IDENTIFIER:
-                        location = new CoordinatesProperty(property.getPropertyBytes());
-                        break;
-                    case ChargeCurrentProperty.IDENTIFIER:
-                        chargeCurrent = new ChargeCurrentProperty(property.getPropertyBytes());
                         break;
                     case HOTSPOT_ENABLED_IDENTIFIER:
                         hotspotEnabled = Property.getBool(property.getValueByte());
@@ -204,24 +235,36 @@ public class HomeChargerState extends CommandWithProperties {
                     case HOTSPOT_PASSWORD_IDENTIFIER:
                         hotspotPassword = Property.getString(property.getValueBytes());
                         break;
-                    case PriceTariff.IDENTIFIER:
-                        if (getPriceTariffs() == null) priceTariffs = new PriceTariff[1];
-                        else priceTariffs = Arrays.copyOf(priceTariffs, priceTariffs.length + 1);
-
-                        priceTariffs[priceTariffs.length - 1] = new PriceTariff(property
-                                .getPropertyBytes());
+                    case IDENTIFIER_AUTHENTICATION_STATE:
+                        authenticated = Property.getBool(property.getValueByte());
+                        break;
+                    case IDENTIFIER_CHARGE_CURRENT_DC:
+                        chargeCurrentDC = Property.getFloat(property.getValueBytes());
+                        break;
+                    case IDENTIFIER_MAXIMUM_CHARGE_CURRENT:
+                        maximumChargeCurrent = Property.getFloat(property.getValueBytes());
+                        break;
+                    case IDENTIFIER_MINIMUM_CHARGE_CURRENT:
+                        minimumChargeCurrent = Property.getFloat(property.getValueBytes());
+                        break;
+                    case IDENTIFIER_COORDINATES:
+                        coordinates = new CoordinatesProperty(property.getPropertyBytes());
+                        break;
+                    case IDENTIFIER_PRICING_TARIFFS:
+                        tariffs.add(new PriceTariff(property.getPropertyBytes()));
                         break;
                 }
-            } catch (Exception e) {
-                logger.info("invalid property " + ByteUtils.hexFromBytes(property.getPropertyBytes()));
-            }
+            });
         }
+
+        priceTariffs = tariffs.toArray(new PriceTariff[0]);
     }
 
     @Override public boolean isState() {
         return true;
     }
 
+    // TBODO:
     private HomeChargerState(Builder builder) {
         super(builder);
         charging = builder.charging;
@@ -229,13 +272,11 @@ public class HomeChargerState extends CommandWithProperties {
         plugType = builder.plugType;
         chargingPower = builder.chargingPower;
         solarChargingActive = builder.solarChargingActive;
-        location = builder.location;
-        chargeCurrent = builder.chargeCurrent;
         hotspotEnabled = builder.hotspotEnabled;
         hotspotSsid = builder.hotspotSsid;
         hotspotSecurity = builder.hotspotSecurity;
         hotspotPassword = builder.hotspotPassword;
-        priceTariffs = builder.priceTariffs.toArray(new PriceTariff[builder.priceTariffs.size()]);
+        priceTariffs = builder.priceTariffs.toArray(new PriceTariff[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
@@ -244,8 +285,6 @@ public class HomeChargerState extends CommandWithProperties {
         private PlugType plugType;
         private Float chargingPower;
         private Boolean solarChargingActive;
-        private CoordinatesProperty location;
-        private ChargeCurrentProperty chargeCurrent;
         private Boolean hotspotEnabled;
         private String hotspotSsid;
         private NetworkSecurity hotspotSecurity;
@@ -262,7 +301,7 @@ public class HomeChargerState extends CommandWithProperties {
          */
         public Builder setCharging(Charging charging) {
             this.charging = charging;
-            addProperty(charging);
+            addProperty(new Property(IDENTIFIER_CHARGING, charging.getByte()));
             return this;
         }
 
@@ -272,7 +311,7 @@ public class HomeChargerState extends CommandWithProperties {
          */
         public Builder setAuthenticationMechanism(AuthenticationMechanism authenticationMechanism) {
             this.authenticationMechanism = authenticationMechanism;
-            addProperty(authenticationMechanism);
+            addProperty(new Property(IDENTIFIER_AUTHENTICATION_MECHANISM, authenticationMechanism.getByte()));
             return this;
         }
 
@@ -282,7 +321,7 @@ public class HomeChargerState extends CommandWithProperties {
          */
         public Builder setPlugType(PlugType plugType) {
             this.plugType = plugType;
-            addProperty(plugType);
+            addProperty(new Property(IDENTIFIER_PLUG_TYPE, plugType.getByte()));
             return this;
         }
 
@@ -303,27 +342,6 @@ public class HomeChargerState extends CommandWithProperties {
         public Builder setSolarChargingActive(Boolean solarChargingActive) {
             this.solarChargingActive = solarChargingActive;
             addProperty(new BooleanProperty(SOLAR_CHARGING_ACTIVE_IDENTIFIER, solarChargingActive));
-            return this;
-        }
-
-        /**
-         * @param location The location of the home charger.
-         * @return The builder.
-         */
-        public Builder setLocation(CoordinatesProperty location) {
-            location.setIdentifier(LOCATION_IDENTIFIER);
-            this.location = location;
-            addProperty(location);
-            return this;
-        }
-
-        /**
-         * @param chargeCurrent The charge current.
-         * @return The builder.
-         */
-        public Builder setChargeCurrent(ChargeCurrentProperty chargeCurrent) {
-            this.chargeCurrent = chargeCurrent;
-            addProperty(chargeCurrent);
             return this;
         }
 
@@ -353,8 +371,7 @@ public class HomeChargerState extends CommandWithProperties {
          */
         public Builder setHotspotSecurity(NetworkSecurity hotspotSecurity) {
             this.hotspotSecurity = hotspotSecurity;
-            hotspotSecurity.setIdentifier(HOTSPOT_SECURITY_IDENTIFIER);
-            addProperty(hotspotSecurity);
+            addProperty(new Property(HOTSPOT_SECURITY_IDENTIFIER, hotspotSecurity.getByte()));
             return this;
         }
 

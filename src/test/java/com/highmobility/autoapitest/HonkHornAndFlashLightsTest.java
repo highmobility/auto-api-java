@@ -11,17 +11,14 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class HonkHornAndFlashLightsTest {
+    Bytes bytes = new Bytes("00260101000102");
+
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "00260101000100"
-        );
 
         Command command = null;
         try {
@@ -32,7 +29,7 @@ public class HonkHornAndFlashLightsTest {
 
         assertTrue(command.is(FlashersState.TYPE));
         FlashersState state = (FlashersState) command;
-        assertTrue(state.getState() == FlashersState.State.INACTIVE);
+        assertTrue(state.getState() == FlashersState.State.LEFT_ACTIVE);
     }
 
     @Test public void get() {
@@ -42,7 +39,7 @@ public class HonkHornAndFlashLightsTest {
     }
 
     @Test public void honkAndFlash() {
-        String waitingForBytes = "0026020100010002000103";
+        String waitingForBytes = "0026120100010002000103";
         String commandBytes = ByteUtils.hexFromBytes(new HonkAndFlash(0, 3).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -57,13 +54,14 @@ public class HonkHornAndFlashLightsTest {
     }
 
     @Test public void activateDeactivate() {
-        String waitingForBytes = "00260301";
+        String waitingForBytes = "00261301000101";
 
         String commandBytes = ByteUtils.hexFromBytes(new ActivateDeactivateEmergencyFlasher(true)
                 .getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
-        ActivateDeactivateEmergencyFlasher command = (ActivateDeactivateEmergencyFlasher) CommandResolver.resolveHex(waitingForBytes);
+        ActivateDeactivateEmergencyFlasher command = (ActivateDeactivateEmergencyFlasher)
+                CommandResolver.resolveHex(waitingForBytes);
         assertTrue(command.activate() == true);
     }
 
@@ -75,9 +73,8 @@ public class HonkHornAndFlashLightsTest {
 
     @Test public void builder() {
         FlashersState.Builder builder = new FlashersState.Builder();
-        builder.setState(FlashersState.State.INACTIVE);
-        assertTrue(Arrays.equals(builder.build().getByteArray(), ByteUtils.bytesFromHex
-                ("00260101000100")));
+        builder.setState(FlashersState.State.LEFT_ACTIVE);
+        assertTrue(builder.build().equals(bytes));
     }
 
 }

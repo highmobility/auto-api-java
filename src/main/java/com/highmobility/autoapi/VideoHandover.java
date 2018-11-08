@@ -29,6 +29,8 @@ import com.highmobility.autoapi.property.StringProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Hand over a video from smart device to car headunit to be shown in the car display. The emulator
  * supports HTML5 video player formats .mp4 and .webm.
@@ -38,6 +40,7 @@ public class VideoHandover extends CommandWithProperties {
 
     public static final byte URL_IDENTIFIER = 0x01;
     public static final byte STARTING_SECOND_IDENTIFIER = 0x02;
+    public static final byte IDENTIFIER_SCREEN_LOCATION = 0x03;
 
     private String url;
     private Integer startingSecond;
@@ -53,14 +56,14 @@ public class VideoHandover extends CommandWithProperties {
     /**
      * @return The starting second.
      */
-    public Integer getStartingSecond() {
+    @Nullable public Integer getStartingSecond() {
         return startingSecond;
     }
 
     /**
      * @return The screen location.
      */
-    public ScreenLocation getLocation() {
+    @Nullable public ScreenLocation getLocation() {
         return location;
     }
 
@@ -69,7 +72,7 @@ public class VideoHandover extends CommandWithProperties {
      * @param location       The screen location.
      * @param startingSecond The starting second of the video.
      */
-    public VideoHandover(String url, Integer startingSecond, ScreenLocation location) {
+    public VideoHandover(String url, @Nullable Integer startingSecond, @Nullable ScreenLocation location) {
         super(TYPE, getProperties(url, startingSecond, location));
         this.url = url;
         this.startingSecond = startingSecond;
@@ -86,7 +89,7 @@ public class VideoHandover extends CommandWithProperties {
                 case STARTING_SECOND_IDENTIFIER:
                     startingSecond = Property.getUnsignedInt(property.getValueBytes());
                     break;
-                case ScreenLocation.IDENTIFIER:
+                case IDENTIFIER_SCREEN_LOCATION:
                     location = ScreenLocation.fromByte(property.getValueByte());
                     break;
             }
@@ -100,7 +103,7 @@ public class VideoHandover extends CommandWithProperties {
         if (startingSecond != null)
             propertiesBuilder.add(new IntegerProperty(STARTING_SECOND_IDENTIFIER, startingSecond,
                     2));
-        if (location != null) propertiesBuilder.add(location);
-        return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
+        if (location != null) propertiesBuilder.add(new Property(IDENTIFIER_SCREEN_LOCATION, location.getByte()));
+        return propertiesBuilder.toArray(new HMProperty[0]);
     }
 }

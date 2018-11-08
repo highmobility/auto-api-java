@@ -20,13 +20,15 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Enable or disable the home charger Wi-Fi Hotspot.
  */
-public class EnableDisableWifiHotspot extends Command {
-    public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x05);
+public class EnableDisableWifiHotspot extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x15);
+    private static final byte IDENTIFIER = 0x01;
 
     /**
      * @return Whether to enable the Wi-Fi hotspot.
@@ -38,12 +40,14 @@ public class EnableDisableWifiHotspot extends Command {
     private boolean enable;
 
     public EnableDisableWifiHotspot(boolean enable) {
-        super(TYPE.addByte(Property.boolToByte(enable)));
+        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, enable)));
         this.enable = enable;
     }
 
-    EnableDisableWifiHotspot(byte[] bytes) {
+    EnableDisableWifiHotspot(byte[] bytes) throws CommandParseException {
         super(bytes);
-        enable = Property.getBool(bytes[3]);
+        Property prop = getProperty(IDENTIFIER);
+        if (prop == null) throw new CommandParseException();
+        enable = Property.getBool(prop.getValueByte());
     }
 }

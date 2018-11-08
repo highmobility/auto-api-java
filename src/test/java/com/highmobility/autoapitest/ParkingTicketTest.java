@@ -41,8 +41,8 @@ public class ParkingTicketTest {
         assertTrue(state.getOperatorName().equals("Berlin Parking"));
         assertTrue(state.getOperatorTicketId().equals("64894233"));
 
-        assertTrue(TestUtils.dateIsSame(state.getTicketStartDate(), "2017-01-10T17:34:00"));
-        assertTrue(TestUtils.dateIsSame(state.getTicketEndDate(), "2018-02-20T22:11:00"));
+        assertTrue(TestUtils.dateIsSameUTC(state.getTicketStartDate(), "2017-01-10T17:34:00"));
+        assertTrue(TestUtils.dateIsSameUTC(state.getTicketEndDate(), "2018-02-20T22:11:00"));
     }
 
     @Test public void build() throws ParseException {
@@ -51,8 +51,8 @@ public class ParkingTicketTest {
         builder.setState(ParkingTicketState.STARTED);
         builder.setOperatorName("Berlin Parking");
         builder.setOperatorTicketId("64894233");
-        builder.setTicketStart(TestUtils.getCalendar("2017-01-10T17:34:00"));
-        builder.setTicketEnd(TestUtils.getCalendar("2018-02-20T22:11:00"));
+        builder.setTicketStart(TestUtils.getUTCCalendar("2017-01-10T17:34:00"));
+        builder.setTicketEnd(TestUtils.getUTCCalendar("2018-02-20T22:11:00"));
 
         ParkingTicket command = builder.build();
         assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex
@@ -78,7 +78,7 @@ public class ParkingTicketTest {
         assertTrue(waitingForBytes.equals(bytes));
 
         StartParking command = (StartParking) CommandResolver.resolve(waitingForBytes);
-        Calendar expected = TestUtils.getCalendar("2017-01-10T16:34:00", (int) (timeZoneOffset /
+        Calendar expected = TestUtils.getUTCCalendar("2017-01-10T16:34:00", (int) (timeZoneOffset /
                 60 / 1000));
 
         assertTrue(TestUtils.dateIsSameIgnoreTimezone(command.getStartDate(), expected));

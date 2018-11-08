@@ -29,6 +29,7 @@ public enum Identifier {
     FAILURE(new byte[]{0x00, (byte) 0x02}),
     CAPABILITIES(new byte[]{0x00, (byte) 0x10}),
     VEHICLE_STATUS(new byte[]{0x00, (byte) 0x11}),
+    HISTORICAL(new byte[]{0x00, (byte) 0x12}),
     DOOR_LOCKS(new byte[]{0x00, (byte) 0x20}),
     TRUNK_ACCESS(new byte[]{0x00, (byte) 0x21}),
     WAKE_UP(new byte[]{0x00, (byte) 0x22}),
@@ -73,7 +74,9 @@ public enum Identifier {
     CRUISE_CONTROL(new byte[]{0x00, (byte) 0x62}),
     START_STOP(new byte[]{0x00, (byte) 0x63}),
     TACHOGRAPH(new byte[]{0x00, (byte) 0x64}),
-    POWER_TAKE_OFF(new byte[]{0x00, (byte) 0x65});
+    POWER_TAKE_OFF(new byte[]{0x00, (byte) 0x65}),
+    MOBILE(new byte[]{0x00, (byte) 0x66}),
+    USAGE(new byte[]{0x00, (byte) 0x68});
 
     public static Identifier fromBytes(byte[] bytes) {
         return fromBytes(bytes[0], bytes[1]);

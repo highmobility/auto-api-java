@@ -6,7 +6,6 @@ import com.highmobility.autoapi.ControlCommand;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetControlMode;
 import com.highmobility.autoapi.StartControlMode;
-import com.highmobility.autoapi.StopControlMode;
 import com.highmobility.autoapi.property.ControlModeValue;
 import com.highmobility.value.Bytes;
 
@@ -45,18 +44,17 @@ public class RemoteControlTest {
     }
 
     @Test public void startControlMode() {
-        String waitingForBytes = "002702";
-        assertTrue(new StartControlMode().equals(waitingForBytes));
+        String waitingForBytes = "00271201000101";
+        assertTrue(new StartControlMode(true).equals(waitingForBytes));
         Command command = CommandResolver.resolveHex(waitingForBytes);
-        assertTrue(command instanceof StartControlMode);
+        assertTrue(((StartControlMode) command).getStart() == true);
     }
 
     @Test public void stopControlMode() {
-        String waitingForBytes = "002703";
-        assertTrue(new StopControlMode().equals(waitingForBytes));
-
+        String waitingForBytes = "00271201000100";
+        assertTrue(new StartControlMode(false).equals(waitingForBytes));
         Command command = CommandResolver.resolveHex(waitingForBytes);
-        assertTrue(command instanceof StopControlMode);
+        assertTrue(((StartControlMode) command).getStart() == false);
     }
 
     @Test public void controlCommand() {

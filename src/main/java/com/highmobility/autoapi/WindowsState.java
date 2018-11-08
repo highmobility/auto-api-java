@@ -20,12 +20,14 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.WindowProperty;
+import com.highmobility.autoapi.property.windows.WindowLocation;
+import com.highmobility.autoapi.property.windows.WindowOpenPercentage;
+import com.highmobility.autoapi.property.windows.WindowPosition;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Command sent from the car every time the windows state changes or when a Get Windows State is
@@ -35,46 +37,70 @@ import java.util.List;
 public class WindowsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDOWS, 0x01);
 
-    WindowProperty[] windowProperties;
+    private static final byte IDENTIFIER_WINDOW_OPEN_PERCENTAGES = 0x02;
+    private static final byte IDENTIFIER_WINDOW_POSITION = 0x03;
+
+    WindowPosition[] windowPositions;
+    WindowOpenPercentage[] windowOpenPercentages;
 
     /**
-     * @return All of the window states
+     * @return The window positions.
      */
-    public WindowProperty[] getWindowProperties() {
-        return windowProperties;
+    public WindowPosition[] getWindowPositions() {
+        return windowPositions;
     }
 
-    public WindowProperty getWindowProperty(WindowProperty.Position position) {
-        for (int i = 0; i < windowProperties.length; i++) {
-            if (windowProperties[i].getPosition() == position) return windowProperties[i];
+    /**
+     * @param location The window location.
+     * @return The window position.
+     */
+    @Nullable public WindowPosition getWindowPosition(WindowLocation location) {
+        for (WindowPosition windowPosition : windowPositions) {
+            if (windowPosition.getLocation() == location) return windowPosition;
         }
+        return null;
+    }
 
+    /**
+     * @return The window open percentages.
+     */
+    public WindowOpenPercentage[] getWindowOpenPercentages() {
+        return windowOpenPercentages;
+    }
+
+    /**
+     * @param location The window location.
+     * @return The window open percentage.
+     */
+    @Nullable public WindowOpenPercentage getWindowOpenPercentage(WindowLocation location) {
+        for (WindowOpenPercentage windowOpenPercentage : windowOpenPercentages) {
+            if (windowOpenPercentage.getLocation() == location) return windowOpenPercentage;
+        }
         return null;
     }
 
     public WindowsState(byte[] bytes) {
         super(bytes);
 
-        List<WindowProperty> builder = new ArrayList<>();
+        List<WindowPosition> positionBuilder = new ArrayList<>();
+        List<WindowOpenPercentage> openBuilder = new ArrayList<>();
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case 0x01:
-                    try {
-                        WindowProperty state = new WindowProperty(property.getValueBytes()[0],
-                                property
-
-                                        .getValueBytes()[1]);
-                        builder.add(state);
-                    } catch (CommandParseException e) {
-                        // ignore
-                    }
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
+                // if one property parsing fails, just dont add it
+                switch (property.getPropertyIdentifier()) {
+                    case IDENTIFIER_WINDOW_OPEN_PERCENTAGES:
+                        openBuilder.add(new WindowOpenPercentage(property.getPropertyBytes()));
+                        break;
+                    case IDENTIFIER_WINDOW_POSITION:
+                        positionBuilder.add(new WindowPosition(property.getPropertyBytes()));
+                        break;
+                }
+            });
         }
 
-        windowProperties = builder.toArray(new WindowProperty[builder.size()]);
+        windowPositions = positionBuilder.toArray(new WindowPosition[0]);
+        windowOpenPercentages = openBuilder.toArray(new WindowOpenPercentage[0]);
     }
 
     @Override public boolean isState() {
@@ -83,43 +109,65 @@ public class WindowsState extends CommandWithProperties {
 
     private WindowsState(Builder builder) {
         super(builder);
-        windowProperties = builder.windowProperties;
+        windowPositions = builder.windowPositions.toArray(new WindowPosition[0]);
+        windowOpenPercentages = builder.windowOpenPercentages.toArray(new WindowOpenPercentage[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private WindowProperty[] windowProperties;
+        List<WindowPosition> windowPositions = new ArrayList<>();
+        List<WindowOpenPercentage> windowOpenPercentages = new ArrayList<>();
 
         public Builder() {
             super(TYPE);
         }
 
         /**
-         * @param windowProperties The window properties.
+         * @param windowPositions The window positions.
          * @return The builder.
          */
-        public Builder setWindowProperties(WindowProperty[] windowProperties) {
-            this.windowProperties = windowProperties;
+        public Builder setWindowPositions(WindowPosition[] windowPositions) {
+            this.windowPositions.clear();
 
-            for (int i = 0; i < windowProperties.length; i++) {
-                addProperty(windowProperties[i]);
+            for (WindowPosition windowPosition : windowPositions) {
+                addWindowPosition(windowPosition);
             }
 
             return this;
         }
 
         /**
-         * Add a single window property.
-         *
-         * @param windowProperty A window property.
+         * @param windowOpenPercentages The window open percentages.
          * @return The builder.
          */
-        public Builder addWindowProperty(WindowProperty windowProperty) {
-            if (windowProperties == null) windowProperties = new WindowProperty[1];
-            else windowProperties = Arrays.copyOf(windowProperties, windowProperties.length + 1);
+        public Builder setWindowOpenPercentages(WindowOpenPercentage[] windowOpenPercentages) {
+            this.windowOpenPercentages.clear();
 
-            addProperty(windowProperty);
-            windowProperties[windowProperties.length - 1] = windowProperty;
+            for (WindowOpenPercentage windowOpenPercentage : windowOpenPercentages) {
+                addWindowOpenPercentage(windowOpenPercentage);
+            }
 
+            return this;
+        }
+
+        /**
+         * @param windowPosition A window position.
+         * @return The builder.
+         */
+        public Builder addWindowPosition(WindowPosition windowPosition) {
+            windowPosition.setIdentifier(IDENTIFIER_WINDOW_POSITION);
+            addProperty(windowPosition);
+            windowPositions.add(windowPosition);
+            return this;
+        }
+
+        /**
+         * @param windowOpenPercentage A window open percentage.
+         * @return The builder.
+         */
+        public Builder addWindowOpenPercentage(WindowOpenPercentage windowOpenPercentage) {
+            windowOpenPercentage.setIdentifier(IDENTIFIER_WINDOW_OPEN_PERCENTAGES);
+            addProperty(windowOpenPercentage);
+            windowOpenPercentages.add(windowOpenPercentage);
             return this;
         }
 

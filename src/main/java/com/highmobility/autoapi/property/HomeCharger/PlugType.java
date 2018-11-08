@@ -20,16 +20,11 @@
 
 package com.highmobility.autoapi.property.homecharger;
 
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
-
-public enum PlugType implements HMProperty {
+public enum PlugType {
     TYPE_ONE((byte)0x00),
     TYPE_TWO((byte)0x01),
     COMBINED_CHARGING_SYSTEM((byte)0x02),
     CHADEMO((byte)0x02);
-
-    public static final byte IDENTIFIER = 0x03;
 
     public static PlugType fromByte(byte byteValue) {
         PlugType[] values = PlugType.values();
@@ -52,17 +47,5 @@ public enum PlugType implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return 0x03;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

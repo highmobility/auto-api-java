@@ -23,6 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * This message is sent when a Start Stop State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
@@ -35,21 +37,15 @@ public class StartStopState extends CommandWithProperties {
     /**
      * @return Whether the start stop is active.
      */
-    public Boolean isActive() {
+    @Nullable public Boolean isActive() {
         return active;
     }
 
     StartStopState(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case ACTIVE_IDENTIFIER:
-                    active = Property.getBool(property.getValueByte());
-                    break;
-            }
-        }
+        Property p = getProperty((byte) 0x01);
+        if (p != null) active = Property.getBool(p.getValueByte());
     }
 
     @Override public boolean isState() {

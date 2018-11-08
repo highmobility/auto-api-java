@@ -22,12 +22,10 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum ChargeMode implements HMProperty {
+public enum ChargeMode {
     IMMEDIATE((byte)0x00),
     TIMER_BASED((byte)0x01),
     INDUCTIVE((byte)0x02);
-
-    public static final byte IDENTIFIER = 0x0C;
 
     public static ChargeMode fromByte(byte byteValue) throws CommandParseException {
         ChargeMode[] values = ChargeMode.values();
@@ -50,17 +48,5 @@ public enum ChargeMode implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

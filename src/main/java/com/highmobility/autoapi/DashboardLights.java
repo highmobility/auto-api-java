@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
- * This message is sent when a Dashboard Lights message is received by the car. The new state is
+ * This message is sent when a Get Dashboard Lights message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
 public class DashboardLights extends CommandWithProperties {
@@ -49,7 +51,7 @@ public class DashboardLights extends CommandWithProperties {
      * @param type The dashboard light type.
      * @return The Dashboard light, if exists.
      */
-    public DashboardLight getLight(DashboardLight.Type type) {
+    @Nullable public DashboardLight getLight(DashboardLight.Type type) {
         for (int i = 0; i < lights.length; i++) {
             DashboardLight light = lights[i];
             if (light.getType() == type) return light;
@@ -68,7 +70,7 @@ public class DashboardLights extends CommandWithProperties {
             }
         }
 
-        lights = builder.toArray(new DashboardLight[builder.size()]);
+        lights = builder.toArray(new DashboardLight[0]);
     }
 
     @Override public boolean isState() {
@@ -77,7 +79,7 @@ public class DashboardLights extends CommandWithProperties {
 
     private DashboardLights(Builder builder) {
         super(builder);
-        lights = builder.lights.toArray(new DashboardLight[builder.lights.size()]);
+        lights = builder.lights.toArray(new DashboardLight[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {

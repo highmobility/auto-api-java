@@ -38,7 +38,7 @@ public class DriverTimeState extends Property {
 
     public DriverTimeState(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes == null || bytes.length < 5) throw new CommandParseException();
+        if (bytes.length < 5) throw new CommandParseException();
         driverNumber = Property.getUnsignedInt(bytes[3]);
         timeState = TimeState.fromByte(bytes[4]);
     }

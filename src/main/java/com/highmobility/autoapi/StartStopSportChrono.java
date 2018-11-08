@@ -20,60 +20,35 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.value.StartStop;
+
 /**
  * Start/stop the sports chronometer. The result is sent through the Chassis Settings message.
  */
-public class StartStopSportChrono extends Command {
-    public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x03);
-
-    Command command;
+public class StartStopSportChrono extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x13);
+    private static final byte PROPERTY_IDENTIFIER = 0x01;
+    StartStop startStop;
 
     /**
      * @return The chronometer command.
      */
-    public Command getCommand() {
-        return command;
+    public StartStop getStartStop() {
+        return startStop;
     }
 
     /**
-     * @param command The chronometer command.
+     * @param startStop The chronometer command.
      */
-    public StartStopSportChrono(Command command) {
-        super(TYPE.addByte(command.getByte()));
-        this.command = command;
+    public StartStopSportChrono(StartStop startStop) {
+        super(TYPE.addProperty(new Property(PROPERTY_IDENTIFIER, startStop.getByte())));
+        this.startStop = startStop;
     }
 
     StartStopSportChrono(byte[] bytes) throws CommandParseException {
         super(bytes);
-        this.command = Command.fromByte(bytes[3]);
-    }
-
-    public enum Command {
-        START((byte) 0x00),
-        STOP((byte) 0x01),
-        RESET((byte) 0x02);
-
-        public static Command fromByte(byte byteValue) throws CommandParseException {
-            Command[] values = Command.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Command state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Command(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
+        Property prop = getProperty(PROPERTY_IDENTIFIER);
+        if (prop != null) this.startStop = StartStop.fromByte(prop.getValueByte());
     }
 }

@@ -23,8 +23,10 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.FatigueLevel;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
- * This is an evented command that notifies about driver fatigue. Sent continously when level 1 or higher.
+ * This is an evented command that notifies about driver fatigue. Sent continuously when level 1 or higher.
  */
 public class DriverFatigueDetected extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.DRIVER_FATIGUE, 0x01);
@@ -34,20 +36,17 @@ public class DriverFatigueDetected extends CommandWithProperties {
     /**
      * @return The driver fatigue level
      */
-    public FatigueLevel getFatigueLevel() {
+    @Nullable public FatigueLevel getFatigueLevel() {
         return fatigueLevel;
     }
 
     public DriverFatigueDetected(byte[] bytes) throws CommandParseException {
         super(bytes);
+        Property p = getProperty((byte) 0x01);
+        if (p != null) fatigueLevel = FatigueLevel.fromByte(p.getValueByte());
+    }
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case 0x01:
-                    fatigueLevel = FatigueLevel.fromByte(property.getValueByte());
-                    break;
-            }
-        }
+    @Override public boolean isState() {
+        return true;
     }
 }

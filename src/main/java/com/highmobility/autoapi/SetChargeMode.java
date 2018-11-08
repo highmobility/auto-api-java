@@ -21,13 +21,14 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ChargeMode;
+import com.highmobility.autoapi.property.Property;
 
 /**
  * Set the charge mode of the car.
  */
-public class SetChargeMode extends Command {
-    public static final Type TYPE = new Type(Identifier.CHARGING, 0x05);
-
+public class SetChargeMode extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.CHARGING, 0x15);
+    private static final byte PROPERTY_IDENTIFIER = 0x01;
     ChargeMode chargeMode;
 
     /**
@@ -41,14 +42,23 @@ public class SetChargeMode extends Command {
      * Set the charge mode of the car.
      *
      * @param chargeMode The charge mode.
+     * @throws IllegalArgumentException for {@link ChargeMode#IMMEDIATE}.
      */
     public SetChargeMode(ChargeMode chargeMode) {
-        super(TYPE.addByte(chargeMode.getByte()));
+        super(TYPE.addProperty(new Property(PROPERTY_IDENTIFIER, chargeMode.getByte())));
+        if (chargeMode == ChargeMode.IMMEDIATE) throw new IllegalArgumentException();
         this.chargeMode = chargeMode;
     }
 
+
     SetChargeMode(byte[] bytes) throws CommandParseException {
         super(bytes);
-        this.chargeMode = ChargeMode.fromByte(bytes[3]);
+        if (bytes.length < 7) throw new CommandParseException();
+        for (int i = 0; i < properties.length; i++) {
+            Property property = properties[i];
+            if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
+                this.chargeMode = ChargeMode.fromByte(property.getValueByte());
+            }
+        }
     }
 }

@@ -24,13 +24,15 @@ import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent when a Get Navi Destination command is received by the car.
  */
 public class NaviDestination extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x01);
 
-    private static final byte COORDINATES_IDENTIFIER = 0x01;
+    private static final byte COORDINATES_IDENTIFIER = 0x07;
     private static final byte NAME_IDENTIFIER = 0x02;
 
     private CoordinatesProperty coordinates;
@@ -39,14 +41,14 @@ public class NaviDestination extends CommandWithProperties {
     /**
      * @return The coordinates.
      */
-    public CoordinatesProperty getCoordinates() {
+    @Nullable public CoordinatesProperty getCoordinates() {
         return coordinates;
     }
 
     /**
      * @return The name.
      */
-    public String getName() {
+    @Nullable public String getName() {
         return name;
     }
 

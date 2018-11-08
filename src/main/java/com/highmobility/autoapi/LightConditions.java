@@ -23,6 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * This command is sent when a Get Light Conditions is received by the car.
  */
@@ -36,30 +38,31 @@ public class LightConditions extends CommandWithProperties {
     /**
      * @return The measured outside illuminance in lux.
      */
-    public Float getOutsideLight() {
+    @Nullable public Float getOutsideLight() {
         return outsideLight;
     }
 
     /**
      * @return The measured inside illuminance in lux.
      */
-    public Float getInsideLight() {
+    @Nullable public Float getInsideLight() {
         return insideLight;
     }
 
     public LightConditions(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case OUTSIDE_LIGHT_IDENTIFIER:
-                    outsideLight = Property.getFloat(property.getValueBytes());
-                    break;
-                case INSIDE_LIGHT_IDENTIFIER:
-                    insideLight = Property.getFloat(property.getValueBytes());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
+                switch (property.getPropertyIdentifier()) {
+                    case OUTSIDE_LIGHT_IDENTIFIER:
+                        outsideLight = Property.getFloat(property.getValueBytes());
+                        break;
+                    case INSIDE_LIGHT_IDENTIFIER:
+                        insideLight = Property.getFloat(property.getValueBytes());
+                        break;
+                }
+            });
         }
     }
 

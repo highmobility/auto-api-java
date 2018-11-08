@@ -23,24 +23,27 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.ByteUtils;
+
 import java.io.UnsupportedEncodingException;
 
 public class StringProperty extends Property {
     public static final String CHARSET = "UTF-8";
 
     public StringProperty(byte identifier, String value) {
-        super(identifier, value.length());
-        byte[] stringBytes;
-        try {
-            stringBytes = value.getBytes(CHARSET);
-        } catch (UnsupportedEncodingException e) {
-            Command.logger.info(CHARSET + " charset not supported.");
-            throw new ParseException();
+        super(identifier, value != null ? value.length() : 0);
+        if (value != null) {
+            byte[] stringBytes;
+            try {
+                stringBytes = value.getBytes(CHARSET);
+            } catch (UnsupportedEncodingException e) {
+                Command.logger.info(CHARSET + " charset not supported.");
+                throw new ParseException();
+            }
+            ByteUtils.setBytes(bytes, stringBytes, 3);
         }
-        ByteUtils.setBytes(bytes, stringBytes, 3);
     }
 
     public static HMProperty[] getProperties(String value, byte identifier) {
-        return new HMProperty[] { new StringProperty(identifier, value) };
+        return new HMProperty[]{new StringProperty(identifier, value)};
     }
 }

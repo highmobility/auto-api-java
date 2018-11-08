@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ChargeTimer;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.charging.ChargingTimer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +31,16 @@ import java.util.List;
  * all.
  */
 public class SetChargeTimer extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.CHARGING, 0x06);
+    public static final Type TYPE = new Type(Identifier.CHARGING, 0x16);
 
-    ChargeTimer[] timers;
+    public static final byte PROPERTY_IDENTIFIER = 0x0D;
+
+    ChargingTimer[] timers;
 
     /**
      * @return The charge timers.
      */
-    public ChargeTimer[] getChargeTimers() {
+    public ChargingTimer[] getChargingTimers() {
         return timers;
     }
 
@@ -48,25 +50,28 @@ public class SetChargeTimer extends CommandWithProperties {
      * @param type The charge timer type.
      * @return The charge timer.
      */
-    public ChargeTimer getChargeTimer(ChargeTimer.Type type) {
+    public ChargingTimer getChargingTimer(ChargingTimer.Type type) {
         if (timers == null) return null;
         for (int i = 0; i < timers.length; i++) {
-            ChargeTimer timer = timers[i];
+            ChargingTimer timer = timers[i];
             if (timer.getType() == type) return timer;
         }
         return null;
     }
 
-    public SetChargeTimer(ChargeTimer[] chargeTimers) {
-        super(TYPE, validateTariffs(chargeTimers));
-        this.timers = chargeTimers;
+    public SetChargeTimer(ChargingTimer[] timers) {
+        super(TYPE, validateTimers(timers));
+        this.timers = timers;
     }
 
-    static ChargeTimer[] validateTariffs(ChargeTimer[] timers) throws IllegalArgumentException {
-        ArrayList<ChargeTimer.Type> types = new ArrayList<>(3);
-        for (ChargeTimer timer : timers) {
+    static ChargingTimer[] validateTimers(ChargingTimer[] timers) throws IllegalArgumentException {
+        if (timers.length == 0) throw new IllegalArgumentException();
+        
+        ArrayList<ChargingTimer.Type> types = new ArrayList<>(3);
+        for (ChargingTimer timer : timers) {
             if (types.contains(timer.getType()) == false) types.add(timer.getType());
             else throw new IllegalArgumentException("Duplicate timer types are not allowed");
+            timer.setIdentifier(PROPERTY_IDENTIFIER);
         }
 
         return timers;
@@ -74,15 +79,15 @@ public class SetChargeTimer extends CommandWithProperties {
 
     SetChargeTimer(byte[] bytes) throws CommandParseException {
         super(bytes);
-        List<ChargeTimer> builder = new ArrayList<>();
+        List<ChargingTimer> builder = new ArrayList<>();
 
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             if (property.getPropertyIdentifier() == 0x0D) {
-                builder.add(new ChargeTimer(property.getPropertyBytes()));
+                builder.add(new ChargingTimer(property.getPropertyBytes()));
             }
         }
 
-        timers = builder.toArray(new ChargeTimer[builder.size()]);
+        timers = builder.toArray(new ChargingTimer[0]);
     }
 }

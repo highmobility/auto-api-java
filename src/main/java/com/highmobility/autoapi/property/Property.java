@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -38,12 +39,10 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 /**
  * Property is a representation of some AutoAPI data. Specific data have specific subclasses like
  * StringProperty and FloatProperty.
- *
+ * <p>
  * Property has to have a value with a size greater or equal to 1.
  */
-public class Property implements HMProperty {
-    protected byte[] bytes;
-
+public class Property extends Bytes implements HMProperty {
     protected Property(byte identifier, int valueSize) {
         this.bytes = baseBytes(identifier, valueSize);
     }
@@ -51,25 +50,31 @@ public class Property implements HMProperty {
     /**
      * @param identifier The identifier byte of the property.
      * @param value      The value of the property.
-     * @throws IllegalArgumentException When the value is not set.
      */
-    public Property(byte identifier, byte[] value) {
-        this(identifier, value != null ? value.length : 0);
-        ByteUtils.setBytes(bytes, value, 3);
+    public Property(byte identifier, byte value) {
+        this(identifier, 1);
+        bytes[3] = value;
     }
 
     /**
      * @param identifier The identifier byte of the property.
      * @param value      The value of the property.
-     * @throws IllegalArgumentException When the value is not set.
+     */
+    public Property(byte identifier, byte[] value) {
+        this(identifier, value != null ? value.length : 0);
+        if (value != null) ByteUtils.setBytes(bytes, value, 3);
+    }
+
+    /**
+     * @param identifier The identifier byte of the property.
+     * @param value      The value of the property.
      */
     public Property(byte identifier, Bytes value) {
-        this(identifier, value != null ? value.getLength() : 0);
-        ByteUtils.setBytes(bytes, value.getByteArray(), 3);
+        this(identifier, value.getByteArray());
     }
 
     public Property(byte[] bytes) {
-        if (bytes.length < 3) throw new IllegalArgumentException();
+        if (bytes == null || bytes.length < 3) throw new IllegalArgumentException();
         this.bytes = bytes;
     }
 
@@ -95,10 +100,21 @@ public class Property implements HMProperty {
 
     /**
      * Set a new identifier for the property
-     * @param identifier The identifier
+     *
+     * @param identifier The identifier.
      */
     public void setIdentifier(byte identifier) {
         bytes[0] = identifier;
+    }
+
+    public void printFailedToParse() {
+        printFailedToParse(null);
+    }
+
+    public void printFailedToParse(Exception e) {
+        Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
+                .getClass().getSimpleName() + ": " + e
+                .getMessage()) : ""));
     }
 
     protected byte[] baseBytes(byte identifier, int valueSize) {
@@ -139,7 +155,8 @@ public class Property implements HMProperty {
 
     // helper methods
 
-    public static byte[] getPropertyBytes(byte identifier, byte value) throws IllegalArgumentException {
+    public static byte[] getPropertyBytes(byte identifier, byte value) throws
+            IllegalArgumentException {
         byte[] bytes = new byte[4];
         bytes[0] = identifier;
         byte[] lengthBytes = intToBytes(1, 2);
@@ -149,7 +166,8 @@ public class Property implements HMProperty {
         return bytes;
     }
 
-    public static byte[] getPropertyBytes(byte identifier, int length, byte[] value) throws IllegalArgumentException {
+    public static byte[] getPropertyBytes(byte identifier, int length, byte[] value) throws
+            IllegalArgumentException {
         byte[] bytes = new byte[3];
         bytes[0] = identifier;
         byte[] lengthBytes = intToBytes(length, 2);
@@ -159,7 +177,8 @@ public class Property implements HMProperty {
         return bytes;
     }
 
-    public static byte[] getIntProperty(byte identifier, int value, int length) throws IllegalArgumentException {
+    public static byte[] getIntProperty(byte identifier, int value, int length) throws
+            IllegalArgumentException {
         byte[] bytes = new byte[]{
                 identifier,
                 0x00,
@@ -170,14 +189,20 @@ public class Property implements HMProperty {
         return ByteUtils.concatBytes(bytes, valueBytes);
     }
 
-    public static long getLong(byte[] b) throws IllegalArgumentException {
-        if (b.length < 8) throw new IllegalArgumentException();
+    public static long getLong(byte[] b, int at) throws IllegalArgumentException {
+        if (b.length - at < 8) throw new IllegalArgumentException();
+
         long result = 0;
-        for (int i = 0; i < 8; i++) {
+        for (int i = at; i < at + 8; i++) {
             result <<= 8;
             result |= (b[i] & 0xFF);
         }
+
         return result;
+    }
+
+    public static long getLong(byte[] b) throws IllegalArgumentException {
+        return getLong(b, 0);
     }
 
     public static byte[] longToBytes(long l) {
@@ -191,7 +216,7 @@ public class Property implements HMProperty {
 
     public static float getFloat(byte[] bytes) throws IllegalArgumentException {
         if (bytes.length < 4) throw new IllegalArgumentException();
-        return ByteBuffer.wrap(bytes).getFloat();
+        return Float.intBitsToFloat(getUnsignedInt(bytes, 0, 4));
     }
 
     public static float getFloat(byte[] bytes, int at) throws IllegalArgumentException {
@@ -203,8 +228,28 @@ public class Property implements HMProperty {
         return ByteBuffer.allocate(4).putFloat(value).array();
     }
 
+    public static double getDouble(byte[] bytes) throws IllegalArgumentException {
+        if (bytes.length < 8) throw new IllegalArgumentException();
+        return Double.longBitsToDouble(getLong(bytes));
+    }
+
+    public static double getDouble(byte[] bytes, int at) throws IllegalArgumentException {
+        return Double.longBitsToDouble(getLong(bytes, at));
+    }
+
+    public static byte[] doubleToBytes(double value) {
+        long bits = Double.doubleToLongBits(value);
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(bits);
+        return buffer.array();
+    }
+
     public static int floatToIntPercentage(float value) {
         return Math.round(value * 100f);
+    }
+
+    public static byte floatToIntPercentageByte(float value) {
+        return (byte) Math.round(value * 100f);
     }
 
     public static float getPercentage(byte value) {
@@ -254,6 +299,8 @@ public class Property implements HMProperty {
     }
 
     /**
+     * This works for both negative and positive ints.
+     *
      * @param value  the valueBytes converted to byte[]
      * @param length the returned byte[] length
      * @return the allBytes representing the valueBytes
@@ -279,7 +326,7 @@ public class Property implements HMProperty {
     }
 
     public static boolean getBool(byte value) {
-        return value == 0x00 ? false : true;
+        return value != 0x00;
     }
 
     public static byte boolToByte(boolean value) {
@@ -360,7 +407,7 @@ public class Property implements HMProperty {
         return c;
     }
 
-    public static byte[] calendarToBytes(Calendar calendar) throws IllegalArgumentException {
+    public static byte[] calendarToBytes(Calendar calendar) {
         byte[] bytes = new byte[8];
 
         bytes[0] = (byte) (calendar.get(Calendar.YEAR) - 2000);

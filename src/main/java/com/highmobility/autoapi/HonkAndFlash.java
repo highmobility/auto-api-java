@@ -26,15 +26,17 @@ import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nullable;
+
 /**
  * Honk the horn and/or flash the blinker lights. This can be done simultaneously or just one action
  * at the time. It is also possible to pass in how many times the lights should be flashed and how
  * many seconds the horn should be honked.
  */
 public class HonkAndFlash extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x02);
-    private static final int SECONDS_IDENTIFER = 0x01;
-    private static final int COUNT_IDENTIFER = 0x02;
+    public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x12);
+    private static final int SECONDS_IDENTIFIER = 0x01;
+    private static final int COUNT_IDENTIFIER = 0x02;
 
     private Integer lightFlashCount;
     private Integer seconds;
@@ -42,23 +44,22 @@ public class HonkAndFlash extends CommandWithProperties {
     /**
      * @return How many seconds the horn should be honked.
      */
-    public Integer getSeconds() {
+    @Nullable public Integer getSeconds() {
         return seconds;
     }
 
     /**
      * @return How many times the lights should be flashed.
      */
-    public Integer getLightFlashCount() {
+    @Nullable public Integer getLightFlashCount() {
         return lightFlashCount;
     }
 
     /**
      * @param seconds         How many seconds the horn should be honked.
      * @param lightFlashCount How many times the lights should be flashed.
-     * @throws IllegalArgumentException If both arguments are null
      */
-    public HonkAndFlash(Integer seconds, Integer lightFlashCount) {
+    public HonkAndFlash(@Nullable Integer seconds, @Nullable Integer lightFlashCount) {
         super(TYPE, getProperties(seconds, lightFlashCount));
         this.seconds = seconds;
         this.lightFlashCount = lightFlashCount;
@@ -68,26 +69,26 @@ public class HonkAndFlash extends CommandWithProperties {
         ArrayList<Property> properties = new ArrayList<>();
 
         if (seconds != null) {
-            IntegerProperty prop = new IntegerProperty((byte) SECONDS_IDENTIFER, seconds, 1);
+            IntegerProperty prop = new IntegerProperty((byte) SECONDS_IDENTIFIER, seconds, 1);
             properties.add(prop);
         }
 
         if (lightFlashCount != null) {
-            IntegerProperty prop = new IntegerProperty((byte) COUNT_IDENTIFER, lightFlashCount, 1);
+            IntegerProperty prop = new IntegerProperty((byte) COUNT_IDENTIFIER, lightFlashCount, 1);
             properties.add(prop);
         }
 
-        return properties.toArray(new Property[properties.size()]);
+        return properties.toArray(new Property[0]);
     }
 
     HonkAndFlash(byte[] bytes) {
         super(bytes);
         for (Property property : properties) {
             switch (property.getPropertyIdentifier()) {
-                case SECONDS_IDENTIFER:
+                case SECONDS_IDENTIFIER:
                     seconds = Property.getUnsignedInt(property.getValueByte());
                     break;
-                case COUNT_IDENTIFER:
+                case COUNT_IDENTIFIER:
                     lightFlashCount = Property.getUnsignedInt(property.getValueByte());
                     break;
             }

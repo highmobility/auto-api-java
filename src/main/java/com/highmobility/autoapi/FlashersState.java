@@ -23,6 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent when a Get Flashers State command is received by the car.
  */
@@ -34,21 +36,15 @@ public class FlashersState extends CommandWithProperties {
     /**
      * @return The flashers state.
      */
-    public State getState() {
+    @Nullable public State getState() {
         return state;
     }
 
     FlashersState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case STATE_IDENTIFIER:
-                    state = State.fromByte(property.getValueByte());
-                    break;
-            }
-        }
+        Property p = getProperty((byte) 0x01);
+        if (p != null) state = State.fromByte(p.getValueByte());
     }
 
     @Override public boolean isState() {

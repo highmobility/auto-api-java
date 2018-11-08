@@ -70,7 +70,7 @@ public class VehicleTimeTest {
 
     @Test public void build() throws ParseException {
         VehicleTime.Builder builder = new VehicleTime.Builder();
-        Calendar c = TestUtils.getCalendar("2017-01-10T14:32:51", 120);
+        Calendar c = TestUtils.getUTCCalendar("2017-01-10T14:32:51", 120);
         builder.setVehicleTime(c);
         byte[] bytes = builder.build().getByteArray();
         assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("00500101000811010A1020330078")));

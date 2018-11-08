@@ -23,15 +23,15 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 
 /**
- * The possible charge weekdayStates
+ * The possible charging states.
  */
-public enum ChargingState implements HMProperty {
-    DISCONNECTED((byte) 0x00),
-    PLUGGED_IN((byte) 0x01),
-    CHARGING((byte) 0x02),
-    CHARGING_COMPLETE((byte) 0x03);
-
-    public static final byte IDENTIFIER = 0x01;
+public enum ChargingState {
+    NOT_CHARGING((byte) 0x00),
+    CHARGING((byte) 0x01),
+    CHARGING_COMPLETE((byte) 0x02),
+    INITIALISING((byte) 0x03),
+    CHARGING_PAUSED((byte) 0x04),
+    CHARGING_ERROR((byte) 0x05);
 
     public static ChargingState fromByte(byte byteValue) throws CommandParseException {
         ChargingState[] values = ChargingState.values();
@@ -54,17 +54,5 @@ public enum ChargingState implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

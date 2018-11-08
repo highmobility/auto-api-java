@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum NetworkSecurity implements HMProperty {
+public enum NetworkSecurity {
     NONE((byte) 0x00),
     WEP((byte) 0x01),
     WPA_WPA2_PERSONAL((byte) 0x02),
@@ -42,31 +42,12 @@ public enum NetworkSecurity implements HMProperty {
     }
 
     private byte value;
-    private byte identifier = 0x00;
-
 
     public byte getByte() {
         return value;
     }
-
-    public void setIdentifier(byte identifier) {
-        this.identifier = identifier;
-    }
-
+    
     NetworkSecurity(byte value) {
         this.value = value;
     }
-
-    @Override public byte getPropertyIdentifier() {
-        return identifier;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
-    }
-
 }

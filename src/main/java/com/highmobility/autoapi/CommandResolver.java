@@ -64,6 +64,12 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, VehicleStatus.TYPE)) {
                     command = new VehicleStatus(bytes);
                 }
+            } else if (bytesAreForIdentifier(bytes, Identifier.HISTORICAL)) {
+                if (bytesAreForType(bytes, GetHistoricalStates.TYPE)) {
+                    command = new GetHistoricalStates(bytes);
+                } else if (bytesAreForType(bytes, HistoricalStates.TYPE)) {
+                    command = new HistoricalStates(bytes);
+                }
             } else if (bytesAreForIdentifier(bytes, Identifier.DOOR_LOCKS)) {
                 if (bytesAreForType(bytes, GetLockState.TYPE)) {
                     command = new GetLockState(bytes);
@@ -93,8 +99,8 @@ public class CommandResolver {
                     command = new TrunkState(bytes);
                 } else if (bytesAreForType(bytes, GetTrunkState.TYPE)) {
                     command = new GetTrunkState(bytes);
-                } else if (bytesAreForType(bytes, OpenCloseTrunk.TYPE)) {
-                    command = new OpenCloseTrunk(bytes);
+                } else if (bytesAreForType(bytes, ControlTrunk.TYPE)) {
+                    command = new ControlTrunk(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.CHARGING)) {
                 if (bytesAreForType(bytes, GetChargeState.TYPE)) {
@@ -105,10 +111,14 @@ public class CommandResolver {
                     command = new StartStopCharging(bytes);
                 } else if (bytesAreForType(bytes, SetChargeLimit.TYPE)) {
                     command = new SetChargeLimit(bytes);
+                } else if (bytesAreForType(bytes, OpenCloseChargePort.TYPE)) {
+                    command = new OpenCloseChargePort(bytes);
                 } else if (bytesAreForType(bytes, SetChargeMode.TYPE)) {
                     command = new SetChargeMode(bytes);
                 } else if (bytesAreForType(bytes, SetChargeTimer.TYPE)) {
                     command = new SetChargeTimer(bytes);
+                } else if (bytesAreForType(bytes, SetReductionOfChargingCurrentTimes.TYPE)) {
+                    command = new SetReductionOfChargingCurrentTimes(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.CLIMATE)) {
                 if (bytesAreForType(bytes, GetClimateState.TYPE)) {
@@ -123,8 +133,10 @@ public class CommandResolver {
                     command = new StartStopDefrosting(bytes);
                 } else if (bytesAreForType(bytes, StartStopDefogging.TYPE)) {
                     command = new StartStopDefogging(bytes);
-                } else if (bytesAreForType(bytes, SetClimateProfile.TYPE)) {
-                    command = new SetClimateProfile(bytes);
+                } else if (bytesAreForType(bytes, SetHvacStartingTimes.TYPE)) {
+                    command = new SetHvacStartingTimes(bytes);
+                } else if (bytesAreForType(bytes, SetTemperatureSettings.TYPE)) {
+                    command = new SetTemperatureSettings(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.ROOFTOP)) {
                 if (bytesAreForType(bytes, GetRooftopState.TYPE)) {
@@ -153,8 +165,6 @@ public class CommandResolver {
                     command = new GetControlMode(bytes);
                 } else if (bytesAreForType(bytes, StartControlMode.TYPE)) {
                     command = new StartControlMode(bytes);
-                } else if (bytesAreForType(bytes, StopControlMode.TYPE)) {
-                    command = new StopControlMode(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.VALET_MODE)) {
                 if (bytesAreForType(bytes, ValetMode.TYPE)) {
@@ -199,8 +209,8 @@ public class CommandResolver {
                     command = new IgnitionState(bytes);
                 } else if (bytesAreForType(bytes, GetIgnitionState.TYPE)) {
                     command = new GetIgnitionState(bytes);
-                } else if (bytesAreForType(bytes, TurnEngineOnOff.TYPE)) {
-                    command = new TurnEngineOnOff(bytes);
+                } else if (bytesAreForType(bytes, TurnIgnitionOnOff.TYPE)) {
+                    command = new TurnIgnitionOnOff(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.LIGHTS)) {
                 if (bytesAreForType(bytes, LightsState.TYPE)) {
@@ -229,8 +239,8 @@ public class CommandResolver {
                     command = new GetWindowsState(bytes);
                 } else if (bytesAreForType(bytes, WindowsState.TYPE)) {
                     command = new WindowsState(bytes);
-                } else if (bytesAreForType(bytes, OpenCloseWindows.TYPE)) {
-                    command = new OpenCloseWindows(bytes);
+                } else if (bytesAreForType(bytes, ControlWindows.TYPE)) {
+                    command = new ControlWindows(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.WINDSCREEN)) {
                 if (bytesAreForType(bytes, GetWindscreenState.TYPE)) {
@@ -239,14 +249,18 @@ public class CommandResolver {
                     command = new WindscreenState(bytes);
                 } else if (bytesAreForType(bytes, SetWindscreenDamage.TYPE)) {
                     command = new SetWindscreenDamage(bytes);
+                } else if (bytesAreForType(bytes, SetWindscreenReplacementNeeded.TYPE)) {
+                    command = new SetWindscreenReplacementNeeded(bytes);
+                } else if (bytesAreForType(bytes, ControlWipers.TYPE)) {
+                    command = new ControlWipers(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.FUELING)) {
                 if (bytesAreForType(bytes, GetGasFlapState.TYPE)) {
                     command = new GetGasFlapState(bytes);
                 } else if (bytesAreForType(bytes, GasFlapState.TYPE)) {
                     command = new GasFlapState(bytes);
-                } else if (bytesAreForType(bytes, OpenGasFlap.TYPE)) {
-                    command = new OpenGasFlap(bytes);
+                } else if (bytesAreForType(bytes, OpenCloseGasFlap.TYPE)) {
+                    command = new OpenCloseGasFlap(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.PARKING_TICKET)) {
                 if (bytesAreForType(bytes, GetParkingTicket.TYPE)) {
@@ -259,8 +273,8 @@ public class CommandResolver {
                     command = new EndParking(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.KEYFOB_POSITION)) {
-                if (bytesAreForType(bytes, KeyfobPosition.TYPE)) {
-                    command = new KeyfobPosition(bytes);
+                if (bytesAreForType(bytes, KeyFobPosition.TYPE)) {
+                    command = new KeyFobPosition(bytes);
                 } else if (bytesAreForType(bytes, GetKeyfobPosition.TYPE)) {
                     command = new GetKeyfobPosition(bytes);
                 }
@@ -307,8 +321,8 @@ public class CommandResolver {
                     command = new ParkingBrakeState(bytes);
                 } else if (bytesAreForType(bytes, GetParkingBrakeState.TYPE)) {
                     command = new GetParkingBrakeState(bytes);
-                } else if (bytesAreForType(bytes, ActivateInactivateParkingBrake.TYPE)) {
-                    command = new ActivateInactivateParkingBrake(bytes);
+                } else if (bytesAreForType(bytes, SetParkingBrake.TYPE)) {
+                    command = new SetParkingBrake(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.LIGHT_CONDITIONS)) {
                 if (bytesAreForType(bytes, LightConditions.TYPE)) {
@@ -347,6 +361,8 @@ public class CommandResolver {
                     command = new SetChargeCurrent(bytes);
                 } else if (bytesAreForType(bytes, SetPriceTariffs.TYPE)) {
                     command = new SetPriceTariffs(bytes);
+                } else if (bytesAreForType(bytes, AuthenticateHomeCharger.TYPE)) {
+                    command = new AuthenticateHomeCharger(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.DASHBOARD_LIGHTS)) {
                 if (bytesAreForType(bytes, DashboardLights.TYPE)) {
@@ -396,6 +412,18 @@ public class CommandResolver {
                 command = new DisplayImage(bytes);
             } else if (bytesAreForType(bytes, TextInput.TYPE)) {
                 command = new TextInput(bytes);
+            } else if (bytesAreForIdentifier(bytes, Identifier.USAGE)) {
+                if (bytesAreForType(bytes, GetUsage.TYPE)) {
+                    command = new GetUsage(bytes);
+                } else if (bytesAreForType(bytes, Usage.TYPE)) {
+                    command = new Usage(bytes);
+                }
+            } else if (bytesAreForIdentifier(bytes, Identifier.MOBILE)) {
+                if (bytesAreForType(bytes, GetMobileState.TYPE)) {
+                    command = new GetMobileState(bytes);
+                } else if (bytesAreForType(bytes, MobileState.TYPE)) {
+                    command = new MobileState(bytes);
+                }
             } else {
                 Command.logger.info("Unknown command " + ByteUtils.hexFromBytes(ByteUtils
                         .trimmedBytes(bytes, 3)) + ".. ");
@@ -406,8 +434,10 @@ public class CommandResolver {
             // return the base class.
             Command.logger.info("Failed to parse command " + ByteUtils.hexFromBytes(ByteUtils
                     .trimmedBytes(bytes, 3)) + ".. " + e.toString());
-            command = new Command(bytes);
         }
+
+        // The identifier was unknown. Return the base class.
+        if (command == null) command = new Command(bytes);
 
         return command;
     }

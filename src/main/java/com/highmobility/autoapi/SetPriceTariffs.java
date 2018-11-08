@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.homecharger.PriceTariff;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.homecharger.PriceTariff;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,8 @@ import java.util.List;
  * Set the price tariffs of the home charger.
  */
 public class SetPriceTariffs extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x03);
+    public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x13);
+    private static final byte IDENTIFIER_TARIFF = 0x0C;
 
     private PriceTariff[] priceTariffs;
 
@@ -65,6 +66,7 @@ public class SetPriceTariffs extends CommandWithProperties {
     static PriceTariff[] validateTariffs(PriceTariff[] tariffs) throws IllegalArgumentException {
         ArrayList<PriceTariff.PricingType> types = new ArrayList<>(3);
         for (PriceTariff tariff : tariffs) {
+            tariff.setIdentifier(IDENTIFIER_TARIFF);
             if (types.contains(tariff.getPricingType()) == false)
                 types.add(tariff.getPricingType());
             else throw new IllegalArgumentException("Duplicate pricing type of the pricing tariff");
@@ -78,11 +80,15 @@ public class SetPriceTariffs extends CommandWithProperties {
         List<PriceTariff> builder = new ArrayList<>();
 
         for (Property property : properties) {
-            if (property.getPropertyIdentifier() == PriceTariff.IDENTIFIER) {
+            if (property.getPropertyIdentifier() == IDENTIFIER_TARIFF) {
                 builder.add(new PriceTariff(property.getPropertyBytes()));
             }
         }
 
-        priceTariffs = builder.toArray(new PriceTariff[builder.size()]);
+        priceTariffs = builder.toArray(new PriceTariff[0]);
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return false;
     }
 }

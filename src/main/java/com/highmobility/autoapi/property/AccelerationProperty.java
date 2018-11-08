@@ -33,7 +33,7 @@ public class AccelerationProperty extends Property {
         FRONT_LATERAL((byte)0x02),
         REAR_LATERAL((byte)0x03);
 
-        public static AccelerationType fromByte(byte byteValue) throws CommandParseException {
+        static AccelerationType fromByte(byte byteValue) throws CommandParseException {
             AccelerationType[] values = AccelerationType.values();
 
             for (int i = 0; i < values.length; i++) {

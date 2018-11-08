@@ -20,14 +20,17 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.Property;
+
 /**
  * Set the charge limit, to which point the car will charge itself. The result is sent through the
  * evented Charge State command.
  */
-public class SetChargeLimit extends Command {
-    public static final Type TYPE = new Type(Identifier.CHARGING, 0x03);
-
-    float percentage;
+public class SetChargeLimit extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.CHARGING, 0x13);
+    private static final byte PROPERTY_IDENTIFIER = 0x01;
+    Float percentage;
 
     /**
      * @return The charge limit percentage.
@@ -42,12 +45,20 @@ public class SetChargeLimit extends Command {
      * @param percentage The charge limit percentage.
      */
     public SetChargeLimit(float percentage) throws IllegalArgumentException {
-        super(Identifier.CHARGING.getBytesWithType(TYPE, (byte) (percentage * 100)));
+        super(TYPE.addProperty(new PercentageProperty(PROPERTY_IDENTIFIER, percentage)));
         this.percentage = percentage;
     }
 
     SetChargeLimit(byte[] bytes) {
         super(bytes);
-        this.percentage = Property.getUnsignedInt(bytes[3]) / 100f;
+
+        for (int i = 0; i < getProperties().length; i++) {
+            Property property = getProperties()[i];
+            switch (property.getPropertyIdentifier()) {
+                case PROPERTY_IDENTIFIER:
+                    percentage = Property.getPercentage(property.getValueByte());
+                    break;
+            }
+        }
     }
 }

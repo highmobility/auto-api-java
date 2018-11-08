@@ -28,13 +28,15 @@ import com.highmobility.autoapi.property.StringProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Set the navigation destination. This will be forwarded to the navigation system of the car.
  */
 public class SetNaviDestination extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x02);
 
-    private static final byte COORDINATES_IDENTIFIER = 0x01;
+    private static final byte COORDINATES_IDENTIFIER = 0x07;
     private static final byte NAME_IDENTIFIER = 0x02;
 
     private CoordinatesProperty coordinates;
@@ -50,16 +52,15 @@ public class SetNaviDestination extends CommandWithProperties {
     /**
      * @return The destination name.
      */
-    public String getName() {
+    @Nullable public String getName() {
         return name;
     }
 
     /**
      * @param coordinates The destination coordinates.
      * @param name        The destination name.
-     * @throws IllegalArgumentException if all arguments are null
      */
-    public SetNaviDestination(CoordinatesProperty coordinates, String name) {
+    public SetNaviDestination(CoordinatesProperty coordinates, @Nullable String name) {
         super(TYPE, getProperties(coordinates, name));
         this.coordinates = coordinates;
         this.name = name;
@@ -68,17 +69,17 @@ public class SetNaviDestination extends CommandWithProperties {
     static HMProperty[] getProperties(CoordinatesProperty coordinates, String name) {
         List<Property> properties = new ArrayList<>();
 
-        if (coordinates != null) {
-            coordinates.setIdentifier(COORDINATES_IDENTIFIER);
-            properties.add(coordinates);
-        }
+        if (coordinates == null) throw new IllegalArgumentException();
+
+        coordinates.setIdentifier(COORDINATES_IDENTIFIER);
+        properties.add(coordinates);
 
         if (name != null) {
             Property prop = new StringProperty(NAME_IDENTIFIER, name);
             properties.add(prop);
         }
 
-        return properties.toArray(new Property[properties.size()]);
+        return properties.toArray(new Property[0]);
     }
 
     SetNaviDestination(byte[] bytes) {

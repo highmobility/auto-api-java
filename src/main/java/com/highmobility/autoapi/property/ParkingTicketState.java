@@ -22,11 +22,9 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum ParkingTicketState implements HMProperty {
+public enum ParkingTicketState {
     ENDED((byte)0x00),
     STARTED((byte)0x01);
-
-    public static final byte IDENTIFIER = 0x01;
 
     public static ParkingTicketState fromByte(byte byteValue) throws CommandParseException {
         ParkingTicketState[] values = ParkingTicketState.values();
@@ -49,17 +47,5 @@ public enum ParkingTicketState implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

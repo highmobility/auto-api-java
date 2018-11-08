@@ -20,12 +20,25 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.Property;
+
 /**
- * Heart rate can be sent to the car from a health accessory of a smartwatch. This is only possible
+ * Heart rate can be sent to the car from a health accessory of a smart watch. This is only possible
  * to send through a direct Bluetooth link for privacy reasons.
  */
-public class SendHeartRate extends Command {
-    public static final Type TYPE = new Type(Identifier.HEART_RATE, 0x02);
+public class SendHeartRate extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.HEART_RATE, 0x12);
+    private static final byte IDENTIFIER = 0x01;
+
+    int heartRate;
+
+    /**
+     * @return The heart rate.
+     */
+    public int getHeartRate() {
+        return heartRate;
+    }
 
     /**
      * Send the driver heart rate to the car.
@@ -33,10 +46,14 @@ public class SendHeartRate extends Command {
      * @param heartRate The heart rate.
      */
     public SendHeartRate(int heartRate) {
-        super(TYPE.addByte((byte) heartRate));
+        super(TYPE.addProperty(new IntegerProperty(IDENTIFIER, heartRate, 1)));
+        this.heartRate = heartRate;
     }
 
-    public SendHeartRate(byte[] bytes) {
+    public SendHeartRate(byte[] bytes) throws CommandParseException {
         super(bytes);
+        Property prop = getProperty(IDENTIFIER);
+        if (prop == null) throw new CommandParseException();
+        this.heartRate = Property.getUnsignedInt(prop.getValueByte());
     }
 }

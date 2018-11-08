@@ -23,12 +23,17 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Used for commands with properties. Can have 0 properties.
@@ -43,26 +48,65 @@ public class CommandWithProperties extends Command {
     Bytes nonce;
     Bytes signature;
     Calendar timestamp;
+    PropertyTimestamp[] propertyTimestamps;
 
     /**
      * @return The nonce for the signature.
      */
-    public Bytes getNonce() {
+    @Nullable public Bytes getNonce() {
         return nonce;
     }
 
     /**
      * @return The signature for the signed bytes(the whole command except the signature property).
      */
-    public Bytes getSignature() {
+    @Nullable public Bytes getSignature() {
         return signature;
     }
 
     /**
      * @return Timestamp of when the data was transmitted from the car.
      */
-    public Calendar getTimestamp() {
+    @Nullable public Calendar getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * @return Timestamps for specific properties of when they were recorded by the car.
+     */
+    public PropertyTimestamp[] getPropertyTimestamps() {
+        return propertyTimestamps;
+    }
+
+    /**
+     * @param identifier The property identifier the timestamps are returned for.
+     * @return An array of timestamps for a property identifier.
+     */
+    public PropertyTimestamp[] getPropertyTimestamps(byte identifier) {
+        ArrayList<PropertyTimestamp> builder = new ArrayList<>();
+
+        for (PropertyTimestamp propertyTimestamp : propertyTimestamps) {
+            if (propertyTimestamp.getTimestampPropertyIdentifier() == identifier) {
+                builder.add(propertyTimestamp);
+            }
+        }
+
+        return builder.toArray(new PropertyTimestamp[0]);
+    }
+
+    /**
+     * @param property The property
+     * @return The property timestamp for a property.
+     */
+    @Nullable public PropertyTimestamp getPropertyTimestamp(Property property) {
+        for (PropertyTimestamp propertyTimestamp : propertyTimestamps) {
+            if (propertyTimestamp.getAdditionalData() != null &&
+                    propertyTimestamp.getAdditionalData().equals(property)) {
+                return propertyTimestamp;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -76,6 +120,8 @@ public class CommandWithProperties extends Command {
      * States are commands that describe some properties of the vehicle. They are usually returned
      * after the state changes, as a response for a get command or as a state in {@link
      * VehicleStatus#getStates()}.
+     * <p>
+     * States can have 0 or more properties.
      *
      * @return True if command is a state.
      */
@@ -109,6 +155,8 @@ public class CommandWithProperties extends Command {
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
         ArrayList<Property> builder = new ArrayList<>();
+        ArrayList<PropertyTimestamp> propertyTimestamps = new ArrayList<>();
+
         PropertyEnumeration enumeration = new PropertyEnumeration(bytes);
 
         while (enumeration.hasMoreElements()) {
@@ -129,18 +177,27 @@ public class CommandWithProperties extends Command {
                         propertyEnumeration.valueStart + propertyEnumeration.size));
             } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
                 timestamp = Property.getCalendar(bytes, propertyEnumeration.valueStart);
+            } else if (property.getPropertyIdentifier() == PropertyTimestamp.IDENTIFIER) {
+                try {
+                    propertyTimestamps.add(new PropertyTimestamp(property.getPropertyBytes()));
+                } catch (CommandParseException e) {
+                    Command.logger.error("invalid property timestamp " + property);
+                }
             }
         }
 
-        properties = builder.toArray(new Property[builder.size()]);
+        properties = builder.toArray(new Property[0]);
+        propertiesIterator = new PropertiesIterator();
+        this.propertyTimestamps = propertyTimestamps.toArray(new PropertyTimestamp[0]);
     }
 
-    CommandWithProperties(Type type, HMProperty[] properties) throws IllegalArgumentException {
+    CommandWithProperties(Type type, HMProperty[] properties) {
         super(type);
         if (propertiesExpected() && (properties == null || properties.length == 0))
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
         bytes = type.getIdentifierAndType();
+        ArrayList<PropertyTimestamp> builder = new ArrayList<>();
 
         for (int i = 0; i < properties.length; i++) {
             HMProperty property = properties[i];
@@ -153,8 +210,16 @@ public class CommandWithProperties extends Command {
                 signature = new Bytes(Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length));
             } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
                 timestamp = Property.getCalendar(propertyBytes, 3);
+            } else if (property instanceof PropertyTimestamp) {
+                builder.add((PropertyTimestamp) property);
             }
         }
+
+        this.propertyTimestamps = builder.toArray(new PropertyTimestamp[0]);
+    }
+
+    CommandWithProperties(Type type, List<HMProperty> properties) {
+        this(type, properties.toArray(new HMProperty[0]));
     }
 
     CommandWithProperties(Builder builder) throws IllegalArgumentException {
@@ -181,6 +246,8 @@ public class CommandWithProperties extends Command {
         private Bytes signature;
 
         private Calendar timestamp;
+        // TBODO:
+        private ArrayList<PropertyTimestamp> propertyTimestamps = new ArrayList<>();
 
         protected ArrayList<HMProperty> propertiesBuilder = new ArrayList<>();
 
@@ -229,7 +296,48 @@ public class CommandWithProperties extends Command {
         }
 
         protected HMProperty[] getProperties() {
-            return propertiesBuilder.toArray(new HMProperty[propertiesBuilder.size()]);
+            return propertiesBuilder.toArray(new HMProperty[0]);
         }
+    }
+
+    // used to catch the property parsing exception. Only used when parsing incoming bytes.
+    protected PropertiesIterator propertiesIterator;
+
+    protected class PropertiesIterator implements Iterator<Property> {
+        private int currentSize;
+
+        PropertiesIterator() {
+            this.currentSize = CommandWithProperties.this.properties.length;
+        }
+
+        private int currentIndex = 0;
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex < currentSize && properties[currentIndex] != null;
+        }
+
+        @Override
+        public Property next() {
+            return properties[currentIndex++];
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        public void parseNext(PropertyIteration next) {
+            Property nextProperty = next();
+            try {
+                next.iterate(nextProperty);
+            } catch (Exception e) {
+                nextProperty.printFailedToParse(e);
+            }
+        }
+    }
+
+    public interface PropertyIteration {
+        void iterate(Property t) throws Exception;
     }
 }

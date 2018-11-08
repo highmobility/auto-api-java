@@ -27,6 +27,8 @@ import com.highmobility.autoapi.property.StringProperty;
 
 import java.util.Calendar;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent from the car every time the parking ticket state changes. or when a Get Parking
  * Ticket message is received. The state is Ended also when the parking ticket has never been
@@ -39,6 +41,8 @@ public class ParkingTicket extends CommandWithProperties {
     private static final byte OPERATOR_TICKET_ID_IDENTIFIER = 0x03;
     private static final byte TICKET_START_IDENTIFIER = 0x04;
     private static final byte TICKET_END_IDENTIFIER = 0x05;
+    private static final byte IDENTIFIER_STATE = 0x01;
+
 
     ParkingTicketState state;
     String operatorName;
@@ -49,35 +53,35 @@ public class ParkingTicket extends CommandWithProperties {
     /**
      * @return The ticket state.
      */
-    public ParkingTicketState getState() {
+    @Nullable public ParkingTicketState getState() {
         return state;
     }
 
     /**
      * @return The operator name.
      */
-    public String getOperatorName() {
+    @Nullable public String getOperatorName() {
         return operatorName;
     }
 
     /**
      * @return The ticket id.
      */
-    public String getOperatorTicketId() {
+    @Nullable public String getOperatorTicketId() {
         return operatorTicketId;
     }
 
     /**
      * @return Ticket start date.
      */
-    public Calendar getTicketStartDate() {
+    @Nullable public Calendar getTicketStartDate() {
         return ticketStart;
     }
 
     /**
      * @return Ticket end date.
      */
-    public Calendar getTicketEndDate() {
+    @Nullable public Calendar getTicketEndDate() {
         return ticketEnd;
     }
 
@@ -87,7 +91,7 @@ public class ParkingTicket extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
-                case ParkingTicketState.IDENTIFIER:
+                case IDENTIFIER_STATE:
                     state = ParkingTicketState.fromByte(property.getValueByte());
                     break;
                 case OPERATOR_NAME_IDENTIFIER:
@@ -136,7 +140,7 @@ public class ParkingTicket extends CommandWithProperties {
          */
         public Builder setState(ParkingTicketState state) {
             this.state = state;
-            addProperty(state);
+            addProperty(new Property(IDENTIFIER_STATE, state.getByte()));
             return this;
         }
 

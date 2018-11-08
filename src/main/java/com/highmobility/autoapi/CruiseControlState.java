@@ -22,6 +22,8 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 
+import javax.annotation.Nullable;
+
 /**
  * This message is sent when a Get Cruise Control State message is received by the car. The new
  * state is included in the message payload and may be the result of user, device or car triggered
@@ -45,35 +47,35 @@ public class CruiseControlState extends CommandWithProperties {
     /**
      * @return Whether the cruise control is active.
      */
-    public Boolean isActive() {
+    @Nullable public Boolean isActive() {
         return active;
     }
 
     /**
      * @return The limiter.
      */
-    public Limiter getLimiter() {
+    @Nullable public Limiter getLimiter() {
         return limiter;
     }
 
     /**
      * @return The cruise control target speed.
      */
-    public Integer getTargetSpeed() {
+    @Nullable public Integer getTargetSpeed() {
         return targetSpeed;
     }
 
     /**
      * @return Whether the adaptive cruise control is active.
      */
-    public Boolean isAdaptiveActive() {
+    @Nullable public Boolean isAdaptiveActive() {
         return adaptiveActive;
     }
 
     /**
      * @return The adaptive cruise control target speed.
      */
-    public Integer getAdaptiveTargetSpeed() {
+    @Nullable public Integer getAdaptiveTargetSpeed() {
         return adaptiveTargetSpeed;
     }
 

@@ -20,14 +20,15 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
- * Activate or deactivate valet mode. The result is sent through the evented Valet Mode command.
+ * Activate or deactivate valet mode. The result is sent through the Valet Mode message.
  */
-public class ActivateDeactivateValetMode extends Command {
-    public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x02);
-
+public class ActivateDeactivateValetMode extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x12);
+    private static final byte IDENTIFIER = 0x01;
     boolean activate;
 
     /**
@@ -41,14 +42,14 @@ public class ActivateDeactivateValetMode extends Command {
      * @param activate Whether valet mode should be activated.
      */
     public ActivateDeactivateValetMode(boolean activate) {
-        super(TYPE.addByte(Property.boolToByte(activate)));
+        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
         this.activate = activate;
     }
 
     ActivateDeactivateValetMode(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 4) throw new CommandParseException();
-        this.activate = Property.getBool(bytes[3]);
+        Property prop = getProperty(IDENTIFIER);
+        if (prop == null) throw new CommandParseException();
+        this.activate = Property.getBool(prop.getValueByte());
     }
-
 }

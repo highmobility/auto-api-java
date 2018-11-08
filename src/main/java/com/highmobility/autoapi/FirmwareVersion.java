@@ -23,6 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
+import javax.annotation.Nullable;
+
 /**
  * Command sent when a Get Firmware Version is received by the car.
  */
@@ -40,21 +42,21 @@ public class FirmwareVersion extends CommandWithProperties {
     /**
      * @return The car SDK version.
      */
-    public String getCarSDKVersion() {
+    @Nullable public String getCarSDKVersion() {
         return carSDKVersion;
     }
 
     /**
      * @return The car SDK build.
      */
-    public String getCarSDKBuild() {
+    @Nullable public String getCarSDKBuild() {
         return carSDKBuild;
     }
 
     /**
      * @return The application version.
      */
-    public String getApplicationVersion() {
+    @Nullable public String getApplicationVersion() {
         return applicationVersion;
     }
 

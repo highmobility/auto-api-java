@@ -21,13 +21,10 @@
 package com.highmobility.autoapi.property.homecharger;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
 
-public enum AuthenticationMechanism implements HMProperty {
+public enum AuthenticationMechanism {
     PIN((byte)0x00),
     APP((byte)0x01);
-    public static final byte IDENTIFIER = 0x02;
 
     public static AuthenticationMechanism fromByte(byte byteValue) throws CommandParseException {
         AuthenticationMechanism[] values = AuthenticationMechanism.values();
@@ -50,17 +47,5 @@ public enum AuthenticationMechanism implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }
