@@ -308,7 +308,7 @@ public class TachographState extends CommandWithProperties {
          */
         public Builder setVehicleDirection(VehicleDirection vehicleDirection) {
             this.vehicleDirection = vehicleDirection;
-            addProperty(vehicleDirection);
+            addProperty(new Property(VEHICLE_DIRECTION_IDENTIFIER, vehicleDirection.getByte()));
             return this;
         }
 
@@ -331,7 +331,7 @@ public class TachographState extends CommandWithProperties {
         }
     }
 
-    public enum VehicleDirection implements HMProperty {
+    public enum VehicleDirection {
         FORWARD((byte) 0x00),
         REVERSE((byte) 0x01),;
 
@@ -356,18 +356,6 @@ public class TachographState extends CommandWithProperties {
 
         public byte getByte() {
             return value;
-        }
-
-        @Override public byte getPropertyIdentifier() {
-            return VEHICLE_DIRECTION_IDENTIFIER;
-        }
-
-        @Override public int getPropertyLength() {
-            return 1;
-        }
-
-        @Override public byte[] getPropertyBytes() {
-            return Property.getPropertyBytes(VEHICLE_DIRECTION_IDENTIFIER, value);
         }
     }
 }

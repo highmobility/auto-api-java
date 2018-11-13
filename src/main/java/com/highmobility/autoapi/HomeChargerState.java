@@ -205,55 +205,56 @@ public class HomeChargerState extends CommandWithProperties {
         ArrayList<PriceTariff> tariffs = new ArrayList<>();
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_CHARGING:
-                        charging = Charging.fromByte(property.getValueByte());
+                        charging = Charging.fromByte(p.getValueByte());
                         break;
                     case IDENTIFIER_AUTHENTICATION_MECHANISM:
-                        authenticationMechanism = AuthenticationMechanism.fromByte(property
+                        authenticationMechanism = AuthenticationMechanism.fromByte(p
                                 .getValueByte());
                         break;
                     case IDENTIFIER_PLUG_TYPE:
-                        plugType = PlugType.fromByte(property.getValueByte());
+                        plugType = PlugType.fromByte(p.getValueByte());
                         break;
                     case CHARGING_POWER_IDENTIFIER:
-                        chargingPower = Property.getFloat(property.getValueBytes());
+                        chargingPower = Property.getFloat(p.getValueBytes());
                         break;
                     case SOLAR_CHARGING_ACTIVE_IDENTIFIER:
-                        solarChargingActive = Property.getBool(property.getValueByte());
+                        solarChargingActive = Property.getBool(p.getValueByte());
                         break;
                     case HOTSPOT_ENABLED_IDENTIFIER:
-                        hotspotEnabled = Property.getBool(property.getValueByte());
+                        hotspotEnabled = Property.getBool(p.getValueByte());
                         break;
                     case HOTSPOT_SSID_IDENTIFIER:
-                        hotspotSsid = Property.getString(property.getValueBytes());
+                        hotspotSsid = Property.getString(p.getValueBytes());
                         break;
                     case HOTSPOT_SECURITY_IDENTIFIER:
-                        hotspotSecurity = NetworkSecurity.fromByte(property.getValueByte());
+                        hotspotSecurity = NetworkSecurity.fromByte(p.getValueByte());
                         break;
                     case HOTSPOT_PASSWORD_IDENTIFIER:
-                        hotspotPassword = Property.getString(property.getValueBytes());
+                        hotspotPassword = Property.getString(p.getValueBytes());
                         break;
                     case IDENTIFIER_AUTHENTICATION_STATE:
-                        authenticated = Property.getBool(property.getValueByte());
+                        authenticated = Property.getBool(p.getValueByte());
                         break;
                     case IDENTIFIER_CHARGE_CURRENT_DC:
-                        chargeCurrentDC = Property.getFloat(property.getValueBytes());
+                        chargeCurrentDC = Property.getFloat(p.getValueBytes());
                         break;
                     case IDENTIFIER_MAXIMUM_CHARGE_CURRENT:
-                        maximumChargeCurrent = Property.getFloat(property.getValueBytes());
+                        maximumChargeCurrent = Property.getFloat(p.getValueBytes());
                         break;
                     case IDENTIFIER_MINIMUM_CHARGE_CURRENT:
-                        minimumChargeCurrent = Property.getFloat(property.getValueBytes());
+                        minimumChargeCurrent = Property.getFloat(p.getValueBytes());
                         break;
                     case IDENTIFIER_COORDINATES:
-                        coordinates = new CoordinatesProperty(property.getPropertyBytes());
+                        coordinates = new CoordinatesProperty(p.getPropertyBytes());
                         break;
                     case IDENTIFIER_PRICING_TARIFFS:
-                        tariffs.add(new PriceTariff(property.getPropertyBytes()));
+                        tariffs.add(new PriceTariff(p.getPropertyBytes()));
                         break;
                 }
+                return null; // TODO: 12/11/2018
             });
         }
 

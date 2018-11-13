@@ -85,22 +85,23 @@ public class Failure extends CommandWithProperties {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_IDENTIFIER:
-                        identifier = property.getValueBytes();
+                        identifier = p.getValueBytes();
                         break;
                     case IDENTIFIER_TYPE:
-                        failedTypeByte = property.getValueByte();
+                        failedTypeByte = p.getValueByte();
                         break;
                     case IDENTIFIER_FAILURE_REASON:
-                        failureReason = FailureReason.fromByte(property.getValueByte());
+                        failureReason = FailureReason.fromByte(p.getValueByte());
                         break;
                     case IDENTIFIER_FAILURE_DESCRIPTION:
-                        failureDescription = Property.getString(property.getValueBytes());
+                        failureDescription = Property.getString(p.getValueBytes());
                         break;
 
                 }
+                return null; // TODO: 12/11/2018
             });
         }
 

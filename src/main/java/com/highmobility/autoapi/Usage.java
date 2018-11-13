@@ -209,58 +209,58 @@ public class Usage extends CommandWithProperties {
         ArrayList<DrivingModeEnergyConsumption> drivingModeEnergyConsumptions = new ArrayList<>();
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(prop -> {
+            propertiesIterator.parseNext(p -> {
                 // TODO: 30/10/2018 test failed property
-                switch (prop.getPropertyIdentifier()) {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_AVERAGE_WEEKLY_DISTANCE:
-                        averageWeeklyDistance = Property.getUnsignedInt(prop.getValueBytes());
-                        break;
+                        averageWeeklyDistance = Property.getUnsignedInt(p.getValueBytes());
+                        return averageWeeklyDistance;
                     case IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_RUN:
-                        averageWeeklyDistanceLongTerm = Property.getUnsignedInt(prop
-                                .getValueBytes());
+                        averageWeeklyDistanceLongTerm = Property.getUnsignedInt(p.getValueBytes());
                         break;
                     case IDENTIFIER_ACCELERATION_EVALUATION:
-                        accelerationEvaluation = Property.getPercentage(prop.getValueByte());
+                        accelerationEvaluation = Property.getPercentage(p.getValueByte());
                         break;
                     case IDENTIFIER_DRIVING_STYLE_EVALUATION:
-                        drivingStyleEvaluation = Property.getPercentage(prop.getValueByte());
+                        drivingStyleEvaluation = Property.getPercentage(p.getValueByte());
                         break;
                     case DrivingModeActivationPeriod.IDENTIFIER:
-                        drivingModeActivationPeriods.add(new DrivingModeActivationPeriod(prop
+                        drivingModeActivationPeriods.add(new DrivingModeActivationPeriod(p
                                 .getPropertyBytes()));
                         break;
                     case DrivingModeEnergyConsumption.IDENTIFIER:
-                        drivingModeEnergyConsumptions.add(new DrivingModeEnergyConsumption(prop
+                        drivingModeEnergyConsumptions.add(new DrivingModeEnergyConsumption(p
                                 .getPropertyBytes()));
                         break;
                     case IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION:
-                        lastTripEnergyConsumption = Property.getFloat(prop.getValueBytes());
+                        lastTripEnergyConsumption = Property.getFloat(p.getValueBytes());
                         break;
                     case IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION:
-                        lastTripFuelConsumption = Property.getFloat(prop.getValueBytes());
+                        lastTripFuelConsumption = Property.getFloat(p.getValueBytes());
                         break;
                     case IDENTIFIER_MILEAGE_AFTER_LAST_TRIP:
-                        mileageAfterLastTrip = Property.getFloat(prop.getValueBytes());
+                        mileageAfterLastTrip = Property.getFloat(p.getValueBytes());
                         break;
                     case IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION:
-                        lastTripElectricPortion = Property.getPercentage(prop.getValueByte());
+                        lastTripElectricPortion = Property.getPercentage(p.getValueByte());
                         break;
                     case IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION:
-                        lastTripAverageEnergyRecuperation = Property.getFloat(prop.getValueBytes());
+                        lastTripAverageEnergyRecuperation = Property.getFloat(p.getValueBytes());
                         break;
                     case IDENTIFIER_LAST_TRIP_BATTERY_REMAINING:
-                        lastTripBatteryRemaining = Property.getPercentage(prop.getValueByte());
+                        lastTripBatteryRemaining = Property.getPercentage(p.getValueByte());
                         break;
                     case IDENTIFIER_LAST_TRIP_DATE:
-                        lastTripDate = Property.getCalendar(prop.getValueBytes());
+                        lastTripDate = Property.getCalendar(p.getValueBytes());
                         break;
                     case IDENTIFIER_AVERAGE_FUEL_CONSUMPTION:
-                        averageFuelConsumption = Property.getFloat(prop.getValueBytes());
+                        averageFuelConsumption = Property.getFloat(p.getValueBytes());
                         break;
                     case IDENTIFIER_CURRENT_FUEL_CONSUMPTION:
-                        currentFuelConsumption = Property.getFloat(prop.getValueBytes());
+                        currentFuelConsumption = Property.getFloat(p.getValueBytes());
                         break;
                 }
+                return null; // TODO: 12/11/2018
             });
         }
 

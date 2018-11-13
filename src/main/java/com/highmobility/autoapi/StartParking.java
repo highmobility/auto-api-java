@@ -94,7 +94,7 @@ public class StartParking extends CommandWithProperties {
         this.endDate = endDate;
     }
 
-    static HMProperty[] getProperties(String operatorName, String operatorTicketId, Calendar
+    static Property[] getProperties(String operatorName, String operatorTicketId, Calendar
             startDate, Calendar endDate) {
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 
@@ -108,7 +108,7 @@ public class StartParking extends CommandWithProperties {
         if (endDate != null)
             propertiesBuilder.add(new CalendarProperty(END_DATE_IDENTIFIER, endDate));
 
-        return propertiesBuilder.toArray(new HMProperty[0]);
+        return propertiesBuilder.toArray(new Property[0]);
     }
 
     StartParking(byte[] bytes) throws CommandParseException {

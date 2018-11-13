@@ -53,15 +53,16 @@ public class LightConditions extends CommandWithProperties {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case OUTSIDE_LIGHT_IDENTIFIER:
-                        outsideLight = Property.getFloat(property.getValueBytes());
+                        outsideLight = Property.getFloat(p.getValueBytes());
                         break;
                     case INSIDE_LIGHT_IDENTIFIER:
-                        insideLight = Property.getFloat(property.getValueBytes());
+                        insideLight = Property.getFloat(p.getValueBytes());
                         break;
                 }
+                return null; // TODO: 12/11/2018
             });
         }
     }

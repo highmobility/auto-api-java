@@ -24,7 +24,7 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 
-public enum SunroofTiltState implements HMProperty {
+public enum SunroofTiltState {
     CLOSED((byte) 0x00),
     TILTED((byte) 0x01),
     HALF_TILTED((byte) 0x02);
@@ -43,7 +43,6 @@ public enum SunroofTiltState implements HMProperty {
     }
 
     private byte value;
-    private byte identifier;
 
     SunroofTiltState(byte value) {
         this.value = value;
@@ -51,26 +50,5 @@ public enum SunroofTiltState implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    public byte getIdentifier() {
-        return identifier;
-    }
-
-    public SunroofTiltState setIdentifier(byte identifier) {
-        this.identifier = identifier;
-        return this;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return identifier;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

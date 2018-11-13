@@ -153,50 +153,49 @@ public class MaintenanceState extends CommandWithProperties {
         ArrayList<ConditionBasedService> conditionBasedServices = new ArrayList<>();
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case DAYS_IDENTIFIER:
-                        daysToNextService = Property.getUnsignedInt(property.getValueBytes());
+                        daysToNextService = Property.getUnsignedInt(p.getValueBytes());
                         break;
                     case KILOMETERS_IDENTIFIER:
-                        kilometersToNextService = Property.getUnsignedInt(property.getValueBytes());
+                        kilometersToNextService = Property.getUnsignedInt(p.getValueBytes());
                         break;
                     case IDENTIFIER_CBS_REPORTS_COUNT:
-                        cbsReportsCount = Property.getUnsignedInt(property.getValueBytes());
+                        cbsReportsCount = Property.getUnsignedInt(p.getValueBytes());
                         break;
                     case IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION:
-                        monthsToExhaustInspection = Property.getUnsignedInt(property.getValueByte
+                        monthsToExhaustInspection = Property.getUnsignedInt(p.getValueByte
                                 ());
                         break;
                     case TeleserviceAvailability.IDENTIFIER:
-                        teleserviceAvailability = TeleserviceAvailability.fromByte(property
-                                .getValueByte());
+                        teleserviceAvailability =
+                                TeleserviceAvailability.fromByte(p.getValueByte());
                         break;
                     case IDENTIFIER_SERVICE_DISTANCE_THRESHOLD:
-                        serviceDistanceThreshold = Property.getUnsignedInt(property.getValueBytes
+                        serviceDistanceThreshold = Property.getUnsignedInt(p.getValueBytes
                                 ());
                         break;
                     case IDENTIFIER_SERVICE_TIME_THRESHOLD:
-                        serviceTimeThreshold = Property.getUnsignedInt(property.getValueByte());
+                        serviceTimeThreshold = Property.getUnsignedInt(p.getValueByte());
                         break;
                     case IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE:
-                        automaticTeleserviceCallDate = Property.getCalendar(property
-                                .getValueBytes());
+                        automaticTeleserviceCallDate = Property.getCalendar(p.getValueBytes());
                         break;
                     case IDENTIFIER_TELESERVICE_BATTERY_CALL_DATE:
-                        teleserviceBatteryCallDate = Property.getCalendar(property.getValueBytes());
+                        teleserviceBatteryCallDate = Property.getCalendar(p.getValueBytes());
                         break;
                     case IDENTIFIER_NEXT_INSPECTION_DATE:
-                        nextInspectionDate = Property.getCalendar(property.getValueBytes());
+                        nextInspectionDate = Property.getCalendar(p.getValueBytes());
                         break;
                     case IDENTIFIER_CONDITION_BASED_SERVICES:
-                        conditionBasedServices.add(new ConditionBasedService(property
-                                .getPropertyBytes()));
+                        conditionBasedServices.add(new ConditionBasedService(p.getPropertyBytes()));
                         break;
                     case IDENTIFIER_BRAKE_FLUID_CHANGE_DATE:
-                        brakeFluidChangeDate = Property.getCalendar(property.getValueBytes());
+                        brakeFluidChangeDate = Property.getCalendar(p.getValueBytes());
                         break;
                 }
+                return null; // TODO: 12/11/2018
             });
         }
 

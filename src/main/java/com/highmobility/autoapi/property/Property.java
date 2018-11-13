@@ -113,8 +113,7 @@ public class Property extends Bytes implements HMProperty {
 
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
-                .getClass().getSimpleName() + ": " + e
-                .getMessage()) : ""));
+                .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
     }
 
     protected byte[] baseBytes(byte identifier, int valueSize) {

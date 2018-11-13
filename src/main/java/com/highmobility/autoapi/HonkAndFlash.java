@@ -65,7 +65,7 @@ public class HonkAndFlash extends CommandWithProperties {
         this.lightFlashCount = lightFlashCount;
     }
 
-    static HMProperty[] getProperties(Integer seconds, Integer lightFlashCount) {
+    static Property[] getProperties(Integer seconds, Integer lightFlashCount) {
         ArrayList<Property> properties = new ArrayList<>();
 
         if (seconds != null) {

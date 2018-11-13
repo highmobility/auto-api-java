@@ -109,8 +109,8 @@ public class Notification extends CommandWithProperties {
         actions = actionsBuilder.toArray(new ActionItem[0]);
     }
 
-    static HMProperty[] getProperties(String text, ActionItem[] actions, Integer receivedAction) {
-        HMProperty[] properties = new HMProperty[actions.length + 2];
+    static Property[] getProperties(String text, ActionItem[] actions, Integer receivedAction) {
+        Property[] properties = new Property[actions.length + 2];
         properties[0] = new StringProperty(TEXT_IDENTIFIER, text);
 
         System.arraycopy(actions, 0, properties, 1, actions.length);

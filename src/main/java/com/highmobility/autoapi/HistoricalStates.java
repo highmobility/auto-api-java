@@ -53,6 +53,7 @@ public class HistoricalStates extends CommandWithProperties {
                     builder.add(state);
 
                 }
+                return null; // TODO: 12/11/2018
             });
         }
 

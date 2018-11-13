@@ -61,7 +61,7 @@ public class ControlWipers extends CommandWithProperties {
         this.intensity = intensity;
     }
 
-    static HMProperty[] getProperties(WiperState state, WiperIntensity intensity) {
+    static Property[] getProperties(WiperState state, WiperIntensity intensity) {
         ArrayList<HMProperty> builder = new ArrayList<>();
 
         if (state != null) builder.add(new Property(IDENTIFIER_WIPER_STATE, state.getByte()));
@@ -69,7 +69,7 @@ public class ControlWipers extends CommandWithProperties {
         if (intensity != null)
             builder.add(new Property(IDENTIFIER_WIPER_INTENSITY, intensity.getByte()));
 
-        return builder.toArray(new HMProperty[0]);
+        return builder.toArray(new Property[0]);
     }
 
     ControlWipers(byte[] bytes) throws CommandParseException {

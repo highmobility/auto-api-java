@@ -77,14 +77,15 @@ public class Capabilities extends CommandWithProperties {
         ArrayList<CapabilityProperty> builder = new ArrayList<>();
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case 0x01:
-                        CapabilityProperty capability = new CapabilityProperty(property
-                                .getPropertyBytes());
+                        CapabilityProperty capability =
+                                new CapabilityProperty(p.getPropertyBytes());
                         builder.add(capability);
                         break;
                 }
+                return null; // TODO: 12/11/2018
             });
         }
 

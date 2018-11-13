@@ -137,16 +137,14 @@ public class RooftopState extends CommandWithProperties {
         }
 
         public Builder setConvertibleRoofState(ConvertibleRoofState convertibleRoofState) {
-            convertibleRoofState.setIdentifier(IDENTIFIER_CONVERTIBLE_ROOF);
             this.convertibleRoofState = convertibleRoofState;
-            addProperty(convertibleRoofState);
+            addProperty(new Property(IDENTIFIER_CONVERTIBLE_ROOF, convertibleRoofState.getByte()));
             return this;
         }
 
         public Builder setSunroofTiltState(SunroofTiltState sunroofTiltState) {
-            sunroofTiltState.setIdentifier(IDENTIFIER_SUNROOF_TILT);
             this.sunroofTiltState = sunroofTiltState;
-            addProperty(sunroofTiltState);
+            addProperty(new Property(IDENTIFIER_SUNROOF_TILT, sunroofTiltState.getByte()));
             return this;
         }
 

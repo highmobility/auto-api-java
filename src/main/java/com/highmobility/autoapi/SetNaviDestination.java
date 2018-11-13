@@ -66,7 +66,7 @@ public class SetNaviDestination extends CommandWithProperties {
         this.name = name;
     }
 
-    static HMProperty[] getProperties(CoordinatesProperty coordinates, String name) {
+    static Property[] getProperties(CoordinatesProperty coordinates, String name) {
         List<Property> properties = new ArrayList<>();
 
         if (coordinates == null) throw new IllegalArgumentException();

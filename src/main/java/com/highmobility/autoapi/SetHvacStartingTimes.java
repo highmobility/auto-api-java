@@ -68,7 +68,7 @@ public class SetHvacStartingTimes extends CommandWithProperties {
         this.hvacStartingTimes = hvacStartingTimes;
     }
 
-    static HMProperty[] getProperties(HvacStartingTime[] hvacStartingTimes) {
+    static Property[] getProperties(HvacStartingTime[] hvacStartingTimes) {
         for (HvacStartingTime hvacStartingTime : hvacStartingTimes) {
             hvacStartingTime.setIdentifier(AUTO_HVAC_IDENTIFIER);
         }

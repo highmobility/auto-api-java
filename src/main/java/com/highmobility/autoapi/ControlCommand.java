@@ -67,7 +67,7 @@ public class ControlCommand extends CommandWithProperties {
         this.angle = angle;
     }
 
-    static HMProperty[] getProperties(Integer speed, Integer angle) {
+    static Property[] getProperties(Integer speed, Integer angle) {
         List<Property> properties = new ArrayList<>();
 
         if (speed != null) {

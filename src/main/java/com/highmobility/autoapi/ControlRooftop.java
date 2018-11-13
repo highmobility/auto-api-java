@@ -90,10 +90,10 @@ public class ControlRooftop extends CommandWithProperties {
         this.sunroofTiltState = sunroofTiltState;
     }
 
-    static HMProperty[] getProperties(@Nullable Float dimmingPercentage, @Nullable Float
+    static Property[] getProperties(@Nullable Float dimmingPercentage, @Nullable Float
             openPercentage, @Nullable ConvertibleRoofState convertibleRoofState, @Nullable
                                               SunroofTiltState sunroofTiltState) {
-        List<HMProperty> properties = new ArrayList<>();
+        List<Property> properties = new ArrayList<>();
 
         if (dimmingPercentage != null) {
             Property prop = new PercentageProperty(RooftopState.DIMMING_IDENTIFIER,
@@ -107,16 +107,15 @@ public class ControlRooftop extends CommandWithProperties {
         }
 
         if (convertibleRoofState != null) {
-            convertibleRoofState.setIdentifier(IDENTIFIER_CONVERTIBLE_ROOFTOP);
-            properties.add(convertibleRoofState);
+
+            properties.add(new Property(IDENTIFIER_CONVERTIBLE_ROOFTOP, convertibleRoofState.getByte()));
         }
 
         if (sunroofTiltState != null) {
-            sunroofTiltState.setIdentifier(IDENTIFIER_SUNROOF_TILT);
-            properties.add(sunroofTiltState);
+            properties.add(new Property(IDENTIFIER_SUNROOF_TILT, sunroofTiltState.getByte()));
         }
 
-        return properties.toArray(new HMProperty[0]);
+        return properties.toArray(new Property[0]);
     }
 
     ControlRooftop(byte[] bytes) throws CommandParseException {

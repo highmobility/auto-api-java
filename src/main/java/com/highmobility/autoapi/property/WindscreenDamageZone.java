@@ -20,15 +20,17 @@
 
 package com.highmobility.autoapi.property;
 
-public class WindscreenDamageZone implements HMProperty {
+public class WindscreenDamageZone extends Property {
     public static final byte IDENTIFIER = 0x05;
 
     int damageZoneX;
     int damageZoneY;
 
     public WindscreenDamageZone(byte valueByte) {
+        super(IDENTIFIER, 1);
         damageZoneX = valueByte >> 4;
         damageZoneY = valueByte & 0x0F;
+        setByteValue();
     }
 
     /**
@@ -47,12 +49,14 @@ public class WindscreenDamageZone implements HMProperty {
     }
 
     public WindscreenDamageZone(int damageZoneX, int damageZoneY) {
+        super(IDENTIFIER, 1);
         this.damageZoneX = damageZoneX;
         this.damageZoneY = damageZoneY;
+        setByteValue();
     }
 
-    public byte getPositionByte() {
-        return (byte) (((damageZoneX & 0x0F) << 4) | (damageZoneY & 0x0F));
+    private void setByteValue() {
+        bytes[3] = (byte) (((damageZoneX & 0x0F) << 4) | (damageZoneY & 0x0F));
     }
 
     @Override public byte getPropertyIdentifier() {
@@ -64,6 +68,6 @@ public class WindscreenDamageZone implements HMProperty {
     }
 
     @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), getPositionByte());
+        return Property.getPropertyBytes(getPropertyIdentifier(), bytes[3]);
     }
 }

@@ -96,7 +96,7 @@ public class VideoHandover extends CommandWithProperties {
         }
     }
 
-    static HMProperty[] getProperties(String url, Integer startingSecond, ScreenLocation location) {
+    static Property[] getProperties(String url, Integer startingSecond, ScreenLocation location) {
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 
         if (url != null) propertiesBuilder.add(new StringProperty(URL_IDENTIFIER, url));
@@ -104,6 +104,6 @@ public class VideoHandover extends CommandWithProperties {
             propertiesBuilder.add(new IntegerProperty(STARTING_SECOND_IDENTIFIER, startingSecond,
                     2));
         if (location != null) propertiesBuilder.add(new Property(IDENTIFIER_SCREEN_LOCATION, location.getByte()));
-        return propertiesBuilder.toArray(new HMProperty[0]);
+        return propertiesBuilder.toArray(new Property[0]);
     }
 }

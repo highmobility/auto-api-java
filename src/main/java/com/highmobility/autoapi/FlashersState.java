@@ -51,7 +51,7 @@ public class FlashersState extends CommandWithProperties {
         return true;
     }
 
-    public enum State implements HMProperty {
+    public enum State {
         INACTIVE((byte) 0x00),
         EMERGENCY_ACTIVE((byte) 0x01),
         LEFT_ACTIVE((byte) 0x02),
@@ -79,18 +79,6 @@ public class FlashersState extends CommandWithProperties {
         public byte getByte() {
             return value;
         }
-
-        @Override public byte getPropertyIdentifier() {
-            return STATE_IDENTIFIER;
-        }
-
-        @Override public int getPropertyLength() {
-            return 1;
-        }
-
-        @Override public byte[] getPropertyBytes() {
-            return Property.getPropertyBytes(getPropertyIdentifier(), value);
-        }
     }
 
     private FlashersState(Builder builder) {
@@ -111,7 +99,7 @@ public class FlashersState extends CommandWithProperties {
          */
         public Builder setState(State state) {
             this.state = state;
-            addProperty(state);
+            addProperty(new Property(STATE_IDENTIFIER, state.getByte()));
             return this;
         }
 

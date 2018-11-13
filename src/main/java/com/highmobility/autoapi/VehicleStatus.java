@@ -237,43 +237,43 @@ public class VehicleStatus extends CommandWithProperties {
         ArrayList<String> equipments = new ArrayList<>();
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case VIN_IDENTIFIER:
-                        vin = Property.getString(property.getValueBytes());
+                        vin = Property.getString(p.getValueBytes());
                         break;
                     case POWER_TRAIN_IDENTIFIER:
-                        powerTrain = PowerTrain.fromByte(property.getValueByte());
+                        powerTrain = PowerTrain.fromByte(p.getValueByte());
                         break;
                     case MODEL_NAME_IDENTIFIER:
-                        modelName = Property.getString(property.getValueBytes());
+                        modelName = Property.getString(p.getValueBytes());
                         break;
                     case NAME_IDENTIFIER:
-                        name = Property.getString(property.getValueBytes());
+                        name = Property.getString(p.getValueBytes());
                         break;
                     case LICENSE_PLATE_IDENTIFIER:
-                        licensePlate = Property.getString(property.getValueBytes());
+                        licensePlate = Property.getString(p.getValueBytes());
                         break;
                     case SALES_DESIGNATION_IDENTIFIER:
-                        salesDesignation = Property.getString(property.getValueBytes());
+                        salesDesignation = Property.getString(p.getValueBytes());
                         break;
                     case MODEL_YEAR_IDENTIFIER:
-                        modelYear = Property.getUnsignedInt(property.getValueBytes());
+                        modelYear = Property.getUnsignedInt(p.getValueBytes());
                         break;
                     case COLOR_IDENTIFIER:
-                        color = Property.getString(property.getValueBytes());
+                        color = Property.getString(p.getValueBytes());
                         break;
                     case POWER_IDENTIFIER:
-                        power = Property.getUnsignedInt(property.getValueBytes());
+                        power = Property.getUnsignedInt(p.getValueBytes());
                         break;
                     case NUMBER_OF_DOORS_IDENTIFIER:
-                        numberOfDoors = Property.getUnsignedInt(property.getValueBytes());
+                        numberOfDoors = Property.getUnsignedInt(p.getValueBytes());
                         break;
                     case NUMBER_OF_SEATS_IDENTIFIER:
-                        numberOfSeats = Property.getUnsignedInt(property.getValueBytes());
+                        numberOfSeats = Property.getUnsignedInt(p.getValueBytes());
                         break;
                     case COMMAND_IDENTIFIER:
-                        byte[] commandBytes = property.getValueBytes();
+                        byte[] commandBytes = p.getValueBytes();
                         try {
                             Command command = CommandResolver.resolve(commandBytes);
                             if (command != null) states.add(command);
@@ -282,25 +282,26 @@ public class VehicleStatus extends CommandWithProperties {
                         }
                         break;
                     case ENGINE_VOLUME_IDENTIFIER:
-                        engineVolume = Property.getFloat(property.getValueBytes());
+                        engineVolume = Property.getFloat(p.getValueBytes());
                         break;
                     case MAX_TORQUE_IDENTIFIER:
-                        maxTorque = Property.getUnsignedInt(property.getValueBytes());
+                        maxTorque = Property.getUnsignedInt(p.getValueBytes());
                         break;
                     case GEARBOX_IDENTIFIER:
-                        gearBox = Gearbox.fromByte(property.getValueByte());
+                        gearBox = Gearbox.fromByte(p.getValueByte());
                         break;
                     case IDENTIFIER_DISPLAY_UNIT:
-                        displayUnit = DisplayUnit.fromByte(property.getValueByte());
+                        displayUnit = DisplayUnit.fromByte(p.getValueByte());
                         break;
                     case IDENTIFIER_DRIVER_SEAT_LOCATION:
-                        driverSeatLocation = DriverSeatLocation.fromByte(property.getValueByte());
+                        driverSeatLocation = DriverSeatLocation.fromByte(p.getValueByte());
                         break;
                     case IDENTIFIER_EQUIPMENTS:
-                        equipments.add(Property.getString(property.getValueBytes()));
+                        equipments.add(Property.getString(p.getValueBytes()));
                         break;
-
                 }
+
+                return null; // TODO: 12/11/2018
             });
         }
 

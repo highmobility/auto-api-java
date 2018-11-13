@@ -94,7 +94,7 @@ public class ControlLights extends CommandWithProperties {
         this.ambientColor = ambientColor;
     }
 
-    static HMProperty[] getProperties(FrontExteriorLightState frontExteriorLightState,
+    static Property[] getProperties(FrontExteriorLightState frontExteriorLightState,
                                       Boolean rearExteriorLightActive,
                                       Boolean interiorLightActive,
                                       int[] ambientColor) {

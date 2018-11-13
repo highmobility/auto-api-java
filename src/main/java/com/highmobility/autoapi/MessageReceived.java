@@ -65,7 +65,7 @@ public class MessageReceived extends CommandWithProperties {
         this.message = message;
     }
 
-    static HMProperty[] getProperties(String handle, String message) {
+    static Property[] getProperties(String handle, String message) {
         ArrayList<HMProperty> properties = new ArrayList<>();
 
         if (handle != null) {
@@ -78,7 +78,7 @@ public class MessageReceived extends CommandWithProperties {
             properties.add(prop);
         }
 
-        return (properties.toArray(new HMProperty[0]));
+        return (properties.toArray(new Property[0]));
     }
 
     MessageReceived(byte[] bytes) {

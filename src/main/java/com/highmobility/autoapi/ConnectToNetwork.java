@@ -76,7 +76,7 @@ public class ConnectToNetwork extends CommandWithProperties {
         this.password = password;
     }
 
-    static HMProperty[] getProperties(String ssid, NetworkSecurity security, String password) {
+    static Property[] getProperties(String ssid, NetworkSecurity security, String password) {
         List<HMProperty> propertiesBuilder = new ArrayList<>();
 
         if (ssid != null)
@@ -88,7 +88,7 @@ public class ConnectToNetwork extends CommandWithProperties {
         if (password != null)
             propertiesBuilder.add(new StringProperty(PASSWORD_IDENTIFIER, password));
 
-        return propertiesBuilder.toArray(new HMProperty[0]);
+        return propertiesBuilder.toArray(new Property[0]);
     }
 
     ConnectToNetwork(byte[] bytes) throws CommandParseException {
