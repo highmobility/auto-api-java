@@ -45,8 +45,15 @@ public class VehicleTime extends CommandWithProperties {
 
     public VehicleTime(byte[] bytes) {
         super(bytes);
-        Property p = getProperty((byte) 0x01);
-        if (p != null) vehicleTime = Property.getCalendar(p.getValueBytes());
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == 0x01) {
+                    vehicleTime = Property.getCalendar(p.getValueBytes());
+                    return vehicleTime;
+                }
+                return null;
+            });
+        }
     }
 
     @Override public boolean isState() {

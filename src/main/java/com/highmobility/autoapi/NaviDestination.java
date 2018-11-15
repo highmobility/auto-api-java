@@ -55,16 +55,19 @@ public class NaviDestination extends CommandWithProperties {
     public NaviDestination(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case COORDINATES_IDENTIFIER:
-                    coordinates = new CoordinatesProperty(property.getPropertyBytes());
-                    break;
-                case NAME_IDENTIFIER:
-                    name = Property.getString(property.getValueBytes());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case COORDINATES_IDENTIFIER:
+                        coordinates = new CoordinatesProperty(p.getPropertyBytes());
+                        return coordinates;
+                    case NAME_IDENTIFIER:
+                        name = Property.getString(p.getValueBytes());
+                        return name;
+                }
+                
+                return null;
+            });
         }
     }
 

@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
@@ -66,7 +65,7 @@ public class MessageReceived extends CommandWithProperties {
     }
 
     static Property[] getProperties(String handle, String message) {
-        ArrayList<HMProperty> properties = new ArrayList<>();
+        ArrayList<Property> properties = new ArrayList<>();
 
         if (handle != null) {
             StringProperty prop = new StringProperty(RECIPIENT_IDENTIFIER, handle);
@@ -84,15 +83,19 @@ public class MessageReceived extends CommandWithProperties {
     MessageReceived(byte[] bytes) {
         super(bytes);
 
-        for (Property property : properties) {
-            switch (property.getPropertyIdentifier()) {
-                case RECIPIENT_IDENTIFIER:
-                    handle = Property.getString(property.getValueBytes());
-                    break;
-                case MESSAGE_IDENTIFIER:
-                    message = Property.getString(property.getValueBytes());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case RECIPIENT_IDENTIFIER:
+                        handle = Property.getString(p.getValueBytes());
+                        return handle;
+                    case MESSAGE_IDENTIFIER:
+                        message = Property.getString(p.getValueBytes());
+                        return message;
+                }
+
+                return null;
+            });
         }
     }
 }

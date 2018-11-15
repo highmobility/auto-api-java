@@ -31,10 +31,7 @@ import java.util.Arrays;
  * Created by ttiganik on 14/10/2016.
  */
 public class CapabilityProperty extends Property {
-    static final byte defaultIdentifier = 0x01;
-
     Type[] types;
-
     byte[] identifierBytes;
     Identifier identifier;
 
@@ -99,7 +96,7 @@ public class CapabilityProperty extends Property {
      */
     public CapabilityProperty(byte[] categoryIdentifier, Type[] types) throws
             IllegalArgumentException {
-        super(defaultIdentifier, getValue(categoryIdentifier, types));
+        super((byte) 0x00, getValue(categoryIdentifier, types));
         this.identifierBytes = categoryIdentifier;
         this.identifier = Identifier.fromBytes(categoryIdentifier);
         this.types = types;
@@ -120,7 +117,7 @@ public class CapabilityProperty extends Property {
                 newTypes[newTypes.length - 1] = stateCommand;
 
                 byte[] newValue = getValue(categoryIdentifier, newTypes);
-                byte[] newBytes = baseBytes(defaultIdentifier, newValue.length);
+                byte[] newBytes = baseBytes((byte) 0x00, newValue.length);
                 ByteUtils.setBytes(newBytes, newValue, 3);
                 this.bytes = newBytes;
                 this.types = newTypes;

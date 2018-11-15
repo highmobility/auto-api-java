@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.KeyFobPositionValue;
-import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -38,11 +37,19 @@ public class KeyFobPosition extends CommandWithProperties {
         return keyFobPosition;
     }
 
-    public KeyFobPosition(byte[] bytes) throws CommandParseException {
+    public KeyFobPosition(byte[] bytes) {
         super(bytes);
 
-        Property p = getProperty((byte) 0x01);
-        if (p != null) keyFobPosition = KeyFobPositionValue.fromByte(p.getValueByte());
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == 0x01) {
+                    keyFobPosition = KeyFobPositionValue.fromByte(p.getValueByte());
+                    return keyFobPosition;
+                }
+
+                return null;
+            });
+        }
     }
 
     @Override public boolean isState() {

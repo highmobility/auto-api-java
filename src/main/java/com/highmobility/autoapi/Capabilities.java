@@ -23,7 +23,6 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.CapabilityProperty;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,6 +30,7 @@ import java.util.List;
  */
 public class Capabilities extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CAPABILITIES, 0x01);
+    private static final byte IDENTIFIER = 0x01;
 
     CapabilityProperty[] capabilities;
 
@@ -79,13 +79,13 @@ public class Capabilities extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01:
+                    case IDENTIFIER:
                         CapabilityProperty capability =
                                 new CapabilityProperty(p.getPropertyBytes());
                         builder.add(capability);
-                        break;
+                        return capability;
                 }
-                return null; // TODO: 12/11/2018
+                return null;
             });
         }
 
@@ -115,6 +115,7 @@ public class Capabilities extends CommandWithProperties {
          * @return The builder.
          */
         public Builder addCapability(CapabilityProperty capability) {
+            capability.setIdentifier(IDENTIFIER);
             capabilities.add(capability);
             addProperty(capability);
             return this;
@@ -127,12 +128,8 @@ public class Capabilities extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setCapabilities(CapabilityProperty[] capabilities) {
-            this.capabilities = Arrays.asList(capabilities);
-
-            for (int i = 0; i < capabilities.length; i++) {
-                addProperty(capabilities[i]);
-            }
-
+            this.capabilities.clear();
+            for (int i = 0; i < capabilities.length; i++) addCapability(capabilities[i]);
             return this;
         }
 

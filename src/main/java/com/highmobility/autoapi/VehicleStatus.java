@@ -29,7 +29,6 @@ import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.autoapi.property.value.DisplayUnit;
 import com.highmobility.autoapi.property.value.DriverSeatLocation;
 import com.highmobility.autoapi.property.value.Gearbox;
-import com.highmobility.utils.ByteUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -241,67 +240,63 @@ public class VehicleStatus extends CommandWithProperties {
                 switch (p.getPropertyIdentifier()) {
                     case VIN_IDENTIFIER:
                         vin = Property.getString(p.getValueBytes());
-                        break;
+                        return vin;
                     case POWER_TRAIN_IDENTIFIER:
                         powerTrain = PowerTrain.fromByte(p.getValueByte());
-                        break;
+                        return powerTrain;
                     case MODEL_NAME_IDENTIFIER:
                         modelName = Property.getString(p.getValueBytes());
-                        break;
+                        return modelName;
                     case NAME_IDENTIFIER:
                         name = Property.getString(p.getValueBytes());
-                        break;
+                        return name;
                     case LICENSE_PLATE_IDENTIFIER:
                         licensePlate = Property.getString(p.getValueBytes());
-                        break;
+                        return licensePlate;
                     case SALES_DESIGNATION_IDENTIFIER:
                         salesDesignation = Property.getString(p.getValueBytes());
-                        break;
+                        return salesDesignation;
                     case MODEL_YEAR_IDENTIFIER:
                         modelYear = Property.getUnsignedInt(p.getValueBytes());
-                        break;
+                        return modelYear;
                     case COLOR_IDENTIFIER:
                         color = Property.getString(p.getValueBytes());
-                        break;
+                        return color;
                     case POWER_IDENTIFIER:
                         power = Property.getUnsignedInt(p.getValueBytes());
-                        break;
+                        return power;
                     case NUMBER_OF_DOORS_IDENTIFIER:
                         numberOfDoors = Property.getUnsignedInt(p.getValueBytes());
-                        break;
+                        return numberOfDoors;
                     case NUMBER_OF_SEATS_IDENTIFIER:
                         numberOfSeats = Property.getUnsignedInt(p.getValueBytes());
-                        break;
+                        return numberOfSeats;
                     case COMMAND_IDENTIFIER:
-                        byte[] commandBytes = p.getValueBytes();
-                        try {
-                            Command command = CommandResolver.resolve(commandBytes);
-                            if (command != null) states.add(command);
-                        } catch (Exception e) {
-                            logger.info("invalid state " + ByteUtils.hexFromBytes(commandBytes));
-                        }
-                        break;
+                        Command command = CommandResolver.resolve(p.getValueBytes());
+                        states.add(command);
+                        return command;
                     case ENGINE_VOLUME_IDENTIFIER:
                         engineVolume = Property.getFloat(p.getValueBytes());
-                        break;
+                        return engineVolume;
                     case MAX_TORQUE_IDENTIFIER:
                         maxTorque = Property.getUnsignedInt(p.getValueBytes());
-                        break;
+                        return maxTorque;
                     case GEARBOX_IDENTIFIER:
                         gearBox = Gearbox.fromByte(p.getValueByte());
-                        break;
+                        return gearBox;
                     case IDENTIFIER_DISPLAY_UNIT:
                         displayUnit = DisplayUnit.fromByte(p.getValueByte());
-                        break;
+                        return displayUnit;
                     case IDENTIFIER_DRIVER_SEAT_LOCATION:
                         driverSeatLocation = DriverSeatLocation.fromByte(p.getValueByte());
-                        break;
+                        return driverSeatLocation;
                     case IDENTIFIER_EQUIPMENTS:
-                        equipments.add(Property.getString(p.getValueBytes()));
-                        break;
+                        String equipment = Property.getString(p.getValueBytes());
+                        equipments.add(equipment);
+                        return equipment;
                 }
 
-                return null; // TODO: 12/11/2018
+                return null;
             });
         }
 

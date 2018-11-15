@@ -63,19 +63,22 @@ public class FirmwareVersion extends CommandWithProperties {
     public FirmwareVersion(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case SDK_VERSION_IDENTIFIER:
-                    carSDKVersion = identifiersToString(property.getValueBytes());
-                    break;
-                case SDK_BUILD_IDENTIFIER:
-                    carSDKBuild = Property.getString(property.getValueBytes());
-                    break;
-                case APP_VERSION_IDENTIFIER:
-                    applicationVersion = Property.getString(property.getValueBytes());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
+                switch (property.getPropertyIdentifier()) {
+                    case SDK_VERSION_IDENTIFIER:
+                        carSDKVersion = identifiersToString(property.getValueBytes());
+                        return carSDKVersion;
+                    case SDK_BUILD_IDENTIFIER:
+                        carSDKBuild = Property.getString(property.getValueBytes());
+                        return carSDKBuild;
+                    case APP_VERSION_IDENTIFIER:
+                        applicationVersion = Property.getString(property.getValueBytes());
+                        return applicationVersion;
+                }
+
+                return null;
+            });
         }
     }
 

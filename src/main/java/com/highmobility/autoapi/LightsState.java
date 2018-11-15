@@ -100,13 +100,13 @@ public class LightsState extends CommandWithProperties {
                     case IDENTIFIER_FRONT_EXTERIOR:
                         frontExteriorLightState =
                                 FrontExteriorLightState.fromByte(p.getValueByte());
-                        break;
+                        return frontExteriorLightState;
                     case REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER:
                         rearExteriorLightActive = Property.getBool(p.getValueByte());
-                        break;
+                        return rearExteriorLightActive;
                     case INTERIOR_LIGHT_ACTIVE_IDENTIFIER:
                         interiorLightActive = Property.getBool(p.getValueByte());
-                        break;
+                        return interiorLightActive;
                     case AMBIENT_COLOR_IDENTIFIER:
                         byte[] valueBytes = p.getValueBytes();
                         if (valueBytes.length != 3) throw new CommandParseException();
@@ -117,16 +117,17 @@ public class LightsState extends CommandWithProperties {
                         ambientColor[2] = valueBytes[2] & 0xFF;
                         ambientColor[3] = 255;
 
-                        break;
+                        return ambientColor;
                     case REVERSE_LIGHT_IDENTIFIER:
                         reverseLightActive = Property.getBool(p.getValueByte());
-                        break;
+                        return reverseLightActive;
 
                     case EMERGENCY_BRAKE_LIGHT_IDENTIFIER:
                         emergencyBrakeLightActive = Property.getBool(p.getValueByte());
-                        break;
+                        return emergencyBrakeLightActive;
                 }
-                return null; // TODO: 12/11/2018
+
+                return null;
             });
         }
     }

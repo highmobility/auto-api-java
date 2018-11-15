@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindscreenDamage;
 import com.highmobility.autoapi.property.WindscreenDamageZone;
@@ -82,7 +81,7 @@ public class SetWindscreenDamage extends CommandWithProperties {
     }
 
     static Property[] getProperties(WindscreenDamage damage, WindscreenDamageZone zone) {
-        List<HMProperty> propertiesBuilder = new ArrayList<>();
+        List<Property> propertiesBuilder = new ArrayList<>();
 
         if (damage != null) propertiesBuilder.add(new Property(IDENTIFIER_WINDSCREEN_DAMAGE, damage.getByte()));
         if (zone != null) propertiesBuilder.add(zone);

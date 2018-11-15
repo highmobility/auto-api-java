@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * Activate or deactivate cruise control. The result is sent through the Cruise Control State
  * message.
  */
-public class ActivateDeactivateCruiseControl extends Command {
+public class ActivateDeactivateCruiseControl extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CRUISE_CONTROL, 0x12);
     Boolean activate;
     Integer speed;
@@ -57,24 +57,18 @@ public class ActivateDeactivateCruiseControl extends Command {
      * @param speed    The speed. Nullable if cruise control inactive.
      */
     public ActivateDeactivateCruiseControl(Boolean activate, @Nullable Integer speed) {
-        super(getBytes(activate, speed));
+        super(TYPE, getProperties(activate, speed));
         this.activate = activate;
         this.speed = speed;
     }
 
-    static byte[] getBytes(Boolean activate, Integer speed) {
-        byte[] bytes = new byte[3 + 4 + (speed != null ? 5 : 0)];
+    static Property[] getProperties(Boolean activate, Integer speed) {
+        Property[] properties = new Property[speed == null ? 1 : 2];
 
-        BooleanProperty activeProp = new BooleanProperty((byte) 0x01, activate);
+        properties[0] = new BooleanProperty((byte) 0x01, activate);
+        if (speed != null) properties[1] = new IntegerProperty((byte) 0x02, speed, 2);
 
-        ByteUtils.setBytes(bytes, TYPE.getIdentifierAndType(), 0);
-        ByteUtils.setBytes(bytes, activeProp.getPropertyBytes(), 3);
-        if (speed != null) {
-            IntegerProperty speedProp = new IntegerProperty((byte) 0x02, speed, 2);
-            ByteUtils.setBytes(bytes, speedProp.getPropertyBytes(), 7);
-        }
-
-        return bytes;
+        return properties;
     }
 
     ActivateDeactivateCruiseControl(byte[] bytes) {

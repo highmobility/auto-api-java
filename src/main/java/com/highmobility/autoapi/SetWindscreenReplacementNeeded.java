@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindscreenReplacementState;
 
@@ -49,7 +48,7 @@ public class SetWindscreenReplacementNeeded extends CommandWithProperties {
         this.state = state;
     }
 
-    static HMProperty getProperty(WindscreenReplacementState state) {
+    static Property getProperty(WindscreenReplacementState state) {
         return new Property(IDENTIFIER, state.getByte());
     }
 

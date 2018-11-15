@@ -87,17 +87,19 @@ public class WindowsState extends CommandWithProperties {
 
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
-                // if one property parsing fails, just dont add it
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_WINDOW_OPEN_PERCENTAGES:
-                        openBuilder.add(new WindowOpenPercentage(p.getPropertyBytes()));
-                        break;
+                        WindowOpenPercentage windowOpenPercentage =
+                                new WindowOpenPercentage(p.getPropertyBytes());
+                        openBuilder.add(windowOpenPercentage);
+                        return windowOpenPercentage;
                     case IDENTIFIER_WINDOW_POSITION:
-                        positionBuilder.add(new WindowPosition(p.getPropertyBytes()));
-                        break;
+                        WindowPosition windowPosition = new WindowPosition(p.getPropertyBytes());
+                        positionBuilder.add(windowPosition);
+                        return windowPosition;
                 }
-                
-                return null; // TODO: 12/11/2018
+
+                return null;
             });
         }
 

@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
@@ -77,7 +76,7 @@ public class ConnectToNetwork extends CommandWithProperties {
     }
 
     static Property[] getProperties(String ssid, NetworkSecurity security, String password) {
-        List<HMProperty> propertiesBuilder = new ArrayList<>();
+        List<Property> propertiesBuilder = new ArrayList<>();
 
         if (ssid != null)
             propertiesBuilder.add(new StringProperty(WifiState.SSID_IDENTIFIER, ssid));

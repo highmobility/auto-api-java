@@ -56,16 +56,19 @@ public class OffroadState extends CommandWithProperties {
     public OffroadState(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case ROUTE_ID:
-                    routeIncline = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-                case WHEEL_ID:
-                    wheelSuspension = Property.getUnsignedInt(property.getValueByte()) / 100f;
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case ROUTE_ID:
+                        routeIncline = Property.getUnsignedInt(p.getValueBytes());
+                        return routeIncline;
+                    case WHEEL_ID:
+                        wheelSuspension = Property.getUnsignedInt(p.getValueByte()) / 100f;
+                        return wheelSuspension;
+                }
+
+                return null;
+            });
         }
     }
 

@@ -4,6 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.CommandWithProperties;
+import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.autoapi.RooftopState;
 import com.highmobility.autoapi.SeatsState;
@@ -122,6 +123,19 @@ public class PropertyTest {
 
         PropertyTimestamp timestamp = command.getPropertyTimestamp(command.getPersonsDetected()[1]);
         assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
+    }
+
+    @Test public void invalidProperty() {
+        // test that invalid gasflapstate just sets the property to null and keeps the base property
+        Bytes bytes = new Bytes("00400101000103"); // 3 is invalid gasflap state
+        GasFlapState state = (GasFlapState) CommandResolver.resolve(bytes);
+
+        assertTrue(state.getState() == null);
+        assertTrue(state.getProperty((byte) 0x01) != null);
+    }
+
+    @Test public void propertyTimestampWithObjectFromArrayBaseType() {
+        // there is no such array that only holds primitive types..
     }
 
     @Test public void basePropertiesArrayObjectReplaced() {

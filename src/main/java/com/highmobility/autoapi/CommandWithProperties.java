@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.utils.ByteUtils;
@@ -225,7 +224,7 @@ public class CommandWithProperties extends Command {
         ArrayList<PropertyTimestamp> builder = new ArrayList<>();
 
         for (int i = 0; i < properties.length; i++) {
-            HMProperty property = properties[i];
+            Property property = properties[i];
             byte[] propertyBytes = property.getPropertyBytes();
             bytes = ByteUtils.concatBytes(bytes, propertyBytes);
 
@@ -241,6 +240,7 @@ public class CommandWithProperties extends Command {
         }
 
         this.propertyTimestamps = builder.toArray(new PropertyTimestamp[0]);
+        // TBODO: if properties have a timestamp, add these here
         this.properties = properties;
     }
 
@@ -257,10 +257,10 @@ public class CommandWithProperties extends Command {
 
         bytes = type.getIdentifierAndType();
 
-        HMProperty[] properties = builder.getProperties();
+        Property[] properties = builder.getProperties();
 
         for (int i = 0; i < properties.length; i++) {
-            HMProperty property = properties[i];
+            Property property = properties[i];
             byte[] propertyBytes = property.getPropertyBytes();
             bytes = ByteUtils.concatBytes(bytes, propertyBytes);
         }

@@ -19,8 +19,7 @@ import static org.junit.Assert.fail;
 public class FuelingTest {
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "00400101000101");
+        Bytes bytes = new Bytes("00400101000101");
 
         Command command = null;
         try {

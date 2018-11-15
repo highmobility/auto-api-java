@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ByteProperty;
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Lock;
 import com.highmobility.autoapi.property.value.Position;
@@ -71,7 +70,7 @@ public class ControlTrunk extends CommandWithProperties {
     }
 
     static Property[] getProperties(Lock state, Position position) {
-        ArrayList<HMProperty> properties = new ArrayList<>();
+        ArrayList<Property> properties = new ArrayList<>();
 
         if (state != null) {
             properties.add(new ByteProperty(IDENTIFIER_LOCK, state.getByte()));

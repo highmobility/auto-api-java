@@ -79,28 +79,31 @@ public class CruiseControlState extends CommandWithProperties {
         return adaptiveTargetSpeed;
     }
 
-    CruiseControlState(byte[] bytes) throws CommandParseException {
+    CruiseControlState(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case ACTIVE_IDENTIFIER:
-                    active = Property.getBool(property.getValueByte());
-                    break;
-                case LIMITER_IDENTIFIER:
-                    limiter = Limiter.fromByte(property.getValueByte());
-                    break;
-                case TARGET_SPEED_IDENTIFIER:
-                    targetSpeed = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-                case ADAPTIVE_ACTIVE_IDENTIFIER:
-                    adaptiveActive = Property.getBool(property.getValueByte());
-                    break;
-                case ADAPTIVE_TARGET_SPEED_IDENTIFIER:
-                    adaptiveTargetSpeed = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case ACTIVE_IDENTIFIER:
+                        active = Property.getBool(p.getValueByte());
+                        return active;
+                    case LIMITER_IDENTIFIER:
+                        limiter = Limiter.fromByte(p.getValueByte());
+                        return limiter;
+                    case TARGET_SPEED_IDENTIFIER:
+                        targetSpeed = Property.getUnsignedInt(p.getValueBytes());
+                        return targetSpeed;
+                    case ADAPTIVE_ACTIVE_IDENTIFIER:
+                        adaptiveActive = Property.getBool(p.getValueByte());
+                        return adaptiveActive;
+                    case ADAPTIVE_TARGET_SPEED_IDENTIFIER:
+                        adaptiveTargetSpeed = Property.getUnsignedInt(p.getValueBytes());
+                        return adaptiveTargetSpeed;
+                }
+
+                return null;
+            });
         }
     }
 

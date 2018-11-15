@@ -45,13 +45,19 @@ public class NotificationAction extends CommandWithProperties {
         this.actionIdentifier = actionIdentifier;
     }
 
-    public NotificationAction(byte[] bytes) throws CommandParseException {
+    public NotificationAction(byte[] bytes) {
         super(bytes);
 
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == IDENTIFIER) {
+                    actionIdentifier = Property.getUnsignedInt(p.getValueByte());
+                    return actionIdentifier;
+                }
 
-        actionIdentifier = Property.getUnsignedInt(prop.getValueByte());
+                return null;
+            });
+        }
     }
 
     private NotificationAction(Builder builder) {
@@ -79,6 +85,5 @@ public class NotificationAction extends CommandWithProperties {
         public NotificationAction build() {
             return new NotificationAction(this);
         }
-
     }
 }

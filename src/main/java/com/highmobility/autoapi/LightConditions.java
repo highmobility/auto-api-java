@@ -57,12 +57,13 @@ public class LightConditions extends CommandWithProperties {
                 switch (p.getPropertyIdentifier()) {
                     case OUTSIDE_LIGHT_IDENTIFIER:
                         outsideLight = Property.getFloat(p.getValueBytes());
-                        break;
+                        return outsideLight;
                     case INSIDE_LIGHT_IDENTIFIER:
                         insideLight = Property.getFloat(p.getValueBytes());
-                        break;
+                        return insideLight;
                 }
-                return null; // TODO: 12/11/2018
+
+                return null;
             });
         }
     }

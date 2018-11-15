@@ -24,7 +24,6 @@ import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.ByteProperty;
 import com.highmobility.autoapi.property.ColorProperty;
 import com.highmobility.autoapi.property.FrontExteriorLightState;
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;

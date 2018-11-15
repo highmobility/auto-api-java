@@ -21,8 +21,6 @@
 package com.highmobility.autoapi.rooftop;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
 
 public enum SunroofTiltState {
     CLOSED((byte) 0x00),

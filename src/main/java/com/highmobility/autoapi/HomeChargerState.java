@@ -209,52 +209,53 @@ public class HomeChargerState extends CommandWithProperties {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_CHARGING:
                         charging = Charging.fromByte(p.getValueByte());
-                        break;
+                        return charging;
                     case IDENTIFIER_AUTHENTICATION_MECHANISM:
-                        authenticationMechanism = AuthenticationMechanism.fromByte(p
-                                .getValueByte());
-                        break;
+                        authenticationMechanism =
+                                AuthenticationMechanism.fromByte(p.getValueByte());
+                        return authenticationMechanism;
                     case IDENTIFIER_PLUG_TYPE:
                         plugType = PlugType.fromByte(p.getValueByte());
-                        break;
+                        return plugType;
                     case CHARGING_POWER_IDENTIFIER:
                         chargingPower = Property.getFloat(p.getValueBytes());
-                        break;
+                        return chargingPower;
                     case SOLAR_CHARGING_ACTIVE_IDENTIFIER:
                         solarChargingActive = Property.getBool(p.getValueByte());
-                        break;
+                        return solarChargingActive;
                     case HOTSPOT_ENABLED_IDENTIFIER:
                         hotspotEnabled = Property.getBool(p.getValueByte());
-                        break;
+                        return hotspotEnabled;
                     case HOTSPOT_SSID_IDENTIFIER:
                         hotspotSsid = Property.getString(p.getValueBytes());
-                        break;
+                        return hotspotSsid;
                     case HOTSPOT_SECURITY_IDENTIFIER:
                         hotspotSecurity = NetworkSecurity.fromByte(p.getValueByte());
-                        break;
+                        return hotspotSecurity;
                     case HOTSPOT_PASSWORD_IDENTIFIER:
                         hotspotPassword = Property.getString(p.getValueBytes());
-                        break;
+                        return hotspotPassword;
                     case IDENTIFIER_AUTHENTICATION_STATE:
                         authenticated = Property.getBool(p.getValueByte());
-                        break;
+                        return authenticated;
                     case IDENTIFIER_CHARGE_CURRENT_DC:
                         chargeCurrentDC = Property.getFloat(p.getValueBytes());
-                        break;
+                        return chargeCurrentDC;
                     case IDENTIFIER_MAXIMUM_CHARGE_CURRENT:
                         maximumChargeCurrent = Property.getFloat(p.getValueBytes());
-                        break;
+                        return maximumChargeCurrent;
                     case IDENTIFIER_MINIMUM_CHARGE_CURRENT:
                         minimumChargeCurrent = Property.getFloat(p.getValueBytes());
-                        break;
+                        return minimumChargeCurrent;
                     case IDENTIFIER_COORDINATES:
                         coordinates = new CoordinatesProperty(p.getPropertyBytes());
-                        break;
+                        return coordinates;
                     case IDENTIFIER_PRICING_TARIFFS:
-                        tariffs.add(new PriceTariff(p.getPropertyBytes()));
-                        break;
+                        PriceTariff t = new PriceTariff(p.getPropertyBytes());
+                        tariffs.add(t);
+                        return t;
                 }
-                return null; // TODO: 12/11/2018
+                return null;
             });
         }
 
@@ -312,7 +313,8 @@ public class HomeChargerState extends CommandWithProperties {
          */
         public Builder setAuthenticationMechanism(AuthenticationMechanism authenticationMechanism) {
             this.authenticationMechanism = authenticationMechanism;
-            addProperty(new Property(IDENTIFIER_AUTHENTICATION_MECHANISM, authenticationMechanism.getByte()));
+            addProperty(new Property(IDENTIFIER_AUTHENTICATION_MECHANISM,
+                    authenticationMechanism.getByte()));
             return this;
         }
 

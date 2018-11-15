@@ -89,19 +89,19 @@ public class Failure extends CommandWithProperties {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_IDENTIFIER:
                         identifier = p.getValueBytes();
-                        break;
+                        return identifier;
                     case IDENTIFIER_TYPE:
                         failedTypeByte = p.getValueByte();
-                        break;
+                        return failedTypeByte;
                     case IDENTIFIER_FAILURE_REASON:
                         failureReason = FailureReason.fromByte(p.getValueByte());
-                        break;
+                        return failureReason;
                     case IDENTIFIER_FAILURE_DESCRIPTION:
                         failureDescription = Property.getString(p.getValueBytes());
-                        break;
-
+                        return failureDescription;
                 }
-                return null; // TODO: 12/11/2018
+                
+                return null;
             });
         }
 

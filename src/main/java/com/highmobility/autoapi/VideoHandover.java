@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.ScreenLocation;
@@ -97,7 +96,7 @@ public class VideoHandover extends CommandWithProperties {
     }
 
     static Property[] getProperties(String url, Integer startingSecond, ScreenLocation location) {
-        List<HMProperty> propertiesBuilder = new ArrayList<>();
+        List<Property> propertiesBuilder = new ArrayList<>();
 
         if (url != null) propertiesBuilder.add(new StringProperty(URL_IDENTIFIER, url));
         if (startingSecond != null)

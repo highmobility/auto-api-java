@@ -46,8 +46,17 @@ public class ValetMode extends CommandWithProperties {
     public ValetMode(byte[] bytes) {
         super(bytes);
 
-        Property p = getProperty((byte) 0x01);
-        if (p != null) active = Property.getBool(p.getValueByte());
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == ACTIVE_IDENTIFIER) {
+                    active = Property.getBool(p.getValueByte());
+                    return active;
+                }
+
+                return null;
+            });
+        }
+
     }
 
     @Override public boolean isState() {

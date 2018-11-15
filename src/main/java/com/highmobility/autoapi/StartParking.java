@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
@@ -96,7 +95,7 @@ public class StartParking extends CommandWithProperties {
 
     static Property[] getProperties(String operatorName, String operatorTicketId, Calendar
             startDate, Calendar endDate) {
-        List<HMProperty> propertiesBuilder = new ArrayList<>();
+        List<Property> propertiesBuilder = new ArrayList<>();
 
         if (operatorName != null)
             propertiesBuilder.add(new StringProperty(OPERATOR_NAME_IDENTIFIER, operatorName));

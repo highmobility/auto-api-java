@@ -1,8 +1,6 @@
 package com.highmobility.autoapi.property.windows;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
 
 public enum WindowLocation {
     FRONT_LEFT((byte) 0x00),

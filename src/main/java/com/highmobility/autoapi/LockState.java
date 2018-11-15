@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.doors.DoorLocation;
 import com.highmobility.autoapi.property.doors.DoorLockState;
 import com.highmobility.autoapi.property.doors.DoorPosition;
@@ -122,26 +121,32 @@ public class LockState extends CommandWithProperties {
         return true;
     }
 
-    public LockState(byte[] bytes) throws CommandParseException {
+    public LockState(byte[] bytes) {
         super(bytes);
 
         ArrayList<DoorLockState> insideLocksBuilder = new ArrayList<>();
         ArrayList<DoorLockState> outsideLocksBuilder = new ArrayList<>();
         ArrayList<DoorPosition> lockAndPositionStatesBuilder = new ArrayList<>();
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case POSITION_IDENTIFIER:
-                    lockAndPositionStatesBuilder.add(new DoorPosition(property.getPropertyBytes()));
-                    break;
-                case INSIDE_LOCK_IDENTIFIER:
-                    insideLocksBuilder.add(new DoorLockState(property.getPropertyBytes()));
-                    break;
-                case OUTSIDE_LOCK_IDENTIFIER:
-                    outsideLocksBuilder.add(new DoorLockState(property.getPropertyBytes()));
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case POSITION_IDENTIFIER:
+                        DoorPosition pos = new DoorPosition(p.getPropertyBytes());
+                        lockAndPositionStatesBuilder.add(pos);
+                        return pos;
+                    case INSIDE_LOCK_IDENTIFIER:
+                        DoorLockState id = new DoorLockState(p.getPropertyBytes());
+                        insideLocksBuilder.add(id);
+                        return id;
+                    case OUTSIDE_LOCK_IDENTIFIER:
+                        DoorLockState od = new DoorLockState(p.getPropertyBytes());
+                        outsideLocksBuilder.add(od);
+                        return od;
+                }
+
+                return null;
+            });
         }
 
         positions = lockAndPositionStatesBuilder.toArray(new DoorPosition[0]);

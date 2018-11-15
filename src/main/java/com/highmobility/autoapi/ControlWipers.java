@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WiperIntensity;
 import com.highmobility.autoapi.property.WiperState;
@@ -62,7 +61,7 @@ public class ControlWipers extends CommandWithProperties {
     }
 
     static Property[] getProperties(WiperState state, WiperIntensity intensity) {
-        ArrayList<HMProperty> builder = new ArrayList<>();
+        ArrayList<Property> builder = new ArrayList<>();
 
         if (state != null) builder.add(new Property(IDENTIFIER_WIPER_STATE, state.getByte()));
 

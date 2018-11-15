@@ -114,40 +114,40 @@ public class WindscreenState extends CommandWithProperties {
         return damageDetectionTime;
     }
 
-    public WindscreenState(byte[] bytes) throws CommandParseException {
+    public WindscreenState(byte[] bytes) {
         super(bytes);
-
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case IDENTIFIER_WIPERS_STATE:
-                    wiperState = WiperState.fromByte(property.getValueByte());
-                    break;
-                case IDENTIFIER_WIPER_INTENSITY:
-                    wiperIntensity = WiperIntensity.fromByte(property.getValueByte());
-                    break;
-                case IDENTIFIER_WINDSCREEN_DAMAGE:
-                    windscreenDamage = WindscreenDamage.fromByte(property.getValueByte());
-                    break;
-                case WindscreenDamageZoneMatrix.IDENTIFIER:
-                    windscreenDamageZoneMatrix = new WindscreenDamageZoneMatrix(property
-                            .getValueByte());
-                    break;
-                case WindscreenDamageZone.IDENTIFIER:
-                    windscreenDamageZone = new WindscreenDamageZone(property.getValueByte());
-                    break;
-                case WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER:
-                    windscreenReplacementState = WindscreenReplacementState.fromByte(property
-                            .getValueByte());
-                    break;
-                case DAMAGE_CONFIDENCE_IDENTIFIER:
-                    damageConfidence = Property.getUnsignedInt(property.getValueByte()) / 100f;
-                    break;
-                case DAMAGE_DETECTION_TIME_IDENTIFIER:
-                    damageDetectionTime = Property.getCalendar(property.getValueBytes());
-                    break;
-
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
+                switch (property.getPropertyIdentifier()) {
+                    case IDENTIFIER_WIPERS_STATE:
+                        wiperState = WiperState.fromByte(property.getValueByte());
+                        return wiperState;
+                    case IDENTIFIER_WIPER_INTENSITY:
+                        wiperIntensity = WiperIntensity.fromByte(property.getValueByte());
+                        return wiperIntensity;
+                    case IDENTIFIER_WINDSCREEN_DAMAGE:
+                        windscreenDamage = WindscreenDamage.fromByte(property.getValueByte());
+                        return windscreenDamage;
+                    case WindscreenDamageZoneMatrix.IDENTIFIER:
+                        windscreenDamageZoneMatrix = new WindscreenDamageZoneMatrix(property
+                                .getValueByte());
+                        return windscreenDamageZoneMatrix;
+                    case WindscreenDamageZone.IDENTIFIER:
+                        windscreenDamageZone = new WindscreenDamageZone(property.getValueByte());
+                        return windscreenDamageZone;
+                    case WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER:
+                        windscreenReplacementState = WindscreenReplacementState.fromByte(property
+                                .getValueByte());
+                        return windscreenReplacementState;
+                    case DAMAGE_CONFIDENCE_IDENTIFIER:
+                        damageConfidence = Property.getUnsignedInt(property.getValueByte()) / 100f;
+                        return damageConfidence;
+                    case DAMAGE_DETECTION_TIME_IDENTIFIER:
+                        damageDetectionTime = Property.getCalendar(property.getValueBytes());
+                        return damageDetectionTime;
+                }
+                return null;
+            });
         }
     }
 
@@ -241,7 +241,8 @@ public class WindscreenState extends CommandWithProperties {
         public Builder setWindscreenReplacementState(WindscreenReplacementState
                                                              windscreenReplacementState) {
             this.windscreenReplacementState = windscreenReplacementState;
-            addProperty(new Property(WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER, windscreenReplacementState.getByte()));
+            addProperty(new Property(WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER,
+                    windscreenReplacementState.getByte()));
             return this;
         }
 
