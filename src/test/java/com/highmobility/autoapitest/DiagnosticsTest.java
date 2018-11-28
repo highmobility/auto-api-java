@@ -27,7 +27,8 @@ public class DiagnosticsTest {
     Bytes bytes = new Bytes(
             "0033010100030249F00200020063030002003C04000209C40500015A0600020109090001010B0004414000000C00043F0000000D000205DC0E0002000A" +
                     "0F0004420E0000" +
-                    /*level7*/"10000101110002001412000444bb94cd13000446d7860014000100150001141600010A1700020041" +
+                    /*level7*/
+                    "10000101110002001412000444bb94cd13000446d7860014000100150001141600010A1700020041" +
                     /*level8*/"18000138" +
                     "19001A000100019C78000C436865636B20656E67696E6505416C657274" + // check control
                     // message 1
@@ -39,8 +40,8 @@ public class DiagnosticsTest {
                     // temp
                     "1C00030002EA1C00030102EA1C00030202EA1C00030302EA" + // wheel rpms
                     "1D001B020743313131364641095244555F32313246520750454E44494E47" +
-                    "1D0018020743313633414641064454523231320750454E44494E47"
-    );
+                    "1D0018020743313633414641064454523231320750454E44494E47" +
+                    "1E0004000249f0"); // TT-171
 
     @Test public void state() {
         Command command = CommandResolver.resolve(bytes);
@@ -149,6 +150,7 @@ public class DiagnosticsTest {
         }
 
         assertTrue(propertyCount == 2);
+        assertTrue(state.getMileageMeters() == 150000);
     }
 
     @Test public void get() {
@@ -214,8 +216,10 @@ public class DiagnosticsTest {
                 "PENDING");
         builder.addTroubleCode(code1);
         builder.addTroubleCode(code2);
+        builder.setMileageMeters(150000);
 
         assertTrue(TestUtils.bytesTheSame(builder.build(), bytes));
+        assertTrue(builder.build().equals(bytes));
     }
 
     @Test public void state0Properties() {

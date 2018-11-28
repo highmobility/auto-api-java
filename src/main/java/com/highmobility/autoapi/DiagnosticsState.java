@@ -76,6 +76,7 @@ public class DiagnosticsState extends CommandWithProperties {
     private static final byte IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE = 0x1D;
 
     private static final byte IDENTIFIER_BRAKE_FLUID = 0x14;
+    private static final byte MILEAGE_METERS_IDENTIFIER = 0x1E;
 
     Integer mileage;
     Integer oilTemperature;
@@ -107,6 +108,8 @@ public class DiagnosticsState extends CommandWithProperties {
     TireTemperature[] tireTemperatures;
     WheelRpm[] wheelRpms;
     DiagnosticsTroubleCode[] troubleCodes;
+
+    Integer mileageMeters;
 
     /**
      * @return The car mileage (odometer) in km.
@@ -335,6 +338,13 @@ public class DiagnosticsState extends CommandWithProperties {
         return troubleCodes;
     }
 
+    /**
+     * @return The mileage meters.
+     */
+    public Integer getMileageMeters() {
+        return mileageMeters;
+    }
+
     public DiagnosticsState(byte[] bytes) {
         super(bytes);
 
@@ -431,17 +441,21 @@ public class DiagnosticsState extends CommandWithProperties {
                                 new DiagnosticsTroubleCode(p.getPropertyBytes());
                         troubleCodes.add(code);
                         return code;
+                    case MILEAGE_METERS_IDENTIFIER:
+                        mileageMeters = Property.getUnsignedInt(p.getValueBytes());
+                        return mileageMeters;
                 }
 
                 return null;
             });
-        }
 
-        this.checkControlMessages = checkControlMessages.toArray(new CheckControlMessage[0]);
-        this.tirePressures = tirePressures.toArray(new TirePressure[0]);
-        this.tireTemperatures = tireTemperatures.toArray(new TireTemperature[0]);
-        this.wheelRpms = wheelRpms.toArray(new WheelRpm[0]);
-        this.troubleCodes = troubleCodes.toArray(new DiagnosticsTroubleCode[0]);
+            this.checkControlMessages =
+                    checkControlMessages.toArray(new CheckControlMessage[0]);
+            this.tirePressures = tirePressures.toArray(new TirePressure[0]);
+            this.tireTemperatures = tireTemperatures.toArray(new TireTemperature[0]);
+            this.wheelRpms = wheelRpms.toArray(new WheelRpm[0]);
+            this.troubleCodes = troubleCodes.toArray(new DiagnosticsTroubleCode[0]);
+        }
     }
 
     @Override public boolean isState() {
@@ -481,6 +495,7 @@ public class DiagnosticsState extends CommandWithProperties {
         tireTemperatures = builder.tireTemperatures.toArray(new TireTemperature[0]);
         wheelRpms = builder.wheelRpms.toArray(new WheelRpm[0]);
         troubleCodes = builder.troubleCodes.toArray(new DiagnosticsTroubleCode[0]);
+        mileageMeters = builder.mileageMeters;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
@@ -512,6 +527,7 @@ public class DiagnosticsState extends CommandWithProperties {
         private List<WheelRpm> wheelRpms = new ArrayList<>();
         private List<CheckControlMessage> checkControlMessages = new ArrayList<>();
         private List<DiagnosticsTroubleCode> troubleCodes = new ArrayList<>();
+        Integer mileageMeters;
 
         public Builder() {
             super(TYPE);
@@ -587,7 +603,8 @@ public class DiagnosticsState extends CommandWithProperties {
          */
         public Builder setWasherFluidLevel(WasherFluidLevel washerFluidLevel) {
             this.washerFluidLevel = washerFluidLevel;
-            addProperty(new Property(WASHER_FLUID_LEVEL_IDENTIFIER, washerFluidLevel.getByte()));
+            addProperty(new Property(WASHER_FLUID_LEVEL_IDENTIFIER,
+                    washerFluidLevel.getByte()));
             return this;
         }
 
@@ -726,12 +743,13 @@ public class DiagnosticsState extends CommandWithProperties {
          */
         public Builder setWheelBasedSpeed(Integer wheelBasedSpeed) {
             this.wheelBasedSpeed = wheelBasedSpeed;
-            addProperty(new IntegerProperty(WHEEL_BASE_SPEED_IDENTIFIER, wheelBasedSpeed, 2));
+            addProperty(new IntegerProperty(WHEEL_BASE_SPEED_IDENTIFIER, wheelBasedSpeed,
+                    2));
             return this;
         }
 
         /**
-         * Set the battery level.
+         * <<<<<<< HEAD Set the battery level.
          *
          * @param batteryLevel The battery level.
          */
@@ -857,5 +875,14 @@ public class DiagnosticsState extends CommandWithProperties {
             return this;
         }
 
+        /**
+         * @param mileageMeters The mileage meters.
+         * @return The builder.
+         */
+        public Builder setMileageMeters(Integer mileageMeters) {
+            this.mileageMeters = mileageMeters;
+            addProperty(new IntegerProperty(MILEAGE_METERS_IDENTIFIER, mileageMeters, 4));
+            return this;
+        }
     }
 }
