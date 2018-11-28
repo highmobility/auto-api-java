@@ -70,6 +70,10 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, HistoricalStates.TYPE)) {
                     command = new HistoricalStates(bytes);
                 }
+            } else if (bytesAreForIdentifier(bytes, Identifier.MULTI_COMMAND)) {
+                if (bytesAreForType(bytes, MultiCommand.TYPE)) {
+                    command = new MultiCommand(bytes);
+                }
             } else if (bytesAreForIdentifier(bytes, Identifier.DOOR_LOCKS)) {
                 if (bytesAreForType(bytes, GetLockState.TYPE)) {
                     command = new GetLockState(bytes);
