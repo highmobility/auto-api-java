@@ -22,7 +22,9 @@ public class DiagnosticsTest {
     Bytes bytes = new Bytes(
             "0033010100030249F00200020063030002003C04000209C40500015A0600020109070004410c000008000440c66666090001010A000B004013d70a4220000002EA0A000B014013d70a4220000002EA0A000B024013d70a4220000002EA0A000B034013d70a4220000002EA0B0004414000000C00043F0000000D000205DC0E0002000A" +
                     "0F0004420E0000" +
-                    "10000101110002001412000444bb94cd13000446d7860014000100150001141600010A1700020041"); // l7
+                    "10000101110002001412000444bb94cd13000446d7860014000100150001141600010A1700020041"+
+                    "1E0004000249f0"); // TT-171
+
     @Test public void state() {
         Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
@@ -93,6 +95,7 @@ public class DiagnosticsTest {
         assertTrue(state.getEngineTorque() == .2f);
         assertTrue(state.getEngineLoad() == .1f);
         assertTrue(state.getWheelBasedSpeed() == 65);
+        assertTrue(state.getMileageMeters() == 150000);
     }
 
     @Test public void get() {
@@ -143,6 +146,7 @@ public class DiagnosticsTest {
         builder.setEngineTorque(.2f);
         builder.setEngineLoad(.1f);
         builder.setWheelBasedSpeed(65);
+        builder.setMileageMeters(150000);
         assertTrue(builder.build().equals(bytes));
     }
 

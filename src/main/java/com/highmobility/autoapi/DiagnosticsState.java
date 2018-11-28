@@ -64,6 +64,8 @@ public class DiagnosticsState extends CommandWithProperties {
     private static final byte ENGINE_LOAD_IDENTIFIER = 0x16;
     private static final byte WHEEL_BASE_SPEED_IDENTIFIER = 0x17;
 
+    private static final byte MILEAGE_METERS_IDENTIFIER = 0x1E;
+
     Integer mileage;
     Integer oilTemperature;
     Integer speed;
@@ -89,6 +91,8 @@ public class DiagnosticsState extends CommandWithProperties {
     Float engineTorque;
     Float engineLoad;
     Integer wheelBasedSpeed;
+
+    Integer mileageMeters;
 
     /**
      * @return The car mileage (odometer) in km.
@@ -265,6 +269,13 @@ public class DiagnosticsState extends CommandWithProperties {
         return wheelBasedSpeed;
     }
 
+    /**
+     * @return The mileage meters.
+     */
+    public Integer getMileageMeters() {
+        return mileageMeters;
+    }
+
     public DiagnosticsState(byte[] bytes) throws CommandParseException {
         super(bytes);
         ArrayList<TireStateProperty> tireStatesBuilder = new ArrayList<>();
@@ -343,6 +354,9 @@ public class DiagnosticsState extends CommandWithProperties {
                 case WHEEL_BASE_SPEED_IDENTIFIER:
                     wheelBasedSpeed = Property.getSignedInt(property.getValueBytes());
                     break;
+                case MILEAGE_METERS_IDENTIFIER:
+                    mileageMeters = Property.getUnsignedInt(property.getValueBytes());
+                    break;
             }
         }
 
@@ -370,6 +384,7 @@ public class DiagnosticsState extends CommandWithProperties {
         distanceDrivenSinceReset = builder.distanceDrivenSinceReset;
         distanceDrivenSinceEngineStart = builder.distanceDrivenSinceEngineStart;
         fuelVolume = builder.fuelVolume;
+        mileageMeters = builder.mileageMeters;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
@@ -397,6 +412,8 @@ public class DiagnosticsState extends CommandWithProperties {
         Float engineTorque;
         Float engineLoad;
         Integer wheelBasedSpeed;
+
+        Integer mileageMeters;
 
         public Builder() {
             super(TYPE);
@@ -662,6 +679,16 @@ public class DiagnosticsState extends CommandWithProperties {
         public Builder setWheelBasedSpeed(Integer wheelBasedSpeed) {
             this.wheelBasedSpeed = wheelBasedSpeed;
             addProperty(new IntegerProperty(WHEEL_BASE_SPEED_IDENTIFIER, wheelBasedSpeed, 2));
+            return this;
+        }
+
+        /**
+         * @param mileageMeters The mileage meters.
+         * @return The builder.
+         */
+        public Builder setMileageMeters(Integer mileageMeters) {
+            this.mileageMeters = mileageMeters;
+            addProperty(new IntegerProperty(MILEAGE_METERS_IDENTIFIER, mileageMeters, 4));
             return this;
         }
     }
