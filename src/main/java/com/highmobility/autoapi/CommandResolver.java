@@ -64,6 +64,10 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, VehicleStatus.TYPE)) {
                     command = new VehicleStatus(bytes);
                 }
+            } else if (bytesAreForIdentifier(bytes, Identifier.MULTI_COMMAND)) {
+                if (bytesAreForType(bytes, MultiCommand.TYPE)) {
+                    command = new MultiCommand(bytes);
+                }
             } else if (bytesAreForIdentifier(bytes, Identifier.DOOR_LOCKS)) {
                 if (bytesAreForType(bytes, GetLockState.TYPE)) {
                     command = new GetLockState(bytes);
@@ -402,9 +406,7 @@ public class CommandResolver {
                 command = new Command(bytes);
             }
         } catch (
-                Exception e)
-
-        {
+                Exception e) {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
             Command.logger.info("Failed to parse command " + ByteUtils.hexFromBytes(ByteUtils
