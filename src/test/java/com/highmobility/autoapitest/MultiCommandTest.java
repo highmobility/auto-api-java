@@ -21,7 +21,7 @@ public class MultiCommandTest {
             "001302" +
                     "01000700201201000101" +
                     "01000700461201000101");
-    
+
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
