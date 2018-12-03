@@ -749,7 +749,7 @@ public class DiagnosticsState extends CommandWithProperties {
         }
 
         /**
-         * <<<<<<< HEAD Set the battery level.
+         * HEAD Set the battery level.
          *
          * @param batteryLevel The battery level.
          */
