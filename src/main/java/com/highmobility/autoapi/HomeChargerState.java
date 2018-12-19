@@ -205,55 +205,57 @@ public class HomeChargerState extends CommandWithProperties {
         ArrayList<PriceTariff> tariffs = new ArrayList<>();
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_CHARGING:
-                        charging = Charging.fromByte(property.getValueByte());
-                        break;
+                        charging = Charging.fromByte(p.getValueByte());
+                        return charging;
                     case IDENTIFIER_AUTHENTICATION_MECHANISM:
-                        authenticationMechanism = AuthenticationMechanism.fromByte(property
-                                .getValueByte());
-                        break;
+                        authenticationMechanism =
+                                AuthenticationMechanism.fromByte(p.getValueByte());
+                        return authenticationMechanism;
                     case IDENTIFIER_PLUG_TYPE:
-                        plugType = PlugType.fromByte(property.getValueByte());
-                        break;
+                        plugType = PlugType.fromByte(p.getValueByte());
+                        return plugType;
                     case CHARGING_POWER_IDENTIFIER:
-                        chargingPower = Property.getFloat(property.getValueBytes());
-                        break;
+                        chargingPower = Property.getFloat(p.getValueBytes());
+                        return chargingPower;
                     case SOLAR_CHARGING_ACTIVE_IDENTIFIER:
-                        solarChargingActive = Property.getBool(property.getValueByte());
-                        break;
+                        solarChargingActive = Property.getBool(p.getValueByte());
+                        return solarChargingActive;
                     case HOTSPOT_ENABLED_IDENTIFIER:
-                        hotspotEnabled = Property.getBool(property.getValueByte());
-                        break;
+                        hotspotEnabled = Property.getBool(p.getValueByte());
+                        return hotspotEnabled;
                     case HOTSPOT_SSID_IDENTIFIER:
-                        hotspotSsid = Property.getString(property.getValueBytes());
-                        break;
+                        hotspotSsid = Property.getString(p.getValueBytes());
+                        return hotspotSsid;
                     case HOTSPOT_SECURITY_IDENTIFIER:
-                        hotspotSecurity = NetworkSecurity.fromByte(property.getValueByte());
-                        break;
+                        hotspotSecurity = NetworkSecurity.fromByte(p.getValueByte());
+                        return hotspotSecurity;
                     case HOTSPOT_PASSWORD_IDENTIFIER:
-                        hotspotPassword = Property.getString(property.getValueBytes());
-                        break;
+                        hotspotPassword = Property.getString(p.getValueBytes());
+                        return hotspotPassword;
                     case IDENTIFIER_AUTHENTICATION_STATE:
-                        authenticated = Property.getBool(property.getValueByte());
-                        break;
+                        authenticated = Property.getBool(p.getValueByte());
+                        return authenticated;
                     case IDENTIFIER_CHARGE_CURRENT_DC:
-                        chargeCurrentDC = Property.getFloat(property.getValueBytes());
-                        break;
+                        chargeCurrentDC = Property.getFloat(p.getValueBytes());
+                        return chargeCurrentDC;
                     case IDENTIFIER_MAXIMUM_CHARGE_CURRENT:
-                        maximumChargeCurrent = Property.getFloat(property.getValueBytes());
-                        break;
+                        maximumChargeCurrent = Property.getFloat(p.getValueBytes());
+                        return maximumChargeCurrent;
                     case IDENTIFIER_MINIMUM_CHARGE_CURRENT:
-                        minimumChargeCurrent = Property.getFloat(property.getValueBytes());
-                        break;
+                        minimumChargeCurrent = Property.getFloat(p.getValueBytes());
+                        return minimumChargeCurrent;
                     case IDENTIFIER_COORDINATES:
-                        coordinates = new CoordinatesProperty(property.getPropertyBytes());
-                        break;
+                        coordinates = new CoordinatesProperty(p.getPropertyBytes());
+                        return coordinates;
                     case IDENTIFIER_PRICING_TARIFFS:
-                        tariffs.add(new PriceTariff(property.getPropertyBytes()));
-                        break;
+                        PriceTariff t = new PriceTariff(p.getPropertyBytes());
+                        tariffs.add(t);
+                        return t;
                 }
+                return null;
             });
         }
 
@@ -311,7 +313,8 @@ public class HomeChargerState extends CommandWithProperties {
          */
         public Builder setAuthenticationMechanism(AuthenticationMechanism authenticationMechanism) {
             this.authenticationMechanism = authenticationMechanism;
-            addProperty(new Property(IDENTIFIER_AUTHENTICATION_MECHANISM, authenticationMechanism.getByte()));
+            addProperty(new Property(IDENTIFIER_AUTHENTICATION_MECHANISM,
+                    authenticationMechanism.getByte()));
             return this;
         }
 

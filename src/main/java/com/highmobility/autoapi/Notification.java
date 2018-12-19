@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ActionItem;
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
@@ -84,33 +83,34 @@ public class Notification extends CommandWithProperties {
         this.receivedAction = receivedAction;
     }
 
-    Notification(byte[] bytes) throws CommandParseException {
+    Notification(byte[] bytes) {
         super(bytes);
         ArrayList<ActionItem> actionsBuilder = new ArrayList<>();
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case TEXT_IDENTIFIER:
-                    text = Property.getString(property.getValueBytes());
-                    break;
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case TEXT_IDENTIFIER:
+                        text = Property.getString(p.getValueBytes());
+                        return text;
+                    case ActionItem.IDENTIFIER:
+                        ActionItem item = new ActionItem(p.getPropertyBytes());
+                        actionsBuilder.add(item);
+                        return item;
+                    case RECEIVED_ACTION_IDENTIFIER:
+                        receivedAction = Property.getSignedInt(p.getValueByte());
+                        return receivedAction;
+                }
 
-                case ActionItem.IDENTIFIER:
-                    actionsBuilder.add(new ActionItem(property.getPropertyBytes()));
-                    break;
-
-                case RECEIVED_ACTION_IDENTIFIER:
-                    receivedAction = Property.getSignedInt(property.getValueByte());
-                    break;
-
-            }
+                return null;
+            });
         }
 
         actions = actionsBuilder.toArray(new ActionItem[0]);
     }
 
-    static HMProperty[] getProperties(String text, ActionItem[] actions, Integer receivedAction) {
-        HMProperty[] properties = new HMProperty[actions.length + 2];
+    static Property[] getProperties(String text, ActionItem[] actions, Integer receivedAction) {
+        Property[] properties = new Property[actions.length + 2];
         properties[0] = new StringProperty(TEXT_IDENTIFIER, text);
 
         System.arraycopy(actions, 0, properties, 1, actions.length);

@@ -51,8 +51,10 @@ public class HistoricalStates extends CommandWithProperties {
                     CommandWithProperties state = (CommandWithProperties) CommandResolver.resolve
                             (p.getValueBytes());
                     builder.add(state);
+                    return state;
 
                 }
+                return null;
             });
         }
 

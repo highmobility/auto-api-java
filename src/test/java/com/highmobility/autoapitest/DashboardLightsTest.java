@@ -11,23 +11,16 @@ import com.highmobility.value.Bytes;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
  */
 public class DashboardLightsTest {
-    Bytes bytes = new Bytes(
-            "006101010002000001000202010100020F030100021500");
+    Bytes bytes = new Bytes("006101010002000001000202010100020F030100021500");
 
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == DashboardLights.class);
         DashboardLights state = (DashboardLights) command;

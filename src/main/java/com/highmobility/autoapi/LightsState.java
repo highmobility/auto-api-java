@@ -95,20 +95,20 @@ public class LightsState extends CommandWithProperties {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_FRONT_EXTERIOR:
-                        frontExteriorLightState = FrontExteriorLightState.fromByte(property
-                                .getValueByte());
-                        break;
+                        frontExteriorLightState =
+                                FrontExteriorLightState.fromByte(p.getValueByte());
+                        return frontExteriorLightState;
                     case REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER:
-                        rearExteriorLightActive = Property.getBool(property.getValueByte());
-                        break;
+                        rearExteriorLightActive = Property.getBool(p.getValueByte());
+                        return rearExteriorLightActive;
                     case INTERIOR_LIGHT_ACTIVE_IDENTIFIER:
-                        interiorLightActive = Property.getBool(property.getValueByte());
-                        break;
+                        interiorLightActive = Property.getBool(p.getValueByte());
+                        return interiorLightActive;
                     case AMBIENT_COLOR_IDENTIFIER:
-                        byte[] valueBytes = property.getValueBytes();
+                        byte[] valueBytes = p.getValueBytes();
                         if (valueBytes.length != 3) throw new CommandParseException();
 
                         ambientColor = new int[4];
@@ -117,15 +117,17 @@ public class LightsState extends CommandWithProperties {
                         ambientColor[2] = valueBytes[2] & 0xFF;
                         ambientColor[3] = 255;
 
-                        break;
+                        return ambientColor;
                     case REVERSE_LIGHT_IDENTIFIER:
-                        reverseLightActive = Property.getBool(property.getValueByte());
-                        break;
+                        reverseLightActive = Property.getBool(p.getValueByte());
+                        return reverseLightActive;
 
                     case EMERGENCY_BRAKE_LIGHT_IDENTIFIER:
-                        emergencyBrakeLightActive = Property.getBool(property.getValueByte());
-                        break;
+                        emergencyBrakeLightActive = Property.getBool(p.getValueByte());
+                        return emergencyBrakeLightActive;
                 }
+
+                return null;
             });
         }
     }

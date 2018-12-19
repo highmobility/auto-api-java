@@ -41,11 +41,19 @@ public class GasFlapState extends CommandWithProperties {
         return state;
     }
 
-    public GasFlapState(byte[] bytes) throws CommandParseException {
+    public GasFlapState(byte[] bytes) {
         super(bytes);
 
-        Property p = getProperty(IDENTIFIER);
-        if (p != null) state = GasFlapStateValue.fromByte(p.getValueByte());
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == IDENTIFIER) {
+                    state = GasFlapStateValue.fromByte(p.getValueByte());
+                    return state;
+                }
+
+                return null;
+            });
+        }
     }
 
     @Override public boolean isState() {

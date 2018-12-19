@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CoordinatesProperty;
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
@@ -66,7 +65,7 @@ public class SetNaviDestination extends CommandWithProperties {
         this.name = name;
     }
 
-    static HMProperty[] getProperties(CoordinatesProperty coordinates, String name) {
+    static Property[] getProperties(CoordinatesProperty coordinates, String name) {
         List<Property> properties = new ArrayList<>();
 
         if (coordinates == null) throw new IllegalArgumentException();

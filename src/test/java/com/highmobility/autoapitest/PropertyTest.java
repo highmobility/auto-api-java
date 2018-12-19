@@ -4,8 +4,11 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.CommandWithProperties;
+import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.autoapi.RooftopState;
+import com.highmobility.autoapi.SeatsState;
+import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyTimestamp;
@@ -95,6 +98,57 @@ public class PropertyTest {
         builder.setPropertyTimestamps(calendar);
         ParkingBrakeState state = builder.build();
         assertTrue(state.equals(bytes));*/
+    }
+
+    @Test public void propertyTimestampWithField() throws ParseException {
+        String parkingStateProperty = "01000101";
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000D11010A112200000004" +
+                parkingStateProperty);
+        String expectedDate = "2017-01-10T17:34:00+0000";
+        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
+
+        PropertyTimestamp timestamp = command.getPropertyTimestamp(command.isActive());
+        assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
+        assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
+    }
+
+    @Test public void propertyTimestampWithObjectFromArray() throws ParseException {
+        Bytes bytes = new Bytes("005601" +
+                "0200020201" +
+                "0200020300" + "A4000E11010A112200000004" + "0200020300" +
+                "0300020201" +
+                "0300020300");
+        SeatsState command = (SeatsState) CommandResolver.resolve(bytes);
+        String expectedDate = "2017-01-10T17:34:00+0000";
+
+        PropertyTimestamp timestamp = command.getPropertyTimestamp(command.getPersonsDetected()[1]);
+        assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
+    }
+
+    @Test public void invalidProperty() {
+        // test that invalid gasflapstate just sets the property to null and keeps the base property
+        Bytes bytes = new Bytes("00400101000103"); // 3 is invalid gasflap state
+        GasFlapState state = (GasFlapState) CommandResolver.resolve(bytes);
+
+        assertTrue(state.getState() == null);
+        assertTrue(state.getProperty((byte) 0x01) != null);
+    }
+
+    @Test public void propertyTimestampWithObjectFromArrayBaseType() {
+        // there is no such array that only holds primitive types..
+    }
+
+    @Test public void basePropertiesArrayObjectReplaced() {
+        Bytes bytes = new Bytes("006101010002000001000202010100020F030100021500");
+        CommandWithProperties command = (CommandWithProperties) CommandResolver.resolve(bytes);
+
+        boolean found = false;
+        for (Property property : command.getProperties()) {
+            if (property instanceof DashboardLight) found = true;
+            break;
+        }
+
+        assertTrue(found);
     }
 
     @Test public void propertyTimestampNoData() throws ParseException {

@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.DashboardLight;
-import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,14 +59,20 @@ public class DashboardLights extends CommandWithProperties {
         return null;
     }
 
-    public DashboardLights(byte[] bytes) throws CommandParseException {
+    public DashboardLights(byte[] bytes) {
         super(bytes);
+
         List<DashboardLight> builder = new ArrayList<>();
 
-        for (Property property : properties) {
-            if (property.getPropertyIdentifier() == DashboardLight.IDENTIFIER) {
-                builder.add(new DashboardLight(property.getPropertyBytes()));
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == DashboardLight.IDENTIFIER) {
+                    DashboardLight light = new DashboardLight(p.getPropertyBytes());
+                    builder.add(light);
+                    return light;
+                }
+                return null;
+            });
         }
 
         lights = builder.toArray(new DashboardLight[0]);

@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
@@ -94,9 +93,9 @@ public class StartParking extends CommandWithProperties {
         this.endDate = endDate;
     }
 
-    static HMProperty[] getProperties(String operatorName, String operatorTicketId, Calendar
+    static Property[] getProperties(String operatorName, String operatorTicketId, Calendar
             startDate, Calendar endDate) {
-        List<HMProperty> propertiesBuilder = new ArrayList<>();
+        List<Property> propertiesBuilder = new ArrayList<>();
 
         if (operatorName != null)
             propertiesBuilder.add(new StringProperty(OPERATOR_NAME_IDENTIFIER, operatorName));
@@ -108,7 +107,7 @@ public class StartParking extends CommandWithProperties {
         if (endDate != null)
             propertiesBuilder.add(new CalendarProperty(END_DATE_IDENTIFIER, endDate));
 
-        return propertiesBuilder.toArray(new HMProperty[0]);
+        return propertiesBuilder.toArray(new Property[0]);
     }
 
     StartParking(byte[] bytes) throws CommandParseException {

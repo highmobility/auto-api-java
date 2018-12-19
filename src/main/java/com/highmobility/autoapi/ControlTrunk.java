@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ByteProperty;
-import com.highmobility.autoapi.property.HMProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Lock;
 import com.highmobility.autoapi.property.value.Position;
 
@@ -69,8 +69,8 @@ public class ControlTrunk extends CommandWithProperties {
         this.position = position;
     }
 
-    static HMProperty[] getProperties(Lock state, Position position) {
-        ArrayList<HMProperty> properties = new ArrayList<>();
+    static Property[] getProperties(Lock state, Position position) {
+        ArrayList<Property> properties = new ArrayList<>();
 
         if (state != null) {
             properties.add(new ByteProperty(IDENTIFIER_LOCK, state.getByte()));
@@ -80,19 +80,22 @@ public class ControlTrunk extends CommandWithProperties {
             properties.add(new ByteProperty(IDENTIFIER_POSITION, position.getByte()));
         }
 
-        return properties.toArray(new HMProperty[0]);
+        return properties.toArray(new Property[0]);
     }
 
     ControlTrunk(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(prop -> {
-                if (prop.getPropertyIdentifier() == IDENTIFIER_LOCK) {
-                    lock = Lock.fromByte(prop.getValueByte());
-                } else if (prop.getPropertyIdentifier() == IDENTIFIER_POSITION) {
-                    position = Position.fromByte(prop.getValueByte());
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == IDENTIFIER_LOCK) {
+                    lock = Lock.fromByte(p.getValueByte());
+                    return lock;
+                } else if (p.getPropertyIdentifier() == IDENTIFIER_POSITION) {
+                    position = Position.fromByte(p.getValueByte());
+                    return position;
                 }
+                return null;
             });
         }
     }

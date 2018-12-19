@@ -42,7 +42,7 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
  * <p>
  * Property has to have a value with a size greater or equal to 1.
  */
-public class Property extends Bytes implements HMProperty {
+public class Property extends Bytes {
     protected Property(byte identifier, int valueSize) {
         this.bytes = baseBytes(identifier, valueSize);
     }
@@ -113,8 +113,7 @@ public class Property extends Bytes implements HMProperty {
 
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
-                .getClass().getSimpleName() + ": " + e
-                .getMessage()) : ""));
+                .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
     }
 
     protected byte[] baseBytes(byte identifier, int valueSize) {
@@ -133,11 +132,11 @@ public class Property extends Bytes implements HMProperty {
         return bytes;
     }
 
-    @Override public byte getPropertyIdentifier() {
+    public byte getPropertyIdentifier() {
         return bytes[0];
     }
 
-    @Override public int getPropertyLength() {
+    public int getPropertyLength() {
         try {
             return Property.getUnsignedInt(bytes, 1, 2);
         } catch (IllegalArgumentException e) {
@@ -149,7 +148,7 @@ public class Property extends Bytes implements HMProperty {
     /**
      * @return All of the property bytes - with the identifier and length.
      */
-    @Override public byte[] getPropertyBytes() {
+    public byte[] getPropertyBytes() {
         return bytes;
     }
 

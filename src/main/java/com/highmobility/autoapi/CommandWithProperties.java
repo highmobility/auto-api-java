@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.utils.ByteUtils;
@@ -30,6 +29,7 @@ import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,7 +39,8 @@ import javax.annotation.Nullable;
  * Used for commands with properties. Can have 0 properties.
  */
 public class CommandWithProperties extends Command {
-    static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be null";
+    private static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be " +
+            "null";
     private static final byte NONCE_IDENTIFIER = (byte) 0xA0;
     private static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
     private static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
@@ -48,7 +49,9 @@ public class CommandWithProperties extends Command {
     Bytes nonce;
     Bytes signature;
     Calendar timestamp;
+
     PropertyTimestamp[] propertyTimestamps;
+    private HashMap<Object, PropertyTimestamp> linkedPropertyTimestamps;
 
     /**
      * @return The nonce for the signature.
@@ -79,8 +82,10 @@ public class CommandWithProperties extends Command {
     }
 
     /**
+     * Get property timestamps for a property identifier.
+     *
      * @param identifier The property identifier the timestamps are returned for.
-     * @return An array of timestamps for a property identifier.
+     * @return An array of property timestamps.
      */
     public PropertyTimestamp[] getPropertyTimestamps(byte identifier) {
         ArrayList<PropertyTimestamp> builder = new ArrayList<>();
@@ -95,8 +100,11 @@ public class CommandWithProperties extends Command {
     }
 
     /**
-     * @param property The property
-     * @return The property timestamp for a property.
+     * Get the timestamp for a property. This compares the additional data of the
+     * timestamp with the property data.
+     *
+     * @param property The property.
+     * @return The property timestamp.
      */
     @Nullable public PropertyTimestamp getPropertyTimestamp(Property property) {
         for (PropertyTimestamp propertyTimestamp : propertyTimestamps) {
@@ -104,6 +112,22 @@ public class CommandWithProperties extends Command {
                     propertyTimestamp.getAdditionalData().equals(property)) {
                 return propertyTimestamp;
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the timestamp for a subclass field. Use the getter values in the parsed Command
+     * subclass as the parameter.
+     *
+     * @param property The property.
+     * @return The property timestamp.
+     */
+    @Nullable public PropertyTimestamp getPropertyTimestamp(Object property) {
+        if (linkedPropertyTimestamps == null) return null;
+        for (HashMap.Entry<Object, PropertyTimestamp> pair : linkedPropertyTimestamps.entrySet()) {
+            if (pair.getKey() == property) return pair.getValue();
         }
 
         return null;
@@ -187,11 +211,11 @@ public class CommandWithProperties extends Command {
         }
 
         properties = builder.toArray(new Property[0]);
-        propertiesIterator = new PropertiesIterator();
         this.propertyTimestamps = propertyTimestamps.toArray(new PropertyTimestamp[0]);
+        propertiesIterator = new PropertiesIterator();
     }
 
-    CommandWithProperties(Type type, HMProperty[] properties) {
+    CommandWithProperties(Type type, Property[] properties) {
         super(type);
         if (propertiesExpected() && (properties == null || properties.length == 0))
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
@@ -200,7 +224,7 @@ public class CommandWithProperties extends Command {
         ArrayList<PropertyTimestamp> builder = new ArrayList<>();
 
         for (int i = 0; i < properties.length; i++) {
-            HMProperty property = properties[i];
+            Property property = properties[i];
             byte[] propertyBytes = property.getPropertyBytes();
             bytes = ByteUtils.concatBytes(bytes, propertyBytes);
 
@@ -216,10 +240,12 @@ public class CommandWithProperties extends Command {
         }
 
         this.propertyTimestamps = builder.toArray(new PropertyTimestamp[0]);
+        // TBODO: if properties have a timestamp, add these here
+        this.properties = properties;
     }
 
-    CommandWithProperties(Type type, List<HMProperty> properties) {
-        this(type, properties.toArray(new HMProperty[0]));
+    CommandWithProperties(Type type, List<Property> properties) {
+        this(type, properties.toArray(new Property[0]));
     }
 
     CommandWithProperties(Builder builder) throws IllegalArgumentException {
@@ -231,10 +257,10 @@ public class CommandWithProperties extends Command {
 
         bytes = type.getIdentifierAndType();
 
-        HMProperty[] properties = builder.getProperties();
+        Property[] properties = builder.getProperties();
 
         for (int i = 0; i < properties.length; i++) {
-            HMProperty property = properties[i];
+            Property property = properties[i];
             byte[] propertyBytes = property.getPropertyBytes();
             bytes = ByteUtils.concatBytes(bytes, propertyBytes);
         }
@@ -249,13 +275,13 @@ public class CommandWithProperties extends Command {
         // TBODO:
         private ArrayList<PropertyTimestamp> propertyTimestamps = new ArrayList<>();
 
-        protected ArrayList<HMProperty> propertiesBuilder = new ArrayList<>();
+        protected ArrayList<Property> propertiesBuilder = new ArrayList<>();
 
         public Builder(Type type) {
             this.type = type;
         }
 
-        public Builder addProperty(HMProperty property) {
+        public Builder addProperty(Property property) {
             propertiesBuilder.add(property);
             return this;
         }
@@ -295,12 +321,12 @@ public class CommandWithProperties extends Command {
             return new CommandWithProperties(this);
         }
 
-        protected HMProperty[] getProperties() {
-            return propertiesBuilder.toArray(new HMProperty[0]);
+        protected Property[] getProperties() {
+            return propertiesBuilder.toArray(new Property[0]);
         }
     }
 
-    // used to catch the property parsing exception. Only used when parsing incoming bytes.
+    // Used to catch the property parsing exception, managing parsed properties in this class.
     protected PropertiesIterator propertiesIterator;
 
     protected class PropertiesIterator implements Iterator<Property> {
@@ -330,7 +356,22 @@ public class CommandWithProperties extends Command {
         public void parseNext(PropertyIteration next) {
             Property nextProperty = next();
             try {
-                next.iterate(nextProperty);
+                Object parsedProperty = next.iterate(nextProperty);
+                if (parsedProperty != null) {
+                    if (parsedProperty instanceof Property) {
+                        // replace the base property with parsed one
+                        properties[currentIndex - 1] = (Property) parsedProperty;
+                    }
+
+                    // try to match a the property timestamp to the the property
+                    for (PropertyTimestamp propertyTimestamp : propertyTimestamps) {
+                        if (propertyTimestamp.getAdditionalData().equals(nextProperty.getPropertyBytes())) {
+                            if (linkedPropertyTimestamps == null)
+                                linkedPropertyTimestamps = new HashMap<>();
+                            linkedPropertyTimestamps.put(parsedProperty, propertyTimestamp);
+                        }
+                    }
+                }
             } catch (Exception e) {
                 nextProperty.printFailedToParse(e);
             }
@@ -338,6 +379,11 @@ public class CommandWithProperties extends Command {
     }
 
     public interface PropertyIteration {
-        void iterate(Property t) throws Exception;
+        /**
+         * @param p The base property.
+         * @return A parsed property or object, if did parse.
+         * @throws Exception
+         */
+        @Nullable Object iterate(Property p) throws Exception;
     }
 }

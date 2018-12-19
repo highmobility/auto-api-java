@@ -43,7 +43,7 @@ public class StringProperty extends Property {
         }
     }
 
-    public static HMProperty[] getProperties(String value, byte identifier) {
-        return new HMProperty[]{new StringProperty(identifier, value)};
+    public static Property[] getProperties(String value, byte identifier) {
+        return new Property[]{new StringProperty(identifier, value)};
     }
 }

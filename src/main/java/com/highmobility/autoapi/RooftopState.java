@@ -72,25 +72,28 @@ public class RooftopState extends CommandWithProperties {
         return sunroofTiltState;
     }
 
-    RooftopState(byte[] bytes) throws CommandParseException {
+    RooftopState(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case DIMMING_IDENTIFIER:
-                    dimmingPercentage = Property.getUnsignedInt(property.getValueByte()) / 100f;
-                    break;
-                case OPEN_IDENTIFIER:
-                    openPercentage = Property.getUnsignedInt(property.getValueByte()) / 100f;
-                    break;
-                case IDENTIFIER_CONVERTIBLE_ROOF:
-                    convertibleRoofState = ConvertibleRoofState.fromByte(property.getValueByte());
-                    break;
-                case IDENTIFIER_SUNROOF_TILT:
-                    sunroofTiltState = SunroofTiltState.fromByte(property.getValueByte());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case DIMMING_IDENTIFIER:
+                        dimmingPercentage = Property.getUnsignedInt(p.getValueByte()) / 100f;
+                        return dimmingPercentage;
+                    case OPEN_IDENTIFIER:
+                        openPercentage = Property.getUnsignedInt(p.getValueByte()) / 100f;
+                        return openPercentage;
+                    case IDENTIFIER_CONVERTIBLE_ROOF:
+                        convertibleRoofState = ConvertibleRoofState.fromByte(p.getValueByte());
+                        return convertibleRoofState;
+                    case IDENTIFIER_SUNROOF_TILT:
+                        sunroofTiltState = SunroofTiltState.fromByte(p.getValueByte());
+                        return sunroofTiltState;
+                }
+                
+                return null;
+            });
         }
     }
 
@@ -137,16 +140,14 @@ public class RooftopState extends CommandWithProperties {
         }
 
         public Builder setConvertibleRoofState(ConvertibleRoofState convertibleRoofState) {
-            convertibleRoofState.setIdentifier(IDENTIFIER_CONVERTIBLE_ROOF);
             this.convertibleRoofState = convertibleRoofState;
-            addProperty(convertibleRoofState);
+            addProperty(new Property(IDENTIFIER_CONVERTIBLE_ROOF, convertibleRoofState.getByte()));
             return this;
         }
 
         public Builder setSunroofTiltState(SunroofTiltState sunroofTiltState) {
-            sunroofTiltState.setIdentifier(IDENTIFIER_SUNROOF_TILT);
             this.sunroofTiltState = sunroofTiltState;
-            addProperty(sunroofTiltState);
+            addProperty(new Property(IDENTIFIER_SUNROOF_TILT, sunroofTiltState.getByte()));
             return this;
         }
 

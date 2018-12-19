@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WiperIntensity;
 import com.highmobility.autoapi.property.WiperState;
@@ -61,15 +60,15 @@ public class ControlWipers extends CommandWithProperties {
         this.intensity = intensity;
     }
 
-    static HMProperty[] getProperties(WiperState state, WiperIntensity intensity) {
-        ArrayList<HMProperty> builder = new ArrayList<>();
+    static Property[] getProperties(WiperState state, WiperIntensity intensity) {
+        ArrayList<Property> builder = new ArrayList<>();
 
         if (state != null) builder.add(new Property(IDENTIFIER_WIPER_STATE, state.getByte()));
 
         if (intensity != null)
             builder.add(new Property(IDENTIFIER_WIPER_INTENSITY, intensity.getByte()));
 
-        return builder.toArray(new HMProperty[0]);
+        return builder.toArray(new Property[0]);
     }
 
     ControlWipers(byte[] bytes) throws CommandParseException {
