@@ -20,8 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.GasFlapStateValue;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.value.Lock;
+import com.highmobility.autoapi.property.value.Position;
 
 import javax.annotation.Nullable;
 
@@ -30,15 +31,24 @@ import javax.annotation.Nullable;
  */
 public class GasFlapState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FUELING, 0x01);
-    private static final byte IDENTIFIER = 0x01;
+    private static final byte LOCK_IDENTIFIER = 0x02;
+    private static final byte POSITION_IDENTIFIER = 0x03;
 
-    GasFlapStateValue state;
+    Lock lock;
+    Position position;
 
     /**
-     * @return The gas flap state.
+     * @return The gas flap lock.
      */
-    @Nullable public GasFlapStateValue getState() {
-        return state;
+    @Nullable public Lock getLock() {
+        return lock;
+    }
+
+    /**
+     * @return The gas flap position.
+     */
+    @Nullable public Position getPosition() {
+        return position;
     }
 
     public GasFlapState(byte[] bytes) {
@@ -46,9 +56,10 @@ public class GasFlapState extends CommandWithProperties {
 
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == IDENTIFIER) {
-                    state = GasFlapStateValue.fromByte(p.getValueByte());
-                    return state;
+                if (p.getPropertyIdentifier() == LOCK_IDENTIFIER) {
+                    lock = Lock.fromByte(p.getValueByte());
+                } else if (p.getPropertyIdentifier() == POSITION_IDENTIFIER) {
+                    position = Position.fromByte(p.getValueByte());
                 }
 
                 return null;
@@ -62,18 +73,31 @@ public class GasFlapState extends CommandWithProperties {
 
     private GasFlapState(Builder builder) {
         super(builder);
+        this.lock = builder.lock;
+        this.position = builder.position;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        GasFlapStateValue state;
+        Lock lock;
+        Position position;
 
         /**
-         * @param state The gas flap state.
+         * @param lock The gas flap lock.
          * @return The builder.
          */
-        public Builder setState(GasFlapStateValue state) {
-            this.state = state;
-            addProperty(new Property(IDENTIFIER, state.getByte()));
+        public Builder setLock(Lock lock) {
+            this.lock = lock;
+            addProperty(new Property(LOCK_IDENTIFIER, lock.getByte()));
+            return this;
+        }
+
+        /**
+         * @param position The gas flap position.
+         * @return The builder.
+         */
+        public Builder setPosition(Position position) {
+            this.position = position;
+            addProperty(new Property(POSITION_IDENTIFIER, position.getByte()));
             return this;
         }
 

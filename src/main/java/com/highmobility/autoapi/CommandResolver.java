@@ -259,8 +259,8 @@ public class CommandResolver {
                     command = new GetGasFlapState(bytes);
                 } else if (bytesAreForType(bytes, GasFlapState.TYPE)) {
                     command = new GasFlapState(bytes);
-                } else if (bytesAreForType(bytes, OpenCloseGasFlap.TYPE)) {
-                    command = new OpenCloseGasFlap(bytes);
+                } else if (bytesAreForType(bytes, ControlGasFlap.TYPE)) {
+                    command = new ControlGasFlap(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.PARKING_TICKET)) {
                 if (bytesAreForType(bytes, GetParkingTicket.TYPE)) {

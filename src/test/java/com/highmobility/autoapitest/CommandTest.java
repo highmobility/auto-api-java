@@ -127,11 +127,11 @@ public class CommandTest {
 
     @Test public void invalidProperty() {
         // test that invalid gasflapstate just sets the property to null and keeps the base property
-        Bytes bytes = new Bytes("00400101000103"); // 3 is invalid gasflap state
+        Bytes bytes = new Bytes("00400102000103"); // 3 is invalid gasflap lock state
         GasFlapState state = (GasFlapState) CommandResolver.resolve(bytes);
 
-        assertTrue(state.getState() == null);
-        assertTrue(state.getProperty((byte) 0x01) != null);
+        assertTrue(state.getLock() == null);
+        assertTrue(state.getProperty((byte) 0x02) != null);
     }
 
     @Test public void propertyTimestampWithObjectFromArrayBaseType() {
