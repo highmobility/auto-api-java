@@ -220,13 +220,13 @@ public class CommandWithProperties extends Command {
             if (createBytes) bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
 
             if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
-                if (property.getValueSize() != 9) continue; // invalid nonce length, just ignore
+                if (property.getValueLength() != 9) continue; // invalid nonce length, just ignore
                 nonce = new Bytes(property.getValueBytes());
             } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
-                if (property.getValueSize() != 64) continue; // ignore invalid length
+                if (property.getValueLength() != 64) continue; // ignore invalid length
                 signature = new Bytes(property.getValueBytes());
             } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
-                if (property.getValueSize() != Property.CALENDAR_SIZE) continue;
+                if (property.getValueLength() != Property.CALENDAR_SIZE) continue;
                 timestamp = Property.getCalendar(property.getValueBytes());
             } else if (property.getPropertyIdentifier() == PropertyTimestamp.IDENTIFIER) {
                 if (property.getPropertyLength() < PropertyTimestamp.LENGTH_WITHOUT_ADDITIONAL_DATA)

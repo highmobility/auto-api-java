@@ -43,6 +43,24 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
  * Property has to have a value with a size greater or equal to 1.
  */
 public class Property extends Bytes {
+    public static final int CALENDAR_SIZE = 8;
+
+    private Calendar timestamp;
+
+    /**
+     * @return The timestamp of the property.
+     */
+    public Calendar getTimestamp() {
+        return timestamp;
+    }
+
+    /**
+     * @param timestamp Set the property timestamp.
+     */
+    public void setTimestamp(Calendar timestamp) {
+        this.timestamp = timestamp;
+    }
+
     protected Property(byte identifier, int valueSize) {
         this.bytes = baseBytes(identifier, valueSize);
     }
@@ -78,7 +96,7 @@ public class Property extends Bytes {
         this.bytes = bytes;
     }
 
-    public int getSize() {
+    public int getValueLength() {
         return Property.getUnsignedInt(bytes, 1, 2);
     }
 
@@ -107,10 +125,6 @@ public class Property extends Bytes {
         bytes[0] = identifier;
     }
 
-    public void printFailedToParse() {
-        printFailedToParse(null);
-    }
-
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
@@ -137,12 +151,7 @@ public class Property extends Bytes {
     }
 
     public int getPropertyLength() {
-        try {
-            return Property.getUnsignedInt(bytes, 1, 2);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            return 0;
-        }
+        return bytes.length;
     }
 
     /**
@@ -385,7 +394,7 @@ public class Property extends Bytes {
     public static Calendar getCalendar(byte[] bytes, int at) throws IllegalArgumentException {
         Calendar c = new GregorianCalendar();
 
-        if (bytes.length >= at + 8) {
+        if (bytes.length >= at + CALENDAR_SIZE) {
             c.set(2000 + bytes[at], bytes[at + 1] - 1, bytes[at + 2], bytes[at + 3], bytes[at +
                     4], bytes[at + 5]);
             int minutesOffset = getSignedInt(new byte[]{bytes[at + 6], bytes[at + 7]});
@@ -407,7 +416,7 @@ public class Property extends Bytes {
     }
 
     public static byte[] calendarToBytes(Calendar calendar) {
-        byte[] bytes = new byte[8];
+        byte[] bytes = new byte[CALENDAR_SIZE];
 
         bytes[0] = (byte) (calendar.get(Calendar.YEAR) - 2000);
         bytes[1] = (byte) (calendar.get(Calendar.MONTH) + 1);

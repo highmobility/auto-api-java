@@ -56,6 +56,6 @@ public class ColorProperty extends Property {
             ambientColor[i] = Property.getUnsignedInt(bytes[i + 3]);
         }
 
-        if (getSize() == 3) ambientColor[3] = 255;
+        if (getValueLength() == 3) ambientColor[3] = 255;
     }
 }
