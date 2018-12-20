@@ -35,11 +35,14 @@ public class CommandTest {
                 "04000102" +
                 "A5000D02000A54727920696e20343073" +
                 "A5000D03000A54727920696e20343073");
+
         CommandWithProperties command = (CommandWithProperties) CommandResolver.resolve(bytes);
         assertTrue(command.getPropertyFailures().length == 2);
         assertTrue(command.getPropertyFailure((byte) 0x02) != null);
         assertTrue(command.getPropertyFailure((byte) 0x03) != null);
-        // TODO:
+        assertTrue(command.getPropertyFailure((byte) 0x04) == null);
+
+        // TBODO:
     }
 
     @Test

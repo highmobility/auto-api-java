@@ -22,6 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -51,6 +52,7 @@ public class CommandWithProperties extends Command {
     Calendar timestamp;
 
     PropertyTimestamp[] propertyTimestamps;
+    PropertyFailure[] propertyFailures;
     private HashMap<Object, PropertyTimestamp> linkedPropertyTimestamps;
 
     /**
@@ -128,6 +130,27 @@ public class CommandWithProperties extends Command {
         if (linkedPropertyTimestamps == null) return null;
         for (HashMap.Entry<Object, PropertyTimestamp> pair : linkedPropertyTimestamps.entrySet()) {
             if (pair.getKey() == property) return pair.getValue();
+        }
+
+        return null;
+    }
+
+    /**
+     * @return Failures of properties.
+     */
+    public PropertyFailure[] getPropertyFailures() {
+        return propertyFailures;
+    }
+
+    /**
+     * Get the failure for a property identifier.
+     *
+     * @param identifier The property identifier of the failure.
+     * @return An array of property failures.
+     */
+    @Nullable public PropertyFailure getPropertyFailure(byte identifier) {
+        for (PropertyFailure propertyFailure : propertyFailures) {
+            if (propertyFailure.getFailedPropertyIdentifier() == identifier) return propertyFailure;
         }
 
         return null;
@@ -213,30 +236,38 @@ public class CommandWithProperties extends Command {
         if (createBytes) bytes = type.getIdentifierAndType();
 
         ArrayList<PropertyTimestamp> propertyTimestamps = new ArrayList<>();
+        ArrayList<PropertyFailure> propertyFailures = new ArrayList<>();
 
         for (int i = 0; i < properties.length; i++) {
-            Property property = properties[i];
+            try {
+                Property property = properties[i];
+                if (createBytes) bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
 
-            if (createBytes) bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
-
-            if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
-                if (property.getValueLength() != 9) continue; // invalid nonce length, just ignore
-                nonce = new Bytes(property.getValueBytes());
-            } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
-                if (property.getValueLength() != 64) continue; // ignore invalid length
-                signature = new Bytes(property.getValueBytes());
-            } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
-                if (property.getValueLength() != Property.CALENDAR_SIZE) continue;
-                timestamp = Property.getCalendar(property.getValueBytes());
-            } else if (property.getPropertyIdentifier() == PropertyTimestamp.IDENTIFIER) {
-                if (property.getPropertyLength() < PropertyTimestamp.LENGTH_WITHOUT_ADDITIONAL_DATA)
-                    continue;
-                PropertyTimestamp timestamp = new PropertyTimestamp(property.getPropertyBytes());
-                properties[i] = timestamp;
-                propertyTimestamps.add(timestamp);
+                if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
+                    if (property.getValueLength() != 9)
+                        continue; // invalid nonce length, just ignore
+                    nonce = new Bytes(property.getValueBytes());
+                } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
+                    if (property.getValueLength() != 64) continue; // ignore invalid length
+                    signature = new Bytes(property.getValueBytes());
+                } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
+                    timestamp = Property.getCalendar(property.getValueBytes());
+                } else if (property.getPropertyIdentifier() == PropertyTimestamp.IDENTIFIER) {
+                    PropertyTimestamp timestamp =
+                            new PropertyTimestamp(property.getPropertyBytes());
+                    properties[i] = timestamp;
+                    propertyTimestamps.add(timestamp);
+                } else if (property.getPropertyIdentifier() == PropertyFailure.IDENTIFIER) {
+                    PropertyFailure failure = new PropertyFailure(property.getPropertyBytes());
+                    properties[i] = failure;
+                    propertyFailures.add(failure);
+                }
+            } catch (Exception e) {
+                // ignore if some universal property had invalid data. just keep the base one.
             }
         }
 
+        this.propertyFailures = propertyFailures.toArray(new PropertyFailure[0]);
         this.propertyTimestamps = propertyTimestamps.toArray(new PropertyTimestamp[0]);
 
         propertiesIterator = new PropertiesIterator();
