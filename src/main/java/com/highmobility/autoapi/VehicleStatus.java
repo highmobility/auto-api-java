@@ -64,6 +64,8 @@ public class VehicleStatus extends CommandWithProperties {
     private static final byte IDENTIFIER_DRIVER_SEAT_LOCATION = 0x10;
     private static final byte IDENTIFIER_EQUIPMENTS = 0x11;
 
+    private static final byte IDENTIFIER_BRAND = 0x12;
+
     Command[] states;
 
     String vin;
@@ -88,6 +90,9 @@ public class VehicleStatus extends CommandWithProperties {
     DisplayUnit displayUnit;
     DriverSeatLocation driverSeatLocation;
     String[] equipments;
+
+    // l9
+    String brand;
 
     /**
      * @return All of the states.
@@ -229,6 +234,13 @@ public class VehicleStatus extends CommandWithProperties {
         return equipments;
     }
 
+    /**
+     * @return The vehicle brand name.
+     */
+    @Nullable public String getBrand() {
+        return brand;
+    }
+
     VehicleStatus(byte[] bytes) {
         super(bytes);
 
@@ -294,6 +306,9 @@ public class VehicleStatus extends CommandWithProperties {
                         String equipment = Property.getString(p.getValueBytes());
                         equipments.add(equipment);
                         return equipment;
+                    case IDENTIFIER_BRAND:
+                        brand = Property.getString(p.getValueBytes());
+                        return brand;
                 }
 
                 return null;
@@ -329,6 +344,7 @@ public class VehicleStatus extends CommandWithProperties {
         displayUnit = builder.displayUnit;
         driverSeatLocation = builder.driverSeatLocation;
         equipments = builder.equipments.toArray(new String[0]);
+        brand = builder.brand;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
@@ -352,6 +368,8 @@ public class VehicleStatus extends CommandWithProperties {
         DisplayUnit displayUnit;
         DriverSeatLocation driverSeatLocation;
         List<String> equipments = new ArrayList<>();
+
+        private String brand;
 
         public Builder() {
             super(TYPE);
@@ -556,9 +574,25 @@ public class VehicleStatus extends CommandWithProperties {
             return this;
         }
 
+        /**
+         * Add an equipment.
+         *
+         * @param equipment The equipment.
+         * @return The builder.
+         */
         public Builder addEquipment(String equipment) {
             equipments.add(equipment);
             addProperty(new StringProperty(IDENTIFIER_EQUIPMENTS, equipment));
+            return this;
+        }
+
+        /**
+         * @param brand The brand.
+         * @return The builder.
+         */
+        public Builder setBrand(String brand) {
+            this.brand = brand;
+            addProperty(new StringProperty(IDENTIFIER_BRAND, brand));
             return this;
         }
 

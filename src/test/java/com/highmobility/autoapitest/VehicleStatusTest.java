@@ -40,60 +40,53 @@ public class VehicleStatusTest {
                     "0F000100" + // display unit km
                     "10000100" + // driver seat left
                     "11000F5061726B696E672073656E736F7273" + // Parking sensors
-                    "1100104175746F6D6174696320776970657273" // Automatic wipers
+                    "1100104175746F6D6174696320776970657273" + // Automatic wipers
+                    // l9
+                    "1200084D65726365646573"
     );
 
-    VehicleStatus builder;
+    VehicleStatus command;
 
     @Before
     public void setup() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-        if (command != null && command instanceof VehicleStatus) {
-            builder = (VehicleStatus) command;
-        } else {
-            fail();
-        }
+        command = (VehicleStatus) CommandResolver.resolve(bytes);
     }
 
     @Test
     public void states_size() {
-        assertTrue(builder.getStates().length == 2);
+        assertTrue(command.getStates().length == 2);
     }
 
     @Test
     public void properties() {
-        assertTrue(builder.getVin().equals("JF2SHBDC7CH451869"));
-        assertTrue(builder.getPowerTrain() == PowerTrain.ALLELECTRIC);
-        assertTrue(builder.getModelName().equals("Type X"));
-        assertTrue(builder.getName().equals("My Car"));
-        assertTrue(builder.getLicensePlate().equals("ABC123"));
+        assertTrue(command.getVin().equals("JF2SHBDC7CH451869"));
+        assertTrue(command.getPowerTrain() == PowerTrain.ALLELECTRIC);
+        assertTrue(command.getModelName().equals("Type X"));
+        assertTrue(command.getName().equals("My Car"));
+        assertTrue(command.getLicensePlate().equals("ABC123"));
 
-        assertTrue(builder.getSalesDesignation().equals("Package+"));
-        assertTrue(builder.getModelYear() == 2017);
-        assertTrue(builder.getColorName().equals("Estoril Blau"));
-        assertTrue(builder.getPower() == 220);
-        assertTrue(builder.getNumberOfDoors() == 5);
-        assertTrue(builder.getNumberOfSeats() == 5);
+        assertTrue(command.getSalesDesignation().equals("Package+"));
+        assertTrue(command.getModelYear() == 2017);
+        assertTrue(command.getColorName().equals("Estoril Blau"));
+        assertTrue(command.getPower() == 220);
+        assertTrue(command.getNumberOfDoors() == 5);
+        assertTrue(command.getNumberOfSeats() == 5);
 
-        assertTrue(builder.getState(TrunkState.TYPE) != null);
+        assertTrue(command.getState(TrunkState.TYPE) != null);
 
-        assertTrue(builder.getEngineVolume() == 2.5f);
-        assertTrue(builder.getMaxTorque() == 245);
-        assertTrue(builder.getGearBox() == Gearbox.AUTOMATIC);
+        assertTrue(command.getEngineVolume() == 2.5f);
+        assertTrue(command.getMaxTorque() == 245);
+        assertTrue(command.getGearBox() == Gearbox.AUTOMATIC);
 
-        assertTrue(builder.getDisplayUnit() == DisplayUnit.KM);
-        assertTrue(builder.getDriverSeatLocation() == DriverSeatLocation.LEFT);
-        assertTrue(builder.getEquipments().length == 2);
+        assertTrue(command.getDisplayUnit() == DisplayUnit.KM);
+        assertTrue(command.getDriverSeatLocation() == DriverSeatLocation.LEFT);
+        assertTrue(command.getEquipments().length == 2);
         int count = 0;
-        for (String s : builder.getEquipments()) {
+        for (String s : command.getEquipments()) {
             if (s.equals("Parking sensors") || s.equals("Automatic wipers")) count++;
         }
         assertTrue(count == 2);
+        assertTrue(command.getBrand().equals("Mercedes"));
     }
 
     @Test public void build() {
@@ -133,8 +126,8 @@ public class VehicleStatusTest {
     }
 
     Command getState(Class forClass) {
-        for (int i = 0; i < builder.getStates().length; i++) {
-            Command command = builder.getStates()[i];
+        for (int i = 0; i < command.getStates().length; i++) {
+            Command command = this.command.getStates()[i];
             if (command.getClass().equals(forClass)) return command;
         }
 
@@ -176,6 +169,9 @@ public class VehicleStatusTest {
         builder.setDriverSeatLocation(DriverSeatLocation.LEFT);
         builder.addEquipment("Parking sensors");
         builder.addEquipment("Automatic wipers");
+
+        // l9
+        builder.setBrand("Mercedes");
 
         return builder;
     }
