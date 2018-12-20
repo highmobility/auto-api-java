@@ -100,8 +100,8 @@ public class CommandWithProperties extends Command {
     }
 
     /**
-     * Get the timestamp for a property. This compares the additional data of the
-     * timestamp with the property data.
+     * Get the timestamp for a property. This compares the additional data of the timestamp with the
+     * property data.
      *
      * @param property The property.
      * @return The property timestamp.
@@ -118,8 +118,8 @@ public class CommandWithProperties extends Command {
     }
 
     /**
-     * Get the timestamp for a subclass field. Use the getter values in the parsed Command
-     * subclass as the parameter.
+     * Get the timestamp for a subclass field. Use the getter values in the parsed Command subclass
+     * as the parameter.
      *
      * @param property The property.
      * @return The property timestamp.
@@ -179,102 +179,79 @@ public class CommandWithProperties extends Command {
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
         ArrayList<Property> builder = new ArrayList<>();
-        ArrayList<PropertyTimestamp> propertyTimestamps = new ArrayList<>();
-
         PropertyEnumeration enumeration = new PropertyEnumeration(bytes);
 
+        // create the base properties
         while (enumeration.hasMoreElements()) {
             PropertyEnumeration.EnumeratedProperty propertyEnumeration = enumeration.nextElement();
             Property property = new Property(Arrays.copyOfRange(bytes, propertyEnumeration
                     .valueStart - 3, propertyEnumeration.valueStart + propertyEnumeration.size));
             builder.add(property);
-
-            if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
-                if (propertyEnumeration.size != 9)
-                    continue; // invalid nonce length, just ignore
-
-                nonce = new Bytes(Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
-                        propertyEnumeration.valueStart + propertyEnumeration.size));
-            } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
-                if (propertyEnumeration.size != 64) continue; // ignore invalid length
-                signature = new Bytes(Arrays.copyOfRange(bytes, propertyEnumeration.valueStart,
-                        propertyEnumeration.valueStart + propertyEnumeration.size));
-            } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
-                timestamp = Property.getCalendar(bytes, propertyEnumeration.valueStart);
-            } else if (property.getPropertyIdentifier() == PropertyTimestamp.IDENTIFIER) {
-                try {
-                    propertyTimestamps.add(new PropertyTimestamp(property.getPropertyBytes()));
-                } catch (CommandParseException e) {
-                    Command.logger.error("invalid property timestamp " + property);
-                }
-            }
         }
 
-        properties = builder.toArray(new Property[0]);
-        this.propertyTimestamps = propertyTimestamps.toArray(new PropertyTimestamp[0]);
-        propertiesIterator = new PropertiesIterator();
+        // find universal properties
+        findUniversalProperties(builder.toArray(new Property[0]), false);
     }
 
     CommandWithProperties(Type type, Property[] properties) {
         super(type);
-        if (propertiesExpected() && (properties == null || properties.length == 0))
-            throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
-
-        bytes = type.getIdentifierAndType();
-        ArrayList<PropertyTimestamp> builder = new ArrayList<>();
-
-        for (int i = 0; i < properties.length; i++) {
-            Property property = properties[i];
-            byte[] propertyBytes = property.getPropertyBytes();
-            bytes = ByteUtils.concatBytes(bytes, propertyBytes);
-
-            if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
-                nonce = new Bytes(Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length));
-            } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
-                signature = new Bytes(Arrays.copyOfRange(propertyBytes, 3, propertyBytes.length));
-            } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
-                timestamp = Property.getCalendar(propertyBytes, 3);
-            } else if (property instanceof PropertyTimestamp) {
-                builder.add((PropertyTimestamp) property);
-            }
-        }
-
-        this.propertyTimestamps = builder.toArray(new PropertyTimestamp[0]);
-        // TBODO: if properties have a timestamp, add these here
-        this.properties = properties;
+        // here there are no timestamps. This constructor is called from setter commands only.
+        findUniversalProperties(properties, true);
     }
 
     CommandWithProperties(Type type, List<Property> properties) {
         this(type, properties.toArray(new Property[0]));
     }
 
-    CommandWithProperties(Builder builder) throws IllegalArgumentException {
-        super(builder.type);
+    void findUniversalProperties(Property[] properties, boolean createBytes) {
+        if (propertiesExpected() && (properties == null || properties.length == 0))
+            throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
-        this.nonce = builder.nonce;
-        this.signature = builder.signature;
-        this.timestamp = builder.timestamp;
+        this.properties = properties;
 
-        bytes = type.getIdentifierAndType();
+        // if from builder, bytes need to be built
+        if (createBytes) bytes = type.getIdentifierAndType();
 
-        Property[] properties = builder.getProperties();
+        ArrayList<PropertyTimestamp> propertyTimestamps = new ArrayList<>();
 
         for (int i = 0; i < properties.length; i++) {
             Property property = properties[i];
-            byte[] propertyBytes = property.getPropertyBytes();
-            bytes = ByteUtils.concatBytes(bytes, propertyBytes);
+
+            if (createBytes) bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
+
+            if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
+                if (property.getValueSize() != 9) continue; // invalid nonce length, just ignore
+                nonce = new Bytes(property.getValueBytes());
+            } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
+                if (property.getValueSize() != 64) continue; // ignore invalid length
+                signature = new Bytes(property.getValueBytes());
+            } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
+                if (property.getValueSize() != Property.CALENDAR_SIZE) continue;
+                timestamp = Property.getCalendar(property.getValueBytes());
+            } else if (property.getPropertyIdentifier() == PropertyTimestamp.IDENTIFIER) {
+                if (property.getPropertyLength() < PropertyTimestamp.LENGTH_WITHOUT_ADDITIONAL_DATA)
+                    continue;
+                PropertyTimestamp timestamp = new PropertyTimestamp(property.getPropertyBytes());
+                properties[i] = timestamp;
+                propertyTimestamps.add(timestamp);
+            }
         }
+
+        this.propertyTimestamps = propertyTimestamps.toArray(new PropertyTimestamp[0]);
+
+        propertiesIterator = new PropertiesIterator();
+    }
+
+    CommandWithProperties(Builder builder) throws IllegalArgumentException {
+        super(builder.type);
+        findUniversalProperties(builder.getProperties(), true);
     }
 
     public static class Builder {
         private Type type;
         private Bytes nonce;
         private Bytes signature;
-
         private Calendar timestamp;
-        // TBODO:
-        private ArrayList<PropertyTimestamp> propertyTimestamps = new ArrayList<>();
-
         protected ArrayList<Property> propertiesBuilder = new ArrayList<>();
 
         public Builder(Type type) {
