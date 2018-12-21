@@ -42,11 +42,11 @@ public class CommandResolver {
      * object's instance type (instanceOf) to understand which command was received.
      *
      * @param bytes the raw command bytes.
-     * @return The parsed command.
+     * @return The parsed command if parsed, null if bytes are not 0 or >3 bytes length.
      */
     public static Command resolve(byte[] bytes) {
-        if (bytes == null || bytes.length == 0) return new Command(bytes);
-        if (bytes.length < 3) return null;
+        if (bytes == null || bytes.length < 3) return new Command(bytes);
+
         Command command = null;
 
         try {
@@ -69,6 +69,10 @@ public class CommandResolver {
                     command = new GetHistoricalStates(bytes);
                 } else if (bytesAreForType(bytes, HistoricalStates.TYPE)) {
                     command = new HistoricalStates(bytes);
+                }
+            } else if (bytesAreForIdentifier(bytes, Identifier.MULTI_COMMAND)) {
+                if (bytesAreForType(bytes, MultiCommand.TYPE)) {
+                    command = new MultiCommand(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.DOOR_LOCKS)) {
                 if (bytesAreForType(bytes, GetLockState.TYPE)) {
@@ -425,15 +429,12 @@ public class CommandResolver {
                     command = new MobileState(bytes);
                 }
             } else {
-                Command.logger.info("Unknown command " + ByteUtils.hexFromBytes(ByteUtils
-                        .trimmedBytes(bytes, 3)) + ".. ");
-                command = new Command(bytes);
+                Command.logger.info("Unknown command " + commandToString(bytes) + ".. ");
             }
         } catch (Exception e) {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
-            Command.logger.info("Failed to parse command " + ByteUtils.hexFromBytes(ByteUtils
-                    .trimmedBytes(bytes, 3)) + ".. " + e.toString());
+            Command.logger.info("Failed to parse command " + commandToString(bytes) + ".. " + e.toString());
         }
 
         // The identifier was unknown. Return the base class.
@@ -475,15 +476,20 @@ public class CommandResolver {
         return resolve(new Bytes(value));
     }
 
-    static boolean bytesAreForIdentifier(byte[] bytes, Identifier identifier) {
+    private static boolean bytesAreForIdentifier(byte[] bytes, Identifier identifier) {
         return bytes[0] == identifier.getBytes()[0]
                 && bytes[1] == identifier.getBytes()[1];
     }
 
-    static boolean bytesAreForType(byte[] bytes, Type type) {
+    private static boolean bytesAreForType(byte[] bytes, Type type) {
         byte[] identifierAndType = type.getIdentifierAndType();
         return bytes[0] == identifierAndType[0]
                 && bytes[1] == identifierAndType[1]
                 && bytes[2] == identifierAndType[2];
+    }
+
+    private static String commandToString(byte[] bytes) {
+        return ByteUtils.hexFromBytes(ByteUtils
+                .trimmedBytes(bytes, bytes.length >= 3 ? 3 : bytes.length));
     }
 }

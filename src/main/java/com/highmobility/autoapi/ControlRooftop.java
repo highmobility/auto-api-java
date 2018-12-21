@@ -50,35 +50,35 @@ public class ControlRooftop extends CommandWithProperties {
     /**
      * @return The dimming percentage.
      */
-    public Float getDimmingPercentage() {
+    @Nullable public Float getDimmingPercentage() {
         return dimmingPercentage;
     }
 
     /**
      * @return The open percentage.
      */
-    public Float getOpenPercentage() {
+    @Nullable public Float getOpenPercentage() {
         return openPercentage;
     }
 
     /**
      * @return The convertible roof state.
      */
-    public ConvertibleRoofState getConvertibleRoofState() {
+    @Nullable public ConvertibleRoofState getConvertibleRoofState() {
         return convertibleRoofState;
     }
 
     /**
      * @return The sunroof tilt state.
      */
-    public SunroofTiltState getSunroofTiltState() {
+    @Nullable public SunroofTiltState getSunroofTiltState() {
         return sunroofTiltState;
     }
 
     /**
      * @return The sunroof position.
      */
-    public Position getSunroofPosition() {
+    @Nullable public Position getSunroofPosition() {
         return sunroofPosition;
     }
 
@@ -89,9 +89,11 @@ public class ControlRooftop extends CommandWithProperties {
      * @param sunroofTiltState     The sunroof tilt state.
      * @param sunroofPosition      The sunroof position.
      */
-    public ControlRooftop(@Nullable Float dimmingPercentage, @Nullable Float openPercentage,
-                          @Nullable ConvertibleRoofState convertibleRoofState, @Nullable
-                                  SunroofTiltState sunroofTiltState,
+
+    public ControlRooftop(@Nullable Float dimmingPercentage,
+                          @Nullable Float openPercentage,
+                          @Nullable ConvertibleRoofState convertibleRoofState,
+                          @Nullable SunroofTiltState sunroofTiltState,
                           @Nullable Position sunroofPosition) {
         super(TYPE, getProperties(dimmingPercentage, openPercentage, convertibleRoofState,
                 sunroofTiltState, sunroofPosition));
@@ -102,9 +104,10 @@ public class ControlRooftop extends CommandWithProperties {
         this.sunroofPosition = sunroofPosition;
     }
 
-    static Property[] getProperties(@Nullable Float dimmingPercentage, @Nullable Float
-            openPercentage, @Nullable ConvertibleRoofState convertibleRoofState, @Nullable
-                                            SunroofTiltState sunroofTiltState,
+    static Property[] getProperties(@Nullable Float dimmingPercentage,
+                                    @Nullable Float openPercentage,
+                                    @Nullable ConvertibleRoofState convertibleRoofState,
+                                    @Nullable SunroofTiltState sunroofTiltState,
                                     @Nullable Position sunroofPosition) {
         List<Property> properties = new ArrayList<>();
 

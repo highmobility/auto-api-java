@@ -90,10 +90,12 @@ public class RooftopTest {
     }
 
     @Test public void controlRooftop() {
+
         Bytes waitingForBytes = new Bytes("0025120100010002000100030001000400010105000101");
 
         Bytes commandBytes = new ControlRooftop(0f, 0f,
                 ConvertibleRoofState.CLOSED, SunroofTiltState.TILTED, Position.OPEN);
+
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
 
         ControlRooftop command = (ControlRooftop) CommandResolver.resolve(waitingForBytes);
@@ -101,7 +103,9 @@ public class RooftopTest {
         assertTrue(command.getOpenPercentage() == 0f);
         assertTrue(command.getConvertibleRoofState() == ConvertibleRoofState.CLOSED);
         assertTrue(command.getSunroofTiltState() == SunroofTiltState.TILTED);
+
         assertTrue(command.getSunroofPosition() == Position.OPEN);
+
     }
 
     @Test public void stateBuilder() {
