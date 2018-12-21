@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import javax.annotation.Nullable;
 
 /**
- * Send multiple commands to the car. The car will respond with the Multi State message that
- * includes the new states of every affected capability.
+ * This message is sent when a Multi Command message is received by the car. The new states are
+ * included in the message payload.
  */
-public class MultiCommand extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.MULTI_COMMAND, 0x02);
+public class MultiState extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.MULTI_COMMAND, 0x01);
 
     private static final byte PROP_IDENTIFIER = 0x01;
 
@@ -61,7 +61,7 @@ public class MultiCommand extends CommandWithProperties {
     /**
      * @param commands The commands.
      */
-    public MultiCommand(Command[] commands) {
+    public MultiState(Command[] commands) {
         super(TYPE, getProperties(commands));
         this.commands = commands;
     }
@@ -77,7 +77,7 @@ public class MultiCommand extends CommandWithProperties {
         return properties.toArray(new Property[properties.size()]);
     }
 
-    MultiCommand(byte[] bytes) {
+    MultiState(byte[] bytes) {
         super(bytes);
 
         ArrayList<Command> builder = new ArrayList<>();
