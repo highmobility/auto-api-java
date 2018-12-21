@@ -2,15 +2,16 @@ package com.highmobility.autoapi.property.windows;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.value.Location;
 
 public class WindowOpenPercentage extends Property {
-    WindowLocation location;
+    Location location;
     Float openPercentage;
 
     /**
      * @return The window location.
      */
-    public WindowLocation getLocation() {
+    public Location getLocation() {
         return location;
     }
 
@@ -24,17 +25,17 @@ public class WindowOpenPercentage extends Property {
     public WindowOpenPercentage(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length < 5) throw new CommandParseException();
-        location = WindowLocation.fromByte(bytes[3]);
+        location = Location.fromByte(bytes[3]);
         openPercentage = Property.getPercentage(bytes[4]);
     }
 
-    public WindowOpenPercentage(WindowLocation location, Float openPercentage) {
+    public WindowOpenPercentage(Location location, Float openPercentage) {
         super((byte) 0x00, getBytes(location, openPercentage));
         this.location = location;
         this.openPercentage = openPercentage;
     }
 
-    static byte[] getBytes(WindowLocation location, Float openPercentage) {
+    static byte[] getBytes(Location location, Float openPercentage) {
         byte[] value = new byte[2];
         value[0] = location.getByte();
         value[1] = Property.floatToIntPercentageByte(openPercentage);

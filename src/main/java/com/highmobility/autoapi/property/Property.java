@@ -91,6 +91,10 @@ public class Property extends Bytes {
         this(identifier, value.getByteArray());
     }
 
+    public Property(Bytes bytes) {
+        this(bytes.getByteArray());
+    }
+
     public Property(byte[] bytes) {
         if (bytes == null || bytes.length < 3) throw new IllegalArgumentException();
         this.bytes = bytes;

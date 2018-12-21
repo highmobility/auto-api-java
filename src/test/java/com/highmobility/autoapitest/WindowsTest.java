@@ -6,7 +6,7 @@ import com.highmobility.autoapi.ControlWindows;
 import com.highmobility.autoapi.GetWindowsState;
 import com.highmobility.autoapi.WindowsState;
 import com.highmobility.autoapi.property.value.Position;
-import com.highmobility.autoapi.property.windows.WindowLocation;
+import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.autoapi.property.windows.WindowOpenPercentage;
 import com.highmobility.autoapi.property.windows.WindowPosition;
 import com.highmobility.utils.ByteUtils;
@@ -35,14 +35,14 @@ public class WindowsTest {
         assertTrue(state.getWindowOpenPercentages().length == 2);
         assertTrue(state.getWindowPositions().length == 2);
 
-        assertTrue(state.getWindowOpenPercentage(WindowLocation.REAR_RIGHT).getOpenPercentage()
+        assertTrue(state.getWindowOpenPercentage(Location.REAR_RIGHT).getOpenPercentage()
                 == .56f);
-        assertTrue(state.getWindowOpenPercentage(WindowLocation.REAR_LEFT).getOpenPercentage() ==
+        assertTrue(state.getWindowOpenPercentage(Location.REAR_LEFT).getOpenPercentage() ==
                 .18f);
 
-        assertTrue(state.getWindowPosition(WindowLocation.REAR_RIGHT).getPosition()
+        assertTrue(state.getWindowPosition(Location.REAR_RIGHT).getPosition()
                 == Position.OPEN);
-        assertTrue(state.getWindowPosition(WindowLocation.REAR_LEFT).getPosition() ==
+        assertTrue(state.getWindowPosition(Location.REAR_LEFT).getPosition() ==
                 Position.CLOSED);
     }
 
@@ -59,8 +59,8 @@ public class WindowsTest {
         );
 
         WindowPosition[] windowsStates = new WindowPosition[2];
-        windowsStates[0] = new WindowPosition(WindowLocation.FRONT_LEFT, Position.OPEN);
-        windowsStates[1] = new WindowPosition(WindowLocation.FRONT_RIGHT, Position.OPEN);
+        windowsStates[0] = new WindowPosition(Location.FRONT_LEFT, Position.OPEN);
+        windowsStates[1] = new WindowPosition(Location.FRONT_RIGHT, Position.OPEN);
 
         Bytes bytes = new ControlWindows(windowsStates);
         assertTrue(TestUtils.bytesTheSame(bytes, waitingForBytes));
@@ -68,9 +68,9 @@ public class WindowsTest {
         ControlWindows command = (ControlWindows) CommandResolver.resolve(waitingForBytes);
         WindowPosition[] states = command.getWindowPositions();
         assertTrue(states.length == 2);
-        assertTrue(command.getWindowPosition(WindowLocation.FRONT_LEFT).getPosition() ==
+        assertTrue(command.getWindowPosition(Location.FRONT_LEFT).getPosition() ==
                 Position.OPEN);
-        assertTrue(command.getWindowPosition(WindowLocation.FRONT_RIGHT).getPosition() ==
+        assertTrue(command.getWindowPosition(Location.FRONT_RIGHT).getPosition() ==
                 Position.OPEN);
     }
 
@@ -88,13 +88,13 @@ public class WindowsTest {
 
     @Test public void build() {
         WindowsState.Builder builder = new WindowsState.Builder();
-        builder.addWindowOpenPercentage(new WindowOpenPercentage(WindowLocation.REAR_RIGHT,
+        builder.addWindowOpenPercentage(new WindowOpenPercentage(Location.REAR_RIGHT,
                 .56f));
-        builder.addWindowOpenPercentage(new WindowOpenPercentage(WindowLocation.REAR_LEFT,
+        builder.addWindowOpenPercentage(new WindowOpenPercentage(Location.REAR_LEFT,
                 .18f));
-        builder.addWindowPosition(new WindowPosition(WindowLocation.REAR_RIGHT,
+        builder.addWindowPosition(new WindowPosition(Location.REAR_RIGHT,
                 Position.OPEN));
-        builder.addWindowPosition(new WindowPosition(WindowLocation.REAR_LEFT,
+        builder.addWindowPosition(new WindowPosition(Location.REAR_LEFT,
                 Position.CLOSED));
         WindowsState state = builder.build();
 

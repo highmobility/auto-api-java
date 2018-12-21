@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.windows.WindowLocation;
+import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.autoapi.property.windows.WindowOpenPercentage;
 import com.highmobility.autoapi.property.windows.WindowPosition;
 
@@ -54,7 +54,7 @@ public class WindowsState extends CommandWithProperties {
      * @param location The window location.
      * @return The window position.
      */
-    @Nullable public WindowPosition getWindowPosition(WindowLocation location) {
+    @Nullable public WindowPosition getWindowPosition(Location location) {
         for (WindowPosition windowPosition : windowPositions) {
             if (windowPosition.getLocation() == location) return windowPosition;
         }
@@ -72,7 +72,7 @@ public class WindowsState extends CommandWithProperties {
      * @param location The window location.
      * @return The window open percentage.
      */
-    @Nullable public WindowOpenPercentage getWindowOpenPercentage(WindowLocation location) {
+    @Nullable public WindowOpenPercentage getWindowOpenPercentage(Location location) {
         for (WindowOpenPercentage windowOpenPercentage : windowOpenPercentages) {
             if (windowOpenPercentage.getLocation() == location) return windowOpenPercentage;
         }

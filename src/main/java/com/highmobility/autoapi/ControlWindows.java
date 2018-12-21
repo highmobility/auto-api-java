@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Position;
-import com.highmobility.autoapi.property.windows.WindowLocation;
+import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.autoapi.property.windows.WindowPosition;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class ControlWindows extends CommandWithProperties {
      * @param location The window location.
      * @return The window position.
      */
-    public WindowPosition getWindowPosition(WindowLocation location) {
+    public WindowPosition getWindowPosition(Location location) {
         for (int i = 0; i < windowPositions.length; i++) {
             WindowPosition prop = windowPositions[i];
             if (prop.getLocation() == location) return prop;
@@ -78,7 +78,7 @@ public class ControlWindows extends CommandWithProperties {
         for (Property property : properties) {
             if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER)
                 builder.add(new WindowPosition(
-                        WindowLocation.fromByte(property.getPropertyBytes()[3]),
+                        Location.fromByte(property.getPropertyBytes()[3]),
                         Position.fromByte(property.getPropertyBytes()[4])
                 ));
         }
