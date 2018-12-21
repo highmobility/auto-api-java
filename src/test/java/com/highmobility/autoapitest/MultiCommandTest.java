@@ -37,7 +37,7 @@ public class MultiCommandTest {
 
     Bytes stateBytes = new Bytes(
             "001301" +
-                    "01005E0020010100030001000100030100000100030200010100030300010200020001020002010003000202010300020300" +
+                    "01002F0020010100030001000100030100000100030200010100030300010200020001020002010003000202010300020300" +
                     "01000700460101000101");
 
     @Test
@@ -55,7 +55,7 @@ public class MultiCommandTest {
         commands[0] = new LockUnlockDoors(DoorLock.LOCKED);
         commands[1] = new SetTheftAlarm(TheftAlarmState.State.ARMED);
         MultiCommand command = new MultiCommand(commands);
-        assertTrue(command.equals(commandBytes));
+        assertTrue(TestUtils.bytesTheSame(command, commandBytes));
     }
 
     @Test
@@ -95,6 +95,6 @@ public class MultiCommandTest {
         commands[1] = theftAlarmState;
 
         MultiState command = new MultiState(commands);
-        assertTrue(command.equals(stateBytes));
+        assertTrue(TestUtils.bytesTheSame(command, stateBytes));
     }
 }

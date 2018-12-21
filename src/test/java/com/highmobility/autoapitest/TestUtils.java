@@ -1,8 +1,12 @@
 package com.highmobility.autoapitest;
 
+import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -62,5 +66,38 @@ public class TestUtils {
 
     public static Calendar getCalendar(String dateString) throws ParseException {
         return getCalendar(dateString, 0);
+    }
+
+    public static boolean bytesTheSame(Bytes state, Bytes bytes) {
+        for (int i = 0; i < state.getLength(); i++) {
+            byte stateByte = state.getByteArray()[i];
+
+            if (bytes.getByteArray().length < i + 1) {
+                System.out.println("state bytes has more bytes");
+                return false;
+            }
+
+            byte otherByte = bytes.getByteArray()[i];
+            if (stateByte != otherByte) {
+                System.out.println("bytes not equal at index " + i + ". expected: " + ByteUtils
+                        .hexFromBytes(new byte[]{otherByte}) + ", actual: " + ByteUtils
+                        .hexFromBytes(new byte[]{stateByte}) +
+                        "\nbytes1: " + ByteUtils.hexFromBytes(Arrays.copyOf
+                        (bytes.getByteArray(), i + 1)) +
+                        "\nbytes2: " + ByteUtils.hexFromBytes(Arrays.copyOf(state
+                        .getByteArray(), i + 1)));
+
+                System.out.println("bytes1: " + bytes);
+                System.out.println("bytes2: " + state);
+                return false;
+            }
+        }
+
+        if (bytes.getLength() > state.getLength()) {
+            System.out.println("expected bytes has more bytes");
+            return false;
+        }
+
+        return true;
     }
 }
