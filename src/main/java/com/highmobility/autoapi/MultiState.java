@@ -20,17 +20,15 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
-
 /**
- * Send multiple commands to the car. The car will respond with the Multi State message that
- * includes the new states of every affected capability.
+ * This message is sent when a Multi Command message is received by the car. The new states are
+ * included in the message payload.
  */
-public class MultiCommand extends CommandWithProperties {
-    public static final Type TYPE = new Type(Identifier.MULTI_COMMAND, 0x02);
+public class MultiState extends CommandWithProperties {
+    public static final Type TYPE = new Type(Identifier.MULTI_COMMAND, 0x01);
 
     private static final byte PROP_IDENTIFIER = 0x01;
 
@@ -60,12 +58,12 @@ public class MultiCommand extends CommandWithProperties {
     /**
      * @param commands The commands.
      */
-    public MultiCommand(Command[] commands) {
+    public MultiState(Command[] commands) {
         super(TYPE, getProperties(commands));
         this.commands = commands;
     }
 
-    private static HMProperty[] getProperties(Command[] commands) {
+    private static Property[] getProperties(Command[] commands) {
         ArrayList<Property> properties = new ArrayList<>();
 
         for (Command command : commands) {
@@ -76,12 +74,14 @@ public class MultiCommand extends CommandWithProperties {
         return properties.toArray(new Property[properties.size()]);
     }
 
-    MultiCommand(byte[] bytes) {
+    MultiState(byte[] bytes) {
         super(bytes);
+
         ArrayList<Command> builder = new ArrayList<>();
-        for (Property property : properties) {
-            if (property.getPropertyIdentifier() == PROP_IDENTIFIER) {
-                Command command = CommandResolver.resolve(property.getValueBytes());
+
+        for (Property p : properties) {
+            if (p.getPropertyIdentifier() == PROP_IDENTIFIER) {
+                Command command = CommandResolver.resolve(p.getValueBytes());
                 if (command != null) builder.add(command);
             }
         }
