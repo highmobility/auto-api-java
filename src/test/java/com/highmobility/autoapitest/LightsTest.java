@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlLights;
 import com.highmobility.autoapi.GetLightsState;
@@ -42,7 +41,10 @@ public class LightsTest {
         assertTrue(command.is(LightsState.TYPE));
 
         LightsState state = (LightsState) command;
-        assertTrue(command.is(LightsState.TYPE));
+        testState(state);
+    }
+
+    void testState(LightsState state) {
         assertTrue(state.getFrontExteriorLightState() == FrontExteriorLightState.ACTIVE_FULL_BEAM);
         assertTrue(state.isRearExteriorLightActive() == true);
 
@@ -86,8 +88,9 @@ public class LightsTest {
         builder.addInteriorLamp(new InteriorLamp(LightLocation.FRONT, false));
         builder.addInteriorLamp(new InteriorLamp(LightLocation.REAR, false));
 
-        Bytes actualBytes = builder.build();
-        assertTrue(actualBytes.equals(bytes));
+        LightsState state = builder.build();
+        assertTrue(state.equals(bytes));
+        testState(state);
     }
 
     @Test public void get() {
@@ -97,19 +100,51 @@ public class LightsTest {
     }
 
     @Test public void control() {
-        Bytes waitingForBytes = new Bytes("003612010001020200010003000100040003ff0000");
+        Bytes waitingForBytes = new Bytes("0036120100010202000100040003ff0000" +
+                "0700020000" +
+                "0700020101" +
+                "0800020000" +
+                "0800020101" +
+                "0900020000" +
+                "0900020100");
 
-        Bytes bytes = new ControlLights(FrontExteriorLightState.ACTIVE_FULL_BEAM, false,
-                false, new int[]{255, 0, 0, 255});
+        FogLight[] fogLights = new FogLight[2];
+        ReadingLamp[] readingLamps = new ReadingLamp[2];
+        InteriorLamp[] interiorLamps = new InteriorLamp[2];
 
-        assertTrue(TestUtils.bytesTheSame(waitingForBytes, bytes));
+        fogLights[0] = new FogLight(LightLocation.FRONT, false);
+        fogLights[1] = new FogLight(LightLocation.REAR, true);
+
+        readingLamps[0] = new ReadingLamp(Location.FRONT_LEFT, false);
+        readingLamps[1] = new ReadingLamp(Location.FRONT_RIGHT, true);
+
+        interiorLamps[0] = new InteriorLamp(LightLocation.FRONT, false);
+        interiorLamps[1] = new InteriorLamp(LightLocation.REAR, false);
+
+        Bytes bytes = new ControlLights(
+                FrontExteriorLightState.ACTIVE_FULL_BEAM,
+                false,
+                new int[]{255, 0, 0, 255}, fogLights, readingLamps, interiorLamps);
+
+        assertTrue(TestUtils.bytesTheSame(bytes, waitingForBytes));
 
         ControlLights command = (ControlLights) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getFrontExteriorLightState() == FrontExteriorLightState
                 .ACTIVE_FULL_BEAM);
         assertTrue(command.getRearExteriorLightActive() == false);
-        assertTrue(command.getInteriorLightActive() == false);
         assertTrue(Arrays.equals(command.getAmbientColor(), new int[]{255, 0, 0, 255}));
+
+        assertTrue(command.getFogLights().length == 2);
+        assertTrue(command.getFogLight(LightLocation.FRONT).isActive() == false);
+        assertTrue(command.getFogLight(LightLocation.REAR).isActive() == true);
+
+        assertTrue(command.getReadingLamps().length == 2);
+        assertTrue(command.getReadingLamp(Location.FRONT_LEFT).isActive() == false);
+        assertTrue(command.getReadingLamp(Location.FRONT_RIGHT).isActive() == true);
+
+        assertTrue(command.getInteriorLamps().length == 2);
+        assertTrue(command.getInteriorLamp(LightLocation.FRONT).isActive() == false);
+        assertTrue(command.getInteriorLamp(LightLocation.REAR).isActive() == false);
     }
 
     @Test public void state0Properties() {
