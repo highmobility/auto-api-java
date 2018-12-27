@@ -76,6 +76,11 @@ public class Notification extends CommandWithProperties {
         return receivedAction;
     }
 
+    /**
+     * @param text           Notification text.
+     * @param actions        Notification action items.
+     * @param receivedAction The received action.
+     */
     public Notification(String text, ActionItem[] actions, Integer receivedAction) {
         super(TYPE, getProperties(text, actions, receivedAction));
         this.text = text;

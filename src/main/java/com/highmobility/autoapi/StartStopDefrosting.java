@@ -38,6 +38,9 @@ public class StartStopDefrosting extends CommandWithProperties {
         return start;
     }
 
+    /**
+     * @param start The defrosting state.
+     */
     public StartStopDefrosting(boolean start) {
         super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, start)));
         this.start = start;

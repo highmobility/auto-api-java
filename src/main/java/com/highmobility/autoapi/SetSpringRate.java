@@ -52,6 +52,9 @@ public class SetSpringRate extends CommandWithProperties {
         return null;
     }
 
+    /**
+     * @param springRates The spring rates.
+     */
     public SetSpringRate(SpringRateProperty[] springRates) {
         super(TYPE, getValues(springRates));
         this.springRates = springRates;

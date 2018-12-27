@@ -40,6 +40,9 @@ public class NotificationAction extends CommandWithProperties {
         return actionIdentifier;
     }
 
+    /**
+     * @param actionIdentifier The identifier of selected action item.
+     */
     public NotificationAction(int actionIdentifier) {
         super(TYPE.addProperty(new IntegerProperty(IDENTIFIER, actionIdentifier, 1)));
         this.actionIdentifier = actionIdentifier;

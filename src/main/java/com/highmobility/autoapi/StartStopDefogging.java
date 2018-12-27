@@ -39,6 +39,9 @@ public class StartStopDefogging extends CommandWithProperties {
 
     private final boolean start;
 
+    /**
+     * @param start The defogging state.
+     */
     public StartStopDefogging(boolean start) {
         super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, start)));
         this.start = start;
