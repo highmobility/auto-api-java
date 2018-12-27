@@ -20,8 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
-
 import java.util.ArrayList;
 
 import javax.annotation.Nullable;
@@ -58,25 +56,6 @@ public class MultiState extends CommandWithProperties {
         return null;
     }
 
-    /**
-     * @param commands The commands.
-     */
-    public MultiState(Command[] commands) {
-        super(TYPE, getProperties(commands));
-        this.commands = commands;
-    }
-
-    private static Property[] getProperties(Command[] commands) {
-        ArrayList<Property> properties = new ArrayList<>();
-
-        for (Command command : commands) {
-            Property prop = new Property(PROP_IDENTIFIER, command);
-            properties.add(prop);
-        }
-
-        return properties.toArray(new Property[properties.size()]);
-    }
-
     MultiState(byte[] bytes) {
         super(bytes);
 
@@ -97,4 +76,23 @@ public class MultiState extends CommandWithProperties {
 
         commands = builder.toArray(new Command[0]);
     }
+
+    // TBODO:
+    /*
+    MultiState(Command[] commands) {
+        super(TYPE, getProperties(commands));
+        this.commands = commands;
+    }
+
+    private static Property[] getProperties(Command[] commands) {
+        ArrayList<Property> properties = new ArrayList<>();
+
+        for (Command command : commands) {
+            Property prop = new Property(PROP_IDENTIFIER, command);
+            properties.add(prop);
+        }
+
+        return properties.toArray(new Property[properties.size()]);
+    }
+     */
 }
