@@ -72,7 +72,7 @@ public class Capabilities extends CommandWithProperties {
         return capabilities;
     }
 
-    public Capabilities(byte[] bytes) {
+    Capabilities(byte[] bytes) {
         super(bytes);
         ArrayList<CapabilityProperty> builder = new ArrayList<>();
 

@@ -37,7 +37,7 @@ public class KeyFobPosition extends CommandWithProperties {
         return keyFobPosition;
     }
 
-    public KeyFobPosition(byte[] bytes) {
+    KeyFobPosition(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

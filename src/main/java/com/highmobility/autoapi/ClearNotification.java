@@ -31,7 +31,7 @@ public class ClearNotification extends Command {
         super(TYPE);
     }
 
-    public ClearNotification(byte[] bytes) {
+    ClearNotification(byte[] bytes) {
         super(bytes);
     }
 }

@@ -52,7 +52,7 @@ public class NaviDestination extends CommandWithProperties {
         return name;
     }
 
-    public NaviDestination(byte[] bytes) {
+    NaviDestination(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

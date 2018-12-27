@@ -156,7 +156,7 @@ public class ChassisSettings extends CommandWithProperties {
         return minimumChassisPosition;
     }
 
-    public ChassisSettings(byte[] bytes) {
+    ChassisSettings(byte[] bytes) {
         super(bytes);
 
         ArrayList<SpringRateProperty> currentSpringRates = new ArrayList<>();

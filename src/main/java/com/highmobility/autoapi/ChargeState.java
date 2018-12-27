@@ -252,7 +252,7 @@ public class ChargeState extends CommandWithProperties {
         return activeState;
     }
 
-    public ChargeState(byte[] bytes) {
+    ChargeState(byte[] bytes) {
         super(bytes);
 
         ArrayList<DepartureTime> departureTimes = new ArrayList<>();

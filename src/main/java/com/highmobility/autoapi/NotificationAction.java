@@ -48,7 +48,7 @@ public class NotificationAction extends CommandWithProperties {
         this.actionIdentifier = actionIdentifier;
     }
 
-    public NotificationAction(byte[] bytes) {
+    NotificationAction(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

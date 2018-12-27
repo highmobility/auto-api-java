@@ -40,7 +40,7 @@ public class MobileState extends CommandWithProperties {
         return connected;
     }
 
-    public MobileState(byte[] bytes) {
+    MobileState(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

@@ -79,7 +79,7 @@ public class WindowsState extends CommandWithProperties {
         return null;
     }
 
-    public WindowsState(byte[] bytes) {
+    WindowsState(byte[] bytes) {
         super(bytes);
 
         List<WindowPosition> positionBuilder = new ArrayList<>();

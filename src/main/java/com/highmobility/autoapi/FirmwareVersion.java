@@ -60,7 +60,7 @@ public class FirmwareVersion extends CommandWithProperties {
         return applicationVersion;
     }
 
-    public FirmwareVersion(byte[] bytes) {
+    FirmwareVersion(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

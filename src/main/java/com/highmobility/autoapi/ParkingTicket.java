@@ -84,7 +84,7 @@ public class ParkingTicket extends CommandWithProperties {
         return ticketEnd;
     }
 
-    public ParkingTicket(byte[] bytes) {
+    ParkingTicket(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

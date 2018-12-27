@@ -79,7 +79,7 @@ public class CheckControlMessage extends Property {
         ByteUtils.setBytes(bytes, Property.stringToBytes(status), textPosition);
     }
 
-    public CheckControlMessage(byte[] bytes) {
+    CheckControlMessage(byte[] bytes) {
         super(bytes);
 
         this.id = Property.getUnsignedInt(bytes, 3, 2);

@@ -59,7 +59,7 @@ public class DashboardLights extends CommandWithProperties {
         return null;
     }
 
-    public DashboardLights(byte[] bytes) {
+    DashboardLights(byte[] bytes) {
         super(bytes);
 
         List<DashboardLight> builder = new ArrayList<>();

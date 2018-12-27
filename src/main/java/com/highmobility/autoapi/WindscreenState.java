@@ -114,7 +114,7 @@ public class WindscreenState extends CommandWithProperties {
         return damageDetectionTime;
     }
 
-    public WindscreenState(byte[] bytes) {
+    WindscreenState(byte[] bytes) {
         super(bytes);
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(property -> {

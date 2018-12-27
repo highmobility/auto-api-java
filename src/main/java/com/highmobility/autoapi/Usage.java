@@ -202,7 +202,7 @@ public class Usage extends CommandWithProperties {
         return currentFuelConsumption;
     }
 
-    public Usage(byte[] bytes) {
+    Usage(byte[] bytes) {
         super(bytes);
 
         ArrayList<DrivingModeActivationPeriod> drivingModeActivationPeriods = new ArrayList<>();

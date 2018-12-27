@@ -196,7 +196,7 @@ public class CommandWithProperties extends Command {
         return null;
     }
 
-    public CommandWithProperties(byte[] bytes) {
+    CommandWithProperties(byte[] bytes) {
         super(bytes);
         if (propertiesExpected() && bytes.length < 7)
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
