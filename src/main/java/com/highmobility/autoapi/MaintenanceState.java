@@ -148,7 +148,7 @@ public class MaintenanceState extends CommandWithProperties {
         return brakeFluidChangeDate;
     }
 
-    public MaintenanceState(byte[] bytes) {
+    MaintenanceState(byte[] bytes) {
         super(bytes);
         ArrayList<ConditionBasedService> conditionBasedServices = new ArrayList<>();
 

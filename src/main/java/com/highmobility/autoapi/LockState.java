@@ -121,7 +121,7 @@ public class LockState extends CommandWithProperties {
         return true;
     }
 
-    public LockState(byte[] bytes) {
+    LockState(byte[] bytes) {
         super(bytes);
 
         ArrayList<DoorLockState> insideLocksBuilder = new ArrayList<>();

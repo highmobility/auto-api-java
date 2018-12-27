@@ -41,7 +41,7 @@ public class TheftAlarmState extends CommandWithProperties {
         return state;
     }
 
-    public TheftAlarmState(byte[] bytes) {
+    TheftAlarmState(byte[] bytes) {
         super(bytes);
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {

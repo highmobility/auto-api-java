@@ -50,7 +50,7 @@ public class SendHeartRate extends CommandWithProperties {
         this.heartRate = heartRate;
     }
 
-    public SendHeartRate(byte[] bytes) throws CommandParseException {
+    SendHeartRate(byte[] bytes) throws CommandParseException {
         super(bytes);
         Property prop = getProperty(IDENTIFIER);
         if (prop == null) throw new CommandParseException();

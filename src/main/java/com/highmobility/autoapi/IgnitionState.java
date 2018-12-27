@@ -52,7 +52,7 @@ public class IgnitionState extends CommandWithProperties {
         return accessoriesIgnition;
     }
 
-    public IgnitionState(byte[] bytes) {
+    IgnitionState(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

@@ -43,7 +43,7 @@ public class VehicleTime extends CommandWithProperties {
         return vehicleTime;
     }
 
-    public VehicleTime(byte[] bytes) {
+    VehicleTime(byte[] bytes) {
         super(bytes);
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {

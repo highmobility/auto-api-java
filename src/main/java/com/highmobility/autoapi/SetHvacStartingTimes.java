@@ -75,7 +75,7 @@ public class SetHvacStartingTimes extends CommandWithProperties {
         return hvacStartingTimes;
     }
 
-    public SetHvacStartingTimes(byte[] bytes) throws CommandParseException {
+    SetHvacStartingTimes(byte[] bytes) throws CommandParseException {
         super(bytes);
         Property[] properties = getProperties();
         ArrayList<HvacStartingTime> builder = new ArrayList<>();

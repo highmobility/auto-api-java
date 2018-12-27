@@ -54,7 +54,7 @@ public class TrunkState extends CommandWithProperties {
         return position;
     }
 
-    public TrunkState(byte[] bytes) {
+    TrunkState(byte[] bytes) {
         super(bytes);
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(property -> {

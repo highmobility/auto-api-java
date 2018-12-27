@@ -71,7 +71,7 @@ public class WifiState extends CommandWithProperties {
         return security;
     }
 
-    public WifiState(byte[] bytes) {
+    WifiState(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

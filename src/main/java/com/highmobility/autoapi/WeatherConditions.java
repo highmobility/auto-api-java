@@ -40,7 +40,7 @@ public class WeatherConditions extends CommandWithProperties {
         return rainIntensity;
     }
 
-    public WeatherConditions(byte[] bytes) {
+    WeatherConditions(byte[] bytes) {
         super(bytes);
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {

@@ -345,7 +345,7 @@ public class DiagnosticsState extends CommandWithProperties {
         return mileageMeters;
     }
 
-    public DiagnosticsState(byte[] bytes) {
+    DiagnosticsState(byte[] bytes) {
         super(bytes);
 
         ArrayList<CheckControlMessage> checkControlMessages = new ArrayList<>();

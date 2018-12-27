@@ -158,7 +158,7 @@ public class LightsState extends CommandWithProperties {
         return null;
     }
 
-    public LightsState(byte[] bytes) {
+    LightsState(byte[] bytes) {
         super(bytes);
 
         ArrayList<FogLight> fogLights = new ArrayList<>();

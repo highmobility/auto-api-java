@@ -59,6 +59,11 @@ public class SetTemperatureSettings extends CommandWithProperties {
         return rearTemperature;
     }
 
+    /**
+     * @param driverTemperature    The driver temperature.
+     * @param passengerTemperature The passenger temperature.
+     * @param rearTemperature      The rear temperature.
+     */
     public SetTemperatureSettings(@Nullable Float driverTemperature, @Nullable Float
             passengerTemperature, @Nullable Float rearTemperature) {
         super(TYPE, getProperties(driverTemperature, passengerTemperature, rearTemperature));

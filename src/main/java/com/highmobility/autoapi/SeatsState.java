@@ -79,7 +79,7 @@ public class SeatsState extends CommandWithProperties {
         return null;
     }
 
-    public SeatsState(byte[] bytes) {
+    SeatsState(byte[] bytes) {
         super(bytes);
 
         ArrayList<PersonDetected> personsDetected = new ArrayList<>();

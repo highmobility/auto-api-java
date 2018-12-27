@@ -43,7 +43,7 @@ public class ValetMode extends CommandWithProperties {
         return active;
     }
 
-    public ValetMode(byte[] bytes) {
+    ValetMode(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

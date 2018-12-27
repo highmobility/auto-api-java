@@ -51,7 +51,7 @@ public class GasFlapState extends CommandWithProperties {
         return position;
     }
 
-    public GasFlapState(byte[] bytes) {
+    GasFlapState(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

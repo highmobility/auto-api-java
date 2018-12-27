@@ -81,7 +81,7 @@ public class Failure extends CommandWithProperties {
         return failureDescription;
     }
 
-    public Failure(byte[] bytes) {
+    Failure(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

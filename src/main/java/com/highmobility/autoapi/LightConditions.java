@@ -49,7 +49,7 @@ public class LightConditions extends CommandWithProperties {
         return insideLight;
     }
 
-    public LightConditions(byte[] bytes) {
+    LightConditions(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

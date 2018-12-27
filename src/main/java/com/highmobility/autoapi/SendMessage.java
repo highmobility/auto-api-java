@@ -52,7 +52,7 @@ public class SendMessage extends CommandWithProperties {
         return message;
     }
 
-    public SendMessage(byte[] bytes) {
+    SendMessage(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

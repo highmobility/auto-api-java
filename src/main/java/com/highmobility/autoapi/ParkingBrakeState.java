@@ -42,7 +42,7 @@ public class ParkingBrakeState extends CommandWithProperties {
         return active;
     }
 
-    public ParkingBrakeState(byte[] bytes) {
+    ParkingBrakeState(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

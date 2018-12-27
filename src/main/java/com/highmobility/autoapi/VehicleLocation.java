@@ -61,7 +61,7 @@ public class VehicleLocation extends CommandWithProperties {
         return altitude;
     }
 
-    public VehicleLocation(byte[] bytes) {
+    VehicleLocation(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {

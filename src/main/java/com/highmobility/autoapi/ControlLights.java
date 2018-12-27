@@ -205,7 +205,7 @@ public class ControlLights extends CommandWithProperties {
         return properties.toArray(new Property[0]);
     }
 
-    ControlLights(byte[] bytes) throws CommandParseException {
+    ControlLights(byte[] bytes) {
         super(bytes);
 
         ArrayList<FogLight> fogLights = new ArrayList<>();
