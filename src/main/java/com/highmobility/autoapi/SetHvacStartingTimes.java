@@ -85,7 +85,7 @@ public class SetHvacStartingTimes extends CommandWithProperties {
 
             switch (prop.getPropertyIdentifier()) {
                 case AUTO_HVAC_IDENTIFIER:
-                    builder.add(new HvacStartingTime(prop.getPropertyBytes()));
+                    builder.add(new HvacStartingTime(prop.getByteArray()));
                     break;
             }
         }

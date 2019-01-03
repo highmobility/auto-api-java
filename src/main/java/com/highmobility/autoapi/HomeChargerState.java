@@ -248,10 +248,10 @@ public class HomeChargerState extends CommandWithProperties {
                         minimumChargeCurrent = Property.getFloat(p.getValueBytes());
                         return minimumChargeCurrent;
                     case IDENTIFIER_COORDINATES:
-                        coordinates = new CoordinatesProperty(p.getPropertyBytes());
+                        coordinates = new CoordinatesProperty(p.getByteArray());
                         return coordinates;
                     case IDENTIFIER_PRICING_TARIFFS:
-                        PriceTariff t = new PriceTariff(p.getPropertyBytes());
+                        PriceTariff t = new PriceTariff(p.getByteArray());
                         tariffs.add(t);
                         return t;
                 }

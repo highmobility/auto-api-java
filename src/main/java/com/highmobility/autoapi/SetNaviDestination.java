@@ -83,13 +83,13 @@ public class SetNaviDestination extends CommandWithProperties {
 
     SetNaviDestination(byte[] bytes) {
         super(bytes);
-        for (Property property : properties) {
-            switch (property.getPropertyIdentifier()) {
+        for (Property p : properties) {
+            switch (p.getPropertyIdentifier()) {
                 case COORDINATES_IDENTIFIER:
-                    coordinates = new CoordinatesProperty(property.getPropertyBytes());
+                    coordinates = new CoordinatesProperty(p.getByteArray());
                     break;
                 case NAME_IDENTIFIER:
-                    name = Property.getString(property.getValueBytes());
+                    name = Property.getString(p.getValueBytes());
                     break;
             }
         }

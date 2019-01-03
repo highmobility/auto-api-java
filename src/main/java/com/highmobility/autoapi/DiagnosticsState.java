@@ -421,24 +421,24 @@ public class DiagnosticsState extends CommandWithProperties {
                         batteryLevel = Property.getPercentage(p.getValueByte());
                         return batteryLevel;
                     case IDENTIFIER_CHECK_CONTROL_MESSAGES:
-                        CheckControlMessage message = new CheckControlMessage(p.getPropertyBytes());
+                        CheckControlMessage message = new CheckControlMessage(p.getByteArray());
                         checkControlMessages.add(message);
                         return message;
                     case IDENTIFIER_TIRE_PRESSURES:
-                        TirePressure pressure = new TirePressure(p.getPropertyBytes());
+                        TirePressure pressure = new TirePressure(p.getByteArray());
                         tirePressures.add(pressure);
                         return pressure;
                     case IDENTIFIER_TIRE_TEMPERATURES:
-                        TireTemperature temp = new TireTemperature(p.getPropertyBytes());
+                        TireTemperature temp = new TireTemperature(p.getByteArray());
                         tireTemperatures.add(temp);
                         return temp;
                     case IDENTIFIER_WHEEL_RPM:
-                        WheelRpm rpm = new WheelRpm(p.getPropertyBytes());
+                        WheelRpm rpm = new WheelRpm(p.getByteArray());
                         wheelRpms.add(rpm);
                         return rpm;
                     case IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE:
                         DiagnosticsTroubleCode code =
-                                new DiagnosticsTroubleCode(p.getPropertyBytes());
+                                new DiagnosticsTroubleCode(p.getByteArray());
                         troubleCodes.add(code);
                         return code;
                     case MILEAGE_METERS_IDENTIFIER:

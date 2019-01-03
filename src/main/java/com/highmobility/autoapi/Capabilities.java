@@ -81,7 +81,7 @@ public class Capabilities extends CommandWithProperties {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER:
                         CapabilityProperty capability =
-                                new CapabilityProperty(p.getPropertyBytes());
+                                new CapabilityProperty(p.getByteArray());
                         builder.add(capability);
                         return capability;
                 }

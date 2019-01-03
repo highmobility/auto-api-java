@@ -173,15 +173,15 @@ public class ChassisSettings extends CommandWithProperties {
                         sportChronoActive = Property.getBool(p.getValueByte());
                         return sportChronoActive;
                     case CURRENT_SPRING_RATE_PROPERTIES_IDENTIFIER:
-                        SpringRateProperty prop1 = new SpringRateProperty(p.getPropertyBytes());
+                        SpringRateProperty prop1 = new SpringRateProperty(p.getByteArray());
                         currentSpringRates.add(prop1);
                         return prop1;
                     case MAXIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER:
-                        SpringRateProperty prop2 = new SpringRateProperty(p.getPropertyBytes());
+                        SpringRateProperty prop2 = new SpringRateProperty(p.getByteArray());
                         maximumSpringRates.add(prop2);
                         return prop2;
                     case MINIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER:
-                        SpringRateProperty prop = new SpringRateProperty(p.getPropertyBytes());
+                        SpringRateProperty prop = new SpringRateProperty(p.getByteArray());
                         minimumSpringRates.add(prop);
                         return prop;
                     case CURRENT_CHASSIS_POSITION_IDENTIFIER:

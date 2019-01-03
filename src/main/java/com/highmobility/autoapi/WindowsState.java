@@ -90,11 +90,11 @@ public class WindowsState extends CommandWithProperties {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_WINDOW_OPEN_PERCENTAGES:
                         WindowOpenPercentage windowOpenPercentage =
-                                new WindowOpenPercentage(p.getPropertyBytes());
+                                new WindowOpenPercentage(p.getByteArray());
                         openBuilder.add(windowOpenPercentage);
                         return windowOpenPercentage;
                     case IDENTIFIER_WINDOW_POSITION:
-                        WindowPosition windowPosition = new WindowPosition(p.getPropertyBytes());
+                        WindowPosition windowPosition = new WindowPosition(p.getByteArray());
                         positionBuilder.add(windowPosition);
                         return windowPosition;
                 }

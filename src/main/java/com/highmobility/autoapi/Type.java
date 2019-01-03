@@ -111,7 +111,7 @@ public class Type {
     }
 
     byte[] addProperty(Property property) {
-        return addBytes(property.getPropertyBytes());
+        return addBytes(property.getByteArray());
     }
 
     byte[] addBytes(byte[] extraBytes) {

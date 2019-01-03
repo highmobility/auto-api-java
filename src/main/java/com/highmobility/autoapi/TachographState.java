@@ -156,16 +156,16 @@ public class TachographState extends CommandWithProperties {
                 switch (property.getPropertyIdentifier()) {
                     case DriverTimeState.IDENTIFIER:
                         DriverTimeState driverTimeState =
-                                new DriverTimeState(property.getPropertyBytes());
+                                new DriverTimeState(property.getByteArray());
                         timeStateBuilder.add(driverTimeState);
                         return driverTimeState;
                     case DriverWorkingState.IDENTIFIER:
                         DriverWorkingState driverWorkingState =
-                                new DriverWorkingState(property.getPropertyBytes());
+                                new DriverWorkingState(property.getByteArray());
                         workingStateBuilder.add(driverWorkingState);
                         return driverWorkingState;
                     case DriverCard.IDENTIFIER:
-                        DriverCard driverCard = new DriverCard(property.getPropertyBytes());
+                        DriverCard driverCard = new DriverCard(property.getByteArray());
                         cardsBuilder.add(driverCard);
                         return driverCard;
                     case VEHICLE_MOTION_DETECTED_IDENTIFIER:

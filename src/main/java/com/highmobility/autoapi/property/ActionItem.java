@@ -62,16 +62,4 @@ public class ActionItem extends Property {
         actionIdentifier = bytes[3];
         name = Property.getString(bytes, 4, bytes.length - 4);
     }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1 + name.length();
-    }
-
-    @Override public byte[] getPropertyBytes()  {
-        return bytes;
-    }
 }

@@ -81,7 +81,7 @@ public class SetPriceTariffs extends CommandWithProperties {
 
         for (Property property : properties) {
             if (property.getPropertyIdentifier() == IDENTIFIER_TARIFF) {
-                builder.add(new PriceTariff(property.getPropertyBytes()));
+                builder.add(new PriceTariff(property.getByteArray()));
             }
         }
 

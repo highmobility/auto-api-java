@@ -67,7 +67,7 @@ public class DashboardLights extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == DashboardLight.IDENTIFIER) {
-                    DashboardLight light = new DashboardLight(p.getPropertyBytes());
+                    DashboardLight light = new DashboardLight(p.getByteArray());
                     builder.add(light);
                     return light;
                 }

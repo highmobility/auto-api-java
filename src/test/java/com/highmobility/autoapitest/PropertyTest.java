@@ -16,7 +16,7 @@ import static junit.framework.TestCase.assertTrue;
 public class PropertyTest {
     @Test public void propertyLength() {
         IntegerProperty property = new IntegerProperty((byte) 0x01, 2, 2);
-        assertTrue(Arrays.equals(property.getPropertyBytes(), new byte[]{0x01, 0x00, 0x02, 0x00,
+        assertTrue(Arrays.equals(property.getByteArray(), new byte[]{0x01, 0x00, 0x02, 0x00,
                 0x02}));
 
         String longString =
@@ -25,8 +25,8 @@ public class PropertyTest {
                         "longstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstring";
 
         StringProperty stringProperty = new StringProperty((byte) 0x02, longString);
-        assertTrue(stringProperty.getPropertyBytes()[1] == 0x01);
-        assertTrue(stringProperty.getPropertyBytes()[2] == 0x4A);
+        assertTrue(stringProperty.getByteArray()[1] == 0x01);
+        assertTrue(stringProperty.getByteArray()[2] == 0x4A);
     }
 
     @Test public void propertyFailure() throws CommandParseException {

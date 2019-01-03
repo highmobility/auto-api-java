@@ -87,7 +87,7 @@ public class SetChargeTimer extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             if (property.getPropertyIdentifier() == 0x0D) {
-                builder.add(new ChargingTimer(property.getPropertyBytes()));
+                builder.add(new ChargingTimer(property.getByteArray()));
             }
         }
 

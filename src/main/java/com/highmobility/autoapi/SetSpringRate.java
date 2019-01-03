@@ -75,7 +75,7 @@ public class SetSpringRate extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
-                    builder.add(new SpringRateProperty(p.getPropertyBytes()));
+                    builder.add(new SpringRateProperty(p.getByteArray()));
                 }
                 return null; // TODO: 12/11/2018
             });

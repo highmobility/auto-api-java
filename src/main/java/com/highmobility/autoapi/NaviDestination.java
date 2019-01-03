@@ -59,7 +59,7 @@ public class NaviDestination extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case COORDINATES_IDENTIFIER:
-                        coordinates = new CoordinatesProperty(p.getPropertyBytes());
+                        coordinates = new CoordinatesProperty(p.getByteArray());
                         return coordinates;
                     case NAME_IDENTIFIER:
                         name = Property.getString(p.getValueBytes());

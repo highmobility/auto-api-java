@@ -225,12 +225,12 @@ public class Usage extends CommandWithProperties {
                         return drivingStyleEvaluation;
                     case DrivingModeActivationPeriod.IDENTIFIER:
                         DrivingModeActivationPeriod drivingModeActivationPeriod =
-                                new DrivingModeActivationPeriod(p.getPropertyBytes());
+                                new DrivingModeActivationPeriod(p.getByteArray());
                         drivingModeActivationPeriods.add(drivingModeActivationPeriod);
                         return drivingModeActivationPeriod;
                     case DrivingModeEnergyConsumption.IDENTIFIER:
                         DrivingModeEnergyConsumption drivingModeEnergyConsumption =
-                                new DrivingModeEnergyConsumption(p.getPropertyBytes());
+                                new DrivingModeEnergyConsumption(p.getByteArray());
                         drivingModeEnergyConsumptions.add(drivingModeEnergyConsumption);
                         return drivingModeEnergyConsumption;
                     case IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION:

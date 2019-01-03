@@ -46,6 +46,7 @@ public class Property extends Bytes {
     public static final int CALENDAR_SIZE = 8;
 
     private Calendar timestamp;
+    private PropertyFailure failure;
 
     /**
      * @return The timestamp of the property.
@@ -57,9 +58,21 @@ public class Property extends Bytes {
     /**
      * @param timestamp Set the property timestamp.
      */
-    public void setTimestamp(Calendar timestamp) {
+    /*public void setTimestamp(Calendar timestamp) {
         this.timestamp = timestamp;
+    }*/
+
+    /**
+     * @return The failure of the property.
+     */
+    public PropertyFailure getFailure() {
+        return failure;
     }
+
+    /*public Property setFailure(PropertyFailure failure) {
+        this.failure = failure;
+        return this;
+    }*/
 
     protected Property(byte identifier, int valueSize) {
         this.bytes = baseBytes(identifier, valueSize);
@@ -152,17 +165,6 @@ public class Property extends Bytes {
 
     public byte getPropertyIdentifier() {
         return bytes[0];
-    }
-
-    public int getPropertyLength() {
-        return bytes.length;
-    }
-
-    /**
-     * @return All of the property bytes - with the identifier and length.
-     */
-    public byte[] getPropertyBytes() {
-        return bytes;
     }
 
     // helper methods

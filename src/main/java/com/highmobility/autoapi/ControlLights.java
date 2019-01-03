@@ -223,7 +223,7 @@ public class ControlLights extends CommandWithProperties {
                         rearExteriorLightActive = Property.getBool(p.getValueByte());
                         return rearExteriorLightActive;
                     case AMBIENT_COLOR_IDENTIFIER:
-                        ambientColor = new ColorProperty(p.getPropertyBytes()).getAmbientColor();
+                        ambientColor = new ColorProperty(p.getByteArray()).getAmbientColor();
                         return ambientColor;
                     case IDENTIFIER_FOG_LIGHTS:
                         FogLight fogLight = new FogLight(p);

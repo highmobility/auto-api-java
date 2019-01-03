@@ -99,7 +99,7 @@ public class Notification extends CommandWithProperties {
                         text = Property.getString(p.getValueBytes());
                         return text;
                     case ActionItem.IDENTIFIER:
-                        ActionItem item = new ActionItem(p.getPropertyBytes());
+                        ActionItem item = new ActionItem(p.getByteArray());
                         actionsBuilder.add(item);
                         return item;
                     case RECEIVED_ACTION_IDENTIFIER:

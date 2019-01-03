@@ -253,12 +253,11 @@ public class CommandWithProperties extends Command {
                 } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
                     timestamp = Property.getCalendar(property.getValueBytes());
                 } else if (property.getPropertyIdentifier() == PropertyTimestamp.IDENTIFIER) {
-                    PropertyTimestamp timestamp =
-                            new PropertyTimestamp(property.getPropertyBytes());
+                    PropertyTimestamp timestamp = new PropertyTimestamp(property.getByteArray());
                     properties[i] = timestamp;
                     propertyTimestamps.add(timestamp);
                 } else if (property.getPropertyIdentifier() == PropertyFailure.IDENTIFIER) {
-                    PropertyFailure failure = new PropertyFailure(property.getPropertyBytes());
+                    PropertyFailure failure = new PropertyFailure(property.getByteArray());
                     properties[i] = failure;
                     propertyFailures.add(failure);
                 }
@@ -373,7 +372,7 @@ public class CommandWithProperties extends Command {
 
                     // try to match a the property timestamp to the the property
                     for (PropertyTimestamp propertyTimestamp : propertyTimestamps) {
-                        if (propertyTimestamp.getAdditionalData().equals(nextProperty.getPropertyBytes())) {
+                        if (propertyTimestamp.getAdditionalData().equals(nextProperty)) {
                             if (linkedPropertyTimestamps == null)
                                 linkedPropertyTimestamps = new HashMap<>();
                             linkedPropertyTimestamps.put(parsedProperty, propertyTimestamp);

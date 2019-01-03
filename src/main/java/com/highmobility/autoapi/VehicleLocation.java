@@ -68,7 +68,7 @@ public class VehicleLocation extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case COORDINATES_IDENTIFIER:
-                        coordinates = new CoordinatesProperty(p.getPropertyBytes());
+                        coordinates = new CoordinatesProperty(p.getByteArray());
                         return coordinates;
                     case HEADING_IDENTIFIER:
                         heading = Property.getDouble(p.getValueBytes());

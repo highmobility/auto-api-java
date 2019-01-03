@@ -132,15 +132,15 @@ public class LockState extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case POSITION_IDENTIFIER:
-                        DoorPosition pos = new DoorPosition(p.getPropertyBytes());
+                        DoorPosition pos = new DoorPosition(p.getByteArray());
                         lockAndPositionStatesBuilder.add(pos);
                         return pos;
                     case INSIDE_LOCK_IDENTIFIER:
-                        DoorLockState id = new DoorLockState(p.getPropertyBytes());
+                        DoorLockState id = new DoorLockState(p.getByteArray());
                         insideLocksBuilder.add(id);
                         return id;
                     case OUTSIDE_LOCK_IDENTIFIER:
-                        DoorLockState od = new DoorLockState(p.getPropertyBytes());
+                        DoorLockState od = new DoorLockState(p.getByteArray());
                         outsideLocksBuilder.add(od);
                         return od;
                 }

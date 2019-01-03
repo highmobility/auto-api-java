@@ -89,11 +89,11 @@ public class SeatsState extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case PersonDetected.IDENTIFIER:
-                        PersonDetected d = new PersonDetected(p.getPropertyBytes());
+                        PersonDetected d = new PersonDetected(p.getByteArray());
                         personsDetected.add(d);
                         return d;
                     case SeatBeltFastened.IDENTIFIER:
-                        SeatBeltFastened f = new SeatBeltFastened(p.getPropertyBytes());
+                        SeatBeltFastened f = new SeatBeltFastened(p.getByteArray());
                         seatBeltsFastened.add(f);
                         return f;
                 }

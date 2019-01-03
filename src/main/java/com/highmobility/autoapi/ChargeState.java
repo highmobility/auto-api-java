@@ -308,11 +308,11 @@ public class ChargeState extends CommandWithProperties {
                         chargingWindowChosen = Property.getBool(p.getValueByte());
                         return chargingWindowChosen;
                     case DEPARTURE_TIMES_IDENTIFIER:
-                        DepartureTime time = new DepartureTime(p.getPropertyBytes());
+                        DepartureTime time = new DepartureTime(p.getByteArray());
                         departureTimes.add(time);
                         return time;
                     case REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER:
-                        ReductionTime time2 = new ReductionTime(p.getPropertyBytes());
+                        ReductionTime time2 = new ReductionTime(p.getByteArray());
                         reductionOfChargingCurrentTimes.add(time2);
                         return time2;
                     case BATTERY_TEMPERATURE_IDENTIFIER:
@@ -322,7 +322,7 @@ public class ChargeState extends CommandWithProperties {
                         pluggedIn = Property.getBool(p.getValueByte());
                         return pluggedIn;
                     case TIMER_IDENTIFIER:
-                        ChargingTimer timer = new ChargingTimer(p.getPropertyBytes());
+                        ChargingTimer timer = new ChargingTimer(p.getByteArray());
                         timers.add(timer);
                         return timer;
                 }

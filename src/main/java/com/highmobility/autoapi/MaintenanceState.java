@@ -187,7 +187,7 @@ public class MaintenanceState extends CommandWithProperties {
                         nextInspectionDate = Property.getCalendar(p.getValueBytes());
                         return nextInspectionDate;
                     case IDENTIFIER_CONDITION_BASED_SERVICES:
-                        ConditionBasedService s = new ConditionBasedService(p.getPropertyBytes());
+                        ConditionBasedService s = new ConditionBasedService(p.getByteArray());
                         conditionBasedServices.add(s);
                         return s;
                     case IDENTIFIER_BRAKE_FLUID_CHANGE_DATE:

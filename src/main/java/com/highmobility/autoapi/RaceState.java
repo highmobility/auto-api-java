@@ -249,7 +249,7 @@ public class RaceState extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case AccelerationProperty.IDENTIFIER:
-                        AccelerationProperty a = new AccelerationProperty(p.getPropertyBytes());
+                        AccelerationProperty a = new AccelerationProperty(p.getByteArray());
                         accelerationProperties.add(a);
                         return a;
                     case UNDER_STEERING_IDENTIFIER:
@@ -278,7 +278,7 @@ public class RaceState extends CommandWithProperties {
                         return espInterventionActive;
                     case BrakeTorqueVectoringProperty.IDENTIFIER:
                         BrakeTorqueVectoringProperty b =
-                                new BrakeTorqueVectoringProperty(p.getPropertyBytes());
+                                new BrakeTorqueVectoringProperty(p.getByteArray());
                         brakeTorqueVectoringProperties.add(b);
                         return b;
                     case IDENTIFIER_GEAR_MODE:
