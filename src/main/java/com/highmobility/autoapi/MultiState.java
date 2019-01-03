@@ -77,6 +77,10 @@ public class MultiState extends CommandWithProperties {
         commands = builder.toArray(new Command[0]);
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     // TBODO:
     /*
     MultiState(Command[] commands) {
