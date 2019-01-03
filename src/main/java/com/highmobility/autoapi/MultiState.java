@@ -63,6 +63,10 @@ public class MultiState extends CommandWithProperties {
         this.commands = commands;
     }
 
+    @Override public boolean isState() {
+        return true;
+    }
+
     private static Property[] getProperties(Command[] commands) {
         ArrayList<Property> properties = new ArrayList<>();
 
