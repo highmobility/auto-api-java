@@ -7,7 +7,7 @@ import com.highmobility.autoapi.HistoricalStates;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.RaceState;
-import com.highmobility.autoapi.property.doors.DoorLocation;
+import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.autoapi.property.value.Lock;
 import com.highmobility.value.Bytes;
 
@@ -16,7 +16,6 @@ import org.junit.Test;
 import java.text.ParseException;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -31,18 +30,13 @@ public class HistoricalTest {
 
     @Test
     public void state() throws ParseException {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == HistoricalStates.class);
         HistoricalStates states = (HistoricalStates) command;
         assertTrue(states.getStates().length == 1);
         LockState state = (LockState) states.getStates()[0];
-        assertTrue(state.getLock(DoorLocation.FRONT_LEFT).getLock() == Lock.UNLOCKED);
+        assertTrue(state.getOutsideLock(Location.FRONT_LEFT).getLock() == Lock.UNLOCKED);
 
         assertTrue(TestUtils.dateIsSame(state.getTimestamp(), "2018-01-10T16:32:05+0000"));
     }

@@ -8,24 +8,12 @@ import com.highmobility.autoapi.MultiCommand;
 import com.highmobility.autoapi.MultiState;
 import com.highmobility.autoapi.SetTheftAlarm;
 import com.highmobility.autoapi.TheftAlarmState;
-import com.highmobility.autoapi.property.doors.DoorLocation;
-import com.highmobility.autoapi.property.doors.DoorLockState;
-import com.highmobility.autoapi.property.doors.DoorPosition;
+import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
-import static com.highmobility.autoapi.property.doors.DoorLocation.FRONT_LEFT;
-import static com.highmobility.autoapi.property.doors.DoorLocation.FRONT_RIGHT;
-import static com.highmobility.autoapi.property.doors.DoorLocation.REAR_LEFT;
-import static com.highmobility.autoapi.property.doors.DoorLocation.REAR_RIGHT;
-import static com.highmobility.autoapi.property.value.Lock.LOCKED;
-import static com.highmobility.autoapi.property.value.Lock.UNLOCKED;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -67,7 +55,7 @@ public class MultiCommandTest {
         assertTrue(state.getCommands().length == 2);
 
         LockState lockState = (LockState) state.getCommand(LockState.TYPE);
-        assertTrue(lockState.getInsideLock(DoorLocation.FRONT_LEFT).getLock() == Lock.UNLOCKED);
+        assertTrue(lockState.getInsideLock(Location.FRONT_LEFT).getLock() == Lock.UNLOCKED);
         TheftAlarmState theftAlarmState = (TheftAlarmState) state.getCommand(TheftAlarmState.TYPE);
         assertTrue(theftAlarmState.getState() == TheftAlarmState.State.ARMED);
     }

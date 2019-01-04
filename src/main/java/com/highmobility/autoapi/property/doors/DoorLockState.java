@@ -22,17 +22,18 @@ package com.highmobility.autoapi.property.doors;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.autoapi.property.value.Lock;
 
 public class DoorLockState extends Property {
-    DoorLocation doorLocation;
+    Location location;
     Lock doorLock;
 
     /**
      * @return The door location.
      */
-    public DoorLocation getLocation() {
-        return doorLocation;
+    public Location getLocation() {
+        return location;
     }
 
     /**
@@ -43,16 +44,15 @@ public class DoorLockState extends Property {
     }
 
     public DoorLockState(byte[] bytes) throws CommandParseException {
-        this(DoorLocation.fromByte(bytes[3]), Lock.fromByte
-                (bytes[4]));
+        this(Location.fromByte(bytes[3]), Lock.fromByte(bytes[4]));
     }
 
-    public DoorLockState(DoorLocation doorLocation, Lock doorLock) {
+    public DoorLockState(Location location, Lock doorLock) {
         super((byte) 0x01, 2);
-        this.doorLocation = doorLocation;
+        this.location = location;
         this.doorLock = doorLock;
 
-        bytes[3] = doorLocation.getByte();
+        bytes[3] = location.getByte();
         bytes[4] = doorLock.getByte();
     }
 }
