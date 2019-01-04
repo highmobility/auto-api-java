@@ -108,6 +108,7 @@ public class LightsState extends CommandWithProperties {
     /**
      * Get the fog light at a location.
      *
+     * @param location The light location.
      * @return The fog light.
      */
     @Nullable public FogLight getFogLight(LightLocation location) {
@@ -128,6 +129,7 @@ public class LightsState extends CommandWithProperties {
     /**
      * Get the reading lamp at a location.
      *
+     * @param location The light location.
      * @return The reading lamp.
      */
     @Nullable public ReadingLamp getReadingLamp(Location location) {

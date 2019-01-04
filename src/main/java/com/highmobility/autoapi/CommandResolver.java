@@ -42,7 +42,7 @@ public class CommandResolver {
      * object's instance type (instanceOf) to understand which command was received.
      *
      * @param bytes the raw command bytes.
-     * @return The parsed command if parsed, null if bytes are not 0 or >3 bytes length.
+     * @return The parsed command.
      */
     public static Command resolve(byte[] bytes) {
         if (bytes == null || bytes.length < 3) return new Command(bytes);

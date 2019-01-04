@@ -390,7 +390,6 @@ public class CommandWithProperties extends Command {
         /**
          * @param p The base property.
          * @return A parsed property or object, if did parse.
-         * @throws Exception
          */
         @Nullable Object iterate(Property p) throws Exception;
     }
