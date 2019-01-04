@@ -21,11 +21,25 @@
 package com.highmobility.autoapi.property;
 
 /**
- * Input is float 0-1, but sets the byte to 0-100 int.
+ * Value is float 0-1, but byte is 0-100 int.
  */
 public class PercentageProperty extends Property {
-    public PercentageProperty(byte identifier, float value) {
-        super(identifier, 1);
-        bytes[3] = Property.floatToIntPercentageByte(value);
+    float value;
+
+    /**
+     * @return Percentage between 0 and 1.
+     */
+    public float getValue() {
+        return value;
+    }
+
+    public PercentageProperty(float value) {
+        super((byte) 0x00, 1);
+        bytes[3] = floatToIntPercentageByte(value);
+    }
+
+    public PercentageProperty(byte[] bytes) {
+        super(bytes);
+        this.value = getUnsignedInt(getValueByte()) / 100f;
     }
 }

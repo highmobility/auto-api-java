@@ -52,45 +52,45 @@ public class ClimateState extends CommandWithProperties {
     private static final byte HVAC_TIME_IDENTIFIER = 0x0B;
     private static final byte IDENTIFIER_REAR_TEMPERATURE = 0x0C;
 
-    Float insideTemperature;
-    Float outsideTemperature;
-    Float driverTemperatureSetting;
-    Float passengerTemperatureSetting;
+    FloatProperty insideTemperature;
+    FloatProperty outsideTemperature;
+    FloatProperty driverTemperatureSetting;
+    FloatProperty passengerTemperatureSetting;
     Boolean hvacActive;
     Boolean defoggingActive;
     Boolean defrostingActive;
     Boolean ionisingActive;
-    Float defrostingTemperature;
+    FloatProperty defrostingTemperature;
 
     // level8
     HvacStartingTime[] hvacStartingTimes;
-    Float rearTemperatureSetting;
+    FloatProperty rearTemperatureSetting;
 
     /**
      * @return The inside temperature.
      */
-    @Nullable public Float getInsideTemperature() {
+    @Nullable public FloatProperty getInsideTemperature() {
         return insideTemperature;
     }
 
     /**
      * @return The outside temperature.
      */
-    @Nullable public Float getOutsideTemperature() {
+    @Nullable public FloatProperty getOutsideTemperature() {
         return outsideTemperature;
     }
 
     /**
      * @return The driver temperature setting.
      */
-    @Nullable public Float getDriverTemperatureSetting() {
+    @Nullable public FloatProperty getDriverTemperatureSetting() {
         return driverTemperatureSetting;
     }
 
     /**
      * @return The passenger temperature setting.
      */
-    @Nullable public Float getPassengerTemperatureSetting() {
+    @Nullable public FloatProperty getPassengerTemperatureSetting() {
         return passengerTemperatureSetting;
     }
 
@@ -125,7 +125,7 @@ public class ClimateState extends CommandWithProperties {
     /**
      * @return The defrosting temperature.
      */
-    @Nullable public Float getDefrostingTemperature() {
+    @Nullable public FloatProperty getDefrostingTemperature() {
         return defrostingTemperature;
     }
 
@@ -151,7 +151,7 @@ public class ClimateState extends CommandWithProperties {
     /**
      * @return The rear temperature setting.
      */
-    @Nullable public Float getRearTemperatureSetting() {
+    @Nullable public FloatProperty getRearTemperatureSetting() {
         return rearTemperatureSetting;
     }
 
@@ -164,16 +164,16 @@ public class ClimateState extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case INSIDE_TEMPERATURE_IDENTIFIER:
-                        insideTemperature = Property.getFloat(p.getValueBytes());
+                        insideTemperature = new FloatProperty(p.getByteArray());
                         return insideTemperature;
                     case OUTSIDE_TEMPERATURE_IDENTIFIER:
-                        outsideTemperature = Property.getFloat(p.getValueBytes());
+                        outsideTemperature = new FloatProperty(p.getByteArray());
                         return outsideTemperature;
                     case DRIVER_TEMPERATURE_SETTING_IDENTIFIER:
-                        driverTemperatureSetting = Property.getFloat(p.getValueBytes());
+                        driverTemperatureSetting = new FloatProperty(p.getByteArray());
                         return driverTemperatureSetting;
                     case PASSENGER_TEMPERATURE_SETTING_IDENTIFIER:
-                        passengerTemperatureSetting = Property.getFloat(p.getValueBytes());
+                        passengerTemperatureSetting = new FloatProperty(p.getByteArray());
                         return passengerTemperatureSetting;
                     case HVAC_ACTIVE_IDENTIFIER:
                         hvacActive = Property.getBool(p.getValueByte());
@@ -188,14 +188,14 @@ public class ClimateState extends CommandWithProperties {
                         ionisingActive = Property.getBool(p.getValueByte());
                         return ionisingActive;
                     case DEFROSTING_TEMPERATURE_IDENTIFIER:
-                        defrostingTemperature = Property.getFloat(p.getValueBytes());
+                        defrostingTemperature = new FloatProperty(p.getByteArray());
                         return defrostingTemperature;
                     case HVAC_TIME_IDENTIFIER:
                         HvacStartingTime time = new HvacStartingTime(p.getByteArray());
                         builder.add(new HvacStartingTime(p.getByteArray()));
                         return time;
                     case IDENTIFIER_REAR_TEMPERATURE:
-                        rearTemperatureSetting = Property.getFloat(p.getValueBytes());
+                        rearTemperatureSetting = new FloatProperty(p.getByteArray());
                         return rearTemperatureSetting;
                 }
                 return null;
@@ -225,18 +225,18 @@ public class ClimateState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Float insideTemperature;
-        private Float outsideTemperature;
-        private Float driverTemperatureSetting;
-        private Float passengerTemperatureSetting;
+        private FloatProperty insideTemperature;
+        private FloatProperty outsideTemperature;
+        private FloatProperty driverTemperatureSetting;
+        private FloatProperty passengerTemperatureSetting;
         private Boolean hvacActive;
         private Boolean defoggingActive;
         private Boolean defrostingActive;
         private Boolean ionisingActive;
-        private Float defrostingTemperature;
+        private FloatProperty defrostingTemperature;
         private ArrayList<HvacStartingTime> hvacStartingTimes = new ArrayList<>();
 
-        private Float rearTemperatureSetting;
+        private FloatProperty rearTemperatureSetting;
 
         public Builder() {
             super(TYPE);
@@ -246,9 +246,10 @@ public class ClimateState extends CommandWithProperties {
          * @param insideTemperature The inside temperature.
          * @return The builder.
          */
-        public Builder setInsideTemperature(Float insideTemperature) {
+        public Builder setInsideTemperature(FloatProperty insideTemperature) {
             this.insideTemperature = insideTemperature;
-            addProperty(new FloatProperty(INSIDE_TEMPERATURE_IDENTIFIER, insideTemperature));
+            insideTemperature.setIdentifier(INSIDE_TEMPERATURE_IDENTIFIER);
+            addProperty(insideTemperature);
             return this;
         }
 
@@ -256,9 +257,10 @@ public class ClimateState extends CommandWithProperties {
          * @param outsideTemperature The outside temperature.
          * @return The builder.
          */
-        public Builder setOutsideTemperature(Float outsideTemperature) {
+        public Builder setOutsideTemperature(FloatProperty outsideTemperature) {
             this.outsideTemperature = outsideTemperature;
-            addProperty(new FloatProperty(OUTSIDE_TEMPERATURE_IDENTIFIER, outsideTemperature));
+            outsideTemperature.setIdentifier(OUTSIDE_TEMPERATURE_IDENTIFIER);
+            addProperty(outsideTemperature);
             return this;
         }
 
@@ -266,10 +268,10 @@ public class ClimateState extends CommandWithProperties {
          * @param driverTemperatureSetting The driver temperature.
          * @return The builder.
          */
-        public Builder setDriverTemperatureSetting(Float driverTemperatureSetting) {
+        public Builder setDriverTemperatureSetting(FloatProperty driverTemperatureSetting) {
             this.driverTemperatureSetting = driverTemperatureSetting;
-            addProperty(new FloatProperty(DRIVER_TEMPERATURE_SETTING_IDENTIFIER,
-                    driverTemperatureSetting));
+            driverTemperatureSetting.setIdentifier(DRIVER_TEMPERATURE_SETTING_IDENTIFIER);
+            addProperty(driverTemperatureSetting);
             return this;
         }
 
@@ -277,10 +279,10 @@ public class ClimateState extends CommandWithProperties {
          * @param passengerTemperatureSetting The passenger temperature setting.
          * @return The builder.
          */
-        public Builder setPassengerTemperatureSetting(Float passengerTemperatureSetting) {
+        public Builder setPassengerTemperatureSetting(FloatProperty passengerTemperatureSetting) {
             this.passengerTemperatureSetting = passengerTemperatureSetting;
-            addProperty(new FloatProperty(PASSENGER_TEMPERATURE_SETTING_IDENTIFIER,
-                    passengerTemperatureSetting));
+            passengerTemperatureSetting.setIdentifier(PASSENGER_TEMPERATURE_SETTING_IDENTIFIER);
+            addProperty(passengerTemperatureSetting);
             return this;
         }
 
@@ -328,10 +330,10 @@ public class ClimateState extends CommandWithProperties {
          * @param defrostingTemperature The defrosting temperature
          * @return The builder.
          */
-        public Builder setDefrostingTemperature(Float defrostingTemperature) {
+        public Builder setDefrostingTemperature(FloatProperty defrostingTemperature) {
             this.defrostingTemperature = defrostingTemperature;
-            addProperty(new FloatProperty(DEFROSTING_TEMPERATURE_IDENTIFIER,
-                    defrostingTemperature));
+            defrostingTemperature.setIdentifier(DEFROSTING_TEMPERATURE_IDENTIFIER);
+            addProperty(defrostingTemperature);
             return this;
         }
 
@@ -368,9 +370,10 @@ public class ClimateState extends CommandWithProperties {
          * @param rearTemperatureSetting The rear temperature setting.
          * @return The builder.
          */
-        public Builder setRearTemperatureSetting(Float rearTemperatureSetting) {
+        public Builder setRearTemperatureSetting(FloatProperty rearTemperatureSetting) {
             this.rearTemperatureSetting = rearTemperatureSetting;
-            addProperty(new FloatProperty(IDENTIFIER_REAR_TEMPERATURE, rearTemperatureSetting));
+            rearTemperatureSetting.setIdentifier(IDENTIFIER_REAR_TEMPERATURE);
+            addProperty(rearTemperatureSetting);
             return this;
         }
 

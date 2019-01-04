@@ -65,7 +65,7 @@ public class HomeChargerState extends CommandWithProperties {
     Charging charging;
     AuthenticationMechanism authenticationMechanism;
     PlugType plugType;
-    Float chargingPower;
+    FloatProperty chargingPower;
     Boolean solarChargingActive;
     Boolean hotspotEnabled;
     String hotspotSsid;
@@ -74,9 +74,9 @@ public class HomeChargerState extends CommandWithProperties {
 
     // level8
     Boolean authenticated;
-    Float chargeCurrentDC;
-    Float maximumChargeCurrent;
-    Float minimumChargeCurrent;
+    FloatProperty chargeCurrentDC;
+    FloatProperty maximumChargeCurrent;
+    FloatProperty minimumChargeCurrent;
     CoordinatesProperty coordinates;
 
     PriceTariff[] priceTariffs;
@@ -105,7 +105,7 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return Charging power in kW.
      */
-    @Nullable public Float getChargingPower() {
+    @Nullable public FloatProperty getChargingPower() {
         return chargingPower;
     }
 
@@ -154,21 +154,21 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return The charge current (DC).
      */
-    @Nullable public Float getChargeCurrent() {
+    @Nullable public FloatProperty getChargeCurrent() {
         return chargeCurrentDC;
     }
 
     /**
      * @return The maximum possible charge current.
      */
-    @Nullable public Float getMaximumChargeCurrent() {
+    @Nullable public FloatProperty getMaximumChargeCurrent() {
         return maximumChargeCurrent;
     }
 
     /**
      * @return The minimal possible charge current.
      */
-    @Nullable public Float getMinimumChargeCurrent() {
+    @Nullable public FloatProperty getMinimumChargeCurrent() {
         return minimumChargeCurrent;
     }
 
@@ -285,7 +285,7 @@ public class HomeChargerState extends CommandWithProperties {
         private Charging charging;
         private AuthenticationMechanism authenticationMechanism;
         private PlugType plugType;
-        private Float chargingPower;
+        private FloatProperty chargingPower;
         private Boolean solarChargingActive;
         private Boolean hotspotEnabled;
         private String hotspotSsid;
@@ -332,7 +332,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param chargingPower The charging power in kW.
          * @return The builder.
          */
-        public Builder setChargingPower(Float chargingPower) {
+        public Builder setChargingPower(FloatProperty chargingPower) {
             this.chargingPower = chargingPower;
             addProperty(new FloatProperty(CHARGING_POWER_IDENTIFIER, chargingPower));
             return this;

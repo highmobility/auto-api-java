@@ -55,7 +55,7 @@ public class WindscreenState extends CommandWithProperties {
     WindscreenDamageZone windscreenDamageZone;
     WindscreenDamageZoneMatrix windscreenDamageZoneMatrix;
     WindscreenReplacementState windscreenReplacementState;
-    Float damageConfidence;
+    FloatProperty damageConfidence;
     Calendar damageDetectionTime;
 
     /**
@@ -103,7 +103,7 @@ public class WindscreenState extends CommandWithProperties {
     /**
      * @return The damage confidence.
      */
-    @Nullable public Float getDamageConfidence() {
+    @Nullable public FloatProperty getDamageConfidence() {
         return damageConfidence;
     }
 
@@ -174,7 +174,7 @@ public class WindscreenState extends CommandWithProperties {
         private WindscreenDamageZone windscreenDamageZone;
         private WindscreenDamageZoneMatrix windscreenDamageZoneMatrix;
         private WindscreenReplacementState windscreenReplacementState;
-        private Float damageConfidence;
+        private FloatProperty damageConfidence;
         private Calendar damageDetectionTime;
 
         public Builder() {
@@ -250,7 +250,7 @@ public class WindscreenState extends CommandWithProperties {
          * @param damageConfidence The damage confidence.
          * @return The builder.
          */
-        public Builder setDamageConfidence(Float damageConfidence) {
+        public Builder setDamageConfidence(FloatProperty damageConfidence) {
             this.damageConfidence = damageConfidence;
             addProperty(new PercentageProperty(DAMAGE_CONFIDENCE_IDENTIFIER, damageConfidence));
             return this;

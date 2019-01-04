@@ -36,7 +36,7 @@ public class OffroadState extends CommandWithProperties {
     private static final byte WHEEL_ID = 0x02;
 
     Integer routeIncline;
-    Float wheelSuspension;
+    FloatProperty wheelSuspension;
 
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.
@@ -49,7 +49,7 @@ public class OffroadState extends CommandWithProperties {
      * @return The wheel suspension level percentage, whereas 0 is no suspension and 1 maximum.
      * suspension
      */
-    @Nullable public Float getWheelSuspension() {
+    @Nullable public FloatProperty getWheelSuspension() {
         return wheelSuspension;
     }
 
@@ -84,7 +84,7 @@ public class OffroadState extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private Integer routeIncline;
-        private Float wheelSuspension;
+        private FloatProperty wheelSuspension;
 
         public Builder() {
             super(TYPE);
@@ -106,7 +106,7 @@ public class OffroadState extends CommandWithProperties {
          *                        and 1 maximum suspension.
          * @return The builder.
          */
-        public Builder setWheelSuspension(Float wheelSuspension) {
+        public Builder setWheelSuspension(FloatProperty wheelSuspension) {
             this.wheelSuspension = wheelSuspension;
             addProperty(new PercentageProperty(WHEEL_ID, wheelSuspension));
             return this;

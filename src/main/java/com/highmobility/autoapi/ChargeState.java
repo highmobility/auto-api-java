@@ -70,28 +70,28 @@ public class ChargeState extends CommandWithProperties {
     private static final byte IDENTIFIER_STATE = 0x17;
 
     Integer estimatedRange;
-    Float batteryLevel;
-    Float batteryCurrentAC;
-    Float batteryCurrentDC;
+    FloatProperty batteryLevel;
+    FloatProperty batteryCurrentAC;
+    FloatProperty batteryCurrentDC;
 
-    Float chargerVoltageAC;
-    Float chargerVoltageDC;
+    FloatProperty chargerVoltageAC;
+    FloatProperty chargerVoltageDC;
 
-    Float chargeLimit;
+    FloatProperty chargeLimit;
     Integer timeToCompleteCharge;
 
-    Float chargingRate;
+    FloatProperty chargingRate;
     ChargePortState chargeChargePortState;
 
     ChargeMode chargeMode;
 
-    Float maxChargingCurrent;
+    FloatProperty maxChargingCurrent;
     PlugType plugType;
     Boolean chargingWindowChosen;
     DepartureTime[] departureTimes;
 
     ReductionTime[] reductionOfChargingCurrentTimes;
-    Float batteryTemperature;
+    FloatProperty batteryTemperature;
     ChargingTimer[] timers;
     Boolean pluggedIn;
     ChargingState activeState;
@@ -106,42 +106,42 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The battery level percentage.
      */
-    @Nullable public Float getBatteryLevel() {
+    @Nullable public FloatProperty getBatteryLevel() {
         return batteryLevel;
     }
 
     /**
      * @return The battery current in AC.
      */
-    @Nullable public Float getBatteryCurrentAC() {
+    @Nullable public FloatProperty getBatteryCurrentAC() {
         return batteryCurrentAC;
     }
 
     /**
      * @return The battery current in DC.
      */
-    @Nullable public Float getBatteryCurrentDC() {
+    @Nullable public FloatProperty getBatteryCurrentDC() {
         return batteryCurrentDC;
     }
 
     /**
      * @return The Charger voltage in AC.
      */
-    @Nullable public Float getChargerVoltageAC() {
+    @Nullable public FloatProperty getChargerVoltageAC() {
         return chargerVoltageAC;
     }
 
     /**
      * @return The Charger voltage in DC.
      */
-    @Nullable public Float getChargerVoltageDC() {
+    @Nullable public FloatProperty getChargerVoltageDC() {
         return chargerVoltageDC;
     }
 
     /**
      * @return The Charge limit percentage.
      */
-    @Nullable public Float getChargeLimit() {
+    @Nullable public FloatProperty getChargeLimit() {
         return chargeLimit;
     }
 
@@ -155,7 +155,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The charging rate in kW, when charging.
      */
-    @Nullable public Float getChargingRate() {
+    @Nullable public FloatProperty getChargingRate() {
         return chargingRate;
     }
 
@@ -176,7 +176,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The maximum charging current.
      */
-    @Nullable public Float getMaxChargingCurrent() {
+    @Nullable public FloatProperty getMaxChargingCurrent() {
         return maxChargingCurrent;
     }
 
@@ -211,7 +211,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The battery temperature in Celsius.
      */
-    @Nullable public Float getBatteryTemperature() {
+    @Nullable public FloatProperty getBatteryTemperature() {
         return batteryTemperature;
     }
 
@@ -368,27 +368,27 @@ public class ChargeState extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private Integer estimatedRange;
-        private Float batteryLevel;
-        private Float batteryCurrentAC;
-        private Float batteryCurrentDC;
+        private FloatProperty batteryLevel;
+        private FloatProperty batteryCurrentAC;
+        private FloatProperty batteryCurrentDC;
 
-        private Float chargerVoltageAC;
-        private Float chargerVoltageDC;
+        private FloatProperty chargerVoltageAC;
+        private FloatProperty chargerVoltageDC;
 
-        private Float chargeLimit;
+        private FloatProperty chargeLimit;
         private Integer timeToCompleteCharge;
 
-        private Float chargingRate;
+        private FloatProperty chargingRate;
         private ChargePortState chargePortState;
 
         private ChargeMode chargeMode;
-        private Float maxChargingCurrent;
+        private FloatProperty maxChargingCurrent;
         private PlugType plugType;
         private Boolean chargingWindowChosen;
         private List<DepartureTime> departureTimes = new ArrayList<>();
 
         private List<ReductionTime> reductionOfChargingCurrentTimes = new ArrayList<>();
-        private Float batteryTemperature;
+        private FloatProperty batteryTemperature;
         private List<ChargingTimer> timers = new ArrayList<>();
         private Boolean pluggedIn;
         private ChargingState activeState;
@@ -421,7 +421,7 @@ public class ChargeState extends CommandWithProperties {
          * @param batteryLevel The battery level percentage.
          * @return The builder.
          */
-        public Builder setBatteryLevel(Float batteryLevel) {
+        public Builder setBatteryLevel(FloatProperty batteryLevel) {
             this.batteryLevel = batteryLevel;
             addProperty(new PercentageProperty(BATTERY_LEVEL_IDENTIFIER, batteryLevel));
             return this;
@@ -431,7 +431,7 @@ public class ChargeState extends CommandWithProperties {
          * @param batteryCurrentAC The battery current in AC.
          * @return The builder.
          */
-        public Builder setBatteryCurrentAC(Float batteryCurrentAC) {
+        public Builder setBatteryCurrentAC(FloatProperty batteryCurrentAC) {
             this.batteryCurrentAC = batteryCurrentAC;
             addProperty(new FloatProperty(BATTERY_CURRENT_AC_IDENTIFIER, batteryCurrentAC));
             return this;
@@ -441,7 +441,7 @@ public class ChargeState extends CommandWithProperties {
          * @param batteryCurrentDC The battery current in DC.
          * @return The builder.
          */
-        public Builder setBatteryCurrentDC(Float batteryCurrentDC) {
+        public Builder setBatteryCurrentDC(FloatProperty batteryCurrentDC) {
             this.batteryCurrentDC = batteryCurrentDC;
             addProperty(new FloatProperty(BATTERY_CURRENT_DC_IDENTIFIER, batteryCurrentDC));
             return this;
@@ -451,7 +451,7 @@ public class ChargeState extends CommandWithProperties {
          * @param chargerVoltageAC The charger voltage in AC.
          * @return The builder.
          */
-        public Builder setChargerVoltageAC(Float chargerVoltageAC) {
+        public Builder setChargerVoltageAC(FloatProperty chargerVoltageAC) {
             this.chargerVoltageAC = chargerVoltageAC;
             addProperty(new FloatProperty(CHARGER_VOLTAGE_AC_IDENTIFIER, chargerVoltageAC));
             return this;
@@ -461,7 +461,7 @@ public class ChargeState extends CommandWithProperties {
          * @param chargerVoltageDC The charger voltage in DC.
          * @return The builder.
          */
-        public Builder setChargerVoltageDC(Float chargerVoltageDC) {
+        public Builder setChargerVoltageDC(FloatProperty chargerVoltageDC) {
             this.chargerVoltageDC = chargerVoltageDC;
             addProperty(new FloatProperty(CHARGER_VOLTAGE_DC_IDENTIFIER, chargerVoltageDC));
             return this;
@@ -471,7 +471,7 @@ public class ChargeState extends CommandWithProperties {
          * @param chargeLimit The charge limit percentage.
          * @return The builder.
          */
-        public Builder setChargeLimit(Float chargeLimit) {
+        public Builder setChargeLimit(FloatProperty chargeLimit) {
             this.chargeLimit = chargeLimit;
             addProperty(new PercentageProperty(CHARGE_LIMIT_IDENTIFIER, chargeLimit));
             return this;
@@ -492,7 +492,7 @@ public class ChargeState extends CommandWithProperties {
          * @param chargingRate The charge rate in kW, when charging.
          * @return The builder.
          */
-        public Builder setChargingRate(Float chargingRate) {
+        public Builder setChargingRate(FloatProperty chargingRate) {
             this.chargingRate = chargingRate;
             addProperty(new FloatProperty(CHARGE_RATE_IDENTIFIER, chargingRate));
             return this;
@@ -519,7 +519,7 @@ public class ChargeState extends CommandWithProperties {
             return this;
         }
 
-        public Builder setMaxChargingCurrent(Float maxChargingCurrent) {
+        public Builder setMaxChargingCurrent(FloatProperty maxChargingCurrent) {
             addProperty(new FloatProperty(MAX_CHARGING_CURRENT_IDENTIFIER, maxChargingCurrent));
             this.maxChargingCurrent = maxChargingCurrent;
             return this;
@@ -577,7 +577,7 @@ public class ChargeState extends CommandWithProperties {
 
         }
 
-        public Builder setBatteryTemperature(Float batteryTemperature) {
+        public Builder setBatteryTemperature(FloatProperty batteryTemperature) {
             this.batteryTemperature = batteryTemperature;
             addProperty(new FloatProperty(BATTERY_TEMPERATURE_IDENTIFIER, batteryTemperature));
             return this;

@@ -54,19 +54,19 @@ public class Usage extends CommandWithProperties {
 
     private Integer averageWeeklyDistance;
     private Integer averageWeeklyDistanceLongTerm;
-    private Float accelerationEvaluation;
-    private Float drivingStyleEvaluation;
+    private FloatProperty accelerationEvaluation;
+    private FloatProperty drivingStyleEvaluation;
     private DrivingModeActivationPeriod[] drivingModeActivationPeriods;
     private DrivingModeEnergyConsumption[] drivingModeEnergyConsumptions;
-    private Float lastTripEnergyConsumption;
-    private Float lastTripFuelConsumption;
-    private Float mileageAfterLastTrip;
-    private Float lastTripElectricPortion;
-    private Float lastTripAverageEnergyRecuperation;
-    private Float lastTripBatteryRemaining;
+    private FloatProperty lastTripEnergyConsumption;
+    private FloatProperty lastTripFuelConsumption;
+    private FloatProperty mileageAfterLastTrip;
+    private FloatProperty lastTripElectricPortion;
+    private FloatProperty lastTripAverageEnergyRecuperation;
+    private FloatProperty lastTripBatteryRemaining;
     private Calendar lastTripDate;
-    private Float averageFuelConsumption;
-    private Float currentFuelConsumption;
+    private FloatProperty averageFuelConsumption;
+    private FloatProperty currentFuelConsumption;
 
     /**
      * @return The average weekly distance in km.
@@ -85,14 +85,14 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The acceleration evaluation in %.
      */
-    @Nullable public Float getAccelerationEvaluation() {
+    @Nullable public FloatProperty getAccelerationEvaluation() {
         return accelerationEvaluation;
     }
 
     /**
      * @return The driving style's evaluation in %
      */
-    @Nullable public Float getDrivingStyleEvaluation() {
+    @Nullable public FloatProperty getDrivingStyleEvaluation() {
         return drivingStyleEvaluation;
     }
 
@@ -142,42 +142,42 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The energy consumption in the last trip in kWh.
      */
-    @Nullable public Float getLastTripEnergyConsumption() {
+    @Nullable public FloatProperty getLastTripEnergyConsumption() {
         return lastTripEnergyConsumption;
     }
 
     /**
      * @return The fuel consumption in the last trip in L.
      */
-    @Nullable public Float getLastTripFuelConsumption() {
+    @Nullable public FloatProperty getLastTripFuelConsumption() {
         return lastTripFuelConsumption;
     }
 
     /**
      * @return The mileage after the last trip in km.
      */
-    @Nullable public Float getMileageAfterLastTrip() {
+    @Nullable public FloatProperty getMileageAfterLastTrip() {
         return mileageAfterLastTrip;
     }
 
     /**
      * @return The % of the last trip used in electric mode.
      */
-    @Nullable public Float getLastTripElectricPortion() {
+    @Nullable public FloatProperty getLastTripElectricPortion() {
         return lastTripElectricPortion;
     }
 
     /**
      * @return The energy recuperation rate for last trip, in kWh / 100 km.
      */
-    @Nullable public Float getLastTripAverageEnergyRecuperation() {
+    @Nullable public FloatProperty getLastTripAverageEnergyRecuperation() {
         return lastTripAverageEnergyRecuperation;
     }
 
     /**
      * @return The battery % remaining after last trip.
      */
-    @Nullable public Float getLastTripBatteryRemaining() {
+    @Nullable public FloatProperty getLastTripBatteryRemaining() {
         return lastTripBatteryRemaining;
     }
 
@@ -191,14 +191,14 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The average fuel consumption in liters/100km.
      */
-    @Nullable public Float getAverageFuelConsumption() {
+    @Nullable public FloatProperty getAverageFuelConsumption() {
         return averageFuelConsumption;
     }
 
     /**
      * @return The current fuel consumption in liters/100km.
      */
-    @Nullable public Float getCurrentFuelConsumption() {
+    @Nullable public FloatProperty getCurrentFuelConsumption() {
         return currentFuelConsumption;
     }
 
@@ -301,20 +301,20 @@ public class Usage extends CommandWithProperties {
     public static final class Builder extends CommandWithProperties.Builder {
         private Integer averageWeeklyDistance;
         private Integer averageWeeklyDistanceLongTerm;
-        private Float accelerationEvaluation;
-        private Float drivingStyleEvaluation;
+        private FloatProperty accelerationEvaluation;
+        private FloatProperty drivingStyleEvaluation;
         private List<DrivingModeActivationPeriod> drivingModeActivationPeriods = new ArrayList<>();
         private List<DrivingModeEnergyConsumption> drivingModeEnergyConsumptions = new
                 ArrayList<>();
-        private Float lastTripEnergyConsumption;
-        private Float lastTripFuelConsumption;
-        private Float mileageAfterLastTrip;
-        private Float lastTripElectricPortion;
-        private Float lastTripAverageEnergyRecuperation;
-        private Float lastTripBatteryRemaining;
+        private FloatProperty lastTripEnergyConsumption;
+        private FloatProperty lastTripFuelConsumption;
+        private FloatProperty mileageAfterLastTrip;
+        private FloatProperty lastTripElectricPortion;
+        private FloatProperty lastTripAverageEnergyRecuperation;
+        private FloatProperty lastTripBatteryRemaining;
         private Calendar lastTripDate;
-        private Float averageFuelConsumption;
-        private Float currentFuelConsumption;
+        private FloatProperty averageFuelConsumption;
+        private FloatProperty currentFuelConsumption;
 
         // TBODO:
         public Builder() {

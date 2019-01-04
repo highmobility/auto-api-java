@@ -82,7 +82,7 @@ public class VehicleStatus extends CommandWithProperties {
     Integer numberOfSeats;
 
     // l7
-    Float engineVolume; // 0c The engine volume displacement in liters
+    FloatProperty engineVolume; // 0c The engine volume displacement in liters
     Integer maxTorque; // 0d maximum engine torque in Nm
     Gearbox gearBox; // 0e Gearbox type
 
@@ -195,7 +195,7 @@ public class VehicleStatus extends CommandWithProperties {
     /**
      * @return The engine volume displacement in liters.
      */
-    @Nullable public Float getEngineVolume() {
+    @Nullable public FloatProperty getEngineVolume() {
         return engineVolume;
     }
 
@@ -361,7 +361,7 @@ public class VehicleStatus extends CommandWithProperties {
         private Integer numberOfSeats;
         private List<Command> states = new ArrayList<>();
 
-        private Float engineVolume;
+        private FloatProperty engineVolume;
         private Integer maxTorque;
         private Gearbox gearBox;
 
@@ -515,7 +515,7 @@ public class VehicleStatus extends CommandWithProperties {
          * @param engineVolume The engine volume displacement in liters.
          * @return The builder.
          */
-        public Builder setEngineVolume(Float engineVolume) {
+        public Builder setEngineVolume(FloatProperty engineVolume) {
             this.engineVolume = engineVolume;
             addProperty(new FloatProperty(ENGINE_VOLUME_IDENTIFIER, engineVolume));
             return this;

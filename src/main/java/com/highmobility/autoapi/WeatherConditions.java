@@ -31,12 +31,12 @@ import javax.annotation.Nullable;
 public class WeatherConditions extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WEATHER_CONDITIONS, 0x01);
     private static final byte RAIN_IDENTIFIER = 0x01;
-    Float rainIntensity;
+    FloatProperty rainIntensity;
 
     /**
      * @return The rain intensity percentage.
      */
-    @Nullable public Float getRainIntensity() {
+    @Nullable public FloatProperty getRainIntensity() {
         return rainIntensity;
     }
 
@@ -64,7 +64,7 @@ public class WeatherConditions extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Float rainIntensity;
+        private FloatProperty rainIntensity;
 
         public Builder() {
             super(TYPE);
@@ -74,7 +74,7 @@ public class WeatherConditions extends CommandWithProperties {
          * @param rainIntensity The rain intensity percentage.
          * @return The builder.
          */
-        public Builder setRainIntensity(Float rainIntensity) {
+        public Builder setRainIntensity(FloatProperty rainIntensity) {
             this.rainIntensity = rainIntensity;
             addProperty(new PercentageProperty(RAIN_IDENTIFIER, rainIntensity));
             return this;

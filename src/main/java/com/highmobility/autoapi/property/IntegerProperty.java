@@ -27,10 +27,15 @@ public class IntegerProperty extends Property {
         super(identifier, length);
 
         if (length == 1) {
-            bytes[3] = (byte)value;
-        }
-        else {
+            bytes[3] = (byte) value;
+        } else {
             ByteUtils.setBytes(bytes, intToBytes(value, length), 3);
         }
+    }
+
+    public IntegerProperty(int value) {
+        this((byte) 0x00, value, 4); // TODO: 2019-01-03 when used in builders, builders need to
+        // reset the length bytes (builder knows the length)
+        // default is 4
     }
 }

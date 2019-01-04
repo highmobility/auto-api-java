@@ -32,20 +32,20 @@ public class LightConditions extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHT_CONDITIONS, 0x01);
     private static final byte OUTSIDE_LIGHT_IDENTIFIER = 0x01;
     private static final byte INSIDE_LIGHT_IDENTIFIER = 0x02;
-    Float outsideLight;
-    Float insideLight;
+    FloatProperty outsideLight;
+    FloatProperty insideLight;
 
     /**
      * @return The measured outside illuminance in lux.
      */
-    @Nullable public Float getOutsideLight() {
+    @Nullable public FloatProperty getOutsideLight() {
         return outsideLight;
     }
 
     /**
      * @return The measured inside illuminance in lux.
      */
-    @Nullable public Float getInsideLight() {
+    @Nullable public FloatProperty getInsideLight() {
         return insideLight;
     }
 
@@ -79,8 +79,8 @@ public class LightConditions extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Float outsideLight;
-        private Float insideLight;
+        private FloatProperty outsideLight;
+        private FloatProperty insideLight;
 
         public Builder() {
             super(TYPE);

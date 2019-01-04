@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**

@@ -6,7 +6,7 @@ import com.highmobility.autoapi.property.value.Location;
 
 public class WindowOpenPercentage extends Property {
     Location location;
-    Float openPercentage;
+    FloatProperty openPercentage;
 
     /**
      * @return The window location.
@@ -18,7 +18,7 @@ public class WindowOpenPercentage extends Property {
     /**
      * @return The window open percentage.
      */
-    public Float getOpenPercentage() {
+    public FloatProperty getOpenPercentage() {
         return openPercentage;
     }
 
@@ -29,13 +29,13 @@ public class WindowOpenPercentage extends Property {
         openPercentage = Property.getPercentage(bytes[4]);
     }
 
-    public WindowOpenPercentage(Location location, Float openPercentage) {
+    public WindowOpenPercentage(Location location, FloatProperty openPercentage) {
         super((byte) 0x00, getBytes(location, openPercentage));
         this.location = location;
         this.openPercentage = openPercentage;
     }
 
-    static byte[] getBytes(Location location, Float openPercentage) {
+    static byte[] getBytes(Location location, FloatProperty openPercentage) {
         byte[] value = new byte[2];
         value[0] = location.getByte();
         value[1] = Property.floatToIntPercentageByte(openPercentage);

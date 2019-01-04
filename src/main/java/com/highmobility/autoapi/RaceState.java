@@ -63,18 +63,18 @@ public class RaceState extends CommandWithProperties {
 
     AccelerationProperty[] accelerationProperties;
 
-    Float underSteering;
-    Float overSteering;
-    Float gasPedalPosition;
+    FloatProperty underSteering;
+    FloatProperty overSteering;
+    FloatProperty gasPedalPosition;
     Integer steeringAngle;
-    Float brakePressure;
-    Float yawRate;
+    FloatProperty brakePressure;
+    FloatProperty yawRate;
     Integer rearSuspensionSteering;
     Boolean espInterventionActive;
     BrakeTorqueVectoringProperty[] brakeTorqueVectorings;
     GearMode gearMode;
     Integer selectedGear;
-    Float brakePedalPosition;
+    FloatProperty brakePedalPosition;
     // level7
     Boolean brakePedalSwitchActive;
     Boolean clutchPedalSwitchActive;
@@ -108,7 +108,7 @@ public class RaceState extends CommandWithProperties {
      * @return The under steering percentage between 0-1 whereas up to .2 is considered OK, up to .3
      * marginal, over .3 critical.
      */
-    @Nullable public Float getUnderSteering() {
+    @Nullable public FloatProperty getUnderSteering() {
         return underSteering;
     }
 
@@ -116,14 +116,14 @@ public class RaceState extends CommandWithProperties {
      * @return The over steering percentage between 0-1 whereas up to .2 is considered OK, up to .3
      * marginal, over .3 critical.
      */
-    @Nullable public Float getOverSteering() {
+    @Nullable public FloatProperty getOverSteering() {
         return overSteering;
     }
 
     /**
      * @return The gas pedal position between 0-1, whereas 1 is full throttle.
      */
-    @Nullable public Float getGasPedalPosition() {
+    @Nullable public FloatProperty getGasPedalPosition() {
         return gasPedalPosition;
     }
 
@@ -138,14 +138,14 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return The Brake pressure in bar, whereas 100bar is max value, full brake.
      */
-    @Nullable public Float getBrakePressure() {
+    @Nullable public FloatProperty getBrakePressure() {
         return brakePressure;
     }
 
     /**
      * @return The yaw rate in degrees per second [°/s].
      */
-    @Nullable public Float getYawRate() {
+    @Nullable public FloatProperty getYawRate() {
         return yawRate;
     }
 
@@ -200,7 +200,7 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return The brake pedal position between 0-1, whereas 1 is full brakes.
      */
-    @Nullable public Float getBrakePedalPosition() {
+    @Nullable public FloatProperty getBrakePedalPosition() {
         return brakePedalPosition;
     }
 
@@ -350,18 +350,18 @@ public class RaceState extends CommandWithProperties {
     public static final class Builder extends CommandWithProperties.Builder {
         private List<AccelerationProperty> accelerationProperties = new ArrayList<>();
 
-        private Float underSteering;
-        private Float overSteering;
-        private Float gasPedalPosition;
+        private FloatProperty underSteering;
+        private FloatProperty overSteering;
+        private FloatProperty gasPedalPosition;
         private Integer steeringAngle;
-        private Float brakePressure;
-        private Float yawRate;
+        private FloatProperty brakePressure;
+        private FloatProperty yawRate;
         private Integer rearSuspensionSteering;
         private Boolean espInterventionActive;
         private List<BrakeTorqueVectoringProperty> brakeTorqueVectorings = new ArrayList<>();
         private GearMode gearMode;
         private Integer selectedGear;
-        private Float brakePedalPosition;
+        private FloatProperty brakePedalPosition;
 
         private Boolean brakePedalSwitchActive;
         private Boolean clutchPedalSwitchActive;
@@ -403,7 +403,7 @@ public class RaceState extends CommandWithProperties {
          *                      considered OK, up to .3 * marginal, over .3 critical.
          * @return The builder.
          */
-        public Builder setUnderSteering(Float underSteering) {
+        public Builder setUnderSteering(FloatProperty underSteering) {
             this.underSteering = underSteering;
             addProperty(new PercentageProperty(UNDER_STEERING_IDENTIFIER, underSteering));
             return this;
@@ -414,7 +414,7 @@ public class RaceState extends CommandWithProperties {
          *                     considered OK, up to .3 marginal, over .3 critical
          * @return The builder.
          */
-        public Builder setOverSteering(Float overSteering) {
+        public Builder setOverSteering(FloatProperty overSteering) {
             this.overSteering = overSteering;
             addProperty(new PercentageProperty(OVER_STEERING_IDENTIFIER, overSteering));
             return this;
@@ -424,7 +424,7 @@ public class RaceState extends CommandWithProperties {
          * @param gasPedalPosition The gas pedal position between 0-1, whereas 1 is full throttle.
          * @return The builder.
          */
-        public Builder setGasPedalPosition(Float gasPedalPosition) {
+        public Builder setGasPedalPosition(FloatProperty gasPedalPosition) {
             this.gasPedalPosition = gasPedalPosition;
             addProperty(new PercentageProperty(GAS_PEDAL_POSITION_IDENTIFIER, gasPedalPosition));
             return this;
@@ -445,7 +445,7 @@ public class RaceState extends CommandWithProperties {
          * @param brakePressure The brake pressure in bar, whereas 100bar is max value, full brake.
          * @return The builder.
          */
-        public Builder setBrakePressure(Float brakePressure) {
+        public Builder setBrakePressure(FloatProperty brakePressure) {
             this.brakePressure = brakePressure;
             addProperty(new FloatProperty(BRAKE_PRESSURE_IDENTIFIER, brakePressure));
             return this;
@@ -455,7 +455,7 @@ public class RaceState extends CommandWithProperties {
          * @param yawRate The yaw rate in degrees per second [°/s].
          * @return The builder.
          */
-        public Builder setYawRate(Float yawRate) {
+        public Builder setYawRate(FloatProperty yawRate) {
             this.yawRate = yawRate;
             addProperty(new FloatProperty(YAW_RATE_IDENTIFIER, yawRate));
             return this;
@@ -532,7 +532,7 @@ public class RaceState extends CommandWithProperties {
          * @param brakePedalPosition The brake pedal position.
          * @return The builder.
          */
-        public Builder setBrakePedalPosition(Float brakePedalPosition) {
+        public Builder setBrakePedalPosition(FloatProperty brakePedalPosition) {
             this.brakePedalPosition = brakePedalPosition;
             addProperty(new PercentageProperty(BRAKE_PEDAL_POSITION_IDENTIFIER,
                     brakePedalPosition));
