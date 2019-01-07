@@ -70,14 +70,14 @@ public class ChargeState extends CommandWithProperties {
     private static final byte IDENTIFIER_STATE = 0x17;
 
     Integer estimatedRange;
-    FloatProperty batteryLevel;
+    PercentageProperty batteryLevel;
     FloatProperty batteryCurrentAC;
     FloatProperty batteryCurrentDC;
 
     FloatProperty chargerVoltageAC;
     FloatProperty chargerVoltageDC;
 
-    FloatProperty chargeLimit;
+    PercentageProperty chargeLimit;
     Integer timeToCompleteCharge;
 
     FloatProperty chargingRate;
@@ -106,7 +106,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The battery level percentage.
      */
-    @Nullable public FloatProperty getBatteryLevel() {
+    @Nullable public PercentageProperty getBatteryLevel() {
         return batteryLevel;
     }
 
@@ -141,7 +141,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The Charge limit percentage.
      */
-    @Nullable public FloatProperty getChargeLimit() {
+    @Nullable public PercentageProperty getChargeLimit() {
         return chargeLimit;
     }
 
@@ -269,28 +269,28 @@ public class ChargeState extends CommandWithProperties {
                         estimatedRange = Property.getUnsignedInt(p.getValueBytes());
                         return estimatedRange;
                     case BATTERY_LEVEL_IDENTIFIER:
-                        batteryLevel = p.getValueByte() / 100f;
+                        batteryLevel = new PercentageProperty(p);
                         return batteryLevel;
                     case BATTERY_CURRENT_AC_IDENTIFIER:
-                        batteryCurrentAC = Property.getFloat(p.getValueBytes());
+                        batteryCurrentAC = new FloatProperty(p);
                         return batteryCurrentAC;
                     case BATTERY_CURRENT_DC_IDENTIFIER:
-                        batteryCurrentDC = Property.getFloat(p.getValueBytes());
+                        batteryCurrentDC = new FloatProperty(p);
                         return batteryCurrentDC;
                     case CHARGER_VOLTAGE_AC_IDENTIFIER:
-                        chargerVoltageAC = Property.getFloat(p.getValueBytes());
+                        chargerVoltageAC = new FloatProperty(p);
                         return chargerVoltageAC;
                     case CHARGER_VOLTAGE_DC_IDENTIFIER:
-                        chargerVoltageDC = Property.getFloat(p.getValueBytes());
+                        chargerVoltageDC = new FloatProperty(p);
                         return chargerVoltageDC;
                     case CHARGE_LIMIT_IDENTIFIER:
-                        chargeLimit = p.getValueByte() / 100f;
+                        chargeLimit = new PercentageProperty(p);
                         return chargeLimit;
                     case TIME_TO_COMPLETE_CHARGE_IDENTIFIER:
                         timeToCompleteCharge = Property.getUnsignedInt(p.getValueBytes());
                         return timeToCompleteCharge;
                     case CHARGE_RATE_IDENTIFIER:
-                        chargingRate = Property.getFloat(p.getValueBytes());
+                        chargingRate = new FloatProperty(p);
                         return chargingRate;
                     case CHARGE_PORT_STATE_IDENTIFIER:
                         chargeChargePortState = ChargePortState.fromByte(p.getValueByte());
@@ -299,7 +299,7 @@ public class ChargeState extends CommandWithProperties {
                         chargeMode = ChargeMode.fromByte(p.getValueByte());
                         return chargeMode;
                     case MAX_CHARGING_CURRENT_IDENTIFIER:
-                        maxChargingCurrent = Property.getFloat(p.getValueBytes());
+                        maxChargingCurrent = new FloatProperty(p);
                         return maxChargingCurrent;
                     case PLUG_TYPE_IDENTIFIER:
                         plugType = PlugType.fromByte(p.getValueByte());
@@ -316,7 +316,7 @@ public class ChargeState extends CommandWithProperties {
                         reductionOfChargingCurrentTimes.add(time2);
                         return time2;
                     case BATTERY_TEMPERATURE_IDENTIFIER:
-                        batteryTemperature = Property.getFloat(p.getValueBytes());
+                        batteryTemperature = new FloatProperty(p);
                         return batteryTemperature;
                     case PLUGGED_IN_IDENTIFIER:
                         pluggedIn = Property.getBool(p.getValueByte());
@@ -368,14 +368,14 @@ public class ChargeState extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private Integer estimatedRange;
-        private FloatProperty batteryLevel;
+        private PercentageProperty batteryLevel;
         private FloatProperty batteryCurrentAC;
         private FloatProperty batteryCurrentDC;
 
         private FloatProperty chargerVoltageAC;
         private FloatProperty chargerVoltageDC;
 
-        private FloatProperty chargeLimit;
+        private PercentageProperty chargeLimit;
         private Integer timeToCompleteCharge;
 
         private FloatProperty chargingRate;
@@ -421,9 +421,10 @@ public class ChargeState extends CommandWithProperties {
          * @param batteryLevel The battery level percentage.
          * @return The builder.
          */
-        public Builder setBatteryLevel(FloatProperty batteryLevel) {
+        public Builder setBatteryLevel(PercentageProperty batteryLevel) {
             this.batteryLevel = batteryLevel;
-            addProperty(new PercentageProperty(BATTERY_LEVEL_IDENTIFIER, batteryLevel));
+            batteryLevel.setIdentifier(BATTERY_LEVEL_IDENTIFIER);
+            addProperty(batteryLevel);
             return this;
         }
 
@@ -433,7 +434,8 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setBatteryCurrentAC(FloatProperty batteryCurrentAC) {
             this.batteryCurrentAC = batteryCurrentAC;
-            addProperty(new FloatProperty(BATTERY_CURRENT_AC_IDENTIFIER, batteryCurrentAC));
+            batteryCurrentAC.setIdentifier(BATTERY_CURRENT_AC_IDENTIFIER);
+            addProperty(batteryCurrentAC);
             return this;
         }
 
@@ -443,7 +445,8 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setBatteryCurrentDC(FloatProperty batteryCurrentDC) {
             this.batteryCurrentDC = batteryCurrentDC;
-            addProperty(new FloatProperty(BATTERY_CURRENT_DC_IDENTIFIER, batteryCurrentDC));
+            batteryCurrentDC.setIdentifier(BATTERY_CURRENT_DC_IDENTIFIER);
+            addProperty(batteryCurrentDC);
             return this;
         }
 
@@ -453,7 +456,8 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setChargerVoltageAC(FloatProperty chargerVoltageAC) {
             this.chargerVoltageAC = chargerVoltageAC;
-            addProperty(new FloatProperty(CHARGER_VOLTAGE_AC_IDENTIFIER, chargerVoltageAC));
+            chargerVoltageAC.setIdentifier(CHARGER_VOLTAGE_AC_IDENTIFIER);
+            addProperty(chargerVoltageAC);
             return this;
         }
 
@@ -463,7 +467,8 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setChargerVoltageDC(FloatProperty chargerVoltageDC) {
             this.chargerVoltageDC = chargerVoltageDC;
-            addProperty(new FloatProperty(CHARGER_VOLTAGE_DC_IDENTIFIER, chargerVoltageDC));
+            chargerVoltageDC.setIdentifier(CHARGER_VOLTAGE_DC_IDENTIFIER);
+            addProperty(chargerVoltageDC);
             return this;
         }
 
@@ -471,9 +476,10 @@ public class ChargeState extends CommandWithProperties {
          * @param chargeLimit The charge limit percentage.
          * @return The builder.
          */
-        public Builder setChargeLimit(FloatProperty chargeLimit) {
+        public Builder setChargeLimit(PercentageProperty chargeLimit) {
             this.chargeLimit = chargeLimit;
-            addProperty(new PercentageProperty(CHARGE_LIMIT_IDENTIFIER, chargeLimit));
+            chargeLimit.setIdentifier(CHARGE_LIMIT_IDENTIFIER);
+            addProperty(chargeLimit);
             return this;
         }
 
@@ -494,7 +500,8 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setChargingRate(FloatProperty chargingRate) {
             this.chargingRate = chargingRate;
-            addProperty(new FloatProperty(CHARGE_RATE_IDENTIFIER, chargingRate));
+            chargingRate.setIdentifier(CHARGE_RATE_IDENTIFIER);
+            addProperty(chargingRate);
             return this;
         }
 
@@ -519,18 +526,31 @@ public class ChargeState extends CommandWithProperties {
             return this;
         }
 
+        /**
+         * @param maxChargingCurrent The max charging current.
+         * @return The builder.
+         */
         public Builder setMaxChargingCurrent(FloatProperty maxChargingCurrent) {
-            addProperty(new FloatProperty(MAX_CHARGING_CURRENT_IDENTIFIER, maxChargingCurrent));
             this.maxChargingCurrent = maxChargingCurrent;
+            maxChargingCurrent.setIdentifier(MAX_CHARGING_CURRENT_IDENTIFIER);
+            addProperty(maxChargingCurrent);
             return this;
         }
 
+        /**
+         * @param plugType The plug type.
+         * @return The builder.
+         */
         public Builder setPlugType(PlugType plugType) {
             this.plugType = plugType;
             addProperty(new Property(PLUG_TYPE_IDENTIFIER, plugType.getByte()));
             return this;
         }
 
+        /**
+         * @param chargingWindowChosen Charging window chosen state.
+         * @return The builder.
+         */
         public Builder setChargingWindowChosen(Boolean chargingWindowChosen) {
             this.chargingWindowChosen = chargingWindowChosen;
             addProperty(new BooleanProperty(CHARGING_WINDOW_CHOSEN_IDENTIFIER,
@@ -538,6 +558,10 @@ public class ChargeState extends CommandWithProperties {
             return this;
         }
 
+        /**
+         * @param departureTimes The departure times.
+         * @return The builder.
+         */
         public Builder setDepartureTimes(DepartureTime[] departureTimes) {
             this.departureTimes = Arrays.asList(departureTimes);
 
@@ -548,6 +572,7 @@ public class ChargeState extends CommandWithProperties {
             return this;
         }
 
+        // TBODO: translate
         public Builder addDepartureTime(DepartureTime departureTime) {
             this.departureTimes.add(departureTime);
             addProperty(departureTime);
@@ -579,7 +604,8 @@ public class ChargeState extends CommandWithProperties {
 
         public Builder setBatteryTemperature(FloatProperty batteryTemperature) {
             this.batteryTemperature = batteryTemperature;
-            addProperty(new FloatProperty(BATTERY_TEMPERATURE_IDENTIFIER, batteryTemperature));
+            batteryTemperature.setIdentifier(BATTERY_TEMPERATURE_IDENTIFIER);
+            addProperty(batteryTemperature);
             return this;
         }
 

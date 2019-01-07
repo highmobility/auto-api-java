@@ -36,26 +36,26 @@ public class SetTemperatureSettings extends CommandWithProperties {
     private static final byte IDENTIFIER_PASSENGER = 0x02;
     private static final byte IDENTIFIER_REAR = 0x03;
 
-    FloatProperty driverTemperature, passengerTemperature, rearTemperature;
+    Float driverTemperature, passengerTemperature, rearTemperature;
 
     /**
      * @return The driver temperature.
      */
-    @Nullable public FloatProperty getDriverTemperature() {
+    @Nullable public Float getDriverTemperature() {
         return driverTemperature;
     }
 
     /**
      * @return The passenger temperature.
      */
-    @Nullable public FloatProperty getPassengerTemperature() {
+    @Nullable public Float getPassengerTemperature() {
         return passengerTemperature;
     }
 
     /**
      * @return The rear temperature.
      */
-    @Nullable public FloatProperty getRearTemperature() {
+    @Nullable public Float getRearTemperature() {
         return rearTemperature;
     }
 
@@ -64,15 +64,15 @@ public class SetTemperatureSettings extends CommandWithProperties {
      * @param passengerTemperature The passenger temperature.
      * @param rearTemperature      The rear temperature.
      */
-    public SetTemperatureSettings(@Nullable FloatProperty driverTemperature, @Nullable FloatProperty
-            passengerTemperature, @Nullable FloatProperty rearTemperature) {
+    public SetTemperatureSettings(@Nullable Float driverTemperature, @Nullable Float
+            passengerTemperature, @Nullable Float rearTemperature) {
         super(TYPE, getProperties(driverTemperature, passengerTemperature, rearTemperature));
         this.driverTemperature = driverTemperature;
         this.passengerTemperature = passengerTemperature;
         this.rearTemperature = rearTemperature;
     }
 
-    static Property[] getProperties(FloatProperty driverTemperature, FloatProperty passengerTemperature, FloatProperty
+    static Property[] getProperties(Float driverTemperature, Float passengerTemperature, Float
             rearTemperature) {
         ArrayList<Property> builder = new ArrayList<>();
         if (driverTemperature != null) {

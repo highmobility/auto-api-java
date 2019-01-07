@@ -90,10 +90,10 @@ public class RooftopState extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case DIMMING_IDENTIFIER:
-                        dimmingPercentage = new PercentageProperty(p.getByteArray());
+                        dimmingPercentage = new PercentageProperty(p);
                         return dimmingPercentage;
                     case OPEN_IDENTIFIER:
-                        openPercentage = new PercentageProperty(p.getByteArray());
+                        openPercentage = new PercentageProperty(p);
                         return openPercentage;
                     case IDENTIFIER_CONVERTIBLE_ROOF:
                         convertibleRoofState = ConvertibleRoofState.fromByte(p.getValueByte());

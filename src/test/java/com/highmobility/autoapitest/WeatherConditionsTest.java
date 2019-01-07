@@ -4,6 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetWeatherConditions;
 import com.highmobility.autoapi.WeatherConditions;
+import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -32,7 +33,7 @@ public class WeatherConditionsTest {
 
         assertTrue(command.getClass() == WeatherConditions.class);
         WeatherConditions state = (WeatherConditions) command;
-        assertTrue(state.getRainIntensity() == 1f);
+        assertTrue(state.getRainIntensity().getValue() == 1f);
     }
 
     @Test public void get() {
@@ -44,12 +45,12 @@ public class WeatherConditionsTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("005501");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((WeatherConditions)state).getRainIntensity() == null);
+        assertTrue(((WeatherConditions) state).getRainIntensity() == null);
     }
 
     @Test public void builder() {
         WeatherConditions.Builder builder = new WeatherConditions.Builder();
-        builder.setRainIntensity(1f);
+        builder.setRainIntensity(new PercentageProperty(1f));
         byte[] bytes = builder.build().getByteArray();
         assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("00550101000164")));
     }

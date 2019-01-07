@@ -30,7 +30,7 @@ import com.highmobility.autoapi.property.Property;
 public class SetChargeLimit extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x13);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    FloatProperty percentage;
+    float percentage;
 
     /**
      * @return The charge limit percentage.

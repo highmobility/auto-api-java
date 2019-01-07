@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.FloatProperty;
-import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -56,10 +55,10 @@ public class LightConditions extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case OUTSIDE_LIGHT_IDENTIFIER:
-                        outsideLight = Property.getFloat(p.getValueBytes());
+                        outsideLight = new FloatProperty(p);
                         return outsideLight;
                     case INSIDE_LIGHT_IDENTIFIER:
-                        insideLight = Property.getFloat(p.getValueBytes());
+                        insideLight = new FloatProperty(p);
                         return insideLight;
                 }
 
@@ -90,9 +89,10 @@ public class LightConditions extends CommandWithProperties {
          * @param outsideLight The measured outside illuminance in lux.
          * @return The builder.
          */
-        public Builder setOutsideLight(float outsideLight) {
+        public Builder setOutsideLight(FloatProperty outsideLight) {
             this.outsideLight = outsideLight;
-            addProperty(new FloatProperty(OUTSIDE_LIGHT_IDENTIFIER, outsideLight));
+            outsideLight.setIdentifier(OUTSIDE_LIGHT_IDENTIFIER);
+            addProperty(outsideLight);
             return this;
         }
 
@@ -100,9 +100,10 @@ public class LightConditions extends CommandWithProperties {
          * @param insideLight The measured inside illuminance in lux.
          * @return The builder.
          */
-        public Builder setInsideLight(float insideLight) {
+        public Builder setInsideLight(FloatProperty insideLight) {
             this.insideLight = insideLight;
-            addProperty(new FloatProperty(INSIDE_LIGHT_IDENTIFIER, insideLight));
+            insideLight.setIdentifier(INSIDE_LIGHT_IDENTIFIER);
+            addProperty(insideLight);
             return this;
         }
 

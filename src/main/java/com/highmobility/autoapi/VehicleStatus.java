@@ -288,7 +288,7 @@ public class VehicleStatus extends CommandWithProperties {
                         states.add(command);
                         return command;
                     case ENGINE_VOLUME_IDENTIFIER:
-                        engineVolume = Property.getFloat(p.getValueBytes());
+                        engineVolume = new FloatProperty(p);
                         return engineVolume;
                     case MAX_TORQUE_IDENTIFIER:
                         maxTorque = Property.getUnsignedInt(p.getValueBytes());
@@ -517,7 +517,8 @@ public class VehicleStatus extends CommandWithProperties {
          */
         public Builder setEngineVolume(FloatProperty engineVolume) {
             this.engineVolume = engineVolume;
-            addProperty(new FloatProperty(ENGINE_VOLUME_IDENTIFIER, engineVolume));
+            engineVolume.setIdentifier(ENGINE_VOLUME_IDENTIFIER);
+            addProperty(engineVolume);
             return this;
         }
 

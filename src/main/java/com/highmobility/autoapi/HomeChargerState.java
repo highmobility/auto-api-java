@@ -218,7 +218,7 @@ public class HomeChargerState extends CommandWithProperties {
                         plugType = PlugType.fromByte(p.getValueByte());
                         return plugType;
                     case CHARGING_POWER_IDENTIFIER:
-                        chargingPower = Property.getFloat(p.getValueBytes());
+                        chargingPower = new FloatProperty(p);
                         return chargingPower;
                     case SOLAR_CHARGING_ACTIVE_IDENTIFIER:
                         solarChargingActive = Property.getBool(p.getValueByte());
@@ -239,13 +239,13 @@ public class HomeChargerState extends CommandWithProperties {
                         authenticated = Property.getBool(p.getValueByte());
                         return authenticated;
                     case IDENTIFIER_CHARGE_CURRENT_DC:
-                        chargeCurrentDC = Property.getFloat(p.getValueBytes());
+                        chargeCurrentDC = new FloatProperty(p);
                         return chargeCurrentDC;
                     case IDENTIFIER_MAXIMUM_CHARGE_CURRENT:
-                        maximumChargeCurrent = Property.getFloat(p.getValueBytes());
+                        maximumChargeCurrent = new FloatProperty(p);
                         return maximumChargeCurrent;
                     case IDENTIFIER_MINIMUM_CHARGE_CURRENT:
-                        minimumChargeCurrent = Property.getFloat(p.getValueBytes());
+                        minimumChargeCurrent = new FloatProperty(p);
                         return minimumChargeCurrent;
                     case IDENTIFIER_COORDINATES:
                         coordinates = new CoordinatesProperty(p.getByteArray());
@@ -334,7 +334,8 @@ public class HomeChargerState extends CommandWithProperties {
          */
         public Builder setChargingPower(FloatProperty chargingPower) {
             this.chargingPower = chargingPower;
-            addProperty(new FloatProperty(CHARGING_POWER_IDENTIFIER, chargingPower));
+            chargingPower.setIdentifier(CHARGING_POWER_IDENTIFIER);
+            addProperty(chargingPower);
             return this;
         }
 

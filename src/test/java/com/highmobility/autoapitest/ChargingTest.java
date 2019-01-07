@@ -13,6 +13,8 @@ import com.highmobility.autoapi.StartStopCharging;
 import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.ChargePortState;
 import com.highmobility.autoapi.property.ChargingState;
+import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
 import com.highmobility.autoapi.property.charging.DepartureTime;
 import com.highmobility.autoapi.property.charging.PlugType;
@@ -53,18 +55,18 @@ public class ChargingTest {
         ChargeState state = (ChargeState) command;
 
         assertTrue(state.getEstimatedRange() == 255);
-        assertTrue(state.getBatteryLevel() == .5f);
-        assertTrue(state.getBatteryCurrentAC() == -.6f);
-        assertTrue(state.getBatteryCurrentDC() == -.6f);
-        assertTrue(state.getChargerVoltageAC() == 400f);
-        assertTrue(state.getChargerVoltageDC() == 410f);
+        assertTrue(state.getBatteryLevel().getValue() == .5f);
+        assertTrue(state.getBatteryCurrentAC().getValue() == -.6f);
+        assertTrue(state.getBatteryCurrentDC().getValue() == -.6f);
+        assertTrue(state.getChargerVoltageAC().getValue() == 400f);
+        assertTrue(state.getChargerVoltageDC().getValue() == 410f);
         assertTrue(state.getTimeToCompleteCharge() == 60);
-        assertTrue(state.getChargeLimit() == .9f);
-        assertTrue(state.getChargingRate() == 0f);
+        assertTrue(state.getChargeLimit().getValue() == .9f);
+        assertTrue(state.getChargingRate().getValue() == 0f);
         assertTrue(state.getChargeChargePortState() == ChargePortState.OPEN);
         assertTrue(state.getChargeMode() == ChargeMode.IMMEDIATE);
 
-        assertTrue(state.getMaxChargingCurrent() == 25);
+        assertTrue(state.getMaxChargingCurrent().getValue() == 25);
         assertTrue(state.getPlugType() == PlugType.TYPE_2);
         assertTrue(state.getChargingWindowChosen() == false);
 
@@ -99,7 +101,7 @@ public class ChargingTest {
 
         assertTrue(timeExists == 2);
 
-        assertTrue(state.getBatteryTemperature() == 38.4f);
+        assertTrue(state.getBatteryTemperature().getValue() == 38.4f);
 
         assertTrue(state.getTimers().length == 2);
         Calendar departureDate = state.getTimer(ChargingTimer.Type.DEPARTURE_TIME).getTime();
@@ -133,18 +135,18 @@ public class ChargingTest {
     @Test public void build() throws ParseException {
         ChargeState.Builder builder = new ChargeState.Builder();
         builder.setEstimatedRange(255);
-        builder.setBatteryLevel(.5f);
-        builder.setBatteryCurrentAC(-.6f);
-        builder.setBatteryCurrentDC(-.6f);
-        builder.setChargerVoltageAC(400f);
-        builder.setChargerVoltageDC(410f);
-        builder.setChargeLimit(.9f);
+        builder.setBatteryLevel(new PercentageProperty(.5f));
+        builder.setBatteryCurrentAC(new FloatProperty(-.6f));
+        builder.setBatteryCurrentDC(new FloatProperty(-.6f));
+        builder.setChargerVoltageAC(new FloatProperty(400f));
+        builder.setChargerVoltageDC(new FloatProperty(410f));
+        builder.setChargeLimit(new PercentageProperty(.9f));
         builder.setTimeToCompleteCharge(60);
-        builder.setChargingRate(0f);
+        builder.setChargingRate(new FloatProperty(0f));
         builder.setChargePortState(ChargePortState.OPEN);
         builder.setChargeMode(ChargeMode.IMMEDIATE);
 
-        builder.setMaxChargingCurrent(25f);
+        builder.setMaxChargingCurrent(new FloatProperty(25f));
         builder.setPlugType(PlugType.TYPE_2);
         builder.setChargingWindowChosen(false);
 
@@ -156,7 +158,7 @@ public class ChargingTest {
         builder.addReductionOfChargingCurrentTime(new ReductionTime(StartStop.STOP, new Time(16,
                 32)));
 
-        builder.setBatteryTemperature(38.4f);
+        builder.setBatteryTemperature(new FloatProperty(38.4f));
 
         Calendar departureDate = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
         Calendar preferredEndTime = TestUtils.getUTCCalendar("2018-01-10T16:32:06");

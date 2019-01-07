@@ -23,7 +23,7 @@ package com.highmobility.autoapi.property;
 import com.highmobility.value.Bytes;
 
 /**
- * Value is float 0-1, but byte is 0-100 int.
+ * {@link #getValue()} is float 0-1. {@link #getValueByte()} is 0-100 int.
  */
 public class PercentageProperty extends Property {
     float value;
@@ -36,8 +36,13 @@ public class PercentageProperty extends Property {
     }
 
     public PercentageProperty(float value) {
-        super((byte) 0x00, 1);
+        this((byte) 0x00, value);
+    }
+
+    public PercentageProperty(byte identifier, float value) {
+        super(identifier, 1);
         bytes[3] = floatToIntPercentageByte(value);
+        this.value = value;
     }
 
     public PercentageProperty(Bytes bytes) {

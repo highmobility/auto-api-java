@@ -27,20 +27,13 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class WindscreenTest {
     @Test
     public void state() {
         Bytes bytes = new Bytes(
                 "0042010100010202000103030001020400014305000112060001020700015f08000811010a1020050000");
-
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(WindscreenState.TYPE) && command.getClass().equals(WindscreenState
                 .class));
@@ -60,7 +53,7 @@ public class WindscreenTest {
         assertTrue(matrix.getWindscreenSizeHorizontal() == 4);
         assertTrue(matrix.getWindscreenSizeVertical() == 3);
 
-        assertTrue(state.getDamageConfidence() == .95f);
+        assertTrue(state.getDamageConfidence().getValue() == .95f);
 
         Calendar c = state.getDamageDetectionTime();
 
@@ -151,7 +144,7 @@ public class WindscreenTest {
 
         SetWindscreenReplacementNeeded command = (SetWindscreenReplacementNeeded) CommandResolver
                 .resolve
-                (waitingForBytes);
+                        (waitingForBytes);
         assertTrue(command.getState() == WindscreenReplacementState.REPLACEMENT_NOT_NEEDED);
     }
 

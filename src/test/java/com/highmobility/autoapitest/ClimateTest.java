@@ -18,7 +18,6 @@ import com.highmobility.value.Bytes;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ClimateTest {
     Bytes bytes = new Bytes(
@@ -38,28 +37,22 @@ public class ClimateTest {
 
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-        if (command == null) fail();
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(ClimateState.TYPE));
         ClimateState state = (ClimateState) command;
 
         assertTrue(command.getClass() == ClimateState.class);
-        assertTrue(state.getInsideTemperature() == 19f);
-        assertTrue(state.getOutsideTemperature() == 12f);
-        assertTrue(state.getDriverTemperatureSetting() == 21.5f);
-        assertTrue(state.getPassengerTemperatureSetting() == 21.5f);
+        assertTrue(state.getInsideTemperature().getValue() == 19f);
+        assertTrue(state.getOutsideTemperature().getValue() == 12f);
+        assertTrue(state.getDriverTemperatureSetting().getValue() == 21.5f);
+        assertTrue(state.getPassengerTemperatureSetting().getValue() == 21.5f);
 
         assertTrue(state.isHvacActive() == true);
         assertTrue(state.isDefoggingActive() == false);
         assertTrue(state.isDefrostingActive() == false);
         assertTrue(state.isIonisingActive() == false);
-        assertTrue(state.getDefrostingTemperature() == 21.5f);
+        assertTrue(state.getDefrostingTemperature().getValue() == 21.5f);
 
         assertTrue(state.getHvacStartingTime(HvacStartingTime.Weekday.MONDAY) == null);
 
@@ -70,7 +63,7 @@ public class ClimateTest {
         assertTrue(time2.getTime().getHour() == 18);
         assertTrue(time2.getTime().getMinute() == 30);
 
-        assertTrue(state.getRearTemperatureSetting() == 21.5f);
+        assertTrue(state.getRearTemperatureSetting().getValue() == 21.5f);
     }
 
     @Test public void get() {

@@ -164,16 +164,16 @@ public class ClimateState extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case INSIDE_TEMPERATURE_IDENTIFIER:
-                        insideTemperature = new FloatProperty(p.getByteArray());
+                        insideTemperature = new FloatProperty(p);
                         return insideTemperature;
                     case OUTSIDE_TEMPERATURE_IDENTIFIER:
-                        outsideTemperature = new FloatProperty(p.getByteArray());
+                        outsideTemperature = new FloatProperty(p);
                         return outsideTemperature;
                     case DRIVER_TEMPERATURE_SETTING_IDENTIFIER:
-                        driverTemperatureSetting = new FloatProperty(p.getByteArray());
+                        driverTemperatureSetting = new FloatProperty(p);
                         return driverTemperatureSetting;
                     case PASSENGER_TEMPERATURE_SETTING_IDENTIFIER:
-                        passengerTemperatureSetting = new FloatProperty(p.getByteArray());
+                        passengerTemperatureSetting = new FloatProperty(p);
                         return passengerTemperatureSetting;
                     case HVAC_ACTIVE_IDENTIFIER:
                         hvacActive = Property.getBool(p.getValueByte());
@@ -188,14 +188,14 @@ public class ClimateState extends CommandWithProperties {
                         ionisingActive = Property.getBool(p.getValueByte());
                         return ionisingActive;
                     case DEFROSTING_TEMPERATURE_IDENTIFIER:
-                        defrostingTemperature = new FloatProperty(p.getByteArray());
+                        defrostingTemperature = new FloatProperty(p);
                         return defrostingTemperature;
                     case HVAC_TIME_IDENTIFIER:
                         HvacStartingTime time = new HvacStartingTime(p.getByteArray());
                         builder.add(new HvacStartingTime(p.getByteArray()));
                         return time;
                     case IDENTIFIER_REAR_TEMPERATURE:
-                        rearTemperatureSetting = new FloatProperty(p.getByteArray());
+                        rearTemperatureSetting = new FloatProperty(p);
                         return rearTemperatureSetting;
                 }
                 return null;

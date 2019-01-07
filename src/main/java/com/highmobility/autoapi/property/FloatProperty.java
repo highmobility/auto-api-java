@@ -31,8 +31,13 @@ public class FloatProperty extends Property {
     }
 
     public FloatProperty(float value) {
-        super((byte) 0x00, 4);
+        this((byte) 0x00, value);
+    }
+
+    public FloatProperty(byte identifier, float value) {
+        super(identifier, 4);
         ByteUtils.setBytes(bytes, floatToBytes(value), 3);
+        this.value = value;
     }
 
     public FloatProperty(Bytes bytes) {

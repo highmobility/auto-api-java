@@ -41,8 +41,8 @@ public class ControlRooftop extends CommandWithProperties {
     private static final byte IDENTIFIER_SUNROOF_TILT = 0x04;
     private static final byte IDENTIFIER_SUNROOF_POSITION = 0x05;
 
-    private FloatProperty dimmingPercentage;
-    private FloatProperty openPercentage;
+    private Float dimmingPercentage;
+    private Float openPercentage;
     private ConvertibleRoofState convertibleRoofState;
     private SunroofTiltState sunroofTiltState;
     private Position sunroofPosition;
@@ -50,14 +50,14 @@ public class ControlRooftop extends CommandWithProperties {
     /**
      * @return The dimming percentage.
      */
-    @Nullable public FloatProperty getDimmingPercentage() {
+    @Nullable public Float getDimmingPercentage() {
         return dimmingPercentage;
     }
 
     /**
      * @return The open percentage.
      */
-    @Nullable public FloatProperty getOpenPercentage() {
+    @Nullable public Float getOpenPercentage() {
         return openPercentage;
     }
 
@@ -90,8 +90,8 @@ public class ControlRooftop extends CommandWithProperties {
      * @param sunroofPosition      The sunroof position.
      */
 
-    public ControlRooftop(@Nullable FloatProperty dimmingPercentage,
-                          @Nullable FloatProperty openPercentage,
+    public ControlRooftop(@Nullable Float dimmingPercentage,
+                          @Nullable Float openPercentage,
                           @Nullable ConvertibleRoofState convertibleRoofState,
                           @Nullable SunroofTiltState sunroofTiltState,
                           @Nullable Position sunroofPosition) {
@@ -104,8 +104,8 @@ public class ControlRooftop extends CommandWithProperties {
         this.sunroofPosition = sunroofPosition;
     }
 
-    static Property[] getProperties(@Nullable FloatProperty dimmingPercentage,
-                                    @Nullable FloatProperty openPercentage,
+    static Property[] getProperties(@Nullable Float dimmingPercentage,
+                                    @Nullable Float openPercentage,
                                     @Nullable ConvertibleRoofState convertibleRoofState,
                                     @Nullable SunroofTiltState sunroofTiltState,
                                     @Nullable Position sunroofPosition) {

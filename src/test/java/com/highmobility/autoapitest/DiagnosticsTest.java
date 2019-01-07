@@ -4,6 +4,8 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
+import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
 import com.highmobility.autoapi.property.diagnostics.DiagnosticsTroubleCode;
@@ -54,29 +56,29 @@ public class DiagnosticsTest {
         assertTrue(state.getSpeed() == 60);
         assertTrue(state.getRpm() == 2500);
         assertTrue(state.getRange() == 265);
-        assertTrue(state.getFuelLevel() == .9f);
+        assertTrue(state.getFuelLevel().getValue() == .9f);
         assertTrue(state.getWasherFluidLevel() == WasherFluidLevel.FULL);
-        assertTrue(state.getFuelVolume() == 35.5f);
+        assertTrue(state.getFuelVolume().getValue() == 35.5f);
 
         assertTrue(state.getNonce() == null);
         assertTrue(state.getSignature() == null);
 
-        assertTrue(state.getBatteryVoltage() == 12f);
-        assertTrue(state.getAdBlueLevel() == .5f);
+        assertTrue(state.getBatteryVoltage().getValue() == 12f);
+        assertTrue(state.getAdBlueLevel().getValue() == .5f);
         assertTrue(state.getDistanceDrivenSinceReset() == 1500);
         assertTrue(state.getDistanceDrivenSinceEngineStart() == 10);
 
         assertTrue(state.isAntiLockBrakingActive());
         assertTrue(state.getEngineCoolantTemperature() == 20);
-        assertTrue(state.getEngineTotalOperatingHours() == 1500.65f);
-        assertTrue(state.getEngineTotalFuelConsumption() == 27587.0f);
+        assertTrue(state.getEngineTotalOperatingHours().getValue() == 1500.65f);
+        assertTrue(state.getEngineTotalFuelConsumption().getValue() == 27587.0f);
         assertTrue(state.getBrakeFluidLevel() == BrakeFluidLevel.LOW);
-        assertTrue(state.getEngineTorque() == .2f);
-        assertTrue(state.getEngineLoad() == .1f);
+        assertTrue(state.getEngineTorque().getValue() == .2f);
+        assertTrue(state.getEngineLoad().getValue() == .1f);
         assertTrue(state.getWheelBasedSpeed() == 65);
 
         // level 8
-        assertTrue(state.getBatteryLevel() == .56f);
+        assertTrue(state.getBatteryLevel().getValue() == .56f);
 
         int propertyCount = 0;
 
@@ -168,27 +170,27 @@ public class DiagnosticsTest {
         builder.setOilTemperature(99);
         builder.setSpeed(60);
         builder.setRpm(2500);
-        builder.setFuelLevel(.9f);
+        builder.setFuelLevel(new PercentageProperty(.9f));
         builder.setRange(265);
         builder.setWasherFluidLevel(WasherFluidLevel.FULL);
 
-        builder.setBatteryVoltage(12f);
-        builder.setAdBlueLevel(.5f);
+        builder.setBatteryVoltage(new FloatProperty(12f));
+        builder.setAdBlueLevel(new FloatProperty(.5f));
         builder.setDistanceDrivenSinceReset(1500);
         builder.setDistanceDrivenSinceEngineStart(10);
-        builder.setFuelVolume(35.5f);
+        builder.setFuelVolume(new FloatProperty(35.5f));
 
         builder.setAntiLockBrakingActive(true);
         builder.setEngineCoolantTemperature(20);
-        builder.setEngineTotalOperatingHours(1500.65f);
-        builder.setEngineTotalFuelConsumption(27587.0f);
+        builder.setEngineTotalOperatingHours(new FloatProperty(1500.65f));
+        builder.setEngineTotalFuelConsumption(new FloatProperty(27587.0f));
         builder.setBrakeFluidLevel(BrakeFluidLevel.LOW);
-        builder.setEngineTorque(.2f);
-        builder.setEngineLoad(.1f);
+        builder.setEngineTorque(new PercentageProperty(.2f));
+        builder.setEngineLoad(new PercentageProperty(.1f));
         builder.setWheelBasedSpeed(65);
 
         // level8
-        builder.setBatteryLevel(.56f);
+        builder.setBatteryLevel(new PercentageProperty(.56f));
 
         CheckControlMessage msg1 = new CheckControlMessage(1, 105592, "Check engine", "Alert");
         CheckControlMessage msg2 = new CheckControlMessage(1, 105592, "Check engine", "Alertt");

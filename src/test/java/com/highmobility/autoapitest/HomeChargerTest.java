@@ -61,7 +61,7 @@ public class HomeChargerTest {
         assertTrue(state.getCharging() == Charging.CHARGING);
         assertTrue(state.getAuthenticationMechanism() == AuthenticationMechanism.APP);
         assertTrue(state.getPlugType() == PlugType.TYPE_TWO);
-        assertTrue(state.getChargingPower() == 11.5f);
+        assertTrue(state.getChargingPower().getValue() == 11.5f);
         assertTrue(state.isSolarChargingActive() == true);
 
         assertTrue(state.isHotspotEnabled() == true);
@@ -70,9 +70,9 @@ public class HomeChargerTest {
         assertTrue(state.getHotspotPassword().equals("ZW3vARNUBe"));
 
         assertTrue(state.isAuthenticated() == true);
-        assertTrue(state.getChargeCurrent() == .5f);
-        assertTrue(state.getMaximumChargeCurrent() == 1f);
-        assertTrue(state.getMinimumChargeCurrent() == 0f);
+        assertTrue(state.getChargeCurrent().getValue() == .5f);
+        assertTrue(state.getMaximumChargeCurrent().getValue() == 1f);
+        assertTrue(state.getMinimumChargeCurrent().getValue() == 0f);
 
         CoordinatesProperty prop = state.getCoordinates();
         assertTrue(prop.getLatitude() == 52.520008);
@@ -85,7 +85,6 @@ public class HomeChargerTest {
         assertTrue(state.getPriceTariff(PriceTariff.PricingType.PER_KWH).getPrice() == .3f);
         assertTrue(state.getPriceTariff(PriceTariff.PricingType.PER_KWH).getCurrency()
                 .equals("Ripple"));
-
     }
 
     @Test public void build() {

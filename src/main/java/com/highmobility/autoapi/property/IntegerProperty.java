@@ -38,4 +38,14 @@ public class IntegerProperty extends Property {
         // reset the length bytes (builder knows the length)
         // default is 4
     }
+
+    /**
+     * Reset the value length. This will create a new base byte array if necessary.
+     *
+     * @param identifier  The property identifier.
+     * @param valueLength The new length.
+     */
+    public void setIdentifier(byte identifier, int valueLength) {
+        // TODO: 2019-01-07
+    }
 }

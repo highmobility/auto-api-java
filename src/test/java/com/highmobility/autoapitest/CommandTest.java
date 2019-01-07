@@ -257,7 +257,7 @@ public class CommandTest {
 
         assertTrue(command.getClass() == RooftopState.class);
         RooftopState state = (RooftopState) command;
-        assertTrue(state.getDimmingPercentage() == .01f);
+        assertTrue(state.getDimmingPercentage().getValue() == .01f);
         assertTrue(state.getOpenPercentage() == null);
         assertTrue(state.getProperties().length == 2);
 

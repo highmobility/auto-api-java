@@ -10,6 +10,7 @@ import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.WindowsState;
 import com.highmobility.autoapi.property.CommandProperty;
+import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.value.DisplayUnit;
@@ -74,7 +75,7 @@ public class VehicleStatusTest {
 
         assertTrue(command.getState(TrunkState.TYPE) != null);
 
-        assertTrue(command.getEngineVolume() == 2.5f);
+        assertTrue(command.getEngineVolume().getValue() == 2.5f);
         assertTrue(command.getMaxTorque() == 245);
         assertTrue(command.getGearBox() == Gearbox.AUTOMATIC);
 
@@ -160,7 +161,7 @@ public class VehicleStatusTest {
         builder.addProperty(new CommandProperty(controlCommand.build()));
 
         // l7
-        builder.setEngineVolume(2.5f);
+        builder.setEngineVolume(new FloatProperty(2.5f));
         builder.setMaxTorque(245);
         builder.setGearBox(Gearbox.AUTOMATIC);
 

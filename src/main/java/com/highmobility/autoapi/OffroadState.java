@@ -36,7 +36,7 @@ public class OffroadState extends CommandWithProperties {
     private static final byte WHEEL_ID = 0x02;
 
     Integer routeIncline;
-    FloatProperty wheelSuspension;
+    PercentageProperty wheelSuspension;
 
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.
@@ -49,7 +49,7 @@ public class OffroadState extends CommandWithProperties {
      * @return The wheel suspension level percentage, whereas 0 is no suspension and 1 maximum.
      * suspension
      */
-    @Nullable public FloatProperty getWheelSuspension() {
+    @Nullable public PercentageProperty getWheelSuspension() {
         return wheelSuspension;
     }
 
@@ -63,7 +63,7 @@ public class OffroadState extends CommandWithProperties {
                         routeIncline = Property.getUnsignedInt(p.getValueBytes());
                         return routeIncline;
                     case WHEEL_ID:
-                        wheelSuspension = Property.getUnsignedInt(p.getValueByte()) / 100f;
+                        wheelSuspension = new PercentageProperty(p);
                         return wheelSuspension;
                 }
 
@@ -84,7 +84,7 @@ public class OffroadState extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private Integer routeIncline;
-        private FloatProperty wheelSuspension;
+        private PercentageProperty wheelSuspension;
 
         public Builder() {
             super(TYPE);
@@ -106,9 +106,10 @@ public class OffroadState extends CommandWithProperties {
          *                        and 1 maximum suspension.
          * @return The builder.
          */
-        public Builder setWheelSuspension(FloatProperty wheelSuspension) {
+        public Builder setWheelSuspension(PercentageProperty wheelSuspension) {
             this.wheelSuspension = wheelSuspension;
-            addProperty(new PercentageProperty(WHEEL_ID, wheelSuspension));
+            wheelSuspension.setIdentifier(WHEEL_ID);
+            addProperty(wheelSuspension);
             return this;
         }
 

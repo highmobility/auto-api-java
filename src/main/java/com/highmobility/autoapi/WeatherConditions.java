@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.PercentageProperty;
-import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -31,12 +30,12 @@ import javax.annotation.Nullable;
 public class WeatherConditions extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WEATHER_CONDITIONS, 0x01);
     private static final byte RAIN_IDENTIFIER = 0x01;
-    FloatProperty rainIntensity;
+    PercentageProperty rainIntensity;
 
     /**
-     * @return The rain intensity percentage.
+     * @return The rain intensity.
      */
-    @Nullable public FloatProperty getRainIntensity() {
+    @Nullable public PercentageProperty getRainIntensity() {
         return rainIntensity;
     }
 
@@ -45,10 +44,10 @@ public class WeatherConditions extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == RAIN_IDENTIFIER) {
-                    rainIntensity = Property.getPercentage(p.getValueByte());
+                    rainIntensity = new PercentageProperty(p);
                     return rainIntensity;
                 }
-                
+
                 return null;
             });
         }
@@ -64,7 +63,7 @@ public class WeatherConditions extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private FloatProperty rainIntensity;
+        private PercentageProperty rainIntensity;
 
         public Builder() {
             super(TYPE);
@@ -74,9 +73,10 @@ public class WeatherConditions extends CommandWithProperties {
          * @param rainIntensity The rain intensity percentage.
          * @return The builder.
          */
-        public Builder setRainIntensity(FloatProperty rainIntensity) {
+        public Builder setRainIntensity(PercentageProperty rainIntensity) {
             this.rainIntensity = rainIntensity;
-            addProperty(new PercentageProperty(RAIN_IDENTIFIER, rainIntensity));
+            rainIntensity.setIdentifier(RAIN_IDENTIFIER);
+            addProperty(rainIntensity);
             return this;
         }
 
