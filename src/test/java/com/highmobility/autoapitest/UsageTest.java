@@ -53,9 +53,9 @@ public class UsageTest {
         assertTrue(state.getAverageWeeklyDistance() == 666);
         assertTrue(state.getAverageWeeklyDistance() == 666);
         assertTrue(state.getAverageWeeklyDistanceLongTerm() == 666);
-        assertTrue(state.getAccelerationEvaluation() == .7f);
-        assertTrue(state.getDrivingStyleEvaluation() == .7f);
-        assertTrue(state.getDrivingStyleEvaluation() == .7f);
+        assertTrue(state.getAccelerationEvaluation().getValue() == .7f);
+        assertTrue(state.getDrivingStyleEvaluation().getValue() == .7f);
+        assertTrue(state.getDrivingStyleEvaluation().getValue() == .7f);
 
         assertTrue(state.getDrivingModeActivationPeriods().length == 2);
         assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.ECO).getPercentage() == .6f);
@@ -68,15 +68,15 @@ public class UsageTest {
         assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.REGULAR)
                 .getEnergyConsumption() == 55.4f);
 
-        assertTrue(state.getLastTripEnergyConsumption() == 101.3f);
-        assertTrue(state.getLastTripFuelConsumption() == 22.5f);
-        assertTrue(state.getMileageAfterLastTrip() == 95632.7f);
-        assertTrue(state.getLastTripElectricPortion() == .7f);
-        assertTrue(state.getLastTripAverageEnergyRecuperation() == 5.68f);
-        assertTrue(state.getLastTripBatteryRemaining() == .5f);
+        assertTrue(state.getLastTripEnergyConsumption().getValue() == 101.3f);
+        assertTrue(state.getLastTripFuelConsumption().getValue() == 22.5f);
+        assertTrue(state.getMileageAfterLastTrip().getValue() == 95632.7f);
+        assertTrue(state.getLastTripElectricPortion().getValue() == .7f);
+        assertTrue(state.getLastTripAverageEnergyRecuperation().getValue() == 5.68f);
+        assertTrue(state.getLastTripBatteryRemaining().getValue() == .5f);
         assertTrue(TestUtils.dateIsSame(state.getLastTripDate(), "2018-10-17T10:33:50+0100"));
-        assertTrue(state.getAverageFuelConsumption() == 6.5f);
-        assertTrue(state.getCurrentFuelConsumption() == 7.5f);
+        assertTrue(state.getAverageFuelConsumption().getValue() == 6.5f);
+        assertTrue(state.getCurrentFuelConsumption().getValue() == 7.5f);
     }
 
     @Test public void build() {
