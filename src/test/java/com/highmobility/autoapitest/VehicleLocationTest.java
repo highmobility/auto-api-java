@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetVehicleLocation;
 import com.highmobility.autoapi.VehicleLocation;
 import com.highmobility.autoapi.property.CoordinatesProperty;
+import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -36,8 +37,8 @@ public class VehicleLocationTest {
         VehicleLocation state = (VehicleLocation) command;
         assertTrue(state.getCoordinates().getLatitude() == 52.520008);
         assertTrue(state.getCoordinates().getLongitude() == 13.404954);
-        assertTrue(state.getHeading() == 13.370123);
-        assertTrue(state.getAltitude() == 133.5);
+        assertTrue(state.getHeading().getValue() == 13.370123);
+        assertTrue(state.getAltitude().getValue() == 133.5);
     }
 
     @Test public void get() {
@@ -56,8 +57,8 @@ public class VehicleLocationTest {
         VehicleLocation.Builder builder = new VehicleLocation.Builder();
         CoordinatesProperty coordinates = new CoordinatesProperty(52.520008, 13.404954);
         builder.setCoordinates(coordinates);
-        builder.setHeading(13.370123);
-        builder.setAltitude(133.5);
+        builder.setHeading(new DoubleProperty(13.370123));
+        builder.setAltitude(new DoubleProperty(133.5));
         assertTrue(builder.build().equals(bytes));
     }
 }

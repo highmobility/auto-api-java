@@ -21,10 +21,26 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 public class DoubleProperty extends Property {
+    Double value;
+
+    public Double getValue() {
+        return value;
+    }
+
+    public DoubleProperty(double value) {
+        this((byte) 0x00, value);
+    }
+
     public DoubleProperty(byte identifier, double value) {
         super(identifier, 8);
         ByteUtils.setBytes(bytes, doubleToBytes(value), 3);
+    }
+
+    public DoubleProperty(Bytes bytes) {
+        super(bytes);
+        value = Property.getDouble(getValueBytes());
     }
 }
