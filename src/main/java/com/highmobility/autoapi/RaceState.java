@@ -66,14 +66,14 @@ public class RaceState extends CommandWithProperties {
     PercentageProperty underSteering;
     PercentageProperty overSteering;
     PercentageProperty gasPedalPosition;
-    Integer steeringAngle;
+    IntegerProperty steeringAngle;
     FloatProperty brakePressure;
     FloatProperty yawRate;
-    Integer rearSuspensionSteering;
+    IntegerProperty rearSuspensionSteering;
     Boolean espInterventionActive;
     BrakeTorqueVectoringProperty[] brakeTorqueVectorings;
     GearMode gearMode;
-    Integer selectedGear;
+    IntegerProperty selectedGear;
     PercentageProperty brakePedalPosition;
     // level7
     Boolean brakePedalSwitchActive;
@@ -131,7 +131,7 @@ public class RaceState extends CommandWithProperties {
      * @return The steering angle in degrees, whereas 0 degrees is straight ahead, positive number
      * to the left and negative number to the right.
      */
-    @Nullable public Integer getSteeringAngle() {
+    @Nullable public IntegerProperty getSteeringAngle() {
         return steeringAngle;
     }
 
@@ -152,7 +152,7 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return The rear suspension steering in degrees.
      */
-    @Nullable public Integer getRearSuspensionSteering() {
+    @Nullable public IntegerProperty getRearSuspensionSteering() {
         return rearSuspensionSteering;
     }
 
@@ -193,7 +193,7 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return The selected gear.
      */
-    @Nullable public Integer getSelectedGear() {
+    @Nullable public IntegerProperty getSelectedGear() {
         return selectedGear;
     }
 
@@ -262,7 +262,7 @@ public class RaceState extends CommandWithProperties {
                         gasPedalPosition = new PercentageProperty(p);
                         return gasPedalPosition;
                     case STEERING_ANGLE_IDENTIFIER:
-                        steeringAngle = Property.getSignedInt(p.getValueByte());
+                        steeringAngle = new IntegerProperty(p, true);
                         return steeringAngle;
                     case BRAKE_PRESSURE_IDENTIFIER:
                         brakePressure = new FloatProperty(p);
@@ -271,7 +271,7 @@ public class RaceState extends CommandWithProperties {
                         yawRate = new FloatProperty(p);
                         return yawRate;
                     case REAR_SUSPENSION_STEERING_IDENTIFIER:
-                        rearSuspensionSteering = Property.getUnsignedInt(p.getValueByte());
+                        rearSuspensionSteering = new IntegerProperty(p, false);
                         return rearSuspensionSteering;
                     case ESP_INTERVENTION_ACTIVE_IDENTIFIER:
                         espInterventionActive = Property.getBool(p.getValueByte());
@@ -285,7 +285,7 @@ public class RaceState extends CommandWithProperties {
                         gearMode = GearMode.fromByte(p.getValueByte());
                         return gearMode;
                     case SELECTED_GEAR_IDENTIFIER:
-                        selectedGear = Property.getUnsignedInt(p.getValueByte());
+                        selectedGear = new IntegerProperty(p, false);
                         return selectedGear;
                     case BRAKE_PEDAL_POSITION_IDENTIFIER:
                         brakePedalPosition = new PercentageProperty(p);
@@ -353,14 +353,14 @@ public class RaceState extends CommandWithProperties {
         private PercentageProperty underSteering;
         private PercentageProperty overSteering;
         private PercentageProperty gasPedalPosition;
-        private Integer steeringAngle;
+        private IntegerProperty steeringAngle;
         private FloatProperty brakePressure;
         private FloatProperty yawRate;
-        private Integer rearSuspensionSteering;
+        private IntegerProperty rearSuspensionSteering;
         private Boolean espInterventionActive;
         private List<BrakeTorqueVectoringProperty> brakeTorqueVectorings = new ArrayList<>();
         private GearMode gearMode;
-        private Integer selectedGear;
+        private IntegerProperty selectedGear;
         private PercentageProperty brakePedalPosition;
 
         private Boolean brakePedalSwitchActive;
@@ -438,9 +438,10 @@ public class RaceState extends CommandWithProperties {
          *                      positive number to the left and negative number to the right.
          * @return The builder.
          */
-        public Builder setSteeringAngle(Integer steeringAngle) {
+        public Builder setSteeringAngle(IntegerProperty steeringAngle) {
             this.steeringAngle = steeringAngle;
-            addProperty(new IntegerProperty(STEERING_ANGLE_IDENTIFIER, steeringAngle, 1));
+            steeringAngle.setIdentifier(STEERING_ANGLE_IDENTIFIER, 1);
+            addProperty(steeringAngle);
             return this;
         }
 
@@ -470,10 +471,10 @@ public class RaceState extends CommandWithProperties {
          * @param rearSuspensionSteering The rear suspension steering in degrees.
          * @return The builder
          */
-        public Builder setRearSuspensionSteering(Integer rearSuspensionSteering) {
+        public Builder setRearSuspensionSteering(IntegerProperty rearSuspensionSteering) {
             this.rearSuspensionSteering = rearSuspensionSteering;
-            addProperty(new IntegerProperty(REAR_SUSPENSION_STEERING_IDENTIFIER,
-                    rearSuspensionSteering, 1));
+            rearSuspensionSteering.setIdentifier(REAR_SUSPENSION_STEERING_IDENTIFIER, 1);
+            addProperty(rearSuspensionSteering);
             return this;
         }
 
@@ -527,9 +528,10 @@ public class RaceState extends CommandWithProperties {
          * @param selectedGear The selected gear.
          * @return The builder.
          */
-        public Builder setSelectedGear(Integer selectedGear) {
+        public Builder setSelectedGear(IntegerProperty selectedGear) {
             this.selectedGear = selectedGear;
-            addProperty(new IntegerProperty(SELECTED_GEAR_IDENTIFIER, selectedGear, 1));
+            selectedGear.setIdentifier(SELECTED_GEAR_IDENTIFIER, 1);
+            addProperty(selectedGear);
             return this;
         }
 

@@ -7,6 +7,7 @@ import com.highmobility.autoapi.TachographState;
 import com.highmobility.autoapi.property.DriverCard;
 import com.highmobility.autoapi.property.DriverTimeState;
 import com.highmobility.autoapi.property.DriverWorkingState;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
@@ -48,7 +49,7 @@ public class TachographTest {
         assertTrue(state.isVehicleMotionDetected() == true);
         assertTrue(state.isVehicleOverspeeding() == false);
         assertTrue(state.getVehicleDirection() == TachographState.VehicleDirection.FORWARD);
-        assertTrue(state.getVehicleSpeed() == 80);
+        assertTrue(state.getVehicleSpeed().getValue() == 80);
     }
 
     @Test public void build() {
@@ -70,7 +71,7 @@ public class TachographTest {
         builder.setVehicleMotionDetected(true);
         builder.setVehicleOverspeed(false);
         builder.setVehicleDirection(TachographState.VehicleDirection.FORWARD);
-        builder.setVehicleSpeed(80);
+        builder.setVehicleSpeed(new IntegerProperty(80));
 
         TachographState state = builder.build();
         assertTrue(state.equals(bytes));

@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
@@ -40,9 +41,9 @@ public class CruiseControlState extends CommandWithProperties {
 
     Boolean active;
     Limiter limiter;
-    Integer targetSpeed;
+    IntegerProperty targetSpeed;
     Boolean adaptiveActive;
-    Integer adaptiveTargetSpeed;
+    IntegerProperty adaptiveTargetSpeed;
 
     /**
      * @return Whether the cruise control is active.
@@ -61,7 +62,7 @@ public class CruiseControlState extends CommandWithProperties {
     /**
      * @return The cruise control target speed.
      */
-    @Nullable public Integer getTargetSpeed() {
+    @Nullable public IntegerProperty getTargetSpeed() {
         return targetSpeed;
     }
 
@@ -75,7 +76,7 @@ public class CruiseControlState extends CommandWithProperties {
     /**
      * @return The adaptive cruise control target speed.
      */
-    @Nullable public Integer getAdaptiveTargetSpeed() {
+    @Nullable public IntegerProperty getAdaptiveTargetSpeed() {
         return adaptiveTargetSpeed;
     }
 
@@ -92,13 +93,13 @@ public class CruiseControlState extends CommandWithProperties {
                         limiter = Limiter.fromByte(p.getValueByte());
                         return limiter;
                     case TARGET_SPEED_IDENTIFIER:
-                        targetSpeed = Property.getUnsignedInt(p.getValueBytes());
+                        targetSpeed = new IntegerProperty(p, false);
                         return targetSpeed;
                     case ADAPTIVE_ACTIVE_IDENTIFIER:
                         adaptiveActive = Property.getBool(p.getValueByte());
                         return adaptiveActive;
                     case ADAPTIVE_TARGET_SPEED_IDENTIFIER:
-                        adaptiveTargetSpeed = Property.getUnsignedInt(p.getValueBytes());
+                        adaptiveTargetSpeed = new IntegerProperty(p, false);
                         return adaptiveTargetSpeed;
                 }
 

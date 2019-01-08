@@ -3,8 +3,8 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.CommandWithProperties;
-import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetVehicleStatus;
+import com.highmobility.autoapi.IgnitionState;
 import com.highmobility.autoapi.TheftAlarmState;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
@@ -25,7 +25,6 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static com.highmobility.autoapi.property.ControlModeValue.STARTED;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -34,7 +33,7 @@ import static org.junit.Assert.fail;
  */
 public class VehicleStatusTest {
     Bytes bytes = new Bytes(
-            "0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000700270101000102" +
+            "0011010100114a46325348424443374348343531383639020001010300065479706520580400064d79204361720500064142433132330600085061636B6167652B07000207E108000C4573746f72696c20426c617509000200DC0A0001050B00010599000B002101010001000200010199000B0035010100010102000101" +
                     // l7
                     "0C0004402000000D000200F50E000101" +
                     // l8
@@ -67,16 +66,16 @@ public class VehicleStatusTest {
         assertTrue(command.getLicensePlate().equals("ABC123"));
 
         assertTrue(command.getSalesDesignation().equals("Package+"));
-        assertTrue(command.getModelYear() == 2017);
+        assertTrue(command.getModelYear().getValue() == 2017);
         assertTrue(command.getColorName().equals("Estoril Blau"));
-        assertTrue(command.getPower() == 220);
-        assertTrue(command.getNumberOfDoors() == 5);
-        assertTrue(command.getNumberOfSeats() == 5);
+        assertTrue(command.getPower().getValue() == 220);
+        assertTrue(command.getNumberOfDoors().getValue() == 5);
+        assertTrue(command.getNumberOfSeats().getValue() == 5);
 
         assertTrue(command.getState(TrunkState.TYPE) != null);
 
         assertTrue(command.getEngineVolume().getValue() == 2.5f);
-        assertTrue(command.getMaxTorque() == 245);
+        assertTrue(command.getMaxTorque().getValue() == 245);
         assertTrue(command.getGearBox() == Gearbox.AUTOMATIC);
 
         assertTrue(command.getDisplayUnit() == DisplayUnit.KM);
@@ -92,7 +91,7 @@ public class VehicleStatusTest {
 
     @Test public void build() {
         VehicleStatus status = getVehicleStatusBuilderWithoutSignature().build();
-        assertTrue(status.equals(bytes));
+        assertTrue(TestUtils.bytesTheSame(status, bytes));
     }
 
     @Test public void get() {
@@ -118,12 +117,10 @@ public class VehicleStatusTest {
         assertTrue(trunkState.getPosition() == Position.OPEN);
     }
 
-    @Test public void controlMode() {
-        Command command = getState(ControlMode.class);
-        if (command == null) fail();
-        if (command.is(ControlMode.TYPE) == false) fail();
-        ControlMode state = (ControlMode) command;
-        assertTrue(state.getMode() == STARTED);
+    @Test public void ignitionState() {
+        Command command = this.command.getState(IgnitionState.TYPE);
+        IgnitionState state = (IgnitionState) command;
+        assertTrue(state.isAccessoriesIgnitionOn());
     }
 
     Command getState(Class forClass) {
@@ -143,26 +140,27 @@ public class VehicleStatusTest {
         builder.setName("My Car");
         builder.setLicensePlate("ABC123");
         builder.setSalesDesignation("Package+");
-        builder.setModelYear(2017);
+        builder.setModelYear(new IntegerProperty(2017));
 
         builder.setColorName("Estoril Blau");
 //        build.setPower(220);
         // add an unknown property (power)
         builder.addProperty(new IntegerProperty((byte) 0x09, 220, 2));
-        builder.setNumberOfDoors(5).setNumberOfSeats(5);
+        builder.setNumberOfDoors(new IntegerProperty(5)).setNumberOfSeats(new IntegerProperty(5));
 
         TrunkState.Builder trunkState = new TrunkState.Builder();
         trunkState.setLockState(Lock.UNLOCKED);
         trunkState.setPosition(Position.OPEN);
         builder.addProperty(new CommandProperty(trunkState.build()));
 
-        ControlMode.Builder controlCommand = new ControlMode.Builder();
-        controlCommand.setMode(STARTED);
-        builder.addProperty(new CommandProperty(controlCommand.build()));
+        IgnitionState.Builder ignitionState = new IgnitionState.Builder();
+        ignitionState.setIsOn(true);
+        ignitionState.setAccessoriesIgnition(true);
+        builder.addProperty(new CommandProperty(ignitionState.build()));
 
         // l7
         builder.setEngineVolume(new FloatProperty(2.5f));
-        builder.setMaxTorque(245);
+        builder.setMaxTorque(new IntegerProperty(245));
         builder.setGearBox(Gearbox.AUTOMATIC);
 
         // l8

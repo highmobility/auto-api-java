@@ -14,6 +14,7 @@ import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.ChargePortState;
 import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
 import com.highmobility.autoapi.property.charging.DepartureTime;
@@ -48,19 +49,17 @@ public class ChargingTest {
 
     @Test
     public void state() throws ParseException {
-        Command command = null;
-
-        command = CommandResolver.resolve(bytes);
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(command.is(ChargeState.TYPE));
         ChargeState state = (ChargeState) command;
 
-        assertTrue(state.getEstimatedRange() == 255);
+        assertTrue(state.getEstimatedRange().getValue() == 255);
         assertTrue(state.getBatteryLevel().getValue() == .5f);
         assertTrue(state.getBatteryCurrentAC().getValue() == -.6f);
         assertTrue(state.getBatteryCurrentDC().getValue() == -.6f);
         assertTrue(state.getChargerVoltageAC().getValue() == 400f);
         assertTrue(state.getChargerVoltageDC().getValue() == 410f);
-        assertTrue(state.getTimeToCompleteCharge() == 60);
+        assertTrue(state.getTimeToCompleteCharge().getValue() == 60);
         assertTrue(state.getChargeLimit().getValue() == .9f);
         assertTrue(state.getChargingRate().getValue() == 0f);
         assertTrue(state.getChargeChargePortState() == ChargePortState.OPEN);
@@ -134,14 +133,14 @@ public class ChargingTest {
 
     @Test public void build() throws ParseException {
         ChargeState.Builder builder = new ChargeState.Builder();
-        builder.setEstimatedRange(255);
+        builder.setEstimatedRange(new IntegerProperty(255));
         builder.setBatteryLevel(new PercentageProperty(.5f));
         builder.setBatteryCurrentAC(new FloatProperty(-.6f));
         builder.setBatteryCurrentDC(new FloatProperty(-.6f));
         builder.setChargerVoltageAC(new FloatProperty(400f));
         builder.setChargerVoltageDC(new FloatProperty(410f));
         builder.setChargeLimit(new PercentageProperty(.9f));
-        builder.setTimeToCompleteCharge(60);
+        builder.setTimeToCompleteCharge(new IntegerProperty(60));
         builder.setChargingRate(new FloatProperty(0f));
         builder.setChargePortState(ChargePortState.OPEN);
         builder.setChargeMode(ChargeMode.IMMEDIATE);

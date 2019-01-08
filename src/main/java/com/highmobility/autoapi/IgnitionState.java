@@ -22,6 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.utils.ByteUtils;
 
 import javax.annotation.Nullable;
 

@@ -71,7 +71,8 @@ public class VideoHandover extends CommandWithProperties {
      * @param location       The screen location.
      * @param startingSecond The starting second of the video.
      */
-    public VideoHandover(String url, @Nullable Integer startingSecond, @Nullable ScreenLocation location) {
+    public VideoHandover(String url, @Nullable Integer startingSecond,
+                         @Nullable ScreenLocation location) {
         super(TYPE, getProperties(url, startingSecond, location));
         this.url = url;
         this.startingSecond = startingSecond;
@@ -80,16 +81,16 @@ public class VideoHandover extends CommandWithProperties {
 
     VideoHandover(byte[] bytes) throws CommandParseException {
         super(bytes);
-        for (Property property : properties) {
-            switch (property.getPropertyIdentifier()) {
+        for (Property p : properties) {
+            switch (p.getPropertyIdentifier()) {
                 case URL_IDENTIFIER:
-                    url = Property.getString(property.getValueBytes());
+                    url = Property.getString(p.getValueBytes());
                     break;
                 case STARTING_SECOND_IDENTIFIER:
-                    startingSecond = Property.getUnsignedInt(property.getValueBytes());
+                    startingSecond = Property.getUnsignedInt(p.getValueBytes());
                     break;
                 case IDENTIFIER_SCREEN_LOCATION:
-                    location = ScreenLocation.fromByte(property.getValueByte());
+                    location = ScreenLocation.fromByte(p.getValueByte());
                     break;
             }
         }
@@ -99,10 +100,12 @@ public class VideoHandover extends CommandWithProperties {
         List<Property> propertiesBuilder = new ArrayList<>();
 
         if (url != null) propertiesBuilder.add(new StringProperty(URL_IDENTIFIER, url));
-        if (startingSecond != null)
+        if (startingSecond != null) {
             propertiesBuilder.add(new IntegerProperty(STARTING_SECOND_IDENTIFIER, startingSecond,
                     2));
-        if (location != null) propertiesBuilder.add(new Property(IDENTIFIER_SCREEN_LOCATION, location.getByte()));
+        }
+        if (location != null)
+            propertiesBuilder.add(new Property(IDENTIFIER_SCREEN_LOCATION, location.getByte()));
         return propertiesBuilder.toArray(new Property[0]);
     }
 }

@@ -22,7 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ControlModeValue;
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -37,12 +36,12 @@ public class ControlMode extends CommandWithProperties {
     private static final byte IDENTIFIER_ANGLE = 0x02;
 
     ControlModeValue mode;
-    Integer angle;
+    IntegerProperty angle;
 
     /**
      * @return the angle
      */
-    @Nullable public Integer getAngle() {
+    @Nullable public IntegerProperty getAngle() {
         return angle;
     }
 
@@ -53,55 +52,27 @@ public class ControlMode extends CommandWithProperties {
         return mode;
     }
 
-    public ControlMode(byte[] bytes) throws CommandParseException {
+    public ControlMode(byte[] bytes) {
         super(bytes);
+        
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_MODE:
+                        mode = ControlModeValue.fromByte(p.getValueByte());
+                        return mode;
+                    case IDENTIFIER_ANGLE:
+                        angle = new IntegerProperty(p, false);
+                        return angle;
+                }
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-
-            switch (property.getPropertyIdentifier()) {
-                case IDENTIFIER_MODE:
-                    mode = ControlModeValue.fromByte(property.getValueByte());
-                    break;
-                case IDENTIFIER_ANGLE:
-                    angle = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-            }
+                return null;
+            });
         }
+
     }
 
     @Override public boolean isState() {
         return true;
-    }
-
-    private ControlMode(Builder builder) {
-        super(builder);
-        angle = builder.angle;
-        mode = builder.mode;
-    }
-
-    public static final class Builder extends CommandWithProperties.Builder {
-        private int angle;
-        private ControlModeValue mode;
-
-        public Builder() {
-            super(TYPE);
-        }
-
-        public Builder setAngle(int angle) {
-            this.angle = angle;
-            addProperty(new IntegerProperty(IDENTIFIER_ANGLE, angle, 2));
-            return this;
-        }
-
-        public Builder setMode(ControlModeValue mode) {
-            this.mode = mode;
-            addProperty(new Property(IDENTIFIER_MODE, mode.getByte()));
-            return this;
-        }
-
-        public ControlMode build() {
-            return new ControlMode(this);
-        }
     }
 }

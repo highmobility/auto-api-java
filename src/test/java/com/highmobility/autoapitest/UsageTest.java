@@ -50,9 +50,9 @@ public class UsageTest {
         assertTrue(command.getClass() == Usage.class);
         Usage state = (Usage) command;
 
-        assertTrue(state.getAverageWeeklyDistance() == 666);
-        assertTrue(state.getAverageWeeklyDistance() == 666);
-        assertTrue(state.getAverageWeeklyDistanceLongTerm() == 666);
+        assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
+        assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
+        assertTrue(state.getAverageWeeklyDistanceLongTerm().getValue() == 666);
         assertTrue(state.getAccelerationEvaluation().getValue() == .7f);
         assertTrue(state.getDrivingStyleEvaluation().getValue() == .7f);
         assertTrue(state.getDrivingStyleEvaluation().getValue() == .7f);

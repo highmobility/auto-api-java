@@ -6,6 +6,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Notification;
 import com.highmobility.autoapi.NotificationAction;
 import com.highmobility.autoapi.property.ActionItem;
+import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -33,7 +35,7 @@ public class NotificationsTest {
         Command command = CommandResolver.resolve(bytes);
         assertTrue(command.getClass() == Notification.class);
         Notification state = (Notification) command;
-        assertTrue(state.getText().equals("Start navigation?"));
+        assertTrue(state.getText().getValue().equals("Start navigation?"));
 
         assertTrue(state.getAction(0) != null);
         assertTrue(state.getAction(1) != null);
@@ -41,7 +43,7 @@ public class NotificationsTest {
         assertTrue(state.getAction(0).getName().equals("No"));
         assertTrue(state.getAction(1).getName().equals("Yes"));
 
-        assertTrue(state.getReceivedAction() == 42);
+        assertTrue(state.getReceivedAction().getValue() == 42);
     }
 
     @Test public void outgoingNotification() {
@@ -63,10 +65,10 @@ public class NotificationsTest {
         action2 = new ActionItem(1, "Yes");
         ActionItem[] actions = new ActionItem[]{action1, action2};
 
-        builder.setText("Start navigation?");
+        builder.setText(new StringProperty("Start navigation?"));
         builder.setActions(actions);
 
-        builder.setReceivedAction(42);
+        builder.setReceivedAction(new IntegerProperty(42));
 
         Notification command = builder.build();
         assertTrue(command.equals(bytes));

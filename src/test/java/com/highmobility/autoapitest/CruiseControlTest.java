@@ -31,9 +31,9 @@ public class CruiseControlTest {
         CruiseControlState state = (CruiseControlState) command;
         assertTrue(state.isActive() == true);
         assertTrue(state.getLimiter() == CruiseControlState.Limiter.HIGHER_SPEED_REQUESTED);
-        assertTrue(state.getTargetSpeed() == 60);
+        assertTrue(state.getTargetSpeed().getValue() == 60);
         assertTrue(state.isAdaptiveActive() == false);
-        assertTrue(state.getAdaptiveTargetSpeed() == 60);
+        assertTrue(state.getAdaptiveTargetSpeed().getValue() == 60);
     }
 
     @Test public void get() {

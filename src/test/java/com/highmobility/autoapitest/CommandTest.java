@@ -74,7 +74,7 @@ public class CommandTest {
         Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
 
         RooftopState state = (RooftopState) CommandResolver.resolve(bytes);
-        Calendar timestamp = state.getPropertyTimestamp(state.getOpenPercentage()).getTimestamp();
+        Calendar timestamp = state.getPropertyTimestamp(state.getOpenPercentage()).getCalendar();
         assertTrue(TestUtils.dateIsSame(timestamp, expectedDate));
 
         // TBODO:
@@ -96,7 +96,7 @@ public class CommandTest {
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
 
         PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x01)[0];
-        assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
+        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), expectedDate));
         assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
     }
 
@@ -108,7 +108,7 @@ public class CommandTest {
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
 
         PropertyTimestamp timestamp = command.getPropertyTimestamp(command.isActive());
-        assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
+        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), expectedDate));
         assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
     }
 
@@ -122,7 +122,7 @@ public class CommandTest {
         String expectedDate = "2017-01-10T17:34:00+0000";
 
         PropertyTimestamp timestamp = command.getPropertyTimestamp(command.getPersonsDetected()[1]);
-        assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
+        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), expectedDate));
     }
 
     @Test public void invalidProperty() {
@@ -197,7 +197,7 @@ public class CommandTest {
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
 
         PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];
-        assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
+        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), expectedDate));
         assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
     }
 
@@ -207,7 +207,7 @@ public class CommandTest {
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
 
         PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];
-        assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
+        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), expectedDate));
         assertTrue(timestamp.getAdditionalData().getLength() == 0);
     }
 
@@ -240,18 +240,13 @@ public class CommandTest {
         }
     }
 
-    @Test public void unknownProperty() throws CommandParseException {
+    @Test public void unknownProperty() {
         Bytes bytes = new Bytes(
                 "002501" +
                         "01000101" +
                         "1A000135");
 
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(RooftopState.TYPE));
 

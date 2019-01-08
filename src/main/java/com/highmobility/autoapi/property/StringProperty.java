@@ -23,11 +23,32 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import java.io.UnsupportedEncodingException;
 
 public class StringProperty extends Property {
     public static final String CHARSET = "UTF-8";
+
+    String value;
+
+    public String getValue() {
+        return value;
+    }
+
+    public StringProperty(Bytes bytes) {
+        super(bytes);
+
+        try {
+            this.value = new String(getValueBytes(), CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            this.value = "Unsupported encoding";
+        }
+    }
+
+    public StringProperty(String value) {
+        this((byte) 0x00, value);
+    }
 
     public StringProperty(byte identifier, String value) {
         super(identifier, value != null ? value.length() : 0);
@@ -41,6 +62,8 @@ public class StringProperty extends Property {
             }
             ByteUtils.setBytes(bytes, stringBytes, 3);
         }
+
+        this.value = value;
     }
 
     public static Property[] getProperties(String value, byte identifier) {

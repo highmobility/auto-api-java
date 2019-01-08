@@ -8,6 +8,7 @@ import com.highmobility.autoapi.property.AccelerationProperty;
 import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.GearMode;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.utils.ByteUtils;
@@ -48,16 +49,16 @@ public class RaceTest {
         assertTrue(state.getUnderSteering().getValue() == .19f);
         assertTrue(state.getOverSteering().getValue() == 0f);
         assertTrue(state.getGasPedalPosition().getValue() == .98f);
-        assertTrue(state.getSteeringAngle() == -30);
+        assertTrue(state.getSteeringAngle().getValue() == -30);
         assertTrue(state.getBrakePressure().getValue() == 11.56f);
         assertTrue(state.getYawRate().getValue() == 6.66f);
-        assertTrue(state.getRearSuspensionSteering() == 3);
+        assertTrue(state.getRearSuspensionSteering().getValue() == 3);
         assertTrue(state.isEspInterventionActive() == true);
 
         assertTrue(state.getBrakeTorqueVectoring(Axle.REAR).isActive() == true);
         assertTrue(state.getBrakeTorqueVectoring(Axle.FRONT) == null);
         assertTrue(state.getGearMode() == GearMode.DRIVE);
-        assertTrue(state.getSelectedGear() == 4);
+        assertTrue(state.getSelectedGear().getValue() == 4);
         assertTrue(state.getBrakePedalPosition().getValue() == .01f);
 
         assertTrue(state.isBrakePedalSwitchActive() == true);
@@ -78,14 +79,14 @@ public class RaceTest {
         builder.setUnderSteering(new PercentageProperty( .19f));
         builder.setOverSteering(new PercentageProperty(0f));
         builder.setGasPedalPosition(new PercentageProperty(.98f));
-        builder.setSteeringAngle(-30);
+        builder.setSteeringAngle(new IntegerProperty(-30));
         builder.setBrakePressure(new FloatProperty(11.56f));
         builder.setYawRate(new FloatProperty(6.66f));
-        builder.setRearSuspensionSteering(3);
+        builder.setRearSuspensionSteering(new IntegerProperty(3));
         builder.setEspInterventionActive(true);
         builder.addBrakeTorqueVectoring(new BrakeTorqueVectoringProperty(Axle.REAR, true));
         builder.setGearMode(GearMode.DRIVE);
-        builder.setSelectedGear(4);
+        builder.setSelectedGear(new IntegerProperty(4));
         builder.setBrakePedalPosition(new PercentageProperty(.01f));
 
         builder.setBrakePedalSwitchActive(true);

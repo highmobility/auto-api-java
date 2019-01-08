@@ -22,7 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
-import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -35,13 +34,13 @@ public class OffroadState extends CommandWithProperties {
     private static final byte ROUTE_ID = 0x01;
     private static final byte WHEEL_ID = 0x02;
 
-    Integer routeIncline;
+    IntegerProperty routeIncline;
     PercentageProperty wheelSuspension;
 
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.
      */
-    @Nullable public Integer getRouteIncline() {
+    @Nullable public IntegerProperty getRouteIncline() {
         return routeIncline;
     }
 
@@ -54,13 +53,13 @@ public class OffroadState extends CommandWithProperties {
     }
 
     public OffroadState(byte[] bytes) {
-        super(bytes);
+        super(TYPE, bytes);
 
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case ROUTE_ID:
-                        routeIncline = Property.getUnsignedInt(p.getValueBytes());
+                        routeIncline = new IntegerProperty(p, false);
                         return routeIncline;
                     case WHEEL_ID:
                         wheelSuspension = new PercentageProperty(p);
@@ -83,7 +82,7 @@ public class OffroadState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Integer routeIncline;
+        private IntegerProperty routeIncline;
         private PercentageProperty wheelSuspension;
 
         public Builder() {
@@ -95,9 +94,10 @@ public class OffroadState extends CommandWithProperties {
          *                     for decline.
          * @return The builder.
          */
-        public Builder setRouteIncline(Integer routeIncline) {
+        public Builder setRouteIncline(IntegerProperty routeIncline) {
             this.routeIncline = routeIncline;
-            addProperty(new IntegerProperty(ROUTE_ID, routeIncline, 2));
+            routeIncline.setIdentifier(ROUTE_ID, 2);
+            addProperty(routeIncline);
             return this;
         }
 

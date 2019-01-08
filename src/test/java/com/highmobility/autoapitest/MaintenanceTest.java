@@ -42,15 +42,15 @@ public class MaintenanceTest {
 
         assertTrue(command.getClass() == MaintenanceState.class);
         MaintenanceState state = (MaintenanceState) command;
-        assertTrue(state.getDaysToNextService() == 501);
-        assertTrue(state.getKilometersToNextService() == 3681);
+        assertTrue(state.getDaysToNextService().getValue() == 501);
+        assertTrue(state.getKilometersToNextService().getValue() == 3681);
 
         // level8
-        assertTrue(state.getCbsReportsCount() == 3);
-        assertTrue(state.getMonthsToExhaustInspection() == 5);
+        assertTrue(state.getCbsReportsCount().getValue() == 3);
+        assertTrue(state.getMonthsToExhaustInspection().getValue() == 5);
         assertTrue(state.getTeleserviceAvailability() == TeleserviceAvailability.SUCCESSFUL);
-        assertTrue(state.getServiceDistanceThreshold() == 500);
-        assertTrue(state.getServiceTimeThreshold() == 4);
+        assertTrue(state.getServiceDistanceThreshold().getValue() == 500);
+        assertTrue(state.getServiceTimeThreshold().getValue() == 4);
 
         assertTrue(TestUtils.dateIsSame(state.getAutomaticTeleserviceCallDate(),
                 "2018-11-23T10:33:50+0100"));

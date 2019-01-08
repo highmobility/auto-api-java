@@ -40,9 +40,9 @@ public class PropertyTimestamp extends Property {
     private Bytes additionalData;
 
     /**
-     * @return The property timestamp.
+     * @return The timestamp calendar.
      */
-    public Calendar getTimestamp() {
+    public Calendar getCalendar() {
         return timestamp;
     }
 

@@ -4,6 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetOffroadState;
 import com.highmobility.autoapi.OffroadState;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -22,11 +23,14 @@ public class OffRoadTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-
         assertTrue(command.getClass() == OffroadState.class);
-        OffroadState state = (OffroadState) command;
-        assertTrue(state.getRouteIncline() == 10);
+        testState((OffroadState) command);
+    }
+
+    void testState(OffroadState state) {
+        assertTrue(state.getRouteIncline().getValue() == 10);
         assertTrue(state.getWheelSuspension().getValue() == .5f);
+        assertTrue(state.getType() == OffroadState.TYPE);
     }
 
     @Test public void get() {
@@ -43,12 +47,11 @@ public class OffRoadTest {
 
     @Test public void build() {
         OffroadState.Builder builder = new OffroadState.Builder();
-        builder.setRouteIncline(10);
+        builder.setRouteIncline(new IntegerProperty(10));
         builder.setWheelSuspension(new PercentageProperty(.5f));
         OffroadState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
-        assertTrue(state.getRouteIncline() == 10);
-        assertTrue(state.getWheelSuspension().getValue() == .5f);
-        assertTrue(state.getType() == OffroadState.TYPE);
+
+        testState(state);
     }
 }

@@ -11,7 +11,6 @@ import com.highmobility.value.Bytes;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -19,15 +18,10 @@ import static org.junit.Assert.fail;
 public class EngineTest {
     Bytes bytes = new Bytes(
             "0035010100010102000101");
+
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(command.is(IgnitionState.TYPE));
         IgnitionState state = (IgnitionState) command;
         assertTrue(state.isOn() == true);

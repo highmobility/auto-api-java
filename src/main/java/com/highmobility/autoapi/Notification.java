@@ -41,14 +41,14 @@ public class Notification extends CommandWithProperties {
     private static final byte TEXT_IDENTIFIER = 0x01;
     private static final byte RECEIVED_ACTION_IDENTIFIER = 0x10;
 
-    String text;
+    StringProperty text;
     ActionItem[] actions;
-    Integer receivedAction;
+    IntegerProperty receivedAction;
 
     /**
      * @return Notification text.
      */
-    @Nullable public String getText() {
+    @Nullable public StringProperty getText() {
         return text;
     }
 
@@ -72,7 +72,7 @@ public class Notification extends CommandWithProperties {
     /**
      * @return The received action.
      */
-    @Nullable public Integer getReceivedAction() {
+    @Nullable public IntegerProperty getReceivedAction() {
         return receivedAction;
     }
 
@@ -83,9 +83,9 @@ public class Notification extends CommandWithProperties {
      */
     public Notification(String text, ActionItem[] actions, Integer receivedAction) {
         super(TYPE, getProperties(text, actions, receivedAction));
-        this.text = text;
         this.actions = actions;
-        this.receivedAction = receivedAction;
+        this.text = (StringProperty) getProperty(TEXT_IDENTIFIER);
+        this.receivedAction = (IntegerProperty) getProperty(RECEIVED_ACTION_IDENTIFIER);
     }
 
     Notification(byte[] bytes) {
@@ -96,14 +96,14 @@ public class Notification extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case TEXT_IDENTIFIER:
-                        text = Property.getString(p.getValueBytes());
+                        text = new StringProperty(p);
                         return text;
                     case ActionItem.IDENTIFIER:
                         ActionItem item = new ActionItem(p.getByteArray());
                         actionsBuilder.add(item);
                         return item;
                     case RECEIVED_ACTION_IDENTIFIER:
-                        receivedAction = Property.getSignedInt(p.getValueByte());
+                        receivedAction = new IntegerProperty(p, true);
                         return receivedAction;
                 }
 
@@ -114,14 +114,15 @@ public class Notification extends CommandWithProperties {
         actions = actionsBuilder.toArray(new ActionItem[0]);
     }
 
-    static Property[] getProperties(String text, ActionItem[] actions, Integer receivedAction) {
+    static Property[] getProperties(String text, ActionItem[] actions,
+                                    Integer receivedAction) {
         Property[] properties = new Property[actions.length + 2];
         properties[0] = new StringProperty(TEXT_IDENTIFIER, text);
 
         System.arraycopy(actions, 0, properties, 1, actions.length);
 
-        properties[properties.length - 1] = new IntegerProperty(RECEIVED_ACTION_IDENTIFIER,
-                receivedAction, 1);
+        IntegerProperty receivedActionProperty = new IntegerProperty(RECEIVED_ACTION_IDENTIFIER, receivedAction, 1);
+        properties[properties.length - 1] = receivedActionProperty;
 
         return properties;
     }
@@ -135,8 +136,8 @@ public class Notification extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private List<ActionItem> actions = new ArrayList<>();
-        String text;
-        Integer receivedAction;
+        StringProperty text;
+        IntegerProperty receivedAction;
 
         public Builder() {
             super(TYPE);
@@ -170,9 +171,10 @@ public class Notification extends CommandWithProperties {
          * @param text The notification text.
          * @return The builder.
          */
-        public Builder setText(String text) {
+        public Builder setText(StringProperty text) {
             this.text = text;
-            addProperty(new StringProperty(TEXT_IDENTIFIER, text));
+            text.setIdentifier(TEXT_IDENTIFIER);
+            addProperty(text);
             return this;
         }
 
@@ -180,9 +182,10 @@ public class Notification extends CommandWithProperties {
          * @param receivedAction The received action.
          * @return The builder.
          */
-        public Builder setReceivedAction(Integer receivedAction) {
+        public Builder setReceivedAction(IntegerProperty receivedAction) {
             this.receivedAction = receivedAction;
-            addProperty(new IntegerProperty(RECEIVED_ACTION_IDENTIFIER, receivedAction, 1));
+            receivedAction.setIdentifier(RECEIVED_ACTION_IDENTIFIER, 1);
+            addProperty(receivedAction);
             return this;
         }
 

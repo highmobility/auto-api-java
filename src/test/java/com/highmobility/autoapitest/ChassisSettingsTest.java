@@ -9,6 +9,7 @@ import com.highmobility.autoapi.SetDrivingMode;
 import com.highmobility.autoapi.SetSpringRate;
 import com.highmobility.autoapi.StartStopSportChrono;
 import com.highmobility.autoapi.property.DrivingMode;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.SpringRateProperty;
 import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.autoapi.property.value.StartStop;
@@ -53,9 +54,9 @@ public class ChassisSettingsTest {
         assertTrue(state.getMinimumSpringRate(Axle.FRONT).getSpringRate() == 16);
         assertTrue(state.getMinimumSpringRate(Axle.REAR).getSpringRate() == 18);
 
-        assertTrue(state.getCurrentChassisPosition() == 25);
-        assertTrue(state.getMaximumChassisPosition() == 55);
-        assertTrue(state.getMinimumChassisPosition() == -28);
+        assertTrue(state.getCurrentChassisPosition().getValue() == 25);
+        assertTrue(state.getMaximumChassisPosition().getValue() == 55);
+        assertTrue(state.getMinimumChassisPosition().getValue() == -28);
     }
 
     @Test public void get() {
@@ -154,9 +155,9 @@ public class ChassisSettingsTest {
         builder.addMinimumSpringRate(new SpringRateProperty(Axle.FRONT, 16));
         builder.addMinimumSpringRate(new SpringRateProperty(Axle.REAR, 18));
 
-        builder.setCurrentChassisPosition(25);
-        builder.setMaximumChassisPosition(55);
-        builder.setMinimumChassisPosition(-28);
+        builder.setCurrentChassisPosition(new IntegerProperty(25));
+        builder.setMaximumChassisPosition(new IntegerProperty(55));
+        builder.setMinimumChassisPosition(new IntegerProperty(-28));
 
         ChassisSettings state = builder.build();
         assertTrue(state.equals(bytes));

@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
 import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
@@ -51,11 +52,11 @@ public class DiagnosticsTest {
         assertTrue(command.getClass() == DiagnosticsState.class);
         DiagnosticsState state = (DiagnosticsState) command;
 
-        assertTrue(state.getMileage() == 150000);
-        assertTrue(state.getOilTemperature() == 99);
-        assertTrue(state.getSpeed() == 60);
-        assertTrue(state.getRpm() == 2500);
-        assertTrue(state.getRange() == 265);
+        assertTrue(state.getMileage().getValue() == 150000);
+        assertTrue(state.getOilTemperature().getValue() == 99);
+        assertTrue(state.getSpeed().getValue() == 60);
+        assertTrue(state.getRpm().getValue() == 2500);
+        assertTrue(state.getRange().getValue() == 265);
         assertTrue(state.getFuelLevel().getValue() == .9f);
         assertTrue(state.getWasherFluidLevel() == WasherFluidLevel.FULL);
         assertTrue(state.getFuelVolume().getValue() == 35.5f);
@@ -65,17 +66,17 @@ public class DiagnosticsTest {
 
         assertTrue(state.getBatteryVoltage().getValue() == 12f);
         assertTrue(state.getAdBlueLevel().getValue() == .5f);
-        assertTrue(state.getDistanceDrivenSinceReset() == 1500);
-        assertTrue(state.getDistanceDrivenSinceEngineStart() == 10);
+        assertTrue(state.getDistanceDrivenSinceReset().getValue() == 1500);
+        assertTrue(state.getDistanceDrivenSinceEngineStart().getValue() == 10);
 
         assertTrue(state.isAntiLockBrakingActive());
-        assertTrue(state.getEngineCoolantTemperature() == 20);
+        assertTrue(state.getEngineCoolantTemperature().getValue() == 20);
         assertTrue(state.getEngineTotalOperatingHours().getValue() == 1500.65f);
         assertTrue(state.getEngineTotalFuelConsumption().getValue() == 27587.0f);
         assertTrue(state.getBrakeFluidLevel() == BrakeFluidLevel.LOW);
         assertTrue(state.getEngineTorque().getValue() == .2f);
         assertTrue(state.getEngineLoad().getValue() == .1f);
-        assertTrue(state.getWheelBasedSpeed() == 65);
+        assertTrue(state.getWheelBasedSpeed().getValue() == 65);
 
         // level 8
         assertTrue(state.getBatteryLevel().getValue() == .56f);
@@ -152,7 +153,7 @@ public class DiagnosticsTest {
         }
 
         assertTrue(propertyCount == 2);
-        assertTrue(state.getMileageMeters() == 150000);
+        assertTrue(state.getMileageMeters().getValue() == 150000);
     }
 
     @Test public void get() {
@@ -166,28 +167,28 @@ public class DiagnosticsTest {
 
     @Test public void build() {
         DiagnosticsState.Builder builder = new DiagnosticsState.Builder();
-        builder.setMileage(150000);
-        builder.setOilTemperature(99);
-        builder.setSpeed(60);
-        builder.setRpm(2500);
+        builder.setMileage(new IntegerProperty(150000));
+        builder.setOilTemperature(new IntegerProperty(99));
+        builder.setSpeed(new IntegerProperty(60));
+        builder.setRpm(new IntegerProperty(2500));
         builder.setFuelLevel(new PercentageProperty(.9f));
-        builder.setRange(265);
+        builder.setRange(new IntegerProperty(265));
         builder.setWasherFluidLevel(WasherFluidLevel.FULL);
 
         builder.setBatteryVoltage(new FloatProperty(12f));
         builder.setAdBlueLevel(new FloatProperty(.5f));
-        builder.setDistanceDrivenSinceReset(1500);
-        builder.setDistanceDrivenSinceEngineStart(10);
+        builder.setDistanceDrivenSinceReset(new IntegerProperty(1500));
+        builder.setDistanceDrivenSinceEngineStart(new IntegerProperty(10));
         builder.setFuelVolume(new FloatProperty(35.5f));
 
         builder.setAntiLockBrakingActive(true);
-        builder.setEngineCoolantTemperature(20);
+        builder.setEngineCoolantTemperature(new IntegerProperty(20));
         builder.setEngineTotalOperatingHours(new FloatProperty(1500.65f));
         builder.setEngineTotalFuelConsumption(new FloatProperty(27587.0f));
         builder.setBrakeFluidLevel(BrakeFluidLevel.LOW);
         builder.setEngineTorque(new PercentageProperty(.2f));
         builder.setEngineLoad(new PercentageProperty(.1f));
-        builder.setWheelBasedSpeed(65);
+        builder.setWheelBasedSpeed(new IntegerProperty(65));
 
         // level8
         builder.setBatteryLevel(new PercentageProperty(.56f));
@@ -218,7 +219,7 @@ public class DiagnosticsTest {
                 "PENDING");
         builder.addTroubleCode(code1);
         builder.addTroubleCode(code2);
-        builder.setMileageMeters(150000);
+        builder.setMileageMeters(new IntegerProperty(150000));
 
         assertTrue(TestUtils.bytesTheSame(builder.build(), bytes));
         assertTrue(builder.build().equals(bytes));

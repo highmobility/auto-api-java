@@ -11,7 +11,6 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class RemoteControlTest {
@@ -22,16 +21,11 @@ public class RemoteControlTest {
                         "01000102" +
                         "0200020032");
 
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(ControlMode.TYPE));
         ControlMode state = (ControlMode) command;
-        assertTrue(state.getAngle() == 50);
+        assertTrue(state.getAngle().getValue() == 50);
         assertTrue(state.getMode() == ControlModeValue.STARTED);
     }
 

@@ -45,22 +45,15 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 public class Property extends Bytes {
     public static final int CALENDAR_SIZE = 8;
 
-    private Calendar timestamp;
-    private PropertyFailure failure;
+    protected PropertyTimestamp timestamp;
+    protected PropertyFailure failure;
 
     /**
      * @return The timestamp of the property.
      */
-    public Calendar getTimestamp() {
+    public PropertyTimestamp getTimestamp() {
         return timestamp;
     }
-
-    /**
-     * @param timestamp Set the property timestamp.
-     */
-    /*public void setTimestamp(Calendar timestamp) {
-        this.timestamp = timestamp;
-    }*/
 
     /**
      * @return The failure of the property.
@@ -68,11 +61,6 @@ public class Property extends Bytes {
     public PropertyFailure getFailure() {
         return failure;
     }
-
-    /*public Property setFailure(PropertyFailure failure) {
-        this.failure = failure;
-        return this;
-    }*/
 
     protected Property(byte identifier, int valueSize) {
         this.bytes = baseBytes(identifier, valueSize);
@@ -133,6 +121,8 @@ public class Property extends Bytes {
         return bytes[3];
     }
 
+    // TODO: 2019-01-08 these should be package private?
+    
     /**
      * Set a new identifier for the property
      *
@@ -147,7 +137,7 @@ public class Property extends Bytes {
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
     }
 
-    protected byte[] baseBytes(byte identifier, int valueSize) {
+    protected static byte[] baseBytes(byte identifier, int valueSize) {
         byte[] bytes = new byte[3 + valueSize];
 
         bytes[0] = identifier;
@@ -305,8 +295,10 @@ public class Property extends Bytes {
     }
 
     public static int getSignedInt(byte[] bytes) throws IllegalArgumentException {
-        if (bytes.length >= 2) {
-            return bytes[0] << 8 | bytes[1];
+        if (bytes.length == 1) return getSignedInt(bytes[0]);
+        else if (bytes.length >= 2) {
+            int result = bytes[0] << 8 | bytes[1];
+            return result;
         }
 
         throw new IllegalArgumentException();

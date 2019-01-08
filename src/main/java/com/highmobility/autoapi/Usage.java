@@ -22,6 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.usage.DrivingModeActivationPeriod;
@@ -54,8 +55,8 @@ public class Usage extends CommandWithProperties {
     private static final byte IDENTIFIER_AVERAGE_FUEL_CONSUMPTION = ((byte) 0x0E);
     private static final byte IDENTIFIER_CURRENT_FUEL_CONSUMPTION = ((byte) 0x0F);
 
-    private Integer averageWeeklyDistance;
-    private Integer averageWeeklyDistanceLongTerm;
+    private IntegerProperty averageWeeklyDistance;
+    private IntegerProperty averageWeeklyDistanceLongTerm;
     private PercentageProperty accelerationEvaluation;
     private PercentageProperty drivingStyleEvaluation;
     private DrivingModeActivationPeriod[] drivingModeActivationPeriods;
@@ -73,14 +74,14 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The average weekly distance in km.
      */
-    @Nullable public Integer getAverageWeeklyDistance() {
+    @Nullable public IntegerProperty getAverageWeeklyDistance() {
         return averageWeeklyDistance;
     }
 
     /**
      * @return The average weekly distance, over long term, in km
      */
-    @Nullable public Integer getAverageWeeklyDistanceLongTerm() {
+    @Nullable public IntegerProperty getAverageWeeklyDistanceLongTerm() {
         return averageWeeklyDistanceLongTerm;
     }
 
@@ -214,10 +215,10 @@ public class Usage extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_AVERAGE_WEEKLY_DISTANCE:
-                        averageWeeklyDistance = Property.getUnsignedInt(p.getValueBytes());
+                        averageWeeklyDistance = new IntegerProperty(p, false);
                         return averageWeeklyDistance;
                     case IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_RUN:
-                        averageWeeklyDistanceLongTerm = Property.getUnsignedInt(p.getValueBytes());
+                        averageWeeklyDistanceLongTerm = new IntegerProperty(p, false);
                         break;
                     case IDENTIFIER_ACCELERATION_EVALUATION:
                         accelerationEvaluation = new PercentageProperty(p);
@@ -301,8 +302,8 @@ public class Usage extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Integer averageWeeklyDistance;
-        private Integer averageWeeklyDistanceLongTerm;
+        private IntegerProperty averageWeeklyDistance;
+        private IntegerProperty averageWeeklyDistanceLongTerm;
         private PercentageProperty accelerationEvaluation;
         private PercentageProperty drivingStyleEvaluation;
         private List<DrivingModeActivationPeriod> drivingModeActivationPeriods = new ArrayList<>();

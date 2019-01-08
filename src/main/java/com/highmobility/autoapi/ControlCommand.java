@@ -86,6 +86,9 @@ public class ControlCommand extends CommandWithProperties {
 
     ControlCommand(byte[] bytes) {
         super(bytes);
+
+        // Not used in telematics.
+
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {

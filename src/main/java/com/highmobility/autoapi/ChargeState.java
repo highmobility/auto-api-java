@@ -69,7 +69,7 @@ public class ChargeState extends CommandWithProperties {
 
     private static final byte IDENTIFIER_STATE = 0x17;
 
-    Integer estimatedRange;
+    IntegerProperty estimatedRange;
     PercentageProperty batteryLevel;
     FloatProperty batteryCurrentAC;
     FloatProperty batteryCurrentDC;
@@ -78,7 +78,7 @@ public class ChargeState extends CommandWithProperties {
     FloatProperty chargerVoltageDC;
 
     PercentageProperty chargeLimit;
-    Integer timeToCompleteCharge;
+    IntegerProperty timeToCompleteCharge;
 
     FloatProperty chargingRate;
     ChargePortState chargeChargePortState;
@@ -99,7 +99,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The estimated range in km.
      */
-    @Nullable public Integer getEstimatedRange() {
+    @Nullable public IntegerProperty getEstimatedRange() {
         return estimatedRange;
     }
 
@@ -148,7 +148,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The time to complete the charge in minutes.
      */
-    @Nullable public Integer getTimeToCompleteCharge() {
+    @Nullable public IntegerProperty getTimeToCompleteCharge() {
         return timeToCompleteCharge;
     }
 
@@ -266,7 +266,7 @@ public class ChargeState extends CommandWithProperties {
                         activeState = ChargingState.fromByte(p.getValueByte());
                         return activeState;
                     case ESTIMATED_RANGE_IDENTIFIER:
-                        estimatedRange = Property.getUnsignedInt(p.getValueBytes());
+                        estimatedRange = new IntegerProperty(p, false);
                         return estimatedRange;
                     case BATTERY_LEVEL_IDENTIFIER:
                         batteryLevel = new PercentageProperty(p);
@@ -287,7 +287,7 @@ public class ChargeState extends CommandWithProperties {
                         chargeLimit = new PercentageProperty(p);
                         return chargeLimit;
                     case TIME_TO_COMPLETE_CHARGE_IDENTIFIER:
-                        timeToCompleteCharge = Property.getUnsignedInt(p.getValueBytes());
+                        timeToCompleteCharge = new IntegerProperty(p, false);
                         return timeToCompleteCharge;
                     case CHARGE_RATE_IDENTIFIER:
                         chargingRate = new FloatProperty(p);
@@ -367,7 +367,7 @@ public class ChargeState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Integer estimatedRange;
+        private IntegerProperty estimatedRange;
         private PercentageProperty batteryLevel;
         private FloatProperty batteryCurrentAC;
         private FloatProperty batteryCurrentDC;
@@ -376,7 +376,7 @@ public class ChargeState extends CommandWithProperties {
         private FloatProperty chargerVoltageDC;
 
         private PercentageProperty chargeLimit;
-        private Integer timeToCompleteCharge;
+        private IntegerProperty timeToCompleteCharge;
 
         private FloatProperty chargingRate;
         private ChargePortState chargePortState;
@@ -411,9 +411,10 @@ public class ChargeState extends CommandWithProperties {
          * @param estimatedRange The estimated range in km.
          * @return The builder.
          */
-        public Builder setEstimatedRange(Integer estimatedRange) {
+        public Builder setEstimatedRange(IntegerProperty estimatedRange) {
             this.estimatedRange = estimatedRange;
-            addProperty(new IntegerProperty(ESTIMATED_RANGE_IDENTIFIER, estimatedRange, 2));
+            estimatedRange.setIdentifier(ESTIMATED_RANGE_IDENTIFIER, 2);
+            addProperty(estimatedRange);
             return this;
         }
 
@@ -487,10 +488,10 @@ public class ChargeState extends CommandWithProperties {
          * @param timeToCompleteCharge The time to complete the charge in minutes.
          * @return The builder.
          */
-        public Builder setTimeToCompleteCharge(Integer timeToCompleteCharge) {
+        public Builder setTimeToCompleteCharge(IntegerProperty timeToCompleteCharge) {
             this.timeToCompleteCharge = timeToCompleteCharge;
-            addProperty(new IntegerProperty(TIME_TO_COMPLETE_CHARGE_IDENTIFIER,
-                    timeToCompleteCharge, 1));
+            timeToCompleteCharge.setIdentifier(TIME_TO_COMPLETE_CHARGE_IDENTIFIER, 1);
+            addProperty(timeToCompleteCharge);
             return this;
         }
 

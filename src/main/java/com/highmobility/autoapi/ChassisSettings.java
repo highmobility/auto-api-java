@@ -57,9 +57,9 @@ public class ChassisSettings extends CommandWithProperties {
     SpringRateProperty[] maximumSpringRates;
     SpringRateProperty[] minimumSpringRates;
 
-    Integer currentChassisPosition;
-    Integer maximumChassisPosition;
-    Integer minimumChassisPosition;
+    IntegerProperty currentChassisPosition;
+    IntegerProperty maximumChassisPosition;
+    IntegerProperty minimumChassisPosition;
 
     /**
      * @return The driving mode.
@@ -138,21 +138,21 @@ public class ChassisSettings extends CommandWithProperties {
     /**
      * @return The chassis position in mm calculated from the lowest point.
      */
-    @Nullable public Integer getCurrentChassisPosition() {
+    @Nullable public IntegerProperty getCurrentChassisPosition() {
         return currentChassisPosition;
     }
 
     /**
      * @return The minimum possible value for the chassis position.
      */
-    @Nullable public Integer getMaximumChassisPosition() {
+    @Nullable public IntegerProperty getMaximumChassisPosition() {
         return maximumChassisPosition;
     }
 
     /**
      * @return The minimum possible value for the chassis position.
      */
-    @Nullable public Integer getMinimumChassisPosition() {
+    @Nullable public IntegerProperty getMinimumChassisPosition() {
         return minimumChassisPosition;
     }
 
@@ -185,16 +185,16 @@ public class ChassisSettings extends CommandWithProperties {
                         minimumSpringRates.add(prop);
                         return prop;
                     case CURRENT_CHASSIS_POSITION_IDENTIFIER:
-                        currentChassisPosition = Property.getSignedInt(p.getValueByte());
+                        currentChassisPosition = new IntegerProperty(p, true);
                         return currentChassisPosition;
                     case MAXIMUM_CHASSIS_POSITION_IDENTIFIER:
-                        maximumChassisPosition = Property.getSignedInt(p.getValueByte());
+                        maximumChassisPosition = new IntegerProperty(p, true);
                         return maximumChassisPosition;
                     case MINIMUM_CHASSIS_POSITION_IDENTIFIER:
-                        minimumChassisPosition = Property.getSignedInt(p.getValueByte());
+                        minimumChassisPosition = new IntegerProperty(p, true);
                         return minimumChassisPosition;
                 }
-                
+
                 return null;
             });
         }
@@ -230,9 +230,9 @@ public class ChassisSettings extends CommandWithProperties {
         List<SpringRateProperty> maximumSpringRates = new ArrayList<>();
         List<SpringRateProperty> minimumSpringRates = new ArrayList<>();
 
-        Integer currentChassisPosition;
-        Integer maximumChassisPosition;
-        Integer minimumChassisPosition;
+        IntegerProperty currentChassisPosition;
+        IntegerProperty maximumChassisPosition;
+        IntegerProperty minimumChassisPosition;
 
         public Builder() {
             super(TYPE);
@@ -263,11 +263,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setCurrentChassisPosition(Integer chassisPosition) {
+        public Builder setCurrentChassisPosition(IntegerProperty chassisPosition) {
             this.currentChassisPosition = chassisPosition;
-            addProperty(new IntegerProperty(CURRENT_CHASSIS_POSITION_IDENTIFIER,
-                    chassisPosition,
-                    1));
+            chassisPosition.setIdentifier(CURRENT_CHASSIS_POSITION_IDENTIFIER, 1);
+            addProperty(chassisPosition);
             return this;
         }
 
@@ -275,11 +274,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setMinimumChassisPosition(Integer chassisPosition) {
+        public Builder setMinimumChassisPosition(IntegerProperty chassisPosition) {
             this.minimumChassisPosition = chassisPosition;
-            addProperty(new IntegerProperty(MINIMUM_CHASSIS_POSITION_IDENTIFIER,
-                    chassisPosition,
-                    1));
+            chassisPosition.setIdentifier(MINIMUM_CHASSIS_POSITION_IDENTIFIER, 1);
+            addProperty(chassisPosition);
             return this;
         }
 
@@ -287,11 +285,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setMaximumChassisPosition(Integer chassisPosition) {
+        public Builder setMaximumChassisPosition(IntegerProperty chassisPosition) {
             this.maximumChassisPosition = chassisPosition;
-            addProperty(new IntegerProperty(MAXIMUM_CHASSIS_POSITION_IDENTIFIER,
-                    chassisPosition,
-                    1));
+            chassisPosition.setIdentifier(MAXIMUM_CHASSIS_POSITION_IDENTIFIER, 1);
+            addProperty(chassisPosition);
             return this;
         }
 

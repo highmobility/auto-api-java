@@ -51,7 +51,7 @@ public class TachographState extends CommandWithProperties {
     Boolean vehicleMotionDetected;
     Boolean vehicleOverspeed;
     VehicleDirection vehicleDirection;
-    Integer vehicleSpeed;
+    IntegerProperty vehicleSpeed;
 
     /**
      * @return The driver working states.
@@ -140,7 +140,7 @@ public class TachographState extends CommandWithProperties {
     /**
      * @return The tachograph vehicle speed in km/h.
      */
-    @Nullable public Integer getVehicleSpeed() {
+    @Nullable public IntegerProperty getVehicleSpeed() {
         return vehicleSpeed;
     }
 
@@ -178,7 +178,7 @@ public class TachographState extends CommandWithProperties {
                         vehicleDirection = VehicleDirection.fromByte(property.getValueByte());
                         return vehicleDirection;
                     case VEHICLE_SPEED_IDENTIFIER:
-                        vehicleSpeed = Property.getUnsignedInt(property.getValueBytes());
+                        vehicleSpeed = new IntegerProperty(property, false);
                         return vehicleSpeed;
                 }
 
@@ -214,7 +214,7 @@ public class TachographState extends CommandWithProperties {
         Boolean vehicleMotionDetected;
         Boolean vehicleOverspeed;
         VehicleDirection vehicleDirection;
-        Integer vehicleSpeed;
+        IntegerProperty vehicleSpeed;
 
         /**
          * Add a single driver working state.
@@ -323,9 +323,10 @@ public class TachographState extends CommandWithProperties {
          * @param vehicleSpeed The tachograph vehicle speed in km/h.
          * @return The builder.
          */
-        public Builder setVehicleSpeed(Integer vehicleSpeed) {
+        public Builder setVehicleSpeed(IntegerProperty vehicleSpeed) {
             this.vehicleSpeed = vehicleSpeed;
-            addProperty(new IntegerProperty(VEHICLE_SPEED_IDENTIFIER, vehicleSpeed, 2));
+            vehicleSpeed.setIdentifier(VEHICLE_SPEED_IDENTIFIER, 2);
+            addProperty(vehicleSpeed);
             return this;
         }
 

@@ -78,28 +78,28 @@ public class DiagnosticsState extends CommandWithProperties {
     private static final byte IDENTIFIER_BRAKE_FLUID = 0x14;
     private static final byte MILEAGE_METERS_IDENTIFIER = 0x1E;
 
-    Integer mileage;
-    Integer oilTemperature;
-    Integer speed;
-    Integer rpm;
+    IntegerProperty mileage;
+    IntegerProperty oilTemperature;
+    IntegerProperty speed;
+    IntegerProperty rpm;
     PercentageProperty fuelLevel;
-    Integer range;
+    IntegerProperty range;
     WasherFluidLevel washerFluidLevel;
     FloatProperty batteryVoltage;
     FloatProperty adBlueLevel;
-    Integer distanceDrivenSinceReset;
-    Integer distanceDrivenSinceEngineStart;
+    IntegerProperty distanceDrivenSinceReset;
+    IntegerProperty distanceDrivenSinceEngineStart;
     FloatProperty fuelVolume;
 
     // level7
     Boolean antiLockBrakingActive;
-    Integer engineCoolantTemperature;
+    IntegerProperty engineCoolantTemperature;
     FloatProperty engineTotalOperatingHours;
     FloatProperty engineTotalFuelConsumption;
     BrakeFluidLevel brakeFluidLevel;
     PercentageProperty engineTorque;
     PercentageProperty engineLoad;
-    Integer wheelBasedSpeed;
+    IntegerProperty wheelBasedSpeed;
 
     // level8
     PercentageProperty batteryLevel;
@@ -109,33 +109,33 @@ public class DiagnosticsState extends CommandWithProperties {
     WheelRpm[] wheelRpms;
     DiagnosticsTroubleCode[] troubleCodes;
 
-    Integer mileageMeters;
+    IntegerProperty mileageMeters;
 
     /**
      * @return The car mileage (odometer) in km.
      */
-    @Nullable public Integer getMileage() {
+    @Nullable public IntegerProperty getMileage() {
         return mileage;
     }
 
     /**
      * @return The engine oil temperature in Celsius, whereas can be negative.
      */
-    @Nullable public Integer getOilTemperature() {
+    @Nullable public IntegerProperty getOilTemperature() {
         return oilTemperature;
     }
 
     /**
      * @return The car speed in km/h, whereas can be negative.
      */
-    @Nullable public Integer getSpeed() {
+    @Nullable public IntegerProperty getSpeed() {
         return speed;
     }
 
     /**
      * @return The RPM of the engine.
      */
-    @Nullable public Integer getRpm() {
+    @Nullable public IntegerProperty getRpm() {
         return rpm;
     }
 
@@ -149,7 +149,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The estimated range.
      */
-    @Nullable public Integer getRange() {
+    @Nullable public IntegerProperty getRange() {
         return range;
     }
 
@@ -177,14 +177,14 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The distance driven in km since reset.
      */
-    @Nullable public Integer getDistanceDrivenSinceReset() {
+    @Nullable public IntegerProperty getDistanceDrivenSinceReset() {
         return distanceDrivenSinceReset;
     }
 
     /**
      * @return The distance driven in km since engine start.
      */
-    @Nullable public Integer getDistanceDrivenSinceEngineStart() {
+    @Nullable public IntegerProperty getDistanceDrivenSinceEngineStart() {
         return distanceDrivenSinceEngineStart;
     }
 
@@ -205,7 +205,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The engine coolant temperature in Celsius, whereas can be negative.
      */
-    @Nullable public Integer getEngineCoolantTemperature() {
+    @Nullable public IntegerProperty getEngineCoolantTemperature() {
         return engineCoolantTemperature;
     }
 
@@ -247,7 +247,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The vehicle speed in km/h measured at the wheel base, whereas can be negative.
      */
-    @Nullable public Integer getWheelBasedSpeed() {
+    @Nullable public IntegerProperty getWheelBasedSpeed() {
         return wheelBasedSpeed;
     }
 
@@ -341,7 +341,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The mileage meters.
      */
-    public Integer getMileageMeters() {
+    public IntegerProperty getMileageMeters() {
         return mileageMeters;
     }
 
@@ -358,22 +358,27 @@ public class DiagnosticsState extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case MILEAGE_IDENTIFIER:
-                        mileage = Property.getUnsignedInt(p.getValueBytes());
+                        mileage = new IntegerProperty(p, false);
+                        ;
                         return mileage;
                     case OIL_TEMPERATURE_IDENTIFIER:
-                        oilTemperature = Property.getUnsignedInt(p.getValueBytes());
+                        oilTemperature = new IntegerProperty(p, false);
+                        ;
                         return oilTemperature;
                     case SPEED_IDENTIFIER:
-                        speed = Property.getUnsignedInt(p.getValueBytes());
+                        speed = new IntegerProperty(p, false);
+                        ;
                         return speed;
                     case RPM_IDENTIFIER:
-                        rpm = Property.getUnsignedInt(p.getValueBytes());
+                        rpm = new IntegerProperty(p, false);
+                        ;
                         return rpm;
                     case FUEL_LEVEL_IDENTIFIER:
                         fuelLevel = new PercentageProperty(p);
                         return fuelLevel;
                     case RANGE_IDENTIFIER:
-                        range = Property.getUnsignedInt(p.getValueBytes());
+                        range = new IntegerProperty(p, false);
+                        ;
                         return range;
                     case WASHER_FLUID_LEVEL_IDENTIFIER:
                         washerFluidLevel = WasherFluidLevel.fromByte(p.getValueByte());
@@ -385,10 +390,12 @@ public class DiagnosticsState extends CommandWithProperties {
                         adBlueLevel = new FloatProperty(p);
                         return adBlueLevel;
                     case DISTANCE_DRIVEN_SINCE_RESET_IDENTIFIER:
-                        distanceDrivenSinceReset = Property.getUnsignedInt(p.getValueBytes());
+                        distanceDrivenSinceReset = new IntegerProperty(p, false);
+                        ;
                         return distanceDrivenSinceReset;
                     case DISTANCE_DRIVEN_SINCE_ENGINE_START_IDENTIFIER:
-                        distanceDrivenSinceEngineStart = Property.getUnsignedInt(p.getValueBytes());
+                        distanceDrivenSinceEngineStart = new IntegerProperty(p, false);
+                        ;
                         return distanceDrivenSinceEngineStart;
                     case FUEL_VOLUME_IDENTIFIER:
                         fuelVolume = new FloatProperty(p);
@@ -397,7 +404,8 @@ public class DiagnosticsState extends CommandWithProperties {
                         antiLockBrakingActive = Property.getBool(p.getValueByte());
                         return antiLockBrakingActive;
                     case ENGINE_COOLANT_TEMPERATURE_IDENTIFIER:
-                        engineCoolantTemperature = Property.getUnsignedInt(p.getValueBytes());
+                        engineCoolantTemperature = new IntegerProperty(p, false);
+                        ;
                         return engineCoolantTemperature;
                     case ENGINE_TOTAL_OPERATING_HOURS_IDENTIFIER:
                         engineTotalOperatingHours = new FloatProperty(p);
@@ -415,7 +423,7 @@ public class DiagnosticsState extends CommandWithProperties {
                         engineLoad = new PercentageProperty(p);
                         return engineLoad;
                     case WHEEL_BASE_SPEED_IDENTIFIER:
-                        wheelBasedSpeed = Property.getSignedInt(p.getValueBytes());
+                        wheelBasedSpeed = new IntegerProperty(p, true);
                         return wheelBasedSpeed;
                     case IDENTIFIER_BATTERY_LEVEL:
                         batteryLevel = new PercentageProperty(p);
@@ -442,7 +450,7 @@ public class DiagnosticsState extends CommandWithProperties {
                         troubleCodes.add(code);
                         return code;
                     case MILEAGE_METERS_IDENTIFIER:
-                        mileageMeters = Property.getUnsignedInt(p.getValueBytes());
+                        mileageMeters = new IntegerProperty(p, false);
                         return mileageMeters;
                 }
 
@@ -499,27 +507,27 @@ public class DiagnosticsState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Integer mileage;
-        private Integer oilTemperature;
-        private Integer speed;
-        private Integer rpm;
+        private IntegerProperty mileage;
+        private IntegerProperty oilTemperature;
+        private IntegerProperty speed;
+        private IntegerProperty rpm;
         private PercentageProperty fuelLevel;
-        private Integer range;
+        private IntegerProperty range;
         private WasherFluidLevel washerFluidLevel;
         private FloatProperty batteryVoltage;
         private FloatProperty adBlueLevel;
-        private Integer distanceDrivenSinceReset;
-        private Integer distanceDrivenSinceEngineStart;
+        private IntegerProperty distanceDrivenSinceReset;
+        private IntegerProperty distanceDrivenSinceEngineStart;
         private FloatProperty fuelVolume;
 
         Boolean antiLockBrakingActive;
-        Integer engineCoolantTemperature;
+        IntegerProperty engineCoolantTemperature;
         FloatProperty engineTotalOperatingHours;
         FloatProperty engineTotalFuelConsumption;
         BrakeFluidLevel brakeFluidLevel;
         PercentageProperty engineTorque;
         PercentageProperty engineLoad;
-        Integer wheelBasedSpeed;
+        IntegerProperty wheelBasedSpeed;
 
         PercentageProperty batteryLevel;
         private List<TirePressure> tirePressures = new ArrayList<>();
@@ -527,7 +535,7 @@ public class DiagnosticsState extends CommandWithProperties {
         private List<WheelRpm> wheelRpms = new ArrayList<>();
         private List<CheckControlMessage> checkControlMessages = new ArrayList<>();
         private List<DiagnosticsTroubleCode> troubleCodes = new ArrayList<>();
-        Integer mileageMeters;
+        IntegerProperty mileageMeters;
 
         public Builder() {
             super(TYPE);
@@ -541,9 +549,10 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param mileage The mileage.
          * @return The builder.
          */
-        public Builder setMileage(Integer mileage) {
+        public Builder setMileage(IntegerProperty mileage) {
             this.mileage = mileage;
-            addProperty(new IntegerProperty(MILEAGE_IDENTIFIER, mileage, 3));
+            mileage.setIdentifier(MILEAGE_IDENTIFIER, 3);
+            addProperty(mileage);
             return this;
         }
 
@@ -551,9 +560,10 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param oilTemperature The oil temperature in Celsius.
          * @return The builder.
          */
-        public Builder setOilTemperature(Integer oilTemperature) {
+        public Builder setOilTemperature(IntegerProperty oilTemperature) {
             this.oilTemperature = oilTemperature;
-            addProperty(new IntegerProperty(OIL_TEMPERATURE_IDENTIFIER, oilTemperature, 2));
+            oilTemperature.setIdentifier(OIL_TEMPERATURE_IDENTIFIER, 2);
+            addProperty(oilTemperature);
             return this;
         }
 
@@ -561,9 +571,10 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param speed The speed in km/h.
          * @return The builder.
          */
-        public Builder setSpeed(Integer speed) {
+        public Builder setSpeed(IntegerProperty speed) {
             this.speed = speed;
-            addProperty(new IntegerProperty(SPEED_IDENTIFIER, speed, 2));
+            speed.setIdentifier(SPEED_IDENTIFIER, 2);
+            addProperty(speed);
             return this;
         }
 
@@ -571,9 +582,10 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param rpm The RPM of the engine.
          * @return The builder.
          */
-        public Builder setRpm(Integer rpm) {
+        public Builder setRpm(IntegerProperty rpm) {
             this.rpm = rpm;
-            addProperty(new IntegerProperty(RPM_IDENTIFIER, rpm, 2));
+            rpm.setIdentifier(RPM_IDENTIFIER, 2);
+            addProperty(rpm);
             return this;
         }
 
@@ -592,9 +604,10 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param range The estimated range.
          * @return The builder.
          */
-        public Builder setRange(Integer range) {
+        public Builder setRange(IntegerProperty range) {
             this.range = range;
-            addProperty(new IntegerProperty(RANGE_IDENTIFIER, range, 2));
+            range.setIdentifier(RANGE_IDENTIFIER, 2);
+            addProperty(range);
             return this;
         }
 
@@ -635,10 +648,10 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param distanceDrivenSinceReset The distance driven in km since reset.
          * @return The builder.
          */
-        public Builder setDistanceDrivenSinceReset(Integer distanceDrivenSinceReset) {
+        public Builder setDistanceDrivenSinceReset(IntegerProperty distanceDrivenSinceReset) {
             this.distanceDrivenSinceReset = distanceDrivenSinceReset;
-            addProperty(new IntegerProperty(DISTANCE_DRIVEN_SINCE_RESET_IDENTIFIER,
-                    distanceDrivenSinceReset, 2));
+            distanceDrivenSinceReset.setIdentifier(DISTANCE_DRIVEN_SINCE_RESET_IDENTIFIER, 2);
+            addProperty(distanceDrivenSinceReset);
             return this;
         }
 
@@ -646,10 +659,10 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param distanceDrivenSinceEngineStart The distance driven in km since engine start
          * @return The builder.
          */
-        public Builder setDistanceDrivenSinceEngineStart(Integer distanceDrivenSinceEngineStart) {
+        public Builder setDistanceDrivenSinceEngineStart(IntegerProperty distanceDrivenSinceEngineStart) {
             this.distanceDrivenSinceEngineStart = distanceDrivenSinceEngineStart;
-            addProperty(new IntegerProperty(DISTANCE_DRIVEN_SINCE_ENGINE_START_IDENTIFIER,
-                    distanceDrivenSinceEngineStart, 2));
+            distanceDrivenSinceEngineStart.setIdentifier(DISTANCE_DRIVEN_SINCE_ENGINE_START_IDENTIFIER, 2);
+            addProperty(distanceDrivenSinceEngineStart);
             return this;
         }
 
@@ -680,10 +693,10 @@ public class DiagnosticsState extends CommandWithProperties {
          *                                 negative.
          * @return The builder.
          */
-        public Builder setEngineCoolantTemperature(Integer engineCoolantTemperature) {
+        public Builder setEngineCoolantTemperature(IntegerProperty engineCoolantTemperature) {
             this.engineCoolantTemperature = engineCoolantTemperature;
-            addProperty(new IntegerProperty(ENGINE_COOLANT_TEMPERATURE_IDENTIFIER,
-                    engineCoolantTemperature, 2));
+            engineCoolantTemperature.setIdentifier(ENGINE_COOLANT_TEMPERATURE_IDENTIFIER, 2);
+            addProperty(engineCoolantTemperature);
             return this;
         }
 
@@ -747,10 +760,10 @@ public class DiagnosticsState extends CommandWithProperties {
          *                        be negative.
          * @return The builder.
          */
-        public Builder setWheelBasedSpeed(Integer wheelBasedSpeed) {
+        public Builder setWheelBasedSpeed(IntegerProperty wheelBasedSpeed) {
             this.wheelBasedSpeed = wheelBasedSpeed;
-            addProperty(new IntegerProperty(WHEEL_BASE_SPEED_IDENTIFIER, wheelBasedSpeed,
-                    2));
+            wheelBasedSpeed.setIdentifier(WHEEL_BASE_SPEED_IDENTIFIER, 2);
+            addProperty(wheelBasedSpeed);
             return this;
         }
 
@@ -888,9 +901,10 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param mileageMeters The mileage meters.
          * @return The builder.
          */
-        public Builder setMileageMeters(Integer mileageMeters) {
+        public Builder setMileageMeters(IntegerProperty mileageMeters) {
             this.mileageMeters = mileageMeters;
-            addProperty(new IntegerProperty(MILEAGE_METERS_IDENTIFIER, mileageMeters, 4));
+            mileageMeters.setIdentifier(MILEAGE_METERS_IDENTIFIER, 4);
+            addProperty(mileageMeters);
             return this;
         }
     }
