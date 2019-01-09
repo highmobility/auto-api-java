@@ -23,6 +23,10 @@ package com.highmobility.autoapi.property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
+
 public class FloatProperty extends Property {
     Float value;
 
@@ -30,14 +34,21 @@ public class FloatProperty extends Property {
         return value;
     }
 
-    public FloatProperty(float value) {
+    public FloatProperty(Float value) {
         this((byte) 0x00, value);
     }
 
-    public FloatProperty(byte identifier, float value) {
-        super(identifier, 4);
-        ByteUtils.setBytes(bytes, floatToBytes(value), 3);
+    public FloatProperty(@Nullable Float value, @Nullable Calendar timestamp,
+                         @Nullable PropertyFailure failure) {
+        this(value);
+        this.timestamp = timestamp;
+        this.failure = failure;
+    }
+
+    public FloatProperty(byte identifier, Float value) {
+        super(identifier, value == null ? 0 : 4);
         this.value = value;
+        if (value != null) ByteUtils.setBytes(bytes, floatToBytes(value), 3);
     }
 
     public FloatProperty(Bytes bytes) {

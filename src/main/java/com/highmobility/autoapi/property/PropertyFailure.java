@@ -21,7 +21,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.value.Bytes;
+import com.highmobility.utils.ByteUtils;
 
 import javax.annotation.Nullable;
 
@@ -68,7 +68,19 @@ public class PropertyFailure extends Property {
         }
     }
 
-    // TBODO:
+    /**
+     * @param identifier    The identifier of the failed property.
+     * @param failureReason The failure reason.
+     * @param description   The failure description.
+     */
+    public PropertyFailure(byte identifier, Reason failureReason, @Nullable String description) {
+        super(IDENTIFIER, 1 + 1 + 1 + description.length());
+
+        bytes[3] = identifier;
+        bytes[4] = failureReason.getByte();
+        bytes[5] = (byte) description.length();
+        ByteUtils.setBytes(bytes, description.getBytes(), 6);
+    }
 
     public enum Reason {
         RATE_LIMIT((byte) 0x00),        // Property rate limit has been exceeded

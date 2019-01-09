@@ -23,6 +23,10 @@ package com.highmobility.autoapi.property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
+
 public class DoubleProperty extends Property {
     Double value;
 
@@ -30,13 +34,21 @@ public class DoubleProperty extends Property {
         return value;
     }
 
-    public DoubleProperty(double value) {
+    public DoubleProperty(Double value) {
         this((byte) 0x00, value);
     }
 
-    public DoubleProperty(byte identifier, double value) {
-        super(identifier, 8);
-        ByteUtils.setBytes(bytes, doubleToBytes(value), 3);
+    public DoubleProperty(@Nullable Double value, @Nullable Calendar timestamp,
+                          @Nullable PropertyFailure failure) {
+        this(value);
+        this.timestamp = timestamp;
+        this.failure = failure;
+    }
+
+    public DoubleProperty(byte identifier, Double value) {
+        super(identifier, value == null ? 0 : 8);
+        this.value = value;
+        if (value != null) ByteUtils.setBytes(bytes, doubleToBytes(value), 3);
     }
 
     public DoubleProperty(Bytes bytes) {

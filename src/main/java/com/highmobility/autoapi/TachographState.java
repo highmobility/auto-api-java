@@ -48,8 +48,8 @@ public class TachographState extends CommandWithProperties {
     DriverWorkingState[] driverWorkingStates;
     DriverTimeState[] driverTimeStates;
     DriverCard[] driverCards;
-    Boolean vehicleMotionDetected;
-    Boolean vehicleOverspeed;
+    BooleanProperty vehicleMotionDetected;
+    BooleanProperty vehicleOverspeed;
     VehicleDirection vehicleDirection;
     IntegerProperty vehicleSpeed;
 
@@ -119,14 +119,14 @@ public class TachographState extends CommandWithProperties {
     /**
      * @return Whether vehicle motion is detected.
      */
-    @Nullable public Boolean isVehicleMotionDetected() {
+    @Nullable public BooleanProperty isVehicleMotionDetected() {
         return vehicleMotionDetected;
     }
 
     /**
      * @return Whether vehicle is overspeeding.
      */
-    @Nullable public Boolean isVehicleOverspeeding() {
+    @Nullable public BooleanProperty isVehicleOverspeeding() {
         return vehicleOverspeed;
     }
 
@@ -152,33 +152,33 @@ public class TachographState extends CommandWithProperties {
         List<DriverCard> cardsBuilder = new ArrayList<>();
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case DriverTimeState.IDENTIFIER:
                         DriverTimeState driverTimeState =
-                                new DriverTimeState(property.getByteArray());
+                                new DriverTimeState(p.getByteArray());
                         timeStateBuilder.add(driverTimeState);
                         return driverTimeState;
                     case DriverWorkingState.IDENTIFIER:
                         DriverWorkingState driverWorkingState =
-                                new DriverWorkingState(property.getByteArray());
+                                new DriverWorkingState(p.getByteArray());
                         workingStateBuilder.add(driverWorkingState);
                         return driverWorkingState;
                     case DriverCard.IDENTIFIER:
-                        DriverCard driverCard = new DriverCard(property.getByteArray());
+                        DriverCard driverCard = new DriverCard(p.getByteArray());
                         cardsBuilder.add(driverCard);
                         return driverCard;
                     case VEHICLE_MOTION_DETECTED_IDENTIFIER:
-                        vehicleMotionDetected = Property.getBool(property.getValueByte());
+                        vehicleMotionDetected = new BooleanProperty(p);
                         return vehicleMotionDetected;
                     case VEHICLE_OVERSPEED_IDENTIFIER:
-                        vehicleOverspeed = Property.getBool(property.getValueByte());
+                        vehicleOverspeed = new BooleanProperty(p);
                         return vehicleOverspeed;
                     case VEHICLE_DIRECTION_IDENTIFIER:
-                        vehicleDirection = VehicleDirection.fromByte(property.getValueByte());
+                        vehicleDirection = VehicleDirection.fromByte(p.getValueByte());
                         return vehicleDirection;
                     case VEHICLE_SPEED_IDENTIFIER:
-                        vehicleSpeed = new IntegerProperty(property, false);
+                        vehicleSpeed = new IntegerProperty(p, false);
                         return vehicleSpeed;
                 }
 
@@ -211,8 +211,8 @@ public class TachographState extends CommandWithProperties {
         List<DriverWorkingState> driverWorkingStates = new ArrayList<>();
         List<DriverTimeState> driverTimeStates = new ArrayList<>();
         List<DriverCard> driverCards = new ArrayList<>();
-        Boolean vehicleMotionDetected;
-        Boolean vehicleOverspeed;
+        BooleanProperty vehicleMotionDetected;
+        BooleanProperty vehicleOverspeed;
         VehicleDirection vehicleDirection;
         IntegerProperty vehicleSpeed;
 
@@ -292,20 +292,21 @@ public class TachographState extends CommandWithProperties {
          * @param vehicleMotionDetected Whether vehicle motion is detected.
          * @return The builder.
          */
-        public Builder setVehicleMotionDetected(Boolean vehicleMotionDetected) {
+        public Builder setVehicleMotionDetected(BooleanProperty vehicleMotionDetected) {
             this.vehicleMotionDetected = vehicleMotionDetected;
-            addProperty(new BooleanProperty(VEHICLE_MOTION_DETECTED_IDENTIFIER,
-                    vehicleMotionDetected));
+            vehicleMotionDetected.setIdentifier(VEHICLE_MOTION_DETECTED_IDENTIFIER);
+            addProperty(vehicleMotionDetected);
             return this;
         }
 
         /**
-         * @param vehicleOverspeed The vehicle overspeed.
+         * @param vehicleOverSpeed The vehicle overspeed.
          * @return The builder.
          */
-        public Builder setVehicleOverspeed(Boolean vehicleOverspeed) {
-            this.vehicleOverspeed = vehicleOverspeed;
-            addProperty(new BooleanProperty(VEHICLE_OVERSPEED_IDENTIFIER, vehicleOverspeed));
+        public Builder setVehicleOverspeed(BooleanProperty vehicleOverSpeed) {
+            this.vehicleOverspeed = vehicleOverSpeed;
+            vehicleOverSpeed.setIdentifier(VEHICLE_OVERSPEED_IDENTIFIER);
+            addProperty(vehicleOverSpeed);
             return this;
         }
 

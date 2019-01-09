@@ -20,9 +20,43 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.value.Bytes;
+
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
+
 public class BooleanProperty extends Property {
-    public BooleanProperty(byte identifier, boolean value) {
-        super(identifier, 1);
-        bytes[3] = Property.boolToByte(value);
+    Boolean value;
+
+    @Nullable public Boolean getValue() {
+        return value;
     }
+
+    public BooleanProperty(Boolean value) {
+        this((byte) 0x00, value);
+    }
+
+    public BooleanProperty(@Nullable Boolean value, @Nullable Calendar timestamp,
+                           @Nullable PropertyFailure failure) {
+        this(value);
+        this.timestamp = timestamp;
+        this.failure = failure;
+    }
+
+    // TODO: this should be internal
+
+    public BooleanProperty(byte identifier, Boolean value) {
+        super(identifier, value == null ? 0 : 1);
+        this.value = value;
+        if (value != null) bytes[3] = Property.boolToByte(value);
+    }
+
+    public BooleanProperty(Bytes bytes) {
+        super(bytes);
+        if (getValueByte() != null) value = Property.getBool(getValueByte());
+    }
+
+    // TODO: ^^ should be internal
+
 }

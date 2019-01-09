@@ -66,14 +66,14 @@ public class HomeChargerState extends CommandWithProperties {
     AuthenticationMechanism authenticationMechanism;
     PlugType plugType;
     FloatProperty chargingPower;
-    Boolean solarChargingActive;
-    Boolean hotspotEnabled;
+    BooleanProperty solarChargingActive;
+    BooleanProperty hotspotEnabled;
     String hotspotSsid;
     NetworkSecurity hotspotSecurity;
     String hotspotPassword;
 
     // level8
-    Boolean authenticated;
+    BooleanProperty authenticated;
     FloatProperty chargeCurrentDC;
     FloatProperty maximumChargeCurrent;
     FloatProperty minimumChargeCurrent;
@@ -112,14 +112,14 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return Solar charging state.
      */
-    @Nullable public Boolean isSolarChargingActive() {
+    @Nullable public BooleanProperty isSolarChargingActive() {
         return solarChargingActive;
     }
 
     /**
      * @return The hotspot state.
      */
-    @Nullable public Boolean isHotspotEnabled() {
+    @Nullable public BooleanProperty isHotspotEnabled() {
         return hotspotEnabled;
     }
 
@@ -147,7 +147,7 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return The authentication state.
      */
-    @Nullable public Boolean isAuthenticated() {
+    @Nullable public BooleanProperty isAuthenticated() {
         return authenticated;
     }
 
@@ -221,10 +221,10 @@ public class HomeChargerState extends CommandWithProperties {
                         chargingPower = new FloatProperty(p);
                         return chargingPower;
                     case SOLAR_CHARGING_ACTIVE_IDENTIFIER:
-                        solarChargingActive = Property.getBool(p.getValueByte());
+                        solarChargingActive = new BooleanProperty(p);
                         return solarChargingActive;
                     case HOTSPOT_ENABLED_IDENTIFIER:
-                        hotspotEnabled = Property.getBool(p.getValueByte());
+                        hotspotEnabled = new BooleanProperty(p);
                         return hotspotEnabled;
                     case HOTSPOT_SSID_IDENTIFIER:
                         hotspotSsid = Property.getString(p.getValueBytes());
@@ -236,7 +236,7 @@ public class HomeChargerState extends CommandWithProperties {
                         hotspotPassword = Property.getString(p.getValueBytes());
                         return hotspotPassword;
                     case IDENTIFIER_AUTHENTICATION_STATE:
-                        authenticated = Property.getBool(p.getValueByte());
+                        authenticated = new BooleanProperty(p);
                         return authenticated;
                     case IDENTIFIER_CHARGE_CURRENT_DC:
                         chargeCurrentDC = new FloatProperty(p);
@@ -286,8 +286,8 @@ public class HomeChargerState extends CommandWithProperties {
         private AuthenticationMechanism authenticationMechanism;
         private PlugType plugType;
         private FloatProperty chargingPower;
-        private Boolean solarChargingActive;
-        private Boolean hotspotEnabled;
+        private BooleanProperty solarChargingActive;
+        private BooleanProperty hotspotEnabled;
         private String hotspotSsid;
         private NetworkSecurity hotspotSecurity;
         private String hotspotPassword;
@@ -343,9 +343,10 @@ public class HomeChargerState extends CommandWithProperties {
          * @param solarChargingActive The solar charging state.
          * @return The builder.
          */
-        public Builder setSolarChargingActive(Boolean solarChargingActive) {
+        public Builder setSolarChargingActive(BooleanProperty solarChargingActive) {
             this.solarChargingActive = solarChargingActive;
-            addProperty(new BooleanProperty(SOLAR_CHARGING_ACTIVE_IDENTIFIER, solarChargingActive));
+            solarChargingActive.setIdentifier(SOLAR_CHARGING_ACTIVE_IDENTIFIER);
+            addProperty(solarChargingActive);
             return this;
         }
 
@@ -353,9 +354,10 @@ public class HomeChargerState extends CommandWithProperties {
          * @param hotspotEnabled The Wi-Fi hotspot state.
          * @return The builder.
          */
-        public Builder setHotspotEnabled(Boolean hotspotEnabled) {
+        public Builder setHotspotEnabled(BooleanProperty hotspotEnabled) {
             this.hotspotEnabled = hotspotEnabled;
-            addProperty(new BooleanProperty(HOTSPOT_ENABLED_IDENTIFIER, hotspotEnabled));
+            hotspotEnabled.setIdentifier(HOTSPOT_ENABLED_IDENTIFIER);
+            addProperty(hotspotEnabled);
             return this;
         }
 

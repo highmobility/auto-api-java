@@ -5,6 +5,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetParkingBrakeState;
 import com.highmobility.autoapi.ParkingBrakeState;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -33,7 +34,7 @@ public class ParkingBrakeTest {
 
         assertTrue(command.getClass() == ParkingBrakeState.class);
         ParkingBrakeState state = (ParkingBrakeState) command;
-        assertTrue(state.isActive() == true);
+        assertTrue(state.isActive().getValue() == true);
     }
 
     @Test public void get() {
@@ -57,7 +58,7 @@ public class ParkingBrakeTest {
                 "00580101000101");
 
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
-        builder.setIsActive(true);
+        builder.setIsActive(new BooleanProperty(true));
         byte[] actualBytes = builder.build().getByteArray();
         assertTrue(Arrays.equals(actualBytes, expectedBytes));
     }

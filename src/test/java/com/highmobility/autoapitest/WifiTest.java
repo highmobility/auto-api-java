@@ -7,7 +7,9 @@ import com.highmobility.autoapi.EnableDisableWifi;
 import com.highmobility.autoapi.ForgetNetwork;
 import com.highmobility.autoapi.GetWifiState;
 import com.highmobility.autoapi.WifiState;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
+import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -36,18 +38,18 @@ public class WifiTest {
 
         assertTrue(command.getClass() == WifiState.class);
         WifiState state = (WifiState) command;
-        assertTrue(state.isEnabled() == true);
-        assertTrue(state.isConnected() == true);
-        assertTrue(state.getSsid().equals("HOME"));
+        assertTrue(state.isEnabled().getValue() == true);
+        assertTrue(state.isConnected().getValue() == true);
+        assertTrue(state.getSsid().getValue().equals("HOME"));
         assertTrue(state.getSecurity() == NetworkSecurity.WPA2_PERSONAL);
     }
 
     @Test public void build() {
         WifiState.Builder builder = new WifiState.Builder();
 
-        builder.setEnabled(true);
-        builder.setConnected(true);
-        builder.setSsid("HOME");
+        builder.setEnabled(new BooleanProperty(true));
+        builder.setConnected(new BooleanProperty(true));
+        builder.setSsid(new StringProperty("HOME"));
         builder.setSecurity(NetworkSecurity.WPA2_PERSONAL);
 
         WifiState state = builder.build();

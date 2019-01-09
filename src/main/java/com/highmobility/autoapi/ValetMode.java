@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -34,12 +33,12 @@ public class ValetMode extends CommandWithProperties {
 
     private static final byte ACTIVE_IDENTIFIER = 0x01;
 
-    Boolean active;
+    BooleanProperty active;
 
     /**
      * @return The valet mode state.
      */
-    @Nullable public Boolean isActive() {
+    @Nullable public BooleanProperty isActive() {
         return active;
     }
 
@@ -49,7 +48,7 @@ public class ValetMode extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == ACTIVE_IDENTIFIER) {
-                    active = Property.getBool(p.getValueByte());
+                    active = new BooleanProperty(p);
                     return active;
                 }
 
@@ -69,7 +68,7 @@ public class ValetMode extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private boolean active;
+        private BooleanProperty active;
 
         public Builder() {
             super(TYPE);
@@ -79,9 +78,10 @@ public class ValetMode extends CommandWithProperties {
          * @param active The valet mode state.
          * @return The builder.
          */
-        public Builder setActive(boolean active) {
+        public Builder setActive(BooleanProperty active) {
             this.active = active;
-            addProperty(new BooleanProperty(ACTIVE_IDENTIFIER, active));
+            active.setIdentifier(ACTIVE_IDENTIFIER);
+            addProperty(active);
             return this;
         }
 

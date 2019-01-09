@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlLights;
 import com.highmobility.autoapi.GetLightsState;
 import com.highmobility.autoapi.LightsState;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.lights.FogLight;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
@@ -46,14 +47,14 @@ public class LightsTest {
 
     void testState(LightsState state) {
         assertTrue(state.getFrontExteriorLightState() == FrontExteriorLightState.ACTIVE_FULL_BEAM);
-        assertTrue(state.isRearExteriorLightActive() == true);
+        assertTrue(state.isRearExteriorLightActive().getValue() == true);
 
         assertTrue(state.getAmbientColor()[0] == 0xFF);
         assertTrue(state.getAmbientColor()[1] == 0);
         assertTrue(state.getAmbientColor()[2] == 0);
 
-        assertTrue(state.isReverseLightActive() == true);
-        assertTrue(state.isEmergencyBrakeLightActive() == true);
+        assertTrue(state.isReverseLightActive().getValue() == true);
+        assertTrue(state.isEmergencyBrakeLightActive().getValue() == true);
 
         assertTrue(state.getFogLights().length == 2);
         assertTrue(state.getFogLight(LightLocation.FRONT).isActive() == false);
@@ -72,12 +73,12 @@ public class LightsTest {
         LightsState.Builder builder = new LightsState.Builder();
 
         builder.setFrontExteriorLightState(FrontExteriorLightState.ACTIVE_FULL_BEAM);
-        builder.setRearExteriorLightActive(true);
+        builder.setRearExteriorLightActive(new BooleanProperty(true));
 
         int[] ambientColor = new int[]{0xFF, 0, 0};
         builder.setAmbientColor(ambientColor);
-        builder.setReverseLightActive(true);
-        builder.setEmergencyBrakeLightActive(true);
+        builder.setReverseLightActive(new BooleanProperty(true));
+        builder.setEmergencyBrakeLightActive(new BooleanProperty(true));
 
         builder.addFogLight(new FogLight(LightLocation.FRONT, false));
         builder.addFogLight(new FogLight(LightLocation.REAR, true));

@@ -8,6 +8,7 @@ import com.highmobility.autoapi.SetChassisPosition;
 import com.highmobility.autoapi.SetDrivingMode;
 import com.highmobility.autoapi.SetSpringRate;
 import com.highmobility.autoapi.StartStopSportChrono;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.SpringRateProperty;
@@ -43,7 +44,7 @@ public class ChassisSettingsTest {
         ChassisSettings state = (ChassisSettings) command;
 
         assertTrue(state.getDrivingMode() == DrivingMode.ECO);
-        assertTrue(state.isSportChronoActive() == true);
+        assertTrue(state.isSportChronoActive().getValue() == true);
 
         assertTrue(state.getCurrentSpringRate(Axle.FRONT).getSpringRate() == 21);
         assertTrue(state.getCurrentSpringRate(Axle.REAR).getSpringRate() == 23);
@@ -144,7 +145,7 @@ public class ChassisSettingsTest {
         ChassisSettings.Builder builder = new ChassisSettings.Builder();
 
         builder.setDrivingMode(DrivingMode.ECO);
-        builder.setSportChronoActive(true);
+        builder.setSportChronoActive(new BooleanProperty(true));
 
         builder.addCurrentSpringRate(new SpringRateProperty(Axle.FRONT, 21));
         builder.addCurrentSpringRate(new SpringRateProperty(Axle.REAR, 23));

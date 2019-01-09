@@ -51,7 +51,7 @@ public class ChassisSettings extends CommandWithProperties {
     public static final byte MINIMUM_CHASSIS_POSITION_IDENTIFIER = 0x0A;
 
     DrivingMode drivingMode;
-    Boolean sportChronoActive;
+    BooleanProperty sportChronoActive;
 
     SpringRateProperty[] currentSpringRates;
     SpringRateProperty[] maximumSpringRates;
@@ -69,9 +69,9 @@ public class ChassisSettings extends CommandWithProperties {
     }
 
     /**
-     * @return Boolean indicating whether the sport chronometer is active.
+     * @return BooleanProperty indicating whether the sport chronometer is active.
      */
-    @Nullable public Boolean isSportChronoActive() {
+    @Nullable public BooleanProperty isSportChronoActive() {
         return sportChronoActive;
     }
 
@@ -170,7 +170,7 @@ public class ChassisSettings extends CommandWithProperties {
                         drivingMode = DrivingMode.fromByte(p.getValueByte());
                         return drivingMode;
                     case SPORT_CHRONO_ACTIVE_IDENTIFIER:
-                        sportChronoActive = Property.getBool(p.getValueByte());
+                        sportChronoActive = new BooleanProperty(p);
                         return sportChronoActive;
                     case CURRENT_SPRING_RATE_PROPERTIES_IDENTIFIER:
                         SpringRateProperty prop1 = new SpringRateProperty(p.getByteArray());
@@ -224,7 +224,7 @@ public class ChassisSettings extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private DrivingMode drivingMode;
-        private Boolean sportChronoActive;
+        private BooleanProperty sportChronoActive;
 
         List<SpringRateProperty> currentSpringRates = new ArrayList<>();
         List<SpringRateProperty> maximumSpringRates = new ArrayList<>();
@@ -252,10 +252,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param sportChronoActive Set the sport chronometer state.
          * @return The builder.
          */
-        public Builder setSportChronoActive(Boolean sportChronoActive) {
+        public Builder setSportChronoActive(BooleanProperty sportChronoActive) {
             this.sportChronoActive = sportChronoActive;
-            addProperty(new BooleanProperty(SPORT_CHRONO_ACTIVE_IDENTIFIER,
-                    sportChronoActive));
+            sportChronoActive.setIdentifier(SPORT_CHRONO_ACTIVE_IDENTIFIER);
+            addProperty(sportChronoActive);
             return this;
         }
 

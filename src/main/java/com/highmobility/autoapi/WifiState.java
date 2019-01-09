@@ -38,29 +38,29 @@ public class WifiState extends CommandWithProperties {
     public static final byte SSID_IDENTIFIER = 0x03;
     public static final byte SECURITY_IDENTIFIER = 0x04;
 
-    Boolean enabled;
-    Boolean connected;
-    String ssid;
+    BooleanProperty enabled;
+    BooleanProperty connected;
+    StringProperty ssid;
     NetworkSecurity security;
 
     /**
      * @return Whether Wi-Fi is enabled.
      */
-    @Nullable public Boolean isEnabled() {
+    @Nullable public BooleanProperty isEnabled() {
         return enabled;
     }
 
     /**
      * @return Whether Wi-Fi is connected.
      */
-    @Nullable public Boolean isConnected() {
+    @Nullable public BooleanProperty isConnected() {
         return connected;
     }
 
     /**
      * @return The network SSID.
      */
-    @Nullable public String getSsid() {
+    @Nullable public StringProperty getSsid() {
         return ssid;
     }
 
@@ -75,22 +75,22 @@ public class WifiState extends CommandWithProperties {
         super(bytes);
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case ENABLED_IDENTIFIER:
-                        enabled = Property.getBool(property.getValueByte());
+                        enabled = new BooleanProperty(p);
                         return enabled;
                     case CONNECTED_IDENTIFIER:
-                        connected = Property.getBool(property.getValueByte());
+                        connected = new BooleanProperty(p);
                         return connected;
                     case SSID_IDENTIFIER:
-                        ssid = Property.getString(property.getValueBytes());
+                        ssid = new StringProperty(p);
                         return ssid;
                     case SECURITY_IDENTIFIER:
-                        security = NetworkSecurity.fromByte(property.getValueByte());
+                        security = NetworkSecurity.fromByte(p.getValueByte());
                         return security;
                 }
-                
+
                 return null;
             });
         }
@@ -109,9 +109,9 @@ public class WifiState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Boolean enabled;
-        private Boolean connected;
-        private String ssid;
+        private BooleanProperty enabled;
+        private BooleanProperty connected;
+        private StringProperty ssid;
         private NetworkSecurity security;
 
         public Builder() {
@@ -122,9 +122,10 @@ public class WifiState extends CommandWithProperties {
          * @param enabled The Wi-Fi state.
          * @return The builder.
          */
-        public Builder setEnabled(Boolean enabled) {
+        public Builder setEnabled(BooleanProperty enabled) {
             this.enabled = enabled;
-            addProperty(new BooleanProperty(ENABLED_IDENTIFIER, enabled));
+            enabled.setIdentifier(ENABLED_IDENTIFIER);
+            addProperty(enabled);
             return this;
         }
 
@@ -132,9 +133,10 @@ public class WifiState extends CommandWithProperties {
          * @param connected The connection state.
          * @return The builder.
          */
-        public Builder setConnected(Boolean connected) {
+        public Builder setConnected(BooleanProperty connected) {
             this.connected = connected;
-            addProperty(new BooleanProperty(CONNECTED_IDENTIFIER, connected));
+            connected.setIdentifier(CONNECTED_IDENTIFIER);
+            addProperty(connected);
             return this;
         }
 
@@ -142,9 +144,10 @@ public class WifiState extends CommandWithProperties {
          * @param ssid The network SSID.
          * @return The builder.
          */
-        public Builder setSsid(String ssid) {
+        public Builder setSsid(StringProperty ssid) {
             this.ssid = ssid;
-            addProperty(new StringProperty(SSID_IDENTIFIER, ssid));
+            ssid.setIdentifier(SSID_IDENTIFIER);
+            addProperty(ssid);
             return this;
         }
 

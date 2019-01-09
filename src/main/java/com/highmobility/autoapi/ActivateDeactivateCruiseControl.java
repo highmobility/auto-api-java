@@ -38,7 +38,7 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
     /**
      * @return Whether cruise control should be activated.
      */
-    public Boolean activate() {
+    public boolean activate() {
         return activate;
     }
 
@@ -56,13 +56,13 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
      * @param activate The cruise control activation state.
      * @param speed    The speed. Nullable if cruise control inactive.
      */
-    public ActivateDeactivateCruiseControl(Boolean activate, @Nullable Integer speed) {
+    public ActivateDeactivateCruiseControl(boolean activate, @Nullable Integer speed) {
         super(TYPE, getProperties(activate, speed));
         this.activate = activate;
         this.speed = speed;
     }
 
-    static Property[] getProperties(Boolean activate, Integer speed) {
+    static Property[] getProperties(boolean activate, Integer speed) {
         Property[] properties = new Property[speed == null ? 1 : 2];
 
         properties[0] = new BooleanProperty((byte) 0x01, activate);

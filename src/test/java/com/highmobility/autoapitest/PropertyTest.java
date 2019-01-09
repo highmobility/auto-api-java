@@ -1,6 +1,7 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
@@ -9,7 +10,9 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -49,4 +52,44 @@ public class PropertyTest {
         new StringProperty((byte) 0x00, null);
         new StringProperty((byte) 0x00, "");
     }
+
+    // TODO: 2019-01-09
+    // test boolean property ctor with null bytes. Only failure or timestamp
+
+    @Test public void nullBytesOk() {
+        byte[] bytes = null;
+        Property prop = new Property(bytes);
+        assertBaseBytesOk(prop);
+        assertTrue(prop.getPropertyIdentifier() == 0x00);
+    }
+
+    @Test public void invalidLengthOk() {
+        Bytes bytes = new Bytes("0100");
+        Property prop = new Property(bytes);
+        assertBaseBytesOk(prop);
+        assertTrue(prop.getPropertyIdentifier() == 0x01);
+    }
+
+    void assertBaseBytesOk(Property prop) {
+        assertTrue(prop.getValueLength() == 0);
+        assertTrue(prop.getValueByte() == null);
+        assertTrue(prop.getValueBytes().length == 0);
+    }
+
+    @Test public void timeStampFailureSet() throws ParseException {
+        Calendar timestamp = TestUtils.getCalendar("2018-01-10T16:32:05+0000");
+
+        PropertyFailure failure = new PropertyFailure(
+                (byte) 0x03,
+                PropertyFailure.Reason.EXECUTION_TIMEOUT,
+                "ero"
+        );
+
+        BooleanProperty property = new BooleanProperty(null, timestamp, failure);
+        assertBaseBytesOk(property);
+        assertTrue(property.getTimestamp() == timestamp);
+        assertTrue(property.getFailure() == failure);
+    }
+
+
 }

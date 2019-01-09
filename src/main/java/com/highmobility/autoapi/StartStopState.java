@@ -32,12 +32,12 @@ import javax.annotation.Nullable;
 public class StartStopState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.START_STOP, 0x01);
     private static final byte ACTIVE_IDENTIFIER = 0x01;
-    Boolean active;
+    BooleanProperty active;
 
     /**
      * @return Whether the start stop is active.
      */
-    @Nullable public Boolean isActive() {
+    @Nullable public BooleanProperty isActive() {
         return active;
     }
 
@@ -45,7 +45,7 @@ public class StartStopState extends CommandWithProperties {
         super(bytes);
 
         Property p = getProperty((byte) 0x01);
-        if (p != null) active = Property.getBool(p.getValueByte());
+        if (p != null) active = new BooleanProperty(p);
     }
 
     @Override public boolean isState() {
@@ -58,7 +58,7 @@ public class StartStopState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private boolean active;
+        private BooleanProperty active;
 
         public Builder() {
             super(TYPE);
@@ -68,9 +68,10 @@ public class StartStopState extends CommandWithProperties {
          * @param active Whether the start stop is active.
          * @return The builder.
          */
-        public Builder setIsActive(boolean active) {
+        public Builder setIsActive(BooleanProperty active) {
             this.active = active;
-            addProperty(new BooleanProperty(ACTIVE_IDENTIFIER, active));
+            active.setIdentifier(ACTIVE_IDENTIFIER);
+            addProperty(active);
             return this;
         }
 

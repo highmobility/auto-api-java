@@ -10,6 +10,7 @@ import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
 import com.highmobility.autoapi.StartStopCharging;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.ChargePortState;
 import com.highmobility.autoapi.property.ChargingState;
@@ -67,7 +68,7 @@ public class ChargingTest {
 
         assertTrue(state.getMaxChargingCurrent().getValue() == 25);
         assertTrue(state.getPlugType() == PlugType.TYPE_2);
-        assertTrue(state.getChargingWindowChosen() == false);
+        assertTrue(state.getChargingWindowChosen().getValue() == false);
 
         assertTrue(state.getDepartureTimes().length == 2);
         int timeExists = 0;
@@ -109,7 +110,7 @@ public class ChargingTest {
         Calendar preferredEndTime = state.getTimer(ChargingTimer.Type.PREFERRED_END_TIME).getTime();
         assertTrue(TestUtils.dateIsSameUTC(preferredEndTime, "2018-01-10T16:32:06"));
 
-        assertTrue(state.getPluggedIn() == true);
+        assertTrue(state.getPluggedIn().getValue() == true);
         assertTrue(state.getActiveState() == ChargingState.CHARGING);
     }
 
@@ -147,7 +148,7 @@ public class ChargingTest {
 
         builder.setMaxChargingCurrent(new FloatProperty(25f));
         builder.setPlugType(PlugType.TYPE_2);
-        builder.setChargingWindowChosen(false);
+        builder.setChargingWindowChosen(new BooleanProperty(false));
 
         builder.addDepartureTime(new DepartureTime(true, new Time(16, 32)));
         builder.addDepartureTime(new DepartureTime(false, new Time(18, 32)));
@@ -168,7 +169,7 @@ public class ChargingTest {
         builder.addTimer(timer);
         builder.addTimer(timer2);
 
-        builder.setPluggedIn(true);
+        builder.setPluggedIn(new BooleanProperty(true));
         builder.setActiveState(ChargingState.CHARGING);
 
         ChargeState state = builder.build();
@@ -276,11 +277,11 @@ public class ChargingTest {
         Bytes waitingForBytes = new Bytes("002317");
 
         ReductionTime[] timers = new ReductionTime[0];
-        SetReductionOfChargingCurrentTimes commandBytes = new SetReductionOfChargingCurrentTimes(timers);
+        SetReductionOfChargingCurrentTimes commandBytes =
+                new SetReductionOfChargingCurrentTimes(timers);
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
         SetReductionOfChargingCurrentTimes command = (SetReductionOfChargingCurrentTimes)
                 CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getProperties().length == 0);
-
     }
 }

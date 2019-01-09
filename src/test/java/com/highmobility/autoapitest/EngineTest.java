@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetIgnitionState;
 import com.highmobility.autoapi.IgnitionState;
 import com.highmobility.autoapi.TurnIgnitionOnOff;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -24,8 +25,8 @@ public class EngineTest {
         Command command = CommandResolver.resolve(bytes);
         assertTrue(command.is(IgnitionState.TYPE));
         IgnitionState state = (IgnitionState) command;
-        assertTrue(state.isOn() == true);
-        assertTrue(state.isAccessoriesIgnitionOn() == true);
+        assertTrue(state.isOn().getValue() == true);
+        assertTrue(state.isAccessoriesIgnitionOn().getValue() == true);
     }
 
     @Test public void get() {
@@ -51,14 +52,14 @@ public class EngineTest {
 
     @Test public void build() {
         IgnitionState.Builder builder = new IgnitionState.Builder();
-        builder.setIsOn(true);
-        builder.setAccessoriesIgnition(true);
+        builder.setIsOn(new BooleanProperty(true));
+        builder.setAccessoriesIgnition(new BooleanProperty(true));
 
         IgnitionState state = builder.build();
 
         assertTrue(state.equals(bytes));
-        assertTrue(state.isOn() == true);
-        assertTrue(state.isAccessoriesIgnitionOn() == true);
+        assertTrue(state.isOn().getValue() == true);
+        assertTrue(state.isAccessoriesIgnitionOn().getValue() == true);
         assertTrue(state.getType() == IgnitionState.TYPE);
     }
 }

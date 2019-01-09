@@ -92,7 +92,7 @@ public class DiagnosticsState extends CommandWithProperties {
     FloatProperty fuelVolume;
 
     // level7
-    Boolean antiLockBrakingActive;
+    BooleanProperty antiLockBrakingActive;
     IntegerProperty engineCoolantTemperature;
     FloatProperty engineTotalOperatingHours;
     FloatProperty engineTotalFuelConsumption;
@@ -198,7 +198,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The anti-lock braking system (ABS) state.
      */
-    @Nullable public Boolean isAntiLockBrakingActive() {
+    @Nullable public BooleanProperty isAntiLockBrakingActive() {
         return antiLockBrakingActive;
     }
 
@@ -359,26 +359,21 @@ public class DiagnosticsState extends CommandWithProperties {
                 switch (p.getPropertyIdentifier()) {
                     case MILEAGE_IDENTIFIER:
                         mileage = new IntegerProperty(p, false);
-                        ;
                         return mileage;
                     case OIL_TEMPERATURE_IDENTIFIER:
                         oilTemperature = new IntegerProperty(p, false);
-                        ;
                         return oilTemperature;
                     case SPEED_IDENTIFIER:
                         speed = new IntegerProperty(p, false);
-                        ;
                         return speed;
                     case RPM_IDENTIFIER:
                         rpm = new IntegerProperty(p, false);
-                        ;
                         return rpm;
                     case FUEL_LEVEL_IDENTIFIER:
                         fuelLevel = new PercentageProperty(p);
                         return fuelLevel;
                     case RANGE_IDENTIFIER:
                         range = new IntegerProperty(p, false);
-                        ;
                         return range;
                     case WASHER_FLUID_LEVEL_IDENTIFIER:
                         washerFluidLevel = WasherFluidLevel.fromByte(p.getValueByte());
@@ -391,21 +386,18 @@ public class DiagnosticsState extends CommandWithProperties {
                         return adBlueLevel;
                     case DISTANCE_DRIVEN_SINCE_RESET_IDENTIFIER:
                         distanceDrivenSinceReset = new IntegerProperty(p, false);
-                        ;
                         return distanceDrivenSinceReset;
                     case DISTANCE_DRIVEN_SINCE_ENGINE_START_IDENTIFIER:
                         distanceDrivenSinceEngineStart = new IntegerProperty(p, false);
-                        ;
                         return distanceDrivenSinceEngineStart;
                     case FUEL_VOLUME_IDENTIFIER:
                         fuelVolume = new FloatProperty(p);
                         return fuelVolume;
                     case ANTI_LOCK_BRAKING_ACTIVE_IDENTIFIER:
-                        antiLockBrakingActive = Property.getBool(p.getValueByte());
+                        antiLockBrakingActive = new BooleanProperty(p);
                         return antiLockBrakingActive;
                     case ENGINE_COOLANT_TEMPERATURE_IDENTIFIER:
                         engineCoolantTemperature = new IntegerProperty(p, false);
-                        ;
                         return engineCoolantTemperature;
                     case ENGINE_TOTAL_OPERATING_HOURS_IDENTIFIER:
                         engineTotalOperatingHours = new FloatProperty(p);
@@ -445,8 +437,7 @@ public class DiagnosticsState extends CommandWithProperties {
                         wheelRpms.add(rpm);
                         return rpm;
                     case IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE:
-                        DiagnosticsTroubleCode code =
-                                new DiagnosticsTroubleCode(p.getByteArray());
+                        DiagnosticsTroubleCode code = new DiagnosticsTroubleCode(p.getByteArray());
                         troubleCodes.add(code);
                         return code;
                     case MILEAGE_METERS_IDENTIFIER:
@@ -457,8 +448,7 @@ public class DiagnosticsState extends CommandWithProperties {
                 return null;
             });
 
-            this.checkControlMessages =
-                    checkControlMessages.toArray(new CheckControlMessage[0]);
+            this.checkControlMessages = checkControlMessages.toArray(new CheckControlMessage[0]);
             this.tirePressures = tirePressures.toArray(new TirePressure[0]);
             this.tireTemperatures = tireTemperatures.toArray(new TireTemperature[0]);
             this.wheelRpms = wheelRpms.toArray(new WheelRpm[0]);
@@ -520,7 +510,7 @@ public class DiagnosticsState extends CommandWithProperties {
         private IntegerProperty distanceDrivenSinceEngineStart;
         private FloatProperty fuelVolume;
 
-        Boolean antiLockBrakingActive;
+        BooleanProperty antiLockBrakingActive;
         IntegerProperty engineCoolantTemperature;
         FloatProperty engineTotalOperatingHours;
         FloatProperty engineTotalFuelConsumption;
@@ -681,10 +671,10 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param antiLockBrakingActive The anti-lock braking system (ABS) state.
          * @return The builder.
          */
-        public Builder setAntiLockBrakingActive(Boolean antiLockBrakingActive) {
+        public Builder setAntiLockBrakingActive(BooleanProperty antiLockBrakingActive) {
             this.antiLockBrakingActive = antiLockBrakingActive;
-            addProperty(new BooleanProperty(ANTI_LOCK_BRAKING_ACTIVE_IDENTIFIER,
-                    antiLockBrakingActive));
+            antiLockBrakingActive.setIdentifier(ANTI_LOCK_BRAKING_ACTIVE_IDENTIFIER);
+            addProperty(antiLockBrakingActive);
             return this;
         }
 

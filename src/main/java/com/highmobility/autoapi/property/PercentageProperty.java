@@ -22,6 +22,10 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.value.Bytes;
 
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
+
 /**
  * {@link #getValue()} is float 0-1. {@link #getValueByte()} is 0-100 int.
  */
@@ -35,14 +39,21 @@ public class PercentageProperty extends Property {
         return value;
     }
 
-    public PercentageProperty(float value) {
+    public PercentageProperty(Float value) {
         this((byte) 0x00, value);
     }
 
-    public PercentageProperty(byte identifier, float value) {
-        super(identifier, 1);
-        bytes[3] = floatToIntPercentageByte(value);
+    public PercentageProperty(@Nullable Float value, @Nullable Calendar timestamp,
+                              @Nullable PropertyFailure failure) {
+        this(value);
+        this.timestamp = timestamp;
+        this.failure = failure;
+    }
+
+    public PercentageProperty(byte identifier, Float value) {
+        super(identifier, value == null ? 0 : 1);
         this.value = value;
+        if (value != null) bytes[3] = floatToIntPercentageByte(value);
     }
 
     public PercentageProperty(Bytes bytes) {

@@ -23,6 +23,10 @@ package com.highmobility.autoapi.property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
+
 public class IntegerProperty extends Property {
     int value;
 
@@ -33,7 +37,7 @@ public class IntegerProperty extends Property {
         return value;
     }
 
-    public IntegerProperty(byte identifier, int value, int length) {
+    public IntegerProperty(byte identifier, Integer value, int length) {
         super(getBytes(identifier, value, length));
         this.value = value;
     }
@@ -44,11 +48,11 @@ public class IntegerProperty extends Property {
         else value = Property.getUnsignedInt(getValueBytes());
     }
 
-    public IntegerProperty(int value) {
+    public IntegerProperty(Integer value) {
         this((byte) 0x00, value, 4);
     }
 
-    public IntegerProperty(int value, PropertyTimestamp timestamp, PropertyFailure failure) {
+    public IntegerProperty(@Nullable Integer value, @Nullable Calendar timestamp, @Nullable PropertyFailure failure) {
         this(value);
         this.timestamp = timestamp;
         this.failure = failure;
@@ -66,11 +70,13 @@ public class IntegerProperty extends Property {
         this.bytes = getBytes(identifier, value, newIntegerLength);
     }
 
-    static byte[] getBytes(byte identifier, int value, int length) {
+    static byte[] getBytes(byte identifier, Integer value, int length) {
         byte[] bytes = baseBytes(identifier, length);
 
+        if (value == null) return bytes;
+
         if (length == 1) {
-            bytes[3] = (byte) value;
+            bytes[3] = value.byteValue();
         } else {
             ByteUtils.setBytes(bytes, intToBytes(value, length), 3);
         }

@@ -29,10 +29,10 @@ public class CruiseControlTest {
 
         assertTrue(command.is(CruiseControlState.TYPE));
         CruiseControlState state = (CruiseControlState) command;
-        assertTrue(state.isActive() == true);
+        assertTrue(state.isActive().getValue() == true);
         assertTrue(state.getLimiter() == CruiseControlState.Limiter.HIGHER_SPEED_REQUESTED);
         assertTrue(state.getTargetSpeed().getValue() == 60);
-        assertTrue(state.isAdaptiveActive() == false);
+        assertTrue(state.isAdaptiveActive().getValue() == false);
         assertTrue(state.getAdaptiveTargetSpeed().getValue() == 60);
     }
 

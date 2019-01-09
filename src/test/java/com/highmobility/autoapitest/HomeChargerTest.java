@@ -62,14 +62,14 @@ public class HomeChargerTest {
         assertTrue(state.getAuthenticationMechanism() == AuthenticationMechanism.APP);
         assertTrue(state.getPlugType() == PlugType.TYPE_TWO);
         assertTrue(state.getChargingPower().getValue() == 11.5f);
-        assertTrue(state.isSolarChargingActive() == true);
+        assertTrue(state.isSolarChargingActive().getValue() == true);
 
-        assertTrue(state.isHotspotEnabled() == true);
+        assertTrue(state.isHotspotEnabled().getValue() == true);
         assertTrue(state.getHotspotSsid().equals("Charger 7612"));
         assertTrue(state.getHotspotSecurity() == NetworkSecurity.WPA2_PERSONAL);
         assertTrue(state.getHotspotPassword().equals("ZW3vARNUBe"));
 
-        assertTrue(state.isAuthenticated() == true);
+        assertTrue(state.isAuthenticated().getValue() == true);
         assertTrue(state.getChargeCurrent().getValue() == .5f);
         assertTrue(state.getMaximumChargeCurrent().getValue() == 1f);
         assertTrue(state.getMinimumChargeCurrent().getValue() == 0f);

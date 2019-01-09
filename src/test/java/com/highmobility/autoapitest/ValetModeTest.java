@@ -5,6 +5,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetValetMode;
 import com.highmobility.autoapi.ValetMode;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -33,7 +34,7 @@ public class ValetModeTest {
 
         assertTrue(command.getClass() == ValetMode.class);
         ValetMode state = (ValetMode) command;
-        assertTrue(state.isActive() == true);
+        assertTrue(state.isActive().getValue() == true);
     }
 
     @Test public void get() {
@@ -60,7 +61,7 @@ public class ValetModeTest {
 
     @Test public void builder() {
         ValetMode.Builder builder = new ValetMode.Builder();
-        builder.setActive(true);
+        builder.setActive(new BooleanProperty(true));
         byte[] bytes = builder.build().getByteArray();
         assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("00280101000101")));
     }

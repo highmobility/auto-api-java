@@ -26,6 +26,9 @@ import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
 
 public class StringProperty extends Property {
     public static final String CHARSET = "UTF-8";
@@ -64,6 +67,18 @@ public class StringProperty extends Property {
         }
 
         this.value = value;
+    }
+
+    /**
+     * @param value     The string value.
+     * @param timestamp The property timestamp.
+     * @param failure   The property failure.
+     */
+    public StringProperty(@Nullable String value, @Nullable Calendar timestamp,
+                          @Nullable PropertyFailure failure) {
+        this(value);
+        this.timestamp = timestamp;
+        this.failure = failure;
     }
 
     public static Property[] getProperties(String value, byte identifier) {

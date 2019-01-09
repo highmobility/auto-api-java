@@ -87,13 +87,13 @@ public class ChargeState extends CommandWithProperties {
 
     FloatProperty maxChargingCurrent;
     PlugType plugType;
-    Boolean chargingWindowChosen;
+    BooleanProperty chargingWindowChosen;
     DepartureTime[] departureTimes;
 
     ReductionTime[] reductionOfChargingCurrentTimes;
     FloatProperty batteryTemperature;
     ChargingTimer[] timers;
-    Boolean pluggedIn;
+    BooleanProperty pluggedIn;
     ChargingState activeState;
 
     /**
@@ -190,7 +190,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return Indication on whether charging window is chosen.
      */
-    @Nullable public Boolean getChargingWindowChosen() {
+    @Nullable public BooleanProperty getChargingWindowChosen() {
         return chargingWindowChosen;
     }
 
@@ -240,7 +240,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The plugged in state.
      */
-    @Nullable public Boolean getPluggedIn() {
+    @Nullable public BooleanProperty getPluggedIn() {
         return pluggedIn;
     }
 
@@ -305,7 +305,7 @@ public class ChargeState extends CommandWithProperties {
                         plugType = PlugType.fromByte(p.getValueByte());
                         return plugType;
                     case CHARGING_WINDOW_CHOSEN_IDENTIFIER:
-                        chargingWindowChosen = Property.getBool(p.getValueByte());
+                        chargingWindowChosen = new BooleanProperty(p);
                         return chargingWindowChosen;
                     case DEPARTURE_TIMES_IDENTIFIER:
                         DepartureTime time = new DepartureTime(p.getByteArray());
@@ -319,7 +319,7 @@ public class ChargeState extends CommandWithProperties {
                         batteryTemperature = new FloatProperty(p);
                         return batteryTemperature;
                     case PLUGGED_IN_IDENTIFIER:
-                        pluggedIn = Property.getBool(p.getValueByte());
+                        pluggedIn = new BooleanProperty(p);
                         return pluggedIn;
                     case TIMER_IDENTIFIER:
                         ChargingTimer timer = new ChargingTimer(p.getByteArray());
@@ -384,13 +384,13 @@ public class ChargeState extends CommandWithProperties {
         private ChargeMode chargeMode;
         private FloatProperty maxChargingCurrent;
         private PlugType plugType;
-        private Boolean chargingWindowChosen;
+        private BooleanProperty chargingWindowChosen;
         private List<DepartureTime> departureTimes = new ArrayList<>();
 
         private List<ReductionTime> reductionOfChargingCurrentTimes = new ArrayList<>();
         private FloatProperty batteryTemperature;
         private List<ChargingTimer> timers = new ArrayList<>();
-        private Boolean pluggedIn;
+        private BooleanProperty pluggedIn;
         private ChargingState activeState;
 
         public Builder() {
@@ -552,10 +552,10 @@ public class ChargeState extends CommandWithProperties {
          * @param chargingWindowChosen Charging window chosen state.
          * @return The builder.
          */
-        public Builder setChargingWindowChosen(Boolean chargingWindowChosen) {
+        public Builder setChargingWindowChosen(BooleanProperty chargingWindowChosen) {
             this.chargingWindowChosen = chargingWindowChosen;
-            addProperty(new BooleanProperty(CHARGING_WINDOW_CHOSEN_IDENTIFIER,
-                    chargingWindowChosen));
+            chargingWindowChosen.setIdentifier(CHARGING_WINDOW_CHOSEN_IDENTIFIER);
+            addProperty(chargingWindowChosen);
             return this;
         }
 
@@ -639,9 +639,10 @@ public class ChargeState extends CommandWithProperties {
             return this;
         }
 
-        public Builder setPluggedIn(Boolean pluggedIn) {
+        public Builder setPluggedIn(BooleanProperty pluggedIn) {
             this.pluggedIn = pluggedIn;
-            addProperty(new BooleanProperty(PLUGGED_IN_IDENTIFIER, pluggedIn));
+            pluggedIn.setIdentifier(PLUGGED_IN_IDENTIFIER);
+            addProperty(pluggedIn);
             return this;
         }
 

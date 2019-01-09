@@ -4,6 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetTachographState;
 import com.highmobility.autoapi.TachographState;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.DriverCard;
 import com.highmobility.autoapi.property.DriverTimeState;
 import com.highmobility.autoapi.property.DriverWorkingState;
@@ -46,8 +47,8 @@ public class TachographTest {
         assertTrue(state.getDriverCard(1).isPresent());
         assertTrue(state.getDriverCard(2).isPresent());
 
-        assertTrue(state.isVehicleMotionDetected() == true);
-        assertTrue(state.isVehicleOverspeeding() == false);
+        assertTrue(state.isVehicleMotionDetected().getValue() == true);
+        assertTrue(state.isVehicleOverspeeding().getValue() == false);
         assertTrue(state.getVehicleDirection() == TachographState.VehicleDirection.FORWARD);
         assertTrue(state.getVehicleSpeed().getValue() == 80);
     }
@@ -68,8 +69,8 @@ public class TachographTest {
         builder.addDriverCard(new DriverCard(1, true));
         builder.addDriverCard(new DriverCard(2, true));
 
-        builder.setVehicleMotionDetected(true);
-        builder.setVehicleOverspeed(false);
+        builder.setVehicleMotionDetected(new BooleanProperty(true));
+        builder.setVehicleOverspeed(new BooleanProperty(false));
         builder.setVehicleDirection(TachographState.VehicleDirection.FORWARD);
         builder.setVehicleSpeed(new IntegerProperty(80));
 

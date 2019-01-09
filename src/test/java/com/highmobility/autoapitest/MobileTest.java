@@ -31,7 +31,7 @@ public class MobileTest {
 
         assertTrue(command.is(MobileState.TYPE));
         MobileState state = (MobileState) command;
-        assertTrue(state.isConnected() == true);
+        assertTrue(state.isConnected().getValue() == true);
     }
 
     @Test public void get() {

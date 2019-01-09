@@ -34,6 +34,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import javax.annotation.Nullable;
+
 import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 
 /**
@@ -44,14 +46,16 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
  */
 public class Property extends Bytes {
     public static final int CALENDAR_SIZE = 8;
+    // set when bytes do not exist
+    private static final byte[] unknownBytes = new byte[]{0x00, 0x00, 0x00};
 
-    protected PropertyTimestamp timestamp;
+    protected Calendar timestamp;
     protected PropertyFailure failure;
 
     /**
      * @return The timestamp of the property.
      */
-    public PropertyTimestamp getTimestamp() {
+    public Calendar getTimestamp() {
         return timestamp;
     }
 
@@ -93,11 +97,12 @@ public class Property extends Bytes {
     }
 
     public Property(Bytes bytes) {
-        this(bytes.getByteArray());
+        this(bytes == null ? null : bytes.getByteArray());
     }
 
     public Property(byte[] bytes) {
-        if (bytes == null || bytes.length < 3) throw new IllegalArgumentException();
+        if (bytes == null || bytes.length == 0) bytes = unknownBytes;
+        if (bytes.length < 3) bytes = Arrays.copyOf(bytes, 3);
         this.bytes = bytes;
     }
 
@@ -116,13 +121,13 @@ public class Property extends Bytes {
     /**
      * @return The one value byte. Returns null if property has no value set.
      */
-    public Byte getValueByte() {
+    @Nullable public Byte getValueByte() {
         if (bytes.length == 3) return null;
         return bytes[3];
     }
 
     // TODO: 2019-01-08 these should be package private?
-    
+
     /**
      * Set a new identifier for the property
      *

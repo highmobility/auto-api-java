@@ -9,6 +9,7 @@ import com.highmobility.autoapi.TheftAlarmState;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.WindowsState;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
@@ -120,7 +121,7 @@ public class VehicleStatusTest {
     @Test public void ignitionState() {
         Command command = this.command.getState(IgnitionState.TYPE);
         IgnitionState state = (IgnitionState) command;
-        assertTrue(state.isAccessoriesIgnitionOn());
+        assertTrue(state.isAccessoriesIgnitionOn().getValue());
     }
 
     Command getState(Class forClass) {
@@ -154,8 +155,8 @@ public class VehicleStatusTest {
         builder.addProperty(new CommandProperty(trunkState.build()));
 
         IgnitionState.Builder ignitionState = new IgnitionState.Builder();
-        ignitionState.setIsOn(true);
-        ignitionState.setAccessoriesIgnition(true);
+        ignitionState.setIsOn(new BooleanProperty(true));
+        ignitionState.setAccessoriesIgnition(new BooleanProperty(true));
         builder.addProperty(new CommandProperty(ignitionState.build()));
 
         // l7

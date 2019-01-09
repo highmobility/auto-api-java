@@ -48,10 +48,10 @@ public class ClimateTest {
         assertTrue(state.getDriverTemperatureSetting().getValue() == 21.5f);
         assertTrue(state.getPassengerTemperatureSetting().getValue() == 21.5f);
 
-        assertTrue(state.isHvacActive() == true);
-        assertTrue(state.isDefoggingActive() == false);
-        assertTrue(state.isDefrostingActive() == false);
-        assertTrue(state.isIonisingActive() == false);
+        assertTrue(state.isHvacActive().getValue() == true);
+        assertTrue(state.isDefoggingActive().getValue() == false);
+        assertTrue(state.isDefrostingActive().getValue() == false);
+        assertTrue(state.isIonisingActive().getValue() == false);
         assertTrue(state.getDefrostingTemperature().getValue() == 21.5f);
 
         assertTrue(state.getHvacStartingTime(HvacStartingTime.Weekday.MONDAY) == null);

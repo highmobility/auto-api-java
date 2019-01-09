@@ -4,6 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
@@ -69,7 +70,7 @@ public class DiagnosticsTest {
         assertTrue(state.getDistanceDrivenSinceReset().getValue() == 1500);
         assertTrue(state.getDistanceDrivenSinceEngineStart().getValue() == 10);
 
-        assertTrue(state.isAntiLockBrakingActive());
+        assertTrue(state.isAntiLockBrakingActive().getValue());
         assertTrue(state.getEngineCoolantTemperature().getValue() == 20);
         assertTrue(state.getEngineTotalOperatingHours().getValue() == 1500.65f);
         assertTrue(state.getEngineTotalFuelConsumption().getValue() == 27587.0f);
@@ -181,7 +182,7 @@ public class DiagnosticsTest {
         builder.setDistanceDrivenSinceEngineStart(new IntegerProperty(10));
         builder.setFuelVolume(new FloatProperty(35.5f));
 
-        builder.setAntiLockBrakingActive(true);
+        builder.setAntiLockBrakingActive(new BooleanProperty(true));
         builder.setEngineCoolantTemperature(new IntegerProperty(20));
         builder.setEngineTotalOperatingHours(new FloatProperty(1500.65f));
         builder.setEngineTotalFuelConsumption(new FloatProperty(27587.0f));
