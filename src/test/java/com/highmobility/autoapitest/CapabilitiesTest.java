@@ -74,7 +74,7 @@ public class CapabilitiesTest {
 
     @Test
     public void capabilities() {
-        Command command= CommandResolver.resolve(bytes);
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(Capabilities.TYPE));
         Capabilities capabilities = (Capabilities) command;
@@ -132,8 +132,8 @@ public class CapabilitiesTest {
         // 00 AB unknown
         byte[] unknownCapabilitiesBytes = ByteUtils.bytesFromHex
                 ("00100101000500AB00010201000500210001020100060023000102030100090024000102030405060100050025000102010006002600010203010007002700010203040100050028000102010003002902010004003000010100050031000102");
-        Capabilities unknownCapabilities = null;
-        unknownCapabilities = new Capabilities(unknownCapabilitiesBytes);
+        Capabilities unknownCapabilities =
+                (Capabilities) CommandResolver.resolve(unknownCapabilitiesBytes);
         assertTrue(unknownCapabilities.getCapabilities().length == 11); // unknown capa still
         // added to array
 
@@ -251,7 +251,8 @@ public class CapabilitiesTest {
         builder.addCapability(property2);
 
         Bytes message = builder.build();
-        assertTrue(TestUtils.bytesTheSame(message, new Bytes("001001010009002400011213141516010006002700011204")));
+        assertTrue(TestUtils.bytesTheSame(message, new Bytes(
+                "001001010009002400011213141516010006002700011204")));
     }
 
     @Test(expected = IllegalArgumentException.class)

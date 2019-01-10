@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -34,6 +33,7 @@ import javax.annotation.Nullable;
  */
 public class PropertyTimestamp extends Property {
     public static final byte IDENTIFIER = (byte) 0xA4;
+    public static final int LENGTH_WITHOUT_ADDITIONAL_DATA = 12;
 
     private Calendar timestamp;
     private byte timestampPropertyIdentifier;
@@ -60,19 +60,30 @@ public class PropertyTimestamp extends Property {
         return additionalData;
     }
 
-    public PropertyTimestamp(byte[] bytes) throws CommandParseException {
+    public PropertyTimestamp(byte[] bytes) {
         super(bytes);
-        if (bytes.length < 12) throw new CommandParseException();
+        if (bytes.length < LENGTH_WITHOUT_ADDITIONAL_DATA) throw new IllegalArgumentException();
         timestamp = Property.getCalendar(bytes, 3);
         timestampPropertyIdentifier = bytes[11];
         additionalData = new Bytes(Arrays.copyOfRange(bytes, 12, bytes.length));
     }
 
+    /**
+     * Create a property timestamp.
+     *
+     * @param timestamp                   The timestamp.
+     * @param timestampPropertyIdentifier The identifier of the property.
+     * @param additionalData              Full property bytes to identify the property.
+     */
     public PropertyTimestamp(Calendar timestamp, byte timestampPropertyIdentifier, @Nullable
             Bytes additionalData) {
         super(IDENTIFIER, 9 + (additionalData != null ? additionalData.getLength() : 0));
         ByteUtils.setBytes(bytes, Property.calendarToBytes(timestamp), 3);
         bytes[11] = timestampPropertyIdentifier;
         if (additionalData != null) ByteUtils.setBytes(bytes, additionalData.getByteArray(), 12);
+    }
+
+    public PropertyTimestamp(Calendar timestamp, Property property) {
+        this(timestamp, property.getPropertyIdentifier(), property);
     }
 }

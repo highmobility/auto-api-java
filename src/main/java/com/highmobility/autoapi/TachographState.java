@@ -24,7 +24,6 @@ import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.DriverCard;
 import com.highmobility.autoapi.property.DriverTimeState;
 import com.highmobility.autoapi.property.DriverWorkingState;
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
@@ -145,38 +144,46 @@ public class TachographState extends CommandWithProperties {
         return vehicleSpeed;
     }
 
-    TachographState(byte[] bytes) throws CommandParseException {
+    TachographState(byte[] bytes) {
         super(bytes);
 
         List<DriverTimeState> timeStateBuilder = new ArrayList<>();
         List<DriverWorkingState> workingStateBuilder = new ArrayList<>();
         List<DriverCard> cardsBuilder = new ArrayList<>();
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case DriverTimeState.IDENTIFIER:
-                    timeStateBuilder.add(new DriverTimeState(property.getPropertyBytes()));
-                    break;
-                case DriverWorkingState.IDENTIFIER:
-                    workingStateBuilder.add(new DriverWorkingState(property.getPropertyBytes()));
-                    break;
-                case DriverCard.IDENTIFIER:
-                    cardsBuilder.add(new DriverCard(property.getPropertyBytes()));
-                    break;
-                case VEHICLE_MOTION_DETECTED_IDENTIFIER:
-                    vehicleMotionDetected = Property.getBool(property.getValueByte());
-                    break;
-                case VEHICLE_OVERSPEED_IDENTIFIER:
-                    vehicleOverspeed = Property.getBool(property.getValueByte());
-                    break;
-                case VEHICLE_DIRECTION_IDENTIFIER:
-                    vehicleDirection = VehicleDirection.fromByte(property.getValueByte());
-                    break;
-                case VEHICLE_SPEED_IDENTIFIER:
-                    vehicleSpeed = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
+                switch (property.getPropertyIdentifier()) {
+                    case DriverTimeState.IDENTIFIER:
+                        DriverTimeState driverTimeState =
+                                new DriverTimeState(property.getPropertyBytes());
+                        timeStateBuilder.add(driverTimeState);
+                        return driverTimeState;
+                    case DriverWorkingState.IDENTIFIER:
+                        DriverWorkingState driverWorkingState =
+                                new DriverWorkingState(property.getPropertyBytes());
+                        workingStateBuilder.add(driverWorkingState);
+                        return driverWorkingState;
+                    case DriverCard.IDENTIFIER:
+                        DriverCard driverCard = new DriverCard(property.getPropertyBytes());
+                        cardsBuilder.add(driverCard);
+                        return driverCard;
+                    case VEHICLE_MOTION_DETECTED_IDENTIFIER:
+                        vehicleMotionDetected = Property.getBool(property.getValueByte());
+                        return vehicleMotionDetected;
+                    case VEHICLE_OVERSPEED_IDENTIFIER:
+                        vehicleOverspeed = Property.getBool(property.getValueByte());
+                        return vehicleOverspeed;
+                    case VEHICLE_DIRECTION_IDENTIFIER:
+                        vehicleDirection = VehicleDirection.fromByte(property.getValueByte());
+                        return vehicleDirection;
+                    case VEHICLE_SPEED_IDENTIFIER:
+                        vehicleSpeed = Property.getUnsignedInt(property.getValueBytes());
+                        return vehicleSpeed;
+                }
+
+                return null;
+            });
         }
 
         driverTimeStates = timeStateBuilder.toArray(new DriverTimeState[0]);
@@ -308,7 +315,7 @@ public class TachographState extends CommandWithProperties {
          */
         public Builder setVehicleDirection(VehicleDirection vehicleDirection) {
             this.vehicleDirection = vehicleDirection;
-            addProperty(vehicleDirection);
+            addProperty(new Property(VEHICLE_DIRECTION_IDENTIFIER, vehicleDirection.getByte()));
             return this;
         }
 
@@ -331,9 +338,10 @@ public class TachographState extends CommandWithProperties {
         }
     }
 
-    public enum VehicleDirection implements HMProperty {
+    public enum VehicleDirection {
         FORWARD((byte) 0x00),
-        REVERSE((byte) 0x01),;
+        REVERSE((byte) 0x01),
+        ;
 
         public static VehicleDirection fromByte(byte byteValue) throws CommandParseException {
             VehicleDirection[] values = VehicleDirection.values();
@@ -356,18 +364,6 @@ public class TachographState extends CommandWithProperties {
 
         public byte getByte() {
             return value;
-        }
-
-        @Override public byte getPropertyIdentifier() {
-            return VEHICLE_DIRECTION_IDENTIFIER;
-        }
-
-        @Override public int getPropertyLength() {
-            return 1;
-        }
-
-        @Override public byte[] getPropertyBytes() {
-            return Property.getPropertyBytes(VEHICLE_DIRECTION_IDENTIFIER, value);
         }
     }
 }

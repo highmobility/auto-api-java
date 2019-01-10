@@ -160,47 +160,46 @@ public class ClimateState extends CommandWithProperties {
 
         ArrayList<HvacStartingTime> builder = new ArrayList<>();
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            try {
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
                 switch (property.getPropertyIdentifier()) {
                     case INSIDE_TEMPERATURE_IDENTIFIER:
                         insideTemperature = Property.getFloat(property.getValueBytes());
-                        break;
+                        return insideTemperature;
                     case OUTSIDE_TEMPERATURE_IDENTIFIER:
                         outsideTemperature = Property.getFloat(property.getValueBytes());
-                        break;
+                        return outsideTemperature;
                     case DRIVER_TEMPERATURE_SETTING_IDENTIFIER:
                         driverTemperatureSetting = Property.getFloat(property.getValueBytes());
-                        break;
+                        return driverTemperatureSetting;
                     case PASSENGER_TEMPERATURE_SETTING_IDENTIFIER:
                         passengerTemperatureSetting = Property.getFloat(property.getValueBytes());
-                        break;
+                        return passengerTemperatureSetting;
                     case HVAC_ACTIVE_IDENTIFIER:
                         hvacActive = Property.getBool(property.getValueByte());
-                        break;
+                        return hvacActive;
                     case DEFOGGING_ACTIVE_IDENTIFIER:
                         defoggingActive = Property.getBool(property.getValueByte());
-                        break;
+                        return defoggingActive;
                     case DEFROSTING_ACTIVE_IDENTIFIER:
                         defrostingActive = Property.getBool(property.getValueByte());
-                        break;
+                        return defrostingActive;
                     case IONISING_ACTIVE_IDENTIFIER:
                         ionisingActive = Property.getBool(property.getValueByte());
-                        break;
+                        return ionisingActive;
                     case DEFROSTING_TEMPERATURE_IDENTIFIER:
                         defrostingTemperature = Property.getFloat(property.getValueBytes());
-                        break;
+                        return defrostingTemperature;
                     case HVAC_TIME_IDENTIFIER:
+                        HvacStartingTime time = new HvacStartingTime(property.getPropertyBytes());
                         builder.add(new HvacStartingTime(property.getPropertyBytes()));
-                        break;
+                        return time;
                     case IDENTIFIER_REAR_TEMPERATURE:
                         rearTemperatureSetting = Property.getFloat(property.getValueBytes());
-                        break;
+                        return rearTemperatureSetting;
                 }
-            } catch (Exception e) {
-                property.printFailedToParse(e);
-            }
+                return null;
+            });
         }
 
         hvacStartingTimes = builder.toArray(new HvacStartingTime[0]);

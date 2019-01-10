@@ -40,12 +40,19 @@ public class MobileState extends CommandWithProperties {
         return connected;
     }
 
-    public MobileState(byte[] bytes) {
+    MobileState(byte[] bytes) {
         super(bytes);
 
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) return;
-        connected = Property.getBool(prop.getValueByte());
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == IDENTIFIER) {
+                    connected = Property.getBool(p.getValueByte());
+                    return connected;
+
+                }
+                return null;
+            });
+        }
     }
 
     @Override public boolean isState() {

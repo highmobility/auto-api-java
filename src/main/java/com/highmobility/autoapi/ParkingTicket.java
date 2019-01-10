@@ -31,8 +31,8 @@ import javax.annotation.Nullable;
 
 /**
  * Command sent from the car every time the parking ticket state changes. or when a Get Parking
- * Ticket message is received. The state is Ended also when the parking ticket has never been
- * set. Afterwards the car always keeps the last parking ticket information.
+ * Ticket message is received. The state is Ended also when the parking ticket has never been set.
+ * Afterwards the car always keeps the last parking ticket information.
  */
 public class ParkingTicket extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.PARKING_TICKET, 0x01);
@@ -42,7 +42,6 @@ public class ParkingTicket extends CommandWithProperties {
     private static final byte TICKET_START_IDENTIFIER = 0x04;
     private static final byte TICKET_END_IDENTIFIER = 0x05;
     private static final byte IDENTIFIER_STATE = 0x01;
-
 
     ParkingTicketState state;
     String operatorName;
@@ -85,28 +84,30 @@ public class ParkingTicket extends CommandWithProperties {
         return ticketEnd;
     }
 
-    public ParkingTicket(byte[] bytes) throws CommandParseException {
+    ParkingTicket(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case IDENTIFIER_STATE:
-                    state = ParkingTicketState.fromByte(property.getValueByte());
-                    break;
-                case OPERATOR_NAME_IDENTIFIER:
-                    operatorName = Property.getString(property.getValueBytes());
-                    break;
-                case OPERATOR_TICKET_ID_IDENTIFIER:
-                    operatorTicketId = Property.getString(property.getValueBytes());
-                    break;
-                case TICKET_START_IDENTIFIER:
-                    ticketStart = Property.getCalendar(property.getValueBytes());
-                    break;
-                case TICKET_END_IDENTIFIER:
-                    ticketEnd = Property.getCalendar(property.getValueBytes());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_STATE:
+                        state = ParkingTicketState.fromByte(p.getValueByte());
+                        return state;
+                    case OPERATOR_NAME_IDENTIFIER:
+                        operatorName = Property.getString(p.getValueBytes());
+                        return operatorName;
+                    case OPERATOR_TICKET_ID_IDENTIFIER:
+                        operatorTicketId = Property.getString(p.getValueBytes());
+                        return operatorTicketId;
+                    case TICKET_START_IDENTIFIER:
+                        ticketStart = Property.getCalendar(p.getValueBytes());
+                        return ticketStart;
+                    case TICKET_END_IDENTIFIER:
+                        ticketEnd = Property.getCalendar(p.getValueBytes());
+                        return ticketEnd;
+                }
+                return null;
+            });
         }
     }
 

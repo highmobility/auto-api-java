@@ -30,7 +30,7 @@ public class GetFlashersState extends Command {
         super(TYPE);
     }
 
-    public GetFlashersState(byte[] bytes) {
+    GetFlashersState(byte[] bytes) {
         super(bytes);
     }
 }

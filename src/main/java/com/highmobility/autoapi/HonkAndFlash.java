@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
@@ -65,7 +64,7 @@ public class HonkAndFlash extends CommandWithProperties {
         this.lightFlashCount = lightFlashCount;
     }
 
-    static HMProperty[] getProperties(Integer seconds, Integer lightFlashCount) {
+    static Property[] getProperties(Integer seconds, Integer lightFlashCount) {
         ArrayList<Property> properties = new ArrayList<>();
 
         if (seconds != null) {

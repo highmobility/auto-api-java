@@ -71,25 +71,28 @@ public class WifiState extends CommandWithProperties {
         return security;
     }
 
-    public WifiState(byte[] bytes) throws CommandParseException {
+    WifiState(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case ENABLED_IDENTIFIER:
-                    enabled = Property.getBool(property.getValueByte());
-                    break;
-                case CONNECTED_IDENTIFIER:
-                    connected = Property.getBool(property.getValueByte());
-                    break;
-                case SSID_IDENTIFIER:
-                    ssid = Property.getString(property.getValueBytes());
-                    break;
-                case SECURITY_IDENTIFIER:
-                    security = NetworkSecurity.fromByte(property.getValueByte());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
+                switch (property.getPropertyIdentifier()) {
+                    case ENABLED_IDENTIFIER:
+                        enabled = Property.getBool(property.getValueByte());
+                        return enabled;
+                    case CONNECTED_IDENTIFIER:
+                        connected = Property.getBool(property.getValueByte());
+                        return connected;
+                    case SSID_IDENTIFIER:
+                        ssid = Property.getString(property.getValueBytes());
+                        return ssid;
+                    case SECURITY_IDENTIFIER:
+                        security = NetworkSecurity.fromByte(property.getValueByte());
+                        return security;
+                }
+                
+                return null;
+            });
         }
     }
 

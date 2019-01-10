@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.value.Bytes;
 
 import org.slf4j.Logger;
@@ -54,8 +53,11 @@ public class Command extends Bytes {
     }
 
     private void setTypeAndBytes(byte[] bytes) {
-        if (bytes == null || bytes.length == 0) return; // empty IncomingCommand
-        if (bytes.length < 3) throw new ParseException();
-        this.type = new Type(bytes[0], bytes[1], bytes[2]);
+        if (bytes == null || bytes.length == 0 || bytes.length < 3) {
+            type = new Type(0x00, 0x00, 0x00);
+        }
+        else {
+            type = new Type(bytes[0], bytes[1], bytes[2]);
+        }
     }
 }

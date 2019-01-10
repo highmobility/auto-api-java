@@ -42,11 +42,19 @@ public class ParkingBrakeState extends CommandWithProperties {
         return active;
     }
 
-    public ParkingBrakeState(byte[] bytes) {
+    ParkingBrakeState(byte[] bytes) {
         super(bytes);
 
-        Property p = getProperty(ACTIVE_IDENTIFIER);
-        if (p != null) active = Property.getBool(p.getValueByte());
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == ACTIVE_IDENTIFIER) {
+                    active = Property.getBool(p.getValueByte());
+                    return active;
+                }
+
+                return null;
+            });
+        }
     }
 
     @Override public boolean isState() {

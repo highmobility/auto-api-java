@@ -40,6 +40,9 @@ public class TurnIgnitionOnOff extends CommandWithProperties {
         return on;
     }
 
+    /**
+     * @param on The ignition state.
+     */
     public TurnIgnitionOnOff(boolean on) {
         super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, on)));
         this.on = on;

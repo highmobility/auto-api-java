@@ -23,12 +23,14 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 
 public enum FailureReason {
-    UNSUPPORTED_CAPABILITY((byte) 0x00),
-    UNAUTHORIZED((byte) 0x01),
-    INCORRECT_STATE((byte) 0x02),
-    EXECUTION_TIMEOUT((byte) 0x03),
-    VEHICLE_ASLEEP((byte) 0x04),
-    INVALID_COMMAND((byte) 0x05);
+    UNSUPPORTED_CAPABILITY((byte)0x00),
+    UNAUTHORISED((byte)0x01),
+    INCORRECT_STATE((byte)0x02),
+    EXECUTION_TIMEOUT((byte)0x03),
+    VEHICLE_ASLEEP((byte)0x04),
+    INVALID_COMMAND((byte)0x05),
+    PENDING((byte)0x06),
+    RATE_LIMIT((byte)0x07);
 
     public byte getByte() {
         return value;

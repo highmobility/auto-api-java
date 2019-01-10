@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
@@ -42,10 +41,18 @@ public class TheftAlarmState extends CommandWithProperties {
         return state;
     }
 
-    public TheftAlarmState(byte[] bytes) throws CommandParseException {
+    TheftAlarmState(byte[] bytes) {
         super(bytes);
-        Property p = getProperty(IDENTIFIER);
-        if (p != null) state = State.fromByte(p.getValueByte());
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == IDENTIFIER) {
+                    state = State.fromByte(p.getValueByte());
+                    return state;
+                }
+
+                return null;
+            });
+        }
     }
 
     @Override public boolean isState() {

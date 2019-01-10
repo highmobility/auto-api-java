@@ -54,16 +54,19 @@ public class PowerTakeOffState extends CommandWithProperties {
     PowerTakeOffState(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case ACTIVE_IDENTIFIER:
-                    active = Property.getBool(property.getValueByte());
-                    break;
-                case ENGAGED_IDENTIFIER:
-                    engaged = Property.getBool(property.getValueByte());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case ACTIVE_IDENTIFIER:
+                        active = Property.getBool(p.getValueByte());
+                        return active;
+                    case ENGAGED_IDENTIFIER:
+                        engaged = Property.getBool(p.getValueByte());
+                        return engaged;
+                }
+                
+                return null;
+            });
         }
     }
 

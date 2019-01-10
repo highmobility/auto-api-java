@@ -24,7 +24,7 @@ package com.highmobility.autoapi.property;
  * Created by root on 6/29/17.
  */
 
-public class WindscreenDamageZoneMatrix implements HMProperty {
+public class WindscreenDamageZoneMatrix extends Property {
     public static final byte IDENTIFIER = 0x04;
 
     int windscreenSizeHorizontal;
@@ -39,28 +39,21 @@ public class WindscreenDamageZoneMatrix implements HMProperty {
     }
 
     public WindscreenDamageZoneMatrix(byte valueByte) {
+        super(IDENTIFIER, 1);
         windscreenSizeHorizontal = valueByte >> 4;
         windscreenSizeVertical = valueByte & 0x0F;
+        setByte();
     }
 
     public WindscreenDamageZoneMatrix(int windscreenSizeHorizontal, int windscreenSizeVertical) {
+        super(IDENTIFIER, 1);
         this.windscreenSizeHorizontal = windscreenSizeHorizontal;
         this.windscreenSizeVertical = windscreenSizeVertical;
+        setByte();
     }
 
-    public byte getSizeByte() {
-        return (byte) (((windscreenSizeHorizontal & 0x0F) << 4) | (windscreenSizeVertical & 0x0F));
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), getSizeByte());
+    private void setByte() {
+        bytes[3] =
+                (byte) (((windscreenSizeHorizontal & 0x0F) << 4) | (windscreenSizeVertical & 0x0F));
     }
 }

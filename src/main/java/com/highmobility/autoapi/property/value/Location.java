@@ -1,21 +1,20 @@
-package com.highmobility.autoapi.property.windows;
+package com.highmobility.autoapi.property.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
 
-public enum WindowLocation {
+public enum Location {
     FRONT_LEFT((byte) 0x00),
     FRONT_RIGHT((byte) 0x01),
     REAR_RIGHT((byte) 0x02),
     REAR_LEFT((byte) 0x03),
-    HATCH((byte) 0x04);
+    HATCH((byte) 0x04),
+    ALL((byte) 0x05);
 
-    public static WindowLocation fromByte(byte value) throws CommandParseException {
-        WindowLocation[] allValues = WindowLocation.values();
+    public static Location fromByte(byte value) throws CommandParseException {
+        Location[] allValues = Location.values();
 
         for (int i = 0; i < allValues.length; i++) {
-            WindowLocation value1 = allValues[i];
+            Location value1 = allValues[i];
             if (value1.getByte() == value) {
                 return value1;
             }
@@ -27,7 +26,7 @@ public enum WindowLocation {
     private byte value;
     private byte identifier;
 
-    WindowLocation(byte value) {
+    Location(byte value) {
         this.value = value;
     }
 
@@ -39,7 +38,7 @@ public enum WindowLocation {
         return identifier;
     }
 
-    public WindowLocation setIdentifier(byte identifier) {
+    public Location setIdentifier(byte identifier) {
         this.identifier = identifier;
         return this;
     }

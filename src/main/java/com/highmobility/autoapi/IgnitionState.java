@@ -52,19 +52,21 @@ public class IgnitionState extends CommandWithProperties {
         return accessoriesIgnition;
     }
 
-    public IgnitionState(byte[] bytes) {
+    IgnitionState(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case ON_IDENTIFIER:
-                    on = Property.getBool(property.getValueByte());
-                    break;
-                case ACCESSORIES_IDENTIFIER:
-                    accessoriesIgnition = Property.getBool(property.getValueByte());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case ON_IDENTIFIER:
+                        on = Property.getBool(p.getValueByte());
+                        return on;
+                    case ACCESSORIES_IDENTIFIER:
+                        accessoriesIgnition = Property.getBool(p.getValueByte());
+                        return accessoriesIgnition;
+                }
+                return null;
+            });
         }
     }
 

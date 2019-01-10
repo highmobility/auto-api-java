@@ -148,60 +148,58 @@ public class MaintenanceState extends CommandWithProperties {
         return brakeFluidChangeDate;
     }
 
-    public MaintenanceState(byte[] bytes) {
+    MaintenanceState(byte[] bytes) {
         super(bytes);
         ArrayList<ConditionBasedService> conditionBasedServices = new ArrayList<>();
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case DAYS_IDENTIFIER:
-                        daysToNextService = Property.getUnsignedInt(property.getValueBytes());
-                        break;
+                        daysToNextService = Property.getUnsignedInt(p.getValueBytes());
+                        return daysToNextService;
                     case KILOMETERS_IDENTIFIER:
-                        kilometersToNextService = Property.getUnsignedInt(property.getValueBytes());
-                        break;
+                        kilometersToNextService = Property.getUnsignedInt(p.getValueBytes());
+                        return kilometersToNextService;
                     case IDENTIFIER_CBS_REPORTS_COUNT:
-                        cbsReportsCount = Property.getUnsignedInt(property.getValueBytes());
-                        break;
+                        cbsReportsCount = Property.getUnsignedInt(p.getValueBytes());
+                        return cbsReportsCount;
                     case IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION:
-                        monthsToExhaustInspection = Property.getUnsignedInt(property.getValueByte
-                                ());
-                        break;
+                        monthsToExhaustInspection = Property.getUnsignedInt(p.getValueByte());
+                        return monthsToExhaustInspection;
                     case TeleserviceAvailability.IDENTIFIER:
-                        teleserviceAvailability = TeleserviceAvailability.fromByte(property
-                                .getValueByte());
-                        break;
+                        teleserviceAvailability =
+                                TeleserviceAvailability.fromByte(p.getValueByte());
+                        return teleserviceAvailability;
                     case IDENTIFIER_SERVICE_DISTANCE_THRESHOLD:
-                        serviceDistanceThreshold = Property.getUnsignedInt(property.getValueBytes
-                                ());
-                        break;
+                        serviceDistanceThreshold = Property.getUnsignedInt(p.getValueBytes());
+                        return serviceDistanceThreshold;
                     case IDENTIFIER_SERVICE_TIME_THRESHOLD:
-                        serviceTimeThreshold = Property.getUnsignedInt(property.getValueByte());
-                        break;
+                        serviceTimeThreshold = Property.getUnsignedInt(p.getValueByte());
+                        return serviceTimeThreshold;
                     case IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE:
-                        automaticTeleserviceCallDate = Property.getCalendar(property
-                                .getValueBytes());
-                        break;
+                        automaticTeleserviceCallDate = Property.getCalendar(p.getValueBytes());
+                        return automaticTeleserviceCallDate;
                     case IDENTIFIER_TELESERVICE_BATTERY_CALL_DATE:
-                        teleserviceBatteryCallDate = Property.getCalendar(property.getValueBytes());
-                        break;
+                        teleserviceBatteryCallDate = Property.getCalendar(p.getValueBytes());
+                        return teleserviceBatteryCallDate;
                     case IDENTIFIER_NEXT_INSPECTION_DATE:
-                        nextInspectionDate = Property.getCalendar(property.getValueBytes());
-                        break;
+                        nextInspectionDate = Property.getCalendar(p.getValueBytes());
+                        return nextInspectionDate;
                     case IDENTIFIER_CONDITION_BASED_SERVICES:
-                        conditionBasedServices.add(new ConditionBasedService(property
-                                .getPropertyBytes()));
-                        break;
+                        ConditionBasedService s = new ConditionBasedService(p.getPropertyBytes());
+                        conditionBasedServices.add(s);
+                        return s;
                     case IDENTIFIER_BRAKE_FLUID_CHANGE_DATE:
-                        brakeFluidChangeDate = Property.getCalendar(property.getValueBytes());
-                        break;
+                        brakeFluidChangeDate = Property.getCalendar(p.getValueBytes());
+                        return brakeFluidChangeDate;
                 }
+
+                return null;
             });
         }
 
-        this.conditionBasedServices = conditionBasedServices.toArray(new
-                ConditionBasedService[0]);
+        this.conditionBasedServices = conditionBasedServices.toArray(new ConditionBasedService[0]);
     }
 
     private MaintenanceState(Builder builder) {

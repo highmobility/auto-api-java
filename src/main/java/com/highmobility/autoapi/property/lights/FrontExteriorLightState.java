@@ -18,14 +18,16 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi.property.lights;
 
 import com.highmobility.autoapi.CommandParseException;
 
 public enum FrontExteriorLightState {
-    INACTIVE((byte) (0x00)),
+    INACTIVE((byte) 0x00),
     ACTIVE((byte) 0x01),
-    ACTIVE_WITH_FULL_BEAM((byte) 0x02);
+    ACTIVE_FULL_BEAM((byte) 0x02),
+    ACTIVE_DAYLIGHT_RUNNING_LAMPS((byte) 0x03),
+    AUTOMATIC((byte) 0x04);
 
     public static FrontExteriorLightState fromByte(byte value) throws CommandParseException {
         FrontExteriorLightState[] values = FrontExteriorLightState.values();

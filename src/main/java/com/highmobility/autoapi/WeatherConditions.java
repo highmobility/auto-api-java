@@ -36,15 +36,22 @@ public class WeatherConditions extends CommandWithProperties {
     /**
      * @return The rain intensity percentage.
      */
-    @Nullable  public Float getRainIntensity() {
+    @Nullable public Float getRainIntensity() {
         return rainIntensity;
     }
 
-    public WeatherConditions(byte[] bytes) {
+    WeatherConditions(byte[] bytes) {
         super(bytes);
-
-        Property p = getProperty((byte) 0x01);
-        if (p != null) rainIntensity = Property.getPercentage(p.getValueByte());
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == RAIN_IDENTIFIER) {
+                    rainIntensity = Property.getPercentage(p.getValueByte());
+                    return rainIntensity;
+                }
+                
+                return null;
+            });
+        }
     }
 
     @Override public boolean isState() {

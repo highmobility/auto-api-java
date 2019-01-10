@@ -20,10 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.seats.PersonDetected;
-import com.highmobility.autoapi.property.seats.SeatLocation;
 import com.highmobility.autoapi.property.seats.SeatBeltFastened;
+import com.highmobility.autoapi.property.seats.SeatLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,22 +79,27 @@ public class SeatsState extends CommandWithProperties {
         return null;
     }
 
-    public SeatsState(byte[] bytes) throws CommandParseException {
+    SeatsState(byte[] bytes) {
         super(bytes);
 
         ArrayList<PersonDetected> personsDetected = new ArrayList<>();
         ArrayList<SeatBeltFastened> seatBeltsFastened = new ArrayList<>();
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case PersonDetected.IDENTIFIER:
-                    personsDetected.add(new PersonDetected(property.getPropertyBytes()));
-                    break;
-                case SeatBeltFastened.IDENTIFIER:
-                    seatBeltsFastened.add(new SeatBeltFastened(property.getPropertyBytes()));
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case PersonDetected.IDENTIFIER:
+                        PersonDetected d = new PersonDetected(p.getPropertyBytes());
+                        personsDetected.add(d);
+                        return d;
+                    case SeatBeltFastened.IDENTIFIER:
+                        SeatBeltFastened f = new SeatBeltFastened(p.getPropertyBytes());
+                        seatBeltsFastened.add(f);
+                        return f;
+                }
+
+                return null;
+            });
         }
 
         this.personsDetected = personsDetected.toArray(new PersonDetected[0]);

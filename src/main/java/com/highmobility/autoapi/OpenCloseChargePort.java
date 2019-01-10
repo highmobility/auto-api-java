@@ -38,6 +38,9 @@ public class OpenCloseChargePort extends CommandWithProperties {
         return chargePortState;
     }
 
+    /**
+     * @param chargePortState The charge port state.
+     */
     public OpenCloseChargePort(ChargePortState chargePortState) {
         super(getBytes(chargePortState));
         this.chargePortState = chargePortState;

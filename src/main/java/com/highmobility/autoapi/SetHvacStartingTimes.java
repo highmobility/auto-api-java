@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.Property;
 
@@ -68,7 +67,7 @@ public class SetHvacStartingTimes extends CommandWithProperties {
         this.hvacStartingTimes = hvacStartingTimes;
     }
 
-    static HMProperty[] getProperties(HvacStartingTime[] hvacStartingTimes) {
+    static Property[] getProperties(HvacStartingTime[] hvacStartingTimes) {
         for (HvacStartingTime hvacStartingTime : hvacStartingTimes) {
             hvacStartingTime.setIdentifier(AUTO_HVAC_IDENTIFIER);
         }
@@ -76,7 +75,7 @@ public class SetHvacStartingTimes extends CommandWithProperties {
         return hvacStartingTimes;
     }
 
-    public SetHvacStartingTimes(byte[] bytes) throws CommandParseException {
+    SetHvacStartingTimes(byte[] bytes) throws CommandParseException {
         super(bytes);
         Property[] properties = getProperties();
         ArrayList<HvacStartingTime> builder = new ArrayList<>();

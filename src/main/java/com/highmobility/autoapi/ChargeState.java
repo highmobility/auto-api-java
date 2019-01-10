@@ -252,84 +252,83 @@ public class ChargeState extends CommandWithProperties {
         return activeState;
     }
 
-    public ChargeState(byte[] bytes) {
+    ChargeState(byte[] bytes) {
         super(bytes);
 
         ArrayList<DepartureTime> departureTimes = new ArrayList<>();
         ArrayList<ReductionTime> reductionOfChargingCurrentTimes = new ArrayList<>();
         ArrayList<ChargingTimer> timers = new ArrayList<>();
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-
-            try {
-                switch (property.getPropertyIdentifier()) {
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_STATE:
-                        activeState = ChargingState.fromByte(property.getValueByte());
-                        break;
+                        activeState = ChargingState.fromByte(p.getValueByte());
+                        return activeState;
                     case ESTIMATED_RANGE_IDENTIFIER:
-                        estimatedRange = Property.getUnsignedInt(property.getValueBytes());
-                        break;
+                        estimatedRange = Property.getUnsignedInt(p.getValueBytes());
+                        return estimatedRange;
                     case BATTERY_LEVEL_IDENTIFIER:
-                        batteryLevel = property.getValueByte() / 100f;
-                        break;
+                        batteryLevel = p.getValueByte() / 100f;
+                        return batteryLevel;
                     case BATTERY_CURRENT_AC_IDENTIFIER:
-                        batteryCurrentAC = Property.getFloat(property.getValueBytes());
-                        break;
+                        batteryCurrentAC = Property.getFloat(p.getValueBytes());
+                        return batteryCurrentAC;
                     case BATTERY_CURRENT_DC_IDENTIFIER:
-                        batteryCurrentDC = Property.getFloat(property.getValueBytes());
-                        break;
+                        batteryCurrentDC = Property.getFloat(p.getValueBytes());
+                        return batteryCurrentDC;
                     case CHARGER_VOLTAGE_AC_IDENTIFIER:
-                        chargerVoltageAC = Property.getFloat(property.getValueBytes());
-                        break;
+                        chargerVoltageAC = Property.getFloat(p.getValueBytes());
+                        return chargerVoltageAC;
                     case CHARGER_VOLTAGE_DC_IDENTIFIER:
-                        chargerVoltageDC = Property.getFloat(property.getValueBytes());
-                        break;
+                        chargerVoltageDC = Property.getFloat(p.getValueBytes());
+                        return chargerVoltageDC;
                     case CHARGE_LIMIT_IDENTIFIER:
-                        chargeLimit = property.getValueByte() / 100f;
-                        break;
+                        chargeLimit = p.getValueByte() / 100f;
+                        return chargeLimit;
                     case TIME_TO_COMPLETE_CHARGE_IDENTIFIER:
-                        timeToCompleteCharge = Property.getUnsignedInt(property.getValueBytes());
-                        break;
+                        timeToCompleteCharge = Property.getUnsignedInt(p.getValueBytes());
+                        return timeToCompleteCharge;
                     case CHARGE_RATE_IDENTIFIER:
-                        chargingRate = Property.getFloat(property.getValueBytes());
-                        break;
+                        chargingRate = Property.getFloat(p.getValueBytes());
+                        return chargingRate;
                     case CHARGE_PORT_STATE_IDENTIFIER:
-                        chargeChargePortState = ChargePortState.fromByte(property.getValueByte());
-                        break;
+                        chargeChargePortState = ChargePortState.fromByte(p.getValueByte());
+                        return chargeChargePortState;
                     case CHARGE_MODE_IDENTIFIER:
-                        chargeMode = ChargeMode.fromByte(property.getValueByte());
-                        break;
+                        chargeMode = ChargeMode.fromByte(p.getValueByte());
+                        return chargeMode;
                     case MAX_CHARGING_CURRENT_IDENTIFIER:
-                        maxChargingCurrent = Property.getFloat(property.getValueBytes());
-                        break;
+                        maxChargingCurrent = Property.getFloat(p.getValueBytes());
+                        return maxChargingCurrent;
                     case PLUG_TYPE_IDENTIFIER:
-                        plugType = PlugType.fromByte(property.getValueByte());
-                        break;
+                        plugType = PlugType.fromByte(p.getValueByte());
+                        return plugType;
                     case CHARGING_WINDOW_CHOSEN_IDENTIFIER:
-                        chargingWindowChosen = Property.getBool(property.getValueByte());
-                        break;
+                        chargingWindowChosen = Property.getBool(p.getValueByte());
+                        return chargingWindowChosen;
                     case DEPARTURE_TIMES_IDENTIFIER:
-                        DepartureTime time = new DepartureTime(property.getPropertyBytes());
+                        DepartureTime time = new DepartureTime(p.getPropertyBytes());
                         departureTimes.add(time);
-                        break;
+                        return time;
                     case REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER:
-                        reductionOfChargingCurrentTimes.add(new ReductionTime(property
-                                .getPropertyBytes()));
-                        break;
+                        ReductionTime time2 = new ReductionTime(p.getPropertyBytes());
+                        reductionOfChargingCurrentTimes.add(time2);
+                        return time2;
                     case BATTERY_TEMPERATURE_IDENTIFIER:
-                        batteryTemperature = Property.getFloat(property.getValueBytes());
-                        break;
+                        batteryTemperature = Property.getFloat(p.getValueBytes());
+                        return batteryTemperature;
                     case PLUGGED_IN_IDENTIFIER:
-                        pluggedIn = Property.getBool(property.getValueByte());
-                        break;
+                        pluggedIn = Property.getBool(p.getValueByte());
+                        return pluggedIn;
                     case TIMER_IDENTIFIER:
-                        timers.add(new ChargingTimer(property.getPropertyBytes()));
-                        break;
+                        ChargingTimer timer = new ChargingTimer(p.getPropertyBytes());
+                        timers.add(timer);
+                        return timer;
                 }
-            } catch (Exception e) {
-                property.printFailedToParse();
-            }
+
+                return null;
+            });
         }
 
         this.departureTimes = departureTimes.toArray(new DepartureTime[0]);

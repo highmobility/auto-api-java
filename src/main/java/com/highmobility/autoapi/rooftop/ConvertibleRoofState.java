@@ -21,10 +21,8 @@
 package com.highmobility.autoapi.rooftop;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.HMProperty;
-import com.highmobility.autoapi.property.Property;
 
-public enum ConvertibleRoofState implements HMProperty {
+public enum ConvertibleRoofState {
     CLOSED((byte) 0x00),
     OPEN((byte) 0x01),
     EMERGENCY_LOCKED((byte) 0x02),
@@ -49,7 +47,6 @@ public enum ConvertibleRoofState implements HMProperty {
     }
 
     private byte value;
-    private byte identifier;
 
     ConvertibleRoofState(byte value) {
         this.value = value;
@@ -57,26 +54,5 @@ public enum ConvertibleRoofState implements HMProperty {
 
     public byte getByte() {
         return value;
-    }
-
-    public byte getIdentifier() {
-        return identifier;
-    }
-
-    public ConvertibleRoofState setIdentifier(byte identifier) {
-        this.identifier = identifier;
-        return this;
-    }
-
-    @Override public byte getPropertyIdentifier() {
-        return identifier;
-    }
-
-    @Override public int getPropertyLength() {
-        return 1;
-    }
-
-    @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), value);
     }
 }

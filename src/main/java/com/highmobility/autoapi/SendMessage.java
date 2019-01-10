@@ -52,19 +52,22 @@ public class SendMessage extends CommandWithProperties {
         return message;
     }
 
-    public SendMessage(byte[] bytes) {
+    SendMessage(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case RECIPIENT_IDENTIFIER:
-                    recipientHandle = Property.getString(property.getValueBytes());
-                    break;
-                case MESSAGE_IDENTIFIER:
-                    message = Property.getString(property.getValueBytes());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case RECIPIENT_IDENTIFIER:
+                        recipientHandle = Property.getString(p.getValueBytes());
+                        return recipientHandle;
+                    case MESSAGE_IDENTIFIER:
+                        message = Property.getString(p.getValueBytes());
+                        return message;
+                }
+                
+                return null;
+            });
         }
     }
 

@@ -61,22 +61,25 @@ public class VehicleLocation extends CommandWithProperties {
         return altitude;
     }
 
-    public VehicleLocation(byte[] bytes) {
+    VehicleLocation(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case COORDINATES_IDENTIFIER:
-                    coordinates = new CoordinatesProperty(property.getPropertyBytes());
-                    break;
-                case HEADING_IDENTIFIER:
-                    heading = Property.getDouble(property.getValueBytes());
-                    break;
-                case ALTITUDE_IDENTIFIER:
-                    altitude = Property.getDouble(property.getValueBytes());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case COORDINATES_IDENTIFIER:
+                        coordinates = new CoordinatesProperty(p.getPropertyBytes());
+                        return coordinates;
+                    case HEADING_IDENTIFIER:
+                        heading = Property.getDouble(p.getValueBytes());
+                        return heading;
+                    case ALTITUDE_IDENTIFIER:
+                        altitude = Property.getDouble(p.getValueBytes());
+                        return altitude;
+                }
+
+                return null;
+            });
         }
     }
 

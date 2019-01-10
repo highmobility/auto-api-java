@@ -26,19 +26,19 @@ public class FailureTest {
         assertTrue(command.is(Failure.TYPE));
         Failure failure = (Failure) command;
         assertTrue(failure.getFailedType().equals(GetTrunkState.TYPE));
-        assertTrue(failure.getFailureReason() == FailureReason.UNAUTHORIZED);
+        assertTrue(failure.getFailureReason() == FailureReason.UNAUTHORISED);
         assertTrue(failure.getFailureDescription().equals("Try again"));
     }
 
     @Test public void build() {
         Failure.Builder builder = new Failure.Builder();
         builder.setFailedType(GetTrunkState.TYPE);
-        builder.setFailureReason(FailureReason.UNAUTHORIZED);
+        builder.setFailureReason(FailureReason.UNAUTHORISED);
         builder.setFailureDescription("Try again");
         Failure failure = builder.build();
         assertTrue(TestUtils.bytesTheSame(failure, bytes));
         assertTrue(failure.getFailedType() == GetTrunkState.TYPE);
-        assertTrue(failure.getFailureReason() == FailureReason.UNAUTHORIZED);
+        assertTrue(failure.getFailureReason() == FailureReason.UNAUTHORISED);
         assertTrue(failure.getType() == Failure.TYPE);
     }
 }

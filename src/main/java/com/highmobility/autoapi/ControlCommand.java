@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HMProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 
@@ -67,7 +66,7 @@ public class ControlCommand extends CommandWithProperties {
         this.angle = angle;
     }
 
-    static HMProperty[] getProperties(Integer speed, Integer angle) {
+    static Property[] getProperties(Integer speed, Integer angle) {
         List<Property> properties = new ArrayList<>();
 
         if (speed != null) {

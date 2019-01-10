@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.windows.WindowLocation;
+import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.autoapi.property.windows.WindowOpenPercentage;
 import com.highmobility.autoapi.property.windows.WindowPosition;
 
@@ -54,7 +54,7 @@ public class WindowsState extends CommandWithProperties {
      * @param location The window location.
      * @return The window position.
      */
-    @Nullable public WindowPosition getWindowPosition(WindowLocation location) {
+    @Nullable public WindowPosition getWindowPosition(Location location) {
         for (WindowPosition windowPosition : windowPositions) {
             if (windowPosition.getLocation() == location) return windowPosition;
         }
@@ -72,30 +72,34 @@ public class WindowsState extends CommandWithProperties {
      * @param location The window location.
      * @return The window open percentage.
      */
-    @Nullable public WindowOpenPercentage getWindowOpenPercentage(WindowLocation location) {
+    @Nullable public WindowOpenPercentage getWindowOpenPercentage(Location location) {
         for (WindowOpenPercentage windowOpenPercentage : windowOpenPercentages) {
             if (windowOpenPercentage.getLocation() == location) return windowOpenPercentage;
         }
         return null;
     }
 
-    public WindowsState(byte[] bytes) {
+    WindowsState(byte[] bytes) {
         super(bytes);
 
         List<WindowPosition> positionBuilder = new ArrayList<>();
         List<WindowOpenPercentage> openBuilder = new ArrayList<>();
 
         while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                // if one property parsing fails, just dont add it
-                switch (property.getPropertyIdentifier()) {
+            propertiesIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_WINDOW_OPEN_PERCENTAGES:
-                        openBuilder.add(new WindowOpenPercentage(property.getPropertyBytes()));
-                        break;
+                        WindowOpenPercentage windowOpenPercentage =
+                                new WindowOpenPercentage(p.getPropertyBytes());
+                        openBuilder.add(windowOpenPercentage);
+                        return windowOpenPercentage;
                     case IDENTIFIER_WINDOW_POSITION:
-                        positionBuilder.add(new WindowPosition(property.getPropertyBytes()));
-                        break;
+                        WindowPosition windowPosition = new WindowPosition(p.getPropertyBytes());
+                        positionBuilder.add(windowPosition);
+                        return windowPosition;
                 }
+
+                return null;
             });
         }
 

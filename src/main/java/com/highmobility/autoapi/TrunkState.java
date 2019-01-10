@@ -54,18 +54,21 @@ public class TrunkState extends CommandWithProperties {
         return position;
     }
 
-    public TrunkState(byte[] bytes) throws CommandParseException {
+    TrunkState(byte[] bytes) {
         super(bytes);
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case IDENTIFIER_LOCK:
-                    lock = Lock.fromByte(property.getValueByte());
-                    break;
-                case IDENTIFIER_POSITION:
-                    position = Position.fromByte(property.getValueByte());
-                    break;
-            }
+        while (propertiesIterator.hasNext()) {
+            propertiesIterator.parseNext(property -> {
+                switch (property.getPropertyIdentifier()) {
+                    case IDENTIFIER_LOCK:
+                        lock = Lock.fromByte(property.getValueByte());
+                        return lock;
+                    case IDENTIFIER_POSITION:
+                        position = Position.fromByte(property.getValueByte());
+                        return position;
+                }
+
+                return null;
+            });
         }
     }
 
