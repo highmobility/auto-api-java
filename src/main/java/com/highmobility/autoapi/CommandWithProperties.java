@@ -40,6 +40,16 @@ import javax.annotation.Nullable;
  * Used for commands with properties. Can have 0 properties.
  */
 public class CommandWithProperties extends Command {
+    /*
+    Properties logic:
+    * Empty properties are always created in child classes with correct identifier but 0x00 bytes.
+    These will not be replaced in base properties.
+
+    * The empty property will be updated with property, timestamp and failure. If with the real
+    property, then base property is replaced in base command properties array.
+
+    * Otherwise timestamp and failure added as ivars.
+     */
     private static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be " +
             "null";
     private static final byte NONCE_IDENTIFIER = (byte) 0xA0;
@@ -53,7 +63,7 @@ public class CommandWithProperties extends Command {
 
     PropertyTimestamp[] propertyTimestamps;
     PropertyFailure[] propertyFailures;
-    
+
     private HashMap<Object, PropertyTimestamp> linkedPropertyTimestamps;
 
     /**

@@ -29,10 +29,10 @@ import java.util.Calendar;
 import javax.annotation.Nullable;
 
 public class ChargeModeProperty extends Property {
-    ChargeMode ChargeMode;
+    ChargeMode chargeMode;
 
     public ChargeMode getValue() {
-        return ChargeMode;
+        return chargeMode;
     }
 
     public ChargeModeProperty(ChargeMode ChargeMode) {
@@ -45,15 +45,15 @@ public class ChargeModeProperty extends Property {
         setTimestampFailure(timestamp, failure);
     }
 
-    public ChargeModeProperty(byte identifier, ChargeMode ChargeMode) {
-        super(identifier, ChargeMode == null ? 0 : 1);
-        this.ChargeMode = ChargeMode;
-        if (ChargeMode != null) bytes[3] = ChargeMode.getByte();
+    public ChargeModeProperty(byte identifier, ChargeMode chargeMode) {
+        super(identifier, chargeMode == null ? 0 : 1);
+        this.chargeMode = chargeMode;
+        if (chargeMode != null) bytes[3] = chargeMode.getByte();
     }
 
     public ChargeModeProperty(Bytes bytes) throws CommandParseException {
         super(bytes);
-        ChargeMode = ChargeMode.fromByte(bytes.get(3));
+        chargeMode = chargeMode.fromByte(bytes.get(3));
     }
 
     // TBODO: ctors

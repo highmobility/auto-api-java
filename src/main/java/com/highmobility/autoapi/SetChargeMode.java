@@ -21,6 +21,7 @@
 package com.highmobility.autoapi;
 
 
+import com.highmobility.autoapi.property.ChargeModeProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 
@@ -46,7 +47,7 @@ public class SetChargeMode extends CommandWithProperties {
      * @throws IllegalArgumentException for {@link ChargeMode#IMMEDIATE}.
      */
     public SetChargeMode(ChargeMode chargeMode) {
-        super(TYPE.addProperty(new Property(PROPERTY_IDENTIFIER, chargeMode.getByte())));
+        super(TYPE.addProperty(new ChargeModeProperty(PROPERTY_IDENTIFIER, chargeMode)));
         if (chargeMode == ChargeMode.IMMEDIATE) throw new IllegalArgumentException();
         this.chargeMode = chargeMode;
     }
