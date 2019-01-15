@@ -11,12 +11,13 @@ import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
 import com.highmobility.autoapi.StartStopCharging;
 import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.ChargeMode;
+import com.highmobility.autoapi.property.ChargeModeProperty;
 import com.highmobility.autoapi.property.ChargePortState;
 import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
 import com.highmobility.autoapi.property.charging.DepartureTime;
 import com.highmobility.autoapi.property.charging.PlugType;
@@ -64,7 +65,7 @@ public class ChargingTest {
         assertTrue(state.getChargeLimit().getValue() == .9f);
         assertTrue(state.getChargingRate().getValue() == 0f);
         assertTrue(state.getChargeChargePortState() == ChargePortState.OPEN);
-        assertTrue(state.getChargeMode() == ChargeMode.IMMEDIATE);
+        assertTrue(state.getChargeMode().getValue() == ChargeMode.IMMEDIATE);
 
         assertTrue(state.getMaxChargingCurrent().getValue() == 25);
         assertTrue(state.getPlugType() == PlugType.TYPE_2);
@@ -144,7 +145,7 @@ public class ChargingTest {
         builder.setTimeToCompleteCharge(new IntegerProperty(60));
         builder.setChargingRate(new FloatProperty(0f));
         builder.setChargePortState(ChargePortState.OPEN);
-        builder.setChargeMode(ChargeMode.IMMEDIATE);
+        builder.setChargeMode(new ChargeModeProperty(ChargeMode.IMMEDIATE));
 
         builder.setMaxChargingCurrent(new FloatProperty(25f));
         builder.setPlugType(PlugType.TYPE_2);
@@ -266,11 +267,16 @@ public class ChargingTest {
                 CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getReductionTimes().length == 2);
 
-        assertTrue(command.getReductionTimes()[0].getStartStop() == StartStop.START);
-        assertTrue(command.getReductionTimes()[0].getTime().equals(new Time(0, 0)));
-
-        assertTrue(command.getReductionTimes()[1].getStartStop() == StartStop.STOP);
-        assertTrue(command.getReductionTimes()[1].getTime().equals(new Time(16, 32)));
+        int times = 0;
+        for (int i = 0; i < command.getReductionTimes().length; i++) {
+            ReductionTime reductionTime = command.getReductionTimes()[i];
+            if ((reductionTime.getTime().equals(new Time(0, 0)) && reductionTime.getStartStop() == StartStop.START) ||
+                    (reductionTime.getTime().equals(new Time(16, 32)) && reductionTime.getStartStop() == StartStop.STOP)) {
+                times++;
+            }
+        }
+        
+        assertTrue(times == 2);
     }
 
     @Test public void SetReductionTimes0Properties() {

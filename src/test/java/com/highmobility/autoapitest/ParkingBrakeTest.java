@@ -66,6 +66,6 @@ public class ParkingBrakeTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("005801");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((ParkingBrakeState)state).isActive() == null);
+        assertTrue(((ParkingBrakeState)state).isActive().getValue() == null);
     }
 }

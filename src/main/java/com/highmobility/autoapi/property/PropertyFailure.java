@@ -82,6 +82,14 @@ public class PropertyFailure extends Property {
         ByteUtils.setBytes(bytes, description.getBytes(), 6);
     }
 
+    /**
+     * @param failureReason The failure reason.
+     * @param description   The failure description.
+     */
+    public PropertyFailure(Reason failureReason, @Nullable String description) {
+        this((byte) 0x00, failureReason, description);
+    }
+
     public enum Reason {
         RATE_LIMIT((byte) 0x00),        // Property rate limit has been exceeded
         EXECUTION_TIMEOUT((byte) 0x01), // Failed to retrieve property in time

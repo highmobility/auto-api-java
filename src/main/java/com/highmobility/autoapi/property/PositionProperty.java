@@ -21,41 +21,40 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.value.Position;
 
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-/**
- * {@link #getValue()} is float 0-1. {@link #getValueByte()} is 0-100 int.
- */
-public class PercentageProperty extends Property {
-    Float value;
+public class PositionProperty extends Property {
+    Position position;
 
-    /**
-     * @return Percentage between 0 and 1.
-     */
-    @Nullable public Float getValue() {
-        return value;
+    @Nullable public Position getValue() {
+        return position;
     }
 
-    public PercentageProperty(Float value) {
-        this((byte) 0x00, value);
+    public PositionProperty(Position position) {
+        this((byte) 0x00, position);
     }
 
-    public PercentageProperty(@Nullable Float value, @Nullable Calendar timestamp,
-                              @Nullable PropertyFailure failure) {
-        this(value);
+    public PositionProperty(@Nullable Position position, @Nullable Calendar timestamp,
+                            @Nullable PropertyFailure failure) {
+        this(position);
         setTimestampFailure(timestamp, failure);
     }
 
-    public PercentageProperty(byte identifier, Float value) {
-        super(identifier, value == null ? 0 : 1);
-        this.value = value;
-        if (value != null) bytes[3] = floatToIntPercentageByte(value);
+    public PositionProperty() {
+        super(unknownBytes);
     }
 
-    public PercentageProperty(Property p) throws CommandParseException {
+    public PositionProperty(byte identifier, Position position) {
+        super(identifier, position == null ? 0 : 1);
+        this.position = position;
+        if (position != null) bytes[3] = position.getByte();
+    }
+
+    public PositionProperty(Property p) throws CommandParseException {
         super(p);
         update(p, null, null, false);
     }
@@ -63,11 +62,12 @@ public class PercentageProperty extends Property {
     @Override
     public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
                           boolean propertyInArray) throws CommandParseException {
-        if (p != null) this.value = getUnsignedInt(p.getValueByte()) / 100f;
+        if (p != null) position = Position.fromByte(p.get(3));
         return super.update(p, failure, timestamp, propertyInArray);
     }
 
-    public PercentageProperty(byte identifier) {
+    public PositionProperty(byte identifier) {
         super(identifier);
     }
+
 }

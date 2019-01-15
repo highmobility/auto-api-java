@@ -27,11 +27,46 @@ import java.util.Arrays;
 
 public class AccelerationProperty extends Property {
     public static final byte IDENTIFIER = 0x01;
+
+    AccelerationType accelerationType;
+    float acceleration;
+
+    /**
+     * @return The acceleration type
+     */
+    public AccelerationType getAccelerationType() {
+        return accelerationType;
+    }
+
+    /**
+     * @return The acceleration in g-force
+     */
+    public float getAcceleration() {
+        return acceleration;
+    }
+
+    public AccelerationProperty(byte[] bytes) throws CommandParseException {
+        super(bytes);
+        if (bytes.length < 8) throw new CommandParseException();
+        accelerationType = AccelerationType.fromByte(bytes[3]);
+        acceleration = Property.getFloat(Arrays.copyOfRange(bytes, 4, 8));
+    }
+
+    public AccelerationProperty(AccelerationType type, float acceleration) {
+        this(IDENTIFIER, type, acceleration);
+    }
+
+    public AccelerationProperty(byte identifier, AccelerationType type, float acceleration) {
+        super(identifier, 5);
+        bytes[3] = type.getByte();
+        ByteUtils.setBytes(bytes, Property.floatToBytes(acceleration), 4);
+    }
+
     public enum AccelerationType {
-        LONGITUDINAL((byte)0x00),
-        LATERAL((byte)0x01),
-        FRONT_LATERAL((byte)0x02),
-        REAR_LATERAL((byte)0x03);
+        LONGITUDINAL((byte) 0x00),
+        LATERAL((byte) 0x01),
+        FRONT_LATERAL((byte) 0x02),
+        REAR_LATERAL((byte) 0x03);
 
         static AccelerationType fromByte(byte byteValue) throws CommandParseException {
             AccelerationType[] values = AccelerationType.values();
@@ -55,41 +90,5 @@ public class AccelerationProperty extends Property {
         public byte getByte() {
             return value;
         }
-    }
-
-    AccelerationType accelerationType;
-    float acceleration;
-
-    /**
-     *
-     * @return The acceleration type
-     */
-    public AccelerationType getAccelerationType() {
-        return accelerationType;
-    }
-
-    /**
-     *
-     * @return The acceleration in g-force
-     */
-    public float getAcceleration() {
-        return acceleration;
-    }
-
-    public AccelerationProperty(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 8) throw new CommandParseException();
-        accelerationType = AccelerationType.fromByte(bytes[3]);
-        acceleration = Property.getFloat(Arrays.copyOfRange(bytes, 4, 8));
-    }
-
-    public AccelerationProperty(AccelerationType type, float acceleration) {
-        this(IDENTIFIER, type, acceleration);
-    }
-
-    public AccelerationProperty(byte identifier, AccelerationType type, float acceleration) {
-        super(identifier, 5);
-        bytes[3] = type.getByte();
-        ByteUtils.setBytes(bytes, Property.floatToBytes(acceleration), 4);
     }
 }

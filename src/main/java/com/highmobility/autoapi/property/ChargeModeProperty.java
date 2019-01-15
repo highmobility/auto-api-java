@@ -20,38 +20,42 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-public class FloatProperty extends Property {
-    Float value;
+public class ChargeModeProperty extends Property {
+    ChargeMode ChargeMode;
 
-    public Float getValue() {
-        return value;
+    public ChargeMode getValue() {
+        return ChargeMode;
     }
 
-    public FloatProperty(Float value) {
-        this((byte) 0x00, value);
+    public ChargeModeProperty(ChargeMode ChargeMode) {
+        this((byte) 0x00, ChargeMode);
     }
 
-    public FloatProperty(@Nullable Float value, @Nullable Calendar timestamp,
-                         @Nullable PropertyFailure failure) {
-        this(value);
+    public ChargeModeProperty(@Nullable ChargeMode ChargeMode, @Nullable Calendar timestamp,
+                              @Nullable PropertyFailure failure) {
+        this(ChargeMode);
         setTimestampFailure(timestamp, failure);
     }
 
-    public FloatProperty(byte identifier, Float value) {
-        super(identifier, value == null ? 0 : 4);
-        this.value = value;
-        if (value != null) ByteUtils.setBytes(bytes, floatToBytes(value), 3);
+    public ChargeModeProperty(byte identifier, ChargeMode ChargeMode) {
+        super(identifier, ChargeMode == null ? 0 : 1);
+        this.ChargeMode = ChargeMode;
+        if (ChargeMode != null) bytes[3] = ChargeMode.getByte();
     }
 
-    public FloatProperty(Bytes bytes) {
+    public ChargeModeProperty(Bytes bytes) throws CommandParseException {
         super(bytes);
-        value = getFloat(getValueBytes());
+        ChargeMode = ChargeMode.fromByte(bytes.get(3));
     }
+
+    // TBODO: ctors
+
 }

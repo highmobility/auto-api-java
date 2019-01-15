@@ -21,13 +21,14 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.ChargeMode;
+import com.highmobility.autoapi.property.ChargeModeProperty;
 import com.highmobility.autoapi.property.ChargePortState;
 import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
 import com.highmobility.autoapi.property.charging.DepartureTime;
 import com.highmobility.autoapi.property.charging.PlugType;
@@ -83,7 +84,7 @@ public class ChargeState extends CommandWithProperties {
     FloatProperty chargingRate;
     ChargePortState chargeChargePortState;
 
-    ChargeMode chargeMode;
+    ChargeModeProperty chargeMode;
 
     FloatProperty maxChargingCurrent;
     PlugType plugType;
@@ -169,7 +170,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The charge mode.
      */
-    @Nullable public ChargeMode getChargeMode() {
+    @Nullable public ChargeModeProperty getChargeMode() {
         return chargeMode;
     }
 
@@ -296,7 +297,7 @@ public class ChargeState extends CommandWithProperties {
                         chargeChargePortState = ChargePortState.fromByte(p.getValueByte());
                         return chargeChargePortState;
                     case CHARGE_MODE_IDENTIFIER:
-                        chargeMode = ChargeMode.fromByte(p.getValueByte());
+                        chargeMode = new ChargeModeProperty(p);
                         return chargeMode;
                     case MAX_CHARGING_CURRENT_IDENTIFIER:
                         maxChargingCurrent = new FloatProperty(p);
@@ -381,7 +382,7 @@ public class ChargeState extends CommandWithProperties {
         private FloatProperty chargingRate;
         private ChargePortState chargePortState;
 
-        private ChargeMode chargeMode;
+        private ChargeModeProperty chargeMode;
         private FloatProperty maxChargingCurrent;
         private PlugType plugType;
         private BooleanProperty chargingWindowChosen;
@@ -521,9 +522,10 @@ public class ChargeState extends CommandWithProperties {
          * @param chargeMode The charge mode.
          * @return The builder.
          */
-        public Builder setChargeMode(ChargeMode chargeMode) {
+        public Builder setChargeMode(ChargeModeProperty chargeMode) {
             this.chargeMode = chargeMode;
-            addProperty(new Property(CHARGE_MODE_IDENTIFIER, chargeMode.getByte()));
+            chargeMode.setIdentifier(CHARGE_MODE_IDENTIFIER);
+            addProperty(chargeMode);
             return this;
         }
 

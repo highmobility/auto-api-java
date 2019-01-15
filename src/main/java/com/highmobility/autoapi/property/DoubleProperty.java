@@ -41,8 +41,7 @@ public class DoubleProperty extends Property {
     public DoubleProperty(@Nullable Double value, @Nullable Calendar timestamp,
                           @Nullable PropertyFailure failure) {
         this(value);
-        this.timestamp = timestamp;
-        this.failure = failure;
+        setTimestampFailure(timestamp, failure);
     }
 
     public DoubleProperty(byte identifier, Double value) {

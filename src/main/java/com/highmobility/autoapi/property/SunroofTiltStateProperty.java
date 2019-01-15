@@ -21,41 +21,37 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.value.rooftop.SunroofTiltState;
 
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-/**
- * {@link #getValue()} is float 0-1. {@link #getValueByte()} is 0-100 int.
- */
-public class PercentageProperty extends Property {
-    Float value;
+public class SunroofTiltStateProperty extends Property {
+    SunroofTiltState sunroofTiltState;
 
-    /**
-     * @return Percentage between 0 and 1.
-     */
-    @Nullable public Float getValue() {
-        return value;
+    public SunroofTiltState getValue() {
+        return sunroofTiltState;
     }
 
-    public PercentageProperty(Float value) {
-        this((byte) 0x00, value);
+    public SunroofTiltStateProperty(SunroofTiltState sunroofTiltState) {
+        this((byte) 0x00, sunroofTiltState);
     }
 
-    public PercentageProperty(@Nullable Float value, @Nullable Calendar timestamp,
-                              @Nullable PropertyFailure failure) {
-        this(value);
+    public SunroofTiltStateProperty(@Nullable SunroofTiltState sunroofTiltState,
+                                    @Nullable Calendar timestamp,
+                                    @Nullable PropertyFailure failure) {
+        this(sunroofTiltState);
         setTimestampFailure(timestamp, failure);
     }
 
-    public PercentageProperty(byte identifier, Float value) {
-        super(identifier, value == null ? 0 : 1);
-        this.value = value;
-        if (value != null) bytes[3] = floatToIntPercentageByte(value);
+    public SunroofTiltStateProperty(byte identifier, SunroofTiltState sunroofTiltState) {
+        super(identifier, sunroofTiltState == null ? 0 : 1);
+        this.sunroofTiltState = sunroofTiltState;
+        if (sunroofTiltState != null) bytes[3] = sunroofTiltState.getByte();
     }
 
-    public PercentageProperty(Property p) throws CommandParseException {
+    public SunroofTiltStateProperty(Property p) throws CommandParseException {
         super(p);
         update(p, null, null, false);
     }
@@ -63,11 +59,14 @@ public class PercentageProperty extends Property {
     @Override
     public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
                           boolean propertyInArray) throws CommandParseException {
-        if (p != null) this.value = getUnsignedInt(p.getValueByte()) / 100f;
+        if (p != null) sunroofTiltState = SunroofTiltState.fromByte(p.get(3));
         return super.update(p, failure, timestamp, propertyInArray);
     }
 
-    public PercentageProperty(byte identifier) {
+    public SunroofTiltStateProperty(byte identifier) {
         super(identifier);
     }
+
+    // TBODO: ctors
+
 }

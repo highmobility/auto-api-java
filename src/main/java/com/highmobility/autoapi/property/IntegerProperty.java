@@ -52,16 +52,16 @@ public class IntegerProperty extends Property {
         this((byte) 0x00, value, 4);
     }
 
-    public IntegerProperty(@Nullable Integer value, @Nullable Calendar timestamp, @Nullable PropertyFailure failure) {
+    public IntegerProperty(@Nullable Integer value, @Nullable Calendar timestamp,
+                           @Nullable PropertyFailure failure) {
         this(value);
-        this.timestamp = timestamp;
-        this.failure = failure;
+        setTimestampFailure(timestamp, failure);
     }
 
     /**
      * Reset the value length. This will create a new base byte array if necessary.
      *
-     * @param identifier  The property identifier.
+     * @param identifier       The property identifier.
      * @param newIntegerLength The new length.
      */
     public void setIdentifier(byte identifier, int newIntegerLength) {

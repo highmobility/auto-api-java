@@ -11,7 +11,9 @@ import com.highmobility.autoapi.SeatsState;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.PropertyTimestamp;
+import com.highmobility.autoapi.property.seats.SeatLocation;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -24,38 +26,91 @@ import java.util.Calendar;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
 
+/*
+ * Timestamp + failure properties:
+ *
+ * property updated without failure or timestamp - every other test tests that.
+ * timestamp added to the parsed property.
+ * failure added to the base empty property. Base property bytes are not set.
+ * For multiple properties with same identifier, timestamps only added if additional data same.
+ * For single property for an identifier, can add without checking additional data.
+ */
 public class CommandTest {
     String parkingBrakeCommand = "00580101000101";
 
-    @Test public void failureProperty() {
+    @Test public void propertiesSortedWithUniversalPropertiesLast() {
+        Bytes bytes = new Bytes("002501" +
+                "A4000D11010A11220000000202000100" + // timestamp as first property
+                "01000164" +
+                "A5000D02000A54727920696e20343073" +
+                "02000201"
+        );
+
+        CommandWithProperties state = (CommandWithProperties) CommandResolver.resolve(bytes);
+        assertTrue(state.getProperties()[0].getPropertyIdentifier() < 3 &&
+                state.getProperties()[1].getPropertyIdentifier() < 3);
+
+        assertTrue(state.getProperties()[2].getPropertyIdentifier() < 0 &&
+                state.getProperties()[3].getPropertyIdentifier() < 0);
+    }
+
+    // MARK: PropertyFailure
+
+    @Test public void propertyFailureForSingleIdentifier() {
         // want to test parsing into the command. values are tested in property test.
         Bytes bytes = new Bytes("002501" +
                 "01000164" +
-                /*"02000100"*/  // << this failed
-                /*"03000101" +*/ // << this failed
+                /*"02000100"*/  // << open failed
+                /*"03000101" +*/ // << convertible roof failed
                 "04000102" +
                 "A5000D02000A54727920696e20343073" +
-                "A5000D03000A54727920696e20343073");
+                "A5000D03010A54727920696e20343073");
 
-        CommandWithProperties command = (CommandWithProperties) CommandResolver.resolve(bytes);
+        RooftopState command = (RooftopState) CommandResolver.resolve(bytes);
+
+        // failure in array
         assertTrue(command.getPropertyFailures().length == 2);
         assertTrue(command.getPropertyFailure((byte) 0x02) != null);
         assertTrue(command.getPropertyFailure((byte) 0x03) != null);
         assertTrue(command.getPropertyFailure((byte) 0x04) == null);
 
+        // failure in property
+        assertTrue(command.getOpenPercentage().getFailure().getFailureReason() == PropertyFailure.Reason.RATE_LIMIT);
+        assertTrue(command.getOpenPercentage().getValue() == null);
+        assertTrue(command.getConvertibleRoofState().getFailure().getFailureReason() == PropertyFailure.Reason.EXECUTION_TIMEOUT);
+        assertTrue(command.getConvertibleRoofState().getValue() == null);
+
         // TBODO:
     }
 
+    @Test public void propertyFailureForMultipleIdentifiers() {
+        // Cannot parse this to a property, because it will not exist. We dont create empty
+        // objects for all of the possible values.
+        Bytes bytes = new Bytes("005601" +
+                /*"0300020201" +
+                "0300020300" +*/
+                "A5000D02000A54727920696e20343073"); // this is a failure for seatbelt fastened.
+
+        SeatsState command = (SeatsState) CommandResolver.resolve(bytes);
+        assertTrue(command.getSeatBeltFastened(SeatLocation.REAR_LEFT) == null);
+        assertTrue(command.getPropertyFailure((byte) 0x02) != null);
+    }
+
+    // MARK: PropertyTimestamp
+
     @Test
-    public void testAddPropertyTimestamp() throws ParseException {
+    public void propertyTimestampParsedIntoArrayAndProperty() throws ParseException {
         // size 9 + full prop size
         String parkingStateProperty = "01000101";
         String propertyTimestamp = "A4000D11010A112200000001" +
                 parkingStateProperty;
         Bytes bytes = new Bytes(parkingBrakeCommand + propertyTimestamp);
 
+        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
+
         String expectedDate = "2017-01-10T17:34:00";
         Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
+        assertTrue(TestUtils.dateIsSameIgnoreTimezone(command.isActive().getTimestamp(), calendar));
 
         // TBODO:
         /*ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
@@ -65,18 +120,19 @@ public class CommandTest {
         assertTrue(TestUtils.bytesTheSame(state, bytes));*/
     }
 
-    @Test public void timestampInTheMiddle() throws ParseException {
+    @Test public void propertyTimestampInTheMiddleOfProperties() {
         Bytes bytes = new Bytes("002501" +
                 "01000164" +
-                "02000100" + "A4000D11010A11220000000202000100" +
-                "03000101" +
+                "02000100" + "A4000D11010A11220000000202000100" + // with additional data
+                "03000101" + "A4000911010A112200000003" + // without additional data
                 "04000102");
-        String expectedDate = "2017-01-10T17:34:00+0000";
-        Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
 
+        // timestamp in array
         RooftopState state = (RooftopState) CommandResolver.resolve(bytes);
-        Calendar timestamp = state.getPropertyTimestamp(state.getOpenPercentage()).getCalendar();
-        assertTrue(TestUtils.dateIsSame(timestamp, expectedDate));
+
+        // timestamp in property
+        assertTrue(state.getOpenPercentage().getTimestamp() != null);
+        assertTrue(state.getConvertibleRoofState().getTimestamp() != null);
 
         // TBODO:
         /*RooftopState.Builder builder = new RooftopState.Builder();
@@ -89,42 +145,50 @@ public class CommandTest {
     }
 
     @Test
-    public void testPropertyTimestampParsed() throws ParseException {
-        String parkingStateProperty = "01000101";
-        Bytes bytes =
-                new Bytes(parkingBrakeCommand + "A4000D11010A112200000001" + parkingStateProperty);
-        String expectedDate = "2017-01-10T17:34:00+0000";
-        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
+    public void propertyTimestampAdditionalDataUsedIfMultipleProperties() throws ParseException {
+        // Only the property with same additional data should have the timestamp
 
-        PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x01)[0];
-        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), expectedDate));
-        assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
-    }
-
-    @Test public void propertyTimestampWithField() throws ParseException {
-        String parkingStateProperty = "01000101";
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000D11010A112200000001" +
-                parkingStateProperty);
-        String expectedDate = "2017-01-10T17:34:00+0000";
-        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
-
-        PropertyTimestamp timestamp = command.getPropertyTimestamp(command.isActive());
-        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), expectedDate));
-        assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
-    }
-
-    @Test public void propertyTimestampWithObjectFromArray() throws ParseException {
         Bytes bytes = new Bytes("005601" +
                 "0200020201" +
                 "0200020300" + "A4000E11010A112200000002" + "0200020300" +
                 "0300020201" +
                 "0300020300");
-        SeatsState command = (SeatsState) CommandResolver.resolve(bytes);
-        String expectedDate = "2017-01-10T17:34:00+0000";
 
-        PropertyTimestamp timestamp = command.getPropertyTimestamp(command.getPersonsDetected()[1]);
-        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), expectedDate));
+    /*
+    REAR_RIGHT((byte) 0x02),
+    REAR_LEFT((byte) 0x03),
+    */
+        SeatsState command = (SeatsState) CommandResolver.resolve(bytes);
+        assertTrue(command.getPersonDetection(SeatLocation.REAR_LEFT).getTimestamp() != null);
+        assertTrue(command.getPersonDetection(SeatLocation.REAR_RIGHT).getTimestamp() == null);
     }
+
+    @Test public void propertyTimestamp() throws ParseException {
+        // size 9 + full prop size
+        String parkingStateProperty = "01000101";
+
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000D11010A112200000001" +
+                parkingStateProperty);
+        String expectedDate = "2017-01-10T17:34:00+0000";
+        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
+
+        Calendar timestamp = command.isActive().getTimestamp();
+        assertTrue(TestUtils.dateIsSame(timestamp, expectedDate));
+
+        assertTrue(command.getPropertyTimestamps((byte) 0x01)[0].getAdditionalData().equals(parkingStateProperty));
+    }
+
+    @Test public void propertyTimestampNoData() throws ParseException {
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000911010A112200000004");
+        String expectedDate = "2017-01-10T17:34:00+0000";
+        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
+
+        PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];
+        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), expectedDate));
+        assertTrue(timestamp.getAdditionalData().getLength() == 0);
+    }
+
+    // MARK: Universal Properties
 
     @Test public void invalidProperty() {
         // test that invalid gasflapstate just sets the property to null and keeps the base property
@@ -188,30 +252,6 @@ public class CommandTest {
         assertTrue(state.equals(bytes));
     }
 
-    @Test public void propertyTimestamp() throws ParseException {
-        // size 9 + full prop size
-        String parkingStateProperty = "01000101";
-
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000D11010A112200000004" +
-                parkingStateProperty);
-        String expectedDate = "2017-01-10T17:34:00+0000";
-        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
-
-        PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];
-        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), expectedDate));
-        assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
-    }
-
-    @Test public void propertyTimestampNoData() throws ParseException {
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000911010A112200000004");
-        String expectedDate = "2017-01-10T17:34:00+0000";
-        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
-
-        PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];
-        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), expectedDate));
-        assertTrue(timestamp.getAdditionalData().getLength() == 0);
-    }
-
     @Test public void signedBytes() {
         CommandWithProperties command = getCommandWithSignature();
         Bytes signedBytes = command.getSignedBytes();
@@ -254,7 +294,7 @@ public class CommandTest {
         assertTrue(command.getClass() == RooftopState.class);
         RooftopState state = (RooftopState) command;
         assertTrue(state.getDimmingPercentage().getValue() == .01f);
-        assertTrue(state.getOpenPercentage() == null);
+        assertTrue(state.getOpenPercentage().getValue() == null);
         assertTrue(state.getProperties().length == 2);
 
         boolean foundUnknownProperty = false;

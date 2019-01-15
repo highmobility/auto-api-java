@@ -21,53 +21,53 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.value.rooftop.ConvertibleRoofState;
 
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-/**
- * {@link #getValue()} is float 0-1. {@link #getValueByte()} is 0-100 int.
- */
-public class PercentageProperty extends Property {
-    Float value;
+public class ConvertibleRoofStateProperty extends Property {
+    ConvertibleRoofState convertibleRoofState;
 
-    /**
-     * @return Percentage between 0 and 1.
-     */
-    @Nullable public Float getValue() {
-        return value;
+    public ConvertibleRoofState getValue() {
+        return convertibleRoofState;
     }
 
-    public PercentageProperty(Float value) {
-        this((byte) 0x00, value);
+    public ConvertibleRoofStateProperty(ConvertibleRoofState convertibleRoofState) {
+        this((byte) 0x00, convertibleRoofState);
     }
 
-    public PercentageProperty(@Nullable Float value, @Nullable Calendar timestamp,
-                              @Nullable PropertyFailure failure) {
-        this(value);
+    public ConvertibleRoofStateProperty(@Nullable ConvertibleRoofState convertibleRoofStateProperty, @Nullable Calendar timestamp,
+                                        @Nullable PropertyFailure failure) {
+        this(convertibleRoofStateProperty);
         setTimestampFailure(timestamp, failure);
     }
 
-    public PercentageProperty(byte identifier, Float value) {
-        super(identifier, value == null ? 0 : 1);
-        this.value = value;
-        if (value != null) bytes[3] = floatToIntPercentageByte(value);
+    public ConvertibleRoofStateProperty(byte identifier) {
+        super(identifier);
     }
 
-    public PercentageProperty(Property p) throws CommandParseException {
+    public ConvertibleRoofStateProperty(Property p) throws CommandParseException {
         super(p);
         update(p, null, null, false);
+    }
+
+    public ConvertibleRoofStateProperty(byte identifier,
+                                        ConvertibleRoofState convertibleRoofState) {
+        super(identifier, convertibleRoofState == null ? 0 : 1);
+        this.convertibleRoofState = convertibleRoofState;
+        if (convertibleRoofState != null) bytes[3] = convertibleRoofState.getByte();
     }
 
     @Override
     public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
                           boolean propertyInArray) throws CommandParseException {
-        if (p != null) this.value = getUnsignedInt(p.getValueByte()) / 100f;
+        if (p != null) convertibleRoofState = ConvertibleRoofState.fromByte(p.get(3));
         return super.update(p, failure, timestamp, propertyInArray);
     }
 
-    public PercentageProperty(byte identifier) {
-        super(identifier);
-    }
+    // TBODO: ctors
+
 }
+

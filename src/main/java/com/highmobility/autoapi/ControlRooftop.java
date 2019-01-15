@@ -23,8 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Position;
-import com.highmobility.autoapi.rooftop.ConvertibleRoofState;
-import com.highmobility.autoapi.rooftop.SunroofTiltState;
+import com.highmobility.autoapi.property.value.rooftop.ConvertibleRoofState;
+import com.highmobility.autoapi.property.value.rooftop.SunroofTiltState;
 
 import java.util.ArrayList;
 import java.util.List;

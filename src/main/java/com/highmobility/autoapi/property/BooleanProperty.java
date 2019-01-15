@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.value.Bytes;
+import com.highmobility.autoapi.CommandParseException;
 
 import java.util.Calendar;
 
@@ -33,6 +33,8 @@ public class BooleanProperty extends Property {
         return value;
     }
 
+    // MARK: builder ctor
+
     public BooleanProperty(Boolean value) {
         this((byte) 0x00, value);
     }
@@ -40,11 +42,14 @@ public class BooleanProperty extends Property {
     public BooleanProperty(@Nullable Boolean value, @Nullable Calendar timestamp,
                            @Nullable PropertyFailure failure) {
         this(value);
-        this.timestamp = timestamp;
-        this.failure = failure;
+        setTimestampFailure(timestamp, failure);
     }
 
-    // TODO: this should be internal
+    // TODO: these should be internal
+
+    public BooleanProperty() {
+        super(unknownBytes);
+    }
 
     public BooleanProperty(byte identifier, Boolean value) {
         super(identifier, value == null ? 0 : 1);
@@ -52,11 +57,19 @@ public class BooleanProperty extends Property {
         if (value != null) bytes[3] = Property.boolToByte(value);
     }
 
-    public BooleanProperty(Bytes bytes) {
-        super(bytes);
-        if (getValueByte() != null) value = Property.getBool(getValueByte());
+    // MARK: Android ctor
+
+    public BooleanProperty(Property property) throws CommandParseException {
+        super(property);
+        update(property, null, null, false);
     }
 
     // TODO: ^^ should be internal
 
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) this.value = getBool(p.getValueByte());
+        return super.update(p, failure, timestamp, propertyInArray);
+    }
 }

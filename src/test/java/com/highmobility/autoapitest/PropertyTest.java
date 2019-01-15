@@ -1,10 +1,14 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.CommandResolver;
+import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PositionProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.value.Bytes;
 
@@ -17,6 +21,11 @@ import java.util.Calendar;
 import static junit.framework.TestCase.assertTrue;
 
 public class PropertyTest {
+    Calendar timestamp = TestUtils.getCalendar("2018-01-10T16:32:05+0000");
+
+    public PropertyTest() throws ParseException {
+    }
+
     @Test public void propertyLength() {
         IntegerProperty property = new IntegerProperty((byte) 0x01, 2, 2);
         assertTrue(Arrays.equals(property.getByteArray(), new byte[]{0x01, 0x00, 0x02, 0x00,
@@ -77,8 +86,6 @@ public class PropertyTest {
     }
 
     @Test public void timeStampFailureSet() throws ParseException {
-        Calendar timestamp = TestUtils.getCalendar("2018-01-10T16:32:05+0000");
-
         PropertyFailure failure = new PropertyFailure(
                 (byte) 0x03,
                 PropertyFailure.Reason.EXECUTION_TIMEOUT,
@@ -87,9 +94,40 @@ public class PropertyTest {
 
         BooleanProperty property = new BooleanProperty(null, timestamp, failure);
         assertBaseBytesOk(property);
-        assertTrue(property.getTimestamp() == timestamp);
+        assertTrue(TestUtils.dateIsSameIgnoreTimezone(property.getTimestamp(), timestamp));
         assertTrue(property.getFailure() == failure);
     }
 
+    @Test public void timeStampFailureNotNulledSet() throws CommandParseException {
+        PositionProperty p = new PositionProperty();
+        p.update(null, new PropertyFailure((byte) 0x00, PropertyFailure.Reason.EXECUTION_TIMEOUT,
+                ""), null, false);
+        p.update(null, null, null, false);
+        assertTrue(p.getFailure() != null);
+    }
 
+    @Test
+    public void propertyTimestampParsed() throws ParseException {
+        String parkingStateProperty = "01000101";
+        PropertyTimestamp timestamp = new PropertyTimestamp(new Bytes( "A4000D11010A112200000001" + parkingStateProperty).getByteArray());
+        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), "2017-01-10T17:34:00+0000"));
+        assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
+    }
+
+    /*@Test public void settingPropertyAfterFailureAddsToFailure() throws CommandParseException {
+        PositionProperty p = new PositionProperty();
+        p.update(null,
+                new PropertyFailure(PropertyFailure.Reason.EXECUTION_TIMEOUT, ""),
+                new PropertyTimestamp(timestamp));
+
+        p.update(new Property(new Bytes("02000101")), null, null);
+        assertTrue(p.getFailure().getFailedPropertyIdentifier() == 0x02);
+        // ^^ this is actually not an use case. In android properties are full.
+        // In builder setIdentifier method is used.
+
+        // update and setIdentifier should be protected
+
+        // TODO: 2019-01-11 test for builders that setIdentifier sets the failure and
+        //  timestamp identifier.
+    }*/
 }

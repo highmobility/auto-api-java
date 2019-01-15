@@ -56,7 +56,7 @@ public class PropertyTimestamp extends Property {
     /**
      * @return Additional data. Full property bytes if exists.
      */
-    public Bytes getAdditionalData() {
+    @Nullable public Bytes getAdditionalData() {
         return additionalData;
     }
 
@@ -81,9 +81,17 @@ public class PropertyTimestamp extends Property {
         ByteUtils.setBytes(bytes, Property.calendarToBytes(timestamp), 3);
         bytes[11] = timestampPropertyIdentifier;
         if (additionalData != null) ByteUtils.setBytes(bytes, additionalData.getByteArray(), 12);
+
+        this.timestamp = timestamp;
+        this.additionalData = additionalData;
+        this.timestampPropertyIdentifier = timestampPropertyIdentifier;
     }
 
     public PropertyTimestamp(Calendar timestamp, Property property) {
         this(timestamp, property.getPropertyIdentifier(), property);
+    }
+
+    public PropertyTimestamp(Calendar timestamp) {
+        this(timestamp, (byte) 0x00, null);
     }
 }

@@ -41,7 +41,7 @@ public class StartStopState extends CommandWithProperties {
         return active;
     }
 
-    StartStopState(byte[] bytes) {
+    StartStopState(byte[] bytes) throws CommandParseException {
         super(bytes);
 
         Property p = getProperty((byte) 0x01);

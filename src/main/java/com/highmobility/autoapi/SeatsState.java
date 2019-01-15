@@ -85,17 +85,32 @@ public class SeatsState extends CommandWithProperties {
         ArrayList<PersonDetected> personsDetected = new ArrayList<>();
         ArrayList<SeatBeltFastened> seatBeltsFastened = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
-                switch (p.getPropertyIdentifier()) {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext((identifier, p, timestamp, failure) -> {
+                switch (identifier) {
                     case PersonDetected.IDENTIFIER:
-                        PersonDetected d = new PersonDetected(p.getByteArray());
-                        personsDetected.add(d);
-                        return d;
+                        if (p != null) {
+                            // if property, create new property.
+                            PersonDetected d = new PersonDetected(p);
+                            personsDetected.add(d);
+                            return d;
+                        } else {
+                            // find the property, update
+                            for (PersonDetected personDetected : personsDetected) {
+                                personDetected.update(p, timestamp, failure, true);
+                            }
+                        }
+                        // if failure, ignore
                     case SeatBeltFastened.IDENTIFIER:
-                        SeatBeltFastened f = new SeatBeltFastened(p.getByteArray());
-                        seatBeltsFastened.add(f);
-                        return f;
+                        if (p != null) {
+                            SeatBeltFastened f = new SeatBeltFastened(p);
+                            seatBeltsFastened.add(f);
+                            return f;
+                        } else {
+                            for (SeatBeltFastened seatBeltFastened : seatBeltsFastened) {
+                                seatBeltFastened.update(p, timestamp, failure, true);
+                            }
+                        }
                 }
 
                 return null;
@@ -114,7 +129,6 @@ public class SeatsState extends CommandWithProperties {
         super(builder);
         personsDetected = builder.personsDetected.toArray(new PersonDetected[0]);
         seatBeltsFastened = builder.seatBeltsFastened.toArray(new SeatBeltFastened[0]);
-
     }
 
     public static final class Builder extends CommandWithProperties.Builder {

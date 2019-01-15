@@ -18,7 +18,7 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.rooftop;
+package com.highmobility.autoapi.property.value.rooftop;
 
 import com.highmobility.autoapi.CommandParseException;
 

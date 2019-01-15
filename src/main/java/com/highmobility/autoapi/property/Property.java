@@ -21,6 +21,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -30,6 +31,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -47,22 +49,23 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 public class Property extends Bytes {
     public static final int CALENDAR_SIZE = 8;
     // set when bytes do not exist
-    private static final byte[] unknownBytes = new byte[]{0x00, 0x00, 0x00};
+    protected static final byte[] unknownBytes = new byte[]{0x00, 0x00, 0x00};
 
-    protected Calendar timestamp;
+    protected PropertyTimestamp timestamp;
     protected PropertyFailure failure;
 
     /**
      * @return The timestamp of the property.
      */
-    public Calendar getTimestamp() {
-        return timestamp;
+    @Nullable public Calendar getTimestamp() {
+        if (timestamp == null) return null;
+        return timestamp.getCalendar();
     }
 
     /**
      * @return The failure of the property.
      */
-    public PropertyFailure getFailure() {
+    @Nullable public PropertyFailure getFailure() {
         return failure;
     }
 
@@ -106,6 +109,10 @@ public class Property extends Bytes {
         this.bytes = bytes;
     }
 
+    public Property(byte identifier) {
+        this(identifier, 0);
+    }
+
     public int getValueLength() {
         return Property.getUnsignedInt(bytes, 1, 2);
     }
@@ -137,6 +144,11 @@ public class Property extends Bytes {
         bytes[0] = identifier;
     }
 
+    protected void setTimestampFailure(Calendar timestamp, PropertyFailure failure) {
+        if (timestamp != null) this.timestamp = new PropertyTimestamp(timestamp);
+        this.failure = failure;
+    }
+
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
@@ -160,6 +172,39 @@ public class Property extends Bytes {
 
     public byte getPropertyIdentifier() {
         return bytes[0];
+    }
+
+    /**
+     * @param propertyInArray Whether there could be multiple properties with this identifier.
+     * @return true if property updated.
+     */
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (failure != null && failure.getFailedPropertyIdentifier() == getPropertyIdentifier()) {
+            this.failure = failure;
+            return true;
+        }
+
+        /* If property in array, need to check the additional data. Otherwise can just use the
+        identifier because property is unique. */
+        if (timestamp != null &&
+                ((propertyInArray && timestamp.getAdditionalData() != null && this.equals(timestamp.getAdditionalData())) ||
+                        (propertyInArray == false && timestamp.getTimestampPropertyIdentifier() == getPropertyIdentifier()))) {
+            // we expect that property bytes are set before failure/timestamp.
+            this.timestamp = timestamp;
+            return true;
+        }
+
+        if (p != null) {
+            this.bytes = p.getByteArray();
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isUniversalProperty() {
+        return this instanceof PropertyFailure || this instanceof PropertyTimestamp;
     }
 
     // helper methods
@@ -436,5 +481,17 @@ public class Property extends Bytes {
         bytes[7] = bytesOffset[1];
 
         return bytes;
+    }
+
+    public static class SortForParsing implements Comparator<Property> {
+        public int compare(Property a, Property b) {
+            // -1 before, 1 after
+            if (a.getPropertyIdentifier() != PropertyFailure.IDENTIFIER &&
+                    a.getPropertyIdentifier() != PropertyTimestamp.IDENTIFIER) {
+                return -1;
+            }
+
+            return 0;
+        }
     }
 }

@@ -22,6 +22,8 @@ package com.highmobility.autoapi.property.seats;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyTimestamp;
 
 public class PersonDetected extends Property {
     public static final byte IDENTIFIER = 0x02;
@@ -51,11 +53,18 @@ public class PersonDetected extends Property {
         this.bytes[4] = Property.boolToByte(detected);
     }
 
-    public PersonDetected(byte[] bytes) throws CommandParseException {
+    public PersonDetected(Property bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 5) throw new CommandParseException();
+        update(bytes, null, null, false);
+    }
 
-        this.seatLocation = SeatLocation.fromByte(bytes[3]);
-        this.detected = Property.getBool(bytes[4]);
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                       boolean propertyInArray) throws CommandParseException {
+        if (p != null) {
+            this.seatLocation = SeatLocation.fromByte(p.get(3));
+            this.detected = Property.getBool(p.get(4));
+        }
+
+        return super.update(p, failure, timestamp, propertyInArray);
     }
 }

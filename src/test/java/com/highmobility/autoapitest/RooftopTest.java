@@ -5,10 +5,13 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlRooftop;
 import com.highmobility.autoapi.GetRooftopState;
 import com.highmobility.autoapi.RooftopState;
+import com.highmobility.autoapi.property.ConvertibleRoofStateProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.PositionProperty;
+import com.highmobility.autoapi.property.SunroofTiltStateProperty;
 import com.highmobility.autoapi.property.value.Position;
-import com.highmobility.autoapi.rooftop.ConvertibleRoofState;
-import com.highmobility.autoapi.rooftop.SunroofTiltState;
+import com.highmobility.autoapi.property.value.rooftop.ConvertibleRoofState;
+import com.highmobility.autoapi.property.value.rooftop.SunroofTiltState;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -28,16 +31,9 @@ public class RooftopTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-
         assertTrue(command.is(RooftopState.TYPE));
         RooftopState state = (RooftopState) command;
-
-        assertTrue(command.getClass() == RooftopState.class);
-        assertTrue(state.getDimmingPercentage().getValue() == 1f);
-        assertTrue(state.getOpenPercentage().getValue() == 0f);
-        assertTrue(state.getConvertibleRoofState() == ConvertibleRoofState.OPEN);
-        assertTrue(state.getSunroofTiltState() == SunroofTiltState.HALF_TILTED);
-        assertTrue(state.getSunroofPosition() == Position.OPEN);
+        testState(state);
     }
 
     @Test
@@ -113,22 +109,26 @@ public class RooftopTest {
         RooftopState.Builder builder = new RooftopState.Builder();
         builder.setDimmingPercentage(new PercentageProperty(1f));
         builder.setOpenPercentage(new PercentageProperty(0f));
-        builder.setConvertibleRoofState(ConvertibleRoofState.OPEN);
-        builder.setSunroofTiltState(SunroofTiltState.HALF_TILTED);
-        builder.setSunroofPosition(Position.OPEN);
+        builder.setConvertibleRoofState(new ConvertibleRoofStateProperty(ConvertibleRoofState.OPEN));
+        builder.setSunroofTiltState(new SunroofTiltStateProperty(SunroofTiltState.HALF_TILTED));
+        builder.setSunroofPosition(new PositionProperty(Position.OPEN));
 
         RooftopState state = builder.build();
+        testState(state);
+    }
+
+    private void testState(RooftopState state) {
         assertTrue(TestUtils.bytesTheSame(state, bytes));
         assertTrue(state.getDimmingPercentage().getValue() == 1f);
         assertTrue(state.getOpenPercentage().getValue() == 0f);
-        assertTrue(state.getConvertibleRoofState() == ConvertibleRoofState.OPEN);
-        assertTrue(state.getSunroofTiltState() == SunroofTiltState.HALF_TILTED);
-        assertTrue(state.getSunroofPosition() == Position.OPEN);
+        assertTrue(state.getConvertibleRoofState().getValue() == ConvertibleRoofState.OPEN);
+        assertTrue(state.getSunroofTiltState().getValue() == SunroofTiltState.HALF_TILTED);
+        assertTrue(state.getSunroofPosition().getValue() == Position.OPEN);
     }
 
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("002501");
         RooftopState state = (RooftopState) CommandResolver.resolve(bytes);
-        assertTrue(state.getOpenPercentage() == null);
+        assertTrue(state.getOpenPercentage().getValue() == null);
     }
 }

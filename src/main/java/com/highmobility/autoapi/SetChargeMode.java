@@ -20,8 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ChargeMode;
+
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.charging.ChargeMode;
 
 /**
  * Set the charge mode of the car.
@@ -49,7 +50,6 @@ public class SetChargeMode extends CommandWithProperties {
         if (chargeMode == ChargeMode.IMMEDIATE) throw new IllegalArgumentException();
         this.chargeMode = chargeMode;
     }
-
 
     SetChargeMode(byte[] bytes) throws CommandParseException {
         super(bytes);

@@ -32,7 +32,7 @@ public class ParkingBrakeState extends CommandWithProperties {
 
     private static final byte ACTIVE_IDENTIFIER = 0x01;
 
-    BooleanProperty active;
+    BooleanProperty active = new BooleanProperty();
 
     /**
      * @return Whether parking brake is active.
@@ -44,10 +44,10 @@ public class ParkingBrakeState extends CommandWithProperties {
     ParkingBrakeState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == ACTIVE_IDENTIFIER) {
-                    active = new BooleanProperty(p);
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext((identifier, p, failure, timestamp) -> {
+                if (identifier == ACTIVE_IDENTIFIER) {
+                    active.update(p, failure, timestamp, false);
                     return active;
                 }
 

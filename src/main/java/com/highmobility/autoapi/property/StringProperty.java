@@ -77,8 +77,7 @@ public class StringProperty extends Property {
     public StringProperty(@Nullable String value, @Nullable Calendar timestamp,
                           @Nullable PropertyFailure failure) {
         this(value);
-        this.timestamp = timestamp;
-        this.failure = failure;
+        setTimestampFailure(timestamp, failure);
     }
 
     public static Property[] getProperties(String value, byte identifier) {
