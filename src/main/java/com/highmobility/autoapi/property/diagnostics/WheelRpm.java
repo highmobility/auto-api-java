@@ -22,8 +22,11 @@ package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
+
+import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
@@ -34,6 +37,12 @@ public class WheelRpm extends Property {
         return value;
     }
 
+    public WheelRpm(@Nullable Value value, @Nullable Calendar timestamp,
+                    @Nullable PropertyFailure failure) {
+        this(value.getTireLocation(), value.getRpm());
+        setTimestampFailure(timestamp, failure);
+    }
+
     public WheelRpm(TireLocation tireLocation, int rpm) {
         super((byte) 0x00, 3);
         value = new Value(tireLocation, rpm);
@@ -41,9 +50,15 @@ public class WheelRpm extends Property {
         ByteUtils.setBytes(bytes, Property.intToBytes(rpm, 2), 4);
     }
 
-    public WheelRpm(Property bytes) throws CommandParseException {
-        super(bytes);
-        value = new Value(bytes);
+    public WheelRpm(Property p) throws CommandParseException {
+        super(p);
+        update(p);
+    }
+
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 3) value = new Value(p);
+        return this;
     }
 
     public static class Value {
