@@ -48,13 +48,12 @@ public class CalendarProperty extends Property {
 
     public CalendarProperty(Property p) throws CommandParseException {
         super(p);
-        update(p, null, null, false);
+        update(p);
     }
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) calendar = Property.getCalendar(p.getValueBytes());
-        return super.update(p, failure, timestamp, propertyInArray);
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 8) calendar = Property.getCalendar(p.getValueBytes());
+        return this;
     }
 }

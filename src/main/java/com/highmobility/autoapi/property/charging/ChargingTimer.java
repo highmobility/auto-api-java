@@ -23,7 +23,6 @@ package com.highmobility.autoapi.property.charging;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.utils.ByteUtils;
 
 import java.util.Calendar;
@@ -66,17 +65,15 @@ public class ChargingTimer extends Property {
 
     public ChargingTimer(Property p) throws CommandParseException {
         super(p);
-        update(p, null, null, false);
+        update(p);
     }
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) {
-            if (bytes.length < 12) throw new CommandParseException();
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 2) {
             value = new Value(bytes);
         }
-        return super.update(p, failure, timestamp, propertyInArray);
+        return this;
     }
 
     public static class Value {

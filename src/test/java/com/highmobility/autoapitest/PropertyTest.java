@@ -98,14 +98,6 @@ public class PropertyTest {
         assertTrue(property.getFailure() == failure);
     }
 
-    @Test public void timeStampFailureNotNulledSet() throws CommandParseException {
-        PositionProperty p = new PositionProperty();
-        p.update(null, new PropertyFailure((byte) 0x00, PropertyFailure.Reason.EXECUTION_TIMEOUT,
-                ""), null, false);
-        p.update(null, null, null, false);
-        assertTrue(p.getFailure() != null);
-    }
-
     @Test
     public void propertyTimestampParsed() throws ParseException {
         String parkingStateProperty = "01000101";

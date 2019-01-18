@@ -24,7 +24,6 @@ import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
@@ -255,84 +254,56 @@ public class ChargeState extends CommandWithProperties {
         ArrayList<ChargingTimer> timers = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext((identifier, p, timestamp, failure) -> {
-                switch (identifier) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case ACTIVE_STATE_IDENTIFIER:
-                        activeState.update(p, timestamp, failure, false);
-                        return activeState;
+                        return activeState.update(p);
                     case ESTIMATED_RANGE_IDENTIFIER:
-                        estimatedRange.update(p, timestamp, failure, false);
-                        return estimatedRange;
+                        return estimatedRange.update(p);
                     case BATTERY_LEVEL_IDENTIFIER:
-                        batteryLevel.update(p, timestamp, failure, false);
-                        return batteryLevel;
+                        return batteryLevel.update(p);
                     case BATTERY_CURRENT_AC_IDENTIFIER:
-                        batteryCurrentAC.update(p, timestamp, failure, false);
-                        return batteryCurrentAC;
+                        return batteryCurrentAC.update(p);
                     case BATTERY_CURRENT_DC_IDENTIFIER:
-                        batteryCurrentDC.update(p, timestamp, failure, false);
-                        return batteryCurrentDC;
+                        return batteryCurrentDC.update(p);
                     case CHARGER_VOLTAGE_AC_IDENTIFIER:
-                        chargerVoltageAC.update(p, timestamp, failure, false);
-                        return chargerVoltageAC;
+                        return chargerVoltageAC.update(p);
                     case CHARGER_VOLTAGE_DC_IDENTIFIER:
-                        chargerVoltageDC.update(p, timestamp, failure, false);
-                        return chargerVoltageDC;
+                        return chargerVoltageDC.update(p);
                     case CHARGE_LIMIT_IDENTIFIER:
-                        chargeLimit.update(p, timestamp, failure, false);
-                        return chargeLimit;
+                        return chargeLimit.update(p);
                     case TIME_TO_COMPLETE_CHARGE_IDENTIFIER:
-                        timeToCompleteCharge.update(p, timestamp, failure, false);
-                        return timeToCompleteCharge;
+                        return timeToCompleteCharge.update(p);
                     case CHARGING_RATE_IDENTIFIER:
-                        chargingRate.update(p, timestamp, failure, false);
-                        return chargingRate;
+                        return chargingRate.update(p);
                     case CHARGE_PORT_STATE_IDENTIFIER:
-                        chargePortState.update(p, timestamp, failure, false);
-                        return chargePortState;
+                        return chargePortState.update(p);
                     case CHARGE_MODE_IDENTIFIER:
-                        chargeMode.update(p, timestamp, failure, false);
-                        return chargeMode;
+                        return chargeMode.update(p);
                     case MAX_CHARGING_CURRENT_IDENTIFIER:
-                        maxChargingCurrent.update(p, timestamp, failure, false);
-                        return maxChargingCurrent;
+                        return maxChargingCurrent.update(p);
                     case PLUG_TYPE_IDENTIFIER:
-                        plugType.update(p, timestamp, failure, false);
-                        return plugType;
+                        return plugType.update(p);
                     case CHARGING_WINDOW_CHOSEN_IDENTIFIER:
-                        chargingWindowChosen.update(p, timestamp, failure, false);
-                        return chargingWindowChosen;
+                        return chargingWindowChosen.update(p);
                     case DEPARTURE_TIMES_IDENTIFIER:
-                        if (p != null) {
-                            DepartureTime time = new DepartureTime(p);
-                            departureTimes.add(time);
-                            return time;
-                        } else {
-                            return Property.update(departureTimes, p, timestamp, failure);
-                        }
+                        DepartureTime time = new DepartureTime(p);
+                        departureTimes.add(time);
+                        return time;
                     case REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER:
-                        if (p != null) {
-                            ReductionTime time = new ReductionTime(p);
-                            reductionOfChargingCurrentTimes.add(time);
-                            return time;
-                        } else {
-                            return Property.update(reductionOfChargingCurrentTimes, p,
-                                    timestamp, failure);
-                        }
+                        ReductionTime time2 = new ReductionTime(p);
+                        reductionOfChargingCurrentTimes.add(time2);
+                        return time2;
                     case BATTERY_TEMPERATURE_IDENTIFIER:
-                        batteryTemperature.update(p, timestamp, failure, false);
+                        batteryTemperature.update(p);
                         return batteryTemperature;
                     case PLUGGED_IN_IDENTIFIER:
-                        pluggedIn.update(p, timestamp, failure, false);
+                        pluggedIn.update(p);
                         return pluggedIn;
                     case TIMER_IDENTIFIER:
-                        if (p != null) {
-                            ChargingTimer time = new ChargingTimer(p);
-                            timers.add(time);
-                            return time;
-                        } else {
-                            return Property.update(timers, p, timestamp, failure);
-                        }
+                        ChargingTimer time3 = new ChargingTimer(p);
+                        timers.add(time3);
+                        return time3;
                 }
 
                 return null;

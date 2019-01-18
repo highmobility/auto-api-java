@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
 public class CommandWithProperties extends Command {
     /*
     Properties logic:
-    * Empty properties are always created in child classes with correct identifier but 0x00 bytes.
+    * Empty properties are always created in subclasses with correct identifier but 0x00 bytes.
     These will not be replaced in base properties.
 
     * The empty property will be updated with property, timestamp and failure. If with the real
@@ -287,20 +287,6 @@ public class CommandWithProperties extends Command {
         this.propertyFailures = propertyFailures.toArray(new PropertyFailure[0]);
         this.propertyTimestamps = propertyTimestamps.toArray(new PropertyTimestamp[0]);
 
-        for (int i = 0; i < propertyFailures.size(); i++) {
-            PropertyFailure failure = propertyFailures.get(i);
-            // TODO: 2019-01-18
-            // create empty property with the identifier.
-            
-        }
-
-        for (int i = 0; i < propertyTimestamps.size(); i++) {
-            PropertyTimestamp timestamp = propertyTimestamps.get(i);
-            // TODO: 2019-01-18
-            // match the timestamp to a property
-
-        }
-
         // iterator is used by subclass
         propertiesIterator = new PropertiesIterator();
         propertiesIterator2 = new PropertiesIterator2();
@@ -311,6 +297,32 @@ public class CommandWithProperties extends Command {
         PropertyTimestamp timestamp = new PropertyTimestamp(property.getByteArray());
         properties[index] = timestamp;
         propertyTimestamps.add(timestamp);
+
+        // match the timestamp to a property
+
+        // find if there are multiple properties with this identifier
+        ArrayList<Property> propertiesForTimestamps = new ArrayList<>();
+        for (int i = 0; i < properties.length; i++) {
+            Property p = properties[i];
+            if (p.isUniversalProperty() == false &&
+                    p.getPropertyIdentifier() == timestamp.getTimestampPropertyIdentifier()) {
+                propertiesForTimestamps.add(p);
+            }
+        }
+
+        // if single property, add the timestamp
+        if (propertiesForTimestamps.size() == 1) {
+            propertiesForTimestamps.get(0).setPropertyTimestamp(timestamp);
+        } else if (propertiesForTimestamps.size() > 1 && timestamp.getAdditionalData() != null) {
+            // if multiple properties, check the additional data
+            for (int i = 0; i < propertiesForTimestamps.size(); i++) {
+                Property p = propertiesForTimestamps.get(i);
+                if (p.equals(timestamp.getAdditionalData())) {
+                    p.setPropertyTimestamp(timestamp);
+                    break;
+                }
+            }
+        }
     }
 
     private void addFailure(Property property, int index,
@@ -411,6 +423,11 @@ public class CommandWithProperties extends Command {
 
         public void parseNext(PropertyIteration next) {
             Property nextProperty = next();
+
+            while (nextProperty.isUniversalProperty()) {
+                nextProperty = next();
+            }
+
             try {
                 Object parsedProperty = next.iterate(nextProperty);
                 if (parsedProperty != null) {
@@ -475,32 +492,34 @@ public class CommandWithProperties extends Command {
         public void parseNext(PropertyIteration2 next) {
             Property nextProperty = next();
 
-            byte propertyIdentifier;
-            PropertyFailure failure = null;
-            PropertyTimestamp timestamp = null;
+            while (nextProperty instanceof PropertyTimestamp && hasNext()) {
+                nextProperty = next();
+            }
 
             if (nextProperty instanceof PropertyFailure) {
-                failure = (PropertyFailure) nextProperty;
-                propertyIdentifier = failure.getFailedPropertyIdentifier();
-                nextProperty = null;
-            } else if (nextProperty instanceof PropertyTimestamp) {
-                timestamp = (PropertyTimestamp) nextProperty;
-                propertyIdentifier = timestamp.getTimestampPropertyIdentifier();
-                nextProperty = null;
-            } else {
-                propertyIdentifier = nextProperty.getPropertyIdentifier();
+                // just create temp property with propertiesIterator. So the fake
+                // empty property is not added to properties array.
+                // create empty property with the identifier.
+                try {
+                    PropertyFailure failure = (PropertyFailure) nextProperty;
+                    Property fakeProperty = new Property(failure.getFailedPropertyIdentifier());
+                    fakeProperty.setPropertyFailure(failure);
+                    next.iterate(fakeProperty);
+                } catch (Exception e) {
+                    nextProperty.printFailedToParse(e);
+                }
+                return;
             }
 
             try {
-                Object parsedProperty = next.iterate(propertyIdentifier, nextProperty, failure,
-                        timestamp);
+                Object parsedProperty = next.iterate(nextProperty);
                 // failure and timestamp are separate properties and should be retained in base
                 // properties array
-                if (parsedProperty != null && failure == null && timestamp == null) {
+                if (parsedProperty != null) {
                     // replace the base property with parsed one
                     properties[currentIndex - 1] = (Property) parsedProperty;
 
-                    // TODO: 2019-01-11 is this necessary??
+                    // TODO: 2019-01-11 delete
                     // try to match a the property timestamp to the the property
                     for (PropertyTimestamp propertyTimestamp : propertyTimestamps) {
                         if (propertyTimestamp.getAdditionalData().equals(nextProperty)) {
@@ -522,11 +541,10 @@ public class CommandWithProperties extends Command {
          * to add timestamp and failure to the property.
          *
          * @param p The base property.
-         * @return A parsed property or object, if did parse.
+         * @return The parsed property or object, if matched to a field.
          * @throws Exception
          */
         @Nullable
-        Object iterate(byte propertyIdentifier, @Nullable Property p,
-                       @Nullable PropertyFailure failure, @Nullable PropertyTimestamp timestamp) throws Exception;
+        Property iterate(@Nullable Property p) throws Exception;
     }
 }

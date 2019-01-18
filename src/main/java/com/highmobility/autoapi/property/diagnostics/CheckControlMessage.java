@@ -70,14 +70,13 @@ public class CheckControlMessage extends Property {
 
     public CheckControlMessage(Property p) throws CommandParseException {
         super(p);
-        update(p, null, null, false);
+        update(p);
     }
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) value = new Value(p);
-        return super.update(p, failure, timestamp, propertyInArray);
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 9) value = new Value(p);
+        return this;
     }
 
     public static class Value {

@@ -14,7 +14,7 @@ import com.highmobility.autoapi.property.diagnostics.DiagnosticsTroubleCode;
 import com.highmobility.autoapi.property.diagnostics.TirePressure;
 import com.highmobility.autoapi.property.diagnostics.TireTemperature;
 import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
-import com.highmobility.autoapi.property.diagnostics.TheelRpm;
+import com.highmobility.autoapi.property.diagnostics.WheelRpm;
 import com.highmobility.autoapi.property.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -131,7 +131,7 @@ public class DiagnosticsTest {
         assertTrue(propertyCount == 4);
         propertyCount = 0;
 
-        for (TheelRpm wheelRpm : state.getWheelRpms()) {
+        for (WheelRpm wheelRpm : state.getWheelRpms()) {
             if (wheelRpm.getValue().getRpm() != 746) fail();
 
             if (wheelRpm.getValue().getTireLocation() == TireLocation.FRONT_LEFT) propertyCount++;
@@ -219,10 +219,10 @@ public class DiagnosticsTest {
         builder.addTireTemperature(new TireTemperature(TireLocation.REAR_RIGHT, 40f));
         builder.addTireTemperature(new TireTemperature(TireLocation.REAR_LEFT, 40f));
 
-        builder.addWheelRpm(new TheelRpm(TireLocation.FRONT_LEFT, 746));
-        builder.addWheelRpm(new TheelRpm(TireLocation.FRONT_RIGHT, 746));
-        builder.addWheelRpm(new TheelRpm(TireLocation.REAR_RIGHT, 746));
-        builder.addWheelRpm(new TheelRpm(TireLocation.REAR_LEFT, 746));
+        builder.addWheelRpm(new WheelRpm(TireLocation.FRONT_LEFT, 746));
+        builder.addWheelRpm(new WheelRpm(TireLocation.FRONT_RIGHT, 746));
+        builder.addWheelRpm(new WheelRpm(TireLocation.REAR_RIGHT, 746));
+        builder.addWheelRpm(new WheelRpm(TireLocation.REAR_LEFT, 746));
 
         DiagnosticsTroubleCode code1 = new DiagnosticsTroubleCode(2, "C1116FA", "RDU_212FR",
                 "PENDING");

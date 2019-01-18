@@ -45,10 +45,9 @@ public class VehicleTime extends CommandWithProperties {
     VehicleTime(byte[] bytes) {
         super(bytes);
         while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext((identifier, p, timestamp, failure) -> {
-                if (identifier == IDENTIFIER) {
-                    vehicleTime.update(p, timestamp, failure, false);
-                    return vehicleTime;
+            propertiesIterator2.parseNext(p -> {
+                if (p.getPropertyIdentifier() == IDENTIFIER) {
+                    return vehicleTime.update(p);
                 }
                 return null;
             });

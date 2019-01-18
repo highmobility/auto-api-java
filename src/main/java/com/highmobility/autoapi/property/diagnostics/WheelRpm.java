@@ -27,21 +27,21 @@ import com.highmobility.utils.ByteUtils;
 
 import javax.annotation.Nullable;
 
-public class TheelRpm extends Property {
+public class WheelRpm extends Property {
     Value value;
 
     @Nullable public Value getValue() {
         return value;
     }
 
-    public TheelRpm(TireLocation tireLocation, int rpm) {
+    public WheelRpm(TireLocation tireLocation, int rpm) {
         super((byte) 0x00, 3);
         value = new Value(tireLocation, rpm);
         this.bytes[3] = tireLocation.getByte();
         ByteUtils.setBytes(bytes, Property.intToBytes(rpm, 2), 4);
     }
 
-    public TheelRpm(Property bytes) throws CommandParseException {
+    public WheelRpm(Property bytes) throws CommandParseException {
         super(bytes);
         value = new Value(bytes);
     }

@@ -56,14 +56,13 @@ public class PositionProperty extends Property {
 
     public PositionProperty(Property p) throws CommandParseException {
         super(p);
-        update(p, null, null, false);
+        update(p);
     }
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) position = Position.fromByte(p.get(3));
-        return super.update(p, failure, timestamp, propertyInArray);
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 1) position = Position.fromByte(p.get(3));
+        return this;
     }
 
     public PositionProperty(byte identifier) {

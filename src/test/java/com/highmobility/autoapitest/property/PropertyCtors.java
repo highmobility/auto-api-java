@@ -26,7 +26,7 @@ public class PropertyCtors {
         assertTrue(new ChargeMode(null, null, failure).getFailure() != null);
         assertTrue(new ChargeMode(property).getValue() != null);
         ChargeMode updateProp = new ChargeMode((byte) 0x00);
-        updateProp.update(property, null, null, false);
+        updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
 
@@ -35,7 +35,7 @@ public class PropertyCtors {
         assertTrue(new ChargePortState(null, null, failure).getFailure() != null);
         assertTrue(new ChargePortState(property).getValue() != null);
         ChargePortState updateProp = new ChargePortState((byte) 0x00);
-        updateProp.update(property, null, null, false);
+        updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
 
@@ -44,7 +44,7 @@ public class PropertyCtors {
         assertTrue(new ChargingState(null, null, failure).getFailure() != null);
         assertTrue(new ChargingState(property).getValue() != null);
         ChargingState updateProp = new ChargingState((byte) 0x00);
-        updateProp.update(property, null, null, false);
+        updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
 

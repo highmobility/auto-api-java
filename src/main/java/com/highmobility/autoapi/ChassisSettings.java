@@ -23,7 +23,6 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.SpringRateProperty;
 import com.highmobility.autoapi.property.value.Axle;
 
@@ -170,47 +169,30 @@ public class ChassisSettings extends CommandWithProperties {
         ArrayList<SpringRateProperty> maximumSpringRates = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext((identifier, p, timestamp, failure) -> {
-                switch (identifier) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_DRIVING_MODE:
-                        drivingMode.update(p, timestamp, failure, false);
-                        return drivingMode;
+                        return drivingMode.update(p);
                     case IDENTIFIER_SPORT_CHRONO_ACTIVE:
-                        sportChronoActive.update(p, timestamp, failure, false);
-                        return sportChronoActive;
+                        return sportChronoActive.update(p);
                     case CURRENT_SPRING_RATE_PROPERTIES_IDENTIFIER:
-                        if (p != null) {
-                            SpringRateProperty newProperty = new SpringRateProperty(p);
-                            currentSpringRates.add(newProperty);
-                            return newProperty;
-                        } else {
-                            return Property.update(currentSpringRates, p, timestamp, failure);
-                        }
+                        SpringRateProperty newProperty = new SpringRateProperty(p);
+                        currentSpringRates.add(newProperty);
+                        return newProperty;
                     case MAXIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER:
-                        if (p != null) {
-                            SpringRateProperty newProperty = new SpringRateProperty(p);
-                            maximumSpringRates.add(newProperty);
-                            return newProperty;
-                        } else {
-                            return Property.update(maximumSpringRates, p, timestamp, failure);
-                        }
+                        SpringRateProperty newProperty2 = new SpringRateProperty(p);
+                        maximumSpringRates.add(newProperty2);
+                        return newProperty2;
                     case MINIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER:
-                        if (p != null) {
-                            SpringRateProperty newProperty = new SpringRateProperty(p);
-                            minimumSpringRates.add(newProperty);
-                            return newProperty;
-                        } else {
-                            return Property.update(minimumSpringRates, p, timestamp, failure);
-                        }
+                        SpringRateProperty newProperty3 = new SpringRateProperty(p);
+                        minimumSpringRates.add(newProperty3);
+                        return newProperty3;
                     case IDENTIFIER_CURRENT_CHASSIS_POSITION:
-                        currentChassisPosition.update(p, timestamp, failure, false);
-                        return currentChassisPosition;
+                        return currentChassisPosition.update(p);
                     case IDENTIFIER_MAXIMUM_CHASSIS_POSITION:
-                        maximumChassisPosition.update(p, timestamp, failure, false);
-                        return maximumChassisPosition;
+                        return maximumChassisPosition.update(p);
                     case IDENTIFIER_MINIMUM_CHASSIS_POSITION:
-                        minimumChassisPosition.update(p, timestamp, failure, false);
-                        return minimumChassisPosition;
+                        return minimumChassisPosition.update(p);
                 }
 
                 return null;

@@ -29,7 +29,6 @@ import com.highmobility.value.Bytes;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -55,22 +54,16 @@ public class Property extends Bytes {
     protected PropertyTimestamp timestamp;
     protected PropertyFailure failure;
 
-    public static Property update(ArrayList<? extends Property> departureTimes, Property p,
-                                  PropertyFailure timestamp, PropertyTimestamp failure) throws CommandParseException {
-        for (Property existingProperty : departureTimes) {
-            if (existingProperty.update(p, timestamp, failure, true))
-                return existingProperty;
-        }
-
-        return null;
-    }
-
     /**
      * @return The timestamp of the property.
      */
     @Nullable public Calendar getTimestamp() {
         if (timestamp == null) return null;
         return timestamp.getCalendar();
+    }
+
+    @Nullable PropertyTimestamp getPropertyTimestamp() {
+        return timestamp;
     }
 
     /**
@@ -148,7 +141,7 @@ public class Property extends Bytes {
         return bytes[3];
     }
 
-    // TODO: 2019-01-08 these should be package private?
+    // TODO: 2019-01-08 these should be package private
 
     /**
      * Set a new identifier for the property
@@ -160,6 +153,14 @@ public class Property extends Bytes {
         return this;
     }
 
+    public void setPropertyFailure(PropertyFailure propertyFailure) {
+        this.failure = propertyFailure;
+    }
+
+    public void setPropertyTimestamp(PropertyTimestamp propertyTimestamp) {
+        this.timestamp = propertyTimestamp;
+    }
+
     protected void setTimestampFailure(Calendar timestamp, PropertyFailure failure) {
         if (timestamp != null) this.timestamp = new PropertyTimestamp(timestamp);
         this.failure = failure;
@@ -168,6 +169,7 @@ public class Property extends Bytes {
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
+//        e.printStackTrace();
     }
 
     protected static byte[] baseBytes(byte identifier, int valueSize) {
@@ -190,33 +192,11 @@ public class Property extends Bytes {
         return bytes[0];
     }
 
-    /**
-     * @param propertyInArray Whether there could be multiple properties with this identifier.
-     * @return true if property updated.
-     */
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (failure != null && failure.getFailedPropertyIdentifier() == getPropertyIdentifier()) {
-            this.failure = failure;
-            return true;
-        }
-
-        /* If property in array, need to check the additional data. Otherwise can just use the
-        identifier because property is unique. */
-        if (timestamp != null &&
-                ((propertyInArray && timestamp.getAdditionalData() != null && this.equals(timestamp.getAdditionalData())) ||
-                        (propertyInArray == false && timestamp.getTimestampPropertyIdentifier() == getPropertyIdentifier()))) {
-            // we expect that property bytes are set before failure/timestamp.
-            this.timestamp = timestamp;
-            return true;
-        }
-
-        if (p != null) {
-            this.bytes = p.getByteArray();
-            return true;
-        }
-
-        return false;
+    public Property update(Property p) throws CommandParseException {
+        this.bytes = p.bytes;
+        this.failure = p.failure;
+        this.timestamp = p.timestamp;
+        return this;
     }
 
     public boolean isUniversalProperty() {

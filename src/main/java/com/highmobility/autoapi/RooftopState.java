@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  */
 public class RooftopState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.ROOFTOP, 0x01);
-    
+
     static final byte DIMMING_IDENTIFIER = 0x01;
     static final byte OPEN_IDENTIFIER = 0x02;
     private static final byte IDENTIFIER_CONVERTIBLE_ROOF = 0x03;
@@ -87,24 +87,19 @@ public class RooftopState extends CommandWithProperties {
         super(bytes);
 
         while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext((identifier, p, timestamp, failure) -> {
+            propertiesIterator2.parseNext(p -> {
                 // can update with failure, timestamp or the real property
-                switch (identifier) {
+                switch (p.getPropertyIdentifier()) {
                     case DIMMING_IDENTIFIER:
-                        dimmingPercentage.update(p, timestamp, failure, false);
-                        return dimmingPercentage;
+                        return dimmingPercentage.update(p);
                     case OPEN_IDENTIFIER:
-                        openPercentage.update(p, timestamp, failure, false);
-                        return openPercentage;
+                        return openPercentage.update(p);
                     case IDENTIFIER_CONVERTIBLE_ROOF:
-                        convertibleRoofState.update(p, timestamp, failure, false);
-                        return convertibleRoofState;
+                        return convertibleRoofState.update(p);
                     case IDENTIFIER_SUNROOF_TILT:
-                        sunroofTiltState.update(p, timestamp, failure, false);
-                        return sunroofTiltState;
+                        return sunroofTiltState.update(p);
                     case IDENTIFIER_SUNROOF_POSITION:
-                        sunroofPosition.update(p, timestamp, failure, false);
-                        return sunroofPosition;
+                        return sunroofPosition.update(p);
                 }
 
                 return null;

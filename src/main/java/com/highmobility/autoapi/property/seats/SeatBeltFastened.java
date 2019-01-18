@@ -22,8 +22,6 @@ package com.highmobility.autoapi.property.seats;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyTimestamp;
 
 public class SeatBeltFastened extends Property {
     public static final byte IDENTIFIER = 0x03;
@@ -55,17 +53,17 @@ public class SeatBeltFastened extends Property {
 
     public SeatBeltFastened(Property bytes) throws CommandParseException {
         super(bytes);
-        update(bytes, null, null, false);
+        update(bytes);
     }
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) {
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+
+        if (p.getValueLength() >= 2) {
             this.seatLocation = SeatLocation.fromByte(bytes[3]);
             this.fastened = Property.getBool(bytes[4]);
         }
-        
-        return super.update(p, failure, timestamp, propertyInArray);
+
+        return this;
     }
 }

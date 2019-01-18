@@ -63,14 +63,13 @@ public class DiagnosticsTroubleCode extends Property {
 
     public DiagnosticsTroubleCode(Property p) throws CommandParseException {
         super(p);
-        update(p, null, null, false);
+        update(p);
     }
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) value = new Value(p);
-        return super.update(p, failure, timestamp, propertyInArray);
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 3) value = new Value(p);
+        return this;
     }
 
     public static class Value {
@@ -107,7 +106,6 @@ public class DiagnosticsTroubleCode extends Property {
         }
 
         public Value(Property bytes) throws CommandParseException {
-            if (bytes.getLength() < 6) throw new CommandParseException();
             this.numberOfOccurences = bytes.get(3);
 
             int textPosition = 4;

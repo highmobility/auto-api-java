@@ -59,9 +59,9 @@ public class BooleanProperty extends Property {
 
     // MARK: Android ctor
 
-    public BooleanProperty(Property property) throws CommandParseException {
-        super(property);
-        update(property, null, null, false);
+    public BooleanProperty(Property p) throws CommandParseException {
+        super(p);
+        update(p);
     }
 
     public BooleanProperty(byte identifier) {
@@ -70,10 +70,9 @@ public class BooleanProperty extends Property {
 
     // TODO: ^^ should be internal
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) this.value = getBool(p.getValueByte());
-        return super.update(p, failure, timestamp, propertyInArray);
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 1) this.value = getBool(p.getValueByte());
+        return this;
     }
 }

@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.seats.PersonDetected;
 import com.highmobility.autoapi.property.seats.SeatBeltFastened;
 import com.highmobility.autoapi.property.seats.SeatLocation;
@@ -87,27 +86,17 @@ public class SeatsState extends CommandWithProperties {
         ArrayList<SeatBeltFastened> seatBeltsFastened = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext((identifier, p, timestamp, failure) -> {
-                switch (identifier) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case PersonDetected.IDENTIFIER:
-                        if (p != null) {
-                            // if property, create new property.
-                            PersonDetected d = new PersonDetected(p);
-                            personsDetected.add(d);
-                            return d;
-                        } else {
-                            // find the property, update
-                            return Property.update(personsDetected, p, timestamp, failure);
-                        }
-                        // if failure, ignore
+                        // if property, create new property.
+                        PersonDetected d = new PersonDetected(p);
+                        personsDetected.add(d);
+                        return d;
                     case SeatBeltFastened.IDENTIFIER:
-                        if (p != null) {
-                            SeatBeltFastened f = new SeatBeltFastened(p);
-                            seatBeltsFastened.add(f);
-                            return f;
-                        } else {
-                            return Property.update(seatBeltsFastened, p, timestamp, failure);
-                        }
+                        SeatBeltFastened f = new SeatBeltFastened(p);
+                        seatBeltsFastened.add(f);
+                        return f;
                 }
 
                 return null;

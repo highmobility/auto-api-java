@@ -24,14 +24,13 @@ import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
 import com.highmobility.autoapi.property.diagnostics.DiagnosticsTroubleCode;
-import com.highmobility.autoapi.property.diagnostics.TheelRpm;
 import com.highmobility.autoapi.property.diagnostics.TirePressure;
 import com.highmobility.autoapi.property.diagnostics.TireTemperature;
 import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
+import com.highmobility.autoapi.property.diagnostics.WheelRpm;
 import com.highmobility.autoapi.property.value.TireLocation;
 
 import java.util.ArrayList;
@@ -112,7 +111,7 @@ public class DiagnosticsState extends CommandWithProperties {
     CheckControlMessage[] checkControlMessages;
     TirePressure[] tirePressures;
     TireTemperature[] tireTemperatures;
-    TheelRpm[] wheelRpms;
+    WheelRpm[] wheelRpms;
     DiagnosticsTroubleCode[] troubleCodes;
 
     IntegerProperty mileageMeters = new IntegerProperty(IDENTIFIER_MILEAGE_METERS, false);
@@ -320,7 +319,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The wheel rpms.
      */
-    public TheelRpm[] getWheelRpms() {
+    public WheelRpm[] getWheelRpms() {
         return wheelRpms;
     }
 
@@ -330,9 +329,9 @@ public class DiagnosticsState extends CommandWithProperties {
      * @param tireLocation The tire location.
      * @return The tire temperature.
      */
-    @Nullable public TheelRpm getWheelRpm(TireLocation tireLocation) {
+    @Nullable public WheelRpm getWheelRpm(TireLocation tireLocation) {
         for (int i = 0; i < wheelRpms.length; i++) {
-            TheelRpm wheelRpm = wheelRpms[i];
+            WheelRpm wheelRpm = wheelRpms[i];
             if (wheelRpm.getValue() != null && wheelRpm.getValue().getTireLocation() == tireLocation)
                 return wheelRpm;
         }
@@ -360,115 +359,74 @@ public class DiagnosticsState extends CommandWithProperties {
         ArrayList<CheckControlMessage> checkControlMessages = new ArrayList<>();
         ArrayList<TirePressure> tirePressures = new ArrayList<>();
         ArrayList<TireTemperature> tireTemperatures = new ArrayList<>();
-        ArrayList<TheelRpm> wheelRpms = new ArrayList<>();
+        ArrayList<WheelRpm> wheelRpms = new ArrayList<>();
         ArrayList<DiagnosticsTroubleCode> troubleCodes = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext((identifier, p, timestamp, failure) -> {
-                switch (identifier) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_MILEAGE:
-                        mileage.update(p, timestamp, failure, false);
-                        return mileage;
+                        return mileage.update(p);
                     case IDENTIFIER_OIL_TEMPERATURE:
-                        oilTemperature.update(p, timestamp, failure, false);
-                        return oilTemperature;
+                        return oilTemperature.update(p);
                     case IDENTIFIER_SPEED:
-                        speed.update(p, timestamp, failure, false);
-                        return speed;
+                        return speed.update(p);
                     case IDENTIFIER_RPM:
-                        rpm.update(p, timestamp, failure, false);
-                        return rpm;
+                        return rpm.update(p);
                     case IDENTIFIER_FUEL_LEVEL:
-                        fuelLevel.update(p, timestamp, failure, false);
-                        return fuelLevel;
+                        return fuelLevel.update(p);
                     case IDENTIFIER_RANGE:
-                        range.update(p, timestamp, failure, false);
-                        return range;
+                        return range.update(p);
                     case IDENTIFIER_WASHER_FLUID_LEVEL:
-                        washerFluidLevel.update(p, timestamp, failure, false);
-                        return washerFluidLevel;
+                        return washerFluidLevel.update(p);
                     case IDENTIFIER_BATTERY_VOLTAGE:
-                        batteryVoltage.update(p, timestamp, failure, false);
-                        return batteryVoltage;
+                        return batteryVoltage.update(p);
                     case IDENTIFIER_AD_BLUE_LEVEL:
-                        adBlueLevel.update(p, timestamp, failure, false);
-                        return adBlueLevel;
+                        return adBlueLevel.update(p);
                     case IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET:
-                        distanceDrivenSinceReset.update(p, timestamp, failure, false);
-                        return distanceDrivenSinceReset;
+                        return distanceDrivenSinceReset.update(p);
                     case IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START:
-                        distanceDrivenSinceEngineStart.update(p, timestamp, failure, false);
-                        return distanceDrivenSinceEngineStart;
+                        return distanceDrivenSinceEngineStart.update(p);
                     case IDENTIFIER_FUEL_VOLUME:
-                        fuelVolume.update(p, timestamp, failure, false);
-                        return fuelVolume;
+                        return fuelVolume.update(p);
                     case IDENTIFIER_ANTI_LOCK_BRAKING_ACTIVE:
-                        antiLockBrakingActive.update(p, timestamp, failure, false);
-                        return antiLockBrakingActive;
+                        return antiLockBrakingActive.update(p);
                     case IDENTIFIER_ENGINE_COOLANT_TEMPERATURE:
-                        engineCoolantTemperature.update(p, timestamp, failure, false);
-                        return engineCoolantTemperature;
+                        return engineCoolantTemperature.update(p);
                     case IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS:
-                        engineTotalOperatingHours.update(p, timestamp, failure, false);
-                        return engineTotalOperatingHours;
+                        return engineTotalOperatingHours.update(p);
                     case IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION:
-                        engineTotalFuelConsumption.update(p, timestamp, failure, false);
-                        return engineTotalFuelConsumption;
+                        return engineTotalFuelConsumption.update(p);
                     case IDENTIFIER_BRAKE_FLUID_LEVEL:
-                        brakeFluidLevel.update(p, timestamp, failure, false);
-                        return brakeFluidLevel;
+                        return brakeFluidLevel.update(p);
                     case IDENTIFIER_ENGINE_TORQUE:
-                        engineTorque.update(p, timestamp, failure, false);
-                        return engineTorque;
+                        return engineTorque.update(p);
                     case IDENTIFIER_ENGINE_LOAD:
-                        engineLoad.update(p, timestamp, failure, false);
-                        return engineLoad;
+                        return engineLoad.update(p);
                     case IDENTIFIER_WHEEL_BASED_SPEED:
-                        wheelBasedSpeed.update(p, timestamp, failure, false);
-                        return wheelBasedSpeed;
+                        return wheelBasedSpeed.update(p);
                     case IDENTIFIER_BATTERY_LEVEL:
-                        batteryLevel.update(p, timestamp, failure, false);
-                        return batteryLevel;
+                        return batteryLevel.update(p);
                     case IDENTIFIER_CHECK_CONTROL_MESSAGES:
-                        if (p != null) {
-                            CheckControlMessage newProperty = new CheckControlMessage(p);
-                            checkControlMessages.add(newProperty);
-                            return newProperty;
-                        } else {
-                            return Property.update(checkControlMessages, p, timestamp, failure);
-                        }
+                        CheckControlMessage message = new CheckControlMessage(p);
+                        checkControlMessages.add(message);
+                        return message;
                     case IDENTIFIER_TIRE_PRESSURES:
-                        if (p != null) {
-                            TirePressure newProperty = new TirePressure(p);
-                            tirePressures.add(newProperty);
-                            return newProperty;
-                        } else {
-                            return Property.update(tirePressures, p, timestamp, failure);
-                        }
+                        TirePressure tirePressure = new TirePressure(p);
+                        tirePressures.add(tirePressure);
+                        return tirePressure;
                     case IDENTIFIER_TIRE_TEMPERATURES:
-                        if (p != null) {
-                            TireTemperature newProperty = new TireTemperature(p);
-                            tireTemperatures.add(newProperty);
-                            return newProperty;
-                        } else {
-                            return Property.update(tireTemperatures, p, timestamp, failure);
-                        }
+                        TireTemperature tireTemperature = new TireTemperature(p);
+                        tireTemperatures.add(tireTemperature);
+                        return tireTemperature;
                     case IDENTIFIER_WHEEL_RPM:
-                        if (p != null) {
-                            TheelRpm newProperty = new TheelRpm(p);
-                            wheelRpms.add(newProperty);
-                            return newProperty;
-                        } else {
-                            return Property.update(wheelRpms, p, timestamp, failure);
-                        }
+                        WheelRpm wheelRpm = new WheelRpm(p);
+                        wheelRpms.add(wheelRpm);
+                        return wheelRpm;
                     case IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE:
-                        if (p != null) {
-                            DiagnosticsTroubleCode newProperty = new DiagnosticsTroubleCode(p);
-                            troubleCodes.add(newProperty);
-                            return newProperty;
-                        } else {
-                            return Property.update(troubleCodes, p, timestamp, failure);
-                        }
+                        DiagnosticsTroubleCode troubleCode = new DiagnosticsTroubleCode(p);
+                        troubleCodes.add(troubleCode);
+                        return troubleCode;
                     case IDENTIFIER_MILEAGE_METERS:
                         mileageMeters = new IntegerProperty(p, false);
                         return mileageMeters;
@@ -480,7 +438,7 @@ public class DiagnosticsState extends CommandWithProperties {
             this.checkControlMessages = checkControlMessages.toArray(new CheckControlMessage[0]);
             this.tirePressures = tirePressures.toArray(new TirePressure[0]);
             this.tireTemperatures = tireTemperatures.toArray(new TireTemperature[0]);
-            this.wheelRpms = wheelRpms.toArray(new TheelRpm[0]);
+            this.wheelRpms = wheelRpms.toArray(new WheelRpm[0]);
             this.troubleCodes = troubleCodes.toArray(new DiagnosticsTroubleCode[0]);
         }
     }
@@ -520,7 +478,7 @@ public class DiagnosticsState extends CommandWithProperties {
         checkControlMessages = builder.checkControlMessages.toArray(new CheckControlMessage[0]);
         tirePressures = builder.tirePressures.toArray(new TirePressure[0]);
         tireTemperatures = builder.tireTemperatures.toArray(new TireTemperature[0]);
-        wheelRpms = builder.wheelRpms.toArray(new TheelRpm[0]);
+        wheelRpms = builder.wheelRpms.toArray(new WheelRpm[0]);
         troubleCodes = builder.troubleCodes.toArray(new DiagnosticsTroubleCode[0]);
         mileageMeters = builder.mileageMeters;
     }
@@ -551,7 +509,7 @@ public class DiagnosticsState extends CommandWithProperties {
         private PercentageProperty batteryLevel;
         private List<TirePressure> tirePressures = new ArrayList<>();
         private List<TireTemperature> tireTemperatures = new ArrayList<>();
-        private List<TheelRpm> wheelRpms = new ArrayList<>();
+        private List<WheelRpm> wheelRpms = new ArrayList<>();
         private List<CheckControlMessage> checkControlMessages = new ArrayList<>();
         private List<DiagnosticsTroubleCode> troubleCodes = new ArrayList<>();
         private IntegerProperty mileageMeters;
@@ -863,7 +821,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param wheelRpms The wheel's RPM.
          * @return The builder.
          */
-        public Builder setWheelRpms(TheelRpm[] wheelRpms) {
+        public Builder setWheelRpms(WheelRpm[] wheelRpms) {
             for (int i = 0; i < wheelRpms.length; i++) {
                 addWheelRpm(wheelRpms[i]);
             }
@@ -877,7 +835,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param wheelRpm The wheel RPM.
          * @return The builder.
          */
-        public Builder addWheelRpm(TheelRpm wheelRpm) {
+        public Builder addWheelRpm(WheelRpm wheelRpm) {
             wheelRpm.setIdentifier(IDENTIFIER_WHEEL_RPM);
             addProperty(wheelRpm);
             wheelRpms.add(wheelRpm);

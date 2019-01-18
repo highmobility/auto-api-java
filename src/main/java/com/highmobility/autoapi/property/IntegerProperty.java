@@ -46,7 +46,7 @@ public class IntegerProperty extends Property {
     public IntegerProperty(Property p, boolean signed) throws CommandParseException {
         super(p);
         this.signed = signed;
-        update(p, null, null, false);
+        update(p);
     }
 
     public IntegerProperty(byte identifier, boolean signed) {
@@ -64,15 +64,15 @@ public class IntegerProperty extends Property {
         setTimestampFailure(timestamp, failure);
     }
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) {
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+
+        if (p.getValueLength() >= 1) {
             if (signed) value = Property.getSignedInt(p.getValueBytes());
             else value = Property.getUnsignedInt(p.getValueBytes());
         }
 
-        return super.update(p, failure, timestamp, propertyInArray);
+        return this;
     }
 
     /**

@@ -45,10 +45,9 @@ public class ParkingBrakeState extends CommandWithProperties {
         super(bytes);
 
         while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext((identifier, p, failure, timestamp) -> {
-                if (identifier == ACTIVE_IDENTIFIER) {
-                    active.update(p, failure, timestamp, false);
-                    return active;
+            propertiesIterator2.parseNext(p -> {
+                if (p.getPropertyIdentifier() == ACTIVE_IDENTIFIER) {
+                    return active.update(p);
                 }
 
                 return null;

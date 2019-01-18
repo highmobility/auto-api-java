@@ -22,8 +22,6 @@ package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.autoapi.property.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
 
@@ -43,16 +41,15 @@ public class TireTemperature extends Property {
         ByteUtils.setBytes(bytes, Property.floatToBytes(temperature), 4);
     }
 
-    public TireTemperature(Property bytes) throws CommandParseException {
-        super(bytes);
-        update(bytes, null, null, false);
+    public TireTemperature(Property p) throws CommandParseException {
+        super(p);
+        update(p);
     }
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) value = new Value(p);
-        return super.update(p, failure, timestamp, propertyInArray);
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 5) value = new Value(p);
+        return this;
     }
 
     public static class Value {

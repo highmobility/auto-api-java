@@ -52,14 +52,13 @@ public class FloatProperty extends Property {
 
     public FloatProperty(Property p) throws CommandParseException {
         super(p);
-        update(p, null, null, false);
+        update(p);
     }
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) value = getFloat(p.getValueBytes());
-        return super.update(p, failure, timestamp, propertyInArray);
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 4) value = getFloat(p.getValueBytes());
+        return this;
     }
 
     public FloatProperty(byte identifier) {

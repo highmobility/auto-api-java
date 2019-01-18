@@ -57,14 +57,13 @@ public class PercentageProperty extends Property {
 
     public PercentageProperty(Property p) throws CommandParseException {
         super(p);
-        update(p, null, null, false);
+        update(p);
     }
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) this.value = getUnsignedInt(p.getValueByte()) / 100f;
-        return super.update(p, failure, timestamp, propertyInArray);
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 1) this.value = getUnsignedInt(p.getValueByte()) / 100f;
+        return this;
     }
 
     public PercentageProperty(byte identifier) {

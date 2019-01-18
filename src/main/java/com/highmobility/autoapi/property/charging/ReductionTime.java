@@ -23,7 +23,6 @@ package com.highmobility.autoapi.property.charging;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.autoapi.property.value.StartStop;
 import com.highmobility.autoapi.property.value.Time;
 import com.highmobility.utils.ByteUtils;
@@ -65,18 +64,15 @@ public class ReductionTime extends Property {
 
     public ReductionTime(Property p) throws CommandParseException {
         super(p);
-        update(p, null, null, false);
+        update(p);
     }
 
-    @Override
-    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
-                          boolean propertyInArray) throws CommandParseException {
-        if (p != null) {
-            if (bytes.length < 6) throw new CommandParseException();
-            this.value = new Value(bytes);
-        }
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
 
-        return super.update(p, failure, timestamp, propertyInArray);
+        if (p.getValueLength() >= 3) this.value = new Value(bytes);
+
+        return this;
     }
 
     public static class Value {
