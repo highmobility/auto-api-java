@@ -14,7 +14,7 @@ import com.highmobility.autoapi.property.diagnostics.DiagnosticsTroubleCode;
 import com.highmobility.autoapi.property.diagnostics.TirePressure;
 import com.highmobility.autoapi.property.diagnostics.TireTemperature;
 import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
-import com.highmobility.autoapi.property.diagnostics.WheelRpm;
+import com.highmobility.autoapi.property.diagnostics.TheelRpm;
 import com.highmobility.autoapi.property.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -53,17 +53,17 @@ public class DiagnosticsTest {
         assertTrue(command.getClass() == DiagnosticsState.class);
         DiagnosticsState state = (DiagnosticsState) command;
 
+        assertTrue(state.getNonce() == null);
+        assertTrue(state.getSignature() == null);
+
         assertTrue(state.getMileage().getValue() == 150000);
         assertTrue(state.getOilTemperature().getValue() == 99);
         assertTrue(state.getSpeed().getValue() == 60);
         assertTrue(state.getRpm().getValue() == 2500);
         assertTrue(state.getRange().getValue() == 265);
         assertTrue(state.getFuelLevel().getValue() == .9f);
-        assertTrue(state.getWasherFluidLevel() == WasherFluidLevel.FULL);
+        assertTrue(state.getWasherFluidLevel().getValue() == WasherFluidLevel.Value.FULL);
         assertTrue(state.getFuelVolume().getValue() == 35.5f);
-
-        assertTrue(state.getNonce() == null);
-        assertTrue(state.getSignature() == null);
 
         assertTrue(state.getBatteryVoltage().getValue() == 12f);
         assertTrue(state.getAdBlueLevel().getValue() == .5f);
@@ -74,7 +74,7 @@ public class DiagnosticsTest {
         assertTrue(state.getEngineCoolantTemperature().getValue() == 20);
         assertTrue(state.getEngineTotalOperatingHours().getValue() == 1500.65f);
         assertTrue(state.getEngineTotalFuelConsumption().getValue() == 27587.0f);
-        assertTrue(state.getBrakeFluidLevel() == BrakeFluidLevel.LOW);
+        assertTrue(state.getBrakeFluidLevel().getValue() == BrakeFluidLevel.Value.LOW);
         assertTrue(state.getEngineTorque().getValue() == .2f);
         assertTrue(state.getEngineLoad().getValue() == .1f);
         assertTrue(state.getWheelBasedSpeed().getValue() == 65);
@@ -85,17 +85,17 @@ public class DiagnosticsTest {
         int propertyCount = 0;
 
         for (CheckControlMessage checkControlMessage : state.getCheckControlMessages()) {
-            if (checkControlMessage.getId() == 1 &&
-                    checkControlMessage.getText().equals("Check engine") &&
-                    checkControlMessage.getStatus().equals("Alert") &&
-                    checkControlMessage.getRemainingTime() == 105592) {
+            if (checkControlMessage.getValue().getId() == 1 &&
+                    checkControlMessage.getValue().getText().equals("Check engine") &&
+                    checkControlMessage.getValue().getStatus().equals("Alert") &&
+                    checkControlMessage.getValue().getRemainingTime() == 105592) {
                 propertyCount++;
             }
 
-            if (checkControlMessage.getId() == 1 &&
-                    checkControlMessage.getText().equals("Check engine") &&
-                    checkControlMessage.getStatus().equals("Alertt") &&
-                    checkControlMessage.getRemainingTime() == 105592) {
+            if (checkControlMessage.getValue().getId() == 1 &&
+                    checkControlMessage.getValue().getText().equals("Check engine") &&
+                    checkControlMessage.getValue().getStatus().equals("Alertt") &&
+                    checkControlMessage.getValue().getRemainingTime() == 105592) {
                 propertyCount++;
             }
         }
@@ -104,57 +104,67 @@ public class DiagnosticsTest {
 
         propertyCount = 0;
         for (TirePressure pressure : state.getTirePressures()) {
-            if (pressure.getPressure() != 2.31f) fail();
+            if (pressure.getValue().getPressure() != 2.31f) fail();
 
-            if (pressure.getTireLocation() == TireLocation.FRONT_LEFT) propertyCount++;
-            if (pressure.getTireLocation() == TireLocation.FRONT_RIGHT) propertyCount++;
-            if (pressure.getTireLocation() == TireLocation.REAR_RIGHT) propertyCount++;
-            if (pressure.getTireLocation() == TireLocation.REAR_LEFT) propertyCount++;
+            if (pressure.getValue().getTireLocation() == TireLocation.FRONT_LEFT) propertyCount++;
+            if (pressure.getValue().getTireLocation() == TireLocation.FRONT_RIGHT) propertyCount++;
+            if (pressure.getValue().getTireLocation() == TireLocation.REAR_RIGHT) propertyCount++;
+            if (pressure.getValue().getTireLocation() == TireLocation.REAR_LEFT) propertyCount++;
         }
 
         assertTrue(propertyCount == 4);
         propertyCount = 0;
 
         for (TireTemperature tireTemperature : state.getTireTemperatures()) {
-            if (tireTemperature.getTemperature() != 40f) fail();
+            if (tireTemperature.getValue().getTemperature() != 40f) fail();
 
-            if (tireTemperature.getTireLocation() == TireLocation.FRONT_LEFT) propertyCount++;
-            if (tireTemperature.getTireLocation() == TireLocation.FRONT_RIGHT) propertyCount++;
-            if (tireTemperature.getTireLocation() == TireLocation.REAR_RIGHT) propertyCount++;
-            if (tireTemperature.getTireLocation() == TireLocation.REAR_LEFT) propertyCount++;
+            if (tireTemperature.getValue().getTireLocation() == TireLocation.FRONT_LEFT)
+                propertyCount++;
+            if (tireTemperature.getValue().getTireLocation() == TireLocation.FRONT_RIGHT)
+                propertyCount++;
+            if (tireTemperature.getValue().getTireLocation() == TireLocation.REAR_RIGHT)
+                propertyCount++;
+            if (tireTemperature.getValue().getTireLocation() == TireLocation.REAR_LEFT)
+                propertyCount++;
         }
 
         assertTrue(propertyCount == 4);
         propertyCount = 0;
 
-        for (WheelRpm wheelRpm : state.getWheelRpms()) {
-            if (wheelRpm.getRpm() != 746) fail();
+        for (TheelRpm wheelRpm : state.getWheelRpms()) {
+            if (wheelRpm.getValue().getRpm() != 746) fail();
 
-            if (wheelRpm.getTireLocation() == TireLocation.FRONT_LEFT) propertyCount++;
-            if (wheelRpm.getTireLocation() == TireLocation.FRONT_RIGHT) propertyCount++;
-            if (wheelRpm.getTireLocation() == TireLocation.REAR_RIGHT) propertyCount++;
-            if (wheelRpm.getTireLocation() == TireLocation.REAR_LEFT) propertyCount++;
+            if (wheelRpm.getValue().getTireLocation() == TireLocation.FRONT_LEFT) propertyCount++;
+            if (wheelRpm.getValue().getTireLocation() == TireLocation.FRONT_RIGHT) propertyCount++;
+            if (wheelRpm.getValue().getTireLocation() == TireLocation.REAR_RIGHT) propertyCount++;
+            if (wheelRpm.getValue().getTireLocation() == TireLocation.REAR_LEFT) propertyCount++;
         }
 
         assertTrue(propertyCount == 4);
         propertyCount = 0;
 
         for (DiagnosticsTroubleCode diagnosticsTroubleCode : state.getTroubleCodes()) {
-            if (diagnosticsTroubleCode.getId().equals("C1116FA") &&
-                    diagnosticsTroubleCode.getEcuId().equals("RDU_212FR") &&
-                    diagnosticsTroubleCode.getStatus().equals("PENDING") &&
-                    diagnosticsTroubleCode.getNumberOfOccurences() == 2) {
+            if (diagnosticsTroubleCode.getValue().getId().equals("C1116FA") &&
+                    diagnosticsTroubleCode.getValue().getEcuId().equals("RDU_212FR") &&
+                    diagnosticsTroubleCode.getValue().getStatus().equals("PENDING") &&
+                    diagnosticsTroubleCode.getValue().getNumberOfOccurences() == 2) {
                 propertyCount++;
-            } else if (diagnosticsTroubleCode.getId().equals("C163AFA") &&
-                    diagnosticsTroubleCode.getEcuId().equals("DTR212") &&
-                    diagnosticsTroubleCode.getStatus().equals("PENDING") &&
-                    diagnosticsTroubleCode.getNumberOfOccurences() == 2) {
+            } else if (diagnosticsTroubleCode.getValue().getId().equals("C163AFA") &&
+                    diagnosticsTroubleCode.getValue().getEcuId().equals("DTR212") &&
+                    diagnosticsTroubleCode.getValue().getStatus().equals("PENDING") &&
+                    diagnosticsTroubleCode.getValue().getNumberOfOccurences() == 2) {
                 propertyCount++;
             }
         }
 
         assertTrue(propertyCount == 2);
         assertTrue(state.getMileageMeters().getValue() == 150000);
+    }
+
+    @Test public void stateWithTimestamp() {
+        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
+        DiagnosticsState command = (DiagnosticsState) CommandResolver.resolve(timestampBytes);
+        assertTrue(command.getOilTemperature().getTimestamp() != null);
     }
 
     @Test public void get() {
@@ -174,7 +184,7 @@ public class DiagnosticsTest {
         builder.setRpm(new IntegerProperty(2500));
         builder.setFuelLevel(new PercentageProperty(.9f));
         builder.setRange(new IntegerProperty(265));
-        builder.setWasherFluidLevel(WasherFluidLevel.FULL);
+        builder.setWasherFluidLevel(new WasherFluidLevel(WasherFluidLevel.Value.FULL));
 
         builder.setBatteryVoltage(new FloatProperty(12f));
         builder.setAdBlueLevel(new FloatProperty(.5f));
@@ -186,7 +196,7 @@ public class DiagnosticsTest {
         builder.setEngineCoolantTemperature(new IntegerProperty(20));
         builder.setEngineTotalOperatingHours(new FloatProperty(1500.65f));
         builder.setEngineTotalFuelConsumption(new FloatProperty(27587.0f));
-        builder.setBrakeFluidLevel(BrakeFluidLevel.LOW);
+        builder.setBrakeFluidLevel(new BrakeFluidLevel(BrakeFluidLevel.Value.LOW));
         builder.setEngineTorque(new PercentageProperty(.2f));
         builder.setEngineLoad(new PercentageProperty(.1f));
         builder.setWheelBasedSpeed(new IntegerProperty(65));
@@ -209,10 +219,10 @@ public class DiagnosticsTest {
         builder.addTireTemperature(new TireTemperature(TireLocation.REAR_RIGHT, 40f));
         builder.addTireTemperature(new TireTemperature(TireLocation.REAR_LEFT, 40f));
 
-        builder.addWheelRpm(new WheelRpm(TireLocation.FRONT_LEFT, 746));
-        builder.addWheelRpm(new WheelRpm(TireLocation.FRONT_RIGHT, 746));
-        builder.addWheelRpm(new WheelRpm(TireLocation.REAR_RIGHT, 746));
-        builder.addWheelRpm(new WheelRpm(TireLocation.REAR_LEFT, 746));
+        builder.addWheelRpm(new TheelRpm(TireLocation.FRONT_LEFT, 746));
+        builder.addWheelRpm(new TheelRpm(TireLocation.FRONT_RIGHT, 746));
+        builder.addWheelRpm(new TheelRpm(TireLocation.REAR_RIGHT, 746));
+        builder.addWheelRpm(new TheelRpm(TireLocation.REAR_LEFT, 746));
 
         DiagnosticsTroubleCode code1 = new DiagnosticsTroubleCode(2, "C1116FA", "RDU_212FR",
                 "PENDING");
@@ -229,6 +239,6 @@ public class DiagnosticsTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("003301");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((DiagnosticsState) state).getBatteryVoltage() == null);
+        assertTrue(((DiagnosticsState) state).getBatteryVoltage().getValue() == null);
     }
 }

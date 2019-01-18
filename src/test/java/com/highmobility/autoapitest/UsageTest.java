@@ -58,14 +58,14 @@ public class UsageTest {
         assertTrue(state.getDrivingStyleEvaluation().getValue() == .7f);
 
         assertTrue(state.getDrivingModeActivationPeriods().length == 2);
-        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.ECO).getPercentage() == .6f);
-        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.REGULAR).getPercentage() ==
+        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.Value.ECO).getPercentage() == .6f);
+        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.Value.REGULAR).getPercentage() ==
                 .4f);
 
         assertTrue(state.getDrivingModeEnergyConsumptions().length == 2);
-        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.ECO).getEnergyConsumption()
+        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.Value.ECO).getEnergyConsumption()
                 == 33.2f);
-        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.REGULAR)
+        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.Value.REGULAR)
                 .getEnergyConsumption() == 55.4f);
 
         assertTrue(state.getLastTripEnergyConsumption().getValue() == 101.3f);

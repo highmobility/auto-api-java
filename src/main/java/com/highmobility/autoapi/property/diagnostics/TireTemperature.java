@@ -22,40 +22,66 @@ package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.autoapi.property.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
 
+import javax.annotation.Nullable;
+
 public class TireTemperature extends Property {
-    TireLocation tireLocation;
-    float temperature;
+    Value value;
 
-    /**
-     * @return The tire location.
-     */
-    public TireLocation getTireLocation() {
-        return tireLocation;
-    }
-
-    /**
-     * @return The tire pressure.
-     */
-    public float getTemperature() {
-        return temperature;
+    @Nullable public Value getValue() {
+        return value;
     }
 
     public TireTemperature(TireLocation tireLocation, float temperature) {
         super((byte) 0x00, 5);
-        this.tireLocation = tireLocation;
-        this.temperature = temperature;
+        value = new Value(tireLocation, temperature);
         bytes[3] = tireLocation.getByte();
         ByteUtils.setBytes(bytes, Property.floatToBytes(temperature), 4);
     }
 
-    public TireTemperature(byte[] bytes) throws CommandParseException {
+    public TireTemperature(Property bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 8) throw new CommandParseException();
+        update(bytes, null, null, false);
+    }
 
-        this.tireLocation = TireLocation.fromByte(bytes[3]);
-        this.temperature = Property.getFloat(bytes, 4);
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) value = new Value(p);
+        return super.update(p, failure, timestamp, propertyInArray);
+    }
+
+    public static class Value {
+        TireLocation tireLocation;
+        float temperature;
+
+        /**
+         * @return The tire location.
+         */
+        public TireLocation getTireLocation() {
+            return tireLocation;
+        }
+
+        /**
+         * @return The tire pressure.
+         */
+        public float getTemperature() {
+            return temperature;
+        }
+
+        public Value(TireLocation tireLocation, float temperature) {
+            this.tireLocation = tireLocation;
+            this.temperature = temperature;
+        }
+
+        public Value(Property bytes) throws CommandParseException {
+            if (bytes.getLength() < 8) throw new CommandParseException();
+            this.tireLocation = TireLocation.fromByte(bytes.get(3));
+            this.temperature = Property.getFloat(bytes, 4);
+        }
     }
 }

@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.ByteUtils;
 
 import java.util.Calendar;
@@ -27,13 +28,33 @@ import java.util.Calendar;
 public class CalendarProperty extends Property {
     private Calendar calendar;
 
-    public Calendar getCalendar() {
+    public Calendar getValue() {
         return calendar;
+    }
+
+    public CalendarProperty(byte identifier) {
+        super(identifier, 8);
+    }
+
+    public CalendarProperty(Calendar c) {
+        this((byte) 0x00, c);
     }
 
     public CalendarProperty(byte identifier, Calendar calendar) {
         super(identifier, 8);
         this.calendar = calendar;
         ByteUtils.setBytes(bytes, Property.calendarToBytes(calendar), 3);
+    }
+
+    public CalendarProperty(Property p) throws CommandParseException {
+        super(p);
+        update(p, null, null, false);
+    }
+
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) calendar = Property.getCalendar(p.getValueBytes());
+        return super.update(p, failure, timestamp, propertyInArray);
     }
 }

@@ -29,26 +29,26 @@ import com.highmobility.autoapi.property.Property;
 public class SetDrivingMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x12);
     private static final byte IDENTIFIER = 0x01;
-    DrivingMode drivingMode;
+    DrivingMode.Value drivingMode;
 
     /**
      * @return The driving mode.
      */
-    public DrivingMode getDrivingMode() {
+    public DrivingMode.Value getDrivingMode() {
         return drivingMode;
     }
 
     /**
      * @param drivingMode The driving mode.
      */
-    public SetDrivingMode(DrivingMode drivingMode) {
-        super(TYPE.addProperty(new Property(IDENTIFIER, drivingMode.getByte())));
+    public SetDrivingMode(DrivingMode.Value drivingMode) {
+        super(TYPE.addProperty(new DrivingMode(IDENTIFIER, drivingMode)));
         this.drivingMode = drivingMode;
     }
 
     SetDrivingMode(byte[] bytes) throws CommandParseException {
         super(bytes);
         Property prop = getProperty(IDENTIFIER);
-        if (prop != null) this.drivingMode = DrivingMode.fromByte(prop.getValueByte());
+        if (prop != null) this.drivingMode = DrivingMode.Value.fromByte(prop.getValueByte());
     }
 }

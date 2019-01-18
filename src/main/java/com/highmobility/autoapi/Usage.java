@@ -110,7 +110,7 @@ public class Usage extends CommandWithProperties {
      * @param mode The driving mode.
      * @return The driving mode activation period for given mode.
      */
-    @Nullable public DrivingModeActivationPeriod getDrivingModeActivationPeriod(DrivingMode mode) {
+    @Nullable public DrivingModeActivationPeriod getDrivingModeActivationPeriod(DrivingMode.Value mode) {
         for (DrivingModeActivationPeriod drivingModeActivationPeriod :
                 drivingModeActivationPeriods) {
             if (drivingModeActivationPeriod.getDrivingMode() == mode) {
@@ -132,7 +132,7 @@ public class Usage extends CommandWithProperties {
      * @return The driving mode energy consumptionfor given mode.
      */
     @Nullable
-    public DrivingModeEnergyConsumption getDrivingModeEnergyConsumption(DrivingMode mode) {
+    public DrivingModeEnergyConsumption getDrivingModeEnergyConsumption(DrivingMode.Value mode) {
         for (DrivingModeEnergyConsumption drivingModeEnergyConsumption :
                 drivingModeEnergyConsumptions) {
             if (drivingModeEnergyConsumption.getDrivingMode() == mode) {

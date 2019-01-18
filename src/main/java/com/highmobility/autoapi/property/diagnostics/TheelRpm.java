@@ -25,37 +25,54 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
 
-public class WheelRpm extends Property {
-    TireLocation tireLocation;
-    int rpm;
+import javax.annotation.Nullable;
 
-    /**
-     * @return The wheel location.
-     */
-    public TireLocation getTireLocation() {
-        return tireLocation;
+public class TheelRpm extends Property {
+    Value value;
+
+    @Nullable public Value getValue() {
+        return value;
     }
 
-    /**
-     * @return The wheel's RPM.
-     */
-    public int getRpm() {
-        return rpm;
-    }
-
-    public WheelRpm(TireLocation tireLocation, int rpm) {
+    public TheelRpm(TireLocation tireLocation, int rpm) {
         super((byte) 0x00, 3);
-        this.tireLocation = tireLocation;
-        this.rpm = rpm;
+        value = new Value(tireLocation, rpm);
         this.bytes[3] = tireLocation.getByte();
         ByteUtils.setBytes(bytes, Property.intToBytes(rpm, 2), 4);
     }
 
-    public WheelRpm(byte[] bytes) throws CommandParseException {
+    public TheelRpm(Property bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 6) throw new CommandParseException();
-
-        this.tireLocation = TireLocation.fromByte(bytes[3]);
-        this.rpm = Property.getUnsignedInt(bytes, 4, 2);
+        value = new Value(bytes);
     }
+
+    public static class Value {
+        TireLocation tireLocation;
+        int rpm;
+
+        /**
+         * @return The wheel location.
+         */
+        public TireLocation getTireLocation() {
+            return tireLocation;
+        }
+
+        /**
+         * @return The wheel's RPM.
+         */
+        public int getRpm() {
+            return rpm;
+        }
+
+        public Value(TireLocation tireLocation, int rpm) {
+            this.tireLocation = tireLocation;
+            this.rpm = rpm;
+        }
+
+        public Value(Property bytes) throws CommandParseException {
+            this.tireLocation = TireLocation.fromByte(bytes.get(3));
+            this.rpm = Property.getUnsignedInt(bytes, 4, 2);
+        }
+    }
+
 }

@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ChargePortState;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.charging.ChargePortState;
 
 /**
  * Open or close the charge port of the car. This is possible even if the car is locked.
@@ -29,26 +29,26 @@ import com.highmobility.autoapi.property.Property;
 public class OpenCloseChargePort extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x14);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    ChargePortState chargePortState;
+    ChargePortState.Value chargePortState;
 
     /**
      * @return The charge port state.
      */
-    public ChargePortState getChargePortState() {
+    public ChargePortState.Value getChargePortState() {
         return chargePortState;
     }
 
     /**
      * @param chargePortState The charge port state.
      */
-    public OpenCloseChargePort(ChargePortState chargePortState) {
+    public OpenCloseChargePort(ChargePortState.Value chargePortState) {
         super(getBytes(chargePortState));
         this.chargePortState = chargePortState;
     }
 
-    static byte[] getBytes(ChargePortState chargePortState) {
-        chargePortState.setIdentifier(PROPERTY_IDENTIFIER);
-        return TYPE.addProperty(new Property(PROPERTY_IDENTIFIER, chargePortState.getByte()));
+    static byte[] getBytes(ChargePortState.Value chargePortState) {
+        ChargePortState prop = new ChargePortState(PROPERTY_IDENTIFIER, chargePortState);
+        return TYPE.addProperty(prop);
     }
 
     OpenCloseChargePort(byte[] bytes) throws CommandParseException {
@@ -58,7 +58,7 @@ public class OpenCloseChargePort extends CommandWithProperties {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case PROPERTY_IDENTIFIER:
-                    chargePortState = ChargePortState.fromByte(property.getValueByte());
+                    chargePortState = ChargePortState.Value.fromByte(property.getValueByte());
                     break;
             }
         }

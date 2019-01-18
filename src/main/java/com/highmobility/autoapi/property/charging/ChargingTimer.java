@@ -21,73 +21,113 @@
 package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.utils.ByteUtils;
 
 import java.util.Calendar;
+
+import javax.annotation.Nullable;
 
 /**
  * The charging timer.
  */
 public class ChargingTimer extends Property {
-    Type type;
-    Calendar time;
+    Value value;
 
-    public Type getType() {
-        return type;
+    @Nullable public Value getValue() {
+        return value;
     }
 
-    public Calendar getTime() {
-        return time;
+    public ChargingTimer(byte identifier) {
+        super(identifier);
     }
 
-    public ChargingTimer(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 12) throw new CommandParseException();
-        type = Type.fromByte(bytes[3]);
-        time = Property.getCalendar(bytes, 4);
+    public ChargingTimer(Value.Type type, Calendar calendar) {
+        this(new Value(type, calendar));
     }
 
-    public ChargingTimer(Type type, Calendar time) throws IllegalArgumentException {
-        this(SetChargeTimer.PROPERTY_IDENTIFIER, type, time);
+    public ChargingTimer(Value value) {
+        super((byte) 0x00, value != null ? 9 : 0);
+        this.value = value;
+
+        if (value != null) {
+            bytes[3] = value.type.getByte();
+            ByteUtils.setBytes(bytes, Property.calendarToBytes(value.time), 4);
+        }
     }
 
-    public ChargingTimer(byte identifier, Type type, Calendar time) {
-        super(identifier, 9);
-        bytes[3] = type.getByte();
-        ByteUtils.setBytes(bytes, Property.calendarToBytes(time), 4);
-        this.type = type;
-        this.time = time;
-
+    public ChargingTimer(@Nullable Value value, @Nullable Calendar timestamp,
+                         @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
     }
 
-    public enum Type {
-        PREFERRED_START_TIME((byte) 0x00),
-        PREFERRED_END_TIME((byte) 0x01),
-        DEPARTURE_TIME((byte) 0x02);
+    public ChargingTimer(Property p) throws CommandParseException {
+        super(p);
+        update(p, null, null, false);
+    }
 
-        public static Type fromByte(byte byteValue) throws CommandParseException {
-            Type[] values = Type.values();
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) {
+            if (bytes.length < 12) throw new CommandParseException();
+            value = new Value(bytes);
+        }
+        return super.update(p, failure, timestamp, propertyInArray);
+    }
 
-            for (int i = 0; i < values.length; i++) {
-                Type state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
+    public static class Value {
+        Type type;
+        Calendar time;
+
+        public Type getType() {
+            return type;
+        }
+
+        public Calendar getTime() {
+            return time;
+        }
+
+        public Value(byte[] bytes) throws CommandParseException {
+            type = Type.fromByte(bytes[3]);
+            time = Property.getCalendar(bytes, 4);
+        }
+
+        public Value(Type type, Calendar time) {
+            this.type = type;
+            this.time = time;
+        }
+
+        public enum Type {
+            PREFERRED_START_TIME((byte) 0x00),
+            PREFERRED_END_TIME((byte) 0x01),
+            DEPARTURE_TIME((byte) 0x02);
+
+            public static Type fromByte(byte byteValue) throws CommandParseException {
+                Type[] values = Type.values();
+
+                for (int i = 0; i < values.length; i++) {
+                    Type state = values[i];
+                    if (state.getByte() == byteValue) {
+                        return state;
+                    }
                 }
+
+                throw new CommandParseException();
             }
 
-            throw new CommandParseException();
-        }
+            private byte value;
 
-        private byte value;
+            Type(byte value) {
+                this.value = value;
+            }
 
-        Type(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
+            public byte getByte() {
+                return value;
+            }
         }
     }
 }

@@ -29,6 +29,7 @@ import com.highmobility.value.Bytes;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -53,6 +54,16 @@ public class Property extends Bytes {
 
     protected PropertyTimestamp timestamp;
     protected PropertyFailure failure;
+
+    public static Property update(ArrayList<? extends Property> departureTimes, Property p,
+                                  PropertyFailure timestamp, PropertyTimestamp failure) throws CommandParseException {
+        for (Property existingProperty : departureTimes) {
+            if (existingProperty.update(p, timestamp, failure, true))
+                return existingProperty;
+        }
+
+        return null;
+    }
 
     /**
      * @return The timestamp of the property.
@@ -103,6 +114,10 @@ public class Property extends Bytes {
         this(bytes == null ? null : bytes.getByteArray());
     }
 
+    public Property(String bytes) {
+        this(ByteUtils.bytesFromHexOrBase64(bytes));
+    }
+
     public Property(byte[] bytes) {
         if (bytes == null || bytes.length == 0) bytes = unknownBytes;
         if (bytes.length < 3) bytes = Arrays.copyOf(bytes, 3);
@@ -140,8 +155,9 @@ public class Property extends Bytes {
      *
      * @param identifier The identifier.
      */
-    public void setIdentifier(byte identifier) {
+    public Property setIdentifier(byte identifier) {
         bytes[0] = identifier;
+        return this;
     }
 
     protected void setTimestampFailure(Calendar timestamp, PropertyFailure failure) {
@@ -278,6 +294,11 @@ public class Property extends Bytes {
         return Float.intBitsToFloat(intValue);
     }
 
+    public static float getFloat(Bytes bytes, int at) throws IllegalArgumentException {
+        int intValue = getUnsignedInt(bytes.getByteArray(), at, 4);
+        return Float.intBitsToFloat(intValue);
+    }
+
     public static byte[] floatToBytes(float value) {
         return ByteBuffer.allocate(4).putFloat(value).array();
     }
@@ -316,6 +337,11 @@ public class Property extends Bytes {
 
     public static int getUnsignedInt(byte[] bytes) throws IllegalArgumentException {
         return getUnsignedInt(bytes, 0, bytes.length);
+    }
+
+    public static int getUnsignedInt(Bytes bytes, int at, int length) throws
+            IllegalArgumentException {
+        return getUnsignedInt(bytes.getByteArray(), at, length);
     }
 
     public static int getUnsignedInt(byte[] bytes, int at, int length) throws
@@ -400,6 +426,10 @@ public class Property extends Bytes {
             e.printStackTrace();
             throw new ParseException();
         }
+    }
+
+    public static String getString(Bytes bytes, int at, int length) {
+        return getString(bytes.getByteArray(), at, length);
     }
 
     public static String getString(byte[] bytes, int at, int length) {

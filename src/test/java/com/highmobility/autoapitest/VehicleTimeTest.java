@@ -4,6 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetVehicleTime;
 import com.highmobility.autoapi.VehicleTime;
+import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -18,26 +19,20 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
  */
 public class VehicleTimeTest {
+    Bytes bytes = new Bytes("00500101000811010A1020330078");
+
     @Test
     public void state() {
-        Bytes bytes = new Bytes("00500101000811010A1020330078");
-
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == VehicleTime.class);
         VehicleTime state = (VehicleTime) command;
-        Calendar c = state.getVehicleTime();
+        Calendar c = state.getVehicleTime().getValue();
 
         float rawOffset = c.getTimeZone().getRawOffset();
         float expectedRawOffset = 120 * 60 * 1000;
@@ -56,6 +51,12 @@ public class VehicleTimeTest {
         }
     }
 
+    @Test public void stateWithTimestamp() {
+        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000001"));
+        VehicleTime command = (VehicleTime) CommandResolver.resolve(timestampBytes);
+        assertTrue(command.getVehicleTime().getTimestamp() != null);
+    }
+
     @Test public void get() {
         String waitingForBytes = "005000";
         String commandBytes = ByteUtils.hexFromBytes(new GetVehicleTime().getByteArray());
@@ -65,15 +66,14 @@ public class VehicleTimeTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("005001");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((VehicleTime) state).getVehicleTime() == null);
+        assertTrue(((VehicleTime) state).getVehicleTime().getValue() == null);
     }
 
     @Test public void build() throws ParseException {
         VehicleTime.Builder builder = new VehicleTime.Builder();
         Calendar c = TestUtils.getUTCCalendar("2017-01-10T14:32:51", 120);
-        builder.setVehicleTime(c);
+        builder.setVehicleTime(new CalendarProperty(c));
         byte[] bytes = builder.build().getByteArray();
         assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("00500101000811010A1020330078")));
-
     }
 }

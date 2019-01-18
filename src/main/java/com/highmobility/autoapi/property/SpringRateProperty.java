@@ -23,29 +23,13 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.value.Axle;
 
+import javax.annotation.Nullable;
+
 public class SpringRateProperty extends Property {
-    Axle axle;
-    Integer springRate;
+    Value value;
 
-    /**
-     * @return The axle.
-     */
-    public Axle getAxle() {
-        return axle;
-    }
-
-    /**
-     * @return The suspension spring rate in N/mm
-     */
-    public Integer getSpringRate() {
-        return springRate;
-    }
-
-    public SpringRateProperty(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length != 5) throw new CommandParseException();
-        axle = Axle.fromByte(bytes[3]);
-        springRate = Property.getUnsignedInt(bytes[4]);
+    @Nullable public Value getValue() {
+        return value;
     }
 
     public SpringRateProperty(Axle axle, Integer springRate) {
@@ -56,5 +40,46 @@ public class SpringRateProperty extends Property {
         super(identifier, 2);
         bytes[3] = axle.getByte();
         bytes[4] = springRate.byteValue();
+    }
+
+    public SpringRateProperty(Property p) throws CommandParseException {
+        super(p);
+        update(p, null, null, false);
+    }
+
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) value = new Value(p);
+        return super.update(p, failure, timestamp, propertyInArray);
+    }
+
+    public static class Value {
+        Axle axle;
+        Integer springRate;
+
+        /**
+         * @return The axle.
+         */
+        public Axle getAxle() {
+            return axle;
+        }
+
+        /**
+         * @return The suspension spring rate in N/mm
+         */
+        public Integer getSpringRate() {
+            return springRate;
+        }
+
+        public Value(Property bytes) throws CommandParseException {
+            axle = Axle.fromByte(bytes.get(3));
+            springRate = Property.getUnsignedInt(bytes.get(4));
+        }
+
+        public Value(Axle axle, Integer springRate) {
+            this.axle = axle;
+            this.springRate = springRate;
+        }
     }
 }

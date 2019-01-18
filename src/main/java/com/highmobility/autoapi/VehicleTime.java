@@ -21,9 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.Property;
-
-import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
@@ -34,21 +31,23 @@ import javax.annotation.Nullable;
 public class VehicleTime extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VEHICLE_TIME, 0x01);
 
-    Calendar vehicleTime;
+    private static final byte IDENTIFIER = 0x01;
+
+    CalendarProperty vehicleTime = new CalendarProperty(IDENTIFIER);
 
     /**
      * @return The vehicle time.
      */
-    @Nullable public Calendar getVehicleTime() {
+    @Nullable public CalendarProperty getVehicleTime() {
         return vehicleTime;
     }
 
     VehicleTime(byte[] bytes) {
         super(bytes);
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == 0x01) {
-                    vehicleTime = Property.getCalendar(p.getValueBytes());
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext((identifier, p, timestamp, failure) -> {
+                if (identifier == IDENTIFIER) {
+                    vehicleTime.update(p, timestamp, failure, false);
                     return vehicleTime;
                 }
                 return null;
@@ -66,7 +65,7 @@ public class VehicleTime extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        Calendar vehicleTime;
+        CalendarProperty vehicleTime;
 
         public Builder() {
             super(TYPE);
@@ -76,9 +75,10 @@ public class VehicleTime extends CommandWithProperties {
          * @param vehicleTime The vehicle time.
          * @return The builder.
          */
-        public Builder setVehicleTime(Calendar vehicleTime) {
+        public Builder setVehicleTime(CalendarProperty vehicleTime) {
             this.vehicleTime = vehicleTime;
-            addProperty(new CalendarProperty((byte) 0x01, vehicleTime));
+            vehicleTime.setIdentifier(IDENTIFIER);
+            addProperty(vehicleTime);
             return this;
         }
 

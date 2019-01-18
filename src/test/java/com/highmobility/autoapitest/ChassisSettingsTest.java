@@ -20,7 +20,6 @@ import com.highmobility.value.Bytes;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -31,33 +30,30 @@ public class ChassisSettingsTest {
 
     @Test
     public void state() {
-
-        com.highmobility.autoapi.Command command = null;
-
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-
-        assertTrue(command.getClass() == ChassisSettings.class);
+        Command command = CommandResolver.resolve(bytes);
         ChassisSettings state = (ChassisSettings) command;
 
-        assertTrue(state.getDrivingMode() == DrivingMode.ECO);
+        assertTrue(state.getDrivingMode().getValue() == DrivingMode.Value.ECO);
         assertTrue(state.isSportChronoActive().getValue() == true);
 
-        assertTrue(state.getCurrentSpringRate(Axle.FRONT).getSpringRate() == 21);
-        assertTrue(state.getCurrentSpringRate(Axle.REAR).getSpringRate() == 23);
+        assertTrue(state.getCurrentSpringRate(Axle.FRONT).getValue().getSpringRate() == 21);
+        assertTrue(state.getCurrentSpringRate(Axle.REAR).getValue().getSpringRate() == 23);
 
-        assertTrue(state.getMaximumSpringRate(Axle.FRONT).getSpringRate() == 37);
-        assertTrue(state.getMaximumSpringRate(Axle.REAR).getSpringRate() == 39);
+        assertTrue(state.getMaximumSpringRate(Axle.FRONT).getValue().getSpringRate() == 37);
+        assertTrue(state.getMaximumSpringRate(Axle.REAR).getValue().getSpringRate() == 39);
 
-        assertTrue(state.getMinimumSpringRate(Axle.FRONT).getSpringRate() == 16);
-        assertTrue(state.getMinimumSpringRate(Axle.REAR).getSpringRate() == 18);
+        assertTrue(state.getMinimumSpringRate(Axle.FRONT).getValue().getSpringRate() == 16);
+        assertTrue(state.getMinimumSpringRate(Axle.REAR).getValue().getSpringRate() == 18);
 
         assertTrue(state.getCurrentChassisPosition().getValue() == 25);
         assertTrue(state.getMaximumChassisPosition().getValue() == 55);
         assertTrue(state.getMinimumChassisPosition().getValue() == -28);
+    }
+
+    @Test public void stateWithTimestamp() {
+        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
+        ChassisSettings command = (ChassisSettings) CommandResolver.resolve(timestampBytes);
+        assertTrue(command.isSportChronoActive().getTimestamp() != null);
     }
 
     @Test public void get() {
@@ -68,11 +64,11 @@ public class ChassisSettingsTest {
 
     @Test public void setDrivingMode() {
         Bytes waitingForBytes = new Bytes("00531201000103");
-        Bytes commandBytes = new SetDrivingMode(DrivingMode.SPORT_PLUS);
+        Bytes commandBytes = new SetDrivingMode(DrivingMode.Value.SPORT_PLUS);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         SetDrivingMode drivingMode = (SetDrivingMode) CommandResolver.resolve(waitingForBytes);
-        assertTrue(drivingMode.getDrivingMode() == DrivingMode.SPORT_PLUS);
+        assertTrue(drivingMode.getDrivingMode() == DrivingMode.Value.SPORT_PLUS);
     }
 
     @Test public void startChrono() {
@@ -98,12 +94,11 @@ public class ChassisSettingsTest {
 
         SetSpringRate command = (SetSpringRate) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getSpringRates().length == 1);
-        assertTrue(command.getSpringRate(Axle.REAR).getSpringRate() == 25);
+        assertTrue(command.getSpringRate(Axle.REAR).getValue().getSpringRate() == 25);
     }
 
     @Test public void setSpringRate0Properties() {
         Bytes waitingForBytes = new Bytes("005314");
-
 
         SpringRateProperty[] props = new SpringRateProperty[0];
         Bytes commandBytes = new SetSpringRate(props);
@@ -144,7 +139,7 @@ public class ChassisSettingsTest {
     @Test public void build() {
         ChassisSettings.Builder builder = new ChassisSettings.Builder();
 
-        builder.setDrivingMode(DrivingMode.ECO);
+        builder.setDrivingMode(new DrivingMode(DrivingMode.Value.ECO));
         builder.setSportChronoActive(new BooleanProperty(true));
 
         builder.addCurrentSpringRate(new SpringRateProperty(Axle.FRONT, 21));

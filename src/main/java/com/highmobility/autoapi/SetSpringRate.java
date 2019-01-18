@@ -46,7 +46,8 @@ public class SetSpringRate extends CommandWithProperties {
      */
     @Nullable public SpringRateProperty getSpringRate(Axle axle) {
         for (SpringRateProperty springRate : springRates) {
-            if (springRate.getAxle() == axle) return springRate;
+            if (springRate.getValue() != null && springRate.getValue().getAxle() == axle)
+                return springRate;
         }
 
         return null;
@@ -75,7 +76,7 @@ public class SetSpringRate extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
-                    builder.add(new SpringRateProperty(p.getByteArray()));
+                    builder.add(new SpringRateProperty(p));
                 }
                 return null; // TODO: 12/11/2018
             });

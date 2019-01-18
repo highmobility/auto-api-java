@@ -50,11 +50,11 @@ public class SetChargeTimer extends CommandWithProperties {
      * @param type The charge timer type.
      * @return The charge timer.
      */
-    public ChargingTimer getChargingTimer(ChargingTimer.Type type) {
+    public ChargingTimer getChargingTimer(ChargingTimer.Value.Type type) {
         if (timers == null) return null;
         for (int i = 0; i < timers.length; i++) {
             ChargingTimer timer = timers[i];
-            if (timer.getType() == type) return timer;
+            if (timer.getValue().getType() == type) return timer;
         }
         return null;
     }
@@ -67,13 +67,17 @@ public class SetChargeTimer extends CommandWithProperties {
         this.timers = timers;
     }
 
-    static ChargingTimer[] validateTimers(ChargingTimer[] timers) throws IllegalArgumentException {
+    static ChargingTimer[] validateTimers(ChargingTimer[] timers) {
         if (timers.length == 0) throw new IllegalArgumentException();
 
-        ArrayList<ChargingTimer.Type> types = new ArrayList<>(3);
         for (ChargingTimer timer : timers) {
-            if (types.contains(timer.getType()) == false) types.add(timer.getType());
-            else throw new IllegalArgumentException("Duplicate timer types are not allowed");
+            if (timer.getValue() == null) throw new IllegalArgumentException();
+
+            for (ChargingTimer timer2 : timers) {
+                if (timer2 != timer && timer2.getValue().getType() == timer.getValue().getType())
+                    throw new IllegalArgumentException();
+            }
+
             timer.setIdentifier(PROPERTY_IDENTIFIER);
         }
 
@@ -87,7 +91,7 @@ public class SetChargeTimer extends CommandWithProperties {
         for (int i = 0; i < getProperties().length; i++) {
             Property property = getProperties()[i];
             if (property.getPropertyIdentifier() == 0x0D) {
-                builder.add(new ChargingTimer(property.getByteArray()));
+                builder.add(new ChargingTimer(property));
             }
         }
 

@@ -20,79 +20,117 @@
 
 package com.highmobility.autoapi.property.diagnostics;
 
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.utils.ByteUtils;
 
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
+
 public class CheckControlMessage extends Property {
-    int id;
-    int remainingTime;
-    String text;
-    String status;
+    Value value;
 
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * @return The message remaining time in minutes.
-     */
-    public int getRemainingTime() {
-        return remainingTime;
-    }
-
-    /**
-     * @return The message text.
-     */
-    public String getText() {
-        return text;
-    }
-
-    /**
-     * @return The message status.
-     */
-    public String getStatus() {
-        return status;
+    @Nullable public Value getValue() {
+        return value;
     }
 
     public CheckControlMessage(int id, int remainingTime, String text, String status) {
-        super((byte) 0x00, 9 + text.length() + status.length());
+        this(new Value(id, remainingTime, text, status));
+    }
 
-        this.id = id;
-        this.remainingTime = remainingTime;
-        this.text = text;
-        this.status = status;
+    public CheckControlMessage(Value value) {
+        super((byte) 0x00, 9 + value.text.length() + value.status.length());
+        this.value = value;
 
-        ByteUtils.setBytes(bytes, Property.intToBytes(id, 2), 3);
-        ByteUtils.setBytes(bytes, Property.intToBytes(remainingTime, 4), 5);
+        ByteUtils.setBytes(bytes, Property.intToBytes(value.id, 2), 3);
+        ByteUtils.setBytes(bytes, Property.intToBytes(value.remainingTime, 4), 5);
 
         int textPosition = 9;
-        int textLength = text.length();
+        int textLength = value.text.length();
         bytes[textPosition] = (byte) textLength;
         ByteUtils.setBytes(bytes, Property.intToBytes(textLength, 2), textPosition);
         textPosition += 2;
-        ByteUtils.setBytes(bytes, Property.stringToBytes(text), textPosition);
+        ByteUtils.setBytes(bytes, Property.stringToBytes(value.text), textPosition);
 
         textPosition += textLength;
-        textLength = status.length();
+        textLength = value.status.length();
         bytes[textPosition] = (byte) textLength;
         textPosition += 1;
-        ByteUtils.setBytes(bytes, Property.stringToBytes(status), textPosition);
+        ByteUtils.setBytes(bytes, Property.stringToBytes(value.status), textPosition);
     }
 
-    public CheckControlMessage(byte[] bytes) {
-        super(bytes);
+    public CheckControlMessage(@Nullable Value value, @Nullable Calendar timestamp,
+                               @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
 
-        this.id = Property.getUnsignedInt(bytes, 3, 2);
-        this.remainingTime = Property.getUnsignedInt(bytes, 5, 4);
+    public CheckControlMessage(Property p) throws CommandParseException {
+        super(p);
+        update(p, null, null, false);
+    }
 
-        int textPosition = 9;
-        int textLength = Property.getUnsignedInt(bytes, textPosition, 2);
-        textPosition+=2;
-        this.text = Property.getString(bytes, textPosition, textLength);
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) value = new Value(p);
+        return super.update(p, failure, timestamp, propertyInArray);
+    }
 
-        textPosition += textLength;
-        textLength = Property.getUnsignedInt(bytes, textPosition, 1);
-        textPosition++;
-        this.status = Property.getString(bytes, textPosition, textLength);
+    public static class Value {
+        int id;
+        int remainingTime;
+        String text;
+        String status;
+
+        public int getId() {
+            return id;
+        }
+
+        /**
+         * @return The message remaining time in minutes.
+         */
+        public int getRemainingTime() {
+            return remainingTime;
+        }
+
+        /**
+         * @return The message text.
+         */
+        public String getText() {
+            return text;
+        }
+
+        /**
+         * @return The message status.
+         */
+        public String getStatus() {
+            return status;
+        }
+
+        public Value(int id, int remainingTime, String text, String status) {
+            this.id = id;
+            this.remainingTime = remainingTime;
+            this.text = text;
+            this.status = status;
+        }
+
+        public Value(Property property) {
+            this.id = Property.getUnsignedInt(property, 3, 2);
+            this.remainingTime = Property.getUnsignedInt(property, 5, 4);
+
+            int textPosition = 9;
+            int textLength = Property.getUnsignedInt(property, textPosition, 2);
+            textPosition += 2;
+            this.text = Property.getString(property, textPosition, textLength);
+
+            textPosition += textLength;
+            textLength = Property.getUnsignedInt(property, textPosition, 1);
+            textPosition++;
+            this.status = Property.getString(property, textPosition, textLength);
+        }
     }
 }

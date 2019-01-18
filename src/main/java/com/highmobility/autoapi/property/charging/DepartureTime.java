@@ -22,41 +22,84 @@ package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.autoapi.property.value.Time;
 
 import java.util.Arrays;
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
 
 public class DepartureTime extends Property {
     private static final byte IDENTIFIER = 0x11;
-    boolean active;
-    Time time;
 
-    /**
-     * @return The activation state.
-     */
-    public boolean isActive() {
-        return active;
-    }
+    Value value;
 
-    /**
-     * @return The departure time.
-     */
-    public Time getTime() {
-        return time;
+    @Nullable public Value getValue() {
+        return value;
     }
 
     public DepartureTime(boolean active, Time time) {
-        super(IDENTIFIER, 3);
-        bytes[3] = Property.boolToByte(active);
-        bytes[4] = (byte) time.getHour();
-        bytes[5] = (byte) time.getMinute();
-        this.time = time;
+        this(new Value(active, time));
     }
 
-    public DepartureTime(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 6) throw new CommandParseException();
-        active = Property.getBool(bytes[3]);
-        time = new Time(Arrays.copyOfRange(bytes, 4, 6));
+    public DepartureTime(@Nullable Value value, @Nullable Calendar timestamp,
+                         @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public DepartureTime(Value value) {
+        super(IDENTIFIER, value != null ? 3 : 0);
+        this.value = value;
+
+        if (value != null) {
+            bytes[3] = Property.boolToByte(value.active);
+            bytes[4] = (byte) value.time.getHour();
+            bytes[5] = (byte) value.time.getMinute();
+        }
+    }
+
+    public DepartureTime(Property p) throws CommandParseException {
+        super(p);
+        update(p, null, null, false);
+    }
+
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) value = new Value(p);
+        return super.update(p, failure, timestamp, propertyInArray);
+    }
+
+    public static class Value {
+        boolean active;
+        Time time;
+
+        /**
+         * @return The activation state.
+         */
+        public boolean isActive() {
+            return active;
+        }
+
+        /**
+         * @return The departure time.
+         */
+        public Time getTime() {
+            return time;
+        }
+
+        public Value(boolean active, Time time) {
+            this.active = active;
+            this.time = time;
+        }
+
+        public Value(Property bytes) {
+            active = Property.getBool(bytes.get(3));
+            time = new Time(Arrays.copyOfRange(bytes.getByteArray(), 4, 6));
+        }
+
     }
 }

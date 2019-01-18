@@ -20,10 +20,8 @@
 
 package com.highmobility.autoapi;
 
-
-import com.highmobility.autoapi.property.ChargeModeProperty;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ChargeMode;
+import com.highmobility.autoapi.property.Property;
 
 /**
  * Set the charge mode of the car.
@@ -31,12 +29,12 @@ import com.highmobility.autoapi.property.charging.ChargeMode;
 public class SetChargeMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x15);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    ChargeMode chargeMode;
+    ChargeMode.Value chargeMode;
 
     /**
      * @return The charge mode.
      */
-    public ChargeMode getChargeMode() {
+    public ChargeMode.Value getChargeMode() {
         return chargeMode;
     }
 
@@ -44,11 +42,11 @@ public class SetChargeMode extends CommandWithProperties {
      * Set the charge mode of the car.
      *
      * @param chargeMode The charge mode.
-     * @throws IllegalArgumentException for {@link ChargeMode#IMMEDIATE}.
+     * @throws IllegalArgumentException for {@link ChargeMode.Value#IMMEDIATE}.
      */
-    public SetChargeMode(ChargeMode chargeMode) {
-        super(TYPE.addProperty(new ChargeModeProperty(PROPERTY_IDENTIFIER, chargeMode)));
-        if (chargeMode == ChargeMode.IMMEDIATE) throw new IllegalArgumentException();
+    public SetChargeMode(ChargeMode.Value chargeMode) {
+        super(TYPE.addProperty(new ChargeMode(chargeMode).setIdentifier(PROPERTY_IDENTIFIER)));
+        if (chargeMode == ChargeMode.Value.IMMEDIATE) throw new IllegalArgumentException();
         this.chargeMode = chargeMode;
     }
 
@@ -58,7 +56,7 @@ public class SetChargeMode extends CommandWithProperties {
         for (int i = 0; i < properties.length; i++) {
             Property property = properties[i];
             if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
-                this.chargeMode = ChargeMode.fromByte(property.getValueByte());
+                this.chargeMode = ChargeMode.Value.fromByte(property.getValueByte());
             }
         }
     }

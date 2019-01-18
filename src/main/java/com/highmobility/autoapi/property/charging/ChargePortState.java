@@ -18,32 +18,45 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property.diagnostics;
+package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.PropertyTimestamp;
-import com.highmobility.autoapi.property.value.TireLocation;
-import com.highmobility.utils.ByteUtils;
+
+import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-public class TirePressure extends Property {
+public class ChargePortState extends Property {
     Value value;
 
     @Nullable public Value getValue() {
         return value;
     }
 
-    public TirePressure(TireLocation tireLocation, float pressure) {
-        super((byte) 0x00, 5);
-        value = new Value(tireLocation, pressure);
-        bytes[3] = tireLocation.getByte();
-        ByteUtils.setBytes(bytes, Property.floatToBytes(pressure), 4);
+    public ChargePortState(byte identifier) {
+        super(identifier);
     }
 
-    public TirePressure(Property p) throws CommandParseException {
+    public ChargePortState(Value value) {
+        this((byte) 0x00, value);
+    }
+
+    public ChargePortState(@Nullable Value value, @Nullable Calendar timestamp,
+                           @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public ChargePortState(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 1);
+        this.value = value;
+        if (value != null) bytes[3] = value.getByte();
+    }
+
+    public ChargePortState(Property p) throws CommandParseException {
         super(p);
         update(p, null, null, false);
     }
@@ -51,39 +64,39 @@ public class TirePressure extends Property {
     @Override
     public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
                           boolean propertyInArray) throws CommandParseException {
-        if (p != null) value = new Value(p);
+        if (p != null) {
+            value = value.fromByte(p.get(3));
+        }
         return super.update(p, failure, timestamp, propertyInArray);
     }
 
-    public class Value {
-        TireLocation tireLocation;
-        float pressure;
+    /**
+     * The possible charge port states
+     */
+    public enum Value {
+        CLOSED((byte) 0x00), OPEN((byte) 0x01);
 
-        /**
-         * @return The tire location
-         */
-        public TireLocation getTireLocation() {
-            return tireLocation;
+        public static Value fromByte(byte byteValue) throws CommandParseException {
+            Value[] values = Value.values();
+
+            for (int i = 0; i < values.length; i++) {
+                Value state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+
+            throw new CommandParseException();
         }
 
-        /**
-         * @return The tire pressure.
-         */
-        public float getPressure() {
-            return pressure;
+        private byte value;
+
+        Value(byte value) {
+            this.value = value;
         }
 
-        public Value(TireLocation tireLocation, float pressure) {
-            this.tireLocation = tireLocation;
-            this.pressure = pressure;
-
-        }
-
-        public Value(Property bytes) throws CommandParseException {
-            if (bytes.getLength() < 8) throw new CommandParseException();
-
-            this.tireLocation = TireLocation.fromByte(bytes.get(3));
-            this.pressure = Property.getFloat(bytes, 4);
+        public byte getByte() {
+            return value;
         }
     }
 }

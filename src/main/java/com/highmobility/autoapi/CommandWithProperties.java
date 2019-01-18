@@ -64,7 +64,7 @@ public class CommandWithProperties extends Command {
     PropertyTimestamp[] propertyTimestamps;
     PropertyFailure[] propertyFailures;
 
-    private HashMap<Object, PropertyTimestamp> linkedPropertyTimestamps;
+    private HashMap<Object, PropertyTimestamp> linkedPropertyTimestamps; // TODO: delete
 
     /**
      * @return The nonce for the signature.
@@ -282,9 +282,26 @@ public class CommandWithProperties extends Command {
             }
         }
 
+        // match the timestamps and failures to the property
+
         this.propertyFailures = propertyFailures.toArray(new PropertyFailure[0]);
         this.propertyTimestamps = propertyTimestamps.toArray(new PropertyTimestamp[0]);
 
+        for (int i = 0; i < propertyFailures.size(); i++) {
+            PropertyFailure failure = propertyFailures.get(i);
+            // TODO: 2019-01-18
+            // create empty property with the identifier.
+            
+        }
+
+        for (int i = 0; i < propertyTimestamps.size(); i++) {
+            PropertyTimestamp timestamp = propertyTimestamps.get(i);
+            // TODO: 2019-01-18
+            // match the timestamp to a property
+
+        }
+
+        // iterator is used by subclass
         propertiesIterator = new PropertiesIterator();
         propertiesIterator2 = new PropertiesIterator2();
     }

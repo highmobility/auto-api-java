@@ -69,7 +69,7 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
         for (int i = 0; i < properties.length; i++) {
             Property property = properties[i];
             if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
-                builder.add(new ReductionTime(property.getByteArray()));
+                builder.add(new ReductionTime(property));
             }
         }
 

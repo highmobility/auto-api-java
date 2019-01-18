@@ -21,14 +21,13 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.ChargeModeProperty;
-import com.highmobility.autoapi.property.ChargePortState;
-import com.highmobility.autoapi.property.ChargingState;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ChargeMode;
+import com.highmobility.autoapi.property.charging.ChargePortState;
+import com.highmobility.autoapi.property.charging.ChargingState;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
 import com.highmobility.autoapi.property.charging.DepartureTime;
 import com.highmobility.autoapi.property.charging.PlugType;
@@ -55,7 +54,7 @@ public class ChargeState extends CommandWithProperties {
     private static final byte CHARGER_VOLTAGE_DC_IDENTIFIER = 0x07;
     private static final byte CHARGE_LIMIT_IDENTIFIER = 0x08;
     private static final byte TIME_TO_COMPLETE_CHARGE_IDENTIFIER = 0x09;
-    private static final byte CHARGE_RATE_IDENTIFIER = 0x0A;
+    private static final byte CHARGING_RATE_IDENTIFIER = 0x0A;
     private static final byte CHARGE_PORT_STATE_IDENTIFIER = 0x0B;
     private static final byte CHARGE_MODE_IDENTIFIER = 0x0C;
 
@@ -68,34 +67,29 @@ public class ChargeState extends CommandWithProperties {
     private static final byte TIMER_IDENTIFIER = 0x15;
     private static final byte PLUGGED_IN_IDENTIFIER = 0x16;
 
-    private static final byte IDENTIFIER_STATE = 0x17;
+    private static final byte ACTIVE_STATE_IDENTIFIER = 0x17;
 
-    IntegerProperty estimatedRange;
-    PercentageProperty batteryLevel;
-    FloatProperty batteryCurrentAC;
-    FloatProperty batteryCurrentDC;
-
-    FloatProperty chargerVoltageAC;
-    FloatProperty chargerVoltageDC;
-
-    PercentageProperty chargeLimit;
-    IntegerProperty timeToCompleteCharge;
-
-    FloatProperty chargingRate;
-    ChargePortState chargeChargePortState;
-
-    ChargeModeProperty chargeMode;
-
-    FloatProperty maxChargingCurrent;
-    PlugType plugType;
-    BooleanProperty chargingWindowChosen;
+    IntegerProperty estimatedRange = new IntegerProperty(ESTIMATED_RANGE_IDENTIFIER, false);
+    PercentageProperty batteryLevel = new PercentageProperty(BATTERY_LEVEL_IDENTIFIER);
+    FloatProperty batteryCurrentAC = new FloatProperty(BATTERY_CURRENT_AC_IDENTIFIER);
+    FloatProperty batteryCurrentDC = new FloatProperty(BATTERY_CURRENT_DC_IDENTIFIER);
+    FloatProperty chargerVoltageAC = new FloatProperty(CHARGER_VOLTAGE_AC_IDENTIFIER);
+    FloatProperty chargerVoltageDC = new FloatProperty(CHARGER_VOLTAGE_DC_IDENTIFIER);
+    PercentageProperty chargeLimit = new PercentageProperty(CHARGE_LIMIT_IDENTIFIER);
+    IntegerProperty timeToCompleteCharge = new IntegerProperty(TIME_TO_COMPLETE_CHARGE_IDENTIFIER
+            , false);
+    FloatProperty chargingRate = new FloatProperty(CHARGING_RATE_IDENTIFIER);
+    ChargePortState chargePortState = new ChargePortState(CHARGE_PORT_STATE_IDENTIFIER);
+    ChargeMode chargeMode = new ChargeMode(CHARGE_MODE_IDENTIFIER);
+    FloatProperty maxChargingCurrent = new FloatProperty(MAX_CHARGING_CURRENT_IDENTIFIER);
+    PlugType plugType = new PlugType(PLUG_TYPE_IDENTIFIER);
+    BooleanProperty chargingWindowChosen = new BooleanProperty(CHARGING_WINDOW_CHOSEN_IDENTIFIER);
     DepartureTime[] departureTimes;
-
     ReductionTime[] reductionOfChargingCurrentTimes;
-    FloatProperty batteryTemperature;
+    FloatProperty batteryTemperature = new FloatProperty(BATTERY_TEMPERATURE_IDENTIFIER);
     ChargingTimer[] timers;
-    BooleanProperty pluggedIn;
-    ChargingState activeState;
+    BooleanProperty pluggedIn = new BooleanProperty(PLUGGED_IN_IDENTIFIER);
+    ChargingState activeState = new ChargingState(ACTIVE_STATE_IDENTIFIER);
 
     /**
      * @return The estimated range in km.
@@ -163,14 +157,14 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The charge port state.
      */
-    @Nullable public ChargePortState getChargeChargePortState() {
-        return chargeChargePortState;
+    @Nullable public ChargePortState getChargePortState() {
+        return chargePortState;
     }
 
     /**
      * @return The charge mode.
      */
-    @Nullable public ChargeModeProperty getChargeMode() {
+    @Nullable public ChargeMode getChargeMode() {
         return chargeMode;
     }
 
@@ -229,10 +223,10 @@ public class ChargeState extends CommandWithProperties {
      * @param type The charge timer type.
      * @return The charge timer.
      */
-    @Nullable public ChargingTimer getTimer(ChargingTimer.Type type) {
+    @Nullable public ChargingTimer getTimer(ChargingTimer.Value.Type type) {
         if (timers != null) {
             for (ChargingTimer timer : timers) {
-                if (timer.getType() == type) return timer;
+                if (timer.getValue() != null && timer.getValue().getType() == type) return timer;
             }
         }
         return null;
@@ -260,72 +254,85 @@ public class ChargeState extends CommandWithProperties {
         ArrayList<ReductionTime> reductionOfChargingCurrentTimes = new ArrayList<>();
         ArrayList<ChargingTimer> timers = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
-                switch (p.getPropertyIdentifier()) {
-                    case IDENTIFIER_STATE:
-                        activeState = ChargingState.fromByte(p.getValueByte());
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext((identifier, p, timestamp, failure) -> {
+                switch (identifier) {
+                    case ACTIVE_STATE_IDENTIFIER:
+                        activeState.update(p, timestamp, failure, false);
                         return activeState;
                     case ESTIMATED_RANGE_IDENTIFIER:
-                        estimatedRange = new IntegerProperty(p, false);
+                        estimatedRange.update(p, timestamp, failure, false);
                         return estimatedRange;
                     case BATTERY_LEVEL_IDENTIFIER:
-                        batteryLevel = new PercentageProperty(p);
+                        batteryLevel.update(p, timestamp, failure, false);
                         return batteryLevel;
                     case BATTERY_CURRENT_AC_IDENTIFIER:
-                        batteryCurrentAC = new FloatProperty(p);
+                        batteryCurrentAC.update(p, timestamp, failure, false);
                         return batteryCurrentAC;
                     case BATTERY_CURRENT_DC_IDENTIFIER:
-                        batteryCurrentDC = new FloatProperty(p);
+                        batteryCurrentDC.update(p, timestamp, failure, false);
                         return batteryCurrentDC;
                     case CHARGER_VOLTAGE_AC_IDENTIFIER:
-                        chargerVoltageAC = new FloatProperty(p);
+                        chargerVoltageAC.update(p, timestamp, failure, false);
                         return chargerVoltageAC;
                     case CHARGER_VOLTAGE_DC_IDENTIFIER:
-                        chargerVoltageDC = new FloatProperty(p);
+                        chargerVoltageDC.update(p, timestamp, failure, false);
                         return chargerVoltageDC;
                     case CHARGE_LIMIT_IDENTIFIER:
-                        chargeLimit = new PercentageProperty(p);
+                        chargeLimit.update(p, timestamp, failure, false);
                         return chargeLimit;
                     case TIME_TO_COMPLETE_CHARGE_IDENTIFIER:
-                        timeToCompleteCharge = new IntegerProperty(p, false);
+                        timeToCompleteCharge.update(p, timestamp, failure, false);
                         return timeToCompleteCharge;
-                    case CHARGE_RATE_IDENTIFIER:
-                        chargingRate = new FloatProperty(p);
+                    case CHARGING_RATE_IDENTIFIER:
+                        chargingRate.update(p, timestamp, failure, false);
                         return chargingRate;
                     case CHARGE_PORT_STATE_IDENTIFIER:
-                        chargeChargePortState = ChargePortState.fromByte(p.getValueByte());
-                        return chargeChargePortState;
+                        chargePortState.update(p, timestamp, failure, false);
+                        return chargePortState;
                     case CHARGE_MODE_IDENTIFIER:
-                        chargeMode = new ChargeModeProperty(p);
+                        chargeMode.update(p, timestamp, failure, false);
                         return chargeMode;
                     case MAX_CHARGING_CURRENT_IDENTIFIER:
-                        maxChargingCurrent = new FloatProperty(p);
+                        maxChargingCurrent.update(p, timestamp, failure, false);
                         return maxChargingCurrent;
                     case PLUG_TYPE_IDENTIFIER:
-                        plugType = PlugType.fromByte(p.getValueByte());
+                        plugType.update(p, timestamp, failure, false);
                         return plugType;
                     case CHARGING_WINDOW_CHOSEN_IDENTIFIER:
-                        chargingWindowChosen = new BooleanProperty(p);
+                        chargingWindowChosen.update(p, timestamp, failure, false);
                         return chargingWindowChosen;
                     case DEPARTURE_TIMES_IDENTIFIER:
-                        DepartureTime time = new DepartureTime(p.getByteArray());
-                        departureTimes.add(time);
-                        return time;
+                        if (p != null) {
+                            DepartureTime time = new DepartureTime(p);
+                            departureTimes.add(time);
+                            return time;
+                        } else {
+                            return Property.update(departureTimes, p, timestamp, failure);
+                        }
                     case REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER:
-                        ReductionTime time2 = new ReductionTime(p.getByteArray());
-                        reductionOfChargingCurrentTimes.add(time2);
-                        return time2;
+                        if (p != null) {
+                            ReductionTime time = new ReductionTime(p);
+                            reductionOfChargingCurrentTimes.add(time);
+                            return time;
+                        } else {
+                            return Property.update(reductionOfChargingCurrentTimes, p,
+                                    timestamp, failure);
+                        }
                     case BATTERY_TEMPERATURE_IDENTIFIER:
-                        batteryTemperature = new FloatProperty(p);
+                        batteryTemperature.update(p, timestamp, failure, false);
                         return batteryTemperature;
                     case PLUGGED_IN_IDENTIFIER:
-                        pluggedIn = new BooleanProperty(p);
+                        pluggedIn.update(p, timestamp, failure, false);
                         return pluggedIn;
                     case TIMER_IDENTIFIER:
-                        ChargingTimer timer = new ChargingTimer(p.getByteArray());
-                        timers.add(timer);
-                        return timer;
+                        if (p != null) {
+                            ChargingTimer time = new ChargingTimer(p);
+                            timers.add(time);
+                            return time;
+                        } else {
+                            return Property.update(timers, p, timestamp, failure);
+                        }
                 }
 
                 return null;
@@ -353,7 +360,7 @@ public class ChargeState extends CommandWithProperties {
         chargeLimit = builder.chargeLimit;
         timeToCompleteCharge = builder.timeToCompleteCharge;
         chargingRate = builder.chargingRate;
-        chargeChargePortState = builder.chargePortState;
+        chargePortState = builder.chargePortState;
         chargeMode = builder.chargeMode;
         maxChargingCurrent = builder.maxChargingCurrent;
         plugType = builder.plugType;
@@ -382,7 +389,7 @@ public class ChargeState extends CommandWithProperties {
         private FloatProperty chargingRate;
         private ChargePortState chargePortState;
 
-        private ChargeModeProperty chargeMode;
+        private ChargeMode chargeMode;
         private FloatProperty maxChargingCurrent;
         private PlugType plugType;
         private BooleanProperty chargingWindowChosen;
@@ -404,7 +411,8 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setActiveState(ChargingState activeState) {
             this.activeState = activeState;
-            addProperty(new Property(IDENTIFIER_STATE, activeState.getByte()));
+            activeState.setIdentifier(ACTIVE_STATE_IDENTIFIER);
+            addProperty(activeState);
             return this;
         }
 
@@ -502,7 +510,7 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setChargingRate(FloatProperty chargingRate) {
             this.chargingRate = chargingRate;
-            chargingRate.setIdentifier(CHARGE_RATE_IDENTIFIER);
+            chargingRate.setIdentifier(CHARGING_RATE_IDENTIFIER);
             addProperty(chargingRate);
             return this;
         }
@@ -514,7 +522,7 @@ public class ChargeState extends CommandWithProperties {
         public Builder setChargePortState(ChargePortState chargePortState) {
             this.chargePortState = chargePortState;
             chargePortState.setIdentifier(CHARGE_PORT_STATE_IDENTIFIER);
-            addProperty(new Property(CHARGE_PORT_STATE_IDENTIFIER, chargePortState.getByte()));
+            addProperty(chargePortState);
             return this;
         }
 
@@ -522,7 +530,7 @@ public class ChargeState extends CommandWithProperties {
          * @param chargeMode The charge mode.
          * @return The builder.
          */
-        public Builder setChargeMode(ChargeModeProperty chargeMode) {
+        public Builder setChargeMode(ChargeMode chargeMode) {
             this.chargeMode = chargeMode;
             chargeMode.setIdentifier(CHARGE_MODE_IDENTIFIER);
             addProperty(chargeMode);
@@ -546,7 +554,8 @@ public class ChargeState extends CommandWithProperties {
          */
         public Builder setPlugType(PlugType plugType) {
             this.plugType = plugType;
-            addProperty(new Property(PLUG_TYPE_IDENTIFIER, plugType.getByte()));
+            plugType.setIdentifier(PLUG_TYPE_IDENTIFIER);
+            addProperty(plugType);
             return this;
         }
 
@@ -576,6 +585,7 @@ public class ChargeState extends CommandWithProperties {
         }
 
         // TBODO: translate
+
         public Builder addDepartureTime(DepartureTime departureTime) {
             this.departureTimes.add(departureTime);
             addProperty(departureTime);

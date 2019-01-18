@@ -29,36 +29,34 @@ import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-public class ChargeMode extends Property {
+public class ChargingState extends Property {
     Value value;
 
     @Nullable public Value getValue() {
         return value;
     }
 
-    public ChargeMode(byte identifier) {
+    public ChargingState(byte identifier) {
         super(identifier);
     }
 
-    public ChargeMode(Value Value) {
-        this((byte) 0x00, Value);
+    public ChargingState(Value value) {
+        this((byte) 0x00, value);
     }
 
-    public ChargeMode(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : 1);
-        this.value = value;
-        if (value != null) {
-            bytes[3] = value.getByte();
-        }
-    }
-
-    public ChargeMode(@Nullable Value value, @Nullable Calendar timestamp,
-                      @Nullable PropertyFailure failure) {
+    public ChargingState(@Nullable Value value, @Nullable Calendar timestamp,
+                         @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
     }
 
-    public ChargeMode(Property p) throws CommandParseException {
+    public ChargingState(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 1);
+        this.value = value;
+        if (value != null) bytes[3] = value.getByte();
+    }
+
+    public ChargingState(Property p) throws CommandParseException {
         super(p);
         update(p, null, null, false);
     }
@@ -70,12 +68,16 @@ public class ChargeMode extends Property {
         return super.update(p, failure, timestamp, propertyInArray);
     }
 
-    // TBODO: ctors
-
+    /**
+     * The possible charging states.
+     */
     public enum Value {
-        IMMEDIATE((byte) 0x00),
-        TIMER_BASED((byte) 0x01),
-        INDUCTIVE((byte) 0x02);
+        NOT_CHARGING((byte) 0x00),
+        CHARGING((byte) 0x01),
+        CHARGING_COMPLETE((byte) 0x02),
+        INITIALISING((byte) 0x03),
+        CHARGING_PAUSED((byte) 0x04),
+        CHARGING_ERROR((byte) 0x05);
 
         public static Value fromByte(byte byteValue) throws CommandParseException {
             Value[] values = Value.values();

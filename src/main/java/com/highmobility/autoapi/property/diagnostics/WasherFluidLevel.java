@@ -21,31 +21,78 @@
 package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyTimestamp;
 
-public enum WasherFluidLevel {
-    LOW((byte) 0x00),
-    FULL((byte) 0x01);
+import java.util.Calendar;
 
-    public static WasherFluidLevel fromByte(byte value) throws CommandParseException {
-        WasherFluidLevel[] values = WasherFluidLevel.values();
+import javax.annotation.Nullable;
 
-        for (int i = 0; i < values.length; i++) {
-            WasherFluidLevel capability = values[i];
-            if (capability.getByte() == value) {
-                return capability;
+public class WasherFluidLevel extends Property {
+    Value value;
+
+    @Nullable public Value getValue() {
+        return value;
+    }
+
+    public WasherFluidLevel(Value value) {
+        this((byte) 0x00, value);
+    }
+
+    public WasherFluidLevel(@Nullable Value value, @Nullable Calendar timestamp,
+                            @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public WasherFluidLevel(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 1);
+        this.value = value;
+        if (value != null) bytes[3] = value.getByte();
+    }
+
+    public WasherFluidLevel(byte identifier) {
+        super(identifier);
+    }
+
+    public WasherFluidLevel(Property p) throws CommandParseException {
+        super(p);
+        update(p, null, null, false);
+    }
+
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) value = value.fromByte(p.get(3));
+        return super.update(p, failure, timestamp, propertyInArray);
+    }
+
+    public enum Value {
+        LOW((byte) 0x00),
+        FULL((byte) 0x01);
+
+        public static Value fromByte(byte value) throws CommandParseException {
+            Value[] values = Value.values();
+
+            for (int i = 0; i < values.length; i++) {
+                Value capability = values[i];
+                if (capability.getByte() == value) {
+                    return capability;
+                }
             }
+
+            throw new CommandParseException();
         }
 
-        throw new CommandParseException();
-    }
+        private byte value;
 
-    private byte value;
+        Value(byte value) {
+            this.value = value;
+        }
 
-    WasherFluidLevel(byte value) {
-        this.value = value;
-    }
-
-    public byte getByte() {
-        return value;
+        public byte getByte() {
+            return value;
+        }
     }
 }

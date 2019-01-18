@@ -22,40 +22,84 @@ package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyTimestamp;
 import com.highmobility.autoapi.property.value.StartStop;
 import com.highmobility.autoapi.property.value.Time;
 import com.highmobility.utils.ByteUtils;
 
 import java.util.Arrays;
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
 
 public class ReductionTime extends Property {
-    Time time;
-    StartStop startStop;
+    Value value;
+
+    @Nullable public Value getValue() {
+        return value;
+    }
 
     public ReductionTime(StartStop startStop, Time time) {
-        this((byte) 0x00, startStop, time);
+        this(new Value(startStop, time));
     }
 
-    public Time getTime() {
-        return time;
+    public ReductionTime(Value value) {
+        this((byte) 0x00, value);
     }
 
-    public StartStop getStartStop() {
-        return startStop;
+    public ReductionTime(@Nullable Value value, @Nullable Calendar timestamp,
+                         @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
     }
 
-    public ReductionTime(byte identifier, StartStop startStop, Time time) {
-        super(identifier, 3);
-        this.startStop = startStop;
-        this.time = time;
-        bytes[3] = startStop.getByte();
-        ByteUtils.setBytes(bytes, time.getByteArray(), 4);
+    public ReductionTime(byte identifier, Value value) {
+        super(identifier, value != null ? 3 : 0);
+        if (value != null) {
+            bytes[3] = value.startStop.getByte();
+            ByteUtils.setBytes(bytes, value.time.getByteArray(), 4);
+            this.value = value;
+        }
     }
 
-    public ReductionTime(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 6) throw new CommandParseException();
-        this.startStop = StartStop.fromByte(bytes[3]);
-        this.time = new Time(Arrays.copyOfRange(bytes, 4, 6));
+    public ReductionTime(Property p) throws CommandParseException {
+        super(p);
+        update(p, null, null, false);
+    }
+
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) {
+            if (bytes.length < 6) throw new CommandParseException();
+            this.value = new Value(bytes);
+        }
+
+        return super.update(p, failure, timestamp, propertyInArray);
+    }
+
+    public static class Value {
+        Time time;
+        StartStop startStop;
+
+        public Time getTime() {
+            return time;
+        }
+
+        public StartStop getStartStop() {
+            return startStop;
+        }
+
+        public Value(StartStop startStop, Time time) {
+            this.startStop = startStop;
+            this.time = time;
+        }
+
+        public Value(byte[] bytes) throws CommandParseException {
+            if (bytes.length < 6) throw new CommandParseException();
+            this.startStop = StartStop.fromByte(bytes[3]);
+            this.time = new Time(Arrays.copyOfRange(bytes, 4, 6));
+        }
     }
 }

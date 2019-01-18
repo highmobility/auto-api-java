@@ -114,9 +114,9 @@ public class MaintenanceTest {
         builder.setServiceDistanceThreshold(500);
         builder.setServiceTimeThreshold(4);
 
-        builder.setAutomaticTeleserviceCallDate(TestUtils.getCalendar("2018-11-23T10:33:50+0100"));
-        builder.setTeleserviceBatteryCallDate(TestUtils.getCalendar("2018-11-23T10:33:50+0100"));
-        builder.setNextInspectionDate(TestUtils.getCalendar("2018-11-23T10:33:50+0100"));
+        builder.setAutomaticTeleserviceCallDate(TestUtils.getValue("2018-11-23T10:33:50+0100"));
+        builder.setTeleserviceBatteryCallDate(TestUtils.getValue("2018-11-23T10:33:50+0100"));
+        builder.setNextInspectionDate(TestUtils.getValue("2018-11-23T10:33:50+0100"));
 
         ConditionBasedService service1 = new ConditionBasedService(LocalDate.of(2019, 5, 1), 3,
                 ConditionBasedService.DueStatus.OK, "Brake fluid");
@@ -126,7 +126,7 @@ public class MaintenanceTest {
         builder.addConditionBasedService(service1);
         builder.addConditionBasedService(service2);
 
-        builder.setBrakeFluidChangeDate(TestUtils.getCalendar("2018-11-23T10:33:50+0100"));
+        builder.setBrakeFluidChangeDate(TestUtils.getValue("2018-11-23T10:33:50+0100"));
 
         MaintenanceState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));*/

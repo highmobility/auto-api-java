@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
 
@@ -50,8 +50,19 @@ public class FloatProperty extends Property {
         if (value != null) ByteUtils.setBytes(bytes, floatToBytes(value), 3);
     }
 
-    public FloatProperty(Bytes bytes) {
-        super(bytes);
-        value = getFloat(getValueBytes());
+    public FloatProperty(Property p) throws CommandParseException {
+        super(p);
+        update(p, null, null, false);
+    }
+
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) value = getFloat(p.getValueBytes());
+        return super.update(p, failure, timestamp, propertyInArray);
+    }
+
+    public FloatProperty(byte identifier) {
+        super(identifier);
     }
 }

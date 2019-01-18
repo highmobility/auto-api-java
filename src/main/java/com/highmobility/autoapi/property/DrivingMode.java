@@ -22,33 +22,77 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum DrivingMode {
-    REGULAR((byte) 0x00),
-    ECO((byte) 0x01),
-    SPORT((byte) 0x02),
-    SPORT_PLUS((byte) 0x03),
-    ECO_PLUS((byte) 0x04);
+import java.util.Calendar;
 
-    public static DrivingMode fromByte(byte byteValue) throws CommandParseException {
-        DrivingMode[] values = DrivingMode.values();
+import javax.annotation.Nullable;
 
-        for (int i = 0; i < values.length; i++) {
-            DrivingMode state = values[i];
-            if (state.getByte() == byteValue) {
-                return state;
+public class DrivingMode extends Property {
+    Value value;
+
+    @Nullable public Value getValue() {
+        return value;
+    }
+
+    public DrivingMode(Value Value) {
+        this((byte) 0x00, Value);
+    }
+
+    public DrivingMode(@Nullable Value Value, @Nullable Calendar timestamp,
+                       @Nullable PropertyFailure failure) {
+        this(Value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public DrivingMode(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 1);
+        this.value = value;
+        if (value != null) bytes[3] = value.getByte();
+    }
+
+    public DrivingMode(Property p) throws CommandParseException {
+        super(p);
+        update(p, null, null, false);
+    }
+
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) value = value.fromByte(p.get(3));
+        return super.update(p, failure, timestamp, propertyInArray);
+    }
+
+    public DrivingMode(byte identifier) {
+        super(identifier);
+    }
+
+    public enum Value {
+        REGULAR((byte) 0x00),
+        ECO((byte) 0x01),
+        SPORT((byte) 0x02),
+        SPORT_PLUS((byte) 0x03),
+        ECO_PLUS((byte) 0x04);
+
+        public static Value fromByte(byte byteValue) throws CommandParseException {
+            Value[] values = Value.values();
+
+            for (int i = 0; i < values.length; i++) {
+                Value state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
             }
+
+            throw new CommandParseException();
         }
 
-        throw new CommandParseException();
-    }
+        private byte value;
 
-    private byte value;
+        Value(byte value) {
+            this.value = value;
+        }
 
-    DrivingMode(byte value) {
-        this.value = value;
-    }
-
-    public byte getByte() {
-        return value;
+        public byte getByte() {
+            return value;
+        }
     }
 }

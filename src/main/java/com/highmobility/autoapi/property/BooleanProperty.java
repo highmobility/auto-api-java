@@ -64,6 +64,10 @@ public class BooleanProperty extends Property {
         update(property, null, null, false);
     }
 
+    public BooleanProperty(byte identifier) {
+        super(identifier);
+    }
+
     // TODO: ^^ should be internal
 
     @Override

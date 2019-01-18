@@ -20,14 +20,15 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
 public class IntegerProperty extends Property {
+    boolean signed;
     int value;
 
     /**
@@ -42,10 +43,15 @@ public class IntegerProperty extends Property {
         this.value = value;
     }
 
-    public IntegerProperty(Bytes bytes, boolean signed) {
-        super(bytes);
-        if (signed) value = Property.getSignedInt(getValueBytes());
-        else value = Property.getUnsignedInt(getValueBytes());
+    public IntegerProperty(Property p, boolean signed) throws CommandParseException {
+        super(p);
+        this.signed = signed;
+        update(p, null, null, false);
+    }
+
+    public IntegerProperty(byte identifier, boolean signed) {
+        super(identifier);
+        this.signed = signed;
     }
 
     public IntegerProperty(Integer value) {
@@ -56,6 +62,17 @@ public class IntegerProperty extends Property {
                            @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
+    }
+
+    @Override
+    public boolean update(Property p, PropertyFailure failure, PropertyTimestamp timestamp,
+                          boolean propertyInArray) throws CommandParseException {
+        if (p != null) {
+            if (signed) value = Property.getSignedInt(p.getValueBytes());
+            else value = Property.getUnsignedInt(p.getValueBytes());
+        }
+
+        return super.update(p, failure, timestamp, propertyInArray);
     }
 
     /**

@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.seats.PersonDetected;
 import com.highmobility.autoapi.property.seats.SeatBeltFastened;
 import com.highmobility.autoapi.property.seats.SeatLocation;
@@ -96,9 +97,7 @@ public class SeatsState extends CommandWithProperties {
                             return d;
                         } else {
                             // find the property, update
-                            for (PersonDetected personDetected : personsDetected) {
-                                personDetected.update(p, timestamp, failure, true);
-                            }
+                            return Property.update(personsDetected, p, timestamp, failure);
                         }
                         // if failure, ignore
                     case SeatBeltFastened.IDENTIFIER:
@@ -107,9 +106,7 @@ public class SeatsState extends CommandWithProperties {
                             seatBeltsFastened.add(f);
                             return f;
                         } else {
-                            for (SeatBeltFastened seatBeltFastened : seatBeltsFastened) {
-                                seatBeltFastened.update(p, timestamp, failure, true);
-                            }
+                            return Property.update(seatBeltsFastened, p, timestamp, failure);
                         }
                 }
 
