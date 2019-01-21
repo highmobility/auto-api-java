@@ -26,13 +26,13 @@ public class DashboardLightsTest {
         DashboardLights state = (DashboardLights) command;
         assertTrue(state.getLights().length == 4);
 
-        assertTrue(state.getLight(DashboardLight.Type.HIGH_BEAM_MAIN_BEAM).getState() ==
+        assertTrue(state.getLight(DashboardLight.Type.HIGH_BEAM_MAIN_BEAM).getValue().getState() ==
                 DashboardLight.State.INACTIVE);
-        assertTrue(state.getLight(DashboardLight.Type.HAZARD_WARNING).getState() ==
+        assertTrue(state.getLight(DashboardLight.Type.HAZARD_WARNING).getValue().getState() ==
                 DashboardLight.State.INFO);
-        assertTrue(state.getLight(DashboardLight.Type.TRANSMISSION_FLUID_TEMPERATURE).getState()
+        assertTrue(state.getLight(DashboardLight.Type.TRANSMISSION_FLUID_TEMPERATURE).getValue().getState()
                 == DashboardLight.State.RED);
-        assertTrue(state.getLight(DashboardLight.Type.ENGINE_OIL_LEVEL).getState() ==
+        assertTrue(state.getLight(DashboardLight.Type.ENGINE_OIL_LEVEL).getValue().getState() ==
                 DashboardLight.State.INACTIVE);
     }
 
@@ -40,6 +40,12 @@ public class DashboardLightsTest {
         String waitingForBytes = "006100";
         String commandBytes = ByteUtils.hexFromBytes(new GetDashboardLights().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
+    }
+
+    @Test public void stateWithTimestamp() {
+        Bytes timestampBytes = bytes.concat(new Bytes("A4000E11010A1122000000010100020000"));
+        DashboardLights command = (DashboardLights) CommandResolver.resolve(timestampBytes);
+        assertTrue(command.getLight(DashboardLight.Type.HIGH_BEAM_MAIN_BEAM).getTimestamp() != null);
     }
 
     @Test public void build() {
@@ -52,7 +58,6 @@ public class DashboardLightsTest {
                 DashboardLight.State.RED));
         builder.addLight(new DashboardLight(DashboardLight.Type.ENGINE_OIL_LEVEL, DashboardLight
                 .State.INACTIVE));
-
         assertTrue(builder.build().equals(bytes));
     }
 }

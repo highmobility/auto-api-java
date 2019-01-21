@@ -34,6 +34,7 @@ import javax.annotation.Nullable;
  */
 public class DashboardLights extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.DASHBOARD_LIGHTS, 0x01);
+    public static final byte IDENTIFIER_DASHBOARD_LIGHT = 0x01;
 
     DashboardLight[] lights;
 
@@ -53,7 +54,7 @@ public class DashboardLights extends CommandWithProperties {
     @Nullable public DashboardLight getLight(DashboardLight.Type type) {
         for (int i = 0; i < lights.length; i++) {
             DashboardLight light = lights[i];
-            if (light.getType() == type) return light;
+            if (light.getValue() != null && light.getValue().getType() == type) return light;
         }
 
         return null;
@@ -64,10 +65,10 @@ public class DashboardLights extends CommandWithProperties {
 
         List<DashboardLight> builder = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == DashboardLight.IDENTIFIER) {
-                    DashboardLight light = new DashboardLight(p.getByteArray());
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                if (p.getPropertyIdentifier() == IDENTIFIER_DASHBOARD_LIGHT) {
+                    DashboardLight light = new DashboardLight(p);
                     builder.add(light);
                     return light;
                 }
@@ -110,7 +111,7 @@ public class DashboardLights extends CommandWithProperties {
          */
         public Builder addLight(DashboardLight light) {
             this.lights.add(light);
-            addProperty(light);
+            addProperty(light.setIdentifier(IDENTIFIER_DASHBOARD_LIGHT));
             return this;
         }
 

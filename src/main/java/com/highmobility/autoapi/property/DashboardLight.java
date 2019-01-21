@@ -22,43 +22,90 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
+
 public class DashboardLight extends Property {
-    public static final byte IDENTIFIER = 0x01;
+    Value value;
 
-    Type type;
-    State state;
-
-    /**
-     * @return The dashboard light type.
-     */
-    public Type getType() {
-        return type;
+    @Nullable public Value getValue() {
+        return value;
     }
 
-    /**
-     * @return The state of the dashboard light.
-     */
-    public State getState() {
-        return state;
+    public DashboardLight(@Nullable Value value, @Nullable Calendar timestamp,
+                          @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
     }
 
-    public DashboardLight(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 5) throw new CommandParseException();
-        type = Type.fromByte(bytes[3]);
-        state = State.fromByte(bytes[4]);
+    public DashboardLight(Value value) {
+        this((byte) 0x00, value);
+    }
+
+    public DashboardLight(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 2);
+        this.value = value;
+        if (value != null) setBytes(value);
     }
 
     public DashboardLight(Type type, State state) {
-        this(IDENTIFIER, type, state);
+        this((byte) 0x00, type, state);
+    }
+
+    public DashboardLight(byte identifier) {
+        super(identifier);
     }
 
     public DashboardLight(byte identifier, Type type, State state) {
         super(identifier, 2);
-        bytes[3] = type.getByte();
-        bytes[4] = state.getByte();
-        this.type = type;
-        this.state = state;
+        setBytes(new Value(type, state));
+    }
+
+    public DashboardLight(Property p) throws CommandParseException {
+        super(p);
+        update(p);
+    }
+
+    void setBytes(Value value) {
+        bytes[3] = value.type.getByte();
+        bytes[4] = value.state.getByte();
+    }
+
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 2) value = new Value(p);
+        return this;
+    }
+
+    public class Value {
+        Type type;
+        State state;
+
+        /**
+         * @return The dashboard light type.
+         */
+        public Type getType() {
+            return type;
+        }
+
+        /**
+         * @return The state of the dashboard light.
+         */
+        public State getState() {
+            return state;
+        }
+
+        public Value(Property bytes) throws CommandParseException {
+            if (bytes.getLength() < 5) throw new CommandParseException();
+            type = Type.fromByte(bytes.get(3));
+            state = State.fromByte(bytes.get(4));
+        }
+
+        public Value(Type type, State state) {
+            this.type = type;
+            this.state = state;
+        }
     }
 
     public enum Type {
