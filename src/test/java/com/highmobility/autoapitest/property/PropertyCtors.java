@@ -1,6 +1,7 @@
 package com.highmobility.autoapitest.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.SpringRateProperty;
@@ -64,6 +65,15 @@ public class PropertyCtors {
         assertTrue(new SpringRateProperty(null, null, failure).getFailure() != null);
         assertTrue(new SpringRateProperty(property).getValue() != null);
         SpringRateProperty updateProp = new SpringRateProperty((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void hvacStartingTime() throws CommandParseException {
+        Property property = new Property("0B000305121E");
+        assertTrue(new HvacStartingTime(null, null, failure).getFailure() != null);
+        assertTrue(new HvacStartingTime(property).getValue() != null);
+        HvacStartingTime updateProp = new HvacStartingTime((byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }

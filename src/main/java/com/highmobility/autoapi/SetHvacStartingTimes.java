@@ -22,6 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.value.Weekday;
 
 import java.util.ArrayList;
 
@@ -49,9 +50,10 @@ public class SetHvacStartingTimes extends CommandWithProperties {
      * @param weekday Weekday of the HVAC starting time.
      * @return The Auto HVAC state.
      */
-    @Nullable public HvacStartingTime getHvacStartingTime(HvacStartingTime.Weekday weekday) {
+    @Nullable public HvacStartingTime getHvacStartingTime(Weekday weekday) {
         for (HvacStartingTime hvacStartingTime : hvacStartingTimes) {
-            if (hvacStartingTime.getWeekday() == weekday) return hvacStartingTime;
+            if (hvacStartingTime.getValue() != null && hvacStartingTime.getValue().getWeekday() == weekday)
+                return hvacStartingTime;
         }
         return null;
     }
@@ -85,7 +87,7 @@ public class SetHvacStartingTimes extends CommandWithProperties {
 
             switch (prop.getPropertyIdentifier()) {
                 case AUTO_HVAC_IDENTIFIER:
-                    builder.add(new HvacStartingTime(prop.getByteArray()));
+                    builder.add(new HvacStartingTime(prop));
                     break;
             }
         }

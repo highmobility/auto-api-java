@@ -2,86 +2,106 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.value.Time;
+import com.highmobility.autoapi.property.value.Weekday;
 
 import java.util.Arrays;
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
 
 public class HvacStartingTime extends Property {
-    Time time;
-    Weekday weekday;
+    Value value;
 
-    /**
-     * @return The time.
-     */
-    public Time getTime() {
-        return time;
+    public Value getValue() {
+        return value;
     }
 
-    /**
-     * @return The weekday.
-     */
-    public Weekday getWeekday() {
-        return weekday;
+    public HvacStartingTime(@Nullable Value value, @Nullable Calendar timestamp,
+                            @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public HvacStartingTime(Value value) {
+        this((byte) 0x00, value);
+    }
+
+    public HvacStartingTime(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 2);
+        if (value != null) setBytes(value);
     }
 
     public HvacStartingTime(Weekday weekday, Time time) {
-        super((byte) 0x00, getInitBytes(weekday, time));
+        this((byte) 0x00, weekday, time);
     }
 
-    static byte[] getInitBytes(Weekday weekday, Time time) {
-        byte[] bytes = new byte[3];
-        bytes[0] = weekday.getByte();
-        bytes[1] = time.getByteArray()[0];
-        bytes[2] = time.getByteArray()[1];
-        return bytes;
+    public HvacStartingTime(byte identifier) {
+        super(identifier);
     }
 
-    public HvacStartingTime(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 6) throw new IllegalArgumentException();
-        this.weekday = Weekday.fromByte(bytes[3]);
-        this.time = new Time(Arrays.copyOfRange(bytes, 4, 6));
-        this.bytes = bytes;
+    public HvacStartingTime(byte identifier, Weekday weekday, Time time) {
+        super(identifier, 3);
+        setBytes(new Value(weekday, time));
     }
 
-    @Override public boolean equals(Object obj) {
-        if (obj instanceof HvacStartingTime == false) return false;
-        HvacStartingTime otherTime = (HvacStartingTime) obj;
-        return otherTime.getTime().getHour() == this.getTime().getHour() && otherTime.getTime()
-                .getMinute() == this.getTime().getMinute() && otherTime.getWeekday() == this
-                .getWeekday();
+    public HvacStartingTime(Property p) throws CommandParseException {
+        super(p);
+        update(p);
     }
 
-    public enum Weekday {
-        MONDAY((byte) 0x00),
-        TUESDAY((byte) 0x01),
-        WEDNESDAY((byte) 0x02),
-        THURSDAY((byte) 0x03),
-        FRIDAY((byte) 0x04),
-        SATURDAY((byte) 0x05),
-        SUNDAY((byte) 0x06),
-        AUTOMATIC((byte) 0x07);
+    void setBytes(Value value) {
+        bytes[3] = value.weekday.getByte();
+        bytes[4] = value.time.getByteArray()[0];
+        bytes[5] = value.time.getByteArray()[1];
+        this.value = value;
+    }
 
-        public static Weekday fromByte(byte value) throws CommandParseException {
-            Weekday[] values = Weekday.values();
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 3) value = new Value(p);
+        return this;
+    }
 
-            for (int i = 0; i < values.length; i++) {
-                Weekday value1 = values[i];
-                if (value1.getByte() == value) {
-                    return value1;
-                }
-            }
+    public class Value {
+        Time time;
+        Weekday weekday;
 
-            throw new CommandParseException();
+        /**
+         * @return The time.
+         */
+        public Time getTime() {
+            return time;
         }
 
-        private byte value;
-
-        Weekday(byte value) {
-            this.value = value;
+        /**
+         * @return The weekday.
+         */
+        public Weekday getWeekday() {
+            return weekday;
         }
 
-        public byte getByte() {
-            return value;
+        public Value(Weekday weekday, Time time) {
+            this.weekday = weekday;
+            this.time = time;
+        }
+
+        public Value(Property p) throws CommandParseException {
+            this(p.getByteArray());
+        }
+
+        public Value(byte[] bytes) throws CommandParseException {
+            if (bytes.length < 6) throw new IllegalArgumentException();
+            this.weekday = Weekday.fromByte(bytes[3]);
+            this.time = new Time(Arrays.copyOfRange(bytes, 4, 6));
+        }
+
+        @Override public boolean equals(Object obj) {
+            if (obj instanceof HvacStartingTime == false) return false;
+            HvacStartingTime.Value otherTime = (HvacStartingTime.Value) obj;
+            return otherTime.getTime().getHour() == this.getTime().getHour() && otherTime.getTime()
+                    .getMinute() == this.getTime().getMinute() && otherTime.getWeekday() == this
+                    .getWeekday();
         }
     }
+
 }
