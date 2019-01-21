@@ -33,14 +33,14 @@ public class DrivingMode extends Property {
         return value;
     }
 
-    public DrivingMode(Value Value) {
-        this((byte) 0x00, Value);
+    public DrivingMode(@Nullable Value value, @Nullable Calendar timestamp,
+                       @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
     }
 
-    public DrivingMode(@Nullable Value Value, @Nullable Calendar timestamp,
-                       @Nullable PropertyFailure failure) {
-        this(Value);
-        setTimestampFailure(timestamp, failure);
+    public DrivingMode(Value value) {
+        this((byte) 0x00, value);
     }
 
     public DrivingMode(byte identifier, Value value) {

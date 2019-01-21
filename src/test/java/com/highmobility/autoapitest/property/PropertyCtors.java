@@ -3,6 +3,7 @@ package com.highmobility.autoapitest.property;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.SpringRateProperty;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
@@ -41,7 +42,7 @@ public class PropertyCtors {
     }
 
     @Test public void chargingState() throws CommandParseException {
-        Property property = new Property("17000101"); // 17
+        Property property = new Property("17000101");
         assertTrue(new ChargingState(null, null, failure).getFailure() != null);
         assertTrue(new ChargingState(property).getValue() != null);
         ChargingState updateProp = new ChargingState((byte) 0x00);
@@ -50,10 +51,19 @@ public class PropertyCtors {
     }
 
     @Test public void chargingTimer() throws CommandParseException {
-        Property property = new Property("1500090212010A1020050000"); // 17
+        Property property = new Property("1500090212010A1020050000");
         assertTrue(new ChargingTimer(null, null, failure).getFailure() != null);
         assertTrue(new ChargingTimer(property).getValue() != null);
         ChargingTimer updateProp = new ChargingTimer((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void springRate() throws CommandParseException {
+        Property property = new Property("0600020025");
+        assertTrue(new SpringRateProperty(null, null, failure).getFailure() != null);
+        assertTrue(new SpringRateProperty(property).getValue() != null);
+        SpringRateProperty updateProp = new SpringRateProperty((byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }

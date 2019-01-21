@@ -23,6 +23,8 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.value.Axle;
 
+import java.util.Calendar;
+
 import javax.annotation.Nullable;
 
 public class SpringRateProperty extends Property {
@@ -32,19 +34,45 @@ public class SpringRateProperty extends Property {
         return value;
     }
 
+    public SpringRateProperty(@Nullable Value value, @Nullable Calendar timestamp,
+                              @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public SpringRateProperty(Value value) {
+        this((byte) 0x00, value);
+    }
+
+    public SpringRateProperty(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 2);
+        this.value = value;
+        if (value != null) {
+            setBytes(value.getAxle(), value.getSpringRate());
+        }
+    }
+
     public SpringRateProperty(Axle axle, Integer springRate) {
         this((byte) 0x00, axle, springRate);
     }
 
+    public SpringRateProperty(byte identifier) {
+        super(identifier);
+    }
+
     public SpringRateProperty(byte identifier, Axle axle, Integer springRate) {
         super(identifier, 2);
-        bytes[3] = axle.getByte();
-        bytes[4] = springRate.byteValue();
+        setBytes(axle, springRate);
     }
 
     public SpringRateProperty(Property p) throws CommandParseException {
         super(p);
         update(p);
+    }
+
+    void setBytes(Axle axle, Integer springRate) {
+        bytes[3] = axle.getByte();
+        bytes[4] = springRate.byteValue();
     }
 
     @Override public Property update(Property p) throws CommandParseException {
