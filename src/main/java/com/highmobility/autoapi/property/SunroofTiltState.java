@@ -21,51 +21,77 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.value.rooftop.SunroofTiltState;
 
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-public class SunroofTiltStateProperty extends Property {
-    SunroofTiltState sunroofTiltState;
+public class SunroofTiltState extends Property {
+    Value value;
 
-    public SunroofTiltState getValue() {
-        return sunroofTiltState;
+    public Value getValue() {
+        return value;
     }
 
-    public SunroofTiltStateProperty(SunroofTiltState sunroofTiltState) {
+    public SunroofTiltState(Value sunroofTiltState) {
         this((byte) 0x00, sunroofTiltState);
     }
 
-    public SunroofTiltStateProperty(@Nullable SunroofTiltState sunroofTiltState,
-                                    @Nullable Calendar timestamp,
-                                    @Nullable PropertyFailure failure) {
+    public SunroofTiltState(@Nullable Value sunroofTiltState,
+                            @Nullable Calendar timestamp,
+                            @Nullable PropertyFailure failure) {
         this(sunroofTiltState);
         setTimestampFailure(timestamp, failure);
     }
 
-    public SunroofTiltStateProperty(byte identifier, SunroofTiltState sunroofTiltState) {
+    public SunroofTiltState(byte identifier, Value sunroofTiltState) {
         super(identifier, sunroofTiltState == null ? 0 : 1);
-        this.sunroofTiltState = sunroofTiltState;
+        this.value = sunroofTiltState;
         if (sunroofTiltState != null) bytes[3] = sunroofTiltState.getByte();
     }
 
-    public SunroofTiltStateProperty(Property p) throws CommandParseException {
+    public SunroofTiltState(Property p) throws CommandParseException {
         super(p);
         update(p);
     }
 
     @Override public Property update(Property p) throws CommandParseException {
         super.update(p);
-        if (p.getValueLength() >= 1) sunroofTiltState = SunroofTiltState.fromByte(p.get(3));
+        if (p.getValueLength() >= 1) value = Value.fromByte(p.get(3));
         return this;
     }
 
-    public SunroofTiltStateProperty(byte identifier) {
+    public SunroofTiltState(byte identifier) {
         super(identifier);
     }
 
     // TBODO: ctors
+    public enum Value {
+        CLOSED((byte) 0x00),
+        TILTED((byte) 0x01),
+        HALF_TILTED((byte) 0x02);
 
+        public static Value fromByte(byte byteValue) throws CommandParseException {
+            Value[] values = Value.values();
+
+            for (int i = 0; i < values.length; i++) {
+                Value state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
+        private byte value;
+
+        Value(byte value) {
+            this.value = value;
+        }
+
+        public byte getByte() {
+            return value;
+        }
+    }
 }

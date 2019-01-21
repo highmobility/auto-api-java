@@ -56,6 +56,13 @@ public class PropertyFailure extends Property {
         return description;
     }
 
+    // should be internal
+    public PropertyFailure update(Property parentProperty) {
+        failedPropertyIdentifier = parentProperty.getPropertyIdentifier();
+        bytes[3] = failedPropertyIdentifier;
+        return this;
+    }
+
     public PropertyFailure(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length < 6) throw new CommandParseException();

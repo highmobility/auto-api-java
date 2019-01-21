@@ -5,8 +5,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.GetGasFlapState;
 import com.highmobility.autoapi.ControlGasFlap;
+import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -27,14 +27,14 @@ public class FuelingTest {
         assertTrue(command.is(GasFlapState.TYPE));
         GasFlapState state = (GasFlapState) command;
         assertTrue(state.getLock() == Lock.LOCKED);
-        assertTrue(state.getPosition() == Position.CLOSED);
+        assertTrue(state.getPosition().getValue() == Position.Value.CLOSED);
     }
 
     @Test public void build() {
         GasFlapState.Builder builder = new GasFlapState.Builder();
 
         builder.setLock(Lock.LOCKED);
-        builder.setPosition(Position.CLOSED);
+        builder.setPosition(new Position(Position.Value.CLOSED));
 
         GasFlapState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
@@ -52,7 +52,7 @@ public class FuelingTest {
                 "02000100" +
                 "03000101");
 
-        byte[] bytes = new ControlGasFlap(Lock.UNLOCKED, Position.OPEN).getByteArray();
+        byte[] bytes = new ControlGasFlap(Lock.UNLOCKED, Position.Value.OPEN).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
         ControlGasFlap openCloseGasFlap =

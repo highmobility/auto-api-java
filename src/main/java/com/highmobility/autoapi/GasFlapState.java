@@ -20,9 +20,9 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
 
 import javax.annotation.Nullable;
 
@@ -35,7 +35,7 @@ public class GasFlapState extends CommandWithProperties {
     private static final byte POSITION_IDENTIFIER = 0x03;
 
     Lock lock;
-    Position position;
+    Position position = new Position(POSITION_IDENTIFIER);
 
     /**
      * @return The gas flap lock.
@@ -54,12 +54,13 @@ public class GasFlapState extends CommandWithProperties {
     GasFlapState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 if (p.getPropertyIdentifier() == LOCK_IDENTIFIER) {
                     lock = Lock.fromByte(p.getValueByte());
+                    // TODO: 2019-01-21 ^^ use property for lock and update
                 } else if (p.getPropertyIdentifier() == POSITION_IDENTIFIER) {
-                    position = Position.fromByte(p.getValueByte());
+                    position.update(p);
                 }
 
                 return null;
@@ -97,7 +98,7 @@ public class GasFlapState extends CommandWithProperties {
          */
         public Builder setPosition(Position position) {
             this.position = position;
-            addProperty(new Property(POSITION_IDENTIFIER, position.getByte()));
+            addProperty(position.setIdentifier(POSITION_IDENTIFIER));
             return this;
         }
 

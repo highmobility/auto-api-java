@@ -20,9 +20,9 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
 
 import javax.annotation.Nullable;
 
@@ -38,7 +38,7 @@ public class TrunkState extends CommandWithProperties {
     private static final byte IDENTIFIER_POSITION = 0x02;
 
     Lock lock;
-    Position position;
+    Position position = new Position(IDENTIFIER_POSITION);
 
     /**
      * @return the current lock status of the trunk.
@@ -56,15 +56,16 @@ public class TrunkState extends CommandWithProperties {
 
     TrunkState(byte[] bytes) {
         super(bytes);
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_LOCK:
-                        lock = Lock.fromByte(property.getValueByte());
-                        return lock;
+                        lock = Lock.fromByte(p.getValueByte());
+                        // TODO: 2019-01-21 refactor to use property
+//                        return lock;
+                        return null;
                     case IDENTIFIER_POSITION:
-                        position = Position.fromByte(property.getValueByte());
-                        return position;
+                        return position.update(p);
                 }
 
                 return null;
@@ -106,7 +107,7 @@ public class TrunkState extends CommandWithProperties {
          */
         public Builder setPosition(Position position) {
             this.position = position;
-            addProperty(new Property(IDENTIFIER_POSITION, position.getByte()));
+            addProperty(position.setIdentifier(IDENTIFIER_POSITION));
             return this;
         }
 

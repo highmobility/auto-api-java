@@ -1,11 +1,8 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.PositionProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.PropertyTimestamp;

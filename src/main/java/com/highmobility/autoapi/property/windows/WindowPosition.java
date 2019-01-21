@@ -1,13 +1,13 @@
 package com.highmobility.autoapi.property.windows;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Location;
-import com.highmobility.autoapi.property.value.Position;
 
 public class WindowPosition extends Property {
     Location location;
-    Position position;
+    Position.Value position;
 
     /**
      * @return The window location.
@@ -19,7 +19,7 @@ public class WindowPosition extends Property {
     /**
      * @return The window position.
      */
-    public Position getPosition() {
+    public Position.Value getPosition() {
         return position;
     }
 
@@ -27,22 +27,20 @@ public class WindowPosition extends Property {
         super(bytes);
         if (bytes.length < 5) throw new CommandParseException();
         location = Location.fromByte(bytes[3]);
-        position = Position.fromByte(bytes[4]);
+        position = Position.Value.fromByte(bytes[4]);
     }
 
-    public WindowPosition(Location location, Position
-            position) {
+    public WindowPosition(Location location, Position.Value position) {
         super((byte) 0x00, getBytes(location, position));
         this.location = location;
         this.position = position;
     }
 
-    private static byte[] getBytes(Location location, Position position) {
+    private static byte[] getBytes(Location location, Position.Value position) {
         byte[] bytes = new byte[2];
         bytes[0] = location.getByte();
         bytes[1] = position.getByte();
         return bytes;
     }
-
 
 }

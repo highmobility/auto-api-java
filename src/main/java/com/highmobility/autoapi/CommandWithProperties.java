@@ -349,7 +349,14 @@ public class CommandWithProperties extends Command {
         }
 
         public Builder addProperty(Property property) {
-            propertiesBuilder.add(property);
+            // if bytes empty and has failure, then only add the failure property.
+            if (property.getValueLength() == 0) {
+                if (property.getFailure() != null) {
+                    addProperty(property.getFailure().update(property));
+                }
+            } else {
+                propertiesBuilder.add(property);
+            }
             return this;
         }
 

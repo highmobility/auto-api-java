@@ -13,12 +13,12 @@ import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.value.DisplayUnit;
 import com.highmobility.autoapi.property.value.DriverSeatLocation;
 import com.highmobility.autoapi.property.value.Gearbox;
 import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
 import com.highmobility.value.Bytes;
 
 import org.junit.Before;
@@ -115,7 +115,7 @@ public class VehicleStatusTest {
         if (command.is(TrunkState.TYPE) == false) fail();
         TrunkState trunkState = (TrunkState) command;
         assertTrue(trunkState.getLockState() == Lock.UNLOCKED);
-        assertTrue(trunkState.getPosition() == Position.OPEN);
+        assertTrue(trunkState.getPosition().getValue() == Position.Value.OPEN);
     }
 
     @Test public void ignitionState() {
@@ -151,7 +151,7 @@ public class VehicleStatusTest {
 
         TrunkState.Builder trunkState = new TrunkState.Builder();
         trunkState.setLockState(Lock.UNLOCKED);
-        trunkState.setPosition(Position.OPEN);
+        trunkState.setPosition(new Position(Position.Value.OPEN));
         builder.addProperty(new CommandProperty(trunkState.build()));
 
         IgnitionState.Builder ignitionState = new IgnitionState.Builder();

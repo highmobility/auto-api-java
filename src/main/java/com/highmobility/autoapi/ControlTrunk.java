@@ -21,9 +21,9 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ByteProperty;
+import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
 
 import java.util.ArrayList;
 
@@ -40,7 +40,7 @@ public class ControlTrunk extends CommandWithProperties {
     private static final byte IDENTIFIER_POSITION = 0x02;
 
     Lock lock;
-    Position position;
+    Position.Value position;
 
     /**
      * @return The trunk lock state.
@@ -52,7 +52,7 @@ public class ControlTrunk extends CommandWithProperties {
     /**
      * @return The trunk position.
      */
-    @Nullable public Position getPosition() {
+    @Nullable public Position.Value getPosition() {
         return position;
     }
 
@@ -63,13 +63,13 @@ public class ControlTrunk extends CommandWithProperties {
      * @param position The trunk position.
      * @throws IllegalArgumentException If all arguments are null
      */
-    public ControlTrunk(@Nullable Lock lock, @Nullable Position position) {
+    public ControlTrunk(@Nullable Lock lock, @Nullable Position.Value position) {
         super(TYPE, getProperties(lock, position));
         this.lock = lock;
         this.position = position;
     }
 
-    static Property[] getProperties(Lock state, Position position) {
+    static Property[] getProperties(Lock state, Position.Value position) {
         ArrayList<Property> properties = new ArrayList<>();
 
         if (state != null) {
@@ -92,7 +92,7 @@ public class ControlTrunk extends CommandWithProperties {
                     lock = Lock.fromByte(p.getValueByte());
                     return lock;
                 } else if (p.getPropertyIdentifier() == IDENTIFIER_POSITION) {
-                    position = Position.fromByte(p.getValueByte());
+                    position = Position.Value.fromByte(p.getValueByte());
                     return position;
                 }
                 return null;

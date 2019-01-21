@@ -20,9 +20,9 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
 
 import java.util.ArrayList;
 
@@ -43,11 +43,11 @@ public class ControlGasFlap extends CommandWithProperties {
      * @param lock     The lock state.
      * @param position The position.
      */
-    public ControlGasFlap(@Nullable Lock lock, @Nullable Position position) {
+    public ControlGasFlap(@Nullable Lock lock, @Nullable Position.Value position) {
         super(TYPE, getProperties(lock, position));
     }
 
-    static Property[] getProperties(@Nullable Lock lock, @Nullable Position position) {
+    static Property[] getProperties(@Nullable Lock lock, @Nullable Position.Value position) {
         ArrayList<Property> propertyList = new ArrayList<>();
         if (lock != null) {
             propertyList.add(new Property(LOCK_IDENTIFIER, lock.getByte()));

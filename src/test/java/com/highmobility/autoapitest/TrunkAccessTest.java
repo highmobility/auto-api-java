@@ -5,14 +5,13 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlTrunk;
 import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.TrunkState;
+import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -20,21 +19,13 @@ import static org.junit.Assert.fail;
 public class TrunkAccessTest {
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "0021010100010002000101");
-
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-        if (command == null) fail("init failed");
+        Bytes bytes = new Bytes("0021010100010002000101");
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == TrunkState.class);
         TrunkState state = (TrunkState) command;
         assertTrue(state.getLockState() == Lock.UNLOCKED);
-        assertTrue(state.getPosition() == Position.OPEN);
+        assertTrue(state.getPosition().getValue() == Position.Value.OPEN);
     }
 
     @Test public void get() {
@@ -50,7 +41,7 @@ public class TrunkAccessTest {
         Bytes waitingForBytes = new Bytes("002112" +
                 "01000100" +
                 "02000101");
-        Command commandBytes = new ControlTrunk(Lock.UNLOCKED, Position.OPEN);
+        Command commandBytes = new ControlTrunk(Lock.UNLOCKED, Position.Value.OPEN);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         Command command = CommandResolver.resolve(waitingForBytes);
@@ -58,7 +49,7 @@ public class TrunkAccessTest {
 
         ControlTrunk state = (ControlTrunk) command;
         assertTrue(state.getLock() == Lock.UNLOCKED);
-        assertTrue(state.getPosition() == Position.OPEN);
+        assertTrue(state.getPosition() == Position.Value.OPEN);
     }
 
     @Test public void state0Properties() {

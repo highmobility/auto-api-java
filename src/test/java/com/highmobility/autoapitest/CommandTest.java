@@ -9,10 +9,13 @@ import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.autoapi.RooftopState;
 import com.highmobility.autoapi.SeatsState;
 import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.ConvertibleRoofState;
 import com.highmobility.autoapi.property.DashboardLight;
+import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.PropertyTimestamp;
+import com.highmobility.autoapi.property.SunroofTiltState;
 import com.highmobility.autoapi.property.seats.SeatLocation;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -81,6 +84,18 @@ public class CommandTest {
         assertTrue(command.getConvertibleRoofState().getValue() == null);
 
         // TBODO:
+
+        RooftopState.Builder builder = new RooftopState.Builder();
+        builder.setDimmingPercentage(new PercentageProperty(1f));
+        builder.setSunroofTiltState(new SunroofTiltState(SunroofTiltState.Value.HALF_TILTED));
+        builder.setOpenPercentage(new PercentageProperty(null, null,
+                new PropertyFailure(PropertyFailure.Reason.RATE_LIMIT, "Try in 40s")));
+        builder.setConvertibleRoofState(new ConvertibleRoofState(null, null,
+                new PropertyFailure(PropertyFailure.Reason.EXECUTION_TIMEOUT, "Try " +
+                        "in 40s")));
+
+        command = builder.build();
+        assertTrue(TestUtils.bytesTheSame(command, bytes));
     }
 
     @Test public void propertyFailureForMultipleIdentifiers() {
