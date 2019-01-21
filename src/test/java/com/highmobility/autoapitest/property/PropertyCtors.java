@@ -1,6 +1,8 @@
 package com.highmobility.autoapitest.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.ControlMode;
+import com.highmobility.autoapi.property.ControlModeProperty;
 import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
@@ -77,4 +79,17 @@ public class PropertyCtors {
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
+
+
+    @Test public void controlMode() throws CommandParseException {
+        Property property = new Property("01000102");
+        assertTrue(new ControlModeProperty(null, null, failure).getFailure() != null);
+        assertTrue(new ControlModeProperty(property).getValue() != null);
+        ControlModeProperty updateProp = new ControlModeProperty((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+
+    //01000102
 }

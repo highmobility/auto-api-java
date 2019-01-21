@@ -21,90 +21,86 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.value.Axle;
 
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-public class SpringRateProperty extends Property {
+/**
+ * The possible control mode values.
+ */
+public class ControlModeProperty extends Property {
     Value value;
 
     @Nullable public Value getValue() {
         return value;
     }
 
-    public SpringRateProperty(@Nullable Value value, @Nullable Calendar timestamp,
-                              @Nullable PropertyFailure failure) {
+    public ControlModeProperty(@Nullable Value value, @Nullable Calendar timestamp,
+                               @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
     }
 
-    public SpringRateProperty(Value value) {
+    public ControlModeProperty(Value value) {
         this((byte) 0x00, value);
     }
 
-    public SpringRateProperty(byte identifier, Value value) {
+    public ControlModeProperty(byte identifier, Value value) {
         super(identifier, value == null ? 0 : 2);
         this.value = value;
         if (value != null) setBytes(value);
     }
 
-    public SpringRateProperty(Axle axle, Integer springRate) {
-        this((byte) 0x00, axle, springRate);
-    }
-
-    public SpringRateProperty(byte identifier) {
+    public ControlModeProperty(byte identifier) {
         super(identifier);
     }
 
-    public SpringRateProperty(byte identifier, Axle axle, Integer springRate) {
-        super(identifier, 2);
-        setBytes(new Value(axle, springRate));
-    }
-
-    public SpringRateProperty(Property p) throws CommandParseException {
+    public ControlModeProperty(Property p) throws CommandParseException {
         super(p);
         update(p);
     }
 
     void setBytes(Value value) {
-        bytes[3] = value.axle.getByte();
-        bytes[4] = value.springRate.byteValue();
+        bytes[3] = value.getByte();
     }
 
     @Override public Property update(Property p) throws CommandParseException {
         super.update(p);
-        if (p.getValueLength() >= 2) value = new Value(p);
+        if (p.getValueLength() == 1) value = Value.fromByte(p.getValueByte());
         return this;
     }
 
-    public static class Value {
-        Axle axle;
-        Integer springRate;
+    public enum Value {
+        UNAVAILABLE((byte) 0x00),
+        AVAILABLE((byte) 0x01),
+        STARTED((byte) 0x02),
+        FAILED_TO_START((byte) 0x03),
+        ABORTED((byte) 0x04),
+        ENDED((byte) 0x05),
+        UNSUPPORTED((byte) 0xFF);
 
-        /**
-         * @return The axle.
-         */
-        public Axle getAxle() {
-            return axle;
+        public static Value fromByte(byte value) throws CommandParseException {
+            Value[] allValues = Value.values();
+
+            for (int i = 0; i < allValues.length; i++) {
+                Value value1 = allValues[i];
+                if (value1.getByte() == value) {
+                    return value1;
+                }
+            }
+
+            throw new CommandParseException();
         }
 
-        /**
-         * @return The suspension spring rate in N/mm
-         */
-        public Integer getSpringRate() {
-            return springRate;
+        private byte value;
+
+        Value(byte value) {
+            this.value = value;
         }
 
-        public Value(Property bytes) throws CommandParseException {
-            axle = Axle.fromByte(bytes.get(3));
-            springRate = Property.getUnsignedInt(bytes.get(4));
-        }
-
-        public Value(Axle axle, Integer springRate) {
-            this.axle = axle;
-            this.springRate = springRate;
+        public byte getByte() {
+            return value;
         }
     }
 }

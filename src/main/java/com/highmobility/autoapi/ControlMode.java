@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ControlModeValue;
+import com.highmobility.autoapi.property.ControlModeProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 
 import javax.annotation.Nullable;
@@ -35,8 +35,8 @@ public class ControlMode extends CommandWithProperties {
     private static final byte IDENTIFIER_MODE = 0x01;
     private static final byte IDENTIFIER_ANGLE = 0x02;
 
-    ControlModeValue mode;
-    IntegerProperty angle;
+    ControlModeProperty mode = new ControlModeProperty(IDENTIFIER_MODE);
+    IntegerProperty angle = new IntegerProperty(IDENTIFIER_ANGLE, false);
 
     /**
      * @return the angle
@@ -48,22 +48,20 @@ public class ControlMode extends CommandWithProperties {
     /**
      * @return the control mode
      */
-    @Nullable public ControlModeValue getMode() {
+    @Nullable public ControlModeProperty getMode() {
         return mode;
     }
 
     public ControlMode(byte[] bytes) {
         super(bytes);
-        
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_MODE:
-                        mode = ControlModeValue.fromByte(p.getValueByte());
-                        return mode;
+                        return mode.update(p);
                     case IDENTIFIER_ANGLE:
-                        angle = new IntegerProperty(p, false);
-                        return angle;
+                        return angle.update(p);
                 }
 
                 return null;

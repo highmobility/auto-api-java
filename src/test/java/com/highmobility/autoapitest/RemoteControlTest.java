@@ -6,7 +6,7 @@ import com.highmobility.autoapi.ControlCommand;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetControlMode;
 import com.highmobility.autoapi.StartControlMode;
-import com.highmobility.autoapi.property.ControlModeValue;
+import com.highmobility.autoapi.property.ControlModeProperty;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
@@ -14,19 +14,24 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 public class RemoteControlTest {
+    Bytes bytes = new Bytes(
+            "002701" +
+                    "01000102" +
+                    "0200020032");
+
     @Test
     public void controlMode() {
-        Bytes bytes = new Bytes(
-                "002701" +
-                        "01000102" +
-                        "0200020032");
-
         Command command = CommandResolver.resolve(bytes);
-
         assertTrue(command.is(ControlMode.TYPE));
         ControlMode state = (ControlMode) command;
         assertTrue(state.getAngle().getValue() == 50);
-        assertTrue(state.getMode() == ControlModeValue.STARTED);
+        assertTrue(state.getMode().getValue() == ControlModeProperty.Value.STARTED);
+    }
+
+    @Test public void stateWithTimestamp() {
+        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
+        ControlMode command = (ControlMode) CommandResolver.resolve(timestampBytes);
+        assertTrue(command.getAngle().getTimestamp() != null);
     }
 
     @Test public void get() {
@@ -67,6 +72,6 @@ public class RemoteControlTest {
     @Test public void state0Properties() {
         String bytes = "002701";
         Command state = CommandResolver.resolveHex(bytes);
-        assertTrue(((ControlMode) state).getAngle() == null);
+        assertTrue(((ControlMode) state).getAngle().getValue() == null);
     }
 }

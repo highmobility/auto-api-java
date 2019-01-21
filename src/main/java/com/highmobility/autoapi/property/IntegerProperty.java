@@ -29,12 +29,12 @@ import javax.annotation.Nullable;
 
 public class IntegerProperty extends Property {
     boolean signed;
-    int value;
+    Integer value;
 
     /**
      * @return The value.
      */
-    public int getValue() {
+    @Nullable public Integer getValue() {
         return value;
     }
 
