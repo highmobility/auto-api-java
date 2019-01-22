@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.FlashersStateProperty;
 
 import javax.annotation.Nullable;
 
@@ -29,24 +29,23 @@ import javax.annotation.Nullable;
  */
 public class FlashersState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x01);
-    private static final byte STATE_IDENTIFIER = 0x01;
-    State state;
+    private static final byte IDENTIFIER_STATE = 0x01;
+    FlashersStateProperty state = new FlashersStateProperty(IDENTIFIER_STATE);
 
     /**
      * @return The flashers state.
      */
-    @Nullable public State getState() {
+    @Nullable public FlashersStateProperty getState() {
         return state;
     }
 
     FlashersState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == STATE_IDENTIFIER) {
-                    state = State.fromByte(p.getValueByte());
-                    return state;
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                if (p.getPropertyIdentifier() == IDENTIFIER_STATE) {
+                    return state.update(p);
                 }
                 return null;
 
@@ -64,7 +63,7 @@ public class FlashersState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private State state;
+        private FlashersStateProperty state;
 
         public Builder() {
             super(TYPE);
@@ -74,9 +73,9 @@ public class FlashersState extends CommandWithProperties {
          * @param state The flashers state.
          * @return The builder.
          */
-        public Builder setState(State state) {
+        public Builder setState(FlashersStateProperty state) {
             this.state = state;
-            addProperty(new Property(STATE_IDENTIFIER, state.getByte()));
+            addProperty(state.setIdentifier(IDENTIFIER_STATE));
             return this;
         }
 
@@ -85,33 +84,4 @@ public class FlashersState extends CommandWithProperties {
         }
     }
 
-    public enum State {
-        INACTIVE((byte) 0x00),
-        EMERGENCY_ACTIVE((byte) 0x01),
-        LEFT_ACTIVE((byte) 0x02),
-        RIGHT_ACTIVE((byte) 0x03);
-
-        public static State fromByte(byte value) throws CommandParseException {
-            State[] allValues = State.values();
-
-            for (int i = 0; i < allValues.length; i++) {
-                State value1 = allValues[i];
-                if (value1.getByte() == value) {
-                    return value1;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        State(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-    }
 }

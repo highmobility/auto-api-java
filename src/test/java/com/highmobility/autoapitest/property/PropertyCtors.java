@@ -1,9 +1,16 @@
 package com.highmobility.autoapitest.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.ControlModeProperty;
+import com.highmobility.autoapi.property.DashboardLight;
+import com.highmobility.autoapi.property.DrivingMode;
+import com.highmobility.autoapi.property.FlashersStateProperty;
+import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.IntArrayProperty;
+import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.SpringRateProperty;
@@ -201,7 +208,7 @@ public class PropertyCtors {
         assertTrue(updateProp.getValue() != null);
     }
 
-    @Test public void WheelRpm() throws CommandParseException {
+    @Test public void wheelRpm() throws CommandParseException {
         Property property = new Property("010003000000");
         assertTrue(new WheelRpm(null, null, failure).getFailure() != null);
         assertTrue(new WheelRpm(property).getValue() != null);
@@ -210,5 +217,75 @@ public class PropertyCtors {
         assertTrue(updateProp.getValue() != null);
     }
 
-    //01000102
+    @Test public void drivingMode() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new DrivingMode(null, null, failure).getFailure() != null);
+        assertTrue(new DrivingMode(property).getValue() != null);
+        DrivingMode updateProp = new DrivingMode((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void integerProperty() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new IntegerProperty(null, null, failure).getFailure() != null);
+        assertTrue(new IntegerProperty(property, true).getValue() != null);
+        IntegerProperty updateProp = new IntegerProperty((byte) 0x00, true);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void BooleanProperty() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new BooleanProperty(null, null, failure).getFailure() != null);
+        assertTrue(new BooleanProperty(property).getValue() != null);
+        BooleanProperty updateProp = new BooleanProperty((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void FloatProperty() throws CommandParseException {
+        Property property = new Property("01000400000000");
+        assertTrue(new FloatProperty(null, null, failure).getFailure() != null);
+        assertTrue(new FloatProperty(property).getValue() != null);
+        FloatProperty updateProp = new FloatProperty((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void HvacStartingTime() throws CommandParseException {
+        Property property = new Property("010003000000");
+        assertTrue(new HvacStartingTime(null, null, failure).getFailure() != null);
+        assertTrue(new HvacStartingTime(property).getValue() != null);
+        HvacStartingTime updateProp = new HvacStartingTime((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void DashboardLight() throws CommandParseException {
+        Property property = new Property("0100020000");
+        assertTrue(new DashboardLight(null, null, failure).getFailure() != null);
+        assertTrue(new DashboardLight(property).getValue() != null);
+        DashboardLight updateProp = new DashboardLight((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void PercentageProperty() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new PercentageProperty(null, null, failure).getFailure() != null);
+        assertTrue(new PercentageProperty(property).getValue() != null);
+        PercentageProperty updateProp = new PercentageProperty((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void FlashersStateProperty() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new FlashersStateProperty(null, null, failure).getFailure() != null);
+        assertTrue(new FlashersStateProperty(property).getValue() != null);
+        FlashersStateProperty updateProp = new FlashersStateProperty((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
 }

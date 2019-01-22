@@ -16,6 +16,10 @@ public class HvacStartingTime extends Property {
         return value;
     }
 
+    public HvacStartingTime(byte identifier) {
+        super(identifier);
+    }
+
     public HvacStartingTime(@Nullable Value value, @Nullable Calendar timestamp,
                             @Nullable PropertyFailure failure) {
         this(value);
@@ -28,32 +32,26 @@ public class HvacStartingTime extends Property {
 
     public HvacStartingTime(byte identifier, Value value) {
         super(identifier, value == null ? 0 : 2);
-        if (value != null) setBytes(value);
+        this.value = value;
+        
+        if (value != null) {
+            bytes[3] = value.weekday.getByte();
+            bytes[4] = value.time.getByteArray()[0];
+            bytes[5] = value.time.getByteArray()[1];
+        }
     }
 
     public HvacStartingTime(Weekday weekday, Time time) {
-        this((byte) 0x00, weekday, time);
-    }
-
-    public HvacStartingTime(byte identifier) {
-        super(identifier);
+        this(new Value(weekday, time));
     }
 
     public HvacStartingTime(byte identifier, Weekday weekday, Time time) {
-        super(identifier, 3);
-        setBytes(new Value(weekday, time));
+        this(identifier, new Value(weekday, time));
     }
 
     public HvacStartingTime(Property p) throws CommandParseException {
         super(p);
         update(p);
-    }
-
-    void setBytes(Value value) {
-        bytes[3] = value.weekday.getByte();
-        bytes[4] = value.time.getByteArray()[0];
-        bytes[5] = value.time.getByteArray()[1];
-        this.value = value;
     }
 
     @Override public Property update(Property p) throws CommandParseException {
@@ -62,7 +60,7 @@ public class HvacStartingTime extends Property {
         return this;
     }
 
-    public static class Value {
+    public static class Value implements PropertyValue {
         Time time;
         Weekday weekday;
 
@@ -101,6 +99,10 @@ public class HvacStartingTime extends Property {
             return otherTime.getTime().getHour() == this.getTime().getHour() && otherTime.getTime()
                     .getMinute() == this.getTime().getMinute() && otherTime.getWeekday() == this
                     .getWeekday();
+        }
+
+        @Override public int getLength() {
+            return 3;
         }
     }
 

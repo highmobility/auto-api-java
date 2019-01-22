@@ -33,6 +33,10 @@ public class DashboardLight extends Property {
         return value;
     }
 
+    public DashboardLight(byte identifier) {
+        super(identifier);
+    }
+
     public DashboardLight(@Nullable Value value, @Nullable Calendar timestamp,
                           @Nullable PropertyFailure failure) {
         this(value);
@@ -46,30 +50,23 @@ public class DashboardLight extends Property {
     public DashboardLight(byte identifier, Value value) {
         super(identifier, value == null ? 0 : 2);
         this.value = value;
-        if (value != null) setBytes(value);
+        if (value != null) {
+            bytes[3] = value.type.getByte();
+            bytes[4] = value.state.getByte();
+        }
     }
 
     public DashboardLight(Type type, State state) {
-        this((byte) 0x00, type, state);
-    }
-
-    public DashboardLight(byte identifier) {
-        super(identifier);
+        this(new Value(type, state));
     }
 
     public DashboardLight(byte identifier, Type type, State state) {
-        super(identifier, 2);
-        setBytes(new Value(type, state));
+        this(identifier, new Value(type, state));
     }
 
     public DashboardLight(Property p) throws CommandParseException {
         super(p);
         update(p);
-    }
-
-    void setBytes(Value value) {
-        bytes[3] = value.type.getByte();
-        bytes[4] = value.state.getByte();
     }
 
     @Override public Property update(Property p) throws CommandParseException {

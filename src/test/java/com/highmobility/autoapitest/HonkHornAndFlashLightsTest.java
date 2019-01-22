@@ -6,6 +6,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.FlashersState;
 import com.highmobility.autoapi.GetFlashersState;
 import com.highmobility.autoapi.HonkAndFlash;
+import com.highmobility.autoapi.property.FlashersStateProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -19,17 +20,10 @@ public class HonkHornAndFlashLightsTest {
 
     @Test
     public void state() {
-
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(command.is(FlashersState.TYPE));
         FlashersState state = (FlashersState) command;
-        assertTrue(state.getState() == FlashersState.State.LEFT_ACTIVE);
+        assertTrue(state.getState().getValue() == FlashersStateProperty.Value.LEFT_ACTIVE);
     }
 
     @Test public void get() {
@@ -73,8 +67,13 @@ public class HonkHornAndFlashLightsTest {
 
     @Test public void builder() {
         FlashersState.Builder builder = new FlashersState.Builder();
-        builder.setState(FlashersState.State.LEFT_ACTIVE);
+        builder.setState(new FlashersStateProperty(FlashersStateProperty.Value.LEFT_ACTIVE));
         assertTrue(builder.build().equals(bytes));
     }
 
+      @Test public void stateWithTimestamp() {
+        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000001"));
+        FlashersState command = (FlashersState) CommandResolver.resolve(timestampBytes);
+        assertTrue(command.getState().getTimestamp() != null);
+    }
 }
