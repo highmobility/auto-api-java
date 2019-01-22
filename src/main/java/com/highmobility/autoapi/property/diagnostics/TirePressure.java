@@ -22,8 +22,12 @@ package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyValue;
 import com.highmobility.autoapi.property.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
+
+import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
@@ -34,11 +38,37 @@ public class TirePressure extends Property {
         return value;
     }
 
+    public TirePressure(byte identifier) {
+        super(identifier);
+    }
+
+    public TirePressure(@Nullable Value value, @Nullable Calendar timestamp,
+                        @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public TirePressure(Value value) {
+        this((byte) 0x00, value);
+    }
+
+    public TirePressure(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 2);
+
+        this.value = value;
+
+        if (value != null) {
+            bytes[3] = value.tireLocation.getByte();
+            ByteUtils.setBytes(bytes, Property.floatToBytes(value.pressure), 4);
+        }
+    }
+
     public TirePressure(TireLocation tireLocation, float pressure) {
-        super((byte) 0x00, 5);
-        value = new Value(tireLocation, pressure);
-        bytes[3] = tireLocation.getByte();
-        ByteUtils.setBytes(bytes, Property.floatToBytes(pressure), 4);
+        this((byte) 0x00, new Value(tireLocation, pressure));
+    }
+
+    public TirePressure(byte identifier, TireLocation tireLocation, float pressure) {
+        this(identifier, new Value(tireLocation, pressure));
     }
 
     public TirePressure(Property p) throws CommandParseException {
@@ -48,11 +78,11 @@ public class TirePressure extends Property {
 
     @Override public Property update(Property p) throws CommandParseException {
         super.update(p);
-        if (p.getValueLength() >= 2) value = new Value(p);
+        if (p.getValueLength() >= 5) value = new Value(p);
         return this;
     }
 
-    public class Value {
+    public static class Value implements PropertyValue {
         TireLocation tireLocation;
         float pressure;
 
@@ -79,6 +109,10 @@ public class TirePressure extends Property {
         public Value(Property bytes) throws CommandParseException {
             this.tireLocation = TireLocation.fromByte(bytes.get(3));
             this.pressure = Property.getFloat(bytes, 4);
+        }
+
+        @Override public int getLength() {
+            return 5;
         }
     }
 }

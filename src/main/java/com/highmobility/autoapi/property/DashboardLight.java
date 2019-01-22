@@ -78,7 +78,7 @@ public class DashboardLight extends Property {
         return this;
     }
 
-    public class Value {
+    public static class Value {
         Type type;
         State state;
 

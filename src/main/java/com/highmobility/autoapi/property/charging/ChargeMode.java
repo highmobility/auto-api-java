@@ -46,9 +46,7 @@ public class ChargeMode extends Property {
     public ChargeMode(byte identifier, Value value) {
         super(identifier, value == null ? 0 : 1);
         this.value = value;
-        if (value != null) {
-            bytes[3] = value.getByte();
-        }
+        if (value != null) bytes[3] = value.getByte();
     }
 
     public ChargeMode(@Nullable Value value, @Nullable Calendar timestamp,

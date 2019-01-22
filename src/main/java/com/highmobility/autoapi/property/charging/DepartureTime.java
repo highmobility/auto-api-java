@@ -39,6 +39,10 @@ public class DepartureTime extends Property {
         return value;
     }
 
+    public DepartureTime(byte identifier) {
+        super(identifier);
+    }
+
     public DepartureTime(boolean active, Time time) {
         this(new Value(active, time));
     }

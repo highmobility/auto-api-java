@@ -23,8 +23,10 @@ package com.highmobility.autoapi.property.diagnostics;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyTimestamp;
+import com.highmobility.autoapi.property.PropertyValue;
 import com.highmobility.utils.ByteUtils;
+
+import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
@@ -35,30 +37,54 @@ public class DiagnosticsTroubleCode extends Property {
         return value;
     }
 
+    public DiagnosticsTroubleCode(byte identifier) {
+        super(identifier);
+    }
+
+    public DiagnosticsTroubleCode(@Nullable Value value, @Nullable Calendar timestamp,
+                                  @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public DiagnosticsTroubleCode(Value value) {
+        this((byte) 0x00, value);
+    }
+
+    public DiagnosticsTroubleCode(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 2);
+
+        this.value = value;
+        if (value != null) {
+            bytes[3] = (byte) value.numberOfOccurences;
+
+            int textPosition = 4;
+            int textLength = value.id.length();
+            bytes[textPosition] = (byte) textLength;
+            textPosition++;
+            ByteUtils.setBytes(bytes, Property.stringToBytes(value.id), textPosition);
+
+            textPosition += textLength;
+            textLength = value.ecuId.length();
+            bytes[textPosition] = (byte) textLength;
+            textPosition += 1;
+            ByteUtils.setBytes(bytes, Property.stringToBytes(value.ecuId), textPosition);
+
+            textPosition += textLength;
+            textLength = value.status.length();
+            bytes[textPosition] = (byte) textLength;
+            textPosition += 1;
+            ByteUtils.setBytes(bytes, Property.stringToBytes(value.status), textPosition);
+        }
+    }
+
     public DiagnosticsTroubleCode(int numberOfOccurences, String id, String ecuId, String status) {
-        super((byte) 0x00, 4 + id.length() + ecuId.length() + status.length());
+        this((byte) 0x00, numberOfOccurences, id, ecuId, status);
+    }
 
-        value = new Value(numberOfOccurences, id, ecuId, status);
-
-        bytes[3] = (byte) numberOfOccurences;
-
-        int textPosition = 4;
-        int textLength = id.length();
-        bytes[textPosition] = (byte) textLength;
-        textPosition++;
-        ByteUtils.setBytes(bytes, Property.stringToBytes(id), textPosition);
-
-        textPosition += textLength;
-        textLength = ecuId.length();
-        bytes[textPosition] = (byte) textLength;
-        textPosition += 1;
-        ByteUtils.setBytes(bytes, Property.stringToBytes(ecuId), textPosition);
-
-        textPosition += textLength;
-        textLength = status.length();
-        bytes[textPosition] = (byte) textLength;
-        textPosition += 1;
-        ByteUtils.setBytes(bytes, Property.stringToBytes(status), textPosition);
+    public DiagnosticsTroubleCode(byte identifier, int numberOfOccurences, String id,
+                                  String ecuId, String status) {
+        this(identifier, new Value(numberOfOccurences, id, ecuId, status));
     }
 
     public DiagnosticsTroubleCode(Property p) throws CommandParseException {
@@ -68,11 +94,11 @@ public class DiagnosticsTroubleCode extends Property {
 
     @Override public Property update(Property p) throws CommandParseException {
         super.update(p);
-        if (p.getValueLength() >= 3) value = new Value(p);
+        if (p.getValueLength() >= 4) value = new Value(p);
         return this;
     }
 
-    public static class Value {
+    public static class Value implements PropertyValue {
         int numberOfOccurences;
         String id;
         String ecuId;
@@ -122,6 +148,10 @@ public class DiagnosticsTroubleCode extends Property {
             textLength = Property.getUnsignedInt(bytes, textPosition, 1);
             textPosition++;
             this.status = Property.getString(bytes, textPosition, textLength);
+        }
+
+        @Override public int getLength() {
+            return 4 + id.length() + ecuId.length() + status.length();
         }
     }
 }

@@ -35,12 +35,12 @@ public class StringProperty extends Property {
 
     String value;
 
-    public StringProperty(byte identifier) {
-        super(identifier);
-    }
-
     @Nullable public String getValue() {
         return value;
+    }
+
+    public StringProperty(byte identifier) {
+        super(identifier);
     }
 
     public StringProperty(Property p) throws CommandParseException {

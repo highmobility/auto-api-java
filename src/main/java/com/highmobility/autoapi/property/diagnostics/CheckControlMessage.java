@@ -23,7 +23,7 @@ package com.highmobility.autoapi.property.diagnostics;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyTimestamp;
+import com.highmobility.autoapi.property.PropertyValue;
 import com.highmobility.utils.ByteUtils;
 
 import java.util.Calendar;
@@ -37,35 +37,53 @@ public class CheckControlMessage extends Property {
         return value;
     }
 
-    public CheckControlMessage(int id, int remainingTime, String text, String status) {
-        this(new Value(id, remainingTime, text, status));
-    }
-
-    public CheckControlMessage(Value value) {
-        super((byte) 0x00, 9 + value.text.length() + value.status.length());
-        this.value = value;
-
-        ByteUtils.setBytes(bytes, Property.intToBytes(value.id, 2), 3);
-        ByteUtils.setBytes(bytes, Property.intToBytes(value.remainingTime, 4), 5);
-
-        int textPosition = 9;
-        int textLength = value.text.length();
-        bytes[textPosition] = (byte) textLength;
-        ByteUtils.setBytes(bytes, Property.intToBytes(textLength, 2), textPosition);
-        textPosition += 2;
-        ByteUtils.setBytes(bytes, Property.stringToBytes(value.text), textPosition);
-
-        textPosition += textLength;
-        textLength = value.status.length();
-        bytes[textPosition] = (byte) textLength;
-        textPosition += 1;
-        ByteUtils.setBytes(bytes, Property.stringToBytes(value.status), textPosition);
+    public CheckControlMessage(byte identifier) {
+        super(identifier);
     }
 
     public CheckControlMessage(@Nullable Value value, @Nullable Calendar timestamp,
                                @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
+    }
+
+    public CheckControlMessage(Value value) {
+        this((byte) 0x00, value);
+    }
+
+    public CheckControlMessage(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 2);
+
+        this.value = value;
+
+        if (value != null) {
+            this.value = value;
+
+            ByteUtils.setBytes(bytes, Property.intToBytes(value.id, 2), 3);
+            ByteUtils.setBytes(bytes, Property.intToBytes(value.remainingTime, 4), 5);
+
+            int textPosition = 9;
+            int textLength = value.text.length();
+            bytes[textPosition] = (byte) textLength;
+            ByteUtils.setBytes(bytes, Property.intToBytes(textLength, 2), textPosition);
+            textPosition += 2;
+            ByteUtils.setBytes(bytes, Property.stringToBytes(value.text), textPosition);
+
+            textPosition += textLength;
+            textLength = value.status.length();
+            bytes[textPosition] = (byte) textLength;
+            textPosition += 1;
+            ByteUtils.setBytes(bytes, Property.stringToBytes(value.status), textPosition);
+        }
+    }
+
+    public CheckControlMessage(int id, int remainingTime, String text, String status) {
+        this((byte) 0x00, id, remainingTime, text, status);
+    }
+
+    public CheckControlMessage(byte identifier, int id, int remainingTime, String text,
+                               String status) {
+        this(identifier, new Value(id, remainingTime, text, status));
     }
 
     public CheckControlMessage(Property p) throws CommandParseException {
@@ -79,7 +97,7 @@ public class CheckControlMessage extends Property {
         return this;
     }
 
-    public static class Value {
+    public static class Value implements PropertyValue {
         int id;
         int remainingTime;
         String text;
@@ -130,6 +148,10 @@ public class CheckControlMessage extends Property {
             textLength = Property.getUnsignedInt(property, textPosition, 1);
             textPosition++;
             this.status = Property.getString(property, textPosition, textLength);
+        }
+
+        @Override public int getLength() {
+            return 9 + text.length() + status.length();
         }
     }
 }

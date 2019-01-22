@@ -23,6 +23,7 @@ package com.highmobility.autoapi.property.diagnostics;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyValue;
 import com.highmobility.autoapi.property.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
 
@@ -37,17 +38,37 @@ public class WheelRpm extends Property {
         return value;
     }
 
+    public WheelRpm(byte identifier) {
+        super(identifier);
+    }
+
     public WheelRpm(@Nullable Value value, @Nullable Calendar timestamp,
                     @Nullable PropertyFailure failure) {
-        this(value.getTireLocation(), value.getRpm());
+        this(value);
         setTimestampFailure(timestamp, failure);
     }
 
+    public WheelRpm(Value value) {
+        this((byte) 0x00, value);
+    }
+
+    public WheelRpm(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 2);
+
+        this.value = value;
+
+        if (value != null) {
+            this.bytes[3] = value.tireLocation.getByte();
+            ByteUtils.setBytes(bytes, Property.intToBytes(value.rpm, 2), 4);
+        }
+    }
+
     public WheelRpm(TireLocation tireLocation, int rpm) {
-        super((byte) 0x00, 3);
-        value = new Value(tireLocation, rpm);
-        this.bytes[3] = tireLocation.getByte();
-        ByteUtils.setBytes(bytes, Property.intToBytes(rpm, 2), 4);
+        this((byte) 0x00, tireLocation, rpm);
+    }
+
+    public WheelRpm(byte identifier, TireLocation tireLocation, int rpm) {
+        this(identifier, new Value(tireLocation, rpm));
     }
 
     public WheelRpm(Property p) throws CommandParseException {
@@ -61,7 +82,7 @@ public class WheelRpm extends Property {
         return this;
     }
 
-    public static class Value {
+    public static class Value implements PropertyValue {
         TireLocation tireLocation;
         int rpm;
 
@@ -87,6 +108,10 @@ public class WheelRpm extends Property {
         public Value(Property bytes) throws CommandParseException {
             this.tireLocation = TireLocation.fromByte(bytes.get(3));
             this.rpm = Property.getUnsignedInt(bytes, 4, 2);
+        }
+
+        @Override public int getLength() {
+            return 3;
         }
     }
 

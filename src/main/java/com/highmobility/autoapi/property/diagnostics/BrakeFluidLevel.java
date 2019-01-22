@@ -23,7 +23,6 @@ package com.highmobility.autoapi.property.diagnostics;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyTimestamp;
 
 import java.util.Calendar;
 

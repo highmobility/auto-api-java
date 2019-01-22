@@ -34,6 +34,10 @@ public class SpringRateProperty extends Property {
         return value;
     }
 
+    public SpringRateProperty(byte identifier) {
+        super(identifier);
+    }
+
     public SpringRateProperty(@Nullable Value value, @Nullable Calendar timestamp,
                               @Nullable PropertyFailure failure) {
         this(value);
@@ -46,31 +50,26 @@ public class SpringRateProperty extends Property {
 
     public SpringRateProperty(byte identifier, Value value) {
         super(identifier, value == null ? 0 : 2);
+
         this.value = value;
-        if (value != null) setBytes(value);
+
+        if (value != null) {
+            bytes[3] = value.axle.getByte();
+            bytes[4] = value.springRate.byteValue();
+        }
     }
 
     public SpringRateProperty(Axle axle, Integer springRate) {
         this((byte) 0x00, axle, springRate);
     }
 
-    public SpringRateProperty(byte identifier) {
-        super(identifier);
-    }
-
     public SpringRateProperty(byte identifier, Axle axle, Integer springRate) {
-        super(identifier, 2);
-        setBytes(new Value(axle, springRate));
+        this(identifier, new Value(axle, springRate));
     }
 
     public SpringRateProperty(Property p) throws CommandParseException {
         super(p);
         update(p);
-    }
-
-    void setBytes(Value value) {
-        bytes[3] = value.axle.getByte();
-        bytes[4] = value.springRate.byteValue();
     }
 
     @Override public Property update(Property p) throws CommandParseException {
@@ -79,7 +78,7 @@ public class SpringRateProperty extends Property {
         return this;
     }
 
-    public static class Value {
+    public static class Value implements PropertyValue {
         Axle axle;
         Integer springRate;
 
@@ -105,6 +104,10 @@ public class SpringRateProperty extends Property {
         public Value(Axle axle, Integer springRate) {
             this.axle = axle;
             this.springRate = springRate;
+        }
+
+        @Override public int getLength() {
+            return 2;
         }
     }
 }

@@ -36,6 +36,10 @@ public class ControlModeProperty extends Property {
         return value;
     }
 
+    public ControlModeProperty(byte identifier) {
+        super(identifier);
+    }
+
     public ControlModeProperty(@Nullable Value value, @Nullable Calendar timestamp,
                                @Nullable PropertyFailure failure) {
         this(value);
@@ -49,20 +53,12 @@ public class ControlModeProperty extends Property {
     public ControlModeProperty(byte identifier, Value value) {
         super(identifier, value == null ? 0 : 2);
         this.value = value;
-        if (value != null) setBytes(value);
-    }
-
-    public ControlModeProperty(byte identifier) {
-        super(identifier);
+        if (value != null) bytes[3] = value.getByte();
     }
 
     public ControlModeProperty(Property p) throws CommandParseException {
         super(p);
         update(p);
-    }
-
-    void setBytes(Value value) {
-        bytes[3] = value.getByte();
     }
 
     @Override public Property update(Property p) throws CommandParseException {

@@ -428,8 +428,7 @@ public class DiagnosticsState extends CommandWithProperties {
                         troubleCodes.add(troubleCode);
                         return troubleCode;
                     case IDENTIFIER_MILEAGE_METERS:
-                        mileageMeters = new IntegerProperty(p, false);
-                        return mileageMeters;
+                        return mileageMeters.update(p);
                 }
 
                 return null;

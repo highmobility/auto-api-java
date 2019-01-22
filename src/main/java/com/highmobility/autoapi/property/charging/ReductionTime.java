@@ -35,8 +35,13 @@ import javax.annotation.Nullable;
 public class ReductionTime extends Property {
     Value value;
 
+
     @Nullable public Value getValue() {
         return value;
+    }
+
+    public ReductionTime(byte identifier) {
+        super(identifier);
     }
 
     public ReductionTime(StartStop startStop, Time time) {

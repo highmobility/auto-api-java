@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.property.ControlModeProperty;
 import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.IntArrayProperty;
@@ -13,6 +12,16 @@ import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
+import com.highmobility.autoapi.property.charging.DepartureTime;
+import com.highmobility.autoapi.property.charging.PlugType;
+import com.highmobility.autoapi.property.charging.ReductionTime;
+import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
+import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
+import com.highmobility.autoapi.property.diagnostics.DiagnosticsTroubleCode;
+import com.highmobility.autoapi.property.diagnostics.TirePressure;
+import com.highmobility.autoapi.property.diagnostics.TireTemperature;
+import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
+import com.highmobility.autoapi.property.diagnostics.WheelRpm;
 
 import org.junit.Test;
 
@@ -22,6 +31,7 @@ import static junit.framework.TestCase.assertTrue;
 
 public class PropertyCtors {
     /*
+     * test:
      * correct one created with only failure() - tests that builder exists
      * null value is ok (does not crash)
      * update sets value
@@ -110,6 +120,95 @@ public class PropertyCtors {
         assertTrue(updateProp.getValue() != null);
     }
 
+    @Test public void departureTime() throws CommandParseException {
+        Property property = new Property("010003000000");
+        assertTrue(new DepartureTime(null, null, failure).getFailure() != null);
+        assertTrue(new DepartureTime(property).getValue() != null);
+        DepartureTime updateProp = new DepartureTime((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void plugType() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new PlugType(null, null, failure).getFailure() != null);
+        assertTrue(new PlugType(property).getValue() != null);
+        PlugType updateProp = new PlugType((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void reductionTime() throws CommandParseException {
+        Property property = new Property("010003000000");
+        assertTrue(new ReductionTime(null, null, failure).getFailure() != null);
+        assertTrue(new ReductionTime(property).getValue() != null);
+        ReductionTime updateProp = new ReductionTime((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void brakeFluidLevel() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new BrakeFluidLevel(null, null, failure).getFailure() != null);
+        assertTrue(new BrakeFluidLevel(property).getValue() != null);
+        BrakeFluidLevel updateProp = new BrakeFluidLevel((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void CheckControlMessage() throws CommandParseException {
+        Property property = new Property("010009000000000000000000");
+        assertTrue(new CheckControlMessage(null, null, failure).getFailure() != null);
+        assertTrue(new CheckControlMessage(property).getValue() != null);
+        CheckControlMessage updateProp = new CheckControlMessage((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void DiagnosticsTroubleCode() throws CommandParseException {
+        Property property = new Property("1D0018020743313633414641064454523231320750454E44494E47");
+        assertTrue(new DiagnosticsTroubleCode(null, null, failure).getFailure() != null);
+        assertTrue(new DiagnosticsTroubleCode(property).getValue() != null);
+        DiagnosticsTroubleCode updateProp = new DiagnosticsTroubleCode((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void tirePressure() throws CommandParseException {
+        Property property = new Property("0100050000000000");
+        assertTrue(new TirePressure(null, null, failure).getFailure() != null);
+        assertTrue(new TirePressure(property).getValue() != null);
+        TirePressure updateProp = new TirePressure((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void tireTemperature() throws CommandParseException {
+        Property property = new Property("0100050000000000");
+        assertTrue(new TireTemperature(null, null, failure).getFailure() != null);
+        assertTrue(new TireTemperature(property).getValue() != null);
+        TireTemperature updateProp = new TireTemperature((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void washerFluidLevel() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new WasherFluidLevel(null, null, failure).getFailure() != null);
+        assertTrue(new WasherFluidLevel(property).getValue() != null);
+        WasherFluidLevel updateProp = new WasherFluidLevel((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void WheelRpm() throws CommandParseException {
+        Property property = new Property("010003000000");
+        assertTrue(new WheelRpm(null, null, failure).getFailure() != null);
+        assertTrue(new WheelRpm(property).getValue() != null);
+        WheelRpm updateProp = new WheelRpm((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
 
     //01000102
 }

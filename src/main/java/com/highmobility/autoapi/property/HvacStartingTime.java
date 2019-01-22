@@ -62,7 +62,7 @@ public class HvacStartingTime extends Property {
         return this;
     }
 
-    public class Value {
+    public static class Value {
         Time time;
         Weekday weekday;
 

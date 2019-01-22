@@ -22,8 +22,12 @@ package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyValue;
 import com.highmobility.autoapi.property.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
+
+import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
@@ -34,11 +38,38 @@ public class TireTemperature extends Property {
         return value;
     }
 
+
+    public TireTemperature(byte identifier) {
+        super(identifier);
+    }
+
+    public TireTemperature(@Nullable Value value, @Nullable Calendar timestamp,
+                              @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public TireTemperature(Value value) {
+        this((byte) 0x00, value);
+    }
+
+    public TireTemperature(byte identifier, Value value) {
+        super(identifier, value == null ? 0 : 2);
+
+        this.value = value;
+
+        if (value != null) {
+            bytes[3] = value.tireLocation.getByte();
+            ByteUtils.setBytes(bytes, Property.floatToBytes(value.temperature), 4);
+        }
+    }
+
     public TireTemperature(TireLocation tireLocation, float temperature) {
-        super((byte) 0x00, 5);
-        value = new Value(tireLocation, temperature);
-        bytes[3] = tireLocation.getByte();
-        ByteUtils.setBytes(bytes, Property.floatToBytes(temperature), 4);
+        this((byte) 0x00, tireLocation, temperature);
+    }
+
+    public TireTemperature(byte identifier, TireLocation tireLocation, float temperature) {
+        this(identifier, new Value(tireLocation, temperature));
     }
 
     public TireTemperature(Property p) throws CommandParseException {
@@ -52,7 +83,7 @@ public class TireTemperature extends Property {
         return this;
     }
 
-    public static class Value {
+    public static class Value implements PropertyValue {
         TireLocation tireLocation;
         float temperature;
 
@@ -79,6 +110,10 @@ public class TireTemperature extends Property {
             if (bytes.getLength() < 8) throw new CommandParseException();
             this.tireLocation = TireLocation.fromByte(bytes.get(3));
             this.temperature = Property.getFloat(bytes, 4);
+        }
+
+        @Override public int getLength() {
+            return 5;
         }
     }
 }
