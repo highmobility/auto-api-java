@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.IntArrayProperty;
 import com.highmobility.autoapi.property.StringProperty;
 
 import javax.annotation.Nullable;
@@ -31,50 +31,47 @@ import javax.annotation.Nullable;
 public class FirmwareVersion extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FIRMWARE_VERSION, 0x01);
 
-    private static final byte SDK_VERSION_IDENTIFIER = 0x01;
-    private static final byte SDK_BUILD_IDENTIFIER = 0x02;
-    private static final byte APP_VERSION_IDENTIFIER = 0x03;
+    private static final byte IDENTIFIER_SDK_VERSION = 0x01;
+    private static final byte IDENTIFIER_SDK_BUILD = 0x02;
+    private static final byte IDENTIFIER_APP_VERSION = 0x03;
 
-    String carSDKVersion;
-    String carSDKBuild;
-    String applicationVersion;
+    IntArrayProperty carSDKVersion = new IntArrayProperty(IDENTIFIER_SDK_VERSION);
+    StringProperty carSDKBuild = new StringProperty(IDENTIFIER_SDK_BUILD);
+    StringProperty applicationVersion = new StringProperty(IDENTIFIER_APP_VERSION);
 
     /**
      * @return The car SDK version.
      */
-    @Nullable public String getCarSDKVersion() {
+    @Nullable public IntArrayProperty getCarSDKVersion() {
         return carSDKVersion;
     }
 
     /**
      * @return The car SDK build.
      */
-    @Nullable public String getCarSDKBuild() {
+    @Nullable public StringProperty getCarSDKBuild() {
         return carSDKBuild;
     }
 
     /**
      * @return The application version.
      */
-    @Nullable public String getApplicationVersion() {
+    @Nullable public StringProperty getApplicationVersion() {
         return applicationVersion;
     }
 
     FirmwareVersion(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
-                    case SDK_VERSION_IDENTIFIER:
-                        carSDKVersion = identifiersToString(property.getValueBytes());
-                        return carSDKVersion;
-                    case SDK_BUILD_IDENTIFIER:
-                        carSDKBuild = Property.getString(property.getValueBytes());
-                        return carSDKBuild;
-                    case APP_VERSION_IDENTIFIER:
-                        applicationVersion = Property.getString(property.getValueBytes());
-                        return applicationVersion;
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_SDK_VERSION:
+                        return carSDKVersion.update(p);
+                    case IDENTIFIER_SDK_BUILD:
+                        return carSDKBuild.update(p);
+                    case IDENTIFIER_APP_VERSION:
+                        return applicationVersion.update(p);
                 }
 
                 return null;
@@ -86,44 +83,30 @@ public class FirmwareVersion extends CommandWithProperties {
         return true;
     }
 
-    private static String identifiersToString(byte[] identifiers) {
-        return (int) identifiers[0] + "." +
-                (int) identifiers[1] + "." +
-                (int) identifiers[2];
-    }
-
     private FirmwareVersion(Builder builder) {
         super(builder);
-        carSDKVersion = builder.carSDKVersion;
+        carSDKVersion = builder.carSdkVersion;
         carSDKBuild = builder.carSDKBuild;
         applicationVersion = builder.applicationVersion;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private String carSDKVersion;
-        private String carSDKBuild;
-        private String applicationVersion;
+        private IntArrayProperty carSdkVersion;
+        private StringProperty carSDKBuild;
+        private StringProperty applicationVersion;
 
         public Builder() {
             super(TYPE);
         }
 
         /**
-         * @param carSDKVersionIdentifiers The Car SDK version identifiers: major, minor and patch.
-         *                                 For instance for version 1.15.33 the identifiers would be
-         *                                 {1, 15, 33}.
+         * @param carSdkVersion The Car SDK version. Version is in format: "[major,minor,patch]"
          * @return The builder.
          */
-        public Builder setCarSDKVersion(int[] carSDKVersionIdentifiers) {
-            if (carSDKVersionIdentifiers.length != 3) throw new IllegalArgumentException();
-
-            byte[] identifiers = new byte[3];
-            for (int i = 0; i < carSDKVersionIdentifiers.length; i++) {
-                identifiers[i] = (byte) carSDKVersionIdentifiers[i];
-            }
-
-            carSDKVersion = FirmwareVersion.identifiersToString(identifiers);
-            addProperty(new Property(SDK_VERSION_IDENTIFIER, identifiers));
+        public Builder setCarSdkVersion(IntArrayProperty carSdkVersion) throws IllegalArgumentException {
+            if (carSdkVersion.getValueLength() != 3) throw new IllegalArgumentException();
+            this.carSdkVersion = carSdkVersion;
+            addProperty(carSdkVersion.setIdentifier(IDENTIFIER_SDK_VERSION));
             return this;
         }
 
@@ -131,9 +114,9 @@ public class FirmwareVersion extends CommandWithProperties {
          * @param carSDKBuild The Car SDK build.
          * @return The builder.
          */
-        public Builder setCarSDKBuild(String carSDKBuild) {
+        public Builder setCarSDKBuild(StringProperty carSDKBuild) {
             this.carSDKBuild = carSDKBuild;
-            addProperty(new StringProperty(SDK_BUILD_IDENTIFIER, carSDKBuild));
+            addProperty(carSDKBuild.setIdentifier(IDENTIFIER_SDK_BUILD));
             return this;
         }
 
@@ -141,9 +124,9 @@ public class FirmwareVersion extends CommandWithProperties {
          * @param applicationVersion The application version.
          * @return The builder.
          */
-        public Builder setApplicationVersion(String applicationVersion) {
+        public Builder setApplicationVersion(StringProperty applicationVersion) {
             this.applicationVersion = applicationVersion;
-            addProperty(new StringProperty(APP_VERSION_IDENTIFIER, applicationVersion));
+            addProperty(applicationVersion.setIdentifier(IDENTIFIER_APP_VERSION));
             return this;
         }
 

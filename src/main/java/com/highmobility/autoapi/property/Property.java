@@ -95,6 +95,12 @@ public class Property extends Bytes {
         if (value != null) ByteUtils.setBytes(bytes, value, 3);
     }
 
+    public Property(byte identifier, byte[] value, @Nullable Calendar timestamp,
+                    @Nullable PropertyFailure failure) {
+        this(identifier, value);
+        setTimestampFailure(timestamp, failure);
+    }
+
     /**
      * @param identifier The identifier byte of the property.
      * @param value      The value of the property.

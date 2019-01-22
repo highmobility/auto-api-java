@@ -4,9 +4,11 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.property.ControlModeProperty;
 import com.highmobility.autoapi.property.HvacStartingTime;
+import com.highmobility.autoapi.property.IntArrayProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.SpringRateProperty;
+import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
@@ -86,6 +88,24 @@ public class PropertyCtors {
         assertTrue(new ControlModeProperty(null, null, failure).getFailure() != null);
         assertTrue(new ControlModeProperty(property).getValue() != null);
         ControlModeProperty updateProp = new ControlModeProperty((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void string() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new StringProperty(null, null, failure).getFailure() != null);
+        assertTrue(new StringProperty(property).getValue() != null);
+        StringProperty updateProp = new StringProperty((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void intArray() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new IntArrayProperty(null, null, failure).getFailure() != null);
+        assertTrue(new IntArrayProperty(property).getValue() != null);
+        IntArrayProperty updateProp = new IntArrayProperty((byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }

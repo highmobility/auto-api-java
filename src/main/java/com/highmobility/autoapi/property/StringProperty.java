@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.value.Bytes;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
@@ -35,18 +35,17 @@ public class StringProperty extends Property {
 
     String value;
 
-    public String getValue() {
+    public StringProperty(byte identifier) {
+        super(identifier);
+    }
+
+    @Nullable public String getValue() {
         return value;
     }
 
-    public StringProperty(Bytes bytes) {
-        super(bytes);
-
-        try {
-            this.value = new String(getValueBytes(), CHARSET);
-        } catch (UnsupportedEncodingException e) {
-            this.value = "Unsupported encoding";
-        }
+    public StringProperty(Property p) throws CommandParseException {
+        super(p);
+        update(p);
     }
 
     public StringProperty(String value) {
@@ -78,6 +77,20 @@ public class StringProperty extends Property {
                           @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
+    }
+
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+
+        if (p.getValueLength() != 0) {
+            try {
+                this.value = new String(getValueBytes(), CHARSET);
+            } catch (UnsupportedEncodingException e) {
+                this.value = "Unsupported encoding";
+            }
+        }
+
+        return this;
     }
 
     public static Property[] getProperties(String value, byte identifier) {
