@@ -42,7 +42,7 @@ public class HistoricalTest {
         HistoricalStates states = (HistoricalStates) command;
         assertTrue(states.getStates().length == 1);
         LockState state = (LockState) states.getStates()[0];
-        assertTrue(state.getLock(DoorLocation.FRONT_LEFT).getLock() == Lock.UNLOCKED);
+        assertTrue(state.getLock(DoorLocation.FRONT_LEFT).getLock() == Lock.Value.UNLOCKED);
 
         assertTrue(TestUtils.dateIsSame(state.getTimestamp(), "2018-01-10T16:32:05+0000"));
     }

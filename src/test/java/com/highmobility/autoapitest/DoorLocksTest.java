@@ -16,10 +16,9 @@ import static com.highmobility.autoapi.property.doors.DoorLocation.FRONT_LEFT;
 import static com.highmobility.autoapi.property.doors.DoorLocation.FRONT_RIGHT;
 import static com.highmobility.autoapi.property.doors.DoorLocation.REAR_LEFT;
 import static com.highmobility.autoapi.property.doors.DoorLocation.REAR_RIGHT;
-import static com.highmobility.autoapi.property.value.Lock.LOCKED;
-import static com.highmobility.autoapi.property.value.Lock.UNLOCKED;
+import static com.highmobility.autoapi.property.value.Lock.Value.LOCKED;
+import static com.highmobility.autoapi.property.value.Lock.Value.UNLOCKED;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class DoorLocksTest {
     Bytes bytes = new Bytes(
@@ -35,13 +34,7 @@ public class DoorLocksTest {
 
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(command.is(LockState.TYPE));
         testState((LockState) command);
     }

@@ -29,8 +29,8 @@ import javax.annotation.Nullable;
  */
 public class FlashersState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x01);
-    private static final byte IDENTIFIER_STATE = 0x01;
-    FlashersStateProperty state = new FlashersStateProperty(IDENTIFIER_STATE);
+    private static final byte STATE_IDENTIFIER = 0x01;
+    FlashersStateProperty state = new FlashersStateProperty(STATE_IDENTIFIER);
 
     /**
      * @return The flashers state.
@@ -44,7 +44,7 @@ public class FlashersState extends CommandWithProperties {
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
-                if (p.getPropertyIdentifier() == IDENTIFIER_STATE) {
+                if (p.getPropertyIdentifier() == STATE_IDENTIFIER) {
                     return state.update(p);
                 }
                 return null;
@@ -75,7 +75,7 @@ public class FlashersState extends CommandWithProperties {
          */
         public Builder setState(FlashersStateProperty state) {
             this.state = state;
-            addProperty(state.setIdentifier(IDENTIFIER_STATE));
+            addProperty(state.setIdentifier(STATE_IDENTIFIER));
             return this;
         }
 

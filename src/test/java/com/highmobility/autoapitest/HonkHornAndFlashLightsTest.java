@@ -62,7 +62,7 @@ public class HonkHornAndFlashLightsTest {
     @Test public void state0Properties() {
         Bytes waitingForBytes = new Bytes("002601");
         Command state = CommandResolver.resolve(waitingForBytes);
-        assertTrue(((FlashersState) state).getState() == null);
+        assertTrue(((FlashersState) state).getState().getValue() == null);
     }
 
     @Test public void builder() {

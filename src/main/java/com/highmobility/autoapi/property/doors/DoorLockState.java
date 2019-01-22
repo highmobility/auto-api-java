@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.value.Lock;
 
 public class DoorLockState extends Property {
     DoorLocation doorLocation;
-    Lock doorLock;
+    Lock.Value doorLock;
 
     /**
      * @return The door location.
@@ -38,16 +38,16 @@ public class DoorLockState extends Property {
     /**
      * @return The door lock state.
      */
-    public Lock getLock() {
+    public Lock.Value getLock() {
         return doorLock;
     }
 
     public DoorLockState(byte[] bytes) throws CommandParseException {
-        this(DoorLocation.fromByte(bytes[3]), Lock.fromByte
+        this(DoorLocation.fromByte(bytes[3]), Lock.Value.fromByte
                 (bytes[4]));
     }
 
-    public DoorLockState(DoorLocation doorLocation, Lock doorLock) {
+    public DoorLockState(DoorLocation doorLocation, Lock.Value doorLock) {
         super((byte) 0x01, 2);
         this.doorLocation = doorLocation;
         this.doorLock = doorLock;

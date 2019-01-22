@@ -210,7 +210,7 @@ public class CommandTest {
         Bytes bytes = new Bytes("00400102000103"); // 3 is invalid gasflap lock state
         GasFlapState state = (GasFlapState) CommandResolver.resolve(bytes);
 
-        assertTrue(state.getLock() == null);
+        assertTrue(state.getLock().getValue() == null);
         assertTrue(state.getProperty((byte) 0x02) != null);
     }
 

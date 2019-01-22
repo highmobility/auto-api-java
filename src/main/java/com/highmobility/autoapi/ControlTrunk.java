@@ -39,13 +39,13 @@ public class ControlTrunk extends CommandWithProperties {
     private static final byte IDENTIFIER_LOCK = 0x01;
     private static final byte IDENTIFIER_POSITION = 0x02;
 
-    Lock lock;
+    Lock.Value lock;
     Position.Value position;
 
     /**
      * @return The trunk lock state.
      */
-    @Nullable public Lock getLock() {
+    @Nullable public Lock.Value getLock() {
         return lock;
     }
 
@@ -63,13 +63,13 @@ public class ControlTrunk extends CommandWithProperties {
      * @param position The trunk position.
      * @throws IllegalArgumentException If all arguments are null
      */
-    public ControlTrunk(@Nullable Lock lock, @Nullable Position.Value position) {
+    public ControlTrunk(@Nullable Lock.Value lock, @Nullable Position.Value position) {
         super(TYPE, getProperties(lock, position));
         this.lock = lock;
         this.position = position;
     }
 
-    static Property[] getProperties(Lock state, Position.Value position) {
+    static Property[] getProperties(Lock.Value state, Position.Value position) {
         ArrayList<Property> properties = new ArrayList<>();
 
         if (state != null) {
@@ -89,7 +89,7 @@ public class ControlTrunk extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER_LOCK) {
-                    lock = Lock.fromByte(p.getValueByte());
+                    lock = Lock.Value.fromByte(p.getValueByte());
                     return lock;
                 } else if (p.getPropertyIdentifier() == IDENTIFIER_POSITION) {
                     position = Position.Value.fromByte(p.getValueByte());

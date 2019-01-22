@@ -37,17 +37,22 @@ public class ControlGasFlap extends CommandWithProperties {
     private static final byte LOCK_IDENTIFIER = 0x02;
     private static final byte POSITION_IDENTIFIER = 0x03;
 
+    @Nullable private Lock.Value lock;
+    @Nullable private Position.Value position;
+
     /**
      * Control the gas flap.
      *
      * @param lock     The lock state.
      * @param position The position.
      */
-    public ControlGasFlap(@Nullable Lock lock, @Nullable Position.Value position) {
+    public ControlGasFlap(@Nullable Lock.Value lock, @Nullable Position.Value position) {
         super(TYPE, getProperties(lock, position));
+        this.lock = lock;
+        this.position = position;
     }
 
-    static Property[] getProperties(@Nullable Lock lock, @Nullable Position.Value position) {
+    static Property[] getProperties(@Nullable Lock.Value lock, @Nullable Position.Value position) {
         ArrayList<Property> propertyList = new ArrayList<>();
         if (lock != null) {
             propertyList.add(new Property(LOCK_IDENTIFIER, lock.getByte()));
@@ -62,5 +67,20 @@ public class ControlGasFlap extends CommandWithProperties {
 
     ControlGasFlap(byte[] bytes) {
         super(bytes);
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                // can update with failure, timestamp or the real property
+                switch (p.getPropertyIdentifier()) {
+                    case LOCK_IDENTIFIER:
+                        lock = Lock.Value.fromByte(p.getValueByte());
+                        break;
+                    case POSITION_IDENTIFIER:
+                        position = Position.Value.fromByte(p.getValueByte());
+                        break;
+                }
+
+                return null;
+            });
+        }
     }
 }

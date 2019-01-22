@@ -31,9 +31,9 @@ public class HvacStartingTime extends Property {
     }
 
     public HvacStartingTime(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : 2);
+        super(identifier, value == null ? 0 : value.getLength());
         this.value = value;
-        
+
         if (value != null) {
             bytes[3] = value.weekday.getByte();
             bytes[4] = value.time.getByteArray()[0];

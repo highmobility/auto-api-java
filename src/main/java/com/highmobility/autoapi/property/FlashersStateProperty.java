@@ -28,7 +28,7 @@ public class FlashersStateProperty extends Property {
     }
 
     public FlashersStateProperty(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : 2);
+        super(identifier, value == null ? 0 : value.getLength());
         this.value = value;
         if (value != null) bytes[3] = value.getByte();
     }
@@ -44,7 +44,7 @@ public class FlashersStateProperty extends Property {
         return this;
     }
 
-    public enum Value {
+    public enum Value implements PropertyValue {
         INACTIVE((byte) 0x00),
         EMERGENCY_ACTIVE((byte) 0x01),
         LEFT_ACTIVE((byte) 0x02),
@@ -71,6 +71,10 @@ public class FlashersStateProperty extends Property {
 
         public byte getByte() {
             return value;
+        }
+
+        @Override public int getLength() {
+            return 1;
         }
     }
 }

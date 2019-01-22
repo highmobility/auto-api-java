@@ -37,7 +37,7 @@ public class TrunkState extends CommandWithProperties {
     private static final byte IDENTIFIER_LOCK = 0x01;
     private static final byte IDENTIFIER_POSITION = 0x02;
 
-    Lock lock;
+    Lock lock = new Lock(IDENTIFIER_LOCK);
     Position position = new Position(IDENTIFIER_POSITION);
 
     /**
@@ -60,10 +60,7 @@ public class TrunkState extends CommandWithProperties {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_LOCK:
-                        lock = Lock.fromByte(p.getValueByte());
-                        // TODO: 2019-01-21 refactor to use property
-//                        return lock;
-                        return null;
+                        return lock.update(p);
                     case IDENTIFIER_POSITION:
                         return position.update(p);
                 }
@@ -97,7 +94,7 @@ public class TrunkState extends CommandWithProperties {
          */
         public Builder setLockState(Lock lock) {
             this.lock = lock;
-            addProperty(new Property(IDENTIFIER_LOCK, lock.getByte()));
+            addProperty(lock.setIdentifier(IDENTIFIER_LOCK));
             return this;
         }
 

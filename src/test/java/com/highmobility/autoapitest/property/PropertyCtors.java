@@ -11,6 +11,7 @@ import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.IntArrayProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.SpringRateProperty;
@@ -29,6 +30,7 @@ import com.highmobility.autoapi.property.diagnostics.TirePressure;
 import com.highmobility.autoapi.property.diagnostics.TireTemperature;
 import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.WheelRpm;
+import com.highmobility.autoapi.property.value.Lock;
 
 import org.junit.Test;
 
@@ -285,6 +287,24 @@ public class PropertyCtors {
         assertTrue(new FlashersStateProperty(null, null, failure).getFailure() != null);
         assertTrue(new FlashersStateProperty(property).getValue() != null);
         FlashersStateProperty updateProp = new FlashersStateProperty((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void Lock() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new Lock(null, null, failure).getFailure() != null);
+        assertTrue(new Lock(property).getValue() != null);
+        Lock updateProp = new Lock((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void Position() throws CommandParseException {
+        Property property = new Property("010003000000");
+        assertTrue(new Position(null, null, failure).getFailure() != null);
+        assertTrue(new Position(property).getValue() != null);
+        Position updateProp = new Position((byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }

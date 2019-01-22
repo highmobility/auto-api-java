@@ -68,7 +68,7 @@ public class Position extends Property {
         super(identifier);
     }
 
-    public enum Value {
+    public enum Value implements PropertyValue {
         CLOSED((byte) 0x00),
         OPEN((byte) 0x01),
         INTERMEDIATE((byte) 0x02);
@@ -94,6 +94,10 @@ public class Position extends Property {
 
         public byte getByte() {
             return value;
+        }
+
+        @Override public int getLength() {
+            return 1;
         }
     }
 

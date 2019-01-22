@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Position;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Lock;
 
 import javax.annotation.Nullable;
@@ -31,11 +30,11 @@ import javax.annotation.Nullable;
  */
 public class GasFlapState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.FUELING, 0x01);
-    private static final byte LOCK_IDENTIFIER = 0x02;
-    private static final byte POSITION_IDENTIFIER = 0x03;
+    private static final byte IDENTIFIER_LOCK = 0x02;
+    private static final byte IDENTIFIER_POSITION = 0x03;
 
-    Lock lock;
-    Position position = new Position(POSITION_IDENTIFIER);
+    Lock lock = new Lock(IDENTIFIER_LOCK);
+    Position position = new Position(IDENTIFIER_POSITION);
 
     /**
      * @return The gas flap lock.
@@ -56,11 +55,10 @@ public class GasFlapState extends CommandWithProperties {
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
-                if (p.getPropertyIdentifier() == LOCK_IDENTIFIER) {
-                    lock = Lock.fromByte(p.getValueByte());
-                    // TODO: 2019-01-21 ^^ use property for lock and update
-                } else if (p.getPropertyIdentifier() == POSITION_IDENTIFIER) {
-                    position.update(p);
+                if (p.getPropertyIdentifier() == IDENTIFIER_LOCK) {
+                    return lock.update(p);
+                } else if (p.getPropertyIdentifier() == IDENTIFIER_POSITION) {
+                    return position.update(p);
                 }
 
                 return null;
@@ -88,7 +86,7 @@ public class GasFlapState extends CommandWithProperties {
          */
         public Builder setLock(Lock lock) {
             this.lock = lock;
-            addProperty(new Property(LOCK_IDENTIFIER, lock.getByte()));
+            addProperty(lock.setIdentifier(IDENTIFIER_LOCK));
             return this;
         }
 
@@ -98,7 +96,7 @@ public class GasFlapState extends CommandWithProperties {
          */
         public Builder setPosition(Position position) {
             this.position = position;
-            addProperty(position.setIdentifier(POSITION_IDENTIFIER));
+            addProperty(position.setIdentifier(IDENTIFIER_POSITION));
             return this;
         }
 
