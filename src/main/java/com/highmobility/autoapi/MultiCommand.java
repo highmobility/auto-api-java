@@ -70,7 +70,7 @@ public class MultiCommand extends CommandWithProperties {
         ArrayList<Property> properties = new ArrayList<>();
 
         for (Command command : commands) {
-            Property prop = new Property(PROP_IDENTIFIER, command);
+            Property prop = new Property(PROP_IDENTIFIER, command.getByteArray());
             properties.add(prop);
         }
 

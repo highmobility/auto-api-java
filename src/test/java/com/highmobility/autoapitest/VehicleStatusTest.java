@@ -119,15 +119,15 @@ public class VehicleStatusTest {
     }
 
     @Test public void ignitionState() {
-        Command command = this.command.getState(IgnitionState.TYPE);
-        IgnitionState state = (IgnitionState) command;
+        CommandProperty command = this.command.getState(IgnitionState.TYPE);
+        IgnitionState state = (IgnitionState) command.getValue();
         assertTrue(state.isAccessoriesIgnitionOn().getValue());
     }
 
     Command getState(Class forClass) {
         for (int i = 0; i < command.getStates().length; i++) {
-            Command command = this.command.getStates()[i];
-            if (command.getClass().equals(forClass)) return command;
+            CommandWithProperties command = this.command.getStates()[i].getValue();
+            if (command != null && command.getClass().equals(forClass)) return command;
         }
 
         return null;
@@ -152,12 +152,12 @@ public class VehicleStatusTest {
         TrunkState.Builder trunkState = new TrunkState.Builder();
         trunkState.setLockState(new Lock(Lock.Value.UNLOCKED));
         trunkState.setPosition(new Position(Position.Value.OPEN));
-        builder.addProperty(new CommandProperty(trunkState.build()));
+        builder.addState(new CommandProperty(trunkState.build()));
 
         IgnitionState.Builder ignitionState = new IgnitionState.Builder();
         ignitionState.setIsOn(new BooleanProperty(true));
         ignitionState.setAccessoriesIgnition(new BooleanProperty(true));
-        builder.addProperty(new CommandProperty(ignitionState.build()));
+        builder.addState(new CommandProperty(ignitionState.build()));
 
         // l7
         builder.setEngineVolume(new FloatProperty(2.5f));
@@ -225,7 +225,7 @@ public class VehicleStatusTest {
         }
         VehicleStatus vs = (VehicleStatus) command;
         // one window property will fail to parse
-        WindowsState ws = (WindowsState) vs.getState(WindowsState.TYPE);
+        WindowsState ws = (WindowsState) vs.getState(WindowsState.TYPE).getValue();
         assertTrue(ws.getProperties().length == 5);
         assertTrue(ws.getWindowPositions().length == 2);
     }

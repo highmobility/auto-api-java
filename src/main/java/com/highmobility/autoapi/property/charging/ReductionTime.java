@@ -23,6 +23,7 @@ package com.highmobility.autoapi.property.charging;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyValue;
 import com.highmobility.autoapi.property.value.StartStop;
 import com.highmobility.autoapi.property.value.Time;
 import com.highmobility.utils.ByteUtils;
@@ -59,7 +60,7 @@ public class ReductionTime extends Property {
     }
 
     public ReductionTime(byte identifier, Value value) {
-        super(identifier, value != null ? 3 : 0);
+        super(identifier, value);
         if (value != null) {
             bytes[3] = value.startStop.getByte();
             ByteUtils.setBytes(bytes, value.time.getByteArray(), 4);
@@ -80,7 +81,7 @@ public class ReductionTime extends Property {
         return this;
     }
 
-    public static class Value {
+    public static class Value implements PropertyValue {
         Time time;
         StartStop startStop;
 
@@ -101,6 +102,10 @@ public class ReductionTime extends Property {
             if (bytes.length < 6) throw new CommandParseException();
             this.startStop = StartStop.fromByte(bytes[3]);
             this.time = new Time(Arrays.copyOfRange(bytes, 4, 6));
+        }
+
+        @Override public int getLength() {
+            return 3;
         }
     }
 }

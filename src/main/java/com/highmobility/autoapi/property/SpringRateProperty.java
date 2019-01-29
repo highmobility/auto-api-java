@@ -49,7 +49,7 @@ public class SpringRateProperty extends Property {
     }
 
     public SpringRateProperty(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : 2);
+        super(identifier, value);
 
         this.value = value;
 

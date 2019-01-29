@@ -53,7 +53,7 @@ public class TirePressure extends Property {
     }
 
     public TirePressure(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : value.getLength());
+        super(identifier, value);
 
         this.value = value;
 

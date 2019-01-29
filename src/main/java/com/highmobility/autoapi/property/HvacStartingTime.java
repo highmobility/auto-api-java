@@ -31,7 +31,7 @@ public class HvacStartingTime extends Property {
     }
 
     public HvacStartingTime(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : value.getLength());
+        super(identifier, value);
         this.value = value;
 
         if (value != null) {

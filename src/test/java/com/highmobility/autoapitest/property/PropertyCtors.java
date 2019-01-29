@@ -2,6 +2,7 @@ package com.highmobility.autoapitest.property;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.ControlModeProperty;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.DrivingMode;
@@ -100,7 +101,6 @@ public class PropertyCtors {
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
-
 
     @Test public void controlMode() throws CommandParseException {
         Property property = new Property("01000102");
@@ -305,6 +305,17 @@ public class PropertyCtors {
         assertTrue(new Position(null, null, failure).getFailure() != null);
         assertTrue(new Position(property).getValue() != null);
         Position updateProp = new Position((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void HistoricalState() throws CommandParseException {
+        Property property = new Property("010013" + "0020010300020000" +
+                "A2000812010a1020050000");
+
+        assertTrue(new CommandProperty(null, null, failure).getFailure() != null);
+        assertTrue(new CommandProperty(property).getValue() != null);
+        CommandProperty updateProp = new CommandProperty((byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }

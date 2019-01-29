@@ -23,7 +23,7 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.value.Axle;
 
-public class BrakeTorqueVectoringProperty extends Property {
+public class BrakeTorqueVectoring extends Property {
     public static final byte IDENTIFIER = 0x0A;
     Axle axle;
     boolean active;
@@ -42,18 +42,18 @@ public class BrakeTorqueVectoringProperty extends Property {
         return active;
     }
 
-    public BrakeTorqueVectoringProperty(byte[] bytes) throws CommandParseException {
+    public BrakeTorqueVectoring(byte[] bytes) throws CommandParseException {
         super(bytes);
 
         axle = Axle.fromByte(bytes[3]);
         active = Property.getBool(bytes[4]);
     }
 
-    public BrakeTorqueVectoringProperty(Axle axle, boolean active) {
+    public BrakeTorqueVectoring(Axle axle, boolean active) {
         this(IDENTIFIER, axle, active);
     }
 
-    BrakeTorqueVectoringProperty(byte identifier, Axle axle, boolean active) {
+    BrakeTorqueVectoring(byte identifier, Axle axle, boolean active) {
         super(identifier, 2);
         bytes[3] = axle.getByte();
         bytes[4] = Property.boolToByte(active);

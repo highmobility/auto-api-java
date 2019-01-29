@@ -33,6 +33,10 @@ public class Position extends Property {
         return position;
     }
 
+    public Position(byte identifier) {
+        super(identifier);
+    }
+
     public Position(Value position) {
         this((byte) 0x00, position);
     }
@@ -41,10 +45,6 @@ public class Position extends Property {
                     @Nullable PropertyFailure failure) {
         this(position);
         setTimestampFailure(timestamp, failure);
-    }
-
-    public Position() {
-        super(unknownBytes);
     }
 
     public Position(byte identifier, Value position) {
@@ -62,10 +62,6 @@ public class Position extends Property {
         super.update(p);
         if (p.getValueLength() >= 1) position = Value.fromByte(p.get(3));
         return this;
-    }
-
-    public Position(byte identifier) {
-        super(identifier);
     }
 
     public enum Value implements PropertyValue {

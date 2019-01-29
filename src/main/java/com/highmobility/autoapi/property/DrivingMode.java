@@ -44,7 +44,7 @@ public class DrivingMode extends Property {
     }
 
     public DrivingMode(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : 1);
+        super(identifier, value);
         this.value = value;
         if (value != null) bytes[3] = value.getByte();
     }
@@ -64,7 +64,7 @@ public class DrivingMode extends Property {
         super(identifier);
     }
 
-    public enum Value {
+    public enum Value implements PropertyValue {
         REGULAR((byte) 0x00),
         ECO((byte) 0x01),
         SPORT((byte) 0x02),
@@ -92,6 +92,10 @@ public class DrivingMode extends Property {
 
         public byte getByte() {
             return value;
+        }
+
+        @Override public int getLength() {
+            return 1;
         }
     }
 }

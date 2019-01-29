@@ -21,17 +21,63 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.CommandResolver;
+import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.utils.ByteUtils;
 
-public class CommandProperty extends Property {
-    private static final byte defaultIdentifier = (byte)0x99;
+import java.util.Calendar;
 
-    public CommandProperty(Command command) {
-        this(defaultIdentifier, command);
+import javax.annotation.Nullable;
+
+/**
+ * The possible control mode values.
+ */
+public class CommandProperty extends Property {
+    CommandWithProperties value;
+
+    @Nullable public CommandWithProperties getValue() {
+        return value;
     }
 
-    public CommandProperty(byte identifier, Command value) {
-        super(identifier, value.getByteArray().length);
-        ByteUtils.setBytes(bytes, value.getByteArray(), 3);
+    public CommandProperty() {
+        super();
+    }
+
+    public CommandProperty(byte identifier) {
+        super(identifier);
+    }
+
+    public CommandProperty(@Nullable CommandWithProperties value, @Nullable Calendar timestamp,
+                           @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public CommandProperty(@Nullable CommandWithProperties value) {
+        super((byte) 0x00, value);
+        this.value = value;
+
+        if (value != null) {
+            ByteUtils.setBytes(bytes, value.getByteArray(), 3);
+            // TBODO: test for historical state
+        }
+    }
+
+    public CommandProperty(Property p) throws CommandParseException {
+        super(p);
+        update(p);
+    }
+
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+
+        if (p.getValueLength() > 5) {
+            Command command = CommandResolver.resolve(p.getValueBytes());
+            if (command instanceof CommandWithProperties)
+                value = (CommandWithProperties) command;
+        }
+
+        return this;
     }
 }

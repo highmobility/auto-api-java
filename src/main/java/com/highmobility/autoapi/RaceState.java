@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.AccelerationProperty;
 import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
+import com.highmobility.autoapi.property.BrakeTorqueVectoring;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.autoapi.property.IntegerProperty;
@@ -71,7 +71,7 @@ public class RaceState extends CommandWithProperties {
     FloatProperty yawRate;
     IntegerProperty rearSuspensionSteering;
     BooleanProperty espInterventionActive;
-    BrakeTorqueVectoringProperty[] brakeTorqueVectorings;
+    BrakeTorqueVectoring[] brakeTorqueVectorings;
     GearMode gearMode;
     IntegerProperty selectedGear;
     PercentageProperty brakePedalPosition;
@@ -167,9 +167,9 @@ public class RaceState extends CommandWithProperties {
      * @param axle The axle.
      * @return The Brake Torque Vectoring for the given axle. Null if doesn't exist.
      */
-    @Nullable public BrakeTorqueVectoringProperty getBrakeTorqueVectoring(Axle axle) {
+    @Nullable public BrakeTorqueVectoring getBrakeTorqueVectoring(Axle axle) {
         for (int i = 0; i < brakeTorqueVectorings.length; i++) {
-            BrakeTorqueVectoringProperty property = brakeTorqueVectorings[i];
+            BrakeTorqueVectoring property = brakeTorqueVectorings[i];
             if (property.getAxle() == axle) return property;
         }
 
@@ -179,7 +179,7 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return All of the brake torque vectorings.
      */
-    public BrakeTorqueVectoringProperty[] getBrakeTorqueVectorings() {
+    public BrakeTorqueVectoring[] getBrakeTorqueVectorings() {
         return brakeTorqueVectorings;
     }
 
@@ -243,7 +243,7 @@ public class RaceState extends CommandWithProperties {
         super(bytes);
 
         ArrayList<AccelerationProperty> accelerationProperties = new ArrayList<>();
-        ArrayList<BrakeTorqueVectoringProperty> brakeTorqueVectoringProperties = new ArrayList<>();
+        ArrayList<BrakeTorqueVectoring> brakeTorqueVectoringProperties = new ArrayList<>();
 
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
@@ -276,9 +276,9 @@ public class RaceState extends CommandWithProperties {
                     case ESP_INTERVENTION_ACTIVE_IDENTIFIER:
                         espInterventionActive = new BooleanProperty(p);
                         return espInterventionActive;
-                    case BrakeTorqueVectoringProperty.IDENTIFIER:
-                        BrakeTorqueVectoringProperty b =
-                                new BrakeTorqueVectoringProperty(p.getByteArray());
+                    case BrakeTorqueVectoring.IDENTIFIER:
+                        BrakeTorqueVectoring b =
+                                new BrakeTorqueVectoring(p.getByteArray());
                         brakeTorqueVectoringProperties.add(b);
                         return b;
                     case IDENTIFIER_GEAR_MODE:
@@ -315,7 +315,7 @@ public class RaceState extends CommandWithProperties {
                 new AccelerationProperty[0]);
 
         this.brakeTorqueVectorings = brakeTorqueVectoringProperties.toArray(
-                new BrakeTorqueVectoringProperty[0]);
+                new BrakeTorqueVectoring[0]);
     }
 
     @Override public boolean isState() {
@@ -335,7 +335,7 @@ public class RaceState extends CommandWithProperties {
         rearSuspensionSteering = builder.rearSuspensionSteering;
         espInterventionActive = builder.espInterventionActive;
         brakeTorqueVectorings = builder.brakeTorqueVectorings.toArray(new
-                BrakeTorqueVectoringProperty[0]);
+                BrakeTorqueVectoring[0]);
         gearMode = builder.gearMode;
         selectedGear = builder.selectedGear;
         brakePedalPosition = builder.brakePedalPosition;
@@ -358,7 +358,7 @@ public class RaceState extends CommandWithProperties {
         private FloatProperty yawRate;
         private IntegerProperty rearSuspensionSteering;
         private BooleanProperty espInterventionActive;
-        private List<BrakeTorqueVectoringProperty> brakeTorqueVectorings = new ArrayList<>();
+        private List<BrakeTorqueVectoring> brakeTorqueVectorings = new ArrayList<>();
         private GearMode gearMode;
         private IntegerProperty selectedGear;
         private PercentageProperty brakePedalPosition;
@@ -493,10 +493,10 @@ public class RaceState extends CommandWithProperties {
          * @param brakeTorqueVectorings The brake torque vectorings.
          * @return The builder.
          */
-        public Builder setBrakeTorqueVectorings(BrakeTorqueVectoringProperty[]
+        public Builder setBrakeTorqueVectorings(BrakeTorqueVectoring[]
                                                         brakeTorqueVectorings) {
             this.brakeTorqueVectorings = Arrays.asList(brakeTorqueVectorings);
-            for (BrakeTorqueVectoringProperty brakeTorqueVectoring : brakeTorqueVectorings) {
+            for (BrakeTorqueVectoring brakeTorqueVectoring : brakeTorqueVectorings) {
                 addProperty(brakeTorqueVectoring);
             }
             return this;
@@ -508,7 +508,7 @@ public class RaceState extends CommandWithProperties {
          * @param brakeTorqueVectoring The brake torque vectoring.
          * @return The builder.
          */
-        public Builder addBrakeTorqueVectoring(BrakeTorqueVectoringProperty brakeTorqueVectoring) {
+        public Builder addBrakeTorqueVectoring(BrakeTorqueVectoring brakeTorqueVectoring) {
             this.brakeTorqueVectorings.add(brakeTorqueVectoring);
             addProperty(brakeTorqueVectoring);
             return this;

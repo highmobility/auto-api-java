@@ -23,6 +23,7 @@ package com.highmobility.autoapi.property.charging;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyValue;
 
 import java.util.Calendar;
 
@@ -49,15 +50,15 @@ public class ChargePortState extends Property {
         setTimestampFailure(timestamp, failure);
     }
 
-    public ChargePortState(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : 1);
-        this.value = value;
-        if (value != null) bytes[3] = value.getByte();
-    }
-
     public ChargePortState(Property p) throws CommandParseException {
         super(p);
         update(p);
+    }
+
+    public ChargePortState(byte identifier, @Nullable Value value) {
+        super(identifier, value);
+        this.value = value;
+        if (value != null) bytes[3] = value.getByte();
     }
 
     @Override public Property update(Property p) throws CommandParseException {
@@ -69,7 +70,7 @@ public class ChargePortState extends Property {
     /**
      * The possible charge port states
      */
-    public enum Value {
+    public enum Value implements PropertyValue {
         CLOSED((byte) 0x00), OPEN((byte) 0x01);
 
         public static Value fromByte(byte byteValue) throws CommandParseException {
@@ -94,5 +95,8 @@ public class ChargePortState extends Property {
         public byte getByte() {
             return value;
         }
-    }
+
+        @Override public int getLength() {
+            return 1;
+        }}
 }

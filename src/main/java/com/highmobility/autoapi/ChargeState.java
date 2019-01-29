@@ -24,6 +24,7 @@ import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
@@ -598,12 +599,10 @@ public class ChargeState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setTimers(ChargingTimer[] chargingTimers) {
-            this.timers = Arrays.asList(chargingTimers);
+            this.timers.clear();
 
             for (int i = 0; i < chargingTimers.length; i++) {
-                ChargingTimer timer = chargingTimers[i];
-                timer.setIdentifier(TIMER_IDENTIFIER);
-                addProperty(chargingTimers[i]);
+                addTimer(chargingTimers[i]);
             }
 
             return this;

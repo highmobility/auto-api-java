@@ -55,7 +55,7 @@ public class ConvertibleRoofState extends Property {
 
     public ConvertibleRoofState(byte identifier,
                                 Value convertibleRoofState) {
-        super(identifier, convertibleRoofState == null ? 0 : 1);
+        super(identifier, convertibleRoofState);
         this.value = convertibleRoofState;
         if (convertibleRoofState != null) bytes[3] = convertibleRoofState.getByte();
     }
@@ -68,7 +68,7 @@ public class ConvertibleRoofState extends Property {
 
     // TBODO: ctors
 
-    public enum Value {
+    public enum Value implements PropertyValue{
         CLOSED((byte) 0x00),
         OPEN((byte) 0x01),
         EMERGENCY_LOCKED((byte) 0x02),
@@ -100,6 +100,10 @@ public class ConvertibleRoofState extends Property {
 
         public byte getByte() {
             return value;
+        }
+
+        @Override public int getLength() {
+            return 1;
         }
     }
 }

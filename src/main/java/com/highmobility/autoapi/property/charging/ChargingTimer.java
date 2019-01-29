@@ -23,6 +23,7 @@ package com.highmobility.autoapi.property.charging;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyValue;
 import com.highmobility.utils.ByteUtils;
 
 import java.util.Calendar;
@@ -48,7 +49,7 @@ public class ChargingTimer extends Property {
     }
 
     public ChargingTimer(Value value) {
-        super((byte) 0x00, value != null ? 9 : 0);
+        super((byte) 0x00, value);
         this.value = value;
 
         if (value != null) {
@@ -76,7 +77,7 @@ public class ChargingTimer extends Property {
         return this;
     }
 
-    public static class Value {
+    public static class Value implements PropertyValue {
         Type type;
         Calendar time;
 
@@ -96,6 +97,10 @@ public class ChargingTimer extends Property {
         public Value(Type type, Calendar time) {
             this.type = type;
             this.time = time;
+        }
+
+        @Override public int getLength() {
+            return 9;
         }
 
         public enum Type {

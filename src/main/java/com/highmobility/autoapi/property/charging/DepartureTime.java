@@ -23,6 +23,7 @@ package com.highmobility.autoapi.property.charging;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyValue;
 import com.highmobility.autoapi.property.value.Time;
 
 import java.util.Arrays;
@@ -54,7 +55,7 @@ public class DepartureTime extends Property {
     }
 
     public DepartureTime(Value value) {
-        super(IDENTIFIER, value != null ? 3 : 0);
+        super(IDENTIFIER, value);
         this.value = value;
 
         if (value != null) {
@@ -75,7 +76,7 @@ public class DepartureTime extends Property {
         return this;
     }
 
-    public static class Value {
+    public static class Value implements PropertyValue {
         boolean active;
         Time time;
 
@@ -103,5 +104,8 @@ public class DepartureTime extends Property {
             time = new Time(Arrays.copyOfRange(bytes.getByteArray(), 4, 6));
         }
 
+        @Override public int getLength() {
+            return 3;
+        }
     }
 }

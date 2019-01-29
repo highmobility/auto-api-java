@@ -73,6 +73,13 @@ public class Property extends Bytes {
         return failure;
     }
 
+    protected Property() { }
+
+
+    protected Property(byte identifier, @Nullable PropertyValue value) {
+        this.bytes = baseBytes(identifier, value == null ? 0 : value.getLength());
+    }
+
     protected Property(byte identifier, int valueSize) {
         this.bytes = baseBytes(identifier, valueSize);
     }
@@ -105,7 +112,7 @@ public class Property extends Bytes {
      * @param identifier The identifier byte of the property.
      * @param value      The value of the property.
      */
-    public Property(byte identifier, Bytes value) {
+    private Property(byte identifier, Bytes value) {
         this(identifier, value.getByteArray());
     }
 
@@ -146,8 +153,6 @@ public class Property extends Bytes {
         if (bytes.length == 3) return null;
         return bytes[3];
     }
-
-    // TODO: 2019-01-08 these should be package private
 
     /**
      * Set a new identifier for the property

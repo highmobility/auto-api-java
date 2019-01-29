@@ -28,7 +28,7 @@ public class FlashersStateProperty extends Property {
     }
 
     public FlashersStateProperty(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : value.getLength());
+        super(identifier, value);
         this.value = value;
         if (value != null) bytes[3] = value.getByte();
     }

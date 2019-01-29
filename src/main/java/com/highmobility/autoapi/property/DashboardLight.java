@@ -48,7 +48,7 @@ public class DashboardLight extends Property {
     }
 
     public DashboardLight(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : 2);
+        super(identifier, value);
         this.value = value;
         if (value != null) {
             bytes[3] = value.type.getByte();
@@ -75,7 +75,7 @@ public class DashboardLight extends Property {
         return this;
     }
 
-    public static class Value {
+    public static class Value implements PropertyValue {
         Type type;
         State state;
 
@@ -102,6 +102,10 @@ public class DashboardLight extends Property {
         public Value(Type type, State state) {
             this.type = type;
             this.state = state;
+        }
+
+        @Override public int getLength() {
+            return 2;
         }
     }
 

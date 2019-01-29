@@ -24,6 +24,7 @@ import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.PropertyTimestamp;
+import com.highmobility.autoapi.property.PropertyValue;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -39,7 +40,7 @@ import javax.annotation.Nullable;
 /**
  * Used for commands with properties. Can have 0 properties.
  */
-public class CommandWithProperties extends Command {
+public class CommandWithProperties extends Command implements PropertyValue {
     /*
     Properties logic:
     * Empty properties are always created in subclasses with correct identifier but 0x00 bytes.
@@ -366,7 +367,7 @@ public class CommandWithProperties extends Command {
          */
         public Builder setNonce(Bytes nonce) {
             this.nonce = nonce;
-            addProperty(new Property((byte) 0xA0, nonce));
+            addProperty(new Property((byte) 0xA0, nonce.getByteArray()));
             return this;
         }
 
@@ -377,7 +378,7 @@ public class CommandWithProperties extends Command {
          */
         public Builder setSignature(Bytes signature) {
             this.signature = signature;
-            addProperty(new Property((byte) 0xA1, signature));
+            addProperty(new Property((byte) 0xA1, signature.getByteArray()));
             return this;
         }
 

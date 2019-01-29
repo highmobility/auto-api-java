@@ -6,7 +6,7 @@ import com.highmobility.autoapi.GetRaceState;
 import com.highmobility.autoapi.RaceState;
 import com.highmobility.autoapi.property.AccelerationProperty;
 import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
+import com.highmobility.autoapi.property.BrakeTorqueVectoring;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.autoapi.property.IntegerProperty;
@@ -85,7 +85,7 @@ public class RaceTest {
         builder.setYawRate(new FloatProperty(6.66f));
         builder.setRearSuspensionSteering(new IntegerProperty(3));
         builder.setEspInterventionActive(new BooleanProperty(true));
-        builder.addBrakeTorqueVectoring(new BrakeTorqueVectoringProperty(Axle.REAR, true));
+        builder.addBrakeTorqueVectoring(new BrakeTorqueVectoring(Axle.REAR, true));
         builder.setGearMode(GearMode.DRIVE);
         builder.setSelectedGear(new IntegerProperty(4));
         builder.setBrakePedalPosition(new PercentageProperty(.01f));

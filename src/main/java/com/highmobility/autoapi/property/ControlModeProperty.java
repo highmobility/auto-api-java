@@ -51,7 +51,7 @@ public class ControlModeProperty extends Property {
     }
 
     public ControlModeProperty(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : 2);
+        super(identifier, value);
         this.value = value;
         if (value != null) bytes[3] = value.getByte();
     }
@@ -67,7 +67,7 @@ public class ControlModeProperty extends Property {
         return this;
     }
 
-    public enum Value {
+    public enum Value implements PropertyValue {
         UNAVAILABLE((byte) 0x00),
         AVAILABLE((byte) 0x01),
         STARTED((byte) 0x02),
@@ -97,6 +97,10 @@ public class ControlModeProperty extends Property {
 
         public byte getByte() {
             return value;
+        }
+
+        @Override public int getLength() {
+            return 1;
         }
     }
 }

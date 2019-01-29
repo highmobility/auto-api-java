@@ -8,6 +8,7 @@ import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.RaceState;
 import com.highmobility.autoapi.property.doors.DoorLocation;
+import com.highmobility.autoapi.property.doors.DoorLockState;
 import com.highmobility.autoapi.property.value.Lock;
 import com.highmobility.value.Bytes;
 
@@ -16,7 +17,6 @@ import org.junit.Test;
 import java.text.ParseException;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -24,27 +24,55 @@ import static org.junit.Assert.fail;
 public class HistoricalTest {
     Bytes bytes = new Bytes(
             "001201" +
-                    "010013" +
+                    "010013" + // 0x13 = 19
                     "0020010300020000" +
-                    "A2000812010a1020050000"
+                    "A2000812010a1020050000" +
+                    "010013" + // 0x13 = 19
+                    "0020010300020101" +
+                    "A2000812010a1020060000"
     );
 
     @Test
     public void state() throws ParseException {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
+        Command command = CommandResolver.resolve(bytes);
+        HistoricalStates states = (HistoricalStates) command;
+
+        assertTrue(states.getStates().length == 2);
+
+        int found = 0;
+        for (int i = 0; i < states.getStates().length; i++) {
+
+            LockState state = (LockState) states.getStates()[i].getValue();
+            DoorLockState doorLockState = state.getLocks()[0];
+
+            if (doorLockState.getLocation() == DoorLocation.FRONT_LEFT) {
+                if (doorLockState.getLock() == Lock.Value.UNLOCKED &&
+                        TestUtils.dateIsSame(state.getTimestamp(), "2018-01-10T16:32:05+0000")) {
+                    found++;
+                }
+            } else if (doorLockState.getLocation() == DoorLocation.FRONT_RIGHT) {
+
+                if (doorLockState.getLock() == Lock.Value.LOCKED &&
+                        TestUtils.dateIsSame(state.getTimestamp(), "2018-01-10T16:32:06+0000")) {
+                    found++;
+                }
+            }
         }
 
-        assertTrue(command.getClass() == HistoricalStates.class);
-        HistoricalStates states = (HistoricalStates) command;
-        assertTrue(states.getStates().length == 1);
-        LockState state = (LockState) states.getStates()[0];
-        assertTrue(state.getLock(DoorLocation.FRONT_LEFT).getLock() == Lock.Value.UNLOCKED);
+        assertTrue(found == 2);
+    }
 
-        assertTrue(TestUtils.dateIsSame(state.getTimestamp(), "2018-01-10T16:32:05+0000"));
+    @Test public void stateWithTimestamp() {
+//        0020010300020000A2000812010a1020050000
+        String prop = "010013" + "0020010300020000" + "A2000812010a1020050000";
+        Bytes timestampBytes = bytes.concat(new Bytes("A4001F11010A112200000001" + prop));
+        HistoricalStates command = (HistoricalStates) CommandResolver.resolve(timestampBytes);
+        int hasTimestamp = 0;
+        for (int i = 0; i < command.getStates().length; i++) {
+            if (command.getStates()[i].getTimestamp() != null) hasTimestamp++;
+        }
+
+        assertTrue(hasTimestamp == 1);
     }
 
     @Test public void build() {

@@ -31,7 +31,7 @@ public class Lock extends Property {
     }
 
     public Lock(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : value.getLength());
+        super(identifier, value);
         this.value = value;
         if (value != null) bytes[3] = value.getByte();
     }

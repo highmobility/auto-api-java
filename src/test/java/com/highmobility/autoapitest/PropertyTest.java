@@ -51,7 +51,7 @@ public class PropertyTest {
 
     @Test public void emptyValueProperty() {
         Bytes bytes = new Bytes("");
-        new Property((byte) 0x00, bytes);
+        new Property((byte) 0x00, bytes.getByteArray());
     }
 
     @Test public void nullString() {

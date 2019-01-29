@@ -65,8 +65,9 @@ public class VehicleStatus extends CommandWithProperties {
     private static final byte IDENTIFIER_EQUIPMENTS = 0x11;
 
     private static final byte IDENTIFIER_BRAND = 0x12;
+    private static final byte IDENTIFIER_STATE = (byte) 0x99;
 
-    Command[] states;
+    CommandProperty[] states;
 
     String vin;
     PowerTrain powerTrain;
@@ -97,7 +98,7 @@ public class VehicleStatus extends CommandWithProperties {
     /**
      * @return All of the states.
      */
-    public Command[] getStates() {
+    public CommandProperty[] getStates() {
         return states;
     }
 
@@ -105,11 +106,12 @@ public class VehicleStatus extends CommandWithProperties {
      * @param type The type of the command.
      * @return The state for the given Command type, if exists.
      */
-    @Nullable public Command getState(Type type) {
+    @Nullable public CommandProperty getState(Type type) {
         if (states == null) return null;
         for (int i = 0; i < states.length; i++) {
-            Command command = states[i];
-            if (command.getType().equals(type)) return command;
+            CommandProperty command = states[i];
+            if (command.getValue() != null && command.getValue().getType().equals(type))
+                return command;
         }
 
         return null;
@@ -244,7 +246,7 @@ public class VehicleStatus extends CommandWithProperties {
     VehicleStatus(byte[] bytes) {
         super(bytes);
 
-        ArrayList<Command> states = new ArrayList<>();
+        ArrayList<CommandProperty> states = new ArrayList<>();
         ArrayList<String> equipments = new ArrayList<>();
 
         while (propertiesIterator.hasNext()) {
@@ -284,7 +286,7 @@ public class VehicleStatus extends CommandWithProperties {
                         numberOfSeats = new IntegerProperty(p, false);
                         return numberOfSeats;
                     case COMMAND_IDENTIFIER:
-                        Command command = CommandResolver.resolve(p.getValueBytes());
+                        CommandProperty command = new CommandProperty(p);
                         states.add(command);
                         return command;
                     case ENGINE_VOLUME_IDENTIFIER:
@@ -315,7 +317,7 @@ public class VehicleStatus extends CommandWithProperties {
             });
         }
 
-        this.states = states.toArray(new Command[0]);
+        this.states = states.toArray(new CommandProperty[0]);
         this.equipments = equipments.toArray(new String[states.size()]);
     }
 
@@ -336,7 +338,7 @@ public class VehicleStatus extends CommandWithProperties {
         power = builder.power;
         numberOfDoors = builder.numberOfDoors;
         numberOfSeats = builder.numberOfSeats;
-        states = builder.states.toArray(new Command[0]);
+        states = builder.states.toArray(new CommandProperty[0]);
         engineVolume = builder.engineVolume;
         maxTorque = builder.maxTorque;
         gearBox = builder.gearBox;
@@ -359,7 +361,7 @@ public class VehicleStatus extends CommandWithProperties {
         private IntegerProperty power;
         private IntegerProperty numberOfDoors;
         private IntegerProperty numberOfSeats;
-        private List<Command> states = new ArrayList<>();
+        private List<CommandProperty> states = new ArrayList<>();
 
         private FloatProperty engineVolume;
         private IntegerProperty maxTorque;
@@ -493,7 +495,7 @@ public class VehicleStatus extends CommandWithProperties {
          * @param states The states.
          * @return The builder.
          */
-        public Builder setStates(Command[] states) {
+        public Builder setStates(CommandProperty[] states) {
             this.states.clear();
 
             for (int i = 0; i < states.length; i++) {
@@ -509,8 +511,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param state A state.
          * @return The builder.
          */
-        public Builder addState(Command state) {
-            addProperty(new CommandProperty(state));
+        public Builder addState(CommandProperty state) {
+            state.setIdentifier(IDENTIFIER_STATE);
+            addProperty(state);
             states.add(state);
             return this;
         }

@@ -20,6 +20,8 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.CommandProperty;
+
 import java.util.ArrayList;
 
 /**
@@ -30,26 +32,45 @@ public class HistoricalStates extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HISTORICAL, 0x01);
     private static final byte STATE_IDENTIFIER = 0x01;
 
+    CommandProperty[] states;
+
     /**
      * @return The historical states. Use {@link CommandWithProperties#getTimestamp()} to understand
      * the command time.
      */
-    public CommandWithProperties[] getStates() {
+    public CommandProperty[] getStates() {
         return states;
     }
 
-    CommandWithProperties[] states;
+    /**
+     * @param type The type.
+     * @return The historical states for the type.
+     */
+    public CommandProperty[] getStates(Type type) {
+        ArrayList<CommandProperty> builder = new ArrayList<>();
+
+        for (int i = 0; i < states.length; i++) {
+            CommandProperty prop = states[i];
+            if (prop.getValue() != null) {
+                CommandWithProperties command = prop.getValue();
+                if (command.getType().equals(type)) {
+                    builder.add(prop);
+                }
+            }
+        }
+
+        return builder.toArray(new CommandProperty[0]);
+    }
 
     HistoricalStates(byte[] bytes) {
         super(bytes);
 
-        ArrayList<CommandWithProperties> builder = new ArrayList<>();
+        ArrayList<CommandProperty> builder = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 if (p.getPropertyIdentifier() == STATE_IDENTIFIER) {
-                    CommandWithProperties state = (CommandWithProperties) CommandResolver.resolve
-                            (p.getValueBytes());
+                    CommandProperty state = new CommandProperty(p);
                     builder.add(state);
                     return state;
 
@@ -58,7 +79,7 @@ public class HistoricalStates extends CommandWithProperties {
             });
         }
 
-        states = builder.toArray(new CommandWithProperties[0]);
+        states = builder.toArray(new CommandProperty[0]);
     }
 
     @Override public boolean isState() {

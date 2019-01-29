@@ -54,7 +54,7 @@ public class TireTemperature extends Property {
     }
 
     public TireTemperature(byte identifier, Value value) {
-        super(identifier, value == null ? 0 : value.getLength());
+        super(identifier, value);
 
         this.value = value;
 
