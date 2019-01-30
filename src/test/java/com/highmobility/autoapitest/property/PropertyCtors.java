@@ -12,6 +12,7 @@ import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.IntArrayProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.KeyFobPositionProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Position;
@@ -369,5 +370,16 @@ public class PropertyCtors {
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
+
+    @Test public void KeyFobPositionProperty() throws CommandParseException {
+        Property property = new Property("01000105");
+        assertTrue(new KeyFobPositionProperty(null, null, failure).getFailure() != null);
+        assertTrue(new KeyFobPositionProperty(property).getValue() != null);
+        KeyFobPositionProperty updateProp = new KeyFobPositionProperty((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+
 
 }
