@@ -22,7 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
 import javax.annotation.Nullable;
@@ -33,15 +32,15 @@ import javax.annotation.Nullable;
  */
 public class WifiState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x01);
-    private static final byte ENABLED_IDENTIFIER = 0x01;
-    private static final byte CONNECTED_IDENTIFIER = 0x02;
-    public static final byte SSID_IDENTIFIER = 0x03;
-    public static final byte SECURITY_IDENTIFIER = 0x04;
+    private static final byte IDENTIFIER_ENABLED = 0x01;
+    private static final byte IDENTIFIER_CONNECTED = 0x02;
+    public static final byte IDENTIFIER_SSID = 0x03;
+    public static final byte IDENTIFIER_SECURITY = 0x04;
 
-    BooleanProperty enabled;
-    BooleanProperty connected;
-    StringProperty ssid;
-    NetworkSecurity security;
+    BooleanProperty enabled = new BooleanProperty(IDENTIFIER_ENABLED);
+    BooleanProperty connected = new BooleanProperty(IDENTIFIER_CONNECTED);
+    StringProperty ssid = new StringProperty(IDENTIFIER_SSID);
+    NetworkSecurity security = new NetworkSecurity(IDENTIFIER_SECURITY);
 
     /**
      * @return Whether Wi-Fi is enabled.
@@ -74,21 +73,17 @@ public class WifiState extends CommandWithProperties {
     WifiState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case ENABLED_IDENTIFIER:
-                        enabled = new BooleanProperty(p);
-                        return enabled;
-                    case CONNECTED_IDENTIFIER:
-                        connected = new BooleanProperty(p);
-                        return connected;
-                    case SSID_IDENTIFIER:
-                        ssid = new StringProperty(p);
-                        return ssid;
-                    case SECURITY_IDENTIFIER:
-                        security = NetworkSecurity.fromByte(p.getValueByte());
-                        return security;
+                    case IDENTIFIER_ENABLED:
+                        return enabled.update(p);
+                    case IDENTIFIER_CONNECTED:
+                        return connected.update(p);
+                    case IDENTIFIER_SSID:
+                        return ssid.update(p);
+                    case IDENTIFIER_SECURITY:
+                        return security.update(p);
                 }
 
                 return null;
@@ -124,7 +119,7 @@ public class WifiState extends CommandWithProperties {
          */
         public Builder setEnabled(BooleanProperty enabled) {
             this.enabled = enabled;
-            enabled.setIdentifier(ENABLED_IDENTIFIER);
+            enabled.setIdentifier(IDENTIFIER_ENABLED);
             addProperty(enabled);
             return this;
         }
@@ -135,7 +130,7 @@ public class WifiState extends CommandWithProperties {
          */
         public Builder setConnected(BooleanProperty connected) {
             this.connected = connected;
-            connected.setIdentifier(CONNECTED_IDENTIFIER);
+            connected.setIdentifier(IDENTIFIER_CONNECTED);
             addProperty(connected);
             return this;
         }
@@ -146,7 +141,7 @@ public class WifiState extends CommandWithProperties {
          */
         public Builder setSsid(StringProperty ssid) {
             this.ssid = ssid;
-            ssid.setIdentifier(SSID_IDENTIFIER);
+            ssid.setIdentifier(IDENTIFIER_SSID);
             addProperty(ssid);
             return this;
         }
@@ -157,7 +152,7 @@ public class WifiState extends CommandWithProperties {
          */
         public Builder setSecurity(NetworkSecurity security) {
             this.security = security;
-            addProperty(new Property(SECURITY_IDENTIFIER, security.getByte()));
+            addProperty(security.setIdentifier(IDENTIFIER_SECURITY));
             return this;
         }
 

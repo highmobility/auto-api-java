@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
 
@@ -34,24 +34,30 @@ public class DoubleProperty extends Property {
         return value;
     }
 
+    public DoubleProperty(byte identifier) {
+        super(identifier);
+    }
+
     public DoubleProperty(Double value) {
-        this((byte) 0x00, value);
-    }
-
-    public DoubleProperty(@Nullable Double value, @Nullable Calendar timestamp,
-                          @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public DoubleProperty(byte identifier, Double value) {
-        super(identifier, value == null ? 0 : 8);
+        super(value == null ? 0 : 8);
         this.value = value;
         if (value != null) ByteUtils.setBytes(bytes, doubleToBytes(value), 3);
     }
 
-    public DoubleProperty(Bytes bytes) {
-        super(bytes);
-        value = Property.getDouble(getValueBytes());
+    public DoubleProperty(@Nullable Double value, @Nullable Calendar timestamp,
+                         @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public DoubleProperty(Property p) throws CommandParseException {
+        super(p);
+        update(p);
+    }
+
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 8) value = getDouble(p.getValueBytes());
+        return this;
     }
 }

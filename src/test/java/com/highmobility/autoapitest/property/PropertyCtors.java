@@ -4,6 +4,7 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.ControlModeProperty;
+import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.FlashersStateProperty;
@@ -11,6 +12,7 @@ import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.IntArrayProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
@@ -31,6 +33,9 @@ import com.highmobility.autoapi.property.diagnostics.TirePressure;
 import com.highmobility.autoapi.property.diagnostics.TireTemperature;
 import com.highmobility.autoapi.property.diagnostics.WasherFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.WheelRpm;
+import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
+import com.highmobility.autoapi.property.homecharger.Charging;
+import com.highmobility.autoapi.property.homecharger.PriceTariff;
 import com.highmobility.autoapi.property.value.Lock;
 
 import org.junit.Test;
@@ -309,7 +314,7 @@ public class PropertyCtors {
         assertTrue(updateProp.getValue() != null);
     }
 
-    @Test public void HistoricalState() throws CommandParseException {
+    @Test public void CommandProperty() throws CommandParseException {
         Property property = new Property("010013" + "0020010300020000" +
                 "A2000812010a1020050000");
 
@@ -319,4 +324,50 @@ public class PropertyCtors {
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
+
+    @Test public void Charging() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new Charging(null, null, failure).getFailure() != null);
+        assertTrue(new Charging(property).getValue() != null);
+        Charging updateProp = new Charging((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void AuthenticationMechanism() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new AuthenticationMechanism(null, null, failure).getFailure() != null);
+        assertTrue(new AuthenticationMechanism(property).getValue() != null);
+        AuthenticationMechanism updateProp = new AuthenticationMechanism((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void NetworkSecurity() throws CommandParseException {
+        Property property = new Property("01000100");
+        assertTrue(new NetworkSecurity(null, null, failure).getFailure() != null);
+        assertTrue(new NetworkSecurity(property).getValue() != null);
+        NetworkSecurity updateProp = new NetworkSecurity((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void CoordinatesProperty() throws CommandParseException {
+        Property property = new Property("040010404A428F9F44D445402ACF562174C4CE");
+        assertTrue(new CoordinatesProperty(null, null, failure).getFailure() != null);
+        assertTrue(new CoordinatesProperty(property).getValue() != null);
+        CoordinatesProperty updateProp = new CoordinatesProperty((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void PriceTariff() throws CommandParseException {
+        Property property = new Property("120009004090000003455552");
+        assertTrue(new PriceTariff(null, null, failure).getFailure() != null);
+        assertTrue(new PriceTariff(property).getValue() != null);
+        PriceTariff updateProp = new PriceTariff((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
 }

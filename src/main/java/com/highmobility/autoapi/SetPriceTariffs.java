@@ -50,7 +50,8 @@ public class SetPriceTariffs extends CommandWithProperties {
      */
     public PriceTariff getPriceTariff(PriceTariff.PricingType type) {
         for (PriceTariff priceTariff : priceTariffs) {
-            if (priceTariff.getPricingType() == type) return priceTariff;
+            if (priceTariff.getValue() != null && priceTariff.getValue().getPricingType() == type)
+                return priceTariff;
         }
         return null;
     }
@@ -60,29 +61,37 @@ public class SetPriceTariffs extends CommandWithProperties {
      */
     public SetPriceTariffs(PriceTariff[] priceTariffs) throws IllegalArgumentException {
         super(TYPE, validateTariffs(priceTariffs));
-        this.priceTariffs = priceTariffs;
+        this.priceTariffs = (PriceTariff[]) properties;
     }
 
     static PriceTariff[] validateTariffs(PriceTariff[] tariffs) throws IllegalArgumentException {
         ArrayList<PriceTariff.PricingType> types = new ArrayList<>(3);
+
         for (PriceTariff tariff : tariffs) {
             tariff.setIdentifier(IDENTIFIER_TARIFF);
-            if (types.contains(tariff.getPricingType()) == false)
-                types.add(tariff.getPricingType());
+            if (tariff.getValue() != null && types.contains(tariff.getValue().getPricingType()) == false)
+                types.add(tariff.getValue().getPricingType());
             else throw new IllegalArgumentException("Duplicate pricing type of the pricing tariff");
         }
 
         return tariffs;
     }
 
-    SetPriceTariffs(byte[] bytes) throws CommandParseException {
+    SetPriceTariffs(byte[] bytes) {
         super(bytes);
         List<PriceTariff> builder = new ArrayList<>();
 
-        for (Property property : properties) {
-            if (property.getPropertyIdentifier() == IDENTIFIER_TARIFF) {
-                builder.add(new PriceTariff(property.getByteArray()));
-            }
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_TARIFF:
+                        PriceTariff tariff = new PriceTariff(p);
+                        builder.add(tariff);
+                        return tariff;
+                }
+
+                return null;
+            });
         }
 
         priceTariffs = builder.toArray(new PriceTariff[0]);

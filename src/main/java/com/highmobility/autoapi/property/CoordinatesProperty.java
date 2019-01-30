@@ -19,44 +19,88 @@
  */
 
 package com.highmobility.autoapi.property;
+
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.ByteUtils;
 
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
+
 public class CoordinatesProperty extends Property {
-    double latitude;
-    double longitude;
+    Value value;
 
-    /**
-     *
-     * @return The latitude
-     */
-    public double getLatitude() {
-        return latitude;
+    @Nullable public Value getValue() {
+        return value;
     }
 
-    /**
-     *
-     * @return The longitude
-     */
-    public double getLongitude() {
-        return longitude;
+    public CoordinatesProperty(byte identifier) {
+        super(identifier);
     }
 
-    public CoordinatesProperty(byte[] bytes) {
-        super(bytes);
-
-        latitude = Property.getDouble(bytes, 3);
-        longitude = Property.getDouble(bytes, 11);
+    public CoordinatesProperty(@Nullable Value value, @Nullable Calendar timestamp,
+                               @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
     }
-    
+
+    public CoordinatesProperty(Value value) {
+        super(value);
+
+        this.value = value;
+
+        if (value != null) {
+            ByteUtils.setBytes(bytes, Property.doubleToBytes(value.latitude), 3);
+            ByteUtils.setBytes(bytes, Property.doubleToBytes(value.longitude), 11);
+        }
+    }
+
     public CoordinatesProperty(double latitude, double longitude) {
-        this((byte) 0x00, latitude, longitude);
+        this(new Value(latitude, longitude));
     }
 
-    public CoordinatesProperty(byte identifier, double latitude, double longitude) {
-        super(identifier, 16);
-        ByteUtils.setBytes(bytes, Property.doubleToBytes(latitude), 3);
-        ByteUtils.setBytes(bytes, Property.doubleToBytes(longitude), 11);
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public CoordinatesProperty(Property p) throws CommandParseException {
+        super(p);
+        update(p);
     }
+
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 16) value = new Value(p);
+        return this;
+    }
+
+    public static class Value implements PropertyValue {
+        double latitude;
+        double longitude;
+
+        /**
+         * @return The latitude
+         */
+        public double getLatitude() {
+            return latitude;
+        }
+
+        /**
+         * @return The longitude
+         */
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public Value(Property bytes) {
+            latitude = Property.getDouble(bytes, 3);
+            longitude = Property.getDouble(bytes, 11);
+        }
+
+        public Value(double latitude, double longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        @Override public int getLength() {
+            return 16;
+        }
+    }
+
 }

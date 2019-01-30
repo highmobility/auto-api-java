@@ -31,13 +31,13 @@ import javax.annotation.Nullable;
 public class VehicleLocation extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VEHICLE_LOCATION, 0x01);
 
-    private static final byte COORDINATES_IDENTIFIER = 0x04;
-    private static final byte HEADING_IDENTIFIER = 0x05;
-    private static final byte ALTITUDE_IDENTIFIER = 0x06;
+    private static final byte IDENTIFIER_COORDINATES = 0x04;
+    private static final byte IDENTIFIER_HEADING = 0x05;
+    private static final byte IDENTIFIER_ALTITUDE = 0x06;
 
-    private CoordinatesProperty coordinates;
-    private DoubleProperty heading;
-    private DoubleProperty altitude;
+    private CoordinatesProperty coordinates = new CoordinatesProperty(IDENTIFIER_COORDINATES);
+    private DoubleProperty heading = new DoubleProperty(IDENTIFIER_HEADING);
+    private DoubleProperty altitude = new DoubleProperty(IDENTIFIER_ALTITUDE);
 
     /**
      * @return The vehicle coordinates.
@@ -63,18 +63,15 @@ public class VehicleLocation extends CommandWithProperties {
     VehicleLocation(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case COORDINATES_IDENTIFIER:
-                        coordinates = new CoordinatesProperty(p.getByteArray());
-                        return coordinates;
-                    case HEADING_IDENTIFIER:
-                        heading = new DoubleProperty(p);
-                        return heading;
-                    case ALTITUDE_IDENTIFIER:
-                        altitude = new DoubleProperty(p);
-                        return altitude;
+                    case IDENTIFIER_COORDINATES:
+                        return coordinates.update(p);
+                    case IDENTIFIER_HEADING:
+                        return heading.update(p);
+                    case IDENTIFIER_ALTITUDE:
+                        return altitude.update(p);
                 }
 
                 return null;
@@ -108,7 +105,7 @@ public class VehicleLocation extends CommandWithProperties {
          */
         public Builder setHeading(DoubleProperty heading) {
             this.heading = heading;
-            heading.setIdentifier(HEADING_IDENTIFIER);
+            heading.setIdentifier(IDENTIFIER_HEADING);
             addProperty(heading);
             return this;
         }
@@ -119,7 +116,7 @@ public class VehicleLocation extends CommandWithProperties {
          */
         public Builder setCoordinates(CoordinatesProperty coordinates) {
             this.coordinates = coordinates;
-            coordinates.setIdentifier(COORDINATES_IDENTIFIER);
+            coordinates.setIdentifier(IDENTIFIER_COORDINATES);
             addProperty(coordinates);
             return this;
         }
@@ -130,7 +127,7 @@ public class VehicleLocation extends CommandWithProperties {
          */
         public Builder setAltitude(DoubleProperty altitude) {
             this.altitude = altitude;
-            altitude.setIdentifier(ALTITUDE_IDENTIFIER);
+            altitude.setIdentifier(IDENTIFIER_ALTITUDE);
             addProperty(altitude);
             return this;
         }

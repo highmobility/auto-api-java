@@ -81,17 +81,23 @@ public class SetNaviDestination extends CommandWithProperties {
         return properties.toArray(new Property[0]);
     }
 
-    SetNaviDestination(byte[] bytes) {
+    SetNaviDestination(byte[] bytes) throws CommandParseException {
         super(bytes);
-        for (Property p : properties) {
-            switch (p.getPropertyIdentifier()) {
-                case COORDINATES_IDENTIFIER:
-                    coordinates = new CoordinatesProperty(p.getByteArray());
-                    break;
-                case NAME_IDENTIFIER:
-                    name = Property.getString(p.getValueBytes());
-                    break;
-            }
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case COORDINATES_IDENTIFIER:
+                        coordinates = new CoordinatesProperty(p);
+                        return coordinates;
+                    case NAME_IDENTIFIER:
+                        name = Property.getString(p.getValueBytes());
+                        return coordinates;
+
+                }
+
+                return null;
+            });
         }
     }
 }

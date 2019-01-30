@@ -20,32 +20,80 @@
 
 package com.highmobility.autoapi.property.homecharger;
 
-public enum PlugType {
-    TYPE_ONE((byte)0x00),
-    TYPE_TWO((byte)0x01),
-    COMBINED_CHARGING_SYSTEM((byte)0x02),
-    CHADEMO((byte)0x02);
+import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyValue;
 
-    public static PlugType fromByte(byte byteValue) {
-        PlugType[] values = PlugType.values();
+import java.util.Calendar;
 
-        for (int i = 0; i < values.length; i++) {
-            PlugType state = values[i];
-            if (state.getByte() == byteValue) {
-                return state;
+import javax.annotation.Nullable;
+
+public class PlugType extends Property {
+    Value value;
+
+    @Nullable public Value getValue() {
+        return value;
+    }
+
+    public PlugType(byte identifier) {
+        super(identifier);
+    }
+
+    public PlugType(Value value) {
+        super(value);
+        this.value = value;
+        if (value != null) bytes[3] = value.getByte();
+    }
+
+    public PlugType(@Nullable Value value, @Nullable Calendar timestamp,
+                    @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public PlugType(Property p) throws CommandParseException {
+        super(p);
+        update(p);
+    }
+
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 1) value = value.fromByte(p.get(3));
+        return this;
+    }
+
+    public enum Value implements PropertyValue {
+        TYPE_ONE((byte) 0x00),
+        TYPE_TWO((byte) 0x01),
+        COMBINED_CHARGING_SYSTEM((byte) 0x02),
+        CHADEMO((byte) 0x02);
+
+        public static Value fromByte(byte byteValue) {
+            Value[] values = Value.values();
+
+            for (int i = 0; i < values.length; i++) {
+                Value state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
             }
+
+            return null;
         }
 
-        return null;
-    }
+        private byte value;
 
-    private byte value;
+        Value(byte value) {
+            this.value = value;
+        }
 
-    PlugType(byte value) {
-        this.value = value;
-    }
+        public byte getByte() {
+            return value;
+        }
 
-    public byte getByte() {
-        return value;
+        @Override public int getLength() {
+            return 1;
+        }
     }
 }

@@ -76,15 +76,15 @@ public class SetTemperatureSettings extends CommandWithProperties {
             rearTemperature) {
         ArrayList<Property> builder = new ArrayList<>();
         if (driverTemperature != null) {
-            builder.add(new FloatProperty(IDENTIFIER_DRIVER, driverTemperature));
+            builder.add(new FloatProperty(driverTemperature).setIdentifier(IDENTIFIER_DRIVER));
         }
 
         if (passengerTemperature != null) {
-            builder.add(new FloatProperty(IDENTIFIER_PASSENGER, passengerTemperature));
+            builder.add(new FloatProperty(passengerTemperature).setIdentifier(IDENTIFIER_PASSENGER));
         }
 
         if (rearTemperature != null) {
-            builder.add(new FloatProperty(IDENTIFIER_REAR, rearTemperature));
+            builder.add(new FloatProperty(rearTemperature).setIdentifier(IDENTIFIER_REAR));
         }
 
         return builder.toArray(new Property[0]);

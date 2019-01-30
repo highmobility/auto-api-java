@@ -30,8 +30,8 @@ public class NaviDestinationTest {
         NaviDestination state = (NaviDestination) command;
 
         assertTrue(state.getName().equals("Berlin"));
-        assertTrue(state.getCoordinates().getLatitude() == 52.520008);
-        assertTrue(state.getCoordinates().getLongitude() == 13.404954);
+        assertTrue(state.getCoordinates().getValue().getLatitude() == 52.520008);
+        assertTrue(state.getCoordinates().getValue().getLongitude() == 13.404954);
     }
 
     @Test public void get() {
@@ -51,8 +51,8 @@ public class NaviDestinationTest {
 
         SetNaviDestination command = (SetNaviDestination) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getName().equals("Berlin"));
-        assertTrue(command.getCoordinates().getLatitude() == 52.520008);
-        assertTrue(command.getCoordinates().getLongitude() == 13.404954);
+        assertTrue(command.getCoordinates().getValue().getLatitude() == 52.520008);
+        assertTrue(command.getCoordinates().getValue().getLongitude() == 13.404954);
     }
 
     @Test public void state0Properties() {

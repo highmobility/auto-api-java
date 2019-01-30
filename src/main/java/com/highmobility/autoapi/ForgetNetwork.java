@@ -44,14 +44,14 @@ public class ForgetNetwork extends CommandWithProperties {
      * @param ssid The network name.
      */
     public ForgetNetwork(String ssid) {
-        super(TYPE, StringProperty.getProperties(ssid, WifiState.SSID_IDENTIFIER));
+        super(TYPE, StringProperty.getProperties(ssid, WifiState.IDENTIFIER_SSID));
         this.ssid = ssid;
     }
 
     ForgetNetwork(byte[] bytes) {
         super(bytes);
         for (Property property : properties) {
-            if (property.getPropertyIdentifier() == WifiState.SSID_IDENTIFIER) {
+            if (property.getPropertyIdentifier() == WifiState.IDENTIFIER_SSID) {
                 ssid = Property.getString(property.getValueBytes());
             }
         }

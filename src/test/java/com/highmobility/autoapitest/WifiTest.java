@@ -41,7 +41,7 @@ public class WifiTest {
         assertTrue(state.isEnabled().getValue() == true);
         assertTrue(state.isConnected().getValue() == true);
         assertTrue(state.getSsid().getValue().equals("HOME"));
-        assertTrue(state.getSecurity() == NetworkSecurity.WPA2_PERSONAL);
+        assertTrue(state.getSecurity().getValue() == NetworkSecurity.Value.WPA2_PERSONAL);
     }
 
     @Test public void build() {
@@ -50,7 +50,7 @@ public class WifiTest {
         builder.setEnabled(new BooleanProperty(true));
         builder.setConnected(new BooleanProperty(true));
         builder.setSsid(new StringProperty("HOME"));
-        builder.setSecurity(NetworkSecurity.WPA2_PERSONAL);
+        builder.setSecurity(new NetworkSecurity(NetworkSecurity.Value.WPA2_PERSONAL));
 
         WifiState state = builder.build();
         assertTrue(Arrays.equals(state.getByteArray(), ByteUtils.bytesFromHex
@@ -68,13 +68,13 @@ public class WifiTest {
                 "005902030004484f4d450400010305000A5a57337641524e554265");
         byte[] commandBytes = null;
         commandBytes = new ConnectToNetwork("HOME", NetworkSecurity
-                .WPA2_PERSONAL, "ZW3vARNUBe")
+                .Value.WPA2_PERSONAL, "ZW3vARNUBe")
                 .getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));
 
         ConnectToNetwork command = (ConnectToNetwork) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getSsid().equals("HOME"));
-        assertTrue(command.getSecurity() == NetworkSecurity.WPA2_PERSONAL);
+        assertTrue(command.getSecurity() == NetworkSecurity.Value.WPA2_PERSONAL);
         assertTrue(command.getPassword().equals("ZW3vARNUBe"));
     }
 
@@ -100,6 +100,6 @@ public class WifiTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("005901");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((WifiState) state).getSecurity() == null);
+        assertTrue(((WifiState) state).getSecurity().getValue() == null);
     }
 }

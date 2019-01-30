@@ -43,7 +43,7 @@ public class SetChargeCurrent extends CommandWithProperties {
      * @param chargeCurrent The charge current.
      */
     public SetChargeCurrent(float chargeCurrent) {
-        super(TYPE.addProperty(new FloatProperty(IDENTIFIER, chargeCurrent)));
+        super(TYPE.addProperty(new FloatProperty(chargeCurrent).setIdentifier(IDENTIFIER)));
         this.current = chargeCurrent;
     }
 

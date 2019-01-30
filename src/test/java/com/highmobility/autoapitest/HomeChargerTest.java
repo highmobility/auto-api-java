@@ -23,7 +23,6 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class HomeChargerTest {
     Bytes bytes = new Bytes(
@@ -48,26 +47,21 @@ public class HomeChargerTest {
 
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command instanceof HomeChargerState);
         HomeChargerState state = (HomeChargerState) command;
 
-        assertTrue(state.getCharging() == Charging.Value.CHARGING);
-        assertTrue(state.getAuthenticationMechanism() == AuthenticationMechanism.APP);
-        assertTrue(state.getPlugType() == PlugType.TYPE_TWO);
+        assertTrue(state.getCharging().getValue() == Charging.Value.CHARGING);
+        assertTrue(state.getAuthenticationMechanism().getValue() == AuthenticationMechanism.Value.APP);
+        assertTrue(state.getPlugType().getValue() == PlugType.Value.TYPE_TWO);
         assertTrue(state.getChargingPower().getValue() == 11.5f);
         assertTrue(state.isSolarChargingActive().getValue() == true);
 
         assertTrue(state.isHotspotEnabled().getValue() == true);
-        assertTrue(state.getHotspotSsid().equals("Charger 7612"));
-        assertTrue(state.getHotspotSecurity() == NetworkSecurity.WPA2_PERSONAL);
-        assertTrue(state.getHotspotPassword().equals("ZW3vARNUBe"));
+        assertTrue(state.getHotspotSsid().getValue().equals("Charger 7612"));
+        assertTrue(state.getHotspotSecurity().getValue() == NetworkSecurity.Value.WPA2_PERSONAL);
+        assertTrue(state.getHotspotPassword().getValue().equals("ZW3vARNUBe"));
 
         assertTrue(state.isAuthenticated().getValue() == true);
         assertTrue(state.getChargeCurrent().getValue() == .5f);
@@ -75,16 +69,21 @@ public class HomeChargerTest {
         assertTrue(state.getMinimumChargeCurrent().getValue() == 0f);
 
         CoordinatesProperty prop = state.getCoordinates();
-        assertTrue(prop.getLatitude() == 52.520008);
-        assertTrue(prop.getLongitude() == 13.404954);
+        assertTrue(prop.getValue().getLatitude() == 52.520008);
+        assertTrue(prop.getValue().getLongitude() == 13.404954);
 
-        assertTrue(state.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getPrice() == 4.5f);
-        assertTrue(state.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getCurrency()
-                .equals("EUR"));
+        assertTrue(state.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getValue().getPrice() == 4.5f);
+        assertTrue(state.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getValue().getCurrency().equals("EUR"));
 
-        assertTrue(state.getPriceTariff(PriceTariff.PricingType.PER_KWH).getPrice() == .3f);
-        assertTrue(state.getPriceTariff(PriceTariff.PricingType.PER_KWH).getCurrency()
+        assertTrue(state.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getPrice() == .3f);
+        assertTrue(state.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getCurrency()
                 .equals("Ripple"));
+    }
+
+    @Test public void stateWithTimestamp() {
+        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
+        HomeChargerState command = (HomeChargerState) CommandResolver.resolve(timestampBytes);
+        assertTrue(command.getAuthenticationMechanism().getTimestamp() != null);
     }
 
     @Test public void build() {
@@ -146,13 +145,13 @@ public class HomeChargerTest {
         SetPriceTariffs command = (SetPriceTariffs) CommandResolver.resolve(bytes);
 
         assertTrue(command.getPriceTariffs().length == 2);
-        assertTrue(command.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getCurrency()
+        assertTrue(command.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getValue().getCurrency()
                 .equals("EUR"));
-        assertTrue(command.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getPrice() == 4.5f);
+        assertTrue(command.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getValue().getPrice() == 4.5f);
 
-        assertTrue(command.getPriceTariff(PriceTariff.PricingType.PER_KWH).getCurrency().equals
+        assertTrue(command.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getCurrency().equals
                 ("EUR"));
-        assertTrue(command.getPriceTariff(PriceTariff.PricingType.PER_KWH).getPrice() == .3f);
+        assertTrue(command.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getPrice() == .3f);
     }
 
     @Test public void setPriceTariffs0Properties() {
@@ -218,7 +217,6 @@ public class HomeChargerTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("006001");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((HomeChargerState) state).getChargeCurrent() == null);
+        assertTrue(((HomeChargerState) state).getChargeCurrent().getValue() == null);
     }
-
 }

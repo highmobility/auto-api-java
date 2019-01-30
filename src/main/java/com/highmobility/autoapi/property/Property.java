@@ -77,7 +77,11 @@ public class Property extends Bytes {
     }
 
     protected Property(@Nullable PropertyValue value) {
-        this.bytes = baseBytes((byte) 0x00, value == null ? 0 : value.getLength());
+        this(value == null ? 0 : value.getLength());
+    }
+
+    protected Property(int length) {
+        this.bytes = baseBytes((byte) 0x00, length);
     }
 
     /*protected Property(byte identifier, @Nullable PropertyValue value) {
@@ -113,7 +117,8 @@ public class Property extends Bytes {
         setValue(value);
     }
 
-    void setValue(PropertyValue value) { }
+    void setValue(PropertyValue value) {
+    }
 
     /**
      * @param identifier The identifier byte of the property.
@@ -308,6 +313,10 @@ public class Property extends Bytes {
 
     public static double getDouble(byte[] bytes, int at) throws IllegalArgumentException {
         return Double.longBitsToDouble(getLong(bytes, at));
+    }
+
+    public static double getDouble(Bytes bytes, int at) throws IllegalArgumentException {
+        return getDouble(bytes.getByteArray(), at);
     }
 
     public static byte[] doubleToBytes(double value) {

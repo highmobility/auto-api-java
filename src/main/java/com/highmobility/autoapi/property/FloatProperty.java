@@ -34,20 +34,20 @@ public class FloatProperty extends Property {
         return value;
     }
 
+    public FloatProperty(byte identifier) {
+        super(identifier);
+    }
+
     public FloatProperty(Float value) {
-        this((byte) 0x00, value);
+        super(value == null ? 0 : 4);
+        this.value = value;
+        if (value != null) ByteUtils.setBytes(bytes, floatToBytes(value), 3);
     }
 
     public FloatProperty(@Nullable Float value, @Nullable Calendar timestamp,
                          @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
-    }
-
-    public FloatProperty(byte identifier, Float value) {
-        super(identifier, value == null ? 0 : 4);
-        this.value = value;
-        if (value != null) ByteUtils.setBytes(bytes, floatToBytes(value), 3);
     }
 
     public FloatProperty(Property p) throws CommandParseException {
@@ -59,9 +59,5 @@ public class FloatProperty extends Property {
         super.update(p);
         if (p.getValueLength() >= 4) value = getFloat(p.getValueBytes());
         return this;
-    }
-
-    public FloatProperty(byte identifier) {
-        super(identifier);
     }
 }

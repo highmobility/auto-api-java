@@ -22,54 +22,106 @@ package com.highmobility.autoapi.property.homecharger;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyValue;
 import com.highmobility.utils.ByteUtils;
 
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
+
 public class PriceTariff extends Property {
-    PricingType pricingType;
-    String currency;
-    float price;
+    Value value;
 
-    /**
-     * @return The pricing type.
-     */
-    public PricingType getPricingType() {
-        return pricingType;
+    @Nullable public Value getValue() {
+        return value;
     }
 
-    /**
-     * @return The currency name.
-     */
-    public String getCurrency() {
-        return currency;
+    public PriceTariff(byte identifier) {
+        super(identifier);
     }
 
-    /**
-     * @return The price.
-     */
-    public float getPrice() {
-        return price;
+    public PriceTariff(@Nullable Value value, @Nullable Calendar timestamp,
+                       @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
     }
 
-    public PriceTariff(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 10) throw new CommandParseException();
-        pricingType = PricingType.fromByte(bytes[3]);
-        price = Property.getFloat(bytes, 4);
-        int currencyLength = Property.getUnsignedInt(bytes, 8, 1);
-        currency = Property.getString(bytes, 9, currencyLength);
+    public PriceTariff(Value value) {
+        super(value);
+
+        this.value = value;
+
+        if (value != null) {
+            bytes[3] = value.pricingType.getByte();
+            ByteUtils.setBytes(bytes, Property.floatToBytes(value.price), 4);
+            ByteUtils.setBytes(bytes, Property.intToBytes(value.currency.length(), 1), 8);
+            ByteUtils.setBytes(bytes, Property.stringToBytes(value.currency), 9);
+
+        }
     }
 
     public PriceTariff(PricingType pricingType, String currency, float price) {
-        super((byte) 0x00, 5 + 1 + currency.length());
-        if (currency.length() < 3) throw new IllegalArgumentException("Currency length needs to be > 3");
-        bytes[3] = pricingType.getByte();
-        ByteUtils.setBytes(bytes, Property.floatToBytes(price), 4);
-        ByteUtils.setBytes(bytes, Property.intToBytes(currency.length(), 1), 8);
-        ByteUtils.setBytes(bytes, Property.stringToBytes(currency), 9);
+        this(new Value(pricingType, currency, price));
+    }
 
-        this.pricingType = pricingType;
-        this.currency = currency;
-        this.price = price;
+    public PriceTariff(Property p) throws CommandParseException {
+        super(p);
+        update(p);
+    }
+
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 7) value = new Value(p);
+        return this;
+    }
+
+    public static class Value implements PropertyValue {
+        PricingType pricingType;
+        String currency;
+        float price;
+
+        /**
+         * @return The pricing type.
+         */
+        public PricingType getPricingType() {
+            return pricingType;
+        }
+
+        /**
+         * @return The currency name.
+         */
+        public String getCurrency() {
+            return currency;
+        }
+
+        /**
+         * @return The price.
+         */
+        public float getPrice() {
+            return price;
+        }
+
+        public Value(Property bytes) throws CommandParseException {
+            if (bytes.getLength() < 10) throw new CommandParseException();
+            pricingType = PricingType.fromByte(bytes.get(3));
+            price = Property.getFloat(bytes, 4);
+            int currencyLength = Property.getUnsignedInt(bytes, 8, 1);
+            currency = Property.getString(bytes, 9, currencyLength);
+        }
+
+        public Value(PricingType pricingType, String currency, float price) {
+            if (currency.length() < 3)
+                throw new IllegalArgumentException("Currency length needs to be > 3");
+
+            this.pricingType = pricingType;
+            this.currency = currency;
+            this.price = price;
+        }
+
+        @Override public int getLength() {
+            return 5 + 1 + currency.length();
+        }
     }
 
     public enum PricingType {
