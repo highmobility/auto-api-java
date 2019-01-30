@@ -31,11 +31,11 @@ import javax.annotation.Nullable;
  */
 public class IgnitionState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.ENGINE, 0x01);
-    private static final byte ON_IDENTIFIER = 0x01;
-    private static final byte ACCESSORIES_IDENTIFIER = 0x02;
+    private static final byte IDENTIFIER_ON = 0x01;
+    private static final byte IDENTIFIER_ACCESSORIES = 0x02;
 
-    BooleanProperty on;
-    BooleanProperty accessoriesIgnition;
+    BooleanProperty on = new BooleanProperty(IDENTIFIER_ON);
+    BooleanProperty accessoriesIgnition = new BooleanProperty(IDENTIFIER_ACCESSORIES);
 
     /**
      * @return The ignition state.
@@ -54,15 +54,13 @@ public class IgnitionState extends CommandWithProperties {
     IgnitionState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case ON_IDENTIFIER:
-                        on = new BooleanProperty(p);
-                        return on;
-                    case ACCESSORIES_IDENTIFIER:
-                        accessoriesIgnition = new BooleanProperty(p);
-                        return accessoriesIgnition;
+                    case IDENTIFIER_ON:
+                        return on.update(p);
+                    case IDENTIFIER_ACCESSORIES:
+                        return accessoriesIgnition.update(p);
                 }
                 return null;
             });
@@ -93,7 +91,7 @@ public class IgnitionState extends CommandWithProperties {
          */
         public Builder setIsOn(BooleanProperty isOn) {
             this.on = isOn;
-            isOn.setIdentifier(ON_IDENTIFIER);
+            isOn.setIdentifier(IDENTIFIER_ON);
             addProperty(isOn);
             return this;
         }
@@ -105,7 +103,7 @@ public class IgnitionState extends CommandWithProperties {
          */
         public Builder setAccessoriesIgnition(BooleanProperty accessoriesIgnition) {
             this.accessoriesIgnition = accessoriesIgnition;
-            accessoriesIgnition.setIdentifier(ACCESSORIES_IDENTIFIER);
+            accessoriesIgnition.setIdentifier(IDENTIFIER_ACCESSORIES);
             addProperty(accessoriesIgnition);
             return this;
         }

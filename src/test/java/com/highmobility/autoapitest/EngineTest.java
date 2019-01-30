@@ -29,6 +29,12 @@ public class EngineTest {
         assertTrue(state.isAccessoriesIgnitionOn().getValue() == true);
     }
 
+    @Test public void stateWithTimestamp() {
+        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000001"));
+        IgnitionState command = (IgnitionState) CommandResolver.resolve(timestampBytes);
+        assertTrue(command.isOn().getTimestamp() != null);
+    }
+
     @Test public void get() {
         String waitingForBytes = "003500";
         String commandBytes = ByteUtils.hexFromBytes(new GetIgnitionState().getByteArray());
@@ -47,7 +53,7 @@ public class EngineTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("003501");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((IgnitionState) state).isOn() == null);
+        assertTrue(((IgnitionState) state).isOn().getValue() == null);
     }
 
     @Test public void build() {
