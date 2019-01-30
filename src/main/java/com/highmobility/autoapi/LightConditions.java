@@ -29,10 +29,10 @@ import javax.annotation.Nullable;
  */
 public class LightConditions extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHT_CONDITIONS, 0x01);
-    private static final byte OUTSIDE_LIGHT_IDENTIFIER = 0x01;
-    private static final byte INSIDE_LIGHT_IDENTIFIER = 0x02;
-    FloatProperty outsideLight;
-    FloatProperty insideLight;
+    private static final byte IDENTIFIER_OUTSIDE_LIGHT = 0x01;
+    private static final byte IDENTIFIER_INSIDE_LIGHT = 0x02;
+    FloatProperty outsideLight = new FloatProperty(IDENTIFIER_OUTSIDE_LIGHT);
+    FloatProperty insideLight = new FloatProperty(IDENTIFIER_INSIDE_LIGHT);
 
     /**
      * @return The measured outside illuminance in lux.
@@ -51,15 +51,13 @@ public class LightConditions extends CommandWithProperties {
     LightConditions(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case OUTSIDE_LIGHT_IDENTIFIER:
-                        outsideLight = new FloatProperty(p);
-                        return outsideLight;
-                    case INSIDE_LIGHT_IDENTIFIER:
-                        insideLight = new FloatProperty(p);
-                        return insideLight;
+                    case IDENTIFIER_OUTSIDE_LIGHT:
+                        return outsideLight.update(p);
+                    case IDENTIFIER_INSIDE_LIGHT:
+                        return insideLight.update(p);
                 }
 
                 return null;
@@ -91,7 +89,7 @@ public class LightConditions extends CommandWithProperties {
          */
         public Builder setOutsideLight(FloatProperty outsideLight) {
             this.outsideLight = outsideLight;
-            outsideLight.setIdentifier(OUTSIDE_LIGHT_IDENTIFIER);
+            outsideLight.setIdentifier(IDENTIFIER_OUTSIDE_LIGHT);
             addProperty(outsideLight);
             return this;
         }
@@ -102,7 +100,7 @@ public class LightConditions extends CommandWithProperties {
          */
         public Builder setInsideLight(FloatProperty insideLight) {
             this.insideLight = insideLight;
-            insideLight.setIdentifier(INSIDE_LIGHT_IDENTIFIER);
+            insideLight.setIdentifier(IDENTIFIER_INSIDE_LIGHT);
             addProperty(insideLight);
             return this;
         }

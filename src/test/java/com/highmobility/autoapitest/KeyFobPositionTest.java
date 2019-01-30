@@ -41,6 +41,6 @@ public class KeyFobPositionTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("004801");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((KeyFobPosition) state).getKeyFobPosition() == null);
+        assertTrue(((KeyFobPosition) state).getKeyFobPosition().getValue() == null);
     }
 }
