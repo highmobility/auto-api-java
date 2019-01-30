@@ -36,7 +36,6 @@ import javax.annotation.Nullable;
 public class ReductionTime extends Property {
     Value value;
 
-
     @Nullable public Value getValue() {
         return value;
     }
@@ -49,18 +48,14 @@ public class ReductionTime extends Property {
         this(new Value(startStop, time));
     }
 
-    public ReductionTime(Value value) {
-        this((byte) 0x00, value);
-    }
-
     public ReductionTime(@Nullable Value value, @Nullable Calendar timestamp,
                          @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
     }
 
-    public ReductionTime(byte identifier, Value value) {
-        super(identifier, value);
+    public ReductionTime(Value value) {
+        super(value);
         if (value != null) {
             bytes[3] = value.startStop.getByte();
             ByteUtils.setBytes(bytes, value.time.getByteArray(), 4);

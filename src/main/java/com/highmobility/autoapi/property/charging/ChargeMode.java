@@ -40,12 +40,8 @@ public class ChargeMode extends Property {
         super(identifier);
     }
 
-    public ChargeMode(Value Value) {
-        this((byte) 0x00, Value);
-    }
-
-    public ChargeMode(byte identifier, @Nullable Value value) {
-        super(identifier, value);
+    public ChargeMode(Value value) {
+        super(value);
         this.value = value;
         if (value != null) bytes[3] = value.getByte();
     }

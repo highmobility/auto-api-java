@@ -36,18 +36,14 @@ public class BrakeFluidLevel extends Property {
         return value;
     }
 
-    public BrakeFluidLevel(Value value) {
-        this((byte) 0x00, value);
-    }
-
     public BrakeFluidLevel(@Nullable Value value, @Nullable Calendar timestamp,
                            @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
     }
 
-    public BrakeFluidLevel(byte identifier, Value value) {
-        super(identifier, value);
+    public BrakeFluidLevel(Value value) {
+        super(value);
         this.value = value;
         if (value != null) bytes[3] = value.getByte();
     }

@@ -34,7 +34,9 @@ public class ConvertibleRoofState extends Property {
     }
 
     public ConvertibleRoofState(Value convertibleRoofState) {
-        this((byte) 0x00, convertibleRoofState);
+        super(convertibleRoofState);
+        this.value = convertibleRoofState;
+        if (convertibleRoofState != null) bytes[3] = convertibleRoofState.getByte();
     }
 
     public ConvertibleRoofState(@Nullable Value convertibleRoofStateProperty,
@@ -53,13 +55,6 @@ public class ConvertibleRoofState extends Property {
         update(p);
     }
 
-    public ConvertibleRoofState(byte identifier,
-                                Value convertibleRoofState) {
-        super(identifier, convertibleRoofState);
-        this.value = convertibleRoofState;
-        if (convertibleRoofState != null) bytes[3] = convertibleRoofState.getByte();
-    }
-
     @Override public Property update(Property p) throws CommandParseException {
         super.update(p);
         if (p.getValueLength() >= 1) value = Value.fromByte(p.get(3));
@@ -68,7 +63,7 @@ public class ConvertibleRoofState extends Property {
 
     // TBODO: ctors
 
-    public enum Value implements PropertyValue{
+    public enum Value implements PropertyValue {
         CLOSED((byte) 0x00),
         OPEN((byte) 0x01),
         EMERGENCY_LOCKED((byte) 0x02),

@@ -27,11 +27,7 @@ public class Lock extends Property {
     }
 
     public Lock(Value value) {
-        this((byte) 0x00, value);
-    }
-
-    public Lock(byte identifier, Value value) {
-        super(identifier, value);
+        super(value);
         this.value = value;
         if (value != null) bytes[3] = value.getByte();
     }

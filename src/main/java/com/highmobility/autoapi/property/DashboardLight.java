@@ -44,11 +44,7 @@ public class DashboardLight extends Property {
     }
 
     public DashboardLight(Value value) {
-        this((byte) 0x00, value);
-    }
-
-    public DashboardLight(byte identifier, Value value) {
-        super(identifier, value);
+        super(value);
         this.value = value;
         if (value != null) {
             bytes[3] = value.type.getByte();
@@ -58,10 +54,6 @@ public class DashboardLight extends Property {
 
     public DashboardLight(Type type, State state) {
         this(new Value(type, state));
-    }
-
-    public DashboardLight(byte identifier, Type type, State state) {
-        this(identifier, new Value(type, state));
     }
 
     public DashboardLight(Property p) throws CommandParseException {

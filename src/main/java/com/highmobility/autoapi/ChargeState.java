@@ -69,6 +69,7 @@ public class ChargeState extends CommandWithProperties {
 
     private static final byte ACTIVE_STATE_IDENTIFIER = 0x17;
 
+
     IntegerProperty estimatedRange = new IntegerProperty(ESTIMATED_RANGE_IDENTIFIER, false);
     PercentageProperty batteryLevel = new PercentageProperty(BATTERY_LEVEL_IDENTIFIER);
     FloatProperty batteryCurrentAC = new FloatProperty(BATTERY_CURRENT_AC_IDENTIFIER);
@@ -559,6 +560,7 @@ public class ChargeState extends CommandWithProperties {
         // TBODO: translate
 
         public Builder addDepartureTime(DepartureTime departureTime) {
+            departureTime.setIdentifier(DEPARTURE_TIMES_IDENTIFIER);
             this.departureTimes.add(departureTime);
             addProperty(departureTime);
             return this;

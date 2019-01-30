@@ -73,12 +73,16 @@ public class Property extends Bytes {
         return failure;
     }
 
-    protected Property() { }
-
-
-    protected Property(byte identifier, @Nullable PropertyValue value) {
-        this.bytes = baseBytes(identifier, value == null ? 0 : value.getLength());
+    protected Property() {
     }
+
+    protected Property(@Nullable PropertyValue value) {
+        this.bytes = baseBytes((byte) 0x00, value == null ? 0 : value.getLength());
+    }
+
+    /*protected Property(byte identifier, @Nullable PropertyValue value) {
+        this.bytes = baseBytes(identifier, value == null ? 0 : value.getLength());
+    }*/
 
     protected Property(byte identifier, int valueSize) {
         this.bytes = baseBytes(identifier, valueSize);
@@ -102,11 +106,14 @@ public class Property extends Bytes {
         if (value != null) ByteUtils.setBytes(bytes, value, 3);
     }
 
-    public Property(byte identifier, byte[] value, @Nullable Calendar timestamp,
+    public Property(@Nullable PropertyValue value, @Nullable Calendar timestamp,
                     @Nullable PropertyFailure failure) {
-        this(identifier, value);
+        this((byte) 0x00, value.getLength());
         setTimestampFailure(timestamp, failure);
+        setValue(value);
     }
+
+    void setValue(PropertyValue value) { }
 
     /**
      * @param identifier The identifier byte of the property.

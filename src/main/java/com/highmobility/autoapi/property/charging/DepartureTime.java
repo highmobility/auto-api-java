@@ -32,8 +32,6 @@ import java.util.Calendar;
 import javax.annotation.Nullable;
 
 public class DepartureTime extends Property {
-    private static final byte IDENTIFIER = 0x11;
-
     Value value;
 
     @Nullable public Value getValue() {
@@ -55,7 +53,7 @@ public class DepartureTime extends Property {
     }
 
     public DepartureTime(Value value) {
-        super(IDENTIFIER, value);
+        super(value);
         this.value = value;
 
         if (value != null) {

@@ -21,32 +21,78 @@
 package com.highmobility.autoapi.property.homecharger;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyFailure;
+import com.highmobility.autoapi.property.PropertyValue;
 
-public enum Charging {
-    DISCONNECTED((byte) 0x00),
-    PLUGGED_IN((byte) 0x01),
-    CHARGING((byte) 0x02);
+import java.util.Calendar;
 
-    public static Charging fromByte(byte byteValue) throws CommandParseException {
-        Charging[] values = Charging.values();
+import javax.annotation.Nullable;
 
-        for (int i = 0; i < values.length; i++) {
-            Charging state = values[i];
-            if (state.getByte() == byteValue) {
-                return state;
+public class Charging extends Property {
+    Value value;
+
+    @Nullable public Value getValue() {
+        return value;
+    }
+
+    public Charging(byte identifier) {
+        super(identifier);
+    }
+
+    public Charging(Value value) {
+        super(value);
+        this.value = value;
+        if (value != null) bytes[3] = value.getByte();
+    }
+
+    public Charging(@Nullable Value value, @Nullable Calendar timestamp,
+                    @Nullable PropertyFailure failure) {
+        this(value);
+        setTimestampFailure(timestamp, failure);
+    }
+
+    public Charging(Property p) throws CommandParseException {
+        super(p);
+        update(p);
+    }
+
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+        if (p.getValueLength() >= 1) value = value.fromByte(p.get(3));
+        return this;
+    }
+
+    public enum Value implements PropertyValue {
+        DISCONNECTED((byte) 0x00),
+        PLUGGED_IN((byte) 0x01),
+        CHARGING((byte) 0x02);
+
+        public static Value fromByte(byte byteValue) throws CommandParseException {
+            Value[] values = Value.values();
+
+            for (int i = 0; i < values.length; i++) {
+                Value state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
             }
+
+            throw new CommandParseException();
         }
 
-        throw new CommandParseException();
-    }
+        private byte value;
 
-    private byte value;
+        Value(byte value) {
+            this.value = value;
+        }
 
-    Charging(byte value) {
-        this.value = value;
-    }
+        public byte getByte() {
+            return value;
+        }
 
-    public byte getByte() {
-        return value;
+        @Override public int getLength() {
+            return 1;
+        }
     }
 }

@@ -49,11 +49,7 @@ public class WheelRpm extends Property {
     }
 
     public WheelRpm(Value value) {
-        this((byte) 0x00, value);
-    }
-
-    public WheelRpm(byte identifier, Value value) {
-        super(identifier, value);
+        super(value);
 
         this.value = value;
 
@@ -64,11 +60,7 @@ public class WheelRpm extends Property {
     }
 
     public WheelRpm(TireLocation tireLocation, int rpm) {
-        this((byte) 0x00, tireLocation, rpm);
-    }
-
-    public WheelRpm(byte identifier, TireLocation tireLocation, int rpm) {
-        this(identifier, new Value(tireLocation, rpm));
+        this(new Value(tireLocation, rpm));
     }
 
     public WheelRpm(Property p) throws CommandParseException {

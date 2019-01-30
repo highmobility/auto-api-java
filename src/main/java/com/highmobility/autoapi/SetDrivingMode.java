@@ -42,7 +42,7 @@ public class SetDrivingMode extends CommandWithProperties {
      * @param drivingMode The driving mode.
      */
     public SetDrivingMode(DrivingMode.Value drivingMode) {
-        super(TYPE.addProperty(new DrivingMode(IDENTIFIER, drivingMode)));
+        super(TYPE.addProperty(new DrivingMode(drivingMode).setIdentifier(IDENTIFIER)));
         this.drivingMode = drivingMode;
     }
 

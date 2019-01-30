@@ -58,7 +58,7 @@ public class HomeChargerTest {
         assertTrue(command instanceof HomeChargerState);
         HomeChargerState state = (HomeChargerState) command;
 
-        assertTrue(state.getCharging() == Charging.CHARGING);
+        assertTrue(state.getCharging() == Charging.Value.CHARGING);
         assertTrue(state.getAuthenticationMechanism() == AuthenticationMechanism.APP);
         assertTrue(state.getPlugType() == PlugType.TYPE_TWO);
         assertTrue(state.getChargingPower().getValue() == 11.5f);

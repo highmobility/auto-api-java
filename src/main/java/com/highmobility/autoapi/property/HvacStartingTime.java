@@ -27,11 +27,7 @@ public class HvacStartingTime extends Property {
     }
 
     public HvacStartingTime(Value value) {
-        this((byte) 0x00, value);
-    }
-
-    public HvacStartingTime(byte identifier, Value value) {
-        super(identifier, value);
+        super(value);
         this.value = value;
 
         if (value != null) {
@@ -43,10 +39,6 @@ public class HvacStartingTime extends Property {
 
     public HvacStartingTime(Weekday weekday, Time time) {
         this(new Value(weekday, time));
-    }
-
-    public HvacStartingTime(byte identifier, Weekday weekday, Time time) {
-        this(identifier, new Value(weekday, time));
     }
 
     public HvacStartingTime(Property p) throws CommandParseException {

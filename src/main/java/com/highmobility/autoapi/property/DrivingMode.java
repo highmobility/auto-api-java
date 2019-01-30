@@ -40,11 +40,7 @@ public class DrivingMode extends Property {
     }
 
     public DrivingMode(Value value) {
-        this((byte) 0x00, value);
-    }
-
-    public DrivingMode(byte identifier, Value value) {
-        super(identifier, value);
+        super(value);
         this.value = value;
         if (value != null) bytes[3] = value.getByte();
     }

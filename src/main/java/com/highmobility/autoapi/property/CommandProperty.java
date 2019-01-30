@@ -55,7 +55,7 @@ public class CommandProperty extends Property {
     }
 
     public CommandProperty(@Nullable CommandWithProperties value) {
-        super((byte) 0x00, value);
+        super((PropertyValue) value);
         this.value = value;
 
         if (value != null) {

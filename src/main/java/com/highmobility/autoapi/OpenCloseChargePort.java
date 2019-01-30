@@ -42,13 +42,8 @@ public class OpenCloseChargePort extends CommandWithProperties {
      * @param chargePortState The charge port state.
      */
     public OpenCloseChargePort(ChargePortState.Value chargePortState) {
-        super(getBytes(chargePortState));
+        super(TYPE.addProperty(new ChargePortState(chargePortState).setIdentifier(PROPERTY_IDENTIFIER)));
         this.chargePortState = chargePortState;
-    }
-
-    static byte[] getBytes(ChargePortState.Value chargePortState) {
-        ChargePortState prop = new ChargePortState(PROPERTY_IDENTIFIER, chargePortState);
-        return TYPE.addProperty(prop);
     }
 
     OpenCloseChargePort(byte[] bytes) throws CommandParseException {

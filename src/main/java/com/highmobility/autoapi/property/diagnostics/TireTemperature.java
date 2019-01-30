@@ -38,23 +38,18 @@ public class TireTemperature extends Property {
         return value;
     }
 
-
     public TireTemperature(byte identifier) {
         super(identifier);
     }
 
     public TireTemperature(@Nullable Value value, @Nullable Calendar timestamp,
-                              @Nullable PropertyFailure failure) {
+                           @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
     }
 
     public TireTemperature(Value value) {
-        this((byte) 0x00, value);
-    }
-
-    public TireTemperature(byte identifier, Value value) {
-        super(identifier, value);
+        super(value);
 
         this.value = value;
 
@@ -65,11 +60,7 @@ public class TireTemperature extends Property {
     }
 
     public TireTemperature(TireLocation tireLocation, float temperature) {
-        this((byte) 0x00, tireLocation, temperature);
-    }
-
-    public TireTemperature(byte identifier, TireLocation tireLocation, float temperature) {
-        this(identifier, new Value(tireLocation, temperature));
+        this(new Value(tireLocation, temperature));
     }
 
     public TireTemperature(Property p) throws CommandParseException {

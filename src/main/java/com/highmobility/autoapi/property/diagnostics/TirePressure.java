@@ -49,11 +49,7 @@ public class TirePressure extends Property {
     }
 
     public TirePressure(Value value) {
-        this((byte) 0x00, value);
-    }
-
-    public TirePressure(byte identifier, Value value) {
-        super(identifier, value);
+        super(value);
 
         this.value = value;
 
@@ -64,11 +60,7 @@ public class TirePressure extends Property {
     }
 
     public TirePressure(TireLocation tireLocation, float pressure) {
-        this((byte) 0x00, new Value(tireLocation, pressure));
-    }
-
-    public TirePressure(byte identifier, TireLocation tireLocation, float pressure) {
-        this(identifier, new Value(tireLocation, pressure));
+        this(new Value(tireLocation, pressure));
     }
 
     public TirePressure(Property p) throws CommandParseException {

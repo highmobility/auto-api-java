@@ -41,19 +41,15 @@ public class ChargingState extends Property {
     }
 
     public ChargingState(Value value) {
-        this((byte) 0x00, value);
+        super(value);
+        this.value = value;
+        if (value != null) bytes[3] = value.getByte();
     }
 
     public ChargingState(@Nullable Value value, @Nullable Calendar timestamp,
                          @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
-    }
-
-    public ChargingState(byte identifier, @Nullable Value value) {
-        super(identifier, value);
-        this.value = value;
-        if (value != null) bytes[3] = value.getByte();
     }
 
     public ChargingState(Property p) throws CommandParseException {

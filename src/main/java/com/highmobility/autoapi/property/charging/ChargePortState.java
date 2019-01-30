@@ -41,7 +41,9 @@ public class ChargePortState extends Property {
     }
 
     public ChargePortState(Value value) {
-        this((byte) 0x00, value);
+        super(value);
+        this.value = value;
+        if (value != null) bytes[3] = value.getByte();
     }
 
     public ChargePortState(@Nullable Value value, @Nullable Calendar timestamp,
@@ -53,12 +55,6 @@ public class ChargePortState extends Property {
     public ChargePortState(Property p) throws CommandParseException {
         super(p);
         update(p);
-    }
-
-    public ChargePortState(byte identifier, @Nullable Value value) {
-        super(identifier, value);
-        this.value = value;
-        if (value != null) bytes[3] = value.getByte();
     }
 
     @Override public Property update(Property p) throws CommandParseException {

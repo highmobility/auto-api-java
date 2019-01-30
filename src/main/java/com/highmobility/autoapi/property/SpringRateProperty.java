@@ -45,11 +45,7 @@ public class SpringRateProperty extends Property {
     }
 
     public SpringRateProperty(Value value) {
-        this((byte) 0x00, value);
-    }
-
-    public SpringRateProperty(byte identifier, Value value) {
-        super(identifier, value);
+        super(value);
 
         this.value = value;
 
@@ -60,11 +56,7 @@ public class SpringRateProperty extends Property {
     }
 
     public SpringRateProperty(Axle axle, Integer springRate) {
-        this((byte) 0x00, axle, springRate);
-    }
-
-    public SpringRateProperty(byte identifier, Axle axle, Integer springRate) {
-        this(identifier, new Value(axle, springRate));
+        this(new Value(axle, springRate));
     }
 
     public SpringRateProperty(Property p) throws CommandParseException {

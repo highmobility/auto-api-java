@@ -49,7 +49,7 @@ public class ChargingTimer extends Property {
     }
 
     public ChargingTimer(Value value) {
-        super((byte) 0x00, value);
+        super(value);
         this.value = value;
 
         if (value != null) {

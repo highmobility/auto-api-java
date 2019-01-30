@@ -48,11 +48,7 @@ public class DiagnosticsTroubleCode extends Property {
     }
 
     public DiagnosticsTroubleCode(Value value) {
-        this((byte) 0x00, value);
-    }
-
-    public DiagnosticsTroubleCode(byte identifier, Value value) {
-        super(identifier, value);
+        super(value);
 
         this.value = value;
         if (value != null) {
@@ -78,13 +74,9 @@ public class DiagnosticsTroubleCode extends Property {
         }
     }
 
-    public DiagnosticsTroubleCode(int numberOfOccurences, String id, String ecuId, String status) {
-        this((byte) 0x00, numberOfOccurences, id, ecuId, status);
-    }
-
-    public DiagnosticsTroubleCode(byte identifier, int numberOfOccurences, String id,
+    public DiagnosticsTroubleCode(int numberOfOccurences, String id,
                                   String ecuId, String status) {
-        this(identifier, new Value(numberOfOccurences, id, ecuId, status));
+        this(new Value(numberOfOccurences, id, ecuId, status));
     }
 
     public DiagnosticsTroubleCode(Property p) throws CommandParseException {

@@ -37,19 +37,15 @@ public class WasherFluidLevel extends Property {
     }
 
     public WasherFluidLevel(Value value) {
-        this((byte) 0x00, value);
+        super(value);
+        this.value = value;
+        if (value != null) bytes[3] = value.getByte();
     }
 
     public WasherFluidLevel(@Nullable Value value, @Nullable Calendar timestamp,
                             @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
-    }
-
-    public WasherFluidLevel(byte identifier, Value value) {
-        super(identifier, value);
-        this.value = value;
-        if (value != null) bytes[3] = value.getByte();
     }
 
     public WasherFluidLevel(byte identifier) {

@@ -47,11 +47,7 @@ public class ControlModeProperty extends Property {
     }
 
     public ControlModeProperty(Value value) {
-        this((byte) 0x00, value);
-    }
-
-    public ControlModeProperty(byte identifier, Value value) {
-        super(identifier, value);
+        super(value);
         this.value = value;
         if (value != null) bytes[3] = value.getByte();
     }

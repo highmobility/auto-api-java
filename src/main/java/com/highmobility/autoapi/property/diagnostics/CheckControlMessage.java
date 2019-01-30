@@ -48,11 +48,7 @@ public class CheckControlMessage extends Property {
     }
 
     public CheckControlMessage(Value value) {
-        this((byte) 0x00, value);
-    }
-
-    public CheckControlMessage(byte identifier, Value value) {
-        super(identifier, value);
+        super(value);
 
         this.value = value;
 
@@ -77,13 +73,9 @@ public class CheckControlMessage extends Property {
         }
     }
 
-    public CheckControlMessage(int id, int remainingTime, String text, String status) {
-        this(new Value(id, remainingTime, text, status));
-    }
-
-    public CheckControlMessage(byte identifier, int id, int remainingTime, String text,
+    public CheckControlMessage(int id, int remainingTime, String text,
                                String status) {
-        this(identifier, new Value(id, remainingTime, text, status));
+        this(new Value(id, remainingTime, text, status));
     }
 
     public CheckControlMessage(Property p) throws CommandParseException {
