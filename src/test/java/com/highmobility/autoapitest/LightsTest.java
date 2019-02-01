@@ -6,7 +6,8 @@ import com.highmobility.autoapi.ControlLights;
 import com.highmobility.autoapi.GetLightsState;
 import com.highmobility.autoapi.LightsState;
 import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.lights.FogLight;
+import com.highmobility.autoapi.property.IntegerArrayProperty;
+import com.highmobility.autoapi.property.FogLight;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
 import com.highmobility.autoapi.property.lights.LightLocation;
@@ -46,37 +47,43 @@ public class LightsTest {
     }
 
     void testState(LightsState state) {
-        assertTrue(state.getFrontExteriorLightState() == FrontExteriorLightState.ACTIVE_FULL_BEAM);
+        assertTrue(state.getFrontExteriorLightState().getValue() == FrontExteriorLightState.Value.ACTIVE_FULL_BEAM);
         assertTrue(state.isRearExteriorLightActive().getValue() == true);
 
-        assertTrue(state.getAmbientColor()[0] == 0xFF);
-        assertTrue(state.getAmbientColor()[1] == 0);
-        assertTrue(state.getAmbientColor()[2] == 0);
+        assertTrue(state.getAmbientColor().getValue()[0] == 0xFF);
+        assertTrue(state.getAmbientColor().getValue()[1] == 0);
+        assertTrue(state.getAmbientColor().getValue()[2] == 0);
 
         assertTrue(state.isReverseLightActive().getValue() == true);
         assertTrue(state.isEmergencyBrakeLightActive().getValue() == true);
 
         assertTrue(state.getFogLights().length == 2);
-        assertTrue(state.getFogLight(LightLocation.FRONT).isActive() == false);
-        assertTrue(state.getFogLight(LightLocation.REAR).isActive() == true);
+        assertTrue(state.getFogLight(LightLocation.FRONT).getValue().isActive() == false);
+        assertTrue(state.getFogLight(LightLocation.REAR).getValue().isActive() == true);
 
         assertTrue(state.getReadingLamps().length == 2);
-        assertTrue(state.getReadingLamp(Location.FRONT_LEFT).isActive() == false);
-        assertTrue(state.getReadingLamp(Location.FRONT_RIGHT).isActive() == true);
+        assertTrue(state.getReadingLamp(Location.FRONT_LEFT).getValue().isActive() == false);
+        assertTrue(state.getReadingLamp(Location.FRONT_RIGHT).getValue().isActive() == true);
 
         assertTrue(state.getInteriorLamps().length == 2);
-        assertTrue(state.getInteriorLamp(LightLocation.FRONT).isActive() == false);
-        assertTrue(state.getInteriorLamp(LightLocation.REAR).isActive() == false);
+        assertTrue(state.getInteriorLamp(LightLocation.FRONT).getValue().isActive() == false);
+        assertTrue(state.getInteriorLamp(LightLocation.REAR).getValue().isActive() == false);
+    }
+
+    @Test public void stateWithTimestamp() {
+        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
+        LightsState command = (LightsState) CommandResolver.resolve(timestampBytes);
+        assertTrue(command.isRearExteriorLightActive().getTimestamp() != null);
     }
 
     @Test public void build() {
         LightsState.Builder builder = new LightsState.Builder();
 
-        builder.setFrontExteriorLightState(FrontExteriorLightState.ACTIVE_FULL_BEAM);
+        builder.setFrontExteriorLightState(new FrontExteriorLightState(FrontExteriorLightState.Value.ACTIVE_FULL_BEAM));
         builder.setRearExteriorLightActive(new BooleanProperty(true));
 
         int[] ambientColor = new int[]{0xFF, 0, 0};
-        builder.setAmbientColor(ambientColor);
+        builder.setAmbientColor(new IntegerArrayProperty(ambientColor));
         builder.setReverseLightActive(new BooleanProperty(true));
         builder.setEmergencyBrakeLightActive(new BooleanProperty(true));
 
@@ -123,34 +130,34 @@ public class LightsTest {
         interiorLamps[1] = new InteriorLamp(LightLocation.REAR, false);
 
         Bytes bytes = new ControlLights(
-                FrontExteriorLightState.ACTIVE_FULL_BEAM,
+                FrontExteriorLightState.Value.ACTIVE_FULL_BEAM,
                 false,
-                new int[]{255, 0, 0, 255}, fogLights, readingLamps, interiorLamps);
+                new int[]{255, 0, 0}, fogLights, readingLamps, interiorLamps);
 
         assertTrue(TestUtils.bytesTheSame(bytes, waitingForBytes));
 
         ControlLights command = (ControlLights) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getFrontExteriorLightState() == FrontExteriorLightState
+        assertTrue(command.getFrontExteriorLightState() == FrontExteriorLightState.Value
                 .ACTIVE_FULL_BEAM);
         assertTrue(command.getRearExteriorLightActive() == false);
-        assertTrue(Arrays.equals(command.getAmbientColor(), new int[]{255, 0, 0, 255}));
+        assertTrue(Arrays.equals(command.getAmbientColor(), new int[]{255, 0, 0}));
 
         assertTrue(command.getFogLights().length == 2);
-        assertTrue(command.getFogLight(LightLocation.FRONT).isActive() == false);
-        assertTrue(command.getFogLight(LightLocation.REAR).isActive() == true);
+        assertTrue(command.getFogLight(LightLocation.FRONT).getValue().isActive() == false);
+        assertTrue(command.getFogLight(LightLocation.REAR).getValue().isActive() == true);
 
         assertTrue(command.getReadingLamps().length == 2);
-        assertTrue(command.getReadingLamp(Location.FRONT_LEFT).isActive() == false);
-        assertTrue(command.getReadingLamp(Location.FRONT_RIGHT).isActive() == true);
+        assertTrue(command.getReadingLamp(Location.FRONT_LEFT).getValue().isActive() == false);
+        assertTrue(command.getReadingLamp(Location.FRONT_RIGHT).getValue().isActive() == true);
 
         assertTrue(command.getInteriorLamps().length == 2);
-        assertTrue(command.getInteriorLamp(LightLocation.FRONT).isActive() == false);
-        assertTrue(command.getInteriorLamp(LightLocation.REAR).isActive() == false);
+        assertTrue(command.getInteriorLamp(LightLocation.FRONT).getValue().isActive() == false);
+        assertTrue(command.getInteriorLamp(LightLocation.REAR).getValue().isActive() == false);
     }
 
     @Test public void state0Properties() {
         Bytes waitingForBytes = new Bytes("003601");
         Command state = CommandResolver.resolve(waitingForBytes);
-        assertTrue(((LightsState) state).getAmbientColor() == null);
+        assertTrue(((LightsState) state).getAmbientColor().getValue() == null);
     }
 }

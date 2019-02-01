@@ -94,16 +94,16 @@ public class ParkingTicket extends CommandWithProperties {
                         state = ParkingTicketState.fromByte(p.getValueByte());
                         return state;
                     case OPERATOR_NAME_IDENTIFIER:
-                        operatorName = Property.getString(p.getValueBytes());
+                        operatorName = Property.getString(p.getValueBytesArray());
                         return operatorName;
                     case OPERATOR_TICKET_ID_IDENTIFIER:
-                        operatorTicketId = Property.getString(p.getValueBytes());
+                        operatorTicketId = Property.getString(p.getValueBytesArray());
                         return operatorTicketId;
                     case TICKET_START_IDENTIFIER:
-                        ticketStart = Property.getCalendar(p.getValueBytes());
+                        ticketStart = Property.getCalendar(p.getValueBytesArray());
                         return ticketStart;
                     case TICKET_END_IDENTIFIER:
-                        ticketEnd = Property.getCalendar(p.getValueBytes());
+                        ticketEnd = Property.getCalendar(p.getValueBytesArray());
                         return ticketEnd;
                 }
                 return null;

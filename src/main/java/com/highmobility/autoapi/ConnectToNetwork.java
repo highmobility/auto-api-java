@@ -97,13 +97,13 @@ public class ConnectToNetwork extends CommandWithProperties {
         for (Property property : properties) {
             switch (property.getPropertyIdentifier()) {
                 case WifiState.IDENTIFIER_SSID:
-                    ssid = Property.getString(property.getValueBytes());
+                    ssid = Property.getString(property.getValueBytesArray());
                     break;
                 case WifiState.IDENTIFIER_SECURITY:
                     security = NetworkSecurity.Value.fromByte(property.getValueByte());
                     break;
                 case PASSWORD_IDENTIFIER:
-                    password = Property.getString(property.getValueBytes());
+                    password = Property.getString(property.getValueBytesArray());
                     break;
             }
         }

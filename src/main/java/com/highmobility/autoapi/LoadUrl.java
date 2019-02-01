@@ -50,6 +50,6 @@ public class LoadUrl extends CommandWithProperties {
     LoadUrl(byte[] bytes) {
         super(bytes);
         Property urlProp = getProperty((byte) 0x01);
-        if (urlProp != null) url = Property.getString(urlProp.getValueBytes());
+        if (urlProp != null) url = Property.getString(urlProp.getValueBytesArray());
     }
 }

@@ -84,7 +84,7 @@ public class MultiCommand extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROP_IDENTIFIER) {
-                    Command command = CommandResolver.resolve(p.getValueBytes());
+                    Command command = CommandResolver.resolve(p.getValueBytesArray());
                     if (command != null) {
                         builder.add(command);
                         return command;

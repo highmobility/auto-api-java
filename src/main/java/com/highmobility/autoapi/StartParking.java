@@ -115,16 +115,16 @@ public class StartParking extends CommandWithProperties {
         for (Property property : properties) {
             switch (property.getPropertyIdentifier()) {
                 case OPERATOR_NAME_IDENTIFIER:
-                    operatorName = Property.getString(property.getValueBytes());
+                    operatorName = Property.getString(property.getValueBytesArray());
                     break;
                 case OPERATOR_TICKET_ID_IDENTIFIER:
-                    operatorTicketId = Property.getString(property.getValueBytes());
+                    operatorTicketId = Property.getString(property.getValueBytesArray());
                     break;
                 case START_DATE_IDENTIFIER:
-                    startDate = Property.getCalendar(property.getValueBytes());
+                    startDate = Property.getCalendar(property.getValueBytesArray());
                     break;
                 case END_DATE_IDENTIFIER:
-                    endDate = Property.getCalendar(property.getValueBytes());
+                    endDate = Property.getCalendar(property.getValueBytesArray());
                     break;
             }
         }

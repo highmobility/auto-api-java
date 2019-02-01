@@ -44,7 +44,7 @@ public class SetParkingBrake extends CommandWithProperties {
      * @param activate BooleanProperty indicating whether to activate parking brake.
      */
     public SetParkingBrake(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
+        super(TYPE.addProperty(new BooleanProperty(activate).setIdentifier(IDENTIFIER)));
         this.activate = activate;
     }
 

@@ -68,8 +68,8 @@ public class IntegerProperty extends Property {
         super.update(p);
 
         if (p.getValueLength() >= 1) {
-            if (signed) value = Property.getSignedInt(p.getValueBytes());
-            else value = Property.getUnsignedInt(p.getValueBytes());
+            if (signed) value = Property.getSignedInt(p.getValueBytesArray());
+            else value = Property.getUnsignedInt(p.getValueBytesArray());
         }
 
         return this;

@@ -44,7 +44,7 @@ public class AuthenticateHomeCharger extends CommandWithProperties {
      * @param authenticate Authentication state.
      */
     public AuthenticateHomeCharger(boolean authenticate) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, authenticate)));
+        super(TYPE.addProperty(new BooleanProperty(authenticate).setIdentifier(IDENTIFIER)));
         this.authenticate = authenticate;
     }
 

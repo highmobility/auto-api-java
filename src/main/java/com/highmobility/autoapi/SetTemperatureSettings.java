@@ -96,11 +96,11 @@ public class SetTemperatureSettings extends CommandWithProperties {
         for (int i = 0; i < properties.length; i++) {
             Property property = properties[i];
             if (property.getPropertyIdentifier() == IDENTIFIER_DRIVER) {
-                this.driverTemperature = Property.getFloat(property.getValueBytes());
+                this.driverTemperature = Property.getFloat(property.getValueBytesArray());
             } else if (property.getPropertyIdentifier() == IDENTIFIER_PASSENGER) {
-                this.passengerTemperature = Property.getFloat(property.getValueBytes());
+                this.passengerTemperature = Property.getFloat(property.getValueBytesArray());
             } else if (property.getPropertyIdentifier() == IDENTIFIER_REAR) {
-                this.rearTemperature = Property.getFloat(property.getValueBytes());
+                this.rearTemperature = Property.getFloat(property.getValueBytesArray());
             }
         }
     }

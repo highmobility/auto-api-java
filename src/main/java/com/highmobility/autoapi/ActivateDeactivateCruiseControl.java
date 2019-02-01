@@ -65,7 +65,7 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
     static Property[] getProperties(boolean activate, Integer speed) {
         Property[] properties = new Property[speed == null ? 1 : 2];
 
-        properties[0] = new BooleanProperty((byte) 0x01, activate);
+        properties[0] = new BooleanProperty(activate).setIdentifier((byte) 0x01);
         if (speed != null) properties[1] = new IntegerProperty((byte) 0x02, speed, 2);
 
         return properties;

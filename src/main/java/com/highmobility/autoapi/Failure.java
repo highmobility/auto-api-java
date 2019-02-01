@@ -88,7 +88,7 @@ public class Failure extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_IDENTIFIER:
-                        identifier = p.getValueBytes();
+                        identifier = p.getValueBytesArray();
                         return identifier;
                     case IDENTIFIER_TYPE:
                         failedTypeByte = p.getValueByte();
@@ -97,7 +97,7 @@ public class Failure extends CommandWithProperties {
                         failureReason = FailureReason.fromByte(p.getValueByte());
                         return failureReason;
                     case IDENTIFIER_FAILURE_DESCRIPTION:
-                        failureDescription = Property.getString(p.getValueBytes());
+                        failureDescription = Property.getString(p.getValueBytesArray());
                         return failureDescription;
                 }
                 

@@ -9,8 +9,9 @@ import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.FlashersStateProperty;
 import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.FogLight;
 import com.highmobility.autoapi.property.HvacStartingTime;
-import com.highmobility.autoapi.property.IntArrayProperty;
+import com.highmobility.autoapi.property.IntegerArrayProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.KeyFobPositionProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
@@ -37,6 +38,9 @@ import com.highmobility.autoapi.property.diagnostics.WheelRpm;
 import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.property.homecharger.Charging;
 import com.highmobility.autoapi.property.homecharger.PriceTariff;
+import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
+import com.highmobility.autoapi.property.lights.InteriorLamp;
+import com.highmobility.autoapi.property.lights.ReadingLamp;
 import com.highmobility.autoapi.property.value.Lock;
 
 import org.junit.Test;
@@ -128,9 +132,9 @@ public class PropertyCtors {
 
     @Test public void intArray() throws CommandParseException {
         Property property = new Property("01000100");
-        assertTrue(new IntArrayProperty(null, null, failure).getFailure() != null);
-        assertTrue(new IntArrayProperty(property).getValue() != null);
-        IntArrayProperty updateProp = new IntArrayProperty((byte) 0x00);
+        assertTrue(new IntegerArrayProperty(null, null, failure).getFailure() != null);
+        assertTrue(new IntegerArrayProperty(property).getValue() != null);
+        IntegerArrayProperty updateProp = new IntegerArrayProperty((byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
@@ -380,6 +384,40 @@ public class PropertyCtors {
         assertTrue(updateProp.getValue() != null);
     }
 
+    @Test public void FrontExteriorLightState() throws CommandParseException {
+        Property property = new Property("01000101");
+        assertTrue(new FrontExteriorLightState(null, null, failure).getFailure() != null);
+        assertTrue(new FrontExteriorLightState(property).getValue() != null);
+        FrontExteriorLightState updateProp = new FrontExteriorLightState((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
 
+    @Test public void FogLight() throws CommandParseException {
+        Property property = new Property("0100020101");
+        assertTrue(new FogLight(null, null, failure).getFailure() != null);
+        assertTrue(new FogLight(property).getValue() != null);
+        FogLight updateProp = new FogLight((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void ReadingLamp() throws CommandParseException {
+        Property property = new Property("0100020101");
+        assertTrue(new ReadingLamp(null, null, failure).getFailure() != null);
+        assertTrue(new ReadingLamp(property).getValue() != null);
+        ReadingLamp updateProp = new ReadingLamp((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
+
+    @Test public void InteriorLamp() throws CommandParseException {
+        Property property = new Property("0100020101");
+        assertTrue(new InteriorLamp(null, null, failure).getFailure() != null);
+        assertTrue(new InteriorLamp(property).getValue() != null);
+        InteriorLamp updateProp = new InteriorLamp((byte) 0x00);
+        updateProp.update(property);
+        assertTrue(updateProp.getValue() != null);
+    }
 
 }

@@ -41,7 +41,7 @@ public class ActivateDeactivateStartStop extends CommandWithProperties {
     }
 
     public ActivateDeactivateStartStop(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
+        super(TYPE.addProperty(new BooleanProperty(activate).setIdentifier(IDENTIFIER)));
         this.activate = activate;
     }
 

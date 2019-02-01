@@ -50,6 +50,6 @@ public class TextInput extends CommandWithProperties {
         super(bytes);
         Property urlProp = getProperty((byte) 0x01);
         if (urlProp == null) throw new CommandParseException();
-        text = Property.getString(urlProp.getValueBytes());
+        text = Property.getString(urlProp.getValueBytesArray());
     }
 }

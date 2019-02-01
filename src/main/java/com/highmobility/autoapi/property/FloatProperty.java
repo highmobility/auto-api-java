@@ -57,7 +57,7 @@ public class FloatProperty extends Property {
 
     @Override public Property update(Property p) throws CommandParseException {
         super.update(p);
-        if (p.getValueLength() >= 4) value = getFloat(p.getValueBytes());
+        if (p.getValueLength() >= 4) value = getFloat(p.getValueBytesArray());
         return this;
     }
 }

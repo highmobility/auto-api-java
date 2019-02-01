@@ -21,10 +21,9 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.ByteProperty;
-import com.highmobility.autoapi.property.ColorProperty;
+import com.highmobility.autoapi.property.IntegerArrayProperty;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.lights.FogLight;
+import com.highmobility.autoapi.property.FogLight;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
 import com.highmobility.autoapi.property.lights.LightLocation;
@@ -42,17 +41,19 @@ import javax.annotation.Nullable;
 public class ControlLights extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHTS, 0x12);
 
-    private static final byte FRONT_EXTERIOR_LIGHT_STATE_IDENTIFIER = 0x01;
-    private static final byte REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER = 0x02;
-    private static final byte AMBIENT_COLOR_IDENTIFIER = 0x04;
+    private static final byte IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE = 0x01;
+    private static final byte IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE = 0x02;
+    private static final byte IDENTIFIER_AMBIENT_COLOR = 0x04;
 
-    private static final byte IDENTIFIER_FOG_LIGHTS = 0x07;
-    private static final byte IDENTIFIER_READING_LAMPS = 0x08;
-    private static final byte IDENTIFIER_INTERIOR_LAMPS = 0x09;
+    private static final byte IDENTIFIER_FOG_LIGHT = 0x07;
+    private static final byte IDENTIFIER_READING_LAMP = 0x08;
+    private static final byte IDENTIFIER_INTERIOR_LAMP = 0x09;
 
-    private FrontExteriorLightState frontExteriorLightState;
-    private Boolean rearExteriorLightActive;
-    private int[] ambientColor;
+    private FrontExteriorLightState frontExteriorLightState =
+            new FrontExteriorLightState(IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE);
+    private BooleanProperty rearExteriorLightActive =
+            new BooleanProperty(IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
+    private IntegerArrayProperty ambientColor = new IntegerArrayProperty(IDENTIFIER_AMBIENT_COLOR);
 
     private FogLight[] fogLights;
     private ReadingLamp[] readingLamps;
@@ -61,22 +62,22 @@ public class ControlLights extends CommandWithProperties {
     /**
      * @return The front exterior light state.
      */
-    public FrontExteriorLightState getFrontExteriorLightState() {
-        return frontExteriorLightState;
+    @Nullable public FrontExteriorLightState.Value getFrontExteriorLightState() {
+        return frontExteriorLightState.getValue();
     }
 
     /**
      * @return Rear exterior light state.
      */
-    public Boolean getRearExteriorLightActive() {
-        return rearExteriorLightActive;
+    @Nullable public Boolean getRearExteriorLightActive() {
+        return rearExteriorLightActive != null ? rearExteriorLightActive.getValue() : null;
     }
 
     /**
      * @return Ambient color, in rgba values from 0-255.
      */
-    public int[] getAmbientColor() {
-        return ambientColor;
+    @Nullable public int[] getAmbientColor() {
+        return ambientColor.getValue();
     }
 
     /**
@@ -93,7 +94,8 @@ public class ControlLights extends CommandWithProperties {
      */
     @Nullable public FogLight getFogLight(LightLocation location) {
         for (FogLight fogLight : fogLights) {
-            if (fogLight.getLocation() == location) return fogLight;
+            if (fogLight.getValue() != null && fogLight.getValue().getLocation() == location)
+                return fogLight;
         }
 
         return null;
@@ -113,7 +115,8 @@ public class ControlLights extends CommandWithProperties {
      */
     @Nullable public ReadingLamp getReadingLamp(Location location) {
         for (ReadingLamp readingLamp : readingLamps) {
-            if (readingLamp.getLocation() == location) return readingLamp;
+            if (readingLamp.getValue() != null && readingLamp.getValue().getLocation() == location)
+                return readingLamp;
         }
 
         return null;
@@ -134,7 +137,8 @@ public class ControlLights extends CommandWithProperties {
      */
     @Nullable public InteriorLamp getInteriorLamp(LightLocation location) {
         for (InteriorLamp interiorLamp : interiorLamps) {
-            if (interiorLamp.getLocation() == location) return interiorLamp;
+            if (interiorLamp.getValue() != null && interiorLamp.getValue().getLocation() == location)
+                return interiorLamp;
         }
         return null;
     }
@@ -144,65 +148,61 @@ public class ControlLights extends CommandWithProperties {
      *
      * @param frontExteriorLightState Front exterior light state.
      * @param rearExteriorLightActive Rear exterior light state.
-     * @param ambientColor            Ambient color with rgba values from 0-255.
+     * @param ambientColor            Ambient color with rgb values from 0-255.
+     * @param fogLights               The fog lights.
+     * @param readingLamps            The reading lamps.
+     * @param interiorLamps           The interior lamps.
      */
-    public ControlLights(@Nullable FrontExteriorLightState frontExteriorLightState,
+    public ControlLights(@Nullable FrontExteriorLightState.Value frontExteriorLightState,
                          @Nullable Boolean rearExteriorLightActive,
                          @Nullable int[] ambientColor,
                          @Nullable FogLight[] fogLights,
                          @Nullable ReadingLamp[] readingLamps,
                          @Nullable InteriorLamp[] interiorLamps) {
-        super(TYPE, getProperties(frontExteriorLightState, rearExteriorLightActive, ambientColor,
-                fogLights, readingLamps, interiorLamps));
+        super(TYPE);
 
-        this.frontExteriorLightState = frontExteriorLightState;
-        this.rearExteriorLightActive = rearExteriorLightActive;
-        this.ambientColor = ambientColor;
-        this.fogLights = fogLights;
-        this.readingLamps = readingLamps;
-        this.interiorLamps = interiorLamps;
-    }
-
-    static Property[] getProperties(@Nullable FrontExteriorLightState frontExteriorLightState,
-                                    @Nullable Boolean rearExteriorLightActive,
-                                    @Nullable int[] ambientColor,
-                                    @Nullable FogLight[] fogLights,
-                                    @Nullable ReadingLamp[] readingLamps,
-                                    @Nullable InteriorLamp[] interiorLamps) {
         List<Property> properties = new ArrayList<>();
 
         if (frontExteriorLightState != null) {
-            ByteProperty prop = new ByteProperty(FRONT_EXTERIOR_LIGHT_STATE_IDENTIFIER,
-                    frontExteriorLightState.getByte());
-            properties.add(prop);
+            properties.add(this.frontExteriorLightState.update(frontExteriorLightState));
         }
 
         if (rearExteriorLightActive != null) {
-            BooleanProperty prop = new BooleanProperty(REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER,
-                    rearExteriorLightActive);
-            properties.add(prop);
+            properties.add(this.rearExteriorLightActive.update(rearExteriorLightActive));
         }
 
         if (ambientColor != null) {
-            ColorProperty prop = new ColorProperty(AMBIENT_COLOR_IDENTIFIER, ambientColor);
-            properties.add(prop);
+            properties.add(this.ambientColor.update(ambientColor));
         }
 
-        if (fogLights != null) for (FogLight light : fogLights) {
-            light.setIdentifier(IDENTIFIER_FOG_LIGHTS);
-            properties.add(light);
+        if (fogLights != null) {
+            for (FogLight light : fogLights) {
+                light.setIdentifier(IDENTIFIER_FOG_LIGHT);
+                properties.add(light);
+            }
+
+            this.fogLights = fogLights;
         }
 
-        if (readingLamps != null) for (ReadingLamp light : readingLamps) {
-            light.setIdentifier(IDENTIFIER_READING_LAMPS);
-            properties.add(light);
-        }
-        if (interiorLamps != null) for (InteriorLamp light : interiorLamps) {
-            light.setIdentifier(IDENTIFIER_INTERIOR_LAMPS);
-            properties.add(light);
+        if (readingLamps != null) {
+            for (ReadingLamp light : readingLamps) {
+                light.setIdentifier(IDENTIFIER_READING_LAMP);
+                properties.add(light);
+            }
+
+            this.readingLamps = readingLamps;
         }
 
-        return properties.toArray(new Property[0]);
+        if (interiorLamps != null) {
+            for (InteriorLamp light : interiorLamps) {
+                light.setIdentifier(IDENTIFIER_INTERIOR_LAMP);
+                properties.add(light);
+            }
+
+            this.interiorLamps = interiorLamps;
+        }
+
+        createBytes(properties);
     }
 
     ControlLights(byte[] bytes) {
@@ -212,28 +212,24 @@ public class ControlLights extends CommandWithProperties {
         ArrayList<InteriorLamp> interiorLamps = new ArrayList<>();
         ArrayList<ReadingLamp> readingLamps = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case FRONT_EXTERIOR_LIGHT_STATE_IDENTIFIER:
-                        frontExteriorLightState =
-                                FrontExteriorLightState.fromByte(p.getValueByte());
-                        return frontExteriorLightState;
-                    case REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER:
-                        rearExteriorLightActive = Property.getBool(p.getValueByte());
-                        return rearExteriorLightActive;
-                    case AMBIENT_COLOR_IDENTIFIER:
-                        ambientColor = new ColorProperty(p.getByteArray()).getAmbientColor();
-                        return ambientColor;
-                    case IDENTIFIER_FOG_LIGHTS:
+                    case IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE:
+                        return frontExteriorLightState.update(p);
+                    case IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE:
+                        return rearExteriorLightActive.update(p);
+                    case IDENTIFIER_AMBIENT_COLOR:
+                        return ambientColor.update(p);
+                    case IDENTIFIER_FOG_LIGHT:
                         FogLight fogLight = new FogLight(p);
                         fogLights.add(fogLight);
                         return fogLight;
-                    case IDENTIFIER_READING_LAMPS:
+                    case IDENTIFIER_READING_LAMP:
                         ReadingLamp readingLamp = new ReadingLamp(p);
                         readingLamps.add(readingLamp);
                         return readingLamp;
-                    case IDENTIFIER_INTERIOR_LAMPS:
+                    case IDENTIFIER_INTERIOR_LAMP:
                         InteriorLamp interiorLamp = new InteriorLamp(p);
                         interiorLamps.add(interiorLamp);
                         return interiorLamp;

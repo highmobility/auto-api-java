@@ -33,10 +33,13 @@ public class BooleanProperty extends Property {
         return value;
     }
 
-    // MARK: builder ctor
+    public BooleanProperty(byte identifier) {
+        super(identifier);
+    }
 
     public BooleanProperty(Boolean value) {
-        this((byte) 0x00, value);
+        super(value == null ? 0 : 1);
+        update(value);
     }
 
     public BooleanProperty(@Nullable Boolean value, @Nullable Calendar timestamp,
@@ -45,34 +48,23 @@ public class BooleanProperty extends Property {
         setTimestampFailure(timestamp, failure);
     }
 
-    // TODO: these should be internal
-
-    public BooleanProperty() {
-        super(unknownBytes);
-    }
-
-    public BooleanProperty(byte identifier, Boolean value) {
-        super(identifier, value == null ? 0 : 1);
-        this.value = value;
-        if (value != null) bytes[3] = Property.boolToByte(value);
-    }
-
-    // MARK: Android ctor
-
     public BooleanProperty(Property p) throws CommandParseException {
         super(p);
         update(p);
     }
 
-    public BooleanProperty(byte identifier) {
-        super(identifier);
-    }
-
-    // TODO: ^^ should be internal
-
     @Override public Property update(Property p) throws CommandParseException {
         super.update(p);
         if (p.getValueLength() >= 1) this.value = getBool(p.getValueByte());
+        return this;
+    }
+
+    public BooleanProperty update(Boolean value) {
+        this.value = value;
+        if (value != null) {
+            if (bytes.length < 4) bytes = baseBytes(getPropertyIdentifier(), 1);
+            bytes[3] = boolToByte(value);
+        }
         return this;
     }
 }

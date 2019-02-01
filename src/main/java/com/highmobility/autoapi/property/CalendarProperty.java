@@ -26,6 +26,8 @@ import com.highmobility.utils.ByteUtils;
 import java.util.Calendar;
 
 public class CalendarProperty extends Property {
+    public static final int CALENDAR_SIZE = 8;
+
     private Calendar calendar;
 
     public Calendar getValue() {
@@ -33,7 +35,7 @@ public class CalendarProperty extends Property {
     }
 
     public CalendarProperty(byte identifier) {
-        super(identifier, 8);
+        super(identifier);
     }
 
     public CalendarProperty(Calendar c) {
@@ -41,7 +43,7 @@ public class CalendarProperty extends Property {
     }
 
     public CalendarProperty(byte identifier, Calendar calendar) {
-        super(identifier, 8);
+        super(identifier, CALENDAR_SIZE);
         this.calendar = calendar;
         ByteUtils.setBytes(bytes, Property.calendarToBytes(calendar), 3);
     }
@@ -53,7 +55,7 @@ public class CalendarProperty extends Property {
 
     @Override public Property update(Property p) throws CommandParseException {
         super.update(p);
-        if (p.getValueLength() >= 8) calendar = Property.getCalendar(p.getValueBytes());
+        if (p.getValueLength() >= CALENDAR_SIZE) calendar = Property.getCalendar(p.getValueBytesArray());
         return this;
     }
 }

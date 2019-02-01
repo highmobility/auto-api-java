@@ -253,28 +253,28 @@ public class VehicleStatus extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case VIN_IDENTIFIER:
-                        vin = Property.getString(p.getValueBytes());
+                        vin = Property.getString(p.getValueBytesArray());
                         return vin;
                     case POWER_TRAIN_IDENTIFIER:
                         powerTrain = PowerTrain.fromByte(p.getValueByte());
                         return powerTrain;
                     case MODEL_NAME_IDENTIFIER:
-                        modelName = Property.getString(p.getValueBytes());
+                        modelName = Property.getString(p.getValueBytesArray());
                         return modelName;
                     case NAME_IDENTIFIER:
-                        name = Property.getString(p.getValueBytes());
+                        name = Property.getString(p.getValueBytesArray());
                         return name;
                     case LICENSE_PLATE_IDENTIFIER:
-                        licensePlate = Property.getString(p.getValueBytes());
+                        licensePlate = Property.getString(p.getValueBytesArray());
                         return licensePlate;
                     case SALES_DESIGNATION_IDENTIFIER:
-                        salesDesignation = Property.getString(p.getValueBytes());
+                        salesDesignation = Property.getString(p.getValueBytesArray());
                         return salesDesignation;
                     case MODEL_YEAR_IDENTIFIER:
                         modelYear = new IntegerProperty(p, false);
                         return modelYear;
                     case COLOR_IDENTIFIER:
-                        color = Property.getString(p.getValueBytes());
+                        color = Property.getString(p.getValueBytesArray());
                         return color;
                     case POWER_IDENTIFIER:
                         power = new IntegerProperty(p, false);
@@ -305,11 +305,11 @@ public class VehicleStatus extends CommandWithProperties {
                         driverSeatLocation = DriverSeatLocation.fromByte(p.getValueByte());
                         return driverSeatLocation;
                     case IDENTIFIER_EQUIPMENTS:
-                        String equipment = Property.getString(p.getValueBytes());
+                        String equipment = Property.getString(p.getValueBytesArray());
                         equipments.add(equipment);
                         return equipment;
                     case IDENTIFIER_BRAND:
-                        brand = Property.getString(p.getValueBytes());
+                        brand = Property.getString(p.getValueBytesArray());
                         return brand;
                 }
 

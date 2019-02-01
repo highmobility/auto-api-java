@@ -40,7 +40,7 @@ public class ActivateDeactivateSolarCharging extends CommandWithProperties {
     private boolean activate;
 
     public ActivateDeactivateSolarCharging(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
+        super(TYPE.addProperty(new BooleanProperty(activate).setIdentifier(IDENTIFIER)));
         this.activate = activate;
     }
 

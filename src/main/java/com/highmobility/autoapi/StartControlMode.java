@@ -44,7 +44,7 @@ public class StartControlMode extends CommandWithProperties {
      * @param start The control mode state.
      */
     public StartControlMode(boolean start) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, start)));
+        super(TYPE.addProperty(new BooleanProperty(start).setIdentifier(IDENTIFIER)));
         this.start = start;
     }
 

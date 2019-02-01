@@ -23,3 +23,4 @@ package com.highmobility.autoapi.property;
 public interface PropertyValue {
     int getLength();
 }
+

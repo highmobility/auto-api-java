@@ -79,7 +79,7 @@ public class PropertyTest {
     void assertBaseBytesOk(Property prop) {
         assertTrue(prop.getValueLength() == 0);
         assertTrue(prop.getValueByte() == null);
-        assertTrue(prop.getValueBytes().length == 0);
+        assertTrue(prop.getValueBytesArray().length == 0);
     }
 
     @Test public void timeStampFailureSet() throws ParseException {

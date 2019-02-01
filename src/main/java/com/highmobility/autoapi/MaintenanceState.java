@@ -178,20 +178,20 @@ public class MaintenanceState extends CommandWithProperties {
                         serviceTimeThreshold = new IntegerProperty(p, false);
                         return serviceTimeThreshold;
                     case IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE:
-                        automaticTeleserviceCallDate = Property.getCalendar(p.getValueBytes());
+                        automaticTeleserviceCallDate = Property.getCalendar(p.getValueBytesArray());
                         return automaticTeleserviceCallDate;
                     case IDENTIFIER_TELESERVICE_BATTERY_CALL_DATE:
-                        teleserviceBatteryCallDate = Property.getCalendar(p.getValueBytes());
+                        teleserviceBatteryCallDate = Property.getCalendar(p.getValueBytesArray());
                         return teleserviceBatteryCallDate;
                     case IDENTIFIER_NEXT_INSPECTION_DATE:
-                        nextInspectionDate = Property.getCalendar(p.getValueBytes());
+                        nextInspectionDate = Property.getCalendar(p.getValueBytesArray());
                         return nextInspectionDate;
                     case IDENTIFIER_CONDITION_BASED_SERVICES:
                         ConditionBasedService s = new ConditionBasedService(p.getByteArray());
                         conditionBasedServices.add(s);
                         return s;
                     case IDENTIFIER_BRAKE_FLUID_CHANGE_DATE:
-                        brakeFluidChangeDate = Property.getCalendar(p.getValueBytes());
+                        brakeFluidChangeDate = Property.getCalendar(p.getValueBytesArray());
                         return brakeFluidChangeDate;
                 }
 

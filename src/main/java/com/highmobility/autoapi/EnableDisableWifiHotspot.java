@@ -40,7 +40,7 @@ public class EnableDisableWifiHotspot extends CommandWithProperties {
     private boolean enable;
 
     public EnableDisableWifiHotspot(boolean enable) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, enable)));
+        super(TYPE.addProperty(new BooleanProperty(enable).setIdentifier(IDENTIFIER)));
         this.enable = enable;
     }
 

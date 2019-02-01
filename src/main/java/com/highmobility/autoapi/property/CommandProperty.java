@@ -73,7 +73,7 @@ public class CommandProperty extends Property {
         super.update(p);
 
         if (p.getValueLength() > 5) {
-            Command command = CommandResolver.resolve(p.getValueBytes());
+            Command command = CommandResolver.resolve(p.getValueBytesArray());
             if (command instanceof CommandWithProperties)
                 value = (CommandWithProperties) command;
         }

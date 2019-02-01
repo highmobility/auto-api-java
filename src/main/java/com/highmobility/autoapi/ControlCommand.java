@@ -96,7 +96,7 @@ public class ControlCommand extends CommandWithProperties {
                     speed = Property.getSignedInt(property.getValueByte());
                     break;
                 case angleIdentifier:
-                    angle = Property.getSignedInt(property.getValueBytes());
+                    angle = Property.getSignedInt(property.getValueBytesArray());
                     break;
             }
         }

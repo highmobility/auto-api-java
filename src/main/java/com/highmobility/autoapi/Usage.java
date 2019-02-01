@@ -255,7 +255,7 @@ public class Usage extends CommandWithProperties {
                         lastTripBatteryRemaining = new PercentageProperty(p);
                         return lastTripBatteryRemaining;
                     case IDENTIFIER_LAST_TRIP_DATE:
-                        lastTripDate = Property.getCalendar(p.getValueBytes());
+                        lastTripDate = Property.getCalendar(p.getValueBytesArray());
                         return lastTripDate;
                     case IDENTIFIER_AVERAGE_FUEL_CONSUMPTION:
                         averageFuelConsumption = new FloatProperty(p);

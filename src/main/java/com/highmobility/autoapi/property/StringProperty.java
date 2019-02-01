@@ -84,7 +84,7 @@ public class StringProperty extends Property {
 
         if (p.getValueLength() != 0) {
             try {
-                this.value = new String(getValueBytes(), CHARSET);
+                this.value = new String(getValueBytesArray(), CHARSET);
             } catch (UnsupportedEncodingException e) {
                 this.value = "Unsupported encoding";
             }

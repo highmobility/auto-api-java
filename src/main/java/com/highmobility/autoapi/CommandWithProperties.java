@@ -243,6 +243,10 @@ public class CommandWithProperties extends Command implements PropertyValue {
         findUniversalProperties(properties, true);
     }
 
+    CommandWithProperties(Type type) {
+        super(type);
+    }
+
     CommandWithProperties(Type type, List<Property> properties) {
         this(type, properties.toArray(new Property[0]));
     }
@@ -267,12 +271,12 @@ public class CommandWithProperties extends Command implements PropertyValue {
                 if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
                     if (property.getValueLength() != 9)
                         continue; // invalid nonce length, just ignore
-                    nonce = new Bytes(property.getValueBytes());
+                    nonce = new Bytes(property.getValueBytesArray());
                 } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
                     if (property.getValueLength() != 64) continue; // ignore invalid length
-                    signature = new Bytes(property.getValueBytes());
+                    signature = new Bytes(property.getValueBytesArray());
                 } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
-                    timestamp = Property.getCalendar(property.getValueBytes());
+                    timestamp = Property.getCalendar(property.getValueBytesArray());
                 } else if (property.getPropertyIdentifier() == PropertyTimestamp.IDENTIFIER) {
                     addTimestamp(property, i, propertyTimestamps);
                 } else if (property.getPropertyIdentifier() == PropertyFailure.IDENTIFIER) {
@@ -331,6 +335,15 @@ public class CommandWithProperties extends Command implements PropertyValue {
         PropertyFailure failure = new PropertyFailure(property.getByteArray());
         properties[index] = failure;
         propertyFailures.add(failure);
+    }
+
+    protected void createBytes(List<Property> properties) {
+        bytes = type.getIdentifierAndType();
+
+        for (int i = 0; i < properties.size(); i++) {
+            Property property = properties.get(i);
+            bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
+        }
     }
 
     CommandWithProperties(Builder builder) throws IllegalArgumentException {
@@ -545,12 +558,11 @@ public class CommandWithProperties extends Command implements PropertyValue {
 
     public interface PropertyIteration2 {
         /**
-         * This could have either the property, property timestamp or property failure. It is used
-         * to add timestamp and failure to the property.
-         *
          * @param p The base property.
          * @return The parsed property or object, if matched to a field.
-         * @throws Exception
+         * @throws Exception The property parse exception is caught internally. If a property
+         *                   parsing fails, it is ignored and parsing continues with the next
+         *                   property.
          */
         @Nullable
         Property iterate(@Nullable Property p) throws Exception;

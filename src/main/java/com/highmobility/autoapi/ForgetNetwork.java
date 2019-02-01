@@ -52,7 +52,7 @@ public class ForgetNetwork extends CommandWithProperties {
         super(bytes);
         for (Property property : properties) {
             if (property.getPropertyIdentifier() == WifiState.IDENTIFIER_SSID) {
-                ssid = Property.getString(property.getValueBytes());
+                ssid = Property.getString(property.getValueBytesArray());
             }
         }
     }

@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindscreenDamage;
@@ -144,7 +143,7 @@ public class WindscreenState extends CommandWithProperties {
                         damageConfidence = new PercentageProperty(p);
                         return damageConfidence;
                     case DAMAGE_DETECTION_TIME_IDENTIFIER:
-                        damageDetectionTime = Property.getCalendar(p.getValueBytes());
+                        damageDetectionTime = Property.getCalendar(p.getValueBytesArray());
                         return damageDetectionTime;
                 }
                 return null;

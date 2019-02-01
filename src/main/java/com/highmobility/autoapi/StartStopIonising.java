@@ -43,7 +43,7 @@ public class StartStopIonising extends CommandWithProperties {
      * @param start The ionising state.
      */
     public StartStopIonising(boolean start) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, start)));
+        super(TYPE.addProperty(new BooleanProperty(start).setIdentifier(IDENTIFIER)));
         this.start = start;
     }
 

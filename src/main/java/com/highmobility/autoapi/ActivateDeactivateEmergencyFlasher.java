@@ -40,7 +40,7 @@ public class ActivateDeactivateEmergencyFlasher extends CommandWithProperties {
     }
 
     public ActivateDeactivateEmergencyFlasher(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(PROPERTY_IDENTIFIER, activate)));
+        super(TYPE.addProperty(new BooleanProperty(activate).setIdentifier(PROPERTY_IDENTIFIER)));
         this.activate = activate;
     }
 

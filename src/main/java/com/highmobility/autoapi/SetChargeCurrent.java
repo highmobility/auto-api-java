@@ -51,6 +51,6 @@ public class SetChargeCurrent extends CommandWithProperties {
         super(bytes);
         Property prop = getProperty(IDENTIFIER);
         if (prop == null) throw new CommandParseException();
-        current = Property.getFloat(prop.getValueBytes());
+        current = Property.getFloat(prop.getValueBytesArray());
     }
 }

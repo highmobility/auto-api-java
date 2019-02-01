@@ -49,6 +49,6 @@ public class DisplayImage extends CommandWithProperties {
     DisplayImage(byte[] bytes) {
         super(bytes);
         com.highmobility.autoapi.property.Property urlProp = getProperty((byte) 0x01);
-        if (urlProp != null) url = Property.getString(urlProp.getValueBytes());
+        if (urlProp != null) url = Property.getString(urlProp.getValueBytesArray());
     }
 }

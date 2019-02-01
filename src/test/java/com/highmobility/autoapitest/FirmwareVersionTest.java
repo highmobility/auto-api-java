@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.FirmwareVersion;
 import com.highmobility.autoapi.GetFirmwareVersion;
-import com.highmobility.autoapi.property.IntArrayProperty;
+import com.highmobility.autoapi.property.IntegerArrayProperty;
 import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.value.Bytes;
 
@@ -41,7 +41,7 @@ public class FirmwareVersionTest {
     @Test public void build() {
         FirmwareVersion.Builder builder = new FirmwareVersion.Builder();
 
-        builder.setCarSdkVersion(new IntArrayProperty(new int[]{1, 15, 33}));
+        builder.setCarSdkVersion(new IntegerArrayProperty(new int[]{1, 15, 33}));
         builder.setCarSDKBuild(new StringProperty("btstack-uart"));
         builder.setApplicationVersion(new StringProperty("v1.5-prod"));
 
@@ -51,7 +51,7 @@ public class FirmwareVersionTest {
 
     @Test(expected = IllegalArgumentException.class) public void throwsIfInvalidFormat() {
         FirmwareVersion.Builder builder = new FirmwareVersion.Builder();
-        builder.setCarSdkVersion(new IntArrayProperty(new int[]{1, 15}));
+        builder.setCarSdkVersion(new IntegerArrayProperty(new int[]{1, 15}));
     }
 
     @Test public void get() {

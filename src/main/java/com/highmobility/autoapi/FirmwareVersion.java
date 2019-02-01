@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntArrayProperty;
+import com.highmobility.autoapi.property.IntegerArrayProperty;
 import com.highmobility.autoapi.property.StringProperty;
 
 import javax.annotation.Nullable;
@@ -35,14 +35,14 @@ public class FirmwareVersion extends CommandWithProperties {
     private static final byte IDENTIFIER_SDK_BUILD = 0x02;
     private static final byte IDENTIFIER_APP_VERSION = 0x03;
 
-    IntArrayProperty carSDKVersion = new IntArrayProperty(IDENTIFIER_SDK_VERSION);
+    IntegerArrayProperty carSDKVersion = new IntegerArrayProperty(IDENTIFIER_SDK_VERSION);
     StringProperty carSDKBuild = new StringProperty(IDENTIFIER_SDK_BUILD);
     StringProperty applicationVersion = new StringProperty(IDENTIFIER_APP_VERSION);
 
     /**
      * @return The car SDK version.
      */
-    @Nullable public IntArrayProperty getCarSDKVersion() {
+    @Nullable public IntegerArrayProperty getCarSDKVersion() {
         return carSDKVersion;
     }
 
@@ -91,7 +91,7 @@ public class FirmwareVersion extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private IntArrayProperty carSdkVersion;
+        private IntegerArrayProperty carSdkVersion;
         private StringProperty carSDKBuild;
         private StringProperty applicationVersion;
 
@@ -103,7 +103,7 @@ public class FirmwareVersion extends CommandWithProperties {
          * @param carSdkVersion The Car SDK version. Version is in format: "[major,minor,patch]"
          * @return The builder.
          */
-        public Builder setCarSdkVersion(IntArrayProperty carSdkVersion) throws IllegalArgumentException {
+        public Builder setCarSdkVersion(IntegerArrayProperty carSdkVersion) throws IllegalArgumentException {
             if (carSdkVersion.getValueLength() != 3) throw new IllegalArgumentException();
             this.carSdkVersion = carSdkVersion;
             addProperty(carSdkVersion.setIdentifier(IDENTIFIER_SDK_VERSION));

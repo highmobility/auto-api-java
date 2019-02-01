@@ -47,12 +47,14 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
  * Property has to have a value with a size greater or equal to 1.
  */
 public class Property extends Bytes {
-    public static final int CALENDAR_SIZE = 8;
     // set when bytes do not exist
     protected static final byte[] unknownBytes = new byte[]{0x00, 0x00, 0x00};
 
     protected PropertyTimestamp timestamp;
     protected PropertyFailure failure;
+    @Nullable PropertyValueByteArray propertyValue; // TODO: use this for all of the properties.
+    // use it
+    // to get the property length and bytes
 
     /**
      * @return The timestamp of the property.
@@ -78,6 +80,11 @@ public class Property extends Bytes {
 
     protected Property(@Nullable PropertyValue value) {
         this(value == null ? 0 : value.getLength());
+    }
+
+    protected Property(@Nullable PropertyValueByteArray value) {
+        this((PropertyValue) value);
+        this.propertyValue = value;
     }
 
     protected Property(int length) {
@@ -112,12 +119,15 @@ public class Property extends Bytes {
 
     public Property(@Nullable PropertyValue value, @Nullable Calendar timestamp,
                     @Nullable PropertyFailure failure) {
-        this((byte) 0x00, value.getLength());
+        this((byte) 0x00, value != null ? value.getLength() : 0);
         setTimestampFailure(timestamp, failure);
-        setValue(value);
     }
 
-    void setValue(PropertyValue value) {
+    public Property(@Nullable PropertyValueByteArray value, @Nullable Calendar timestamp,
+                    @Nullable PropertyFailure failure) {
+        this((byte) 0x00, value != null ? value.getLength() : 0);
+        setTimestampFailure(timestamp, failure);
+        this.propertyValue = value;
     }
 
     /**
@@ -153,9 +163,13 @@ public class Property extends Bytes {
     /**
      * @return The value bytes.
      */
-    public byte[] getValueBytes() {
+    public byte[] getValueBytesArray() {
         if (bytes.length == 3) return new byte[0];
         return Arrays.copyOfRange(bytes, 3, bytes.length);
+    }
+
+    public Bytes getValueBytes() {
+        return new Bytes(getValueBytesArray());
     }
 
     /**
@@ -184,6 +198,8 @@ public class Property extends Bytes {
         this.timestamp = propertyTimestamp;
     }
 
+    // TODO: 2019-01-31 set to private. has to call the proper ctor with these arguments
+    // or nvm if easier for primitive types to use this
     protected void setTimestampFailure(Calendar timestamp, PropertyFailure failure) {
         if (timestamp != null) this.timestamp = new PropertyTimestamp(timestamp);
         this.failure = failure;
@@ -193,6 +209,20 @@ public class Property extends Bytes {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
 //        e.printStackTrace();
+    }
+
+    public static void ignoreInvalidByteSizeException(RunnableExc r) throws CommandParseException {
+        try {
+            r.run();
+        } catch (IllegalArgumentException e) {
+        } catch (NullPointerException e2) {
+
+        }
+    }
+
+    @FunctionalInterface
+    public interface RunnableExc {
+        void run() throws CommandParseException;
     }
 
     protected static byte[] baseBytes(byte identifier, int valueSize) {
@@ -219,6 +249,29 @@ public class Property extends Bytes {
         this.bytes = p.bytes;
         this.failure = p.failure;
         this.timestamp = p.timestamp;
+        return this;
+    }
+
+    public Property update(PropertyValue p) {
+        if (p != null) {
+            Bytes newValue = null;
+
+            if (p instanceof PropertyValueSingleByte) {
+                newValue = new Bytes(new byte[]{((PropertyValueSingleByte) p).getByte()});
+            } else if (p instanceof PropertyValueByteArray) {
+                newValue = ((PropertyValueByteArray) p).getBytes();
+            }
+
+            if (newValue != null) {
+                if (getValueLength() < newValue.getLength()) {
+                    // reset the bytes
+                    bytes = baseBytes(getPropertyIdentifier(), newValue.getLength());
+                }
+
+                ByteUtils.setBytes(bytes, newValue.getByteArray(), 3);
+            }
+        }
+
         return this;
     }
 
@@ -396,6 +449,8 @@ public class Property extends Bytes {
      * @throws IllegalArgumentException when input is invalid
      */
     public static byte[] intToBytes(int value, int length) throws IllegalArgumentException {
+        if (length == 1) return new byte[]{(byte) value};
+
         byte[] bytes = BigInteger.valueOf(value).toByteArray();
 
         if (bytes.length == length) {
@@ -479,7 +534,7 @@ public class Property extends Bytes {
     public static Calendar getCalendar(byte[] bytes, int at) throws IllegalArgumentException {
         Calendar c = new GregorianCalendar();
 
-        if (bytes.length >= at + CALENDAR_SIZE) {
+        if (bytes.length >= at + CalendarProperty.CALENDAR_SIZE) {
             c.set(2000 + bytes[at], bytes[at + 1] - 1, bytes[at + 2], bytes[at + 3], bytes[at +
                     4], bytes[at + 5]);
             int minutesOffset = getSignedInt(new byte[]{bytes[at + 6], bytes[at + 7]});
@@ -501,7 +556,7 @@ public class Property extends Bytes {
     }
 
     public static byte[] calendarToBytes(Calendar calendar) {
-        byte[] bytes = new byte[CALENDAR_SIZE];
+        byte[] bytes = new byte[CalendarProperty.CALENDAR_SIZE];
 
         bytes[0] = (byte) (calendar.get(Calendar.YEAR) - 2000);
         bytes[1] = (byte) (calendar.get(Calendar.MONTH) + 1);

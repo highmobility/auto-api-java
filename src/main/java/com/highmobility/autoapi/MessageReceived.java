@@ -87,10 +87,10 @@ public class MessageReceived extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case RECIPIENT_IDENTIFIER:
-                        handle = Property.getString(p.getValueBytes());
+                        handle = Property.getString(p.getValueBytesArray());
                         return handle;
                     case MESSAGE_IDENTIFIER:
-                        message = Property.getString(p.getValueBytes());
+                        message = Property.getString(p.getValueBytesArray());
                         return message;
                 }
 

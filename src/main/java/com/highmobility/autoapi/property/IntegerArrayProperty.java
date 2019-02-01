@@ -26,7 +26,7 @@ import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-public class IntArrayProperty extends Property {
+public class IntegerArrayProperty extends Property {
     // int is expected to be 1 byte, unsigned
     int[] value;
 
@@ -34,27 +34,26 @@ public class IntArrayProperty extends Property {
         return value;
     }
 
-    public IntArrayProperty(@Nullable int[] value, @Nullable Calendar timestamp,
-                            @Nullable PropertyFailure failure) {
+    public IntegerArrayProperty(@Nullable int[] value, @Nullable Calendar timestamp,
+                                @Nullable PropertyFailure failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
     }
 
-    public IntArrayProperty(int[] value) {
+    public IntegerArrayProperty(int[] value) {
         this((byte) 0x00, value);
     }
 
-    public IntArrayProperty(byte identifier, int[] value) {
+    public IntegerArrayProperty(byte identifier, int[] value) {
         super(identifier, value == null ? 0 : value.length);
-        this.value = value;
-        if (value != null) setBytes(value);
+        update(value);
     }
 
-    public IntArrayProperty(byte identifier) {
+    public IntegerArrayProperty(byte identifier) {
         super(identifier);
     }
 
-    public IntArrayProperty(Property p) throws CommandParseException {
+    public IntegerArrayProperty(Property p) throws CommandParseException {
         super(p);
         update(p);
     }
@@ -72,9 +71,18 @@ public class IntArrayProperty extends Property {
         return this;
     }
 
-    void setBytes(int[] value) {
-        for (int i = 0; i < value.length; i++) {
-            bytes[3 + i] = Property.intToBytes(value[i], 1)[0];
+    public IntegerArrayProperty update(int[] value) {
+        this.value = value;
+
+        if (value != null) {
+            if (bytes.length != 3 + value.length) bytes = baseBytes(getPropertyIdentifier(), value.length);
+
+            for (int i = 0; i < value.length; i++) {
+                byte byteValue = Property.intToBytes(value[i], 1)[0];
+                bytes[3 + i] = byteValue;
+            }
         }
+
+        return this;
     }
 }

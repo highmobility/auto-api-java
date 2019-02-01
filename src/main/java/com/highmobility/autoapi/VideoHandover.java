@@ -84,10 +84,10 @@ public class VideoHandover extends CommandWithProperties {
         for (Property p : properties) {
             switch (p.getPropertyIdentifier()) {
                 case URL_IDENTIFIER:
-                    url = Property.getString(p.getValueBytes());
+                    url = Property.getString(p.getValueBytesArray());
                     break;
                 case STARTING_SECOND_IDENTIFIER:
-                    startingSecond = Property.getUnsignedInt(p.getValueBytes());
+                    startingSecond = Property.getUnsignedInt(p.getValueBytesArray());
                     break;
                 case IDENTIFIER_SCREEN_LOCATION:
                     location = ScreenLocation.fromByte(p.getValueByte());

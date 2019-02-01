@@ -59,10 +59,10 @@ public class SendMessage extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case RECIPIENT_IDENTIFIER:
-                        recipientHandle = Property.getString(p.getValueBytes());
+                        recipientHandle = Property.getString(p.getValueBytesArray());
                         return recipientHandle;
                     case MESSAGE_IDENTIFIER:
-                        message = Property.getString(p.getValueBytes());
+                        message = Property.getString(p.getValueBytesArray());
                         return message;
                 }
                 

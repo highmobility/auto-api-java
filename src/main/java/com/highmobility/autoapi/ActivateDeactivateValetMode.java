@@ -42,7 +42,7 @@ public class ActivateDeactivateValetMode extends CommandWithProperties {
      * @param activate Whether valet mode should be activated.
      */
     public ActivateDeactivateValetMode(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
+        super(TYPE.addProperty(new BooleanProperty(activate).setIdentifier(IDENTIFIER)));
         this.activate = activate;
     }
 

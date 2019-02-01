@@ -39,7 +39,7 @@ public class ActivateDeactivatePowerTakeoff extends CommandWithProperties {
     }
 
     public ActivateDeactivatePowerTakeoff(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty((byte) 0x01, activate)));
+        super(TYPE.addProperty(new BooleanProperty(activate).setIdentifier((byte) 0x01)));
         this.activate = activate;
     }
 

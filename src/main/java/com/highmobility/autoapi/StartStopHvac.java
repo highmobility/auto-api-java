@@ -45,7 +45,7 @@ public class StartStopHvac extends CommandWithProperties {
      * @param start The HVAC state.
      */
     public StartStopHvac(boolean start) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, start)));
+        super(TYPE.addProperty(new BooleanProperty(start).setIdentifier(IDENTIFIER)));
         this.start = start;
     }
 

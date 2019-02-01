@@ -21,9 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.ColorProperty;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.lights.FogLight;
+import com.highmobility.autoapi.property.FogLight;
+import com.highmobility.autoapi.property.IntegerArrayProperty;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
 import com.highmobility.autoapi.property.lights.LightLocation;
@@ -40,23 +39,27 @@ import javax.annotation.Nullable;
 public class LightsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHTS, 0x01);
 
-    private static final byte REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER = 0x02;
-    private static final byte AMBIENT_COLOR_IDENTIFIER = 0x04;
-    private static final byte REVERSE_LIGHT_IDENTIFIER = 0x05;
-    private static final byte EMERGENCY_BRAKE_LIGHT_IDENTIFIER = 0x06;
-    private static final byte IDENTIFIER_FRONT_EXTERIOR = 0x01;
+    private static final byte IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE = 0x01;
+    private static final byte IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE = 0x02;
+    private static final byte IDENTIFIER_AMBIENT_COLOR = 0x04;
+    private static final byte IDENTIFIER_REVERSE_LIGHT_ACTIVE = 0x05;
+    private static final byte IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE = 0x06;
 
     private static final byte IDENTIFIER_FOG_LIGHTS = 0x07;
     private static final byte IDENTIFIER_READING_LAMPS = 0x08;
     private static final byte IDENTIFIER_INTERIOR_LAMPS = 0x09;
 
-    FrontExteriorLightState frontExteriorLightState;
-    BooleanProperty rearExteriorLightActive;
-    int[] ambientColor;
+    FrontExteriorLightState frontExteriorLightState =
+            new FrontExteriorLightState(IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE);
+    BooleanProperty rearExteriorLightActive =
+            new BooleanProperty(IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
+
+    IntegerArrayProperty ambientColor = new IntegerArrayProperty(IDENTIFIER_AMBIENT_COLOR);
 
     // l7
-    BooleanProperty reverseLightActive;
-    BooleanProperty emergencyBrakeLightActive;
+    BooleanProperty reverseLightActive = new BooleanProperty(IDENTIFIER_REVERSE_LIGHT_ACTIVE);
+    BooleanProperty emergencyBrakeLightActive =
+            new BooleanProperty(IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE);
 
     // l9
     FogLight[] fogLights;
@@ -78,9 +81,9 @@ public class LightsState extends CommandWithProperties {
     }
 
     /**
-     * @return The ambient color, in rgba values from 0-255.
+     * @return The ambient color, in rgb values.
      */
-    @Nullable public int[] getAmbientColor() {
+    @Nullable public IntegerArrayProperty getAmbientColor() {
         return ambientColor;
     }
 
@@ -112,7 +115,8 @@ public class LightsState extends CommandWithProperties {
      */
     @Nullable public FogLight getFogLight(LightLocation location) {
         for (FogLight fogLight : fogLights) {
-            if (fogLight.getLocation() == location) return fogLight;
+            if (fogLight.getValue() != null && fogLight.getValue().getLocation() == location)
+                return fogLight;
         }
 
         return null;
@@ -132,7 +136,8 @@ public class LightsState extends CommandWithProperties {
      */
     @Nullable public ReadingLamp getReadingLamp(Location location) {
         for (ReadingLamp readingLamp : readingLamps) {
-            if (readingLamp.getLocation() == location) return readingLamp;
+            if (readingLamp.getValue() != null && readingLamp.getValue().getLocation() == location)
+                return readingLamp;
         }
 
         return null;
@@ -153,7 +158,8 @@ public class LightsState extends CommandWithProperties {
      */
     @Nullable public InteriorLamp getInteriorLamp(LightLocation location) {
         for (InteriorLamp interiorLamp : interiorLamps) {
-            if (interiorLamp.getLocation() == location) return interiorLamp;
+            if (interiorLamp.getValue() != null && interiorLamp.getValue().getLocation() == location)
+                return interiorLamp;
         }
         return null;
     }
@@ -165,33 +171,20 @@ public class LightsState extends CommandWithProperties {
         ArrayList<InteriorLamp> interiorLamps = new ArrayList<>();
         ArrayList<ReadingLamp> readingLamps = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case IDENTIFIER_FRONT_EXTERIOR:
-                        frontExteriorLightState =
-                                FrontExteriorLightState.fromByte(p.getValueByte());
-                        return frontExteriorLightState;
-                    case REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER:
+                    case IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE:
+                        return frontExteriorLightState.update(p);
+                    case IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE:
                         rearExteriorLightActive = new BooleanProperty(p);
                         return rearExteriorLightActive;
-                    case AMBIENT_COLOR_IDENTIFIER:
-                        byte[] valueBytes = p.getValueBytes();
-                        if (valueBytes.length != 3) throw new CommandParseException();
-
-                        ambientColor = new int[4];
-                        ambientColor[0] = valueBytes[0] & 0xFF;
-                        ambientColor[1] = valueBytes[1] & 0xFF;
-                        ambientColor[2] = valueBytes[2] & 0xFF;
-                        ambientColor[3] = 255;
-
-                        return ambientColor;
-                    case REVERSE_LIGHT_IDENTIFIER:
-                        reverseLightActive = new BooleanProperty(p);
-                        return reverseLightActive;
-                    case EMERGENCY_BRAKE_LIGHT_IDENTIFIER:
-                        emergencyBrakeLightActive = new BooleanProperty(p);
-                        return emergencyBrakeLightActive;
+                    case IDENTIFIER_AMBIENT_COLOR:
+                        return this.ambientColor.update(p);
+                    case IDENTIFIER_REVERSE_LIGHT_ACTIVE:
+                        return reverseLightActive.update(p);
+                    case IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE:
+                        return emergencyBrakeLightActive.update(p);
                     case IDENTIFIER_FOG_LIGHTS:
                         FogLight fogLight = new FogLight(p);
                         fogLights.add(fogLight);
@@ -235,7 +228,7 @@ public class LightsState extends CommandWithProperties {
         private FrontExteriorLightState frontExteriorLightState;
         private BooleanProperty rearExteriorLightActive;
         private BooleanProperty interiorLightActive;
-        private int[] ambientColor;
+        private IntegerArrayProperty ambientColor;
 
         private BooleanProperty reverseLightActive;
         private BooleanProperty emergencyBrakeLightActive;
@@ -254,7 +247,7 @@ public class LightsState extends CommandWithProperties {
          */
         public Builder setFrontExteriorLightState(FrontExteriorLightState frontExteriorLightState) {
             this.frontExteriorLightState = frontExteriorLightState;
-            addProperty(new Property(IDENTIFIER_FRONT_EXTERIOR, frontExteriorLightState.getByte()));
+            addProperty(frontExteriorLightState.setIdentifier(IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE));
             return this;
         }
 
@@ -264,7 +257,7 @@ public class LightsState extends CommandWithProperties {
          */
         public Builder setRearExteriorLightActive(BooleanProperty rearExteriorLightActive) {
             this.rearExteriorLightActive = rearExteriorLightActive;
-            rearExteriorLightActive.setIdentifier(REAR_EXTERIOR_LIGHT_ACTIVE_IDENTIFIER);
+            rearExteriorLightActive.setIdentifier(IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
             addProperty(rearExteriorLightActive);
             return this;
         }
@@ -273,9 +266,9 @@ public class LightsState extends CommandWithProperties {
          * @param ambientColor The ambient color, in rgba values from 0-255.
          * @return The builder.
          */
-        public Builder setAmbientColor(int[] ambientColor) {
+        public Builder setAmbientColor(IntegerArrayProperty ambientColor) {
             this.ambientColor = ambientColor;
-            addProperty(new ColorProperty(AMBIENT_COLOR_IDENTIFIER, ambientColor));
+            addProperty(ambientColor.setIdentifier(IDENTIFIER_AMBIENT_COLOR));
             return this;
         }
 
@@ -285,7 +278,7 @@ public class LightsState extends CommandWithProperties {
          */
         public Builder setReverseLightActive(BooleanProperty reverseLightActive) {
             this.reverseLightActive = reverseLightActive;
-            reverseLightActive.setIdentifier(REVERSE_LIGHT_IDENTIFIER);
+            reverseLightActive.setIdentifier(IDENTIFIER_REVERSE_LIGHT_ACTIVE);
             addProperty(reverseLightActive);
             return this;
         }
@@ -296,7 +289,7 @@ public class LightsState extends CommandWithProperties {
          */
         public Builder setEmergencyBrakeLightActive(BooleanProperty emergencyBrakeLightActive) {
             this.emergencyBrakeLightActive = emergencyBrakeLightActive;
-            emergencyBrakeLightActive.setIdentifier(EMERGENCY_BRAKE_LIGHT_IDENTIFIER);
+            emergencyBrakeLightActive.setIdentifier(IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE);
             addProperty(emergencyBrakeLightActive);
             return this;
         }

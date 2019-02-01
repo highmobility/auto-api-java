@@ -57,7 +57,7 @@ public class DoubleProperty extends Property {
 
     @Override public Property update(Property p) throws CommandParseException {
         super.update(p);
-        if (p.getValueLength() >= 8) value = getDouble(p.getValueBytes());
+        if (p.getValueLength() >= 8) value = getDouble(p.getValueBytesArray());
         return this;
     }
 }

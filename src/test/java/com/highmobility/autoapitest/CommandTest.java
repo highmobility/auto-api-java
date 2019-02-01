@@ -319,13 +319,13 @@ public class CommandTest {
             Property property = state.getProperties()[i];
             if (property.getPropertyIdentifier() == 0x1A) {
                 assertTrue(property.getValueLength() == 1);
-                assertTrue(Arrays.equals(property.getValueBytes(), new byte[]{0x35}));
+                assertTrue(Arrays.equals(property.getValueBytesArray(), new byte[]{0x35}));
                 assertTrue(Arrays.equals(property.getByteArray(), ByteUtils.bytesFromHex
                         ("1A000135")));
                 foundUnknownProperty = true;
             } else if (property.getPropertyIdentifier() == 0x01) {
                 assertTrue(property.getValueLength() == 1);
-                assertTrue(Arrays.equals(property.getValueBytes(), new byte[]{0x01}));
+                assertTrue(Arrays.equals(property.getValueBytesArray(), new byte[]{0x01}));
                 assertTrue(Arrays.equals(property.getByteArray(), ByteUtils.bytesFromHex
                         ("01000101")));
                 foundDimmingProperty = true;
