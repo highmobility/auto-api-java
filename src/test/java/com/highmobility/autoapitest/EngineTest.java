@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetIgnitionState;
 import com.highmobility.autoapi.IgnitionState;
 import com.highmobility.autoapi.TurnIgnitionOnOff;
-import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -58,8 +58,8 @@ public class EngineTest {
 
     @Test public void build() {
         IgnitionState.Builder builder = new IgnitionState.Builder();
-        builder.setIsOn(new BooleanProperty(true));
-        builder.setAccessoriesIgnition(new BooleanProperty(true));
+        builder.setIsOn(new ObjectProperty<>(true));
+        builder.setAccessoriesIgnition(new ObjectProperty<>(true));
 
         IgnitionState state = builder.build();
 

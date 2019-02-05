@@ -20,9 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FogLight;
 import com.highmobility.autoapi.property.IntegerArrayProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
 import com.highmobility.autoapi.property.lights.LightLocation;
@@ -51,15 +51,15 @@ public class LightsState extends CommandWithProperties {
 
     FrontExteriorLightState frontExteriorLightState =
             new FrontExteriorLightState(IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE);
-    BooleanProperty rearExteriorLightActive =
-            new BooleanProperty(IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
+    ObjectProperty<Boolean> rearExteriorLightActive =
+            new ObjectProperty<>(Boolean.class, IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
 
     IntegerArrayProperty ambientColor = new IntegerArrayProperty(IDENTIFIER_AMBIENT_COLOR);
 
     // l7
-    BooleanProperty reverseLightActive = new BooleanProperty(IDENTIFIER_REVERSE_LIGHT_ACTIVE);
-    BooleanProperty emergencyBrakeLightActive =
-            new BooleanProperty(IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE);
+    ObjectProperty<Boolean> reverseLightActive = new ObjectProperty<>(Boolean.class, IDENTIFIER_REVERSE_LIGHT_ACTIVE);
+    ObjectProperty<Boolean> emergencyBrakeLightActive =
+            new ObjectProperty<>(Boolean.class, IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE);
 
     // l9
     FogLight[] fogLights;
@@ -76,7 +76,7 @@ public class LightsState extends CommandWithProperties {
     /**
      * @return The rear exterior light state.
      */
-    @Nullable public BooleanProperty isRearExteriorLightActive() {
+    @Nullable public ObjectProperty<Boolean> isRearExteriorLightActive() {
         return rearExteriorLightActive;
     }
 
@@ -90,14 +90,14 @@ public class LightsState extends CommandWithProperties {
     /**
      * @return The reverse light state.
      */
-    @Nullable public BooleanProperty isReverseLightActive() {
+    @Nullable public ObjectProperty<Boolean> isReverseLightActive() {
         return reverseLightActive;
     }
 
     /**
      * @return The emergency brake light state.
      */
-    @Nullable public BooleanProperty isEmergencyBrakeLightActive() {
+    @Nullable public ObjectProperty<Boolean> isEmergencyBrakeLightActive() {
         return emergencyBrakeLightActive;
     }
 
@@ -177,7 +177,7 @@ public class LightsState extends CommandWithProperties {
                     case IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE:
                         return frontExteriorLightState.update(p);
                     case IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE:
-                        rearExteriorLightActive = new BooleanProperty(p);
+                        rearExteriorLightActive = new ObjectProperty<>(Boolean.class, p);
                         return rearExteriorLightActive;
                     case IDENTIFIER_AMBIENT_COLOR:
                         return this.ambientColor.update(p);
@@ -226,12 +226,12 @@ public class LightsState extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private FrontExteriorLightState frontExteriorLightState;
-        private BooleanProperty rearExteriorLightActive;
-        private BooleanProperty interiorLightActive;
+        private ObjectProperty<Boolean> rearExteriorLightActive;
+        private ObjectProperty<Boolean> interiorLightActive;
         private IntegerArrayProperty ambientColor;
 
-        private BooleanProperty reverseLightActive;
-        private BooleanProperty emergencyBrakeLightActive;
+        private ObjectProperty<Boolean> reverseLightActive;
+        private ObjectProperty<Boolean> emergencyBrakeLightActive;
 
         private ArrayList<FogLight> fogLights = new ArrayList<>();
         private ArrayList<ReadingLamp> readingLamps = new ArrayList<>();
@@ -255,7 +255,7 @@ public class LightsState extends CommandWithProperties {
          * @param rearExteriorLightActive Whether exterior lights are active.
          * @return The builder.
          */
-        public Builder setRearExteriorLightActive(BooleanProperty rearExteriorLightActive) {
+        public Builder setRearExteriorLightActive(ObjectProperty<Boolean> rearExteriorLightActive) {
             this.rearExteriorLightActive = rearExteriorLightActive;
             rearExteriorLightActive.setIdentifier(IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
             addProperty(rearExteriorLightActive);
@@ -276,7 +276,7 @@ public class LightsState extends CommandWithProperties {
          * @param reverseLightActive The reverse light state.
          * @return The builder.
          */
-        public Builder setReverseLightActive(BooleanProperty reverseLightActive) {
+        public Builder setReverseLightActive(ObjectProperty<Boolean> reverseLightActive) {
             this.reverseLightActive = reverseLightActive;
             reverseLightActive.setIdentifier(IDENTIFIER_REVERSE_LIGHT_ACTIVE);
             addProperty(reverseLightActive);
@@ -287,7 +287,7 @@ public class LightsState extends CommandWithProperties {
          * @param emergencyBrakeLightActive The emergency brake light state.
          * @return The builder.
          */
-        public Builder setEmergencyBrakeLightActive(BooleanProperty emergencyBrakeLightActive) {
+        public Builder setEmergencyBrakeLightActive(ObjectProperty<Boolean> emergencyBrakeLightActive) {
             this.emergencyBrakeLightActive = emergencyBrakeLightActive;
             emergencyBrakeLightActive.setIdentifier(IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE);
             addProperty(emergencyBrakeLightActive);

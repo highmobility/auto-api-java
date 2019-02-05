@@ -1,7 +1,6 @@
 package com.highmobility.autoapitest.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.ControlModeProperty;
 import com.highmobility.autoapi.property.CoordinatesProperty;
@@ -259,8 +258,8 @@ public class PropertyCtors {
     @Test public void BooleanProperty() throws CommandParseException {
         Property property = new Property("01000100");
 
-        assertTrue(new BooleanProperty(property).getValue() != null);
-        BooleanProperty updateProp = new BooleanProperty((byte) 0x00);
+        assertTrue(new ObjectProperty<>(Boolean.class, property).getValue() != null);
+        ObjectProperty<Boolean> updateProp = new ObjectProperty<>(Boolean.class, (byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }

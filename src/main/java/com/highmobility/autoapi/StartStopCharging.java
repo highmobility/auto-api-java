@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -43,7 +43,7 @@ public class StartStopCharging extends CommandWithProperties {
      * @param start The charging state.
      */
     public StartStopCharging(boolean start) {
-        super(TYPE.addProperty(new BooleanProperty(start).setIdentifier(ACTIVE_STATE_IDENTIFIER)));
+        super(TYPE.addProperty(new ObjectProperty<>(start).setIdentifier(ACTIVE_STATE_IDENTIFIER)));
         this.start = start;
     }
 

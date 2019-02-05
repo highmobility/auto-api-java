@@ -20,9 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.HvacStartingTime;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.value.Weekday;
 
 import java.util.ArrayList;
@@ -58,10 +58,10 @@ public class ClimateState extends CommandWithProperties {
             new FloatProperty(IDENTIFIER_DRIVER_TEMPERATURE_SETTING);
     FloatProperty passengerTemperatureSetting =
             new FloatProperty(IDENTIFIER_PASSENGER_TEMPERATURE_SETTING);
-    BooleanProperty hvacActive = new BooleanProperty(IDENTIFIER_HVAC_ACTIVE);
-    BooleanProperty defoggingActive = new BooleanProperty(IDENTIFIER_DEFOGGING_ACTIVE);
-    BooleanProperty defrostingActive = new BooleanProperty(IDENTIFIER_DEFROSTING_ACTIVE);
-    BooleanProperty ionisingActive = new BooleanProperty(IDENTIFIER_IONISING_ACTIVE);
+    ObjectProperty<Boolean> hvacActive = new ObjectProperty<>(Boolean.class, IDENTIFIER_HVAC_ACTIVE);
+    ObjectProperty<Boolean> defoggingActive = new ObjectProperty<>(Boolean.class, IDENTIFIER_DEFOGGING_ACTIVE);
+    ObjectProperty<Boolean> defrostingActive = new ObjectProperty<>(Boolean.class, IDENTIFIER_DEFROSTING_ACTIVE);
+    ObjectProperty<Boolean> ionisingActive = new ObjectProperty<>(Boolean.class, IDENTIFIER_IONISING_ACTIVE);
     FloatProperty defrostingTemperature = new FloatProperty(IDENTIFIER_DEFROSTING_TEMPERATURE);
 
     // level8
@@ -99,28 +99,28 @@ public class ClimateState extends CommandWithProperties {
     /**
      * @return Whether HVAC is active or not.
      */
-    @Nullable public BooleanProperty isHvacActive() {
+    @Nullable public ObjectProperty<Boolean> isHvacActive() {
         return hvacActive;
     }
 
     /**
      * @return Whether defogging is active or not.
      */
-    @Nullable public BooleanProperty isDefoggingActive() {
+    @Nullable public ObjectProperty<Boolean> isDefoggingActive() {
         return defoggingActive;
     }
 
     /**
      * @return Whether defrosting is active or not.
      */
-    @Nullable public BooleanProperty isDefrostingActive() {
+    @Nullable public ObjectProperty<Boolean> isDefrostingActive() {
         return defrostingActive;
     }
 
     /**
      * @return Whether ionising is active or not.
      */
-    @Nullable public BooleanProperty isIonisingActive() {
+    @Nullable public ObjectProperty<Boolean> isIonisingActive() {
         return ionisingActive;
     }
 
@@ -221,10 +221,10 @@ public class ClimateState extends CommandWithProperties {
         private FloatProperty outsideTemperature;
         private FloatProperty driverTemperatureSetting;
         private FloatProperty passengerTemperatureSetting;
-        private BooleanProperty hvacActive;
-        private BooleanProperty defoggingActive;
-        private BooleanProperty defrostingActive;
-        private BooleanProperty ionisingActive;
+        private ObjectProperty<Boolean> hvacActive;
+        private ObjectProperty<Boolean> defoggingActive;
+        private ObjectProperty<Boolean> defrostingActive;
+        private ObjectProperty<Boolean> ionisingActive;
         private FloatProperty defrostingTemperature;
         private ArrayList<HvacStartingTime> hvacStartingTimes = new ArrayList<>();
 
@@ -284,7 +284,7 @@ public class ClimateState extends CommandWithProperties {
          * @param hvacActive Whether HVAC is active or not.
          * @return The builder.
          */
-        public Builder setHvacActive(BooleanProperty hvacActive) {
+        public Builder setHvacActive(ObjectProperty<Boolean> hvacActive) {
             this.hvacActive = hvacActive;
             hvacActive.setIdentifier(IDENTIFIER_HVAC_ACTIVE);
             addProperty(hvacActive);
@@ -295,7 +295,7 @@ public class ClimateState extends CommandWithProperties {
          * @param defoggingActive Whether defogging is active or not.
          * @return The builder.
          */
-        public Builder setDefoggingActive(BooleanProperty defoggingActive) {
+        public Builder setDefoggingActive(ObjectProperty<Boolean> defoggingActive) {
             this.defoggingActive = defoggingActive;
             defoggingActive.setIdentifier(IDENTIFIER_DEFOGGING_ACTIVE);
             addProperty(defoggingActive);
@@ -306,7 +306,7 @@ public class ClimateState extends CommandWithProperties {
          * @param defrostingActive Whether defrosting is active or not.
          * @return The builder.
          */
-        public Builder setDefrostingActive(BooleanProperty defrostingActive) {
+        public Builder setDefrostingActive(ObjectProperty<Boolean> defrostingActive) {
             this.defrostingActive = defrostingActive;
             defrostingActive.setIdentifier(IDENTIFIER_DEFROSTING_ACTIVE);
             addProperty(defrostingActive);
@@ -317,7 +317,7 @@ public class ClimateState extends CommandWithProperties {
          * @param ionisingActive Whether ionising is active or not.
          * @return The builder.
          */
-        public Builder setIonisingActive(BooleanProperty ionisingActive) {
+        public Builder setIonisingActive(ObjectProperty<Boolean> ionisingActive) {
             this.ionisingActive = ionisingActive;
             ionisingActive.setIdentifier(IDENTIFIER_IONISING_ACTIVE);
             addProperty(ionisingActive);

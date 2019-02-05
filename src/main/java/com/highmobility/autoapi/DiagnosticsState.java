@@ -20,9 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
@@ -93,8 +93,8 @@ public class DiagnosticsState extends CommandWithProperties {
     FloatProperty fuelVolume = new FloatProperty(IDENTIFIER_FUEL_VOLUME);
 
     // level7
-    BooleanProperty antiLockBrakingActive =
-            new BooleanProperty(IDENTIFIER_ANTI_LOCK_BRAKING_ACTIVE);
+    ObjectProperty<Boolean> antiLockBrakingActive =
+            new ObjectProperty<>(Boolean.class, IDENTIFIER_ANTI_LOCK_BRAKING_ACTIVE);
     IntegerProperty engineCoolantTemperature =
             new IntegerProperty(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, false);
     FloatProperty engineTotalOperatingHours =
@@ -203,7 +203,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The anti-lock braking system (ABS) state.
      */
-    @Nullable public BooleanProperty isAntiLockBrakingActive() {
+    @Nullable public ObjectProperty<Boolean> isAntiLockBrakingActive() {
         return antiLockBrakingActive;
     }
 
@@ -496,7 +496,7 @@ public class DiagnosticsState extends CommandWithProperties {
         private IntegerProperty distanceDrivenSinceEngineStart;
         private FloatProperty fuelVolume;
 
-        private BooleanProperty antiLockBrakingActive;
+        private ObjectProperty<Boolean> antiLockBrakingActive;
         private IntegerProperty engineCoolantTemperature;
         private FloatProperty engineTotalOperatingHours;
         private FloatProperty engineTotalFuelConsumption;
@@ -657,7 +657,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param antiLockBrakingActive The anti-lock braking system (ABS) state.
          * @return The builder.
          */
-        public Builder setAntiLockBrakingActive(BooleanProperty antiLockBrakingActive) {
+        public Builder setAntiLockBrakingActive(ObjectProperty<Boolean> antiLockBrakingActive) {
             this.antiLockBrakingActive = antiLockBrakingActive;
             antiLockBrakingActive.setIdentifier(IDENTIFIER_ANTI_LOCK_BRAKING_ACTIVE);
             addProperty(antiLockBrakingActive);

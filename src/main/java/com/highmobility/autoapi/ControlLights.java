@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.IntegerArrayProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.FogLight;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
@@ -51,8 +51,8 @@ public class ControlLights extends CommandWithProperties {
 
     private FrontExteriorLightState frontExteriorLightState =
             new FrontExteriorLightState(IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE);
-    private BooleanProperty rearExteriorLightActive =
-            new BooleanProperty(IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
+    private ObjectProperty<Boolean> rearExteriorLightActive =
+            new ObjectProperty<>(Boolean.class, IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
     private IntegerArrayProperty ambientColor = new IntegerArrayProperty(IDENTIFIER_AMBIENT_COLOR);
 
     private FogLight[] fogLights;
@@ -168,7 +168,7 @@ public class ControlLights extends CommandWithProperties {
         }
 
         if (rearExteriorLightActive != null) {
-            properties.add(this.rearExteriorLightActive.update(rearExteriorLightActive));
+            properties.add(this.rearExteriorLightActive.setValue(rearExteriorLightActive));
         }
 
         if (ambientColor != null) {

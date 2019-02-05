@@ -20,10 +20,10 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.property.homecharger.Charging;
@@ -65,14 +65,14 @@ public class HomeChargerState extends CommandWithProperties {
             (IDENTIFIER_AUTHENTICATION_MECHANISM);
     PlugType plugType = new PlugType(IDENTIFIER_PLUG_TYPE);
     FloatProperty chargingPower = new FloatProperty(IDENTIFIER_CHARGING_POWER);
-    BooleanProperty solarChargingActive = new BooleanProperty(IDENTIFIER_SOLAR_CHARGING_ACTIVE);
-    BooleanProperty hotspotEnabled = new BooleanProperty(IDENTIFIER_HOTSPOT_ENABLED);
+    ObjectProperty<Boolean> solarChargingActive = new ObjectProperty<>(Boolean.class, IDENTIFIER_SOLAR_CHARGING_ACTIVE);
+    ObjectProperty<Boolean> hotspotEnabled = new ObjectProperty<>(Boolean.class, IDENTIFIER_HOTSPOT_ENABLED);
     StringProperty hotspotSsid = new StringProperty(IDENTIFIER_HOTSPOT_SSID);
     NetworkSecurity hotspotSecurity = new NetworkSecurity(IDENTIFIER_HOTSPOT_SECURITY);
     StringProperty hotspotPassword = new StringProperty(IDENTIFIER_HOTSPOT_PASSWORD);
 
     // level8
-    BooleanProperty authenticated = new BooleanProperty(IDENTIFIER_AUTHENTICATED);
+    ObjectProperty<Boolean> authenticated = new ObjectProperty<>(Boolean.class, IDENTIFIER_AUTHENTICATED);
     FloatProperty chargeCurrentDC = new FloatProperty(IDENTIFIER_CHARGE_CURRENT_DC);
     FloatProperty maximumChargeCurrent = new FloatProperty(IDENTIFIER_MAXIMUM_CHARGE_CURRENT);
     FloatProperty minimumChargeCurrent = new FloatProperty(IDENTIFIER_MINIMUM_CHARGE_CURRENT);
@@ -111,14 +111,14 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return Solar charging state.
      */
-    @Nullable public BooleanProperty isSolarChargingActive() {
+    @Nullable public ObjectProperty<Boolean> isSolarChargingActive() {
         return solarChargingActive;
     }
 
     /**
      * @return The hotspot state.
      */
-    @Nullable public BooleanProperty isHotspotEnabled() {
+    @Nullable public ObjectProperty<Boolean> isHotspotEnabled() {
         return hotspotEnabled;
     }
 
@@ -146,7 +146,7 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return The authentication state.
      */
-    @Nullable public BooleanProperty isAuthenticated() {
+    @Nullable public ObjectProperty<Boolean> isAuthenticated() {
         return authenticated;
     }
 
@@ -271,8 +271,8 @@ public class HomeChargerState extends CommandWithProperties {
         private AuthenticationMechanism authenticationMechanism;
         private PlugType plugType;
         private FloatProperty chargingPower;
-        private BooleanProperty solarChargingActive;
-        private BooleanProperty hotspotEnabled;
+        private ObjectProperty<Boolean> solarChargingActive;
+        private ObjectProperty<Boolean> hotspotEnabled;
         private StringProperty hotspotSsid;
         private NetworkSecurity hotspotSecurity;
         private StringProperty hotspotPassword;
@@ -327,7 +327,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param solarChargingActive The solar charging state.
          * @return The builder.
          */
-        public Builder setSolarChargingActive(BooleanProperty solarChargingActive) {
+        public Builder setSolarChargingActive(ObjectProperty<Boolean> solarChargingActive) {
             this.solarChargingActive = solarChargingActive;
             solarChargingActive.setIdentifier(IDENTIFIER_SOLAR_CHARGING_ACTIVE);
             addProperty(solarChargingActive);
@@ -338,7 +338,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param hotspotEnabled The Wi-Fi hotspot state.
          * @return The builder.
          */
-        public Builder setHotspotEnabled(BooleanProperty hotspotEnabled) {
+        public Builder setHotspotEnabled(ObjectProperty<Boolean> hotspotEnabled) {
             this.hotspotEnabled = hotspotEnabled;
             hotspotEnabled.setIdentifier(IDENTIFIER_HOTSPOT_ENABLED);
             addProperty(hotspotEnabled);

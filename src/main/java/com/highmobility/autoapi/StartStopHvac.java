@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -45,7 +45,7 @@ public class StartStopHvac extends CommandWithProperties {
      * @param start The HVAC state.
      */
     public StartStopHvac(boolean start) {
-        super(TYPE.addProperty(new BooleanProperty(start).setIdentifier(IDENTIFIER)));
+        super(TYPE.addProperty(new ObjectProperty<>(start).setIdentifier(IDENTIFIER)));
         this.start = start;
     }
 

@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
@@ -65,7 +65,7 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
     static Property[] getProperties(boolean activate, Integer speed) {
         Property[] properties = new Property[speed == null ? 1 : 2];
 
-        properties[0] = new BooleanProperty(activate).setIdentifier((byte) 0x01);
+        properties[0] = new ObjectProperty<>(activate).setIdentifier((byte) 0x01);
         if (speed != null) properties[1] = new IntegerProperty((byte) 0x02, speed, 2);
 
         return properties;

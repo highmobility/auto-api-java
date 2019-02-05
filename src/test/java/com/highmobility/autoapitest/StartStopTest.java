@@ -5,7 +5,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetStartStopState;
 import com.highmobility.autoapi.StartStopState;
-import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class StartStopTest {
 
     @Test public void build() {
         StartStopState.Builder builder = new StartStopState.Builder();
-        builder.setIsActive(new BooleanProperty(true));
+        builder.setIsActive(new ObjectProperty<>(true));
         assertTrue(builder.build().equals(bytes));
     }
 

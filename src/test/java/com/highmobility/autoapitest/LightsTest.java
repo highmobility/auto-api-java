@@ -5,9 +5,9 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlLights;
 import com.highmobility.autoapi.GetLightsState;
 import com.highmobility.autoapi.LightsState;
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.IntegerArrayProperty;
 import com.highmobility.autoapi.property.FogLight;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
 import com.highmobility.autoapi.property.lights.LightLocation;
@@ -80,12 +80,12 @@ public class LightsTest {
         LightsState.Builder builder = new LightsState.Builder();
 
         builder.setFrontExteriorLightState(new FrontExteriorLightState(FrontExteriorLightState.Value.ACTIVE_FULL_BEAM));
-        builder.setRearExteriorLightActive(new BooleanProperty(true));
+        builder.setRearExteriorLightActive(new ObjectProperty<>(true));
 
         int[] ambientColor = new int[]{0xFF, 0, 0};
         builder.setAmbientColor(new IntegerArrayProperty(ambientColor));
-        builder.setReverseLightActive(new BooleanProperty(true));
-        builder.setEmergencyBrakeLightActive(new BooleanProperty(true));
+        builder.setReverseLightActive(new ObjectProperty<>(true));
+        builder.setEmergencyBrakeLightActive(new ObjectProperty<>(true));
 
         builder.addFogLight(new FogLight(LightLocation.FRONT, false));
         builder.addFogLight(new FogLight(LightLocation.REAR, true));

@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -44,7 +44,7 @@ public class AuthenticateHomeCharger extends CommandWithProperties {
      * @param authenticate Authentication state.
      */
     public AuthenticateHomeCharger(boolean authenticate) {
-        super(TYPE.addProperty(new BooleanProperty(authenticate).setIdentifier(IDENTIFIER)));
+        super(TYPE.addProperty(new ObjectProperty<>(authenticate).setIdentifier(IDENTIFIER)));
         this.authenticate = authenticate;
     }
 

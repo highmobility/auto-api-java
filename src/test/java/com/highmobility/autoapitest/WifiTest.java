@@ -7,8 +7,8 @@ import com.highmobility.autoapi.EnableDisableWifi;
 import com.highmobility.autoapi.ForgetNetwork;
 import com.highmobility.autoapi.GetWifiState;
 import com.highmobility.autoapi.WifiState;
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -47,8 +47,8 @@ public class WifiTest {
     @Test public void build() {
         WifiState.Builder builder = new WifiState.Builder();
 
-        builder.setEnabled(new BooleanProperty(true));
-        builder.setConnected(new BooleanProperty(true));
+        builder.setEnabled(new ObjectProperty<>(true));
+        builder.setConnected(new ObjectProperty<>(true));
         builder.setSsid(new StringProperty("HOME"));
         builder.setSecurity(new NetworkSecurity(NetworkSecurity.Value.WPA2_PERSONAL));
 

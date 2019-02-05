@@ -1,8 +1,8 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.PropertyTimestamp;
@@ -89,7 +89,7 @@ public class PropertyTest {
                 "ero"
         );
 
-        BooleanProperty property = new BooleanProperty(null, timestamp, failure);
+        ObjectProperty<Boolean> property = new ObjectProperty<>(null, timestamp, failure);
         assertBaseBytesOk(property);
         assertTrue(TestUtils.dateIsSameIgnoreTimezone(property.getTimestamp(), timestamp));
         assertTrue(property.getFailure() == failure);

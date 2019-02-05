@@ -83,13 +83,6 @@ public class ObjectProperty<T> extends Property {
 
     // MARK: builder ctor
 
-    public ObjectProperty(@Nullable T value) {
-        if (value == null) {
-            bytes = baseBytes((byte) 0, 0);
-        } else {
-            setValue((byte) 0, value);
-        }
-    }
 
     public ObjectProperty(@Nullable T value,
                           @Nullable Calendar timestamp,
@@ -98,6 +91,16 @@ public class ObjectProperty<T> extends Property {
         setTimestampFailure(timestamp, failure);
     }
 
+    public ObjectProperty(@Nullable T value) {
+        if (value == null) {
+            bytes = baseBytes((byte) 0, 0);
+        } else {
+            setValue((byte) 0, value);
+        }
+
+
+
+    }
     // MARK: internal ctor
     // TODO: 2019-02-04 make internal
 
@@ -105,12 +108,6 @@ public class ObjectProperty<T> extends Property {
         setValue(identifier, value);
     }
 
-    private void setValue(byte identifier, T value) {
-        Bytes valueBytes = getBytes(value);
-        this.bytes = baseBytes(identifier, valueBytes.getLength());
-        ByteUtils.setBytes(bytes, valueBytes.getByteArray(), 3);
-        this.value = value;
-    }
 
     public ObjectProperty(Class<T> theClass, byte identifier) {
         this.theClass = theClass;
@@ -123,6 +120,20 @@ public class ObjectProperty<T> extends Property {
         if (property.getLength() < 3) this.bytes = Arrays.copyOf(property.getByteArray(), 3);
         else this.bytes = property.getByteArray();
         update(property);
+    }
+
+    // TODO: 2019-02-05 make internal
+    public ObjectProperty setValue(byte identifier, T value) {
+        Bytes valueBytes = getBytes(value);
+        this.bytes = baseBytes(identifier, valueBytes.getLength());
+        ByteUtils.setBytes(bytes, valueBytes.getByteArray(), 3);
+        this.value = value;
+        return this;
+    }
+
+    // TODO: 2019-02-05 make internal
+    public ObjectProperty setValue(T value) {
+        return setValue(bytes[0], value);
     }
 
     private Bytes getBytes(T value) {

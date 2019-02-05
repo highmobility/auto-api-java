@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -39,7 +39,7 @@ public class ActivateDeactivatePowerTakeoff extends CommandWithProperties {
     }
 
     public ActivateDeactivatePowerTakeoff(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(activate).setIdentifier((byte) 0x01)));
+        super(TYPE.addProperty(new ObjectProperty<>(activate).setIdentifier((byte) 0x01)));
         this.activate = activate;
     }
 

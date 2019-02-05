@@ -5,11 +5,11 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetRaceState;
 import com.highmobility.autoapi.RaceState;
 import com.highmobility.autoapi.property.AccelerationProperty;
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.BrakeTorqueVectoring;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.utils.ByteUtils;
@@ -84,17 +84,17 @@ public class RaceTest {
         builder.setBrakePressure(new FloatProperty(11.56f));
         builder.setYawRate(new FloatProperty(6.66f));
         builder.setRearSuspensionSteering(new IntegerProperty(3));
-        builder.setEspInterventionActive(new BooleanProperty(true));
+        builder.setEspInterventionActive(new ObjectProperty<>(true));
         builder.addBrakeTorqueVectoring(new BrakeTorqueVectoring(Axle.REAR, true));
         builder.setGearMode(GearMode.DRIVE);
         builder.setSelectedGear(new IntegerProperty(4));
         builder.setBrakePedalPosition(new PercentageProperty(.01f));
 
-        builder.setBrakePedalSwitchActive(new BooleanProperty(true));
-        builder.setClutchPedalSwitchActive(new BooleanProperty(true));
-        builder.setAcceleratorPedalIdleSwitchActive(new BooleanProperty(true));
-        builder.setAcceleratorPedalKickdownSwitchActive(new BooleanProperty(true));
-        builder.setVehicleMoving(new BooleanProperty(true));
+        builder.setBrakePedalSwitchActive(new ObjectProperty<>(true));
+        builder.setClutchPedalSwitchActive(new ObjectProperty<>(true));
+        builder.setAcceleratorPedalIdleSwitchActive(new ObjectProperty<>(true));
+        builder.setAcceleratorPedalKickdownSwitchActive(new ObjectProperty<>(true));
+        builder.setVehicleMoving(new ObjectProperty<>(true));
 
         RaceState state = builder.build();
         assertTrue(state.equals(bytes));

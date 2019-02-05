@@ -20,11 +20,10 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
@@ -84,12 +83,12 @@ public class ChargeState extends CommandWithProperties {
     ChargeMode chargeMode = new ChargeMode(CHARGE_MODE_IDENTIFIER);
     FloatProperty maxChargingCurrent = new FloatProperty(MAX_CHARGING_CURRENT_IDENTIFIER);
     PlugType plugType = new PlugType(PLUG_TYPE_IDENTIFIER);
-    BooleanProperty chargingWindowChosen = new BooleanProperty(CHARGING_WINDOW_CHOSEN_IDENTIFIER);
+    ObjectProperty<Boolean> chargingWindowChosen = new ObjectProperty<>(Boolean.class, CHARGING_WINDOW_CHOSEN_IDENTIFIER);
     DepartureTime[] departureTimes;
     ReductionTime[] reductionOfChargingCurrentTimes;
     FloatProperty batteryTemperature = new FloatProperty(BATTERY_TEMPERATURE_IDENTIFIER);
     ChargingTimer[] timers;
-    BooleanProperty pluggedIn = new BooleanProperty(PLUGGED_IN_IDENTIFIER);
+    ObjectProperty<Boolean> pluggedIn = new ObjectProperty<>(Boolean.class, PLUGGED_IN_IDENTIFIER);
     ChargingState activeState = new ChargingState(ACTIVE_STATE_IDENTIFIER);
 
     /**
@@ -186,7 +185,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return Indication on whether charging window is chosen.
      */
-    @Nullable public BooleanProperty getChargingWindowChosen() {
+    @Nullable public ObjectProperty<Boolean> getChargingWindowChosen() {
         return chargingWindowChosen;
     }
 
@@ -236,7 +235,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The plugged in state.
      */
-    @Nullable public BooleanProperty getPluggedIn() {
+    @Nullable public ObjectProperty<Boolean> getPluggedIn() {
         return pluggedIn;
     }
 
@@ -365,13 +364,13 @@ public class ChargeState extends CommandWithProperties {
         private ChargeMode chargeMode;
         private FloatProperty maxChargingCurrent;
         private PlugType plugType;
-        private BooleanProperty chargingWindowChosen;
+        private ObjectProperty<Boolean> chargingWindowChosen;
         private List<DepartureTime> departureTimes = new ArrayList<>();
 
         private List<ReductionTime> reductionOfChargingCurrentTimes = new ArrayList<>();
         private FloatProperty batteryTemperature;
         private List<ChargingTimer> timers = new ArrayList<>();
-        private BooleanProperty pluggedIn;
+        private ObjectProperty<Boolean> pluggedIn;
         private ChargingState activeState;
 
         public Builder() {
@@ -536,7 +535,7 @@ public class ChargeState extends CommandWithProperties {
          * @param chargingWindowChosen Charging window chosen state.
          * @return The builder.
          */
-        public Builder setChargingWindowChosen(BooleanProperty chargingWindowChosen) {
+        public Builder setChargingWindowChosen(ObjectProperty<Boolean> chargingWindowChosen) {
             this.chargingWindowChosen = chargingWindowChosen;
             chargingWindowChosen.setIdentifier(CHARGING_WINDOW_CHOSEN_IDENTIFIER);
             addProperty(chargingWindowChosen);
@@ -623,7 +622,7 @@ public class ChargeState extends CommandWithProperties {
             return this;
         }
 
-        public Builder setPluggedIn(BooleanProperty pluggedIn) {
+        public Builder setPluggedIn(ObjectProperty<Boolean> pluggedIn) {
             this.pluggedIn = pluggedIn;
             pluggedIn.setIdentifier(PLUGGED_IN_IDENTIFIER);
             addProperty(pluggedIn);

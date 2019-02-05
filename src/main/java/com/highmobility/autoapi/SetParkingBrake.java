@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -41,10 +41,10 @@ public class SetParkingBrake extends CommandWithProperties {
     }
 
     /**
-     * @param activate BooleanProperty indicating whether to activate parking brake.
+     * @param activate ObjectProperty<Boolean> indicating whether to activate parking brake.
      */
     public SetParkingBrake(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(activate).setIdentifier(IDENTIFIER)));
+        super(TYPE.addProperty(new ObjectProperty<>(activate).setIdentifier(IDENTIFIER)));
         this.activate = activate;
     }
 

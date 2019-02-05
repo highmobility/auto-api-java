@@ -21,11 +21,11 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.AccelerationProperty;
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.BrakeTorqueVectoring;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Axle;
@@ -70,18 +70,18 @@ public class RaceState extends CommandWithProperties {
     FloatProperty brakePressure;
     FloatProperty yawRate;
     IntegerProperty rearSuspensionSteering;
-    BooleanProperty espInterventionActive;
+    ObjectProperty<Boolean> espInterventionActive;
     BrakeTorqueVectoring[] brakeTorqueVectorings;
     GearMode gearMode;
     IntegerProperty selectedGear;
     PercentageProperty brakePedalPosition;
     // level7
-    BooleanProperty brakePedalSwitchActive;
-    BooleanProperty clutchPedalSwitchActive;
-    BooleanProperty acceleratorPedalIdleSwitchActive;
-    BooleanProperty acceleratorPedalKickdownSwitchActive;
+    ObjectProperty<Boolean> brakePedalSwitchActive;
+    ObjectProperty<Boolean> clutchPedalSwitchActive;
+    ObjectProperty<Boolean> acceleratorPedalIdleSwitchActive;
+    ObjectProperty<Boolean> acceleratorPedalKickdownSwitchActive;
     // level8
-    BooleanProperty vehicleMoving;
+    ObjectProperty<Boolean> vehicleMoving;
 
     /**
      * @param accelerationType The acceleration type.
@@ -159,7 +159,7 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return The ESP (Electronic Stability Program) intervention state.
      */
-    @Nullable public BooleanProperty isEspInterventionActive() {
+    @Nullable public ObjectProperty<Boolean> isEspInterventionActive() {
         return espInterventionActive;
     }
 
@@ -207,35 +207,35 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return The brake pedal switch state.
      */
-    @Nullable public BooleanProperty isBrakePedalSwitchActive() {
+    @Nullable public ObjectProperty<Boolean> isBrakePedalSwitchActive() {
         return brakePedalSwitchActive;
     }
 
     /**
      * @return The clutch pedal switch state.
      */
-    @Nullable public BooleanProperty isClutchPedalSwitchActive() {
+    @Nullable public ObjectProperty<Boolean> isClutchPedalSwitchActive() {
         return clutchPedalSwitchActive;
     }
 
     /**
      * @return The accelerator pedal idle switch state. If active, pedal is fully released.
      */
-    @Nullable public BooleanProperty isAcceleratorPedalIdleSwitchActive() {
+    @Nullable public ObjectProperty<Boolean> isAcceleratorPedalIdleSwitchActive() {
         return acceleratorPedalIdleSwitchActive;
     }
 
     /**
      * @return The accelerator pedal kickdown switch state. If active, pedal is fully depressed.
      */
-    @Nullable public BooleanProperty isAcceleratorPedalKickdownSwitchActive() {
+    @Nullable public ObjectProperty<Boolean> isAcceleratorPedalKickdownSwitchActive() {
         return acceleratorPedalKickdownSwitchActive;
     }
 
     /**
      * @return The vehicle moving state.
      */
-    @Nullable public BooleanProperty isVehicleMoving() {
+    @Nullable public ObjectProperty<Boolean> isVehicleMoving() {
         return vehicleMoving;
     }
 
@@ -274,7 +274,7 @@ public class RaceState extends CommandWithProperties {
                         rearSuspensionSteering = new IntegerProperty(p, false);
                         return rearSuspensionSteering;
                     case ESP_INTERVENTION_ACTIVE_IDENTIFIER:
-                        espInterventionActive = new BooleanProperty(p);
+                        espInterventionActive = new ObjectProperty<>(Boolean.class, p);
                         return espInterventionActive;
                     case BrakeTorqueVectoring.IDENTIFIER:
                         BrakeTorqueVectoring b =
@@ -291,19 +291,19 @@ public class RaceState extends CommandWithProperties {
                         brakePedalPosition = new PercentageProperty(p);
                         return brakePedalPosition;
                     case BRAKE_PEDAL_SWITCH_IDENTIFIER:
-                        brakePedalSwitchActive = new BooleanProperty(p);
+                        brakePedalSwitchActive = new ObjectProperty<>(Boolean.class, p);
                         return brakePedalSwitchActive;
                     case CLUTCH_PEDAL_SWITCH_IDENTIFIER:
-                        clutchPedalSwitchActive = new BooleanProperty(p);
+                        clutchPedalSwitchActive = new ObjectProperty<>(Boolean.class, p);
                         return clutchPedalSwitchActive;
                     case ACCELERATOR_PEDAL_IDLE_SWITCH_IDENTIFIER:
-                        acceleratorPedalIdleSwitchActive = new BooleanProperty(p);
+                        acceleratorPedalIdleSwitchActive = new ObjectProperty<>(Boolean.class, p);
                         return acceleratorPedalIdleSwitchActive;
                     case ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER:
-                        acceleratorPedalKickdownSwitchActive = new BooleanProperty(p);
+                        acceleratorPedalKickdownSwitchActive = new ObjectProperty<>(Boolean.class, p);
                         return acceleratorPedalKickdownSwitchActive;
                     case IDENTIFIER_VEHICLE_MOVING:
-                        vehicleMoving = new BooleanProperty(p);
+                        vehicleMoving = new ObjectProperty<>(Boolean.class, p);
                         return vehicleMoving;
                 }
 
@@ -357,18 +357,18 @@ public class RaceState extends CommandWithProperties {
         private FloatProperty brakePressure;
         private FloatProperty yawRate;
         private IntegerProperty rearSuspensionSteering;
-        private BooleanProperty espInterventionActive;
+        private ObjectProperty<Boolean> espInterventionActive;
         private List<BrakeTorqueVectoring> brakeTorqueVectorings = new ArrayList<>();
         private GearMode gearMode;
         private IntegerProperty selectedGear;
         private PercentageProperty brakePedalPosition;
 
-        private BooleanProperty brakePedalSwitchActive;
-        private BooleanProperty clutchPedalSwitchActive;
-        private BooleanProperty acceleratorPedalIdleSwitchActive;
-        private BooleanProperty acceleratorPedalKickdownSwitchActive;
+        private ObjectProperty<Boolean> brakePedalSwitchActive;
+        private ObjectProperty<Boolean> clutchPedalSwitchActive;
+        private ObjectProperty<Boolean> acceleratorPedalIdleSwitchActive;
+        private ObjectProperty<Boolean> acceleratorPedalKickdownSwitchActive;
 
-        public BooleanProperty vehicleMoving;
+        public ObjectProperty<Boolean> vehicleMoving;
 
         public Builder() {
             super(TYPE);
@@ -482,7 +482,7 @@ public class RaceState extends CommandWithProperties {
          * @param espInterventionActive The ESP (Electronic Stability Program) intervention state.
          * @return The builder.
          */
-        public Builder setEspInterventionActive(BooleanProperty espInterventionActive) {
+        public Builder setEspInterventionActive(ObjectProperty<Boolean> espInterventionActive) {
             this.espInterventionActive = espInterventionActive;
             espInterventionActive.setIdentifier(ESP_INTERVENTION_ACTIVE_IDENTIFIER);
             addProperty(espInterventionActive);
@@ -550,7 +550,7 @@ public class RaceState extends CommandWithProperties {
          * @param brakePedalSwitchActive The brake pedal switch state.
          * @return The builder.
          */
-        public Builder setBrakePedalSwitchActive(BooleanProperty brakePedalSwitchActive) {
+        public Builder setBrakePedalSwitchActive(ObjectProperty<Boolean> brakePedalSwitchActive) {
             this.brakePedalSwitchActive = brakePedalSwitchActive;
             brakePedalSwitchActive.setIdentifier(BRAKE_PEDAL_SWITCH_IDENTIFIER);
             addProperty(brakePedalSwitchActive);
@@ -561,7 +561,7 @@ public class RaceState extends CommandWithProperties {
          * @param clutchPedalSwitchActive The clutch pedal switch state.
          * @return The builder.
          */
-        public Builder setClutchPedalSwitchActive(BooleanProperty clutchPedalSwitchActive) {
+        public Builder setClutchPedalSwitchActive(ObjectProperty<Boolean> clutchPedalSwitchActive) {
             this.clutchPedalSwitchActive = clutchPedalSwitchActive;
             clutchPedalSwitchActive.setIdentifier(CLUTCH_PEDAL_SWITCH_IDENTIFIER);
             addProperty(clutchPedalSwitchActive);
@@ -573,7 +573,7 @@ public class RaceState extends CommandWithProperties {
          *                                         active, pedal is fully released.
          * @return The builder.
          */
-        public Builder setAcceleratorPedalIdleSwitchActive(BooleanProperty acceleratorPedalIdleSwitchActive) {
+        public Builder setAcceleratorPedalIdleSwitchActive(ObjectProperty<Boolean> acceleratorPedalIdleSwitchActive) {
             this.acceleratorPedalIdleSwitchActive = acceleratorPedalIdleSwitchActive;
             acceleratorPedalIdleSwitchActive.setIdentifier(ACCELERATOR_PEDAL_IDLE_SWITCH_IDENTIFIER);
             addProperty(acceleratorPedalIdleSwitchActive);
@@ -585,7 +585,7 @@ public class RaceState extends CommandWithProperties {
          *                                             If active, pedal is fully depressed.
          * @return The builder.
          */
-        public Builder setAcceleratorPedalKickdownSwitchActive(BooleanProperty acceleratorPedalKickdownSwitchActive) {
+        public Builder setAcceleratorPedalKickdownSwitchActive(ObjectProperty<Boolean> acceleratorPedalKickdownSwitchActive) {
             this.acceleratorPedalKickdownSwitchActive = acceleratorPedalKickdownSwitchActive;
             acceleratorPedalKickdownSwitchActive.setIdentifier(ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER);
             addProperty(acceleratorPedalKickdownSwitchActive);
@@ -596,7 +596,7 @@ public class RaceState extends CommandWithProperties {
          * @param vehicleMoving The vehicle moving state.
          * @return The builder.
          */
-        public Builder setVehicleMoving(BooleanProperty vehicleMoving) {
+        public Builder setVehicleMoving(ObjectProperty<Boolean> vehicleMoving) {
             this.vehicleMoving = vehicleMoving;
             vehicleMoving.setIdentifier(IDENTIFIER_VEHICLE_MOVING);
             addProperty(vehicleMoving);

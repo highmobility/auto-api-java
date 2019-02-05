@@ -10,9 +10,9 @@ import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
 import com.highmobility.autoapi.StartStopCharging;
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
@@ -153,7 +153,7 @@ public class ChargingTest {
 
         builder.setMaxChargingCurrent(new FloatProperty(25f));
         builder.setPlugType(new PlugType(PlugType.Value.TYPE_2));
-        builder.setChargingWindowChosen(new BooleanProperty(false));
+        builder.setChargingWindowChosen(new ObjectProperty<>(false));
 
         builder.addDepartureTime(new DepartureTime(true, new Time(16, 32)));
         builder.addDepartureTime(new DepartureTime(false, new Time(18, 32)));
@@ -174,7 +174,7 @@ public class ChargingTest {
         builder.addTimer(timer);
         builder.addTimer(timer2);
 
-        builder.setPluggedIn(new BooleanProperty(true));
+        builder.setPluggedIn(new ObjectProperty<>(true));
         builder.setActiveState(new ChargingState(ChargingState.Value.CHARGING));
 
         ChargeState state = builder.build();

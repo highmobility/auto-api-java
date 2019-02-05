@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.StringProperty;
 
 import javax.annotation.Nullable;
@@ -37,22 +37,22 @@ public class WifiState extends CommandWithProperties {
     public static final byte IDENTIFIER_SSID = 0x03;
     public static final byte IDENTIFIER_SECURITY = 0x04;
 
-    BooleanProperty enabled = new BooleanProperty(IDENTIFIER_ENABLED);
-    BooleanProperty connected = new BooleanProperty(IDENTIFIER_CONNECTED);
+    ObjectProperty<Boolean> enabled = new ObjectProperty<>(Boolean.class, IDENTIFIER_ENABLED);
+    ObjectProperty<Boolean> connected = new ObjectProperty<>(Boolean.class, IDENTIFIER_CONNECTED);
     StringProperty ssid = new StringProperty(IDENTIFIER_SSID);
     NetworkSecurity security = new NetworkSecurity(IDENTIFIER_SECURITY);
 
     /**
      * @return Whether Wi-Fi is enabled.
      */
-    @Nullable public BooleanProperty isEnabled() {
+    @Nullable public ObjectProperty<Boolean> isEnabled() {
         return enabled;
     }
 
     /**
      * @return Whether Wi-Fi is connected.
      */
-    @Nullable public BooleanProperty isConnected() {
+    @Nullable public ObjectProperty<Boolean> isConnected() {
         return connected;
     }
 
@@ -104,8 +104,8 @@ public class WifiState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private BooleanProperty enabled;
-        private BooleanProperty connected;
+        private ObjectProperty<Boolean> enabled;
+        private ObjectProperty<Boolean> connected;
         private StringProperty ssid;
         private NetworkSecurity security;
 
@@ -117,7 +117,7 @@ public class WifiState extends CommandWithProperties {
          * @param enabled The Wi-Fi state.
          * @return The builder.
          */
-        public Builder setEnabled(BooleanProperty enabled) {
+        public Builder setEnabled(ObjectProperty<Boolean> enabled) {
             this.enabled = enabled;
             enabled.setIdentifier(IDENTIFIER_ENABLED);
             addProperty(enabled);
@@ -128,7 +128,7 @@ public class WifiState extends CommandWithProperties {
          * @param connected The connection state.
          * @return The builder.
          */
-        public Builder setConnected(BooleanProperty connected) {
+        public Builder setConnected(ObjectProperty<Boolean> connected) {
             this.connected = connected;
             connected.setIdentifier(IDENTIFIER_CONNECTED);
             addProperty(connected);

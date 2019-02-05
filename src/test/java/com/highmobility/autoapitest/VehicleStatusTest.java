@@ -9,10 +9,10 @@ import com.highmobility.autoapi.TheftAlarmState;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.WindowsState;
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.value.DisplayUnit;
@@ -155,8 +155,8 @@ public class VehicleStatusTest {
         builder.addState(new CommandProperty(trunkState.build()));
 
         IgnitionState.Builder ignitionState = new IgnitionState.Builder();
-        ignitionState.setIsOn(new BooleanProperty(true));
-        ignitionState.setAccessoriesIgnition(new BooleanProperty(true));
+        ignitionState.setIsOn(new ObjectProperty<>(true));
+        ignitionState.setAccessoriesIgnition(new ObjectProperty<>(true));
         builder.addState(new CommandProperty(ignitionState.build()));
 
         // l7

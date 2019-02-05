@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -44,7 +44,7 @@ public class TurnIgnitionOnOff extends CommandWithProperties {
      * @param on The ignition state.
      */
     public TurnIgnitionOnOff(boolean on) {
-        super(TYPE.addProperty(new BooleanProperty(on).setIdentifier(IDENTIFIER)));
+        super(TYPE.addProperty(new ObjectProperty<>(on).setIdentifier(IDENTIFIER)));
         this.on = on;
     }
 

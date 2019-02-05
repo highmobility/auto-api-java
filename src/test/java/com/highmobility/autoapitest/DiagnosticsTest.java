@@ -4,9 +4,9 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
@@ -192,7 +192,7 @@ public class DiagnosticsTest {
         builder.setDistanceDrivenSinceEngineStart(new IntegerProperty(10));
         builder.setFuelVolume(new FloatProperty(35.5f));
 
-        builder.setAntiLockBrakingActive(new BooleanProperty(true));
+        builder.setAntiLockBrakingActive(new ObjectProperty<>(true));
         builder.setEngineCoolantTemperature(new IntegerProperty(20));
         builder.setEngineTotalOperatingHours(new FloatProperty(1500.65f));
         builder.setEngineTotalFuelConsumption(new FloatProperty(27587.0f));

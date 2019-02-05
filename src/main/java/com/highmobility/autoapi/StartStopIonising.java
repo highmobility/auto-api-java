@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -43,7 +43,7 @@ public class StartStopIonising extends CommandWithProperties {
      * @param start The ionising state.
      */
     public StartStopIonising(boolean start) {
-        super(TYPE.addProperty(new BooleanProperty(start).setIdentifier(IDENTIFIER)));
+        super(TYPE.addProperty(new ObjectProperty<>(start).setIdentifier(IDENTIFIER)));
         this.start = start;
     }
 

@@ -20,11 +20,11 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.DriverCard;
 import com.highmobility.autoapi.property.DriverTimeState;
 import com.highmobility.autoapi.property.DriverWorkingState;
 import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
@@ -48,8 +48,8 @@ public class TachographState extends CommandWithProperties {
     DriverWorkingState[] driverWorkingStates;
     DriverTimeState[] driverTimeStates;
     DriverCard[] driverCards;
-    BooleanProperty vehicleMotionDetected;
-    BooleanProperty vehicleOverspeed;
+    ObjectProperty<Boolean> vehicleMotionDetected;
+    ObjectProperty<Boolean> vehicleOverspeed;
     VehicleDirection vehicleDirection;
     IntegerProperty vehicleSpeed;
 
@@ -119,14 +119,14 @@ public class TachographState extends CommandWithProperties {
     /**
      * @return Whether vehicle motion is detected.
      */
-    @Nullable public BooleanProperty isVehicleMotionDetected() {
+    @Nullable public ObjectProperty<Boolean> isVehicleMotionDetected() {
         return vehicleMotionDetected;
     }
 
     /**
      * @return Whether vehicle is overspeeding.
      */
-    @Nullable public BooleanProperty isVehicleOverspeeding() {
+    @Nullable public ObjectProperty<Boolean> isVehicleOverspeeding() {
         return vehicleOverspeed;
     }
 
@@ -169,10 +169,10 @@ public class TachographState extends CommandWithProperties {
                         cardsBuilder.add(driverCard);
                         return driverCard;
                     case VEHICLE_MOTION_DETECTED_IDENTIFIER:
-                        vehicleMotionDetected = new BooleanProperty(p);
+                        vehicleMotionDetected = new ObjectProperty<>(Boolean.class, p);
                         return vehicleMotionDetected;
                     case VEHICLE_OVERSPEED_IDENTIFIER:
-                        vehicleOverspeed = new BooleanProperty(p);
+                        vehicleOverspeed = new ObjectProperty<>(Boolean.class, p);
                         return vehicleOverspeed;
                     case VEHICLE_DIRECTION_IDENTIFIER:
                         vehicleDirection = VehicleDirection.fromByte(p.getValueByte());
@@ -211,8 +211,8 @@ public class TachographState extends CommandWithProperties {
         List<DriverWorkingState> driverWorkingStates = new ArrayList<>();
         List<DriverTimeState> driverTimeStates = new ArrayList<>();
         List<DriverCard> driverCards = new ArrayList<>();
-        BooleanProperty vehicleMotionDetected;
-        BooleanProperty vehicleOverspeed;
+        ObjectProperty<Boolean> vehicleMotionDetected;
+        ObjectProperty<Boolean> vehicleOverspeed;
         VehicleDirection vehicleDirection;
         IntegerProperty vehicleSpeed;
 
@@ -292,7 +292,7 @@ public class TachographState extends CommandWithProperties {
          * @param vehicleMotionDetected Whether vehicle motion is detected.
          * @return The builder.
          */
-        public Builder setVehicleMotionDetected(BooleanProperty vehicleMotionDetected) {
+        public Builder setVehicleMotionDetected(ObjectProperty<Boolean> vehicleMotionDetected) {
             this.vehicleMotionDetected = vehicleMotionDetected;
             vehicleMotionDetected.setIdentifier(VEHICLE_MOTION_DETECTED_IDENTIFIER);
             addProperty(vehicleMotionDetected);
@@ -303,7 +303,7 @@ public class TachographState extends CommandWithProperties {
          * @param vehicleOverSpeed The vehicle overspeed.
          * @return The builder.
          */
-        public Builder setVehicleOverspeed(BooleanProperty vehicleOverSpeed) {
+        public Builder setVehicleOverspeed(ObjectProperty<Boolean> vehicleOverSpeed) {
             this.vehicleOverspeed = vehicleOverSpeed;
             vehicleOverSpeed.setIdentifier(VEHICLE_OVERSPEED_IDENTIFIER);
             addProperty(vehicleOverSpeed);

@@ -20,8 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ObjectProperty;
 
 import javax.annotation.Nullable;
 
@@ -32,12 +31,12 @@ import javax.annotation.Nullable;
 public class MobileState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MOBILE, 0x01);
     private static final byte IDENTIFIER = 0x01;
-    BooleanProperty connected;
+    ObjectProperty<Boolean> connected;
 
     /**
      * @return Whether mobile phone is connected.
      */
-    @Nullable public BooleanProperty isConnected() {
+    @Nullable public ObjectProperty<Boolean> isConnected() {
         return connected;
     }
 
@@ -47,7 +46,7 @@ public class MobileState extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER) {
-                    connected = new BooleanProperty(p);
+                    connected = new ObjectProperty<>(Boolean.class, p);
                     return connected;
 
                 }

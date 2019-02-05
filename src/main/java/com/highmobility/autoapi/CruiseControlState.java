@@ -20,9 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ObjectProperty;
 
 import javax.annotation.Nullable;
 
@@ -40,16 +39,16 @@ public class CruiseControlState extends CommandWithProperties {
     private static final byte ADAPTIVE_ACTIVE_IDENTIFIER = 0x04;
     private static final byte ADAPTIVE_TARGET_SPEED_IDENTIFIER = 0x05;
 
-    BooleanProperty active;
+    ObjectProperty<Boolean> active;
     Limiter limiter;
     IntegerProperty targetSpeed;
-    BooleanProperty adaptiveActive;
+    ObjectProperty<Boolean> adaptiveActive;
     IntegerProperty adaptiveTargetSpeed;
 
     /**
      * @return Whether the cruise control is active.
      */
-    @Nullable public BooleanProperty isActive() {
+    @Nullable public ObjectProperty<Boolean> isActive() {
         return active;
     }
 
@@ -70,7 +69,7 @@ public class CruiseControlState extends CommandWithProperties {
     /**
      * @return Whether the adaptive cruise control is active.
      */
-    @Nullable public BooleanProperty isAdaptiveActive() {
+    @Nullable public ObjectProperty<Boolean> isAdaptiveActive() {
         return adaptiveActive;
     }
 
@@ -88,7 +87,7 @@ public class CruiseControlState extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case ACTIVE_IDENTIFIER:
-                        active = new BooleanProperty(p);
+                        active = new ObjectProperty<>(Boolean.class, p);
                         return active;
                     case LIMITER_IDENTIFIER:
                         limiter = Limiter.fromByte(p.getValueByte());
@@ -97,7 +96,7 @@ public class CruiseControlState extends CommandWithProperties {
                         targetSpeed = new IntegerProperty(p, false);
                         return targetSpeed;
                     case ADAPTIVE_ACTIVE_IDENTIFIER:
-                        adaptiveActive = new BooleanProperty(p);
+                        adaptiveActive = new ObjectProperty<>(Boolean.class, p);
                         return adaptiveActive;
                     case ADAPTIVE_TARGET_SPEED_IDENTIFIER:
                         adaptiveTargetSpeed = new IntegerProperty(p, false);
