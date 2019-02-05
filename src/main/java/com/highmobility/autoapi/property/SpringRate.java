@@ -24,12 +24,8 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.value.Bytes;
 
-import java.util.Calendar;
-
-import javax.annotation.Nullable;
-
-public class SpringRateProperty extends Property {
-    Value value;
+//public class SpringRateProperty extends Property {
+    /*Value value;
 
     @Nullable public Value getValue() {
         return value;
@@ -71,42 +67,45 @@ public class SpringRateProperty extends Property {
         this.value = value;
         return this;
     }
+*/
+public class SpringRate extends PropertyValueObject {
+    Axle axle;
+    Integer springRate;
 
-    public static class Value extends PropertyValueObject {
-        Axle axle;
-        Integer springRate;
-
-        /**
-         * @return The axle.
-         */
-        public Axle getAxle() {
-            return axle;
-        }
-
-        /**
-         * @return The suspension spring rate in N/mm
-         */
-        public Integer getSpringRate() {
-            return springRate;
-        }
-
-        private Value(Bytes bytes) throws CommandParseException {
-            super(bytes);
-
-            if (bytes.getLength() >= 2) {
-                axle = Axle.fromByte(bytes.get(0));
-                springRate = Property.getUnsignedInt(bytes.get(1));
-            } else throw new IllegalArgumentException();
-        }
-
-        private Value(Axle axle, int springRate) {
-            super();
-            this.axle = axle;
-            this.springRate = springRate;
-            byte[] bytes = new byte[2];
-            bytes[0] = axle.getByte();
-            bytes[1] = Property.intToBytes(springRate, 1)[0];
-            this.bytes = new Bytes(bytes);
-        }
+    /**
+     * @return The axle.
+     */
+    public Axle getAxle() {
+        return axle;
     }
+
+    /**
+     * @return The suspension spring rate in N/mm
+     */
+    public Integer getSpringRate() {
+        return springRate;
+    }
+
+    public SpringRate() {
+    }
+
+    public SpringRate(Axle axle, int springRate) {
+        super();
+        this.axle = axle;
+        this.springRate = springRate;
+        byte[] bytes = new byte[2];
+        bytes[0] = axle.getByte();
+        bytes[1] = Property.intToBytes(springRate, 1)[0];
+        this.bytes = new Bytes(bytes);
+    }
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.getLength() >= 2) {
+            axle = Axle.fromByte(bytes.get(0));
+            springRate = Property.getUnsignedInt(bytes.get(1));
+        } else throw new IllegalArgumentException();
+    }
+
+    //    }
 }

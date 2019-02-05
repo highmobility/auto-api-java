@@ -46,15 +46,21 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
  * <p>
  * Property has to have a value with a size greater or equal to 1.
  */
-public class Property extends Bytes {
-    // set when bytes do not exist
+// TODO: 2019-02-04 extend Bytes instead of Property
+public class ObjectProperty<T> extends Property {
     protected static final byte[] unknownBytes = new byte[]{0x00, 0x00, 0x00};
 
-    protected PropertyTimestamp timestamp;
-    protected PropertyFailure failure;
-    @Nullable PropertyValueByteArray propertyValue; // TODO: use this for all of the properties.
-    // use it
-    // to get the property length and bytes
+    @Nullable private PropertyTimestamp timestamp;
+    @Nullable private PropertyFailure failure;
+    @Nullable protected T value;
+    private Class<T> theClass = null;
+
+    /**
+     * @return The property value.
+     */
+    @Nullable public T getValue() {
+        return value;
+    }
 
     /**
      * @return The timestamp of the property.
@@ -75,89 +81,86 @@ public class Property extends Bytes {
         return failure;
     }
 
-    protected Property() {
+    // MARK: builder ctor
+
+    public ObjectProperty(@Nullable T value) {
+        if (value == null) {
+            bytes = baseBytes((byte) 0, 0);
+        } else {
+            setValue((byte) 0, value);
+        }
     }
 
-    protected Property(@Nullable PropertyValue value) {
-        this(value == null ? 0 : value.getLength());
-    }
-
-    protected Property(@Nullable PropertyValueByteArray value) {
-        this((PropertyValue) value);
-        this.propertyValue = value;
-    }
-
-    protected Property(int length) {
-        this.bytes = baseBytes((byte) 0x00, length);
-    }
-
-    /*protected Property(byte identifier, @Nullable PropertyValue value) {
-        this.bytes = baseBytes(identifier, value == null ? 0 : value.getLength());
-    }*/
-
-    protected Property(byte identifier, int valueSize) {
-        this.bytes = baseBytes(identifier, valueSize);
-    }
-
-    /**
-     * @param identifier The identifier byte of the property.
-     * @param value      The value of the property.
-     */
-    public Property(byte identifier, byte value) {
-        this(identifier, 1);
-        bytes[3] = value;
-    }
-
-    /**
-     * @param identifier The identifier byte of the property.
-     * @param value      The value of the property.
-     */
-    public Property(byte identifier, byte[] value) {
-        this(identifier, value != null ? value.length : 0);
-        if (value != null) ByteUtils.setBytes(bytes, value, 3);
-    }
-
-    public Property(@Nullable PropertyValue value, @Nullable Calendar timestamp,
-                    @Nullable PropertyFailure failure) {
-        this((byte) 0x00, value != null ? value.getLength() : 0);
+    public ObjectProperty(@Nullable T value,
+                          @Nullable Calendar timestamp,
+                          @Nullable PropertyFailure failure) {
+        this(value);
         setTimestampFailure(timestamp, failure);
     }
 
-    public Property(@Nullable PropertyValueByteArray value, @Nullable Calendar timestamp,
-                    @Nullable PropertyFailure failure) {
-        this((byte) 0x00, value != null ? value.getLength() : 0);
-        setTimestampFailure(timestamp, failure);
-        this.propertyValue = value;
+    // MARK: internal ctor
+    // TODO: 2019-02-04 make internal
+
+    public ObjectProperty(byte identifier, T value) {
+        setValue(identifier, value);
     }
 
-    /**
-     * @param identifier The identifier byte of the property.
-     * @param value      The value of the property.
-     */
-    private Property(byte identifier, Bytes value) {
-        this(identifier, value.getByteArray());
+    private void setValue(byte identifier, T value) {
+        Bytes valueBytes = getBytes(value);
+        this.bytes = baseBytes(identifier, valueBytes.getLength());
+        ByteUtils.setBytes(bytes, valueBytes.getByteArray(), 3);
+        this.value = value;
     }
 
-    public Property(Bytes bytes) {
-        this(bytes == null ? null : bytes.getByteArray());
+    public ObjectProperty(Class<T> theClass, byte identifier) {
+        this.theClass = theClass;
+        this.bytes = baseBytes(identifier, 0);
     }
 
-    public Property(String bytes) {
-        this(ByteUtils.bytesFromHexOrBase64(bytes));
+    public ObjectProperty(Class<T> theClass, Property property) throws CommandParseException {
+        this.theClass = theClass;
+        if (property == null || property.getLength() == 0) this.bytes = unknownBytes;
+        if (property.getLength() < 3) this.bytes = Arrays.copyOf(property.getByteArray(), 3);
+        else this.bytes = property.getByteArray();
+        update(property);
     }
 
-    public Property(byte[] bytes) {
-        if (bytes == null || bytes.length == 0) bytes = unknownBytes;
-        if (bytes.length < 3) bytes = Arrays.copyOf(bytes, 3);
-        this.bytes = bytes;
-    }
+    private Bytes getBytes(T value) {
+        // this is for builder
+        if (value instanceof PropertyValueObject) {
+            return ((PropertyValueObject) value).getBytes();
+        } else if (value instanceof PropertyValueSingleByte) {
+            byte byteValue = ((PropertyValueSingleByte) value).getByte();
+            return new Bytes(new byte[]{byteValue});
+        } else if (value instanceof Boolean) {
+            return new Bytes(new byte[]{boolToByte((Boolean) value)});
+        } else if (value instanceof Number) {
+            if (value instanceof Float) {
+                return new Bytes(floatToBytes((Float) value));
+            } else if (value instanceof Integer) {
+                return new Bytes(BigInteger.valueOf((Integer) value).toByteArray());
+            } else if (value instanceof Double) {
+                return new Bytes(doubleToBytes((Double) value));
+            }
+        } else if (value instanceof int[]) {
+            int[] valueIntArray = (int[]) value;
+            byte[] valueBytes = new byte[valueIntArray.length];
 
-    public Property(byte identifier) {
-        this(identifier, 0);
+            for (int i = 0; i < valueIntArray.length; i++) {
+                byte byteValue = Property.intToBytes(valueIntArray[i], 1)[0];
+                valueBytes[i] = byteValue;
+            }
+
+            return new Bytes(valueBytes);
+        } else {
+            throw new IllegalArgumentException("Type not supported for Property");
+        }
+
+        return null;
     }
 
     public int getValueLength() {
-        return Property.getUnsignedInt(bytes, 1, 2);
+        return getUnsignedInt(bytes, 1, 2);
     }
 
     /**
@@ -176,35 +179,46 @@ public class Property extends Bytes {
      * @return The one value byte. Returns null if property has no value set.
      */
     @Nullable public Byte getValueByte() {
-        if (bytes.length <= 3) return null;
+        if (bytes.length == 3) return null;
         return bytes[3];
     }
+
+    // TODO: 2019-02-04 make private 
 
     /**
      * Set a new identifier for the property
      *
      * @param identifier The identifier.
      */
-    public Property setIdentifier(byte identifier) {
+    public ObjectProperty setIdentifier(byte identifier) {
         bytes[0] = identifier;
         return this;
     }
 
     // TODO: 2019-02-04 make private
-    public void setPropertyFailure(PropertyFailure propertyFailure) {
-        this.failure = propertyFailure;
-    }
 
-    // TODO: 2019-02-04 make private
-    public void setPropertyTimestamp(PropertyTimestamp propertyTimestamp) {
-        this.timestamp = propertyTimestamp;
-    }
+    /**
+     * Reset the value length. This will create a new base byte array. It is used for Integer
+     * builders because we dont want the user to bother about whether Integer is signed or how many
+     * bytes is it's length.
+     *
+     * @param identifier The property identifier.
+     * @param newLength  The new length.
+     */
+    public ObjectProperty updateIntegerFromBuilder(byte identifier, boolean signed, int newLength) {
+        byte[] bytes = baseBytes(identifier, newLength);
 
-    // TODO: 2019-01-31 set to private. has to call the proper ctor with these arguments
-    // or nvm if easier for primitive types to use this
-    protected void setTimestampFailure(Calendar timestamp, PropertyFailure failure) {
-        if (timestamp != null) this.timestamp = new PropertyTimestamp(timestamp);
-        this.failure = failure;
+        if (value == null) return this;
+
+        if (newLength == 1) {
+            bytes[3] = ((Integer) value).byteValue();
+        } else {
+            ByteUtils.setBytes(bytes, intToBytes((Integer) value, newLength), 3);
+        }
+
+        this.bytes = bytes;
+
+        return this;
     }
 
     public void printFailedToParse(Exception e) {
@@ -213,19 +227,81 @@ public class Property extends Bytes {
 //        e.printStackTrace();
     }
 
-    public static void ignoreInvalidByteSizeException(RunnableExc r) throws CommandParseException {
+    public byte getPropertyIdentifier() {
+        return bytes[0];
+    }
+
+    // TODO: 2019-02-04 private
+    public ObjectProperty update(Property p) throws CommandParseException {
+        if (theClass == null)
+            throw new IllegalArgumentException("Initialise with a class to update.");
+
+        this.bytes = p.getByteArray();
+        this.failure = p.failure;
+        this.timestamp = p.timestamp;
+
         try {
-            r.run();
-        } catch (IllegalArgumentException e) {
-        } catch (NullPointerException e2) {
+            if (PropertyValueObject.class.isAssignableFrom(theClass)) {
+                value = theClass.newInstance();
+                ((PropertyValueObject) value).update(p.getValueBytes());
+            } else if (Enum.class.isAssignableFrom(theClass)) {
+                value = theClass.getEnumConstants()[p.getValueByte()];
+            } else if (Boolean.class.isAssignableFrom(theClass)) {
+                value = (T) getBool(p.getValueByte());
+            } else if (Number.class.isAssignableFrom(theClass)) {
+                // TODO: 2019-02-04
+            } else if (int[].class.isAssignableFrom(theClass)) {
+                // TODO: 2019-02-04
+            }
 
+            // TODO: 2019-02-04 create int, enum values
+        } catch (IllegalAccessException e) {
+
+        } catch (InstantiationException e) {
+
+        } catch (CommandParseException e) {
+            // TODO: 2019-02-01 error handling
         }
+
+        /*Bytes valueBytes = p.getValueBytes();
+
+        if (valueBytes.getLength() > 0) {
+            // TODO: 2019-02-04 create the correct value object
+            value = (T) new PropertyValueObject(valueBytes);
+        }*/
+
+        return this;
     }
 
-    @FunctionalInterface
-    public interface RunnableExc {
-        void run() throws CommandParseException;
+    /*ObjectProperty update(T value) {
+        if (value != null) {
+            Bytes newValue = value.getBytes();
+
+            if (newValue != null) {
+                if (getValueLength() < newValue.getLength()) {
+                    // reset the bytes
+                    bytes = baseBytes(getPropertyIdentifier(), newValue.getLength());
+                }
+
+                ByteUtils.setBytes(bytes, newValue.getByteArray(), 3);
+            }
+        }
+
+        return this;
+    }*/
+
+    protected void setTimestampFailure(Calendar timestamp, PropertyFailure failure) {
+        if (timestamp != null) this.timestamp = new PropertyTimestamp(timestamp);
+        this.failure = failure;
     }
+
+
+    /*public boolean isUniversalProperty() {
+        return this instanceof PropertyFailure || this instanceof PropertyTimestamp;
+    }*/
+    // TODO: 2019-02-01
+
+    // helper methods
 
     protected static byte[] baseBytes(byte identifier, int valueSize) {
         byte[] bytes = new byte[3 + valueSize];
@@ -242,46 +318,6 @@ public class Property extends Bytes {
 
         return bytes;
     }
-
-    public byte getPropertyIdentifier() {
-        return bytes[0];
-    }
-
-    public Property update(Property p) throws CommandParseException {
-        this.bytes = p.bytes;
-        this.failure = p.failure;
-        this.timestamp = p.timestamp;
-        return this;
-    }
-
-    public Property update(PropertyValue p) {
-        if (p != null) {
-            Bytes newValue = null;
-
-            if (p instanceof PropertyValueSingleByte) {
-                newValue = new Bytes(new byte[]{((PropertyValueSingleByte) p).getByte()});
-            } else if (p instanceof PropertyValueByteArray) {
-                newValue = ((PropertyValueByteArray) p).getBytes();
-            }
-
-            if (newValue != null) {
-                if (getValueLength() < newValue.getLength()) {
-                    // reset the bytes
-                    bytes = baseBytes(getPropertyIdentifier(), newValue.getLength());
-                }
-
-                ByteUtils.setBytes(bytes, newValue.getByteArray(), 3);
-            }
-        }
-
-        return this;
-    }
-
-    public boolean isUniversalProperty() {
-        return this instanceof PropertyFailure || this instanceof PropertyTimestamp;
-    }
-
-    // helper methods
 
     public static byte[] getPropertyBytes(byte identifier, byte value) throws
             IllegalArgumentException {
@@ -451,8 +487,6 @@ public class Property extends Bytes {
      * @throws IllegalArgumentException when input is invalid
      */
     public static byte[] intToBytes(int value, int length) throws IllegalArgumentException {
-        if (length == 1) return new byte[]{(byte) value};
-
         byte[] bytes = BigInteger.valueOf(value).toByteArray();
 
         if (bytes.length == length) {
@@ -570,15 +604,15 @@ public class Property extends Bytes {
         int msOffset = calendar.getTimeZone().getRawOffset(); // in ms
         int minuteOffset = msOffset / (60 * 1000);
 
-        byte[] bytesOffset = Property.intToBytes(minuteOffset, 2);
+        byte[] bytesOffset = ObjectProperty.intToBytes(minuteOffset, 2);
         bytes[6] = bytesOffset[0];
         bytes[7] = bytesOffset[1];
 
         return bytes;
     }
 
-    public static class SortForParsing implements Comparator<Property> {
-        public int compare(Property a, Property b) {
+    public static class SortForParsing implements Comparator<ObjectProperty> {
+        public int compare(ObjectProperty a, ObjectProperty b) {
             // -1 before, 1 after
             if (a.getPropertyIdentifier() != PropertyFailure.IDENTIFIER &&
                     a.getPropertyIdentifier() != PropertyTimestamp.IDENTIFIER) {

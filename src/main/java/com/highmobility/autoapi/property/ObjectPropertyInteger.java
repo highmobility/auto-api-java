@@ -20,13 +20,22 @@
 
 package com.highmobility.autoapi.property;
 
-public class ByteProperty extends Property {
-    public ByteProperty(byte identifier, byte value) {
-        super(identifier, 1);
-        bytes[3] = value;
+import com.highmobility.autoapi.CommandParseException;
+
+public class ObjectPropertyInteger extends ObjectProperty<Integer> {
+    // since int has different signed and length options, its better to have a property subclass.
+    boolean signed;
+
+    public ObjectPropertyInteger(Class<Integer> theClass, byte identifier, boolean signed) {
+        super(theClass, identifier);
+        this.signed = signed;
     }
 
-    public ByteProperty(byte aByte) {
-        this((byte) 0, aByte);
+    @Override public ObjectProperty update(Property p) throws CommandParseException {
+        if (p.getValueLength() >= 1) {
+            if (signed) value = Property.getSignedInt(p.getValueBytesArray());
+            else value = Property.getUnsignedInt(p.getValueBytesArray());
+        }
+        return this;
     }
 }

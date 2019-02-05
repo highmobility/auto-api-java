@@ -22,76 +22,37 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-import java.util.Calendar;
+public enum DrivingMode implements PropertyValueSingleByte {
+    REGULAR((byte) 0x00),
+    ECO((byte) 0x01),
+    SPORT((byte) 0x02),
+    SPORT_PLUS((byte) 0x03),
+    ECO_PLUS((byte) 0x04);
 
-import javax.annotation.Nullable;
+    public static DrivingMode fromByte(byte byteValue) throws CommandParseException {
+        DrivingMode[] values = DrivingMode.values();
 
-public class DrivingMode extends Property {
-    Value value;
+        for (int i = 0; i < values.length; i++) {
+            DrivingMode state = values[i];
+            if (state.getByte() == byteValue) {
+                return state;
+            }
+        }
 
-    @Nullable public Value getValue() {
+        throw new CommandParseException();
+    }
+
+    private byte value;
+
+    DrivingMode(byte value) {
+        this.value = value;
+    }
+
+    public byte getByte() {
         return value;
     }
 
-    public DrivingMode(@Nullable Value value, @Nullable Calendar timestamp,
-                       @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public DrivingMode(Value value) {
-        super(value);
-        this.value = value;
-        if (value != null) bytes[3] = value.getByte();
-    }
-
-    public DrivingMode(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 1) value = value.fromByte(p.get(3));
-        return this;
-    }
-
-    public DrivingMode(byte identifier) {
-        super(identifier);
-    }
-
-    public enum Value implements PropertyValue {
-        REGULAR((byte) 0x00),
-        ECO((byte) 0x01),
-        SPORT((byte) 0x02),
-        SPORT_PLUS((byte) 0x03),
-        ECO_PLUS((byte) 0x04);
-
-        public static Value fromByte(byte byteValue) throws CommandParseException {
-            Value[] values = Value.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Value state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Value(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-
-        @Override public int getLength() {
-            return 1;
-        }
+    @Override public int getLength() {
+        return 1;
     }
 }

@@ -30,13 +30,13 @@ import java.util.Arrays;
 public class DrivingModeEnergyConsumption extends Property {
     public static final byte IDENTIFIER = 0x06;
 
-    DrivingMode.Value drivingMode;
+    DrivingMode drivingMode;
     Float energyConsumption;
 
     /**
      * @return The driving mode.
      */
-    public DrivingMode.Value getDrivingMode() {
+    public DrivingMode getDrivingMode() {
         return drivingMode;
     }
 
@@ -50,15 +50,15 @@ public class DrivingModeEnergyConsumption extends Property {
     public DrivingModeEnergyConsumption(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length < 5) throw new CommandParseException();
-        drivingMode = DrivingMode.Value.fromByte(bytes[3]);
+        drivingMode = DrivingMode.fromByte(bytes[3]);
         energyConsumption = Property.getFloat(Arrays.copyOfRange(bytes, 4, 8));
     }
 
-    public DrivingModeEnergyConsumption(DrivingMode.Value mode, float energyConsumption) {
+    public DrivingModeEnergyConsumption(DrivingMode mode, float energyConsumption) {
         this(IDENTIFIER, mode, energyConsumption);
     }
 
-    DrivingModeEnergyConsumption(byte identifier, DrivingMode.Value mode, float energyConsumption) {
+    DrivingModeEnergyConsumption(byte identifier, DrivingMode mode, float energyConsumption) {
         super(identifier, 5);
         bytes[3] = mode.getByte();
         ByteUtils.setBytes(bytes, Property.floatToBytes(energyConsumption), 4);

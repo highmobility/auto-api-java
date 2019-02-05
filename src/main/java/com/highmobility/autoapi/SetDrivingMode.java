@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ByteProperty;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.Property;
 
@@ -29,26 +30,26 @@ import com.highmobility.autoapi.property.Property;
 public class SetDrivingMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x12);
     private static final byte IDENTIFIER = 0x01;
-    DrivingMode.Value drivingMode;
+    DrivingMode drivingMode;
 
     /**
      * @return The driving mode.
      */
-    public DrivingMode.Value getDrivingMode() {
+    public DrivingMode getDrivingMode() {
         return drivingMode;
     }
 
     /**
      * @param drivingMode The driving mode.
      */
-    public SetDrivingMode(DrivingMode.Value drivingMode) {
-        super(TYPE.addProperty(new DrivingMode(drivingMode).setIdentifier(IDENTIFIER)));
+    public SetDrivingMode(DrivingMode drivingMode) {
+        super(TYPE.addProperty(new ByteProperty(drivingMode.getByte()).setIdentifier(IDENTIFIER)));
         this.drivingMode = drivingMode;
     }
 
     SetDrivingMode(byte[] bytes) throws CommandParseException {
         super(bytes);
         Property prop = getProperty(IDENTIFIER);
-        if (prop != null) this.drivingMode = DrivingMode.Value.fromByte(prop.getValueByte());
+        if (prop != null) this.drivingMode = DrivingMode.fromByte(prop.getValueByte());
     }
 }
