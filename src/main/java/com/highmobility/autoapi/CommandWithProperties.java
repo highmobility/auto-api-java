@@ -346,6 +346,11 @@ public class CommandWithProperties extends Command implements PropertyValue {
         }
     }
 
+    protected void createBytes(Property property) {
+        bytes = type.getIdentifierAndType();
+        bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
+    }
+
     CommandWithProperties(Builder builder) throws IllegalArgumentException {
         super(builder.type);
         findUniversalProperties(builder.getProperties(), true);

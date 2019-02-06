@@ -168,7 +168,7 @@ public class ControlLights extends CommandWithProperties {
         }
 
         if (rearExteriorLightActive != null) {
-            properties.add(this.rearExteriorLightActive.setValue(rearExteriorLightActive));
+            properties.add(this.rearExteriorLightActive.update(rearExteriorLightActive));
         }
 
         if (ambientColor != null) {

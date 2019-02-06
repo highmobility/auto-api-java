@@ -59,13 +59,13 @@ public class ChassisSettings extends CommandWithProperties {
     ObjectProperty<SpringRate>[] minimumSpringRates;
 
     ObjectProperty<Integer> currentChassisPosition =
-            new ObjectPropertyInteger(Integer.class, IDENTIFIER_CURRENT_CHASSIS_POSITION, true);
+            new ObjectPropertyInteger(IDENTIFIER_CURRENT_CHASSIS_POSITION, true);
 
     ObjectProperty<Integer> maximumChassisPosition =
-            new ObjectPropertyInteger(Integer.class, IDENTIFIER_MAXIMUM_CHASSIS_POSITION, true);
+            new ObjectPropertyInteger(IDENTIFIER_MAXIMUM_CHASSIS_POSITION, true);
 
     ObjectProperty<Integer> minimumChassisPosition =
-            new ObjectPropertyInteger(Integer.class, IDENTIFIER_MINIMUM_CHASSIS_POSITION, true);
+            new ObjectPropertyInteger(IDENTIFIER_MINIMUM_CHASSIS_POSITION, true);
 
     /**
      * @return The driving mode.

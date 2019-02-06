@@ -23,7 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
@@ -70,12 +71,12 @@ public class ChargeState extends CommandWithProperties {
 
 
     IntegerProperty estimatedRange = new IntegerProperty(ESTIMATED_RANGE_IDENTIFIER, false);
-    PercentageProperty batteryLevel = new PercentageProperty(BATTERY_LEVEL_IDENTIFIER);
+    ObjectPropertyPercentage batteryLevel = new ObjectPropertyPercentage(BATTERY_LEVEL_IDENTIFIER);
     FloatProperty batteryCurrentAC = new FloatProperty(BATTERY_CURRENT_AC_IDENTIFIER);
     FloatProperty batteryCurrentDC = new FloatProperty(BATTERY_CURRENT_DC_IDENTIFIER);
     FloatProperty chargerVoltageAC = new FloatProperty(CHARGER_VOLTAGE_AC_IDENTIFIER);
     FloatProperty chargerVoltageDC = new FloatProperty(CHARGER_VOLTAGE_DC_IDENTIFIER);
-    PercentageProperty chargeLimit = new PercentageProperty(CHARGE_LIMIT_IDENTIFIER);
+    ObjectPropertyPercentage chargeLimit = new ObjectPropertyPercentage(CHARGE_LIMIT_IDENTIFIER);
     IntegerProperty timeToCompleteCharge = new IntegerProperty(TIME_TO_COMPLETE_CHARGE_IDENTIFIER
             , false);
     FloatProperty chargingRate = new FloatProperty(CHARGING_RATE_IDENTIFIER);
@@ -101,7 +102,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The battery level percentage.
      */
-    @Nullable public PercentageProperty getBatteryLevel() {
+    @Nullable public ObjectProperty<Integer> getBatteryLevel() {
         return batteryLevel;
     }
 
@@ -136,7 +137,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The Charge limit percentage.
      */
-    @Nullable public PercentageProperty getChargeLimit() {
+    @Nullable public ObjectProperty<Integer> getChargeLimit() {
         return chargeLimit;
     }
 
@@ -348,14 +349,14 @@ public class ChargeState extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private IntegerProperty estimatedRange;
-        private PercentageProperty batteryLevel;
+        private ObjectPropertyPercentage batteryLevel;
         private FloatProperty batteryCurrentAC;
         private FloatProperty batteryCurrentDC;
 
         private FloatProperty chargerVoltageAC;
         private FloatProperty chargerVoltageDC;
 
-        private PercentageProperty chargeLimit;
+        private ObjectPropertyPercentage chargeLimit;
         private IntegerProperty timeToCompleteCharge;
 
         private FloatProperty chargingRate;
@@ -403,7 +404,7 @@ public class ChargeState extends CommandWithProperties {
          * @param batteryLevel The battery level percentage.
          * @return The builder.
          */
-        public Builder setBatteryLevel(PercentageProperty batteryLevel) {
+        public Builder setBatteryLevel(ObjectPropertyPercentage batteryLevel) {
             this.batteryLevel = batteryLevel;
             batteryLevel.setIdentifier(BATTERY_LEVEL_IDENTIFIER);
             addProperty(batteryLevel);
@@ -458,7 +459,7 @@ public class ChargeState extends CommandWithProperties {
          * @param chargeLimit The charge limit percentage.
          * @return The builder.
          */
-        public Builder setChargeLimit(PercentageProperty chargeLimit) {
+        public Builder setChargeLimit(ObjectPropertyPercentage chargeLimit) {
             this.chargeLimit = chargeLimit;
             chargeLimit.setIdentifier(CHARGE_LIMIT_IDENTIFIER);
             addProperty(chargeLimit);

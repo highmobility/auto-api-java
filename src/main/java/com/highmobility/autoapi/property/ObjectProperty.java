@@ -83,7 +83,6 @@ public class ObjectProperty<T> extends Property {
 
     // MARK: builder ctor
 
-
     public ObjectProperty(@Nullable T value,
                           @Nullable Calendar timestamp,
                           @Nullable PropertyFailure failure) {
@@ -95,19 +94,16 @@ public class ObjectProperty<T> extends Property {
         if (value == null) {
             bytes = baseBytes((byte) 0, 0);
         } else {
-            setValue((byte) 0, value);
+            update((byte) 0, value);
         }
-
-
 
     }
     // MARK: internal ctor
     // TODO: 2019-02-04 make internal
 
     public ObjectProperty(byte identifier, T value) {
-        setValue(identifier, value);
+        update(identifier, value);
     }
-
 
     public ObjectProperty(Class<T> theClass, byte identifier) {
         this.theClass = theClass;
@@ -123,7 +119,12 @@ public class ObjectProperty<T> extends Property {
     }
 
     // TODO: 2019-02-05 make internal
-    public ObjectProperty setValue(byte identifier, T value) {
+    public ObjectProperty update(T value) {
+        return update(bytes[0], value);
+    }
+
+    // TODO: 2019-02-05 make internal
+    public ObjectProperty update(byte identifier, T value) {
         Bytes valueBytes = getBytes(value);
         this.bytes = baseBytes(identifier, valueBytes.getLength());
         ByteUtils.setBytes(bytes, valueBytes.getByteArray(), 3);
@@ -131,12 +132,7 @@ public class ObjectProperty<T> extends Property {
         return this;
     }
 
-    // TODO: 2019-02-05 make internal
-    public ObjectProperty setValue(T value) {
-        return setValue(bytes[0], value);
-    }
-
-    private Bytes getBytes(T value) {
+    protected Bytes getBytes(T value) {
         // this is for builder
         if (value instanceof PropertyValueObject) {
             return ((PropertyValueObject) value).getBytes();
@@ -260,6 +256,7 @@ public class ObjectProperty<T> extends Property {
             } else if (Boolean.class.isAssignableFrom(theClass)) {
                 value = (T) getBool(p.getValueByte());
             } else if (Number.class.isAssignableFrom(theClass)) {
+
                 // TODO: 2019-02-04
             } else if (int[].class.isAssignableFrom(theClass)) {
                 // TODO: 2019-02-04

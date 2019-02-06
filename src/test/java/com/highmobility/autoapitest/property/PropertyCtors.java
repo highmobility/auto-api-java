@@ -15,7 +15,8 @@ import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.KeyFobPositionProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
@@ -291,11 +292,11 @@ public class PropertyCtors {
         assertTrue(updateProp.getValue() != null);
     }
 
-    @Test public void PercentageProperty() throws CommandParseException {
+    @Test public void ObjectPropertyPercentage() throws CommandParseException {
         Property property = new Property("01000100");
 
-        assertTrue(new PercentageProperty(property).getValue() != null);
-        PercentageProperty updateProp = new PercentageProperty((byte) 0x00);
+        assertTrue(new ObjectPropertyPercentage(property).getValue() != null);
+        ObjectPropertyPercentage updateProp = new ObjectPropertyPercentage((byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }

@@ -11,7 +11,8 @@ import com.highmobility.autoapi.SeatsState;
 import com.highmobility.autoapi.property.ConvertibleRoofState;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.PropertyTimestamp;
@@ -86,9 +87,9 @@ public class CommandTest {
         // TBODO:
 
         RooftopState.Builder builder = new RooftopState.Builder();
-        builder.setDimmingPercentage(new PercentageProperty(1f));
+        builder.setDimmingPercentage(new ObjectPropertyPercentage(100));
         builder.setSunroofTiltState(new SunroofTiltState(SunroofTiltState.Value.HALF_TILTED));
-        builder.setOpenPercentage(new PercentageProperty(null, null,
+        builder.setOpenPercentage(new ObjectPropertyPercentage(null, null,
                 new PropertyFailure(PropertyFailure.Reason.RATE_LIMIT, "Try in 40s")));
         builder.setConvertibleRoofState(new ConvertibleRoofState(null, null,
                 new PropertyFailure(PropertyFailure.Reason.EXECUTION_TIMEOUT, "Try " +
@@ -308,7 +309,7 @@ public class CommandTest {
 
         assertTrue(command.getClass() == RooftopState.class);
         RooftopState state = (RooftopState) command;
-        assertTrue(state.getDimmingPercentage().getValue() == .01f);
+        assertTrue(state.getDimmingPercentage().getValue() == 1);
         assertTrue(state.getOpenPercentage().getValue() == null);
         assertTrue(state.getProperties().length == 2);
 

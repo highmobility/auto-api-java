@@ -13,7 +13,8 @@ import com.highmobility.autoapi.StartStopCharging;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
@@ -55,13 +56,13 @@ public class ChargingTest {
         ChargeState state = (ChargeState) command;
 
         assertTrue(state.getEstimatedRange().getValue() == 255);
-        assertTrue(state.getBatteryLevel().getValue() == .5f);
+        assertTrue(state.getBatteryLevel().getValue() == 50);
         assertTrue(state.getBatteryCurrentAC().getValue() == -.6f);
         assertTrue(state.getBatteryCurrentDC().getValue() == -.6f);
         assertTrue(state.getChargerVoltageAC().getValue() == 400f);
         assertTrue(state.getChargerVoltageDC().getValue() == 410f);
         assertTrue(state.getTimeToCompleteCharge().getValue() == 60);
-        assertTrue(state.getChargeLimit().getValue() == .9f);
+        assertTrue(state.getChargeLimit().getValue() == 90);
         assertTrue(state.getChargingRate().getValue() == 0f);
         assertTrue(state.getChargePortState().getValue() == ChargePortState.Value.OPEN);
         assertTrue(state.getChargeMode().getValue() == ChargeMode.Value.IMMEDIATE);
@@ -140,12 +141,12 @@ public class ChargingTest {
     @Test public void build() throws ParseException {
         ChargeState.Builder builder = new ChargeState.Builder();
         builder.setEstimatedRange(new IntegerProperty(255));
-        builder.setBatteryLevel(new PercentageProperty(.5f));
+        builder.setBatteryLevel(new ObjectPropertyPercentage(50));
         builder.setBatteryCurrentAC(new FloatProperty(-.6f));
         builder.setBatteryCurrentDC(new FloatProperty(-.6f));
         builder.setChargerVoltageAC(new FloatProperty(400f));
         builder.setChargerVoltageDC(new FloatProperty(410f));
-        builder.setChargeLimit(new PercentageProperty(.9f));
+        builder.setChargeLimit(new ObjectPropertyPercentage(90));
         builder.setTimeToCompleteCharge(new IntegerProperty(60));
         builder.setChargingRate(new FloatProperty(0f));
         builder.setChargePortState(new ChargePortState(ChargePortState.Value.OPEN));
@@ -190,11 +191,11 @@ public class ChargingTest {
     @Test public void setChargeLimit() {
         Bytes expected = new Bytes("0023130100015A");
 
-        Bytes commandBytes = new SetChargeLimit(.9f);
+        Bytes commandBytes = new SetChargeLimit(90);
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
 
         SetChargeLimit command = (SetChargeLimit) CommandResolver.resolve(expected);
-        assertTrue(command.getChargeLimit() == .9f);
+        assertTrue(command.getChargeLimit() == 90);
     }
 
     @Test public void openCloseChargePort() {

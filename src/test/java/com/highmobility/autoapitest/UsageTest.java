@@ -53,9 +53,9 @@ public class UsageTest {
         assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
         assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
         assertTrue(state.getAverageWeeklyDistanceLongTerm().getValue() == 666);
-        assertTrue(state.getAccelerationEvaluation().getValue() == .7f);
-        assertTrue(state.getDrivingStyleEvaluation().getValue() == .7f);
-        assertTrue(state.getDrivingStyleEvaluation().getValue() == .7f);
+        assertTrue(state.getAccelerationEvaluation().getValue() == 70);
+        assertTrue(state.getDrivingStyleEvaluation().getValue() == 70);
+        assertTrue(state.getDrivingStyleEvaluation().getValue() == 70);
 
         assertTrue(state.getDrivingModeActivationPeriods().length == 2);
         assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.ECO).getPercentage() == .6f);
@@ -71,9 +71,9 @@ public class UsageTest {
         assertTrue(state.getLastTripEnergyConsumption().getValue() == 101.3f);
         assertTrue(state.getLastTripFuelConsumption().getValue() == 22.5f);
         assertTrue(state.getMileageAfterLastTrip().getValue() == 95632.7f);
-        assertTrue(state.getLastTripElectricPortion().getValue() == .7f);
+        assertTrue(state.getLastTripElectricPortion().getValue() == 70);
         assertTrue(state.getLastTripAverageEnergyRecuperation().getValue() == 5.68f);
-        assertTrue(state.getLastTripBatteryRemaining().getValue() == .5f);
+        assertTrue(state.getLastTripBatteryRemaining().getValue() == 50);
         assertTrue(TestUtils.dateIsSame(state.getLastTripDate(), "2018-10-17T10:33:50+0100"));
         assertTrue(state.getAverageFuelConsumption().getValue() == 6.5f);
         assertTrue(state.getCurrentFuelConsumption().getValue() == 7.5f);

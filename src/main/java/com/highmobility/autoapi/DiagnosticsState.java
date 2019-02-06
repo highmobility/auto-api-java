@@ -23,7 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
 import com.highmobility.autoapi.property.diagnostics.DiagnosticsTroubleCode;
@@ -81,7 +81,7 @@ public class DiagnosticsState extends CommandWithProperties {
     IntegerProperty oilTemperature = new IntegerProperty(IDENTIFIER_OIL_TEMPERATURE, false);
     IntegerProperty speed = new IntegerProperty(IDENTIFIER_SPEED, false);
     IntegerProperty rpm = new IntegerProperty(IDENTIFIER_RPM, false);
-    PercentageProperty fuelLevel = new PercentageProperty(IDENTIFIER_FUEL_LEVEL);
+    ObjectPropertyPercentage fuelLevel = new ObjectPropertyPercentage(IDENTIFIER_FUEL_LEVEL);
     IntegerProperty range = new IntegerProperty(IDENTIFIER_RANGE, false);
     WasherFluidLevel washerFluidLevel = new WasherFluidLevel(IDENTIFIER_WASHER_FLUID_LEVEL);
     FloatProperty batteryVoltage = new FloatProperty(IDENTIFIER_BATTERY_VOLTAGE);
@@ -102,12 +102,12 @@ public class DiagnosticsState extends CommandWithProperties {
     FloatProperty engineTotalFuelConsumption =
             new FloatProperty(IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
     BrakeFluidLevel brakeFluidLevel = new BrakeFluidLevel(IDENTIFIER_BRAKE_FLUID_LEVEL);
-    PercentageProperty engineTorque = new PercentageProperty(IDENTIFIER_ENGINE_TORQUE);
-    PercentageProperty engineLoad = new PercentageProperty(IDENTIFIER_ENGINE_LOAD);
+    ObjectPropertyPercentage engineTorque = new ObjectPropertyPercentage(IDENTIFIER_ENGINE_TORQUE);
+    ObjectPropertyPercentage engineLoad = new ObjectPropertyPercentage(IDENTIFIER_ENGINE_LOAD);
     IntegerProperty wheelBasedSpeed = new IntegerProperty(IDENTIFIER_WHEEL_BASED_SPEED, true);
 
     // level8
-    PercentageProperty batteryLevel = new PercentageProperty(IDENTIFIER_BATTERY_LEVEL);
+    ObjectPropertyPercentage batteryLevel = new ObjectPropertyPercentage(IDENTIFIER_BATTERY_LEVEL);
     CheckControlMessage[] checkControlMessages;
     TirePressure[] tirePressures;
     TireTemperature[] tireTemperatures;
@@ -147,7 +147,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The Fuel level percentage.
      */
-    @Nullable public PercentageProperty getFuelLevel() {
+    @Nullable public ObjectPropertyPercentage getFuelLevel() {
         return fuelLevel;
     }
 
@@ -238,14 +238,14 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The current engine torque percentage.
      */
-    @Nullable public PercentageProperty getEngineTorque() {
+    @Nullable public ObjectPropertyPercentage getEngineTorque() {
         return engineTorque;
     }
 
     /**
      * @return The current engine load percentage.
      */
-    @Nullable public PercentageProperty getEngineLoad() {
+    @Nullable public ObjectPropertyPercentage getEngineLoad() {
         return engineLoad;
     }
 
@@ -259,7 +259,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The battery level percentage.
      */
-    @Nullable public PercentageProperty getBatteryLevel() {
+    @Nullable public ObjectPropertyPercentage getBatteryLevel() {
         return batteryLevel;
     }
 
@@ -487,7 +487,7 @@ public class DiagnosticsState extends CommandWithProperties {
         private IntegerProperty oilTemperature;
         private IntegerProperty speed;
         private IntegerProperty rpm;
-        private PercentageProperty fuelLevel;
+        private ObjectPropertyPercentage fuelLevel;
         private IntegerProperty range;
         private WasherFluidLevel washerFluidLevel;
         private FloatProperty batteryVoltage;
@@ -501,11 +501,11 @@ public class DiagnosticsState extends CommandWithProperties {
         private FloatProperty engineTotalOperatingHours;
         private FloatProperty engineTotalFuelConsumption;
         private BrakeFluidLevel brakeFluidLevel;
-        private PercentageProperty engineTorque;
-        private PercentageProperty engineLoad;
+        private ObjectPropertyPercentage engineTorque;
+        private ObjectPropertyPercentage engineLoad;
         private IntegerProperty wheelBasedSpeed;
 
-        private PercentageProperty batteryLevel;
+        private ObjectPropertyPercentage batteryLevel;
         private List<TirePressure> tirePressures = new ArrayList<>();
         private List<TireTemperature> tireTemperatures = new ArrayList<>();
         private List<WheelRpm> wheelRpms = new ArrayList<>();
@@ -569,7 +569,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param fuelLevel The fuel level percentage between 0 and 1.
          * @return The builder.
          */
-        public Builder setFuelLevel(PercentageProperty fuelLevel) {
+        public Builder setFuelLevel(ObjectPropertyPercentage fuelLevel) {
             fuelLevel.setIdentifier(IDENTIFIER_FUEL_LEVEL);
             this.fuelLevel = fuelLevel;
             addProperty(fuelLevel);
@@ -714,7 +714,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param engineTorque The current engine torque percentage between 0-1.
          * @return The builder.
          */
-        public Builder setEngineTorque(PercentageProperty engineTorque) {
+        public Builder setEngineTorque(ObjectPropertyPercentage engineTorque) {
             this.engineTorque = engineTorque;
             engineTorque.setIdentifier(IDENTIFIER_ENGINE_TORQUE);
             addProperty(engineTorque);
@@ -725,7 +725,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param engineLoad The current engine load percentage between 0-1.
          * @return The builder.
          */
-        public Builder setEngineLoad(PercentageProperty engineLoad) {
+        public Builder setEngineLoad(ObjectPropertyPercentage engineLoad) {
             this.engineLoad = engineLoad;
             engineLoad.setIdentifier(IDENTIFIER_ENGINE_LOAD);
             addProperty(engineLoad);
@@ -750,7 +750,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param batteryLevel The battery level.
          * @return The builder.
          */
-        public Builder setBatteryLevel(PercentageProperty batteryLevel) {
+        public Builder setBatteryLevel(ObjectPropertyPercentage batteryLevel) {
             this.batteryLevel = batteryLevel;
             batteryLevel.setIdentifier(IDENTIFIER_BATTERY_LEVEL);
             addProperty(batteryLevel);

@@ -10,7 +10,8 @@ import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -47,9 +48,9 @@ public class RaceTest {
                 AccelerationProperty.AccelerationType.LONGITUDINAL).getAcceleration() == .864f);
         assertTrue(state.getAcceleration(
                 AccelerationProperty.AccelerationType.LATERAL).getAcceleration() == -0.753f);
-        assertTrue(state.getUnderSteering().getValue() == .19f);
-        assertTrue(state.getOverSteering().getValue() == 0f);
-        assertTrue(state.getGasPedalPosition().getValue() == .98f);
+        assertTrue(state.getUnderSteering().getValue() == 19);
+        assertTrue(state.getOverSteering().getValue() == 0);
+        assertTrue(state.getGasPedalPosition().getValue() == 98);
         assertTrue(state.getSteeringAngle().getValue() == -30);
         assertTrue(state.getBrakePressure().getValue() == 11.56f);
         assertTrue(state.getYawRate().getValue() == 6.66f);
@@ -60,7 +61,7 @@ public class RaceTest {
         assertTrue(state.getBrakeTorqueVectoring(Axle.FRONT) == null);
         assertTrue(state.getGearMode() == GearMode.DRIVE);
         assertTrue(state.getSelectedGear().getValue() == 4);
-        assertTrue(state.getBrakePedalPosition().getValue() == .01f);
+        assertTrue(state.getBrakePedalPosition().getValue() == 1);
 
         assertTrue(state.isBrakePedalSwitchActive().getValue() == true);
         assertTrue(state.isClutchPedalSwitchActive().getValue() == true);
@@ -77,9 +78,9 @@ public class RaceTest {
                 .AccelerationType.LONGITUDINAL, .864f));
         builder.addAccelerationProperty(new AccelerationProperty(AccelerationProperty
                 .AccelerationType.LATERAL, -.753f));
-        builder.setUnderSteering(new PercentageProperty(.19f));
-        builder.setOverSteering(new PercentageProperty(0f));
-        builder.setGasPedalPosition(new PercentageProperty(.98f));
+        builder.setUnderSteering(new ObjectPropertyPercentage(19));
+        builder.setOverSteering(new ObjectPropertyPercentage(0));
+        builder.setGasPedalPosition(new ObjectPropertyPercentage(98));
         builder.setSteeringAngle(new IntegerProperty(-30));
         builder.setBrakePressure(new FloatProperty(11.56f));
         builder.setYawRate(new FloatProperty(6.66f));
@@ -88,7 +89,7 @@ public class RaceTest {
         builder.addBrakeTorqueVectoring(new BrakeTorqueVectoring(Axle.REAR, true));
         builder.setGearMode(GearMode.DRIVE);
         builder.setSelectedGear(new IntegerProperty(4));
-        builder.setBrakePedalPosition(new PercentageProperty(.01f));
+        builder.setBrakePedalPosition(new ObjectPropertyPercentage(1));
 
         builder.setBrakePedalSwitchActive(new ObjectProperty<>(true));
         builder.setClutchPedalSwitchActive(new ObjectProperty<>(true));

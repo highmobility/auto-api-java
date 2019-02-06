@@ -23,7 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.usage.DrivingModeActivationPeriod;
 import com.highmobility.autoapi.property.usage.DrivingModeEnergyConsumption;
@@ -57,16 +57,20 @@ public class Usage extends CommandWithProperties {
 
     private IntegerProperty averageWeeklyDistance;
     private IntegerProperty averageWeeklyDistanceLongTerm;
-    private PercentageProperty accelerationEvaluation;
-    private PercentageProperty drivingStyleEvaluation;
+    private ObjectPropertyPercentage accelerationEvaluation =
+            new ObjectPropertyPercentage(IDENTIFIER_ACCELERATION_EVALUATION);
+    private ObjectPropertyPercentage drivingStyleEvaluation =
+            new ObjectPropertyPercentage(IDENTIFIER_DRIVING_STYLE_EVALUATION);
     private DrivingModeActivationPeriod[] drivingModeActivationPeriods;
     private DrivingModeEnergyConsumption[] drivingModeEnergyConsumptions;
     private FloatProperty lastTripEnergyConsumption;
     private FloatProperty lastTripFuelConsumption;
     private FloatProperty mileageAfterLastTrip;
-    private PercentageProperty lastTripElectricPortion;
+    private ObjectPropertyPercentage lastTripElectricPortion =
+            new ObjectPropertyPercentage(IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION);
     private FloatProperty lastTripAverageEnergyRecuperation;
-    private PercentageProperty lastTripBatteryRemaining;
+    private ObjectPropertyPercentage lastTripBatteryRemaining =
+            new ObjectPropertyPercentage(IDENTIFIER_LAST_TRIP_BATTERY_REMAINING);
     private Calendar lastTripDate;
     private FloatProperty averageFuelConsumption;
     private FloatProperty currentFuelConsumption;
@@ -88,14 +92,14 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The acceleration evaluation.
      */
-    @Nullable public PercentageProperty getAccelerationEvaluation() {
+    @Nullable public ObjectPropertyPercentage getAccelerationEvaluation() {
         return accelerationEvaluation;
     }
 
     /**
      * @return The driving style's evaluation in %
      */
-    @Nullable public PercentageProperty getDrivingStyleEvaluation() {
+    @Nullable public ObjectPropertyPercentage getDrivingStyleEvaluation() {
         return drivingStyleEvaluation;
     }
 
@@ -166,7 +170,7 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The % of the last trip used in electric mode.
      */
-    @Nullable public PercentageProperty getLastTripElectricPortion() {
+    @Nullable public ObjectPropertyPercentage getLastTripElectricPortion() {
         return lastTripElectricPortion;
     }
 
@@ -180,7 +184,7 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The battery % remaining after last trip.
      */
-    @Nullable public PercentageProperty getLastTripBatteryRemaining() {
+    @Nullable public ObjectPropertyPercentage getLastTripBatteryRemaining() {
         return lastTripBatteryRemaining;
     }
 
@@ -221,11 +225,9 @@ public class Usage extends CommandWithProperties {
                         averageWeeklyDistanceLongTerm = new IntegerProperty(p, false);
                         break;
                     case IDENTIFIER_ACCELERATION_EVALUATION:
-                        accelerationEvaluation = new PercentageProperty(p);
-                        return accelerationEvaluation;
+                        return accelerationEvaluation.update(p);
                     case IDENTIFIER_DRIVING_STYLE_EVALUATION:
-                        drivingStyleEvaluation = new PercentageProperty(p);
-                        return drivingStyleEvaluation;
+                        return drivingStyleEvaluation.update(p);
                     case DrivingModeActivationPeriod.IDENTIFIER:
                         DrivingModeActivationPeriod drivingModeActivationPeriod =
                                 new DrivingModeActivationPeriod(p.getByteArray());
@@ -246,14 +248,12 @@ public class Usage extends CommandWithProperties {
                         mileageAfterLastTrip = new FloatProperty(p);
                         return mileageAfterLastTrip;
                     case IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION:
-                        lastTripElectricPortion = new PercentageProperty(p);
-                        return lastTripElectricPortion;
+                        return lastTripElectricPortion.update(p);
                     case IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION:
                         lastTripAverageEnergyRecuperation = new FloatProperty(p);
                         return lastTripAverageEnergyRecuperation;
                     case IDENTIFIER_LAST_TRIP_BATTERY_REMAINING:
-                        lastTripBatteryRemaining = new PercentageProperty(p);
-                        return lastTripBatteryRemaining;
+                        return lastTripBatteryRemaining.update(p);
                     case IDENTIFIER_LAST_TRIP_DATE:
                         lastTripDate = Property.getCalendar(p.getValueBytesArray());
                         return lastTripDate;
@@ -304,17 +304,17 @@ public class Usage extends CommandWithProperties {
     public static final class Builder extends CommandWithProperties.Builder {
         private IntegerProperty averageWeeklyDistance;
         private IntegerProperty averageWeeklyDistanceLongTerm;
-        private PercentageProperty accelerationEvaluation;
-        private PercentageProperty drivingStyleEvaluation;
+        private ObjectPropertyPercentage accelerationEvaluation;
+        private ObjectPropertyPercentage drivingStyleEvaluation;
         private List<DrivingModeActivationPeriod> drivingModeActivationPeriods = new ArrayList<>();
         private List<DrivingModeEnergyConsumption> drivingModeEnergyConsumptions = new
                 ArrayList<>();
         private FloatProperty lastTripEnergyConsumption;
         private FloatProperty lastTripFuelConsumption;
         private FloatProperty mileageAfterLastTrip;
-        private PercentageProperty lastTripElectricPortion;
+        private ObjectPropertyPercentage lastTripElectricPortion;
         private FloatProperty lastTripAverageEnergyRecuperation;
-        private PercentageProperty lastTripBatteryRemaining;
+        private ObjectPropertyPercentage lastTripBatteryRemaining;
         private Calendar lastTripDate;
         private FloatProperty averageFuelConsumption;
         private FloatProperty currentFuelConsumption;

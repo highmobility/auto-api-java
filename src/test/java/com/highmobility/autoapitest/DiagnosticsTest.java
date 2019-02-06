@@ -7,7 +7,8 @@ import com.highmobility.autoapi.GetDiagnosticsState;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
 import com.highmobility.autoapi.property.diagnostics.DiagnosticsTroubleCode;
@@ -61,7 +62,7 @@ public class DiagnosticsTest {
         assertTrue(state.getSpeed().getValue() == 60);
         assertTrue(state.getRpm().getValue() == 2500);
         assertTrue(state.getRange().getValue() == 265);
-        assertTrue(state.getFuelLevel().getValue() == .9f);
+        assertTrue(state.getFuelLevel().getValue() == 90);
         assertTrue(state.getWasherFluidLevel().getValue() == WasherFluidLevel.Value.FULL);
         assertTrue(state.getFuelVolume().getValue() == 35.5f);
 
@@ -75,12 +76,12 @@ public class DiagnosticsTest {
         assertTrue(state.getEngineTotalOperatingHours().getValue() == 1500.65f);
         assertTrue(state.getEngineTotalFuelConsumption().getValue() == 27587.0f);
         assertTrue(state.getBrakeFluidLevel().getValue() == BrakeFluidLevel.Value.LOW);
-        assertTrue(state.getEngineTorque().getValue() == .2f);
-        assertTrue(state.getEngineLoad().getValue() == .1f);
+        assertTrue(state.getEngineTorque().getValue() == 20);
+        assertTrue(state.getEngineLoad().getValue() == 10);
         assertTrue(state.getWheelBasedSpeed().getValue() == 65);
 
         // level 8
-        assertTrue(state.getBatteryLevel().getValue() == .56f);
+        assertTrue(state.getBatteryLevel().getValue() == 56);
 
         int propertyCount = 0;
 
@@ -182,7 +183,7 @@ public class DiagnosticsTest {
         builder.setOilTemperature(new IntegerProperty(99));
         builder.setSpeed(new IntegerProperty(60));
         builder.setRpm(new IntegerProperty(2500));
-        builder.setFuelLevel(new PercentageProperty(.9f));
+        builder.setFuelLevel(new ObjectPropertyPercentage(90));
         builder.setRange(new IntegerProperty(265));
         builder.setWasherFluidLevel(new WasherFluidLevel(WasherFluidLevel.Value.FULL));
 
@@ -197,12 +198,12 @@ public class DiagnosticsTest {
         builder.setEngineTotalOperatingHours(new FloatProperty(1500.65f));
         builder.setEngineTotalFuelConsumption(new FloatProperty(27587.0f));
         builder.setBrakeFluidLevel(new BrakeFluidLevel(BrakeFluidLevel.Value.LOW));
-        builder.setEngineTorque(new PercentageProperty(.2f));
-        builder.setEngineLoad(new PercentageProperty(.1f));
+        builder.setEngineTorque(new ObjectPropertyPercentage(20));
+        builder.setEngineLoad(new ObjectPropertyPercentage(10));
         builder.setWheelBasedSpeed(new IntegerProperty(65));
 
         // level8
-        builder.setBatteryLevel(new PercentageProperty(.56f));
+        builder.setBatteryLevel(new ObjectPropertyPercentage(56));
 
         CheckControlMessage msg1 = new CheckControlMessage(1, 105592, "Check engine", "Alert");
         CheckControlMessage msg2 = new CheckControlMessage(1, 105592, "Check engine", "Alertt");

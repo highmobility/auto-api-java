@@ -24,50 +24,6 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.value.Bytes;
 
-//public class SpringRateProperty extends Property {
-    /*Value value;
-
-    @Nullable public Value getValue() {
-        return value;
-    }
-
-    public SpringRateProperty(byte identifier) {
-        super(identifier);
-    }
-
-    public SpringRateProperty(Axle axle, Integer springRate) {
-        this(new Value(axle, springRate));
-    }
-
-    public SpringRateProperty(@Nullable Value value, @Nullable Calendar timestamp,
-                              @Nullable PropertyFailure failure) {
-        super(value, timestamp, failure);
-        update(value);
-    }
-
-    public SpringRateProperty(Value value) {
-        super(value);
-        update(value);
-    }
-
-    public SpringRateProperty(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    public SpringRateProperty update(Property p) throws CommandParseException {
-        super.update(p);
-        ignoreInvalidByteSizeException(() -> value = new Value(p.getValueBytes()));
-        // TODO: 2019-01-31 test that IllegalArgument/nullpointer is not thrown and value is null
-        return this;
-    }
-
-    public SpringRateProperty update(Value value) {
-        super.update(value);
-        this.value = value;
-        return this;
-    }
-*/
 public class SpringRate extends PropertyValueObject {
     Axle axle;
     Integer springRate;
@@ -106,6 +62,4 @@ public class SpringRate extends PropertyValueObject {
             springRate = Property.getUnsignedInt(bytes.get(1));
         } else throw new IllegalArgumentException();
     }
-
-    //    }
 }

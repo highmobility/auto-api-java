@@ -26,8 +26,8 @@ public class ObjectPropertyInteger extends ObjectProperty<Integer> {
     // since int has different signed and length options, its better to have a property subclass.
     boolean signed;
 
-    public ObjectPropertyInteger(Class<Integer> theClass, byte identifier, boolean signed) {
-        super(theClass, identifier);
+    public ObjectPropertyInteger(byte identifier, boolean signed) {
+        super(Integer.class, identifier);
         this.signed = signed;
     }
 

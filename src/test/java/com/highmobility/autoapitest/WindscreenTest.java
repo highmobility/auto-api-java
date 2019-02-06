@@ -53,7 +53,7 @@ public class WindscreenTest {
         assertTrue(matrix.getWindscreenSizeHorizontal() == 4);
         assertTrue(matrix.getWindscreenSizeVertical() == 3);
 
-        assertTrue(state.getDamageConfidence().getValue() == .95f);
+        assertTrue(state.getDamageConfidence().getValue() == 95);
 
         Calendar c = state.getDamageDetectionTime();
 
@@ -151,7 +151,7 @@ public class WindscreenTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("004201");
         WindscreenState state = (WindscreenState) CommandResolver.resolve(bytes);
-        assertTrue(state.getDamageConfidence() == null);
+        assertTrue(state.getDamageConfidence().getValue() == null);
     }
 
     @Test public void controlWipersTest() {

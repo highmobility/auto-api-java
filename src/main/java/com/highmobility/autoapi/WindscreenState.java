@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindscreenDamage;
 import com.highmobility.autoapi.property.WindscreenDamageZone;
@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
 public class WindscreenState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x01);
 
-    private static final byte DAMAGE_CONFIDENCE_IDENTIFIER = 0x07;
+    private static final byte IDENTIFIER_DAMAGE_CONFIDENCE = 0x07;
     private static final byte DAMAGE_DETECTION_TIME_IDENTIFIER = 0x08;
     private static final byte WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER = 0x06;
 
@@ -55,7 +55,8 @@ public class WindscreenState extends CommandWithProperties {
     WindscreenDamageZone windscreenDamageZone;
     WindscreenDamageZoneMatrix windscreenDamageZoneMatrix;
     WindscreenReplacementState windscreenReplacementState;
-    PercentageProperty damageConfidence;
+    ObjectPropertyPercentage damageConfidence =
+            new ObjectPropertyPercentage(IDENTIFIER_DAMAGE_CONFIDENCE);
     Calendar damageDetectionTime;
 
     /**
@@ -103,7 +104,7 @@ public class WindscreenState extends CommandWithProperties {
     /**
      * @return The damage confidence.
      */
-    @Nullable public PercentageProperty getDamageConfidence() {
+    @Nullable public ObjectPropertyPercentage getDamageConfidence() {
         return damageConfidence;
     }
 
@@ -116,21 +117,21 @@ public class WindscreenState extends CommandWithProperties {
 
     WindscreenState(byte[] bytes) {
         super(bytes);
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_WIPERS_STATE:
                         wiperState = WiperState.fromByte(p.getValueByte());
-                        return wiperState;
+                        return null;
                     case IDENTIFIER_WIPER_INTENSITY:
                         wiperIntensity = WiperIntensity.fromByte(p.getValueByte());
-                        return wiperIntensity;
+                        return null;
                     case IDENTIFIER_WINDSCREEN_DAMAGE:
                         windscreenDamage = WindscreenDamage.fromByte(p.getValueByte());
-                        return windscreenDamage;
+                        return null;
                     case WindscreenDamageZoneMatrix.IDENTIFIER:
-                        windscreenDamageZoneMatrix = new WindscreenDamageZoneMatrix(p
-                                .getValueByte());
+                        windscreenDamageZoneMatrix =
+                                new WindscreenDamageZoneMatrix(p.getValueByte());
                         return windscreenDamageZoneMatrix;
                     case WindscreenDamageZone.IDENTIFIER:
                         windscreenDamageZone = new WindscreenDamageZone(p.getValueByte());
@@ -138,13 +139,12 @@ public class WindscreenState extends CommandWithProperties {
                     case WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER:
                         windscreenReplacementState = WindscreenReplacementState.fromByte(p
                                 .getValueByte());
-                        return windscreenReplacementState;
-                    case DAMAGE_CONFIDENCE_IDENTIFIER:
-                        damageConfidence = new PercentageProperty(p);
-                        return damageConfidence;
+                        return null;
+                    case IDENTIFIER_DAMAGE_CONFIDENCE:
+                        return damageConfidence.update(p);
                     case DAMAGE_DETECTION_TIME_IDENTIFIER:
                         damageDetectionTime = Property.getCalendar(p.getValueBytesArray());
-                        return damageDetectionTime;
+                        return null;
                 }
                 return null;
             });
@@ -174,7 +174,7 @@ public class WindscreenState extends CommandWithProperties {
         private WindscreenDamageZone windscreenDamageZone;
         private WindscreenDamageZoneMatrix windscreenDamageZoneMatrix;
         private WindscreenReplacementState windscreenReplacementState;
-        private PercentageProperty damageConfidence;
+        private ObjectPropertyPercentage damageConfidence;
         private Calendar damageDetectionTime;
 
         public Builder() {
@@ -250,9 +250,9 @@ public class WindscreenState extends CommandWithProperties {
          * @param damageConfidence The damage confidence.
          * @return The builder.
          */
-        public Builder setDamageConfidence(PercentageProperty damageConfidence) {
+        public Builder setDamageConfidence(ObjectPropertyPercentage damageConfidence) {
             this.damageConfidence = damageConfidence;
-            damageConfidence.setIdentifier(DAMAGE_CONFIDENCE_IDENTIFIER);
+            damageConfidence.setIdentifier(IDENTIFIER_DAMAGE_CONFIDENCE);
             addProperty(damageConfidence);
             return this;
         }

@@ -20,53 +20,46 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.CommandParseException;
-
-import java.util.Calendar;
-
 import javax.annotation.Nullable;
+/*
 
+*/
 /**
- * {@link #getValue()} is float 0-1. {@link #getValueByte()} is 0-100 int.
- */
-public class PercentageProperty extends Property {
+ * {@link #getValue()} is float 0-1. {@link #getByte()} ()} is 0-100 int.
+ *//*
+
+public class PercentageProperty implements PropertyValueSingleByte {
     Float value;
 
-    /**
+    */
+/**
      * @return Percentage between 0 and 1.
-     */
+     *//*
+
     @Nullable public Float getValue() {
         return value;
     }
 
+    public PercentageProperty() {
+    }
+
     public PercentageProperty(Float value) {
-        this((byte) 0x00, value);
-    }
-
-    public PercentageProperty(@Nullable Float value, @Nullable Calendar timestamp,
-                              @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public PercentageProperty(byte identifier, Float value) {
-        super(identifier, value == null ? 0 : 1);
         this.value = value;
-        if (value != null) bytes[3] = floatToIntPercentageByte(value);
     }
 
-    public PercentageProperty(Property p) throws CommandParseException {
-        super(p);
-        update(p);
+    public PercentageProperty(byte value) {
+        update(value);
     }
 
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 1) this.value = getUnsignedInt(p.getValueByte()) / 100f;
-        return this;
+    public void update(byte value) {
+        this.value = ObjectProperty.getUnsignedInt(value) / 100f;
     }
 
-    public PercentageProperty(byte identifier) {
-        super(identifier);
+    @Override public byte getByte() {
+        return ObjectProperty.floatToIntPercentageByte(value);
     }
-}
+
+    @Override public int getLength() {
+        return 1;
+    }
+}*/

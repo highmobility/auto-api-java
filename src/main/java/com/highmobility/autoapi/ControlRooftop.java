@@ -21,7 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ConvertibleRoofState;
-import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.SunroofTiltState;
@@ -41,8 +42,12 @@ public class ControlRooftop extends CommandWithProperties {
     private static final byte IDENTIFIER_SUNROOF_TILT = 0x04;
     private static final byte IDENTIFIER_SUNROOF_POSITION = 0x05;
 
-    private Float dimmingPercentage;
-    private Float openPercentage;
+    private ObjectProperty<Integer> dimmingPercentage =
+            new ObjectPropertyPercentage(RooftopState.DIMMING_IDENTIFIER);
+
+    private ObjectProperty<Integer> openPercentage =
+            new ObjectPropertyPercentage(RooftopState.OPEN_IDENTIFIER);
+
     private ConvertibleRoofState.Value convertibleRoofState;
     private SunroofTiltState.Value sunroofTiltState;
     private Position.Value sunroofPosition;
@@ -50,15 +55,15 @@ public class ControlRooftop extends CommandWithProperties {
     /**
      * @return The dimming percentage.
      */
-    @Nullable public Float getDimmingPercentage() {
-        return dimmingPercentage;
+    @Nullable public Integer getDimmingPercentage() {
+        return dimmingPercentage.getValue();
     }
 
     /**
      * @return The open percentage.
      */
-    @Nullable public Float getOpenPercentage() {
-        return openPercentage;
+    @Nullable public Integer getOpenPercentage() {
+        return openPercentage.getValue();
     }
 
     /**
@@ -90,75 +95,68 @@ public class ControlRooftop extends CommandWithProperties {
      * @param sunroofPosition      The sunroof position.
      */
 
-    public ControlRooftop(@Nullable Float dimmingPercentage,
-                          @Nullable Float openPercentage,
+    public ControlRooftop(@Nullable Integer dimmingPercentage,
+                          @Nullable Integer openPercentage,
                           @Nullable ConvertibleRoofState.Value convertibleRoofState,
                           @Nullable SunroofTiltState.Value sunroofTiltState,
                           @Nullable Position.Value sunroofPosition) {
-        super(TYPE, getProperties(dimmingPercentage, openPercentage, convertibleRoofState,
-                sunroofTiltState, sunroofPosition));
-        this.dimmingPercentage = dimmingPercentage;
-        this.openPercentage = openPercentage;
-        this.convertibleRoofState = convertibleRoofState;
-        this.sunroofTiltState = sunroofTiltState;
-        this.sunroofPosition = sunroofPosition;
-    }
+        super(TYPE);
 
-    static Property[] getProperties(@Nullable Float dimmingPercentage,
-                                    @Nullable Float openPercentage,
-                                    @Nullable ConvertibleRoofState.Value convertibleRoofState,
-                                    @Nullable SunroofTiltState.Value sunroofTiltState,
-                                    @Nullable Position.Value sunroofPosition) {
         List<Property> properties = new ArrayList<>();
 
         if (dimmingPercentage != null) {
-            Property prop = new PercentageProperty(RooftopState.DIMMING_IDENTIFIER,
-                    dimmingPercentage);
-            properties.add(prop);
+            properties.add(this.dimmingPercentage.update(dimmingPercentage));
         }
 
         if (openPercentage != null) {
-            Property prop = new PercentageProperty(RooftopState.OPEN_IDENTIFIER, openPercentage);
-            properties.add(prop);
+            properties.add(this.openPercentage.update(openPercentage));
         }
 
         if (convertibleRoofState != null) {
             properties.add(new Property(IDENTIFIER_CONVERTIBLE_ROOFTOP,
                     convertibleRoofState.getByte()));
+            this.convertibleRoofState = convertibleRoofState;
         }
 
         if (sunroofTiltState != null) {
             properties.add(new Property(IDENTIFIER_SUNROOF_TILT, sunroofTiltState.getByte()));
+            this.sunroofTiltState = sunroofTiltState;
         }
 
         if (sunroofPosition != null) {
             properties.add(new Property(IDENTIFIER_SUNROOF_POSITION, sunroofPosition.getByte()));
+            this.sunroofPosition = sunroofPosition;
         }
 
-        return properties.toArray(new Property[0]);
+        createBytes(properties);
     }
 
-    ControlRooftop(byte[] bytes) throws CommandParseException {
+    ControlRooftop(byte[] bytes) {
         super(bytes);
 
-        for (Property prop : properties) {
-            switch (prop.getPropertyIdentifier()) {
-                case RooftopState.DIMMING_IDENTIFIER:
-                    dimmingPercentage = Property.getUnsignedInt(prop.getValueByte()) / 100f;
-                    break;
-                case RooftopState.OPEN_IDENTIFIER:
-                    openPercentage = Property.getUnsignedInt(prop.getValueByte()) / 100f;
-                    break;
-                case IDENTIFIER_CONVERTIBLE_ROOFTOP:
-                    convertibleRoofState = ConvertibleRoofState.Value.fromByte(prop.getValueByte());
-                    break;
-                case IDENTIFIER_SUNROOF_TILT:
-                    sunroofTiltState = SunroofTiltState.Value.fromByte(prop.getValueByte());
-                    break;
-                case IDENTIFIER_SUNROOF_POSITION:
-                    sunroofPosition = Position.Value.fromByte(prop.getValueByte());
-                    break;
-            }
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case RooftopState.DIMMING_IDENTIFIER:
+                        dimmingPercentage.update(p);
+                        break;
+                    case RooftopState.OPEN_IDENTIFIER:
+                        openPercentage.update(p);
+                        break;
+                    case IDENTIFIER_CONVERTIBLE_ROOFTOP:
+                        convertibleRoofState =
+                                ConvertibleRoofState.Value.fromByte(p.getValueByte());
+                        break;
+                    case IDENTIFIER_SUNROOF_TILT:
+                        sunroofTiltState = SunroofTiltState.Value.fromByte(p.getValueByte());
+                        break;
+                    case IDENTIFIER_SUNROOF_POSITION:
+                        sunroofPosition = Position.Value.fromByte(p.getValueByte());
+                        break;
+                }
+
+                return null;
+            });
         }
     }
 }

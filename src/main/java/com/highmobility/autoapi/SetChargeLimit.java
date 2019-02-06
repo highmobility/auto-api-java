@@ -20,8 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.PercentageProperty;
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 
 /**
  * Set the charge limit, to which point the car will charge itself. The result is sent through the
@@ -30,13 +31,13 @@ import com.highmobility.autoapi.property.Property;
 public class SetChargeLimit extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x13);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    float percentage;
+    ObjectPropertyPercentage percentage = new ObjectPropertyPercentage(PROPERTY_IDENTIFIER);
 
     /**
      * @return The charge limit percentage.
      */
-    public float getChargeLimit() {
-        return percentage;
+    public int getChargeLimit() {
+        return percentage.getValue();
     }
 
     /**
@@ -44,21 +45,23 @@ public class SetChargeLimit extends CommandWithProperties {
      *
      * @param percentage The charge limit percentage.
      */
-    public SetChargeLimit(float percentage) throws IllegalArgumentException {
-        super(TYPE.addProperty(new PercentageProperty(PROPERTY_IDENTIFIER, percentage)));
-        this.percentage = percentage;
+    public SetChargeLimit(int percentage) throws IllegalArgumentException {
+        super(TYPE);
+        this.percentage.update(percentage);
+        createBytes(this.percentage);
     }
 
     SetChargeLimit(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case PROPERTY_IDENTIFIER:
-                    percentage = Property.getPercentage(property.getValueByte());
-                    break;
-            }
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
+                    return percentage.update(p);
+                }
+                return null;
+            });
         }
+
     }
 }

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 
 import javax.annotation.Nullable;
 
@@ -31,11 +31,11 @@ import javax.annotation.Nullable;
 public class OffroadState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.OFF_ROAD, 0x01);
 
-    private static final byte ROUTE_ID = 0x01;
-    private static final byte WHEEL_ID = 0x02;
+    private static final byte IDENTIFIER_ROUTE_INCLINE = 0x01;
+    private static final byte IDENTIFIER_WHEEL_SUSPENSION = 0x02;
 
     IntegerProperty routeIncline;
-    PercentageProperty wheelSuspension;
+    ObjectPropertyPercentage wheelSuspension = new ObjectPropertyPercentage(IDENTIFIER_WHEEL_SUSPENSION);
 
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.
@@ -48,22 +48,21 @@ public class OffroadState extends CommandWithProperties {
      * @return The wheel suspension level percentage, whereas 0 is no suspension and 1 maximum.
      * suspension
      */
-    @Nullable public PercentageProperty getWheelSuspension() {
+    @Nullable public ObjectPropertyPercentage getWheelSuspension() {
         return wheelSuspension;
     }
 
     public OffroadState(byte[] bytes) {
         super(TYPE, bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case ROUTE_ID:
+                    case IDENTIFIER_ROUTE_INCLINE:
                         routeIncline = new IntegerProperty(p, false);
                         return routeIncline;
-                    case WHEEL_ID:
-                        wheelSuspension = new PercentageProperty(p);
-                        return wheelSuspension;
+                    case IDENTIFIER_WHEEL_SUSPENSION:
+                        return wheelSuspension.update(p);
                 }
 
                 return null;
@@ -83,7 +82,7 @@ public class OffroadState extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private IntegerProperty routeIncline;
-        private PercentageProperty wheelSuspension;
+        private ObjectPropertyPercentage wheelSuspension;
 
         public Builder() {
             super(TYPE);
@@ -96,7 +95,7 @@ public class OffroadState extends CommandWithProperties {
          */
         public Builder setRouteIncline(IntegerProperty routeIncline) {
             this.routeIncline = routeIncline;
-            routeIncline.setIdentifier(ROUTE_ID, 2);
+            routeIncline.setIdentifier(IDENTIFIER_ROUTE_INCLINE, 2);
             addProperty(routeIncline);
             return this;
         }
@@ -106,9 +105,9 @@ public class OffroadState extends CommandWithProperties {
          *                        and 1 maximum suspension.
          * @return The builder.
          */
-        public Builder setWheelSuspension(PercentageProperty wheelSuspension) {
+        public Builder setWheelSuspension(ObjectPropertyPercentage wheelSuspension) {
             this.wheelSuspension = wheelSuspension;
-            wheelSuspension.setIdentifier(WHEEL_ID);
+            wheelSuspension.setIdentifier(IDENTIFIER_WHEEL_SUSPENSION);
             addProperty(wheelSuspension);
             return this;
         }

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ConvertibleRoofState;
-import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.SunroofTiltState;
 
@@ -40,8 +40,8 @@ public class RooftopState extends CommandWithProperties {
     private static final byte IDENTIFIER_SUNROOF_TILT = 0x04;
     private static final byte IDENTIFIER_SUNROOF_POSITION = 0x05;
 
-    PercentageProperty dimmingPercentage = new PercentageProperty(DIMMING_IDENTIFIER);
-    PercentageProperty openPercentage = new PercentageProperty(OPEN_IDENTIFIER);
+    ObjectPropertyPercentage dimmingPercentage = new ObjectPropertyPercentage(DIMMING_IDENTIFIER);
+    ObjectPropertyPercentage openPercentage = new ObjectPropertyPercentage(OPEN_IDENTIFIER);
     ConvertibleRoofState convertibleRoofState =
             new ConvertibleRoofState(IDENTIFIER_CONVERTIBLE_ROOF);
     SunroofTiltState sunroofTiltState =
@@ -51,14 +51,14 @@ public class RooftopState extends CommandWithProperties {
     /**
      * @return The dim percentage of the rooftop.
      */
-    @Nullable public PercentageProperty getDimmingPercentage() {
+    @Nullable public ObjectPropertyPercentage getDimmingPercentage() {
         return dimmingPercentage;
     }
 
     /**
      * @return The percentage of how much the rooftop is open.
      */
-    @Nullable public PercentageProperty getOpenPercentage() {
+    @Nullable public ObjectPropertyPercentage getOpenPercentage() {
         return openPercentage;
     }
 
@@ -121,8 +121,8 @@ public class RooftopState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private PercentageProperty openPercentage;
-        private PercentageProperty dimmingPercentage;
+        private ObjectPropertyPercentage openPercentage;
+        private ObjectPropertyPercentage dimmingPercentage;
         private ConvertibleRoofState convertibleRoofState;
         private SunroofTiltState sunroofTiltState;
         private Position sunroofPosition;
@@ -135,7 +135,7 @@ public class RooftopState extends CommandWithProperties {
          * @param openPercentage The open percentage.
          * @return The builder.
          */
-        public Builder setOpenPercentage(PercentageProperty openPercentage) {
+        public Builder setOpenPercentage(ObjectPropertyPercentage openPercentage) {
             this.openPercentage = openPercentage;
             addProperty(openPercentage.setIdentifier(OPEN_IDENTIFIER));
             return this;
@@ -145,7 +145,7 @@ public class RooftopState extends CommandWithProperties {
          * @param dimmingPercentage The dimming percentage.
          * @return The builder.
          */
-        public Builder setDimmingPercentage(PercentageProperty dimmingPercentage) {
+        public Builder setDimmingPercentage(ObjectPropertyPercentage dimmingPercentage) {
             this.dimmingPercentage = dimmingPercentage;
             addProperty(dimmingPercentage.setIdentifier(DIMMING_IDENTIFIER));
             return this;

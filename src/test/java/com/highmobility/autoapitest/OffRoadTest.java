@@ -5,7 +5,9 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetOffroadState;
 import com.highmobility.autoapi.OffroadState;
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+
+import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -29,7 +31,7 @@ public class OffRoadTest {
 
     void testState(OffroadState state) {
         assertTrue(state.getRouteIncline().getValue() == 10);
-        assertTrue(state.getWheelSuspension().getValue() == .5f);
+        assertTrue(state.getWheelSuspension().getValue() == 50);
         assertTrue(state.getType() == OffroadState.TYPE);
     }
 
@@ -48,7 +50,7 @@ public class OffRoadTest {
     @Test public void build() {
         OffroadState.Builder builder = new OffroadState.Builder();
         builder.setRouteIncline(new IntegerProperty(10));
-        builder.setWheelSuspension(new PercentageProperty(.5f));
+        builder.setWheelSuspension(new ObjectPropertyPercentage(50));
         OffroadState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
 
