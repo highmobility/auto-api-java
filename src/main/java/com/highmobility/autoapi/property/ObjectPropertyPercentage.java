@@ -30,6 +30,10 @@ import javax.annotation.Nullable;
 public class ObjectPropertyPercentage extends ObjectProperty<Integer> {
     private static final String INVALID_RANGE_EXCEPTION = "Percentage in invalid range";
 
+    public float getPercentageValue() {
+        return getPercentage(getValueByte());
+    }
+
     public ObjectPropertyPercentage(@Nullable Integer value, @Nullable Calendar timestamp,
                                     @Nullable PropertyFailure failure) {
         super(value, timestamp, failure);

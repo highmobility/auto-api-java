@@ -42,7 +42,7 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 
 /**
  * Property is a representation of some AutoAPI data. Specific data have specific subclasses like
- * StringProperty and FloatProperty.
+ * StringProperty and ObjectProperty<Float>.
  * <p>
  * Property has to have a value with a size greater or equal to 1.
  */
@@ -233,14 +233,15 @@ public class ObjectProperty<T> extends Property {
                 value = theClass.getEnumConstants()[p.getValueByte()];
             } else if (Boolean.class.isAssignableFrom(theClass)) {
                 value = (T) getBool(p.getValueByte());
-            } else if (Number.class.isAssignableFrom(theClass)) {
-
-                // TODO: 2019-02-04
+            } else if (Float.class.isAssignableFrom(theClass)) {
+                value = (T) (Float) getFloat(p.getValueBytesArray());
+            } else if (Double.class.isAssignableFrom(theClass)) {
+                value = (T) (Double) getDouble(p.getValueBytesArray());
             } else if (int[].class.isAssignableFrom(theClass)) {
                 // TODO: 2019-02-04
             }
+// TODO: 2019-02-04 add double
 
-            // TODO: 2019-02-04 create int, enum values
         } catch (IllegalAccessException e) {
 
         } catch (InstantiationException e) {

@@ -4,7 +4,6 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
-import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectProperty;
 
@@ -187,16 +186,16 @@ public class DiagnosticsTest {
         builder.setRange(new ObjectPropertyInteger(265));
         builder.setWasherFluidLevel(new WasherFluidLevel(WasherFluidLevel.Value.FULL));
 
-        builder.setBatteryVoltage(new FloatProperty(12f));
-        builder.setAdBlueLevel(new FloatProperty(.5f));
+        builder.setBatteryVoltage(new ObjectProperty<Float>(12f));
+        builder.setAdBlueLevel(new ObjectProperty<Float>(.5f));
         builder.setDistanceDrivenSinceReset(new ObjectPropertyInteger(1500));
         builder.setDistanceDrivenSinceEngineStart(new ObjectPropertyInteger(10));
-        builder.setFuelVolume(new FloatProperty(35.5f));
+        builder.setFuelVolume(new ObjectProperty<Float>(35.5f));
 
         builder.setAntiLockBrakingActive(new ObjectProperty<>(true));
         builder.setEngineCoolantTemperature(new ObjectPropertyInteger(20));
-        builder.setEngineTotalOperatingHours(new FloatProperty(1500.65f));
-        builder.setEngineTotalFuelConsumption(new FloatProperty(27587.0f));
+        builder.setEngineTotalOperatingHours(new ObjectProperty<Float>(1500.65f));
+        builder.setEngineTotalFuelConsumption(new ObjectProperty<Float>(27587.0f));
         builder.setBrakeFluidLevel(new BrakeFluidLevel(BrakeFluidLevel.Value.LOW));
         builder.setEngineTorque(new ObjectPropertyPercentage(20));
         builder.setEngineLoad(new ObjectPropertyPercentage(10));

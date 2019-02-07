@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
@@ -85,23 +84,23 @@ public class DiagnosticsState extends CommandWithProperties {
     ObjectPropertyPercentage fuelLevel = new ObjectPropertyPercentage(IDENTIFIER_FUEL_LEVEL);
     ObjectPropertyInteger range = new ObjectPropertyInteger(IDENTIFIER_RANGE, false);
     WasherFluidLevel washerFluidLevel = new WasherFluidLevel(IDENTIFIER_WASHER_FLUID_LEVEL);
-    FloatProperty batteryVoltage = new FloatProperty(IDENTIFIER_BATTERY_VOLTAGE);
-    FloatProperty adBlueLevel = new FloatProperty(IDENTIFIER_AD_BLUE_LEVEL);
+    ObjectProperty<Float> batteryVoltage = new ObjectProperty<>(Float.class, IDENTIFIER_BATTERY_VOLTAGE);
+    ObjectProperty<Float> adBlueLevel = new ObjectProperty<>(Float.class, IDENTIFIER_AD_BLUE_LEVEL);
     ObjectPropertyInteger distanceDrivenSinceReset =
             new ObjectPropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET, false);
     ObjectPropertyInteger distanceDrivenSinceEngineStart =
             new ObjectPropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START, false);
-    FloatProperty fuelVolume = new FloatProperty(IDENTIFIER_FUEL_VOLUME);
+    ObjectProperty<Float> fuelVolume = new ObjectProperty<>(Float.class, IDENTIFIER_FUEL_VOLUME);
 
     // level7
     ObjectProperty<Boolean> antiLockBrakingActive =
             new ObjectProperty<>(Boolean.class, IDENTIFIER_ANTI_LOCK_BRAKING_ACTIVE);
     ObjectPropertyInteger engineCoolantTemperature =
             new ObjectPropertyInteger(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, false);
-    FloatProperty engineTotalOperatingHours =
-            new FloatProperty(IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
-    FloatProperty engineTotalFuelConsumption =
-            new FloatProperty(IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
+    ObjectProperty<Float> engineTotalOperatingHours =
+            new ObjectProperty<>(Float.class, IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
+    ObjectProperty<Float> engineTotalFuelConsumption =
+            new ObjectProperty<>(Float.class, IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
     BrakeFluidLevel brakeFluidLevel = new BrakeFluidLevel(IDENTIFIER_BRAKE_FLUID_LEVEL);
     ObjectPropertyPercentage engineTorque = new ObjectPropertyPercentage(IDENTIFIER_ENGINE_TORQUE);
     ObjectPropertyPercentage engineLoad = new ObjectPropertyPercentage(IDENTIFIER_ENGINE_LOAD);
@@ -171,14 +170,14 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The battery voltage.
      */
-    @Nullable public FloatProperty getBatteryVoltage() {
+    @Nullable public ObjectProperty<Float> getBatteryVoltage() {
         return batteryVoltage;
     }
 
     /**
      * @return AdBlue level in liters.
      */
-    @Nullable public FloatProperty getAdBlueLevel() {
+    @Nullable public ObjectProperty<Float> getAdBlueLevel() {
         return adBlueLevel;
     }
 
@@ -199,7 +198,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The fuel volume measured in liters.
      */
-    @Nullable public FloatProperty getFuelVolume() {
+    @Nullable public ObjectProperty<Float> getFuelVolume() {
         return fuelVolume;
     }
 
@@ -220,14 +219,14 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The the accumulated time of engine operation.
      */
-    @Nullable public FloatProperty getEngineTotalOperatingHours() {
+    @Nullable public ObjectProperty<Float> getEngineTotalOperatingHours() {
         return engineTotalOperatingHours;
     }
 
     /**
      * @return The the accumulated lifespan fuel consumption in liters.
      */
-    @Nullable public FloatProperty getEngineTotalFuelConsumption() {
+    @Nullable public ObjectProperty<Float> getEngineTotalFuelConsumption() {
         return engineTotalFuelConsumption;
     }
 
@@ -493,16 +492,16 @@ public class DiagnosticsState extends CommandWithProperties {
         private ObjectPropertyPercentage fuelLevel;
         private ObjectPropertyInteger range;
         private WasherFluidLevel washerFluidLevel;
-        private FloatProperty batteryVoltage;
-        private FloatProperty adBlueLevel;
+        private ObjectProperty<Float> batteryVoltage;
+        private ObjectProperty<Float> adBlueLevel;
         private ObjectPropertyInteger distanceDrivenSinceReset;
         private ObjectPropertyInteger distanceDrivenSinceEngineStart;
-        private FloatProperty fuelVolume;
+        private ObjectProperty<Float> fuelVolume;
 
         private ObjectProperty<Boolean> antiLockBrakingActive;
         private ObjectPropertyInteger engineCoolantTemperature;
-        private FloatProperty engineTotalOperatingHours;
-        private FloatProperty engineTotalFuelConsumption;
+        private ObjectProperty<Float> engineTotalOperatingHours;
+        private ObjectProperty<Float> engineTotalFuelConsumption;
         private BrakeFluidLevel brakeFluidLevel;
         private ObjectPropertyPercentage engineTorque;
         private ObjectPropertyPercentage engineLoad;
@@ -605,7 +604,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param batteryVoltage The battery voltage.
          * @return The builder.
          */
-        public Builder setBatteryVoltage(FloatProperty batteryVoltage) {
+        public Builder setBatteryVoltage(ObjectProperty<Float> batteryVoltage) {
             this.batteryVoltage = batteryVoltage;
             batteryVoltage.setIdentifier(IDENTIFIER_BATTERY_VOLTAGE);
             addProperty(batteryVoltage);
@@ -616,7 +615,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param adBlueLevel The adBlue level in liters.
          * @return The builder.
          */
-        public Builder setAdBlueLevel(FloatProperty adBlueLevel) {
+        public Builder setAdBlueLevel(ObjectProperty<Float> adBlueLevel) {
             this.adBlueLevel = adBlueLevel;
             adBlueLevel.setIdentifier(IDENTIFIER_AD_BLUE_LEVEL);
             addProperty(adBlueLevel);
@@ -650,7 +649,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param fuelVolume The fuel volume measured in liters.
          * @return The builder.
          */
-        public Builder setFuelVolume(FloatProperty fuelVolume) {
+        public Builder setFuelVolume(ObjectProperty<Float> fuelVolume) {
             this.fuelVolume = fuelVolume;
             fuelVolume.setIdentifier(IDENTIFIER_FUEL_VOLUME);
             addProperty(fuelVolume);
@@ -684,7 +683,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param engineTotalOperatingHours The the accumulated time of engine operation.
          * @return The builder.
          */
-        public Builder setEngineTotalOperatingHours(FloatProperty engineTotalOperatingHours) {
+        public Builder setEngineTotalOperatingHours(ObjectProperty<Float> engineTotalOperatingHours) {
             this.engineTotalOperatingHours = engineTotalOperatingHours;
             engineTotalOperatingHours.setIdentifier(IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
             addProperty(engineTotalOperatingHours);
@@ -696,7 +695,7 @@ public class DiagnosticsState extends CommandWithProperties {
          *                                   liters.
          * @return The builder.
          */
-        public Builder setEngineTotalFuelConsumption(FloatProperty engineTotalFuelConsumption) {
+        public Builder setEngineTotalFuelConsumption(ObjectProperty<Float> engineTotalFuelConsumption) {
             this.engineTotalFuelConsumption = engineTotalFuelConsumption;
             engineTotalFuelConsumption.setIdentifier(IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
             addProperty(engineTotalFuelConsumption);

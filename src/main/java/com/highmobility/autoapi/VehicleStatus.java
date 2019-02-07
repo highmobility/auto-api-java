@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CommandProperty;
-import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.Property;
@@ -56,7 +56,7 @@ public class VehicleStatus extends CommandWithProperties {
     private static final byte IDENTIFIER_NUMBER_OF_SEATS = 0x0B;
     private static final byte COMMAND_IDENTIFIER = (byte) 0x99;
 
-    private static final byte ENGINE_VOLUME_IDENTIFIER = 0x0C;
+    private static final byte IDENTIFIER_ENGINE_VOLUME = 0x0C;
     private static final byte IDENTIFIER_MAX_TORQUE = 0x0D;
     private static final byte GEARBOX_IDENTIFIER = 0x0E;
 
@@ -85,8 +85,10 @@ public class VehicleStatus extends CommandWithProperties {
             false);
 
     // l7
-    FloatProperty engineVolume; // 0c The engine volume displacement in liters
-    ObjectPropertyInteger maxTorque = new ObjectPropertyInteger(IDENTIFIER_MAX_TORQUE, false); // 0d maximum engine torque in N = new ObjectPropertyInteger
+    ObjectProperty<Float> engineVolume = new ObjectProperty<>(Float.class,
+            IDENTIFIER_ENGINE_VOLUME); // 0c The engine volume displacement in liters
+    ObjectPropertyInteger maxTorque = new ObjectPropertyInteger(IDENTIFIER_MAX_TORQUE, false); //
+    // 0d maximum engine torque in N = new ObjectPropertyInteger
     // (IDENTIFIER_MAX_TORQUE)
     Gearbox gearBox; // 0e Gearbox type
 
@@ -200,7 +202,7 @@ public class VehicleStatus extends CommandWithProperties {
     /**
      * @return The engine volume displacement in liters.
      */
-    @Nullable public FloatProperty getEngineVolume() {
+    @Nullable public ObjectProperty<Float> getEngineVolume() {
         return engineVolume;
     }
 
@@ -288,9 +290,8 @@ public class VehicleStatus extends CommandWithProperties {
                         CommandProperty command = new CommandProperty(p);
                         states.add(command);
                         return command;
-                    case ENGINE_VOLUME_IDENTIFIER:
-                        engineVolume = new FloatProperty(p);
-                        return engineVolume;
+                    case IDENTIFIER_ENGINE_VOLUME:
+                        return engineVolume.update(p);
                     case IDENTIFIER_MAX_TORQUE:
                         return maxTorque.update(p);
                     case GEARBOX_IDENTIFIER:
@@ -361,7 +362,7 @@ public class VehicleStatus extends CommandWithProperties {
         private ObjectPropertyInteger numberOfSeats;
         private List<CommandProperty> states = new ArrayList<>();
 
-        private FloatProperty engineVolume;
+        private ObjectProperty<Float> engineVolume;
         private ObjectPropertyInteger maxTorque;
         private Gearbox gearBox;
 
@@ -520,9 +521,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param engineVolume The engine volume displacement in liters.
          * @return The builder.
          */
-        public Builder setEngineVolume(FloatProperty engineVolume) {
+        public Builder setEngineVolume(ObjectProperty<Float> engineVolume) {
             this.engineVolume = engineVolume;
-            engineVolume.setIdentifier(ENGINE_VOLUME_IDENTIFIER);
+            engineVolume.setIdentifier(IDENTIFIER_ENGINE_VOLUME);
             addProperty(engineVolume);
             return this;
         }

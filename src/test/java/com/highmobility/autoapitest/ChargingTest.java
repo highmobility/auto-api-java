@@ -10,7 +10,6 @@ import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
 import com.highmobility.autoapi.StartStopCharging;
-import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectProperty;
 
@@ -55,6 +54,10 @@ public class ChargingTest {
         assertTrue(command.is(ChargeState.TYPE));
         ChargeState state = (ChargeState) command;
 
+        testState(state);
+    }
+
+    private void testState(ChargeState state) throws ParseException {
         assertTrue(state.getEstimatedRange().getValue() == 255);
         assertTrue(state.getBatteryLevel().getValue() == 50);
         assertTrue(state.getBatteryCurrentAC().getValue() == -.6f);
@@ -142,17 +145,17 @@ public class ChargingTest {
         ChargeState.Builder builder = new ChargeState.Builder();
         builder.setEstimatedRange(new ObjectPropertyInteger(255));
         builder.setBatteryLevel(new ObjectPropertyPercentage(50));
-        builder.setBatteryCurrentAC(new FloatProperty(-.6f));
-        builder.setBatteryCurrentDC(new FloatProperty(-.6f));
-        builder.setChargerVoltageAC(new FloatProperty(400f));
-        builder.setChargerVoltageDC(new FloatProperty(410f));
+        builder.setBatteryCurrentAC(new ObjectProperty<Float>(-.6f));
+        builder.setBatteryCurrentDC(new ObjectProperty<Float>(-.6f));
+        builder.setChargerVoltageAC(new ObjectProperty<Float>(400f));
+        builder.setChargerVoltageDC(new ObjectProperty<Float>(410f));
         builder.setChargeLimit(new ObjectPropertyPercentage(90));
         builder.setTimeToCompleteCharge(new ObjectPropertyInteger(60));
-        builder.setChargingRate(new FloatProperty(0f));
+        builder.setChargingRate(new ObjectProperty<Float>(0f));
         builder.setChargePortState(new ChargePortState(ChargePortState.Value.OPEN));
         builder.setChargeMode(new ChargeMode(ChargeMode.Value.IMMEDIATE));
 
-        builder.setMaxChargingCurrent(new FloatProperty(25f));
+        builder.setMaxChargingCurrent(new ObjectProperty<Float>(25f));
         builder.setPlugType(new PlugType(PlugType.Value.TYPE_2));
         builder.setChargingWindowChosen(new ObjectProperty<>(false));
 
@@ -164,7 +167,7 @@ public class ChargingTest {
         builder.addReductionOfChargingCurrentTime(new ReductionTime(StartStop.STOP, new Time(16,
                 32)));
 
-        builder.setBatteryTemperature(new FloatProperty(38.4f));
+        builder.setBatteryTemperature(new ObjectProperty<Float>(38.4f));
 
         Calendar departureDate = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
         Calendar preferredEndTime = TestUtils.getUTCCalendar("2018-01-10T16:32:06");
@@ -179,7 +182,7 @@ public class ChargingTest {
         builder.setActiveState(new ChargingState(ChargingState.Value.CHARGING));
 
         ChargeState state = builder.build();
-        assertTrue(TestUtils.bytesTheSame(state, bytes));
+        testState(state);
     }
 
     @Test public void state0Properties() {

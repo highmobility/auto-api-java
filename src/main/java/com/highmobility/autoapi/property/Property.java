@@ -42,7 +42,7 @@ import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 
 /**
  * Property is a representation of some AutoAPI data. Specific data have specific subclasses like
- * StringProperty and FloatProperty.
+ * StringProperty and ObjectProperty<Float>.
  * <p>
  * Property has to have a value with a size greater or equal to 1.
  */

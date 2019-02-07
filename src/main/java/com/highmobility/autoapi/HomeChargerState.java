@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CoordinatesProperty;
-import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.StringProperty;
@@ -64,18 +63,25 @@ public class HomeChargerState extends CommandWithProperties {
     AuthenticationMechanism authenticationMechanism = new AuthenticationMechanism
             (IDENTIFIER_AUTHENTICATION_MECHANISM);
     PlugType plugType = new PlugType(IDENTIFIER_PLUG_TYPE);
-    FloatProperty chargingPower = new FloatProperty(IDENTIFIER_CHARGING_POWER);
-    ObjectProperty<Boolean> solarChargingActive = new ObjectProperty<>(Boolean.class, IDENTIFIER_SOLAR_CHARGING_ACTIVE);
-    ObjectProperty<Boolean> hotspotEnabled = new ObjectProperty<>(Boolean.class, IDENTIFIER_HOTSPOT_ENABLED);
+    ObjectProperty<Float> chargingPower = new ObjectProperty<>(Float.class,
+            IDENTIFIER_CHARGING_POWER);
+    ObjectProperty<Boolean> solarChargingActive = new ObjectProperty<>(Boolean.class,
+            IDENTIFIER_SOLAR_CHARGING_ACTIVE);
+    ObjectProperty<Boolean> hotspotEnabled = new ObjectProperty<>(Boolean.class,
+            IDENTIFIER_HOTSPOT_ENABLED);
     StringProperty hotspotSsid = new StringProperty(IDENTIFIER_HOTSPOT_SSID);
     NetworkSecurity hotspotSecurity = new NetworkSecurity(IDENTIFIER_HOTSPOT_SECURITY);
     StringProperty hotspotPassword = new StringProperty(IDENTIFIER_HOTSPOT_PASSWORD);
 
     // level8
-    ObjectProperty<Boolean> authenticated = new ObjectProperty<>(Boolean.class, IDENTIFIER_AUTHENTICATED);
-    FloatProperty chargeCurrentDC = new FloatProperty(IDENTIFIER_CHARGE_CURRENT_DC);
-    FloatProperty maximumChargeCurrent = new FloatProperty(IDENTIFIER_MAXIMUM_CHARGE_CURRENT);
-    FloatProperty minimumChargeCurrent = new FloatProperty(IDENTIFIER_MINIMUM_CHARGE_CURRENT);
+    ObjectProperty<Boolean> authenticated = new ObjectProperty<>(Boolean.class,
+            IDENTIFIER_AUTHENTICATED);
+    ObjectProperty<Float> chargeCurrentDC = new ObjectProperty<>(Float.class,
+            IDENTIFIER_CHARGE_CURRENT_DC);
+    ObjectProperty<Float> maximumChargeCurrent =
+            new ObjectProperty<>(Float.class, IDENTIFIER_MAXIMUM_CHARGE_CURRENT);
+    ObjectProperty<Float> minimumChargeCurrent =
+            new ObjectProperty<>(Float.class, IDENTIFIER_MINIMUM_CHARGE_CURRENT);
     CoordinatesProperty coordinates = new CoordinatesProperty(IDENTIFIER_COORDINATES);
 
     PriceTariff[] priceTariffs;
@@ -104,7 +110,7 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return Charging power in kW.
      */
-    @Nullable public FloatProperty getChargingPower() {
+    @Nullable public ObjectProperty<Float> getChargingPower() {
         return chargingPower;
     }
 
@@ -153,21 +159,21 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return The charge current (DC).
      */
-    @Nullable public FloatProperty getChargeCurrent() {
+    @Nullable public ObjectProperty<Float> getChargeCurrent() {
         return chargeCurrentDC;
     }
 
     /**
      * @return The maximum possible charge current.
      */
-    @Nullable public FloatProperty getMaximumChargeCurrent() {
+    @Nullable public ObjectProperty<Float> getMaximumChargeCurrent() {
         return maximumChargeCurrent;
     }
 
     /**
      * @return The minimal possible charge current.
      */
-    @Nullable public FloatProperty getMinimumChargeCurrent() {
+    @Nullable public ObjectProperty<Float> getMinimumChargeCurrent() {
         return minimumChargeCurrent;
     }
 
@@ -270,7 +276,7 @@ public class HomeChargerState extends CommandWithProperties {
         private Charging charging;
         private AuthenticationMechanism authenticationMechanism;
         private PlugType plugType;
-        private FloatProperty chargingPower;
+        private ObjectProperty<Float> chargingPower;
         private ObjectProperty<Boolean> solarChargingActive;
         private ObjectProperty<Boolean> hotspotEnabled;
         private StringProperty hotspotSsid;
@@ -316,7 +322,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param chargingPower The charging power in kW.
          * @return The builder.
          */
-        public Builder setChargingPower(FloatProperty chargingPower) {
+        public Builder setChargingPower(ObjectProperty<Float> chargingPower) {
             this.chargingPower = chargingPower;
             chargingPower.setIdentifier(IDENTIFIER_CHARGING_POWER);
             addProperty(chargingPower);

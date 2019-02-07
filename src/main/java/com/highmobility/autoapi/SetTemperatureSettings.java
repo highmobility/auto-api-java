@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
@@ -32,31 +32,34 @@ import javax.annotation.Nullable;
  */
 public class SetTemperatureSettings extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x17);
-    private static final byte IDENTIFIER_DRIVER = 0x01;
-    private static final byte IDENTIFIER_PASSENGER = 0x02;
-    private static final byte IDENTIFIER_REAR = 0x03;
+    private static final byte IDENTIFIER_DRIVER_TEMPERATURE = 0x01;
+    private static final byte IDENTIFIER_PASSENGER_TEMPERATURE = 0x02;
+    private static final byte IDENTIFIER_REAR_TEMPERATURE = 0x03;
 
-    Float driverTemperature, passengerTemperature, rearTemperature;
+    ObjectProperty<Float> driverTemperature = new ObjectProperty(Float.class, IDENTIFIER_DRIVER_TEMPERATURE);
+    ObjectProperty<Float> passengerTemperature =
+            new ObjectProperty(Float.class, IDENTIFIER_PASSENGER_TEMPERATURE);
+    ObjectProperty<Float> rearTemperature = new ObjectProperty(Float.class, IDENTIFIER_REAR_TEMPERATURE);
 
     /**
      * @return The driver temperature.
      */
     @Nullable public Float getDriverTemperature() {
-        return driverTemperature;
+        return driverTemperature.getValue();
     }
 
     /**
      * @return The passenger temperature.
      */
     @Nullable public Float getPassengerTemperature() {
-        return passengerTemperature;
+        return passengerTemperature.getValue();
     }
 
     /**
      * @return The rear temperature.
      */
     @Nullable public Float getRearTemperature() {
-        return rearTemperature;
+        return rearTemperature.getValue();
     }
 
     /**
@@ -66,42 +69,43 @@ public class SetTemperatureSettings extends CommandWithProperties {
      */
     public SetTemperatureSettings(@Nullable Float driverTemperature, @Nullable Float
             passengerTemperature, @Nullable Float rearTemperature) {
-        super(TYPE, getProperties(driverTemperature, passengerTemperature, rearTemperature));
-        this.driverTemperature = driverTemperature;
-        this.passengerTemperature = passengerTemperature;
-        this.rearTemperature = rearTemperature;
-    }
+        super(TYPE);
 
-    static Property[] getProperties(Float driverTemperature, Float passengerTemperature, Float
-            rearTemperature) {
         ArrayList<Property> builder = new ArrayList<>();
         if (driverTemperature != null) {
-            builder.add(new FloatProperty(driverTemperature).setIdentifier(IDENTIFIER_DRIVER));
+            this.driverTemperature.update(driverTemperature);
+            builder.add(this.driverTemperature);
         }
 
         if (passengerTemperature != null) {
-            builder.add(new FloatProperty(passengerTemperature).setIdentifier(IDENTIFIER_PASSENGER));
+            this.passengerTemperature.update(passengerTemperature);
+            builder.add(this.passengerTemperature);
         }
 
         if (rearTemperature != null) {
-            builder.add(new FloatProperty(rearTemperature).setIdentifier(IDENTIFIER_REAR));
+            this.rearTemperature.update(rearTemperature);
+            builder.add(this.rearTemperature);
         }
 
-        return builder.toArray(new Property[0]);
+        createBytes(builder);
     }
 
     SetTemperatureSettings(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < properties.length; i++) {
-            Property property = properties[i];
-            if (property.getPropertyIdentifier() == IDENTIFIER_DRIVER) {
-                this.driverTemperature = Property.getFloat(property.getValueBytesArray());
-            } else if (property.getPropertyIdentifier() == IDENTIFIER_PASSENGER) {
-                this.passengerTemperature = Property.getFloat(property.getValueBytesArray());
-            } else if (property.getPropertyIdentifier() == IDENTIFIER_REAR) {
-                this.rearTemperature = Property.getFloat(property.getValueBytesArray());
-            }
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_DRIVER_TEMPERATURE:
+                        return driverTemperature.update(p);
+                    case IDENTIFIER_PASSENGER_TEMPERATURE:
+                        return passengerTemperature.update(p);
+                    case IDENTIFIER_REAR_TEMPERATURE:
+                        return rearTemperature.update(p);
+                }
+
+                return null;
+            });
         }
     }
 }

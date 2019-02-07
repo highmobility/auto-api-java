@@ -95,6 +95,6 @@ public class UsageTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("006801");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((Usage) state).getAverageFuelConsumption() == null);
+        assertTrue(((Usage) state).getAverageFuelConsumption().getValue() == null);
     }
 }

@@ -7,14 +7,13 @@ import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.FlashersStateProperty;
-import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.FogLight;
 import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.IntegerArrayProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.KeyFobPositionProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
-import com.highmobility.autoapi.property.ObjectProperty;
 
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.Position;
@@ -264,11 +263,11 @@ public class PropertyCtors {
         assertTrue(updateProp.getValue() != null);
     }
 
-    @Test public void FloatProperty() throws CommandParseException {
+    @Test public void floatProperty() throws CommandParseException {
         Property property = new Property("01000400000000");
 
-        assertTrue(new FloatProperty(property).getValue() != null);
-        FloatProperty updateProp = new FloatProperty((byte) 0x00);
+        assertTrue(new ObjectProperty<>(Float.class, property).getValue() != null);
+        ObjectProperty<Float> updateProp = new ObjectProperty<>(Float.class, (byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }

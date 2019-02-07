@@ -10,7 +10,6 @@ import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.WindowsState;
 import com.highmobility.autoapi.property.CommandProperty;
-import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.Position;
@@ -160,7 +159,7 @@ public class VehicleStatusTest {
         builder.addState(new CommandProperty(ignitionState.build()));
 
         // l7
-        builder.setEngineVolume(new FloatProperty(2.5f));
+        builder.setEngineVolume(new ObjectProperty<>(2.5f));
         builder.setMaxTorque(new ObjectPropertyInteger(245));
         builder.setGearBox(Gearbox.AUTOMATIC);
 
@@ -245,7 +244,6 @@ public class VehicleStatusTest {
         assertTrue(vs.getNumberOfDoors().getValue() == null);
         assertTrue(vs.getState(TheftAlarmState.TYPE) == null);
     }
-
 
     @Test public void anotherTest() {
         Bytes bytes = new Bytes

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.DrivingMode;
-import com.highmobility.autoapi.property.FloatProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.Property;
@@ -55,25 +55,33 @@ public class Usage extends CommandWithProperties {
     private static final byte IDENTIFIER_AVERAGE_FUEL_CONSUMPTION = ((byte) 0x0E);
     private static final byte IDENTIFIER_CURRENT_FUEL_CONSUMPTION = ((byte) 0x0F);
 
-    private ObjectPropertyInteger averageWeeklyDistance = new ObjectPropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE, false);
-    private ObjectPropertyInteger averageWeeklyDistanceLongTerm = new ObjectPropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_TERM, false);
+    private ObjectPropertyInteger averageWeeklyDistance =
+            new ObjectPropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE, false);
+    private ObjectPropertyInteger averageWeeklyDistanceLongTerm =
+            new ObjectPropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_TERM, false);
     private ObjectPropertyPercentage accelerationEvaluation =
             new ObjectPropertyPercentage(IDENTIFIER_ACCELERATION_EVALUATION);
     private ObjectPropertyPercentage drivingStyleEvaluation =
             new ObjectPropertyPercentage(IDENTIFIER_DRIVING_STYLE_EVALUATION);
     private DrivingModeActivationPeriod[] drivingModeActivationPeriods;
     private DrivingModeEnergyConsumption[] drivingModeEnergyConsumptions;
-    private FloatProperty lastTripEnergyConsumption;
-    private FloatProperty lastTripFuelConsumption;
-    private FloatProperty mileageAfterLastTrip;
+    private ObjectProperty<Float> lastTripEnergyConsumption = new ObjectProperty<>(Float.class,
+            IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION);
+    private ObjectProperty<Float> lastTripFuelConsumption = new ObjectProperty<>(Float.class,
+            IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION);
+    private ObjectProperty<Float> mileageAfterLastTrip = new ObjectProperty<>(Float.class,
+            IDENTIFIER_MILEAGE_AFTER_LAST_TRIP);
     private ObjectPropertyPercentage lastTripElectricPortion =
             new ObjectPropertyPercentage(IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION);
-    private FloatProperty lastTripAverageEnergyRecuperation;
+    private ObjectProperty<Float> lastTripAverageEnergyRecuperation =
+            new ObjectProperty<>(Float.class, IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION);
     private ObjectPropertyPercentage lastTripBatteryRemaining =
             new ObjectPropertyPercentage(IDENTIFIER_LAST_TRIP_BATTERY_REMAINING);
     private Calendar lastTripDate;
-    private FloatProperty averageFuelConsumption;
-    private FloatProperty currentFuelConsumption;
+    private ObjectProperty<Float> averageFuelConsumption = new ObjectProperty<>(Float.class,
+            IDENTIFIER_AVERAGE_FUEL_CONSUMPTION);
+    private ObjectProperty<Float> currentFuelConsumption = new ObjectProperty<>(Float.class,
+            IDENTIFIER_CURRENT_FUEL_CONSUMPTION);
 
     /**
      * @return The average weekly distance in km.
@@ -149,21 +157,21 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The energy consumption in the last trip in kWh.
      */
-    @Nullable public FloatProperty getLastTripEnergyConsumption() {
+    @Nullable public ObjectProperty<Float> getLastTripEnergyConsumption() {
         return lastTripEnergyConsumption;
     }
 
     /**
      * @return The fuel consumption in the last trip in L.
      */
-    @Nullable public FloatProperty getLastTripFuelConsumption() {
+    @Nullable public ObjectProperty<Float> getLastTripFuelConsumption() {
         return lastTripFuelConsumption;
     }
 
     /**
      * @return The mileage after the last trip in km.
      */
-    @Nullable public FloatProperty getMileageAfterLastTrip() {
+    @Nullable public ObjectProperty<Float> getMileageAfterLastTrip() {
         return mileageAfterLastTrip;
     }
 
@@ -177,7 +185,7 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The energy recuperation rate for last trip, in kWh / 100 km.
      */
-    @Nullable public FloatProperty getLastTripAverageEnergyRecuperation() {
+    @Nullable public ObjectProperty<Float> getLastTripAverageEnergyRecuperation() {
         return lastTripAverageEnergyRecuperation;
     }
 
@@ -198,14 +206,14 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The average fuel consumption in liters/100km.
      */
-    @Nullable public FloatProperty getAverageFuelConsumption() {
+    @Nullable public ObjectProperty<Float> getAverageFuelConsumption() {
         return averageFuelConsumption;
     }
 
     /**
      * @return The current fuel consumption in liters/100km.
      */
-    @Nullable public FloatProperty getCurrentFuelConsumption() {
+    @Nullable public ObjectProperty<Float> getCurrentFuelConsumption() {
         return currentFuelConsumption;
     }
 
@@ -237,30 +245,24 @@ public class Usage extends CommandWithProperties {
                         drivingModeEnergyConsumptions.add(drivingModeEnergyConsumption);
                         return drivingModeEnergyConsumption;
                     case IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION:
-                        lastTripEnergyConsumption = new FloatProperty(p);
-                        return lastTripEnergyConsumption;
+                        return lastTripEnergyConsumption.update(p);
                     case IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION:
-                        lastTripFuelConsumption = new FloatProperty(p);
-                        return lastTripFuelConsumption;
+                        return lastTripFuelConsumption.update(p);
                     case IDENTIFIER_MILEAGE_AFTER_LAST_TRIP:
-                        mileageAfterLastTrip = new FloatProperty(p);
-                        return mileageAfterLastTrip;
+                        return mileageAfterLastTrip.update(p);
                     case IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION:
                         return lastTripElectricPortion.update(p);
                     case IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION:
-                        lastTripAverageEnergyRecuperation = new FloatProperty(p);
-                        return lastTripAverageEnergyRecuperation;
+                        return lastTripAverageEnergyRecuperation.update(p);
                     case IDENTIFIER_LAST_TRIP_BATTERY_REMAINING:
                         return lastTripBatteryRemaining.update(p);
                     case IDENTIFIER_LAST_TRIP_DATE:
                         lastTripDate = Property.getCalendar(p.getValueBytesArray());
                         return lastTripDate;
                     case IDENTIFIER_AVERAGE_FUEL_CONSUMPTION:
-                        averageFuelConsumption = new FloatProperty(p);
-                        return averageFuelConsumption;
+                        return averageFuelConsumption.update(p);
                     case IDENTIFIER_CURRENT_FUEL_CONSUMPTION:
-                        currentFuelConsumption = new FloatProperty(p);
-                        return currentFuelConsumption;
+                        return currentFuelConsumption.update(p);
                 }
 
                 return null;
@@ -307,15 +309,15 @@ public class Usage extends CommandWithProperties {
         private List<DrivingModeActivationPeriod> drivingModeActivationPeriods = new ArrayList<>();
         private List<DrivingModeEnergyConsumption> drivingModeEnergyConsumptions = new
                 ArrayList<>();
-        private FloatProperty lastTripEnergyConsumption;
-        private FloatProperty lastTripFuelConsumption;
-        private FloatProperty mileageAfterLastTrip;
+        private ObjectProperty<Float> lastTripEnergyConsumption;
+        private ObjectProperty<Float> lastTripFuelConsumption;
+        private ObjectProperty<Float> mileageAfterLastTrip;
         private ObjectPropertyPercentage lastTripElectricPortion;
-        private FloatProperty lastTripAverageEnergyRecuperation;
+        private ObjectProperty<Float> lastTripAverageEnergyRecuperation;
         private ObjectPropertyPercentage lastTripBatteryRemaining;
         private Calendar lastTripDate;
-        private FloatProperty averageFuelConsumption;
-        private FloatProperty currentFuelConsumption;
+        private ObjectProperty<Float> averageFuelConsumption;
+        private ObjectProperty<Float> currentFuelConsumption;
 
         // TBODO:
         public Builder() {

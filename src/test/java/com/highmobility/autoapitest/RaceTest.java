@@ -6,11 +6,9 @@ import com.highmobility.autoapi.GetRaceState;
 import com.highmobility.autoapi.RaceState;
 import com.highmobility.autoapi.property.AccelerationProperty;
 import com.highmobility.autoapi.property.BrakeTorqueVectoring;
-import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.GearMode;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectProperty;
-
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.utils.ByteUtils;
@@ -19,7 +17,6 @@ import com.highmobility.value.Bytes;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -33,13 +30,7 @@ public class RaceTest {
 
     @Test
     public void state() {
-
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == RaceState.class);
         RaceState state = (RaceState) command;
@@ -48,7 +39,7 @@ public class RaceTest {
                 AccelerationProperty.AccelerationType.LONGITUDINAL).getAcceleration() == .864f);
         assertTrue(state.getAcceleration(
                 AccelerationProperty.AccelerationType.LATERAL).getAcceleration() == -0.753f);
-        assertTrue(state.getUnderSteering().getValue() == 19);
+        assertTrue(state.getUnderSteering().getPercentageValue() == .19f);
         assertTrue(state.getOverSteering().getValue() == 0);
         assertTrue(state.getGasPedalPosition().getValue() == 98);
         assertTrue(state.getSteeringAngle().getValue() == -30);
@@ -82,8 +73,8 @@ public class RaceTest {
         builder.setOverSteering(new ObjectPropertyPercentage(0));
         builder.setGasPedalPosition(new ObjectPropertyPercentage(98));
         builder.setSteeringAngle(new ObjectPropertyInteger(-30));
-        builder.setBrakePressure(new FloatProperty(11.56f));
-        builder.setYawRate(new FloatProperty(6.66f));
+        builder.setBrakePressure(new ObjectProperty<>(11.56f));
+        builder.setYawRate(new ObjectProperty<>(6.66f));
         builder.setRearSuspensionSteering(new ObjectPropertyInteger(3));
         builder.setEspInterventionActive(new ObjectProperty<>(true));
         builder.addBrakeTorqueVectoring(new BrakeTorqueVectoring(Axle.REAR, true));

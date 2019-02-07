@@ -22,7 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.AccelerationProperty;
 import com.highmobility.autoapi.property.BrakeTorqueVectoring;
-import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
@@ -46,17 +45,17 @@ public class RaceState extends CommandWithProperties {
     private static final byte IDENTIFIER_OVER_STEERING = 0x03;
     private static final byte IDENTIFIER_GAS_PEDAL_POSITION = 0x04;
     private static final byte IDENTIFIER_STEERING_ANGLE = 0x05;
-    private static final byte BRAKE_PRESSURE_IDENTIFIER = 0x06;
-    private static final byte YAW_RATE_IDENTIFIER = 0x07;
+    private static final byte IDENTIFIER_BRAKE_PRESSURE = 0x06;
+    private static final byte IDENTIFIER_YAW_RATE = 0x07;
     private static final byte IDENTIFIER_REAR_SUSPENSION_STEERING = 0x08;
-    private static final byte ESP_INTERVENTION_ACTIVE_IDENTIFIER = 0x09;
+    private static final byte IDENTIFIER_ESP_INTERVENTION_ACTIVE = 0x09;
     private static final byte IDENTIFIER_SELECTED_GEAR = 0x0C;
     private static final byte IDENTIFIER_BRAKE_PEDAL_POSITION = 0x0D;
 
-    private static final byte BRAKE_PEDAL_SWITCH_IDENTIFIER = 0x0E;
-    private static final byte CLUTCH_PEDAL_SWITCH_IDENTIFIER = 0x0F;
-    private static final byte ACCELERATOR_PEDAL_IDLE_SWITCH_IDENTIFIER = 0x10;
-    private static final byte ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER = 0x11;
+    private static final byte IDENTIFIER_BRAKE_PEDAL_SWITCH_ACTIVE = 0x0E;
+    private static final byte IDENTIFIER_CLUTCH_PEDAL_SWITCH_ACTIVE = 0x0F;
+    private static final byte IDENTIFIER_ACCELERATOR_PEDAL_IDLE_SWITCH_ACTIVE = 0x10;
+    private static final byte IDENTIFIER_ACCELERATOR_PEDAL_KICKDOWN_SWITCH_ACTIVE = 0x11;
 
     private static final byte IDENTIFIER_VEHICLE_MOVING = 0x12;
     public static final byte IDENTIFIER_GEAR_MODE = 0x0B;
@@ -70,23 +69,31 @@ public class RaceState extends CommandWithProperties {
             new ObjectPropertyPercentage(IDENTIFIER_GAS_PEDAL_POSITION);
     ObjectPropertyInteger steeringAngle = new ObjectPropertyInteger(IDENTIFIER_STEERING_ANGLE,
             true);
-    FloatProperty brakePressure;
-    FloatProperty yawRate;
+    ObjectProperty<Float> brakePressure = new ObjectProperty<>(Float.class,
+            IDENTIFIER_BRAKE_PRESSURE);
+    ObjectProperty<Float> yawRate = new ObjectProperty<>(Float.class, IDENTIFIER_YAW_RATE);
     ObjectPropertyInteger rearSuspensionSteering =
             new ObjectPropertyInteger(IDENTIFIER_REAR_SUSPENSION_STEERING, false);
-    ObjectProperty<Boolean> espInterventionActive;
+    ObjectProperty<Boolean> espInterventionActive = new ObjectProperty<>(Boolean.class,
+            IDENTIFIER_ESP_INTERVENTION_ACTIVE);
     BrakeTorqueVectoring[] brakeTorqueVectorings;
     GearMode gearMode;
     ObjectPropertyInteger selectedGear = new ObjectPropertyInteger(IDENTIFIER_SELECTED_GEAR, false);
     ObjectPropertyPercentage brakePedalPosition =
             new ObjectPropertyPercentage(IDENTIFIER_BRAKE_PEDAL_POSITION);
     // level7
-    ObjectProperty<Boolean> brakePedalSwitchActive;
-    ObjectProperty<Boolean> clutchPedalSwitchActive;
-    ObjectProperty<Boolean> acceleratorPedalIdleSwitchActive;
-    ObjectProperty<Boolean> acceleratorPedalKickdownSwitchActive;
+    ObjectProperty<Boolean> brakePedalSwitchActive = new ObjectProperty<>(Boolean.class,
+            IDENTIFIER_BRAKE_PEDAL_SWITCH_ACTIVE);
+    ObjectProperty<Boolean> clutchPedalSwitchActive = new ObjectProperty<>(Boolean.class,
+            IDENTIFIER_CLUTCH_PEDAL_SWITCH_ACTIVE);
+    ObjectProperty<Boolean> acceleratorPedalIdleSwitchActive = new ObjectProperty<>(Boolean.class
+            , IDENTIFIER_ACCELERATOR_PEDAL_IDLE_SWITCH_ACTIVE);
+    ObjectProperty<Boolean> acceleratorPedalKickdownSwitchActive =
+            new ObjectProperty<>(Boolean.class,
+                    IDENTIFIER_ACCELERATOR_PEDAL_KICKDOWN_SWITCH_ACTIVE);
     // level8
-    ObjectProperty<Boolean> vehicleMoving;
+    ObjectProperty<Boolean> vehicleMoving = new ObjectProperty<>(Boolean.class,
+            IDENTIFIER_VEHICLE_MOVING);
 
     /**
      * @param accelerationType The acceleration type.
@@ -143,14 +150,14 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return The Brake pressure in bar, whereas 100bar is max value, full brake.
      */
-    @Nullable public FloatProperty getBrakePressure() {
+    @Nullable public ObjectProperty<Float> getBrakePressure() {
         return brakePressure;
     }
 
     /**
      * @return The yaw rate in degrees per second [°/s].
      */
-    @Nullable public FloatProperty getYawRate() {
+    @Nullable public ObjectProperty<Float> getYawRate() {
         return yawRate;
     }
 
@@ -265,17 +272,14 @@ public class RaceState extends CommandWithProperties {
                         return gasPedalPosition.update(p);
                     case IDENTIFIER_STEERING_ANGLE:
                         return steeringAngle.update(p);
-                    case BRAKE_PRESSURE_IDENTIFIER:
-                        brakePressure = new FloatProperty(p);
-                        return brakePressure;
-                    case YAW_RATE_IDENTIFIER:
-                        yawRate = new FloatProperty(p);
-                        return yawRate;
+                    case IDENTIFIER_BRAKE_PRESSURE:
+                        return brakePressure.update(p);
+                    case IDENTIFIER_YAW_RATE:
+                        return yawRate.update(p);
                     case IDENTIFIER_REAR_SUSPENSION_STEERING:
                         return rearSuspensionSteering.update(p);
-                    case ESP_INTERVENTION_ACTIVE_IDENTIFIER:
-                        espInterventionActive = new ObjectProperty<>(Boolean.class, p);
-                        return espInterventionActive;
+                    case IDENTIFIER_ESP_INTERVENTION_ACTIVE:
+                        return espInterventionActive.update(p);
                     case BrakeTorqueVectoring.IDENTIFIER:
                         BrakeTorqueVectoring b =
                                 new BrakeTorqueVectoring(p.getByteArray());
@@ -283,27 +287,21 @@ public class RaceState extends CommandWithProperties {
                         return b;
                     case IDENTIFIER_GEAR_MODE:
                         gearMode = GearMode.fromByte(p.getValueByte());
-                        return null;
+                        return null; // TODO: 2019-02-07
                     case IDENTIFIER_SELECTED_GEAR:
                         return selectedGear.update(p);
                     case IDENTIFIER_BRAKE_PEDAL_POSITION:
                         return brakePedalPosition.update(p);
-                    case BRAKE_PEDAL_SWITCH_IDENTIFIER:
-                        brakePedalSwitchActive = new ObjectProperty<>(Boolean.class, p);
-                        return brakePedalSwitchActive;
-                    case CLUTCH_PEDAL_SWITCH_IDENTIFIER:
-                        clutchPedalSwitchActive = new ObjectProperty<>(Boolean.class, p);
-                        return clutchPedalSwitchActive;
-                    case ACCELERATOR_PEDAL_IDLE_SWITCH_IDENTIFIER:
-                        acceleratorPedalIdleSwitchActive = new ObjectProperty<>(Boolean.class, p);
-                        return acceleratorPedalIdleSwitchActive;
-                    case ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER:
-                        acceleratorPedalKickdownSwitchActive = new ObjectProperty<>(Boolean.class
-                                , p);
-                        return acceleratorPedalKickdownSwitchActive;
+                    case IDENTIFIER_BRAKE_PEDAL_SWITCH_ACTIVE:
+                        return brakePedalSwitchActive.update(p);
+                    case IDENTIFIER_CLUTCH_PEDAL_SWITCH_ACTIVE:
+                        return clutchPedalSwitchActive.update(p);
+                    case IDENTIFIER_ACCELERATOR_PEDAL_IDLE_SWITCH_ACTIVE:
+                        return acceleratorPedalIdleSwitchActive.update(p);
+                    case IDENTIFIER_ACCELERATOR_PEDAL_KICKDOWN_SWITCH_ACTIVE:
+                        return acceleratorPedalKickdownSwitchActive.update(p);
                     case IDENTIFIER_VEHICLE_MOVING:
-                        vehicleMoving = new ObjectProperty<>(Boolean.class, p);
-                        return vehicleMoving;
+                        return vehicleMoving.update(p);
                 }
 
                 return null;
@@ -353,8 +351,8 @@ public class RaceState extends CommandWithProperties {
         private ObjectPropertyPercentage overSteering;
         private ObjectPropertyPercentage gasPedalPosition;
         private ObjectPropertyInteger steeringAngle;
-        private FloatProperty brakePressure;
-        private FloatProperty yawRate;
+        private ObjectProperty<Float> brakePressure;
+        private ObjectProperty<Float> yawRate;
         private ObjectPropertyInteger rearSuspensionSteering;
         private ObjectProperty<Boolean> espInterventionActive;
         private List<BrakeTorqueVectoring> brakeTorqueVectorings = new ArrayList<>();
@@ -448,9 +446,9 @@ public class RaceState extends CommandWithProperties {
          * @param brakePressure The brake pressure in bar, whereas 100bar is max value, full brake.
          * @return The builder.
          */
-        public Builder setBrakePressure(FloatProperty brakePressure) {
+        public Builder setBrakePressure(ObjectProperty<Float> brakePressure) {
             this.brakePressure = brakePressure;
-            brakePressure.setIdentifier(BRAKE_PRESSURE_IDENTIFIER);
+            brakePressure.setIdentifier(IDENTIFIER_BRAKE_PRESSURE);
             addProperty(brakePressure);
             return this;
         }
@@ -459,9 +457,9 @@ public class RaceState extends CommandWithProperties {
          * @param yawRate The yaw rate in degrees per second [°/s].
          * @return The builder.
          */
-        public Builder setYawRate(FloatProperty yawRate) {
+        public Builder setYawRate(ObjectProperty<Float> yawRate) {
             this.yawRate = yawRate;
-            yawRate.setIdentifier(YAW_RATE_IDENTIFIER);
+            yawRate.setIdentifier(IDENTIFIER_YAW_RATE);
             addProperty(yawRate);
             return this;
         }
@@ -483,7 +481,7 @@ public class RaceState extends CommandWithProperties {
          */
         public Builder setEspInterventionActive(ObjectProperty<Boolean> espInterventionActive) {
             this.espInterventionActive = espInterventionActive;
-            espInterventionActive.setIdentifier(ESP_INTERVENTION_ACTIVE_IDENTIFIER);
+            espInterventionActive.setIdentifier(IDENTIFIER_ESP_INTERVENTION_ACTIVE);
             addProperty(espInterventionActive);
             return this;
         }
@@ -551,7 +549,7 @@ public class RaceState extends CommandWithProperties {
          */
         public Builder setBrakePedalSwitchActive(ObjectProperty<Boolean> brakePedalSwitchActive) {
             this.brakePedalSwitchActive = brakePedalSwitchActive;
-            brakePedalSwitchActive.setIdentifier(BRAKE_PEDAL_SWITCH_IDENTIFIER);
+            brakePedalSwitchActive.setIdentifier(IDENTIFIER_BRAKE_PEDAL_SWITCH_ACTIVE);
             addProperty(brakePedalSwitchActive);
             return this;
         }
@@ -562,7 +560,7 @@ public class RaceState extends CommandWithProperties {
          */
         public Builder setClutchPedalSwitchActive(ObjectProperty<Boolean> clutchPedalSwitchActive) {
             this.clutchPedalSwitchActive = clutchPedalSwitchActive;
-            clutchPedalSwitchActive.setIdentifier(CLUTCH_PEDAL_SWITCH_IDENTIFIER);
+            clutchPedalSwitchActive.setIdentifier(IDENTIFIER_CLUTCH_PEDAL_SWITCH_ACTIVE);
             addProperty(clutchPedalSwitchActive);
             return this;
         }
@@ -574,7 +572,7 @@ public class RaceState extends CommandWithProperties {
          */
         public Builder setAcceleratorPedalIdleSwitchActive(ObjectProperty<Boolean> acceleratorPedalIdleSwitchActive) {
             this.acceleratorPedalIdleSwitchActive = acceleratorPedalIdleSwitchActive;
-            acceleratorPedalIdleSwitchActive.setIdentifier(ACCELERATOR_PEDAL_IDLE_SWITCH_IDENTIFIER);
+            acceleratorPedalIdleSwitchActive.setIdentifier(IDENTIFIER_ACCELERATOR_PEDAL_IDLE_SWITCH_ACTIVE);
             addProperty(acceleratorPedalIdleSwitchActive);
             return this;
         }
@@ -586,7 +584,7 @@ public class RaceState extends CommandWithProperties {
          */
         public Builder setAcceleratorPedalKickdownSwitchActive(ObjectProperty<Boolean> acceleratorPedalKickdownSwitchActive) {
             this.acceleratorPedalKickdownSwitchActive = acceleratorPedalKickdownSwitchActive;
-            acceleratorPedalKickdownSwitchActive.setIdentifier(ACCELERATOR_PEDAL_KICKDOWN_SWITCH_IDENTIFIER);
+            acceleratorPedalKickdownSwitchActive.setIdentifier(IDENTIFIER_ACCELERATOR_PEDAL_KICKDOWN_SWITCH_ACTIVE);
             addProperty(acceleratorPedalKickdownSwitchActive);
             return this;
         }
