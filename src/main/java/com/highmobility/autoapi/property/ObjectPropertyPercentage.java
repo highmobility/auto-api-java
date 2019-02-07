@@ -33,8 +33,6 @@ public class ObjectPropertyPercentage extends ObjectProperty<Integer> {
     public ObjectPropertyPercentage(@Nullable Integer value, @Nullable Calendar timestamp,
                                     @Nullable PropertyFailure failure) {
         super(value, timestamp, failure);
-
-        // TODO: 2019-02-06 should verify in ctors if is 0-100. add test as well
         checkValue(value);
     }
 
@@ -80,6 +78,6 @@ public class ObjectPropertyPercentage extends ObjectProperty<Integer> {
     }
 
     private void checkValue(@Nullable Integer value) {
-        if (value != null && inRange(value) == false) throw new IllegalArgumentException("INVALID_RANGE_EXCEPTION");
+        if (value != null && inRange(value) == false) throw new IllegalArgumentException(INVALID_RANGE_EXCEPTION);
     }
 }
