@@ -8,7 +8,7 @@ import com.highmobility.autoapi.property.AccelerationProperty;
 import com.highmobility.autoapi.property.BrakeTorqueVectoring;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.GearMode;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectProperty;
 
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
@@ -81,14 +81,14 @@ public class RaceTest {
         builder.setUnderSteering(new ObjectPropertyPercentage(19));
         builder.setOverSteering(new ObjectPropertyPercentage(0));
         builder.setGasPedalPosition(new ObjectPropertyPercentage(98));
-        builder.setSteeringAngle(new IntegerProperty(-30));
+        builder.setSteeringAngle(new ObjectPropertyInteger(-30));
         builder.setBrakePressure(new FloatProperty(11.56f));
         builder.setYawRate(new FloatProperty(6.66f));
-        builder.setRearSuspensionSteering(new IntegerProperty(3));
+        builder.setRearSuspensionSteering(new ObjectPropertyInteger(3));
         builder.setEspInterventionActive(new ObjectProperty<>(true));
         builder.addBrakeTorqueVectoring(new BrakeTorqueVectoring(Axle.REAR, true));
         builder.setGearMode(GearMode.DRIVE);
-        builder.setSelectedGear(new IntegerProperty(4));
+        builder.setSelectedGear(new ObjectPropertyInteger(4));
         builder.setBrakePedalPosition(new ObjectPropertyPercentage(1));
 
         builder.setBrakePedalSwitchActive(new ObjectProperty<>(true));

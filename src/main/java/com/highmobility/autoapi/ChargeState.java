@@ -21,9 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.FloatProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
-
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
@@ -69,22 +68,24 @@ public class ChargeState extends CommandWithProperties {
 
     private static final byte ACTIVE_STATE_IDENTIFIER = 0x17;
 
-
-    IntegerProperty estimatedRange = new IntegerProperty(ESTIMATED_RANGE_IDENTIFIER, false);
+    ObjectPropertyInteger estimatedRange = new ObjectPropertyInteger(ESTIMATED_RANGE_IDENTIFIER,
+            false);
     ObjectPropertyPercentage batteryLevel = new ObjectPropertyPercentage(BATTERY_LEVEL_IDENTIFIER);
     FloatProperty batteryCurrentAC = new FloatProperty(BATTERY_CURRENT_AC_IDENTIFIER);
     FloatProperty batteryCurrentDC = new FloatProperty(BATTERY_CURRENT_DC_IDENTIFIER);
     FloatProperty chargerVoltageAC = new FloatProperty(CHARGER_VOLTAGE_AC_IDENTIFIER);
     FloatProperty chargerVoltageDC = new FloatProperty(CHARGER_VOLTAGE_DC_IDENTIFIER);
     ObjectPropertyPercentage chargeLimit = new ObjectPropertyPercentage(CHARGE_LIMIT_IDENTIFIER);
-    IntegerProperty timeToCompleteCharge = new IntegerProperty(TIME_TO_COMPLETE_CHARGE_IDENTIFIER
-            , false);
+    ObjectPropertyInteger timeToCompleteCharge =
+            new ObjectPropertyInteger(TIME_TO_COMPLETE_CHARGE_IDENTIFIER
+                    , false);
     FloatProperty chargingRate = new FloatProperty(CHARGING_RATE_IDENTIFIER);
     ChargePortState chargePortState = new ChargePortState(CHARGE_PORT_STATE_IDENTIFIER);
     ChargeMode chargeMode = new ChargeMode(CHARGE_MODE_IDENTIFIER);
     FloatProperty maxChargingCurrent = new FloatProperty(MAX_CHARGING_CURRENT_IDENTIFIER);
     PlugType plugType = new PlugType(PLUG_TYPE_IDENTIFIER);
-    ObjectProperty<Boolean> chargingWindowChosen = new ObjectProperty<>(Boolean.class, CHARGING_WINDOW_CHOSEN_IDENTIFIER);
+    ObjectProperty<Boolean> chargingWindowChosen = new ObjectProperty<>(Boolean.class,
+            CHARGING_WINDOW_CHOSEN_IDENTIFIER);
     DepartureTime[] departureTimes;
     ReductionTime[] reductionOfChargingCurrentTimes;
     FloatProperty batteryTemperature = new FloatProperty(BATTERY_TEMPERATURE_IDENTIFIER);
@@ -95,7 +96,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The estimated range in km.
      */
-    @Nullable public IntegerProperty getEstimatedRange() {
+    @Nullable public ObjectPropertyInteger getEstimatedRange() {
         return estimatedRange;
     }
 
@@ -144,7 +145,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The time to complete the charge in minutes.
      */
-    @Nullable public IntegerProperty getTimeToCompleteCharge() {
+    @Nullable public ObjectPropertyInteger getTimeToCompleteCharge() {
         return timeToCompleteCharge;
     }
 
@@ -348,7 +349,7 @@ public class ChargeState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private IntegerProperty estimatedRange;
+        private ObjectPropertyInteger estimatedRange;
         private ObjectPropertyPercentage batteryLevel;
         private FloatProperty batteryCurrentAC;
         private FloatProperty batteryCurrentDC;
@@ -357,7 +358,7 @@ public class ChargeState extends CommandWithProperties {
         private FloatProperty chargerVoltageDC;
 
         private ObjectPropertyPercentage chargeLimit;
-        private IntegerProperty timeToCompleteCharge;
+        private ObjectPropertyInteger timeToCompleteCharge;
 
         private FloatProperty chargingRate;
         private ChargePortState chargePortState;
@@ -393,9 +394,9 @@ public class ChargeState extends CommandWithProperties {
          * @param estimatedRange The estimated range in km.
          * @return The builder.
          */
-        public Builder setEstimatedRange(IntegerProperty estimatedRange) {
+        public Builder setEstimatedRange(ObjectPropertyInteger estimatedRange) {
             this.estimatedRange = estimatedRange;
-            estimatedRange.setIdentifier(ESTIMATED_RANGE_IDENTIFIER, 2);
+            estimatedRange.update(ESTIMATED_RANGE_IDENTIFIER, false, 2);
             addProperty(estimatedRange);
             return this;
         }
@@ -470,9 +471,9 @@ public class ChargeState extends CommandWithProperties {
          * @param timeToCompleteCharge The time to complete the charge in minutes.
          * @return The builder.
          */
-        public Builder setTimeToCompleteCharge(IntegerProperty timeToCompleteCharge) {
+        public Builder setTimeToCompleteCharge(ObjectPropertyInteger timeToCompleteCharge) {
             this.timeToCompleteCharge = timeToCompleteCharge;
-            timeToCompleteCharge.setIdentifier(TIME_TO_COMPLETE_CHARGE_IDENTIFIER, 1);
+            timeToCompleteCharge.update(TIME_TO_COMPLETE_CHARGE_IDENTIFIER, false, 1);
             addProperty(timeToCompleteCharge);
             return this;
         }

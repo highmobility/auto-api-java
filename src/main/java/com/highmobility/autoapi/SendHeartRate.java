@@ -20,8 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 
 /**
  * Heart rate can be sent to the car from a health accessory of a smart watch. This is only possible
@@ -31,13 +30,13 @@ public class SendHeartRate extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HEART_RATE, 0x12);
     private static final byte IDENTIFIER = 0x01;
 
-    int heartRate;
+    ObjectPropertyInteger heartRate = new ObjectPropertyInteger(IDENTIFIER, false);
 
     /**
      * @return The heart rate.
      */
     public int getHeartRate() {
-        return heartRate;
+        return heartRate.getValue();
     }
 
     /**
@@ -46,14 +45,24 @@ public class SendHeartRate extends CommandWithProperties {
      * @param heartRate The heart rate.
      */
     public SendHeartRate(int heartRate) {
-        super(TYPE.addProperty(new IntegerProperty(IDENTIFIER, heartRate, 1)));
-        this.heartRate = heartRate;
+        super(TYPE);
+        this.heartRate.update(IDENTIFIER, false, 1, heartRate);
+        createBytes(this.heartRate);
     }
 
     SendHeartRate(byte[] bytes) throws CommandParseException {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        this.heartRate = Property.getUnsignedInt(prop.getValueByte());
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return this.heartRate.update(p);
+                }
+                return null;
+            });
+        }
+
+        if (this.heartRate.getValue() == null) throw new CommandParseException();
     }
 }

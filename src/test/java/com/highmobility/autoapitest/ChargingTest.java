@@ -11,7 +11,7 @@ import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
 import com.highmobility.autoapi.StartStopCharging;
 import com.highmobility.autoapi.property.FloatProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectProperty;
 
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
@@ -140,14 +140,14 @@ public class ChargingTest {
 
     @Test public void build() throws ParseException {
         ChargeState.Builder builder = new ChargeState.Builder();
-        builder.setEstimatedRange(new IntegerProperty(255));
+        builder.setEstimatedRange(new ObjectPropertyInteger(255));
         builder.setBatteryLevel(new ObjectPropertyPercentage(50));
         builder.setBatteryCurrentAC(new FloatProperty(-.6f));
         builder.setBatteryCurrentDC(new FloatProperty(-.6f));
         builder.setChargerVoltageAC(new FloatProperty(400f));
         builder.setChargerVoltageDC(new FloatProperty(410f));
         builder.setChargeLimit(new ObjectPropertyPercentage(90));
-        builder.setTimeToCompleteCharge(new IntegerProperty(60));
+        builder.setTimeToCompleteCharge(new ObjectPropertyInteger(60));
         builder.setChargingRate(new FloatProperty(0f));
         builder.setChargePortState(new ChargePortState(ChargePortState.Value.OPEN));
         builder.setChargeMode(new ChargeMode(ChargeMode.Value.IMMEDIATE));

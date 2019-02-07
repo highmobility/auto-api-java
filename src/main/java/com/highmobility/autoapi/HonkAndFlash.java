@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
@@ -34,24 +34,25 @@ import javax.annotation.Nullable;
  */
 public class HonkAndFlash extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x12);
-    private static final int SECONDS_IDENTIFIER = 0x01;
-    private static final int COUNT_IDENTIFIER = 0x02;
+    private static final byte IDENTIFIER_SECONDS = 0x01;
+    private static final byte IDENTIFIER_COUNT = 0x02;
 
-    private Integer lightFlashCount;
-    private Integer seconds;
+    private ObjectPropertyInteger lightFlashCount = new ObjectPropertyInteger(IDENTIFIER_COUNT,
+            false);
+    private ObjectPropertyInteger seconds = new ObjectPropertyInteger(IDENTIFIER_SECONDS, false);
 
     /**
      * @return How many seconds the horn should be honked.
      */
     @Nullable public Integer getSeconds() {
-        return seconds;
+        return seconds.getValue();
     }
 
     /**
      * @return How many times the lights should be flashed.
      */
     @Nullable public Integer getLightFlashCount() {
-        return lightFlashCount;
+        return lightFlashCount.getValue();
     }
 
     /**
@@ -59,38 +60,37 @@ public class HonkAndFlash extends CommandWithProperties {
      * @param lightFlashCount How many times the lights should be flashed.
      */
     public HonkAndFlash(@Nullable Integer seconds, @Nullable Integer lightFlashCount) {
-        super(TYPE, getProperties(seconds, lightFlashCount));
-        this.seconds = seconds;
-        this.lightFlashCount = lightFlashCount;
-    }
+        super(TYPE);
 
-    static Property[] getProperties(Integer seconds, Integer lightFlashCount) {
         ArrayList<Property> properties = new ArrayList<>();
 
         if (seconds != null) {
-            IntegerProperty prop = new IntegerProperty((byte) SECONDS_IDENTIFIER, seconds, 1);
-            properties.add(prop);
+            this.seconds = new ObjectPropertyInteger((byte) IDENTIFIER_SECONDS, false, 1, seconds);
+            properties.add(this.seconds);
         }
 
         if (lightFlashCount != null) {
-            IntegerProperty prop = new IntegerProperty((byte) COUNT_IDENTIFIER, lightFlashCount, 1);
-            properties.add(prop);
+            this.lightFlashCount = new ObjectPropertyInteger((byte) IDENTIFIER_COUNT, false,
+                    1, lightFlashCount);
+            properties.add(this.lightFlashCount);
         }
 
-        return properties.toArray(new Property[0]);
+        createBytes(properties);
     }
 
     HonkAndFlash(byte[] bytes) {
         super(bytes);
-        for (Property property : properties) {
-            switch (property.getPropertyIdentifier()) {
-                case SECONDS_IDENTIFIER:
-                    seconds = Property.getUnsignedInt(property.getValueByte());
-                    break;
-                case COUNT_IDENTIFIER:
-                    lightFlashCount = Property.getUnsignedInt(property.getValueByte());
-                    break;
-            }
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_SECONDS:
+                        return seconds.update(p);
+                    case IDENTIFIER_COUNT:
+                        return lightFlashCount.update(p);
+                }
+                return null;
+            });
         }
     }
 }

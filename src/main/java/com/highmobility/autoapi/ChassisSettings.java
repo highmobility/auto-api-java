@@ -271,10 +271,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setCurrentChassisPosition(ObjectProperty<Integer> chassisPosition) {
+        public Builder setCurrentChassisPosition(ObjectPropertyInteger chassisPosition) {
             this.currentChassisPosition = chassisPosition;
             addProperty(chassisPosition);
-            chassisPosition.updateIntegerFromBuilder(IDENTIFIER_CURRENT_CHASSIS_POSITION, true, 1);
+            chassisPosition.update(IDENTIFIER_CURRENT_CHASSIS_POSITION, true, 1);
             return this;
         }
 
@@ -282,10 +282,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setMinimumChassisPosition(ObjectProperty<Integer> chassisPosition) {
+        public Builder setMinimumChassisPosition(ObjectPropertyInteger chassisPosition) {
             this.minimumChassisPosition = chassisPosition;
             addProperty(chassisPosition);
-            chassisPosition.updateIntegerFromBuilder(IDENTIFIER_MINIMUM_CHASSIS_POSITION, true, 1);
+            chassisPosition.update(IDENTIFIER_MINIMUM_CHASSIS_POSITION, true, 1);
             return this;
         }
 
@@ -293,10 +293,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setMaximumChassisPosition(ObjectProperty<Integer> chassisPosition) {
+        public Builder setMaximumChassisPosition(ObjectPropertyInteger chassisPosition) {
             this.maximumChassisPosition = chassisPosition;
             addProperty(chassisPosition);
-            chassisPosition.updateIntegerFromBuilder(IDENTIFIER_MAXIMUM_CHASSIS_POSITION, true, 1);
+            chassisPosition.update(IDENTIFIER_MAXIMUM_CHASSIS_POSITION, true, 1);
             return this;
         }
 

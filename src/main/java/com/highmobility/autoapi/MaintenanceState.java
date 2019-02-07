@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.maintenance.ConditionBasedService;
 import com.highmobility.autoapi.property.maintenance.TeleserviceAvailability;
@@ -37,8 +37,8 @@ import javax.annotation.Nullable;
 public class MaintenanceState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MAINTENANCE, 0x01);
 
-    private static final byte DAYS_IDENTIFIER = 0x01;
-    private static final byte KILOMETERS_IDENTIFIER = 0x02;
+    private static final byte IDENTIFIER_DAYS_TO_NEXT_SERVICE = 0x01;
+    private static final byte IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE = 0x02;
     private static final byte IDENTIFIER_CBS_REPORTS_COUNT = 0x03;
     private static final byte IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION = 0x04;
     private static final byte IDENTIFIER_SERVICE_DISTANCE_THRESHOLD = 0x06;
@@ -49,15 +49,22 @@ public class MaintenanceState extends CommandWithProperties {
     private static final byte IDENTIFIER_CONDITION_BASED_SERVICES = 0x0B;
     private static final byte IDENTIFIER_BRAKE_FLUID_CHANGE_DATE = 0x0C;
 
-    private IntegerProperty kilometersToNextService;
-    private IntegerProperty daysToNextService;
+    private ObjectPropertyInteger kilometersToNextService =
+            new ObjectPropertyInteger(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false);
+    private ObjectPropertyInteger daysToNextService =
+            new ObjectPropertyInteger(IDENTIFIER_DAYS_TO_NEXT_SERVICE, false);
 
     // level8
-    private IntegerProperty cbsReportsCount;
-    private IntegerProperty monthsToExhaustInspection;
+    private ObjectPropertyInteger cbsReportsCount =
+            new ObjectPropertyInteger(IDENTIFIER_CBS_REPORTS_COUNT, false);
+    private ObjectPropertyInteger monthsToExhaustInspection =
+            new ObjectPropertyInteger(IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION, false);
     private TeleserviceAvailability teleserviceAvailability;
-    private IntegerProperty serviceDistanceThreshold;
-    private IntegerProperty serviceTimeThreshold;
+    private ObjectPropertyInteger serviceDistanceThreshold =
+            new ObjectPropertyInteger(IDENTIFIER_SERVICE_DISTANCE_THRESHOLD, false);
+    private ObjectPropertyInteger serviceTimeThreshold =
+            new ObjectPropertyInteger(IDENTIFIER_SERVICE_TIME_THRESHOLD, false);
+
     private Calendar automaticTeleserviceCallDate;
     private Calendar teleserviceBatteryCallDate;
     private Calendar nextInspectionDate;
@@ -67,28 +74,28 @@ public class MaintenanceState extends CommandWithProperties {
     /**
      * @return The amount of kilometers until next servicing of the car
      */
-    @Nullable public IntegerProperty getKilometersToNextService() {
+    @Nullable public ObjectPropertyInteger getKilometersToNextService() {
         return kilometersToNextService;
     }
 
     /**
      * @return The number of days until next servicing of the car, whereas negative is overdue
      */
-    @Nullable public IntegerProperty getDaysToNextService() {
+    @Nullable public ObjectPropertyInteger getDaysToNextService() {
         return daysToNextService;
     }
 
     /**
      * @return The number of CBS reports.
      */
-    @Nullable public IntegerProperty getCbsReportsCount() {
+    @Nullable public ObjectPropertyInteger getCbsReportsCount() {
         return cbsReportsCount;
     }
 
     /**
      * @return The number of Months until exhaust inspection.
      */
-    @Nullable public IntegerProperty getMonthsToExhaustInspection() {
+    @Nullable public ObjectPropertyInteger getMonthsToExhaustInspection() {
         return monthsToExhaustInspection;
     }
 
@@ -102,14 +109,14 @@ public class MaintenanceState extends CommandWithProperties {
     /**
      * @return The service distance threshold in km.
      */
-    @Nullable public IntegerProperty getServiceDistanceThreshold() {
+    @Nullable public ObjectPropertyInteger getServiceDistanceThreshold() {
         return serviceDistanceThreshold;
     }
 
     /**
      * @return The service time threshold in weeks.
      */
-    @Nullable public IntegerProperty getServiceTimeThreshold() {
+    @Nullable public ObjectPropertyInteger getServiceTimeThreshold() {
         return serviceTimeThreshold;
     }
 
@@ -155,28 +162,22 @@ public class MaintenanceState extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case DAYS_IDENTIFIER:
-                        daysToNextService = new IntegerProperty(p, false);
-                        return daysToNextService;
-                    case KILOMETERS_IDENTIFIER:
-                        kilometersToNextService = new IntegerProperty(p, false);
-                        return kilometersToNextService;
+                    case IDENTIFIER_DAYS_TO_NEXT_SERVICE:
+                        return daysToNextService.update(p);
+                    case IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE:
+                        return kilometersToNextService.update(p);
                     case IDENTIFIER_CBS_REPORTS_COUNT:
-                        cbsReportsCount = new IntegerProperty(p, false);
-                        return cbsReportsCount;
+                        return cbsReportsCount.update(p);
                     case IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION:
-                        monthsToExhaustInspection = new IntegerProperty(p, false);
-                        return monthsToExhaustInspection;
+                        return monthsToExhaustInspection.update(p);
                     case TeleserviceAvailability.IDENTIFIER:
                         teleserviceAvailability =
                                 TeleserviceAvailability.fromByte(p.getValueByte());
                         return teleserviceAvailability;
                     case IDENTIFIER_SERVICE_DISTANCE_THRESHOLD:
-                        serviceDistanceThreshold = new IntegerProperty(p, false);
-                        return serviceDistanceThreshold;
+                        return serviceDistanceThreshold.update(p);
                     case IDENTIFIER_SERVICE_TIME_THRESHOLD:
-                        serviceTimeThreshold = new IntegerProperty(p, false);
-                        return serviceTimeThreshold;
+                        return serviceTimeThreshold.update(p);
                     case IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE:
                         automaticTeleserviceCallDate = Property.getCalendar(p.getValueBytesArray());
                         return automaticTeleserviceCallDate;
@@ -224,13 +225,13 @@ public class MaintenanceState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private IntegerProperty kilometersToNextService;
-        private IntegerProperty daysToNextService;
-        private IntegerProperty cbsReportsCount;
-        private IntegerProperty monthsToExhaustInspection;
+        private ObjectPropertyInteger kilometersToNextService;
+        private ObjectPropertyInteger daysToNextService;
+        private ObjectPropertyInteger cbsReportsCount;
+        private ObjectPropertyInteger monthsToExhaustInspection;
         private TeleserviceAvailability teleserviceAvailability;
-        private IntegerProperty serviceDistanceThreshold;
-        private IntegerProperty serviceTimeThreshold;
+        private ObjectPropertyInteger serviceDistanceThreshold;
+        private ObjectPropertyInteger serviceTimeThreshold;
         private Calendar automaticTeleserviceCallDate;
         private Calendar teleserviceBatteryCallDate;
         private Calendar nextInspectionDate;
@@ -245,9 +246,9 @@ public class MaintenanceState extends CommandWithProperties {
          * @param kilometersToNextService The amount of kilometers until next servicing of the car.
          * @return The builder.
          */
-        public Builder setKilometersToNextService(IntegerProperty kilometersToNextService) {
+        public Builder setKilometersToNextService(ObjectPropertyInteger kilometersToNextService) {
             this.kilometersToNextService = kilometersToNextService;
-            kilometersToNextService.setIdentifier(KILOMETERS_IDENTIFIER, 3);
+            kilometersToNextService.update(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false, 3);
             addProperty(kilometersToNextService);
             return this;
         }
@@ -257,22 +258,24 @@ public class MaintenanceState extends CommandWithProperties {
          *                          negative is overdue.
          * @return The builder.
          */
-        public Builder setDaysToNextService(IntegerProperty daysToNextService) {
+        public Builder setDaysToNextService(ObjectPropertyInteger daysToNextService) {
             this.daysToNextService = daysToNextService;
-            daysToNextService.setIdentifier(DAYS_IDENTIFIER, 2);
+            daysToNextService.update(IDENTIFIER_DAYS_TO_NEXT_SERVICE, false, 2);
             addProperty(daysToNextService);
             return this;
         }
 /*
-        public Builder setCbsReportsCount(IntegerProperty cbsReportsCount) {
+        public Builder setCbsReportsCount(ObjectPropertyInteger cbsReportsCount) {
             this.cbsReportsCount = cbsReportsCount;
-            addProperty(new IntegerProperty(IDENTIFIER_CBS_REPORTS_COUNT, cbsReportsCount, 1));
+            addProperty(new ObjectPropertyInteger(IDENTIFIER_CBS_REPORTS_COUNT, cbsReportsCount,
+            1));
             return this;
         }
 
-        public Builder setMonthsToExhaustInspection(IntegerProperty monthsToExhaustInspection) {
+        public Builder setMonthsToExhaustInspection(ObjectPropertyInteger
+        monthsToExhaustInspection) {
             this.monthsToExhaustInspection = monthsToExhaustInspection;
-            addProperty(new IntegerProperty(IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION,
+            addProperty(new ObjectPropertyInteger(IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION,
                     monthsToExhaustInspection, 1));
             return this;
         }
@@ -283,16 +286,16 @@ public class MaintenanceState extends CommandWithProperties {
             return this;
         }
 
-        public Builder setServiceDistanceThreshold(IntegerProperty serviceDistanceThreshold) {
+        public Builder setServiceDistanceThreshold(ObjectPropertyInteger serviceDistanceThreshold) {
             this.serviceDistanceThreshold = serviceDistanceThreshold;
-            addProperty(new IntegerProperty(IDENTIFIER_SERVICE_DISTANCE_THRESHOLD,
+            addProperty(new ObjectPropertyInteger(IDENTIFIER_SERVICE_DISTANCE_THRESHOLD,
                     serviceDistanceThreshold, 2));
             return this;
         }
 
-        public Builder setServiceTimeThreshold(IntegerProperty serviceTimeThreshold) {
+        public Builder setServiceTimeThreshold(ObjectPropertyInteger serviceTimeThreshold) {
             this.serviceTimeThreshold = serviceTimeThreshold;
-            addProperty(new IntegerProperty(IDENTIFIER_SERVICE_TIME_THRESHOLD,
+            addProperty(new ObjectPropertyInteger(IDENTIFIER_SERVICE_TIME_THRESHOLD,
                     serviceDistanceThreshold, 1));
             return this;
         }

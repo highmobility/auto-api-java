@@ -23,8 +23,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.DriverCard;
 import com.highmobility.autoapi.property.DriverTimeState;
 import com.highmobility.autoapi.property.DriverWorkingState;
-import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
@@ -40,10 +40,10 @@ import javax.annotation.Nullable;
 public class TachographState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.TACHOGRAPH, 0x01);
 
-    private static final byte VEHICLE_MOTION_DETECTED_IDENTIFIER = (byte) 0x04;
-    private static final byte VEHICLE_OVERSPEED_IDENTIFIER = (byte) 0x05;
-    private static final byte VEHICLE_DIRECTION_IDENTIFIER = (byte) 0x06;
-    private static final byte VEHICLE_SPEED_IDENTIFIER = (byte) 0x07;
+    private static final byte IDENTIFIER_VEHICLE_MOTION_DETECTED = (byte) 0x04;
+    private static final byte IDENTIFIER_VEHICLE_OVERSPEED = (byte) 0x05;
+    private static final byte IDENTIFIER_VEHICLE_DIRECTION = (byte) 0x06;
+    private static final byte IDENTIFIER_VEHICLE_SPEED = (byte) 0x07;
 
     DriverWorkingState[] driverWorkingStates;
     DriverTimeState[] driverTimeStates;
@@ -51,7 +51,7 @@ public class TachographState extends CommandWithProperties {
     ObjectProperty<Boolean> vehicleMotionDetected;
     ObjectProperty<Boolean> vehicleOverspeed;
     VehicleDirection vehicleDirection;
-    IntegerProperty vehicleSpeed;
+    ObjectPropertyInteger vehicleSpeed = new ObjectPropertyInteger(IDENTIFIER_VEHICLE_SPEED, false);
 
     /**
      * @return The driver working states.
@@ -140,7 +140,7 @@ public class TachographState extends CommandWithProperties {
     /**
      * @return The tachograph vehicle speed in km/h.
      */
-    @Nullable public IntegerProperty getVehicleSpeed() {
+    @Nullable public ObjectPropertyInteger getVehicleSpeed() {
         return vehicleSpeed;
     }
 
@@ -168,18 +168,17 @@ public class TachographState extends CommandWithProperties {
                         DriverCard driverCard = new DriverCard(p.getByteArray());
                         cardsBuilder.add(driverCard);
                         return driverCard;
-                    case VEHICLE_MOTION_DETECTED_IDENTIFIER:
+                    case IDENTIFIER_VEHICLE_MOTION_DETECTED:
                         vehicleMotionDetected = new ObjectProperty<>(Boolean.class, p);
                         return vehicleMotionDetected;
-                    case VEHICLE_OVERSPEED_IDENTIFIER:
+                    case IDENTIFIER_VEHICLE_OVERSPEED:
                         vehicleOverspeed = new ObjectProperty<>(Boolean.class, p);
                         return vehicleOverspeed;
-                    case VEHICLE_DIRECTION_IDENTIFIER:
+                    case IDENTIFIER_VEHICLE_DIRECTION:
                         vehicleDirection = VehicleDirection.fromByte(p.getValueByte());
                         return vehicleDirection;
-                    case VEHICLE_SPEED_IDENTIFIER:
-                        vehicleSpeed = new IntegerProperty(p, false);
-                        return vehicleSpeed;
+                    case IDENTIFIER_VEHICLE_SPEED:
+                        return vehicleSpeed.update(p);
                 }
 
                 return null;
@@ -214,7 +213,7 @@ public class TachographState extends CommandWithProperties {
         ObjectProperty<Boolean> vehicleMotionDetected;
         ObjectProperty<Boolean> vehicleOverspeed;
         VehicleDirection vehicleDirection;
-        IntegerProperty vehicleSpeed;
+        ObjectPropertyInteger vehicleSpeed;
 
         /**
          * Add a single driver working state.
@@ -294,7 +293,7 @@ public class TachographState extends CommandWithProperties {
          */
         public Builder setVehicleMotionDetected(ObjectProperty<Boolean> vehicleMotionDetected) {
             this.vehicleMotionDetected = vehicleMotionDetected;
-            vehicleMotionDetected.setIdentifier(VEHICLE_MOTION_DETECTED_IDENTIFIER);
+            vehicleMotionDetected.setIdentifier(IDENTIFIER_VEHICLE_MOTION_DETECTED);
             addProperty(vehicleMotionDetected);
             return this;
         }
@@ -305,7 +304,7 @@ public class TachographState extends CommandWithProperties {
          */
         public Builder setVehicleOverspeed(ObjectProperty<Boolean> vehicleOverSpeed) {
             this.vehicleOverspeed = vehicleOverSpeed;
-            vehicleOverSpeed.setIdentifier(VEHICLE_OVERSPEED_IDENTIFIER);
+            vehicleOverSpeed.setIdentifier(IDENTIFIER_VEHICLE_OVERSPEED);
             addProperty(vehicleOverSpeed);
             return this;
         }
@@ -316,7 +315,7 @@ public class TachographState extends CommandWithProperties {
          */
         public Builder setVehicleDirection(VehicleDirection vehicleDirection) {
             this.vehicleDirection = vehicleDirection;
-            addProperty(new Property(VEHICLE_DIRECTION_IDENTIFIER, vehicleDirection.getByte()));
+            addProperty(new Property(IDENTIFIER_VEHICLE_DIRECTION, vehicleDirection.getByte()));
             return this;
         }
 
@@ -324,9 +323,9 @@ public class TachographState extends CommandWithProperties {
          * @param vehicleSpeed The tachograph vehicle speed in km/h.
          * @return The builder.
          */
-        public Builder setVehicleSpeed(IntegerProperty vehicleSpeed) {
+        public Builder setVehicleSpeed(ObjectPropertyInteger vehicleSpeed) {
             this.vehicleSpeed = vehicleSpeed;
-            vehicleSpeed.setIdentifier(VEHICLE_SPEED_IDENTIFIER, 2);
+            vehicleSpeed.update(IDENTIFIER_VEHICLE_SPEED, false, 2);
             addProperty(vehicleSpeed);
             return this;
         }
@@ -342,8 +341,7 @@ public class TachographState extends CommandWithProperties {
 
     public enum VehicleDirection {
         FORWARD((byte) 0x00),
-        REVERSE((byte) 0x01),
-        ;
+        REVERSE((byte) 0x01);
 
         public static VehicleDirection fromByte(byte byteValue) throws CommandParseException {
             VehicleDirection[] values = VehicleDirection.values();

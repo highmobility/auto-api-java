@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.ScreenLocation;
 import com.highmobility.autoapi.property.StringProperty;
@@ -42,7 +42,8 @@ public class VideoHandover extends CommandWithProperties {
     public static final byte IDENTIFIER_SCREEN_LOCATION = 0x03;
 
     private String url;
-    private Integer startingSecond;
+    private ObjectPropertyInteger startingSecond =
+            new ObjectPropertyInteger(STARTING_SECOND_IDENTIFIER, false);
     private ScreenLocation location;
 
     /**
@@ -56,7 +57,7 @@ public class VideoHandover extends CommandWithProperties {
      * @return The starting second.
      */
     @Nullable public Integer getStartingSecond() {
-        return startingSecond;
+        return startingSecond.getValue();
     }
 
     /**
@@ -73,39 +74,45 @@ public class VideoHandover extends CommandWithProperties {
      */
     public VideoHandover(String url, @Nullable Integer startingSecond,
                          @Nullable ScreenLocation location) {
-        super(TYPE, getProperties(url, startingSecond, location));
-        this.url = url;
-        this.startingSecond = startingSecond;
-        this.location = location;
-    }
+        super(TYPE);
 
-    VideoHandover(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        for (Property p : properties) {
-            switch (p.getPropertyIdentifier()) {
-                case URL_IDENTIFIER:
-                    url = Property.getString(p.getValueBytesArray());
-                    break;
-                case STARTING_SECOND_IDENTIFIER:
-                    startingSecond = Property.getUnsignedInt(p.getValueBytesArray());
-                    break;
-                case IDENTIFIER_SCREEN_LOCATION:
-                    location = ScreenLocation.fromByte(p.getValueByte());
-                    break;
-            }
-        }
-    }
+        List<Property> properties = new ArrayList<>();
 
-    static Property[] getProperties(String url, Integer startingSecond, ScreenLocation location) {
-        List<Property> propertiesBuilder = new ArrayList<>();
-
-        if (url != null) propertiesBuilder.add(new StringProperty(URL_IDENTIFIER, url));
+        if (url != null) properties.add(new StringProperty(URL_IDENTIFIER, url));
         if (startingSecond != null) {
-            propertiesBuilder.add(new IntegerProperty(STARTING_SECOND_IDENTIFIER, startingSecond,
-                    2));
+            this.startingSecond.update(STARTING_SECOND_IDENTIFIER, false, 2, startingSecond);
+            properties.add(this.startingSecond);
         }
-        if (location != null)
-            propertiesBuilder.add(new Property(IDENTIFIER_SCREEN_LOCATION, location.getByte()));
-        return propertiesBuilder.toArray(new Property[0]);
+
+        if (location != null) {
+            properties.add(new Property(IDENTIFIER_SCREEN_LOCATION, location.getByte()));
+
+        }
+
+        this.url = url;
+        this.location = location;
+        createBytes(properties);
     }
+
+    VideoHandover(byte[] bytes) {
+        super(bytes);
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case URL_IDENTIFIER:
+                        url = Property.getString(p.getValueBytesArray());
+                        break;
+                    case STARTING_SECOND_IDENTIFIER:
+                        return startingSecond.update(p);
+                    case IDENTIFIER_SCREEN_LOCATION:
+                        location = ScreenLocation.fromByte(p.getValueByte());
+                        break;
+                }
+                return null;
+            });
+        }
+
+    }
+
 }

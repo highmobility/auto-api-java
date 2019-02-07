@@ -6,7 +6,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Notification;
 import com.highmobility.autoapi.NotificationAction;
 import com.highmobility.autoapi.property.ActionItem;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -47,14 +47,14 @@ public class NotificationsTest {
     }
 
     @Test public void outgoingNotification() {
-        ActionItem action1 = null, action2 = null;
+        ActionItem action1, action2;
         action1 = new ActionItem(0, "No");
         action2 = new ActionItem(1, "Yes");
         ActionItem[] actions = new ActionItem[]{action1, action2};
         Notification notification = new Notification("Start navigation?", actions, 42);
 
         // we expect that properties are ordered in this test. It should not matter really
-        assertTrue(notification.equals(bytes));
+        assertTrue(TestUtils.bytesTheSame(notification, bytes));
     }
 
     @Test public void buildNotification() {
@@ -68,7 +68,7 @@ public class NotificationsTest {
         builder.setText(new StringProperty("Start navigation?"));
         builder.setActions(actions);
 
-        builder.setReceivedAction(new IntegerProperty(42));
+        builder.setReceivedAction(new ObjectPropertyInteger(42));
 
         Notification command = builder.build();
         assertTrue(command.equals(bytes));
@@ -79,10 +79,8 @@ public class NotificationsTest {
         Bytes bytes = new Bytes(
                 "003811010001FE");
 
-        Command command = CommandResolver.resolve(bytes);
-        assertTrue(command.getClass() == NotificationAction.class);
-        NotificationAction state = (NotificationAction) command;
-        assertTrue(state.getActionIdentifier() == 254);
+        NotificationAction command = (NotificationAction) CommandResolver.resolve(bytes);
+        assertTrue(command.getActionIdentifier() == 254);
     }
 
     @Test public void outgoingNotificationAction() {
@@ -97,7 +95,7 @@ public class NotificationsTest {
 
     @Test public void buildNotificationAction() {
         NotificationAction.Builder builder = new NotificationAction.Builder();
-        builder.setActionIdentifier(254);
+        builder.setActionIdentifier(new ObjectPropertyInteger(254));
         NotificationAction command = builder.build();
         assertTrue(command.getActionIdentifier() == 254);
         assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex("003811010001FE")));

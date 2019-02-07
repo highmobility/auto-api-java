@@ -98,7 +98,7 @@ public class MaintenanceTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("003401");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((MaintenanceState) state).getKilometersToNextService() == null);
+        assertTrue(((MaintenanceState) state).getKilometersToNextService().getValue() == null);
     }
 
     @Test public void build() throws ParseException {

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ActionItem;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
 
@@ -43,7 +43,8 @@ public class Notification extends CommandWithProperties {
 
     StringProperty text;
     ActionItem[] actions;
-    IntegerProperty receivedAction;
+    ObjectPropertyInteger receivedAction = new ObjectPropertyInteger(RECEIVED_ACTION_IDENTIFIER,
+            false);
 
     /**
      * @return Notification text.
@@ -72,7 +73,7 @@ public class Notification extends CommandWithProperties {
     /**
      * @return The received action.
      */
-    @Nullable public IntegerProperty getReceivedAction() {
+    @Nullable public ObjectPropertyInteger getReceivedAction() {
         return receivedAction;
     }
 
@@ -81,11 +82,23 @@ public class Notification extends CommandWithProperties {
      * @param actions        Notification action items.
      * @param receivedAction The received action.
      */
-    public Notification(String text, ActionItem[] actions, Integer receivedAction) {
-        super(TYPE, getProperties(text, actions, receivedAction));
+    public Notification(String text, ActionItem[] actions, @Nullable Integer receivedAction) {
+        super(TYPE);
+
+        ArrayList<Property> properties = new ArrayList<>();
+
+        this.text = new StringProperty(TEXT_IDENTIFIER, text);
+        properties.add(this.text);
+
         this.actions = actions;
-        this.text = (StringProperty) getProperty(TEXT_IDENTIFIER);
-        this.receivedAction = (IntegerProperty) getProperty(RECEIVED_ACTION_IDENTIFIER);
+        properties.addAll(Arrays.asList(actions));
+
+        if (receivedAction != null) {
+            this.receivedAction.update(RECEIVED_ACTION_IDENTIFIER, false, 1, receivedAction);
+            properties.add(this.receivedAction);
+        }
+
+        createBytes(properties);
     }
 
     Notification(byte[] bytes) {
@@ -103,8 +116,7 @@ public class Notification extends CommandWithProperties {
                         actionsBuilder.add(item);
                         return item;
                     case RECEIVED_ACTION_IDENTIFIER:
-                        receivedAction = new IntegerProperty(p, true);
-                        return receivedAction;
+                        return receivedAction.update(p);
                 }
 
                 return null;
@@ -112,19 +124,6 @@ public class Notification extends CommandWithProperties {
         }
 
         actions = actionsBuilder.toArray(new ActionItem[0]);
-    }
-
-    static Property[] getProperties(String text, ActionItem[] actions,
-                                    Integer receivedAction) {
-        Property[] properties = new Property[actions.length + 2];
-        properties[0] = new StringProperty(TEXT_IDENTIFIER, text);
-
-        System.arraycopy(actions, 0, properties, 1, actions.length);
-
-        IntegerProperty receivedActionProperty = new IntegerProperty(RECEIVED_ACTION_IDENTIFIER, receivedAction, 1);
-        properties[properties.length - 1] = receivedActionProperty;
-
-        return properties;
     }
 
     private Notification(Builder builder) {
@@ -137,7 +136,7 @@ public class Notification extends CommandWithProperties {
     public static final class Builder extends CommandWithProperties.Builder {
         private List<ActionItem> actions = new ArrayList<>();
         StringProperty text;
-        IntegerProperty receivedAction;
+        ObjectPropertyInteger receivedAction;
 
         public Builder() {
             super(TYPE);
@@ -182,9 +181,9 @@ public class Notification extends CommandWithProperties {
          * @param receivedAction The received action.
          * @return The builder.
          */
-        public Builder setReceivedAction(IntegerProperty receivedAction) {
+        public Builder setReceivedAction(ObjectPropertyInteger receivedAction) {
             this.receivedAction = receivedAction;
-            receivedAction.setIdentifier(RECEIVED_ACTION_IDENTIFIER, 1);
+            receivedAction.update(RECEIVED_ACTION_IDENTIFIER, false, 1);
             addProperty(receivedAction);
             return this;
         }

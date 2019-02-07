@@ -340,6 +340,8 @@ public class CommandWithProperties extends Command implements PropertyValue {
     protected void createBytes(List<Property> properties) {
         bytes = type.getIdentifierAndType();
 
+        if (propertiesExpected() && properties.size() == 0) throw new IllegalArgumentException();
+
         for (int i = 0; i < properties.size(); i++) {
             Property property = properties.get(i);
             bytes = ByteUtils.concatBytes(bytes, property.getByteArray());

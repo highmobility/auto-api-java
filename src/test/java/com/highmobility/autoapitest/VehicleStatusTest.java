@@ -11,8 +11,8 @@ import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.WindowsState;
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.FloatProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.value.DisplayUnit;
@@ -141,13 +141,13 @@ public class VehicleStatusTest {
         builder.setName("My Car");
         builder.setLicensePlate("ABC123");
         builder.setSalesDesignation("Package+");
-        builder.setModelYear(new IntegerProperty(2017));
+        builder.setModelYear(new ObjectPropertyInteger(2017));
 
         builder.setColorName("Estoril Blau");
 //        build.setPower(220);
         // add an unknown property (power)
-        builder.addProperty(new IntegerProperty((byte) 0x09, 220, 2));
-        builder.setNumberOfDoors(new IntegerProperty(5)).setNumberOfSeats(new IntegerProperty(5));
+        builder.addProperty(new ObjectPropertyInteger((byte) 0x09, false, 2, 220));
+        builder.setNumberOfDoors(new ObjectPropertyInteger(5)).setNumberOfSeats(new ObjectPropertyInteger(5));
 
         TrunkState.Builder trunkState = new TrunkState.Builder();
         trunkState.setLockState(new Lock(Lock.Value.UNLOCKED));
@@ -161,7 +161,7 @@ public class VehicleStatusTest {
 
         // l7
         builder.setEngineVolume(new FloatProperty(2.5f));
-        builder.setMaxTorque(new IntegerProperty(245));
+        builder.setMaxTorque(new ObjectPropertyInteger(245));
         builder.setGearBox(Gearbox.AUTOMATIC);
 
         // l8
@@ -233,25 +233,19 @@ public class VehicleStatusTest {
     @Test public void zeroProperties() {
         VehicleStatus.Builder builder = new VehicleStatus.Builder();
         VehicleStatus vs = builder.build();
-        testEmptyCommand(vs);
-        assertTrue(vs.getByteArray().length == 3);
-        assertTrue(vs.getByteArray().length == 3);
 
-        Bytes bytes = new Bytes("00110100");
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-        testEmptyCommand((VehicleStatus) command);
-    }
-
-    void testEmptyCommand(VehicleStatus vs) {
         assertTrue(vs.getStates().length == 0);
         assertTrue(vs.getNumberOfDoors() == null);
         assertTrue(vs.getState(TheftAlarmState.TYPE) == null);
+        assertTrue(vs.getByteArray().length == 3);
+
+        Bytes bytes = new Bytes("00110100");
+        vs = (VehicleStatus) CommandResolver.resolve(bytes);
+        assertTrue(vs.getStates().length == 0);
+        assertTrue(vs.getNumberOfDoors().getValue() == null);
+        assertTrue(vs.getState(TheftAlarmState.TYPE) == null);
     }
+
 
     @Test public void anotherTest() {
         Bytes bytes = new Bytes

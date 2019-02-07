@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 
 import javax.annotation.Nullable;
@@ -34,13 +34,14 @@ public class OffroadState extends CommandWithProperties {
     private static final byte IDENTIFIER_ROUTE_INCLINE = 0x01;
     private static final byte IDENTIFIER_WHEEL_SUSPENSION = 0x02;
 
-    IntegerProperty routeIncline;
-    ObjectPropertyPercentage wheelSuspension = new ObjectPropertyPercentage(IDENTIFIER_WHEEL_SUSPENSION);
+    ObjectPropertyInteger routeIncline = new ObjectPropertyInteger(IDENTIFIER_ROUTE_INCLINE, false);
+    ObjectPropertyPercentage wheelSuspension =
+            new ObjectPropertyPercentage(IDENTIFIER_WHEEL_SUSPENSION);
 
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.
      */
-    @Nullable public IntegerProperty getRouteIncline() {
+    @Nullable public ObjectPropertyInteger getRouteIncline() {
         return routeIncline;
     }
 
@@ -59,8 +60,7 @@ public class OffroadState extends CommandWithProperties {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_ROUTE_INCLINE:
-                        routeIncline = new IntegerProperty(p, false);
-                        return routeIncline;
+                        return routeIncline.update(p);
                     case IDENTIFIER_WHEEL_SUSPENSION:
                         return wheelSuspension.update(p);
                 }
@@ -81,7 +81,7 @@ public class OffroadState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private IntegerProperty routeIncline;
+        private ObjectPropertyInteger routeIncline;
         private ObjectPropertyPercentage wheelSuspension;
 
         public Builder() {
@@ -93,9 +93,9 @@ public class OffroadState extends CommandWithProperties {
          *                     for decline.
          * @return The builder.
          */
-        public Builder setRouteIncline(IntegerProperty routeIncline) {
+        public Builder setRouteIncline(ObjectPropertyInteger routeIncline) {
             this.routeIncline = routeIncline;
-            routeIncline.setIdentifier(IDENTIFIER_ROUTE_INCLINE, 2);
+            routeIncline.update(IDENTIFIER_ROUTE_INCLINE, false, 2);
             addProperty(routeIncline);
             return this;
         }

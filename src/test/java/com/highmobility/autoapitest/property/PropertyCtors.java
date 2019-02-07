@@ -11,7 +11,7 @@ import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.FogLight;
 import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.IntegerArrayProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.KeyFobPositionProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.ObjectProperty;
@@ -249,9 +249,8 @@ public class PropertyCtors {
 
     @Test public void integerProperty() throws CommandParseException {
         Property property = new Property("01000100");
-
-        assertTrue(new IntegerProperty(property, true).getValue() != null);
-        IntegerProperty updateProp = new IntegerProperty((byte) 0x00, true);
+        assertTrue(new ObjectPropertyInteger(property, true).getValue() != null);
+        ObjectPropertyInteger updateProp = new ObjectPropertyInteger((byte) 0x00, true);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ControlModeProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 
 import javax.annotation.Nullable;
 
@@ -36,12 +36,12 @@ public class ControlMode extends CommandWithProperties {
     private static final byte IDENTIFIER_ANGLE = 0x02;
 
     ControlModeProperty mode = new ControlModeProperty(IDENTIFIER_MODE);
-    IntegerProperty angle = new IntegerProperty(IDENTIFIER_ANGLE, false);
+    ObjectPropertyInteger angle = new ObjectPropertyInteger(IDENTIFIER_ANGLE, false);
 
     /**
      * @return the angle
      */
-    @Nullable public IntegerProperty getAngle() {
+    @Nullable public ObjectPropertyInteger getAngle() {
         return angle;
     }
 

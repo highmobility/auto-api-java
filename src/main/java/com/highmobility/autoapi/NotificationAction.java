@@ -20,8 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 
 /**
  * Send an action to a previously received Notification message.
@@ -31,31 +30,31 @@ public class NotificationAction extends CommandWithProperties {
 
     private static final byte IDENTIFIER = 0x01;
 
-    int actionIdentifier;
+    ObjectPropertyInteger actionIdentifier = new ObjectPropertyInteger(IDENTIFIER, false);
 
     /**
      * @return The identifier of selected action item.
      */
     public int getActionIdentifier() {
-        return actionIdentifier;
+        return actionIdentifier.getValue();
     }
 
     /**
      * @param actionIdentifier The identifier of selected action item.
      */
     public NotificationAction(int actionIdentifier) {
-        super(TYPE.addProperty(new IntegerProperty(IDENTIFIER, actionIdentifier, 1)));
-        this.actionIdentifier = actionIdentifier;
+        super(TYPE);
+        this.actionIdentifier.update(IDENTIFIER, false, 1, actionIdentifier);
+        createBytes(this.actionIdentifier);
     }
 
     NotificationAction(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER) {
-                    actionIdentifier = Property.getUnsignedInt(p.getValueByte());
-                    return actionIdentifier;
+                    return actionIdentifier.update(p);
                 }
 
                 return null;
@@ -69,7 +68,7 @@ public class NotificationAction extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private int actionIdentifier;
+        private ObjectPropertyInteger actionIdentifier;
 
         public Builder() {
             super(TYPE);
@@ -79,9 +78,9 @@ public class NotificationAction extends CommandWithProperties {
          * @param actionIdentifier The identifier of selected action item.
          * @return The builder.
          */
-        public Builder setActionIdentifier(int actionIdentifier) {
+        public Builder setActionIdentifier(ObjectPropertyInteger actionIdentifier) {
             this.actionIdentifier = actionIdentifier;
-            addProperty(new IntegerProperty(IDENTIFIER, actionIdentifier, 1));
+            addProperty(this.actionIdentifier.update(IDENTIFIER, false, 1));
             return this;
         }
 

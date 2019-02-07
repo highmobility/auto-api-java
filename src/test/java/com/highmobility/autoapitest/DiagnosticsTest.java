@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
 import com.highmobility.autoapi.property.FloatProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectProperty;
 
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
@@ -179,28 +179,28 @@ public class DiagnosticsTest {
 
     @Test public void build() {
         DiagnosticsState.Builder builder = new DiagnosticsState.Builder();
-        builder.setMileage(new IntegerProperty(150000));
-        builder.setOilTemperature(new IntegerProperty(99));
-        builder.setSpeed(new IntegerProperty(60));
-        builder.setRpm(new IntegerProperty(2500));
+        builder.setMileage(new ObjectPropertyInteger(150000));
+        builder.setOilTemperature(new ObjectPropertyInteger(99));
+        builder.setSpeed(new ObjectPropertyInteger(60));
+        builder.setRpm(new ObjectPropertyInteger(2500));
         builder.setFuelLevel(new ObjectPropertyPercentage(90));
-        builder.setRange(new IntegerProperty(265));
+        builder.setRange(new ObjectPropertyInteger(265));
         builder.setWasherFluidLevel(new WasherFluidLevel(WasherFluidLevel.Value.FULL));
 
         builder.setBatteryVoltage(new FloatProperty(12f));
         builder.setAdBlueLevel(new FloatProperty(.5f));
-        builder.setDistanceDrivenSinceReset(new IntegerProperty(1500));
-        builder.setDistanceDrivenSinceEngineStart(new IntegerProperty(10));
+        builder.setDistanceDrivenSinceReset(new ObjectPropertyInteger(1500));
+        builder.setDistanceDrivenSinceEngineStart(new ObjectPropertyInteger(10));
         builder.setFuelVolume(new FloatProperty(35.5f));
 
         builder.setAntiLockBrakingActive(new ObjectProperty<>(true));
-        builder.setEngineCoolantTemperature(new IntegerProperty(20));
+        builder.setEngineCoolantTemperature(new ObjectPropertyInteger(20));
         builder.setEngineTotalOperatingHours(new FloatProperty(1500.65f));
         builder.setEngineTotalFuelConsumption(new FloatProperty(27587.0f));
         builder.setBrakeFluidLevel(new BrakeFluidLevel(BrakeFluidLevel.Value.LOW));
         builder.setEngineTorque(new ObjectPropertyPercentage(20));
         builder.setEngineLoad(new ObjectPropertyPercentage(10));
-        builder.setWheelBasedSpeed(new IntegerProperty(65));
+        builder.setWheelBasedSpeed(new ObjectPropertyInteger(65));
 
         // level8
         builder.setBatteryLevel(new ObjectPropertyPercentage(56));
@@ -231,7 +231,7 @@ public class DiagnosticsTest {
                 "PENDING");
         builder.addTroubleCode(code1);
         builder.addTroubleCode(code2);
-        builder.setMileageMeters(new IntegerProperty(150000));
+        builder.setMileageMeters(new ObjectPropertyInteger(150000));
 
         assertTrue(TestUtils.bytesTheSame(builder.build(), bytes));
         assertTrue(builder.build().equals(bytes));

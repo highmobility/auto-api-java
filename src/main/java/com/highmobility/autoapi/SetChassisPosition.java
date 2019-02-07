@@ -20,8 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 
 /**
  * Set the chassis position. The result is sent through the Chassis Settings command.
@@ -29,27 +28,38 @@ import com.highmobility.autoapi.property.Property;
 public class SetChassisPosition extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x15);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    int position;
+
+    ObjectPropertyInteger position = new ObjectPropertyInteger(PROPERTY_IDENTIFIER, true);
 
     /**
      * @return The chassis position in mm calculated from the lowest point.
      */
     public int getPosition() {
-        return position;
+        return position.getValue();
     }
 
     /**
      * @param position The chassis position in mm calculated from the lowest point
      */
     public SetChassisPosition(int position) {
-        super(TYPE.addProperty(new IntegerProperty(PROPERTY_IDENTIFIER, position, 1)));
-        this.position = position;
+        super(TYPE);
+        this.position.update(PROPERTY_IDENTIFIER, true, 1, position);
+        createBytes(this.position);
     }
 
     SetChassisPosition(byte[] bytes) throws CommandParseException {
         super(bytes);
-        Property prop = getProperty(PROPERTY_IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        this.position = Property.getSignedInt(prop.getValueByte());
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case PROPERTY_IDENTIFIER:
+                        return this.position.update(p);
+                }
+                return null;
+            });
+        }
+
+        if (this.position.getValue() == null) throw new CommandParseException();
     }
 }

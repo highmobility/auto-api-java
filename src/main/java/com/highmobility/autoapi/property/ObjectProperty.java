@@ -53,7 +53,7 @@ public class ObjectProperty<T> extends Property {
     @Nullable private PropertyTimestamp timestamp;
     @Nullable private PropertyFailure failure;
     @Nullable protected T value;
-    private Class<T> theClass = null;
+    protected Class<T> theClass = null;
 
     /**
      * @return The property value.
@@ -145,7 +145,9 @@ public class ObjectProperty<T> extends Property {
             if (value instanceof Float) {
                 return new Bytes(floatToBytes((Float) value));
             } else if (value instanceof Integer) {
-                return new Bytes(BigInteger.valueOf((Integer) value).toByteArray());
+                // integer length is defaulted to 4 here. It should be set to the correct one in
+                // the IntegerProperty's update.
+                return new Bytes(intToBytes((Integer) value, 4));
             } else if (value instanceof Double) {
                 return new Bytes(doubleToBytes((Double) value));
             }
@@ -203,30 +205,6 @@ public class ObjectProperty<T> extends Property {
     }
 
     // TODO: 2019-02-04 make private
-
-    /**
-     * Reset the value length. This will create a new base byte array. It is used for Integer
-     * builders because we dont want the user to bother about whether Integer is signed or how many
-     * bytes is it's length.
-     *
-     * @param identifier The property identifier.
-     * @param newLength  The new length.
-     */
-    public ObjectProperty updateIntegerFromBuilder(byte identifier, boolean signed, int newLength) {
-        byte[] bytes = baseBytes(identifier, newLength);
-
-        if (value == null) return this;
-
-        if (newLength == 1) {
-            bytes[3] = ((Integer) value).byteValue();
-        } else {
-            ByteUtils.setBytes(bytes, intToBytes((Integer) value, newLength), 3);
-        }
-
-        this.bytes = bytes;
-
-        return this;
-    }
 
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
@@ -465,7 +443,7 @@ public class ObjectProperty<T> extends Property {
                 int result = ((bytes[at] & 0xff) << 8) | (bytes[at + 1] & 0xff);
                 return result;
             } else if (length == 1) {
-                return (int) bytes[at];
+                return bytes[at] & 0xFF;
             }
         }
 

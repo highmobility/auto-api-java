@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 
 import javax.annotation.Nullable;
 
@@ -35,15 +35,16 @@ public class CruiseControlState extends CommandWithProperties {
 
     private static final byte ACTIVE_IDENTIFIER = 0x01;
     private static final byte LIMITER_IDENTIFIER = 0x02;
-    private static final byte TARGET_SPEED_IDENTIFIER = 0x03;
+    private static final byte IDENTIFIER_TARGET_SPEED = 0x03;
     private static final byte ADAPTIVE_ACTIVE_IDENTIFIER = 0x04;
-    private static final byte ADAPTIVE_TARGET_SPEED_IDENTIFIER = 0x05;
+    private static final byte IDENTIFIER_ADAPTIVE_TARGET_SPEED = 0x05;
 
     ObjectProperty<Boolean> active;
     Limiter limiter;
-    IntegerProperty targetSpeed;
+    ObjectPropertyInteger targetSpeed = new ObjectPropertyInteger(IDENTIFIER_TARGET_SPEED, false);
     ObjectProperty<Boolean> adaptiveActive;
-    IntegerProperty adaptiveTargetSpeed;
+    ObjectPropertyInteger adaptiveTargetSpeed =
+            new ObjectPropertyInteger(IDENTIFIER_ADAPTIVE_TARGET_SPEED, false);
 
     /**
      * @return Whether the cruise control is active.
@@ -62,7 +63,7 @@ public class CruiseControlState extends CommandWithProperties {
     /**
      * @return The cruise control target speed.
      */
-    @Nullable public IntegerProperty getTargetSpeed() {
+    @Nullable public ObjectPropertyInteger getTargetSpeed() {
         return targetSpeed;
     }
 
@@ -76,31 +77,29 @@ public class CruiseControlState extends CommandWithProperties {
     /**
      * @return The adaptive cruise control target speed.
      */
-    @Nullable public IntegerProperty getAdaptiveTargetSpeed() {
+    @Nullable public ObjectPropertyInteger getAdaptiveTargetSpeed() {
         return adaptiveTargetSpeed;
     }
 
     CruiseControlState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case ACTIVE_IDENTIFIER:
                         active = new ObjectProperty<>(Boolean.class, p);
                         return active;
                     case LIMITER_IDENTIFIER:
                         limiter = Limiter.fromByte(p.getValueByte());
-                        return limiter;
-                    case TARGET_SPEED_IDENTIFIER:
-                        targetSpeed = new IntegerProperty(p, false);
-                        return targetSpeed;
+                        return null; // TODO: 2019-02-06
+                    case IDENTIFIER_TARGET_SPEED:
+                        return targetSpeed.update(p);
                     case ADAPTIVE_ACTIVE_IDENTIFIER:
                         adaptiveActive = new ObjectProperty<>(Boolean.class, p);
                         return adaptiveActive;
-                    case ADAPTIVE_TARGET_SPEED_IDENTIFIER:
-                        adaptiveTargetSpeed = new IntegerProperty(p, false);
-                        return adaptiveTargetSpeed;
+                    case IDENTIFIER_ADAPTIVE_TARGET_SPEED:
+                        return adaptiveTargetSpeed.update(p);
                 }
 
                 return null;

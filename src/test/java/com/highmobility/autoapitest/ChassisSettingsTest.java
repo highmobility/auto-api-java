@@ -10,6 +10,7 @@ import com.highmobility.autoapi.SetSpringRate;
 import com.highmobility.autoapi.StartStopSportChrono;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.SpringRate;
 import com.highmobility.autoapi.property.value.Axle;
 import com.highmobility.autoapi.property.value.StartStop;
@@ -122,13 +123,10 @@ public class ChassisSettingsTest {
     }
 
     @Test public void setNegativeChassisPosition() {
-        String waitingForBytes = "005315010001E4";
-        String commandBytes = ByteUtils.hexFromBytes(new SetChassisPosition(-28).getByteArray
-                ());
-        assertTrue(waitingForBytes.equals(commandBytes));
-
-        SetChassisPosition command = (SetChassisPosition) CommandResolver.resolve(ByteUtils
-                .bytesFromHex(waitingForBytes));
+        Bytes waitingForBytes = new Bytes("005315010001E4");
+        Command state = new SetChassisPosition(-28);
+        assertTrue(TestUtils.bytesTheSame(state, waitingForBytes));
+        SetChassisPosition command = (SetChassisPosition) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getPosition() == -28);
     }
 
@@ -153,9 +151,9 @@ public class ChassisSettingsTest {
         builder.addMinimumSpringRate(new ObjectProperty<>(new SpringRate(Axle.FRONT, 16)));
         builder.addMinimumSpringRate(new ObjectProperty<>(new SpringRate(Axle.REAR, 18)));
 
-        builder.setCurrentChassisPosition(new ObjectProperty<>(25));
-        builder.setMaximumChassisPosition(new ObjectProperty<>(55));
-        builder.setMinimumChassisPosition(new ObjectProperty<>(-28));
+        builder.setCurrentChassisPosition(new ObjectPropertyInteger(25));
+        builder.setMaximumChassisPosition(new ObjectPropertyInteger(55));
+        builder.setMinimumChassisPosition(new ObjectPropertyInteger(-28));
 
         ChassisSettings state = builder.build();
         assertTrue(state.equals(bytes));

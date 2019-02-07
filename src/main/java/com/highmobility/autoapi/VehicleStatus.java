@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.FloatProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.StringProperty;
@@ -49,15 +49,15 @@ public class VehicleStatus extends CommandWithProperties {
     private static final byte NAME_IDENTIFIER = 0x04;
     private static final byte LICENSE_PLATE_IDENTIFIER = 0x05;
     private static final byte SALES_DESIGNATION_IDENTIFIER = 0x06;
-    private static final byte MODEL_YEAR_IDENTIFIER = 0x07;
+    private static final byte IDENTIFIER_MODEL_YEAR = 0x07;
     private static final byte COLOR_IDENTIFIER = 0x08;
-    private static final byte POWER_IDENTIFIER = 0x09;
-    private static final byte NUMBER_OF_DOORS_IDENTIFIER = 0x0A;
-    private static final byte NUMBER_OF_SEATS_IDENTIFIER = 0x0B;
+    private static final byte IDENTIFIER_POWER = 0x09;
+    private static final byte IDENTIFIER_NUMBER_OF_DOORS = 0x0A;
+    private static final byte IDENTIFIER_NUMBER_OF_SEATS = 0x0B;
     private static final byte COMMAND_IDENTIFIER = (byte) 0x99;
 
     private static final byte ENGINE_VOLUME_IDENTIFIER = 0x0C;
-    private static final byte MAX_TORQUE_IDENTIFIER = 0x0D;
+    private static final byte IDENTIFIER_MAX_TORQUE = 0x0D;
     private static final byte GEARBOX_IDENTIFIER = 0x0E;
 
     private static final byte IDENTIFIER_DISPLAY_UNIT = 0x0F;
@@ -76,15 +76,18 @@ public class VehicleStatus extends CommandWithProperties {
     String licensePlate;
 
     String salesDesignation;
-    IntegerProperty modelYear;
+    ObjectPropertyInteger modelYear = new ObjectPropertyInteger(IDENTIFIER_MODEL_YEAR, false);
     String color;
-    IntegerProperty power;
-    IntegerProperty numberOfDoors;
-    IntegerProperty numberOfSeats;
+    ObjectPropertyInteger power = new ObjectPropertyInteger(IDENTIFIER_POWER, false);
+    ObjectPropertyInteger numberOfDoors = new ObjectPropertyInteger(IDENTIFIER_NUMBER_OF_DOORS,
+            false);
+    ObjectPropertyInteger numberOfSeats = new ObjectPropertyInteger(IDENTIFIER_NUMBER_OF_SEATS,
+            false);
 
     // l7
     FloatProperty engineVolume; // 0c The engine volume displacement in liters
-    IntegerProperty maxTorque; // 0d maximum engine torque in Nm
+    ObjectPropertyInteger maxTorque = new ObjectPropertyInteger(IDENTIFIER_MAX_TORQUE, false); // 0d maximum engine torque in N = new ObjectPropertyInteger
+    // (IDENTIFIER_MAX_TORQUE)
     Gearbox gearBox; // 0e Gearbox type
 
     // l8
@@ -162,7 +165,7 @@ public class VehicleStatus extends CommandWithProperties {
     /**
      * @return The car model manufacturing year number
      */
-    @Nullable public IntegerProperty getModelYear() {
+    @Nullable public ObjectPropertyInteger getModelYear() {
         return modelYear;
     }
 
@@ -176,21 +179,21 @@ public class VehicleStatus extends CommandWithProperties {
     /**
      * @return The power of the car measured in kw
      */
-    @Nullable public IntegerProperty getPower() {
+    @Nullable public ObjectPropertyInteger getPower() {
         return power;
     }
 
     /**
      * @return The number of doors
      */
-    @Nullable public IntegerProperty getNumberOfDoors() {
+    @Nullable public ObjectPropertyInteger getNumberOfDoors() {
         return numberOfDoors;
     }
 
     /**
      * @return The number of seats
      */
-    @Nullable public IntegerProperty getNumberOfSeats() {
+    @Nullable public ObjectPropertyInteger getNumberOfSeats() {
         return numberOfSeats;
     }
 
@@ -204,7 +207,7 @@ public class VehicleStatus extends CommandWithProperties {
     /**
      * @return The maximum engine torque in Nm.
      */
-    @Nullable public IntegerProperty getMaxTorque() {
+    @Nullable public ObjectPropertyInteger getMaxTorque() {
         return maxTorque;
     }
 
@@ -270,21 +273,17 @@ public class VehicleStatus extends CommandWithProperties {
                     case SALES_DESIGNATION_IDENTIFIER:
                         salesDesignation = Property.getString(p.getValueBytesArray());
                         return salesDesignation;
-                    case MODEL_YEAR_IDENTIFIER:
-                        modelYear = new IntegerProperty(p, false);
-                        return modelYear;
+                    case IDENTIFIER_MODEL_YEAR:
+                        return modelYear.update(p);
                     case COLOR_IDENTIFIER:
                         color = Property.getString(p.getValueBytesArray());
                         return color;
-                    case POWER_IDENTIFIER:
-                        power = new IntegerProperty(p, false);
-                        return power;
-                    case NUMBER_OF_DOORS_IDENTIFIER:
-                        numberOfDoors = new IntegerProperty(p, false);
-                        return numberOfDoors;
-                    case NUMBER_OF_SEATS_IDENTIFIER:
-                        numberOfSeats = new IntegerProperty(p, false);
-                        return numberOfSeats;
+                    case IDENTIFIER_POWER:
+                        return power.update(p);
+                    case IDENTIFIER_NUMBER_OF_DOORS:
+                        return numberOfDoors.update(p);
+                    case IDENTIFIER_NUMBER_OF_SEATS:
+                        return numberOfSeats.update(p);
                     case COMMAND_IDENTIFIER:
                         CommandProperty command = new CommandProperty(p);
                         states.add(command);
@@ -292,9 +291,8 @@ public class VehicleStatus extends CommandWithProperties {
                     case ENGINE_VOLUME_IDENTIFIER:
                         engineVolume = new FloatProperty(p);
                         return engineVolume;
-                    case MAX_TORQUE_IDENTIFIER:
-                        maxTorque = new IntegerProperty(p, false);
-                        return maxTorque;
+                    case IDENTIFIER_MAX_TORQUE:
+                        return maxTorque.update(p);
                     case GEARBOX_IDENTIFIER:
                         gearBox = Gearbox.fromByte(p.getValueByte());
                         return gearBox;
@@ -356,15 +354,15 @@ public class VehicleStatus extends CommandWithProperties {
         private String name;
         private String licensePlate;
         private String salesDesignation;
-        private IntegerProperty modelYear;
+        private ObjectPropertyInteger modelYear;
         private String color;
-        private IntegerProperty power;
-        private IntegerProperty numberOfDoors;
-        private IntegerProperty numberOfSeats;
+        private ObjectPropertyInteger power;
+        private ObjectPropertyInteger numberOfDoors;
+        private ObjectPropertyInteger numberOfSeats;
         private List<CommandProperty> states = new ArrayList<>();
 
         private FloatProperty engineVolume;
-        private IntegerProperty maxTorque;
+        private ObjectPropertyInteger maxTorque;
         private Gearbox gearBox;
 
         DisplayUnit displayUnit;
@@ -441,9 +439,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param modelYear The model year.
          * @return The builder.
          */
-        public Builder setModelYear(IntegerProperty modelYear) {
+        public Builder setModelYear(ObjectPropertyInteger modelYear) {
             this.modelYear = modelYear;
-            modelYear.setIdentifier(MODEL_YEAR_IDENTIFIER, 2);
+            modelYear.update(IDENTIFIER_MODEL_YEAR, false, 2);
             addProperty(modelYear);
             return this;
         }
@@ -462,9 +460,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param power The power in kw.
          * @return The builder.
          */
-        public Builder setPower(IntegerProperty power) {
+        public Builder setPower(ObjectPropertyInteger power) {
             this.power = power;
-            power.setIdentifier(POWER_IDENTIFIER, 2);
+            power.update(IDENTIFIER_POWER, false, 2);
             addProperty(power);
             return this;
         }
@@ -473,9 +471,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param numberOfDoors The number of doors.
          * @return The builder.
          */
-        public Builder setNumberOfDoors(IntegerProperty numberOfDoors) {
+        public Builder setNumberOfDoors(ObjectPropertyInteger numberOfDoors) {
             this.numberOfDoors = numberOfDoors;
-            numberOfDoors.setIdentifier(NUMBER_OF_DOORS_IDENTIFIER, 1);
+            numberOfDoors.update(IDENTIFIER_NUMBER_OF_DOORS, false, 1);
             addProperty(numberOfDoors);
             return this;
         }
@@ -484,9 +482,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param numberOfSeats The number of seats.
          * @return The builder.
          */
-        public Builder setNumberOfSeats(IntegerProperty numberOfSeats) {
+        public Builder setNumberOfSeats(ObjectPropertyInteger numberOfSeats) {
             this.numberOfSeats = numberOfSeats;
-            numberOfSeats.setIdentifier(NUMBER_OF_SEATS_IDENTIFIER, 1);
+            numberOfSeats.update(IDENTIFIER_NUMBER_OF_SEATS, false, 1);
             addProperty(numberOfSeats);
             return this;
         }
@@ -533,9 +531,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param maxTorque The maximum engine torque in Nm.
          * @return The builder.
          */
-        public Builder setMaxTorque(IntegerProperty maxTorque) {
+        public Builder setMaxTorque(ObjectPropertyInteger maxTorque) {
             this.maxTorque = maxTorque;
-            maxTorque.setIdentifier(MAX_TORQUE_IDENTIFIER, 2);
+            maxTorque.update(IDENTIFIER_MAX_TORQUE, false, 2);
             addProperty(maxTorque);
             return this;
         }

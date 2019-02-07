@@ -21,10 +21,35 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.utils.ByteUtils;
+
+import javax.annotation.Nullable;
 
 public class ObjectPropertyInteger extends ObjectProperty<Integer> {
     // since int has different signed and length options, its better to have a property subclass.
     boolean signed;
+
+    /**
+     * Here value is just stored as ivar, no bytes are set. It should be later updated in {@link
+     * #update(byte, boolean, int)}
+     *
+     * @param value the value.
+     */
+    public ObjectPropertyInteger(Integer value) {
+        super(value);
+    }
+
+    public ObjectPropertyInteger(Property p, boolean signed) throws CommandParseException {
+        super(Integer.class, p.getPropertyIdentifier());
+        this.signed = signed;
+        update(p);
+    }
+
+    public ObjectPropertyInteger(byte identifier, boolean signed, int length, int value) {
+        this(identifier, signed);
+        this.value = value;
+        this.bytes = getBytes(identifier, length, value);
+    }
 
     public ObjectPropertyInteger(byte identifier, boolean signed) {
         super(Integer.class, identifier);
@@ -32,10 +57,62 @@ public class ObjectPropertyInteger extends ObjectProperty<Integer> {
     }
 
     @Override public ObjectProperty update(Property p) throws CommandParseException {
+        super.update(p);
+
         if (p.getValueLength() >= 1) {
-            if (signed) value = Property.getSignedInt(p.getValueBytesArray());
-            else value = Property.getUnsignedInt(p.getValueBytesArray());
+            if (signed) value = getSignedInt(p.getValueBytesArray());
+            else value = getUnsignedInt(p.getValueBytesArray());
         }
+
         return this;
+    }
+
+    /**
+     * Reset the value length. This will create a new base byte array. It is used for Integer
+     * builders because we don't want the user to bother about whether Integer is signed or how many
+     * bytes is it's length.
+     *
+     * @param identifier The property identifier.
+     * @param newLength  The new length.
+     */
+    public ObjectProperty update(byte identifier, boolean signed, int newLength) {
+        byte[] bytes = baseBytes(identifier, newLength);
+
+        /*
+        Don't need to consider signed here because we are not resetting the value, it stayes
+        signed int from builder ctor. Bytes would be set the same for signed/unsigned.
+         */
+
+        if (value == null) return this;
+
+        if (newLength == 1) {
+            bytes[3] = value.byteValue();
+        } else {
+            ByteUtils.setBytes(bytes, intToBytes(value, newLength), 3);
+        }
+
+        this.bytes = bytes;
+
+        return this;
+    }
+
+    public ObjectProperty update(byte identifier, boolean signed, int newLength,
+                                 @Nullable Integer value) {
+        this.value = value;
+        return update(identifier, signed, newLength);
+    }
+
+    static byte[] getBytes(byte identifier, int length, Integer value) {
+        byte[] bytes = baseBytes(identifier, length);
+
+        if (value == null) return bytes;
+
+        if (length == 1) {
+            bytes[3] = value.byteValue();
+        } else {
+            ByteUtils.setBytes(bytes, intToBytes(value, length), 3);
+        }
+
+        return bytes;
     }
 }

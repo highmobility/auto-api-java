@@ -1,8 +1,8 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.PropertyTimestamp;
@@ -24,7 +24,7 @@ public class PropertyTest {
     }
 
     @Test public void propertyLength() {
-        IntegerProperty property = new IntegerProperty((byte) 0x01, 2, 2);
+        ObjectPropertyInteger property = new ObjectPropertyInteger((byte) 0x01, false, 2, 2);
         assertTrue(Arrays.equals(property.getByteArray(), new byte[]{0x01, 0x00, 0x02, 0x00,
                 0x02}));
 
@@ -98,7 +98,8 @@ public class PropertyTest {
     @Test
     public void propertyTimestampParsed() throws ParseException {
         String parkingStateProperty = "01000101";
-        PropertyTimestamp timestamp = new PropertyTimestamp(new Bytes( "A4000D11010A112200000001" + parkingStateProperty).getByteArray());
+        PropertyTimestamp timestamp =
+                new PropertyTimestamp(new Bytes("A4000D11010A112200000001" + parkingStateProperty).getByteArray());
         assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), "2017-01-10T17:34:00+0000"));
         assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
     }
@@ -119,4 +120,15 @@ public class PropertyTest {
         // TODO: 2019-01-11 test for builders that setIdentifier sets the failure and
         //  timestamp identifier.
     }*/
+
+
+    @Test public void integerPropertySignChecked() throws CommandParseException {
+        ObjectPropertyInteger propertyInteger = new ObjectPropertyInteger(253);
+        propertyInteger.update((byte) 0x00, false, 1);
+
+        assertTrue(propertyInteger.getValue() == 253);
+
+        // assert that the bytes are correct to create 253 int
+        assertTrue(new ObjectPropertyInteger(propertyInteger, false).getValue() == 253);
+    }
 }
