@@ -5,9 +5,9 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlLights;
 import com.highmobility.autoapi.GetLightsState;
 import com.highmobility.autoapi.LightsState;
-import com.highmobility.autoapi.property.IntegerArrayProperty;
-import com.highmobility.autoapi.property.FogLight;
 import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Color;
+import com.highmobility.autoapi.property.lights.FogLight;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
 import com.highmobility.autoapi.property.lights.LightLocation;
@@ -17,8 +17,6 @@ import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
 
@@ -47,12 +45,12 @@ public class LightsTest {
     }
 
     void testState(LightsState state) {
-        assertTrue(state.getFrontExteriorLightState().getValue() == FrontExteriorLightState.Value.ACTIVE_FULL_BEAM);
+        assertTrue(state.getFrontExteriorLightState().getValue() == FrontExteriorLightState.ACTIVE_FULL_BEAM);
         assertTrue(state.isRearExteriorLightActive().getValue() == true);
 
-        assertTrue(state.getAmbientColor().getValue()[0] == 0xFF);
-        assertTrue(state.getAmbientColor().getValue()[1] == 0);
-        assertTrue(state.getAmbientColor().getValue()[2] == 0);
+        assertTrue(state.getAmbientColor().getValue().getRed() == 1f);
+        assertTrue(state.getAmbientColor().getValue().getGreen() == 0);
+        assertTrue(state.getAmbientColor().getValue().getBlue() == 0);
 
         assertTrue(state.isReverseLightActive().getValue() == true);
         assertTrue(state.isEmergencyBrakeLightActive().getValue() == true);
@@ -79,25 +77,25 @@ public class LightsTest {
     @Test public void build() {
         LightsState.Builder builder = new LightsState.Builder();
 
-        builder.setFrontExteriorLightState(new FrontExteriorLightState(FrontExteriorLightState.Value.ACTIVE_FULL_BEAM));
+        builder.setFrontExteriorLightState(new ObjectProperty<>(FrontExteriorLightState.ACTIVE_FULL_BEAM));
         builder.setRearExteriorLightActive(new ObjectProperty<>(true));
 
-        int[] ambientColor = new int[]{0xFF, 0, 0};
-        builder.setAmbientColor(new IntegerArrayProperty(ambientColor));
+        Color ambientColor = new Color(new float[]{1f, 0, 0});
+        builder.setAmbientColor(new ObjectProperty<>(ambientColor));
         builder.setReverseLightActive(new ObjectProperty<>(true));
         builder.setEmergencyBrakeLightActive(new ObjectProperty<>(true));
 
-        builder.addFogLight(new FogLight(LightLocation.FRONT, false));
-        builder.addFogLight(new FogLight(LightLocation.REAR, true));
+        builder.addFogLight(new ObjectProperty<>(new FogLight(LightLocation.FRONT, false)));
+        builder.addFogLight(new ObjectProperty<>(new FogLight(LightLocation.REAR, true)));
 
-        builder.addReadingLamp(new ReadingLamp(Location.FRONT_LEFT, false));
-        builder.addReadingLamp(new ReadingLamp(Location.FRONT_RIGHT, true));
+        builder.addReadingLamp(new ObjectProperty<>(new ReadingLamp(Location.FRONT_LEFT, false)));
+        builder.addReadingLamp(new ObjectProperty<>(new ReadingLamp(Location.FRONT_RIGHT, true)));
 
-        builder.addInteriorLamp(new InteriorLamp(LightLocation.FRONT, false));
-        builder.addInteriorLamp(new InteriorLamp(LightLocation.REAR, false));
+        builder.addInteriorLamp(new ObjectProperty<>(new InteriorLamp(LightLocation.FRONT, false)));
+        builder.addInteriorLamp(new ObjectProperty<>(new InteriorLamp(LightLocation.REAR, false)));
 
         LightsState state = builder.build();
-        assertTrue(state.equals(bytes));
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
         testState(state);
     }
 
@@ -130,17 +128,19 @@ public class LightsTest {
         interiorLamps[1] = new InteriorLamp(LightLocation.REAR, false);
 
         Bytes bytes = new ControlLights(
-                FrontExteriorLightState.Value.ACTIVE_FULL_BEAM,
+                FrontExteriorLightState.ACTIVE_FULL_BEAM,
                 false,
-                new int[]{255, 0, 0}, fogLights, readingLamps, interiorLamps);
+                new Color(new float[]{1f, 0f, 0f}), fogLights, readingLamps, interiorLamps);
 
         assertTrue(TestUtils.bytesTheSame(bytes, waitingForBytes));
 
         ControlLights command = (ControlLights) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getFrontExteriorLightState() == FrontExteriorLightState.Value
-                .ACTIVE_FULL_BEAM);
-        assertTrue(command.getRearExteriorLightActive() == false);
-        assertTrue(Arrays.equals(command.getAmbientColor(), new int[]{255, 0, 0}));
+        assertTrue(command.getFrontExteriorLightState().getValue() == FrontExteriorLightState.ACTIVE_FULL_BEAM);
+
+        assertTrue(command.getRearExteriorLightActive().getValue() == false);
+        assertTrue(command.getAmbientColor().getValue().getRed() == 1f);
+        assertTrue(command.getAmbientColor().getValue().getGreen() == 0f);
+        assertTrue(command.getAmbientColor().getValue().getBlue() == 0f);
 
         assertTrue(command.getFogLights().length == 2);
         assertTrue(command.getFogLight(LightLocation.FRONT).getValue().isActive() == false);

@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ReductionTime;
 
@@ -33,12 +34,12 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x17);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
 
-    ReductionTime[] reductionTimes;
+    ObjectProperty<ReductionTime>[] reductionTimes;
 
     /**
      * @return The charging current times reductions.
      */
-    public ReductionTime[] getReductionTimes() {
+    public ObjectProperty<ReductionTime>[] getReductionTimes() {
         return reductionTimes;
     }
 
@@ -48,32 +49,41 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
      * @param reductionTimes The charging current times reductions..
      */
     public SetReductionOfChargingCurrentTimes(ReductionTime[] reductionTimes) {
-        super(TYPE, setIdentifiers(reductionTimes));
-        this.reductionTimes = reductionTimes;
-    }
+        super(TYPE);
 
-    static ReductionTime[] setIdentifiers(ReductionTime[] reductionTimes) {
+        List<Property> builder = new ArrayList<>();
+
         for (int i = 0; i < reductionTimes.length; i++) {
-            ReductionTime reductionTime = reductionTimes[i];
-            reductionTime.setIdentifier(PROPERTY_IDENTIFIER);
+            ReductionTime time = reductionTimes[i];
+            ObjectProperty<ReductionTime> reductionTime =
+                    new ObjectProperty<>(PROPERTY_IDENTIFIER, time);
+            builder.add(reductionTime);
         }
 
-        return reductionTimes;
+        this.reductionTimes = builder.toArray(new ObjectProperty[0]);
+
+        createBytes(builder);
     }
 
-    SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException {
+    SetReductionOfChargingCurrentTimes(byte[] bytes) {
         super(bytes);
 
-        List<ReductionTime> builder = new ArrayList<>();
+        List<Property> builder = new ArrayList<>();
 
-        for (int i = 0; i < properties.length; i++) {
-            Property property = properties[i];
-            if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
-                builder.add(new ReductionTime(property));
-            }
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case PROPERTY_IDENTIFIER:
+                        ObjectProperty<ReductionTime> reductionTimeObjectProperty =
+                                new ObjectProperty<>(ReductionTime.class, p);
+                        builder.add(reductionTimeObjectProperty);
+                        return reductionTimeObjectProperty;
+                }
+                return null;
+            });
         }
 
-        reductionTimes = builder.toArray(new ReductionTime[0]);
+        reductionTimes = builder.toArray(new ObjectProperty[0]);
     }
 
     @Override protected boolean propertiesExpected() {

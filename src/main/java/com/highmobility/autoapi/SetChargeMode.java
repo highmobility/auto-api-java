@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.charging.ChargeMode;
-import com.highmobility.autoapi.property.Property;
 
 /**
  * Set the charge mode of the car.
@@ -29,12 +29,13 @@ import com.highmobility.autoapi.property.Property;
 public class SetChargeMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x15);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    ChargeMode.Value chargeMode;
+    ObjectProperty<ChargeMode> chargeMode = new ObjectProperty<>(ChargeMode.class,
+            PROPERTY_IDENTIFIER);
 
     /**
      * @return The charge mode.
      */
-    public ChargeMode.Value getChargeMode() {
+    public ObjectProperty<ChargeMode> getChargeMode() {
         return chargeMode;
     }
 
@@ -42,22 +43,26 @@ public class SetChargeMode extends CommandWithProperties {
      * Set the charge mode of the car.
      *
      * @param chargeMode The charge mode.
-     * @throws IllegalArgumentException for {@link ChargeMode.Value#IMMEDIATE}.
+     * @throws IllegalArgumentException for {@link ChargeMode#IMMEDIATE}.
      */
-    public SetChargeMode(ChargeMode.Value chargeMode) {
-        super(TYPE.addProperty(new ChargeMode(chargeMode).setIdentifier(PROPERTY_IDENTIFIER)));
-        if (chargeMode == ChargeMode.Value.IMMEDIATE) throw new IllegalArgumentException();
-        this.chargeMode = chargeMode;
+    public SetChargeMode(ChargeMode chargeMode) {
+        super(TYPE);
+        if (chargeMode == ChargeMode.IMMEDIATE) throw new IllegalArgumentException();
+        this.chargeMode.update(chargeMode);
+        createBytes(this.chargeMode);
     }
 
-    SetChargeMode(byte[] bytes) throws CommandParseException {
+    SetChargeMode(byte[] bytes) {
         super(bytes);
-        if (bytes.length < 7) throw new CommandParseException();
-        for (int i = 0; i < properties.length; i++) {
-            Property property = properties[i];
-            if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
-                this.chargeMode = ChargeMode.Value.fromByte(property.getValueByte());
-            }
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
+                    return chargeMode.update(p);
+                }
+
+                return null;
+            });
         }
     }
 }

@@ -21,78 +21,35 @@
 package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyValue;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
-import java.util.Calendar;
+public enum ChargePortState implements PropertyValueSingleByte {
+    CLOSED((byte) 0x00), OPEN((byte) 0x01);
 
-import javax.annotation.Nullable;
+    public static ChargePortState fromByte(byte byteValue) throws CommandParseException {
+        ChargePortState[] values = ChargePortState.values();
 
-public class ChargePortState extends Property {
-    Value value;
+        for (int i = 0; i < values.length; i++) {
+            ChargePortState state = values[i];
+            if (state.getByte() == byteValue) {
+                return state;
+            }
+        }
 
-    @Nullable public Value getValue() {
+        throw new CommandParseException();
+    }
+
+    private byte value;
+
+    ChargePortState(byte value) {
+        this.value = value;
+    }
+
+    public byte getByte() {
         return value;
     }
 
-    public ChargePortState(byte identifier) {
-        super(identifier);
+    @Override public int getLength() {
+        return 1;
     }
-
-    public ChargePortState(Value value) {
-        super(value);
-        this.value = value;
-        if (value != null) bytes[3] = value.getByte();
-    }
-
-    public ChargePortState(@Nullable Value value, @Nullable Calendar timestamp,
-                           @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public ChargePortState(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 1) value = value.fromByte(p.get(3));
-        return this;
-    }
-
-    /**
-     * The possible charge port states
-     */
-    public enum Value implements PropertyValue {
-        CLOSED((byte) 0x00), OPEN((byte) 0x01);
-
-        public static Value fromByte(byte byteValue) throws CommandParseException {
-            Value[] values = Value.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Value state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Value(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-
-        @Override public int getLength() {
-            return 1;
-        }}
 }

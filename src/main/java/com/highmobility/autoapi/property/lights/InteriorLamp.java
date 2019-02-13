@@ -2,87 +2,42 @@ package com.highmobility.autoapi.property.lights;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyValue;
+import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.value.Bytes;
 
-import java.util.Calendar;
+public class InteriorLamp extends PropertyValueObject {
+    LightLocation location;
+    boolean active;
 
-import javax.annotation.Nullable;
-
-public class InteriorLamp extends Property {
-
-    Value value;
-
-    @Nullable public Value getValue() {
-        return value;
+    /**
+     * @return The light location.
+     */
+    public LightLocation getLocation() {
+        return location;
     }
 
-    public InteriorLamp(byte identifier) {
-        super(identifier);
+    /**
+     * @return The light state.
+     */
+    public boolean isActive() {
+        return active;
     }
 
-    public InteriorLamp(@Nullable Value value, @Nullable Calendar timestamp,
-                        @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public InteriorLamp(Value value) {
-        super(value);
-
-        this.value = value;
-
-        if (value != null) {
-            bytes[3] = value.location.getByte();
-            bytes[4] = Property.boolToByte(value.active);
-        }
+    public InteriorLamp() {
     }
 
     public InteriorLamp(LightLocation location, boolean active) {
-        this(new Value(location, active));
+        super(2);
+        this.location = location;
+        this.active = active;
+
+        set(0, location.getByte());
+        set(1, Property.boolToByte(active));
     }
 
-    public InteriorLamp(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 2) value = new Value(p);
-        return this;
-    }
-
-    public static class Value implements PropertyValue {
-        LightLocation location;
-        boolean active;
-
-        /**
-         * @return The light location.
-         */
-        public LightLocation getLocation() {
-            return location;
-        }
-
-        /**
-         * @return The light state.
-         */
-        public boolean isActive() {
-            return active;
-        }
-
-        private Value(Property bytes) throws CommandParseException {
-            location = LightLocation.fromByte(bytes.get(3));
-            active = Property.getBool(bytes.get(4));
-        }
-
-        private Value(LightLocation location, boolean active) {
-            this.location = location;
-            this.active = active;
-        }
-
-        @Override public int getLength() {
-            return 2;
-        }
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        location = LightLocation.fromByte(get(0));
+        active = Property.getBool(get(1));
     }
 }

@@ -50,7 +50,6 @@ public class ChassisSettingsTest {
         assertTrue(state.getCurrentChassisPosition().getValue() == 25);
         assertTrue(state.getMaximumChassisPosition().getValue() == 55);
         assertTrue(state.getMinimumChassisPosition().getValue() == -28);
-
     }
 
     @Test public void stateWithTimestamp() {
@@ -119,7 +118,7 @@ public class ChassisSettingsTest {
 
         SetChassisPosition command = (SetChassisPosition) CommandResolver.resolve(ByteUtils
                 .bytesFromHex(waitingForBytes));
-        assertTrue(command.getPosition() == 50);
+        assertTrue(command.getPosition().getValue() == 50);
     }
 
     @Test public void setNegativeChassisPosition() {
@@ -127,7 +126,7 @@ public class ChassisSettingsTest {
         Command state = new SetChassisPosition(-28);
         assertTrue(TestUtils.bytesTheSame(state, waitingForBytes));
         SetChassisPosition command = (SetChassisPosition) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getPosition() == -28);
+        assertTrue(command.getPosition().getValue() == -28);
     }
 
     @Test public void state0Properties() {

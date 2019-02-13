@@ -21,84 +21,43 @@
 package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyValue;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
-import java.util.Calendar;
+/**
+ * The possible charging states.
+ */
+public enum ChargingState implements PropertyValueSingleByte {
+    NOT_CHARGING((byte) 0x00),
+    CHARGING((byte) 0x01),
+    CHARGING_COMPLETE((byte) 0x02),
+    INITIALISING((byte) 0x03),
+    CHARGING_PAUSED((byte) 0x04),
+    CHARGING_ERROR((byte) 0x05);
 
-import javax.annotation.Nullable;
+    public static ChargingState fromByte(byte byteValue) throws CommandParseException {
+        ChargingState[] values = ChargingState.values();
 
-public class ChargingState extends Property {
-    Value value;
+        for (int i = 0; i < values.length; i++) {
+            ChargingState state = values[i];
+            if (state.getByte() == byteValue) {
+                return state;
+            }
+        }
 
-    @Nullable public Value getValue() {
+        throw new CommandParseException();
+    }
+
+    private byte value;
+
+    ChargingState(byte value) {
+        this.value = value;
+    }
+
+    public byte getByte() {
         return value;
     }
 
-    public ChargingState(byte identifier) {
-        super(identifier);
-    }
-
-    public ChargingState(Value value) {
-        super(value);
-        this.value = value;
-        if (value != null) bytes[3] = value.getByte();
-    }
-
-    public ChargingState(@Nullable Value value, @Nullable Calendar timestamp,
-                         @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public ChargingState(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 1) value = value.fromByte(p.get(3));
-        return this;
-    }
-
-    /**
-     * The possible charging states.
-     */
-    public enum Value implements PropertyValue {
-        NOT_CHARGING((byte) 0x00),
-        CHARGING((byte) 0x01),
-        CHARGING_COMPLETE((byte) 0x02),
-        INITIALISING((byte) 0x03),
-        CHARGING_PAUSED((byte) 0x04),
-        CHARGING_ERROR((byte) 0x05);
-
-        public static Value fromByte(byte byteValue) throws CommandParseException {
-            Value[] values = Value.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Value state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Value(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-
-        @Override public int getLength() {
-            return 1;
-        }
+    @Override public int getLength() {
+        return 1;
     }
 }

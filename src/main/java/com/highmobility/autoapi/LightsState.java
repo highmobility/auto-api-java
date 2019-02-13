@@ -20,9 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.FogLight;
-import com.highmobility.autoapi.property.IntegerArrayProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Color;
+import com.highmobility.autoapi.property.lights.FogLight;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
 import com.highmobility.autoapi.property.lights.LightLocation;
@@ -49,27 +49,30 @@ public class LightsState extends CommandWithProperties {
     private static final byte IDENTIFIER_READING_LAMPS = 0x08;
     private static final byte IDENTIFIER_INTERIOR_LAMPS = 0x09;
 
-    FrontExteriorLightState frontExteriorLightState =
-            new FrontExteriorLightState(IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE);
+    ObjectProperty<FrontExteriorLightState> frontExteriorLightState =
+            new ObjectProperty<>(FrontExteriorLightState.class,
+                    IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE);
     ObjectProperty<Boolean> rearExteriorLightActive =
             new ObjectProperty<>(Boolean.class, IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
 
-    IntegerArrayProperty ambientColor = new IntegerArrayProperty(IDENTIFIER_AMBIENT_COLOR);
+    ObjectProperty<Color> ambientColor = new ObjectProperty<>(Color.class,
+            IDENTIFIER_AMBIENT_COLOR);
 
     // l7
-    ObjectProperty<Boolean> reverseLightActive = new ObjectProperty<>(Boolean.class, IDENTIFIER_REVERSE_LIGHT_ACTIVE);
+    ObjectProperty<Boolean> reverseLightActive = new ObjectProperty<>(Boolean.class,
+            IDENTIFIER_REVERSE_LIGHT_ACTIVE);
     ObjectProperty<Boolean> emergencyBrakeLightActive =
             new ObjectProperty<>(Boolean.class, IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE);
 
     // l9
-    FogLight[] fogLights;
-    ReadingLamp[] readingLamps;
-    InteriorLamp[] interiorLamps;
+    ObjectProperty<FogLight>[] fogLights;
+    ObjectProperty<ReadingLamp>[] readingLamps;
+    ObjectProperty<InteriorLamp>[] interiorLamps;
 
     /**
      * @return The front exterior light state.
      */
-    @Nullable public FrontExteriorLightState getFrontExteriorLightState() {
+    @Nullable public ObjectProperty<FrontExteriorLightState> getFrontExteriorLightState() {
         return frontExteriorLightState;
     }
 
@@ -83,7 +86,7 @@ public class LightsState extends CommandWithProperties {
     /**
      * @return The ambient color, in rgb values.
      */
-    @Nullable public IntegerArrayProperty getAmbientColor() {
+    @Nullable public ObjectProperty<Color> getAmbientColor() {
         return ambientColor;
     }
 
@@ -104,7 +107,7 @@ public class LightsState extends CommandWithProperties {
     /**
      * @return The fog lights.
      */
-    public FogLight[] getFogLights() {
+    public ObjectProperty<FogLight>[] getFogLights() {
         return fogLights;
     }
 
@@ -113,8 +116,8 @@ public class LightsState extends CommandWithProperties {
      *
      * @return The fog light.
      */
-    @Nullable public FogLight getFogLight(LightLocation location) {
-        for (FogLight fogLight : fogLights) {
+    @Nullable public ObjectProperty<FogLight> getFogLight(LightLocation location) {
+        for (ObjectProperty<FogLight> fogLight : fogLights) {
             if (fogLight.getValue() != null && fogLight.getValue().getLocation() == location)
                 return fogLight;
         }
@@ -125,7 +128,7 @@ public class LightsState extends CommandWithProperties {
     /**
      * @return The reading lamps.
      */
-    public ReadingLamp[] getReadingLamps() {
+    public ObjectProperty<ReadingLamp>[] getReadingLamps() {
         return readingLamps;
     }
 
@@ -134,8 +137,8 @@ public class LightsState extends CommandWithProperties {
      *
      * @return The reading lamp.
      */
-    @Nullable public ReadingLamp getReadingLamp(Location location) {
-        for (ReadingLamp readingLamp : readingLamps) {
+    @Nullable public ObjectProperty<ReadingLamp> getReadingLamp(Location location) {
+        for (ObjectProperty<ReadingLamp> readingLamp : readingLamps) {
             if (readingLamp.getValue() != null && readingLamp.getValue().getLocation() == location)
                 return readingLamp;
         }
@@ -146,7 +149,7 @@ public class LightsState extends CommandWithProperties {
     /**
      * @return The interior lamps.
      */
-    public InteriorLamp[] getInteriorLamps() {
+    public ObjectProperty<InteriorLamp>[] getInteriorLamps() {
         return interiorLamps;
     }
 
@@ -156,8 +159,8 @@ public class LightsState extends CommandWithProperties {
      * @param location The lamp location.
      * @return The interior lamp.
      */
-    @Nullable public InteriorLamp getInteriorLamp(LightLocation location) {
-        for (InteriorLamp interiorLamp : interiorLamps) {
+    @Nullable public ObjectProperty<InteriorLamp> getInteriorLamp(LightLocation location) {
+        for (ObjectProperty<InteriorLamp> interiorLamp : interiorLamps) {
             if (interiorLamp.getValue() != null && interiorLamp.getValue().getLocation() == location)
                 return interiorLamp;
         }
@@ -167,9 +170,9 @@ public class LightsState extends CommandWithProperties {
     LightsState(byte[] bytes) {
         super(bytes);
 
-        ArrayList<FogLight> fogLights = new ArrayList<>();
-        ArrayList<InteriorLamp> interiorLamps = new ArrayList<>();
-        ArrayList<ReadingLamp> readingLamps = new ArrayList<>();
+        ArrayList<ObjectProperty<FogLight>> fogLights = new ArrayList<>();
+        ArrayList<ObjectProperty<InteriorLamp>> interiorLamps = new ArrayList<>();
+        ArrayList<ObjectProperty<ReadingLamp>> readingLamps = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
@@ -177,8 +180,7 @@ public class LightsState extends CommandWithProperties {
                     case IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE:
                         return frontExteriorLightState.update(p);
                     case IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE:
-                        rearExteriorLightActive = new ObjectProperty<>(Boolean.class, p);
-                        return rearExteriorLightActive;
+                        return rearExteriorLightActive.update(p);
                     case IDENTIFIER_AMBIENT_COLOR:
                         return this.ambientColor.update(p);
                     case IDENTIFIER_REVERSE_LIGHT_ACTIVE:
@@ -186,15 +188,17 @@ public class LightsState extends CommandWithProperties {
                     case IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE:
                         return emergencyBrakeLightActive.update(p);
                     case IDENTIFIER_FOG_LIGHTS:
-                        FogLight fogLight = new FogLight(p);
+                        ObjectProperty<FogLight> fogLight = new ObjectProperty<>(FogLight.class, p);
                         fogLights.add(fogLight);
                         return fogLight;
                     case IDENTIFIER_READING_LAMPS:
-                        ReadingLamp readingLamp = new ReadingLamp(p);
+                        ObjectProperty<ReadingLamp> readingLamp =
+                                new ObjectProperty<>(ReadingLamp.class, p);
                         readingLamps.add(readingLamp);
                         return readingLamp;
                     case IDENTIFIER_INTERIOR_LAMPS:
-                        InteriorLamp interiorLamp = new InteriorLamp(p);
+                        ObjectProperty<InteriorLamp> interiorLamp =
+                                new ObjectProperty<>(InteriorLamp.class, p);
                         interiorLamps.add(interiorLamp);
                         return interiorLamp;
                 }
@@ -202,9 +206,9 @@ public class LightsState extends CommandWithProperties {
                 return null;
             });
 
-            this.fogLights = fogLights.toArray(new FogLight[0]);
-            this.readingLamps = readingLamps.toArray(new ReadingLamp[0]);
-            this.interiorLamps = interiorLamps.toArray(new InteriorLamp[0]);
+            this.fogLights = fogLights.toArray(new ObjectProperty[0]);
+            this.readingLamps = readingLamps.toArray(new ObjectProperty[0]);
+            this.interiorLamps = interiorLamps.toArray(new ObjectProperty[0]);
         }
     }
 
@@ -219,23 +223,22 @@ public class LightsState extends CommandWithProperties {
         ambientColor = builder.ambientColor;
         reverseLightActive = builder.reverseLightActive;
         emergencyBrakeLightActive = builder.emergencyBrakeLightActive;
-        fogLights = builder.fogLights.toArray(new FogLight[0]);
-        readingLamps = builder.readingLamps.toArray(new ReadingLamp[0]);
-        interiorLamps = builder.interiorLamps.toArray(new InteriorLamp[0]);
+        fogLights = builder.fogLights.toArray(new ObjectProperty[0]);
+        readingLamps = builder.readingLamps.toArray(new ObjectProperty[0]);
+        interiorLamps = builder.interiorLamps.toArray(new ObjectProperty[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private FrontExteriorLightState frontExteriorLightState;
+        private ObjectProperty<FrontExteriorLightState> frontExteriorLightState;
         private ObjectProperty<Boolean> rearExteriorLightActive;
-        private ObjectProperty<Boolean> interiorLightActive;
-        private IntegerArrayProperty ambientColor;
+        private ObjectProperty<Color> ambientColor;
 
         private ObjectProperty<Boolean> reverseLightActive;
         private ObjectProperty<Boolean> emergencyBrakeLightActive;
 
-        private ArrayList<FogLight> fogLights = new ArrayList<>();
-        private ArrayList<ReadingLamp> readingLamps = new ArrayList<>();
-        private ArrayList<InteriorLamp> interiorLamps = new ArrayList<>();
+        private ArrayList<ObjectProperty<FogLight>> fogLights = new ArrayList<>();
+        private ArrayList<ObjectProperty<ReadingLamp>> readingLamps = new ArrayList<>();
+        private ArrayList<ObjectProperty<InteriorLamp>> interiorLamps = new ArrayList<>();
 
         public Builder() {
             super(TYPE);
@@ -245,7 +248,7 @@ public class LightsState extends CommandWithProperties {
          * @param frontExteriorLightState The front exterior light state.
          * @return The builder.
          */
-        public Builder setFrontExteriorLightState(FrontExteriorLightState frontExteriorLightState) {
+        public Builder setFrontExteriorLightState(ObjectProperty<FrontExteriorLightState> frontExteriorLightState) {
             this.frontExteriorLightState = frontExteriorLightState;
             addProperty(frontExteriorLightState.setIdentifier(IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE));
             return this;
@@ -266,7 +269,7 @@ public class LightsState extends CommandWithProperties {
          * @param ambientColor The ambient color, in rgba values from 0-255.
          * @return The builder.
          */
-        public Builder setAmbientColor(IntegerArrayProperty ambientColor) {
+        public Builder setAmbientColor(ObjectProperty<Color> ambientColor) {
             this.ambientColor = ambientColor;
             addProperty(ambientColor.setIdentifier(IDENTIFIER_AMBIENT_COLOR));
             return this;
@@ -300,9 +303,9 @@ public class LightsState extends CommandWithProperties {
          * @param fogLight The fog light.
          * @return The builder.
          */
-        public Builder addFogLight(FogLight fogLight) {
-            this.fogLights.add(fogLight);
+        public Builder addFogLight(ObjectProperty<FogLight> fogLight) {
             fogLight.setIdentifier(IDENTIFIER_FOG_LIGHTS);
+            this.fogLights.add(fogLight);
             addProperty(fogLight);
             return this;
         }
@@ -311,10 +314,10 @@ public class LightsState extends CommandWithProperties {
          * @param fogLights The lights.
          * @return The builder.
          */
-        public Builder setFogLights(FogLight[] fogLights) {
+        public Builder setFogLights(ObjectProperty<FogLight>[] fogLights) {
             this.fogLights.clear();
 
-            for (FogLight lamp : fogLights) {
+            for (ObjectProperty<FogLight> lamp : fogLights) {
                 addFogLight(lamp);
             }
 
@@ -327,9 +330,9 @@ public class LightsState extends CommandWithProperties {
          * @param readingLamp The fog light.
          * @return The builder.
          */
-        public Builder addReadingLamp(ReadingLamp readingLamp) {
-            this.readingLamps.add(readingLamp);
+        public Builder addReadingLamp(ObjectProperty<ReadingLamp> readingLamp) {
             readingLamp.setIdentifier(IDENTIFIER_READING_LAMPS);
+            this.readingLamps.add(readingLamp);
             addProperty(readingLamp);
             return this;
         }
@@ -338,10 +341,10 @@ public class LightsState extends CommandWithProperties {
          * @param readingLamps The lights.
          * @return The builder.
          */
-        public Builder setReadingLamps(ReadingLamp[] readingLamps) {
+        public Builder setReadingLamps(ObjectProperty<ReadingLamp>[] readingLamps) {
             this.readingLamps.clear();
 
-            for (ReadingLamp lamp : readingLamps) {
+            for (ObjectProperty<ReadingLamp> lamp : readingLamps) {
                 addReadingLamp(lamp);
             }
 
@@ -354,9 +357,9 @@ public class LightsState extends CommandWithProperties {
          * @param interiorLamp The fog light.
          * @return The builder.
          */
-        public Builder addInteriorLamp(InteriorLamp interiorLamp) {
-            this.interiorLamps.add(interiorLamp);
+        public Builder addInteriorLamp(ObjectProperty<InteriorLamp> interiorLamp) {
             interiorLamp.setIdentifier(IDENTIFIER_INTERIOR_LAMPS);
+            this.interiorLamps.add(interiorLamp);
             addProperty(interiorLamp);
             return this;
         }
@@ -365,10 +368,10 @@ public class LightsState extends CommandWithProperties {
          * @param interiorLamps The lights.
          * @return The builder.
          */
-        public Builder setInteriorLamps(InteriorLamp[] interiorLamps) {
+        public Builder setInteriorLamps(ObjectProperty<InteriorLamp>[] interiorLamps) {
             this.interiorLamps.clear();
 
-            for (InteriorLamp lamp : interiorLamps) {
+            for (ObjectProperty<InteriorLamp> lamp : interiorLamps) {
                 addInteriorLamp(lamp);
             }
 

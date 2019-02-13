@@ -3,9 +3,7 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.value.Bytes;
 
-public class PropertyValueObject implements PropertyValueByteArray {
-    Bytes bytes;
-
+public class PropertyValueObject extends Bytes implements PropertyValue {
     public PropertyValueObject(Bytes value) throws CommandParseException {
         update(value);
     }
@@ -14,15 +12,11 @@ public class PropertyValueObject implements PropertyValueByteArray {
 
     }
 
-    @Override public Bytes getBytes() {
-        return bytes;
-    }
-
-    @Override public int getLength() {
-        return bytes.getLength();
+    public PropertyValueObject(int bytesLength) {
+        super(bytesLength);
     }
 
     public void update(Bytes value) throws CommandParseException {
-        this.bytes = value;
+        this.bytes = value.getByteArray();
     }
 }

@@ -22,88 +22,46 @@ package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyValue;
+import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.value.Time;
+import com.highmobility.value.Bytes;
 
-import java.util.Arrays;
-import java.util.Calendar;
+public class DepartureTime extends PropertyValueObject {
+    boolean active;
+    Time time;
 
-import javax.annotation.Nullable;
-
-public class DepartureTime extends Property {
-    Value value;
-
-    @Nullable public Value getValue() {
-        return value;
+    /**
+     * @return The activation state.
+     */
+    public boolean isActive() {
+        return active;
     }
 
-    public DepartureTime(byte identifier) {
-        super(identifier);
+    /**
+     * @return The departure time.
+     */
+    public Time getTime() {
+        return time;
     }
 
     public DepartureTime(boolean active, Time time) {
-        this(new Value(active, time));
+        super(3);
+        this.active = active;
+        this.time = time;
+
+        set(0, Property.boolToByte(active));
+        set(1, (byte) time.getHour());
+        set(2, (byte) time.getMinute());
     }
 
-    public DepartureTime(@Nullable Value value, @Nullable Calendar timestamp,
-                         @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
+    public DepartureTime() {
+    } // needed for generic ctor
 
-    public DepartureTime(Value value) {
-        super(value);
-        this.value = value;
-
-        if (value != null) {
-            bytes[3] = Property.boolToByte(value.active);
-            bytes[4] = (byte) value.time.getHour();
-            bytes[5] = (byte) value.time.getMinute();
-        }
-    }
-
-    public DepartureTime(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 3) value = new Value(p);
-        return this;
-    }
-
-    public static class Value implements PropertyValue {
-        boolean active;
-        Time time;
-
-        /**
-         * @return The activation state.
-         */
-        public boolean isActive() {
-            return active;
-        }
-
-        /**
-         * @return The departure time.
-         */
-        public Time getTime() {
-            return time;
-        }
-
-        public Value(boolean active, Time time) {
-            this.active = active;
-            this.time = time;
-        }
-
-        public Value(Property bytes) {
-            active = Property.getBool(bytes.get(3));
-            time = new Time(Arrays.copyOfRange(bytes.getByteArray(), 4, 6));
-        }
-
-        @Override public int getLength() {
-            return 3;
-        }
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 3) throw new CommandParseException();
+        active = Property.getBool(get(0));
+        time = new Time(getRange(1, 3));
     }
 }
+

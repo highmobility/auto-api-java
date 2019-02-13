@@ -134,8 +134,10 @@ public class ObjectProperty<T> extends Property {
 
     protected Bytes getBytes(T value) {
         // this is for builder
-        if (value instanceof PropertyValueObject) {
-            return ((PropertyValueObject) value).getBytes();
+        if (value instanceof Bytes) {
+            return ((Bytes) value);
+        } else if (value instanceof PropertyValueObject) {
+            return ((PropertyValueObject) value);
         } else if (value instanceof PropertyValueSingleByte) {
             byte byteValue = ((PropertyValueSingleByte) value).getByte();
             return new Bytes(new byte[]{byteValue});

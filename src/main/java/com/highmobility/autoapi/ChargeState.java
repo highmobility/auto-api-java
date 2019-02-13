@@ -84,20 +84,23 @@ public class ChargeState extends CommandWithProperties {
                     , false);
     ObjectProperty<Float> chargingRate = new ObjectProperty<>(Float.class,
             CHARGING_RATE_IDENTIFIER);
-    ChargePortState chargePortState = new ChargePortState(CHARGE_PORT_STATE_IDENTIFIER);
-    ChargeMode chargeMode = new ChargeMode(CHARGE_MODE_IDENTIFIER);
+    ObjectProperty<ChargePortState> chargePortState = new ObjectProperty<>(ChargePortState.class,
+            CHARGE_PORT_STATE_IDENTIFIER);
+    ObjectProperty<ChargeMode> chargeMode = new ObjectProperty<>(ChargeMode.class,
+            CHARGE_MODE_IDENTIFIER);
     ObjectProperty<Float> maxChargingCurrent =
             new ObjectProperty<>(Float.class, MAX_CHARGING_CURRENT_IDENTIFIER);
-    PlugType plugType = new PlugType(PLUG_TYPE_IDENTIFIER);
+    ObjectProperty<PlugType> plugType = new ObjectProperty(PlugType.class, PLUG_TYPE_IDENTIFIER);
     ObjectProperty<Boolean> chargingWindowChosen = new ObjectProperty<>(Boolean.class,
             CHARGING_WINDOW_CHOSEN_IDENTIFIER);
-    DepartureTime[] departureTimes;
-    ReductionTime[] reductionOfChargingCurrentTimes;
+    ObjectProperty<DepartureTime>[] departureTimes;
+    ObjectProperty<ReductionTime>[] reductionOfChargingCurrentTimes;
     ObjectProperty<Float> batteryTemperature =
             new ObjectProperty<>(Float.class, BATTERY_TEMPERATURE_IDENTIFIER);
-    ChargingTimer[] timers;
+    ObjectProperty<ChargingTimer>[] timers;
     ObjectProperty<Boolean> pluggedIn = new ObjectProperty<>(Boolean.class, PLUGGED_IN_IDENTIFIER);
-    ChargingState activeState = new ChargingState(ACTIVE_STATE_IDENTIFIER);
+    ObjectProperty<ChargingState> activeState = new ObjectProperty<>(ChargingState.class,
+            ACTIVE_STATE_IDENTIFIER);
 
     /**
      * @return The estimated range in km.
@@ -158,70 +161,70 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The charging rate in kW, when charging.
      */
-    @Nullable public ObjectProperty<Float> getChargingRate() {
+    public ObjectProperty<Float> getChargingRate() {
         return chargingRate;
     }
 
     /**
      * @return The charge port state.
      */
-    @Nullable public ChargePortState getChargePortState() {
+    public ObjectProperty<ChargePortState> getChargePortState() {
         return chargePortState;
     }
 
     /**
      * @return The charge mode.
      */
-    @Nullable public ChargeMode getChargeMode() {
+    public ObjectProperty<ChargeMode> getChargeMode() {
         return chargeMode;
     }
 
     /**
      * @return The maximum charging current.
      */
-    @Nullable public ObjectProperty<Float> getMaxChargingCurrent() {
+    public ObjectProperty<Float> getMaxChargingCurrent() {
         return maxChargingCurrent;
     }
 
     /**
      * @return The plug type.
      */
-    @Nullable public PlugType getPlugType() {
+    public ObjectProperty<PlugType> getPlugType() {
         return plugType;
     }
 
     /**
      * @return Indication on whether charging window is chosen.
      */
-    @Nullable public ObjectProperty<Boolean> getChargingWindowChosen() {
+    public ObjectProperty<Boolean> getChargingWindowChosen() {
         return chargingWindowChosen;
     }
 
     /**
      * @return The departure times.
      */
-    public DepartureTime[] getDepartureTimes() {
+    public ObjectProperty<DepartureTime>[] getDepartureTimes() {
         return departureTimes;
     }
 
     /**
      * @return The reduction of charging current times.
      */
-    public ReductionTime[] getReductionOfChargingCurrentTimes() {
+    public ObjectProperty<ReductionTime>[] getReductionOfChargingCurrentTimes() {
         return reductionOfChargingCurrentTimes;
     }
 
     /**
      * @return The battery temperature in Celsius.
      */
-    @Nullable public ObjectProperty<Float> getBatteryTemperature() {
+    public ObjectProperty<Float> getBatteryTemperature() {
         return batteryTemperature;
     }
 
     /**
      * @return The charging timers.
      */
-    public ChargingTimer[] getTimers() {
+    public ObjectProperty<ChargingTimer>[] getTimers() {
         return timers;
     }
 
@@ -231,10 +234,11 @@ public class ChargeState extends CommandWithProperties {
      * @param type The charge timer type.
      * @return The charge timer.
      */
-    @Nullable public ChargingTimer getTimer(ChargingTimer.Value.Type type) {
+    @Nullable public ObjectProperty<ChargingTimer> getTimer(ChargingTimer.Type type) {
         if (timers != null) {
-            for (ChargingTimer timer : timers) {
-                if (timer.getValue() != null && timer.getValue().getType() == type) return timer;
+            for (ObjectProperty<ChargingTimer> timer : timers) {
+                if (timer.getValue() != null && timer.getValue().getType() == type)
+                    return timer;
             }
         }
         return null;
@@ -243,24 +247,24 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The plugged in state.
      */
-    @Nullable public ObjectProperty<Boolean> getPluggedIn() {
+    public ObjectProperty<Boolean> getPluggedIn() {
         return pluggedIn;
     }
 
     /**
      * @return The charging active state.
      */
-    @Nullable
-    public ChargingState getActiveState() {
+    public ObjectProperty<ChargingState> getActiveState() {
         return activeState;
     }
 
     ChargeState(byte[] bytes) {
         super(bytes);
 
-        ArrayList<DepartureTime> departureTimes = new ArrayList<>();
-        ArrayList<ReductionTime> reductionOfChargingCurrentTimes = new ArrayList<>();
-        ArrayList<ChargingTimer> timers = new ArrayList<>();
+        ArrayList<ObjectProperty<DepartureTime>> departureTimes = new ArrayList<>();
+        ArrayList<ObjectProperty<ReductionTime>> reductionOfChargingCurrentTimes =
+                new ArrayList<>();
+        ArrayList<ObjectProperty<ChargingTimer>> timers = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
@@ -296,11 +300,13 @@ public class ChargeState extends CommandWithProperties {
                     case CHARGING_WINDOW_CHOSEN_IDENTIFIER:
                         return chargingWindowChosen.update(p);
                     case DEPARTURE_TIMES_IDENTIFIER:
-                        DepartureTime time = new DepartureTime(p);
+                        ObjectProperty<DepartureTime> time =
+                                new ObjectProperty<>(DepartureTime.class, p);
                         departureTimes.add(time);
                         return time;
                     case REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER:
-                        ReductionTime time2 = new ReductionTime(p);
+                        ObjectProperty<ReductionTime> time2 =
+                                new ObjectProperty<>(ReductionTime.class, p);
                         reductionOfChargingCurrentTimes.add(time2);
                         return time2;
                     case BATTERY_TEMPERATURE_IDENTIFIER:
@@ -310,7 +316,8 @@ public class ChargeState extends CommandWithProperties {
                         pluggedIn.update(p);
                         return pluggedIn;
                     case TIMER_IDENTIFIER:
-                        ChargingTimer time3 = new ChargingTimer(p);
+                        ObjectProperty<ChargingTimer> time3 =
+                                new ObjectProperty<>(ChargingTimer.class, p);
                         timers.add(time3);
                         return time3;
                 }
@@ -319,10 +326,10 @@ public class ChargeState extends CommandWithProperties {
             });
         }
 
-        this.departureTimes = departureTimes.toArray(new DepartureTime[0]);
-        this.reductionOfChargingCurrentTimes = reductionOfChargingCurrentTimes.toArray(new
-                ReductionTime[0]);
-        this.timers = timers.toArray(new ChargingTimer[0]);
+        this.departureTimes = departureTimes.toArray(new ObjectProperty[0]);
+        this.reductionOfChargingCurrentTimes =
+                reductionOfChargingCurrentTimes.toArray(new ObjectProperty[0]);
+        this.timers = timers.toArray(new ObjectProperty[0]);
     }
 
     @Override public boolean isState() {
@@ -345,11 +352,11 @@ public class ChargeState extends CommandWithProperties {
         maxChargingCurrent = builder.maxChargingCurrent;
         plugType = builder.plugType;
         chargingWindowChosen = builder.chargingWindowChosen;
-        departureTimes = builder.departureTimes.toArray(new DepartureTime[0]);
+        departureTimes = builder.departureTimes.toArray(new ObjectProperty[0]);
         reductionOfChargingCurrentTimes = builder.reductionOfChargingCurrentTimes.toArray(new
-                ReductionTime[0]);
+                ObjectProperty[0]);
         batteryTemperature = builder.batteryTemperature;
-        timers = builder.timers.toArray(new ChargingTimer[0]);
+        timers = builder.timers.toArray(new ObjectProperty[0]);
         pluggedIn = builder.pluggedIn;
         activeState = builder.activeState;
     }
@@ -367,19 +374,20 @@ public class ChargeState extends CommandWithProperties {
         private ObjectPropertyInteger timeToCompleteCharge;
 
         private ObjectProperty<Float> chargingRate;
-        private ChargePortState chargePortState;
+        private ObjectProperty<ChargePortState> chargePortState;
 
-        private ChargeMode chargeMode;
+        private ObjectProperty<ChargeMode> chargeMode;
         private ObjectProperty<Float> maxChargingCurrent;
-        private PlugType plugType;
+        private ObjectProperty<PlugType> plugType;
         private ObjectProperty<Boolean> chargingWindowChosen;
-        private List<DepartureTime> departureTimes = new ArrayList<>();
+        private List<ObjectProperty<DepartureTime>> departureTimes = new ArrayList<>();
 
-        private List<ReductionTime> reductionOfChargingCurrentTimes = new ArrayList<>();
+        private List<ObjectProperty<ReductionTime>> reductionOfChargingCurrentTimes =
+                new ArrayList<>();
         private ObjectProperty<Float> batteryTemperature;
-        private List<ChargingTimer> timers = new ArrayList<>();
+        private List<ObjectProperty<ChargingTimer>> timers = new ArrayList<>();
         private ObjectProperty<Boolean> pluggedIn;
-        private ChargingState activeState;
+        private ObjectProperty<ChargingState> activeState;
 
         public Builder() {
             super(TYPE);
@@ -389,7 +397,7 @@ public class ChargeState extends CommandWithProperties {
          * @param activeState The charging state.
          * @return The builder.
          */
-        public Builder setActiveState(ChargingState activeState) {
+        public Builder setActiveState(ObjectProperty<ChargingState> activeState) {
             this.activeState = activeState;
             activeState.setIdentifier(ACTIVE_STATE_IDENTIFIER);
             addProperty(activeState);
@@ -499,7 +507,7 @@ public class ChargeState extends CommandWithProperties {
          * @param chargePortState The charge port state.
          * @return The builder.
          */
-        public Builder setChargePortState(ChargePortState chargePortState) {
+        public Builder setChargePortState(ObjectProperty<ChargePortState> chargePortState) {
             this.chargePortState = chargePortState;
             chargePortState.setIdentifier(CHARGE_PORT_STATE_IDENTIFIER);
             addProperty(chargePortState);
@@ -510,7 +518,7 @@ public class ChargeState extends CommandWithProperties {
          * @param chargeMode The charge mode.
          * @return The builder.
          */
-        public Builder setChargeMode(ChargeMode chargeMode) {
+        public Builder setChargeMode(ObjectProperty<ChargeMode> chargeMode) {
             this.chargeMode = chargeMode;
             chargeMode.setIdentifier(CHARGE_MODE_IDENTIFIER);
             addProperty(chargeMode);
@@ -532,7 +540,7 @@ public class ChargeState extends CommandWithProperties {
          * @param plugType The plug type.
          * @return The builder.
          */
-        public Builder setPlugType(PlugType plugType) {
+        public Builder setPlugType(ObjectProperty<PlugType> plugType) {
             this.plugType = plugType;
             plugType.setIdentifier(PLUG_TYPE_IDENTIFIER);
             addProperty(plugType);
@@ -554,7 +562,7 @@ public class ChargeState extends CommandWithProperties {
          * @param departureTimes The departure times.
          * @return The builder.
          */
-        public Builder setDepartureTimes(DepartureTime[] departureTimes) {
+        public Builder setDepartureTimes(ObjectProperty<DepartureTime>[] departureTimes) {
             this.departureTimes = Arrays.asList(departureTimes);
 
             for (int i = 0; i < departureTimes.length; i++) {
@@ -566,27 +574,25 @@ public class ChargeState extends CommandWithProperties {
 
         // TBODO: translate
 
-        public Builder addDepartureTime(DepartureTime departureTime) {
+        public Builder addDepartureTime(ObjectProperty<DepartureTime> departureTime) {
             departureTime.setIdentifier(DEPARTURE_TIMES_IDENTIFIER);
             this.departureTimes.add(departureTime);
             addProperty(departureTime);
             return this;
         }
 
-        public Builder setReductionOfChargingCurrentTimes(ReductionTime[]
+        public Builder setReductionOfChargingCurrentTimes(ObjectProperty<ReductionTime>[]
                                                                   reductionOfChargingCurrentTimes) {
-            this.reductionOfChargingCurrentTimes = Arrays.asList(reductionOfChargingCurrentTimes);
+            this.reductionOfChargingCurrentTimes.clear();
 
             for (int i = 0; i < reductionOfChargingCurrentTimes.length; i++) {
-                ReductionTime time = reductionOfChargingCurrentTimes[i];
-                time.setIdentifier(REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER);
-                addProperty(time);
+                addReductionOfChargingCurrentTime(reductionOfChargingCurrentTimes[i]);
             }
 
             return this;
         }
 
-        public Builder addReductionOfChargingCurrentTime(ReductionTime
+        public Builder addReductionOfChargingCurrentTime(ObjectProperty<ReductionTime>
                                                                  reductionOfChargingCurrentTime) {
             reductionOfChargingCurrentTime.setIdentifier
                     (REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER);
@@ -607,7 +613,7 @@ public class ChargeState extends CommandWithProperties {
          * @param chargingTimers All of the charge timers.
          * @return The builder.
          */
-        public Builder setTimers(ChargingTimer[] chargingTimers) {
+        public Builder setTimers(ObjectProperty<ChargingTimer>[] chargingTimers) {
             this.timers.clear();
 
             for (int i = 0; i < chargingTimers.length; i++) {
@@ -623,7 +629,7 @@ public class ChargeState extends CommandWithProperties {
          * @param timer The charge timer.
          * @return The builder.
          */
-        public Builder addTimer(ChargingTimer timer) {
+        public Builder addTimer(ObjectProperty<ChargingTimer> timer) {
             this.timers.add(timer);
             timer.setIdentifier(TIMER_IDENTIFIER);
             addProperty(timer);

@@ -21,85 +21,39 @@
 package com.highmobility.autoapi.property.lights;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
-import java.util.Calendar;
+public enum FrontExteriorLightState implements PropertyValueSingleByte {
+    INACTIVE((byte) 0x00),
+    ACTIVE((byte) 0x01),
+    ACTIVE_FULL_BEAM((byte) 0x02),
+    ACTIVE_DAYLIGHT_RUNNING_LAMPS((byte) 0x03),
+    AUTOMATIC((byte) 0x04);
 
-import javax.annotation.Nullable;
+    public static FrontExteriorLightState fromByte(byte value) throws CommandParseException {
+        FrontExteriorLightState[] values = FrontExteriorLightState.values();
 
-public class FrontExteriorLightState extends Property {
-    Value value;
+        for (int i = 0; i < values.length; i++) {
+            FrontExteriorLightState capability = values[i];
+            if (capability.getByte() == value) {
+                return capability;
+            }
+        }
 
-    @Nullable public Value getValue() {
+        throw new CommandParseException();
+    }
+
+    private byte value;
+
+    FrontExteriorLightState(byte value) {
+        this.value = value;
+    }
+
+    public byte getByte() {
         return value;
     }
 
-    public FrontExteriorLightState(byte identifier) {
-        super(identifier);
-    }
-
-    public FrontExteriorLightState(@Nullable Value value, @Nullable Calendar timestamp,
-                                   @Nullable PropertyFailure failure) {
-        super(value, timestamp, failure);
-        update(value);
-    }
-
-    public FrontExteriorLightState(Value value) {
-        super(value);
-        update(value);
-    }
-
-    public FrontExteriorLightState(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        ignoreInvalidByteSizeException(() -> value = value.fromByte(p.get(3)));
-        return this;
-    }
-
-    public Property update(Value value) {
-        super.update(value);
-        this.value = value;
-        return this;
-    }
-
-    public enum Value implements PropertyValueSingleByte {
-        INACTIVE((byte) 0x00),
-        ACTIVE((byte) 0x01),
-        ACTIVE_FULL_BEAM((byte) 0x02),
-        ACTIVE_DAYLIGHT_RUNNING_LAMPS((byte) 0x03),
-        AUTOMATIC((byte) 0x04);
-
-        public static Value fromByte(byte value) throws CommandParseException {
-            Value[] values = Value.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Value capability = values[i];
-                if (capability.getByte() == value) {
-                    return capability;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Value(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-
-        @Override public int getLength() {
-            return 1;
-        }
+    @Override public int getLength() {
+        return 1;
     }
 }

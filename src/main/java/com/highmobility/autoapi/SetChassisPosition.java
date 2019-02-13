@@ -34,8 +34,8 @@ public class SetChassisPosition extends CommandWithProperties {
     /**
      * @return The chassis position in mm calculated from the lowest point.
      */
-    public int getPosition() {
-        return position.getValue();
+    public ObjectPropertyInteger getPosition() {
+        return position;
     }
 
     /**
@@ -59,7 +59,5 @@ public class SetChassisPosition extends CommandWithProperties {
                 return null;
             });
         }
-
-        if (this.position.getValue() == null) throw new CommandParseException();
     }
 }

@@ -117,6 +117,13 @@ public class Property extends Bytes {
         if (value != null) ByteUtils.setBytes(bytes, value, 3);
     }
 
+
+    public Property(@Nullable PropertyValueObject value, @Nullable Calendar timestamp,
+                    @Nullable PropertyFailure failure) {
+        this((byte) 0x00, value != null ? value.getLength() : 0);
+        setTimestampFailure(timestamp, failure);
+    }
+
     public Property(@Nullable PropertyValue value, @Nullable Calendar timestamp,
                     @Nullable PropertyFailure failure) {
         this((byte) 0x00, value != null ? value.getLength() : 0);
@@ -531,6 +538,10 @@ public class Property extends Bytes {
 
     public static Calendar getCalendar(byte[] bytes) throws IllegalArgumentException {
         return getCalendar(bytes, 0);
+    }
+
+    public static Calendar getCalendar(Bytes bytes, int at) throws IllegalArgumentException {
+        return getCalendar(bytes.getByteArray(), at);
     }
 
     public static Calendar getCalendar(byte[] bytes, int at) throws IllegalArgumentException {

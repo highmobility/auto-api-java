@@ -7,14 +7,12 @@ import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.FlashersStateProperty;
-import com.highmobility.autoapi.property.FogLight;
 import com.highmobility.autoapi.property.HvacStartingTime;
 import com.highmobility.autoapi.property.IntegerArrayProperty;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.KeyFobPositionProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
-
+import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
@@ -38,6 +36,7 @@ import com.highmobility.autoapi.property.diagnostics.WheelRpm;
 import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.property.homecharger.Charging;
 import com.highmobility.autoapi.property.homecharger.PriceTariff;
+import com.highmobility.autoapi.property.lights.FogLight;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
 import com.highmobility.autoapi.property.lights.ReadingLamp;
@@ -58,49 +57,56 @@ public class PropertyCtors {
      */
     PropertyFailure failure = new PropertyFailure(PropertyFailure.Reason.EXECUTION_TIMEOUT, "ba");
 
-    @Test public void failure() throws CommandParseException {
-        Property property = new Property("0C000100");
-        assertTrue(new ChargeMode(null, null, failure).getFailure() != null);
+    @Test public void failure() {
+        assertTrue(new ObjectProperty<ChargeMode>(null, null, failure).getFailure() != null);
     }
 
     @Test public void chargeMode() throws CommandParseException {
         Property property = new Property("0C000100");
-        assertTrue(new ChargeMode(property).getValue() != null);
-        ChargeMode updateProp = new ChargeMode((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(ChargeMode.class, property);
     }
 
     @Test public void chargePortState() throws CommandParseException {
         Property property = new Property("0B000101");
-
-        assertTrue(new ChargePortState(property).getValue() != null);
-        ChargePortState updateProp = new ChargePortState((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(ChargePortState.class, property);
     }
 
     @Test public void chargingState() throws CommandParseException {
         Property property = new Property("17000101");
-
-        assertTrue(new ChargingState(property).getValue() != null);
-        ChargingState updateProp = new ChargingState((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(ChargingState.class, property);
     }
 
     @Test public void chargingTimer() throws CommandParseException {
         Property property = new Property("1500090212010A1020050000");
+        testClass(ChargingTimer.class, property);
+    }
 
-        assertTrue(new ChargingTimer(property).getValue() != null);
-        ChargingTimer updateProp = new ChargingTimer((byte) 0x00);
+    @Test public void departureTime() throws CommandParseException {
+        Property property = new Property("010003000000");
+        testClass(DepartureTime.class, property);
+    }
+
+    @Test public void plugType() throws CommandParseException {
+        Property property = new Property("01000100");
+        testClass(PlugType.class, property);
+    }
+
+    void testClass(Class theclass, Property property) throws CommandParseException {
+        assertTrue(new ObjectProperty<>(theclass, property).getValue() != null);
+        ObjectProperty updateProp = new ObjectProperty<>(theclass, (byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
 
+    @Test public void reductionTime() throws CommandParseException {
+        Property property = new Property("010003000000");
+        testClass(ReductionTime.class, property);
+    }
+
     @Test public void springRate() throws CommandParseException {
         Property property = new Property("0600020025");
-        // TODO: below ones can be tested once for each of the sub value types (object, enum, int)
+        // TODO: below ones can be tested once for each of the sub value types (object, enum,
+        //  int), that are all parsed in ObjectProperty
 
         // assert ctor parses the value
         assertTrue(new ObjectProperty<>(SpringRate.class, property).getValue() != null);
@@ -141,33 +147,6 @@ public class PropertyCtors {
 
         assertTrue(new IntegerArrayProperty(property).getValue() != null);
         IntegerArrayProperty updateProp = new IntegerArrayProperty((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
-    }
-
-    @Test public void departureTime() throws CommandParseException {
-        Property property = new Property("010003000000");
-
-        assertTrue(new DepartureTime(property).getValue() != null);
-        DepartureTime updateProp = new DepartureTime((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
-    }
-
-    @Test public void plugType() throws CommandParseException {
-        Property property = new Property("01000100");
-
-        assertTrue(new PlugType(property).getValue() != null);
-        PlugType updateProp = new PlugType((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
-    }
-
-    @Test public void reductionTime() throws CommandParseException {
-        Property property = new Property("010003000000");
-
-        assertTrue(new ReductionTime(property).getValue() != null);
-        ReductionTime updateProp = new ReductionTime((byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
@@ -392,38 +371,21 @@ public class PropertyCtors {
 
     @Test public void FrontExteriorLightState() throws CommandParseException {
         Property property = new Property("01000101");
-
-        assertTrue(new FrontExteriorLightState(property).getValue() != null);
-        FrontExteriorLightState updateProp = new FrontExteriorLightState((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(FrontExteriorLightState.class, property);
     }
 
     @Test public void FogLight() throws CommandParseException {
         Property property = new Property("0100020101");
-
-        assertTrue(new FogLight(property).getValue() != null);
-        FogLight updateProp = new FogLight((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(FogLight.class, property);
     }
 
     @Test public void ReadingLamp() throws CommandParseException {
         Property property = new Property("0100020101");
-
-        assertTrue(new ReadingLamp(property).getValue() != null);
-        ReadingLamp updateProp = new ReadingLamp((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(ReadingLamp.class, property);
     }
 
     @Test public void InteriorLamp() throws CommandParseException {
         Property property = new Property("0100020101");
-
-        assertTrue(new InteriorLamp(property).getValue() != null);
-        InteriorLamp updateProp = new InteriorLamp((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(InteriorLamp.class, property);
     }
-
 }

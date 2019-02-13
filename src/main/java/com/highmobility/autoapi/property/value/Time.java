@@ -17,6 +17,10 @@ public class Time extends Bytes {
         return bytes;
     }
 
+    public Time(Bytes bytes) {
+        this(bytes.getByteArray());
+    }
+
     public Time(byte[] bytes) {
         if (bytes.length < 2 || bytes[0] < 0 || bytes[0] > 23 || bytes[1] < 0 || bytes[1] > 59)
             throw new IllegalArgumentException();

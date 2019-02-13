@@ -46,20 +46,21 @@ public class SpringRate extends PropertyValueObject {
     }
 
     public SpringRate(Axle axle, int springRate) {
-        super();
+        super(2);
+
+        set(0, axle.getByte());
+        set(1, Property.intToBytes(springRate, 1)[0]);
+
         this.axle = axle;
         this.springRate = springRate;
-        byte[] bytes = new byte[2];
-        bytes[0] = axle.getByte();
-        bytes[1] = Property.intToBytes(springRate, 1)[0];
-        this.bytes = new Bytes(bytes);
     }
 
     @Override public void update(Bytes value) throws CommandParseException {
         super.update(value);
-        if (bytes.getLength() >= 2) {
-            axle = Axle.fromByte(bytes.get(0));
-            springRate = Property.getUnsignedInt(bytes.get(1));
+
+        if (getLength() >= 2) {
+            axle = Axle.fromByte(get(0));
+            springRate = Property.getUnsignedInt(get(1));
         } else throw new IllegalArgumentException();
     }
 }

@@ -47,7 +47,7 @@ public class SetChargeCurrent extends CommandWithProperties {
         createBytes(current);
     }
 
-    SetChargeCurrent(byte[] bytes) throws CommandParseException {
+    SetChargeCurrent(byte[] bytes) {
         super(bytes);
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
@@ -57,7 +57,5 @@ public class SetChargeCurrent extends CommandWithProperties {
                 return null;
             });
         }
-
-        if (current.getValue() == null) throw new CommandParseException();
     }
 }

@@ -1,79 +1,38 @@
 package com.highmobility.autoapi.property.charging;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyValue;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
-import java.util.Calendar;
+public enum PlugType implements PropertyValueSingleByte {
+    TYPE_1((byte) 0x00),
+    TYPE_2((byte) 0x01),
+    COMBINED_CHARGING_SYSTEM((byte) 0x02),
+    CHA_DE_MO((byte) 0x03);
 
-import javax.annotation.Nullable;
+    public static PlugType fromByte(byte byteValue) throws CommandParseException {
+        PlugType[] values = PlugType.values();
 
-public class PlugType extends Property {
-    Value value;
+        for (int i = 0; i < values.length; i++) {
+            PlugType state = values[i];
+            if (state.getByte() == byteValue) {
+                return state;
+            }
+        }
 
-    @Nullable public Value getValue() {
+        throw new CommandParseException();
+    }
+
+    private byte value;
+
+    PlugType(byte value) {
+        this.value = value;
+    }
+
+    public byte getByte() {
         return value;
     }
 
-    public PlugType(@Nullable Value value, @Nullable Calendar timestamp,
-                    @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public PlugType(Value value) {
-        super(value);
-        this.value = value;
-        if (value != null) bytes[3] = value.getByte();
-    }
-
-    public PlugType(byte identifier) {
-        super(identifier);
-    }
-
-    public PlugType(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 1) value = value.fromByte(p.get(3));
-        return this;
-    }
-
-    public enum Value implements PropertyValue {
-        TYPE_1((byte) 0x00),
-        TYPE_2((byte) 0x01),
-        COMBINED_CHARGING_SYSTEM((byte) 0x02),
-        CHA_DE_MO((byte) 0x03);
-
-        public static Value fromByte(byte byteValue) throws CommandParseException {
-            Value[] values = Value.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Value state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Value(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-
-        @Override public int getLength() {
-            return 1;
-        }
+    @Override public int getLength() {
+        return 1;
     }
 }

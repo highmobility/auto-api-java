@@ -3,17 +3,16 @@ package com.highmobility.autoapi.property.lights;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
-import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.value.Bytes;
 
-public class ReadingLamp extends PropertyValueObject {
-    Location location;
+public class FogLight extends PropertyValueObject {
+    LightLocation location;
     boolean active;
 
     /**
      * @return The light location.
      */
-    public Location getLocation() {
+    public LightLocation getLocation() {
         return location;
     }
 
@@ -24,21 +23,22 @@ public class ReadingLamp extends PropertyValueObject {
         return active;
     }
 
-    public ReadingLamp() {
+    public FogLight() {
     }
 
-    public ReadingLamp(Location location, boolean active) {
+    public FogLight(LightLocation location, boolean active) {
         super(2);
         this.location = location;
         this.active = active;
+
         set(0, location.getByte());
         set(1, Property.boolToByte(active));
     }
 
     @Override public void update(Bytes value) throws CommandParseException {
         super.update(value);
-        if (getLength() < 2) throw new CommandParseException();
-        location = Location.fromByte(get(0));
+        location = LightLocation.fromByte(get(0));
         active = Property.getBool(get(1));
     }
 }
+
