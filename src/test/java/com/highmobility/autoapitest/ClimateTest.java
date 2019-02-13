@@ -11,6 +11,7 @@ import com.highmobility.autoapi.StartStopDefrosting;
 import com.highmobility.autoapi.StartStopHvac;
 import com.highmobility.autoapi.StartStopIonising;
 import com.highmobility.autoapi.property.HvacStartingTime;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.value.Time;
 import com.highmobility.autoapi.property.value.Weekday;
 import com.highmobility.utils.ByteUtils;
@@ -42,7 +43,10 @@ public class ClimateTest {
 
         assertTrue(command.is(ClimateState.TYPE));
         ClimateState state = (ClimateState) command;
+        testState(command, state);
+    }
 
+    private void testState(Command command, ClimateState state) {
         assertTrue(command.getClass() == ClimateState.class);
         assertTrue(state.getInsideTemperature().getValue() == 19f);
         assertTrue(state.getOutsideTemperature().getValue() == 12f);
@@ -56,8 +60,8 @@ public class ClimateTest {
         assertTrue(state.getDefrostingTemperature().getValue() == 21.5f);
         assertTrue(state.getHvacStartingTime(Weekday.MONDAY) == null);
 
-        HvacStartingTime time1 = state.getHvacStartingTime(Weekday.SATURDAY);
-        HvacStartingTime time2 = state.getHvacStartingTime(Weekday.SUNDAY);
+        ObjectProperty<HvacStartingTime> time1 = state.getHvacStartingTime(Weekday.SATURDAY);
+        ObjectProperty<HvacStartingTime> time2 = state.getHvacStartingTime(Weekday.SUNDAY);
         assertTrue(time1.getValue().getTime().getHour() == 18);
         assertTrue(time1.getValue().getTime().getMinute() == 30);
         assertTrue(time2.getValue().getTime().getHour() == 18);

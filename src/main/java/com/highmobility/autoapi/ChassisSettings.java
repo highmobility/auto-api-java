@@ -167,9 +167,9 @@ public class ChassisSettings extends CommandWithProperties {
     ChassisSettings(byte[] bytes) {
         super(bytes);
 
-        ArrayList<ObjectProperty<SpringRate>> currentSpringRates = new ArrayList<>();
-        ArrayList<ObjectProperty<SpringRate>> minimumSpringRates = new ArrayList<>();
-        ArrayList<ObjectProperty<SpringRate>> maximumSpringRates = new ArrayList<>();
+        ArrayList<ObjectProperty> currentSpringRates = new ArrayList<>();
+        ArrayList<ObjectProperty> minimumSpringRates = new ArrayList<>();
+        ArrayList<ObjectProperty> maximumSpringRates = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {

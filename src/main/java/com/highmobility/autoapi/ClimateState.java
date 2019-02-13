@@ -71,7 +71,7 @@ public class ClimateState extends CommandWithProperties {
             IDENTIFIER_DEFROSTING_TEMPERATURE);
 
     // level8
-    HvacStartingTime[] hvacStartingTimes;
+    ObjectProperty<HvacStartingTime>[] hvacStartingTimes;
     ObjectProperty<Float> rearTemperatureSetting = new ObjectProperty<>(Float.class,
             IDENTIFIER_REAR_TEMPERATURE_SETTING);
 
@@ -141,7 +141,7 @@ public class ClimateState extends CommandWithProperties {
     /**
      * @return The HVAC weekday starting times.
      */
-    public HvacStartingTime[] getHvacStartingTimes() {
+    public ObjectProperty<HvacStartingTime>[] getHvacStartingTimes() {
         return hvacStartingTimes;
     }
 
@@ -149,8 +149,8 @@ public class ClimateState extends CommandWithProperties {
      * @param weekday The weekday of the hvac starting times.
      * @return The HVAC weekday starting times.
      */
-    @Nullable public HvacStartingTime getHvacStartingTime(Weekday weekday) {
-        for (HvacStartingTime hvacStartingTime : hvacStartingTimes) {
+    @Nullable public ObjectProperty<HvacStartingTime> getHvacStartingTime(Weekday weekday) {
+        for (ObjectProperty<HvacStartingTime> hvacStartingTime : hvacStartingTimes) {
             if (hvacStartingTime.getValue().getWeekday() == weekday) return hvacStartingTime;
         }
 
@@ -167,7 +167,7 @@ public class ClimateState extends CommandWithProperties {
     ClimateState(byte[] bytes) {
         super(bytes);
 
-        ArrayList<HvacStartingTime> builder = new ArrayList<>();
+        ArrayList<ObjectProperty> builder = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
@@ -191,7 +191,8 @@ public class ClimateState extends CommandWithProperties {
                     case IDENTIFIER_DEFROSTING_TEMPERATURE:
                         return defrostingTemperature.update(p);
                     case IDENTIFIER_HVAC_TIME:
-                        HvacStartingTime time = new HvacStartingTime(p);
+                        ObjectProperty<HvacStartingTime> time =
+                                new ObjectProperty<>(HvacStartingTime.class, p);
                         builder.add(time);
                         return time;
                     case IDENTIFIER_REAR_TEMPERATURE_SETTING:
@@ -201,7 +202,7 @@ public class ClimateState extends CommandWithProperties {
             });
         }
 
-        hvacStartingTimes = builder.toArray(new HvacStartingTime[0]);
+        hvacStartingTimes = builder.toArray(new ObjectProperty[0]);
     }
 
     @Override public boolean isState() {
@@ -219,7 +220,7 @@ public class ClimateState extends CommandWithProperties {
         defrostingActive = builder.defrostingActive;
         ionisingActive = builder.ionisingActive;
         defrostingTemperature = builder.defrostingTemperature;
-        hvacStartingTimes = builder.hvacStartingTimes.toArray(new HvacStartingTime[0]);
+        hvacStartingTimes = builder.hvacStartingTimes.toArray(new ObjectProperty[0]);
         rearTemperatureSetting = builder.rearTemperatureSetting;
     }
 
@@ -233,7 +234,7 @@ public class ClimateState extends CommandWithProperties {
         private ObjectProperty<Boolean> defrostingActive;
         private ObjectProperty<Boolean> ionisingActive;
         private ObjectProperty<Float> defrostingTemperature;
-        private ArrayList<HvacStartingTime> hvacStartingTimes = new ArrayList<>();
+        private ArrayList<ObjectProperty<HvacStartingTime>> hvacStartingTimes = new ArrayList<>();
 
         private ObjectProperty<Float> rearTemperatureSetting;
 
@@ -348,10 +349,10 @@ public class ClimateState extends CommandWithProperties {
          * @param hvacStartingTimes the HVAC starting times.
          * @return The builder.
          */
-        public Builder setHvacStartingTimes(HvacStartingTime[] hvacStartingTimes) {
+        public Builder setHvacStartingTimes(ObjectProperty<HvacStartingTime>[] hvacStartingTimes) {
             this.hvacStartingTimes.clear();
 
-            for (HvacStartingTime hvacStartingTime : hvacStartingTimes) {
+            for (ObjectProperty<HvacStartingTime> hvacStartingTime : hvacStartingTimes) {
                 addHvacStartingTime(hvacStartingTime);
 
             }
@@ -364,7 +365,7 @@ public class ClimateState extends CommandWithProperties {
          * @param hvacStartingTime the HVAC starting time.
          * @return The builder.
          */
-        public Builder addHvacStartingTime(HvacStartingTime hvacStartingTime) {
+        public Builder addHvacStartingTime(ObjectProperty<HvacStartingTime> hvacStartingTime) {
             hvacStartingTime.setIdentifier(IDENTIFIER_HVAC_TIME);
             this.hvacStartingTimes.add(hvacStartingTime);
             addProperty(hvacStartingTime);

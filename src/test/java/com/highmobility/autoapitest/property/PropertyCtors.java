@@ -117,11 +117,7 @@ public class PropertyCtors {
 
     @Test public void hvacStartingTime() throws CommandParseException {
         Property property = new Property("0B000305121E");
-
-        assertTrue(new HvacStartingTime(property).getValue() != null);
-        HvacStartingTime updateProp = new HvacStartingTime((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(HvacStartingTime.class, property);
     }
 
     @Test public void controlMode() throws CommandParseException {
@@ -253,11 +249,7 @@ public class PropertyCtors {
 
     @Test public void HvacStartingTime() throws CommandParseException {
         Property property = new Property("010003000000");
-
-        assertTrue(new HvacStartingTime(property).getValue() != null);
-        HvacStartingTime updateProp = new HvacStartingTime((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(HvacStartingTime.class, property);
     }
 
     @Test public void DashboardLight() throws CommandParseException {

@@ -170,9 +170,9 @@ public class LightsState extends CommandWithProperties {
     LightsState(byte[] bytes) {
         super(bytes);
 
-        ArrayList<ObjectProperty<FogLight>> fogLights = new ArrayList<>();
-        ArrayList<ObjectProperty<InteriorLamp>> interiorLamps = new ArrayList<>();
-        ArrayList<ObjectProperty<ReadingLamp>> readingLamps = new ArrayList<>();
+        ArrayList<ObjectProperty> fogLights = new ArrayList<>();
+        ArrayList<ObjectProperty> interiorLamps = new ArrayList<>();
+        ArrayList<ObjectProperty> readingLamps = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
