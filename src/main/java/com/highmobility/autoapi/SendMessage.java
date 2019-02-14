@@ -20,8 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 
 import javax.annotation.Nullable;
 
@@ -35,37 +34,34 @@ public class SendMessage extends CommandWithProperties {
     private static final byte RECIPIENT_IDENTIFIER = 0x01;
     private static final byte MESSAGE_IDENTIFIER = 0x02;
 
-    String recipientHandle;
-    String message;
+    ObjectPropertyString recipientHandle = new ObjectPropertyString(RECIPIENT_IDENTIFIER);
+    ObjectPropertyString message = new ObjectPropertyString(MESSAGE_IDENTIFIER);
 
     /**
      * @return The recipient handle (e.g. phone number).
      */
-    @Nullable public String getRecipientHandle() {
+    @Nullable public ObjectPropertyString getRecipientHandle() {
         return recipientHandle;
     }
 
     /**
      * @return The message content text.
      */
-    @Nullable public String getMessage() {
+    @Nullable public ObjectPropertyString getMessage() {
         return message;
     }
 
     SendMessage(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case RECIPIENT_IDENTIFIER:
-                        recipientHandle = Property.getString(p.getValueBytesArray());
-                        return recipientHandle;
+                        return recipientHandle.update(p);
                     case MESSAGE_IDENTIFIER:
-                        message = Property.getString(p.getValueBytesArray());
-                        return message;
+                        return message.update(p);
                 }
-                
                 return null;
             });
         }
@@ -82,8 +78,8 @@ public class SendMessage extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private String message;
-        private String recipientHandle;
+        private ObjectPropertyString message;
+        private ObjectPropertyString recipientHandle;
 
         public Builder() {
             super(TYPE);
@@ -93,9 +89,9 @@ public class SendMessage extends CommandWithProperties {
          * @param message The message content text.
          * @return The builder.
          */
-        public Builder setMessage(String message) {
+        public Builder setMessage(ObjectPropertyString message) {
             this.message = message;
-            addProperty(new StringProperty(MESSAGE_IDENTIFIER, message));
+            addProperty(message.setIdentifier(MESSAGE_IDENTIFIER));
             return this;
         }
 
@@ -103,9 +99,9 @@ public class SendMessage extends CommandWithProperties {
          * @param recipientHandle The recipient handle (e.g. phone number).
          * @return The builder.
          */
-        public Builder setRecipientHandle(String recipientHandle) {
+        public Builder setRecipientHandle(ObjectPropertyString recipientHandle) {
             this.recipientHandle = recipientHandle;
-            addProperty(new StringProperty(RECIPIENT_IDENTIFIER, recipientHandle));
+            addProperty(recipientHandle.setIdentifier(RECIPIENT_IDENTIFIER));
             return this;
         }
 

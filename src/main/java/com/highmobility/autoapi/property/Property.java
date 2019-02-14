@@ -38,7 +38,7 @@ import java.util.TimeZone;
 
 import javax.annotation.Nullable;
 
-import static com.highmobility.autoapi.property.StringProperty.CHARSET;
+import static com.highmobility.autoapi.property.ObjectPropertyString.CHARSET;
 
 /**
  * Property is a representation of some AutoAPI data. Specific data have specific subclasses like
@@ -116,7 +116,6 @@ public class Property extends Bytes {
         this(identifier, value != null ? value.length : 0);
         if (value != null) ByteUtils.setBytes(bytes, value, 3);
     }
-
 
     public Property(@Nullable PropertyValueObject value, @Nullable Calendar timestamp,
                     @Nullable PropertyFailure failure) {
@@ -368,6 +367,10 @@ public class Property extends Bytes {
         return ByteBuffer.allocate(4).putFloat(value).array();
     }
 
+    public static double getDouble(Bytes bytes) throws IllegalArgumentException {
+        return getDouble(bytes.getByteArray());
+    }
+
     public static double getDouble(byte[] bytes) throws IllegalArgumentException {
         if (bytes.length < 8) throw new IllegalArgumentException();
         return Double.longBitsToDouble(getLong(bytes));
@@ -509,7 +512,7 @@ public class Property extends Bytes {
 
     public static byte[] stringToBytes(String string) {
         try {
-            return string.getBytes(StringProperty.CHARSET);
+            return string.getBytes(ObjectPropertyString.CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             throw new ParseException();

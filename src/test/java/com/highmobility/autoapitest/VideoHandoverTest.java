@@ -18,8 +18,8 @@ public class VideoHandoverTest {
         assertTrue(waitingForBytes.equals(bytes));
 
         VideoHandover command = (VideoHandover) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getUrl().equals("https://www.youtube.com/watch?v=yWVB7U6mX2Y"));
-        assertTrue(command.getLocation() == ScreenLocation.FRONT);
-        assertTrue(command.getStartingSecond() == 90);
+        assertTrue(command.getUrl().getValue().equals("https://www.youtube.com/watch?v=yWVB7U6mX2Y"));
+        assertTrue(command.getLocation().getValue() == ScreenLocation.FRONT);
+        assertTrue(command.getStartingSecond().getValue() == 90);
     }
 }

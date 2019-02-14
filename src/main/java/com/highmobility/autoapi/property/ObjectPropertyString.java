@@ -23,37 +23,31 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.exception.ParseException;
-import com.highmobility.utils.ByteUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
 
-import javax.annotation.Nullable;
-
-public class StringProperty extends Property {
+public class ObjectPropertyString extends ObjectProperty<String> {
     public static final String CHARSET = "UTF-8";
 
-    String value;
-
-    @Nullable public String getValue() {
-        return value;
-    }
-
-    public StringProperty(byte identifier) {
-        super(identifier);
-    }
-
-    public StringProperty(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    public StringProperty(String value) {
+    public ObjectPropertyString(String value) {
         this((byte) 0x00, value);
     }
 
-    public StringProperty(byte identifier, String value) {
-        super(identifier, value != null ? value.length() : 0);
+    public ObjectPropertyString(Property p) throws CommandParseException {
+        super(String.class, p.getPropertyIdentifier());
+        update(p);
+    }
+
+    public ObjectPropertyString(byte identifier, String value) {
+        this(identifier);
+        update(value);
+    }
+
+    public ObjectPropertyString(byte identifier) {
+        super(String.class, identifier);
+    }
+
+    @Override public ObjectProperty update(String value) {
         if (value != null) {
             byte[] stringBytes;
             try {
@@ -62,26 +56,16 @@ public class StringProperty extends Property {
                 Command.logger.info(CHARSET + " charset not supported.");
                 throw new ParseException();
             }
-            ByteUtils.setBytes(bytes, stringBytes, 3);
+
+            bytes = getPropertyBytes(bytes[0], stringBytes.length, stringBytes);
         }
 
         this.value = value;
+        return this;
     }
 
-    /**
-     * @param value     The string value.
-     * @param timestamp The property timestamp.
-     * @param failure   The property failure.
-     */
-    public StringProperty(@Nullable String value, @Nullable Calendar timestamp,
-                          @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
+    @Override public ObjectProperty update(Property p) throws CommandParseException {
         super.update(p);
-
         if (p.getValueLength() != 0) {
             try {
                 this.value = new String(getValueBytesArray(), CHARSET);
@@ -91,9 +75,5 @@ public class StringProperty extends Property {
         }
 
         return this;
-    }
-
-    public static Property[] getProperties(String value, byte identifier) {
-        return new Property[]{new StringProperty(identifier, value)};
     }
 }

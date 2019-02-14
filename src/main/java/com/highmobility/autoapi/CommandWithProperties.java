@@ -492,7 +492,7 @@ public class CommandWithProperties extends Command implements PropertyValue {
 
     // Used to catch the property parsing exception, managing parsed properties in this class.
     protected PropertiesIterator2 propertiesIterator2;
-    // TODO: 2019-02-07 throw if propertiesExpected but returned 0 properties
+    // TODO: 2019-02-07 throw if propertiesExpected but returned 0 properties (child command didnt find its property)
 
     protected class PropertiesIterator2 implements Iterator<Property> {
         private int currentSize;

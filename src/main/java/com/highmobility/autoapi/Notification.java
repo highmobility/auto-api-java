@@ -23,7 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.ActionItem;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +41,7 @@ public class Notification extends CommandWithProperties {
     private static final byte TEXT_IDENTIFIER = 0x01;
     private static final byte RECEIVED_ACTION_IDENTIFIER = 0x10;
 
-    StringProperty text;
+    ObjectPropertyString text;
     ActionItem[] actions;
     ObjectPropertyInteger receivedAction = new ObjectPropertyInteger(RECEIVED_ACTION_IDENTIFIER,
             false);
@@ -49,7 +49,7 @@ public class Notification extends CommandWithProperties {
     /**
      * @return Notification text.
      */
-    @Nullable public StringProperty getText() {
+    @Nullable public ObjectPropertyString getText() {
         return text;
     }
 
@@ -87,7 +87,7 @@ public class Notification extends CommandWithProperties {
 
         ArrayList<Property> properties = new ArrayList<>();
 
-        this.text = new StringProperty(TEXT_IDENTIFIER, text);
+        this.text = new ObjectPropertyString(TEXT_IDENTIFIER, text);
         properties.add(this.text);
 
         this.actions = actions;
@@ -109,7 +109,7 @@ public class Notification extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case TEXT_IDENTIFIER:
-                        text = new StringProperty(p);
+                        text = new ObjectPropertyString(p);
                         return text;
                     case ActionItem.IDENTIFIER:
                         ActionItem item = new ActionItem(p.getByteArray());
@@ -135,7 +135,7 @@ public class Notification extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private List<ActionItem> actions = new ArrayList<>();
-        StringProperty text;
+        ObjectPropertyString text;
         ObjectPropertyInteger receivedAction;
 
         public Builder() {
@@ -170,7 +170,7 @@ public class Notification extends CommandWithProperties {
          * @param text The notification text.
          * @return The builder.
          */
-        public Builder setText(StringProperty text) {
+        public Builder setText(ObjectPropertyString text) {
             this.text = text;
             text.setIdentifier(TEXT_IDENTIFIER);
             addProperty(text);

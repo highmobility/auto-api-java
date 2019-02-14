@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CoordinatesProperty;
-import com.highmobility.autoapi.property.DoubleProperty;
+import com.highmobility.autoapi.property.Coordinates;
+import com.highmobility.autoapi.property.ObjectProperty;
 
 import javax.annotation.Nullable;
 
@@ -35,28 +35,28 @@ public class VehicleLocation extends CommandWithProperties {
     private static final byte IDENTIFIER_HEADING = 0x05;
     private static final byte IDENTIFIER_ALTITUDE = 0x06;
 
-    private CoordinatesProperty coordinates = new CoordinatesProperty(IDENTIFIER_COORDINATES);
-    private DoubleProperty heading = new DoubleProperty(IDENTIFIER_HEADING);
-    private DoubleProperty altitude = new DoubleProperty(IDENTIFIER_ALTITUDE);
+    private ObjectProperty<Coordinates> coordinates = new ObjectProperty<>(Coordinates.class, IDENTIFIER_COORDINATES);
+    private ObjectProperty<Double> heading = new ObjectProperty<>(Double.class, IDENTIFIER_HEADING);
+    private ObjectProperty<Double> altitude = new ObjectProperty<>(Double.class, IDENTIFIER_ALTITUDE);
 
     /**
      * @return The vehicle coordinates.
      */
-    @Nullable public CoordinatesProperty getCoordinates() {
+    @Nullable public ObjectProperty<Coordinates> getCoordinates() {
         return coordinates;
     }
 
     /**
      * @return The heading.
      */
-    @Nullable public DoubleProperty getHeading() {
+    @Nullable public ObjectProperty<Double> getHeading() {
         return heading;
     }
 
     /**
      * @return The altitude in meters above the WGS 84 reference ellipsoid.
      */
-    @Nullable public DoubleProperty getAltitude() {
+    @Nullable public ObjectProperty<Double> getAltitude() {
         return altitude;
     }
 
@@ -91,9 +91,9 @@ public class VehicleLocation extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private CoordinatesProperty coordinates;
-        private DoubleProperty heading;
-        private DoubleProperty altitude;
+        private ObjectProperty<Coordinates> coordinates;
+        private ObjectProperty<Double> heading;
+        private ObjectProperty<Double> altitude;
 
         public Builder() {
             super(TYPE);
@@ -103,7 +103,7 @@ public class VehicleLocation extends CommandWithProperties {
          * @param heading The heading.
          * @return The builder.
          */
-        public Builder setHeading(DoubleProperty heading) {
+        public Builder setHeading(ObjectProperty<Double> heading) {
             this.heading = heading;
             heading.setIdentifier(IDENTIFIER_HEADING);
             addProperty(heading);
@@ -114,7 +114,7 @@ public class VehicleLocation extends CommandWithProperties {
          * @param coordinates The vehicle coordinates.
          * @return The builder.
          */
-        public Builder setCoordinates(CoordinatesProperty coordinates) {
+        public Builder setCoordinates(ObjectProperty<Coordinates> coordinates) {
             this.coordinates = coordinates;
             coordinates.setIdentifier(IDENTIFIER_COORDINATES);
             addProperty(coordinates);
@@ -125,7 +125,7 @@ public class VehicleLocation extends CommandWithProperties {
          * @param altitude The altitude in meters above the WGS 84 reference ellipsoid
          * @return The builder.
          */
-        public Builder setAltitude(DoubleProperty altitude) {
+        public Builder setAltitude(ObjectProperty<Double> altitude) {
             this.altitude = altitude;
             altitude.setIdentifier(IDENTIFIER_ALTITUDE);
             addProperty(altitude);

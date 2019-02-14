@@ -20,10 +20,10 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CoordinatesProperty;
+import com.highmobility.autoapi.property.Coordinates;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.property.homecharger.Charging;
 import com.highmobility.autoapi.property.homecharger.PlugType;
@@ -69,9 +69,10 @@ public class HomeChargerState extends CommandWithProperties {
             IDENTIFIER_SOLAR_CHARGING_ACTIVE);
     ObjectProperty<Boolean> hotspotEnabled = new ObjectProperty<>(Boolean.class,
             IDENTIFIER_HOTSPOT_ENABLED);
-    StringProperty hotspotSsid = new StringProperty(IDENTIFIER_HOTSPOT_SSID);
-    NetworkSecurity hotspotSecurity = new NetworkSecurity(IDENTIFIER_HOTSPOT_SECURITY);
-    StringProperty hotspotPassword = new StringProperty(IDENTIFIER_HOTSPOT_PASSWORD);
+    ObjectPropertyString hotspotSsid = new ObjectPropertyString(IDENTIFIER_HOTSPOT_SSID);
+    ObjectProperty<NetworkSecurity> hotspotSecurity = new ObjectProperty<>(NetworkSecurity.class,
+            IDENTIFIER_HOTSPOT_SECURITY);
+    ObjectPropertyString hotspotPassword = new ObjectPropertyString(IDENTIFIER_HOTSPOT_PASSWORD);
 
     // level8
     ObjectProperty<Boolean> authenticated = new ObjectProperty<>(Boolean.class,
@@ -82,7 +83,7 @@ public class HomeChargerState extends CommandWithProperties {
             new ObjectProperty<>(Float.class, IDENTIFIER_MAXIMUM_CHARGE_CURRENT);
     ObjectProperty<Float> minimumChargeCurrent =
             new ObjectProperty<>(Float.class, IDENTIFIER_MINIMUM_CHARGE_CURRENT);
-    CoordinatesProperty coordinates = new CoordinatesProperty(IDENTIFIER_COORDINATES);
+    ObjectProperty<Coordinates> coordinates = new ObjectProperty<>(Coordinates.class, IDENTIFIER_COORDINATES);
 
     PriceTariff[] priceTariffs;
 
@@ -131,21 +132,21 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return The hotspot SSID.
      */
-    @Nullable public StringProperty getHotspotSsid() {
+    @Nullable public ObjectPropertyString getHotspotSsid() {
         return hotspotSsid;
     }
 
     /**
      * @return The hotspot security.
      */
-    @Nullable public NetworkSecurity getHotspotSecurity() {
+    @Nullable public ObjectProperty<NetworkSecurity> getHotspotSecurity() {
         return hotspotSecurity;
     }
 
     /**
      * @return The hotspot password.
      */
-    @Nullable public StringProperty getHotspotPassword() {
+    @Nullable public ObjectPropertyString getHotspotPassword() {
         return hotspotPassword;
     }
 
@@ -180,7 +181,7 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return The coordinates.
      */
-    @Nullable public CoordinatesProperty getCoordinates() {
+    @Nullable public ObjectProperty<Coordinates> getCoordinates() {
         return coordinates;
     }
 
@@ -279,9 +280,9 @@ public class HomeChargerState extends CommandWithProperties {
         private ObjectProperty<Float> chargingPower;
         private ObjectProperty<Boolean> solarChargingActive;
         private ObjectProperty<Boolean> hotspotEnabled;
-        private StringProperty hotspotSsid;
-        private NetworkSecurity hotspotSecurity;
-        private StringProperty hotspotPassword;
+        private ObjectPropertyString hotspotSsid;
+        private ObjectProperty<NetworkSecurity> hotspotSecurity;
+        private ObjectPropertyString hotspotPassword;
         private List<PriceTariff> priceTariffs = new ArrayList<>();
 
         public Builder() {
@@ -355,7 +356,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param hotspotSsid The hotspot SSID.
          * @return The builder.
          */
-        public Builder setHotspotSsid(StringProperty hotspotSsid) {
+        public Builder setHotspotSsid(ObjectPropertyString hotspotSsid) {
             this.hotspotSsid = hotspotSsid;
             addProperty(hotspotSsid.setIdentifier(IDENTIFIER_HOTSPOT_SSID));
             return this;
@@ -365,7 +366,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param hotspotSecurity The hotspot security.
          * @return The builder.
          */
-        public Builder setHotspotSecurity(NetworkSecurity hotspotSecurity) {
+        public Builder setHotspotSecurity(ObjectProperty<NetworkSecurity> hotspotSecurity) {
             this.hotspotSecurity = hotspotSecurity;
             addProperty(hotspotSecurity.setIdentifier(IDENTIFIER_HOTSPOT_SECURITY));
             return this;
@@ -375,7 +376,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param hotspotPassword The hotspot password.
          * @return The builder.
          */
-        public Builder setHotspotPassword(StringProperty hotspotPassword) {
+        public Builder setHotspotPassword(ObjectPropertyString hotspotPassword) {
             this.hotspotPassword = hotspotPassword;
             addProperty(hotspotPassword.setIdentifier(IDENTIFIER_HOTSPOT_PASSWORD));
             return this;

@@ -38,7 +38,7 @@ import java.util.TimeZone;
 
 import javax.annotation.Nullable;
 
-import static com.highmobility.autoapi.property.StringProperty.CHARSET;
+import static com.highmobility.autoapi.property.ObjectPropertyString.CHARSET;
 
 /**
  * Property is a representation of some AutoAPI data. Specific data have specific subclasses like
@@ -133,7 +133,8 @@ public class ObjectProperty<T> extends Property {
     }
 
     protected Bytes getBytes(T value) {
-        // this is for builder
+        // this is for builder/set command
+
         if (value instanceof Bytes) {
             return ((Bytes) value);
         } else if (value instanceof PropertyValueObject) {
@@ -153,16 +154,6 @@ public class ObjectProperty<T> extends Property {
             } else if (value instanceof Double) {
                 return new Bytes(doubleToBytes((Double) value));
             }
-        } else if (value instanceof int[]) {
-            int[] valueIntArray = (int[]) value;
-            byte[] valueBytes = new byte[valueIntArray.length];
-
-            for (int i = 0; i < valueIntArray.length; i++) {
-                byte byteValue = Property.intToBytes(valueIntArray[i], 1)[0];
-                valueBytes[i] = byteValue;
-            }
-
-            return new Bytes(valueBytes);
         } else {
             throw new IllegalArgumentException("Type not supported for Property");
         }
@@ -239,10 +230,7 @@ public class ObjectProperty<T> extends Property {
                 value = (T) (Float) getFloat(p.getValueBytesArray());
             } else if (Double.class.isAssignableFrom(theClass)) {
                 value = (T) (Double) getDouble(p.getValueBytesArray());
-            } else if (int[].class.isAssignableFrom(theClass)) {
-                // TODO: 2019-02-04
             }
-// TODO: 2019-02-04 add double
 
         } catch (IllegalAccessException e) {
 
@@ -251,13 +239,6 @@ public class ObjectProperty<T> extends Property {
         } catch (CommandParseException e) {
             // TODO: 2019-02-01 error handling
         }
-
-        /*Bytes valueBytes = p.getValueBytes();
-
-        if (valueBytes.getLength() > 0) {
-            // TODO: 2019-02-04 create the correct value object
-            value = (T) new PropertyValueObject(valueBytes);
-        }*/
 
         return this;
     }
@@ -525,7 +506,7 @@ public class ObjectProperty<T> extends Property {
 
     public static byte[] stringToBytes(String string) {
         try {
-            return string.getBytes(StringProperty.CHARSET);
+            return string.getBytes(ObjectPropertyString.CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             throw new ParseException();

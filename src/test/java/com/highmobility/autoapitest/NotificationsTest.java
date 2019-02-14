@@ -7,7 +7,7 @@ import com.highmobility.autoapi.Notification;
 import com.highmobility.autoapi.NotificationAction;
 import com.highmobility.autoapi.property.ActionItem;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -65,7 +65,7 @@ public class NotificationsTest {
         action2 = new ActionItem(1, "Yes");
         ActionItem[] actions = new ActionItem[]{action1, action2};
 
-        builder.setText(new StringProperty("Start navigation?"));
+        builder.setText(new ObjectPropertyString("Start navigation?"));
         builder.setActions(actions);
 
         builder.setReceivedAction(new ObjectPropertyInteger(42));

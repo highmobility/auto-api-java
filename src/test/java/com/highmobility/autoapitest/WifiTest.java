@@ -9,7 +9,7 @@ import com.highmobility.autoapi.GetWifiState;
 import com.highmobility.autoapi.WifiState;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -41,7 +41,7 @@ public class WifiTest {
         assertTrue(state.isEnabled().getValue() == true);
         assertTrue(state.isConnected().getValue() == true);
         assertTrue(state.getSsid().getValue().equals("HOME"));
-        assertTrue(state.getSecurity().getValue() == NetworkSecurity.Value.WPA2_PERSONAL);
+        assertTrue(state.getSecurity().getValue() == NetworkSecurity.WPA2_PERSONAL);
     }
 
     @Test public void build() {
@@ -49,8 +49,8 @@ public class WifiTest {
 
         builder.setEnabled(new ObjectProperty<>(true));
         builder.setConnected(new ObjectProperty<>(true));
-        builder.setSsid(new StringProperty("HOME"));
-        builder.setSecurity(new NetworkSecurity(NetworkSecurity.Value.WPA2_PERSONAL));
+        builder.setSsid(new ObjectPropertyString("HOME"));
+        builder.setSecurity(new ObjectProperty<>(NetworkSecurity.WPA2_PERSONAL));
 
         WifiState state = builder.build();
         assertTrue(Arrays.equals(state.getByteArray(), ByteUtils.bytesFromHex
@@ -67,15 +67,14 @@ public class WifiTest {
         Bytes waitingForBytes = new Bytes(
                 "005902030004484f4d450400010305000A5a57337641524e554265");
         byte[] commandBytes = null;
-        commandBytes = new ConnectToNetwork("HOME", NetworkSecurity
-                .Value.WPA2_PERSONAL, "ZW3vARNUBe")
-                .getByteArray();
+        commandBytes =
+                new ConnectToNetwork("HOME", NetworkSecurity.WPA2_PERSONAL, "ZW3vARNUBe").getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));
 
         ConnectToNetwork command = (ConnectToNetwork) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getSsid().equals("HOME"));
-        assertTrue(command.getSecurity() == NetworkSecurity.Value.WPA2_PERSONAL);
-        assertTrue(command.getPassword().equals("ZW3vARNUBe"));
+        assertTrue(command.getSsid().getValue().equals("HOME"));
+        assertTrue(command.getSecurity().getValue() == NetworkSecurity.WPA2_PERSONAL);
+        assertTrue(command.getPassword().getValue().equals("ZW3vARNUBe"));
     }
 
     @Test public void forgetNetwork() {
@@ -85,7 +84,7 @@ public class WifiTest {
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
         ForgetNetwork command = (ForgetNetwork) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getSsid().equals("HOME"));
+        assertTrue(command.getSsid().getValue().equals("HOME"));
     }
 
     @Test public void enableDisableWifi() {

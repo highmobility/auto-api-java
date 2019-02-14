@@ -20,10 +20,11 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.ScreenLocation;
-import com.highmobility.autoapi.property.StringProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,33 +38,34 @@ import javax.annotation.Nullable;
 public class VideoHandover extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VIDEO_HANDOVER, 0x00);
 
-    public static final byte URL_IDENTIFIER = 0x01;
+    public static final byte IDENTIFIER_URL = 0x01;
     public static final byte STARTING_SECOND_IDENTIFIER = 0x02;
     public static final byte IDENTIFIER_SCREEN_LOCATION = 0x03;
 
-    private String url;
+    private ObjectPropertyString url = new ObjectPropertyString(IDENTIFIER_URL);
     private ObjectPropertyInteger startingSecond =
             new ObjectPropertyInteger(STARTING_SECOND_IDENTIFIER, false);
-    private ScreenLocation location;
+    private ObjectProperty<ScreenLocation> location = new ObjectProperty<>(ScreenLocation.class,
+            IDENTIFIER_SCREEN_LOCATION);
 
     /**
      * @return The video url.
      */
-    public String getUrl() {
+    public ObjectPropertyString getUrl() {
         return url;
     }
 
     /**
      * @return The starting second.
      */
-    @Nullable public Integer getStartingSecond() {
-        return startingSecond.getValue();
+    @Nullable public ObjectPropertyInteger getStartingSecond() {
+        return startingSecond;
     }
 
     /**
      * @return The screen location.
      */
-    @Nullable public ScreenLocation getLocation() {
+    @Nullable public ObjectProperty<ScreenLocation> getLocation() {
         return location;
     }
 
@@ -78,19 +80,19 @@ public class VideoHandover extends CommandWithProperties {
 
         List<Property> properties = new ArrayList<>();
 
-        if (url != null) properties.add(new StringProperty(URL_IDENTIFIER, url));
+        this.url.update(url);
+        properties.add(this.url);
+
         if (startingSecond != null) {
             this.startingSecond.update(STARTING_SECOND_IDENTIFIER, false, 2, startingSecond);
             properties.add(this.startingSecond);
         }
 
         if (location != null) {
-            properties.add(new Property(IDENTIFIER_SCREEN_LOCATION, location.getByte()));
-
+            this.location.update(location);
+            properties.add(this.location);
         }
 
-        this.url = url;
-        this.location = location;
         createBytes(properties);
     }
 
@@ -100,14 +102,12 @@ public class VideoHandover extends CommandWithProperties {
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case URL_IDENTIFIER:
-                        url = Property.getString(p.getValueBytesArray());
-                        break;
+                    case IDENTIFIER_URL:
+                        return url.update(p);
                     case STARTING_SECOND_IDENTIFIER:
                         return startingSecond.update(p);
                     case IDENTIFIER_SCREEN_LOCATION:
-                        location = ScreenLocation.fromByte(p.getValueByte());
-                        break;
+                        return location.update(p);
                 }
                 return null;
             });

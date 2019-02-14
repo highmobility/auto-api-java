@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.FailureReason;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 
 import javax.annotation.Nullable;
 
@@ -44,7 +44,7 @@ public class Failure extends CommandWithProperties {
     private Type failedType;
     private FailureReason failureReason;
 
-    private String failureDescription;
+    private ObjectPropertyString failureDescription = new ObjectPropertyString(IDENTIFIER_FAILURE_DESCRIPTION);
 
     /**
      * @return The failed identifier bytes.
@@ -77,7 +77,7 @@ public class Failure extends CommandWithProperties {
     /**
      * @return The failure description.
      */
-    @Nullable public String getFailureDescription() {
+    @Nullable public ObjectPropertyString getFailureDescription() {
         return failureDescription;
     }
 
@@ -97,8 +97,7 @@ public class Failure extends CommandWithProperties {
                         failureReason = FailureReason.fromByte(p.getValueByte());
                         return failureReason;
                     case IDENTIFIER_FAILURE_DESCRIPTION:
-                        failureDescription = Property.getString(p.getValueBytesArray());
-                        return failureDescription;
+                        return failureDescription.update(p);
                 }
                 
                 return null;
@@ -119,7 +118,7 @@ public class Failure extends CommandWithProperties {
     public static final class Builder extends CommandWithProperties.Builder {
         private FailureReason failureReason;
         private Type failedType;
-        private String failureDescription;
+        private ObjectPropertyString failureDescription;
 
         public Builder() {
             super(TYPE);
@@ -154,9 +153,9 @@ public class Failure extends CommandWithProperties {
          * @param description The failure description.
          * @return The builder.
          */
-        public Builder setFailureDescription(String description) {
+        public Builder setFailureDescription(ObjectPropertyString description) {
+            addProperty(description.setIdentifier(IDENTIFIER_FAILURE_DESCRIPTION));
             this.failureDescription = description;
-            addProperty(new StringProperty(IDENTIFIER_FAILURE_DESCRIPTION, description));
             return this;
         }
 

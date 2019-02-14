@@ -6,6 +6,7 @@ import com.highmobility.autoapi.EndParking;
 import com.highmobility.autoapi.GetParkingTicket;
 import com.highmobility.autoapi.ParkingTicket;
 import com.highmobility.autoapi.StartParking;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.ParkingTicketState;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -38,8 +39,8 @@ public class ParkingTicketTest {
         ParkingTicket state = (ParkingTicket) command;
 
         assertTrue(((ParkingTicket) command).getState() == ParkingTicketState.STARTED);
-        assertTrue(state.getOperatorName().equals("Berlin Parking"));
-        assertTrue(state.getOperatorTicketId().equals("64894233"));
+        assertTrue(state.getOperatorName().getValue().equals("Berlin Parking"));
+        assertTrue(state.getOperatorTicketId().getValue().equals("64894233"));
 
         assertTrue(TestUtils.dateIsSameUTC(state.getTicketStartDate(), "2017-01-10T17:34:00"));
         assertTrue(TestUtils.dateIsSameUTC(state.getTicketEndDate(), "2018-02-20T22:11:00"));
@@ -49,8 +50,8 @@ public class ParkingTicketTest {
         ParkingTicket.Builder builder = new ParkingTicket.Builder();
 
         builder.setState(ParkingTicketState.STARTED);
-        builder.setOperatorName("Berlin Parking");
-        builder.setOperatorTicketId("64894233");
+        builder.setOperatorName(new ObjectPropertyString("Berlin Parking"));
+        builder.setOperatorTicketId(new ObjectPropertyString("64894233"));
         builder.setTicketStart(TestUtils.getUTCCalendar("2017-01-10T17:34:00"));
         builder.setTicketEnd(TestUtils.getUTCCalendar("2018-02-20T22:11:00"));
 
@@ -74,17 +75,17 @@ public class ParkingTicketTest {
         long timeZoneOffset = 3600000;
         startDate.setTimeZone(new SimpleTimeZone((int) timeZoneOffset, "CET"));
 
-        byte[] bytes = new StartParking("Berlin Parking", "64894233", startDate, null).getByteArray();
-        assertTrue(waitingForBytes.equals(bytes));
+        StartParking command = new StartParking("Berlin Parking", "64894233", startDate, null);
+        assertTrue(TestUtils.bytesTheSame(command, waitingForBytes));
 
-        StartParking command = (StartParking) CommandResolver.resolve(waitingForBytes);
+        command = (StartParking) CommandResolver.resolve(waitingForBytes);
         Calendar expected = TestUtils.getUTCCalendar("2017-01-10T16:34:00", (int) (timeZoneOffset /
                 60 / 1000));
 
         assertTrue(TestUtils.dateIsSameIgnoreTimezone(command.getStartDate(), expected));
         assertTrue(command.getEndDate() == null);
-        assertTrue(command.getOperatorName().equals("Berlin Parking"));
-        assertTrue(command.getOperatorTicketId().equals("64894233"));
+        assertTrue(command.getOperatorName().getValue().equals("Berlin Parking"));
+        assertTrue(command.getOperatorTicketId().getValue().equals("64894233"));
     }
 
     @Test public void endParking() {

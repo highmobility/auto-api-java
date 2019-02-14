@@ -9,7 +9,6 @@ import com.highmobility.autoapi.GetHomeChargerState;
 import com.highmobility.autoapi.HomeChargerState;
 import com.highmobility.autoapi.SetChargeCurrent;
 import com.highmobility.autoapi.SetPriceTariffs;
-import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.property.homecharger.Charging;
@@ -60,7 +59,7 @@ public class HomeChargerTest {
 
         assertTrue(state.isHotspotEnabled().getValue() == true);
         assertTrue(state.getHotspotSsid().getValue().equals("Charger 7612"));
-        assertTrue(state.getHotspotSecurity().getValue() == NetworkSecurity.Value.WPA2_PERSONAL);
+        assertTrue(state.getHotspotSecurity().getValue() == NetworkSecurity.WPA2_PERSONAL);
         assertTrue(state.getHotspotPassword().getValue().equals("ZW3vARNUBe"));
 
         assertTrue(state.isAuthenticated().getValue() == true);
@@ -68,9 +67,9 @@ public class HomeChargerTest {
         assertTrue(state.getMaximumChargeCurrent().getValue() == 1f);
         assertTrue(state.getMinimumChargeCurrent().getValue() == 0f);
 
-        CoordinatesProperty prop = state.getCoordinates();
-        assertTrue(prop.getValue().getLatitude() == 52.520008);
-        assertTrue(prop.getValue().getLongitude() == 13.404954);
+
+        assertTrue(state.getCoordinates().getValue().getLatitude() == 52.520008);
+        assertTrue(state.getCoordinates().getValue().getLongitude() == 13.404954);
 
         assertTrue(state.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getValue().getPrice() == 4.5f);
         assertTrue(state.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getValue().getCurrency().equals("EUR"));

@@ -22,76 +22,36 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-import java.util.Calendar;
+public enum NetworkSecurity implements PropertyValueSingleByte {
+    NONE((byte) 0x00),
+    WEP((byte) 0x01),
+    WPA_WPA2_PERSONAL((byte) 0x02),
+    WPA2_PERSONAL((byte) 0x03);
 
-import javax.annotation.Nullable;
+    public static NetworkSecurity fromByte(byte value) throws CommandParseException {
+        NetworkSecurity[] values = NetworkSecurity.values();
 
-public class NetworkSecurity extends Property {
+        for (int i = 0; i < values.length; i++) {
+            NetworkSecurity type = values[i];
+            if (type.getByte() == value) {
+                return type;
+            }
+        }
 
-    Value value;
+        throw new CommandParseException();
+    }
 
-    @Nullable public Value getValue() {
+    private byte value;
+
+    public byte getByte() {
         return value;
     }
 
-    public NetworkSecurity(byte identifier) {
-        super(identifier);
-    }
-
-    public NetworkSecurity(Value value) {
-        super(value);
+    NetworkSecurity(byte value) {
         this.value = value;
-        if (value != null) bytes[3] = value.getByte();
     }
 
-    public NetworkSecurity(@Nullable Value value, @Nullable Calendar timestamp,
-                           @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public NetworkSecurity(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 1) value = value.fromByte(p.get(3));
-        return this;
-    }
-
-    public enum Value implements PropertyValue {
-        NONE((byte) 0x00),
-        WEP((byte) 0x01),
-        WPA_WPA2_PERSONAL((byte) 0x02),
-        WPA2_PERSONAL((byte) 0x03);
-
-        public static Value fromByte(byte value) throws CommandParseException {
-            Value[] values = Value.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Value type = values[i];
-                if (type.getByte() == value) {
-                    return type;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        public byte getByte() {
-            return value;
-        }
-
-        Value(byte value) {
-            this.value = value;
-        }
-
-        @Override public int getLength() {
-            return 1;
-        }
+    @Override public int getLength() {
+        return 1;
     }
 }

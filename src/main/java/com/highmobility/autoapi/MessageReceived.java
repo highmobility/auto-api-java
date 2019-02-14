@@ -20,10 +20,12 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -34,23 +36,23 @@ import javax.annotation.Nullable;
 public class MessageReceived extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MESSAGING, 0x00);
 
-    private static final byte RECIPIENT_IDENTIFIER = 0x01;
-    private static final byte MESSAGE_IDENTIFIER = 0x02;
+    private static final byte IDENTIFIER_RECIPIENT = 0x01;
+    private static final byte IDENTIFIER_MESSAGE = 0x02;
 
-    private String handle;
-    private String message;
+    private ObjectPropertyString handle = new ObjectPropertyString(IDENTIFIER_RECIPIENT);
+    private ObjectPropertyString message = new ObjectPropertyString(IDENTIFIER_MESSAGE);;
 
     /**
      * @return The sender handle (e.g. phone number).
      */
-    @Nullable public String getSenderHandle() {
+    @Nullable public ObjectPropertyString getSenderHandle() {
         return handle;
     }
 
     /**
      * @return The message content text.
      */
-    public String getMessage() {
+    public ObjectPropertyString getMessage() {
         return message;
     }
 
@@ -59,43 +61,36 @@ public class MessageReceived extends CommandWithProperties {
      * @param message      The message content text.
      */
     public MessageReceived(@Nullable String senderHandle, String message) {
-        super(TYPE, getProperties(senderHandle, message));
-        this.handle = senderHandle;
-        this.message = message;
-    }
+        super(TYPE);
 
-    static Property[] getProperties(String handle, String message) {
-        ArrayList<Property> properties = new ArrayList<>();
+        List<Property> properties = new ArrayList<>();
 
-        if (handle != null) {
-            StringProperty prop = new StringProperty(RECIPIENT_IDENTIFIER, handle);
-            properties.add(prop);
+        if (senderHandle != null) {
+            this.handle.update(senderHandle);
+            properties.add(this.handle);
         }
 
-        if (message != null) {
-            StringProperty prop = new StringProperty(MESSAGE_IDENTIFIER, message);
-            properties.add(prop);
-        }
+        this.message.update(message);
+        properties.add(this.message);
 
-        return (properties.toArray(new Property[0]));
+        createBytes(properties);
     }
 
-    MessageReceived(byte[] bytes) {
+    MessageReceived(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case RECIPIENT_IDENTIFIER:
-                        handle = Property.getString(p.getValueBytesArray());
-                        return handle;
-                    case MESSAGE_IDENTIFIER:
-                        message = Property.getString(p.getValueBytesArray());
-                        return message;
+                    case IDENTIFIER_RECIPIENT:
+                        return handle.update(p);
+                    case IDENTIFIER_MESSAGE:
+                        return message.update(p);
                 }
-
                 return null;
             });
         }
+
+        if (message.getValue() == null) throw new CommandParseException();
     }
 }

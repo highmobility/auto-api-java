@@ -6,7 +6,7 @@ import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.PropertyTimestamp;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class PropertyTest {
                         "longstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstring" +
                         "longstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstring";
 
-        StringProperty stringProperty = new StringProperty((byte) 0x02, longString);
+        ObjectPropertyString stringProperty = new ObjectPropertyString((byte) 0x02, longString);
         assertTrue(stringProperty.getByteArray()[1] == 0x01);
         assertTrue(stringProperty.getByteArray()[2] == 0x4A);
     }
@@ -55,8 +55,8 @@ public class PropertyTest {
     }
 
     @Test public void nullString() {
-        new StringProperty((byte) 0x00, null);
-        new StringProperty((byte) 0x00, "");
+        new ObjectPropertyString((byte) 0x00, null);
+        new ObjectPropertyString((byte) 0x00, "");
     }
 
     // TODO: 2019-01-09

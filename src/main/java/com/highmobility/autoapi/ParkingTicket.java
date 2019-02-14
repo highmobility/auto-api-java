@@ -21,9 +21,9 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.ParkingTicketState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
 
 import java.util.Calendar;
 
@@ -37,15 +37,15 @@ import javax.annotation.Nullable;
 public class ParkingTicket extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.PARKING_TICKET, 0x01);
 
-    private static final byte OPERATOR_NAME_IDENTIFIER = 0x02;
-    private static final byte OPERATOR_TICKET_ID_IDENTIFIER = 0x03;
-    private static final byte TICKET_START_IDENTIFIER = 0x04;
-    private static final byte TICKET_END_IDENTIFIER = 0x05;
+    private static final byte IDENTIFIER_OPERATOR_NAME = 0x02;
+    private static final byte IDENTIFIER_OPERATOR_TICKET_ID = 0x03;
+    private static final byte IDENTIFIER_TICKET_START = 0x04;
+    private static final byte IDENTIFIER_TICKET_END = 0x05;
     private static final byte IDENTIFIER_STATE = 0x01;
 
     ParkingTicketState state;
-    String operatorName;
-    String operatorTicketId;
+    ObjectPropertyString operatorName = new ObjectPropertyString(IDENTIFIER_OPERATOR_NAME);
+    ObjectPropertyString operatorTicketId = new ObjectPropertyString(IDENTIFIER_OPERATOR_TICKET_ID);
     Calendar ticketStart;
     Calendar ticketEnd;
 
@@ -59,14 +59,14 @@ public class ParkingTicket extends CommandWithProperties {
     /**
      * @return The operator name.
      */
-    @Nullable public String getOperatorName() {
+    @Nullable public ObjectPropertyString getOperatorName() {
         return operatorName;
     }
 
     /**
      * @return The ticket id.
      */
-    @Nullable public String getOperatorTicketId() {
+    @Nullable public ObjectPropertyString getOperatorTicketId() {
         return operatorTicketId;
     }
 
@@ -93,16 +93,14 @@ public class ParkingTicket extends CommandWithProperties {
                     case IDENTIFIER_STATE:
                         state = ParkingTicketState.fromByte(p.getValueByte());
                         return state;
-                    case OPERATOR_NAME_IDENTIFIER:
-                        operatorName = Property.getString(p.getValueBytesArray());
-                        return operatorName;
-                    case OPERATOR_TICKET_ID_IDENTIFIER:
-                        operatorTicketId = Property.getString(p.getValueBytesArray());
-                        return operatorTicketId;
-                    case TICKET_START_IDENTIFIER:
+                    case IDENTIFIER_OPERATOR_NAME:
+                        return operatorName.update(p);
+                    case IDENTIFIER_OPERATOR_TICKET_ID:
+                        return operatorTicketId.update(p);
+                    case IDENTIFIER_TICKET_START:
                         ticketStart = Property.getCalendar(p.getValueBytesArray());
                         return ticketStart;
-                    case TICKET_END_IDENTIFIER:
+                    case IDENTIFIER_TICKET_END:
                         ticketEnd = Property.getCalendar(p.getValueBytesArray());
                         return ticketEnd;
                 }
@@ -126,8 +124,8 @@ public class ParkingTicket extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private ParkingTicketState state;
-        private String operatorName;
-        private String operatorTicketId;
+        private ObjectPropertyString operatorName;
+        private ObjectPropertyString operatorTicketId;
         private Calendar ticketStart;
         private Calendar ticketEnd;
 
@@ -149,9 +147,9 @@ public class ParkingTicket extends CommandWithProperties {
          * @param operatorName The operator name.
          * @return The builder.
          */
-        public Builder setOperatorName(String operatorName) {
+        public Builder setOperatorName(ObjectPropertyString operatorName) {
             this.operatorName = operatorName;
-            addProperty(new StringProperty(OPERATOR_NAME_IDENTIFIER, operatorName));
+            addProperty(operatorName.setIdentifier(IDENTIFIER_OPERATOR_NAME));
             return this;
         }
 
@@ -159,9 +157,9 @@ public class ParkingTicket extends CommandWithProperties {
          * @param operatorTicketId The ticket id.
          * @return The builder.
          */
-        public Builder setOperatorTicketId(String operatorTicketId) {
+        public Builder setOperatorTicketId(ObjectPropertyString operatorTicketId) {
             this.operatorTicketId = operatorTicketId;
-            addProperty(new StringProperty(OPERATOR_TICKET_ID_IDENTIFIER, operatorTicketId));
+            addProperty(operatorTicketId.setIdentifier(IDENTIFIER_OPERATOR_TICKET_ID));
             return this;
         }
 
@@ -171,7 +169,7 @@ public class ParkingTicket extends CommandWithProperties {
          */
         public Builder setTicketStart(Calendar ticketStart) {
             this.ticketStart = ticketStart;
-            addProperty(new CalendarProperty(TICKET_START_IDENTIFIER, ticketStart));
+            addProperty(new CalendarProperty(IDENTIFIER_TICKET_START, ticketStart));
             return this;
         }
 
@@ -181,7 +179,7 @@ public class ParkingTicket extends CommandWithProperties {
          */
         public Builder setTicketEnd(Calendar ticketEnd) {
             this.ticketEnd = ticketEnd;
-            addProperty(new CalendarProperty(TICKET_END_IDENTIFIER, ticketEnd));
+            addProperty(new CalendarProperty(IDENTIFIER_TICKET_END, ticketEnd));
             return this;
         }
 

@@ -34,6 +34,6 @@ public class TextInputTest {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("004400010003796573");
         Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof TextInput);
-        assertTrue(((TextInput)command).getText().equals("yes"));
+        assertTrue(((TextInput)command).getText().getValue().equals("yes"));
     }
 }

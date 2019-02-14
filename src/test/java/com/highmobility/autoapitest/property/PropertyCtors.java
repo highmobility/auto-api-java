@@ -3,7 +3,7 @@ package com.highmobility.autoapitest.property;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.ControlModeProperty;
-import com.highmobility.autoapi.property.CoordinatesProperty;
+import com.highmobility.autoapi.property.Coordinates;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.FlashersStateProperty;
@@ -14,11 +14,11 @@ import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
 import com.highmobility.autoapi.property.SpringRate;
-import com.highmobility.autoapi.property.StringProperty;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
@@ -132,8 +132,8 @@ public class PropertyCtors {
     @Test public void string() throws CommandParseException {
         Property property = new Property("01000100");
 
-        assertTrue(new StringProperty(property).getValue() != null);
-        StringProperty updateProp = new StringProperty((byte) 0x00);
+        assertTrue(new ObjectPropertyString(property).getValue() != null);
+        ObjectPropertyString updateProp = new ObjectPropertyString((byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
@@ -327,20 +327,12 @@ public class PropertyCtors {
 
     @Test public void NetworkSecurity() throws CommandParseException {
         Property property = new Property("01000100");
-
-        assertTrue(new NetworkSecurity(property).getValue() != null);
-        NetworkSecurity updateProp = new NetworkSecurity((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(NetworkSecurity.class, property);
     }
 
     @Test public void CoordinatesProperty() throws CommandParseException {
         Property property = new Property("040010404A428F9F44D445402ACF562174C4CE");
-
-        assertTrue(new CoordinatesProperty(property).getValue() != null);
-        CoordinatesProperty updateProp = new CoordinatesProperty((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(Coordinates.class, property);
     }
 
     @Test public void PriceTariff() throws CommandParseException {

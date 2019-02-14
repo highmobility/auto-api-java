@@ -20,8 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 
 /**
  * Load a URL in the head unit browser. A URL shortener can be used in other cases. Note that for
@@ -29,13 +28,13 @@ import com.highmobility.autoapi.property.StringProperty;
  */
 public class LoadUrl extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.BROWSER, 0x00);
-
-    private String url;
+    private static final byte IDENTIFIER = 0x01;
+    private ObjectPropertyString url = new ObjectPropertyString(IDENTIFIER);
 
     /**
      * @return The url that should be loaded to head unit.
      */
-    public String getUrl() {
+    public ObjectPropertyString getUrl() {
         return url;
     }
 
@@ -43,13 +42,22 @@ public class LoadUrl extends CommandWithProperties {
      * @param url The url that should be loaded to head unit.
      */
     public LoadUrl(String url) {
-        super(TYPE, StringProperty.getProperties(url, (byte) 0x01));
-        this.url = url;
+        super(TYPE);
+        this.url.update(url);
+        createBytes(this.url);
     }
 
     LoadUrl(byte[] bytes) {
         super(bytes);
-        Property urlProp = getProperty((byte) 0x01);
-        if (urlProp != null) url = Property.getString(urlProp.getValueBytesArray());
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return url.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

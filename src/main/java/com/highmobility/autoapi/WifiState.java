@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 
 import javax.annotation.Nullable;
 
@@ -39,8 +39,8 @@ public class WifiState extends CommandWithProperties {
 
     ObjectProperty<Boolean> enabled = new ObjectProperty<>(Boolean.class, IDENTIFIER_ENABLED);
     ObjectProperty<Boolean> connected = new ObjectProperty<>(Boolean.class, IDENTIFIER_CONNECTED);
-    StringProperty ssid = new StringProperty(IDENTIFIER_SSID);
-    NetworkSecurity security = new NetworkSecurity(IDENTIFIER_SECURITY);
+    ObjectPropertyString ssid = new ObjectPropertyString(IDENTIFIER_SSID);
+    ObjectProperty<NetworkSecurity> security = new ObjectProperty(NetworkSecurity.class, IDENTIFIER_SECURITY);
 
     /**
      * @return Whether Wi-Fi is enabled.
@@ -59,14 +59,14 @@ public class WifiState extends CommandWithProperties {
     /**
      * @return The network SSID.
      */
-    @Nullable public StringProperty getSsid() {
+    @Nullable public ObjectPropertyString getSsid() {
         return ssid;
     }
 
     /**
      * @return The network security.
      */
-    @Nullable public NetworkSecurity getSecurity() {
+    @Nullable public ObjectProperty<NetworkSecurity> getSecurity() {
         return security;
     }
 
@@ -106,8 +106,8 @@ public class WifiState extends CommandWithProperties {
     public static final class Builder extends CommandWithProperties.Builder {
         private ObjectProperty<Boolean> enabled;
         private ObjectProperty<Boolean> connected;
-        private StringProperty ssid;
-        private NetworkSecurity security;
+        private ObjectPropertyString ssid;
+        private ObjectProperty<NetworkSecurity> security;
 
         public Builder() {
             super(TYPE);
@@ -139,7 +139,7 @@ public class WifiState extends CommandWithProperties {
          * @param ssid The network SSID.
          * @return The builder.
          */
-        public Builder setSsid(StringProperty ssid) {
+        public Builder setSsid(ObjectPropertyString ssid) {
             this.ssid = ssid;
             ssid.setIdentifier(IDENTIFIER_SSID);
             addProperty(ssid);
@@ -150,7 +150,7 @@ public class WifiState extends CommandWithProperties {
          * @param security The network security.
          * @return The builder.
          */
-        public Builder setSecurity(NetworkSecurity security) {
+        public Builder setSecurity(ObjectProperty<NetworkSecurity> security) {
             this.security = security;
             addProperty(security.setIdentifier(IDENTIFIER_SECURITY));
             return this;

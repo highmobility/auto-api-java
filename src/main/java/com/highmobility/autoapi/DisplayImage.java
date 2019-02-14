@@ -20,21 +20,21 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 
 /**
  * Display an image in the head unit by providing the image URL.
  */
 public class DisplayImage extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.GRAPHICS, 0x00);
+    private static final byte IDENTIFIER = 0x01;
 
-    String url;
+    ObjectPropertyString url = new ObjectPropertyString(IDENTIFIER);
 
     /**
      * @return The url of the image that should be loaded to head unit.
      */
-    public String getUrl() {
+    public ObjectPropertyString getUrl() {
         return url;
     }
 
@@ -42,13 +42,22 @@ public class DisplayImage extends CommandWithProperties {
      * @param url The url of the image that should be loaded to head unit.
      */
     public DisplayImage(String url) {
-        super(TYPE, StringProperty.getProperties(url, (byte) 0x01));
-        this.url = url;
+        super(TYPE);
+        this.url = new ObjectPropertyString(IDENTIFIER, url);
+        createBytes(this.url);
     }
 
     DisplayImage(byte[] bytes) {
         super(bytes);
-        com.highmobility.autoapi.property.Property urlProp = getProperty((byte) 0x01);
-        if (urlProp != null) url = Property.getString(urlProp.getValueBytesArray());
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return url.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

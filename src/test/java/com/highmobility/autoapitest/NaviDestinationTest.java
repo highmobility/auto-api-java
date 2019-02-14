@@ -5,7 +5,9 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetNaviDestination;
 import com.highmobility.autoapi.NaviDestination;
 import com.highmobility.autoapi.SetNaviDestination;
-import com.highmobility.autoapi.property.CoordinatesProperty;
+import com.highmobility.autoapi.property.Coordinates;
+import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -29,7 +31,7 @@ public class NaviDestinationTest {
         assertTrue(command.getClass() == NaviDestination.class);
         NaviDestination state = (NaviDestination) command;
 
-        assertTrue(state.getName().equals("Berlin"));
+        assertTrue(state.getName().getValue().equals("Berlin"));
         assertTrue(state.getCoordinates().getValue().getLatitude() == 52.520008);
         assertTrue(state.getCoordinates().getValue().getLongitude() == 13.404954);
     }
@@ -44,13 +46,13 @@ public class NaviDestinationTest {
                 "070010404A428F9F44D445402ACF562174C4CE" +
                 "0200064265726c696e");
 
-        Bytes commandBytes = new SetNaviDestination(new CoordinatesProperty(52.520008, 13.404954),
+        Bytes commandBytes = new SetNaviDestination(new Coordinates(52.520008, 13.404954),
                 "Berlin");
 
         assertTrue(TestUtils.bytesTheSame(waitingForBytes, commandBytes));
 
         SetNaviDestination command = (SetNaviDestination) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getName().equals("Berlin"));
+        assertTrue(command.getName().getValue().equals("Berlin"));
         assertTrue(command.getCoordinates().getValue().getLatitude() == 52.520008);
         assertTrue(command.getCoordinates().getValue().getLongitude() == 13.404954);
     }
@@ -58,13 +60,13 @@ public class NaviDestinationTest {
     @Test public void state0Properties() {
         byte[] bytes = ByteUtils.bytesFromHex("003101");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((NaviDestination) state).getName() == null);
+        assertTrue(((NaviDestination) state).getName().getValue() == null);
     }
 
     @Test public void build() {
         NaviDestination.Builder builder = new NaviDestination.Builder();
-        builder.setCoordinates(new CoordinatesProperty(52.520008, 13.404954));
-        builder.setName("Berlin");
+        builder.setCoordinates(new ObjectProperty<>(new Coordinates(52.520008, 13.404954)));
+        builder.setName(new ObjectPropertyString("Berlin"));
         Command state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }

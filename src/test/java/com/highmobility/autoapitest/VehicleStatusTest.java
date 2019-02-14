@@ -12,6 +12,7 @@ import com.highmobility.autoapi.WindowsState;
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.value.DisplayUnit;
@@ -59,15 +60,15 @@ public class VehicleStatusTest {
 
     @Test
     public void properties() {
-        assertTrue(command.getVin().equals("JF2SHBDC7CH451869"));
+        assertTrue(command.getVin().getValue().equals("JF2SHBDC7CH451869"));
         assertTrue(command.getPowerTrain() == PowerTrain.ALLELECTRIC);
-        assertTrue(command.getModelName().equals("Type X"));
-        assertTrue(command.getName().equals("My Car"));
-        assertTrue(command.getLicensePlate().equals("ABC123"));
+        assertTrue(command.getModelName().getValue().equals("Type X"));
+        assertTrue(command.getName().getValue().equals("My Car"));
+        assertTrue(command.getLicensePlate().getValue().equals("ABC123"));
 
-        assertTrue(command.getSalesDesignation().equals("Package+"));
+        assertTrue(command.getSalesDesignation().getValue().equals("Package+"));
         assertTrue(command.getModelYear().getValue() == 2017);
-        assertTrue(command.getColorName().equals("Estoril Blau"));
+        assertTrue(command.getColorName().getValue().equals("Estoril Blau"));
         assertTrue(command.getPower().getValue() == 220);
         assertTrue(command.getNumberOfDoors().getValue() == 5);
         assertTrue(command.getNumberOfSeats().getValue() == 5);
@@ -82,11 +83,11 @@ public class VehicleStatusTest {
         assertTrue(command.getDriverSeatLocation() == DriverSeatLocation.LEFT);
         assertTrue(command.getEquipments().length == 2);
         int count = 0;
-        for (String s : command.getEquipments()) {
-            if (s.equals("Parking sensors") || s.equals("Automatic wipers")) count++;
+        for (ObjectPropertyString s : command.getEquipments()) {
+            if (s.getValue().equals("Parking sensors") || s.getValue().equals("Automatic wipers")) count++;
         }
         assertTrue(count == 2);
-        assertTrue(command.getBrand().equals("Mercedes"));
+        assertTrue(command.getBrand().getValue().equals("Mercedes"));
     }
 
     @Test public void build() {
@@ -134,15 +135,15 @@ public class VehicleStatusTest {
 
     VehicleStatus.Builder getVehicleStatusBuilderWithoutSignature() {
         VehicleStatus.Builder builder = new VehicleStatus.Builder();
-        builder.setVin("JF2SHBDC7CH451869");
+        builder.setVin(new ObjectPropertyString("JF2SHBDC7CH451869"));
         builder.setPowerTrain(PowerTrain.ALLELECTRIC);
-        builder.setModelName("Type X");
-        builder.setName("My Car");
-        builder.setLicensePlate("ABC123");
-        builder.setSalesDesignation("Package+");
+        builder.setModelName(new ObjectPropertyString("Type X"));
+        builder.setName(new ObjectPropertyString("My Car"));
+        builder.setLicensePlate(new ObjectPropertyString("ABC123"));
+        builder.setSalesDesignation(new ObjectPropertyString("Package+"));
         builder.setModelYear(new ObjectPropertyInteger(2017));
 
-        builder.setColorName("Estoril Blau");
+        builder.setColorName(new ObjectPropertyString("Estoril Blau"));
 //        build.setPower(220);
         // add an unknown property (power)
         builder.addProperty(new ObjectPropertyInteger((byte) 0x09, false, 2, 220));
@@ -166,11 +167,11 @@ public class VehicleStatusTest {
         // l8
         builder.setDisplayUnit(DisplayUnit.KM);
         builder.setDriverSeatLocation(DriverSeatLocation.LEFT);
-        builder.addEquipment("Parking sensors");
-        builder.addEquipment("Automatic wipers");
+        builder.addEquipment(new ObjectPropertyString("Parking sensors"));
+        builder.addEquipment(new ObjectPropertyString("Automatic wipers"));
 
         // l9
-        builder.setBrand("Mercedes");
+        builder.setBrand(new ObjectPropertyString("Mercedes"));
 
         return builder;
     }

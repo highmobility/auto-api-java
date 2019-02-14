@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum ScreenLocation {
+public enum ScreenLocation implements PropertyValueSingleByte {
     FRONT((byte) 0x00),
     REAR((byte) 0x01);
 
@@ -47,5 +47,10 @@ public enum ScreenLocation {
 
     public byte getByte() {
         return value;
+    }
+
+    // TODO: 2019-02-14 is getlength 1 necessary?
+    @Override public int getLength() {
+        return 1;
     }
 }

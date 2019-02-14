@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.IntegerArrayProperty;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 
 import javax.annotation.Nullable;
 
@@ -36,8 +36,8 @@ public class FirmwareVersion extends CommandWithProperties {
     private static final byte IDENTIFIER_APP_VERSION = 0x03;
 
     IntegerArrayProperty carSDKVersion = new IntegerArrayProperty(IDENTIFIER_SDK_VERSION);
-    StringProperty carSDKBuild = new StringProperty(IDENTIFIER_SDK_BUILD);
-    StringProperty applicationVersion = new StringProperty(IDENTIFIER_APP_VERSION);
+    ObjectPropertyString carSDKBuild = new ObjectPropertyString(IDENTIFIER_SDK_BUILD);
+    ObjectPropertyString applicationVersion = new ObjectPropertyString(IDENTIFIER_APP_VERSION);
 
     /**
      * @return The car SDK version.
@@ -49,14 +49,14 @@ public class FirmwareVersion extends CommandWithProperties {
     /**
      * @return The car SDK build.
      */
-    @Nullable public StringProperty getCarSDKBuild() {
+    @Nullable public ObjectPropertyString getCarSDKBuild() {
         return carSDKBuild;
     }
 
     /**
      * @return The application version.
      */
-    @Nullable public StringProperty getApplicationVersion() {
+    @Nullable public ObjectPropertyString getApplicationVersion() {
         return applicationVersion;
     }
 
@@ -92,8 +92,8 @@ public class FirmwareVersion extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private IntegerArrayProperty carSdkVersion;
-        private StringProperty carSDKBuild;
-        private StringProperty applicationVersion;
+        private ObjectPropertyString carSDKBuild;
+        private ObjectPropertyString applicationVersion;
 
         public Builder() {
             super(TYPE);
@@ -114,7 +114,7 @@ public class FirmwareVersion extends CommandWithProperties {
          * @param carSDKBuild The Car SDK build.
          * @return The builder.
          */
-        public Builder setCarSDKBuild(StringProperty carSDKBuild) {
+        public Builder setCarSDKBuild(ObjectPropertyString carSDKBuild) {
             this.carSDKBuild = carSDKBuild;
             addProperty(carSDKBuild.setIdentifier(IDENTIFIER_SDK_BUILD));
             return this;
@@ -124,7 +124,7 @@ public class FirmwareVersion extends CommandWithProperties {
          * @param applicationVersion The application version.
          * @return The builder.
          */
-        public Builder setApplicationVersion(StringProperty applicationVersion) {
+        public Builder setApplicationVersion(ObjectPropertyString applicationVersion) {
             this.applicationVersion = applicationVersion;
             addProperty(applicationVersion.setIdentifier(IDENTIFIER_APP_VERSION));
             return this;
