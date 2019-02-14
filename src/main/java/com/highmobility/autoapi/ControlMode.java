@@ -20,8 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ControlModeProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
 import javax.annotation.Nullable;
 
@@ -35,7 +36,7 @@ public class ControlMode extends CommandWithProperties {
     private static final byte IDENTIFIER_MODE = 0x01;
     private static final byte IDENTIFIER_ANGLE = 0x02;
 
-    ControlModeProperty mode = new ControlModeProperty(IDENTIFIER_MODE);
+    ObjectProperty<Value> mode = new ObjectProperty<>(Value.class, IDENTIFIER_MODE);
     ObjectPropertyInteger angle = new ObjectPropertyInteger(IDENTIFIER_ANGLE, false);
 
     /**
@@ -48,7 +49,7 @@ public class ControlMode extends CommandWithProperties {
     /**
      * @return the control mode
      */
-    @Nullable public ControlModeProperty getMode() {
+    @Nullable public ObjectProperty<Value> getMode() {
         return mode;
     }
 
@@ -72,5 +73,46 @@ public class ControlMode extends CommandWithProperties {
 
     @Override public boolean isState() {
         return true;
+    }
+
+    /**
+     * The possible control mode values.
+     */
+
+    public enum Value implements PropertyValueSingleByte {
+        UNAVAILABLE((byte) 0x00),
+        AVAILABLE((byte) 0x01),
+        STARTED((byte) 0x02),
+        FAILED_TO_START((byte) 0x03),
+        ABORTED((byte) 0x04),
+        ENDED((byte) 0x05),
+        UNSUPPORTED((byte) 0xFF);
+
+        public static Value fromByte(byte value) throws CommandParseException {
+            Value[] allValues = Value.values();
+
+            for (int i = 0; i < allValues.length; i++) {
+                Value value1 = allValues[i];
+                if (value1.getByte() == value) {
+                    return value1;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
+        private byte value;
+
+        Value(byte value) {
+            this.value = value;
+        }
+
+        public byte getByte() {
+            return value;
+        }
+
+        @Override public int getLength() {
+            return 1;
+        }
     }
 }

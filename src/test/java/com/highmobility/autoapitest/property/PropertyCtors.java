@@ -1,8 +1,8 @@
 package com.highmobility.autoapitest.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.property.CommandProperty;
-import com.highmobility.autoapi.property.ControlModeProperty;
 import com.highmobility.autoapi.property.Coordinates;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.DrivingMode;
@@ -122,11 +122,7 @@ public class PropertyCtors {
 
     @Test public void controlMode() throws CommandParseException {
         Property property = new Property("01000102");
-
-        assertTrue(new ControlModeProperty(property).getValue() != null);
-        ControlModeProperty updateProp = new ControlModeProperty((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(ControlMode.Value.class, property);
     }
 
     @Test public void string() throws CommandParseException {
