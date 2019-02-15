@@ -47,7 +47,7 @@ public class Coordinates extends PropertyValueObject {
     }
 
     public Coordinates() {
-        super(16);
+        super();
     } // needed for generic ctor
 
     @Override public void update(Bytes value) throws CommandParseException {
@@ -60,12 +60,13 @@ public class Coordinates extends PropertyValueObject {
     public void update(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+        bytes = new byte[16];
 
         set(0, Property.doubleToBytes(latitude));
         set(8, Property.doubleToBytes(longitude));
     }
 
-    public void update(Coordinates coordinates) {
-        update(coordinates.latitude, coordinates.longitude);
+    public void update(Coordinates value) {
+        update(value.latitude, value.longitude);
     }
 }

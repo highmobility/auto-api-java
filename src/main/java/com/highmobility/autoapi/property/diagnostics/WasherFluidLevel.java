@@ -21,77 +21,36 @@
 package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyValue;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
-import java.util.Calendar;
+public enum WasherFluidLevel implements PropertyValueSingleByte {
+    LOW((byte) 0x00),
+    FULL((byte) 0x01);
 
-import javax.annotation.Nullable;
+    public static WasherFluidLevel fromByte(byte value) throws CommandParseException {
+        WasherFluidLevel[] values = WasherFluidLevel.values();
 
-public class WasherFluidLevel extends Property {
-    Value value;
+        for (int i = 0; i < values.length; i++) {
+            WasherFluidLevel capability = values[i];
+            if (capability.getByte() == value) {
+                return capability;
+            }
+        }
 
-    @Nullable public Value getValue() {
+        throw new CommandParseException();
+    }
+
+    private byte value;
+
+    WasherFluidLevel(byte value) {
+        this.value = value;
+    }
+
+    public byte getByte() {
         return value;
     }
 
-    public WasherFluidLevel(Value value) {
-        super(value);
-        this.value = value;
-        if (value != null) bytes[3] = value.getByte();
-    }
-
-    public WasherFluidLevel(@Nullable Value value, @Nullable Calendar timestamp,
-                            @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public WasherFluidLevel(byte identifier) {
-        super(identifier);
-    }
-
-    public WasherFluidLevel(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 1) value = value.fromByte(p.get(3));
-        return this;
-    }
-
-    public enum Value implements PropertyValue {
-        LOW((byte) 0x00),
-        FULL((byte) 0x01);
-
-        public static Value fromByte(byte value) throws CommandParseException {
-            Value[] values = Value.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Value capability = values[i];
-                if (capability.getByte() == value) {
-                    return capability;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Value(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-
-        @Override public int getLength() {
-            return 1;
-        }
+    @Override public int getLength() {
+        return 1;
     }
 }

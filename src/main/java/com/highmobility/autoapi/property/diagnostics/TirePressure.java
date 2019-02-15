@@ -22,89 +22,53 @@ package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyValue;
+import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.value.TireLocation;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
-import java.util.Calendar;
+public class TirePressure extends PropertyValueObject {
+    TireLocation tireLocation;
+    float pressure;
 
-import javax.annotation.Nullable;
-
-public class TirePressure extends Property {
-    Value value;
-
-    @Nullable public Value getValue() {
-        return value;
+    /**
+     * @return The tire location
+     */
+    public TireLocation getTireLocation() {
+        return tireLocation;
     }
 
-    public TirePressure(byte identifier) {
-        super(identifier);
-    }
-
-    public TirePressure(@Nullable Value value, @Nullable Calendar timestamp,
-                        @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public TirePressure(Value value) {
-        super(value);
-
-        this.value = value;
-
-        if (value != null) {
-            bytes[3] = value.tireLocation.getByte();
-            ByteUtils.setBytes(bytes, Property.floatToBytes(value.pressure), 4);
-        }
+    /**
+     * @return The tire pressure.
+     */
+    public float getPressure() {
+        return pressure;
     }
 
     public TirePressure(TireLocation tireLocation, float pressure) {
-        this(new Value(tireLocation, pressure));
+        super(5);
+        update(tireLocation, pressure);
     }
 
-    public TirePressure(Property p) throws CommandParseException {
-        super(p);
-        update(p);
+    public TirePressure() {
+        super(5);
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 5) throw new CommandParseException();
+        this.tireLocation = TireLocation.fromByte(get(0));
+        this.pressure = Property.getFloat(bytes, 1);
     }
 
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 5) value = new Value(p);
-        return this;
+    public void update(TireLocation tireLocation, float pressure) {
+        this.tireLocation = tireLocation;
+        this.pressure = pressure;
+
+        set(0, tireLocation.getByte());
+        set(1, Property.floatToBytes(pressure));
     }
 
-    public static class Value implements PropertyValue {
-        TireLocation tireLocation;
-        float pressure;
-
-        /**
-         * @return The tire location
-         */
-        public TireLocation getTireLocation() {
-            return tireLocation;
-        }
-
-        /**
-         * @return The tire pressure.
-         */
-        public float getPressure() {
-            return pressure;
-        }
-
-        public Value(TireLocation tireLocation, float pressure) {
-            this.tireLocation = tireLocation;
-            this.pressure = pressure;
-
-        }
-
-        public Value(Property bytes) throws CommandParseException {
-            this.tireLocation = TireLocation.fromByte(bytes.get(3));
-            this.pressure = Property.getFloat(bytes, 4);
-        }
-
-        @Override public int getLength() {
-            return 5;
-        }
+    public void update(TirePressure value) {
+        update(value.tireLocation, value.pressure);
     }
 }

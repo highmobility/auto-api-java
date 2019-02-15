@@ -145,65 +145,37 @@ public class PropertyCtors {
 
     @Test public void brakeFluidLevel() throws CommandParseException {
         Property property = new Property("01000100");
-
-        assertTrue(new BrakeFluidLevel(property).getValue() != null);
-        BrakeFluidLevel updateProp = new BrakeFluidLevel((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(BrakeFluidLevel.class, property);
     }
 
     @Test public void CheckControlMessage() throws CommandParseException {
         Property property = new Property("010009000000000000000000");
-
-        assertTrue(new CheckControlMessage(property).getValue() != null);
-        CheckControlMessage updateProp = new CheckControlMessage((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(CheckControlMessage.class, property);
     }
 
     @Test public void DiagnosticsTroubleCode() throws CommandParseException {
         Property property = new Property("1D0018020743313633414641064454523231320750454E44494E47");
-
-        assertTrue(new DiagnosticsTroubleCode(property).getValue() != null);
-        DiagnosticsTroubleCode updateProp = new DiagnosticsTroubleCode((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(DiagnosticsTroubleCode.class, property);
     }
 
     @Test public void tirePressure() throws CommandParseException {
         Property property = new Property("0100050000000000");
-
-        assertTrue(new TirePressure(property).getValue() != null);
-        TirePressure updateProp = new TirePressure((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(TirePressure.class, property);
     }
 
     @Test public void tireTemperature() throws CommandParseException {
         Property property = new Property("0100050000000000");
-
-        assertTrue(new TireTemperature(property).getValue() != null);
-        TireTemperature updateProp = new TireTemperature((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(TireTemperature.class, property);
     }
 
     @Test public void washerFluidLevel() throws CommandParseException {
         Property property = new Property("01000100");
-
-        assertTrue(new WasherFluidLevel(property).getValue() != null);
-        WasherFluidLevel updateProp = new WasherFluidLevel((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(WasherFluidLevel.class, property);
     }
 
     @Test public void wheelRpm() throws CommandParseException {
         Property property = new Property("010003000000");
-
-        assertTrue(new WheelRpm(property).getValue() != null);
-        WheelRpm updateProp = new WheelRpm((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(WheelRpm.class, property);
     }
 
     @Test public void drivingMode() throws CommandParseException {

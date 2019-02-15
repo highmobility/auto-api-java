@@ -22,89 +22,53 @@ package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyValue;
+import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.value.TireLocation;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
-import java.util.Calendar;
+public class TireTemperature extends PropertyValueObject {
+    TireLocation tireLocation;
+    float temperature;
 
-import javax.annotation.Nullable;
-
-public class TireTemperature extends Property {
-    Value value;
-
-    @Nullable public Value getValue() {
-        return value;
+    /**
+     * @return The tire location.
+     */
+    public TireLocation getTireLocation() {
+        return tireLocation;
     }
 
-    public TireTemperature(byte identifier) {
-        super(identifier);
-    }
-
-    public TireTemperature(@Nullable Value value, @Nullable Calendar timestamp,
-                           @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public TireTemperature(Value value) {
-        super(value);
-
-        this.value = value;
-
-        if (value != null) {
-            bytes[3] = value.tireLocation.getByte();
-            ByteUtils.setBytes(bytes, Property.floatToBytes(value.temperature), 4);
-        }
+    /**
+     * @return The tire temperature.
+     */
+    public float getTemperature() {
+        return temperature;
     }
 
     public TireTemperature(TireLocation tireLocation, float temperature) {
-        this(new Value(tireLocation, temperature));
+        super(5);
+        update(tireLocation, temperature);
     }
 
-    public TireTemperature(Property p) throws CommandParseException {
-        super(p);
-        update(p);
+    public TireTemperature() {
+        super(5);
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 5) throw new CommandParseException();
+        this.tireLocation = TireLocation.fromByte(get(0));
+        this.temperature = Property.getFloat(bytes, 1);
     }
 
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 5) value = new Value(p);
-        return this;
+    public void update(TireLocation tireLocation, float temperature) {
+        this.tireLocation = tireLocation;
+        this.temperature = temperature;
+
+        set(0, tireLocation.getByte());
+        set(1, Property.floatToBytes(temperature));
     }
 
-    public static class Value implements PropertyValue {
-        TireLocation tireLocation;
-        float temperature;
-
-        /**
-         * @return The tire location.
-         */
-        public TireLocation getTireLocation() {
-            return tireLocation;
-        }
-
-        /**
-         * @return The tire pressure.
-         */
-        public float getTemperature() {
-            return temperature;
-        }
-
-        public Value(TireLocation tireLocation, float temperature) {
-            this.tireLocation = tireLocation;
-            this.temperature = temperature;
-        }
-
-        public Value(Property bytes) throws CommandParseException {
-            if (bytes.getLength() < 8) throw new CommandParseException();
-            this.tireLocation = TireLocation.fromByte(bytes.get(3));
-            this.temperature = Property.getFloat(bytes, 4);
-        }
-
-        @Override public int getLength() {
-            return 5;
-        }
+    public void update(TireTemperature pressure) {
+        update(pressure.tireLocation, pressure.temperature);
     }
 }

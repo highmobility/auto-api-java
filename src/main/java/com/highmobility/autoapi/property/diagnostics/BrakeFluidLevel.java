@@ -21,77 +21,36 @@
 package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyValue;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
-import java.util.Calendar;
+public enum BrakeFluidLevel implements PropertyValueSingleByte {
+    LOW((byte) 0x00),
+    FULL((byte) 0x01);
 
-import javax.annotation.Nullable;
+    public static BrakeFluidLevel fromByte(byte byteValue) throws CommandParseException {
+        BrakeFluidLevel[] values = BrakeFluidLevel.values();
 
-public class BrakeFluidLevel extends Property {
-    Value value;
+        for (int i = 0; i < values.length; i++) {
+            BrakeFluidLevel state = values[i];
+            if (state.getByte() == byteValue) {
+                return state;
+            }
+        }
 
-    @Nullable public Value getValue() {
+        throw new CommandParseException();
+    }
+
+    private byte value;
+
+    BrakeFluidLevel(byte value) {
+        this.value = value;
+    }
+
+    public byte getByte() {
         return value;
     }
 
-    public BrakeFluidLevel(@Nullable Value value, @Nullable Calendar timestamp,
-                           @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public BrakeFluidLevel(Value value) {
-        super(value);
-        this.value = value;
-        if (value != null) bytes[3] = value.getByte();
-    }
-
-    public BrakeFluidLevel(byte identifier) {
-        super(identifier);
-    }
-
-    public BrakeFluidLevel(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 1) value = value.fromByte(p.get(3));
-        return this;
-    }
-
-    public enum Value implements PropertyValue {
-        LOW((byte) 0x00),
-        FULL((byte) 0x01);
-
-        public static Value fromByte(byte byteValue) throws CommandParseException {
-            Value[] values = Value.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Value state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Value(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-
-        @Override public int getLength() {
-            return 1;
-        }
+    @Override public int getLength() {
+        return 1;
     }
 }

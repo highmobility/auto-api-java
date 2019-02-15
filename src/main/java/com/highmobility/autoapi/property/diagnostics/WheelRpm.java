@@ -22,89 +22,54 @@ package com.highmobility.autoapi.property.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyValue;
+import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.value.TireLocation;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
-import java.util.Calendar;
+public class WheelRpm extends PropertyValueObject {
+    TireLocation tireLocation;
+    int rpm;
 
-import javax.annotation.Nullable;
-
-public class WheelRpm extends Property {
-    Value value;
-
-    @Nullable public Value getValue() {
-        return value;
+    /**
+     * @return The wheel location.
+     */
+    public TireLocation getTireLocation() {
+        return tireLocation;
     }
 
-    public WheelRpm(byte identifier) {
-        super(identifier);
-    }
-
-    public WheelRpm(@Nullable Value value, @Nullable Calendar timestamp,
-                    @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public WheelRpm(Value value) {
-        super(value);
-
-        this.value = value;
-
-        if (value != null) {
-            this.bytes[3] = value.tireLocation.getByte();
-            ByteUtils.setBytes(bytes, Property.intToBytes(value.rpm, 2), 4);
-        }
+    /**
+     * @return The wheel's RPM.
+     */
+    public int getRpm() {
+        return rpm;
     }
 
     public WheelRpm(TireLocation tireLocation, int rpm) {
-        this(new Value(tireLocation, rpm));
+        super(3);
+        update(tireLocation, rpm);
     }
 
-    public WheelRpm(Property p) throws CommandParseException {
-        super(p);
-        update(p);
+    public WheelRpm() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 3) throw new CommandParseException();
+        this.tireLocation = TireLocation.fromByte(get(0));
+        this.rpm = Property.getUnsignedInt(bytes, 1, 2);
     }
 
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 3) value = new Value(p);
-        return this;
+    public void update(TireLocation tireLocation, int rpm) {
+        this.tireLocation = tireLocation;
+        this.rpm = rpm;
+        bytes = new byte[getLength()];
+
+        set(0, tireLocation.getByte());
+        set(1, Property.intToBytes(rpm, 2));
     }
 
-    public static class Value implements PropertyValue {
-        TireLocation tireLocation;
-        int rpm;
-
-        /**
-         * @return The wheel location.
-         */
-        public TireLocation getTireLocation() {
-            return tireLocation;
-        }
-
-        /**
-         * @return The wheel's RPM.
-         */
-        public int getRpm() {
-            return rpm;
-        }
-
-        public Value(TireLocation tireLocation, int rpm) {
-            this.tireLocation = tireLocation;
-            this.rpm = rpm;
-        }
-
-        public Value(Property bytes) throws CommandParseException {
-            this.tireLocation = TireLocation.fromByte(bytes.get(3));
-            this.rpm = Property.getUnsignedInt(bytes, 4, 2);
-        }
-
-        @Override public int getLength() {
-            return 3;
-        }
+    public void update(WheelRpm value) {
+        update(value.tireLocation, value.rpm);
     }
-
 }
