@@ -53,7 +53,7 @@ public class ObjectProperty<T> extends Property {
     @Nullable private PropertyTimestamp timestamp;
     @Nullable private PropertyFailure failure;
     @Nullable protected T value;
-    protected Class<T> theClass = null;
+    protected Class<T> valueClass = null;
 
     /**
      * @return The property value.
@@ -81,6 +81,10 @@ public class ObjectProperty<T> extends Property {
         return failure;
     }
 
+    @Nullable public Class<T> getValueClass() {
+        return valueClass;
+    }
+
     // MARK: builder ctor
 
     public ObjectProperty(@Nullable T value,
@@ -96,8 +100,8 @@ public class ObjectProperty<T> extends Property {
         } else {
             update((byte) 0, value);
         }
-
     }
+
     // MARK: internal ctor
     // TODO: 2019-02-04 make internal
 
@@ -105,13 +109,13 @@ public class ObjectProperty<T> extends Property {
         update(identifier, value);
     }
 
-    public ObjectProperty(Class<T> theClass, byte identifier) {
-        this.theClass = theClass;
+    public ObjectProperty(Class<T> valueClass, byte identifier) {
+        this.valueClass = valueClass;
         this.bytes = baseBytes(identifier, 0);
     }
 
-    public ObjectProperty(Class<T> theClass, Property property) throws CommandParseException {
-        this.theClass = theClass;
+    public ObjectProperty(Class<T> valueClass, Property property) throws CommandParseException {
+        this.valueClass = valueClass;
         if (property == null || property.getLength() == 0) this.bytes = unknownBytes;
         if (property.getLength() < 3) this.bytes = Arrays.copyOf(property.getByteArray(), 3);
         else this.bytes = property.getByteArray();
@@ -211,7 +215,7 @@ public class ObjectProperty<T> extends Property {
 
     // TODO: 2019-02-04 private
     public ObjectProperty update(Property p) throws CommandParseException {
-        if (theClass == null)
+        if (valueClass == null)
             throw new IllegalArgumentException("Initialise with a class to update.");
 
         this.bytes = p.getByteArray();
@@ -219,16 +223,16 @@ public class ObjectProperty<T> extends Property {
         this.timestamp = p.timestamp;
 
         try {
-            if (PropertyValueObject.class.isAssignableFrom(theClass)) {
-                value = theClass.newInstance();
+            if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
+                value = valueClass.newInstance();
                 ((PropertyValueObject) value).update(p.getValueBytes());
-            } else if (Enum.class.isAssignableFrom(theClass)) {
-                value = theClass.getEnumConstants()[p.getValueByte()];
-            } else if (Boolean.class.isAssignableFrom(theClass)) {
+            } else if (Enum.class.isAssignableFrom(valueClass)) {
+                value = valueClass.getEnumConstants()[p.getValueByte()];
+            } else if (Boolean.class.isAssignableFrom(valueClass)) {
                 value = (T) getBool(p.getValueByte());
-            } else if (Float.class.isAssignableFrom(theClass)) {
+            } else if (Float.class.isAssignableFrom(valueClass)) {
                 value = (T) (Float) getFloat(p.getValueBytesArray());
-            } else if (Double.class.isAssignableFrom(theClass)) {
+            } else if (Double.class.isAssignableFrom(valueClass)) {
                 value = (T) (Double) getDouble(p.getValueBytesArray());
             }
 

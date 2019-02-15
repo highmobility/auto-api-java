@@ -11,7 +11,6 @@ import com.highmobility.autoapi.SeatsState;
 import com.highmobility.autoapi.property.ConvertibleRoofState;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.ObjectProperty;
-
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
@@ -225,7 +224,11 @@ public class CommandTest {
 
         boolean found = false;
         for (Property property : command.getProperties()) {
-            if (property instanceof DashboardLight) found = true;
+            if (property instanceof ObjectProperty) {
+                if (((ObjectProperty) property).getValueClass() == DashboardLight.class) {
+                    found = true;
+                }
+            }
             break;
         }
 

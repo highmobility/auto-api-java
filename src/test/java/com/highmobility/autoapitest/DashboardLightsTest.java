@@ -1,10 +1,10 @@
 package com.highmobility.autoapitest;
 
-import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DashboardLights;
 import com.highmobility.autoapi.GetDashboardLights;
 import com.highmobility.autoapi.property.DashboardLight;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -20,10 +20,11 @@ public class DashboardLightsTest {
 
     @Test
     public void state() {
-        Command command = CommandResolver.resolve(bytes);
+        DashboardLights state = (DashboardLights) CommandResolver.resolve(bytes);
+        testState(state);
+    }
 
-        assertTrue(command.getClass() == DashboardLights.class);
-        DashboardLights state = (DashboardLights) command;
+    private void testState(DashboardLights state) {
         assertTrue(state.getLights().length == 4);
 
         assertTrue(state.getLight(DashboardLight.Type.HIGH_BEAM_MAIN_BEAM).getValue().getState() ==
@@ -50,14 +51,16 @@ public class DashboardLightsTest {
 
     @Test public void build() {
         DashboardLights.Builder builder = new DashboardLights.Builder();
-        builder.addLight(new DashboardLight(DashboardLight.Type.HIGH_BEAM_MAIN_BEAM,
-                DashboardLight.State.INACTIVE));
-        builder.addLight(new DashboardLight(DashboardLight.Type.HAZARD_WARNING, DashboardLight
-                .State.INFO));
-        builder.addLight(new DashboardLight(DashboardLight.Type.TRANSMISSION_FLUID_TEMPERATURE,
-                DashboardLight.State.RED));
-        builder.addLight(new DashboardLight(DashboardLight.Type.ENGINE_OIL_LEVEL, DashboardLight
-                .State.INACTIVE));
-        assertTrue(builder.build().equals(bytes));
+        builder.addLight(new ObjectProperty<>(new DashboardLight(DashboardLight.Type.HIGH_BEAM_MAIN_BEAM,
+                DashboardLight.State.INACTIVE)));
+        builder.addLight(new ObjectProperty<>(new DashboardLight(DashboardLight.Type.HAZARD_WARNING, DashboardLight
+                .State.INFO)));
+        builder.addLight(new ObjectProperty<>(new DashboardLight(DashboardLight.Type.TRANSMISSION_FLUID_TEMPERATURE,
+                DashboardLight.State.RED)));
+        builder.addLight(new ObjectProperty<>(new DashboardLight(DashboardLight.Type.ENGINE_OIL_LEVEL, DashboardLight
+                .State.INACTIVE)));
+        DashboardLights state = builder.build();
+        assertTrue(state.equals(bytes));
+        testState(state);
     }
 }

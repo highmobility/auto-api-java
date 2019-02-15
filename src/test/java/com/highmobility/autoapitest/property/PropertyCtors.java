@@ -250,11 +250,7 @@ public class PropertyCtors {
 
     @Test public void DashboardLight() throws CommandParseException {
         Property property = new Property("0100020000");
-
-        assertTrue(new DashboardLight(property).getValue() != null);
-        DashboardLight updateProp = new DashboardLight((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(DashboardLight.class, property);
     }
 
     @Test public void ObjectPropertyPercentage() throws CommandParseException {

@@ -78,70 +78,70 @@ public class ClimateState extends CommandWithProperties {
     /**
      * @return The inside temperature.
      */
-    @Nullable public ObjectProperty<Float> getInsideTemperature() {
+    public ObjectProperty<Float> getInsideTemperature() {
         return insideTemperature;
     }
 
     /**
      * @return The outside temperature.
      */
-    @Nullable public ObjectProperty<Float> getOutsideTemperature() {
+    public ObjectProperty<Float> getOutsideTemperature() {
         return outsideTemperature;
     }
 
     /**
      * @return The driver temperature setting.
      */
-    @Nullable public ObjectProperty<Float> getDriverTemperatureSetting() {
+    public ObjectProperty<Float> getDriverTemperatureSetting() {
         return driverTemperatureSetting;
     }
 
     /**
      * @return The passenger temperature setting.
      */
-    @Nullable public ObjectProperty<Float> getPassengerTemperatureSetting() {
+    public ObjectProperty<Float> getPassengerTemperatureSetting() {
         return passengerTemperatureSetting;
     }
 
     /**
      * @return Whether HVAC is active or not.
      */
-    @Nullable public ObjectProperty<Boolean> isHvacActive() {
+    public ObjectProperty<Boolean> isHvacActive() {
         return hvacActive;
     }
 
     /**
      * @return Whether defogging is active or not.
      */
-    @Nullable public ObjectProperty<Boolean> isDefoggingActive() {
+    public ObjectProperty<Boolean> isDefoggingActive() {
         return defoggingActive;
     }
 
     /**
      * @return Whether defrosting is active or not.
      */
-    @Nullable public ObjectProperty<Boolean> isDefrostingActive() {
+    public ObjectProperty<Boolean> isDefrostingActive() {
         return defrostingActive;
     }
 
     /**
      * @return Whether ionising is active or not.
      */
-    @Nullable public ObjectProperty<Boolean> isIonisingActive() {
+    public ObjectProperty<Boolean> isIonisingActive() {
         return ionisingActive;
     }
 
     /**
      * @return The defrosting temperature.
      */
-    @Nullable public ObjectProperty<Float> getDefrostingTemperature() {
+    public ObjectProperty<Float> getDefrostingTemperature() {
         return defrostingTemperature;
     }
 
     /**
      * @return The HVAC weekday starting times.
      */
-    public ObjectProperty<HvacStartingTime>[] getHvacStartingTimes() {
+    @Nullable public ObjectProperty<HvacStartingTime>[] getHvacStartingTimes() {
         return hvacStartingTimes;
     }
 
@@ -160,7 +160,7 @@ public class ClimateState extends CommandWithProperties {
     /**
      * @return The rear temperature setting.
      */
-    @Nullable public ObjectProperty<Float> getRearTemperatureSetting() {
+    public ObjectProperty<Float> getRearTemperatureSetting() {
         return rearTemperatureSetting;
     }
 

@@ -21,84 +21,47 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.value.Bytes;
 
-import java.util.Calendar;
+public class DashboardLight extends PropertyValueObject {
+    Type type;
+    State state;
 
-import javax.annotation.Nullable;
-
-public class DashboardLight extends Property {
-    Value value;
-
-    @Nullable public Value getValue() {
-        return value;
+    /**
+     * @return The dashboard light type.
+     */
+    public Type getType() {
+        return type;
     }
 
-    public DashboardLight(byte identifier) {
-        super(identifier);
-    }
-
-    public DashboardLight(@Nullable Value value, @Nullable Calendar timestamp,
-                          @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public DashboardLight(Value value) {
-        super(value);
-        this.value = value;
-        if (value != null) {
-            bytes[3] = value.type.getByte();
-            bytes[4] = value.state.getByte();
-        }
+    /**
+     * @return The state of the dashboard light.
+     */
+    public State getState() {
+        return state;
     }
 
     public DashboardLight(Type type, State state) {
-        this(new Value(type, state));
+        super(2);
+        update(type, state);
     }
 
-    public DashboardLight(Property p) throws CommandParseException {
-        super(p);
-        update(p);
+    public DashboardLight() {
+        super(2);
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        type = Type.fromByte(get(0));
+        state = State.fromByte(get(1));
     }
 
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 2) value = new Value(p);
-        return this;
-    }
+    public void update(Type type, State state) {
+        this.type = type;
+        this.state = state;
 
-    public static class Value implements PropertyValue {
-        Type type;
-        State state;
-
-        /**
-         * @return The dashboard light type.
-         */
-        public Type getType() {
-            return type;
-        }
-
-        /**
-         * @return The state of the dashboard light.
-         */
-        public State getState() {
-            return state;
-        }
-
-        public Value(Property bytes) throws CommandParseException {
-            if (bytes.getLength() < 5) throw new CommandParseException();
-            type = Type.fromByte(bytes.get(3));
-            state = State.fromByte(bytes.get(4));
-        }
-
-        public Value(Type type, State state) {
-            this.type = type;
-            this.state = state;
-        }
-
-        @Override public int getLength() {
-            return 2;
-        }
+        set(0, type.getByte());
+        set(1, state.getByte());
     }
 
     public enum Type {

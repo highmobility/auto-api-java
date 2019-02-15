@@ -105,56 +105,56 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The estimated range in km.
      */
-    @Nullable public ObjectPropertyInteger getEstimatedRange() {
+    public ObjectPropertyInteger getEstimatedRange() {
         return estimatedRange;
     }
 
     /**
      * @return The battery level percentage.
      */
-    @Nullable public ObjectProperty<Integer> getBatteryLevel() {
+    public ObjectProperty<Integer> getBatteryLevel() {
         return batteryLevel;
     }
 
     /**
      * @return The battery current in AC.
      */
-    @Nullable public ObjectProperty<Float> getBatteryCurrentAC() {
+    public ObjectProperty<Float> getBatteryCurrentAC() {
         return batteryCurrentAC;
     }
 
     /**
      * @return The battery current in DC.
      */
-    @Nullable public ObjectProperty<Float> getBatteryCurrentDC() {
+    public ObjectProperty<Float> getBatteryCurrentDC() {
         return batteryCurrentDC;
     }
 
     /**
      * @return The Charger voltage in AC.
      */
-    @Nullable public ObjectProperty<Float> getChargerVoltageAC() {
+    public ObjectProperty<Float> getChargerVoltageAC() {
         return chargerVoltageAC;
     }
 
     /**
      * @return The Charger voltage in DC.
      */
-    @Nullable public ObjectProperty<Float> getChargerVoltageDC() {
+    public ObjectProperty<Float> getChargerVoltageDC() {
         return chargerVoltageDC;
     }
 
     /**
      * @return The Charge limit percentage.
      */
-    @Nullable public ObjectProperty<Integer> getChargeLimit() {
+    public ObjectProperty<Integer> getChargeLimit() {
         return chargeLimit;
     }
 
     /**
      * @return The time to complete the charge in minutes.
      */
-    @Nullable public ObjectPropertyInteger getTimeToCompleteCharge() {
+    public ObjectPropertyInteger getTimeToCompleteCharge() {
         return timeToCompleteCharge;
     }
 
