@@ -20,7 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.FlashersStateProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
 import javax.annotation.Nullable;
 
@@ -30,12 +31,12 @@ import javax.annotation.Nullable;
 public class FlashersState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x01);
     private static final byte STATE_IDENTIFIER = 0x01;
-    FlashersStateProperty state = new FlashersStateProperty(STATE_IDENTIFIER);
+    ObjectProperty<Value> state = new ObjectProperty<>(Value.class, STATE_IDENTIFIER);
 
     /**
      * @return The flashers state.
      */
-    @Nullable public FlashersStateProperty getState() {
+    @Nullable public ObjectProperty<Value> getState() {
         return state;
     }
 
@@ -63,7 +64,7 @@ public class FlashersState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private FlashersStateProperty state;
+        private ObjectProperty<Value> state;
 
         public Builder() {
             super(TYPE);
@@ -73,7 +74,7 @@ public class FlashersState extends CommandWithProperties {
          * @param state The flashers state.
          * @return The builder.
          */
-        public Builder setState(FlashersStateProperty state) {
+        public Builder setState(ObjectProperty<Value> state) {
             this.state = state;
             addProperty(state.setIdentifier(STATE_IDENTIFIER));
             return this;
@@ -81,6 +82,40 @@ public class FlashersState extends CommandWithProperties {
 
         public FlashersState build() {
             return new FlashersState(this);
+        }
+    }
+
+    public enum Value implements PropertyValueSingleByte {
+        INACTIVE((byte) 0x00),
+        EMERGENCY_ACTIVE((byte) 0x01),
+        LEFT_ACTIVE((byte) 0x02),
+        RIGHT_ACTIVE((byte) 0x03);
+
+        public static Value fromByte(byte value) throws CommandParseException {
+            Value[] allValues = Value.values();
+
+            for (int i = 0; i < allValues.length; i++) {
+                Value value1 = allValues[i];
+                if (value1.getByte() == value) {
+                    return value1;
+                }
+            }
+
+            throw new CommandParseException();
+        }
+
+        private byte value;
+
+        Value(byte value) {
+            this.value = value;
+        }
+
+        public byte getByte() {
+            return value;
+        }
+
+        @Override public int getLength() {
+            return 1;
         }
     }
 

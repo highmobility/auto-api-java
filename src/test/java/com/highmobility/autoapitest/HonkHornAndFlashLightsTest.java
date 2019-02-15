@@ -6,13 +6,12 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.FlashersState;
 import com.highmobility.autoapi.GetFlashersState;
 import com.highmobility.autoapi.HonkAndFlash;
-import com.highmobility.autoapi.property.FlashersStateProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class HonkHornAndFlashLightsTest {
@@ -20,10 +19,8 @@ public class HonkHornAndFlashLightsTest {
 
     @Test
     public void state() {
-        Command command = CommandResolver.resolve(bytes);
-        assertTrue(command.is(FlashersState.TYPE));
-        FlashersState state = (FlashersState) command;
-        assertTrue(state.getState().getValue() == FlashersStateProperty.Value.LEFT_ACTIVE);
+        FlashersState state = (FlashersState) CommandResolver.resolve(bytes);
+        assertTrue(state.getState().getValue() == FlashersState.Value.LEFT_ACTIVE);
     }
 
     @Test public void get() {
@@ -67,11 +64,13 @@ public class HonkHornAndFlashLightsTest {
 
     @Test public void builder() {
         FlashersState.Builder builder = new FlashersState.Builder();
-        builder.setState(new FlashersStateProperty(FlashersStateProperty.Value.LEFT_ACTIVE));
-        assertTrue(builder.build().equals(bytes));
+        builder.setState(new ObjectProperty<>(FlashersState.Value.LEFT_ACTIVE));
+        FlashersState state = builder.build();
+        assertTrue(state.equals(bytes));
+        assertTrue(state.getState().getValue() == FlashersState.Value.LEFT_ACTIVE);
     }
 
-      @Test public void stateWithTimestamp() {
+    @Test public void stateWithTimestamp() {
         Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000001"));
         FlashersState command = (FlashersState) CommandResolver.resolve(timestampBytes);
         assertTrue(command.getState().getTimestamp() != null);

@@ -2,17 +2,17 @@ package com.highmobility.autoapitest.property;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.ControlMode;
+import com.highmobility.autoapi.FlashersState;
 import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.Coordinates;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.DrivingMode;
-import com.highmobility.autoapi.property.FlashersStateProperty;
 import com.highmobility.autoapi.property.HvacStartingTime;
-import com.highmobility.autoapi.property.ObjectPropertyIntegerArray;
 import com.highmobility.autoapi.property.KeyFobPositionProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
+import com.highmobility.autoapi.property.ObjectPropertyIntegerArray;
 import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.Position;
@@ -236,11 +236,7 @@ public class PropertyCtors {
 
     @Test public void FlashersStateProperty() throws CommandParseException {
         Property property = new Property("01000100");
-
-        assertTrue(new FlashersStateProperty(property).getValue() != null);
-        FlashersStateProperty updateProp = new FlashersStateProperty((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(FlashersState.Value.class, property);
     }
 
     @Test public void Lock() throws CommandParseException {
