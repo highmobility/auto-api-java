@@ -7,7 +7,7 @@ import com.highmobility.autoapi.property.value.Location;
 
 public class WindowPosition extends Property {
     Location location;
-    Position.Value position;
+    Position position;
 
     /**
      * @return The window location.
@@ -19,7 +19,7 @@ public class WindowPosition extends Property {
     /**
      * @return The window position.
      */
-    public Position.Value getPosition() {
+    public Position getPosition() {
         return position;
     }
 
@@ -27,16 +27,16 @@ public class WindowPosition extends Property {
         super(bytes);
         if (bytes.length < 5) throw new CommandParseException();
         location = Location.fromByte(bytes[3]);
-        position = Position.Value.fromByte(bytes[4]);
+        position = Position.fromByte(bytes[4]);
     }
 
-    public WindowPosition(Location location, Position.Value position) {
+    public WindowPosition(Location location, Position position) {
         super((byte) 0x00, getBytes(location, position));
         this.location = location;
         this.position = position;
     }
 
-    private static byte[] getBytes(Location location, Position.Value position) {
+    private static byte[] getBytes(Location location, Position position) {
         byte[] bytes = new byte[2];
         bytes[0] = location.getByte();
         bytes[1] = position.getByte();

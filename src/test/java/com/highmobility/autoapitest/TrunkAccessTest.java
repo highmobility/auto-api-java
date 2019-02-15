@@ -24,8 +24,8 @@ public class TrunkAccessTest {
 
         assertTrue(command.getClass() == TrunkState.class);
         TrunkState state = (TrunkState) command;
-        assertTrue(state.getLockState().getValue() == Lock.Value.UNLOCKED);
-        assertTrue(state.getPosition().getValue() == Position.Value.OPEN);
+        assertTrue(state.getLockState().getValue() == Lock.UNLOCKED);
+        assertTrue(state.getPosition().getValue() == Position.OPEN);
     }
 
     @Test public void get() {
@@ -41,15 +41,15 @@ public class TrunkAccessTest {
         Bytes waitingForBytes = new Bytes("002112" +
                 "01000100" +
                 "02000101");
-        Command commandBytes = new ControlTrunk(Lock.Value.UNLOCKED, Position.Value.OPEN);
-        assertTrue(waitingForBytes.equals(commandBytes));
+        Command commandBytes = new ControlTrunk(Lock.UNLOCKED, Position.OPEN);
+        assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
 
         Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof ControlTrunk);
 
         ControlTrunk state = (ControlTrunk) command;
-        assertTrue(state.getLock() == Lock.Value.UNLOCKED);
-        assertTrue(state.getPosition() == Position.Value.OPEN);
+        assertTrue(state.getLock().getValue() == Lock.UNLOCKED);
+        assertTrue(state.getPosition().getValue() == Position.OPEN);
     }
 
     @Test public void state0Properties() {

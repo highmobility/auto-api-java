@@ -90,7 +90,7 @@ public class RooftopTest {
 
         Bytes commandBytes = new ControlRooftop(0, 0,
                 ConvertibleRoofState.Value.CLOSED, SunroofTiltState.Value.TILTED,
-                Position.Value.OPEN);
+                Position.OPEN);
 
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
 
@@ -99,7 +99,7 @@ public class RooftopTest {
         assertTrue(command.getOpenPercentage() == 0f);
         assertTrue(command.getConvertibleRoofState() == ConvertibleRoofState.Value.CLOSED);
         assertTrue(command.getSunroofTiltState() == SunroofTiltState.Value.TILTED);
-        assertTrue(command.getSunroofPosition() == Position.Value.OPEN);
+        assertTrue(command.getSunroofPosition() == Position.OPEN);
 
     }
 
@@ -109,7 +109,7 @@ public class RooftopTest {
         builder.setOpenPercentage(new ObjectPropertyPercentage(0));
         builder.setConvertibleRoofState(new ConvertibleRoofState(ConvertibleRoofState.Value.OPEN));
         builder.setSunroofTiltState(new SunroofTiltState(SunroofTiltState.Value.HALF_TILTED));
-        builder.setSunroofPosition(new Position(Position.Value.OPEN));
+        builder.setSunroofPosition(new ObjectProperty<>(Position.OPEN));
 
         RooftopState state = builder.build();
         testState(state);
@@ -121,7 +121,7 @@ public class RooftopTest {
         assertTrue(state.getOpenPercentage().getValue() == 0);
         assertTrue(state.getConvertibleRoofState().getValue() == ConvertibleRoofState.Value.OPEN);
         assertTrue(state.getSunroofTiltState().getValue() == SunroofTiltState.Value.HALF_TILTED);
-        assertTrue(state.getSunroofPosition().getValue() == Position.Value.OPEN);
+        assertTrue(state.getSunroofPosition().getValue() == Position.OPEN);
     }
 
     @Test public void state0Properties() {

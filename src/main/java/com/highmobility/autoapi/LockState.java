@@ -29,7 +29,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import static com.highmobility.autoapi.property.value.Lock.Value.UNLOCKED;
+import static com.highmobility.autoapi.property.value.Lock.UNLOCKED;
 
 /**
  * Command sent from the car every time the lock state changes or when a Get Lock State is received.

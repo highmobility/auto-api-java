@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.value.Lock;
 
@@ -33,20 +34,20 @@ public class GasFlapState extends CommandWithProperties {
     private static final byte IDENTIFIER_LOCK = 0x02;
     private static final byte IDENTIFIER_POSITION = 0x03;
 
-    Lock lock = new Lock(IDENTIFIER_LOCK);
-    Position position = new Position(IDENTIFIER_POSITION);
+    ObjectProperty<Lock> lock = new ObjectProperty<>(Lock.class, IDENTIFIER_LOCK);
+    ObjectProperty<Position> position = new ObjectProperty<>(Position.class, IDENTIFIER_POSITION);
 
     /**
      * @return The gas flap lock.
      */
-    @Nullable public Lock getLock() {
+    public ObjectProperty<Lock> getLock() {
         return lock;
     }
 
     /**
      * @return The gas flap position.
      */
-    @Nullable public Position getPosition() {
+    @Nullable public ObjectProperty<Position> getPosition() {
         return position;
     }
 
@@ -77,16 +78,16 @@ public class GasFlapState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        Lock lock;
-        Position position;
+        ObjectProperty<Lock> lock;
+        ObjectProperty<Position> position;
 
         /**
          * @param lock The gas flap lock.
          * @return The builder.
          */
-        public Builder setLock(Lock lock) {
-            this.lock = lock;
+        public Builder setLock(ObjectProperty<Lock> lock) {
             addProperty(lock.setIdentifier(IDENTIFIER_LOCK));
+            this.lock = lock;
             return this;
         }
 
@@ -94,9 +95,9 @@ public class GasFlapState extends CommandWithProperties {
          * @param position The gas flap position.
          * @return The builder.
          */
-        public Builder setPosition(Position position) {
-            this.position = position;
+        public Builder setPosition(ObjectProperty<Position> position) {
             addProperty(position.setIdentifier(IDENTIFIER_POSITION));
+            this.position = position;
             return this;
         }
 

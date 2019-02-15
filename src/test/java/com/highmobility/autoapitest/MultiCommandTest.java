@@ -35,14 +35,14 @@ public class MultiCommandTest {
         Command command = CommandResolver.resolve(commandBytes);
         MultiCommand state = (MultiCommand) command;
         assertTrue(state.getCommands().length == 2);
-        assertTrue(((LockUnlockDoors) state.getCommand(LockUnlockDoors.TYPE)).getDoorLock() == Lock.Value.LOCKED);
+        assertTrue(((LockUnlockDoors) state.getCommand(LockUnlockDoors.TYPE)).getDoorLock() == Lock.LOCKED);
         assertTrue(((SetTheftAlarm) state.getCommand(SetTheftAlarm.TYPE)).getState() == TheftAlarmState.State.ARMED);
     }
 
     @Test
     public void commandBuild() {
         Command[] commands = new Command[2];
-        commands[0] = new LockUnlockDoors(Lock.Value.LOCKED);
+        commands[0] = new LockUnlockDoors(Lock.LOCKED);
         commands[1] = new SetTheftAlarm(TheftAlarmState.State.ARMED);
         MultiCommand command = new MultiCommand(commands);
         assertTrue(TestUtils.bytesTheSame(command, commandBytes));
@@ -55,7 +55,7 @@ public class MultiCommandTest {
         assertTrue(state.getCommands().length == 2);
 
         LockState lockState = (LockState) state.getCommand(LockState.TYPE);
-        assertTrue(lockState.getInsideLock(DoorLocation.FRONT_LEFT).getLock() == Lock.Value.UNLOCKED);
+        assertTrue(lockState.getInsideLock(DoorLocation.FRONT_LEFT).getLock() == Lock.UNLOCKED);
         TheftAlarmState theftAlarmState = (TheftAlarmState) state.getCommand(TheftAlarmState.TYPE);
         assertTrue(theftAlarmState.getState() == TheftAlarmState.State.ARMED);
     }

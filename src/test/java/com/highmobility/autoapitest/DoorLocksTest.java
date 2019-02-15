@@ -16,8 +16,8 @@ import static com.highmobility.autoapi.property.doors.DoorLocation.FRONT_LEFT;
 import static com.highmobility.autoapi.property.doors.DoorLocation.FRONT_RIGHT;
 import static com.highmobility.autoapi.property.doors.DoorLocation.REAR_LEFT;
 import static com.highmobility.autoapi.property.doors.DoorLocation.REAR_RIGHT;
-import static com.highmobility.autoapi.property.value.Lock.Value.LOCKED;
-import static com.highmobility.autoapi.property.value.Lock.Value.UNLOCKED;
+import static com.highmobility.autoapi.property.value.Lock.LOCKED;
+import static com.highmobility.autoapi.property.value.Lock.UNLOCKED;
 import static org.junit.Assert.assertTrue;
 
 public class DoorLocksTest {
@@ -46,10 +46,10 @@ public class DoorLocksTest {
         builder.addInsideLock(new DoorLockState(FRONT_RIGHT, UNLOCKED));
         builder.addLock(new DoorLockState(FRONT_LEFT, LOCKED));
         builder.addLock(new DoorLockState(FRONT_RIGHT, LOCKED));
-        builder.addPosition(new DoorPosition(FRONT_LEFT, Position.Value.OPEN));
-        builder.addPosition(new DoorPosition(FRONT_RIGHT, Position.Value.CLOSED));
-        builder.addPosition(new DoorPosition(REAR_RIGHT, Position.Value.CLOSED));
-        builder.addPosition(new DoorPosition(REAR_LEFT, Position.Value.CLOSED));
+        builder.addPosition(new DoorPosition(FRONT_LEFT, Position.OPEN));
+        builder.addPosition(new DoorPosition(FRONT_RIGHT, Position.CLOSED));
+        builder.addPosition(new DoorPosition(REAR_RIGHT, Position.CLOSED));
+        builder.addPosition(new DoorPosition(REAR_LEFT, Position.CLOSED));
 
         LockState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
@@ -68,10 +68,10 @@ public class DoorLocksTest {
         assertTrue(state.getLock(FRONT_RIGHT).getLock() == LOCKED);
         assertTrue(state.isLocked());
 
-        assertTrue(state.getPosition(FRONT_LEFT).getPosition() == Position.Value.OPEN);
-        assertTrue(state.getPosition(FRONT_RIGHT).getPosition() == Position.Value.CLOSED);
-        assertTrue(state.getPosition(REAR_RIGHT).getPosition() == Position.Value.CLOSED);
-        assertTrue(state.getPosition(REAR_LEFT).getPosition() == Position.Value.CLOSED);
+        assertTrue(state.getPosition(FRONT_LEFT).getPosition() == Position.OPEN);
+        assertTrue(state.getPosition(FRONT_RIGHT).getPosition() == Position.CLOSED);
+        assertTrue(state.getPosition(REAR_RIGHT).getPosition() == Position.CLOSED);
+        assertTrue(state.getPosition(REAR_LEFT).getPosition() == Position.CLOSED);
     }
 
     @Test public void get() {

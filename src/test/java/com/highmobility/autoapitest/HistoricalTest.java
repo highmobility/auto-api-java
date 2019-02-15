@@ -46,13 +46,13 @@ public class HistoricalTest {
             DoorLockState doorLockState = state.getLocks()[0];
 
             if (doorLockState.getLocation() == DoorLocation.FRONT_LEFT) {
-                if (doorLockState.getLock() == Lock.Value.UNLOCKED &&
+                if (doorLockState.getLock() == Lock.UNLOCKED &&
                         TestUtils.dateIsSame(state.getTimestamp(), "2018-01-10T16:32:05+0000")) {
                     found++;
                 }
             } else if (doorLockState.getLocation() == DoorLocation.FRONT_RIGHT) {
 
-                if (doorLockState.getLock() == Lock.Value.LOCKED &&
+                if (doorLockState.getLock() == Lock.LOCKED &&
                         TestUtils.dateIsSame(state.getTimestamp(), "2018-01-10T16:32:06+0000")) {
                     found++;
                 }

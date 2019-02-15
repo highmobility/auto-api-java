@@ -241,20 +241,12 @@ public class PropertyCtors {
 
     @Test public void Lock() throws CommandParseException {
         Property property = new Property("01000100");
-
-        assertTrue(new Lock(property).getValue() != null);
-        Lock updateProp = new Lock((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(Lock.class, property);
     }
 
     @Test public void Position() throws CommandParseException {
         Property property = new Property("010003000000");
-
-        assertTrue(new Position(property).getValue() != null);
-        Position updateProp = new Position((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(Position.class, property);
     }
 
     @Test public void CommandProperty() throws CommandParseException {

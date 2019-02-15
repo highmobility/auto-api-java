@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Lock;
@@ -37,8 +38,9 @@ public class ControlGasFlap extends CommandWithProperties {
     private static final byte LOCK_IDENTIFIER = 0x02;
     private static final byte POSITION_IDENTIFIER = 0x03;
 
-    @Nullable private Lock.Value lock;
-    @Nullable private Position.Value position;
+    @Nullable private ObjectProperty<Lock> lock = new ObjectProperty<>(Lock.class, LOCK_IDENTIFIER);
+    @Nullable private ObjectProperty<Position> position = new ObjectProperty<>(Position.class,
+            POSITION_IDENTIFIER);
 
     /**
      * Control the gas flap.
@@ -46,23 +48,22 @@ public class ControlGasFlap extends CommandWithProperties {
      * @param lock     The lock state.
      * @param position The position.
      */
-    public ControlGasFlap(@Nullable Lock.Value lock, @Nullable Position.Value position) {
-        super(TYPE, getProperties(lock, position));
-        this.lock = lock;
-        this.position = position;
-    }
+    public ControlGasFlap(@Nullable Lock lock, @Nullable Position position) {
+        super(TYPE);
 
-    static Property[] getProperties(@Nullable Lock.Value lock, @Nullable Position.Value position) {
-        ArrayList<Property> propertyList = new ArrayList<>();
+        ArrayList<Property> properties = new ArrayList<>();
+
         if (lock != null) {
-            propertyList.add(new Property(LOCK_IDENTIFIER, lock.getByte()));
+            this.lock.update(lock);
+            properties.add(this.lock);
         }
 
         if (position != null) {
-            propertyList.add(new Property(POSITION_IDENTIFIER, position.getByte()));
+            this.position.update(position);
+            properties.add(this.position);
         }
 
-        return propertyList.toArray(new Property[0]);
+        createBytes(properties);
     }
 
     ControlGasFlap(byte[] bytes) {
@@ -72,11 +73,9 @@ public class ControlGasFlap extends CommandWithProperties {
                 // can update with failure, timestamp or the real property
                 switch (p.getPropertyIdentifier()) {
                     case LOCK_IDENTIFIER:
-                        lock = Lock.Value.fromByte(p.getValueByte());
-                        break;
+                        return lock.update(p);
                     case POSITION_IDENTIFIER:
-                        position = Position.Value.fromByte(p.getValueByte());
-                        break;
+                        return position.update(p);
                 }
 
                 return null;

@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlGasFlap;
 import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.GetGasFlapState;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.value.Lock;
 import com.highmobility.utils.ByteUtils;
@@ -26,24 +27,23 @@ public class FuelingTest {
         Command command = CommandResolver.resolve(bytes);
         assertTrue(command.is(GasFlapState.TYPE));
         GasFlapState state = (GasFlapState) command;
-        assertTrue(state.getLock().getValue() == Lock.Value.LOCKED);
-        assertTrue(state.getPosition().getValue() == Position.Value.CLOSED);
+        testState(state);
     }
 
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
-        GasFlapState command = (GasFlapState) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getLock().getTimestamp() != null);
+    private void testState(GasFlapState state) {
+        assertTrue(state.getLock().getValue() == Lock.LOCKED);
+        assertTrue(state.getPosition().getValue() == Position.CLOSED);
     }
 
     @Test public void build() {
         GasFlapState.Builder builder = new GasFlapState.Builder();
 
-        builder.setLock(new Lock(Lock.Value.LOCKED));
-        builder.setPosition(new Position(Position.Value.CLOSED));
+        builder.setLock(new ObjectProperty<>(Lock.LOCKED));
+        builder.setPosition(new ObjectProperty<>(Position.CLOSED));
 
         GasFlapState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
+        testState(state);
     }
 
     @Test public void get() {
@@ -58,7 +58,7 @@ public class FuelingTest {
                 "02000100" +
                 "03000101");
 
-        byte[] bytes = new ControlGasFlap(Lock.Value.UNLOCKED, Position.Value.OPEN).getByteArray();
+        byte[] bytes = new ControlGasFlap(Lock.UNLOCKED, Position.OPEN).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
         ControlGasFlap openCloseGasFlap =
@@ -70,5 +70,11 @@ public class FuelingTest {
         Bytes bytes = new Bytes("004001");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((GasFlapState) state).getLock().getValue() == null);
+    }
+
+    @Test public void stateWithTimestamp() {
+        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
+        GasFlapState command = (GasFlapState) CommandResolver.resolve(timestampBytes);
+        assertTrue(command.getLock().getTimestamp() != null);
     }
 }

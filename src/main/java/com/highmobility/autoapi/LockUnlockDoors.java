@@ -32,16 +32,16 @@ public class LockUnlockDoors extends CommandWithProperties {
 
     private static final byte IDENTIFIER = 0x01;
 
-    Lock.Value doorLock;
+    Lock doorLock;
 
     /**
      * @return The lock state.
      */
-    public Lock.Value getDoorLock() {
+    public Lock getDoorLock() {
         return doorLock;
     }
 
-    public LockUnlockDoors(Lock.Value doorLock) {
+    public LockUnlockDoors(Lock doorLock) {
         super(TYPE.addProperty(new Property(IDENTIFIER, doorLock.getByte())));
         this.doorLock = doorLock;
     }
@@ -50,6 +50,6 @@ public class LockUnlockDoors extends CommandWithProperties {
         super(bytes);
         Property prop = getProperty(IDENTIFIER);
         if (prop == null) throw new CommandParseException();
-        doorLock = Lock.Value.fromByte(prop.getValueByte());
+        doorLock = Lock.fromByte(prop.getValueByte());
     }
 }

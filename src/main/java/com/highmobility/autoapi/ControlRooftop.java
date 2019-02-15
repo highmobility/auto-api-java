@@ -50,7 +50,7 @@ public class ControlRooftop extends CommandWithProperties {
 
     private ConvertibleRoofState.Value convertibleRoofState;
     private SunroofTiltState.Value sunroofTiltState;
-    private Position.Value sunroofPosition;
+    private Position sunroofPosition;
 
     /**
      * @return The dimming percentage.
@@ -83,7 +83,7 @@ public class ControlRooftop extends CommandWithProperties {
     /**
      * @return The sunroof position.
      */
-    @Nullable public Position.Value getSunroofPosition() {
+    @Nullable public Position getSunroofPosition() {
         return sunroofPosition;
     }
 
@@ -99,7 +99,7 @@ public class ControlRooftop extends CommandWithProperties {
                           @Nullable Integer openPercentage,
                           @Nullable ConvertibleRoofState.Value convertibleRoofState,
                           @Nullable SunroofTiltState.Value sunroofTiltState,
-                          @Nullable Position.Value sunroofPosition) {
+                          @Nullable Position sunroofPosition) {
         super(TYPE);
 
         List<Property> properties = new ArrayList<>();
@@ -151,7 +151,7 @@ public class ControlRooftop extends CommandWithProperties {
                         sunroofTiltState = SunroofTiltState.Value.fromByte(p.getValueByte());
                         break;
                     case IDENTIFIER_SUNROOF_POSITION:
-                        sunroofPosition = Position.Value.fromByte(p.getValueByte());
+                        sunroofPosition = Position.fromByte(p.getValueByte());
                         break;
                 }
 

@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Position;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Lock;
 
 import javax.annotation.Nullable;
@@ -37,20 +37,20 @@ public class TrunkState extends CommandWithProperties {
     private static final byte IDENTIFIER_LOCK = 0x01;
     private static final byte IDENTIFIER_POSITION = 0x02;
 
-    Lock lock = new Lock(IDENTIFIER_LOCK);
-    Position position = new Position(IDENTIFIER_POSITION);
+    ObjectProperty<Lock> lock = new ObjectProperty<>(Lock.class, IDENTIFIER_LOCK);
+    ObjectProperty<Position> position = new ObjectProperty<>(Position.class, IDENTIFIER_POSITION);
 
     /**
      * @return the current lock status of the trunk.
      */
-    @Nullable public Lock getLockState() {
+    public ObjectProperty<Lock> getLockState() {
         return lock;
     }
 
     /**
      * @return the current position of the trunk.
      */
-    @Nullable public Position getPosition() {
+    @Nullable public ObjectProperty<Position> getPosition() {
         return position;
     }
 
@@ -81,8 +81,8 @@ public class TrunkState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Lock lock;
-        private Position position;
+        private ObjectProperty<Lock> lock;
+        private ObjectProperty<Position> position;
 
         public Builder() {
             super(TYPE);
@@ -92,9 +92,9 @@ public class TrunkState extends CommandWithProperties {
          * @param lock The lock state of the trunk.
          * @return The builder.
          */
-        public Builder setLockState(Lock lock) {
-            this.lock = lock;
+        public Builder setLockState(ObjectProperty<Lock> lock) {
             addProperty(lock.setIdentifier(IDENTIFIER_LOCK));
+            this.lock = lock;
             return this;
         }
 
@@ -102,7 +102,7 @@ public class TrunkState extends CommandWithProperties {
          * @param position The position of the trunk.
          * @return The builder.
          */
-        public Builder setPosition(Position position) {
+        public Builder setPosition(ObjectProperty<Position> position) {
             this.position = position;
             addProperty(position.setIdentifier(IDENTIFIER_POSITION));
             return this;

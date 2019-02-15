@@ -114,8 +114,8 @@ public class VehicleStatusTest {
         if (command == null) fail();
         if (command.is(TrunkState.TYPE) == false) fail();
         TrunkState trunkState = (TrunkState) command;
-        assertTrue(trunkState.getLockState().getValue() == Lock.Value.UNLOCKED);
-        assertTrue(trunkState.getPosition().getValue() == Position.Value.OPEN);
+        assertTrue(trunkState.getLockState().getValue() == Lock.UNLOCKED);
+        assertTrue(trunkState.getPosition().getValue() == Position.OPEN);
     }
 
     @Test public void ignitionState() {
@@ -150,8 +150,8 @@ public class VehicleStatusTest {
         builder.setNumberOfDoors(new ObjectPropertyInteger(5)).setNumberOfSeats(new ObjectPropertyInteger(5));
 
         TrunkState.Builder trunkState = new TrunkState.Builder();
-        trunkState.setLockState(new Lock(Lock.Value.UNLOCKED));
-        trunkState.setPosition(new Position(Position.Value.OPEN));
+        trunkState.setLockState(new ObjectProperty<>(Lock.UNLOCKED));
+        trunkState.setPosition(new ObjectProperty<>(Position.OPEN));
         builder.addState(new CommandProperty(trunkState.build()));
 
         IgnitionState.Builder ignitionState = new IgnitionState.Builder();

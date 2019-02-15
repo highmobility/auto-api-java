@@ -20,12 +20,13 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteProperty;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Lock;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -39,20 +40,20 @@ public class ControlTrunk extends CommandWithProperties {
     private static final byte IDENTIFIER_LOCK = 0x01;
     private static final byte IDENTIFIER_POSITION = 0x02;
 
-    Lock.Value lock;
-    Position.Value position;
+    ObjectProperty<Lock> lock = new ObjectProperty<>(Lock.class, IDENTIFIER_LOCK);
+    ObjectProperty<Position> position = new ObjectProperty<>(Position.class, IDENTIFIER_POSITION);
 
     /**
      * @return The trunk lock state.
      */
-    @Nullable public Lock.Value getLock() {
+    public ObjectProperty<Lock> getLock() {
         return lock;
     }
 
     /**
      * @return The trunk position.
      */
-    @Nullable public Position.Value getPosition() {
+    public ObjectProperty<Position> getPosition() {
         return position;
     }
 
@@ -63,24 +64,22 @@ public class ControlTrunk extends CommandWithProperties {
      * @param position The trunk position.
      * @throws IllegalArgumentException If all arguments are null
      */
-    public ControlTrunk(@Nullable Lock.Value lock, @Nullable Position.Value position) {
-        super(TYPE, getProperties(lock, position));
-        this.lock = lock;
-        this.position = position;
-    }
+    public ControlTrunk(@Nullable Lock lock, @Nullable Position position) {
+        super(TYPE);
 
-    static Property[] getProperties(Lock.Value state, Position.Value position) {
-        ArrayList<Property> properties = new ArrayList<>();
+        List<Property> properties = new ArrayList<>();
 
-        if (state != null) {
-            properties.add(new ByteProperty(IDENTIFIER_LOCK, state.getByte()));
+        if (lock != null) {
+            this.lock.update(lock);
+            properties.add(this.lock);
         }
 
         if (position != null) {
-            properties.add(new ByteProperty(IDENTIFIER_POSITION, position.getByte()));
+            this.position.update(position);
+            properties.add(this.position);
         }
 
-        return properties.toArray(new Property[0]);
+        createBytes(properties);
     }
 
     ControlTrunk(byte[] bytes) {
@@ -89,11 +88,9 @@ public class ControlTrunk extends CommandWithProperties {
         while (propertiesIterator.hasNext()) {
             propertiesIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER_LOCK) {
-                    lock = Lock.Value.fromByte(p.getValueByte());
-                    return lock;
+                    return lock.update(p);
                 } else if (p.getPropertyIdentifier() == IDENTIFIER_POSITION) {
-                    position = Position.Value.fromByte(p.getValueByte());
-                    return position;
+                    return position.update(p);
                 }
                 return null;
             });
