@@ -8,7 +8,7 @@ import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.FlashersStateProperty;
 import com.highmobility.autoapi.property.HvacStartingTime;
-import com.highmobility.autoapi.property.IntegerArrayProperty;
+import com.highmobility.autoapi.property.ObjectPropertyIntegerArray;
 import com.highmobility.autoapi.property.KeyFobPositionProperty;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.ObjectProperty;
@@ -137,8 +137,8 @@ public class PropertyCtors {
     @Test public void intArray() throws CommandParseException {
         Property property = new Property("01000100");
 
-        assertTrue(new IntegerArrayProperty(property).getValue() != null);
-        IntegerArrayProperty updateProp = new IntegerArrayProperty((byte) 0x00);
+        assertTrue(new ObjectPropertyIntegerArray(property).getValue() != null);
+        ObjectPropertyIntegerArray updateProp = new ObjectPropertyIntegerArray((byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }

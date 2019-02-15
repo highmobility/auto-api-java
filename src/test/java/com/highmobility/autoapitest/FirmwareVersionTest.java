@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.FirmwareVersion;
 import com.highmobility.autoapi.GetFirmwareVersion;
-import com.highmobility.autoapi.property.IntegerArrayProperty;
+import com.highmobility.autoapi.property.ObjectPropertyIntegerArray;
 import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.value.Bytes;
 
@@ -23,10 +23,11 @@ public class FirmwareVersionTest {
 
     @Test
     public void state() {
-        Command command = CommandResolver.resolve(bytes);
+        FirmwareVersion state = (FirmwareVersion) CommandResolver.resolve(bytes);
+        testState(state);
+    }
 
-        assertTrue(command.is(FirmwareVersion.TYPE));
-        FirmwareVersion state = (FirmwareVersion) command;
+    private void testState(FirmwareVersion state) {
         assertTrue(Arrays.equals(state.getCarSDKVersion().getValue(), new int[]{1,15,33}));
         assertTrue(state.getCarSDKBuild().getValue().equals("btstack-uart"));
         assertTrue(state.getApplicationVersion().getValue().equals("v1.5-prod"));
@@ -41,17 +42,18 @@ public class FirmwareVersionTest {
     @Test public void build() {
         FirmwareVersion.Builder builder = new FirmwareVersion.Builder();
 
-        builder.setCarSdkVersion(new IntegerArrayProperty(new int[]{1, 15, 33}));
+        builder.setCarSdkVersion(new ObjectPropertyIntegerArray(new int[]{1, 15, 33}));
         builder.setCarSDKBuild(new ObjectPropertyString("btstack-uart"));
         builder.setApplicationVersion(new ObjectPropertyString("v1.5-prod"));
 
         FirmwareVersion command = builder.build();
         assertTrue(command.equals(bytes));
+        testState(command);
     }
 
     @Test(expected = IllegalArgumentException.class) public void throwsIfInvalidFormat() {
         FirmwareVersion.Builder builder = new FirmwareVersion.Builder();
-        builder.setCarSdkVersion(new IntegerArrayProperty(new int[]{1, 15}));
+        builder.setCarSdkVersion(new ObjectPropertyIntegerArray(new int[]{1, 15}));
     }
 
     @Test public void get() {

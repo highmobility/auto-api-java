@@ -20,10 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntegerArrayProperty;
+import com.highmobility.autoapi.property.ObjectPropertyIntegerArray;
 import com.highmobility.autoapi.property.ObjectPropertyString;
-
-import javax.annotation.Nullable;
 
 /**
  * Command sent when a Get Firmware Version is received by the car.
@@ -35,28 +33,28 @@ public class FirmwareVersion extends CommandWithProperties {
     private static final byte IDENTIFIER_SDK_BUILD = 0x02;
     private static final byte IDENTIFIER_APP_VERSION = 0x03;
 
-    IntegerArrayProperty carSDKVersion = new IntegerArrayProperty(IDENTIFIER_SDK_VERSION);
+    ObjectPropertyIntegerArray carSDKVersion = new ObjectPropertyIntegerArray(IDENTIFIER_SDK_VERSION);
     ObjectPropertyString carSDKBuild = new ObjectPropertyString(IDENTIFIER_SDK_BUILD);
     ObjectPropertyString applicationVersion = new ObjectPropertyString(IDENTIFIER_APP_VERSION);
 
     /**
      * @return The car SDK version.
      */
-    @Nullable public IntegerArrayProperty getCarSDKVersion() {
+    public ObjectPropertyIntegerArray getCarSDKVersion() {
         return carSDKVersion;
     }
 
     /**
      * @return The car SDK build.
      */
-    @Nullable public ObjectPropertyString getCarSDKBuild() {
+    public ObjectPropertyString getCarSDKBuild() {
         return carSDKBuild;
     }
 
     /**
      * @return The application version.
      */
-    @Nullable public ObjectPropertyString getApplicationVersion() {
+    public ObjectPropertyString getApplicationVersion() {
         return applicationVersion;
     }
 
@@ -91,7 +89,7 @@ public class FirmwareVersion extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private IntegerArrayProperty carSdkVersion;
+        private ObjectPropertyIntegerArray carSdkVersion;
         private ObjectPropertyString carSDKBuild;
         private ObjectPropertyString applicationVersion;
 
@@ -103,7 +101,7 @@ public class FirmwareVersion extends CommandWithProperties {
          * @param carSdkVersion The Car SDK version. Version is in format: "[major,minor,patch]"
          * @return The builder.
          */
-        public Builder setCarSdkVersion(IntegerArrayProperty carSdkVersion) throws IllegalArgumentException {
+        public Builder setCarSdkVersion(ObjectPropertyIntegerArray carSdkVersion) throws IllegalArgumentException {
             if (carSdkVersion.getValueLength() != 3) throw new IllegalArgumentException();
             this.carSdkVersion = carSdkVersion;
             addProperty(carSdkVersion.setIdentifier(IDENTIFIER_SDK_VERSION));

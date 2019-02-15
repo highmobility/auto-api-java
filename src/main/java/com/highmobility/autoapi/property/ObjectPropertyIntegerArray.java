@@ -22,11 +22,9 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-import java.util.Calendar;
-
 import javax.annotation.Nullable;
 
-public class IntegerArrayProperty extends Property {
+public class ObjectPropertyIntegerArray extends ObjectProperty<int[]> {
     // int is expected to be 1 byte, unsigned
     int[] value;
 
@@ -34,52 +32,45 @@ public class IntegerArrayProperty extends Property {
         return value;
     }
 
-    public IntegerArrayProperty(@Nullable int[] value, @Nullable Calendar timestamp,
-                                @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public IntegerArrayProperty(int[] value) {
+    public ObjectPropertyIntegerArray(int[] value) {
         this((byte) 0x00, value);
     }
 
-    public IntegerArrayProperty(byte identifier, int[] value) {
-        super(identifier, value == null ? 0 : value.length);
-        update(value);
-    }
-
-    public IntegerArrayProperty(byte identifier) {
-        super(identifier);
-    }
-
-    public IntegerArrayProperty(Property p) throws CommandParseException {
-        super(p);
+    public ObjectPropertyIntegerArray(Property p) throws CommandParseException {
+        super(int[].class, p.getPropertyIdentifier());
         update(p);
     }
 
-    @Override public Property update(Property p) throws CommandParseException {
+    public ObjectPropertyIntegerArray(byte identifier, int[] value) {
+        this(identifier);
+        update(value);
+    }
+
+    public ObjectPropertyIntegerArray(byte identifier) {
+        super(int[].class, identifier);
+    }
+
+    @Override public ObjectProperty update(int[] value) {
+        this.value = value;
+
+        if (bytes.length != 3 + value.length) bytes = baseBytes(getPropertyIdentifier(),
+                value.length);
+
+        for (int i = 0; i < value.length; i++) {
+            byte byteValue = Property.intToBytes(value[i], 1)[0];
+            bytes[3 + i] = byteValue;
+        }
+
+        return this;
+    }
+
+    @Override public ObjectProperty update(Property p) throws CommandParseException {
         super.update(p);
         int length = p.getValueLength();
         if (length > 0) {
             value = new int[length];
             for (int i = 0; i < length; i++) {
                 value[i] = Property.getUnsignedInt(p.getByteArray()[i + 3]);
-            }
-        }
-
-        return this;
-    }
-
-    public IntegerArrayProperty update(int[] value) {
-        this.value = value;
-
-        if (value != null) {
-            if (bytes.length != 3 + value.length) bytes = baseBytes(getPropertyIdentifier(), value.length);
-
-            for (int i = 0; i < value.length; i++) {
-                byte byteValue = Property.intToBytes(value[i], 1)[0];
-                bytes[3 + i] = byteValue;
             }
         }
 
