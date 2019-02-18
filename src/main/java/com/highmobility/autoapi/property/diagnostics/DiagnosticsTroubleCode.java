@@ -57,9 +57,9 @@ public class DiagnosticsTroubleCode extends Property {
         this.ecuId = ecuId;
         this.status = status;
 
-        bytes[3] = (byte) numberOfOccurences;
+        bytes[6] = (byte) numberOfOccurences;
 
-        int textPosition = 4;
+        int textPosition = 7;
         int textLength = id.length();
         bytes[textPosition] = (byte) textLength;
         textPosition++;
@@ -80,10 +80,10 @@ public class DiagnosticsTroubleCode extends Property {
 
     public DiagnosticsTroubleCode(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 6) throw new CommandParseException();
-        this.numberOfOccurences = bytes[3];
+        if (bytes.length < 9) throw new CommandParseException();
+        this.numberOfOccurences = bytes[6];
 
-        int textPosition = 4;
+        int textPosition = 7;
         int textLength = Property.getUnsignedInt(bytes, textPosition, 1);
         textPosition++;
         this.id = Property.getString(bytes, textPosition, textLength);

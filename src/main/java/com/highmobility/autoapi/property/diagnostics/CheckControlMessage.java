@@ -62,10 +62,10 @@ public class CheckControlMessage extends Property {
         this.text = text;
         this.status = status;
 
-        ByteUtils.setBytes(bytes, Property.intToBytes(id, 2), 3);
-        ByteUtils.setBytes(bytes, Property.intToBytes(remainingTime, 4), 5);
+        ByteUtils.setBytes(bytes, Property.intToBytes(id, 2), 6);
+        ByteUtils.setBytes(bytes, Property.intToBytes(remainingTime, 4), 8);
 
-        int textPosition = 9;
+        int textPosition = 12;
         int textLength = text.length();
         bytes[textPosition] = (byte) textLength;
         ByteUtils.setBytes(bytes, Property.intToBytes(textLength, 2), textPosition);
@@ -82,10 +82,10 @@ public class CheckControlMessage extends Property {
     public CheckControlMessage(byte[] bytes) {
         super(bytes);
 
-        this.id = Property.getUnsignedInt(bytes, 3, 2);
-        this.remainingTime = Property.getUnsignedInt(bytes, 5, 4);
+        this.id = Property.getUnsignedInt(bytes, 6, 2);
+        this.remainingTime = Property.getUnsignedInt(bytes, 8, 4);
 
-        int textPosition = 9;
+        int textPosition = 12;
         int textLength = Property.getUnsignedInt(bytes, textPosition, 2);
         textPosition+=2;
         this.text = Property.getString(bytes, textPosition, textLength);

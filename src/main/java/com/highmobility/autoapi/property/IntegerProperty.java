@@ -27,10 +27,10 @@ public class IntegerProperty extends Property {
         super(identifier, length);
 
         if (length == 1) {
-            bytes[3] = (byte)value;
+            bytes[6] = (byte)value;
         }
         else {
-            ByteUtils.setBytes(bytes, intToBytes(value, length), 3);
+            ByteUtils.setBytes(bytes, intToBytes(value, length), 6);
         }
     }
 }

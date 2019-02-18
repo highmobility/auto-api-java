@@ -56,7 +56,7 @@ public class WindscreenDamageZone extends Property {
     }
 
     private void setByteValue() {
-        bytes[3] = (byte) (((damageZoneX & 0x0F) << 4) | (damageZoneY & 0x0F));
+        bytes[6] = (byte) (((damageZoneX & 0x0F) << 4) | (damageZoneY & 0x0F));
     }
 
     @Override public byte getPropertyIdentifier() {
@@ -68,6 +68,6 @@ public class WindscreenDamageZone extends Property {
     }
 
     @Override public byte[] getPropertyBytes() {
-        return Property.getPropertyBytes(getPropertyIdentifier(), bytes[3]);
+        return Property.getPropertyBytes(getPropertyIdentifier(), bytes[6]);
     }
 }

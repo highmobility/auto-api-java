@@ -47,16 +47,16 @@ public class SeatBeltFastened extends Property {
         super(IDENTIFIER, 2);
         this.seatLocation = seatLocation;
         this.fastened = fastened;
-        this.bytes[3] = seatLocation.getByte();
-        this.bytes[4] = Property.boolToByte(fastened);
+        this.bytes[6] = seatLocation.getByte();
+        this.bytes[7] = Property.boolToByte(fastened);
     }
 
     public SeatBeltFastened(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 5) throw new CommandParseException();
+        if (bytes.length < 8) throw new CommandParseException();
 
-        this.seatLocation = SeatLocation.fromByte(bytes[3]);
-        this.fastened = Property.getBool(bytes[4]);
+        this.seatLocation = SeatLocation.fromByte(bytes[6]);
+        this.fastened = Property.getBool(bytes[7]);
     }
 
 

@@ -57,10 +57,10 @@ public class ActionItem extends Property {
 
     public ActionItem(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 5) throw new CommandParseException();
+        if (bytes.length < 8) throw new CommandParseException();
         this.bytes = bytes;
-        actionIdentifier = bytes[3];
-        name = Property.getString(bytes, 4, bytes.length - 4);
+        actionIdentifier = bytes[6];
+        name = Property.getString(bytes, 7, bytes.length - 4);
     }
 
     @Override public byte getPropertyIdentifier() {

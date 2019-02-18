@@ -45,8 +45,8 @@ public class ChargingTimer extends Property {
     public ChargingTimer(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length < 12) throw new CommandParseException();
-        type = Type.fromByte(bytes[3]);
-        time = Property.getCalendar(bytes, 4);
+        type = Type.fromByte(bytes[6]);
+        time = Property.getCalendar(bytes, 7);
     }
 
     public ChargingTimer(Type type, Calendar time) throws IllegalArgumentException {
@@ -55,8 +55,8 @@ public class ChargingTimer extends Property {
 
     public ChargingTimer(byte identifier, Type type, Calendar time) {
         super(identifier, 9);
-        bytes[3] = type.getByte();
-        ByteUtils.setBytes(bytes, Property.calendarToBytes(time), 4);
+        bytes[6] = type.getByte();
+        ByteUtils.setBytes(bytes, Property.calendarToBytes(time), 7);
         this.type = type;
         this.time = time;
 

@@ -49,6 +49,6 @@ public class EnableDisableWifi extends Command {
 
     EnableDisableWifi(byte[] bytes) {
         super(bytes);
-        enable = Property.getBool(bytes[3]);
+        enable = Property.getBool(bytes[6]);
     }
 }

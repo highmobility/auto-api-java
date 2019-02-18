@@ -47,16 +47,16 @@ public class DepartureTime extends Property {
 
     public DepartureTime(boolean active, Time time) {
         super(IDENTIFIER, 3);
-        bytes[3] = Property.boolToByte(active);
-        bytes[4] = (byte) time.getHour();
-        bytes[5] = (byte) time.getMinute();
+        bytes[6] = Property.boolToByte(active);
+        bytes[7] = (byte) time.getHour();
+        bytes[8] = (byte) time.getMinute();
         this.time = time;
     }
 
     public DepartureTime(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 6) throw new CommandParseException();
-        active = Property.getBool(bytes[3]);
-        time = new Time(Arrays.copyOfRange(bytes, 4, 6));
+        if (bytes.length < 9) throw new CommandParseException();
+        active = Property.getBool(bytes[6]);
+        time = new Time(Arrays.copyOfRange(bytes, 7, 9));
     }
 }

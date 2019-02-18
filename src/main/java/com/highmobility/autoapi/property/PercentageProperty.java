@@ -26,6 +26,6 @@ package com.highmobility.autoapi.property;
 public class PercentageProperty extends Property {
     public PercentageProperty(byte identifier, float value) {
         super(identifier, 1);
-        bytes[3] = Property.floatToIntPercentageByte(value);
+        bytes[6] = Property.floatToIntPercentageByte(value);
     }
 }

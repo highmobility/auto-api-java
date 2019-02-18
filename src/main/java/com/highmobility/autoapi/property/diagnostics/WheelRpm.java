@@ -47,15 +47,15 @@ public class WheelRpm extends Property {
         super((byte) 0x00, 3);
         this.tireLocation = tireLocation;
         this.rpm = rpm;
-        this.bytes[3] = tireLocation.getByte();
-        ByteUtils.setBytes(bytes, Property.intToBytes(rpm, 2), 4);
+        this.bytes[6] = tireLocation.getByte();
+        ByteUtils.setBytes(bytes, Property.intToBytes(rpm, 2), 7);
     }
 
     public WheelRpm(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 6) throw new CommandParseException();
+        if (bytes.length < 9) throw new CommandParseException();
 
-        this.tireLocation = TireLocation.fromByte(bytes[3]);
-        this.rpm = Property.getUnsignedInt(bytes, 4, 2);
+        this.tireLocation = TireLocation.fromByte(bytes[6]);
+        this.rpm = Property.getUnsignedInt(bytes, 7, 2);
     }
 }

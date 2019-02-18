@@ -31,24 +31,36 @@ import static org.junit.Assert.assertTrue;
 
 public class ChargingTest {
     Bytes bytes = new Bytes(
-            "00230102000200FF03000132040004bf19999a050004bf19999a06000443c8000007000443cd00000800015A0900013C0A0004000000000B0001010C000100"
+            "002301" +
+                    "02000501000200FF" +
+                    "03000401000132" +
+                    "040007010004bf19999a" +
+                    "050007010004bf19999a" +
+                    "06000701000443c80000" +
+                    "07000701000443cd0000" +
+                    "0800040100015A" +
+                    "0900040100013C" +
+                    "0A000701000400000000" +
+                    "0B000401000101" +
+                    "0C000401000100"
                     // start of l8
-                    + "0E000441c800000F00010110000100"
-                    + "110003011020" // departure times
-                    + "110003001220"
-                    + "130003000000" // reduction times
-                    + "130003011020"
-                    + "1400044219999a"
-                    + "1500090212010A1020050000" // timers
-                    + "1500090112010A1020060000"
-                    + "1600010117000101" // 16 and 17
+                    + "0E000701000441c80000" +
+                    "0F000401000101" +
+                    "10000401000100"
+                    + "110006010003011020" // departure times
+                    + "110006010003001220"
+                    + "130006010003000000" // reduction times
+                    + "130006010003011020"
+                    + "1400070100044219999a"
+                    + "15000C0100090212010A1020050000" // timers
+                    + "15000C0100090112010A1020060000"
+                    + "16000401000101"
+                    + "17000401000101" // 16 and 17
     );
 
     @Test
     public void state() throws ParseException {
-        Command command = null;
-
-        command = CommandResolver.resolve(bytes);
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(command.is(ChargeState.TYPE));
         ChargeState state = (ChargeState) command;
 
@@ -181,7 +193,7 @@ public class ChargingTest {
     }
 
     @Test public void setChargeLimit() {
-        Bytes expected = new Bytes("0023130100015A");
+        Bytes expected = new Bytes("0023130100040100015A");
 
         Bytes commandBytes = new SetChargeLimit(.9f);
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
@@ -275,7 +287,8 @@ public class ChargingTest {
         Bytes waitingForBytes = new Bytes("002317");
 
         ReductionTime[] timers = new ReductionTime[0];
-        SetReductionOfChargingCurrentTimes commandBytes = new SetReductionOfChargingCurrentTimes(timers);
+        SetReductionOfChargingCurrentTimes commandBytes =
+                new SetReductionOfChargingCurrentTimes(timers);
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
         SetReductionOfChargingCurrentTimes command = (SetReductionOfChargingCurrentTimes)
                 CommandResolver.resolve(waitingForBytes);

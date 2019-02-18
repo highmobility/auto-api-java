@@ -70,8 +70,7 @@ public class Property extends Bytes {
      * @param value      The value of the property.
      */
     public Property(byte identifier, byte value) {
-        this(identifier, 1);
-        bytes[3] = value;
+        bytes = getPropertyBytes(identifier, value);
     }
 
     /**
@@ -79,8 +78,7 @@ public class Property extends Bytes {
      * @param value      The value of the property.
      */
     public Property(byte identifier, byte[] value) {
-        this(identifier, value != null ? value.length : 0);
-        if (value != null) ByteUtils.setBytes(bytes, value, 3);
+        bytes = getPropertyBytes(identifier, value);
     }
 
     /**
@@ -101,23 +99,23 @@ public class Property extends Bytes {
     }
 
     public int getValueLength() {
-        return Property.getUnsignedInt(bytes, 1, 2);
+        return Property.getUnsignedInt(bytes, 4, 2);
     }
 
     /**
      * @return The value bytes.
      */
     public byte[] getValueBytes() {
-        if (bytes.length == 3) return new byte[0];
-        return Arrays.copyOfRange(bytes, 3, bytes.length);
+        if (bytes.length < 7) return new byte[0];
+        return Arrays.copyOfRange(bytes, 6, bytes.length);
     }
 
     /**
      * @return The one value byte. Returns null if property has no value set.
      */
     public Byte getValueByte() {
-        if (bytes.length == 3) return null;
-        return bytes[3];
+        if (bytes.length < 7) return null;
+        return bytes[6];
     }
 
     /**
@@ -132,22 +130,6 @@ public class Property extends Bytes {
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
-    }
-
-    protected byte[] baseBytes(byte identifier, int valueSize) {
-        byte[] bytes = new byte[3 + valueSize];
-
-        bytes[0] = identifier;
-        if (valueSize > 255) {
-            byte[] lengthBytes = intToBytes(valueSize, 2);
-            bytes[1] = lengthBytes[0];
-            bytes[2] = lengthBytes[1];
-        } else if (valueSize != 0) {
-            bytes[1] = 0x00;
-            bytes[2] = (byte) valueSize;
-        }
-
-        return bytes;
     }
 
     public byte getPropertyIdentifier() {
@@ -165,41 +147,49 @@ public class Property extends Bytes {
         return bytes;
     }
 
-    // helper methods
+    protected void setValueBytes(byte[] valueBytes) {
+        ByteUtils.setBytes(bytes, valueBytes, 6);
+    }
 
-    public static byte[] getPropertyBytes(byte identifier, byte value) throws
-            IllegalArgumentException {
-        byte[] bytes = new byte[4];
+    // MARK: ctor helpers
+
+    protected static byte[] baseBytes(byte identifier, int dataComponentSize) {
+        // if have a value, create bytes for data component
+        int propertySize = dataComponentSize + 3;
+
+        byte[] bytes = new byte[3 + (dataComponentSize > 0 ? dataComponentSize + 3 : 0)];
+
         bytes[0] = identifier;
-        byte[] lengthBytes = intToBytes(1, 2);
-        bytes[1] = lengthBytes[0];
-        bytes[2] = lengthBytes[1];
-        bytes[3] = value;
+
+        if (propertySize > 255) {
+            byte[] propertyLengthBytes = intToBytes(propertySize, 2);
+            bytes[1] = propertyLengthBytes[0];
+            bytes[2] = propertyLengthBytes[1];
+        } else if (propertySize != 3) {
+            // if property size 3, we don't have data component and can omit the bytes.
+            bytes[1] = 0x00;
+            bytes[2] = (byte) propertySize;
+        }
+
+        bytes[3] = 0x01; // data component
+        bytes[4] = 0x00; // data component size
+        bytes[5] = intToBytes(dataComponentSize, 1)[0]; // data component size
+
         return bytes;
     }
 
-    public static byte[] getPropertyBytes(byte identifier, int length, byte[] value) throws
+    protected static byte[] getPropertyBytes(byte identifier, byte value) throws IllegalArgumentException {
+        return getPropertyBytes(identifier, new byte[]{value});
+    }
+
+    protected static byte[] getPropertyBytes(byte identifier, byte[] value) throws
             IllegalArgumentException {
-        byte[] bytes = new byte[3];
-        bytes[0] = identifier;
-        byte[] lengthBytes = intToBytes(length, 2);
-        bytes[1] = lengthBytes[0];
-        bytes[2] = lengthBytes[1];
-        bytes = ByteUtils.concatBytes(bytes, value);
+        byte[] bytes = baseBytes(identifier, value.length);
+        ByteUtils.setBytes(bytes, value, 6);
         return bytes;
     }
 
-    public static byte[] getIntProperty(byte identifier, int value, int length) throws
-            IllegalArgumentException {
-        byte[] bytes = new byte[]{
-                identifier,
-                0x00,
-                (byte) length
-        };
-
-        byte[] valueBytes = intToBytes(value, length);
-        return ByteUtils.concatBytes(bytes, valueBytes);
-    }
+    // MARK: static helpers
 
     public static long getLong(byte[] b, int at) throws IllegalArgumentException {
         if (b.length - at < 8) throw new IllegalArgumentException();

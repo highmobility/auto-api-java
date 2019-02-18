@@ -43,9 +43,9 @@ public class SpringRateProperty extends Property {
 
     public SpringRateProperty(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length != 5) throw new CommandParseException();
-        axle = Axle.fromByte(bytes[3]);
-        springRate = Property.getUnsignedInt(bytes[4]);
+        if (bytes.length != 8) throw new CommandParseException();
+        axle = Axle.fromByte(bytes[6]);
+        springRate = Property.getUnsignedInt(bytes[7]);
     }
 
     public SpringRateProperty(Axle axle, Integer springRate) {
@@ -54,7 +54,7 @@ public class SpringRateProperty extends Property {
 
     public SpringRateProperty(byte identifier, Axle axle, Integer springRate) {
         super(identifier, 2);
-        bytes[3] = axle.getByte();
-        bytes[4] = springRate.byteValue();
+        bytes[6] = axle.getByte();
+        bytes[7] = springRate.byteValue();
     }
 }

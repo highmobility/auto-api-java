@@ -53,7 +53,7 @@ public class WindscreenDamageZoneMatrix extends Property {
     }
 
     private void setByte() {
-        bytes[3] =
+        bytes[6] =
                 (byte) (((windscreenSizeHorizontal & 0x0F) << 4) | (windscreenSizeVertical & 0x0F));
     }
 }

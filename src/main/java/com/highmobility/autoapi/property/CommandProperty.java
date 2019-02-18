@@ -32,6 +32,6 @@ public class CommandProperty extends Property {
 
     public CommandProperty(byte identifier, Command value) {
         super(identifier, value.getByteArray().length);
-        ByteUtils.setBytes(bytes, value.getByteArray(), 3);
+        ByteUtils.setBytes(bytes, value.getByteArray(), 6);
     }
 }

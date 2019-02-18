@@ -45,9 +45,9 @@ public class DrivingModeActivationPeriod extends Property {
 
     public DrivingModeActivationPeriod(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 5) throw new CommandParseException();
-        drivingMode = DrivingMode.fromByte(bytes[3]);
-        percentage = Property.getPercentage(bytes[4]);
+        if (bytes.length < 8) throw new CommandParseException();
+        drivingMode = DrivingMode.fromByte(bytes[6]);
+        percentage = Property.getPercentage(bytes[7]);
     }
 
     public DrivingModeActivationPeriod(DrivingMode type, float percentage) {
@@ -55,8 +55,8 @@ public class DrivingModeActivationPeriod extends Property {
     }
 
     DrivingModeActivationPeriod(byte identifier, DrivingMode type, float percentage) {
-        super(identifier, 5);
-        bytes[3] = type.getByte();
-        bytes[4] = Property.floatToIntPercentageByte(percentage);
+        super(identifier, 2);
+        bytes[6] = type.getByte();
+        bytes[7] = Property.floatToIntPercentageByte(percentage);
     }
 }

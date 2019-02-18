@@ -11,8 +11,8 @@ public class ReadingLamp extends Property {
 
     public ReadingLamp(Location location, boolean active) {
         super((byte) 0x00, 2);
-        bytes[3] = location.getByte();
-        bytes[4] = Property.boolToByte(active);
+        bytes[6] = location.getByte();
+        bytes[7] = Property.boolToByte(active);
         this.location = location;
         this.active = active;
     }
@@ -34,8 +34,8 @@ public class ReadingLamp extends Property {
     public ReadingLamp(Bytes bytes) throws CommandParseException {
         super(bytes);
         if (getValueLength() >= 2) {
-            location = Location.fromByte(bytes.get(3));
-            active = Property.getBool(bytes.get(4));
+            location = Location.fromByte(bytes.get(6));
+            active = Property.getBool(bytes.get(7));
         }
     }
 }

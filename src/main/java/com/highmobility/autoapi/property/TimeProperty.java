@@ -13,21 +13,18 @@ public class TimeProperty extends Property {
     public TimeProperty(byte identifier, int hour, int minute) {
         super(identifier, 2);
         this.time = new Time(hour, minute);
-        this.bytes[3] = (byte) hour;
-        this.bytes[4] = (byte) minute;
+        this.bytes[6] = (byte) hour;
+        this.bytes[7] = (byte) minute;
     }
 
     public TimeProperty(byte identifier, Time time) {
-        super(identifier, 2);
-        this.time = time;
-        this.bytes[3] = (byte) time.getHour();
-        this.bytes[4] = (byte) time.getMinute();
+        this(identifier, time.getHour(), time.getMinute());
     }
 
     public TimeProperty(byte[] bytes) {
         super(bytes);
-        if (bytes.length < 5) throw new IllegalArgumentException();
-        time = new Time(Arrays.copyOfRange(bytes, 3, 5));
+        if (bytes.length < 8) throw new IllegalArgumentException();
+        time = new Time(Arrays.copyOfRange(bytes, 6, 8));
     }
 
     /**

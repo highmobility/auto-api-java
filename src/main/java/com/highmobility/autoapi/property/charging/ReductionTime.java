@@ -48,14 +48,14 @@ public class ReductionTime extends Property {
         super(identifier, 3);
         this.startStop = startStop;
         this.time = time;
-        bytes[3] = startStop.getByte();
-        ByteUtils.setBytes(bytes, time.getByteArray(), 4);
+        bytes[6] = startStop.getByte();
+        ByteUtils.setBytes(bytes, time.getByteArray(), 7);
     }
 
     public ReductionTime(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 6) throw new CommandParseException();
-        this.startStop = StartStop.fromByte(bytes[3]);
-        this.time = new Time(Arrays.copyOfRange(bytes, 4, 6));
+        if (bytes.length < 9) throw new CommandParseException();
+        this.startStop = StartStop.fromByte(bytes[6]);
+        this.time = new Time(Arrays.copyOfRange(bytes, 7, 9));
     }
 }

@@ -45,8 +45,8 @@ public class BrakeTorqueVectoringProperty extends Property {
     public BrakeTorqueVectoringProperty(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        axle = Axle.fromByte(bytes[3]);
-        active = Property.getBool(bytes[4]);
+        axle = Axle.fromByte(bytes[6]);
+        active = Property.getBool(bytes[7]);
     }
 
     public BrakeTorqueVectoringProperty(Axle axle, boolean active) {
@@ -55,7 +55,7 @@ public class BrakeTorqueVectoringProperty extends Property {
 
     BrakeTorqueVectoringProperty(byte identifier, Axle axle, boolean active) {
         super(identifier, 2);
-        bytes[3] = axle.getByte();
-        bytes[4] = Property.boolToByte(active);
+        bytes[6] = axle.getByte();
+        bytes[7] = Property.boolToByte(active);
     }
 }

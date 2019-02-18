@@ -24,9 +24,9 @@ public class WindowOpenPercentage extends Property {
 
     public WindowOpenPercentage(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 5) throw new CommandParseException();
-        location = Location.fromByte(bytes[3]);
-        openPercentage = Property.getPercentage(bytes[4]);
+        if (bytes.length < 8) throw new CommandParseException();
+        location = Location.fromByte(bytes[6]);
+        openPercentage = Property.getPercentage(bytes[7]);
     }
 
     public WindowOpenPercentage(Location location, Float openPercentage) {
