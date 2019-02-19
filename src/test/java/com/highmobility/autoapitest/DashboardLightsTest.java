@@ -16,7 +16,12 @@ import static org.junit.Assert.assertTrue;
  * Created by ttiganik on 15/09/16.
  */
 public class DashboardLightsTest {
-    Bytes bytes = new Bytes("006101010002000001000202010100020F030100021500");
+    Bytes bytes = new Bytes("006101" +
+            "0100050100020000" +
+            "0100050100020201" +
+            "0100050100020F03" +
+            "0100050100021502"
+    );
 
     @Test
     public void state() {
@@ -33,7 +38,7 @@ public class DashboardLightsTest {
         assertTrue(state.getLight(DashboardLight.Type.TRANSMISSION_FLUID_TEMPERATURE).getState()
                 == DashboardLight.State.RED);
         assertTrue(state.getLight(DashboardLight.Type.ENGINE_OIL_LEVEL).getState() ==
-                DashboardLight.State.INACTIVE);
+                DashboardLight.State.YELLOW);
     }
 
     @Test public void get() {
@@ -51,7 +56,7 @@ public class DashboardLightsTest {
         builder.addLight(new DashboardLight(DashboardLight.Type.TRANSMISSION_FLUID_TEMPERATURE,
                 DashboardLight.State.RED));
         builder.addLight(new DashboardLight(DashboardLight.Type.ENGINE_OIL_LEVEL, DashboardLight
-                .State.INACTIVE));
+                .State.YELLOW));
 
         assertTrue(builder.build().equals(bytes));
     }

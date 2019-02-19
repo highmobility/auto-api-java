@@ -67,7 +67,6 @@ public class CheckControlMessage extends Property {
 
         int textPosition = 12;
         int textLength = text.length();
-        bytes[textPosition] = (byte) textLength;
         ByteUtils.setBytes(bytes, Property.intToBytes(textLength, 2), textPosition);
         textPosition += 2;
         ByteUtils.setBytes(bytes, Property.stringToBytes(text), textPosition);

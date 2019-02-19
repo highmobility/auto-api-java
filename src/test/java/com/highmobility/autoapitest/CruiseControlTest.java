@@ -16,7 +16,13 @@ import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class CruiseControlTest {
-    Bytes bytes = new Bytes("0062010100010102000101030002003C04000100050002003C");
+    Bytes bytes = new Bytes("006201" +
+            "01000401000101" +
+            "02000401000101" +
+            "030005010002003D" +
+            "04000401000100" +
+            "050005010002003C"
+    );
 
     @Test
     public void state() {
@@ -31,7 +37,7 @@ public class CruiseControlTest {
         CruiseControlState state = (CruiseControlState) command;
         assertTrue(state.isActive() == true);
         assertTrue(state.getLimiter() == CruiseControlState.Limiter.HIGHER_SPEED_REQUESTED);
-        assertTrue(state.getTargetSpeed() == 60);
+        assertTrue(state.getTargetSpeed() == 61);
         assertTrue(state.isAdaptiveActive() == false);
         assertTrue(state.getAdaptiveTargetSpeed() == 60);
     }
@@ -43,14 +49,17 @@ public class CruiseControlTest {
     }
 
     @Test public void activateDeactivate() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("00621201000101020002003C");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("006212" +
+                "01000401000101" +
+                "020005010002003C");
         byte[] commandBytes = new ActivateDeactivateCruiseControl(true, 60)
                 .getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
     }
 
     @Test public void deactivate() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("00621201000100");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("006212" +
+                "01000401000100");
         byte[] commandBytes = new ActivateDeactivateCruiseControl(false, null)
                 .getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));

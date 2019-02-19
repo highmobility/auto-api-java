@@ -160,7 +160,7 @@ public class CommandWithProperties extends Command {
      * @return The bytes that are signed with the signature
      */
     public Bytes getSignedBytes() {
-        return new Bytes(Arrays.copyOfRange(bytes, 0, bytes.length - 64 - 3));
+        return new Bytes(Arrays.copyOfRange(bytes, 0, bytes.length - 64 - 3 - 3));
     }
 
     /**

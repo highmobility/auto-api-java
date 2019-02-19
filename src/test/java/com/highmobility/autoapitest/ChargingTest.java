@@ -203,7 +203,7 @@ public class ChargingTest {
     }
 
     @Test public void openCloseChargePort() {
-        Bytes expected = new Bytes("00231401000101");
+        Bytes expected = new Bytes("00231401000401000101");
 
         Bytes commandBytes = new OpenCloseChargePort(ChargePortState.OPEN);
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
@@ -213,7 +213,7 @@ public class ChargingTest {
     }
 
     @Test public void startStopCharging() {
-        Bytes waitingForBytes = new Bytes("00231201000101");
+        Bytes waitingForBytes = new Bytes("00231201000401000101");
         Bytes commandBytes = new StartStopCharging(true);
 
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -223,7 +223,7 @@ public class ChargingTest {
     }
 
     @Test public void setChargeMode() {
-        Bytes waitingForBytes = new Bytes("00231501000102");
+        Bytes waitingForBytes = new Bytes("00231501000401000102");
         Bytes commandBytes = new SetChargeMode(ChargeMode.INDUCTIVE);
 
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
@@ -237,7 +237,9 @@ public class ChargingTest {
 
     @Test public void SetChargeTimer() throws ParseException {
         Bytes waitingForBytes = new Bytes
-                ("0023160D00090212010a10200500000D00090113010a1020070000");
+                ("002316" +
+                        "0D000C0100090212010a1020050000" +
+                        "0D000C0100090113010a1020070000");
         Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
         Calendar c2 = TestUtils.getUTCCalendar("2019-01-10T16:32:07");
 
@@ -262,8 +264,8 @@ public class ChargingTest {
 
     @Test public void SetReductionTimes() {
         Bytes waitingForBytes = new Bytes("002317" +
-                "010003000000" + // reduction times
-                "010003011020");
+                "010006010003000000" + // reduction times
+                "010006010003011020");
 
         ReductionTime[] timers = new ReductionTime[2];
         timers[0] = new ReductionTime(StartStop.START, new Time(0, 0));

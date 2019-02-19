@@ -24,17 +24,17 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
 
 public class CommandTest {
-    String parkingBrakeCommand = "00580101000101";
+    String parkingBrakeCommand = "00580101000401000101";
 
     @Test public void failureProperty() {
         // want to test parsing into the command. values are tested in property test.
         Bytes bytes = new Bytes("002501" +
-                "01000164" +
+                "01000401000164" +
                 /*"02000100"*/  // << this failed
                 /*"03000101" +*/ // << this failed
-                "04000102" +
-                "A5000D02000A54727920696e20343073" +
-                "A5000D03000A54727920696e20343073");
+                "04000401000102" +
+                "A5001001000D02000A54727920696e20343073" +
+                "A5001001000D03000A54727920696e20343073");
 
         CommandWithProperties command = (CommandWithProperties) CommandResolver.resolve(bytes);
         assertTrue(command.getPropertyFailures().length == 2);
@@ -48,8 +48,8 @@ public class CommandTest {
     @Test
     public void testAddPropertyTimestamp() throws ParseException {
         // size 9 + full prop size
-        String parkingStateProperty = "01000101";
-        String propertyTimestamp = "A4000D11010A112200000001" +
+        String parkingStateProperty = "01000401000101";
+        String propertyTimestamp = "A4001301001011010A112200000001" +
                 parkingStateProperty;
         Bytes bytes = new Bytes(parkingBrakeCommand + propertyTimestamp);
 
@@ -66,10 +66,10 @@ public class CommandTest {
 
     @Test public void timestampInTheMiddle() throws ParseException {
         Bytes bytes = new Bytes("002501" +
-                "01000164" +
-                "02000100" + "A4000D11010A11220000000202000100" +
-                "03000101" +
-                "04000102");
+                "01000401000164" +
+                "02000401000100" + "A4001301001011010A11220000000202000401000100" +
+                "03000401000101" +
+                "04000401000102");
         String expectedDate = "2017-01-10T17:34:00+0000";
         Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
 
@@ -89,9 +89,9 @@ public class CommandTest {
 
     @Test
     public void testPropertyTimestampParsed() throws ParseException {
-        String parkingStateProperty = "01000101";
+        String parkingStateProperty = "01000401000101";
         Bytes bytes =
-                new Bytes(parkingBrakeCommand + "A4000D11010A112200000001" + parkingStateProperty);
+                new Bytes(parkingBrakeCommand + "A4001301001011010A112200000001" + parkingStateProperty);
         String expectedDate = "2017-01-10T17:34:00+0000";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
 
@@ -101,8 +101,15 @@ public class CommandTest {
     }
 
     @Test public void propertyTimestampWithField() throws ParseException {
-        String parkingStateProperty = "01000101";
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000D11010A112200000001" +
+        /*
+        String parkingStateProperty = "01000401000101";
+        Bytes bytes =
+                new Bytes(parkingBrakeCommand + "A4001301001011010A112200000001" + parkingStateProperty);
+
+         */
+
+        String parkingStateProperty = "01000401000101";
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4001301001011010A112200000001" +
                 parkingStateProperty);
         String expectedDate = "2017-01-10T17:34:00+0000";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
@@ -114,10 +121,10 @@ public class CommandTest {
 
     @Test public void propertyTimestampWithObjectFromArray() throws ParseException {
         Bytes bytes = new Bytes("005601" +
-                "0200020201" +
-                "0200020300" + "A4000E11010A112200000002" + "0200020300" +
-                "0300020201" +
-                "0300020300");
+                "0200050100020201" +
+                "0200050100020300" + "A4001401001111010A112200000002" + "0200050100020300" +
+                "0300050100020201" +
+                "0300050100020300");
         SeatsState command = (SeatsState) CommandResolver.resolve(bytes);
         String expectedDate = "2017-01-10T17:34:00+0000";
 
@@ -139,7 +146,11 @@ public class CommandTest {
     }
 
     @Test public void basePropertiesArrayObjectReplaced() {
-        Bytes bytes = new Bytes("006101010002000001000202010100020F030100021500");
+        Bytes bytes = new Bytes("006101" +
+                "0100050100020000" +
+                "0100050100020201" +
+                "0100050100020F03" +
+                "0100050100021500");
         CommandWithProperties command = (CommandWithProperties) CommandResolver.resolve(bytes);
 
         boolean found = false;
@@ -174,7 +185,7 @@ public class CommandTest {
     }
 
     @Test public void timestamp() throws ParseException {
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A2000811010A1122000000");
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A2000B01000811010A1122000000");
         String expectedDate = "2017-01-10T17:34:00";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
         assertTrue(TestUtils.dateIsSameUTC(command.getTimestamp(), expectedDate));
@@ -189,11 +200,11 @@ public class CommandTest {
 
     @Test public void propertyTimestamp() throws ParseException {
         // size 9 + full prop size
-        String parkingStateProperty = "01000101";
-
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000D11010A112200000004" +
+        String parkingStateProperty = "01000401000101";
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4001301001011010A112200000004" +
                 parkingStateProperty);
         String expectedDate = "2017-01-10T17:34:00+0000";
+
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
 
         PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];
@@ -202,7 +213,7 @@ public class CommandTest {
     }
 
     @Test public void propertyTimestampNoData() throws ParseException {
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000911010A112200000004");
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000C01000911010A112200000004");
         String expectedDate = "2017-01-10T17:34:00+0000";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
 
@@ -214,13 +225,14 @@ public class CommandTest {
     @Test public void signedBytes() {
         CommandWithProperties command = getCommandWithSignature();
         Bytes signedBytes = command.getSignedBytes();
-        assertTrue(signedBytes.equals(new Bytes(parkingBrakeCommand + "A00009324244433743483436")));
+        assertTrue(signedBytes.equals(new Bytes(parkingBrakeCommand + "A0000C010009324244433743483436")));
     }
 
     CommandWithProperties getCommandWithSignature() {
         Bytes bytes = new Bytes
                 (parkingBrakeCommand +
-                        "A00009324244433743483436A100404D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6");
+                        "A0000C010009324244433743483436" +
+                        "A100430100404D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6");
         try {
             Command command = null;
             try {
@@ -243,8 +255,8 @@ public class CommandTest {
     @Test public void unknownProperty() throws CommandParseException {
         Bytes bytes = new Bytes(
                 "002501" +
-                        "01000101" +
-                        "1A000135");
+                        "01000401000101" +
+                        "1A000401000135");
 
         Command command = null;
         try {
@@ -270,13 +282,13 @@ public class CommandTest {
                 assertTrue(property.getValueLength() == 1);
                 assertTrue(Arrays.equals(property.getValueBytes(), new byte[]{0x35}));
                 assertTrue(Arrays.equals(property.getPropertyBytes(), ByteUtils.bytesFromHex
-                        ("1A000135")));
+                        ("1A000401000135")));
                 foundUnknownProperty = true;
             } else if (property.getPropertyIdentifier() == 0x01) {
                 assertTrue(property.getValueLength() == 1);
                 assertTrue(Arrays.equals(property.getValueBytes(), new byte[]{0x01}));
                 assertTrue(Arrays.equals(property.getPropertyBytes(), ByteUtils.bytesFromHex
-                        ("01000101")));
+                        ("01000401000101")));
                 foundDimmingProperty = true;
             }
         }
