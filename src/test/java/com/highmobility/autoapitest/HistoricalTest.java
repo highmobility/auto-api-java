@@ -23,17 +23,14 @@ import static org.junit.Assert.assertTrue;
 public class HistoricalTest {
     Bytes bytes = new Bytes(
             "001201" +
-                    "010013" +
-                    "0020010300020000" +
-                    "A2000812010a1020050000"
+                    "01001C010019" + // >> length 19 + 3 + 3
+                    "0020010300050100020000" +
+                    "A2000B01000812010a1020050000"
     );
 
     @Test
     public void state() throws ParseException {
-        Command command = CommandResolver.resolve(bytes);
-
-        assertTrue(command.getClass() == HistoricalStates.class);
-        HistoricalStates states = (HistoricalStates) command;
+        HistoricalStates states = (HistoricalStates) CommandResolver.resolve(bytes);
         assertTrue(states.getStates().length == 1);
         LockState state = (LockState) states.getStates()[0];
         assertTrue(state.getOutsideLock(Location.FRONT_LEFT).getLock() == Lock.UNLOCKED);
@@ -47,9 +44,9 @@ public class HistoricalTest {
 
     @Test public void get() throws ParseException {
         Bytes waitingForBytes = new Bytes("001200" +
-                "0100020020" +
-                "02000812010a1020050000" +
-                "03000812010a1123000000"
+                "0100050100020020" +
+                "02000B01000812010a1020050000" +
+                "03000B01000812010a1123000000"
         );
 
         Command command = new GetHistoricalStates(

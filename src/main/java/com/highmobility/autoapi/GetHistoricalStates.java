@@ -77,19 +77,19 @@ public class GetHistoricalStates extends CommandWithProperties {
     }
 
     private static byte[] getBytes(Identifier identifier, Calendar startDate, Calendar endDate) {
-        byte[] bytes = new byte[5 + 11 + 11];
+        byte[] bytes = new byte[8 + 14 + 14];
 
         Property identifierProperty = new Property(IDENTIFIER_CAPABILITY, identifier.getBytes());
         ByteUtils.setBytes(bytes, identifierProperty.getByteArray(), 0);
 
         if (startDate != null) {
             CalendarProperty startDateProp = new CalendarProperty(IDENTIFIER_START_DATE, startDate);
-            ByteUtils.setBytes(bytes, startDateProp.getByteArray(), 5);
+            ByteUtils.setBytes(bytes, startDateProp.getByteArray(), 8);
         }
 
         if (endDate != null) {
             CalendarProperty endDateProp = new CalendarProperty(IDENTIFIER_END_DATE, endDate);
-            ByteUtils.setBytes(bytes, endDateProp.getByteArray(), 16);
+            ByteUtils.setBytes(bytes, endDateProp.getByteArray(), 22);
         }
 
         return bytes;

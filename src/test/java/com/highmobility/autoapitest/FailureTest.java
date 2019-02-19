@@ -13,10 +13,10 @@ import static org.junit.Assert.assertTrue;
 
 public class FailureTest {
     Bytes bytes = new Bytes("000201" +
-            "0100020021" +
-            "02000100" +
-            "03000101" +
-            "04000954727920616761696E"
+            "0100050100020021" +
+            "02000401000100" +
+            "03000401000101" +
+            "04000C01000954727920616761696E"
     );
 
     @Test

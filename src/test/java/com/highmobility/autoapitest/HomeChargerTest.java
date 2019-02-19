@@ -28,22 +28,23 @@ import static org.junit.Assert.fail;
 public class HomeChargerTest {
     Bytes bytes = new Bytes(
             "006001" +
-                    "01000102" +
-                    "02000101" +
-                    "03000101" +
-                    "04000441380000" +
-                    "05000101" +
-                    "08000101" +
-                    "09000C436861726765722037363132" +
-                    "0A000103" +
-                    "0B000A5A57337641524E554265" +
-                    "0D000101" +
-                    "0E00043F000000" +
-                    "0F00043F800000" +
-                    "10000400000000" +
-                    "110010404A428F9F44D445402ACF562174C4CE" +
-                    "120009004090000003455552" +
-                    "12000C023E99999A06526970706C65"
+                    "01000401000102" +
+                    "02000401000101" +
+                    "03000401000101" +
+                    "04000701000441380000" +
+                    "05000401000101" +
+                    "08000401000101" +
+                    "09000F01000C436861726765722037363132" +
+                    "0A000401000103" +
+                    "0B000D01000A5A57337641524E554265" +
+                    "0D000401000101" +
+                    "0E00070100043F000000" +
+                    "0F00070100043F800000" +
+                    "10000701000400000000" +
+                    "110013010010404A428F9F44D445402ACF562174C4CE" +
+                    "12000C010009004090000003455552" +
+                    "12000F01000C023E99999A06526970706C65"
+
     );
 
     @Test
@@ -120,7 +121,7 @@ public class HomeChargerTest {
     @Test public void setChargeCurrent() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex(
                 "006012" +
-                        "0100043f000000"
+                        "0100070100043f000000"
         );
 
         byte[] commandBytes = new SetChargeCurrent(.5f).getByteArray();
@@ -133,8 +134,8 @@ public class HomeChargerTest {
     @Test public void setPriceTariffs() {
         Bytes bytes = new Bytes(
                 "006013" +
-                        "0C0009004090000003455552" +
-                        "0C0009023e99999a03455552");
+                        "0C000C010009004090000003455552" +
+                        "0C000C010009023e99999a03455552");
 
         PriceTariff[] tariffs = new PriceTariff[2];
 
@@ -183,7 +184,7 @@ public class HomeChargerTest {
 
     @Test public void activateSolarCharging() {
         Bytes waitingForBytes = new Bytes("006014" +
-                "01000101");
+                "01000401000101");
         byte[] commandBytes = new ActivateDeactivateSolarCharging(true).getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -194,7 +195,7 @@ public class HomeChargerTest {
 
     @Test public void enableWifi() {
         Bytes waitingForBytes = new Bytes("006015" +
-                "01000100");
+                "01000401000100");
 
         byte[] commandBytes = new EnableDisableWifiHotspot(false).getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -206,7 +207,7 @@ public class HomeChargerTest {
 
     @Test public void authenticate() {
         Bytes waitingForBytes = new Bytes("006016" +
-                "01000100");
+                "01000401000100");
 
         Bytes commandBytes = new AuthenticateHomeCharger(false);
         assertTrue(waitingForBytes.equals(commandBytes));

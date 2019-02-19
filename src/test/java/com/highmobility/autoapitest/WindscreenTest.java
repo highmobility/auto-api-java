@@ -30,11 +30,20 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class WindscreenTest {
+    Bytes bytes = new Bytes(
+            "004201" +
+                    "01000401000102" +
+                    "02000401000103" +
+                    "03000401000101" +
+                    "04000401000143" +
+                    "05000401000112" +
+                    "06000401000102" +
+                    "07000B0100083FEE666666666666" +
+                    "08000B01000841D61D3C19400000"
+    );
+
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "0042010100010202000103030001020400014305000112060001020700015f08000811010a1020050000");
-
         Command command = null;
         try {
             command = CommandResolver.resolve(bytes);
@@ -48,7 +57,7 @@ public class WindscreenTest {
 
         assertTrue(state.getWiperState() == WiperState.AUTOMATIC);
         assertTrue(state.getWiperIntensity() == WiperIntensity.LEVEL_3);
-        assertTrue(state.getWindscreenDamage() == WindscreenDamage.DAMAGE_SMALLER_THAN_1);
+        assertTrue(state.getWindscreenDamage() == WindscreenDamage.IMPACT_NO_DAMAGE);
         assertTrue(state.getWindscreenReplacementState() == WindscreenReplacementState
                 .REPLACEMENT_NEEDED);
 
@@ -60,13 +69,15 @@ public class WindscreenTest {
         assertTrue(matrix.getWindscreenSizeHorizontal() == 4);
         assertTrue(matrix.getWindscreenSizeVertical() == 3);
 
-        assertTrue(state.getDamageConfidence() == .95f);
+        assertTrue(state.getDamageConfidence() == .95);
 
         Calendar c = state.getDamageDetectionTime();
 
+/*
         float rawOffset = c.getTimeZone().getRawOffset();
         float expectedRawOffset = 0;
         assertTrue(rawOffset == expectedRawOffset);
+*/
 
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("UTC"));

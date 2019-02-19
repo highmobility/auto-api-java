@@ -32,7 +32,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 
@@ -389,18 +388,8 @@ public class Property extends Bytes {
         Calendar c = new GregorianCalendar();
 
         if (bytes.length >= at + CALENDAR_SIZE) {
-            c.set(2000 + bytes[at], bytes[at + 1] - 1, bytes[at + 2], bytes[at + 3], bytes[at +
-                    4], bytes[at + 5]);
-            int minutesOffset = getSignedInt(new byte[]{bytes[at + 6], bytes[at + 7]});
-
-            int msOffset = minutesOffset * 60 * 1000;
-            String[] availableIds = TimeZone.getAvailableIDs(msOffset);
-            if (availableIds.length == 0) {
-                c.setTimeZone(TimeZone.getTimeZone("UTC"));
-            } else {
-                TimeZone timeZone = TimeZone.getTimeZone(availableIds[0]);
-                c.setTimeZone(timeZone);
-            }
+            Long epoch = Property.getLong(bytes, at);
+            c.setTimeInMillis(epoch);
         } else {
             throw new IllegalArgumentException();
         }
@@ -411,21 +400,7 @@ public class Property extends Bytes {
 
     public static byte[] calendarToBytes(Calendar calendar) {
         byte[] bytes = new byte[CALENDAR_SIZE];
-
-        bytes[0] = (byte) (calendar.get(Calendar.YEAR) - 2000);
-        bytes[1] = (byte) (calendar.get(Calendar.MONTH) + 1);
-        bytes[2] = (byte) calendar.get(Calendar.DAY_OF_MONTH);
-        bytes[3] = (byte) calendar.get(Calendar.HOUR_OF_DAY);
-        bytes[4] = (byte) calendar.get(Calendar.MINUTE);
-        bytes[5] = (byte) calendar.get(Calendar.SECOND);
-
-        int msOffset = calendar.getTimeZone().getRawOffset(); // in ms
-        int minuteOffset = msOffset / (60 * 1000);
-
-        byte[] bytesOffset = Property.intToBytes(minuteOffset, 2);
-        bytes[6] = bytesOffset[0];
-        bytes[7] = bytesOffset[1];
-
+        Property.longToBytes(calendar.getTimeInMillis());
         return bytes;
     }
 }

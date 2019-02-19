@@ -15,9 +15,7 @@ public class DriverFatigueTest {
     @Test
     public void detected() {
         Bytes bytes = new Bytes(
-                "00410101000100");
-
-
+                "00410101000401000100");
 
         Command command = null;try {    command = CommandResolver.resolve(bytes);}catch(Exception e) {    fail();}
 
