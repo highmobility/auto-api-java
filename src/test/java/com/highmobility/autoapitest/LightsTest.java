@@ -23,17 +23,18 @@ import static org.junit.Assert.assertTrue;
 public class LightsTest {
     Bytes bytes = new Bytes(
             "003601" +
-                    "01000102" +
-                    "02000101" +
-                    "040003FF0000" +
-                    "05000101" +
-                    "06000101" +
-                    "0700020000" +
-                    "0700020101" +
-                    "0800020000" +
-                    "0800020101" +
-                    "0900020000" +
-                    "0900020100");
+                    "01000401000102" +
+                    "02000401000101" +
+                    "040006010003FF0000" +
+                    "05000401000100" +
+                    "06000401000100" +
+                    "0700050100020000" +
+                    "0700050100020101" +
+                    "0800050100020000" +
+                    "0800050100020101" +
+                    "0900050100020000" +
+                    "0900050100020100"
+    );
 
     @Test
     public void state() {
@@ -52,8 +53,8 @@ public class LightsTest {
         assertTrue(state.getAmbientColor()[1] == 0);
         assertTrue(state.getAmbientColor()[2] == 0);
 
-        assertTrue(state.isReverseLightActive() == true);
-        assertTrue(state.isEmergencyBrakeLightActive() == true);
+        assertTrue(state.isReverseLightActive() == false);
+        assertTrue(state.isEmergencyBrakeLightActive() == false);
 
         assertTrue(state.getFogLights().length == 2);
         assertTrue(state.getFogLight(LightLocation.FRONT).isActive() == false);
@@ -76,8 +77,8 @@ public class LightsTest {
 
         int[] ambientColor = new int[]{0xFF, 0, 0};
         builder.setAmbientColor(ambientColor);
-        builder.setReverseLightActive(true);
-        builder.setEmergencyBrakeLightActive(true);
+        builder.setReverseLightActive(false);
+        builder.setEmergencyBrakeLightActive(false);
 
         builder.addFogLight(new FogLight(LightLocation.FRONT, false));
         builder.addFogLight(new FogLight(LightLocation.REAR, true));
@@ -100,13 +101,16 @@ public class LightsTest {
     }
 
     @Test public void control() {
-        Bytes waitingForBytes = new Bytes("0036120100010202000100040003ff0000" +
-                "0700020000" +
-                "0700020101" +
-                "0800020000" +
-                "0800020101" +
-                "0900020000" +
-                "0900020100");
+        Bytes waitingForBytes = new Bytes("003612" +
+                "01000401000102" +
+                "02000401000100" +
+                "040006010003ff0000" +
+                "0700050100020000" +
+                "0700050100020101" +
+                "0800050100020000" +
+                "0800050100020101" +
+                "0900050100020000" +
+                "0900050100020100");
 
         FogLight[] fogLights = new FogLight[2];
         ReadingLamp[] readingLamps = new ReadingLamp[2];

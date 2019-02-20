@@ -9,8 +9,6 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -18,10 +16,13 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class OffRoadTest {
+        Bytes bytes = new Bytes(
+                "005201" +
+                        "010005010002000A" +
+                        "02000B0100083FE0000000000000"
+        );
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "005201010002000A02000132");
 
         Command command = null;
         try {
@@ -33,7 +34,7 @@ public class OffRoadTest {
         assertTrue(command.getClass() == OffroadState.class);
         OffroadState state = (OffroadState) command;
         assertTrue(state.getRouteIncline() == 10);
-        assertTrue(state.getWheelSuspension() == .5f);
+        assertTrue(state.getWheelSuspension() == .5);
     }
 
     @Test public void get() {
@@ -49,16 +50,17 @@ public class OffRoadTest {
     }
 
     @Test public void build() {
-        byte[] bytes = ByteUtils.bytesFromHex("005201010002000A02000132");
+
 
         OffroadState.Builder builder = new OffroadState.Builder();
         builder.setRouteIncline(10);
-        builder.setWheelSuspension(.5f);
+        builder.setWheelSuspension(.5d);
         OffroadState state = builder.build();
-        byte[] builtBytes = state.getByteArray();
-        assertTrue(Arrays.equals(builtBytes, bytes));
+
+        assertTrue(state.equals(bytes));
+
         assertTrue(state.getRouteIncline() == 10);
-        assertTrue(state.getWheelSuspension() == .5f);
+        assertTrue(state.getWheelSuspension() == .5d);
         assertTrue(state.getType() == OffroadState.TYPE);
     }
 }

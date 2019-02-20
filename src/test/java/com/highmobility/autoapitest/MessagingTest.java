@@ -18,12 +18,12 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class MessagingTest {
-    @Test
-    public void send() {
         Bytes bytes = new Bytes(
                 "003701" +
-                        "01000e2b31203535352d3535352d353535" +
-                        "02000d48656c6c6f20796f7520746f6f");
+                        "01001101000e2b31203535352d3535352d353535" +
+                        "02001001000d48656c6c6f20796f7520746f6f");
+    @Test
+    public void send() {
 
         Command command = null;
         try {
@@ -40,8 +40,8 @@ public class MessagingTest {
 
     @Test public void received() {
         Bytes waitingForBytes = new Bytes("003700" +
-                "01000e2b31203535352d3535352d353535" +
-                "02000548656c6c6f");
+                "01001101000e2b31203535352d3535352d353535" +
+                "02000801000548656c6c6f");
 
         byte[] commandBytes = null;
         commandBytes = new MessageReceived("+1 555-555-555", "Hello").getByteArray();
@@ -57,9 +57,6 @@ public class MessagingTest {
         SendMessage.Builder builder = new SendMessage.Builder();
         builder.setRecipientHandle("+1 555-555-555");
         builder.setMessage("Hello you too");
-        byte[] bytes = builder.build().getByteArray();
-        assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("003701" +
-                "01000e2b31203535352d3535352d353535" +
-                "02000d48656c6c6f20796f7520746f6f")));
+        assertTrue(TestUtils.bytesTheSame(builder.build(), bytes));
     }
 }

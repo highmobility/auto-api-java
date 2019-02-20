@@ -29,7 +29,6 @@ public class ActionItem extends Property {
     String name;
 
     /**
-     *
      * @return The action item identifier
      */
     public int getActionIdentifier() {
@@ -37,7 +36,6 @@ public class ActionItem extends Property {
     }
 
     /**
-     *
      * @return Name of the action item
      */
     public String getName() {
@@ -49,10 +47,8 @@ public class ActionItem extends Property {
         this.actionIdentifier = actionIdentifier;
         this.name = name;
 
-        bytes = new byte[]{ getPropertyIdentifier() };
-        bytes = ByteUtils.concatBytes(bytes, Property.intToBytes(1 + name.length(), 2));
-        bytes = ByteUtils.concatBytes(bytes, (byte) getActionIdentifier());
-        bytes = ByteUtils.concatBytes(bytes, Property.stringToBytes(name));
+        bytes[6] = (byte) getActionIdentifier();
+        ByteUtils.setBytes(bytes, Property.stringToBytes(name), 7);
     }
 
     public ActionItem(byte[] bytes) throws CommandParseException {
@@ -60,7 +56,7 @@ public class ActionItem extends Property {
         if (bytes.length < 8) throw new CommandParseException();
         this.bytes = bytes;
         actionIdentifier = bytes[6];
-        name = Property.getString(bytes, 7, bytes.length - 4);
+        name = Property.getString(bytes, 7, bytes.length - 7);
     }
 
     @Override public byte getPropertyIdentifier() {
@@ -71,7 +67,7 @@ public class ActionItem extends Property {
         return 1 + name.length();
     }
 
-    @Override public byte[] getPropertyBytes()  {
+    @Override public byte[] getPropertyBytes() {
         return bytes;
     }
 }

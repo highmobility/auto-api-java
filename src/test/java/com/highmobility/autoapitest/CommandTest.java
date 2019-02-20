@@ -67,10 +67,10 @@ public class CommandTest {
     @Test public void timestampInTheMiddle() throws ParseException {
         Bytes bytes = new Bytes("002501" +
                 "01000401000164" +
-                "02000401000100" + "A4001301001011010A11220000000202000401000100" +
+                "02000401000100" + "A4001301001000000160E15608400202000401000100" +
                 "03000401000101" +
                 "04000401000102");
-        String expectedDate = "2017-01-10T17:34:00+0000";
+        String expectedDate = "2018-01-10T18:30:00";
         Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
 
         RooftopState state = (RooftopState) CommandResolver.resolve(bytes);
@@ -91,8 +91,8 @@ public class CommandTest {
     public void testPropertyTimestampParsed() throws ParseException {
         String parkingStateProperty = "01000401000101";
         Bytes bytes =
-                new Bytes(parkingBrakeCommand + "A4001301001011010A112200000001" + parkingStateProperty);
-        String expectedDate = "2017-01-10T17:34:00+0000";
+                new Bytes(parkingBrakeCommand + "A4001301001000000160E156084001" + parkingStateProperty);
+        String expectedDate = "2018-01-10T18:30:00";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
 
         PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x01)[0];
@@ -109,9 +109,9 @@ public class CommandTest {
          */
 
         String parkingStateProperty = "01000401000101";
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A4001301001011010A112200000001" +
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4001301001000000160E156084001" +
                 parkingStateProperty);
-        String expectedDate = "2017-01-10T17:34:00+0000";
+        String expectedDate = "2018-01-10T18:30:00";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
 
         PropertyTimestamp timestamp = command.getPropertyTimestamp(command.isActive());
@@ -122,11 +122,11 @@ public class CommandTest {
     @Test public void propertyTimestampWithObjectFromArray() throws ParseException {
         Bytes bytes = new Bytes("005601" +
                 "0200050100020201" +
-                "0200050100020300" + "A4001401001111010A112200000002" + "0200050100020300" +
+                "0200050100020300" + "A4001401001100000160E0EA138802" + "0200050100020300" +
                 "0300050100020201" +
                 "0300050100020300");
         SeatsState command = (SeatsState) CommandResolver.resolve(bytes);
-        String expectedDate = "2017-01-10T17:34:00+0000";
+        String expectedDate = "2018-01-10T16:32:05";
 
         PropertyTimestamp timestamp = command.getPropertyTimestamp(command.getPersonsDetected()[1]);
         assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
@@ -185,10 +185,10 @@ public class CommandTest {
     }
 
     @Test public void timestamp() throws ParseException {
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A2000B01000811010A1122000000");
-        String expectedDate = "2017-01-10T17:34:00";
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A2000B01000800000160E0EA1388");
+        String expectedDate = "2018-01-10T16:32:05";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
-        assertTrue(TestUtils.dateIsSameUTC(command.getTimestamp(), expectedDate));
+        assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
 
         Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
@@ -198,23 +198,9 @@ public class CommandTest {
         assertTrue(state.equals(bytes));
     }
 
-    @Test public void propertyTimestamp() throws ParseException {
-        // size 9 + full prop size
-        String parkingStateProperty = "01000401000101";
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A4001301001011010A112200000004" +
-                parkingStateProperty);
-        String expectedDate = "2017-01-10T17:34:00+0000";
-
-        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
-
-        PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];
-        assertTrue(TestUtils.dateIsSame(timestamp.getTimestamp(), expectedDate));
-        assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
-    }
-
     @Test public void propertyTimestampNoData() throws ParseException {
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000C01000911010A112200000004");
-        String expectedDate = "2017-01-10T17:34:00+0000";
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000C01000900000160E0EA138804");
+        String expectedDate = "2018-01-10T16:32:05";
         ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
 
         PropertyTimestamp timestamp = command.getPropertyTimestamps((byte) 0x04)[0];

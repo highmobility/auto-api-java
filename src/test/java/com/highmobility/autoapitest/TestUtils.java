@@ -17,7 +17,8 @@ import static junit.framework.TestCase.assertTrue;
 public class TestUtils {
 
     public static boolean dateIsSame(Calendar c, String dateString) throws ParseException {
-        DateFormat format = getFormat(dateString);
+        return dateIsSameIgnoreTimezone(c, dateString); // currently ignoring time zone.
+        /*DateFormat format = getFormat(dateString);
         Date expectedDate;
         try {
             expectedDate = format.parse(dateString);
@@ -37,7 +38,7 @@ public class TestUtils {
         String commandDateString = getUTCFormat().format(commandDate);
         String expectedDateString = getUTCFormat().format(expectedDate);
 
-        return (commandDateString.equals(expectedDateString));
+        return (commandDateString.equals(expectedDateString));*/
     }
 
     public static DateFormat getFormat(String date) {

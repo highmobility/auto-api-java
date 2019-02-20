@@ -118,7 +118,7 @@ public class CapabilityProperty extends Property {
 
                 byte[] newValue = getValue(categoryIdentifier, newTypes);
                 byte[] newBytes = baseBytes((byte) 0x00, newValue.length);
-                ByteUtils.setBytes(newBytes, newValue, 3);
+                ByteUtils.setBytes(newBytes, newValue, 6);
                 this.bytes = newBytes;
                 this.types = newTypes;
             }
@@ -139,7 +139,9 @@ public class CapabilityProperty extends Property {
     static byte[] getValue(byte[] categoryIdentifier, Type[] types) throws
             IllegalArgumentException {
         byte[] bytes = new byte[2 + types.length];
+
         ByteUtils.setBytes(bytes, categoryIdentifier, 0);
+
         for (int i = 0; i < types.length; i++) {
             Type type = types[i];
             bytes[2 + i] = type.getType();

@@ -257,8 +257,8 @@ public class ChargingTest {
         Calendar preferredEndTime = command.getChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME)
                 .getTime();
 
-        assertTrue(TestUtils.dateIsSameIgnoreTimezone(departureTime, "2018-01-10T16:32:05"));
-        assertTrue(TestUtils.dateIsSameIgnoreTimezone(preferredEndTime, "2018-01-10T18:30:00"));
+        assertTrue(TestUtils.dateIsSame(departureTime, "2018-01-10T16:32:05"));
+        assertTrue(TestUtils.dateIsSame(preferredEndTime, "2018-01-10T18:30:00"));
     }
 
     @Test public void SetReductionTimes() {

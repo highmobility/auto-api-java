@@ -215,7 +215,8 @@ public class CapabilitiesTest {
         Capabilities capabilities = builder.build();
         byte[] message = capabilities.getByteArray();
         assertTrue(Arrays.equals(message, ByteUtils.bytesFromHex
-                ("001001010009002400011213141516")));
+                ("001001" +
+                        "01000C010009002400011213141516")));
         assertTrue(capabilities.getCapability(GetClimateState.TYPE) != null);
         assertTrue(capabilities.getCapability(EnableDisableWifi.TYPE) == null);
         assertTrue(capabilities.getCapabilities().length == 1);
@@ -250,9 +251,13 @@ public class CapabilitiesTest {
                 remoteControlTypes);
         builder.addCapability(property2);
 
+        Bytes expected = new Bytes(
+                "001001" +
+                        "01000C010009002400011213141516" +
+                        "010009010006002700011204");
+
         Bytes message = builder.build();
-        assertTrue(TestUtils.bytesTheSame(message, new Bytes(
-                "001001010009002400011213141516010006002700011204")));
+        assertTrue(TestUtils.bytesTheSame(message, expected));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -287,8 +292,9 @@ public class CapabilitiesTest {
         Capabilities capabilities = builder.build();
         assertTrue(capabilities.isSupported(ClimateState.TYPE));
 
-        byte[] bytes = ByteUtils.bytesFromHex("00100101000400240001");
-        assertTrue(Arrays.equals(capabilities.getByteArray(), bytes));
+        Bytes bytes = new Bytes("001001" +
+                "01000701000400240001");
+        assertTrue(TestUtils.bytesTheSame(capabilities, bytes));
     }
 
     @Test public void buildDontAddStateAutomaticallyWhenStateAlreadyExists() {
