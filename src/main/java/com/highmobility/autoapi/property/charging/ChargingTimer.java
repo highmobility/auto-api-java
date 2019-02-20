@@ -56,7 +56,8 @@ public class ChargingTimer extends Property {
     public ChargingTimer(byte identifier, Type type, Calendar time) {
         super(identifier, 9);
         bytes[6] = type.getByte();
-        ByteUtils.setBytes(bytes, Property.calendarToBytes(time), 7);
+        byte[] calendarBytes = Property.calendarToBytes(time);
+        ByteUtils.setBytes(bytes, calendarBytes, 7);
         this.type = type;
         this.time = time;
 

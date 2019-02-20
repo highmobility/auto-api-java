@@ -399,8 +399,6 @@ public class Property extends Bytes {
     }
 
     public static byte[] calendarToBytes(Calendar calendar) {
-        byte[] bytes = new byte[CALENDAR_SIZE];
-        Property.longToBytes(calendar.getTimeInMillis());
-        return bytes;
+        return Property.longToBytes(calendar.getTimeInMillis());
     }
 }

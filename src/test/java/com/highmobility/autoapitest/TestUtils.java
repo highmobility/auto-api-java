@@ -16,9 +16,14 @@ import static junit.framework.TestCase.assertTrue;
 
 public class TestUtils {
 
-    public static boolean dateIsSame(Calendar c, String date) throws ParseException {
-        DateFormat format = getFormat(date);
-        Date expectedDate = format.parse(date);
+    public static boolean dateIsSame(Calendar c, String dateString) throws ParseException {
+        DateFormat format = getFormat(dateString);
+        Date expectedDate;
+        try {
+            expectedDate = format.parse(dateString);
+        } catch (ParseException e) {
+            expectedDate = format.parse(dateString + "+0000"); // add timezone
+        }
 
         Calendar expectedCalendar = Calendar.getInstance();
         expectedCalendar.setTime(expectedDate);
@@ -71,6 +76,14 @@ public class TestUtils {
         return true;
     }
 
+    public static boolean dateIsSameIgnoreTimezone(Calendar c1, String c2) throws ParseException {
+        Date expectedDate = getUTCFormat().parse(c2);
+        Date commandDate = c1.getTime();
+        String commandDateString = getUTCFormat().format(commandDate);
+        String expectedDateString = getUTCFormat().format(expectedDate);
+        return (commandDateString.equals(expectedDateString));
+    }
+
 //    private static DateFormat format;
 
     public static DateFormat getUTCFormat() {
@@ -96,7 +109,12 @@ public class TestUtils {
 
     public static Calendar getCalendar(String dateString) throws ParseException {
         DateFormat format = getFormat(dateString);
-        Date date = format.parse(dateString);
+        Date date = null;
+        try {
+            date = format.parse(dateString);
+        } catch (ParseException e) {
+            date = format.parse(dateString + "+0000"); // add timezone
+        }
         Calendar c = new GregorianCalendar();
         c.setTime(date);
         c.setTimeZone(format.getTimeZone());

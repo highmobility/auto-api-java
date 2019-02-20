@@ -32,30 +32,30 @@ import static org.junit.Assert.assertTrue;
 public class ChargingTest {
     Bytes bytes = new Bytes(
             "002301" +
-                    "02000501000200FF" +
-                    "03000401000132" +
-                    "040007010004bf19999a" +
-                    "050007010004bf19999a" +
-                    "06000701000443c80000" +
-                    "07000701000443cd0000" +
-                    "0800040100015A" +
+                    "02000501000201B0" +
+                    "03000B0100083FE0000000000000" +
+                    "040007010004BF19999A" +
+                    "050007010004BF19999A" +
+                    "06000701000443C80000" +
+                    "070007010004BF19999A" +
+                    "08000B0100083FECCCCCCCCCCCCD" +
                     "0900040100013C" +
-                    "0A000701000400000000" +
+                    "0A000701000440600000" +
                     "0B000401000101" +
-                    "0C000401000100"
-                    // start of l8
-                    + "0E000701000441c80000" +
+                    "0C000401000101" +
+                    "0E000701000441C80000" +
                     "0F000401000101" +
-                    "10000401000100"
-                    + "110006010003011020" // departure times
-                    + "110006010003001220"
-                    + "130006010003000000" // reduction times
-                    + "130006010003011020"
-                    + "1400070100044219999a"
-                    + "15000C0100090212010A1020050000" // timers
-                    + "15000C0100090112010A1020060000"
-                    + "16000401000101"
-                    + "17000401000101" // 16 and 17
+                    "10000401000100" +
+                    "110006010003011020" +
+                    "110006010003000B33" +
+                    "130006010003001121" +
+                    "130006010003010C34" +
+                    "1400070100044219999A" +
+                    "15000C0100090000000160E0EA1388" +
+                    "15000C0100090100000160E1560840" +
+                    "16000401000101" +
+                    "17000401000101"
+
     );
 
     @Test
@@ -64,19 +64,19 @@ public class ChargingTest {
         assertTrue(command.is(ChargeState.TYPE));
         ChargeState state = (ChargeState) command;
 
-        assertTrue(state.getEstimatedRange() == 255);
-        assertTrue(state.getBatteryLevel() == .5f);
+        assertTrue(state.getEstimatedRange() == 432);
+        assertTrue(state.getBatteryLevel() == .5d);
         assertTrue(state.getBatteryCurrentAC() == -.6f);
         assertTrue(state.getBatteryCurrentDC() == -.6f);
         assertTrue(state.getChargerVoltageAC() == 400f);
-        assertTrue(state.getChargerVoltageDC() == 410f);
+        assertTrue(state.getChargerVoltageDC() == -.6f);
         assertTrue(state.getTimeToCompleteCharge() == 60);
-        assertTrue(state.getChargeLimit() == .9f);
-        assertTrue(state.getChargingRate() == 0f);
+        assertTrue(state.getChargeLimit() == .9d);
+        assertTrue(state.getChargingRate() == 3.5f);
         assertTrue(state.getChargeChargePortState() == ChargePortState.OPEN);
-        assertTrue(state.getChargeMode() == ChargeMode.IMMEDIATE);
+        assertTrue(state.getChargeMode() == ChargeMode.TIMER_BASED);
 
-        assertTrue(state.getMaxChargingCurrent() == 25);
+        assertTrue(state.getMaxChargingCurrent() == 25f);
         assertTrue(state.getPlugType() == PlugType.TYPE_2);
         assertTrue(state.getChargingWindowChosen() == false);
 
@@ -88,7 +88,7 @@ public class ChargingTest {
                 timeExists++;
             }
 
-            if (time.getTime().getHour() == 18 && time.getTime().getMinute() == 32 && !time
+            if (time.getTime().getHour() == 11 && time.getTime().getMinute() == 51 && !time
                     .isActive()) {
                 timeExists++;
             }
@@ -99,11 +99,11 @@ public class ChargingTest {
         assertTrue(state.getReductionOfChargingCurrentTimes().length == 2);
 
         for (ReductionTime time : state.getReductionOfChargingCurrentTimes()) {
-            if (time.getTime().getHour() == 0 && time.getTime().getMinute() == 0 && time
+            if (time.getTime().getHour() == 17 && time.getTime().getMinute() == 33 && time
                     .getStartStop() == StartStop.START) {
                 timeExists++;
             }
-            if (time.getTime().getHour() == 16 && time.getTime().getMinute() == 32 && time
+            if (time.getTime().getHour() == 12 && time.getTime().getMinute() == 52 && time
                     .getStartStop() == StartStop.STOP) {
                 timeExists++;
             }
@@ -114,11 +114,11 @@ public class ChargingTest {
         assertTrue(state.getBatteryTemperature() == 38.4f);
 
         assertTrue(state.getTimers().length == 2);
-        Calendar departureDate = state.getTimer(ChargingTimer.Type.DEPARTURE_TIME).getTime();
-        assertTrue(TestUtils.dateIsSameUTC(departureDate, "2018-01-10T16:32:05"));
+        Calendar departureDate = state.getTimer(ChargingTimer.Type.PREFERRED_START_TIME).getTime();
+        assertTrue(TestUtils.dateIsSameIgnoreTimezone(departureDate, "2018-01-10T16:32:05"));
 
         Calendar preferredEndTime = state.getTimer(ChargingTimer.Type.PREFERRED_END_TIME).getTime();
-        assertTrue(TestUtils.dateIsSameUTC(preferredEndTime, "2018-01-10T16:32:06"));
+        assertTrue(TestUtils.dateIsSameIgnoreTimezone(preferredEndTime, "2018-01-10T18:30:00"));
 
         assertTrue(state.getPluggedIn() == true);
         assertTrue(state.getActiveState() == ChargingState.CHARGING);
@@ -144,41 +144,40 @@ public class ChargingTest {
 
     @Test public void build() throws ParseException {
         ChargeState.Builder builder = new ChargeState.Builder();
-        builder.setEstimatedRange(255);
-        builder.setBatteryLevel(.5f);
+        builder.setEstimatedRange(432);
+        builder.setBatteryLevel(.5d);
         builder.setBatteryCurrentAC(-.6f);
         builder.setBatteryCurrentDC(-.6f);
         builder.setChargerVoltageAC(400f);
-        builder.setChargerVoltageDC(410f);
-        builder.setChargeLimit(.9f);
+        builder.setChargerVoltageDC(-.6f);
+        builder.setChargeLimit(.9d);
         builder.setTimeToCompleteCharge(60);
-        builder.setChargingRate(0f);
+        builder.setChargingRate(3.5f);
         builder.setChargePortState(ChargePortState.OPEN);
-        builder.setChargeMode(ChargeMode.IMMEDIATE);
+        builder.setChargeMode(ChargeMode.TIMER_BASED);
 
         builder.setMaxChargingCurrent(25f);
         builder.setPlugType(PlugType.TYPE_2);
         builder.setChargingWindowChosen(false);
 
         builder.addDepartureTime(new DepartureTime(true, new Time(16, 32)));
-        builder.addDepartureTime(new DepartureTime(false, new Time(18, 32)));
+        builder.addDepartureTime(new DepartureTime(false, new Time(11, 51)));
 
-        builder.addReductionOfChargingCurrentTime(new ReductionTime(StartStop.START, new Time(0,
-                0)));
-        builder.addReductionOfChargingCurrentTime(new ReductionTime(StartStop.STOP, new Time(16,
-                32)));
+        builder.addReductionOfChargingCurrentTime(new ReductionTime(StartStop.START, new Time(17,
+                33)));
+        builder.addReductionOfChargingCurrentTime(new ReductionTime(StartStop.STOP, new Time(12,
+                52)));
 
         builder.setBatteryTemperature(38.4f);
 
-        Calendar departureDate = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
-        Calendar preferredEndTime = TestUtils.getUTCCalendar("2018-01-10T16:32:06");
-        ChargingTimer timer = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME,
+        Calendar departureDate = TestUtils.getCalendar("2018-01-10T16:32:05");
+        Calendar preferredEndTime = TestUtils.getCalendar("2018-01-10T18:30:00");
+        ChargingTimer timer = new ChargingTimer(ChargingTimer.Type.PREFERRED_START_TIME,
                 departureDate);
         ChargingTimer timer2 = new ChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME,
                 preferredEndTime);
         builder.addTimer(timer);
         builder.addTimer(timer2);
-
         builder.setPluggedIn(true);
         builder.setActiveState(ChargingState.CHARGING);
 
@@ -238,10 +237,10 @@ public class ChargingTest {
     @Test public void SetChargeTimer() throws ParseException {
         Bytes waitingForBytes = new Bytes
                 ("002316" +
-                        "0D000C0100090212010a1020050000" +
-                        "0D000C0100090113010a1020070000");
+                        "0D000C0100090200000160E0EA1388" +
+                        "0D000C0100090100000160E1560840");
         Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
-        Calendar c2 = TestUtils.getUTCCalendar("2019-01-10T16:32:07");
+        Calendar c2 = TestUtils.getUTCCalendar("2018-01-10T18:30:00");
 
         ChargingTimer[] timers = new ChargingTimer[2];
         timers[0] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
@@ -258,8 +257,8 @@ public class ChargingTest {
         Calendar preferredEndTime = command.getChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME)
                 .getTime();
 
-        assertTrue(TestUtils.dateIsSameUTC(departureTime, "2018-01-10T16:32:05"));
-        assertTrue(TestUtils.dateIsSameUTC(preferredEndTime, "2019-01-10T16:32:07"));
+        assertTrue(TestUtils.dateIsSameIgnoreTimezone(departureTime, "2018-01-10T16:32:05"));
+        assertTrue(TestUtils.dateIsSameIgnoreTimezone(preferredEndTime, "2018-01-10T18:30:00"));
     }
 
     @Test public void SetReductionTimes() {
