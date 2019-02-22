@@ -18,10 +18,12 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class TrunkAccessTest {
+    Bytes bytes = new Bytes(
+            "002101" +
+                    "01000401000100" +
+                    "02000401000101");
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "0021010100010002000101");
 
         Command command = null;
         try {
@@ -48,8 +50,8 @@ public class TrunkAccessTest {
 
     @Test public void control() {
         Bytes waitingForBytes = new Bytes("002112" +
-                "01000100" +
-                "02000101");
+                "01000401000100" +
+                "02000401000101");
         Command commandBytes = new ControlTrunk(Lock.UNLOCKED, Position.OPEN);
         assertTrue(waitingForBytes.equals(commandBytes));
 

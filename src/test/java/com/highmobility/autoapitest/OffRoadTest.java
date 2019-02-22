@@ -34,7 +34,7 @@ public class OffRoadTest {
         assertTrue(command.getClass() == OffroadState.class);
         OffroadState state = (OffroadState) command;
         assertTrue(state.getRouteIncline() == 10);
-        assertTrue(state.getWheelSuspension() == .5);
+        assertTrue(state.getWheelSuspension() == .5d);
     }
 
     @Test public void get() {

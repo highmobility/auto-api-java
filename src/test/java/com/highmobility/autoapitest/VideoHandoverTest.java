@@ -12,10 +12,16 @@ import static org.junit.Assert.assertTrue;
 public class VideoHandoverTest {
     @Test public void videoHandover() {
         Bytes waitingForBytes = new Bytes(
-                "00430001002b68747470733a2f2f7777772e796f75747562652e636f6d2f77617463683f763d795756423755366d583259020002005a03000100");
-        byte[] bytes = new VideoHandover("https://www.youtube.com/watch?v=yWVB7U6mX2Y", 90,
-                ScreenLocation.FRONT).getByteArray();
-        assertTrue(waitingForBytes.equals(bytes));
+                "004300" +
+                        "01002E01002b68747470733a2f2f7777772e796f75747562652e636f6d2f77617463683f763d795756423755366d583259" +
+                        "020005010002005a" +
+                        "03000401000100"
+        );
+
+
+        VideoHandover state = new VideoHandover("https://www.youtube.com/watch?v=yWVB7U6mX2Y", 90,
+                ScreenLocation.FRONT);
+        assertTrue(TestUtils.bytesTheSame(state, waitingForBytes));
 
         VideoHandover command = (VideoHandover) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getUrl().equals("https://www.youtube.com/watch?v=yWVB7U6mX2Y"));

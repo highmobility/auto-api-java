@@ -15,7 +15,9 @@ import static org.junit.Assert.assertTrue;
 
 public class PowerTakeOffTest {
     Bytes bytes = new Bytes(
-            "0065010100010102000101"
+            "006501" +
+                    "01000401000101" +
+                    "02000401000101"
     );
 
     @Test
@@ -47,7 +49,8 @@ public class PowerTakeOffTest {
     }
 
     @Test public void activateDeactivate() {
-        Bytes waitingForBytes = new Bytes("00650201000101");
+        Bytes waitingForBytes = new Bytes("006502" +
+                "01000401000101");
         byte[] commandBytes = new ActivateDeactivatePowerTakeoff(true).getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));
         ActivateDeactivatePowerTakeoff command = (ActivateDeactivatePowerTakeoff) CommandResolver

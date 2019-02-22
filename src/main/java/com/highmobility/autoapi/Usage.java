@@ -44,7 +44,7 @@ public class Usage extends CommandWithProperties {
     private static final byte IDENTIFIER_DRIVING_STYLE_EVALUATION = ((byte) 0x04);
     private static final byte IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION = ((byte) 0x07);
     private static final byte IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION = ((byte) 0x08);
-    private static final byte IDENTIFIER_MILEAGE_AFTER_LAST_TRIP = ((byte) 0x97);
+    private static final byte IDENTIFIER_MILEAGE_AFTER_LAST_TRIP = ((byte) 0x09);
     private static final byte IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION = ((byte) 0x0A);
     private static final byte IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION = ((byte) 0x0B);
     private static final byte IDENTIFIER_LAST_TRIP_BATTERY_REMAINING = ((byte) 0x0C);
@@ -54,16 +54,16 @@ public class Usage extends CommandWithProperties {
 
     private Integer averageWeeklyDistance;
     private Integer averageWeeklyDistanceLongTerm;
-    private Float accelerationEvaluation;
-    private Float drivingStyleEvaluation;
+    private Double accelerationEvaluation;
+    private Double drivingStyleEvaluation;
     private DrivingModeActivationPeriod[] drivingModeActivationPeriods;
     private DrivingModeEnergyConsumption[] drivingModeEnergyConsumptions;
     private Float lastTripEnergyConsumption;
     private Float lastTripFuelConsumption;
     private Float mileageAfterLastTrip;
-    private Float lastTripElectricPortion;
+    private Double lastTripElectricPortion;
     private Float lastTripAverageEnergyRecuperation;
-    private Float lastTripBatteryRemaining;
+    private Double lastTripBatteryRemaining;
     private Calendar lastTripDate;
     private Float averageFuelConsumption;
     private Float currentFuelConsumption;
@@ -85,14 +85,14 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The acceleration evaluation in %.
      */
-    @Nullable public Float getAccelerationEvaluation() {
+    @Nullable public Double getAccelerationEvaluation() {
         return accelerationEvaluation;
     }
 
     /**
      * @return The driving style's evaluation in %
      */
-    @Nullable public Float getDrivingStyleEvaluation() {
+    @Nullable public Double getDrivingStyleEvaluation() {
         return drivingStyleEvaluation;
     }
 
@@ -163,7 +163,7 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The % of the last trip used in electric mode.
      */
-    @Nullable public Float getLastTripElectricPortion() {
+    @Nullable public Double getLastTripElectricPortion() {
         return lastTripElectricPortion;
     }
 
@@ -177,7 +177,7 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The battery % remaining after last trip.
      */
-    @Nullable public Float getLastTripBatteryRemaining() {
+    @Nullable public Double getLastTripBatteryRemaining() {
         return lastTripBatteryRemaining;
     }
 
@@ -216,12 +216,12 @@ public class Usage extends CommandWithProperties {
                         return averageWeeklyDistance;
                     case IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_RUN:
                         averageWeeklyDistanceLongTerm = Property.getUnsignedInt(p.getValueBytes());
-                        break;
+                        return averageWeeklyDistanceLongTerm;
                     case IDENTIFIER_ACCELERATION_EVALUATION:
-                        accelerationEvaluation = Property.getPercentage(p.getValueByte());
+                        accelerationEvaluation = Property.getDouble(p.getValueBytes());
                         return accelerationEvaluation;
                     case IDENTIFIER_DRIVING_STYLE_EVALUATION:
-                        drivingStyleEvaluation = Property.getPercentage(p.getValueByte());
+                        drivingStyleEvaluation = Property.getDouble(p.getValueBytes());
                         return drivingStyleEvaluation;
                     case DrivingModeActivationPeriod.IDENTIFIER:
                         DrivingModeActivationPeriod drivingModeActivationPeriod =
@@ -243,13 +243,13 @@ public class Usage extends CommandWithProperties {
                         mileageAfterLastTrip = Property.getFloat(p.getValueBytes());
                         return mileageAfterLastTrip;
                     case IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION:
-                        lastTripElectricPortion = Property.getPercentage(p.getValueByte());
+                        lastTripElectricPortion = Property.getDouble(p.getValueBytes());
                         return lastTripElectricPortion;
                     case IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION:
                         lastTripAverageEnergyRecuperation = Property.getFloat(p.getValueBytes());
                         return lastTripAverageEnergyRecuperation;
                     case IDENTIFIER_LAST_TRIP_BATTERY_REMAINING:
-                        lastTripBatteryRemaining = Property.getPercentage(p.getValueByte());
+                        lastTripBatteryRemaining = Property.getDouble(p.getValueBytes());
                         return lastTripBatteryRemaining;
                     case IDENTIFIER_LAST_TRIP_DATE:
                         lastTripDate = Property.getCalendar(p.getValueBytes());
@@ -301,17 +301,17 @@ public class Usage extends CommandWithProperties {
     public static final class Builder extends CommandWithProperties.Builder {
         private Integer averageWeeklyDistance;
         private Integer averageWeeklyDistanceLongTerm;
-        private Float accelerationEvaluation;
-        private Float drivingStyleEvaluation;
+        private Double accelerationEvaluation;
+        private Double drivingStyleEvaluation;
         private List<DrivingModeActivationPeriod> drivingModeActivationPeriods = new ArrayList<>();
         private List<DrivingModeEnergyConsumption> drivingModeEnergyConsumptions = new
                 ArrayList<>();
         private Float lastTripEnergyConsumption;
         private Float lastTripFuelConsumption;
         private Float mileageAfterLastTrip;
-        private Float lastTripElectricPortion;
+        private Double lastTripElectricPortion;
         private Float lastTripAverageEnergyRecuperation;
-        private Float lastTripBatteryRemaining;
+        private Double lastTripBatteryRemaining;
         private Calendar lastTripDate;
         private Float averageFuelConsumption;
         private Float currentFuelConsumption;

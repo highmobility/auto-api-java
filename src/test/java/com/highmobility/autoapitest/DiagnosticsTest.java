@@ -26,11 +26,11 @@ import static org.junit.Assert.fail;
 public class DiagnosticsTest {
     Bytes bytes = new Bytes(
             "003301" +
-                    "0100060100030249F0" +
+                    "010007010004000249F0" +
                     "0200050100020063" +
                     "030005010002003C" +
                     "04000501000209C4" +
-                    "0500040100015A" +
+                    "05000B0100083FECCCCCCCCCCCCD" +
                     "0600050100020109" +
                     "09000401000101" +
                     "0B000701000441400000" +
@@ -43,10 +43,10 @@ public class DiagnosticsTest {
                     "12000701000444BB94CD" +
                     "13000701000446D78600" +
                     "14000401000100" +
-                    "15000401000114" +
-                    "1600040100010A" +
+                    "15000B0100083FC999999999999A" +
+                    "16000B0100083FB999999999999A" +
                     "1700050100020041" +
-                    "18000401000138" +
+                    "18000B0100083FE1EB851EB851EC" +
                     "19001D01001A000100019C78000C436865636B20656E67696E6505416C657274" +
                     "19001E01001B000100019C78000C436865636B20656E67696E6506416C65727474" +
                     "1A0008010005004013D70A" +
@@ -77,7 +77,7 @@ public class DiagnosticsTest {
         assertTrue(state.getSpeed() == 60);
         assertTrue(state.getRpm() == 2500);
         assertTrue(state.getRange() == 265);
-        assertTrue(state.getFuelLevel() == .9f);
+        assertTrue(state.getFuelLevel() == .9d);
         assertTrue(state.getWasherFluidLevel() == WasherFluidLevel.FULL);
         assertTrue(state.getFuelVolume() == 35.5f);
 
@@ -94,12 +94,12 @@ public class DiagnosticsTest {
         assertTrue(state.getEngineTotalOperatingHours() == 1500.65f);
         assertTrue(state.getEngineTotalFuelConsumption() == 27587.0f);
         assertTrue(state.getBrakeFluidLevel() == BrakeFluidLevel.LOW);
-        assertTrue(state.getEngineTorque() == .2f);
-        assertTrue(state.getEngineLoad() == .1f);
-        assertTrue(state.getWheelBasedSpeed() == 65);
+        assertTrue(state.getEngineTorque() == .2d);
+        assertTrue(state.getEngineLoad() == .1d);
+        assertTrue(state.getWheelBasedSpeed() == 65d);
 
         // level 8
-        assertTrue(state.getBatteryLevel() == .56f);
+        assertTrue(state.getBatteryLevel() == .56d);
 
         int propertyCount = 0;
 
@@ -191,7 +191,7 @@ public class DiagnosticsTest {
         builder.setOilTemperature(99);
         builder.setSpeed(60);
         builder.setRpm(2500);
-        builder.setFuelLevel(.9f);
+        builder.setFuelLevel(.9d);
         builder.setRange(265);
         builder.setWasherFluidLevel(WasherFluidLevel.FULL);
 
@@ -206,12 +206,12 @@ public class DiagnosticsTest {
         builder.setEngineTotalOperatingHours(1500.65f);
         builder.setEngineTotalFuelConsumption(27587.0f);
         builder.setBrakeFluidLevel(BrakeFluidLevel.LOW);
-        builder.setEngineTorque(.2f);
-        builder.setEngineLoad(.1f);
+        builder.setEngineTorque(.2d);
+        builder.setEngineLoad(.1d);
         builder.setWheelBasedSpeed(65);
 
         // level8
-        builder.setBatteryLevel(.56f);
+        builder.setBatteryLevel(.56d);
 
         CheckControlMessage msg1 = new CheckControlMessage(1, 105592, "Check engine", "Alert");
         CheckControlMessage msg2 = new CheckControlMessage(1, 105592, "Check engine", "Alertt");

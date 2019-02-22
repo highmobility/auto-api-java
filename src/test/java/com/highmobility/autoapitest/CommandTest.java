@@ -66,10 +66,11 @@ public class CommandTest {
 
     @Test public void timestampInTheMiddle() throws ParseException {
         Bytes bytes = new Bytes("002501" +
-                "01000401000164" +
-                "02000401000100" + "A4001301001000000160E15608400202000401000100" +
+                "01000B0100083FF0000000000000" +
+                "02000B0100080000000000000000" + "A4001A01001000000160E15608400202000B0100080000000000000000" +
                 "03000401000101" +
                 "04000401000102");
+
         String expectedDate = "2018-01-10T18:30:00";
         Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
 
@@ -238,10 +239,10 @@ public class CommandTest {
         }
     }
 
-    @Test public void unknownProperty() throws CommandParseException {
+    @Test public void unknownProperty()  {
         Bytes bytes = new Bytes(
                 "002501" +
-                        "01000401000101" +
+                        "01000B0100083FF0000000000000" +
                         "1A000401000135");
 
         Command command = null;
@@ -255,7 +256,7 @@ public class CommandTest {
 
         assertTrue(command.getClass() == RooftopState.class);
         RooftopState state = (RooftopState) command;
-        assertTrue(state.getDimmingPercentage() == .01f);
+        assertTrue(state.getDimmingPercentage() == 1d);
         assertTrue(state.getOpenPercentage() == null);
         assertTrue(state.getProperties().length == 2);
 
@@ -271,10 +272,10 @@ public class CommandTest {
                         ("1A000401000135")));
                 foundUnknownProperty = true;
             } else if (property.getPropertyIdentifier() == 0x01) {
-                assertTrue(property.getValueLength() == 1);
-                assertTrue(Arrays.equals(property.getValueBytes(), new byte[]{0x01}));
+                assertTrue(property.getValueLength() == 8);
+
                 assertTrue(Arrays.equals(property.getPropertyBytes(), ByteUtils.bytesFromHex
-                        ("01000401000101")));
+                        ("01000B0100083FF0000000000000")));
                 foundDimmingProperty = true;
             }
         }

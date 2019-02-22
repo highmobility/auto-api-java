@@ -152,7 +152,7 @@ public class Property extends Bytes {
 
     // MARK: ctor helpers
 
-    protected static byte[] baseBytes(byte identifier, int dataComponentSize) {
+    public static byte[] baseBytes(byte identifier, int dataComponentSize) {
         // if have a value, create bytes for data component
         int propertySize = dataComponentSize + 3;
 
@@ -170,9 +170,10 @@ public class Property extends Bytes {
             bytes[2] = (byte) propertySize;
         }
 
-        bytes[3] = 0x01; // data component
-        bytes[4] = 0x00; // data component size
-        bytes[5] = intToBytes(dataComponentSize, 1)[0]; // data component size
+        if (dataComponentSize > 0) {
+            bytes[3] = 0x01; // data component
+            ByteUtils.setBytes(bytes, intToBytes(dataComponentSize, 2), 4); // data component size
+        }
 
         return bytes;
     }
@@ -243,18 +244,6 @@ public class Property extends Bytes {
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
         buffer.putLong(bits);
         return buffer.array();
-    }
-
-    public static int floatToIntPercentage(float value) {
-        return Math.round(value * 100f);
-    }
-
-    public static byte floatToIntPercentageByte(float value) {
-        return (byte) Math.round(value * 100f);
-    }
-
-    public static float getPercentage(byte value) {
-        return getUnsignedInt(value) / 100f;
     }
 
     public static int getUnsignedInt(byte value) {

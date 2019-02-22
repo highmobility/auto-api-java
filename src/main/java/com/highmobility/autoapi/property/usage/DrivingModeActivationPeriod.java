@@ -23,11 +23,12 @@ package com.highmobility.autoapi.property.usage;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.utils.ByteUtils;
 
 public class DrivingModeActivationPeriod extends Property {
     public static final byte IDENTIFIER = 0x05;
     DrivingMode drivingMode;
-    Float percentage;
+    Double percentage;
 
     /**
      * @return The driving mode.
@@ -39,7 +40,7 @@ public class DrivingModeActivationPeriod extends Property {
     /**
      * @return The activation period.
      */
-    public float getPercentage() {
+    public Double getPercentage() {
         return percentage;
     }
 
@@ -47,16 +48,16 @@ public class DrivingModeActivationPeriod extends Property {
         super(bytes);
         if (bytes.length < 8) throw new CommandParseException();
         drivingMode = DrivingMode.fromByte(bytes[6]);
-        percentage = Property.getPercentage(bytes[7]);
+        percentage = Property.getDouble(bytes, 7);
     }
 
-    public DrivingModeActivationPeriod(DrivingMode type, float percentage) {
+    public DrivingModeActivationPeriod(DrivingMode type, Double percentage) {
         this(IDENTIFIER, type, percentage);
     }
 
-    DrivingModeActivationPeriod(byte identifier, DrivingMode type, float percentage) {
+    DrivingModeActivationPeriod(byte identifier, DrivingMode type, Double percentage) {
         super(identifier, 2);
         bytes[6] = type.getByte();
-        bytes[7] = Property.floatToIntPercentageByte(percentage);
+        ByteUtils.setBytes(bytes, Property.doubleToBytes(percentage), 7);
     }
 }

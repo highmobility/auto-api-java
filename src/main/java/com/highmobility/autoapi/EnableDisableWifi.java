@@ -20,14 +20,15 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Enable or disable Wi-Fi completely.
  */
-public class EnableDisableWifi extends Command {
+public class EnableDisableWifi extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x04);
-
+private static final byte IDENTIFIER = 0x01;
     private boolean enable;
 
     /**
@@ -43,12 +44,15 @@ public class EnableDisableWifi extends Command {
      * @param enable Whether Wi-Fi should be enabled.
      */
     public EnableDisableWifi(boolean enable) {
-        super(TYPE.addByte(Property.boolToByte(enable)));
+        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, enable)));
         this.enable = enable;
     }
 
-    EnableDisableWifi(byte[] bytes) {
+    EnableDisableWifi(byte[] bytes) throws CommandParseException {
         super(bytes);
-        enable = Property.getBool(bytes[6]);
+
+        Property prop = getProperty(IDENTIFIER);
+        if (prop == null) throw new CommandParseException();
+        this.enable = Property.getBool(prop.getValueByte());
     }
 }

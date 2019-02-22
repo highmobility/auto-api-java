@@ -43,7 +43,7 @@ public class DevCenterSnippetTest {
 
         if (command instanceof VehicleStatus) {
             VehicleStatus vehicleStatus = (VehicleStatus) command;
-            // now you can inspect the Vehicle Status properties, for example
+            // now you can inspect the Vehicle Status testState, for example
 
             // get VIN number
             vehicleStatus.getVin();
@@ -82,7 +82,7 @@ public class DevCenterSnippetTest {
 
         if (command instanceof VehicleLocation) {
             VehicleLocation location = (VehicleLocation) command;
-            // vehicle location properties can now be accessed:
+            // vehicle location testState can now be accessed:
 
             // coordinates
             location.getCoordinates().getLatitude();
@@ -97,7 +97,7 @@ public class DevCenterSnippetTest {
 
         if (command instanceof LockState) {
             LockState state = (LockState) command;
-            // vehicle lock state properties can now be accessed:
+            // vehicle lock state testState can now be accessed:
 
             // lock state for a specific door
             state.getOutsideLock(Location.FRONT_LEFT);

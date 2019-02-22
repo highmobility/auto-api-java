@@ -192,13 +192,13 @@ public class ChargingTest {
     }
 
     @Test public void setChargeLimit() {
-        Bytes expected = new Bytes("0023130100040100015A");
+        Bytes expected = new Bytes("00231301000B0100083FECCCCCCCCCCCCD");
 
-        Bytes commandBytes = new SetChargeLimit(.9f);
+        Bytes commandBytes = new SetChargeLimit(.9d);
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
 
         SetChargeLimit command = (SetChargeLimit) CommandResolver.resolve(expected);
-        assertTrue(command.getChargeLimit() == .9f);
+        assertTrue(command.getChargeLimit() == .9d);
     }
 
     @Test public void openCloseChargePort() {
@@ -212,7 +212,8 @@ public class ChargingTest {
     }
 
     @Test public void startStopCharging() {
-        Bytes waitingForBytes = new Bytes("00231201000401000101");
+        Bytes waitingForBytes = new Bytes("002312" +
+                "01000401000101");
         Bytes commandBytes = new StartStopCharging(true);
 
         assertTrue(waitingForBytes.equals(commandBytes));

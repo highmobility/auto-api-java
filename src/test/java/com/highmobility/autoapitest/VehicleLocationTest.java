@@ -19,9 +19,10 @@ import static org.junit.Assert.fail;
 public class VehicleLocationTest {
     Bytes bytes = new Bytes(
             "003001" +
-                    "040010404A428F9F44D445402ACF562174C4CE" +
-                    "050008402ABD80C308FEAC" +
-                    "0600084060B00000000000");
+                    "040013010010404A428F9F44D445402ACF562174C4CE" +
+                    "05000B010008402ABD80C308FEAC" +
+                    "06000B0100084060B00000000000"
+    );
 
     @Test
     public void state() {

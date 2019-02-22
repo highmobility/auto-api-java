@@ -18,10 +18,12 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class WeatherConditionsTest {
+        Bytes bytes = new Bytes(
+                "005501" +
+                        "01000B0100083FF0000000000000"
+        );
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "00550101000164");
 
         Command command = null;
         try {
@@ -49,8 +51,8 @@ public class WeatherConditionsTest {
 
     @Test public void builder() {
         WeatherConditions.Builder builder = new WeatherConditions.Builder();
-        builder.setRainIntensity(1f);
-        byte[] bytes = builder.build().getByteArray();
-        assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("00550101000164")));
+        builder.setRainIntensity(1d);
+        WeatherConditions state = builder.build();
+        assertTrue(state.equals(bytes));
     }
 }

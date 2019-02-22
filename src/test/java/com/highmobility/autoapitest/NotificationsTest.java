@@ -50,7 +50,7 @@ public class NotificationsTest {
         ActionItem[] actions = new ActionItem[]{action1, action2};
         Notification notification = new Notification("Start navigation?", actions, 42);
 
-        // we expect that properties are ordered in this test. It should not matter really
+        // we expect that testState are ordered in this test. It should not matter really
         assertTrue(TestUtils.bytesTheSame(notification, bytes));
     }
 

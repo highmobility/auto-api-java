@@ -22,10 +22,15 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class WifiTest {
+        Bytes bytes = new Bytes(
+                "005901" +
+                        "01000401000101" +
+                        "02000401000101" +
+                        "030007010004484F4D45" +
+                        "04000401000103"
+        );
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "0059010100010102000101030004484f4d4504000103");
 
         Command command = null;
         try {
@@ -51,8 +56,7 @@ public class WifiTest {
         builder.setSecurity(NetworkSecurity.WPA2_PERSONAL);
 
         WifiState state = builder.build();
-        assertTrue(Arrays.equals(state.getByteArray(), ByteUtils.bytesFromHex
-                ("0059010100010102000101030004484f4d4504000103")));
+        assertTrue(state.equals(bytes));
     }
 
     @Test public void get() {
@@ -63,7 +67,11 @@ public class WifiTest {
 
     @Test public void connectToNetwork() {
         Bytes waitingForBytes = new Bytes(
-                "005902030004484f4d450400010305000A5a57337641524e554265");
+                "005902" +
+                        "030007010004484f4d45" +
+                        "04000401000103" +
+                        "05000D01000A5a57337641524e554265");
+
         byte[] commandBytes = null;
         commandBytes = new ConnectToNetwork("HOME", NetworkSecurity
                 .WPA2_PERSONAL, "ZW3vARNUBe")
@@ -77,7 +85,8 @@ public class WifiTest {
     }
 
     @Test public void forgetNetwork() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("005903030004484f4d45");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("005903" +
+                "030007010004484f4d45");
         byte[] commandBytes = new ForgetNetwork("HOME").getByteArray();
 
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
@@ -87,7 +96,8 @@ public class WifiTest {
     }
 
     @Test public void enableDisableWifi() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("00590401");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex("005904" +
+                "01000401000101");
         byte[] commandBytes = new EnableDisableWifi(true).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
