@@ -74,13 +74,13 @@ public class CapabilityProperty extends Property {
         super(bytes);
 
         int propertyLength = Property.getUnsignedInt(bytes, 1, 2);
-        identifierBytes = new byte[]{bytes[3], bytes[4]};
+        identifierBytes = new byte[]{bytes[6], bytes[7]};
         identifier = Identifier.fromBytes(identifierBytes);
         if (propertyLength < 3) return;
 
         ArrayList<Type> builder = new ArrayList<>();
 
-        for (int i = 5; i < 3 + propertyLength; i++) {
+        for (int i = 8; i < 3 + propertyLength; i++) {
             Type type = new Type(identifierBytes, bytes[i]);
             builder.add(type);
         }

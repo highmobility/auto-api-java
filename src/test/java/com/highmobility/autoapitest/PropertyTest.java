@@ -1,6 +1,8 @@
 package com.highmobility.autoapitest;
 
+import com.highmobility.autoapi.ClimateState;
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.CapabilityProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyFailure;
@@ -47,5 +49,18 @@ public class PropertyTest {
     @Test public void nullString() {
         new StringProperty((byte) 0x00, null);
         new StringProperty((byte) 0x00, "");
+    }
+
+
+    @Test public void string() {
+        Bytes bytes = new Bytes("01001401001131484D3345303733314837373936393543");
+        String s = Property.getString(bytes.getByteArray());
+    }
+
+    @Test public void capability() {
+        Bytes bytes = new Bytes("01000D01000A" +
+                "00240001121314151617");
+        CapabilityProperty capabilityProperty = new CapabilityProperty(bytes.getByteArray());
+        assertTrue(capabilityProperty.isSupported(ClimateState.TYPE));
     }
 }
