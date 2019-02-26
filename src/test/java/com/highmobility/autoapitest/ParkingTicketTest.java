@@ -15,17 +15,22 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.SimpleTimeZone;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class ParkingTicketTest {
+    Bytes bytes = new Bytes(
+            "004701" +
+                    "01000401000101" +
+                    "02001101000E4265726C696E205061726B696E67" +
+                    "03000B0100083634383934323333" +
+                    "04000B01000800000160E0EA1388" +
+                    "05000B01000800000160E1560840"
+    );
+
     @Test
     public void state() throws ParseException {
-        Bytes bytes = new Bytes(
-                "0047010100010102000E4265726c696e205061726b696e67030008363438393432333304000811010a1122000000050008120214160B000000");
 
         Command command = null;
         try {
@@ -41,8 +46,8 @@ public class ParkingTicketTest {
         assertTrue(state.getOperatorName().equals("Berlin Parking"));
         assertTrue(state.getOperatorTicketId().equals("64894233"));
 
-        assertTrue(TestUtils.dateIsSameUTC(state.getTicketStartDate(), "2017-01-10T17:34:00"));
-        assertTrue(TestUtils.dateIsSameUTC(state.getTicketEndDate(), "2018-02-20T22:11:00"));
+        assertTrue(TestUtils.dateIsSame(state.getTicketStartDate(), "2018-01-10T16:32:05"));
+        assertTrue(TestUtils.dateIsSame(state.getTicketEndDate(), "2018-01-10T18:30:00"));
     }
 
     @Test public void build() throws ParseException {
@@ -51,12 +56,11 @@ public class ParkingTicketTest {
         builder.setState(ParkingTicketState.STARTED);
         builder.setOperatorName("Berlin Parking");
         builder.setOperatorTicketId("64894233");
-        builder.setTicketStart(TestUtils.getUTCCalendar("2017-01-10T17:34:00"));
-        builder.setTicketEnd(TestUtils.getUTCCalendar("2018-02-20T22:11:00"));
+        builder.setTicketStart(TestUtils.getCalendar("2018-01-10T16:32:05"));
+        builder.setTicketEnd(TestUtils.getCalendar("2018-01-10T18:30:00"));
 
         ParkingTicket command = builder.build();
-        assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex
-                ("0047010100010102000E4265726c696e205061726b696e67030008363438393432333304000811010a1122000000050008120214160B000000")));
+        assertTrue(TestUtils.bytesTheSame(command, bytes));
     }
 
     @Test public void get() {
@@ -67,21 +71,18 @@ public class ParkingTicketTest {
 
     @Test public void startParking() throws ParseException {
         Bytes waitingForBytes = new Bytes(
-                "00470201000E4265726c696e205061726b696e67020008363438393432333303000811010a112200003C");
+                "004702" +
+                        "01001101000E4265726c696e205061726b696e67" +
+                        "02000B0100083634383934323333" +
+                        "03000B01000800000160E1560840");
 
-        Calendar startDate = new GregorianCalendar();
-        startDate.set(2017, 0, 10, 17, 34, 0);
-        long timeZoneOffset = 3600000;
-        startDate.setTimeZone(new SimpleTimeZone((int) timeZoneOffset, "CET"));
+        Calendar expected = TestUtils.getCalendar("2018-01-10T18:30:00");
+        StartParking command = new StartParking("Berlin Parking", "64894233", expected, null);
+        assertTrue(TestUtils.bytesTheSame(command, waitingForBytes));
 
-        byte[] bytes = new StartParking("Berlin Parking", "64894233", startDate, null).getByteArray();
-        assertTrue(waitingForBytes.equals(bytes));
+        command = (StartParking) CommandResolver.resolve(waitingForBytes);
 
-        StartParking command = (StartParking) CommandResolver.resolve(waitingForBytes);
-        Calendar expected = TestUtils.getUTCCalendar("2017-01-10T16:34:00", (int) (timeZoneOffset /
-                60 / 1000));
-
-        assertTrue(TestUtils.dateIsSameIgnoreTimezone(command.getStartDate(), expected));
+        assertTrue(TestUtils.dateIsSame(command.getStartDate(), "2018-01-10T18:30:00"));
         assertTrue(command.getEndDate() == null);
         assertTrue(command.getOperatorName().equals("Berlin Parking"));
         assertTrue(command.getOperatorTicketId().equals("64894233"));

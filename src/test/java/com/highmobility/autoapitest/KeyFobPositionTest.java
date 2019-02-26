@@ -19,7 +19,7 @@ import static org.junit.Assert.fail;
 public class KeyFobPositionTest {
     @Test
     public void state() {
-        Bytes bytes = new Bytes("00480101000105");
+        Bytes bytes = new Bytes("00480101000401000105");
 
         Command command = null;
         try {

@@ -10,6 +10,6 @@ public class HeartRate {
     @Test public void send() {
         Command actual = new SendHeartRate(70);
         assertTrue(actual.equals("002912" +
-                "01000146"));
+                "01000401000146"));
     }
 }

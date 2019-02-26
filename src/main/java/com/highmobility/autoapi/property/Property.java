@@ -32,7 +32,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import static com.highmobility.autoapi.property.StringProperty.CHARSET;
 
@@ -70,8 +69,7 @@ public class Property extends Bytes {
      * @param value      The value of the property.
      */
     public Property(byte identifier, byte value) {
-        this(identifier, 1);
-        bytes[3] = value;
+        bytes = getPropertyBytes(identifier, value);
     }
 
     /**
@@ -79,8 +77,7 @@ public class Property extends Bytes {
      * @param value      The value of the property.
      */
     public Property(byte identifier, byte[] value) {
-        this(identifier, value != null ? value.length : 0);
-        if (value != null) ByteUtils.setBytes(bytes, value, 3);
+        bytes = getPropertyBytes(identifier, value);
     }
 
     /**
@@ -101,23 +98,23 @@ public class Property extends Bytes {
     }
 
     public int getValueLength() {
-        return Property.getUnsignedInt(bytes, 1, 2);
+        return Property.getUnsignedInt(bytes, 4, 2);
     }
 
     /**
      * @return The value bytes.
      */
     public byte[] getValueBytes() {
-        if (bytes.length == 3) return new byte[0];
-        return Arrays.copyOfRange(bytes, 3, bytes.length);
+        if (bytes.length < 7) return new byte[0];
+        return Arrays.copyOfRange(bytes, 6, bytes.length);
     }
 
     /**
      * @return The one value byte. Returns null if property has no value set.
      */
     public Byte getValueByte() {
-        if (bytes.length == 3) return null;
-        return bytes[3];
+        if (bytes.length < 7) return null;
+        return bytes[6];
     }
 
     /**
@@ -132,22 +129,6 @@ public class Property extends Bytes {
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
-    }
-
-    protected byte[] baseBytes(byte identifier, int valueSize) {
-        byte[] bytes = new byte[3 + valueSize];
-
-        bytes[0] = identifier;
-        if (valueSize > 255) {
-            byte[] lengthBytes = intToBytes(valueSize, 2);
-            bytes[1] = lengthBytes[0];
-            bytes[2] = lengthBytes[1];
-        } else if (valueSize != 0) {
-            bytes[1] = 0x00;
-            bytes[2] = (byte) valueSize;
-        }
-
-        return bytes;
     }
 
     public byte getPropertyIdentifier() {
@@ -165,41 +146,50 @@ public class Property extends Bytes {
         return bytes;
     }
 
-    // helper methods
+    protected void setValueBytes(byte[] valueBytes) {
+        ByteUtils.setBytes(bytes, valueBytes, 6);
+    }
 
-    public static byte[] getPropertyBytes(byte identifier, byte value) throws
-            IllegalArgumentException {
-        byte[] bytes = new byte[4];
+    // MARK: ctor helpers
+
+    public static byte[] baseBytes(byte identifier, int dataComponentSize) {
+        // if have a value, create bytes for data component
+        int propertySize = dataComponentSize + 3;
+
+        byte[] bytes = new byte[3 + (dataComponentSize > 0 ? dataComponentSize + 3 : 0)];
+
         bytes[0] = identifier;
-        byte[] lengthBytes = intToBytes(1, 2);
-        bytes[1] = lengthBytes[0];
-        bytes[2] = lengthBytes[1];
-        bytes[3] = value;
+
+        if (propertySize > 255) {
+            byte[] propertyLengthBytes = intToBytes(propertySize, 2);
+            bytes[1] = propertyLengthBytes[0];
+            bytes[2] = propertyLengthBytes[1];
+        } else if (propertySize != 3) {
+            // if property size 3, we don't have data component and can omit the bytes.
+            bytes[1] = 0x00;
+            bytes[2] = (byte) propertySize;
+        }
+
+        if (dataComponentSize > 0) {
+            bytes[3] = 0x01; // data component
+            ByteUtils.setBytes(bytes, intToBytes(dataComponentSize, 2), 4); // data component size
+        }
+
         return bytes;
     }
 
-    public static byte[] getPropertyBytes(byte identifier, int length, byte[] value) throws
+    protected static byte[] getPropertyBytes(byte identifier, byte value) throws IllegalArgumentException {
+        return getPropertyBytes(identifier, new byte[]{value});
+    }
+
+    protected static byte[] getPropertyBytes(byte identifier, byte[] value) throws
             IllegalArgumentException {
-        byte[] bytes = new byte[3];
-        bytes[0] = identifier;
-        byte[] lengthBytes = intToBytes(length, 2);
-        bytes[1] = lengthBytes[0];
-        bytes[2] = lengthBytes[1];
-        bytes = ByteUtils.concatBytes(bytes, value);
+        byte[] bytes = baseBytes(identifier, value.length);
+        ByteUtils.setBytes(bytes, value, 6);
         return bytes;
     }
 
-    public static byte[] getIntProperty(byte identifier, int value, int length) throws
-            IllegalArgumentException {
-        byte[] bytes = new byte[]{
-                identifier,
-                0x00,
-                (byte) length
-        };
-
-        byte[] valueBytes = intToBytes(value, length);
-        return ByteUtils.concatBytes(bytes, valueBytes);
-    }
+    // MARK: static helpers
 
     public static long getLong(byte[] b, int at) throws IllegalArgumentException {
         if (b.length - at < 8) throw new IllegalArgumentException();
@@ -254,18 +244,6 @@ public class Property extends Bytes {
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
         buffer.putLong(bits);
         return buffer.array();
-    }
-
-    public static int floatToIntPercentage(float value) {
-        return Math.round(value * 100f);
-    }
-
-    public static byte floatToIntPercentageByte(float value) {
-        return (byte) Math.round(value * 100f);
-    }
-
-    public static float getPercentage(byte value) {
-        return getUnsignedInt(value) / 100f;
     }
 
     public static int getUnsignedInt(byte value) {
@@ -399,18 +377,8 @@ public class Property extends Bytes {
         Calendar c = new GregorianCalendar();
 
         if (bytes.length >= at + CALENDAR_SIZE) {
-            c.set(2000 + bytes[at], bytes[at + 1] - 1, bytes[at + 2], bytes[at + 3], bytes[at +
-                    4], bytes[at + 5]);
-            int minutesOffset = getSignedInt(new byte[]{bytes[at + 6], bytes[at + 7]});
-
-            int msOffset = minutesOffset * 60 * 1000;
-            String[] availableIds = TimeZone.getAvailableIDs(msOffset);
-            if (availableIds.length == 0) {
-                c.setTimeZone(TimeZone.getTimeZone("UTC"));
-            } else {
-                TimeZone timeZone = TimeZone.getTimeZone(availableIds[0]);
-                c.setTimeZone(timeZone);
-            }
+            Long epoch = Property.getLong(bytes, at);
+            c.setTimeInMillis(epoch);
         } else {
             throw new IllegalArgumentException();
         }
@@ -420,22 +388,6 @@ public class Property extends Bytes {
     }
 
     public static byte[] calendarToBytes(Calendar calendar) {
-        byte[] bytes = new byte[CALENDAR_SIZE];
-
-        bytes[0] = (byte) (calendar.get(Calendar.YEAR) - 2000);
-        bytes[1] = (byte) (calendar.get(Calendar.MONTH) + 1);
-        bytes[2] = (byte) calendar.get(Calendar.DAY_OF_MONTH);
-        bytes[3] = (byte) calendar.get(Calendar.HOUR_OF_DAY);
-        bytes[4] = (byte) calendar.get(Calendar.MINUTE);
-        bytes[5] = (byte) calendar.get(Calendar.SECOND);
-
-        int msOffset = calendar.getTimeZone().getRawOffset(); // in ms
-        int minuteOffset = msOffset / (60 * 1000);
-
-        byte[] bytesOffset = Property.intToBytes(minuteOffset, 2);
-        bytes[6] = bytesOffset[0];
-        bytes[7] = bytesOffset[1];
-
-        return bytes;
+        return Property.longToBytes(calendar.getTimeInMillis());
     }
 }

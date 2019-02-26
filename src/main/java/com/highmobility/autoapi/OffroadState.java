@@ -20,8 +20,9 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
@@ -36,7 +37,7 @@ public class OffroadState extends CommandWithProperties {
     private static final byte WHEEL_ID = 0x02;
 
     Integer routeIncline;
-    Float wheelSuspension;
+    Double wheelSuspension;
 
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.
@@ -49,7 +50,7 @@ public class OffroadState extends CommandWithProperties {
      * @return The wheel suspension level percentage, whereas 0 is no suspension and 1 maximum.
      * suspension
      */
-    @Nullable public Float getWheelSuspension() {
+    @Nullable public Double getWheelSuspension() {
         return wheelSuspension;
     }
 
@@ -63,7 +64,7 @@ public class OffroadState extends CommandWithProperties {
                         routeIncline = Property.getUnsignedInt(p.getValueBytes());
                         return routeIncline;
                     case WHEEL_ID:
-                        wheelSuspension = Property.getUnsignedInt(p.getValueByte()) / 100f;
+                        wheelSuspension = Property.getDouble(p.getValueBytes());
                         return wheelSuspension;
                 }
 
@@ -84,7 +85,7 @@ public class OffroadState extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private Integer routeIncline;
-        private Float wheelSuspension;
+        private Double wheelSuspension;
 
         public Builder() {
             super(TYPE);
@@ -106,9 +107,9 @@ public class OffroadState extends CommandWithProperties {
          *                        and 1 maximum suspension.
          * @return The builder.
          */
-        public Builder setWheelSuspension(Float wheelSuspension) {
+        public Builder setWheelSuspension(Double wheelSuspension) {
             this.wheelSuspension = wheelSuspension;
-            addProperty(new PercentageProperty(WHEEL_ID, wheelSuspension));
+            addProperty(new DoubleProperty(WHEEL_ID, wheelSuspension));
             return this;
         }
 

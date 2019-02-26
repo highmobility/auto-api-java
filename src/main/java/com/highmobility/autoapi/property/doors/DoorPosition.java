@@ -44,7 +44,7 @@ public class DoorPosition extends Property {
     }
 
     public DoorPosition(byte[] bytes) throws CommandParseException {
-        this(Location.fromByte(bytes[3]), Position.fromByte(bytes[4]));
+        this(Location.fromByte(bytes[6]), Position.fromByte(bytes[7]));
     }
 
     public DoorPosition(Location location, Position position) {
@@ -52,7 +52,7 @@ public class DoorPosition extends Property {
         this.location = location;
         this.position = position;
 
-        bytes[3] = location.getByte();
-        bytes[4] = position.getByte();
+        bytes[6] = location.getByte();
+        bytes[7] = position.getByte();
     }
 }

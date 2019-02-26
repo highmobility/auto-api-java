@@ -20,7 +20,7 @@ public class MobileTest {
     public void state() {
         Bytes bytes = new Bytes(
                 "006601" +
-                        "01000101");
+                        "01000401000101");
 
         Command command = null;
         try {

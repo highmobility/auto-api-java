@@ -15,10 +15,15 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class FirmwareVersionTest {
+    Bytes bytes = new Bytes(
+            "000301" +
+                    "010006010003010F21" +
+                    "02000F01000C6274737461636B2D75617274" +
+                    "03000C01000976312E352D70726F64"
+    );
+
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "000301010003010f2102000C6274737461636b2d7561727403000976312e352d70726f64");
 
         Command command = null;
         try {
@@ -42,8 +47,7 @@ public class FirmwareVersionTest {
         builder.setApplicationVersion("v1.5-prod");
 
         FirmwareVersion command = builder.build();
-        assertTrue(command.equals
-                ("000301010003010f2102000C6274737461636b2d7561727403000976312e352d70726f64"));
+        assertTrue(command.equals(bytes));
         // 000301010007312E31352E333302000C6274737461636B2D7561727403000976312E352D70726F64
     }
 

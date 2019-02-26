@@ -47,15 +47,15 @@ public class TireTemperature extends Property {
         super((byte) 0x00, 5);
         this.tireLocation = tireLocation;
         this.temperature = temperature;
-        bytes[3] = tireLocation.getByte();
-        ByteUtils.setBytes(bytes, Property.floatToBytes(temperature), 4);
+        bytes[6] = tireLocation.getByte();
+        ByteUtils.setBytes(bytes, Property.floatToBytes(temperature), 7);
     }
 
     public TireTemperature(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 8) throw new CommandParseException();
+        if (bytes.length < 11) throw new CommandParseException();
 
-        this.tireLocation = TireLocation.fromByte(bytes[3]);
-        this.temperature = Property.getFloat(bytes, 4);
+        this.tireLocation = TireLocation.fromByte(bytes[6]);
+        this.temperature = Property.getFloat(bytes, 7);
     }
 }

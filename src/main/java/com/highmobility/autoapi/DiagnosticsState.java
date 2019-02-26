@@ -21,9 +21,9 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.BooleanProperty;
+import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
@@ -82,7 +82,7 @@ public class DiagnosticsState extends CommandWithProperties {
     Integer oilTemperature;
     Integer speed;
     Integer rpm;
-    Float fuelLevel;
+    Double fuelLevel;
     Integer range;
     WasherFluidLevel washerFluidLevel;
     Float batteryVoltage;
@@ -97,12 +97,12 @@ public class DiagnosticsState extends CommandWithProperties {
     Float engineTotalOperatingHours;
     Float engineTotalFuelConsumption;
     BrakeFluidLevel brakeFluidLevel;
-    Float engineTorque;
-    Float engineLoad;
+    Double engineTorque;
+    Double engineLoad;
     Integer wheelBasedSpeed;
 
     // level8
-    Float batteryLevel;
+    Double batteryLevel;
     CheckControlMessage[] checkControlMessages;
     TirePressure[] tirePressures;
     TireTemperature[] tireTemperatures;
@@ -142,7 +142,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The Fuel level percentage between 0-100.
      */
-    @Nullable public Float getFuelLevel() {
+    @Nullable public Double getFuelLevel() {
         return fuelLevel;
     }
 
@@ -233,14 +233,14 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The current engine torque percentage between 0-1.
      */
-    @Nullable public Float getEngineTorque() {
+    @Nullable public Double getEngineTorque() {
         return engineTorque;
     }
 
     /**
      * @return The current engine load percentage between 0-1.
      */
-    @Nullable public Float getEngineLoad() {
+    @Nullable public Double getEngineLoad() {
         return engineLoad;
     }
 
@@ -254,7 +254,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The battery level percentage.
      */
-    @Nullable public Float getBatteryLevel() {
+    @Nullable public Double getBatteryLevel() {
         return batteryLevel;
     }
 
@@ -370,7 +370,7 @@ public class DiagnosticsState extends CommandWithProperties {
                         rpm = Property.getUnsignedInt(p.getValueBytes());
                         return rpm;
                     case FUEL_LEVEL_IDENTIFIER:
-                        fuelLevel = Property.getUnsignedInt(p.getValueBytes()) / 100f;
+                        fuelLevel = Property.getDouble(p.getValueBytes());
                         return fuelLevel;
                     case RANGE_IDENTIFIER:
                         range = Property.getUnsignedInt(p.getValueBytes());
@@ -409,16 +409,16 @@ public class DiagnosticsState extends CommandWithProperties {
                         brakeFluidLevel = BrakeFluidLevel.fromByte(p.getValueByte());
                         return brakeFluidLevel;
                     case ENGINE_TORQUE_IDENTIFIER:
-                        engineTorque = Property.getPercentage(p.getValueByte());
+                        engineTorque = Property.getDouble(p.getValueBytes());
                         return engineTorque;
                     case ENGINE_LOAD_IDENTIFIER:
-                        engineLoad = Property.getPercentage(p.getValueByte());
+                        engineLoad = Property.getDouble(p.getValueBytes());
                         return engineLoad;
                     case WHEEL_BASE_SPEED_IDENTIFIER:
                         wheelBasedSpeed = Property.getSignedInt(p.getValueBytes());
                         return wheelBasedSpeed;
                     case IDENTIFIER_BATTERY_LEVEL:
-                        batteryLevel = Property.getPercentage(p.getValueByte());
+                        batteryLevel = Property.getDouble(p.getValueBytes());
                         return batteryLevel;
                     case IDENTIFIER_CHECK_CONTROL_MESSAGES:
                         CheckControlMessage message = new CheckControlMessage(p.getPropertyBytes());
@@ -503,7 +503,7 @@ public class DiagnosticsState extends CommandWithProperties {
         private Integer oilTemperature;
         private Integer speed;
         private Integer rpm;
-        private Float fuelLevel;
+        private Double fuelLevel;
         private Integer range;
         private WasherFluidLevel washerFluidLevel;
         private Float batteryVoltage;
@@ -517,11 +517,11 @@ public class DiagnosticsState extends CommandWithProperties {
         Float engineTotalOperatingHours;
         Float engineTotalFuelConsumption;
         BrakeFluidLevel brakeFluidLevel;
-        Float engineTorque;
-        Float engineLoad;
+        Double engineTorque;
+        Double engineLoad;
         Integer wheelBasedSpeed;
 
-        Float batteryLevel;
+        Double batteryLevel;
         private List<TirePressure> tirePressures = new ArrayList<>();
         private List<TireTemperature> tireTemperatures = new ArrayList<>();
         private List<WheelRpm> wheelRpms = new ArrayList<>();
@@ -543,7 +543,7 @@ public class DiagnosticsState extends CommandWithProperties {
          */
         public Builder setMileage(Integer mileage) {
             this.mileage = mileage;
-            addProperty(new IntegerProperty(MILEAGE_IDENTIFIER, mileage, 3));
+            addProperty(new IntegerProperty(MILEAGE_IDENTIFIER, mileage, 4));
             return this;
         }
 
@@ -581,9 +581,9 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param fuelLevel The fuel level percentage between 0 and 1.
          * @return The builder.
          */
-        public Builder setFuelLevel(Float fuelLevel) {
+        public Builder setFuelLevel(Double fuelLevel) {
             this.fuelLevel = fuelLevel;
-            addProperty(new PercentageProperty(FUEL_LEVEL_IDENTIFIER, fuelLevel));
+            addProperty(new DoubleProperty(FUEL_LEVEL_IDENTIFIER, fuelLevel));
             return this;
         }
 
@@ -720,9 +720,9 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param engineTorque The current engine torque percentage between 0-1.
          * @return The builder.
          */
-        public Builder setEngineTorque(Float engineTorque) {
+        public Builder setEngineTorque(Double engineTorque) {
             this.engineTorque = engineTorque;
-            addProperty(new PercentageProperty(ENGINE_TORQUE_IDENTIFIER, engineTorque));
+            addProperty(new DoubleProperty(ENGINE_TORQUE_IDENTIFIER, engineTorque));
             return this;
         }
 
@@ -730,9 +730,9 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param engineLoad The current engine load percentage between 0-1.
          * @return The builder.
          */
-        public Builder setEngineLoad(Float engineLoad) {
+        public Builder setEngineLoad(Double engineLoad) {
             this.engineLoad = engineLoad;
-            addProperty(new PercentageProperty(ENGINE_LOAD_IDENTIFIER, engineLoad));
+            addProperty(new DoubleProperty(ENGINE_LOAD_IDENTIFIER, engineLoad));
             return this;
         }
 
@@ -753,9 +753,9 @@ public class DiagnosticsState extends CommandWithProperties {
          *
          * @param batteryLevel The battery level.
          */
-        public void setBatteryLevel(Float batteryLevel) {
+        public void setBatteryLevel(Double batteryLevel) {
             this.batteryLevel = batteryLevel;
-            addProperty(new PercentageProperty(IDENTIFIER_BATTERY_LEVEL, batteryLevel));
+            addProperty(new DoubleProperty(IDENTIFIER_BATTERY_LEVEL, batteryLevel));
         }
 
         /**

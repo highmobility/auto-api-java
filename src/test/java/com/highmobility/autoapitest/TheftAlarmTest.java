@@ -6,6 +6,7 @@ import com.highmobility.autoapi.GetTheftAlarmState;
 import com.highmobility.autoapi.SetTheftAlarm;
 import com.highmobility.autoapi.TheftAlarmState;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
@@ -15,10 +16,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TheftAlarmTest {
+        Bytes bytes = new Bytes(
+                "00460101000401000101");
     @Test
     public void state() {
-        byte[] bytes = ByteUtils.bytesFromHex(
-                "00460101000101");
 
         Command command = null;
         try {
@@ -40,7 +41,7 @@ public class TheftAlarmTest {
     }
 
     @Test public void setAlarm() {
-        String waitingForBytes = "00461201000101";
+        String waitingForBytes = "00461201000401000101";
         String commandBytes = ByteUtils.hexFromBytes(new SetTheftAlarm(TheftAlarmState.State
                 .ARMED).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -53,7 +54,7 @@ public class TheftAlarmTest {
         TheftAlarmState.Builder builder = new TheftAlarmState.Builder();
         builder.setState(TheftAlarmState.State.ARMED);
         TheftAlarmState state = builder.build();
-        assertTrue(Arrays.equals(state.getByteArray(), ByteUtils.bytesFromHex("00460101000101")));
+        assertTrue(state.equals(bytes));
         assertTrue(state.getState() == TheftAlarmState.State.ARMED);
     }
 

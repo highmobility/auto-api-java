@@ -19,8 +19,8 @@ import static org.junit.Assert.assertTrue;
 public class NaviDestinationTest {
     Bytes bytes = new Bytes(
             "003101" +
-                    "070010404A428F9F44D445402ACF562174C4CE" +
-                    "0200064265726C696E");
+                    "070013010010404A428F9F44D445402ACF562174C4CE" +
+                    "0200090100064265726C696E");
 
     @Test
     public void state() {
@@ -41,8 +41,8 @@ public class NaviDestinationTest {
 
     @Test public void set() {
         Bytes waitingForBytes = new Bytes("003102" +
-                "070010404A428F9F44D445402ACF562174C4CE" +
-                "0200064265726c696e");
+                "070013010010404A428F9F44D445402ACF562174C4CE" +
+                "0200090100064265726c696e");
 
         Bytes commandBytes = new SetNaviDestination(new CoordinatesProperty(52.520008, 13.404954),
                 "Berlin");

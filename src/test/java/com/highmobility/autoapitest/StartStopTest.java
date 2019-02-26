@@ -14,7 +14,8 @@ import static org.junit.Assert.assertTrue;
 
 public class StartStopTest {
     Bytes bytes = new Bytes(
-            "00630101000101"
+            "006301" +
+                    "01000401000101"
     );
 
     @Test
@@ -46,7 +47,8 @@ public class StartStopTest {
     }
 
     @Test public void activateDeactivate() {
-        Bytes waitingForBytes = new Bytes("00631201000100");
+        Bytes waitingForBytes = new Bytes("006312" +
+                "01000401000100");
 
         Bytes commandBytes = new ActivateDeactivateStartStop(false);
         assertTrue(TestUtils.bytesTheSame(waitingForBytes, commandBytes));

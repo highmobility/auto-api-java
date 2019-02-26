@@ -44,8 +44,8 @@ public class CoordinatesProperty extends Property {
     public CoordinatesProperty(byte[] bytes) {
         super(bytes);
 
-        latitude = Property.getDouble(bytes, 3);
-        longitude = Property.getDouble(bytes, 11);
+        latitude = Property.getDouble(bytes, 6);
+        longitude = Property.getDouble(bytes, 14);
     }
     
     public CoordinatesProperty(double latitude, double longitude) {
@@ -54,8 +54,8 @@ public class CoordinatesProperty extends Property {
 
     public CoordinatesProperty(byte identifier, double latitude, double longitude) {
         super(identifier, 16);
-        ByteUtils.setBytes(bytes, Property.doubleToBytes(latitude), 3);
-        ByteUtils.setBytes(bytes, Property.doubleToBytes(longitude), 11);
+        ByteUtils.setBytes(bytes, Property.doubleToBytes(latitude), 6);
+        ByteUtils.setBytes(bytes, Property.doubleToBytes(longitude), 14);
         this.latitude = latitude;
         this.longitude = longitude;
     }

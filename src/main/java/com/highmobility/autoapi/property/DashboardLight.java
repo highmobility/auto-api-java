@@ -45,8 +45,8 @@ public class DashboardLight extends Property {
     public DashboardLight(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length < 5) throw new CommandParseException();
-        type = Type.fromByte(bytes[3]);
-        state = State.fromByte(bytes[4]);
+        type = Type.fromByte(bytes[6]);
+        state = State.fromByte(bytes[7]);
     }
 
     public DashboardLight(Type type, State state) {
@@ -55,8 +55,8 @@ public class DashboardLight extends Property {
 
     public DashboardLight(byte identifier, Type type, State state) {
         super(identifier, 2);
-        bytes[3] = type.getByte();
-        bytes[4] = state.getByte();
+        bytes[6] = type.getByte();
+        bytes[7] = state.getByte();
         this.type = type;
         this.state = state;
     }

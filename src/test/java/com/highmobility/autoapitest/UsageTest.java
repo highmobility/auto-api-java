@@ -20,23 +20,24 @@ import static org.junit.Assert.fail;
 public class UsageTest {
     Bytes bytes = new Bytes(
             "006801" +
-                    "010002029A" +
-                    "020002029A" +
-                    "03000146" +
-                    "04000146" +
-                    "050002013C" +
-                    "0500020028" +
-                    "060005014204CCCD" +
-                    "06000500425D999A" +
-                    "07000442CA999A" +
-                    "08000441B40000" +
-                    "97000447BAC85A" +
-                    "0A000146" +
-                    "0B000440B5C28F" +
-                    "0C000132" +
-                    "0D0008120A110A2132003C" +
-                    "0E000440D00000" +
-                    "0F000440F00000"
+                    "010005010002029A" +
+                    "020005010002029A" +
+                    "03000B0100083FE6666666666666" +
+                    "04000B0100083FE6666666666666" +
+                    "05000C010009013FE3333333333333" +
+                    "05000C010009003FD999999999999A" +
+                    "060008010002014204CCCD" +
+                    "06000801000200425D999A" +
+                    "07000701000442CA999A" +
+                    "08000701000441B40000" +
+                    "09000701000447BAC85A" +
+                    "0A000B0100083FE6666666666666" +
+                    "0B000701000440B5C28F" +
+                    "0C000B0100083FE0000000000000" +
+                    "0D000B0100080000016682059D50" +
+                    "0E000701000440D00000" +
+                    "0F000701000440F00000"
+
     );
 
     @Test public void state() throws ParseException {
@@ -53,14 +54,14 @@ public class UsageTest {
         assertTrue(state.getAverageWeeklyDistance() == 666);
         assertTrue(state.getAverageWeeklyDistance() == 666);
         assertTrue(state.getAverageWeeklyDistanceLongTerm() == 666);
-        assertTrue(state.getAccelerationEvaluation() == .7f);
-        assertTrue(state.getDrivingStyleEvaluation() == .7f);
-        assertTrue(state.getDrivingStyleEvaluation() == .7f);
+        assertTrue(state.getAccelerationEvaluation() == .7d);
+        assertTrue(state.getDrivingStyleEvaluation() == .7d);
+        assertTrue(state.getDrivingStyleEvaluation() == .7d);
 
         assertTrue(state.getDrivingModeActivationPeriods().length == 2);
-        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.ECO).getPercentage() == .6f);
+        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.ECO).getPercentage() == .6d);
         assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.REGULAR).getPercentage() ==
-                .4f);
+                .4d);
 
         assertTrue(state.getDrivingModeEnergyConsumptions().length == 2);
         assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.ECO).getEnergyConsumption()
@@ -71,10 +72,10 @@ public class UsageTest {
         assertTrue(state.getLastTripEnergyConsumption() == 101.3f);
         assertTrue(state.getLastTripFuelConsumption() == 22.5f);
         assertTrue(state.getMileageAfterLastTrip() == 95632.7f);
-        assertTrue(state.getLastTripElectricPortion() == .7f);
+        assertTrue(state.getLastTripElectricPortion() == .7d);
         assertTrue(state.getLastTripAverageEnergyRecuperation() == 5.68f);
         assertTrue(state.getLastTripBatteryRemaining() == .5f);
-        assertTrue(TestUtils.dateIsSame(state.getLastTripDate(), "2018-10-17T10:33:50+0100"));
+        assertTrue(TestUtils.dateIsSame(state.getLastTripDate(), "2018-10-17T12:34:58"));
         assertTrue(state.getAverageFuelConsumption() == 6.5f);
         assertTrue(state.getCurrentFuelConsumption() == 7.5f);
     }

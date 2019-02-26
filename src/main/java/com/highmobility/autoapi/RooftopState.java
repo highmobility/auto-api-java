@@ -20,7 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.DoubleProperty;
+import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Position;
 import com.highmobility.autoapi.rooftop.ConvertibleRoofState;
@@ -41,8 +42,8 @@ public class RooftopState extends CommandWithProperties {
     public static final byte IDENTIFIER_SUNROOF_TILT = 0x04;
     public static final byte IDENTIFIER_SUNROOF_POSITION = 0x05;
 
-    Float dimmingPercentage;
-    Float openPercentage;
+    Double dimmingPercentage;
+    Double openPercentage;
     ConvertibleRoofState convertibleRoofState;
     SunroofTiltState sunroofTiltState;
     Position sunroofPosition;
@@ -50,14 +51,14 @@ public class RooftopState extends CommandWithProperties {
     /**
      * @return The dim percentage of the rooftop.
      */
-    @Nullable public Float getDimmingPercentage() {
+    @Nullable public Double getDimmingPercentage() {
         return dimmingPercentage;
     }
 
     /**
      * @return The percentage of how much the rooftop is open.
      */
-    @Nullable public Float getOpenPercentage() {
+    @Nullable public Double getOpenPercentage() {
         return openPercentage;
     }
 
@@ -89,10 +90,10 @@ public class RooftopState extends CommandWithProperties {
             propertiesIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case DIMMING_IDENTIFIER:
-                        dimmingPercentage = Property.getUnsignedInt(p.getValueByte()) / 100f;
+                        dimmingPercentage = Property.getDouble(p.getValueBytes());
                         return dimmingPercentage;
                     case OPEN_IDENTIFIER:
-                        openPercentage = Property.getUnsignedInt(p.getValueByte()) / 100f;
+                        openPercentage = Property.getDouble(p.getValueBytes());
                         return openPercentage;
                     case IDENTIFIER_CONVERTIBLE_ROOF:
                         convertibleRoofState = ConvertibleRoofState.fromByte(p.getValueByte());
@@ -124,8 +125,8 @@ public class RooftopState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Float openPercentage;
-        private Float dimmingPercentage;
+        private Double openPercentage;
+        private Double dimmingPercentage;
         private ConvertibleRoofState convertibleRoofState;
         private SunroofTiltState sunroofTiltState;
         private Position sunroofPosition;
@@ -138,9 +139,9 @@ public class RooftopState extends CommandWithProperties {
          * @param openPercentage The open percentage.
          * @return The builder.
          */
-        public Builder setOpenPercentage(Float openPercentage) {
+        public Builder setOpenPercentage(Double openPercentage) {
             this.openPercentage = openPercentage;
-            addProperty(new PercentageProperty(OPEN_IDENTIFIER, openPercentage));
+            addProperty(new DoubleProperty(OPEN_IDENTIFIER, openPercentage));
             return this;
         }
 
@@ -148,9 +149,9 @@ public class RooftopState extends CommandWithProperties {
          * @param dimmingPercentage The dimming percentage.
          * @return The builder.
          */
-        public Builder setDimmingPercentage(Float dimmingPercentage) {
+        public Builder setDimmingPercentage(Double dimmingPercentage) {
             this.dimmingPercentage = dimmingPercentage;
-            addProperty(new PercentageProperty(DIMMING_IDENTIFIER, dimmingPercentage));
+            addProperty(new DoubleProperty(DIMMING_IDENTIFIER, dimmingPercentage));
             return this;
         }
 

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindscreenDamage;
 import com.highmobility.autoapi.property.WindscreenDamageZone;
@@ -55,7 +55,7 @@ public class WindscreenState extends CommandWithProperties {
     WindscreenDamageZone windscreenDamageZone;
     WindscreenDamageZoneMatrix windscreenDamageZoneMatrix;
     WindscreenReplacementState windscreenReplacementState;
-    Float damageConfidence;
+    Double damageConfidence;
     Calendar damageDetectionTime;
 
     /**
@@ -103,7 +103,7 @@ public class WindscreenState extends CommandWithProperties {
     /**
      * @return The damage confidence.
      */
-    @Nullable public Float getDamageConfidence() {
+    @Nullable public Double getDamageConfidence() {
         return damageConfidence;
     }
 
@@ -140,7 +140,7 @@ public class WindscreenState extends CommandWithProperties {
                                 .getValueByte());
                         return windscreenReplacementState;
                     case DAMAGE_CONFIDENCE_IDENTIFIER:
-                        damageConfidence = Property.getUnsignedInt(property.getValueByte()) / 100f;
+                        damageConfidence = Property.getDouble(property.getValueBytes());
                         return damageConfidence;
                     case DAMAGE_DETECTION_TIME_IDENTIFIER:
                         damageDetectionTime = Property.getCalendar(property.getValueBytes());
@@ -174,7 +174,7 @@ public class WindscreenState extends CommandWithProperties {
         private WindscreenDamageZone windscreenDamageZone;
         private WindscreenDamageZoneMatrix windscreenDamageZoneMatrix;
         private WindscreenReplacementState windscreenReplacementState;
-        private Float damageConfidence;
+        private Double damageConfidence;
         private Calendar damageDetectionTime;
 
         public Builder() {
@@ -250,9 +250,9 @@ public class WindscreenState extends CommandWithProperties {
          * @param damageConfidence The damage confidence.
          * @return The builder.
          */
-        public Builder setDamageConfidence(Float damageConfidence) {
+        public Builder setDamageConfidence(Double damageConfidence) {
             this.damageConfidence = damageConfidence;
-            addProperty(new PercentageProperty(DAMAGE_CONFIDENCE_IDENTIFIER, damageConfidence));
+            addProperty(new DoubleProperty(DAMAGE_CONFIDENCE_IDENTIFIER, damageConfidence));
             return this;
         }
 

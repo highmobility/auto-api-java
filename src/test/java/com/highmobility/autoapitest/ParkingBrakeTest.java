@@ -1,10 +1,10 @@
 package com.highmobility.autoapitest;
 
-import com.highmobility.autoapi.SetParkingBrake;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetParkingBrakeState;
 import com.highmobility.autoapi.ParkingBrakeState;
+import com.highmobility.autoapi.SetParkingBrake;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -19,10 +19,11 @@ import static org.junit.Assert.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class ParkingBrakeTest {
+    Bytes bytes = new Bytes(
+            "005801" +
+                    "01000401000101");
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "00580101000101");
 
         Command command = null;
         try {
@@ -43,7 +44,8 @@ public class ParkingBrakeTest {
     }
 
     @Test public void setParkingBrake() {
-        Bytes waitingForBytes = new Bytes("00581201000101");
+        Bytes waitingForBytes = new Bytes("005812" +
+                "01000401000101");
         Bytes commandBytes = new SetParkingBrake(true);
         assertTrue(TestUtils.bytesTheSame(waitingForBytes, commandBytes));
 
@@ -53,13 +55,9 @@ public class ParkingBrakeTest {
     }
 
     @Test public void build() {
-        byte[] expectedBytes = ByteUtils.bytesFromHex(
-                "00580101000101");
-
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
         builder.setIsActive(true);
-        byte[] actualBytes = builder.build().getByteArray();
-        assertTrue(Arrays.equals(actualBytes, expectedBytes));
+        assertTrue(builder.build().equals(bytes));
     }
 
     @Test public void state0Properties() {

@@ -44,7 +44,7 @@ public class DoorLockState extends Property {
     }
 
     public DoorLockState(byte[] bytes) throws CommandParseException {
-        this(Location.fromByte(bytes[3]), Lock.fromByte(bytes[4]));
+        this(Location.fromByte(bytes[6]), Lock.fromByte(bytes[7]));
     }
 
     public DoorLockState(Location location, Lock doorLock) {
@@ -52,7 +52,7 @@ public class DoorLockState extends Property {
         this.location = location;
         this.doorLock = doorLock;
 
-        bytes[3] = location.getByte();
-        bytes[4] = doorLock.getByte();
+        bytes[6] = location.getByte();
+        bytes[7] = doorLock.getByte();
     }
 }

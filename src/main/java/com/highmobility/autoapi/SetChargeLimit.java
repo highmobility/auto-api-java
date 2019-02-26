@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.PercentageProperty;
+import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -30,12 +30,12 @@ import com.highmobility.autoapi.property.Property;
 public class SetChargeLimit extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x13);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    Float percentage;
+    Double percentage;
 
     /**
      * @return The charge limit percentage.
      */
-    public float getChargeLimit() {
+    public Double getChargeLimit() {
         return percentage;
     }
 
@@ -44,8 +44,8 @@ public class SetChargeLimit extends CommandWithProperties {
      *
      * @param percentage The charge limit percentage.
      */
-    public SetChargeLimit(float percentage) throws IllegalArgumentException {
-        super(TYPE.addProperty(new PercentageProperty(PROPERTY_IDENTIFIER, percentage)));
+    public SetChargeLimit(Double percentage) throws IllegalArgumentException {
+        super(TYPE.addProperty(new DoubleProperty(PROPERTY_IDENTIFIER, percentage)));
         this.percentage = percentage;
     }
 
@@ -56,7 +56,7 @@ public class SetChargeLimit extends CommandWithProperties {
             Property property = getProperties()[i];
             switch (property.getPropertyIdentifier()) {
                 case PROPERTY_IDENTIFIER:
-                    percentage = Property.getPercentage(property.getValueByte());
+                    percentage = Property.getDouble(property.getValueBytes());
                     break;
             }
         }

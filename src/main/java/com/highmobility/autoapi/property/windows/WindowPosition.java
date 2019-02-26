@@ -25,9 +25,9 @@ public class WindowPosition extends Property {
 
     public WindowPosition(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 5) throw new CommandParseException();
-        location = Location.fromByte(bytes[3]);
-        position = Position.fromByte(bytes[4]);
+        if (bytes.length < 8) throw new CommandParseException();
+        location = Location.fromByte(bytes[6]);
+        position = Position.fromByte(bytes[7]);
     }
 
     public WindowPosition(Location location, Position

@@ -38,8 +38,8 @@ public class HvacStartingTime extends Property {
     public HvacStartingTime(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length < 6) throw new IllegalArgumentException();
-        this.weekday = Weekday.fromByte(bytes[3]);
-        this.time = new Time(Arrays.copyOfRange(bytes, 4, 6));
+        this.weekday = Weekday.fromByte(bytes[6]);
+        this.time = new Time(Arrays.copyOfRange(bytes, 7, 9));
         this.bytes = bytes;
     }
 

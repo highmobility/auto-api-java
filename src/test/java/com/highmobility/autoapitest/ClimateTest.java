@@ -23,18 +23,19 @@ import static org.junit.Assert.fail;
 public class ClimateTest {
     Bytes bytes = new Bytes(
             "002401" +
-                    "01000441980000" +
-                    "02000441400000" +
-                    "03000441AC0000" +
-                    "04000441AC0000" +
-                    "05000101" +
-                    "06000100" +
-                    "07000100" +
-                    "08000100" +
-                    "09000441AC0000" +
-                    "0B000305121E" +
-                    "0B000306121E" +
-                    "0C000441AC0000");
+                    "01000701000441980000" +
+                    "02000701000441400000" +
+                    "03000701000441AC0000" +
+                    "04000701000441AC0000" +
+                    "05000401000101" +
+                    "06000401000100" +
+                    "07000401000100" +
+                    "08000401000100" +
+                    "09000701000441AC0000" +
+                    "0B000601000305121E" +
+                    "0B000601000306121E" +
+                    "0C000701000441AC0000"
+    );
 
     @Test
     public void state() {
@@ -80,7 +81,8 @@ public class ClimateTest {
     }
 
     @Test public void startStopDefogging() {
-        Bytes waitingForBytes = new Bytes("00241401000101");
+        Bytes waitingForBytes = new Bytes("002414" +
+                "01000401000101");
         String commandBytes = ByteUtils.hexFromBytes(new StartStopDefogging(true).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -89,7 +91,8 @@ public class ClimateTest {
     }
 
     @Test public void startStopDefrosting() {
-        Bytes waitingForBytes = new Bytes("00241501000101");
+        Bytes waitingForBytes = new Bytes("002415" +
+                "01000401000101");
         String commandBytes = ByteUtils.hexFromBytes(new StartStopDefrosting(true).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -99,7 +102,8 @@ public class ClimateTest {
     }
 
     @Test public void startStopHvac() {
-        Bytes waitingForBytes = new Bytes("00241301000101");
+        Bytes waitingForBytes = new Bytes("002413" +
+                "01000401000101");
         String commandBytes = ByteUtils.hexFromBytes(new StartStopHvac(true).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -108,7 +112,8 @@ public class ClimateTest {
     }
 
     @Test public void StartStopIonising() {
-        Bytes waitingForBytes = new Bytes("00241601000100");
+        Bytes waitingForBytes = new Bytes("002416" +
+                "01000401000100");
         String commandBytes = ByteUtils.hexFromBytes(new StartStopIonising(false).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -118,9 +123,9 @@ public class ClimateTest {
 
     @Test public void setTemperatureSettings() {
         Bytes bytes = new Bytes("002417" +
-                "01000441a40000" +
-                "02000441a40000" +
-                "03000441980000");
+                "01000701000441a40000" +
+                "02000701000441a40000" +
+                "03000701000441980000");
 
         SetTemperatureSettings cmd = new SetTemperatureSettings(20.5f, 20.5f, 19f);
         assertTrue(cmd.equals(bytes));
@@ -133,8 +138,8 @@ public class ClimateTest {
 
     @Test public void setClimateProfile() {
         Bytes bytes = new Bytes("002412" +
-                "010003000800" +
-                "01000302080A");
+                "010006010003000800" +
+                "01000601000302080A");
 
         HvacStartingTime[] times = new HvacStartingTime[2];
         times[0] = new HvacStartingTime(HvacStartingTime.Weekday.MONDAY, new Time(8, 0));

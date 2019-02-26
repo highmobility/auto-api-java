@@ -10,12 +10,14 @@ import static org.junit.Assert.assertTrue;
 
 public class BrowserTest {
     @Test public void loadUrl() {
+        // TODO: 2019-02-18 verify when doc updated
         Bytes waitingForBytes = new Bytes
-                ("00490001001268747470733a2f2f676f6f676c652e636f6d");
-        assertTrue(new LoadUrl("https://google.com").equals(waitingForBytes));
-        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof LoadUrl);
+                ("004900"+ "01001501001268747470733a2f2f676f6f676c652e636f6d");
 
-        LoadUrl command = (LoadUrl) CommandResolver.resolve(waitingForBytes);
+        LoadUrl command = new LoadUrl("https://google.com");
+        assertTrue(TestUtils.bytesTheSame(command, waitingForBytes));
+
+        command = (LoadUrl) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getUrl().equals("https://google.com"));
     }
 }

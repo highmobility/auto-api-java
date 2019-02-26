@@ -18,8 +18,9 @@ import static org.junit.Assert.assertTrue;
 
 public class FuelingTest {
     Bytes bytes = new Bytes("004001" +
-            "02000101" +
-            "03000100");
+            "02000401000101" +
+            "03000401000100"
+    );
 
     @Test
     public void state() {
@@ -49,8 +50,8 @@ public class FuelingTest {
 
     @Test public void control() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("004012" +
-                "02000100" +
-                "03000101");
+                "02000401000100" +
+                "03000401000101");
 
         byte[] bytes = new ControlGasFlap(Lock.UNLOCKED, Position.OPEN).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));

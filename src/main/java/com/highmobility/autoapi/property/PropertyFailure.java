@@ -59,11 +59,11 @@ public class PropertyFailure extends Property {
         super(bytes);
         if (bytes.length < 6) throw new CommandParseException();
 
-        failedPropertyIdentifier = bytes[3];
-        reason = Reason.fromByte(bytes[4]);
-        int descriptionLength = Property.getUnsignedInt(bytes, 5, 1);
+        failedPropertyIdentifier = bytes[6];
+        reason = Reason.fromByte(bytes[7]);
+        int descriptionLength = Property.getUnsignedInt(bytes, 8, 1);
         if (descriptionLength > 0) {
-            description = Property.getString(bytes, 6, descriptionLength);
+            description = Property.getString(bytes, 9, descriptionLength);
         }
     }
 

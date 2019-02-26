@@ -24,14 +24,15 @@ import static org.junit.Assert.assertTrue;
 public class DoorLocksTest {
     Bytes bytes = new Bytes(
             "002001" +
-                    "0200020000" +
-                    "0200020100" +
-                    "0300020001" +
-                    "0300020101" +
-                    "0400020001" +
-                    "0400020100" +
-                    "0400020200" +
-                    "0400020300");
+                    "0200050100020000" +
+                    "0200050100020100" +
+                    "0300050100020001" +
+                    "0300050100020101" +
+                    "0400050100020001" +
+                    "0400050100020100" +
+                    "0400050100020200" +
+                    "0400050100020300"
+    );
 
     @Test
     public void state() {
@@ -85,7 +86,7 @@ public class DoorLocksTest {
     }
 
     @Test public void lock() {
-        Bytes waitingForBytes = new Bytes("00201201000101");
+        Bytes waitingForBytes = new Bytes("00201201000401000101");
         byte[] commandBytes = new LockUnlockDoors(LOCKED).getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -105,7 +106,7 @@ public class DoorLocksTest {
     @Test public void allLocksValue() {
         Bytes bytes = new Bytes(
                 "002001" +
-                        "0300020501");
+                        "0300050100020501");
         LockState state = (LockState) CommandResolver.resolve(bytes);
         assertTrue(state.getOutsideLocks().length == 1);
         assertTrue(state.getOutsideLock(Location.ALL).getLock() == LOCKED);

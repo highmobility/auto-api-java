@@ -23,10 +23,10 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.AccelerationProperty;
 import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
+import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.autoapi.property.FloatProperty;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.PercentageProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Axle;
 
@@ -63,9 +63,9 @@ public class RaceState extends CommandWithProperties {
 
     AccelerationProperty[] accelerationProperties;
 
-    Float underSteering;
-    Float overSteering;
-    Float gasPedalPosition;
+    Double underSteering;
+    Double overSteering;
+    Double gasPedalPosition;
     Integer steeringAngle;
     Float brakePressure;
     Float yawRate;
@@ -74,7 +74,7 @@ public class RaceState extends CommandWithProperties {
     BrakeTorqueVectoringProperty[] brakeTorqueVectorings;
     GearMode gearMode;
     Integer selectedGear;
-    Float brakePedalPosition;
+    Double brakePedalPosition;
     // level7
     Boolean brakePedalSwitchActive;
     Boolean clutchPedalSwitchActive;
@@ -108,7 +108,7 @@ public class RaceState extends CommandWithProperties {
      * @return The under steering percentage between 0-1 whereas up to .2 is considered OK, up to .3
      * marginal, over .3 critical.
      */
-    @Nullable public Float getUnderSteering() {
+    @Nullable public Double getUnderSteering() {
         return underSteering;
     }
 
@@ -116,14 +116,14 @@ public class RaceState extends CommandWithProperties {
      * @return The over steering percentage between 0-1 whereas up to .2 is considered OK, up to .3
      * marginal, over .3 critical.
      */
-    @Nullable public Float getOverSteering() {
+    @Nullable public Double getOverSteering() {
         return overSteering;
     }
 
     /**
      * @return The gas pedal position between 0-1, whereas 1 is full throttle.
      */
-    @Nullable public Float getGasPedalPosition() {
+    @Nullable public Double getGasPedalPosition() {
         return gasPedalPosition;
     }
 
@@ -200,7 +200,7 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return The brake pedal position between 0-1, whereas 1 is full brakes.
      */
-    @Nullable public Float getBrakePedalPosition() {
+    @Nullable public Double getBrakePedalPosition() {
         return brakePedalPosition;
     }
 
@@ -253,13 +253,13 @@ public class RaceState extends CommandWithProperties {
                         accelerationProperties.add(a);
                         return a;
                     case UNDER_STEERING_IDENTIFIER:
-                        underSteering = Property.getUnsignedInt(p.getValueByte()) / 100f;
+                        underSteering = Property.getDouble(p.getValueBytes());
                         return underSteering;
                     case OVER_STEERING_IDENTIFIER:
-                        overSteering = Property.getUnsignedInt(p.getValueByte()) / 100f;
+                        overSteering = Property.getDouble(p.getValueBytes());
                         return overSteering;
                     case GAS_PEDAL_POSITION_IDENTIFIER:
-                        gasPedalPosition = Property.getUnsignedInt(p.getValueByte()) / 100f;
+                        gasPedalPosition = Property.getDouble(p.getValueBytes());
                         return gasPedalPosition;
                     case STEERING_ANGLE_IDENTIFIER:
                         steeringAngle = Property.getSignedInt(p.getValueByte());
@@ -288,7 +288,7 @@ public class RaceState extends CommandWithProperties {
                         selectedGear = Property.getUnsignedInt(p.getValueByte());
                         return selectedGear;
                     case BRAKE_PEDAL_POSITION_IDENTIFIER:
-                        brakePedalPosition = Property.getUnsignedInt(p.getValueByte()) / 100f;
+                        brakePedalPosition = Property.getDouble(p.getValueBytes());
                         return brakePedalPosition;
                     case BRAKE_PEDAL_SWITCH_IDENTIFIER:
                         brakePedalSwitchActive = Property.getBool(p.getValueByte());
@@ -350,9 +350,9 @@ public class RaceState extends CommandWithProperties {
     public static final class Builder extends CommandWithProperties.Builder {
         private List<AccelerationProperty> accelerationProperties = new ArrayList<>();
 
-        private Float underSteering;
-        private Float overSteering;
-        private Float gasPedalPosition;
+        private Double underSteering;
+        private Double overSteering;
+        private Double gasPedalPosition;
         private Integer steeringAngle;
         private Float brakePressure;
         private Float yawRate;
@@ -361,7 +361,7 @@ public class RaceState extends CommandWithProperties {
         private List<BrakeTorqueVectoringProperty> brakeTorqueVectorings = new ArrayList<>();
         private GearMode gearMode;
         private Integer selectedGear;
-        private Float brakePedalPosition;
+        private Double brakePedalPosition;
 
         private Boolean brakePedalSwitchActive;
         private Boolean clutchPedalSwitchActive;
@@ -403,9 +403,9 @@ public class RaceState extends CommandWithProperties {
          *                      considered OK, up to .3 * marginal, over .3 critical.
          * @return The builder.
          */
-        public Builder setUnderSteering(Float underSteering) {
+        public Builder setUnderSteering(Double underSteering) {
             this.underSteering = underSteering;
-            addProperty(new PercentageProperty(UNDER_STEERING_IDENTIFIER, underSteering));
+            addProperty(new DoubleProperty(UNDER_STEERING_IDENTIFIER, underSteering));
             return this;
         }
 
@@ -414,9 +414,9 @@ public class RaceState extends CommandWithProperties {
          *                     considered OK, up to .3 marginal, over .3 critical
          * @return The builder.
          */
-        public Builder setOverSteering(Float overSteering) {
+        public Builder setOverSteering(Double overSteering) {
             this.overSteering = overSteering;
-            addProperty(new PercentageProperty(OVER_STEERING_IDENTIFIER, overSteering));
+            addProperty(new DoubleProperty(OVER_STEERING_IDENTIFIER, overSteering));
             return this;
         }
 
@@ -424,9 +424,9 @@ public class RaceState extends CommandWithProperties {
          * @param gasPedalPosition The gas pedal position between 0-1, whereas 1 is full throttle.
          * @return The builder.
          */
-        public Builder setGasPedalPosition(Float gasPedalPosition) {
+        public Builder setGasPedalPosition(Double gasPedalPosition) {
             this.gasPedalPosition = gasPedalPosition;
-            addProperty(new PercentageProperty(GAS_PEDAL_POSITION_IDENTIFIER, gasPedalPosition));
+            addProperty(new DoubleProperty(GAS_PEDAL_POSITION_IDENTIFIER, gasPedalPosition));
             return this;
         }
 
@@ -532,9 +532,9 @@ public class RaceState extends CommandWithProperties {
          * @param brakePedalPosition The brake pedal position.
          * @return The builder.
          */
-        public Builder setBrakePedalPosition(Float brakePedalPosition) {
+        public Builder setBrakePedalPosition(Double brakePedalPosition) {
             this.brakePedalPosition = brakePedalPosition;
-            addProperty(new PercentageProperty(BRAKE_PEDAL_POSITION_IDENTIFIER,
+            addProperty(new DoubleProperty(BRAKE_PEDAL_POSITION_IDENTIFIER,
                     brakePedalPosition));
             return this;
         }

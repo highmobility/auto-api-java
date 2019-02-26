@@ -74,13 +74,13 @@ public class CapabilityProperty extends Property {
         super(bytes);
 
         int propertyLength = Property.getUnsignedInt(bytes, 1, 2);
-        identifierBytes = new byte[]{bytes[3], bytes[4]};
+        identifierBytes = new byte[]{bytes[6], bytes[7]};
         identifier = Identifier.fromBytes(identifierBytes);
         if (propertyLength < 3) return;
 
         ArrayList<Type> builder = new ArrayList<>();
 
-        for (int i = 5; i < 3 + propertyLength; i++) {
+        for (int i = 8; i < 3 + propertyLength; i++) {
             Type type = new Type(identifierBytes, bytes[i]);
             builder.add(type);
         }
@@ -118,7 +118,7 @@ public class CapabilityProperty extends Property {
 
                 byte[] newValue = getValue(categoryIdentifier, newTypes);
                 byte[] newBytes = baseBytes((byte) 0x00, newValue.length);
-                ByteUtils.setBytes(newBytes, newValue, 3);
+                ByteUtils.setBytes(newBytes, newValue, 6);
                 this.bytes = newBytes;
                 this.types = newTypes;
             }
@@ -139,7 +139,9 @@ public class CapabilityProperty extends Property {
     static byte[] getValue(byte[] categoryIdentifier, Type[] types) throws
             IllegalArgumentException {
         byte[] bytes = new byte[2 + types.length];
+
         ByteUtils.setBytes(bytes, categoryIdentifier, 0);
+
         for (int i = 0; i < types.length; i++) {
             Type type = types[i];
             bytes[2 + i] = type.getType();

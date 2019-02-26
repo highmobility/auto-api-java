@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  */
 public class PropertyTimestamp extends Property {
     public static final byte IDENTIFIER = (byte) 0xA4;
-    public static final int LENGTH_WITHOUT_ADDITIONAL_DATA = 12;
+    public static final int LENGTH_WITHOUT_ADDITIONAL_DATA = 15;
 
     private Calendar timestamp;
     private byte timestampPropertyIdentifier;
@@ -63,9 +63,9 @@ public class PropertyTimestamp extends Property {
     public PropertyTimestamp(byte[] bytes) {
         super(bytes);
         if (bytes.length < LENGTH_WITHOUT_ADDITIONAL_DATA) throw new IllegalArgumentException();
-        timestamp = Property.getCalendar(bytes, 3);
-        timestampPropertyIdentifier = bytes[11];
-        additionalData = new Bytes(Arrays.copyOfRange(bytes, 12, bytes.length));
+        timestamp = Property.getCalendar(bytes, 6);
+        timestampPropertyIdentifier = bytes[14];
+        additionalData = new Bytes(Arrays.copyOfRange(bytes, 15, bytes.length));
     }
 
     /**
@@ -78,9 +78,9 @@ public class PropertyTimestamp extends Property {
     public PropertyTimestamp(Calendar timestamp, byte timestampPropertyIdentifier, @Nullable
             Bytes additionalData) {
         super(IDENTIFIER, 9 + (additionalData != null ? additionalData.getLength() : 0));
-        ByteUtils.setBytes(bytes, Property.calendarToBytes(timestamp), 3);
-        bytes[11] = timestampPropertyIdentifier;
-        if (additionalData != null) ByteUtils.setBytes(bytes, additionalData.getByteArray(), 12);
+        ByteUtils.setBytes(bytes, Property.calendarToBytes(timestamp), 6);
+        bytes[14] = timestampPropertyIdentifier;
+        if (additionalData != null) ByteUtils.setBytes(bytes, additionalData.getByteArray(), 15);
     }
 
     public PropertyTimestamp(Calendar timestamp, Property property) {

@@ -21,19 +21,19 @@ import static org.junit.Assert.assertTrue;
 public class MaintenanceTest {
     Bytes bytes = new Bytes(
             "003401" +
-                    "01000201F5" +
-                    "020003000E61" +
-                    "03000103" +
-                    "04000105" +
-                    "05000102" +
-                    "06000201F4" +
-                    "07000104" +
-                    "080008120B170A2132003C" +
-                    "090008120B170A2132003C" +
-                    "0A0008120B170A2132003C" +
-                    "0B00401305000300000B4272616B6520666C756964002C4E657874206368616E676520617420737065636966696564206461746520617420746865206C61746573742E" +
-                    "0B004F1303002001001256656869636C6520696E7370656374696F6E00344E657874206D616E6461746F72792076656869636C6520696E7370656374696F6E206F6E2073706563696669656420646174652E" +
-                    "0C0008120B170A2132003C"
+                    "01000501000201F5" +
+                    "020006010003000E61" +
+                    "03000401000103" +
+                    "04000401000105" +
+                    "05000401000102" +
+                    "06000501000201F4" +
+                    "07000401000104" +
+                    "08000B01000800000160E0EA1388" +
+                    "09000B01000800000160E1560840" +
+                    "0A000B01000800000160E0EA1388" +
+                    "0B00430100401305000300000B4272616B6520666C756964002C4E657874206368616E676520617420737065636966696564206461746520617420746865206C61746573742E" +
+                    "0B005201004F1303002001001256656869636C6520696E7370656374696F6E00344E657874206D616E6461746F72792076656869636C6520696E7370656374696F6E206F6E2073706563696669656420646174652E" +
+                    "0C000B01000800000160E1560840"
     );
 
     @Test
@@ -53,12 +53,12 @@ public class MaintenanceTest {
         assertTrue(state.getServiceTimeThreshold() == 4);
 
         assertTrue(TestUtils.dateIsSame(state.getAutomaticTeleserviceCallDate(),
-                "2018-11-23T10:33:50+0100"));
+                "2018-01-10T16:32:05"));
 
         assertTrue(TestUtils.dateIsSame(state.getTeleserviceBatteryCallDate(),
-                "2018-11-23T10:33:50+0100"));
+                "2018-01-10T18:30:00"));
 
-        assertTrue(TestUtils.dateIsSame(state.getNextInspectionDate(), "2018-11-23T10:33:50+0100"));
+        assertTrue(TestUtils.dateIsSame(state.getNextInspectionDate(), "2018-01-10T16:32:05"));
 
         assertTrue(state.getConditionBasedServices().length == 2);
         int count = 0;
@@ -86,7 +86,7 @@ public class MaintenanceTest {
 
         assertTrue(count == 2);
         assertTrue(TestUtils.dateIsSame(state.getBrakeFluidChangeDate(),
-                "2018-11-23T10:33:50+0100"));
+                "2018-01-10T18:30:00"));
     }
 
     @Test public void get() {

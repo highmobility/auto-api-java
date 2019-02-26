@@ -25,6 +25,6 @@ import com.highmobility.utils.ByteUtils;
 public class DoubleProperty extends Property {
     public DoubleProperty(byte identifier, double value) {
         super(identifier, 8);
-        ByteUtils.setBytes(bytes, doubleToBytes(value), 3);
+        ByteUtils.setBytes(bytes, doubleToBytes(value), 6);
     }
 }

@@ -74,13 +74,13 @@ public class ConditionBasedService extends Property {
         super(bytes);
         if (bytes.length < 10) throw new CommandParseException();
 
-        int year = bytes[3] + 2000;
-        int month = bytes[4];
+        int year = bytes[6] + 2000;
+        int month = bytes[7];
         this.date = LocalDate.of(year, month, 1);
-        this.id = Property.getUnsignedInt(bytes, 5, 2);
-        this.dueStatus = DueStatus.fromByte(bytes[7]);
+        this.id = Property.getUnsignedInt(bytes, 8, 2);
+        this.dueStatus = DueStatus.fromByte(bytes[10]);
 
-        int textPosition = 8;
+        int textPosition = 11;
         int textLength = Property.getUnsignedInt(bytes, textPosition, 2);
         textPosition += 2;
         this.text = Property.getString(bytes, textPosition, textLength);
@@ -93,12 +93,12 @@ public class ConditionBasedService extends Property {
     ConditionBasedService(LocalDate date, int id, DueStatus dueStatus, String text) {
         // TBODO:
         super(IDENTIFIER, 7 + text.length());
-        bytes[3] = (byte) (date.getYear() - 2000);
-        bytes[4] = (byte) date.getMonth().getValue();
-        ByteUtils.setBytes(bytes, Property.intToBytes(id, 2), 5);
-        bytes[7] = dueStatus.getByte();
-        ByteUtils.setBytes(bytes, Property.intToBytes(text.length(), 2), 8);
-        ByteUtils.setBytes(bytes, Property.stringToBytes(text), 10);
+        bytes[6] = (byte) (date.getYear() - 2000);
+        bytes[7] = (byte) date.getMonth().getValue();
+        ByteUtils.setBytes(bytes, Property.intToBytes(id, 2), 8);
+        bytes[10] = dueStatus.getByte();
+        ByteUtils.setBytes(bytes, Property.intToBytes(text.length(), 2), 11);
+        ByteUtils.setBytes(bytes, Property.stringToBytes(text), 13);
     }
 
     public enum DueStatus {
