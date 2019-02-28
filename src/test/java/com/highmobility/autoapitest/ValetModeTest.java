@@ -11,29 +11,25 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
  */
 public class ValetModeTest {
+    Bytes bytes = new Bytes(
+            "002801" +
+                    "01000401000101"
+    );
+
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "00280101000101");
+        ValetMode command = (ValetMode) CommandResolver.resolve(bytes);
+        testState(command);
+    }
 
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-
-        assertTrue(command.getClass() == ValetMode.class);
-        ValetMode state = (ValetMode) command;
+    private void testState(ValetMode state) {
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
         assertTrue(state.isActive().getValue() == true);
     }
 
@@ -44,7 +40,8 @@ public class ValetModeTest {
     }
 
     @Test public void activate() {
-        Bytes waitingForBytes = new Bytes("00281201000101");
+        Bytes waitingForBytes = new Bytes("002812" +
+                "01000401000101");
         Bytes commandBytes = new ActivateDeactivateValetMode(true);
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -62,7 +59,6 @@ public class ValetModeTest {
     @Test public void builder() {
         ValetMode.Builder builder = new ValetMode.Builder();
         builder.setActive(new ObjectProperty<>(true));
-        byte[] bytes = builder.build().getByteArray();
-        assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("00280101000101")));
+        testState(builder.build());
     }
 }

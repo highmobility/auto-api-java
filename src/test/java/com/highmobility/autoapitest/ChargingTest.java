@@ -12,7 +12,6 @@ import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
 import com.highmobility.autoapi.StartStopCharging;
 import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
@@ -34,17 +33,31 @@ import static org.junit.Assert.assertTrue;
 
 public class ChargingTest {
     Bytes bytes = new Bytes(
-            "00230102000200FF03000132040004bf19999a050004bf19999a06000443c8000007000443cd00000800015A0900013C0A0004000000000B0001010C000100"
-                    // start of l8
-                    + "0E000441c800000F00010110000100"
-                    + "110003011020" // departure times
-                    + "110003001220"
-                    + "130003000000" // reduction times
-                    + "130003011020"
-                    + "1400044219999a"
-                    + "1500090212010A1020050000" // timers
-                    + "1500090112010A1020060000"
-                    + "1600010117000101" // 16 and 17
+            "002301" +
+                    "02000501000201B0" +
+                    "03000B0100083FE0000000000000" +
+                    "040007010004BF19999A" +
+                    "050007010004BF19999A" +
+                    "06000701000443C80000" +
+                    "070007010004BF19999A" +
+                    "08000B0100083FECCCCCCCCCCCCD" +
+                    "0900040100013C" +
+                    "0A000701000440600000" +
+                    "0B000401000101" +
+                    "0C000401000101" +
+                    "0E000701000441C80000" +
+                    "0F000401000101" +
+                    "10000401000100" +
+                    "110006010003011020" +
+                    "110006010003000B33" +
+                    "130006010003001121" +
+                    "130006010003010C34" +
+                    "1400070100044219999A" +
+                    "15000C0100090000000160E0EA1388" +
+                    "15000C0100090100000160E1560840" +
+                    "16000401000101" +
+                    "17000401000101"
+
     );
 
     @Test
@@ -56,19 +69,19 @@ public class ChargingTest {
     }
 
     private void testState(ChargeState state) throws ParseException {
-        assertTrue(state.getEstimatedRange().getValue() == 255);
-        assertTrue(state.getBatteryLevel().getValue() == 50);
+        assertTrue(state.getEstimatedRange().getValue() == 432);
+        assertTrue(state.getBatteryLevel().getValue() == .5d);
         assertTrue(state.getBatteryCurrentAC().getValue() == -.6f);
         assertTrue(state.getBatteryCurrentDC().getValue() == -.6f);
         assertTrue(state.getChargerVoltageAC().getValue() == 400f);
-        assertTrue(state.getChargerVoltageDC().getValue() == 410f);
+        assertTrue(state.getChargerVoltageDC().getValue() == -.6f);
         assertTrue(state.getTimeToCompleteCharge().getValue() == 60);
-        assertTrue(state.getChargeLimit().getValue() == 90);
-        assertTrue(state.getChargingRate().getValue() == 0f);
+        assertTrue(state.getChargeLimit().getValue() == .9d);
+        assertTrue(state.getChargingRate().getValue() == 3.5f);
         assertTrue(state.getChargePortState().getValue() == ChargePortState.OPEN);
-        assertTrue(state.getChargeMode().getValue() == ChargeMode.IMMEDIATE);
+        assertTrue(state.getChargeMode().getValue() == ChargeMode.TIMER_BASED);
 
-        assertTrue(state.getMaxChargingCurrent().getValue() == 25);
+        assertTrue(state.getMaxChargingCurrent().getValue() == 25f);
         assertTrue(state.getPlugType().getValue() == PlugType.TYPE_2);
         assertTrue(state.getChargingWindowChosen().getValue() == false);
 
@@ -80,8 +93,8 @@ public class ChargingTest {
                 timeExists++;
             }
 
-            if (time.getValue().getTime().getHour() == 18 && time.getValue().getTime().getMinute() == 32 && !time
-                    .getValue().isActive()) {
+            if (time.getValue().getTime().getHour() == 11 && time.getValue().getTime().getMinute() == 51 && !time.getValue()
+                    .isActive()) {
                 timeExists++;
             }
         }
@@ -91,11 +104,11 @@ public class ChargingTest {
         assertTrue(state.getReductionOfChargingCurrentTimes().length == 2);
 
         for (ObjectProperty<ReductionTime> time : state.getReductionOfChargingCurrentTimes()) {
-            if (time.getValue().getTime().getHour() == 0 && time.getValue().getTime().getMinute() == 0 && time
+            if (time.getValue().getTime().getHour() == 17 && time.getValue().getTime().getMinute() == 33 && time
                     .getValue().getStartStop() == StartStop.START) {
                 timeExists++;
             }
-            if (time.getValue().getTime().getHour() == 16 && time.getValue().getTime().getMinute() == 32 && time
+            if (time.getValue().getTime().getHour() == 12 && time.getValue().getTime().getMinute() == 52 && time
                     .getValue().getStartStop() == StartStop.STOP) {
                 timeExists++;
             }
@@ -106,13 +119,14 @@ public class ChargingTest {
         assertTrue(state.getBatteryTemperature().getValue() == 38.4f);
 
         assertTrue(state.getTimers().length == 2);
+
         Calendar departureDate =
-                state.getTimer(ChargingTimer.Type.DEPARTURE_TIME).getValue().getTime();
-        assertTrue(TestUtils.dateIsSameUTC(departureDate, "2018-01-10T16:32:05"));
+                state.getTimer(ChargingTimer.Type.PREFERRED_START_TIME).getValue().getTime();
+        assertTrue(TestUtils.dateIsSameIgnoreTimezone(departureDate, "2018-01-10T16:32:05"));
 
         Calendar preferredEndTime =
                 state.getTimer(ChargingTimer.Type.PREFERRED_END_TIME).getValue().getTime();
-        assertTrue(TestUtils.dateIsSameUTC(preferredEndTime, "2018-01-10T16:32:06"));
+        assertTrue(TestUtils.dateIsSameIgnoreTimezone(preferredEndTime, "2018-01-10T18:30:00"));
 
         assertTrue(state.getPluggedIn().getValue() == true);
         assertTrue(state.getActiveState().getValue() == ChargingState.CHARGING);
@@ -141,45 +155,43 @@ public class ChargingTest {
 
     @Test public void build() throws ParseException {
         ChargeState.Builder builder = new ChargeState.Builder();
-        builder.setEstimatedRange(new ObjectPropertyInteger(255));
-        builder.setBatteryLevel(new ObjectPropertyPercentage(50));
-        builder.setBatteryCurrentAC(new ObjectProperty<>(-.6f));
-        builder.setBatteryCurrentDC(new ObjectProperty<>(-.6f));
-        builder.setChargerVoltageAC(new ObjectProperty<>(400f));
-        builder.setChargerVoltageDC(new ObjectProperty<>(410f));
-        builder.setChargeLimit(new ObjectPropertyPercentage(90));
+
+        builder.setEstimatedRange(new ObjectPropertyInteger(432));
+        builder.setBatteryLevel(new ObjectProperty(.5d));
+        builder.setBatteryCurrentAC(new ObjectProperty(-.6f));
+        builder.setBatteryCurrentDC(new ObjectProperty(-.6f));
+        builder.setChargerVoltageAC(new ObjectProperty(400f));
+        builder.setChargerVoltageDC(new ObjectProperty(-.6f));
+        builder.setChargeLimit(new ObjectProperty(.9d));
         builder.setTimeToCompleteCharge(new ObjectPropertyInteger(60));
-        builder.setChargingRate(new ObjectProperty<>(0f));
-        builder.setChargePortState(new ObjectProperty<>(ChargePortState.OPEN));
-        builder.setChargeMode(new ObjectProperty(ChargeMode.IMMEDIATE));
+        builder.setChargingRate(new ObjectProperty(3.5f));
+        builder.setChargePortState(new ObjectProperty(ChargePortState.OPEN));
+        builder.setChargeMode(new ObjectProperty(ChargeMode.TIMER_BASED));
 
-        builder.setMaxChargingCurrent(new ObjectProperty<>(25f));
+        builder.setMaxChargingCurrent(new ObjectProperty(25f));
         builder.setPlugType(new ObjectProperty(PlugType.TYPE_2));
-        builder.setChargingWindowChosen(new ObjectProperty<>(false));
+        builder.setChargingWindowChosen(new ObjectProperty(false));
 
-        builder.addDepartureTime(new ObjectProperty<>(new DepartureTime(true, new Time(16, 32))));
-        builder.addDepartureTime(new ObjectProperty<>(new DepartureTime(false, new Time(18, 32))));
+        builder.addDepartureTime(new ObjectProperty(new DepartureTime(true, new Time(16, 32))));
+        builder.addDepartureTime(new ObjectProperty(new DepartureTime(false, new Time(11, 51))));
 
-        builder.addReductionOfChargingCurrentTime(new ObjectProperty<>(new ReductionTime(StartStop.START, new Time(0,
-                0))));
-        builder.addReductionOfChargingCurrentTime(new ObjectProperty<>(new ReductionTime(StartStop.STOP, new Time(16,
-                32))));
+        builder.addReductionOfChargingCurrentTime(new ObjectProperty(new ReductionTime(StartStop.START, new Time(17,
+                33))));
+        builder.addReductionOfChargingCurrentTime(new ObjectProperty(new ReductionTime(StartStop.STOP, new Time(12,
+                52))));
 
-        builder.setBatteryTemperature(new ObjectProperty<>(38.4f));
+        builder.setBatteryTemperature(new ObjectProperty(38.4f));
 
-        Calendar departureDate = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
-        Calendar preferredEndTime = TestUtils.getUTCCalendar("2018-01-10T16:32:06");
-        ObjectProperty<ChargingTimer> timer =
-                new ObjectProperty<>(new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME,
-                        departureDate));
-        ObjectProperty<ChargingTimer> timer2 =
-                new ObjectProperty<>(new ChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME,
-                        preferredEndTime));
-        builder.addTimer(timer);
-        builder.addTimer(timer2);
-
-        builder.setPluggedIn(new ObjectProperty<>(true));
-        builder.setActiveState(new ObjectProperty<>(ChargingState.CHARGING));
+        Calendar departureDate = TestUtils.getCalendar("2018-01-10T16:32:05");
+        Calendar preferredEndTime = TestUtils.getCalendar("2018-01-10T18:30:00");
+        ChargingTimer timer = new ChargingTimer(ChargingTimer.Type.PREFERRED_START_TIME,
+                departureDate);
+        ChargingTimer timer2 = new ChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME,
+                preferredEndTime);
+        builder.addTimer(new ObjectProperty(timer));
+        builder.addTimer(new ObjectProperty(timer2));
+        builder.setPluggedIn(new ObjectProperty(true));
+        builder.setActiveState(new ObjectProperty(ChargingState.CHARGING));
 
         ChargeState state = builder.build();
         testState(state);
@@ -192,17 +204,17 @@ public class ChargingTest {
     }
 
     @Test public void setChargeLimit() {
-        Bytes expected = new Bytes("0023130100015A");
+        Bytes expected = new Bytes("00231301000B0100083FECCCCCCCCCCCCD");
 
-        Bytes commandBytes = new SetChargeLimit(90);
+        Bytes commandBytes = new SetChargeLimit(.9d);
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
 
         SetChargeLimit command = (SetChargeLimit) CommandResolver.resolve(expected);
-        assertTrue(command.getChargeLimit() == 90);
+        assertTrue(command.getChargeLimit().getValue() == .9d);
     }
 
     @Test public void openCloseChargePort() {
-        Bytes expected = new Bytes("00231401000101");
+        Bytes expected = new Bytes("00231401000401000101");
 
         Bytes commandBytes = new OpenCloseChargePort(ChargePortState.OPEN);
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
@@ -212,7 +224,8 @@ public class ChargingTest {
     }
 
     @Test public void startStopCharging() {
-        Bytes waitingForBytes = new Bytes("00231201000101");
+        Bytes waitingForBytes = new Bytes("002312" +
+                "01000401000101");
         Bytes commandBytes = new StartStopCharging(true);
 
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -222,7 +235,7 @@ public class ChargingTest {
     }
 
     @Test public void setChargeMode() {
-        Bytes waitingForBytes = new Bytes("00231501000102");
+        Bytes waitingForBytes = new Bytes("00231501000401000102");
         Bytes commandBytes = new SetChargeMode(ChargeMode.INDUCTIVE);
 
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
@@ -236,9 +249,11 @@ public class ChargingTest {
 
     @Test public void SetChargeTimer() throws ParseException {
         Bytes waitingForBytes = new Bytes
-                ("0023160D00090212010a10200500000D00090113010a1020070000");
+                ("002316" +
+                        "0D000C0100090200000160E0EA1388" +
+                        "0D000C0100090100000160E1560840");
         Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
-        Calendar c2 = TestUtils.getUTCCalendar("2019-01-10T16:32:07");
+        Calendar c2 = TestUtils.getUTCCalendar("2018-01-10T18:30:00");
 
         ChargingTimer[] timers = new ChargingTimer[2];
         timers[0] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
@@ -256,14 +271,14 @@ public class ChargingTest {
                 command.getChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME)
                         .getValue().getTime();
 
-        assertTrue(TestUtils.dateIsSameUTC(departureTime, "2018-01-10T16:32:05"));
-        assertTrue(TestUtils.dateIsSameUTC(preferredEndTime, "2019-01-10T16:32:07"));
+        assertTrue(TestUtils.dateIsSame(departureTime, "2018-01-10T16:32:05"));
+        assertTrue(TestUtils.dateIsSame(preferredEndTime, "2018-01-10T18:30:00"));
     }
 
     @Test public void SetReductionTimes() {
         Bytes waitingForBytes = new Bytes("002317" +
-                "010003000000" + // reduction times
-                "010003011020");
+                "010006010003000000" + // reduction times
+                "010006010003011020");
 
         ReductionTime[] timers = new ReductionTime[2];
         timers[0] = new ReductionTime(StartStop.START, new Time(0, 0));
@@ -278,7 +293,7 @@ public class ChargingTest {
 
         int times = 0;
         for (int i = 0; i < command.getReductionTimes().length; i++) {
-            ObjectProperty<ReductionTime>reductionTime = command.getReductionTimes()[i];
+            ObjectProperty<ReductionTime> reductionTime = command.getReductionTimes()[i];
             if ((reductionTime.getValue().getTime().equals(new Time(0, 0)) && reductionTime.getValue().getStartStop() == StartStop.START) ||
                     (reductionTime.getValue().getTime().equals(new Time(16, 32)) && reductionTime.getValue().getStartStop() == StartStop.STOP)) {
                 times++;

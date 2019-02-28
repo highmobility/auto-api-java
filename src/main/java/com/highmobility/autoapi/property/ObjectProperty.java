@@ -165,30 +165,6 @@ public class ObjectProperty<T> extends Property {
         return null;
     }
 
-    public int getValueLength() {
-        return getUnsignedInt(bytes, 1, 2);
-    }
-
-    /**
-     * @return The value bytes.
-     */
-    public byte[] getValueBytesArray() {
-        if (bytes.length == 3) return new byte[0];
-        return Arrays.copyOfRange(bytes, 3, bytes.length);
-    }
-
-    public Bytes getValueBytes() {
-        return new Bytes(getValueBytesArray());
-    }
-
-    /**
-     * @return The one value byte. Returns null if property has no value set.
-     */
-    @Nullable public Byte getValueByte() {
-        if (bytes.length == 3) return null;
-        return bytes[3];
-    }
-
     // TODO: 2019-02-04 make private 
 
     /**
@@ -269,52 +245,46 @@ public class ObjectProperty<T> extends Property {
         this.failure = failure;
     }
 
+    // helper methods
+    protected void setValueBytes(byte[] valueBytes) {
+        ByteUtils.setBytes(bytes, valueBytes, 6);
+    }
 
     /*public boolean isUniversalProperty() {
         return this instanceof PropertyFailure || this instanceof PropertyTimestamp;
     }*/
     // TODO: 2019-02-01
 
-    // helper methods
 
-    protected static byte[] baseBytes(byte identifier, int valueSize) {
-        byte[] bytes = new byte[3 + valueSize];
+
+    // MARK: ctor helpers
+
+    public static byte[] baseBytes(byte identifier, int dataComponentSize) {
+        // if have a value, create bytes for data component
+        int propertySize = dataComponentSize + 3;
+
+        byte[] bytes = new byte[3 + (dataComponentSize > 0 ? dataComponentSize + 3 : 0)];
 
         bytes[0] = identifier;
-        if (valueSize > 255) {
-            byte[] lengthBytes = intToBytes(valueSize, 2);
-            bytes[1] = lengthBytes[0];
-            bytes[2] = lengthBytes[1];
-        } else if (valueSize != 0) {
+
+        if (propertySize > 255) {
+            byte[] propertyLengthBytes = intToBytes(propertySize, 2);
+            bytes[1] = propertyLengthBytes[0];
+            bytes[2] = propertyLengthBytes[1];
+        } else if (propertySize != 3) {
+            // if property size 3, we don't have data component and can omit the bytes.
             bytes[1] = 0x00;
-            bytes[2] = (byte) valueSize;
+            bytes[2] = (byte) propertySize;
+        }
+
+        if (dataComponentSize > 0) {
+            bytes[3] = 0x01; // data component
+            ByteUtils.setBytes(bytes, intToBytes(dataComponentSize, 2), 4); // data component size
         }
 
         return bytes;
     }
-
-    public static byte[] getPropertyBytes(byte identifier, byte value) throws
-            IllegalArgumentException {
-        byte[] bytes = new byte[4];
-        bytes[0] = identifier;
-        byte[] lengthBytes = intToBytes(1, 2);
-        bytes[1] = lengthBytes[0];
-        bytes[2] = lengthBytes[1];
-        bytes[3] = value;
-        return bytes;
-    }
-
-    public static byte[] getPropertyBytes(byte identifier, int length, byte[] value) throws
-            IllegalArgumentException {
-        byte[] bytes = new byte[3];
-        bytes[0] = identifier;
-        byte[] lengthBytes = intToBytes(length, 2);
-        bytes[1] = lengthBytes[0];
-        bytes[2] = lengthBytes[1];
-        bytes = ByteUtils.concatBytes(bytes, value);
-        return bytes;
-    }
-
+/*
     public static byte[] getIntProperty(byte identifier, int value, int length) throws
             IllegalArgumentException {
         byte[] bytes = new byte[]{
@@ -452,14 +422,15 @@ public class ObjectProperty<T> extends Property {
         throw new IllegalArgumentException();
     }
 
-    /**
+    *
+    * //**
      * This works for both negative and positive ints.
      *
      * @param value  the valueBytes converted to byte[]
      * @param length the returned byte[] length
      * @return the allBytes representing the valueBytes
      * @throws IllegalArgumentException when input is invalid
-     */
+     *//*
     public static byte[] intToBytes(int value, int length) throws IllegalArgumentException {
         byte[] bytes = BigInteger.valueOf(value).toByteArray();
 
@@ -583,7 +554,7 @@ public class ObjectProperty<T> extends Property {
         bytes[7] = bytesOffset[1];
 
         return bytes;
-    }
+    }*/
 
     public static class SortForParsing implements Comparator<ObjectProperty> {
         public int compare(ObjectProperty a, ObjectProperty b) {

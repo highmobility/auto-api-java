@@ -73,6 +73,7 @@ public class CheckControlMessage extends PropertyValueObject {
 
         int textPosition = 6;
         int textLength = Property.getUnsignedInt(value, textPosition, 2);
+
         textPosition += 2;
         this.text = Property.getString(value, textPosition, textLength);
 
@@ -96,7 +97,7 @@ public class CheckControlMessage extends PropertyValueObject {
         int textPosition = 6;
         int textLength = text.length();
         set(textPosition, Property.intToBytes(textLength, 2));
-        textPosition+=2;
+        textPosition += 2;
         set(textPosition, Property.stringToBytes(text));
         textPosition += textLength;
         textLength = status.length();

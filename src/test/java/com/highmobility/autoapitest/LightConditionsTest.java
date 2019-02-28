@@ -17,7 +17,10 @@ import static org.junit.Assert.assertTrue;
  */
 public class LightConditionsTest {
     Bytes bytes = new Bytes(
-            "00540101000447d8cc000200043e800000");
+            "005401" +
+                    "01000701000447D8CC00" +
+                    "0200070100043E800000"
+    );
 
     @Test
     public void state() {

@@ -59,6 +59,6 @@ public class StartStopCharging extends CommandWithProperties {
             }
         }
 
-        this.start = Property.getBool(bytes[3]);
+        this.start = Property.getBool(bytes[6]);
     }
 }

@@ -60,17 +60,17 @@ import static org.junit.Assert.fail;
 public class CapabilitiesTest {
     Bytes bytes = new Bytes
             ("001001" +
-                    "0100050020000112" +
-                    "0100050021000112" +
-                    "010006002300011213" +
-                    "010009002400011213141516" +
-                    "0100050025000112" +
-                    "010006002600011213" +
-                    "010006002700011204" +
-                    "0100050028000112" +
-                    "010003002912" +
-                    "01000400300001" +
-                    "0100050031000102");
+                    "0100080100050020000112" +
+                    "0100080100050021000112" +
+                    "010009010006002300011213" +
+                    "01000C010009002400011213141516" +
+                    "0100080100050025000112" +
+                    "010009010006002600011213" +
+                    "010009010006002700011204" +
+                    "0100080100050028000112" +
+                    "010006010003002912" +
+                    "01000701000400300001" +
+                    "0100080100050031000102");
 
     @Test
     public void capabilities() {
@@ -172,12 +172,7 @@ public class CapabilitiesTest {
         byte[] commandBytes = new GetCapabilities().getByteArray();
         assertTrue(Arrays.equals(bytes, commandBytes));
 
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(command instanceof GetCapabilities);
     }
 
@@ -186,12 +181,7 @@ public class CapabilitiesTest {
         byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getByteArray();
         assertTrue(Arrays.equals(bytes, commandBytes));
 
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(command instanceof GetCapability);
         GetCapability get = (GetCapability) command;
         assertTrue(get.getCapabilityIdentifier() == Identifier.HEART_RATE);
@@ -215,7 +205,8 @@ public class CapabilitiesTest {
         Capabilities capabilities = builder.build();
         byte[] message = capabilities.getByteArray();
         assertTrue(Arrays.equals(message, ByteUtils.bytesFromHex
-                ("001001010009002400011213141516")));
+                ("001001" +
+                        "01000C010009002400011213141516")));
         assertTrue(capabilities.getCapability(GetClimateState.TYPE) != null);
         assertTrue(capabilities.getCapability(EnableDisableWifi.TYPE) == null);
         assertTrue(capabilities.getCapabilities().length == 1);
@@ -250,9 +241,13 @@ public class CapabilitiesTest {
                 remoteControlTypes);
         builder.addCapability(property2);
 
+        Bytes expected = new Bytes(
+                "001001" +
+                        "01000C010009002400011213141516" +
+                        "010009010006002700011204");
+
         Bytes message = builder.build();
-        assertTrue(TestUtils.bytesTheSame(message, new Bytes(
-                "001001010009002400011213141516010006002700011204")));
+        assertTrue(TestUtils.bytesTheSame(message, expected));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -287,8 +282,9 @@ public class CapabilitiesTest {
         Capabilities capabilities = builder.build();
         assertTrue(capabilities.isSupported(ClimateState.TYPE));
 
-        byte[] bytes = ByteUtils.bytesFromHex("00100101000400240001");
-        assertTrue(Arrays.equals(capabilities.getByteArray(), bytes));
+        Bytes bytes = new Bytes("001001" +
+                "01000701000400240001");
+        assertTrue(TestUtils.bytesTheSame(capabilities, bytes));
     }
 
     @Test public void buildDontAddStateAutomaticallyWhenStateAlreadyExists() {

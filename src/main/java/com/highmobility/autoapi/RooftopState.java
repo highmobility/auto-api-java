@@ -22,11 +22,9 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ConvertibleRoofState;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyPercentage;
+
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.SunroofTiltState;
-
-import javax.annotation.Nullable;
 
 /**
  * Command sent from the car every time the rooftop state changes or when a Get Rooftop State is
@@ -37,12 +35,13 @@ public class RooftopState extends CommandWithProperties {
 
     static final byte DIMMING_IDENTIFIER = 0x01;
     static final byte OPEN_IDENTIFIER = 0x02;
+
     private static final byte IDENTIFIER_CONVERTIBLE_ROOF = 0x03;
     private static final byte IDENTIFIER_SUNROOF_TILT = 0x04;
     private static final byte IDENTIFIER_SUNROOF_POSITION = 0x05;
 
-    ObjectPropertyPercentage dimmingPercentage = new ObjectPropertyPercentage(DIMMING_IDENTIFIER);
-    ObjectPropertyPercentage openPercentage = new ObjectPropertyPercentage(OPEN_IDENTIFIER);
+    ObjectProperty<Double> dimmingPercentage = new ObjectProperty<>(Double.class, DIMMING_IDENTIFIER);
+    ObjectProperty<Double> openPercentage = new ObjectProperty<>(Double.class, OPEN_IDENTIFIER);
     ConvertibleRoofState convertibleRoofState =
             new ConvertibleRoofState(IDENTIFIER_CONVERTIBLE_ROOF);
     SunroofTiltState sunroofTiltState =
@@ -53,14 +52,15 @@ public class RooftopState extends CommandWithProperties {
     /**
      * @return The dim percentage of the rooftop.
      */
-    public ObjectPropertyPercentage getDimmingPercentage() {
+
+    public ObjectProperty<Double> getDimmingPercentage() {
         return dimmingPercentage;
     }
 
     /**
      * @return The percentage of how much the rooftop is open.
      */
-    public ObjectPropertyPercentage getOpenPercentage() {
+    public ObjectProperty<Double> getOpenPercentage() {
         return openPercentage;
     }
 
@@ -123,8 +123,8 @@ public class RooftopState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectPropertyPercentage openPercentage;
-        private ObjectPropertyPercentage dimmingPercentage;
+        private ObjectProperty<Double> openPercentage;
+        private ObjectProperty<Double> dimmingPercentage;
         private ConvertibleRoofState convertibleRoofState;
         private SunroofTiltState sunroofTiltState;
         private ObjectProperty<Position> sunroofPosition;
@@ -137,7 +137,7 @@ public class RooftopState extends CommandWithProperties {
          * @param openPercentage The open percentage.
          * @return The builder.
          */
-        public Builder setOpenPercentage(ObjectPropertyPercentage openPercentage) {
+        public Builder setOpenPercentage(ObjectProperty<Double> openPercentage) {
             this.openPercentage = openPercentage;
             addProperty(openPercentage.setIdentifier(OPEN_IDENTIFIER));
             return this;
@@ -147,7 +147,7 @@ public class RooftopState extends CommandWithProperties {
          * @param dimmingPercentage The dimming percentage.
          * @return The builder.
          */
-        public Builder setDimmingPercentage(ObjectPropertyPercentage dimmingPercentage) {
+        public Builder setDimmingPercentage(ObjectProperty<Double> dimmingPercentage) {
             this.dimmingPercentage = dimmingPercentage;
             addProperty(dimmingPercentage.setIdentifier(DIMMING_IDENTIFIER));
             return this;
@@ -157,7 +157,8 @@ public class RooftopState extends CommandWithProperties {
          * @param convertibleRoofState The convertible roof state.
          * @return The builder.
          */
-        public Builder setConvertibleRoofState(ConvertibleRoofState convertibleRoofState) {
+        public Builder setConvertibleRoofState(ConvertibleRoofState
+                                                       convertibleRoofState) {
             this.convertibleRoofState = convertibleRoofState;
             addProperty(convertibleRoofState.setIdentifier(IDENTIFIER_CONVERTIBLE_ROOF));
             return this;

@@ -47,9 +47,9 @@ public class AccelerationProperty extends Property {
 
     public AccelerationProperty(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 8) throw new CommandParseException();
-        accelerationType = AccelerationType.fromByte(bytes[3]);
-        acceleration = Property.getFloat(Arrays.copyOfRange(bytes, 4, 8));
+        if (bytes.length < 11) throw new CommandParseException();
+        accelerationType = AccelerationType.fromByte(bytes[6]);
+        acceleration = getFloat(Arrays.copyOfRange(bytes, 7, 11));
     }
 
     public AccelerationProperty(AccelerationType type, float acceleration) {
@@ -58,8 +58,8 @@ public class AccelerationProperty extends Property {
 
     public AccelerationProperty(byte identifier, AccelerationType type, float acceleration) {
         super(identifier, 5);
-        bytes[3] = type.getByte();
-        ByteUtils.setBytes(bytes, Property.floatToBytes(acceleration), 4);
+        bytes[6] = type.getByte();
+        ByteUtils.setBytes(bytes, floatToBytes(acceleration), 7);
     }
 
     public enum AccelerationType {

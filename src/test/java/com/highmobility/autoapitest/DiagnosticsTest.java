@@ -6,7 +6,6 @@ import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
 import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
 import com.highmobility.autoapi.property.diagnostics.DiagnosticsTroubleCode;
@@ -28,23 +27,46 @@ import static org.junit.Assert.fail;
  */
 public class DiagnosticsTest {
     Bytes bytes = new Bytes(
-            "0033010100030249F00200020063030002003C04000209C40500015A0600020109090001010B0004414000000C00043F0000000D000205DC0E0002000A" +
-                    "0F0004420E0000" +
-                    /*level7*/
-                    "10000101110002001412000444bb94cd13000446d7860014000100150001141600010A1700020041" +
-                    /*level8*/"18000138" +
-                    "19001A000100019C78000C436865636B20656E67696E6505416C657274" + // check control
-                    // message 1
-                    "19001B000100019C78000C436865636B20656E67696E6506416C65727474" + // check
-                    // control message 2
-                    "1A0005004013d70a1A0005014013d70a1A0005024013d70a1A0005034013d70a" + // tire
-                    // pressure
-                    "1B000500422000001B000501422000001B000502422000001B00050342200000" + // tire
-                    // temp
-                    "1C00030002EA1C00030102EA1C00030202EA1C00030302EA" + // wheel rpms
-                    "1D001B020743313131364641095244555F32313246520750454E44494E47" +
-                    "1D0018020743313633414641064454523231320750454E44494E47" +
-                    "1E0004000249f0"); // TT-171
+            "003301" +
+                    "010007010004000249F0" +
+                    "0200050100020063" +
+                    "030005010002003C" +
+                    "04000501000209C4" +
+                    "05000B0100083FECCCCCCCCCCCCD" +
+                    "0600050100020109" +
+                    "09000401000101" +
+                    "0B000701000441400000" +
+                    "0C00070100043F000000" +
+                    "0D000501000205DC" +
+                    "0E0005010002000A" +
+                    "0F0007010004420E0000" +
+                    "10000401000101" +
+                    "1100050100020014" +
+                    "12000701000444BB94CD" +
+                    "13000701000446D78600" +
+                    "14000401000100" +
+                    "15000B0100083FC999999999999A" +
+                    "16000B0100083FB999999999999A" +
+                    "1700050100020041" +
+                    "18000B0100083FE1EB851EB851EC" +
+                    "19001D01001A000100019C78000C436865636B20656E67696E6505416C657274" +
+                    "19001E01001B000100019C78000C436865636B20656E67696E6506416C65727474" +
+                    "1A0008010005004013D70A" +
+                    "1A0008010005014013D70A" +
+                    "1A0008010005024013D70A" +
+                    "1A0008010005034013D70A" +
+                    "1B00080100050042200000" +
+                    "1B00080100050142200000" +
+                    "1B00080100050242200000" +
+                    "1B00080100050342200000" +
+                    "1C00060100030002EA" +
+                    "1C00060100030102EA" +
+                    "1C00060100030202EA" +
+                    "1C00060100030302EA" +
+                    "1D001E01001B020743313131364641095244555F32313246520750454E44494E47" +
+                    "1D001B010018020743313633414641064454523231320750454E44494E47" +
+                    "1E0007010004000249F0"
+    );
 
     @Test public void state() {
         DiagnosticsState state = (DiagnosticsState) CommandResolver.resolve(bytes);
@@ -60,7 +82,7 @@ public class DiagnosticsTest {
         assertTrue(state.getSpeed().getValue() == 60);
         assertTrue(state.getRpm().getValue() == 2500);
         assertTrue(state.getRange().getValue() == 265);
-        assertTrue(state.getFuelLevel().getValue() == 90);
+        assertTrue(state.getFuelLevel().getValue() == .9d);
         assertTrue(state.getWasherFluidLevel().getValue() == WasherFluidLevel.FULL);
         assertTrue(state.getFuelVolume().getValue() == 35.5f);
 
@@ -74,12 +96,12 @@ public class DiagnosticsTest {
         assertTrue(state.getEngineTotalOperatingHours().getValue() == 1500.65f);
         assertTrue(state.getEngineTotalFuelConsumption().getValue() == 27587.0f);
         assertTrue(state.getBrakeFluidLevel().getValue() == BrakeFluidLevel.LOW);
-        assertTrue(state.getEngineTorque().getValue() == 20);
-        assertTrue(state.getEngineLoad().getValue() == 10);
-        assertTrue(state.getWheelBasedSpeed().getValue() == 65);
+        assertTrue(state.getEngineTorque().getValue() == .2d);
+        assertTrue(state.getEngineLoad().getValue() == .1d);
+        assertTrue(state.getWheelBasedSpeed().getValue() == 65d);
 
         // level 8
-        assertTrue(state.getBatteryLevel().getValue() == 56);
+        assertTrue(state.getBatteryLevel().getValue() == .56d);
 
         int propertyCount = 0;
 
@@ -179,31 +201,32 @@ public class DiagnosticsTest {
 
     @Test public void build() {
         DiagnosticsState.Builder builder = new DiagnosticsState.Builder();
+
         builder.setMileage(new ObjectPropertyInteger(150000));
         builder.setOilTemperature(new ObjectPropertyInteger(99));
         builder.setSpeed(new ObjectPropertyInteger(60));
         builder.setRpm(new ObjectPropertyInteger(2500));
-        builder.setFuelLevel(new ObjectPropertyPercentage(90));
+        builder.setFuelLevel(new ObjectProperty(.9d));
         builder.setRange(new ObjectPropertyInteger(265));
         builder.setWasherFluidLevel(new ObjectProperty<>(WasherFluidLevel.FULL));
 
-        builder.setBatteryVoltage(new ObjectProperty<Float>(12f));
-        builder.setAdBlueLevel(new ObjectProperty<Float>(.5f));
+        builder.setBatteryVoltage(new ObjectProperty<>(12f));
+        builder.setAdBlueLevel(new ObjectProperty<>(.5f));
         builder.setDistanceDrivenSinceReset(new ObjectPropertyInteger(1500));
         builder.setDistanceDrivenSinceEngineStart(new ObjectPropertyInteger(10));
-        builder.setFuelVolume(new ObjectProperty<Float>(35.5f));
+        builder.setFuelVolume(new ObjectProperty<>(35.5f));
 
         builder.setAntiLockBrakingActive(new ObjectProperty<>(true));
         builder.setEngineCoolantTemperature(new ObjectPropertyInteger(20));
         builder.setEngineTotalOperatingHours(new ObjectProperty<>(1500.65f));
         builder.setEngineTotalFuelConsumption(new ObjectProperty<>(27587.0f));
         builder.setBrakeFluidLevel(new ObjectProperty<>(BrakeFluidLevel.LOW));
-        builder.setEngineTorque(new ObjectPropertyPercentage(20));
-        builder.setEngineLoad(new ObjectPropertyPercentage(10));
+        builder.setEngineTorque(new ObjectProperty(.2d));
+        builder.setEngineLoad(new ObjectProperty(.1d));
         builder.setWheelBasedSpeed(new ObjectPropertyInteger(65));
 
         // level8
-        builder.setBatteryLevel(new ObjectPropertyPercentage(56));
+        builder.setBatteryLevel(new ObjectProperty(.56d));
 
         ObjectProperty msg1 = new ObjectProperty<>(new CheckControlMessage(1, 105592, "Check " +
                 "engine", "Alert"));

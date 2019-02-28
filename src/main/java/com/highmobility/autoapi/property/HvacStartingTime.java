@@ -38,7 +38,6 @@ public class HvacStartingTime extends PropertyValueObject {
     @Override public void update(Bytes value) throws CommandParseException {
         super.update(value);
         if (bytes.length < 3) throw new CommandParseException();
-
         this.weekday = Weekday.fromByte(get(0));
         time = new Time(getRange(1, 3));
     }

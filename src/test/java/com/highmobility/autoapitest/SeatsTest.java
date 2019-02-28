@@ -19,10 +19,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class SeatsTest {
     Bytes bytes = new Bytes("005601" +
-            "0200020201" +
-            "0200020300" +
-            "0300020201" +
-            "0300020300");
+            "0200050100020201" +
+            "0200050100020300" +
+            "0300050100020201" +
+            "0300050100020300"
+    );
 
     @Test
     public void state() {

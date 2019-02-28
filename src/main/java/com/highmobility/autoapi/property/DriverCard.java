@@ -38,9 +38,9 @@ public class DriverCard extends Property {
 
     public DriverCard(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 5) throw new CommandParseException();
-        driverNumber = Property.getUnsignedInt(bytes[3]);
-        present = Property.getBool(bytes[4]);
+        if (bytes.length < 8) throw new CommandParseException();
+        driverNumber = Property.getUnsignedInt(bytes[6]);
+        present = Property.getBool(bytes[7]);
     }
 
     public DriverCard(int driverNumber, boolean present) throws
@@ -52,7 +52,7 @@ public class DriverCard extends Property {
             IllegalArgumentException {
         super(identifier, 2);
 
-        bytes[3] = (byte) driverNumber;
-        bytes[4] = Property.boolToByte(present);
+        bytes[6] = (byte) driverNumber;
+        bytes[7] = Property.boolToByte(present);
     }
 }

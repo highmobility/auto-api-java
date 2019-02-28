@@ -15,8 +15,8 @@ import static org.junit.Assert.assertTrue;
 public class RemoteControlTest {
     Bytes bytes = new Bytes(
             "002701" +
-                    "01000102" +
-                    "0200020032");
+                    "01000401000102" +
+                    "0200050100020032");
 
     @Test
     public void controlMode() {
@@ -42,21 +42,26 @@ public class RemoteControlTest {
     }
 
     @Test public void startControlMode() {
-        String waitingForBytes = "00271201000101";
-        assertTrue(new StartControlMode(true).equals(waitingForBytes));
-        Command command = CommandResolver.resolveHex(waitingForBytes);
-        assertTrue(((StartControlMode) command).getStart() == true);
+        String waitingForBytes = "002712" +
+                "01000401000101";
+        StartControlMode command = new StartControlMode(true);
+        assertTrue(command.equals(waitingForBytes));
+        command = (StartControlMode) CommandResolver.resolveHex(waitingForBytes);
+        assertTrue(command.getStart() == true);
     }
 
     @Test public void stopControlMode() {
-        String waitingForBytes = "00271201000100";
+        String waitingForBytes = "002712" +
+                "01000401000100";
         assertTrue(new StartControlMode(false).equals(waitingForBytes));
         Command command = CommandResolver.resolveHex(waitingForBytes);
         assertTrue(((StartControlMode) command).getStart() == false);
     }
 
     @Test public void controlCommand() {
-        String waitingForBytes = "002704010001030200020032";
+        String waitingForBytes = "002704" +
+                "01000401000103" +
+                "0200050100020032";
 
         assertTrue(new ControlCommand(3, 50).equals(waitingForBytes));
 

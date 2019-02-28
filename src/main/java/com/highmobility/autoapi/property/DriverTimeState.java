@@ -38,9 +38,9 @@ public class DriverTimeState extends Property {
 
     public DriverTimeState(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 5) throw new CommandParseException();
-        driverNumber = Property.getUnsignedInt(bytes[3]);
-        timeState = TimeState.fromByte(bytes[4]);
+        if (bytes.length < 8) throw new CommandParseException();
+        driverNumber = Property.getUnsignedInt(bytes[6]);
+        timeState = TimeState.fromByte(bytes[7]);
     }
 
     public DriverTimeState(int driverNumber, TimeState timeState) throws
@@ -52,8 +52,8 @@ public class DriverTimeState extends Property {
             IllegalArgumentException {
         super(identifier, 2);
 
-        bytes[3] = (byte) driverNumber;
-        bytes[4] = timeState.getByte();
+        bytes[6] = (byte) driverNumber;
+        bytes[7] = timeState.getByte();
     }
 
     public enum TimeState {

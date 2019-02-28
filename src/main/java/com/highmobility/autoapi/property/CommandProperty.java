@@ -34,6 +34,7 @@ import javax.annotation.Nullable;
  * The possible control mode values.
  */
 public class CommandProperty extends Property {
+    // TODO: 2019-02-27 this should be a PropertyValue, without timestamp and failure
     CommandWithProperties value;
 
     @Nullable public CommandWithProperties getValue() {
@@ -70,6 +71,7 @@ public class CommandProperty extends Property {
     }
 
     @Override public Property update(Property p) throws CommandParseException {
+        // TODO: 2019-02-27 update with value not property
         super.update(p);
 
         if (p.getValueLength() > 5) {

@@ -57,7 +57,8 @@ public class ObjectPropertyString extends ObjectProperty<String> {
                 throw new ParseException();
             }
 
-            bytes = getPropertyBytes(bytes[0], stringBytes.length, stringBytes);
+
+            bytes = getPropertyBytes(bytes[0], stringBytes);
         }
 
         this.value = value;

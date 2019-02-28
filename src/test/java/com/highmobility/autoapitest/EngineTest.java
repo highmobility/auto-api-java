@@ -18,7 +18,10 @@ import static org.junit.Assert.assertTrue;
  */
 public class EngineTest {
     Bytes bytes = new Bytes(
-            "0035010100010102000101");
+            "003501" +
+                    "01000401000101" +
+                    "02000401000101"
+    );
 
     @Test
     public void state() {
@@ -42,7 +45,7 @@ public class EngineTest {
     }
 
     @Test public void set() {
-        Bytes waitingForBytes = new Bytes("00351201000101");
+        Bytes waitingForBytes = new Bytes("00351201000401000101");
         Bytes commandBytes = new TurnIgnitionOnOff(true);
         assertTrue(waitingForBytes.equals(commandBytes));
 

@@ -10,13 +10,8 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 import static org.junit.Assert.assertTrue;
 
@@ -24,31 +19,24 @@ import static org.junit.Assert.assertTrue;
  * Created by ttiganik on 15/09/16.
  */
 public class VehicleTimeTest {
-    Bytes bytes = new Bytes("00500101000811010A1020330078");
+    Bytes bytes = new Bytes("005001" +
+            "01000B0100080000015999E5BFC0"
+    );
 
     @Test
-    public void state() {
+    public void state() throws ParseException {
+
         Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == VehicleTime.class);
         VehicleTime state = (VehicleTime) command;
+        testState(state);
+    }
+
+    private void testState(VehicleTime state) throws ParseException {
         Calendar c = state.getVehicleTime().getValue();
-
-        float rawOffset = c.getTimeZone().getRawOffset();
-        float expectedRawOffset = 120 * 60 * 1000;
-        assertTrue(rawOffset == expectedRawOffset);
-
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        try {
-            Date commandDate = c.getTime();
-            // hour is 16 - 2 = 14 because timezone is UTC+2
-            Date expectedDate = format.parse("2017-01-10T14:32:51");
-            assertTrue((format.format(commandDate).equals(format.format(expectedDate))));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        assertTrue(TestUtils.dateIsSame(c, "2017-01-13T22:14:48"));
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void stateWithTimestamp() {
@@ -71,9 +59,8 @@ public class VehicleTimeTest {
 
     @Test public void build() throws ParseException {
         VehicleTime.Builder builder = new VehicleTime.Builder();
-        Calendar c = TestUtils.getUTCCalendar("2017-01-10T14:32:51", 120);
+        Calendar c = TestUtils.getCalendar("2017-01-13T22:14:48");
         builder.setVehicleTime(new CalendarProperty(c));
-        byte[] bytes = builder.build().getByteArray();
-        assertTrue(Arrays.equals(bytes, ByteUtils.bytesFromHex("00500101000811010A1020330078")));
+        testState(builder.build());
     }
 }

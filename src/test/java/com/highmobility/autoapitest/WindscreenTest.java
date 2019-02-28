@@ -18,21 +18,28 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 import static org.junit.Assert.assertTrue;
 
 public class WindscreenTest {
+    Bytes bytes = new Bytes(
+            "004201" +
+                    "01000401000102" +
+                    "02000401000103" +
+                    "03000401000101" +
+                    "04000401000143" +
+                    "05000401000112" +
+                    "06000401000102" +
+                    "07000B0100083FEE666666666666" +
+                    "08000B010008000001598938E788"
+
+    );
+
     @Test
-    public void state() {
-        Bytes bytes = new Bytes(
-                "0042010100010202000103030001020400014305000112060001020700015f08000811010a1020050000");
+    public void state() throws ParseException {
         Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(WindscreenState.TYPE) && command.getClass().equals(WindscreenState
@@ -41,7 +48,7 @@ public class WindscreenTest {
 
         assertTrue(state.getWiperState() == WiperState.AUTOMATIC);
         assertTrue(state.getWiperIntensity() == WiperIntensity.LEVEL_3);
-        assertTrue(state.getWindscreenDamage() == WindscreenDamage.DAMAGE_SMALLER_THAN_1);
+        assertTrue(state.getWindscreenDamage() == WindscreenDamage.IMPACT_NO_DAMAGE);
         assertTrue(state.getWindscreenReplacementState() == WindscreenReplacementState
                 .REPLACEMENT_NEEDED);
 
@@ -53,24 +60,10 @@ public class WindscreenTest {
         assertTrue(matrix.getWindscreenSizeHorizontal() == 4);
         assertTrue(matrix.getWindscreenSizeVertical() == 3);
 
-        assertTrue(state.getDamageConfidence().getValue() == 95);
+        assertTrue(state.getDamageConfidence().getValue() == .95d);
 
         Calendar c = state.getDamageDetectionTime();
-
-        float rawOffset = c.getTimeZone().getRawOffset();
-        float expectedRawOffset = 0;
-        assertTrue(rawOffset == expectedRawOffset);
-
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        try {
-            Date commandDate = c.getTime();
-            Date expectedDate = format.parse("2017-01-10T16:32:05");
-            assertTrue((format.format(commandDate).equals(format.format(expectedDate))));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        assertTrue(TestUtils.dateIsSame(c, "2017-01-10T16:32:05"));
     }
 
     @Test public void build() throws ParseException {
@@ -105,7 +98,8 @@ public class WindscreenTest {
     }
 
     @Test public void setNoDamage() {
-        Bytes waitingForBytes = new Bytes("00421203000101");
+        Bytes waitingForBytes = new Bytes("004212" +
+                "03000401000101");
 
         byte[] bytes = new SetWindscreenDamage(WindscreenDamage.IMPACT_NO_DAMAGE,
                 null).getByteArray();
@@ -118,7 +112,9 @@ public class WindscreenTest {
     }
 
     @Test public void setDamage() {
-        Bytes bytes = new Bytes("0042120300010105000123");
+        Bytes bytes = new Bytes("004212" +
+                "03000401000101" +
+                "05000401000123");
 
         WindscreenDamage damage = WindscreenDamage.IMPACT_NO_DAMAGE;
         WindscreenDamageZone zone = new WindscreenDamageZone(2, 3);
@@ -135,7 +131,8 @@ public class WindscreenTest {
     }
 
     @Test public void setReplacementNeeded() {
-        Bytes waitingForBytes = new Bytes("00421301000101");
+        Bytes waitingForBytes = new Bytes("004213" +
+                "01000401000101");
 
         Bytes bytes = new SetWindscreenReplacementNeeded(WindscreenReplacementState
                 .REPLACEMENT_NOT_NEEDED);
@@ -155,7 +152,9 @@ public class WindscreenTest {
     }
 
     @Test public void controlWipersTest() {
-        Bytes bytes = new Bytes("0042140100010102000102");
+        Bytes bytes = new Bytes("004214" +
+                "01000401000101" +
+                "02000401000102");
 
         ControlWipers create = new ControlWipers(WiperState.ACTIVE, WiperIntensity.LEVEL_2);
         assertTrue(create.getIntensity() == WiperIntensity.LEVEL_2);

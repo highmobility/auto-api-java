@@ -78,8 +78,8 @@ public class ControlWindows extends CommandWithProperties {
         for (Property property : properties) {
             if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER)
                 builder.add(new WindowPosition(
-                        Location.fromByte(property.getByteArray()[3]),
-                        Position.fromByte(property.getByteArray()[4])
+                        Location.fromByte(property.getValueBytes().get(0)),
+                        Position.fromByte(property.getValueBytes().get(1))
                 ));
         }
 

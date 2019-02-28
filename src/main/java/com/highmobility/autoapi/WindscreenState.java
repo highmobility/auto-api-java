@@ -21,7 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.ObjectPropertyPercentage;
+
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.WindscreenDamage;
 import com.highmobility.autoapi.property.WindscreenDamageZone;
@@ -55,8 +56,8 @@ public class WindscreenState extends CommandWithProperties {
     WindscreenDamageZone windscreenDamageZone;
     WindscreenDamageZoneMatrix windscreenDamageZoneMatrix;
     WindscreenReplacementState windscreenReplacementState;
-    ObjectPropertyPercentage damageConfidence =
-            new ObjectPropertyPercentage(IDENTIFIER_DAMAGE_CONFIDENCE);
+    ObjectProperty<Double> damageConfidence =
+            new ObjectProperty<>(Double.class, IDENTIFIER_DAMAGE_CONFIDENCE);
     Calendar damageDetectionTime;
 
     /**
@@ -104,7 +105,8 @@ public class WindscreenState extends CommandWithProperties {
     /**
      * @return The damage confidence.
      */
-    @Nullable public ObjectPropertyPercentage getDamageConfidence() {
+
+    @Nullable public ObjectProperty<Double> getDamageConfidence() {
         return damageConfidence;
     }
 
@@ -174,7 +176,8 @@ public class WindscreenState extends CommandWithProperties {
         private WindscreenDamageZone windscreenDamageZone;
         private WindscreenDamageZoneMatrix windscreenDamageZoneMatrix;
         private WindscreenReplacementState windscreenReplacementState;
-        private ObjectPropertyPercentage damageConfidence;
+
+        private ObjectProperty<Double> damageConfidence;
         private Calendar damageDetectionTime;
 
         public Builder() {
@@ -250,7 +253,7 @@ public class WindscreenState extends CommandWithProperties {
          * @param damageConfidence The damage confidence.
          * @return The builder.
          */
-        public Builder setDamageConfidence(ObjectPropertyPercentage damageConfidence) {
+        public Builder setDamageConfidence(ObjectProperty<Double> damageConfidence) {
             this.damageConfidence = damageConfidence;
             damageConfidence.setIdentifier(IDENTIFIER_DAMAGE_CONFIDENCE);
             addProperty(damageConfidence);

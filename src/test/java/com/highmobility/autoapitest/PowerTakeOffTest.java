@@ -11,22 +11,18 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class PowerTakeOffTest {
     Bytes bytes = new Bytes(
-            "0065010100010102000101"
+            "006501" +
+                    "01000401000101" +
+                    "02000401000101"
     );
 
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(PowerTakeOffState.TYPE));
         PowerTakeOffState state = (PowerTakeOffState) command;
@@ -48,7 +44,8 @@ public class PowerTakeOffTest {
     }
 
     @Test public void activateDeactivate() {
-        Bytes waitingForBytes = new Bytes("00650201000101");
+        Bytes waitingForBytes = new Bytes("006502" +
+                "01000401000101");
         byte[] commandBytes = new ActivateDeactivatePowerTakeoff(true).getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));
         ActivateDeactivatePowerTakeoff command = (ActivateDeactivatePowerTakeoff) CommandResolver

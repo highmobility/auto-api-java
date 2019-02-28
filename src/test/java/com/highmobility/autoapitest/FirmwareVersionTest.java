@@ -10,8 +10,6 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -19,24 +17,26 @@ import static org.junit.Assert.assertTrue;
  */
 public class FirmwareVersionTest {
     Bytes bytes = new Bytes(
-            "000301010003010f2102000C6274737461636b2d7561727403000976312e352d70726f64");
 
+            "000301" +
+                    "010006010003010F21" +
+                    "02000F01000C6274737461636B2D75617274" +
+                    "03000C01000976312E352D70726F64"
+    );
+
+    // TODO: 2019-02-27 test state
     @Test
     public void state() {
-        FirmwareVersion state = (FirmwareVersion) CommandResolver.resolve(bytes);
-        testState(state);
+        Command command = CommandResolver.resolve(bytes);
+
+        testState((FirmwareVersion) command);
     }
 
-    private void testState(FirmwareVersion state) {
-        assertTrue(Arrays.equals(state.getCarSDKVersion().getValue(), new int[]{1,15,33}));
-        assertTrue(state.getCarSDKBuild().getValue().equals("btstack-uart"));
-        assertTrue(state.getApplicationVersion().getValue().equals("v1.5-prod"));
-    }
+    void testState(FirmwareVersion state) {
+        assertTrue(state.getCarSDKVersion().equals("1.15.33"));
+        assertTrue(state.getCarSDKBuild().equals("btstack-uart"));
+        assertTrue(state.getApplicationVersion().equals("v1.5-prod"));
 
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
-        FirmwareVersion command = (FirmwareVersion) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getCarSDKBuild().getTimestamp() != null);
     }
 
     @Test public void build() {
@@ -49,11 +49,6 @@ public class FirmwareVersionTest {
         FirmwareVersion command = builder.build();
         assertTrue(command.equals(bytes));
         testState(command);
-    }
-
-    @Test(expected = IllegalArgumentException.class) public void throwsIfInvalidFormat() {
-        FirmwareVersion.Builder builder = new FirmwareVersion.Builder();
-        builder.setCarSdkVersion(new ObjectPropertyIntegerArray(new int[]{1, 15}));
     }
 
     @Test public void get() {

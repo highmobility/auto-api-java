@@ -42,11 +42,13 @@ public class ReductionTime extends PropertyValueObject {
         super(3);
         this.startStop = startStop;
         this.time = time;
+
         set(0, startStop.getByte());
         set(1, time);
     }
 
-    public ReductionTime() { }
+    public ReductionTime() {
+    }
 
     @Override public void update(Bytes value) throws CommandParseException {
         super.update(value);

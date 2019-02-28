@@ -26,6 +26,7 @@ import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
+// TODO: 2019-02-28 use propertyValue
 public class SunroofTiltState extends Property {
     Value value;
 

@@ -7,7 +7,8 @@ public enum Location {
     FRONT_RIGHT((byte) 0x01),
     REAR_RIGHT((byte) 0x02),
     REAR_LEFT((byte) 0x03),
-    HATCH((byte) 0x04);
+    HATCH((byte) 0x04),
+    ALL((byte) 0x05);
 
     public static Location fromByte(byte value) throws CommandParseException {
         Location[] allValues = Location.values();

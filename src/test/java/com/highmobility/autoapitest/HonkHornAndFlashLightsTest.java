@@ -15,7 +15,9 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 public class HonkHornAndFlashLightsTest {
-    Bytes bytes = new Bytes("00260101000102");
+    Bytes bytes = new Bytes("002601" +
+            "01000401000102"
+    );
 
     @Test
     public void state() {
@@ -30,7 +32,9 @@ public class HonkHornAndFlashLightsTest {
     }
 
     @Test public void honkAndFlash() {
-        String waitingForBytes = "0026120100010002000103";
+        String waitingForBytes = "002612" +
+                "01000401000100" +
+                "02000401000103";
         String commandBytes = ByteUtils.hexFromBytes(new HonkAndFlash(0, 3).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -45,7 +49,8 @@ public class HonkHornAndFlashLightsTest {
     }
 
     @Test public void activateDeactivate() {
-        String waitingForBytes = "00261301000101";
+        String waitingForBytes = "002613" +
+                "01000401000101";
 
         String commandBytes = ByteUtils.hexFromBytes(new ActivateDeactivateEmergencyFlasher(true)
                 .getByteArray());

@@ -38,9 +38,9 @@ public class DriverWorkingState extends Property {
 
     public DriverWorkingState(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes.length < 5) throw new CommandParseException();
-        driverNumber = Property.getUnsignedInt(bytes[3]);
-        workingState = WorkingState.fromByte(bytes[4]);
+        if (bytes.length < 8) throw new CommandParseException();
+        driverNumber = Property.getUnsignedInt(bytes[6]);
+        workingState = WorkingState.fromByte(bytes[7]);
     }
 
     public DriverWorkingState(int driverNumber, WorkingState workingState) throws IllegalArgumentException {
@@ -51,8 +51,8 @@ public class DriverWorkingState extends Property {
             IllegalArgumentException {
         super(identifier, 2);
 
-        bytes[3] = (byte) driverNumber;
-        bytes[4] = workingState.getByte();
+        bytes[6] = (byte) driverNumber;
+        bytes[7] = workingState.getByte();
     }
 
     public enum WorkingState {

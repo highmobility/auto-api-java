@@ -21,8 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 
 /**
  * Set the charge limit, to which point the car will charge itself. The result is sent through the
@@ -31,13 +29,15 @@ import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 public class SetChargeLimit extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x13);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    ObjectPropertyPercentage percentage = new ObjectPropertyPercentage(PROPERTY_IDENTIFIER);
+
+    ObjectProperty<Double> percentage = new ObjectProperty<>(Double.class, PROPERTY_IDENTIFIER);
 
     /**
      * @return The charge limit percentage.
      */
-    public int getChargeLimit() {
-        return percentage.getValue();
+
+    public ObjectProperty<Double> getChargeLimit() {
+        return percentage;
     }
 
     /**
@@ -45,7 +45,8 @@ public class SetChargeLimit extends CommandWithProperties {
      *
      * @param percentage The charge limit percentage.
      */
-    public SetChargeLimit(int percentage) throws IllegalArgumentException {
+
+    public SetChargeLimit(double percentage) throws IllegalArgumentException {
         super(TYPE);
         this.percentage.update(percentage);
         createBytes(this.percentage);
@@ -62,6 +63,5 @@ public class SetChargeLimit extends CommandWithProperties {
                 return null;
             });
         }
-
     }
 }

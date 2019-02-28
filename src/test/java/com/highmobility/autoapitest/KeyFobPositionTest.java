@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
  * Created by ttiganik on 15/09/16.
  */
 public class KeyFobPositionTest {
-    Bytes bytes = new Bytes("00480101000105");
+    Bytes bytes = new Bytes("00480101000401000105");
 
     @Test
     public void state() {

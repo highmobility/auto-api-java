@@ -10,22 +10,17 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 public class StartStopTest {
     Bytes bytes = new Bytes(
-            "00630101000101"
+            "006301" +
+                    "01000401000101"
     );
 
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(StartStopState.TYPE));
         StartStopState state = (StartStopState) command;
@@ -47,7 +42,8 @@ public class StartStopTest {
     }
 
     @Test public void activateDeactivate() {
-        Bytes waitingForBytes = new Bytes("00631201000100");
+        Bytes waitingForBytes = new Bytes("006312" +
+                "01000401000100");
 
         Bytes commandBytes = new ActivateDeactivateStartStop(false);
         assertTrue(TestUtils.bytesTheSame(waitingForBytes, commandBytes));

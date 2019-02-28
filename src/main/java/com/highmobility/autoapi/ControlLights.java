@@ -91,6 +91,7 @@ public class ControlLights extends CommandWithProperties {
     /**
      * Get the fog light at a location.
      *
+     * @param location The light location.
      * @return The fog light.
      */
     @Nullable public ObjectProperty<FogLight> getFogLight(LightLocation location) {
@@ -112,6 +113,7 @@ public class ControlLights extends CommandWithProperties {
     /**
      * Get the reading lamp at a location.
      *
+     * @param location The light location.
      * @return The reading lamp.
      */
     @Nullable public ObjectProperty<ReadingLamp> getReadingLamp(Location location) {
@@ -149,7 +151,7 @@ public class ControlLights extends CommandWithProperties {
      *
      * @param frontExteriorLightState Front exterior light state.
      * @param rearExteriorLightActive Rear exterior light state.
-     * @param ambientColor            Ambient color with rgb values from 0-255.
+     * @param ambientColor            Ambient color with rgba values from 0-255.
      * @param fogLights               The fog lights.
      * @param readingLamps            The reading lamps.
      * @param interiorLamps           The interior lamps.

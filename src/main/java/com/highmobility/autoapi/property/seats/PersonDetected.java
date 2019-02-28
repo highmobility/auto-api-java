@@ -47,8 +47,8 @@ public class PersonDetected extends Property {
         super(IDENTIFIER, 2);
         this.seatLocation = seatLocation;
         this.detected = detected;
-        this.bytes[3] = seatLocation.getByte();
-        this.bytes[4] = Property.boolToByte(detected);
+        this.bytes[6] = seatLocation.getByte();
+        this.bytes[7] = Property.boolToByte(detected);
     }
 
     public PersonDetected(Property p) throws CommandParseException {

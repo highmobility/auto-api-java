@@ -22,16 +22,15 @@ import static junit.framework.TestCase.fail;
  * Created by ttiganik on 15/09/16.
  */
 public class NotificationsTest {
-    Bytes bytes = new Bytes
-            ("003800" +
-                    "0100115374617274206e617669676174696f6e3f" +
-                    "020003004e6f" +
-                    "02000401596573" +
-                    "1000012A" // 42
-            );
+    Bytes bytes = new Bytes(
+            "003800" +
+                    "0100140100115374617274206e617669676174696f6e3f" +
+                    "020006010003004e6f" +
+                    "02000701000401596573" +
+                    "1000040100012A" // 42
+    );
 
     @Test public void incomingNotification() {
-
         Command command = CommandResolver.resolve(bytes);
         assertTrue(command.getClass() == Notification.class);
         Notification state = (Notification) command;
@@ -53,7 +52,7 @@ public class NotificationsTest {
         ActionItem[] actions = new ActionItem[]{action1, action2};
         Notification notification = new Notification("Start navigation?", actions, 42);
 
-        // we expect that properties are ordered in this test. It should not matter really
+        // we expect that testState are ordered in this test. It should not matter really
         assertTrue(TestUtils.bytesTheSame(notification, bytes));
     }
 
@@ -77,7 +76,8 @@ public class NotificationsTest {
 
     @Test public void incomingNotificationAction() {
         Bytes bytes = new Bytes(
-                "003811010001FE");
+                "003811" +
+                        "010004010001FE");
 
         NotificationAction command = (NotificationAction) CommandResolver.resolve(bytes);
         assertTrue(command.getActionIdentifier() == 254);
@@ -85,7 +85,8 @@ public class NotificationsTest {
 
     @Test public void outgoingNotificationAction() {
         Bytes waitingForBytes = new Bytes
-                ("003811010001FE");
+                ("003811" +
+                        "010004010001FE");
         byte[] bytes = new NotificationAction(254).getByteArray();
         assertTrue(waitingForBytes.equals(bytes));
 
@@ -98,7 +99,8 @@ public class NotificationsTest {
         builder.setActionIdentifier(new ObjectPropertyInteger(254));
         NotificationAction command = builder.build();
         assertTrue(command.getActionIdentifier() == 254);
-        assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex("003811010001FE")));
+        assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex("003811" +
+                "010004010001FE")));
     }
 
     @Test public void incomingClear() {

@@ -174,7 +174,7 @@ public class CommandWithProperties extends Command implements PropertyValue {
      * @return The bytes that are signed with the signature
      */
     public Bytes getSignedBytes() {
-        return new Bytes(Arrays.copyOfRange(bytes, 0, bytes.length - 64 - 3));
+        return new Bytes(Arrays.copyOfRange(bytes, 0, bytes.length - 64 - 3 - 3));
     }
 
     /**
@@ -485,7 +485,7 @@ public class CommandWithProperties extends Command implements PropertyValue {
         /**
          * @param p The base property.
          * @return A parsed property or object, if did parse.
-         * @throws Exception
+         * @throws Exception Any exception.
          */
         @Nullable Object iterate(Property p) throws Exception;
     }

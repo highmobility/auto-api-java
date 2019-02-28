@@ -48,6 +48,6 @@ public class ActivateDeactivateEmergencyFlasher extends CommandWithProperties {
         super(bytes);
         Property property = getProperty(PROPERTY_IDENTIFIER);
         if (property == null) throw new CommandParseException();
-        activate = Property.getBool(bytes[3]);
+        activate = Property.getBool(bytes[6]);
     }
 }

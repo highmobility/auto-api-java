@@ -45,7 +45,7 @@ public class CalendarProperty extends Property {
     public CalendarProperty(byte identifier, Calendar calendar) {
         super(identifier, CALENDAR_SIZE);
         this.calendar = calendar;
-        ByteUtils.setBytes(bytes, Property.calendarToBytes(calendar), 3);
+        ByteUtils.setBytes(bytes, Property.calendarToBytes(calendar), 6);
     }
 
     public CalendarProperty(Property p) throws CommandParseException {

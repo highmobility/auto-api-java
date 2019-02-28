@@ -22,7 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
@@ -69,7 +68,8 @@ public class ChargeState extends CommandWithProperties {
 
     ObjectPropertyInteger estimatedRange = new ObjectPropertyInteger(ESTIMATED_RANGE_IDENTIFIER,
             false);
-    ObjectPropertyPercentage batteryLevel = new ObjectPropertyPercentage(BATTERY_LEVEL_IDENTIFIER);
+    ObjectProperty<Double> batteryLevel = new ObjectProperty<>(Double.class,
+            BATTERY_LEVEL_IDENTIFIER);
     ObjectProperty<Float> batteryCurrentAC =
             new ObjectProperty<>(Float.class, BATTERY_CURRENT_AC_IDENTIFIER);
     ObjectProperty<Float> batteryCurrentDC =
@@ -78,10 +78,10 @@ public class ChargeState extends CommandWithProperties {
             new ObjectProperty<>(Float.class, CHARGER_VOLTAGE_AC_IDENTIFIER);
     ObjectProperty<Float> chargerVoltageDC =
             new ObjectProperty<>(Float.class, CHARGER_VOLTAGE_DC_IDENTIFIER);
-    ObjectPropertyPercentage chargeLimit = new ObjectPropertyPercentage(CHARGE_LIMIT_IDENTIFIER);
+    ObjectProperty<Double> chargeLimit = new ObjectProperty<>(Double.class,
+            CHARGE_LIMIT_IDENTIFIER);
     ObjectPropertyInteger timeToCompleteCharge =
-            new ObjectPropertyInteger(TIME_TO_COMPLETE_CHARGE_IDENTIFIER
-                    , false);
+            new ObjectPropertyInteger(TIME_TO_COMPLETE_CHARGE_IDENTIFIER, false);
     ObjectProperty<Float> chargingRate = new ObjectProperty<>(Float.class,
             CHARGING_RATE_IDENTIFIER);
     ObjectProperty<ChargePortState> chargePortState = new ObjectProperty<>(ChargePortState.class,
@@ -112,7 +112,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The battery level percentage.
      */
-    public ObjectProperty<Integer> getBatteryLevel() {
+    public ObjectProperty<Double> getBatteryLevel() {
         return batteryLevel;
     }
 
@@ -147,7 +147,8 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The Charge limit percentage.
      */
-    public ObjectProperty<Integer> getChargeLimit() {
+
+    public ObjectProperty<Double> getChargeLimit() {
         return chargeLimit;
     }
 
@@ -362,15 +363,15 @@ public class ChargeState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
+
         private ObjectPropertyInteger estimatedRange;
-        private ObjectPropertyPercentage batteryLevel;
+        private ObjectProperty<Double> batteryLevel;
         private ObjectProperty<Float> batteryCurrentAC;
         private ObjectProperty<Float> batteryCurrentDC;
-
         private ObjectProperty<Float> chargerVoltageAC;
         private ObjectProperty<Float> chargerVoltageDC;
 
-        private ObjectPropertyPercentage chargeLimit;
+        private ObjectProperty<Double> chargeLimit;
         private ObjectPropertyInteger timeToCompleteCharge;
 
         private ObjectProperty<Float> chargingRate;
@@ -419,7 +420,7 @@ public class ChargeState extends CommandWithProperties {
          * @param batteryLevel The battery level percentage.
          * @return The builder.
          */
-        public Builder setBatteryLevel(ObjectPropertyPercentage batteryLevel) {
+        public Builder setBatteryLevel(ObjectProperty<Double> batteryLevel) {
             this.batteryLevel = batteryLevel;
             batteryLevel.setIdentifier(BATTERY_LEVEL_IDENTIFIER);
             addProperty(batteryLevel);
@@ -474,7 +475,7 @@ public class ChargeState extends CommandWithProperties {
          * @param chargeLimit The charge limit percentage.
          * @return The builder.
          */
-        public Builder setChargeLimit(ObjectPropertyPercentage chargeLimit) {
+        public Builder setChargeLimit(ObjectProperty<Double> chargeLimit) {
             this.chargeLimit = chargeLimit;
             chargeLimit.setIdentifier(CHARGE_LIMIT_IDENTIFIER);
             addProperty(chargeLimit);
@@ -507,7 +508,8 @@ public class ChargeState extends CommandWithProperties {
          * @param chargePortState The charge port state.
          * @return The builder.
          */
-        public Builder setChargePortState(ObjectProperty<ChargePortState> chargePortState) {
+        public Builder setChargePortState
+        (ObjectProperty<ChargePortState> chargePortState) {
             this.chargePortState = chargePortState;
             chargePortState.setIdentifier(CHARGE_PORT_STATE_IDENTIFIER);
             addProperty(chargePortState);
@@ -551,7 +553,8 @@ public class ChargeState extends CommandWithProperties {
          * @param chargingWindowChosen Charging window chosen state.
          * @return The builder.
          */
-        public Builder setChargingWindowChosen(ObjectProperty<Boolean> chargingWindowChosen) {
+        public Builder setChargingWindowChosen
+        (ObjectProperty<Boolean> chargingWindowChosen) {
             this.chargingWindowChosen = chargingWindowChosen;
             chargingWindowChosen.setIdentifier(CHARGING_WINDOW_CHOSEN_IDENTIFIER);
             addProperty(chargingWindowChosen);

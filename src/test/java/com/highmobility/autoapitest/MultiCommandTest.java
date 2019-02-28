@@ -8,7 +8,7 @@ import com.highmobility.autoapi.MultiCommand;
 import com.highmobility.autoapi.MultiState;
 import com.highmobility.autoapi.SetTheftAlarm;
 import com.highmobility.autoapi.TheftAlarmState;
-import com.highmobility.autoapi.property.doors.DoorLocation;
+import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.autoapi.property.value.Lock;
 import com.highmobility.value.Bytes;
 
@@ -22,13 +22,23 @@ import static org.junit.Assert.assertTrue;
 public class MultiCommandTest {
     Bytes commandBytes = new Bytes(
             "001302" +
-                    "01000700201201000101" +
-                    "01000700461201000101");
+                    "01000D01000A00201201000401000101" +
+                    "01000D01000A00461201000401000101");
 
     Bytes stateBytes = new Bytes(
             "001301" +
-                    "01002B00200102000200000200020100030002000103000201010400020001040002010004000202000400020300" +
-                    "01000700460101000101");
+                    "010046010043" +
+                    "002001" + // 43 / 67
+                    "0200050100020000" +
+                    "0200050100020100" +
+                    "0300050100020001" +
+                    "0300050100020101" +
+                    "0400050100020001" +
+                    "0400050100020100" +
+                    "0400050100020200" +
+                    "0400050100020300" +
+
+                    "01000D01000A00460101000401000101"); // d / 13
 
     @Test
     public void commandIncoming() {
@@ -55,7 +65,7 @@ public class MultiCommandTest {
         assertTrue(state.getCommands().length == 2);
 
         LockState lockState = (LockState) state.getCommand(LockState.TYPE);
-        assertTrue(lockState.getInsideLock(DoorLocation.FRONT_LEFT).getLock() == Lock.UNLOCKED);
+        assertTrue(lockState.getInsideLock(Location.FRONT_LEFT).getLock() == Lock.UNLOCKED);
         TheftAlarmState theftAlarmState = (TheftAlarmState) state.getCommand(TheftAlarmState.TYPE);
         assertTrue(theftAlarmState.getState() == TheftAlarmState.State.ARMED);
     }

@@ -5,8 +5,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlLights;
 import com.highmobility.autoapi.GetLightsState;
 import com.highmobility.autoapi.LightsState;
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Color;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.lights.FogLight;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
@@ -23,17 +23,18 @@ import static org.junit.Assert.assertTrue;
 public class LightsTest {
     Bytes bytes = new Bytes(
             "003601" +
-                    "01000102" +
-                    "02000101" +
-                    "040003FF0000" +
-                    "05000101" +
-                    "06000101" +
-                    "0700020000" +
-                    "0700020101" +
-                    "0800020000" +
-                    "0800020101" +
-                    "0900020000" +
-                    "0900020100");
+                    "01000401000102" +
+                    "02000401000101" +
+                    "040006010003FF0000" +
+                    "05000401000100" +
+                    "06000401000100" +
+                    "0700050100020000" +
+                    "0700050100020101" +
+                    "0800050100020000" +
+                    "0800050100020101" +
+                    "0900050100020000" +
+                    "0900050100020100"
+    );
 
     @Test
     public void state() {
@@ -52,8 +53,8 @@ public class LightsTest {
         assertTrue(state.getAmbientColor().getValue().getGreen() == 0);
         assertTrue(state.getAmbientColor().getValue().getBlue() == 0);
 
-        assertTrue(state.isReverseLightActive().getValue() == true);
-        assertTrue(state.isEmergencyBrakeLightActive().getValue() == true);
+        assertTrue(state.isReverseLightActive().getValue() == false);
+        assertTrue(state.isEmergencyBrakeLightActive().getValue() == false);
 
         assertTrue(state.getFogLights().length == 2);
         assertTrue(state.getFogLight(LightLocation.FRONT).getValue().isActive() == false);
@@ -82,8 +83,8 @@ public class LightsTest {
 
         Color ambientColor = new Color(new float[]{1f, 0, 0});
         builder.setAmbientColor(new ObjectProperty<>(ambientColor));
-        builder.setReverseLightActive(new ObjectProperty<>(true));
-        builder.setEmergencyBrakeLightActive(new ObjectProperty<>(true));
+        builder.setReverseLightActive(new ObjectProperty<>(false));
+        builder.setEmergencyBrakeLightActive(new ObjectProperty<>(false));
 
         builder.addFogLight(new ObjectProperty<>(new FogLight(LightLocation.FRONT, false)));
         builder.addFogLight(new ObjectProperty<>(new FogLight(LightLocation.REAR, true)));
@@ -106,13 +107,16 @@ public class LightsTest {
     }
 
     @Test public void control() {
-        Bytes waitingForBytes = new Bytes("0036120100010202000100040003ff0000" +
-                "0700020000" +
-                "0700020101" +
-                "0800020000" +
-                "0800020101" +
-                "0900020000" +
-                "0900020100");
+        Bytes waitingForBytes = new Bytes("003612" +
+                "01000401000102" +
+                "02000401000100" +
+                "040006010003ff0000" +
+                "0700050100020000" +
+                "0700050100020101" +
+                "0800050100020000" +
+                "0800050100020101" +
+                "0900050100020000" +
+                "0900050100020100");
 
         FogLight[] fogLights = new FogLight[2];
         ReadingLamp[] readingLamps = new ReadingLamp[2];

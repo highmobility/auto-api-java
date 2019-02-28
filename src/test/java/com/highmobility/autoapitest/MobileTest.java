@@ -20,14 +20,9 @@ public class MobileTest {
     public void state() {
         Bytes bytes = new Bytes(
                 "006601" +
-                        "01000101");
+                        "01000401000101");
 
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(MobileState.TYPE));
         MobileState state = (MobileState) command;

@@ -4,10 +4,8 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetOffroadState;
 import com.highmobility.autoapi.OffroadState;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
-
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyPercentage;
+import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -20,19 +18,23 @@ import static org.junit.Assert.assertTrue;
  */
 public class OffRoadTest {
     Bytes bytes = new Bytes(
-            "005201010002000A02000132");
+            "005201" +
+                    "010005010002000A" +
+                    "02000B0100083FE0000000000000"
+    );
 
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
+
         assertTrue(command.getClass() == OffroadState.class);
-        testState((OffroadState) command);
+        OffroadState state = (OffroadState) command;
+        testState(state);
     }
 
-    void testState(OffroadState state) {
+    private void testState(OffroadState state) {
         assertTrue(state.getRouteIncline().getValue() == 10);
-        assertTrue(state.getWheelSuspension().getValue() == 50);
-        assertTrue(state.getType() == OffroadState.TYPE);
+        assertTrue(state.getWheelSuspension().getValue() == .5d);
     }
 
     @Test public void get() {
@@ -50,10 +52,9 @@ public class OffRoadTest {
     @Test public void build() {
         OffroadState.Builder builder = new OffroadState.Builder();
         builder.setRouteIncline(new ObjectPropertyInteger(10));
-        builder.setWheelSuspension(new ObjectPropertyPercentage(50));
+        builder.setWheelSuspension(new ObjectProperty(.5d));
         OffroadState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
-
         testState(state);
     }
 }

@@ -22,7 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ConvertibleRoofState;
 import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.SunroofTiltState;
@@ -42,11 +41,11 @@ public class ControlRooftop extends CommandWithProperties {
     private static final byte IDENTIFIER_SUNROOF_TILT = 0x04;
     private static final byte IDENTIFIER_SUNROOF_POSITION = 0x05;
 
-    private ObjectProperty<Integer> dimmingPercentage =
-            new ObjectPropertyPercentage(RooftopState.DIMMING_IDENTIFIER);
+    private ObjectProperty<Double> dimmingPercentage =
+            new ObjectProperty<>(Double.class, RooftopState.DIMMING_IDENTIFIER);
 
-    private ObjectProperty<Integer> openPercentage =
-            new ObjectPropertyPercentage(RooftopState.OPEN_IDENTIFIER);
+    private ObjectProperty<Double> openPercentage =
+            new ObjectProperty<>(Double.class, RooftopState.OPEN_IDENTIFIER);
 
     private ConvertibleRoofState.Value convertibleRoofState;
     private SunroofTiltState.Value sunroofTiltState;
@@ -55,14 +54,15 @@ public class ControlRooftop extends CommandWithProperties {
     /**
      * @return The dimming percentage.
      */
-    @Nullable public Integer getDimmingPercentage() {
+    @Nullable public Double getDimmingPercentage() {
         return dimmingPercentage.getValue();
     }
 
     /**
      * @return The open percentage.
      */
-    @Nullable public Integer getOpenPercentage() {
+
+    @Nullable public Double getOpenPercentage() {
         return openPercentage.getValue();
     }
 
@@ -95,8 +95,8 @@ public class ControlRooftop extends CommandWithProperties {
      * @param sunroofPosition      The sunroof position.
      */
 
-    public ControlRooftop(@Nullable Integer dimmingPercentage,
-                          @Nullable Integer openPercentage,
+    public ControlRooftop(@Nullable Double dimmingPercentage,
+                          @Nullable Double openPercentage,
                           @Nullable ConvertibleRoofState.Value convertibleRoofState,
                           @Nullable SunroofTiltState.Value sunroofTiltState,
                           @Nullable Position sunroofPosition) {

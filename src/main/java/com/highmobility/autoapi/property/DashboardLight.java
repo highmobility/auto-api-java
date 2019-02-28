@@ -41,6 +41,7 @@ public class DashboardLight extends PropertyValueObject {
         return state;
     }
 
+
     public DashboardLight(Type type, State state) {
         super(2);
         update(type, state);

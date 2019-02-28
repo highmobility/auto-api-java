@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.ObjectPropertyPercentage;
 
 import javax.annotation.Nullable;
 
@@ -35,8 +35,8 @@ public class OffroadState extends CommandWithProperties {
     private static final byte IDENTIFIER_WHEEL_SUSPENSION = 0x02;
 
     ObjectPropertyInteger routeIncline = new ObjectPropertyInteger(IDENTIFIER_ROUTE_INCLINE, false);
-    ObjectPropertyPercentage wheelSuspension =
-            new ObjectPropertyPercentage(IDENTIFIER_WHEEL_SUSPENSION);
+    ObjectProperty<Double> wheelSuspension =
+            new ObjectProperty<>(Double.class, IDENTIFIER_WHEEL_SUSPENSION);
 
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.
@@ -49,7 +49,7 @@ public class OffroadState extends CommandWithProperties {
      * @return The wheel suspension level percentage, whereas 0 is no suspension and 1 maximum.
      * suspension
      */
-    @Nullable public ObjectPropertyPercentage getWheelSuspension() {
+    @Nullable public ObjectProperty<Double> getWheelSuspension() {
         return wheelSuspension;
     }
 
@@ -82,7 +82,7 @@ public class OffroadState extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private ObjectPropertyInteger routeIncline;
-        private ObjectPropertyPercentage wheelSuspension;
+        private ObjectProperty<Double> wheelSuspension;
 
         public Builder() {
             super(TYPE);
@@ -105,7 +105,7 @@ public class OffroadState extends CommandWithProperties {
          *                        and 1 maximum suspension.
          * @return The builder.
          */
-        public Builder setWheelSuspension(ObjectPropertyPercentage wheelSuspension) {
+        public Builder setWheelSuspension(ObjectProperty<Double> wheelSuspension) {
             this.wheelSuspension = wheelSuspension;
             wheelSuspension.setIdentifier(IDENTIFIER_WHEEL_SUSPENSION);
             addProperty(wheelSuspension);

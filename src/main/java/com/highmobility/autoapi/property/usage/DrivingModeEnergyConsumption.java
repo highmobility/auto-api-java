@@ -25,8 +25,6 @@ import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 
-import java.util.Arrays;
-
 public class DrivingModeEnergyConsumption extends Property {
     public static final byte IDENTIFIER = 0x06;
 
@@ -50,8 +48,8 @@ public class DrivingModeEnergyConsumption extends Property {
     public DrivingModeEnergyConsumption(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes.length < 5) throw new CommandParseException();
-        drivingMode = DrivingMode.fromByte(bytes[3]);
-        energyConsumption = Property.getFloat(Arrays.copyOfRange(bytes, 4, 8));
+        drivingMode = DrivingMode.fromByte(bytes[6]);
+        energyConsumption = getFloat(bytes, 7);
     }
 
     public DrivingModeEnergyConsumption(DrivingMode mode, float energyConsumption) {
@@ -60,7 +58,7 @@ public class DrivingModeEnergyConsumption extends Property {
 
     DrivingModeEnergyConsumption(byte identifier, DrivingMode mode, float energyConsumption) {
         super(identifier, 5);
-        bytes[3] = mode.getByte();
-        ByteUtils.setBytes(bytes, Property.floatToBytes(energyConsumption), 4);
+        bytes[6] = mode.getByte();
+        ByteUtils.setBytes(bytes, Property.floatToBytes(energyConsumption), 7);
     }
 }

@@ -20,13 +20,11 @@
 
 package com.highmobility.autoapi.property;
 
-public class ByteProperty extends Property {
-    public ByteProperty(byte identifier, byte value) {
-        super(identifier, 1);
-        bytes[6] = value;
-    }
+import com.highmobility.utils.ByteUtils;
 
-    public ByteProperty(byte aByte) {
-        this((byte) 0, aByte);
+public class FloatProperty extends Property {
+    public FloatProperty(byte identifier, float value) {
+        super(identifier, 4);
+        ByteUtils.setBytes(bytes, floatToBytes(value), 6);
     }
 }
