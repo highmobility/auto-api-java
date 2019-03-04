@@ -129,12 +129,24 @@ public class CapabilitiesTest {
 
     @Test
     public void oneUnknownCapability() {
-        // 00 AB unknown
-        byte[] unknownCapabilitiesBytes = ByteUtils.bytesFromHex
-                ("00100101000500AB00010201000500210001020100060023000102030100090024000102030405060100050025000102010006002600010203010007002700010203040100050028000102010003002902010004003000010100050031000102");
+        Bytes bytes = new Bytes
+                ("001001" +
+                        "0100080100050020000112" +
+                        "0100080100050021000112" +
+                        "010009010006002300011213" +
+                        "01000C010009002400011213141516" +
+                        "0100080100050025000112" +
+                        "010009010006002600011213" +
+                        "010009010006002700011204" +
+                        "0100080100050028000112" +
+                        "010006010003002912" +
+                        "01000701000400300001" +
+                        "0100080100050031000102" +
+                        "010006010003ABAB12" ); // unknown ABAB
+
         Capabilities unknownCapabilities =
-                (Capabilities) CommandResolver.resolve(unknownCapabilitiesBytes);
-        assertTrue(unknownCapabilities.getCapabilities().length == 11); // unknown capa still
+                (Capabilities) CommandResolver.resolve(bytes);
+        assertTrue(unknownCapabilities.getCapabilities().length == 12); // unknown capa still
         // added to array
 
         for (int i = 0; i < unknownCapabilities.getCapabilities().length; i++) {
@@ -146,7 +158,8 @@ public class CapabilitiesTest {
 
     @Test
     public void climateCapability() {
-        byte[] message = ByteUtils.bytesFromHex("001001010009002400011213141516");
+        byte[] message = ByteUtils.bytesFromHex("001001" +
+                "01000C010009002400011213141516");
         Capabilities capability = null;
         capability = (Capabilities) CommandResolver.resolve(message);
         if (capability == null) fail();
@@ -161,7 +174,8 @@ public class CapabilitiesTest {
 
     @Test
     public void heartRateCapability() {
-        Bytes message = new Bytes("001001010003002912");
+        Bytes message = new Bytes("001001" +
+                "010006010003002912");
 
         Capabilities capability = (Capabilities) CommandResolver.resolve(message);
         assertTrue(capability.isSupported(SendHeartRate.TYPE));

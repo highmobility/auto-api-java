@@ -28,7 +28,7 @@ import static org.junit.Assert.fail;
 public class DiagnosticsTest {
     Bytes bytes = new Bytes(
             "003301" +
-                    "010007010004000249F0" +
+                    "0100060100030249F0" +
                     "0200050100020063" +
                     "030005010002003C" +
                     "04000501000209C4" +
@@ -182,12 +182,6 @@ public class DiagnosticsTest {
 
         assertTrue(propertyCount == 2);
         assertTrue(state.getMileageMeters().getValue() == 150000);
-    }
-
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
-        DiagnosticsState command = (DiagnosticsState) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getOilTemperature().getTimestamp() != null);
     }
 
     @Test public void get() {

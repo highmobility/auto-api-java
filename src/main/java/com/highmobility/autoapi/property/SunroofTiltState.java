@@ -22,77 +22,35 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-import java.util.Calendar;
+public enum SunroofTiltState implements PropertyValueSingleByte {
+    CLOSED((byte) 0x00),
+    TILTED((byte) 0x01),
+    HALF_TILTED((byte) 0x02);
 
-import javax.annotation.Nullable;
+    public static SunroofTiltState fromByte(byte byteValue) throws CommandParseException {
+        SunroofTiltState[] values = SunroofTiltState.values();
 
-// TODO: 2019-02-28 use propertyValue
-public class SunroofTiltState extends Property {
-    Value value;
+        for (int i = 0; i < values.length; i++) {
+            SunroofTiltState state = values[i];
+            if (state.getByte() == byteValue) {
+                return state;
+            }
+        }
 
-    public Value getValue() {
+        throw new CommandParseException();
+    }
+
+    private byte value;
+
+    SunroofTiltState(byte value) {
+        this.value = value;
+    }
+
+    public byte getByte() {
         return value;
     }
 
-    public SunroofTiltState(Value sunroofTiltState) {
-        this((byte) 0x00, sunroofTiltState);
-    }
-
-    public SunroofTiltState(@Nullable Value sunroofTiltState,
-                            @Nullable Calendar timestamp,
-                            @Nullable PropertyFailure failure) {
-        this(sunroofTiltState);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public SunroofTiltState(byte identifier, Value sunroofTiltState) {
-        super(identifier, sunroofTiltState == null ? 0 : 1);
-        this.value = sunroofTiltState;
-        if (sunroofTiltState != null) bytes[3] = sunroofTiltState.getByte();
-    }
-
-    public SunroofTiltState(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 1) value = Value.fromByte(p.get(3));
-        return this;
-    }
-
-    public SunroofTiltState(byte identifier) {
-        super(identifier);
-    }
-
-    // TBODO: ctors
-    public enum Value {
-        CLOSED((byte) 0x00),
-        TILTED((byte) 0x01),
-        HALF_TILTED((byte) 0x02);
-
-        public static Value fromByte(byte byteValue) throws CommandParseException {
-            Value[] values = Value.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Value state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Value(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
+    @Override public int getLength() {
+        return 1;
     }
 }

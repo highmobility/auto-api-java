@@ -22,7 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ConvertibleRoofState;
 import com.highmobility.autoapi.property.ObjectProperty;
-
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.SunroofTiltState;
 
@@ -40,14 +39,15 @@ public class RooftopState extends CommandWithProperties {
     private static final byte IDENTIFIER_SUNROOF_TILT = 0x04;
     private static final byte IDENTIFIER_SUNROOF_POSITION = 0x05;
 
-    ObjectProperty<Double> dimmingPercentage = new ObjectProperty<>(Double.class, DIMMING_IDENTIFIER);
+    ObjectProperty<Double> dimmingPercentage = new ObjectProperty<>(Double.class,
+            DIMMING_IDENTIFIER);
     ObjectProperty<Double> openPercentage = new ObjectProperty<>(Double.class, OPEN_IDENTIFIER);
-    ConvertibleRoofState convertibleRoofState =
-            new ConvertibleRoofState(IDENTIFIER_CONVERTIBLE_ROOF);
-    SunroofTiltState sunroofTiltState =
-            new SunroofTiltState(IDENTIFIER_SUNROOF_TILT);
+    ObjectProperty<ConvertibleRoofState> convertibleRoofState =
+            new ObjectProperty(ConvertibleRoofState.class, IDENTIFIER_CONVERTIBLE_ROOF);
+    ObjectProperty<SunroofTiltState> sunroofTiltState =
+            new ObjectProperty(SunroofTiltState.class, IDENTIFIER_SUNROOF_TILT);
     ObjectProperty<Position> sunroofPosition =
-            new ObjectProperty<>(Position.class, IDENTIFIER_SUNROOF_POSITION);
+            new ObjectProperty(Position.class, IDENTIFIER_SUNROOF_POSITION);
 
     /**
      * @return The dim percentage of the rooftop.
@@ -67,14 +67,14 @@ public class RooftopState extends CommandWithProperties {
     /**
      * @return The convertible roof state.
      */
-    public ConvertibleRoofState getConvertibleRoofState() {
+    public ObjectProperty<ConvertibleRoofState> getConvertibleRoofState() {
         return convertibleRoofState;
     }
 
     /**
      * @return The sunroof tilt state.
      */
-    public SunroofTiltState getSunroofTiltState() {
+    public ObjectProperty<SunroofTiltState> getSunroofTiltState() {
         return sunroofTiltState;
     }
 
@@ -125,8 +125,8 @@ public class RooftopState extends CommandWithProperties {
     public static final class Builder extends CommandWithProperties.Builder {
         private ObjectProperty<Double> openPercentage;
         private ObjectProperty<Double> dimmingPercentage;
-        private ConvertibleRoofState convertibleRoofState;
-        private SunroofTiltState sunroofTiltState;
+        private ObjectProperty<ConvertibleRoofState> convertibleRoofState;
+        private ObjectProperty<SunroofTiltState> sunroofTiltState;
         private ObjectProperty<Position> sunroofPosition;
 
         public Builder() {
@@ -157,8 +157,7 @@ public class RooftopState extends CommandWithProperties {
          * @param convertibleRoofState The convertible roof state.
          * @return The builder.
          */
-        public Builder setConvertibleRoofState(ConvertibleRoofState
-                                                       convertibleRoofState) {
+        public Builder setConvertibleRoofState(ObjectProperty<ConvertibleRoofState> convertibleRoofState) {
             this.convertibleRoofState = convertibleRoofState;
             addProperty(convertibleRoofState.setIdentifier(IDENTIFIER_CONVERTIBLE_ROOF));
             return this;
@@ -168,7 +167,7 @@ public class RooftopState extends CommandWithProperties {
          * @param sunroofTiltState The sunroof tilt state.
          * @return The builder.
          */
-        public Builder setSunroofTiltState(SunroofTiltState sunroofTiltState) {
+        public Builder setSunroofTiltState(ObjectProperty<SunroofTiltState> sunroofTiltState) {
             this.sunroofTiltState = sunroofTiltState;
             addProperty(sunroofTiltState.setIdentifier(IDENTIFIER_SUNROOF_TILT));
             return this;

@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.homecharger.PriceTariff;
 
 import java.util.ArrayList;
@@ -33,12 +33,12 @@ public class SetPriceTariffs extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x13);
     private static final byte IDENTIFIER_TARIFF = 0x0C;
 
-    private PriceTariff[] priceTariffs;
+    private ObjectProperty<PriceTariff>[] priceTariffs;
 
     /**
      * @return All of the price tariffs.
      */
-    public PriceTariff[] getPriceTariffs() {
+    public ObjectProperty<PriceTariff>[] getPriceTariffs() {
         return priceTariffs;
     }
 
@@ -48,8 +48,8 @@ public class SetPriceTariffs extends CommandWithProperties {
      * @param type The pricing type.
      * @return The price tariff, if exists.
      */
-    public PriceTariff getPriceTariff(PriceTariff.PricingType type) {
-        for (PriceTariff priceTariff : priceTariffs) {
+    public ObjectProperty<PriceTariff> getPriceTariff(PriceTariff.PricingType type) {
+        for (ObjectProperty<PriceTariff> priceTariff : priceTariffs) {
             if (priceTariff.getValue() != null && priceTariff.getValue().getPricingType() == type)
                 return priceTariff;
         }
@@ -59,15 +59,15 @@ public class SetPriceTariffs extends CommandWithProperties {
     /**
      * @param priceTariffs The price tariffs of the different pricing types.
      */
-    public SetPriceTariffs(PriceTariff[] priceTariffs) throws IllegalArgumentException {
+    public SetPriceTariffs(ObjectProperty<PriceTariff>[] priceTariffs) throws IllegalArgumentException {
         super(TYPE, validateTariffs(priceTariffs));
-        this.priceTariffs = (PriceTariff[]) properties;
+        this.priceTariffs = priceTariffs;
     }
 
-    static PriceTariff[] validateTariffs(PriceTariff[] tariffs) throws IllegalArgumentException {
+    static ObjectProperty<PriceTariff>[] validateTariffs(ObjectProperty<PriceTariff>[] tariffs) throws IllegalArgumentException {
         ArrayList<PriceTariff.PricingType> types = new ArrayList<>(3);
 
-        for (PriceTariff tariff : tariffs) {
+        for (ObjectProperty<PriceTariff> tariff : tariffs) {
             tariff.setIdentifier(IDENTIFIER_TARIFF);
             if (tariff.getValue() != null && types.contains(tariff.getValue().getPricingType()) == false)
                 types.add(tariff.getValue().getPricingType());
@@ -79,13 +79,13 @@ public class SetPriceTariffs extends CommandWithProperties {
 
     SetPriceTariffs(byte[] bytes) {
         super(bytes);
-        List<PriceTariff> builder = new ArrayList<>();
+        List<ObjectProperty> builder = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_TARIFF:
-                        PriceTariff tariff = new PriceTariff(p);
+                        ObjectProperty tariff = new ObjectProperty(PriceTariff.class, p);
                         builder.add(tariff);
                         return tariff;
                 }
@@ -94,7 +94,7 @@ public class SetPriceTariffs extends CommandWithProperties {
             });
         }
 
-        priceTariffs = builder.toArray(new PriceTariff[0]);
+        priceTariffs = builder.toArray(new ObjectProperty[0]);
     }
 
     @Override protected boolean propertiesExpected() {

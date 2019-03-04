@@ -32,12 +32,6 @@ public class LightConditionsTest {
         assertTrue(state.getInsideLight().getValue() == .25f);
     }
 
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000001"));
-        LightConditions command = (LightConditions) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getOutsideLight().getTimestamp() != null);
-    }
-
     @Test public void build() {
         LightConditions.Builder builder = new LightConditions.Builder();
         builder.setOutsideLight(new ObjectProperty<>(111000f));

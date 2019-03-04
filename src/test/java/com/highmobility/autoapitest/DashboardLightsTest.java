@@ -38,22 +38,14 @@ public class DashboardLightsTest {
                 DashboardLight.State.INFO);
         assertTrue(state.getLight(DashboardLight.Type.TRANSMISSION_FLUID_TEMPERATURE).getValue().getState()
                 == DashboardLight.State.RED);
-
         assertTrue(state.getLight(DashboardLight.Type.ENGINE_OIL_LEVEL).getValue().getState() ==
                 DashboardLight.State.YELLOW);
-
     }
 
     @Test public void get() {
         String waitingForBytes = "006100";
         String commandBytes = ByteUtils.hexFromBytes(new GetDashboardLights().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
-    }
-
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000E11010A1122000000010100020000"));
-        DashboardLights command = (DashboardLights) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getLight(DashboardLight.Type.HIGH_BEAM_MAIN_BEAM).getTimestamp() != null);
     }
 
     @Test public void build() {

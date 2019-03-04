@@ -46,7 +46,7 @@ public class SetChargeLimit extends CommandWithProperties {
      * @param percentage The charge limit percentage.
      */
 
-    public SetChargeLimit(double percentage) throws IllegalArgumentException {
+    public SetChargeLimit(Double percentage) throws IllegalArgumentException {
         super(TYPE);
         this.percentage.update(percentage);
         createBytes(this.percentage);

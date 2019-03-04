@@ -60,8 +60,8 @@ public class PersonDetected extends Property {
         super.update(p);
 
         if (p.getValueLength() >= 2) {
-            this.seatLocation = SeatLocation.fromByte(p.get(3));
-            this.detected = Property.getBool(p.get(4));
+            this.seatLocation = SeatLocation.fromByte(p.getValueBytes().get(0));
+            this.detected = Property.getBool(p.getValueBytes().get(1));
         }
 
         return this;

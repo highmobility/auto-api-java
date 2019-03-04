@@ -10,6 +10,7 @@ import com.highmobility.autoapi.HomeChargerState;
 import com.highmobility.autoapi.SetChargeCurrent;
 import com.highmobility.autoapi.SetPriceTariffs;
 import com.highmobility.autoapi.property.NetworkSecurity;
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.property.homecharger.Charging;
 import com.highmobility.autoapi.property.homecharger.PlugType;
@@ -52,9 +53,9 @@ public class HomeChargerTest {
         assertTrue(command instanceof HomeChargerState);
         HomeChargerState state = (HomeChargerState) command;
 
-        assertTrue(state.getCharging().getValue() == Charging.Value.CHARGING);
-        assertTrue(state.getAuthenticationMechanism().getValue() == AuthenticationMechanism.Value.APP);
-        assertTrue(state.getPlugType().getValue() == PlugType.Value.TYPE_TWO);
+        assertTrue(state.getCharging().getValue() == Charging.CHARGING);
+        assertTrue(state.getAuthenticationMechanism().getValue() == AuthenticationMechanism.APP);
+        assertTrue(state.getPlugType().getValue() == PlugType.TYPE_TWO);
         assertTrue(state.getChargingPower().getValue() == 11.5f);
         assertTrue(state.isSolarChargingActive().getValue() == true);
 
@@ -68,7 +69,6 @@ public class HomeChargerTest {
         assertTrue(state.getMaximumChargeCurrent().getValue() == 1f);
         assertTrue(state.getMinimumChargeCurrent().getValue() == 0f);
 
-
         assertTrue(state.getCoordinates().getValue().getLatitude() == 52.520008);
         assertTrue(state.getCoordinates().getValue().getLongitude() == 13.404954);
 
@@ -78,12 +78,6 @@ public class HomeChargerTest {
         assertTrue(state.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getPrice() == .3f);
         assertTrue(state.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getCurrency()
                 .equals("Ripple"));
-    }
-
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
-        HomeChargerState command = (HomeChargerState) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getAuthenticationMechanism().getTimestamp() != null);
     }
 
     @Test public void build() {
@@ -134,10 +128,12 @@ public class HomeChargerTest {
                         "0C000C010009004090000003455552" +
                         "0C000C010009023e99999a03455552");
 
-        PriceTariff[] tariffs = new PriceTariff[2];
+        ObjectProperty[] tariffs = new ObjectProperty[2];
 
-        tariffs[0] = new PriceTariff(PriceTariff.PricingType.STARTING_FEE, "EUR", 4.5f);
-        tariffs[1] = new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR", .3f);
+        tariffs[0] = new ObjectProperty(new PriceTariff(PriceTariff.PricingType.STARTING_FEE,
+                "EUR", 4.5f));
+        tariffs[1] = new ObjectProperty(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
+                .3f));
 
         Command cmd = new SetPriceTariffs(tariffs);
         assertTrue(TestUtils.bytesTheSame(cmd, bytes));
@@ -156,7 +152,7 @@ public class HomeChargerTest {
 
     @Test public void setPriceTariffs0Properties() {
         Bytes bytes = new Bytes("006013");
-        PriceTariff[] tariffs = new PriceTariff[0];
+        ObjectProperty[] tariffs = new ObjectProperty[0];
         Command cmd = new SetPriceTariffs(tariffs);
         assertTrue(TestUtils.bytesTheSame(cmd, bytes));
         SetPriceTariffs command = (SetPriceTariffs) CommandResolver.resolve(bytes);
@@ -166,17 +162,19 @@ public class HomeChargerTest {
     @Test(expected = IllegalArgumentException.class)
     public void failSamePriceTariffTypes() {
 
-        PriceTariff[] tariffs = new PriceTariff[2];
+        ObjectProperty[] tariffs = new ObjectProperty[2];
 
-        tariffs[0] = new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR", 4.5f);
-        tariffs[1] = new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR", .3f);
+        tariffs[0] = new ObjectProperty(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
+                4.5f));
+        tariffs[1] = new ObjectProperty(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
+                .3f));
 
         new SetPriceTariffs(tariffs).getByteArray();
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void failPriceTariffCurrencyLessThan3Characters() {
-        new PriceTariff(PriceTariff.PricingType.PER_KWH, "E", 4.5f);
+    @Test public void accept1CharTariff() {
+        PriceTariff tariff = new PriceTariff(PriceTariff.PricingType.PER_KWH, "E", 4.5f);
+        assertTrue(tariff.getCurrency().equals("E"));
     }
 
     @Test public void activateSolarCharging() {

@@ -18,39 +18,33 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property.homecharger;
+package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.value.Bytes;
 
-public enum AuthenticationMechanism implements PropertyValueSingleByte {
-    PIN((byte) 0x00),
-    APP((byte) 0x01);
+import javax.annotation.Nullable;
 
-    public static AuthenticationMechanism fromByte(byte byteValue) throws CommandParseException {
-        AuthenticationMechanism[] values = AuthenticationMechanism.values();
+public class PropertyValueComponent<T> extends PropertyComponent {
+    private static final byte IDENTIFIER = 0x01;
 
-        for (int i = 0; i < values.length; i++) {
-            AuthenticationMechanism state = values[i];
-            if (state.getByte() == byteValue) {
-                return state;
-            }
-        }
+    Bytes valueBytes = new Bytes();
+    @Nullable protected T value;
 
-        throw new CommandParseException();
-    }
-
-    private byte value;
-
-    AuthenticationMechanism(byte value) {
-        this.value = value;
-    }
-
-    public byte getByte() {
+    @Nullable public T getValue() {
         return value;
     }
 
-    @Override public int getLength() {
-        return 1;
+    public Bytes getValueBytes() {
+        return valueBytes;
     }
+
+    public PropertyValueComponent(Bytes value) throws CommandParseException {
+        super(value);
+        if (length > 0) {
+            this.valueBytes = value.getRange(3, value.getLength());
+        }
+    }
+
+    // TODO: 2019-02-28  
 }

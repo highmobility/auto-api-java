@@ -60,8 +60,8 @@ public class SeatBeltFastened extends Property {
         super.update(p);
 
         if (p.getValueLength() >= 2) {
-            this.seatLocation = SeatLocation.fromByte(bytes[3]);
-            this.fastened = Property.getBool(bytes[4]);
+            this.seatLocation = SeatLocation.fromByte(p.getValueBytes().get(3));
+            this.fastened = Property.getBool(p.getValueBytes().get(4));
         }
 
         return this;

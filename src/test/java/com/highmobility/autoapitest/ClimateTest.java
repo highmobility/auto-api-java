@@ -71,12 +71,6 @@ public class ClimateTest {
         assertTrue(state.getRearTemperatureSetting().getValue() == 21.5f);
     }
 
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
-        ClimateState command = (ClimateState) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getOutsideTemperature().getTimestamp() != null);
-    }
-
     @Test public void get() {
         String waitingForBytes = "002400";
         String commandBytes = ByteUtils.hexFromBytes(new GetClimateState().getByteArray());

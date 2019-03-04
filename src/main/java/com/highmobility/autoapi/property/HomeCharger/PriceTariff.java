@@ -21,16 +21,14 @@
 package com.highmobility.autoapi.property.homecharger;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailure;
-import com.highmobility.autoapi.property.PropertyValue;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.value.Bytes;
 
-import java.util.Calendar;
+import java.io.UnsupportedEncodingException;
 
-import javax.annotation.Nullable;
-
-public class PriceTariff extends Property {
+/*public class PriceTariff extends Property {
     Value value;
 
     @Nullable public Value getValue() {
@@ -74,35 +72,36 @@ public class PriceTariff extends Property {
         super.update(p);
         if (p.getValueLength() >= 7) value = new Value(p);
         return this;
+    }*/
+
+public class PriceTariff extends PropertyValueObject {
+    PricingType pricingType;
+    String currency;
+    float price;
+
+    /**
+     * @return The pricing type.
+     */
+    public PricingType getPricingType() {
+        return pricingType;
     }
 
-    public static class Value implements PropertyValue {
-        PricingType pricingType;
-        String currency;
-        float price;
+    /**
+     * @return The currency name.
+     */
+    public String getCurrency() {
+        return currency;
+    }
 
-        /**
-         * @return The pricing type.
-         */
-        public PricingType getPricingType() {
-            return pricingType;
-        }
+    /**
+     * @return The price.
+     */
+    public float getPrice() {
+        return price;
+    }
 
-        /**
-         * @return The currency name.
-         */
-        public String getCurrency() {
-            return currency;
-        }
-
-        /**
-         * @return The price.
-         */
-        public float getPrice() {
-            return price;
-        }
-
-        public Value(Property bytes) throws CommandParseException {
+        /*public PriceTariff(Property bytes) throws CommandParseException {
+            super(bytes);
             if (bytes.getLength() < 10) throw new CommandParseException();
             pricingType = PricingType.fromByte(bytes.get(3));
             price = Property.getFloat(bytes, 4);
@@ -110,18 +109,54 @@ public class PriceTariff extends Property {
             currency = Property.getString(bytes, 9, currencyLength);
         }
 
-        public Value(PricingType pricingType, String currency, float price) {
+        public PriceTariff(PricingType pricingType, String currency, float price) {
             if (currency.length() < 3)
                 throw new IllegalArgumentException("Currency length needs to be > 3");
 
             this.pricingType = pricingType;
             this.currency = currency;
             this.price = price;
-        }
+        }*/
 
-        @Override public int getLength() {
-            return 5 + 1 + currency.length();
+    public PriceTariff(PricingType pricingType, String currency, float price) {
+        super(1 + 1 + currency.length() + 4);
+        update(pricingType, currency, price);
+    }
+
+    public PriceTariff() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 6) throw new CommandParseException();
+
+        pricingType = PricingType.fromByte(get(0));
+        price = Property.getFloat(bytes, 1);
+        int currencyLength = Property.getUnsignedInt(bytes, 5, 1);
+        currency = Property.getString(bytes, 6, currencyLength);
+    }
+
+    public void update(PricingType pricingType, String currency, float price) {
+        this.pricingType = pricingType;
+        this.currency = currency;
+        this.price = price;
+
+        bytes = new byte[1 + 1 + currency.length() + 4];
+
+        set(0, pricingType.getByte());
+        set(1, Property.floatToBytes(price));
+        set(5, (byte) currency.length());
+        try {
+            set(6, currency.getBytes(ObjectPropertyString.CHARSET));
+        } catch (UnsupportedEncodingException e) {
+            // ignore
+            e.printStackTrace();
         }
+    }
+
+    public void update(PriceTariff value) {
+        update(value.pricingType, value.currency, value.price);
     }
 
     public enum PricingType {
@@ -152,4 +187,5 @@ public class PriceTariff extends Property {
             return value;
         }
     }
+
 }

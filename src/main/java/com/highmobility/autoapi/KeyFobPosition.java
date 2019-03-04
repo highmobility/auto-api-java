@@ -20,7 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.KeyFobPositionProperty;
+import com.highmobility.autoapi.property.KeyFobPositionValue;
+import com.highmobility.autoapi.property.ObjectProperty;
 
 import javax.annotation.Nullable;
 
@@ -32,9 +33,9 @@ public class KeyFobPosition extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.KEYFOB_POSITION, 0x01);
     private static final byte IDENTIFIER = 0x01;
 
-    KeyFobPositionProperty keyFobPosition = new KeyFobPositionProperty(IDENTIFIER);
+    ObjectProperty keyFobPosition = new ObjectProperty(KeyFobPositionValue.class, IDENTIFIER);
 
-    @Nullable public KeyFobPositionProperty getKeyFobPosition() {
+    @Nullable public ObjectProperty<KeyFobPositionValue> getKeyFobPosition() {
         return keyFobPosition;
     }
 

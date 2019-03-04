@@ -63,12 +63,6 @@ public class ChassisSettingsTest {
         assertTrue(state.getMinimumChassisPosition().getValue() == -28);
     }
 
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
-        ChassisSettings command = (ChassisSettings) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.isSportChronoActive().getTimestamp() != null);
-    }
-
     @Test public void get() {
         String waitingForBytes = "005300";
         String commandBytes = ByteUtils.hexFromBytes(new GetChassisSettings().getByteArray());
@@ -131,7 +125,8 @@ public class ChassisSettingsTest {
     }
 
     @Test public void setNegativeChassisPosition() {
-        Bytes waitingForBytes = new Bytes("005315010004010001E4");
+        Bytes waitingForBytes = new Bytes("005315" +
+                "010004010001E4");
         Command state = new SetChassisPosition(-28);
         assertTrue(TestUtils.bytesTheSame(state, waitingForBytes));
         SetChassisPosition command = (SetChassisPosition) CommandResolver.resolve(waitingForBytes);

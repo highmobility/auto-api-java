@@ -59,10 +59,11 @@ public class HomeChargerState extends CommandWithProperties {
     private static final byte IDENTIFIER_COORDINATES = 0x11;
     private static final byte IDENTIFIER_PRICE_TARIFF = 0x12;
 
-    Charging charging = new Charging(IDENTIFIER_CHARGING);
-    AuthenticationMechanism authenticationMechanism = new AuthenticationMechanism
-            (IDENTIFIER_AUTHENTICATION_MECHANISM);
-    PlugType plugType = new PlugType(IDENTIFIER_PLUG_TYPE);
+    ObjectProperty<Charging> charging = new ObjectProperty<>(Charging.class, IDENTIFIER_CHARGING);
+    ObjectProperty<AuthenticationMechanism> authenticationMechanism =
+            new ObjectProperty<>(AuthenticationMechanism.class,
+                    IDENTIFIER_AUTHENTICATION_MECHANISM);
+    ObjectProperty<PlugType> plugType = new ObjectProperty<>(PlugType.class, IDENTIFIER_PLUG_TYPE);
     ObjectProperty<Float> chargingPower = new ObjectProperty<>(Float.class,
             IDENTIFIER_CHARGING_POWER);
     ObjectProperty<Boolean> solarChargingActive = new ObjectProperty<>(Boolean.class,
@@ -83,28 +84,29 @@ public class HomeChargerState extends CommandWithProperties {
             new ObjectProperty<>(Float.class, IDENTIFIER_MAXIMUM_CHARGE_CURRENT);
     ObjectProperty<Float> minimumChargeCurrent =
             new ObjectProperty<>(Float.class, IDENTIFIER_MINIMUM_CHARGE_CURRENT);
-    ObjectProperty<Coordinates> coordinates = new ObjectProperty<>(Coordinates.class, IDENTIFIER_COORDINATES);
+    ObjectProperty<Coordinates> coordinates = new ObjectProperty<>(Coordinates.class,
+            IDENTIFIER_COORDINATES);
 
-    PriceTariff[] priceTariffs;
+    ObjectProperty<PriceTariff>[] priceTariffs;
 
     /**
      * @return The charging state.
      */
-    @Nullable public Charging getCharging() {
+    @Nullable public ObjectProperty<Charging> getCharging() {
         return charging;
     }
 
     /**
      * @return The authentication mechanism.
      */
-    @Nullable public AuthenticationMechanism getAuthenticationMechanism() {
+    @Nullable public ObjectProperty<AuthenticationMechanism> getAuthenticationMechanism() {
         return authenticationMechanism;
     }
 
     /**
      * @return The plug type.
      */
-    @Nullable public PlugType getPlugType() {
+    @Nullable public ObjectProperty<PlugType> getPlugType() {
         return plugType;
     }
 
@@ -188,7 +190,7 @@ public class HomeChargerState extends CommandWithProperties {
     /**
      * @return All of the price tariffs.
      */
-    public PriceTariff[] getPriceTariffs() {
+    public ObjectProperty<PriceTariff>[] getPriceTariffs() {
         return priceTariffs;
     }
 
@@ -196,9 +198,10 @@ public class HomeChargerState extends CommandWithProperties {
      * @param pricingType The pricing type.
      * @return Price tariff for the given pricing type.
      */
-    @Nullable public PriceTariff getPriceTariff(PriceTariff.PricingType pricingType) {
+    @Nullable
+    public ObjectProperty<PriceTariff> getPriceTariff(PriceTariff.PricingType pricingType) {
         if (priceTariffs != null) {
-            for (PriceTariff tariff : priceTariffs) {
+            for (ObjectProperty<PriceTariff> tariff : priceTariffs) {
                 if (tariff.getValue() != null && tariff.getValue().getPricingType() == pricingType)
                     return tariff;
             }
@@ -209,7 +212,7 @@ public class HomeChargerState extends CommandWithProperties {
 
     public HomeChargerState(byte[] bytes) {
         super(bytes);
-        ArrayList<PriceTariff> tariffs = new ArrayList<>();
+        ArrayList<ObjectProperty<PriceTariff>> tariffs = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
@@ -243,7 +246,7 @@ public class HomeChargerState extends CommandWithProperties {
                     case IDENTIFIER_COORDINATES:
                         return coordinates.update(p);
                     case IDENTIFIER_PRICE_TARIFF:
-                        PriceTariff t = new PriceTariff(p);
+                        ObjectProperty<PriceTariff> t = new ObjectProperty<>(PriceTariff.class, p);
                         tariffs.add(t);
                         return t;
                 }
@@ -251,7 +254,7 @@ public class HomeChargerState extends CommandWithProperties {
             });
         }
 
-        priceTariffs = tariffs.toArray(new PriceTariff[0]);
+        priceTariffs = tariffs.toArray(new ObjectProperty[0]);
     }
 
     @Override public boolean isState() {
@@ -270,20 +273,20 @@ public class HomeChargerState extends CommandWithProperties {
         hotspotSsid = builder.hotspotSsid;
         hotspotSecurity = builder.hotspotSecurity;
         hotspotPassword = builder.hotspotPassword;
-        priceTariffs = builder.priceTariffs.toArray(new PriceTariff[0]);
+        priceTariffs = builder.priceTariffs.toArray(new ObjectProperty[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private Charging charging;
-        private AuthenticationMechanism authenticationMechanism;
-        private PlugType plugType;
+        private ObjectProperty<Charging> charging;
+        private ObjectProperty<AuthenticationMechanism> authenticationMechanism;
+        private ObjectProperty<PlugType> plugType;
         private ObjectProperty<Float> chargingPower;
         private ObjectProperty<Boolean> solarChargingActive;
         private ObjectProperty<Boolean> hotspotEnabled;
         private ObjectPropertyString hotspotSsid;
         private ObjectProperty<NetworkSecurity> hotspotSecurity;
         private ObjectPropertyString hotspotPassword;
-        private List<PriceTariff> priceTariffs = new ArrayList<>();
+        private List<ObjectProperty<PriceTariff>> priceTariffs = new ArrayList<>();
 
         public Builder() {
             super(TYPE);
@@ -293,7 +296,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param charging The charging state
          * @return The builder.
          */
-        public Builder setCharging(Charging charging) {
+        public Builder setCharging(ObjectProperty<Charging> charging) {
             this.charging = charging;
             addProperty(charging.setIdentifier(IDENTIFIER_CHARGING));
             return this;
@@ -303,7 +306,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param authenticationMechanism The authentication mechanism.
          * @return The builder.
          */
-        public Builder setAuthenticationMechanism(AuthenticationMechanism authenticationMechanism) {
+        public Builder setAuthenticationMechanism(ObjectProperty<AuthenticationMechanism> authenticationMechanism) {
             this.authenticationMechanism = authenticationMechanism;
             addProperty(authenticationMechanism.setIdentifier(IDENTIFIER_AUTHENTICATION_MECHANISM));
             return this;
@@ -313,7 +316,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param plugType The plug type.
          * @return The builder.
          */
-        public Builder setPlugType(PlugType plugType) {
+        public Builder setPlugType(ObjectProperty<PlugType> plugType) {
             this.plugType = plugType;
             addProperty(plugType.setIdentifier(IDENTIFIER_PLUG_TYPE));
             return this;
@@ -388,9 +391,9 @@ public class HomeChargerState extends CommandWithProperties {
          * @param priceTariffs The price tariffs.
          * @return The builder.
          */
-        public Builder setPriceTariffs(PriceTariff[] priceTariffs) {
+        public Builder setPriceTariffs(ObjectProperty<PriceTariff>[] priceTariffs) {
             this.priceTariffs.clear();
-            for (PriceTariff priceTariff : priceTariffs) {
+            for (ObjectProperty priceTariff : priceTariffs) {
                 addPriceTariff(priceTariff);
             }
             return this;
@@ -402,7 +405,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param priceTariff The price tariff.
          * @return The builder.
          */
-        public Builder addPriceTariff(PriceTariff priceTariff) {
+        public Builder addPriceTariff(ObjectProperty<PriceTariff> priceTariff) {
             priceTariffs.add(priceTariff);
             priceTariff.setIdentifier(IDENTIFIER_PRICE_TARIFF);
             addProperty(priceTariff);

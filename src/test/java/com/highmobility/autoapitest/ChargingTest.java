@@ -132,12 +132,6 @@ public class ChargingTest {
         assertTrue(state.getActiveState().getValue() == ChargingState.CHARGING);
     }
 
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
-        ChargeState command = (ChargeState) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getEstimatedRange().getTimestamp() != null);
-    }
-
     @Test public void get() {
         String waitingForBytes = "002300";
         String commandBytes = ByteUtils.hexFromBytes(new GetChargeState().getByteArray());
@@ -204,7 +198,8 @@ public class ChargingTest {
     }
 
     @Test public void setChargeLimit() {
-        Bytes expected = new Bytes("00231301000B0100083FECCCCCCCCCCCCD");
+        Bytes expected = new Bytes("002313" +
+                "01000B0100083FECCCCCCCCCCCCD");
 
         Bytes commandBytes = new SetChargeLimit(.9d);
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));

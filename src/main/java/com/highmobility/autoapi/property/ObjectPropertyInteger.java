@@ -29,13 +29,8 @@ public class ObjectPropertyInteger extends ObjectProperty<Integer> {
     // since int has different signed and length options, its better to have a property subclass.
     boolean signed;
 
-    /**
-     * Here value is just stored as ivar, no bytes are set. It should be later updated in {@link
-     * #update(byte, boolean, int)}
-     *
-     * @param value the value.
-     */
     public ObjectPropertyInteger(Integer value) {
+        // This will create uint32. Can be updated later in {@link #update(byte, boolean, int)}
         super(value);
     }
 
@@ -49,6 +44,7 @@ public class ObjectPropertyInteger extends ObjectProperty<Integer> {
         this(identifier, signed);
         this.value = value;
         this.bytes = getBytes(identifier, length, value);
+        bytesUpdated();
     }
 
     public ObjectPropertyInteger(byte identifier, boolean signed) {
@@ -79,19 +75,17 @@ public class ObjectPropertyInteger extends ObjectProperty<Integer> {
         byte[] bytes = baseBytes(identifier, newLength);
 
         /*
-        Don't need to consider signed here because we are not resetting the value, it stayes
+        Don't need to consider signed here because we are not resetting the value, it stays
         signed int from builder ctor. Bytes would be set the same for signed/unsigned.
          */
 
         if (value == null) return this;
 
         if (newLength == 1) {
-            bytes[3] = value.byteValue();
+            bytes[6] = value.byteValue();
         } else {
-            ByteUtils.setBytes(bytes, intToBytes(value, newLength), 3);
+            ByteUtils.setBytes(bytes, intToBytes(value, newLength), 6);
         }
-
-        this.bytes = bytes;
 
         return this;
     }
@@ -108,9 +102,9 @@ public class ObjectPropertyInteger extends ObjectProperty<Integer> {
         if (value == null) return bytes;
 
         if (length == 1) {
-            bytes[3] = value.byteValue();
+            bytes[6] = value.byteValue();
         } else {
-            ByteUtils.setBytes(bytes, intToBytes(value, length), 3);
+            ByteUtils.setBytes(bytes, intToBytes(value, length), 6);
         }
 
         return bytes;

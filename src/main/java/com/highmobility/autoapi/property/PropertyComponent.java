@@ -18,39 +18,28 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property.homecharger;
+package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
-public enum AuthenticationMechanism implements PropertyValueSingleByte {
-    PIN((byte) 0x00),
-    APP((byte) 0x01);
+public class PropertyComponent extends Bytes {
+    byte identifier;
+    int length;
 
-    public static AuthenticationMechanism fromByte(byte byteValue) throws CommandParseException {
-        AuthenticationMechanism[] values = AuthenticationMechanism.values();
-
-        for (int i = 0; i < values.length; i++) {
-            AuthenticationMechanism state = values[i];
-            if (state.getByte() == byteValue) {
-                return state;
-            }
-        }
-
-        throw new CommandParseException();
+    PropertyComponent(Bytes value) throws CommandParseException {
+        if (value.getLength() < 3) throw new CommandParseException();
+        bytes = value.getByteArray();
+        identifier = bytes[0];
+        length = Property.getUnsignedInt(bytes, 0, 2);
     }
 
-    private byte value;
-
-    AuthenticationMechanism(byte value) {
-        this.value = value;
-    }
-
-    public byte getByte() {
-        return value;
-    }
-
-    @Override public int getLength() {
-        return 1;
+    PropertyComponent(byte identifier, int length) {
+        this.length = length;
+        this.identifier = identifier;
+        bytes = new byte[3 + length];
+        bytes[0] = identifier;
+        ByteUtils.setBytes(bytes, Property.intToBytes(CalendarProperty.CALENDAR_SIZE, 2), 1);
     }
 }

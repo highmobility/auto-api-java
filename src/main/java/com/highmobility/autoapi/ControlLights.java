@@ -182,7 +182,7 @@ public class ControlLights extends CommandWithProperties {
         }
 
         for (FogLight fogLight : fogLights) {
-            ObjectProperty<FogLight> prop = new ObjectProperty<>(IDENTIFIER_FOG_LIGHT, fogLight);
+            ObjectProperty prop = new ObjectProperty(IDENTIFIER_FOG_LIGHT, fogLight);
             fogLightsBuilder.add(prop);
             properties.add(prop);
         }

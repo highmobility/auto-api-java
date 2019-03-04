@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi.property;
 
-public interface PropertyValue {
+public interface IPropertyValue {
     int getLength();
 }
 

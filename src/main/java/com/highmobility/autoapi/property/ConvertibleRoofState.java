@@ -22,84 +22,43 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-import java.util.Calendar;
+public enum ConvertibleRoofState implements PropertyValueSingleByte {
+    CLOSED((byte) 0x00),
+    OPEN((byte) 0x01),
+    EMERGENCY_LOCKED((byte) 0x02),
+    CLOSED_SECURED((byte) 0x03),
+    OPEN_SECURED((byte) 0x04),
+    HARD_TOP_MOUNTED((byte) 0x05),
+    INTERMEDIATE_POSITION((byte) 0x06),
+    LOADING_POSITION((byte) 0x07),
+    LOADING_POSITION_IMMEDIATE((byte) 0x08);
 
-import javax.annotation.Nullable;
+    public static ConvertibleRoofState fromByte(byte byteValue) throws CommandParseException {
+        ConvertibleRoofState[] values = ConvertibleRoofState.values();
 
-public class ConvertibleRoofState extends Property {
-    Value value;
+        for (int i = 0; i < values.length; i++) {
+            ConvertibleRoofState state = values[i];
+            if (state.getByte() == byteValue) {
+                return state;
+            }
+        }
 
-    public Value getValue() {
+        throw new CommandParseException();
+    }
+
+    private byte value;
+
+    ConvertibleRoofState(byte value) {
+        this.value = value;
+    }
+
+    public byte getByte() {
         return value;
     }
 
-    public ConvertibleRoofState(Value convertibleRoofState) {
-        super(convertibleRoofState);
-        this.value = convertibleRoofState;
-        if (convertibleRoofState != null) bytes[3] = convertibleRoofState.getByte();
-    }
-
-    public ConvertibleRoofState(@Nullable Value convertibleRoofStateProperty,
-                                @Nullable Calendar timestamp,
-                                @Nullable PropertyFailure failure) {
-        this(convertibleRoofStateProperty);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public ConvertibleRoofState(byte identifier) {
-        super(identifier);
-    }
-
-    public ConvertibleRoofState(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 1) value = Value.fromByte(p.get(3));
-        return this;
-    }
-
-    // TBODO: ctors
-
-    public enum Value implements PropertyValue {
-        CLOSED((byte) 0x00),
-        OPEN((byte) 0x01),
-        EMERGENCY_LOCKED((byte) 0x02),
-        CLOSED_SECURED((byte) 0x03),
-        OPEN_SECURED((byte) 0x04),
-        HARD_TOP_MOUNTED((byte) 0x05),
-        INTERMEDIATE_POSITION((byte) 0x06),
-        LOADING_POSITION((byte) 0x07),
-        LOADING_POSITION_IMMEDIATE((byte) 0x08);
-
-        public static Value fromByte(byte byteValue) throws CommandParseException {
-            Value[] values = Value.values();
-
-            for (int i = 0; i < values.length; i++) {
-                Value state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        Value(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
-        }
-
-        @Override public int getLength() {
-            return 1;
-        }
+    @Override public int getLength() {
+        return 1;
     }
 }
+
 

@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 
@@ -111,6 +112,10 @@ public class Type {
     }
 
     byte[] addProperty(Property property) {
+        return addBytes(property.getByteArray());
+    }
+
+    byte[] addProperty(ObjectProperty property) {
         return addBytes(property.getByteArray());
     }
 

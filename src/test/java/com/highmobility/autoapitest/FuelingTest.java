@@ -72,10 +72,4 @@ public class FuelingTest {
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((GasFlapState) state).getLock().getValue() == null);
     }
-
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
-        GasFlapState command = (GasFlapState) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getLock().getTimestamp() != null);
-    }
 }

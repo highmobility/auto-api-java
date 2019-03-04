@@ -69,12 +69,6 @@ public class LightsTest {
         assertTrue(state.getInteriorLamp(LightLocation.REAR).getValue().isActive() == false);
     }
 
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
-        LightsState command = (LightsState) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.isRearExteriorLightActive().getTimestamp() != null);
-    }
-
     @Test public void build() {
         LightsState.Builder builder = new LightsState.Builder();
 

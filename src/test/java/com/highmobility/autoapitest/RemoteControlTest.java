@@ -27,12 +27,6 @@ public class RemoteControlTest {
         assertTrue(state.getMode().getValue() == ControlMode.Value.STARTED);
     }
 
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000002"));
-        ControlMode command = (ControlMode) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getAngle().getTimestamp() != null);
-    }
-
     @Test public void get() {
         String waitingForBytes = "002700";
 

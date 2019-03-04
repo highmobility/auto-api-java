@@ -18,22 +18,25 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property.homecharger;
+package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
-public enum AuthenticationMechanism implements PropertyValueSingleByte {
-    PIN((byte) 0x00),
-    APP((byte) 0x01);
+public enum KeyFobPositionValue implements PropertyValueSingleByte {
+    OUT_OF_RANGE((byte) 0x00),
+    OUTSIDE_DRIVER_SIDE((byte) 0x01),
+    OUTSIDE_IN_FRONT_OF_CAR((byte) 0x02),
+    OUTSIDE_PASSENGER_SIDE((byte) 0x03),
+    OUTSIDE_BEHIND_CAR((byte) 0x04),
+    INSIDE_CAR((byte) 0x05);
 
-    public static AuthenticationMechanism fromByte(byte byteValue) throws CommandParseException {
-        AuthenticationMechanism[] values = AuthenticationMechanism.values();
+    public static KeyFobPositionValue fromByte(byte value) throws CommandParseException {
+        KeyFobPositionValue[] values = KeyFobPositionValue.values();
 
         for (int i = 0; i < values.length; i++) {
-            AuthenticationMechanism state = values[i];
-            if (state.getByte() == byteValue) {
-                return state;
+            KeyFobPositionValue possibleValue = values[i];
+            if (possibleValue.getByte() == value) {
+                return possibleValue;
             }
         }
 
@@ -42,7 +45,7 @@ public enum AuthenticationMechanism implements PropertyValueSingleByte {
 
     private byte value;
 
-    AuthenticationMechanism(byte value) {
+    KeyFobPositionValue(byte value) {
         this.value = value;
     }
 

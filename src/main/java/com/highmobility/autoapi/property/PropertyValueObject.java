@@ -3,7 +3,7 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.value.Bytes;
 
-public class PropertyValueObject extends Bytes implements PropertyValue {
+public class PropertyValueObject extends Bytes implements IPropertyValue {
     public PropertyValueObject(Bytes value) throws CommandParseException {
         update(value);
     }

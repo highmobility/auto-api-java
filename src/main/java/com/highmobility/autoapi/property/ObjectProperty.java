@@ -31,14 +31,10 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import javax.annotation.Nullable;
-
-import static com.highmobility.autoapi.property.ObjectPropertyString.CHARSET;
 
 /**
  * Property is a representation of some AutoAPI data. Specific data have specific subclasses like
@@ -46,20 +42,21 @@ import static com.highmobility.autoapi.property.ObjectPropertyString.CHARSET;
  * <p>
  * Property has to have a value with a size greater or equal to 1.
  */
-// TODO: 2019-02-04 extend Bytes instead of Property
-public class ObjectProperty<T> extends Property {
+// TODO: 2019-02-28 clear comments
+public class ObjectProperty<T> extends Bytes {
     protected static final byte[] unknownBytes = new byte[]{0x00, 0x00, 0x00};
 
-    @Nullable private PropertyTimestamp timestamp;
-    @Nullable private PropertyFailure failure;
-    @Nullable protected T value;
+    @Nullable private PropertyValueComponent<T> value;
+    @Nullable private PropertyTimestampComponent timestamp;
+    @Nullable private PropertyFailureComponent failure;
+
     protected Class<T> valueClass = null;
 
     /**
      * @return The property value.
      */
     @Nullable public T getValue() {
-        return value;
+        return value.getValue();
     }
 
     /**
@@ -70,26 +67,34 @@ public class ObjectProperty<T> extends Property {
         return timestamp.getCalendar();
     }
 
-    @Nullable PropertyTimestamp getPropertyTimestamp() {
+    @Nullable PropertyTimestampComponent getPropertyTimestamp() {
         return timestamp;
     }
 
     /**
      * @return The failure of the property.
      */
-    @Nullable public PropertyFailure getFailure() {
+    @Nullable public PropertyFailureComponent getFailure() {
         return failure;
     }
 
-    @Nullable public Class<T> getValueClass() {
+    @Nullable public Class<T> getValueClass() { // TODO: 2019-02-28 should be private
         return valueClass;
+    }
+
+    /**
+     * @return The one value byte. Returns null if property has no value set.
+     */
+
+    @Nullable public Byte getValueByte() {
+        return (value != null && value.getLength() > 0) ? value.get(0) : null;
     }
 
     // MARK: builder ctor
 
     public ObjectProperty(@Nullable T value,
                           @Nullable Calendar timestamp,
-                          @Nullable PropertyFailure failure) {
+                          @Nullable PropertyFailureComponent failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
     }
@@ -100,6 +105,15 @@ public class ObjectProperty<T> extends Property {
         } else {
             update((byte) 0, value);
         }
+    }
+
+    // TODO: 2019-03-04 make private
+    public ObjectProperty(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) bytes = unknownBytes;
+        if (bytes.length < 3) bytes = Arrays.copyOf(bytes, 3);
+        this.bytes = bytes;
+
+        // TODO: 2019-03-04 find components
     }
 
     // MARK: internal ctor
@@ -114,7 +128,7 @@ public class ObjectProperty<T> extends Property {
         this.bytes = baseBytes(identifier, 0);
     }
 
-    public ObjectProperty(Class<T> valueClass, Property property) throws CommandParseException {
+    public ObjectProperty(Class<T> valueClass, ObjectProperty property) throws CommandParseException {
         this.valueClass = valueClass;
         if (property == null || property.getLength() == 0) this.bytes = unknownBytes;
         if (property.getLength() < 3) this.bytes = Arrays.copyOf(property.getByteArray(), 3);
@@ -129,9 +143,9 @@ public class ObjectProperty<T> extends Property {
 
     // TODO: 2019-02-05 make internal
     public ObjectProperty update(byte identifier, T value) {
-        Bytes valueBytes = getBytes(value);
-        this.bytes = baseBytes(identifier, valueBytes.getLength());
-        ByteUtils.setBytes(bytes, valueBytes.getByteArray(), 3);
+        this.value = getBytes(value);
+        this.bytes = baseBytes(identifier, this.value.getLength());
+        ByteUtils.setBytes(bytes, this.value.getByteArray(), 6);
         this.value = value;
         return this;
     }
@@ -190,13 +204,37 @@ public class ObjectProperty<T> extends Property {
     }
 
     // TODO: 2019-02-04 private
-    public ObjectProperty update(Property p) throws CommandParseException {
+    public ObjectProperty update(ObjectProperty p) throws CommandParseException {
         if (valueClass == null)
             throw new IllegalArgumentException("Initialise with a class to update.");
 
         this.bytes = p.getByteArray();
+
+        this.value = p.value;
         this.failure = p.failure;
         this.timestamp = p.timestamp;
+
+        /*// TODO: 2019-03-04 dont use position 6, find the data component instead
+        if (bytes.length <= 6) value = new Bytes();
+        else value = new Bytes(Arrays.copyOfRange(bytes, 6, bytes.length));*/
+
+        int index = 3;
+        for (int i = 3; i < bytes.length; i++) {
+            int size = getUnsignedInt(bytes, index + 1, 2);
+
+            if (bytes[index] == 0x01) {
+                // data component
+                value = p.getRange(index + 3, index + 3 + size);
+            } else if (bytes[index] == 0x02) {
+                // timestamp component
+                timestamp = new PropertyTimestampComponent(p.getRange(index + 3, index + 3 + size));
+            } else if (bytes[index] == 0x03) {
+                // failure component
+                failure = new PropertyFailureComponent(p.getRange(index + 3, index + 3 + size));
+            }
+
+            i += size + 3;
+        }
 
         try {
             if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
@@ -240,8 +278,9 @@ public class ObjectProperty<T> extends Property {
         return this;
     }*/
 
-    protected void setTimestampFailure(Calendar timestamp, PropertyFailure failure) {
-        if (timestamp != null) this.timestamp = new PropertyTimestamp(timestamp);
+    protected void setTimestampFailure(Calendar timestamp, PropertyFailureComponent failure) {
+        if (timestamp != null) this.timestamp = new PropertyTimestampComponent(timestamp);
+        // TODO: 2019-02-28 verify that bytes are correct when timestamp/failure are set
         this.failure = failure;
     }
 
@@ -254,8 +293,6 @@ public class ObjectProperty<T> extends Property {
         return this instanceof PropertyFailure || this instanceof PropertyTimestamp;
     }*/
     // TODO: 2019-02-01
-
-
 
     // MARK: ctor helpers
 
@@ -284,7 +321,7 @@ public class ObjectProperty<T> extends Property {
 
         return bytes;
     }
-/*
+
     public static byte[] getIntProperty(byte identifier, int value, int length) throws
             IllegalArgumentException {
         byte[] bytes = new byte[]{
@@ -422,15 +459,14 @@ public class ObjectProperty<T> extends Property {
         throw new IllegalArgumentException();
     }
 
-    *
-    * //**
+    /**
      * This works for both negative and positive ints.
      *
      * @param value  the valueBytes converted to byte[]
      * @param length the returned byte[] length
      * @return the allBytes representing the valueBytes
      * @throws IllegalArgumentException when input is invalid
-     *//*
+     */
     public static byte[] intToBytes(int value, int length) throws IllegalArgumentException {
         byte[] bytes = BigInteger.valueOf(value).toByteArray();
 
@@ -464,7 +500,7 @@ public class ObjectProperty<T> extends Property {
 
     public static String getString(byte[] bytes) {
         try {
-            return new String(bytes, CHARSET);
+            return new String(bytes, ObjectPropertyString.CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             throw new ParseException();
@@ -512,22 +548,16 @@ public class ObjectProperty<T> extends Property {
         return getCalendar(bytes, 0);
     }
 
+    public static Calendar getCalendar(Bytes bytes, int at) throws IllegalArgumentException {
+        return getCalendar(bytes.getByteArray(), at);
+    }
+
     public static Calendar getCalendar(byte[] bytes, int at) throws IllegalArgumentException {
         Calendar c = new GregorianCalendar();
-
         if (bytes.length >= at + CalendarProperty.CALENDAR_SIZE) {
-            c.set(2000 + bytes[at], bytes[at + 1] - 1, bytes[at + 2], bytes[at + 3], bytes[at +
-                    4], bytes[at + 5]);
-            int minutesOffset = getSignedInt(new byte[]{bytes[at + 6], bytes[at + 7]});
+            Long epoch = Property.getLong(bytes, at);
+            c.setTimeInMillis(epoch);
 
-            int msOffset = minutesOffset * 60 * 1000;
-            String[] availableIds = TimeZone.getAvailableIDs(msOffset);
-            if (availableIds.length == 0) {
-                c.setTimeZone(TimeZone.getTimeZone("UTC"));
-            } else {
-                TimeZone timeZone = TimeZone.getTimeZone(availableIds[0]);
-                c.setTimeZone(timeZone);
-            }
         } else {
             throw new IllegalArgumentException();
         }
@@ -537,34 +567,18 @@ public class ObjectProperty<T> extends Property {
     }
 
     public static byte[] calendarToBytes(Calendar calendar) {
-        byte[] bytes = new byte[CalendarProperty.CALENDAR_SIZE];
-
-        bytes[0] = (byte) (calendar.get(Calendar.YEAR) - 2000);
-        bytes[1] = (byte) (calendar.get(Calendar.MONTH) + 1);
-        bytes[2] = (byte) calendar.get(Calendar.DAY_OF_MONTH);
-        bytes[3] = (byte) calendar.get(Calendar.HOUR_OF_DAY);
-        bytes[4] = (byte) calendar.get(Calendar.MINUTE);
-        bytes[5] = (byte) calendar.get(Calendar.SECOND);
-
-        int msOffset = calendar.getTimeZone().getRawOffset(); // in ms
-        int minuteOffset = msOffset / (60 * 1000);
-
-        byte[] bytesOffset = ObjectProperty.intToBytes(minuteOffset, 2);
-        bytes[6] = bytesOffset[0];
-        bytes[7] = bytesOffset[1];
-
-        return bytes;
-    }*/
-
-    public static class SortForParsing implements Comparator<ObjectProperty> {
-        public int compare(ObjectProperty a, ObjectProperty b) {
-            // -1 before, 1 after
-            if (a.getPropertyIdentifier() != PropertyFailure.IDENTIFIER &&
-                    a.getPropertyIdentifier() != PropertyTimestamp.IDENTIFIER) {
-                return -1;
-            }
-
-            return 0;
-        }
+        return Property.longToBytes(calendar.getTimeInMillis());
     }
+
+//    public static class SortForParsing implements Comparator<ObjectProperty> {
+//        public int compare(ObjectProperty a, ObjectProperty b) {
+//            // -1 before, 1 after
+//            if (a.getPropertyIdentifier() != PropertyFailure.IDENTIFIER &&
+//                    a.getPropertyIdentifier() != PropertyTimestamp.IDENTIFIER) {
+//                return -1;
+//            }
+//
+//            return 0;
+//        }
+//    }
 }

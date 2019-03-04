@@ -53,12 +53,12 @@ public class ObjectPropertyIntegerArray extends ObjectProperty<int[]> {
     @Override public ObjectProperty update(int[] value) {
         this.value = value;
 
-        if (bytes.length != 3 + value.length) bytes = baseBytes(getPropertyIdentifier(),
+        if (bytes.length != 6 + value.length) bytes = baseBytes(getPropertyIdentifier(),
                 value.length);
 
         for (int i = 0; i < value.length; i++) {
             byte byteValue = Property.intToBytes(value[i], 1)[0];
-            bytes[3 + i] = byteValue;
+            bytes[6 + i] = byteValue;
         }
 
         return this;
@@ -70,7 +70,7 @@ public class ObjectPropertyIntegerArray extends ObjectProperty<int[]> {
         if (length > 0) {
             value = new int[length];
             for (int i = 0; i < length; i++) {
-                value[i] = Property.getUnsignedInt(p.getByteArray()[i + 3]);
+                value[i] = Property.getUnsignedInt(p.getByteArray()[i + 6]);
             }
         }
 

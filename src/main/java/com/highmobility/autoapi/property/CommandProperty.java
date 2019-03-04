@@ -50,13 +50,13 @@ public class CommandProperty extends Property {
     }
 
     public CommandProperty(@Nullable CommandWithProperties value, @Nullable Calendar timestamp,
-                           @Nullable PropertyFailure failure) {
+                           @Nullable PropertyFailureComponent failure) {
         this(value);
         setTimestampFailure(timestamp, failure);
     }
 
     public CommandProperty(@Nullable CommandWithProperties value) {
-        super((PropertyValue) value);
+        super((IPropertyValue) value);
         this.value = value;
 
         if (value != null) {

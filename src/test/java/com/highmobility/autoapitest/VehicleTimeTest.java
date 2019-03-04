@@ -39,12 +39,6 @@ public class VehicleTimeTest {
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000001"));
-        VehicleTime command = (VehicleTime) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getVehicleTime().getTimestamp() != null);
-    }
-
     @Test public void get() {
         String waitingForBytes = "005000";
         String commandBytes = ByteUtils.hexFromBytes(new GetVehicleTime().getByteArray());

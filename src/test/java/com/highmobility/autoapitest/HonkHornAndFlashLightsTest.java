@@ -74,10 +74,4 @@ public class HonkHornAndFlashLightsTest {
         assertTrue(state.equals(bytes));
         assertTrue(state.getState().getValue() == FlashersState.Value.LEFT_ACTIVE);
     }
-
-    @Test public void stateWithTimestamp() {
-        Bytes timestampBytes = bytes.concat(new Bytes("A4000911010A112200000001"));
-        FlashersState command = (FlashersState) CommandResolver.resolve(timestampBytes);
-        assertTrue(command.getState().getTimestamp() != null);
-    }
 }

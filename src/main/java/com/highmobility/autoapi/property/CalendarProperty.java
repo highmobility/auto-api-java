@@ -25,7 +25,7 @@ import com.highmobility.utils.ByteUtils;
 
 import java.util.Calendar;
 
-public class CalendarProperty extends Property {
+public class CalendarProperty extends ObjectProperty {
     public static final int CALENDAR_SIZE = 8;
 
     private Calendar calendar;

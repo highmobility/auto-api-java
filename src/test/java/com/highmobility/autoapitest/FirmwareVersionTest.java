@@ -10,6 +10,8 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -17,26 +19,23 @@ import static org.junit.Assert.assertTrue;
  */
 public class FirmwareVersionTest {
     Bytes bytes = new Bytes(
-
             "000301" +
                     "010006010003010F21" +
                     "02000F01000C6274737461636B2D75617274" +
                     "03000C01000976312E352D70726F64"
     );
 
-    // TODO: 2019-02-27 test state
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-
         testState((FirmwareVersion) command);
     }
 
     void testState(FirmwareVersion state) {
-        assertTrue(state.getCarSDKVersion().equals("1.15.33"));
-        assertTrue(state.getCarSDKBuild().equals("btstack-uart"));
-        assertTrue(state.getApplicationVersion().equals("v1.5-prod"));
-
+        assertTrue(Arrays.equals(state.getCarSDKVersion().getValue(), new int[]{1, 15, 33}));
+        assertTrue(state.getCarSDKBuild().getValue().equals("btstack-uart"));
+        assertTrue(state.getApplicationVersion().getValue().equals("v1.5-prod"));
+        assertTrue(state.equals(bytes));
     }
 
     @Test public void build() {
@@ -47,7 +46,6 @@ public class FirmwareVersionTest {
         builder.setApplicationVersion(new ObjectPropertyString("v1.5-prod"));
 
         FirmwareVersion command = builder.build();
-        assertTrue(command.equals(bytes));
         testState(command);
     }
 
