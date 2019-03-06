@@ -21,8 +21,9 @@
 package com.highmobility.autoapi.property.homecharger;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyComponentValue;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
@@ -148,7 +149,7 @@ public class PriceTariff extends PropertyValueObject {
         set(1, Property.floatToBytes(price));
         set(5, (byte) currency.length());
         try {
-            set(6, currency.getBytes(ObjectPropertyString.CHARSET));
+            set(6, currency.getBytes(PropertyComponentValue.CHARSET));
         } catch (UnsupportedEncodingException e) {
             // ignore
             e.printStackTrace();

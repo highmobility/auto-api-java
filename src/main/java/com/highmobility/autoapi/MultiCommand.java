@@ -81,10 +81,10 @@ public class MultiCommand extends CommandWithProperties {
         super(bytes);
 
         ArrayList<Command> builder = new ArrayList<>();
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROP_IDENTIFIER) {
-                    Command command = CommandResolver.resolve(p.getValueBytesArray());
+                    Command command = CommandResolver.resolve(p.getValueComponent().getValueBytes());
                     if (command != null) {
                         builder.add(command);
                         return command;

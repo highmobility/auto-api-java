@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -40,7 +39,7 @@ public class ActivateDeactivateEmergencyFlasher extends CommandWithProperties {
     }
 
     public ActivateDeactivateEmergencyFlasher(boolean activate) {
-        super(TYPE.addProperty(new ObjectProperty<>(activate).setIdentifier(PROPERTY_IDENTIFIER)));
+        super(TYPE.addProperty(new Property<>(activate).setIdentifier(PROPERTY_IDENTIFIER)));
         this.activate = activate;
     }
 

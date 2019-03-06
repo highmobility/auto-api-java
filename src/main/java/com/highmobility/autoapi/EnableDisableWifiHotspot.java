@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -40,7 +39,7 @@ public class EnableDisableWifiHotspot extends CommandWithProperties {
     private boolean enable;
 
     public EnableDisableWifiHotspot(boolean enable) {
-        super(TYPE.addProperty(new ObjectProperty<>(enable).setIdentifier(IDENTIFIER)));
+        super(TYPE.addProperty(new Property<>(enable).setIdentifier(IDENTIFIER)));
         this.enable = enable;
     }
 

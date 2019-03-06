@@ -22,42 +22,43 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 import javax.annotation.Nullable;
 
-public class ObjectPropertyInteger extends ObjectProperty<Integer> {
+// TODO: 2019-03-05 move as child of PropertyComponentValue (PropertyComponentValueInteger)
+public class PropertyInteger extends Property<Integer> {
     // since int has different signed and length options, its better to have a property subclass.
     boolean signed;
 
-    public ObjectPropertyInteger(Integer value) {
-        // This will create uint32. Can be updated later in {@link #update(byte, boolean, int)}
+    public PropertyInteger(Integer value) {
+        // This will create int32. Can be updated later in {@link #update(byte, boolean, int)}
         super(value);
     }
 
-    public ObjectPropertyInteger(Property p, boolean signed) throws CommandParseException {
+    public PropertyInteger(Property p, boolean signed) throws CommandParseException {
         super(Integer.class, p.getPropertyIdentifier());
         this.signed = signed;
         update(p);
     }
 
-    public ObjectPropertyInteger(byte identifier, boolean signed, int length, int value) {
+    public PropertyInteger(byte identifier, boolean signed, int length, int value) {
         this(identifier, signed);
-        this.value = value;
-        this.bytes = getBytes(identifier, length, value);
-        bytesUpdated();
+        this.bytes = getBytes(identifier, length, value).getByteArray();
+        findComponents();
     }
 
-    public ObjectPropertyInteger(byte identifier, boolean signed) {
+    public PropertyInteger(byte identifier, boolean signed) {
         super(Integer.class, identifier);
         this.signed = signed;
     }
 
-    @Override public ObjectProperty update(Property p) throws CommandParseException {
+    @Override public Property update(Property p) throws CommandParseException {
         super.update(p);
 
-        if (p.getValueLength() >= 1) {
-            if (signed) value = getSignedInt(p.getValueBytesArray());
-            else value = getUnsignedInt(p.getValueBytesArray());
+        if (p.getValueComponent().getValueBytes().getLength() >= 1) {
+            if (signed) value.value = getSignedInt(p.getValueComponent().getValueBytes());
+            else value.value = getUnsignedInt(p.getValueComponent().getValueBytes());
         }
 
         return this;
@@ -71,7 +72,7 @@ public class ObjectPropertyInteger extends ObjectProperty<Integer> {
      * @param identifier The property identifier.
      * @param newLength  The new length.
      */
-    public ObjectProperty update(byte identifier, boolean signed, int newLength) {
+    public Property update(byte identifier, boolean signed, int newLength) {
         byte[] bytes = baseBytes(identifier, newLength);
 
         /*
@@ -82,24 +83,26 @@ public class ObjectPropertyInteger extends ObjectProperty<Integer> {
         if (value == null) return this;
 
         if (newLength == 1) {
-            bytes[6] = value.byteValue();
+            bytes[6] = value.value.byteValue();
         } else {
-            ByteUtils.setBytes(bytes, intToBytes(value, newLength), 6);
+            ByteUtils.setBytes(bytes, intToBytes(value.value, newLength), 6);
         }
+
+        findComponents();
 
         return this;
     }
 
-    public ObjectProperty update(byte identifier, boolean signed, int newLength,
-                                 @Nullable Integer value) {
-        this.value = value;
+    public Property update(byte identifier, boolean signed, int newLength,
+                           @Nullable Integer value) {
+        this.value.value = value;
         return update(identifier, signed, newLength);
     }
 
-    static byte[] getBytes(byte identifier, int length, Integer value) {
+    static Bytes getBytes(byte identifier, int length, Integer value) {
         byte[] bytes = baseBytes(identifier, length);
 
-        if (value == null) return bytes;
+        if (value == null) return new Bytes();
 
         if (length == 1) {
             bytes[6] = value.byteValue();
@@ -107,6 +110,6 @@ public class ObjectPropertyInteger extends ObjectProperty<Integer> {
             ByteUtils.setBytes(bytes, intToBytes(value, length), 6);
         }
 
-        return bytes;
+        return new Bytes(bytes);
     }
 }

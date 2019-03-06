@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -28,8 +28,8 @@ public class PropertyComponent extends Bytes {
     byte identifier;
     int length;
 
-    PropertyComponent(Bytes value) throws CommandParseException {
-        if (value.getLength() < 3) throw new CommandParseException();
+    PropertyComponent(Bytes value) {
+        if (value.getLength() < 3) throw new ParseException();
         bytes = value.getByteArray();
         identifier = bytes[0];
         length = Property.getUnsignedInt(bytes, 0, 2);
@@ -40,6 +40,6 @@ public class PropertyComponent extends Bytes {
         this.identifier = identifier;
         bytes = new byte[3 + length];
         bytes[0] = identifier;
-        ByteUtils.setBytes(bytes, Property.intToBytes(CalendarProperty.CALENDAR_SIZE, 2), 1);
+        ByteUtils.setBytes(bytes, Property.intToBytes(length, 2), 1);
     }
 }

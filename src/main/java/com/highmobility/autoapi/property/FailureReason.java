@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum FailureReason {
+public enum FailureReason implements PropertyValueSingleByte {
     UNSUPPORTED_CAPABILITY((byte)0x00),
     UNAUTHORISED((byte)0x01),
     INCORRECT_STATE((byte)0x02),

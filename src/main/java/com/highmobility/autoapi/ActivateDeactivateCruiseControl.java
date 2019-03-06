@@ -20,9 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
 
 import java.util.ArrayList;
 
@@ -38,7 +37,7 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
     private static final byte IDENTIFIER_SPEED = 0x02;
 
     Boolean activate;
-    ObjectPropertyInteger speed = new ObjectPropertyInteger(IDENTIFIER_SPEED, false);
+    PropertyInteger speed = new PropertyInteger(IDENTIFIER_SPEED, false);
 
     /**
      * @return Whether cruise control should be activated.
@@ -65,7 +64,7 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
         super(TYPE);
         ArrayList<Property> properties = new ArrayList<>();
 
-        properties.add(new ObjectProperty<>(activate).setIdentifier(IDENTIFIER_ACTIVATE));
+        properties.add(new Property<>(activate).setIdentifier(IDENTIFIER_ACTIVATE));
         this.activate = activate;
 
         if (speed != null) {

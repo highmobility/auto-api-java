@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 
 /**
@@ -29,13 +29,13 @@ import com.highmobility.autoapi.property.charging.ChargeMode;
 public class SetChargeMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x15);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    ObjectProperty<ChargeMode> chargeMode = new ObjectProperty<>(ChargeMode.class,
+    Property<ChargeMode> chargeMode = new Property<>(ChargeMode.class,
             PROPERTY_IDENTIFIER);
 
     /**
      * @return The charge mode.
      */
-    public ObjectProperty<ChargeMode> getChargeMode() {
+    public Property<ChargeMode> getChargeMode() {
         return chargeMode;
     }
 

@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetWeatherConditions;
 import com.highmobility.autoapi.WeatherConditions;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -48,7 +48,7 @@ public class WeatherConditionsTest {
 
     @Test public void builder() {
         WeatherConditions.Builder builder = new WeatherConditions.Builder();
-        builder.setRainIntensity(new ObjectProperty<>(1d));
+        builder.setRainIntensity(new Property<>(1d));
         testState(builder.build());
     }
 }

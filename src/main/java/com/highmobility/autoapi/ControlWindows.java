@@ -34,12 +34,13 @@ import java.util.ArrayList;
 public class ControlWindows extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDOWS, 0x12);
     private static final byte PROPERTY_IDENTIFIER = 0x02;
-    private WindowPosition[] windowPositions;
+
+    private Property<WindowPosition>[] windowPositions;
 
     /**
      * @return The window positions.
      */
-    public WindowPosition[] getWindowPositions() {
+    public Property<WindowPosition>[] getWindowPositions() {
         return windowPositions;
     }
 
@@ -49,41 +50,42 @@ public class ControlWindows extends CommandWithProperties {
      * @param location The window location.
      * @return The window position.
      */
-    public WindowPosition getWindowPosition(Location location) {
+    public Property<WindowPosition> getWindowPosition(Location location) {
         for (int i = 0; i < windowPositions.length; i++) {
-            WindowPosition prop = windowPositions[i];
-            if (prop.getLocation() == location) return prop;
+            Property<WindowPosition> prop = windowPositions[i];
+            if (prop.getValue().getLocation() == location) return prop;
         }
 
         return null;
     }
 
     public ControlWindows(WindowPosition[] windowPositions) {
-        super(TYPE, updatePositions(windowPositions));
-        this.windowPositions = windowPositions;
-    }
+        super(TYPE);
 
-    static WindowPosition[] updatePositions(WindowPosition[] windowPositions) {
-        for (WindowPosition windowPosition : windowPositions) {
-            windowPosition.setIdentifier(PROPERTY_IDENTIFIER);
+        ArrayList<Property> builder = new ArrayList<>();
+
+        for (WindowPosition windowPos : windowPositions) {
+            Property prop = new Property(PROPERTY_IDENTIFIER, windowPos);
+            builder.add(prop);
         }
 
-        return windowPositions;
+        this.windowPositions = builder.toArray(new Property[0]);
+        createBytes(builder);
     }
 
     ControlWindows(byte[] bytes) throws CommandParseException {
         super(bytes);
-        ArrayList<WindowPosition> builder = new ArrayList<>();
+        ArrayList<Property<WindowPosition>> builder = new ArrayList<>();
 
         for (Property property : properties) {
             if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER)
-                builder.add(new WindowPosition(
-                        Location.fromByte(property.getValueBytes().get(0)),
-                        Position.fromByte(property.getValueBytes().get(1))
-                ));
+                builder.add(new Property(new WindowPosition(
+                        Location.fromByte(property.getValueComponent().getValueByte()),
+                        Position.fromByte(property.getValueComponent().getValueByte())
+                )));
         }
 
-        windowPositions = builder.toArray(new WindowPosition[0]);
+        windowPositions = builder.toArray(new Property[0]);
     }
 
     @Override protected boolean propertiesExpected() {

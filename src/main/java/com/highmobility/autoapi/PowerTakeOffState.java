@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -33,34 +33,34 @@ public class PowerTakeOffState extends CommandWithProperties {
     private static final byte ACTIVE_IDENTIFIER = 0x01;
     private static final byte ENGAGED_IDENTIFIER = 0x02;
 
-    ObjectProperty<Boolean> active;
-    ObjectProperty<Boolean> engaged;
+    Property<Boolean> active;
+    Property<Boolean> engaged;
 
     /**
      * @return Whether the power take-off is active.
      */
-    @Nullable public ObjectProperty<Boolean> isActive() {
+    @Nullable public Property<Boolean> isActive() {
         return active;
     }
 
     /**
      * @return Whether at least one Power Take-Off drive is engaged.
      */
-    @Nullable public ObjectProperty<Boolean> isEngaged() {
+    @Nullable public Property<Boolean> isEngaged() {
         return engaged;
     }
 
     PowerTakeOffState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case ACTIVE_IDENTIFIER:
-                        active = new ObjectProperty<>(Boolean.class, p);
+                        active = new Property<>(Boolean.class, p);
                         return active;
                     case ENGAGED_IDENTIFIER:
-                        engaged = new ObjectProperty<>(Boolean.class, p);
+                        engaged = new Property<>(Boolean.class, p);
                         return engaged;
                 }
 
@@ -80,8 +80,8 @@ public class PowerTakeOffState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectProperty<Boolean> active;
-        private ObjectProperty<Boolean> engaged;
+        private Property<Boolean> active;
+        private Property<Boolean> engaged;
 
         public Builder() {
             super(TYPE);
@@ -91,7 +91,7 @@ public class PowerTakeOffState extends CommandWithProperties {
          * @param active Whether the power take-off is active.
          * @return The builder.
          */
-        public Builder setIsActive(ObjectProperty<Boolean> active) {
+        public Builder setIsActive(Property<Boolean> active) {
             this.active = active;
             active.setIdentifier(ACTIVE_IDENTIFIER);
             addProperty(active);
@@ -102,7 +102,7 @@ public class PowerTakeOffState extends CommandWithProperties {
          * @param engaged Whether the power take-off is engaged.
          * @return The builder.
          */
-        public Builder setIsEngaged(ObjectProperty<Boolean> engaged) {
+        public Builder setIsEngaged(Property<Boolean> engaged) {
             this.engaged = engaged;
             engaged.setIdentifier(ENGAGED_IDENTIFIER);
             addProperty(engaged);

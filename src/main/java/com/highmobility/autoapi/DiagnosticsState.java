@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
 
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
@@ -76,76 +76,76 @@ public class DiagnosticsState extends CommandWithProperties {
 
     private static final byte IDENTIFIER_MILEAGE_METERS = 0x1E;
 
-    ObjectPropertyInteger mileage = new ObjectPropertyInteger(IDENTIFIER_MILEAGE, false);
-    ObjectPropertyInteger oilTemperature = new ObjectPropertyInteger(IDENTIFIER_OIL_TEMPERATURE,
+    PropertyInteger mileage = new PropertyInteger(IDENTIFIER_MILEAGE, false);
+    PropertyInteger oilTemperature = new PropertyInteger(IDENTIFIER_OIL_TEMPERATURE,
             false);
-    ObjectPropertyInteger speed = new ObjectPropertyInteger(IDENTIFIER_SPEED, false);
-    ObjectPropertyInteger rpm = new ObjectPropertyInteger(IDENTIFIER_RPM, false);
-    ObjectProperty<Double> fuelLevel = new ObjectProperty<>(Double.class, IDENTIFIER_FUEL_LEVEL);
-    ObjectPropertyInteger range = new ObjectPropertyInteger(IDENTIFIER_RANGE, false);
-    ObjectProperty<WasherFluidLevel> washerFluidLevel =
-            new ObjectProperty<>(WasherFluidLevel.class, IDENTIFIER_WASHER_FLUID_LEVEL);
-    ObjectProperty<Float> batteryVoltage = new ObjectProperty<>(Float.class,
+    PropertyInteger speed = new PropertyInteger(IDENTIFIER_SPEED, false);
+    PropertyInteger rpm = new PropertyInteger(IDENTIFIER_RPM, false);
+    Property<Double> fuelLevel = new Property<>(Double.class, IDENTIFIER_FUEL_LEVEL);
+    PropertyInteger range = new PropertyInteger(IDENTIFIER_RANGE, false);
+    Property<WasherFluidLevel> washerFluidLevel =
+            new Property<>(WasherFluidLevel.class, IDENTIFIER_WASHER_FLUID_LEVEL);
+    Property<Float> batteryVoltage = new Property<>(Float.class,
             IDENTIFIER_BATTERY_VOLTAGE);
-    ObjectProperty<Float> adBlueLevel = new ObjectProperty<>(Float.class, IDENTIFIER_AD_BLUE_LEVEL);
-    ObjectPropertyInteger distanceDrivenSinceReset =
-            new ObjectPropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET, false);
-    ObjectPropertyInteger distanceDrivenSinceEngineStart =
-            new ObjectPropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START, false);
-    ObjectProperty<Float> fuelVolume = new ObjectProperty<>(Float.class, IDENTIFIER_FUEL_VOLUME);
+    Property<Float> adBlueLevel = new Property<>(Float.class, IDENTIFIER_AD_BLUE_LEVEL);
+    PropertyInteger distanceDrivenSinceReset =
+            new PropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET, false);
+    PropertyInteger distanceDrivenSinceEngineStart =
+            new PropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START, false);
+    Property<Float> fuelVolume = new Property<>(Float.class, IDENTIFIER_FUEL_VOLUME);
 
     // level7
-    ObjectProperty<Boolean> antiLockBrakingActive =
-            new ObjectProperty<>(Boolean.class, IDENTIFIER_ANTI_LOCK_BRAKING_ACTIVE);
-    ObjectPropertyInteger engineCoolantTemperature =
-            new ObjectPropertyInteger(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, false);
-    ObjectProperty<Float> engineTotalOperatingHours =
-            new ObjectProperty<>(Float.class, IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
-    ObjectProperty<Float> engineTotalFuelConsumption =
-            new ObjectProperty<>(Float.class, IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
-    ObjectProperty<BrakeFluidLevel> brakeFluidLevel = new ObjectProperty<>(BrakeFluidLevel.class,
+    Property<Boolean> antiLockBrakingActive =
+            new Property<>(Boolean.class, IDENTIFIER_ANTI_LOCK_BRAKING_ACTIVE);
+    PropertyInteger engineCoolantTemperature =
+            new PropertyInteger(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, false);
+    Property<Float> engineTotalOperatingHours =
+            new Property<>(Float.class, IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
+    Property<Float> engineTotalFuelConsumption =
+            new Property<>(Float.class, IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
+    Property<BrakeFluidLevel> brakeFluidLevel = new Property<>(BrakeFluidLevel.class,
             IDENTIFIER_BRAKE_FLUID_LEVEL);
-    ObjectProperty<Double> engineTorque = new ObjectProperty<>(Double.class, IDENTIFIER_ENGINE_TORQUE);
-    ObjectProperty<Double> engineLoad = new ObjectProperty<>(Double.class, IDENTIFIER_ENGINE_LOAD);
-    ObjectPropertyInteger wheelBasedSpeed =
-            new ObjectPropertyInteger(IDENTIFIER_WHEEL_BASED_SPEED, true);
+    Property<Double> engineTorque = new Property<>(Double.class, IDENTIFIER_ENGINE_TORQUE);
+    Property<Double> engineLoad = new Property<>(Double.class, IDENTIFIER_ENGINE_LOAD);
+    PropertyInteger wheelBasedSpeed =
+            new PropertyInteger(IDENTIFIER_WHEEL_BASED_SPEED, true);
 
     // level8
-    ObjectProperty<Double> batteryLevel = new ObjectProperty<>(Double.class, IDENTIFIER_BATTERY_LEVEL);
-    ObjectProperty<CheckControlMessage>[] checkControlMessages;
-    ObjectProperty<TirePressure>[] tirePressures;
-    ObjectProperty<TireTemperature>[] tireTemperatures;
-    ObjectProperty<WheelRpm>[] wheelRpms;
-    ObjectProperty<DiagnosticsTroubleCode>[] troubleCodes;
+    Property<Double> batteryLevel = new Property<>(Double.class, IDENTIFIER_BATTERY_LEVEL);
+    Property<CheckControlMessage>[] checkControlMessages;
+    Property<TirePressure>[] tirePressures;
+    Property<TireTemperature>[] tireTemperatures;
+    Property<WheelRpm>[] wheelRpms;
+    Property<DiagnosticsTroubleCode>[] troubleCodes;
 
-    ObjectPropertyInteger mileageMeters = new ObjectPropertyInteger(IDENTIFIER_MILEAGE_METERS,
+    PropertyInteger mileageMeters = new PropertyInteger(IDENTIFIER_MILEAGE_METERS,
             false);
 
     /**
      * @return The car mileage (odometer) in km.
      */
-    public ObjectPropertyInteger getMileage() {
+    public PropertyInteger getMileage() {
         return mileage;
     }
 
     /**
      * @return The engine oil temperature in Celsius, whereas can be negative.
      */
-    public ObjectPropertyInteger getOilTemperature() {
+    public PropertyInteger getOilTemperature() {
         return oilTemperature;
     }
 
     /**
      * @return The car speed in km/h, whereas can be negative.
      */
-    public ObjectPropertyInteger getSpeed() {
+    public PropertyInteger getSpeed() {
         return speed;
     }
 
     /**
      * @return The RPM of the engine.
      */
-    public ObjectPropertyInteger getRpm() {
+    public PropertyInteger getRpm() {
         return rpm;
     }
 
@@ -153,91 +153,91 @@ public class DiagnosticsState extends CommandWithProperties {
      * @return The Fuel level percentage.
      */
 
-    public ObjectProperty<Double> getFuelLevel() {
+    public Property<Double> getFuelLevel() {
         return fuelLevel;
     }
 
     /**
      * @return The estimated range.
      */
-    public ObjectPropertyInteger getRange() {
+    public PropertyInteger getRange() {
         return range;
     }
 
     /**
      * @return Washer fluid level.
      */
-    public ObjectProperty<WasherFluidLevel> getWasherFluidLevel() {
+    public Property<WasherFluidLevel> getWasherFluidLevel() {
         return washerFluidLevel;
     }
 
     /**
      * @return The battery voltage.
      */
-    public ObjectProperty<Float> getBatteryVoltage() {
+    public Property<Float> getBatteryVoltage() {
         return batteryVoltage;
     }
 
     /**
      * @return AdBlue level in liters.
      */
-    public ObjectProperty<Float> getAdBlueLevel() {
+    public Property<Float> getAdBlueLevel() {
         return adBlueLevel;
     }
 
     /**
      * @return The distance driven in km since reset.
      */
-    public ObjectPropertyInteger getDistanceDrivenSinceReset() {
+    public PropertyInteger getDistanceDrivenSinceReset() {
         return distanceDrivenSinceReset;
     }
 
     /**
      * @return The distance driven in km since engine start.
      */
-    public ObjectPropertyInteger getDistanceDrivenSinceEngineStart() {
+    public PropertyInteger getDistanceDrivenSinceEngineStart() {
         return distanceDrivenSinceEngineStart;
     }
 
     /**
      * @return The fuel volume measured in liters.
      */
-    public ObjectProperty<Float> getFuelVolume() {
+    public Property<Float> getFuelVolume() {
         return fuelVolume;
     }
 
     /**
      * @return The anti-lock braking system (ABS) state.
      */
-    public ObjectProperty<Boolean> isAntiLockBrakingActive() {
+    public Property<Boolean> isAntiLockBrakingActive() {
         return antiLockBrakingActive;
     }
 
     /**
      * @return The engine coolant temperature in Celsius, whereas can be negative.
      */
-    public ObjectPropertyInteger getEngineCoolantTemperature() {
+    public PropertyInteger getEngineCoolantTemperature() {
         return engineCoolantTemperature;
     }
 
     /**
      * @return The the accumulated time of engine operation.
      */
-    public ObjectProperty<Float> getEngineTotalOperatingHours() {
+    public Property<Float> getEngineTotalOperatingHours() {
         return engineTotalOperatingHours;
     }
 
     /**
      * @return The the accumulated lifespan fuel consumption in liters.
      */
-    public ObjectProperty<Float> getEngineTotalFuelConsumption() {
+    public Property<Float> getEngineTotalFuelConsumption() {
         return engineTotalFuelConsumption;
     }
 
     /**
      * @return The brake fluid level.
      */
-    public ObjectProperty<BrakeFluidLevel> getBrakeFluidLevel() {
+    public Property<BrakeFluidLevel> getBrakeFluidLevel() {
         return brakeFluidLevel;
     }
 
@@ -245,21 +245,21 @@ public class DiagnosticsState extends CommandWithProperties {
      * @return The current engine torque percentage.
      */
 
-    public ObjectProperty<Double> getEngineTorque() {
+    public Property<Double> getEngineTorque() {
         return engineTorque;
     }
 
     /**
      * @return The current engine load percentage.
      */
-    public ObjectProperty<Double> getEngineLoad() {
+    public Property<Double> getEngineLoad() {
         return engineLoad;
     }
 
     /**
      * @return The vehicle speed in km/h measured at the wheel base, whereas can be negative.
      */
-    public ObjectPropertyInteger getWheelBasedSpeed() {
+    public PropertyInteger getWheelBasedSpeed() {
         return wheelBasedSpeed;
     }
 
@@ -267,21 +267,21 @@ public class DiagnosticsState extends CommandWithProperties {
      * @return The battery level percentage.
      */
 
-    public ObjectProperty<Double> getBatteryLevel() {
+    public Property<Double> getBatteryLevel() {
         return batteryLevel;
     }
 
     /**
      * @return The Check Control Message.
      */
-    public ObjectProperty<CheckControlMessage>[] getCheckControlMessages() {
+    public Property<CheckControlMessage>[] getCheckControlMessages() {
         return checkControlMessages;
     }
 
     /**
      * @return The tire pressures.
      */
-    public ObjectProperty<TirePressure>[] getTirePressures() {
+    public Property<TirePressure>[] getTirePressures() {
         return tirePressures;
     }
 
@@ -291,9 +291,9 @@ public class DiagnosticsState extends CommandWithProperties {
      * @param tireLocation The tire location
      * @return The tire pressure.
      */
-    @Nullable public ObjectProperty<TirePressure> getTirePressure(TireLocation tireLocation) {
+    @Nullable public Property<TirePressure> getTirePressure(TireLocation tireLocation) {
         for (int i = 0; i < tirePressures.length; i++) {
-            ObjectProperty<TirePressure> pressure = tirePressures[i];
+            Property<TirePressure> pressure = tirePressures[i];
             if (pressure != null && pressure.getValue().getTireLocation() == tireLocation)
                 return pressure;
         }
@@ -304,7 +304,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The tire temperatures.
      */
-    public ObjectProperty<TireTemperature>[] getTireTemperatures() {
+    public Property<TireTemperature>[] getTireTemperatures() {
         return tireTemperatures;
     }
 
@@ -314,10 +314,10 @@ public class DiagnosticsState extends CommandWithProperties {
      * @param tireLocation The tire location.
      * @return The tire temperature.
      */
-    @Nullable public ObjectProperty<TireTemperature> getTireTemperature(TireLocation
+    @Nullable public Property<TireTemperature> getTireTemperature(TireLocation
                                                                                 tireLocation) {
         for (int i = 0; i < tireTemperatures.length; i++) {
-            ObjectProperty<TireTemperature> temperature = tireTemperatures[i];
+            Property<TireTemperature> temperature = tireTemperatures[i];
             if (temperature != null && temperature.getValue().getTireLocation() == tireLocation)
                 return temperature;
         }
@@ -328,7 +328,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The wheel rpms.
      */
-    public ObjectProperty<WheelRpm>[] getWheelRpms() {
+    public Property<WheelRpm>[] getWheelRpms() {
         return wheelRpms;
     }
 
@@ -338,9 +338,9 @@ public class DiagnosticsState extends CommandWithProperties {
      * @param tireLocation The tire location.
      * @return The tire temperature.
      */
-    @Nullable public ObjectProperty<WheelRpm> getWheelRpm(TireLocation tireLocation) {
+    @Nullable public Property<WheelRpm> getWheelRpm(TireLocation tireLocation) {
         for (int i = 0; i < wheelRpms.length; i++) {
-            ObjectProperty<WheelRpm> wheelRpm = wheelRpms[i];
+            Property<WheelRpm> wheelRpm = wheelRpms[i];
             if (wheelRpm.getValue() != null && wheelRpm.getValue().getTireLocation() == tireLocation)
                 return wheelRpm;
         }
@@ -351,25 +351,25 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The trouble codes.
      */
-    public ObjectProperty<DiagnosticsTroubleCode>[] getTroubleCodes() {
+    public Property<DiagnosticsTroubleCode>[] getTroubleCodes() {
         return troubleCodes;
     }
 
     /**
      * @return The mileage meters.
      */
-    public ObjectPropertyInteger getMileageMeters() {
+    public PropertyInteger getMileageMeters() {
         return mileageMeters;
     }
 
     DiagnosticsState(byte[] bytes) {
         super(bytes);
 
-        ArrayList<ObjectProperty> checkControlMessages = new ArrayList<>();
-        ArrayList<ObjectProperty> tirePressures = new ArrayList<>();
-        ArrayList<ObjectProperty> tireTemperatures = new ArrayList<>();
-        ArrayList<ObjectProperty> wheelRpms = new ArrayList<>();
-        ArrayList<ObjectProperty> troubleCodes = new ArrayList<>();
+        ArrayList<Property> checkControlMessages = new ArrayList<>();
+        ArrayList<Property> tirePressures = new ArrayList<>();
+        ArrayList<Property> tireTemperatures = new ArrayList<>();
+        ArrayList<Property> wheelRpms = new ArrayList<>();
+        ArrayList<Property> troubleCodes = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
@@ -417,28 +417,28 @@ public class DiagnosticsState extends CommandWithProperties {
                     case IDENTIFIER_BATTERY_LEVEL:
                         return batteryLevel.update(p);
                     case IDENTIFIER_CHECK_CONTROL_MESSAGES:
-                        ObjectProperty<CheckControlMessage> message =
-                                new ObjectProperty<>(CheckControlMessage.class, p);
+                        Property<CheckControlMessage> message =
+                                new Property<>(CheckControlMessage.class, p);
                         checkControlMessages.add(message);
                         return message;
                     case IDENTIFIER_TIRE_PRESSURES:
-                        ObjectProperty<TirePressure> tirePressure =
-                                new ObjectProperty<>(TirePressure.class, p);
+                        Property<TirePressure> tirePressure =
+                                new Property<>(TirePressure.class, p);
                         tirePressures.add(tirePressure);
                         return tirePressure;
                     case IDENTIFIER_TIRE_TEMPERATURES:
-                        ObjectProperty<TireTemperature> tireTemperature =
-                                new ObjectProperty<>(TireTemperature.class, p);
+                        Property<TireTemperature> tireTemperature =
+                                new Property<>(TireTemperature.class, p);
                         tireTemperatures.add(tireTemperature);
                         return tireTemperature;
                     case IDENTIFIER_WHEEL_RPM:
-                        ObjectProperty<WheelRpm> wheelRpm =
-                                new ObjectProperty<>(WheelRpm.class, p);
+                        Property<WheelRpm> wheelRpm =
+                                new Property<>(WheelRpm.class, p);
                         wheelRpms.add(wheelRpm);
                         return wheelRpm;
                     case IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE:
-                        ObjectProperty<DiagnosticsTroubleCode> troubleCode =
-                                new ObjectProperty<>(DiagnosticsTroubleCode.class, p);
+                        Property<DiagnosticsTroubleCode> troubleCode =
+                                new Property<>(DiagnosticsTroubleCode.class, p);
                         troubleCodes.add(troubleCode);
                         return troubleCode;
                     case IDENTIFIER_MILEAGE_METERS:
@@ -448,11 +448,11 @@ public class DiagnosticsState extends CommandWithProperties {
                 return null;
             });
 
-            this.checkControlMessages = checkControlMessages.toArray(new ObjectProperty[0]);
-            this.tirePressures = tirePressures.toArray(new ObjectProperty[0]);
-            this.tireTemperatures = tireTemperatures.toArray(new ObjectProperty[0]);
-            this.wheelRpms = wheelRpms.toArray(new ObjectProperty[0]);
-            this.troubleCodes = troubleCodes.toArray(new ObjectProperty[0]);
+            this.checkControlMessages = checkControlMessages.toArray(new Property[0]);
+            this.tirePressures = tirePressures.toArray(new Property[0]);
+            this.tireTemperatures = tireTemperatures.toArray(new Property[0]);
+            this.wheelRpms = wheelRpms.toArray(new Property[0]);
+            this.troubleCodes = troubleCodes.toArray(new Property[0]);
         }
     }
 
@@ -488,44 +488,44 @@ public class DiagnosticsState extends CommandWithProperties {
         // level 8
         batteryLevel = builder.batteryLevel;
 
-        checkControlMessages = builder.checkControlMessages.toArray(new ObjectProperty[0]);
-        tirePressures = builder.tirePressures.toArray(new ObjectProperty[0]);
-        tireTemperatures = builder.tireTemperatures.toArray(new ObjectProperty[0]);
-        wheelRpms = builder.wheelRpms.toArray(new ObjectProperty[0]);
-        troubleCodes = builder.troubleCodes.toArray(new ObjectProperty[0]);
+        checkControlMessages = builder.checkControlMessages.toArray(new Property[0]);
+        tirePressures = builder.tirePressures.toArray(new Property[0]);
+        tireTemperatures = builder.tireTemperatures.toArray(new Property[0]);
+        wheelRpms = builder.wheelRpms.toArray(new Property[0]);
+        troubleCodes = builder.troubleCodes.toArray(new Property[0]);
         mileageMeters = builder.mileageMeters;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectPropertyInteger mileage;
-        private ObjectPropertyInteger oilTemperature;
-        private ObjectPropertyInteger speed;
-        private ObjectPropertyInteger rpm;
-        private ObjectProperty<Double> fuelLevel;
-        private ObjectPropertyInteger range;
-        private ObjectProperty<WasherFluidLevel> washerFluidLevel;
-        private ObjectProperty<Float> batteryVoltage;
-        private ObjectProperty<Float> adBlueLevel;
-        private ObjectPropertyInteger distanceDrivenSinceReset;
-        private ObjectPropertyInteger distanceDrivenSinceEngineStart;
-        private ObjectProperty<Float> fuelVolume;
+        private PropertyInteger mileage;
+        private PropertyInteger oilTemperature;
+        private PropertyInteger speed;
+        private PropertyInteger rpm;
+        private Property<Double> fuelLevel;
+        private PropertyInteger range;
+        private Property<WasherFluidLevel> washerFluidLevel;
+        private Property<Float> batteryVoltage;
+        private Property<Float> adBlueLevel;
+        private PropertyInteger distanceDrivenSinceReset;
+        private PropertyInteger distanceDrivenSinceEngineStart;
+        private Property<Float> fuelVolume;
 
-        private ObjectProperty<Boolean> antiLockBrakingActive;
-        private ObjectPropertyInteger engineCoolantTemperature;
-        private ObjectProperty<Float> engineTotalOperatingHours;
-        private ObjectProperty<Float> engineTotalFuelConsumption;
-        private ObjectProperty<BrakeFluidLevel> brakeFluidLevel;
-        private ObjectProperty<Double> engineTorque;
-        private ObjectProperty<Double> engineLoad;
-        private ObjectPropertyInteger wheelBasedSpeed;
+        private Property<Boolean> antiLockBrakingActive;
+        private PropertyInteger engineCoolantTemperature;
+        private Property<Float> engineTotalOperatingHours;
+        private Property<Float> engineTotalFuelConsumption;
+        private Property<BrakeFluidLevel> brakeFluidLevel;
+        private Property<Double> engineTorque;
+        private Property<Double> engineLoad;
+        private PropertyInteger wheelBasedSpeed;
 
-        private ObjectProperty<Double> batteryLevel;
-        private List<ObjectProperty> tirePressures = new ArrayList<>();
-        private List<ObjectProperty> tireTemperatures = new ArrayList<>();
-        private List<ObjectProperty> wheelRpms = new ArrayList<>();
-        private List<ObjectProperty> checkControlMessages = new ArrayList<>();
-        private List<ObjectProperty> troubleCodes = new ArrayList<>();
-        private ObjectPropertyInteger mileageMeters;
+        private Property<Double> batteryLevel;
+        private List<Property> tirePressures = new ArrayList<>();
+        private List<Property> tireTemperatures = new ArrayList<>();
+        private List<Property> wheelRpms = new ArrayList<>();
+        private List<Property> checkControlMessages = new ArrayList<>();
+        private List<Property> troubleCodes = new ArrayList<>();
+        private PropertyInteger mileageMeters;
 
         public Builder() {
             super(TYPE);
@@ -539,7 +539,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param mileage The mileage.
          * @return The builder.
          */
-        public Builder setMileage(ObjectPropertyInteger mileage) {
+        public Builder setMileage(PropertyInteger mileage) {
             this.mileage = mileage;
             mileage.update(IDENTIFIER_MILEAGE, false, 3);
             addProperty(mileage);
@@ -550,7 +550,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param oilTemperature The oil temperature in Celsius.
          * @return The builder.
          */
-        public Builder setOilTemperature(ObjectPropertyInteger oilTemperature) {
+        public Builder setOilTemperature(PropertyInteger oilTemperature) {
             this.oilTemperature = oilTemperature;
             oilTemperature.update(IDENTIFIER_OIL_TEMPERATURE, false, 2);
             addProperty(oilTemperature);
@@ -561,7 +561,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param speed The speed in km/h.
          * @return The builder.
          */
-        public Builder setSpeed(ObjectPropertyInteger speed) {
+        public Builder setSpeed(PropertyInteger speed) {
             this.speed = speed;
             speed.update(IDENTIFIER_SPEED, false, 2);
             addProperty(speed);
@@ -572,7 +572,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param rpm The RPM of the engine.
          * @return The builder.
          */
-        public Builder setRpm(ObjectPropertyInteger rpm) {
+        public Builder setRpm(PropertyInteger rpm) {
             this.rpm = rpm;
             rpm.update(IDENTIFIER_RPM, false, 2);
             addProperty(rpm);
@@ -583,7 +583,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param fuelLevel The fuel level percentage between 0 and 1.
          * @return The builder.
          */
-        public Builder setFuelLevel(ObjectProperty<Double> fuelLevel) {
+        public Builder setFuelLevel(Property<Double> fuelLevel) {
             fuelLevel.setIdentifier(IDENTIFIER_FUEL_LEVEL);
             this.fuelLevel = fuelLevel;
             addProperty(fuelLevel);
@@ -594,7 +594,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param range The estimated range.
          * @return The builder.
          */
-        public Builder setRange(ObjectPropertyInteger range) {
+        public Builder setRange(PropertyInteger range) {
             this.range = range;
             range.update(IDENTIFIER_RANGE, false, 2);
             addProperty(range);
@@ -606,7 +606,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setWasherFluidLevel
-        (ObjectProperty<WasherFluidLevel> washerFluidLevel) {
+        (Property<WasherFluidLevel> washerFluidLevel) {
             this.washerFluidLevel = washerFluidLevel;
             washerFluidLevel.setIdentifier(IDENTIFIER_WASHER_FLUID_LEVEL);
             addProperty(washerFluidLevel);
@@ -617,7 +617,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param batteryVoltage The battery voltage.
          * @return The builder.
          */
-        public Builder setBatteryVoltage(ObjectProperty<Float> batteryVoltage) {
+        public Builder setBatteryVoltage(Property<Float> batteryVoltage) {
             this.batteryVoltage = batteryVoltage;
             batteryVoltage.setIdentifier(IDENTIFIER_BATTERY_VOLTAGE);
             addProperty(batteryVoltage);
@@ -628,7 +628,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param adBlueLevel The adBlue level in liters.
          * @return The builder.
          */
-        public Builder setAdBlueLevel(ObjectProperty<Float> adBlueLevel) {
+        public Builder setAdBlueLevel(Property<Float> adBlueLevel) {
             this.adBlueLevel = adBlueLevel;
             adBlueLevel.setIdentifier(IDENTIFIER_AD_BLUE_LEVEL);
             addProperty(adBlueLevel);
@@ -639,7 +639,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param distanceDrivenSinceReset The distance driven in km since reset.
          * @return The builder.
          */
-        public Builder setDistanceDrivenSinceReset(ObjectPropertyInteger
+        public Builder setDistanceDrivenSinceReset(PropertyInteger
                                                            distanceDrivenSinceReset) {
             this.distanceDrivenSinceReset = distanceDrivenSinceReset;
             distanceDrivenSinceReset.update(IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET,
@@ -652,7 +652,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param distanceDrivenSinceEngineStart The distance driven in km since engine start
          * @return The builder.
          */
-        public Builder setDistanceDrivenSinceEngineStart(ObjectPropertyInteger
+        public Builder setDistanceDrivenSinceEngineStart(PropertyInteger
                                                                  distanceDrivenSinceEngineStart) {
             this.distanceDrivenSinceEngineStart = distanceDrivenSinceEngineStart;
             distanceDrivenSinceEngineStart.update(IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START,
@@ -665,7 +665,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param fuelVolume The fuel volume measured in liters.
          * @return The builder.
          */
-        public Builder setFuelVolume(ObjectProperty<Float> fuelVolume) {
+        public Builder setFuelVolume(Property<Float> fuelVolume) {
             this.fuelVolume = fuelVolume;
             fuelVolume.setIdentifier(IDENTIFIER_FUEL_VOLUME);
             addProperty(fuelVolume);
@@ -677,7 +677,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setAntiLockBrakingActive
-        (ObjectProperty<Boolean> antiLockBrakingActive) {
+        (Property<Boolean> antiLockBrakingActive) {
             this.antiLockBrakingActive = antiLockBrakingActive;
             antiLockBrakingActive.setIdentifier(IDENTIFIER_ANTI_LOCK_BRAKING_ACTIVE);
             addProperty(antiLockBrakingActive);
@@ -689,7 +689,7 @@ public class DiagnosticsState extends CommandWithProperties {
          *                                 negative.
          * @return The builder.
          */
-        public Builder setEngineCoolantTemperature(ObjectPropertyInteger
+        public Builder setEngineCoolantTemperature(PropertyInteger
                                                            engineCoolantTemperature) {
             this.engineCoolantTemperature = engineCoolantTemperature;
             engineCoolantTemperature.update(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE,
@@ -703,7 +703,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setEngineTotalOperatingHours
-        (ObjectProperty<Float> engineTotalOperatingHours) {
+        (Property<Float> engineTotalOperatingHours) {
             this.engineTotalOperatingHours = engineTotalOperatingHours;
             engineTotalOperatingHours.setIdentifier(IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
             addProperty(engineTotalOperatingHours);
@@ -716,7 +716,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setEngineTotalFuelConsumption
-        (ObjectProperty<Float> engineTotalFuelConsumption) {
+        (Property<Float> engineTotalFuelConsumption) {
             this.engineTotalFuelConsumption = engineTotalFuelConsumption;
             engineTotalFuelConsumption.setIdentifier(IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
             addProperty(engineTotalFuelConsumption);
@@ -728,7 +728,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setBrakeFluidLevel
-        (ObjectProperty<BrakeFluidLevel> brakeFluidLevel) {
+        (Property<BrakeFluidLevel> brakeFluidLevel) {
             this.brakeFluidLevel = brakeFluidLevel;
             brakeFluidLevel.setIdentifier(IDENTIFIER_BRAKE_FLUID_LEVEL);
             addProperty(brakeFluidLevel);
@@ -740,7 +740,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
 
-        public Builder setEngineTorque(ObjectProperty<Double> engineTorque) {
+        public Builder setEngineTorque(Property<Double> engineTorque) {
             this.engineTorque = engineTorque;
             engineTorque.setIdentifier(IDENTIFIER_ENGINE_TORQUE);
             addProperty(engineTorque);
@@ -751,7 +751,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param engineLoad The current engine load percentage between 0-1.
          * @return The builder.
          */
-        public Builder setEngineLoad(ObjectProperty<Double> engineLoad) {
+        public Builder setEngineLoad(Property<Double> engineLoad) {
             this.engineLoad = engineLoad;
             engineLoad.setIdentifier(IDENTIFIER_ENGINE_LOAD);
             addProperty(engineLoad);
@@ -763,7 +763,7 @@ public class DiagnosticsState extends CommandWithProperties {
          *                        be negative.
          * @return The builder.
          */
-        public Builder setWheelBasedSpeed(ObjectPropertyInteger wheelBasedSpeed) {
+        public Builder setWheelBasedSpeed(PropertyInteger wheelBasedSpeed) {
             this.wheelBasedSpeed = wheelBasedSpeed;
             wheelBasedSpeed.update(IDENTIFIER_WHEEL_BASED_SPEED, true, 2);
             addProperty(wheelBasedSpeed);
@@ -776,7 +776,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param batteryLevel The battery level.
          * @return The builder.
          */
-        public Builder setBatteryLevel(ObjectProperty<Double> batteryLevel) {
+        public Builder setBatteryLevel(Property<Double> batteryLevel) {
             this.batteryLevel = batteryLevel;
             batteryLevel.setIdentifier(IDENTIFIER_BATTERY_LEVEL);
             addProperty(batteryLevel);
@@ -789,7 +789,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param pressures The tire pressures.
          * @return The builder.
          */
-        public Builder setTirePressures(ObjectProperty<TirePressure>[]
+        public Builder setTirePressures(Property<TirePressure>[]
                                                 pressures) {
             tirePressures.clear();
             for (int i = 0; i < pressures.length; i++) {
@@ -806,7 +806,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder addTirePressure
-        (ObjectProperty<TirePressure> pressure) {
+        (Property<TirePressure> pressure) {
             pressure.setIdentifier(IDENTIFIER_TIRE_PRESSURES);
             addProperty(pressure);
             tirePressures.add(pressure);
@@ -820,7 +820,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setTireTemperatures
-        (ObjectProperty<TireTemperature>[] temperatures) {
+        (Property<TireTemperature>[] temperatures) {
             this.tireTemperatures.clear();
 
             for (int i = 0; i < temperatures.length; i++) {
@@ -837,7 +837,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder addTireTemperature
-        (ObjectProperty<TireTemperature> temperature) {
+        (Property<TireTemperature> temperature) {
             temperature.setIdentifier(IDENTIFIER_TIRE_TEMPERATURES);
             addProperty(temperature);
             tireTemperatures.add(temperature);
@@ -850,7 +850,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param wheelRpms The wheel's RPM.
          * @return The builder.
          */
-        public Builder setWheelRpms(ObjectProperty<WheelRpm>[] wheelRpms) {
+        public Builder setWheelRpms(Property<WheelRpm>[] wheelRpms) {
             for (int i = 0; i < wheelRpms.length; i++) {
                 addWheelRpm(wheelRpms[i]);
             }
@@ -864,7 +864,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param wheelRpm The wheel RPM.
          * @return The builder.
          */
-        public Builder addWheelRpm(ObjectProperty<WheelRpm> wheelRpm) {
+        public Builder addWheelRpm(Property<WheelRpm> wheelRpm) {
             wheelRpm.setIdentifier(IDENTIFIER_WHEEL_RPM);
             addProperty(wheelRpm);
             wheelRpms.add(wheelRpm);
@@ -872,10 +872,10 @@ public class DiagnosticsState extends CommandWithProperties {
         }
 
         public Builder setCheckControlMessages
-                (ObjectProperty<CheckControlMessage>[] checkControlMessages) {
+                (Property<CheckControlMessage>[] checkControlMessages) {
             this.checkControlMessages.clear();
 
-            for (ObjectProperty<CheckControlMessage> checkControlMessage :
+            for (Property<CheckControlMessage> checkControlMessage :
                     checkControlMessages) {
                 addCheckControlMessage(checkControlMessage);
             }
@@ -884,17 +884,17 @@ public class DiagnosticsState extends CommandWithProperties {
         }
 
         public void addCheckControlMessage
-                (ObjectProperty<CheckControlMessage> checkControlMessage) {
+                (Property<CheckControlMessage> checkControlMessage) {
             checkControlMessage.setIdentifier(IDENTIFIER_CHECK_CONTROL_MESSAGES);
             addProperty(checkControlMessage);
             checkControlMessages.add(checkControlMessage);
         }
 
         public Builder setTroubleCodes
-                (ObjectProperty<DiagnosticsTroubleCode>[] troubleCodes) {
+                (Property<DiagnosticsTroubleCode>[] troubleCodes) {
             this.troubleCodes.clear();
 
-            for (ObjectProperty<DiagnosticsTroubleCode> troubleCode :
+            for (Property<DiagnosticsTroubleCode> troubleCode :
                     troubleCodes) {
                 addTroubleCode(troubleCode);
             }
@@ -903,7 +903,7 @@ public class DiagnosticsState extends CommandWithProperties {
         }
 
         public Builder addTroubleCode
-                (ObjectProperty<DiagnosticsTroubleCode> code) {
+                (Property<DiagnosticsTroubleCode> code) {
             code.setIdentifier(IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE);
             addProperty(code);
             troubleCodes.add(code);
@@ -914,7 +914,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param mileageMeters The mileage meters.
          * @return The builder.
          */
-        public Builder setMileageMeters(ObjectPropertyInteger mileageMeters) {
+        public Builder setMileageMeters(PropertyInteger mileageMeters) {
             this.mileageMeters = mileageMeters;
             mileageMeters.update(IDENTIFIER_MILEAGE_METERS, false, 4);
             addProperty(mileageMeters);

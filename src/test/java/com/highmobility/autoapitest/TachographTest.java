@@ -7,8 +7,8 @@ import com.highmobility.autoapi.TachographState;
 import com.highmobility.autoapi.property.DriverCard;
 import com.highmobility.autoapi.property.DriverTimeState;
 import com.highmobility.autoapi.property.DriverWorkingState;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
@@ -75,10 +75,10 @@ public class TachographTest {
         builder.addDriverCard(new DriverCard(1, true));
         builder.addDriverCard(new DriverCard(2, true));
 
-        builder.setVehicleMotionDetected(new ObjectProperty<>(true));
-        builder.setVehicleOverspeed(new ObjectProperty<>(false));
+        builder.setVehicleMotionDetected(new Property<>(true));
+        builder.setVehicleOverspeed(new Property<>(false));
         builder.setVehicleDirection(TachographState.VehicleDirection.FORWARD);
-        builder.setVehicleSpeed(new ObjectPropertyInteger(80));
+        builder.setVehicleSpeed(new PropertyInteger(80));
 
         TachographState state = builder.build();
         assertTrue(state.equals(bytes));

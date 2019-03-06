@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 
 /**
@@ -29,13 +29,13 @@ import com.highmobility.autoapi.property.charging.ChargePortState;
 public class OpenCloseChargePort extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x14);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    ObjectProperty<ChargePortState> chargePortState = new ObjectProperty<>(ChargePortState.class,
+    Property<ChargePortState> chargePortState = new Property<>(ChargePortState.class,
             PROPERTY_IDENTIFIER);
 
     /**
      * @return The charge port state.
      */
-    public ObjectProperty<ChargePortState> getChargePortState() {
+    public Property<ChargePortState> getChargePortState() {
         return chargePortState;
     }
 

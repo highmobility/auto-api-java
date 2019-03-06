@@ -26,14 +26,14 @@ import com.highmobility.value.Bytes;
 
 import javax.annotation.Nullable;
 
-public class PropertyFailureComponent extends PropertyComponent {
+public class PropertyComponentFailure extends PropertyComponent {
     private static final byte IDENTIFIER = 0x03;
 
     byte failedPropertyIdentifier;
     String description;
     Reason reason;
 
-    public PropertyFailureComponent(Bytes bytes) throws CommandParseException {
+    public PropertyComponentFailure(Bytes bytes) throws CommandParseException {
         super(bytes);
         // TODO: 2019-02-28
     }
@@ -68,7 +68,7 @@ public class PropertyFailureComponent extends PropertyComponent {
      * @param description   The failure description.
      */
 
-    public PropertyFailureComponent(byte identifier, Reason failureReason, @Nullable String description) {
+    public PropertyComponentFailure(byte identifier, Reason failureReason, @Nullable String description) {
         super(IDENTIFIER, 1 + 1 + 1 + description.length());
 
         bytes[3] = identifier;

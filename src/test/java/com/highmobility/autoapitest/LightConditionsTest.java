@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetLightConditions;
 import com.highmobility.autoapi.LightConditions;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -34,8 +34,8 @@ public class LightConditionsTest {
 
     @Test public void build() {
         LightConditions.Builder builder = new LightConditions.Builder();
-        builder.setOutsideLight(new ObjectProperty<>(111000f));
-        builder.setInsideLight(new ObjectProperty<>(.25f));
+        builder.setOutsideLight(new Property<>(111000f));
+        builder.setInsideLight(new Property<>(.25f));
         Command command = builder.build();
         assertTrue(command.equals(bytes));
     }

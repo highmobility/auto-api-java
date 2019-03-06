@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum WiperIntensity {
+public enum WiperIntensity implements PropertyValueSingleByte {
     LEVEL_0((byte)0x00),
     LEVEL_1((byte)0x01),
     LEVEL_2((byte)0x02),

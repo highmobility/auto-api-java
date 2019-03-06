@@ -6,8 +6,8 @@ import com.highmobility.autoapi.GetNaviDestination;
 import com.highmobility.autoapi.NaviDestination;
 import com.highmobility.autoapi.SetNaviDestination;
 import com.highmobility.autoapi.property.Coordinates;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property;
+
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -65,8 +65,8 @@ public class NaviDestinationTest {
 
     @Test public void build() {
         NaviDestination.Builder builder = new NaviDestination.Builder();
-        builder.setCoordinates(new ObjectProperty<>(new Coordinates(52.520008, 13.404954)));
-        builder.setName(new ObjectPropertyString("Berlin"));
+        builder.setCoordinates(new Property<>(new Coordinates(52.520008, 13.404954)));
+        builder.setName(new PropertyString("Berlin"));
         Command state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }

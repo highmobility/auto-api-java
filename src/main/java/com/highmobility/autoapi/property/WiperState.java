@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum WiperState {
+public enum WiperState implements PropertyValueSingleByte {
     INACTIVE((byte)0x00),
     ACTIVE((byte)0x01),
     AUTOMATIC((byte)0x02);

@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectPropertyString;
+
 
 /**
  * Load a URL in the head unit browser. A URL shortener can be used in other cases. Note that for
@@ -29,12 +29,12 @@ import com.highmobility.autoapi.property.ObjectPropertyString;
 public class LoadUrl extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.BROWSER, 0x00);
     private static final byte IDENTIFIER = 0x01;
-    private ObjectPropertyString url = new ObjectPropertyString(IDENTIFIER);
+    private Property<String> url = new Property(String.class, IDENTIFIER);
 
     /**
      * @return The url that should be loaded to head unit.
      */
-    public ObjectPropertyString getUrl() {
+    public Property<String> getUrl() {
         return url;
     }
 

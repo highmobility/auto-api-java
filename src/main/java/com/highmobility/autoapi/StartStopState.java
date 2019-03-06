@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
@@ -32,12 +31,12 @@ import javax.annotation.Nullable;
 public class StartStopState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.START_STOP, 0x01);
     private static final byte ACTIVE_IDENTIFIER = 0x01;
-    ObjectProperty<Boolean> active;
+    Property<Boolean> active;
 
     /**
      * @return Whether the start stop is active.
      */
-    @Nullable public ObjectProperty<Boolean> isActive() {
+    @Nullable public Property<Boolean> isActive() {
         return active;
     }
 
@@ -45,7 +44,7 @@ public class StartStopState extends CommandWithProperties {
         super(bytes);
 
         Property p = getProperty((byte) 0x01);
-        if (p != null) active = new ObjectProperty<>(Boolean.class, p);
+        if (p != null) active = new Property<>(Boolean.class, p);
     }
 
     @Override public boolean isState() {
@@ -58,7 +57,7 @@ public class StartStopState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectProperty<Boolean> active;
+        private Property<Boolean> active;
 
         public Builder() {
             super(TYPE);
@@ -68,7 +67,7 @@ public class StartStopState extends CommandWithProperties {
          * @param active Whether the start stop is active.
          * @return The builder.
          */
-        public Builder setIsActive(ObjectProperty<Boolean> active) {
+        public Builder setIsActive(Property<Boolean> active) {
             this.active = active;
             active.setIdentifier(ACTIVE_IDENTIFIER);
             addProperty(active);

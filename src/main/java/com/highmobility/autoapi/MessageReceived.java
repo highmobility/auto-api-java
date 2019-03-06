@@ -20,9 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,20 +38,20 @@ public class MessageReceived extends CommandWithProperties {
     private static final byte IDENTIFIER_RECIPIENT = 0x01;
     private static final byte IDENTIFIER_MESSAGE = 0x02;
 
-    private ObjectPropertyString handle = new ObjectPropertyString(IDENTIFIER_RECIPIENT);
-    private ObjectPropertyString message = new ObjectPropertyString(IDENTIFIER_MESSAGE);;
+    private Property<String> handle = new Property(String.class, IDENTIFIER_RECIPIENT);
+    private Property<String> message = new Property(String.class, IDENTIFIER_MESSAGE);;
 
     /**
      * @return The sender handle (e.g. phone number).
      */
-    @Nullable public ObjectPropertyString getSenderHandle() {
+    @Nullable public Property<String> getSenderHandle() {
         return handle;
     }
 
     /**
      * @return The message content text.
      */
-    public ObjectPropertyString getMessage() {
+    public Property<String> getMessage() {
         return message;
     }
 

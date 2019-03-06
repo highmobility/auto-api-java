@@ -5,7 +5,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetValetMode;
 import com.highmobility.autoapi.ValetMode;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -58,7 +58,7 @@ public class ValetModeTest {
 
     @Test public void builder() {
         ValetMode.Builder builder = new ValetMode.Builder();
-        builder.setActive(new ObjectProperty<>(true));
+        builder.setActive(new Property<>(true));
         testState(builder.build());
     }
 }

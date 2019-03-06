@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
@@ -36,10 +35,10 @@ public class SetTemperatureSettings extends CommandWithProperties {
     private static final byte IDENTIFIER_PASSENGER_TEMPERATURE = 0x02;
     private static final byte IDENTIFIER_REAR_TEMPERATURE = 0x03;
 
-    ObjectProperty<Float> driverTemperature = new ObjectProperty(Float.class, IDENTIFIER_DRIVER_TEMPERATURE);
-    ObjectProperty<Float> passengerTemperature =
-            new ObjectProperty(Float.class, IDENTIFIER_PASSENGER_TEMPERATURE);
-    ObjectProperty<Float> rearTemperature = new ObjectProperty(Float.class, IDENTIFIER_REAR_TEMPERATURE);
+    Property<Float> driverTemperature = new Property(Float.class, IDENTIFIER_DRIVER_TEMPERATURE);
+    Property<Float> passengerTemperature =
+            new Property(Float.class, IDENTIFIER_PASSENGER_TEMPERATURE);
+    Property<Float> rearTemperature = new Property(Float.class, IDENTIFIER_REAR_TEMPERATURE);
 
     /**
      * @return The driver temperature.

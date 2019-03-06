@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
 
 import javax.annotation.Nullable;
 
@@ -34,14 +34,14 @@ public class OffroadState extends CommandWithProperties {
     private static final byte IDENTIFIER_ROUTE_INCLINE = 0x01;
     private static final byte IDENTIFIER_WHEEL_SUSPENSION = 0x02;
 
-    ObjectPropertyInteger routeIncline = new ObjectPropertyInteger(IDENTIFIER_ROUTE_INCLINE, false);
-    ObjectProperty<Double> wheelSuspension =
-            new ObjectProperty<>(Double.class, IDENTIFIER_WHEEL_SUSPENSION);
+    PropertyInteger routeIncline = new PropertyInteger(IDENTIFIER_ROUTE_INCLINE, false);
+    Property<Double> wheelSuspension =
+            new Property<>(Double.class, IDENTIFIER_WHEEL_SUSPENSION);
 
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.
      */
-    @Nullable public ObjectPropertyInteger getRouteIncline() {
+    @Nullable public PropertyInteger getRouteIncline() {
         return routeIncline;
     }
 
@@ -49,7 +49,7 @@ public class OffroadState extends CommandWithProperties {
      * @return The wheel suspension level percentage, whereas 0 is no suspension and 1 maximum.
      * suspension
      */
-    @Nullable public ObjectProperty<Double> getWheelSuspension() {
+    @Nullable public Property<Double> getWheelSuspension() {
         return wheelSuspension;
     }
 
@@ -81,8 +81,8 @@ public class OffroadState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectPropertyInteger routeIncline;
-        private ObjectProperty<Double> wheelSuspension;
+        private PropertyInteger routeIncline;
+        private Property<Double> wheelSuspension;
 
         public Builder() {
             super(TYPE);
@@ -93,7 +93,7 @@ public class OffroadState extends CommandWithProperties {
          *                     for decline.
          * @return The builder.
          */
-        public Builder setRouteIncline(ObjectPropertyInteger routeIncline) {
+        public Builder setRouteIncline(PropertyInteger routeIncline) {
             this.routeIncline = routeIncline;
             routeIncline.update(IDENTIFIER_ROUTE_INCLINE, false, 2);
             addProperty(routeIncline);
@@ -105,7 +105,7 @@ public class OffroadState extends CommandWithProperties {
          *                        and 1 maximum suspension.
          * @return The builder.
          */
-        public Builder setWheelSuspension(ObjectProperty<Double> wheelSuspension) {
+        public Builder setWheelSuspension(Property<Double> wheelSuspension) {
             this.wheelSuspension = wheelSuspension;
             wheelSuspension.setIdentifier(IDENTIFIER_WHEEL_SUSPENSION);
             addProperty(wheelSuspension);

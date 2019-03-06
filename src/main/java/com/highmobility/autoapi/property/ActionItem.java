@@ -21,10 +21,9 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
-public class ActionItem extends Property {
-    public static final byte IDENTIFIER = 0x02;
+public class ActionItem extends PropertyValueObject {
     int actionIdentifier;
     String name;
 
@@ -43,19 +42,32 @@ public class ActionItem extends Property {
     }
 
     public ActionItem(int actionIdentifier, String name) {
-        super(IDENTIFIER, 1 + name.length());
-        this.actionIdentifier = actionIdentifier;
-        this.name = name;
-
-        bytes[6] = (byte) getActionIdentifier();
-        ByteUtils.setBytes(bytes, Property.stringToBytes(name), 7);
+        super(1 + name.length());
+        update(actionIdentifier, name);
     }
 
-    public ActionItem(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 8) throw new CommandParseException();
-        this.bytes = bytes;
-        actionIdentifier = bytes[6];
-        name = Property.getString(bytes, 7, bytes.length - 7);
+    public ActionItem() {
+        super();
+    }
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length == 0) throw new CommandParseException();
+
+        actionIdentifier = bytes[0];
+        if (bytes.length > 1) name = Property.getString(getRange(1, bytes.length - 1));
+    }
+
+    public void update(int actionIdentifier, String name) {
+        this.actionIdentifier = actionIdentifier;
+        this.name = name;
+        bytes = new byte[1 + name.length()];
+
+        set(0, Property.intToBytes(actionIdentifier, 1));
+        set(1, Property.stringToBytes(name));
+    }
+
+    public void update(ActionItem value) {
+        update(value.actionIdentifier, value.name);
     }
 }

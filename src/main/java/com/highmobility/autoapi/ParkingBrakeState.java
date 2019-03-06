@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -32,12 +32,12 @@ public class ParkingBrakeState extends CommandWithProperties {
 
     private static final byte ACTIVE_IDENTIFIER = 0x01;
 
-    ObjectProperty<Boolean> active = new ObjectProperty<>(Boolean.class, ACTIVE_IDENTIFIER);
+    Property<Boolean> active = new Property<>(Boolean.class, ACTIVE_IDENTIFIER);
 
     /**
      * @return Whether parking brake is active.
      */
-    @Nullable public ObjectProperty<Boolean> isActive() {
+    @Nullable public Property<Boolean> isActive() {
         return active;
     }
 
@@ -65,7 +65,7 @@ public class ParkingBrakeState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectProperty<Boolean> active;
+        private Property<Boolean> active;
 
         public Builder() {
             super(TYPE);
@@ -75,7 +75,7 @@ public class ParkingBrakeState extends CommandWithProperties {
          * @param active The parking brake state.
          * @return The builder.
          */
-        public Builder setIsActive(ObjectProperty<Boolean> active) {
+        public Builder setIsActive(Property<Boolean> active) {
             this.active = active;
             active.setIdentifier(ACTIVE_IDENTIFIER);
             addProperty(active);

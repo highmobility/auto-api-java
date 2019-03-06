@@ -21,9 +21,9 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ActionItem;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,15 +41,15 @@ public class Notification extends CommandWithProperties {
     private static final byte TEXT_IDENTIFIER = 0x01;
     private static final byte RECEIVED_ACTION_IDENTIFIER = 0x10;
 
-    ObjectPropertyString text;
+    Property<String> text;
     ActionItem[] actions;
-    ObjectPropertyInteger receivedAction = new ObjectPropertyInteger(RECEIVED_ACTION_IDENTIFIER,
+    PropertyInteger receivedAction = new PropertyInteger(RECEIVED_ACTION_IDENTIFIER,
             false);
 
     /**
      * @return Notification text.
      */
-    @Nullable public ObjectPropertyString getText() {
+    @Nullable public Property<String> getText() {
         return text;
     }
 
@@ -73,7 +73,7 @@ public class Notification extends CommandWithProperties {
     /**
      * @return The received action.
      */
-    @Nullable public ObjectPropertyInteger getReceivedAction() {
+    @Nullable public PropertyInteger getReceivedAction() {
         return receivedAction;
     }
 
@@ -87,7 +87,7 @@ public class Notification extends CommandWithProperties {
 
         ArrayList<Property> properties = new ArrayList<>();
 
-        this.text = new ObjectPropertyString(TEXT_IDENTIFIER, text);
+        this.text = new Property(String.class, TEXT_IDENTIFIER, text);
         properties.add(this.text);
 
         this.actions = actions;
@@ -105,11 +105,11 @@ public class Notification extends CommandWithProperties {
         super(bytes);
         ArrayList<ActionItem> actionsBuilder = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case TEXT_IDENTIFIER:
-                        text = new ObjectPropertyString(p);
+                        text = new Property(String.class, p);
                         return text;
                     case ActionItem.IDENTIFIER:
                         ActionItem item = new ActionItem(p.getByteArray());
@@ -135,8 +135,8 @@ public class Notification extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
         private List<ActionItem> actions = new ArrayList<>();
-        ObjectPropertyString text;
-        ObjectPropertyInteger receivedAction;
+        Property<String> text;
+        PropertyInteger receivedAction;
 
         public Builder() {
             super(TYPE);
@@ -170,7 +170,7 @@ public class Notification extends CommandWithProperties {
          * @param text The notification text.
          * @return The builder.
          */
-        public Builder setText(ObjectPropertyString text) {
+        public Builder setText(Property<String> text) {
             this.text = text;
             text.setIdentifier(TEXT_IDENTIFIER);
             addProperty(text);
@@ -181,7 +181,7 @@ public class Notification extends CommandWithProperties {
          * @param receivedAction The received action.
          * @return The builder.
          */
-        public Builder setReceivedAction(ObjectPropertyInteger receivedAction) {
+        public Builder setReceivedAction(PropertyInteger receivedAction) {
             this.receivedAction = receivedAction;
             receivedAction.update(RECEIVED_ACTION_IDENTIFIER, false, 1);
             addProperty(receivedAction);

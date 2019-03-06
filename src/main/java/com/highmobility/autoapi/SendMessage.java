@@ -20,7 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectPropertyString;
+
+
+import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -34,20 +36,20 @@ public class SendMessage extends CommandWithProperties {
     private static final byte RECIPIENT_IDENTIFIER = 0x01;
     private static final byte MESSAGE_IDENTIFIER = 0x02;
 
-    ObjectPropertyString recipientHandle = new ObjectPropertyString(RECIPIENT_IDENTIFIER);
-    ObjectPropertyString message = new ObjectPropertyString(MESSAGE_IDENTIFIER);
+    Property<String> recipientHandle = new Property(String.class, RECIPIENT_IDENTIFIER);
+    Property<String> message = new Property(String.class, MESSAGE_IDENTIFIER);
 
     /**
      * @return The recipient handle (e.g. phone number).
      */
-    @Nullable public ObjectPropertyString getRecipientHandle() {
+    @Nullable public Property<String> getRecipientHandle() {
         return recipientHandle;
     }
 
     /**
      * @return The message content text.
      */
-    @Nullable public ObjectPropertyString getMessage() {
+    @Nullable public Property<String> getMessage() {
         return message;
     }
 
@@ -78,8 +80,8 @@ public class SendMessage extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectPropertyString message;
-        private ObjectPropertyString recipientHandle;
+        private Property<String> message;
+        private Property<String> recipientHandle;
 
         public Builder() {
             super(TYPE);
@@ -89,7 +91,7 @@ public class SendMessage extends CommandWithProperties {
          * @param message The message content text.
          * @return The builder.
          */
-        public Builder setMessage(ObjectPropertyString message) {
+        public Builder setMessage(Property<String> message) {
             this.message = message;
             addProperty(message.setIdentifier(MESSAGE_IDENTIFIER));
             return this;
@@ -99,7 +101,7 @@ public class SendMessage extends CommandWithProperties {
          * @param recipientHandle The recipient handle (e.g. phone number).
          * @return The builder.
          */
-        public Builder setRecipientHandle(ObjectPropertyString recipientHandle) {
+        public Builder setRecipientHandle(Property<String> recipientHandle) {
             this.recipientHandle = recipientHandle;
             addProperty(recipientHandle.setIdentifier(RECIPIENT_IDENTIFIER));
             return this;

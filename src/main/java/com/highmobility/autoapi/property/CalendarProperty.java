@@ -25,37 +25,39 @@ import com.highmobility.utils.ByteUtils;
 
 import java.util.Calendar;
 
-public class CalendarProperty extends ObjectProperty {
-    public static final int CALENDAR_SIZE = 8;
 
-    private Calendar calendar;
-
-    public Calendar getValue() {
-        return calendar;
-    }
-
-    public CalendarProperty(byte identifier) {
-        super(identifier);
-    }
-
-    public CalendarProperty(Calendar c) {
-        this((byte) 0x00, c);
-    }
-
-    public CalendarProperty(byte identifier, Calendar calendar) {
-        super(identifier, CALENDAR_SIZE);
-        this.calendar = calendar;
-        ByteUtils.setBytes(bytes, Property.calendarToBytes(calendar), 6);
-    }
-
-    public CalendarProperty(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= CALENDAR_SIZE) calendar = Property.getCalendar(p.getValueBytesArray());
-        return this;
-    }
-}
+// TODO: 2019-03-04 try use as <Calendar>
+//public class CalendarProperty extends ObjectProperty {
+//    public static final int CALENDAR_SIZE = 8;
+//
+//    private Property<Calendar> calendar;
+//
+//    public Calendar getValue() {
+//        return calendar;
+//    }
+//
+//    public CalendarProperty(byte identifier) {
+//        super(identifier);
+//    }
+//
+//    public CalendarProperty(Calendar c) {
+//        this((byte) 0x00, c);
+//    }
+//
+//    public CalendarProperty(byte identifier, Calendar calendar) {
+//        super(identifier, CALENDAR_SIZE);
+//        this.calendar = calendar;
+//        ByteUtils.setBytes(bytes, Property.calendarToBytes(calendar), 6);
+//    }
+//
+//    public CalendarProperty(Property p) throws CommandParseException {
+//        super(p);
+//        update(p);
+//    }
+//
+//    @Override public Property update(Property p) throws CommandParseException {
+//        super.update(p);
+//        if (p.getValueLength() >= CALENDAR_SIZE) calendar = Property.getCalendar(p.getValueBytesArray());
+//        return this;
+//    }
+//}

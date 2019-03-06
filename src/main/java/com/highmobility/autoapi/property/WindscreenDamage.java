@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum WindscreenDamage {
+public enum WindscreenDamage implements PropertyValueSingleByte {
     NO_IMPACT((byte)0x00),
     IMPACT_NO_DAMAGE((byte)0x01),
     DAMAGE_SMALLER_THAN_1((byte)0x02),

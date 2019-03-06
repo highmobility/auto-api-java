@@ -2,10 +2,11 @@ package com.highmobility.autoapi.property.windows;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.value.Location;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
-public class WindowOpenPercentage extends Property {
+public class WindowOpenPercentage extends PropertyValueObject {
     Location location;
     Double openPercentage;
 
@@ -23,23 +24,33 @@ public class WindowOpenPercentage extends Property {
         return openPercentage;
     }
 
-    public WindowOpenPercentage(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 8) throw new CommandParseException();
-        location = Location.fromByte(bytes[6]);
-        openPercentage = Property.getDouble(bytes, 7);
+    public WindowOpenPercentage(Location location, Double openPercentage) {
+        super(9);
+        update(location, openPercentage);
     }
 
-    public WindowOpenPercentage(Location location, Double openPercentage) {
-        super((byte) 0x00, getBytes(location, openPercentage));
+    public WindowOpenPercentage() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 9) throw new CommandParseException();
+        location = Location.fromByte(get(0));
+        openPercentage = Property.getDouble(getRange(1, 9));
+    }
+
+    public void update(Location location, Double openPercentage) {
         this.location = location;
         this.openPercentage = openPercentage;
+        bytes = new byte[9];
+
+        set(0, location.getByte());
+        set(1, Property.doubleToBytes(openPercentage));
     }
 
-    static byte[] getBytes(Location location, Double openPercentage) {
-        byte[] value = new byte[9];
-        value[0] = location.getByte();
-        ByteUtils.setBytes(value, Property.doubleToBytes(openPercentage), 1);
-        return value;
+    public void update(WindowOpenPercentage value) {
+        update(value.location, value.openPercentage);
     }
+
 }

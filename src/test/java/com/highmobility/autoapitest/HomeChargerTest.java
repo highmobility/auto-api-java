@@ -10,7 +10,7 @@ import com.highmobility.autoapi.HomeChargerState;
 import com.highmobility.autoapi.SetChargeCurrent;
 import com.highmobility.autoapi.SetPriceTariffs;
 import com.highmobility.autoapi.property.NetworkSecurity;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.property.homecharger.Charging;
 import com.highmobility.autoapi.property.homecharger.PlugType;
@@ -128,11 +128,11 @@ public class HomeChargerTest {
                         "0C000C010009004090000003455552" +
                         "0C000C010009023e99999a03455552");
 
-        ObjectProperty[] tariffs = new ObjectProperty[2];
+        Property[] tariffs = new Property[2];
 
-        tariffs[0] = new ObjectProperty(new PriceTariff(PriceTariff.PricingType.STARTING_FEE,
+        tariffs[0] = new Property(new PriceTariff(PriceTariff.PricingType.STARTING_FEE,
                 "EUR", 4.5f));
-        tariffs[1] = new ObjectProperty(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
+        tariffs[1] = new Property(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
                 .3f));
 
         Command cmd = new SetPriceTariffs(tariffs);
@@ -152,7 +152,7 @@ public class HomeChargerTest {
 
     @Test public void setPriceTariffs0Properties() {
         Bytes bytes = new Bytes("006013");
-        ObjectProperty[] tariffs = new ObjectProperty[0];
+        Property[] tariffs = new Property[0];
         Command cmd = new SetPriceTariffs(tariffs);
         assertTrue(TestUtils.bytesTheSame(cmd, bytes));
         SetPriceTariffs command = (SetPriceTariffs) CommandResolver.resolve(bytes);
@@ -162,11 +162,11 @@ public class HomeChargerTest {
     @Test(expected = IllegalArgumentException.class)
     public void failSamePriceTariffTypes() {
 
-        ObjectProperty[] tariffs = new ObjectProperty[2];
+        Property[] tariffs = new Property[2];
 
-        tariffs[0] = new ObjectProperty(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
+        tariffs[0] = new Property(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
                 4.5f));
-        tariffs[1] = new ObjectProperty(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
+        tariffs[1] = new Property(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
                 .3f));
 
         new SetPriceTariffs(tariffs).getByteArray();

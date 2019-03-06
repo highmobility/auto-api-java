@@ -20,9 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.value.Lock;
 
 import java.util.ArrayList;
@@ -40,20 +39,20 @@ public class ControlTrunk extends CommandWithProperties {
     private static final byte IDENTIFIER_LOCK = 0x01;
     private static final byte IDENTIFIER_POSITION = 0x02;
 
-    ObjectProperty<Lock> lock = new ObjectProperty<>(Lock.class, IDENTIFIER_LOCK);
-    ObjectProperty<Position> position = new ObjectProperty<>(Position.class, IDENTIFIER_POSITION);
+    Property<Lock> lock = new Property<>(Lock.class, IDENTIFIER_LOCK);
+    Property<Position> position = new Property<>(Position.class, IDENTIFIER_POSITION);
 
     /**
      * @return The trunk lock state.
      */
-    public ObjectProperty<Lock> getLock() {
+    public Property<Lock> getLock() {
         return lock;
     }
 
     /**
      * @return The trunk position.
      */
-    public ObjectProperty<Position> getPosition() {
+    public Property<Position> getPosition() {
         return position;
     }
 
@@ -85,8 +84,8 @@ public class ControlTrunk extends CommandWithProperties {
     ControlTrunk(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER_LOCK) {
                     return lock.update(p);
                 } else if (p.getPropertyIdentifier() == IDENTIFIER_POSITION) {

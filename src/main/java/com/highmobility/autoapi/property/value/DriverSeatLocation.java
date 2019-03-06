@@ -21,8 +21,9 @@
 package com.highmobility.autoapi.property.value;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
-public enum DriverSeatLocation {
+public enum DriverSeatLocation implements PropertyValueSingleByte {
     LEFT((byte)0x00),
     RIGHT((byte)0x01),
     CENTER((byte)0x02);

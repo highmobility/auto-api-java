@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -44,7 +43,7 @@ public class SetParkingBrake extends CommandWithProperties {
      * @param activate ObjectProperty<Boolean> indicating whether to activate parking brake.
      */
     public SetParkingBrake(boolean activate) {
-        super(TYPE.addProperty(new ObjectProperty<>(activate).setIdentifier(IDENTIFIER)));
+        super(TYPE.addProperty(new Property<>(activate).setIdentifier(IDENTIFIER)));
         this.activate = activate;
     }
 

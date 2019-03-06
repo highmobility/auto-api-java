@@ -11,9 +11,9 @@ import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.WindowsState;
 import com.highmobility.autoapi.property.CommandProperty;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
+
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.value.DisplayUnit;
@@ -101,7 +101,7 @@ public class VehicleStatusTest {
         assertTrue(command.getDriverSeatLocation() == DriverSeatLocation.LEFT);
         assertTrue(command.getEquipments().length == 2);
         int count = 0;
-        for (ObjectPropertyString s : command.getEquipments()) {
+        for (ObjectProperty<String> s : command.getEquipments()) {
             if (s.getValue().equals("Parking sensors") || s.getValue().equals("Automatic wipers")) count++;
         }
         assertTrue(count == 2);
@@ -133,7 +133,7 @@ public class VehicleStatusTest {
         assertTrue(state.getEquipments().length == 2);
 
         int count = 0;
-        for (ObjectPropertyString s : state.getEquipments()) {
+        for (Property<String> s : state.getEquipments()) {
             if (s.getValue().equals("Parking sensors") || s.getValue().equals("Automatic wipers")) count++;
         }
         assertTrue(count == 2);
@@ -201,33 +201,33 @@ public class VehicleStatusTest {
 
     VehicleStatus.Builder getVehicleStatusBuilderWithoutSignature() {
         VehicleStatus.Builder builder = new VehicleStatus.Builder();
-        builder.setVin(new ObjectPropertyString("JF2SHBDC7CH451869"));
+        builder.setVin(new PropertyString("JF2SHBDC7CH451869"));
         builder.setPowerTrain(PowerTrain.ALLELECTRIC);
-        builder.setModelName(new ObjectPropertyString("Type X"));
-        builder.setName(new ObjectPropertyString("My Car"));
-        builder.setLicensePlate(new ObjectPropertyString("ABC123"));
-        builder.setSalesDesignation(new ObjectPropertyString("Package+"));
-        builder.setModelYear(new ObjectPropertyInteger(2017));
+        builder.setModelName(new PropertyString("Type X"));
+        builder.setName(new PropertyString("My Car"));
+        builder.setLicensePlate(new PropertyString("ABC123"));
+        builder.setSalesDesignation(new PropertyString("Package+"));
+        builder.setModelYear(new PropertyInteger(2017));
 
-        builder.setColorName(new ObjectPropertyString("Estoril Blau"));
+        builder.setColorName(new PropertyString("Estoril Blau"));
 //        build.setPower(220);
         // add an unknown property (power)
-        builder.addProperty(new ObjectPropertyInteger((byte) 0x09, false, 2, 220));
-        builder.setNumberOfDoors(new ObjectPropertyInteger(5)).setNumberOfSeats(new ObjectPropertyInteger(5));
+        builder.addProperty(new PropertyInteger((byte) 0x09, false, 2, 220));
+        builder.setNumberOfDoors(new PropertyInteger(5)).setNumberOfSeats(new PropertyInteger(5));
 
         // l7
-        builder.setEngineVolume(new ObjectProperty<>(2.5f));
-        builder.setMaxTorque(new ObjectPropertyInteger(245));
+        builder.setEngineVolume(new Property<>(2.5f));
+        builder.setMaxTorque(new PropertyInteger(245));
         builder.setGearBox(Gearbox.AUTOMATIC);
 
         TrunkState.Builder trunkState = new TrunkState.Builder();
-        trunkState.setLockState(new ObjectProperty<>(Lock.UNLOCKED));
-        trunkState.setPosition(new ObjectProperty<>(Position.OPEN));
+        trunkState.setLockState(new Property<>(Lock.UNLOCKED));
+        trunkState.setPosition(new Property<>(Position.OPEN));
         builder.addState(new CommandProperty(trunkState.build()));
 
         IgnitionState.Builder ignitionState = new IgnitionState.Builder();
-        ignitionState.setIsOn(new ObjectProperty<>(true));
-        ignitionState.setAccessoriesIgnition(new ObjectProperty<>(true));
+        ignitionState.setIsOn(new Property<>(true));
+        ignitionState.setAccessoriesIgnition(new Property<>(true));
         builder.addState(new CommandProperty(ignitionState.build()));
 
 /*<<<<<<< HEAD
@@ -241,11 +241,11 @@ public class VehicleStatusTest {
         // l8
         builder.setDisplayUnit(DisplayUnit.KM);
         builder.setDriverSeatLocation(DriverSeatLocation.LEFT);
-        builder.addEquipment(new ObjectPropertyString("Parking sensors"));
-        builder.addEquipment(new ObjectPropertyString("Automatic wipers"));
+        builder.addEquipment(new PropertyString("Parking sensors"));
+        builder.addEquipment(new PropertyString("Automatic wipers"));
 
         // l9
-        builder.setBrand(new ObjectPropertyString("Mercedes"));
+        builder.setBrand(new PropertyString("Mercedes"));
 
         return builder;
     }

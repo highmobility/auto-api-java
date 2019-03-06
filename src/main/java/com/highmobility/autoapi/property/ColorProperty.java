@@ -22,40 +22,40 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public class ColorProperty extends Property {
-    public ColorProperty(int[] ambientColor) {
-        this((byte) 0x00, ambientColor);
-    }
-
-    public int[] getAmbientColor() {
-        return ambientColor;
-    }
-
-    int[] ambientColor;
-
-    public ColorProperty(byte identifier, int[] ambientColor) {
-        super(identifier, 3);
-
-        if (ambientColor.length != 4 && ambientColor.length != 3) {
-            // maybe later will add alpha as well
-            throw new IllegalArgumentException("Need rgb or rgba color values");
-        }
-
-        bytes[6] = (byte) ambientColor[0];
-        bytes[7] = (byte) ambientColor[1];
-        bytes[8] = (byte) ambientColor[2];
-
-        this.ambientColor = ambientColor;
-    }
-
-    public ColorProperty(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 9) throw new CommandParseException();
-        ambientColor = new int[4];
-        for (int i = 0; i < 3; i++) {
-            ambientColor[i] = Property.getUnsignedInt(bytes[6 + i]);
-        }
-
-        if (getValueLength() == 3) ambientColor[3] = 255;
-    }
-}
+//public class ColorProperty extends Property {
+//    public ColorProperty(int[] ambientColor) {
+//        this((byte) 0x00, ambientColor);
+//    }
+//
+//    public int[] getAmbientColor() {
+//        return ambientColor;
+//    }
+//
+//    int[] ambientColor;
+//
+//    public ColorProperty(byte identifier, int[] ambientColor) {
+//        super(identifier, 3);
+//
+//        if (ambientColor.length != 4 && ambientColor.length != 3) {
+//            // maybe later will add alpha as well
+//            throw new IllegalArgumentException("Need rgb or rgba color values");
+//        }
+//
+//        bytes[6] = (byte) ambientColor[0];
+//        bytes[7] = (byte) ambientColor[1];
+//        bytes[8] = (byte) ambientColor[2];
+//
+//        this.ambientColor = ambientColor;
+//    }
+//
+//    public ColorProperty(byte[] bytes) throws CommandParseException {
+//        super(bytes);
+//        if (bytes.length < 9) throw new CommandParseException();
+//        ambientColor = new int[4];
+//        for (int i = 0; i < 3; i++) {
+//            ambientColor[i] = Property.getUnsignedInt(bytes[6 + i]);
+//        }
+//
+//        if (getValueLength() == 3) ambientColor[3] = 255;
+//    }
+//}

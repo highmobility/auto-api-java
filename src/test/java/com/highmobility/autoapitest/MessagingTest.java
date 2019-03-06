@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.MessageReceived;
 import com.highmobility.autoapi.SendMessage;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
@@ -47,8 +47,8 @@ public class MessagingTest {
 
     @Test public void build() {
         SendMessage.Builder builder = new SendMessage.Builder();
-        builder.setRecipientHandle(new ObjectPropertyString("+1 555-555-555"));
-        builder.setMessage(new ObjectPropertyString("Hello you too"));
+        builder.setRecipientHandle(new PropertyString("+1 555-555-555"));
+        builder.setMessage(new PropertyString("Hello you too"));
         assertTrue(TestUtils.bytesTheSame(builder.build(), bytes));
     }
 }

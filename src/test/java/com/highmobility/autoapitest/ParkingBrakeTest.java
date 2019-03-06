@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetParkingBrakeState;
 import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.autoapi.SetParkingBrake;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -55,7 +55,7 @@ public class ParkingBrakeTest {
 
     @Test public void build() {
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
-        builder.setIsActive(new ObjectProperty<>(true));
+        builder.setIsActive(new Property<>(true));
         ParkingBrakeState state = builder.build();
         assertTrue(state.equals(bytes));
         testState(state);

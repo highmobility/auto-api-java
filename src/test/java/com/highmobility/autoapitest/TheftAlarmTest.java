@@ -10,8 +10,6 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -26,7 +24,7 @@ public class TheftAlarmTest {
 
         assertTrue(command.is(TheftAlarmState.TYPE));
         TheftAlarmState state = (TheftAlarmState) command;
-        assertTrue(state.getState() == TheftAlarmState.State.ARMED);
+        assertTrue(state.getState() == TheftAlarmState.Value.ARMED);
     }
 
     @Test public void get() {
@@ -37,20 +35,20 @@ public class TheftAlarmTest {
 
     @Test public void setAlarm() {
         String waitingForBytes = "00461201000401000101";
-        String commandBytes = ByteUtils.hexFromBytes(new SetTheftAlarm(TheftAlarmState.State
+        String commandBytes = ByteUtils.hexFromBytes(new SetTheftAlarm(TheftAlarmState.Value
                 .ARMED).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         SetTheftAlarm command = (SetTheftAlarm) CommandResolver.resolveHex(waitingForBytes);
-        assertTrue(command.getState() == TheftAlarmState.State.ARMED);
+        assertTrue(command.getState() == TheftAlarmState.Value.ARMED);
     }
 
     @Test public void build() {
         TheftAlarmState.Builder builder = new TheftAlarmState.Builder();
-        builder.setState(TheftAlarmState.State.ARMED);
+        builder.setState(TheftAlarmState.Value.ARMED);
         TheftAlarmState state = builder.build();
         assertTrue(state.equals(bytes));
-        assertTrue(state.getState() == TheftAlarmState.State.ARMED);
+        assertTrue(state.getState() == TheftAlarmState.Value.ARMED);
     }
 
     @Test public void state0Properties() {

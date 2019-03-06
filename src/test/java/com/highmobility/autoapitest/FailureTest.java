@@ -5,13 +5,10 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Failure;
 import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.property.FailureReason;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
-
-import javafx.beans.property.StringProperty;
-import sun.net.idn.StringPrep;
 
 import static org.junit.Assert.assertTrue;
 
@@ -36,9 +33,9 @@ public class FailureTest {
 
     @Test public void build() {
         Failure.Builder builder = new Failure.Builder();
-        builder.setFailedType(GetTrunkState.TYPE);
+        builder.setFailedTypeByte(GetTrunkState.TYPE);
         builder.setFailureReason(FailureReason.UNAUTHORISED);
-        builder.setFailureDescription(new ObjectPropertyString("Try again"));
+        builder.setFailureDescription(new PropertyString("Try again"));
         Failure failure = builder.build();
         assertTrue(TestUtils.bytesTheSame(failure, bytes));
         assertTrue(failure.getFailedType() == GetTrunkState.TYPE);

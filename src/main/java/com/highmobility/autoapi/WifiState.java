@@ -21,8 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.NetworkSecurity;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property;
+
 
 import javax.annotation.Nullable;
 
@@ -37,36 +37,36 @@ public class WifiState extends CommandWithProperties {
     public static final byte IDENTIFIER_SSID = 0x03;
     public static final byte IDENTIFIER_SECURITY = 0x04;
 
-    ObjectProperty<Boolean> enabled = new ObjectProperty<>(Boolean.class, IDENTIFIER_ENABLED);
-    ObjectProperty<Boolean> connected = new ObjectProperty<>(Boolean.class, IDENTIFIER_CONNECTED);
-    ObjectPropertyString ssid = new ObjectPropertyString(IDENTIFIER_SSID);
-    ObjectProperty<NetworkSecurity> security = new ObjectProperty(NetworkSecurity.class, IDENTIFIER_SECURITY);
+    Property<Boolean> enabled = new Property<>(Boolean.class, IDENTIFIER_ENABLED);
+    Property<Boolean> connected = new Property<>(Boolean.class, IDENTIFIER_CONNECTED);
+    Property<String> ssid = new Property(String.class, IDENTIFIER_SSID);
+    Property<NetworkSecurity> security = new Property(NetworkSecurity.class, IDENTIFIER_SECURITY);
 
     /**
      * @return Whether Wi-Fi is enabled.
      */
-    @Nullable public ObjectProperty<Boolean> isEnabled() {
+    @Nullable public Property<Boolean> isEnabled() {
         return enabled;
     }
 
     /**
      * @return Whether Wi-Fi is connected.
      */
-    @Nullable public ObjectProperty<Boolean> isConnected() {
+    @Nullable public Property<Boolean> isConnected() {
         return connected;
     }
 
     /**
      * @return The network SSID.
      */
-    @Nullable public ObjectPropertyString getSsid() {
+    @Nullable public Property<String> getSsid() {
         return ssid;
     }
 
     /**
      * @return The network security.
      */
-    @Nullable public ObjectProperty<NetworkSecurity> getSecurity() {
+    @Nullable public Property<NetworkSecurity> getSecurity() {
         return security;
     }
 
@@ -104,10 +104,10 @@ public class WifiState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectProperty<Boolean> enabled;
-        private ObjectProperty<Boolean> connected;
-        private ObjectPropertyString ssid;
-        private ObjectProperty<NetworkSecurity> security;
+        private Property<Boolean> enabled;
+        private Property<Boolean> connected;
+        private Property<String> ssid;
+        private Property<NetworkSecurity> security;
 
         public Builder() {
             super(TYPE);
@@ -117,7 +117,7 @@ public class WifiState extends CommandWithProperties {
          * @param enabled The Wi-Fi state.
          * @return The builder.
          */
-        public Builder setEnabled(ObjectProperty<Boolean> enabled) {
+        public Builder setEnabled(Property<Boolean> enabled) {
             this.enabled = enabled;
             enabled.setIdentifier(IDENTIFIER_ENABLED);
             addProperty(enabled);
@@ -128,7 +128,7 @@ public class WifiState extends CommandWithProperties {
          * @param connected The connection state.
          * @return The builder.
          */
-        public Builder setConnected(ObjectProperty<Boolean> connected) {
+        public Builder setConnected(Property<Boolean> connected) {
             this.connected = connected;
             connected.setIdentifier(IDENTIFIER_CONNECTED);
             addProperty(connected);
@@ -139,7 +139,7 @@ public class WifiState extends CommandWithProperties {
          * @param ssid The network SSID.
          * @return The builder.
          */
-        public Builder setSsid(ObjectPropertyString ssid) {
+        public Builder setSsid(Property<String> ssid) {
             this.ssid = ssid;
             ssid.setIdentifier(IDENTIFIER_SSID);
             addProperty(ssid);
@@ -150,7 +150,7 @@ public class WifiState extends CommandWithProperties {
          * @param security The network security.
          * @return The builder.
          */
-        public Builder setSecurity(ObjectProperty<NetworkSecurity> security) {
+        public Builder setSecurity(Property<NetworkSecurity> security) {
             this.security = security;
             addProperty(security.setIdentifier(IDENTIFIER_SECURITY));
             return this;

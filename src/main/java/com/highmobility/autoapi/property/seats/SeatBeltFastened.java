@@ -22,8 +22,10 @@ package com.highmobility.autoapi.property.seats;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.value.Bytes;
 
-public class SeatBeltFastened extends Property {
+public class SeatBeltFastened extends PropertyValueObject {
     public static final byte IDENTIFIER = 0x03;
 
     SeatLocation seatLocation;
@@ -44,26 +46,31 @@ public class SeatBeltFastened extends Property {
     }
 
     public SeatBeltFastened(SeatLocation seatLocation, boolean fastened) {
-        super(IDENTIFIER, 2);
+        super(2);
+        update(seatLocation, fastened);
+    }
+
+    public SeatBeltFastened() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 2) throw new CommandParseException();
+        seatLocation = SeatLocation.fromByte(get(0));
+        fastened = Property.getBool(get(1));
+    }
+
+    public void update(SeatLocation seatLocation, boolean fastened) {
         this.seatLocation = seatLocation;
         this.fastened = fastened;
-        this.bytes[6] = seatLocation.getByte();
-        this.bytes[7] = Property.boolToByte(fastened);
+        bytes = new byte[2];
+
+        set(0, seatLocation.getByte());
+        set(1, Property.boolToByte(fastened));
     }
 
-    public SeatBeltFastened(Property bytes) throws CommandParseException {
-        super(bytes);
-        update(bytes);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-
-        if (p.getValueLength() >= 2) {
-            this.seatLocation = SeatLocation.fromByte(p.getValueBytes().get(3));
-            this.fastened = Property.getBool(p.getValueBytes().get(4));
-        }
-
-        return this;
+    public void update(SeatBeltFastened value) {
+        update(value.seatLocation, value.fastened);
     }
 }

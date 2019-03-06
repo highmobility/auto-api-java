@@ -20,8 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.maintenance.ConditionBasedService;
 import com.highmobility.autoapi.property.maintenance.TeleserviceAvailability;
 
@@ -49,53 +48,53 @@ public class MaintenanceState extends CommandWithProperties {
     private static final byte IDENTIFIER_CONDITION_BASED_SERVICES = 0x0B;
     private static final byte IDENTIFIER_BRAKE_FLUID_CHANGE_DATE = 0x0C;
 
-    private ObjectPropertyInteger kilometersToNextService =
-            new ObjectPropertyInteger(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false);
-    private ObjectPropertyInteger daysToNextService =
-            new ObjectPropertyInteger(IDENTIFIER_DAYS_TO_NEXT_SERVICE, false);
+    private PropertyInteger kilometersToNextService =
+            new PropertyInteger(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false);
+    private PropertyInteger daysToNextService =
+            new PropertyInteger(IDENTIFIER_DAYS_TO_NEXT_SERVICE, false);
 
     // level8
-    private ObjectPropertyInteger cbsReportsCount =
-            new ObjectPropertyInteger(IDENTIFIER_CBS_REPORTS_COUNT, false);
-    private ObjectPropertyInteger monthsToExhaustInspection =
-            new ObjectPropertyInteger(IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION, false);
+    private PropertyInteger cbsReportsCount =
+            new PropertyInteger(IDENTIFIER_CBS_REPORTS_COUNT, false);
+    private PropertyInteger monthsToExhaustInspection =
+            new PropertyInteger(IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION, false);
     private TeleserviceAvailability teleserviceAvailability;
-    private ObjectPropertyInteger serviceDistanceThreshold =
-            new ObjectPropertyInteger(IDENTIFIER_SERVICE_DISTANCE_THRESHOLD, false);
-    private ObjectPropertyInteger serviceTimeThreshold =
-            new ObjectPropertyInteger(IDENTIFIER_SERVICE_TIME_THRESHOLD, false);
+    private PropertyInteger serviceDistanceThreshold =
+            new PropertyInteger(IDENTIFIER_SERVICE_DISTANCE_THRESHOLD, false);
+    private PropertyInteger serviceTimeThreshold =
+            new PropertyInteger(IDENTIFIER_SERVICE_TIME_THRESHOLD, false);
 
-    private Calendar automaticTeleserviceCallDate;
-    private Calendar teleserviceBatteryCallDate;
-    private Calendar nextInspectionDate;
+    private Property<Calendar> automaticTeleserviceCallDate;
+    private Property<Calendar> teleserviceBatteryCallDate;
+    private Property<Calendar> nextInspectionDate;
     private ConditionBasedService[] conditionBasedServices;
-    private Calendar brakeFluidChangeDate;
+    private Property<Calendar> brakeFluidChangeDate;
 
     /**
      * @return The amount of kilometers until next servicing of the car
      */
-    @Nullable public ObjectPropertyInteger getKilometersToNextService() {
+    @Nullable public PropertyInteger getKilometersToNextService() {
         return kilometersToNextService;
     }
 
     /**
      * @return The number of days until next servicing of the car, whereas negative is overdue
      */
-    @Nullable public ObjectPropertyInteger getDaysToNextService() {
+    @Nullable public PropertyInteger getDaysToNextService() {
         return daysToNextService;
     }
 
     /**
      * @return The number of CBS reports.
      */
-    @Nullable public ObjectPropertyInteger getCbsReportsCount() {
+    @Nullable public PropertyInteger getCbsReportsCount() {
         return cbsReportsCount;
     }
 
     /**
      * @return The number of Months until exhaust inspection.
      */
-    @Nullable public ObjectPropertyInteger getMonthsToExhaustInspection() {
+    @Nullable public PropertyInteger getMonthsToExhaustInspection() {
         return monthsToExhaustInspection;
     }
 
@@ -109,35 +108,35 @@ public class MaintenanceState extends CommandWithProperties {
     /**
      * @return The service distance threshold in km.
      */
-    @Nullable public ObjectPropertyInteger getServiceDistanceThreshold() {
+    @Nullable public PropertyInteger getServiceDistanceThreshold() {
         return serviceDistanceThreshold;
     }
 
     /**
      * @return The service time threshold in weeks.
      */
-    @Nullable public ObjectPropertyInteger getServiceTimeThreshold() {
+    @Nullable public PropertyInteger getServiceTimeThreshold() {
         return serviceTimeThreshold;
     }
 
     /**
      * @return The automatic Teleservice call date.
      */
-    @Nullable public Calendar getAutomaticTeleserviceCallDate() {
+    @Nullable public Property<Calendar> getAutomaticTeleserviceCallDate() {
         return automaticTeleserviceCallDate;
     }
 
     /**
      * @return The Teleservice battery call date.
      */
-    @Nullable public Calendar getTeleserviceBatteryCallDate() {
+    @Nullable public Property<Calendar> getTeleserviceBatteryCallDate() {
         return teleserviceBatteryCallDate;
     }
 
     /**
      * @return The next inspection date.
      */
-    @Nullable public Calendar getNextInspectionDate() {
+    @Nullable public Property<Calendar> getNextInspectionDate() {
         return nextInspectionDate;
     }
 
@@ -151,7 +150,7 @@ public class MaintenanceState extends CommandWithProperties {
     /**
      * @return The brake fluid change date.
      */
-    @Nullable public Calendar getBrakeFluidChangeDate() {
+    @Nullable public Property<Calendar> getBrakeFluidChangeDate() {
         return brakeFluidChangeDate;
     }
 
@@ -159,8 +158,8 @@ public class MaintenanceState extends CommandWithProperties {
         super(bytes);
         ArrayList<ConditionBasedService> conditionBasedServices = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_DAYS_TO_NEXT_SERVICE:
                         return daysToNextService.update(p);
@@ -179,20 +178,20 @@ public class MaintenanceState extends CommandWithProperties {
                     case IDENTIFIER_SERVICE_TIME_THRESHOLD:
                         return serviceTimeThreshold.update(p);
                     case IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE:
-                        automaticTeleserviceCallDate = Property.getCalendar(p.getValueBytesArray());
+                        automaticTeleserviceCallDate = Property.getCalendar(p);
                         return automaticTeleserviceCallDate;
                     case IDENTIFIER_TELESERVICE_BATTERY_CALL_DATE:
-                        teleserviceBatteryCallDate = Property.getCalendar(p.getValueBytesArray());
+                        teleserviceBatteryCallDate = Property.getCalendar(p);
                         return teleserviceBatteryCallDate;
                     case IDENTIFIER_NEXT_INSPECTION_DATE:
-                        nextInspectionDate = Property.getCalendar(p.getValueBytesArray());
+                        nextInspectionDate = Property.getCalendar(p);
                         return nextInspectionDate;
                     case IDENTIFIER_CONDITION_BASED_SERVICES:
                         ConditionBasedService s = new ConditionBasedService(p.getByteArray());
                         conditionBasedServices.add(s);
                         return s;
                     case IDENTIFIER_BRAKE_FLUID_CHANGE_DATE:
-                        brakeFluidChangeDate = Property.getCalendar(p.getValueBytesArray());
+                        brakeFluidChangeDate = Property.getCalendar(p);
                         return brakeFluidChangeDate;
                 }
 
@@ -225,18 +224,18 @@ public class MaintenanceState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectPropertyInteger kilometersToNextService;
-        private ObjectPropertyInteger daysToNextService;
-        private ObjectPropertyInteger cbsReportsCount;
-        private ObjectPropertyInteger monthsToExhaustInspection;
+        private PropertyInteger kilometersToNextService;
+        private PropertyInteger daysToNextService;
+        private PropertyInteger cbsReportsCount;
+        private PropertyInteger monthsToExhaustInspection;
         private TeleserviceAvailability teleserviceAvailability;
-        private ObjectPropertyInteger serviceDistanceThreshold;
-        private ObjectPropertyInteger serviceTimeThreshold;
-        private Calendar automaticTeleserviceCallDate;
-        private Calendar teleserviceBatteryCallDate;
-        private Calendar nextInspectionDate;
+        private PropertyInteger serviceDistanceThreshold;
+        private PropertyInteger serviceTimeThreshold;
+        private Property<Calendar> automaticTeleserviceCallDate;
+        private Property<Calendar> teleserviceBatteryCallDate;
+        private Property<Calendar> nextInspectionDate;
         private ArrayList<ConditionBasedService> conditionBasedServices = new ArrayList<>();
-        private Calendar brakeFluidChangeDate;
+        private Property<Calendar> brakeFluidChangeDate;
 
         public Builder() {
             super(TYPE);
@@ -246,7 +245,7 @@ public class MaintenanceState extends CommandWithProperties {
          * @param kilometersToNextService The amount of kilometers until next servicing of the car.
          * @return The builder.
          */
-        public Builder setKilometersToNextService(ObjectPropertyInteger kilometersToNextService) {
+        public Builder setKilometersToNextService(PropertyInteger kilometersToNextService) {
             this.kilometersToNextService = kilometersToNextService;
             kilometersToNextService.update(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false, 3);
             addProperty(kilometersToNextService);
@@ -258,7 +257,7 @@ public class MaintenanceState extends CommandWithProperties {
          *                          negative is overdue.
          * @return The builder.
          */
-        public Builder setDaysToNextService(ObjectPropertyInteger daysToNextService) {
+        public Builder setDaysToNextService(PropertyInteger daysToNextService) {
             this.daysToNextService = daysToNextService;
             daysToNextService.update(IDENTIFIER_DAYS_TO_NEXT_SERVICE, false, 2);
             addProperty(daysToNextService);

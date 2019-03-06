@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum WindscreenReplacementState {
+public enum WindscreenReplacementState implements PropertyValueSingleByte {
     UNKNOWN((byte) 0x00),
     REPLACEMENT_NOT_NEEDED((byte) 0x01),
     REPLACEMENT_NEEDED((byte) 0x02);

@@ -6,7 +6,7 @@ import com.highmobility.autoapi.EndParking;
 import com.highmobility.autoapi.GetParkingTicket;
 import com.highmobility.autoapi.ParkingTicket;
 import com.highmobility.autoapi.StartParking;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+
 import com.highmobility.autoapi.property.ParkingTicketState;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -49,8 +49,8 @@ public class ParkingTicketTest {
         ParkingTicket.Builder builder = new ParkingTicket.Builder();
 
         builder.setState(ParkingTicketState.STARTED);
-        builder.setOperatorName(new ObjectPropertyString("Berlin Parking"));
-        builder.setOperatorTicketId(new ObjectPropertyString("64894233"));
+        builder.setOperatorName(new PropertyString("Berlin Parking"));
+        builder.setOperatorTicketId(new PropertyString("64894233"));
         builder.setTicketStart(TestUtils.getCalendar("2018-01-10T16:32:05"));
         builder.setTicketEnd(TestUtils.getCalendar("2018-01-10T18:30:00"));
 

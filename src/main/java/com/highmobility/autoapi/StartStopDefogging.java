@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -43,7 +42,7 @@ public class StartStopDefogging extends CommandWithProperties {
      * @param start The defogging state.
      */
     public StartStopDefogging(boolean start) {
-        super(TYPE.addProperty(new ObjectProperty<>(start).setIdentifier(IDENTIFIER)));
+        super(TYPE.addProperty(new Property<>(start).setIdentifier(IDENTIFIER)));
         this.start = start;
     }
 

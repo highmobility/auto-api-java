@@ -23,7 +23,6 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.Type;
 import com.highmobility.utils.ByteUtils;
-import com.highmobility.value.Bytes;
 
 import java.util.ArrayList;
 import java.util.Arrays;

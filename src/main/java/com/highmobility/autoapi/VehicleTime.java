@@ -20,7 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CalendarProperty;
+import com.highmobility.autoapi.property.Property;
+
+import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
@@ -33,12 +35,12 @@ public class VehicleTime extends CommandWithProperties {
 
     private static final byte IDENTIFIER = 0x01;
 
-    CalendarProperty vehicleTime = new CalendarProperty(IDENTIFIER);
+    Property<Calendar> vehicleTime = new Property(Calendar.class, IDENTIFIER);
 
     /**
      * @return The vehicle time.
      */
-    @Nullable public CalendarProperty getVehicleTime() {
+    @Nullable public Property<Calendar> getVehicleTime() {
         return vehicleTime;
     }
 
@@ -64,7 +66,7 @@ public class VehicleTime extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        CalendarProperty vehicleTime;
+        Property<Calendar> vehicleTime;
 
         public Builder() {
             super(TYPE);
@@ -74,7 +76,7 @@ public class VehicleTime extends CommandWithProperties {
          * @param vehicleTime The vehicle time.
          * @return The builder.
          */
-        public Builder setVehicleTime(CalendarProperty vehicleTime) {
+        public Builder setVehicleTime(Property<Calendar> vehicleTime) {
             this.vehicleTime = vehicleTime;
             vehicleTime.setIdentifier(IDENTIFIER);
             addProperty(vehicleTime);

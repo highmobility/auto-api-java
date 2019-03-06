@@ -20,8 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CommandProperty;
-
 import java.util.ArrayList;
 
 /**

@@ -22,7 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum PowerTrain {
+public enum PowerTrain implements PropertyValueSingleByte{
     UNKNOWN((byte) 0x00),
     ALLELECTRIC((byte) 0x01),
     COMBUSTIONENGINE((byte) 0x02),
@@ -51,5 +51,9 @@ public enum PowerTrain {
 
     public byte getByte() {
         return value;
+    }
+
+    @Override public int getLength() {
+        return 1;
     }
 }

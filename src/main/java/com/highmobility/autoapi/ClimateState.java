@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HvacStartingTime;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Weekday;
 
 import java.util.ArrayList;
@@ -51,97 +51,97 @@ public class ClimateState extends CommandWithProperties {
     private static final byte IDENTIFIER_HVAC_TIME = 0x0B;
     private static final byte IDENTIFIER_REAR_TEMPERATURE_SETTING = 0x0C;
 
-    ObjectProperty<Float> insideTemperature = new ObjectProperty<>(Float.class,
+    Property<Float> insideTemperature = new Property<>(Float.class,
             IDENTIFIER_INSIDE_TEMPERATURE);
-    ObjectProperty<Float> outsideTemperature = new ObjectProperty<>(Float.class,
+    Property<Float> outsideTemperature = new Property<>(Float.class,
             IDENTIFIER_OUTSIDE_TEMPERATURE);
-    ObjectProperty<Float> driverTemperatureSetting =
-            new ObjectProperty<>(Float.class, IDENTIFIER_DRIVER_TEMPERATURE_SETTING);
-    ObjectProperty<Float> passengerTemperatureSetting =
-            new ObjectProperty<>(Float.class, IDENTIFIER_PASSENGER_TEMPERATURE_SETTING);
-    ObjectProperty<Boolean> hvacActive = new ObjectProperty<>(Boolean.class,
+    Property<Float> driverTemperatureSetting =
+            new Property<>(Float.class, IDENTIFIER_DRIVER_TEMPERATURE_SETTING);
+    Property<Float> passengerTemperatureSetting =
+            new Property<>(Float.class, IDENTIFIER_PASSENGER_TEMPERATURE_SETTING);
+    Property<Boolean> hvacActive = new Property<>(Boolean.class,
             IDENTIFIER_HVAC_ACTIVE);
-    ObjectProperty<Boolean> defoggingActive = new ObjectProperty<>(Boolean.class,
+    Property<Boolean> defoggingActive = new Property<>(Boolean.class,
             IDENTIFIER_DEFOGGING_ACTIVE);
-    ObjectProperty<Boolean> defrostingActive = new ObjectProperty<>(Boolean.class,
+    Property<Boolean> defrostingActive = new Property<>(Boolean.class,
             IDENTIFIER_DEFROSTING_ACTIVE);
-    ObjectProperty<Boolean> ionisingActive = new ObjectProperty<>(Boolean.class,
+    Property<Boolean> ionisingActive = new Property<>(Boolean.class,
             IDENTIFIER_IONISING_ACTIVE);
-    ObjectProperty<Float> defrostingTemperature = new ObjectProperty<>(Float.class,
+    Property<Float> defrostingTemperature = new Property<>(Float.class,
             IDENTIFIER_DEFROSTING_TEMPERATURE);
 
     // level8
-    ObjectProperty<HvacStartingTime>[] hvacStartingTimes;
-    ObjectProperty<Float> rearTemperatureSetting = new ObjectProperty<>(Float.class,
+    Property<HvacStartingTime>[] hvacStartingTimes;
+    Property<Float> rearTemperatureSetting = new Property<>(Float.class,
             IDENTIFIER_REAR_TEMPERATURE_SETTING);
 
     /**
      * @return The inside temperature.
      */
-    public ObjectProperty<Float> getInsideTemperature() {
+    public Property<Float> getInsideTemperature() {
         return insideTemperature;
     }
 
     /**
      * @return The outside temperature.
      */
-    public ObjectProperty<Float> getOutsideTemperature() {
+    public Property<Float> getOutsideTemperature() {
         return outsideTemperature;
     }
 
     /**
      * @return The driver temperature setting.
      */
-    public ObjectProperty<Float> getDriverTemperatureSetting() {
+    public Property<Float> getDriverTemperatureSetting() {
         return driverTemperatureSetting;
     }
 
     /**
      * @return The passenger temperature setting.
      */
-    public ObjectProperty<Float> getPassengerTemperatureSetting() {
+    public Property<Float> getPassengerTemperatureSetting() {
         return passengerTemperatureSetting;
     }
 
     /**
      * @return Whether HVAC is active or not.
      */
-    public ObjectProperty<Boolean> isHvacActive() {
+    public Property<Boolean> isHvacActive() {
         return hvacActive;
     }
 
     /**
      * @return Whether defogging is active or not.
      */
-    public ObjectProperty<Boolean> isDefoggingActive() {
+    public Property<Boolean> isDefoggingActive() {
         return defoggingActive;
     }
 
     /**
      * @return Whether defrosting is active or not.
      */
-    public ObjectProperty<Boolean> isDefrostingActive() {
+    public Property<Boolean> isDefrostingActive() {
         return defrostingActive;
     }
 
     /**
      * @return Whether ionising is active or not.
      */
-    public ObjectProperty<Boolean> isIonisingActive() {
+    public Property<Boolean> isIonisingActive() {
         return ionisingActive;
     }
 
     /**
      * @return The defrosting temperature.
      */
-    public ObjectProperty<Float> getDefrostingTemperature() {
+    public Property<Float> getDefrostingTemperature() {
         return defrostingTemperature;
     }
 
     /**
      * @return The HVAC weekday starting times.
      */
-    @Nullable public ObjectProperty<HvacStartingTime>[] getHvacStartingTimes() {
+    @Nullable public Property<HvacStartingTime>[] getHvacStartingTimes() {
         return hvacStartingTimes;
     }
 
@@ -149,8 +149,8 @@ public class ClimateState extends CommandWithProperties {
      * @param weekday The weekday of the hvac starting times.
      * @return The HVAC weekday starting times.
      */
-    @Nullable public ObjectProperty<HvacStartingTime> getHvacStartingTime(Weekday weekday) {
-        for (ObjectProperty<HvacStartingTime> hvacStartingTime : hvacStartingTimes) {
+    @Nullable public Property<HvacStartingTime> getHvacStartingTime(Weekday weekday) {
+        for (Property<HvacStartingTime> hvacStartingTime : hvacStartingTimes) {
             if (hvacStartingTime.getValue().getWeekday() == weekday) return hvacStartingTime;
         }
 
@@ -160,14 +160,14 @@ public class ClimateState extends CommandWithProperties {
     /**
      * @return The rear temperature setting.
      */
-    public ObjectProperty<Float> getRearTemperatureSetting() {
+    public Property<Float> getRearTemperatureSetting() {
         return rearTemperatureSetting;
     }
 
     ClimateState(byte[] bytes) {
         super(bytes);
 
-        ArrayList<ObjectProperty> builder = new ArrayList<>();
+        ArrayList<Property> builder = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
@@ -191,8 +191,8 @@ public class ClimateState extends CommandWithProperties {
                     case IDENTIFIER_DEFROSTING_TEMPERATURE:
                         return defrostingTemperature.update(p);
                     case IDENTIFIER_HVAC_TIME:
-                        ObjectProperty<HvacStartingTime> time =
-                                new ObjectProperty<>(HvacStartingTime.class, p);
+                        Property<HvacStartingTime> time =
+                                new Property<>(HvacStartingTime.class, p);
                         builder.add(time);
                         return time;
                     case IDENTIFIER_REAR_TEMPERATURE_SETTING:
@@ -202,7 +202,7 @@ public class ClimateState extends CommandWithProperties {
             });
         }
 
-        hvacStartingTimes = builder.toArray(new ObjectProperty[0]);
+        hvacStartingTimes = builder.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {
@@ -220,23 +220,23 @@ public class ClimateState extends CommandWithProperties {
         defrostingActive = builder.defrostingActive;
         ionisingActive = builder.ionisingActive;
         defrostingTemperature = builder.defrostingTemperature;
-        hvacStartingTimes = builder.hvacStartingTimes.toArray(new ObjectProperty[0]);
+        hvacStartingTimes = builder.hvacStartingTimes.toArray(new Property[0]);
         rearTemperatureSetting = builder.rearTemperatureSetting;
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectProperty<Float> insideTemperature;
-        private ObjectProperty<Float> outsideTemperature;
-        private ObjectProperty<Float> driverTemperatureSetting;
-        private ObjectProperty<Float> passengerTemperatureSetting;
-        private ObjectProperty<Boolean> hvacActive;
-        private ObjectProperty<Boolean> defoggingActive;
-        private ObjectProperty<Boolean> defrostingActive;
-        private ObjectProperty<Boolean> ionisingActive;
-        private ObjectProperty<Float> defrostingTemperature;
-        private ArrayList<ObjectProperty<HvacStartingTime>> hvacStartingTimes = new ArrayList<>();
+        private Property<Float> insideTemperature;
+        private Property<Float> outsideTemperature;
+        private Property<Float> driverTemperatureSetting;
+        private Property<Float> passengerTemperatureSetting;
+        private Property<Boolean> hvacActive;
+        private Property<Boolean> defoggingActive;
+        private Property<Boolean> defrostingActive;
+        private Property<Boolean> ionisingActive;
+        private Property<Float> defrostingTemperature;
+        private ArrayList<Property<HvacStartingTime>> hvacStartingTimes = new ArrayList<>();
 
-        private ObjectProperty<Float> rearTemperatureSetting;
+        private Property<Float> rearTemperatureSetting;
 
         public Builder() {
             super(TYPE);
@@ -248,7 +248,7 @@ public class ClimateState extends CommandWithProperties {
          * @param insideTemperature The inside temperature.
          * @return The builder.
          */
-        public Builder setInsideTemperature(ObjectProperty<Float> insideTemperature) {
+        public Builder setInsideTemperature(Property<Float> insideTemperature) {
             this.insideTemperature = insideTemperature;
             insideTemperature.setIdentifier(IDENTIFIER_INSIDE_TEMPERATURE);
             addProperty(insideTemperature);
@@ -259,7 +259,7 @@ public class ClimateState extends CommandWithProperties {
          * @param outsideTemperature The outside temperature.
          * @return The builder.
          */
-        public Builder setOutsideTemperature(ObjectProperty<Float> outsideTemperature) {
+        public Builder setOutsideTemperature(Property<Float> outsideTemperature) {
             this.outsideTemperature = outsideTemperature;
             outsideTemperature.setIdentifier(IDENTIFIER_OUTSIDE_TEMPERATURE);
             addProperty(outsideTemperature);
@@ -270,7 +270,7 @@ public class ClimateState extends CommandWithProperties {
          * @param driverTemperatureSetting The driver temperature.
          * @return The builder.
          */
-        public Builder setDriverTemperatureSetting(ObjectProperty<Float> driverTemperatureSetting) {
+        public Builder setDriverTemperatureSetting(Property<Float> driverTemperatureSetting) {
             this.driverTemperatureSetting = driverTemperatureSetting;
             driverTemperatureSetting.setIdentifier(IDENTIFIER_DRIVER_TEMPERATURE_SETTING);
             addProperty(driverTemperatureSetting);
@@ -281,7 +281,7 @@ public class ClimateState extends CommandWithProperties {
          * @param passengerTemperatureSetting The passenger temperature setting.
          * @return The builder.
          */
-        public Builder setPassengerTemperatureSetting(ObjectProperty<Float> passengerTemperatureSetting) {
+        public Builder setPassengerTemperatureSetting(Property<Float> passengerTemperatureSetting) {
             this.passengerTemperatureSetting = passengerTemperatureSetting;
             passengerTemperatureSetting.setIdentifier(IDENTIFIER_PASSENGER_TEMPERATURE_SETTING);
             addProperty(passengerTemperatureSetting);
@@ -292,7 +292,7 @@ public class ClimateState extends CommandWithProperties {
          * @param hvacActive Whether HVAC is active or not.
          * @return The builder.
          */
-        public Builder setHvacActive(ObjectProperty<Boolean> hvacActive) {
+        public Builder setHvacActive(Property<Boolean> hvacActive) {
             this.hvacActive = hvacActive;
             hvacActive.setIdentifier(IDENTIFIER_HVAC_ACTIVE);
             addProperty(hvacActive);
@@ -303,7 +303,7 @@ public class ClimateState extends CommandWithProperties {
          * @param defoggingActive Whether defogging is active or not.
          * @return The builder.
          */
-        public Builder setDefoggingActive(ObjectProperty<Boolean> defoggingActive) {
+        public Builder setDefoggingActive(Property<Boolean> defoggingActive) {
             this.defoggingActive = defoggingActive;
             defoggingActive.setIdentifier(IDENTIFIER_DEFOGGING_ACTIVE);
             addProperty(defoggingActive);
@@ -314,7 +314,7 @@ public class ClimateState extends CommandWithProperties {
          * @param defrostingActive Whether defrosting is active or not.
          * @return The builder.
          */
-        public Builder setDefrostingActive(ObjectProperty<Boolean> defrostingActive) {
+        public Builder setDefrostingActive(Property<Boolean> defrostingActive) {
             this.defrostingActive = defrostingActive;
             defrostingActive.setIdentifier(IDENTIFIER_DEFROSTING_ACTIVE);
             addProperty(defrostingActive);
@@ -325,7 +325,7 @@ public class ClimateState extends CommandWithProperties {
          * @param ionisingActive Whether ionising is active or not.
          * @return The builder.
          */
-        public Builder setIonisingActive(ObjectProperty<Boolean> ionisingActive) {
+        public Builder setIonisingActive(Property<Boolean> ionisingActive) {
             this.ionisingActive = ionisingActive;
             ionisingActive.setIdentifier(IDENTIFIER_IONISING_ACTIVE);
             addProperty(ionisingActive);
@@ -336,7 +336,7 @@ public class ClimateState extends CommandWithProperties {
          * @param defrostingTemperature The defrosting temperature
          * @return The builder.
          */
-        public Builder setDefrostingTemperature(ObjectProperty<Float> defrostingTemperature) {
+        public Builder setDefrostingTemperature(Property<Float> defrostingTemperature) {
             this.defrostingTemperature = defrostingTemperature;
             defrostingTemperature.setIdentifier(IDENTIFIER_DEFROSTING_TEMPERATURE);
             addProperty(defrostingTemperature);
@@ -349,10 +349,10 @@ public class ClimateState extends CommandWithProperties {
          * @param hvacStartingTimes the HVAC starting times.
          * @return The builder.
          */
-        public Builder setHvacStartingTimes(ObjectProperty<HvacStartingTime>[] hvacStartingTimes) {
+        public Builder setHvacStartingTimes(Property<HvacStartingTime>[] hvacStartingTimes) {
             this.hvacStartingTimes.clear();
 
-            for (ObjectProperty<HvacStartingTime> hvacStartingTime : hvacStartingTimes) {
+            for (Property<HvacStartingTime> hvacStartingTime : hvacStartingTimes) {
                 addHvacStartingTime(hvacStartingTime);
 
             }
@@ -365,7 +365,7 @@ public class ClimateState extends CommandWithProperties {
          * @param hvacStartingTime the HVAC starting time.
          * @return The builder.
          */
-        public Builder addHvacStartingTime(ObjectProperty<HvacStartingTime> hvacStartingTime) {
+        public Builder addHvacStartingTime(Property<HvacStartingTime> hvacStartingTime) {
             hvacStartingTime.setIdentifier(IDENTIFIER_HVAC_TIME);
             this.hvacStartingTimes.add(hvacStartingTime);
             addProperty(hvacStartingTime);
@@ -376,7 +376,7 @@ public class ClimateState extends CommandWithProperties {
          * @param rearTemperatureSetting The rear temperature setting.
          * @return The builder.
          */
-        public Builder setRearTemperatureSetting(ObjectProperty<Float> rearTemperatureSetting) {
+        public Builder setRearTemperatureSetting(Property<Float> rearTemperatureSetting) {
             this.rearTemperatureSetting = rearTemperatureSetting;
             rearTemperatureSetting.setIdentifier(IDENTIFIER_REAR_TEMPERATURE_SETTING);
             addProperty(rearTemperatureSetting);

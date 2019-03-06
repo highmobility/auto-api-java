@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property;
 
 /**
  * Send a keystroke or entire sentences as input to the car head unit. This can act as an
@@ -30,12 +30,12 @@ public class TextInput extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.TEXT_INPUT, 0x00);
     private static final byte IDENTIFIER = 0x01;
 
-    ObjectPropertyString text = new ObjectPropertyString(IDENTIFIER);
+    Property<String> text = new Property(String.class, IDENTIFIER);
 
     /**
      * @return The text.
      */
-    public ObjectPropertyString getText() {
+    public Property<String> getText() {
         return text;
     }
 
@@ -44,7 +44,7 @@ public class TextInput extends CommandWithProperties {
      */
     public TextInput(String text) {
         super(TYPE);
-        this.text = new ObjectPropertyString(IDENTIFIER, text);
+        this.text.update(text);
         createBytes(this.text);
     }
 

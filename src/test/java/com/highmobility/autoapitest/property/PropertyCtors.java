@@ -1,17 +1,14 @@
 package com.highmobility.autoapitest.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.ControlMode;
-import com.highmobility.autoapi.property.CommandProperty;
 import com.highmobility.autoapi.property.Coordinates;
 import com.highmobility.autoapi.property.DashboardLight;
 import com.highmobility.autoapi.property.HvacStartingTime;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.ObjectPropertyIntegerArray;
-import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyFailureComponent;
+import com.highmobility.autoapi.property.PropertyComponentFailure;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.SpringRate;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
@@ -38,11 +35,11 @@ public class PropertyCtors {
      * null value is ok (does not crash)
      * update sets value
      */
-    PropertyFailureComponent failure = new PropertyFailureComponent((byte) 0x00,
-            PropertyFailureComponent.Reason.EXECUTION_TIMEOUT, "ba");
+    PropertyComponentFailure failure = new PropertyComponentFailure((byte) 0x00,
+            PropertyComponentFailure.Reason.EXECUTION_TIMEOUT, "ba");
 
     @Test public void failure() {
-        assertTrue(new ObjectProperty<ChargeMode>(null, null, failure).getFailure() != null);
+        assertTrue(new Property<ChargeMode>(null, null, failure).getFailure() != null);
     }
 
     // TODO: 2019-03-04 one type should be tested once. eg enum once, double once.
@@ -53,8 +50,8 @@ public class PropertyCtors {
     }
 
     void testClass(Class theclass, Property property) throws CommandParseException {
-        assertTrue(new ObjectProperty<>(theclass, property).getValue() != null);
-        ObjectProperty updateProp = new ObjectProperty<>(theclass, (byte) 0x00);
+        assertTrue(new Property<>(theclass, property).getValue() != null);
+        Property updateProp = new Property<>(theclass, (byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
@@ -80,9 +77,9 @@ public class PropertyCtors {
         //  int), that are all parsed in ObjectProperty
 
         // assert ctor parses the value
-        assertTrue(new ObjectProperty<>(SpringRate.class, property).getValue() != null);
+        assertTrue(new Property<>(SpringRate.class, property).getValue() != null);
         // assert update parses the value
-        ObjectProperty<SpringRate> updateProp = new ObjectProperty<>(SpringRate.class, (byte) 0x00);
+        Property<SpringRate> updateProp = new Property<>(SpringRate.class, (byte) 0x00);
         assertTrue(updateProp.update(property).getValue() != null);
     }
 
@@ -98,20 +95,20 @@ public class PropertyCtors {
 
     @Test public void string() throws CommandParseException {
         Property property = new Property("01000100");
-
-        assertTrue(new ObjectPropertyString(property).getValue() != null);
-        ObjectPropertyString updateProp = new ObjectPropertyString((byte) 0x00);
+        testClass(String.class, property);
+        /*assertTrue(new Property<String>(property).getValue() != null);
+        Property<String> updateProp = new Property(String.class, (byte) 0x00);
         updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        assertTrue(updateProp.getValue() != null);*/
     }
 
     @Test public void intArray() throws CommandParseException {
         Property property = new Property("01000100");
-
-        assertTrue(new ObjectPropertyIntegerArray(property).getValue() != null);
-        ObjectPropertyIntegerArray updateProp = new ObjectPropertyIntegerArray((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(int[].class, property);
+//        assertTrue(new PropertyIntegerArray(property).getValue() != null);
+//        PropertyIntegerArray updateProp = new PropertyIntegerArray((byte) 0x00);
+//        updateProp.update(property);
+//        assertTrue(updateProp.getValue() != null);
     }
 
     @Test public void CheckControlMessage() throws CommandParseException {
@@ -141,8 +138,8 @@ public class PropertyCtors {
 
     @Test public void integerProperty() throws CommandParseException {
         Property property = new Property("01000100");
-        assertTrue(new ObjectPropertyInteger(property, true).getValue() != null);
-        ObjectPropertyInteger updateProp = new ObjectPropertyInteger((byte) 0x00, true);
+        assertTrue(new PropertyInteger(property, true).getValue() != null);
+        PropertyInteger updateProp = new PropertyInteger((byte) 0x00, true);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
@@ -150,8 +147,8 @@ public class PropertyCtors {
     @Test public void BooleanProperty() throws CommandParseException {
         Property property = new Property("01000100");
 
-        assertTrue(new ObjectProperty<>(Boolean.class, property).getValue() != null);
-        ObjectProperty<Boolean> updateProp = new ObjectProperty<>(Boolean.class, (byte) 0x00);
+        assertTrue(new Property<>(Boolean.class, property).getValue() != null);
+        Property<Boolean> updateProp = new Property<>(Boolean.class, (byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
@@ -159,8 +156,8 @@ public class PropertyCtors {
     @Test public void floatProperty() throws CommandParseException {
         Property property = new Property("01000400000000");
 
-        assertTrue(new ObjectProperty<>(Float.class, property).getValue() != null);
-        ObjectProperty<Float> updateProp = new ObjectProperty<>(Float.class, (byte) 0x00);
+        assertTrue(new Property<>(Float.class, property).getValue() != null);
+        Property<Float> updateProp = new Property<>(Float.class, (byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
@@ -178,8 +175,8 @@ public class PropertyCtors {
     @Test public void ObjectPropertyPercentage() throws CommandParseException {
         Property property = new Property("01000B0100083FF0000000000000");
 
-        assertTrue(new ObjectProperty<>(Double.class, property).getValue() != null);
-        ObjectProperty<Double> updateProp = new ObjectProperty<>(Double.class, (byte) 0x00);
+        assertTrue(new Property<>(Double.class, property).getValue() != null);
+        Property<Double> updateProp = new Property<>(Double.class, (byte) 0x00);
         updateProp.update(property);
         assertTrue(updateProp.getValue() != null);
     }
@@ -187,11 +184,12 @@ public class PropertyCtors {
     @Test public void CommandProperty() throws CommandParseException {
         Property property = new Property("010013" + "0020010300020000" +
                 "A2000812010a1020050000");
-
-        assertTrue(new CommandProperty(property).getValue() != null);
-        CommandProperty updateProp = new CommandProperty((byte) 0x00);
-        updateProp.update(property);
-        assertTrue(updateProp.getValue() != null);
+        testClass(CommandWithProperties.class, property);
+//        assertTrue(new Property<CommandWithProperties>(property).getValue() != null);
+//        Property<CommandWithProperties> updateProp = new Property<CommandWithProperties>((byte)
+//        0x00);
+//        updateProp.update(property);
+//        assertTrue(updateProp.getValue() != null);
     }
 
     @Test public void CoordinatesProperty() throws CommandParseException {

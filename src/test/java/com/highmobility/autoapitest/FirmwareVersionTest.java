@@ -4,8 +4,8 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.FirmwareVersion;
 import com.highmobility.autoapi.GetFirmwareVersion;
-import com.highmobility.autoapi.property.ObjectPropertyIntegerArray;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property<int[]>;
+
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
@@ -41,9 +41,9 @@ public class FirmwareVersionTest {
     @Test public void build() {
         FirmwareVersion.Builder builder = new FirmwareVersion.Builder();
 
-        builder.setCarSdkVersion(new ObjectPropertyIntegerArray(new int[]{1, 15, 33}));
-        builder.setCarSDKBuild(new ObjectPropertyString("btstack-uart"));
-        builder.setApplicationVersion(new ObjectPropertyString("v1.5-prod"));
+        builder.setCarSdkVersion(new Property<int[]>(new int[]{1, 15, 33}));
+        builder.setCarSDKBuild(new PropertyString("btstack-uart"));
+        builder.setApplicationVersion(new PropertyString("v1.5-prod"));
 
         FirmwareVersion command = builder.build();
         testState(command);

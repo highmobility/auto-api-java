@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
 import javax.annotation.Nullable;
@@ -31,12 +31,12 @@ import javax.annotation.Nullable;
 public class FlashersState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x01);
     private static final byte STATE_IDENTIFIER = 0x01;
-    ObjectProperty<Value> state = new ObjectProperty<>(Value.class, STATE_IDENTIFIER);
+    Property<Value> state = new Property<>(Value.class, STATE_IDENTIFIER);
 
     /**
      * @return The flashers state.
      */
-    @Nullable public ObjectProperty<Value> getState() {
+    @Nullable public Property<Value> getState() {
         return state;
     }
 
@@ -64,7 +64,7 @@ public class FlashersState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectProperty<Value> state;
+        private Property<Value> state;
 
         public Builder() {
             super(TYPE);
@@ -74,7 +74,7 @@ public class FlashersState extends CommandWithProperties {
          * @param state The flashers state.
          * @return The builder.
          */
-        public Builder setState(ObjectProperty<Value> state) {
+        public Builder setState(Property<Value> state) {
             this.state = state;
             addProperty(state.setIdentifier(STATE_IDENTIFIER));
             return this;

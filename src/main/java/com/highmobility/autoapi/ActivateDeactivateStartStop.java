@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -41,7 +40,7 @@ public class ActivateDeactivateStartStop extends CommandWithProperties {
     }
 
     public ActivateDeactivateStartStop(boolean activate) {
-        super(TYPE.addProperty(new ObjectProperty<>(activate).setIdentifier(IDENTIFIER)));
+        super(TYPE.addProperty(new Property<>(activate).setIdentifier(IDENTIFIER)));
         this.activate = activate;
     }
 

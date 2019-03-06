@@ -21,8 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Coordinates;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property;
+
 
 import javax.annotation.Nullable;
 
@@ -35,21 +35,21 @@ public class NaviDestination extends CommandWithProperties {
     private static final byte COORDINATES_IDENTIFIER = 0x07;
     private static final byte NAME_IDENTIFIER = 0x02;
 
-    private ObjectProperty<Coordinates> coordinates = new ObjectProperty<>(Coordinates.class,
+    private Property<Coordinates> coordinates = new Property<>(Coordinates.class,
             COORDINATES_IDENTIFIER);
-    private ObjectPropertyString name = new ObjectPropertyString(NAME_IDENTIFIER);
+    private Property<String> name = new Property(String.class, NAME_IDENTIFIER);
 
     /**
      * @return The coordinates.
      */
-    @Nullable public ObjectProperty<Coordinates> getCoordinates() {
+    @Nullable public Property<Coordinates> getCoordinates() {
         return coordinates;
     }
 
     /**
      * @return The name.
      */
-    @Nullable public ObjectPropertyString getName() {
+    @Nullable public Property<String> getName() {
         return name;
     }
 
@@ -80,8 +80,8 @@ public class NaviDestination extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectPropertyString name;
-        private ObjectProperty<Coordinates> coordinates;
+        private Property<String> name;
+        private Property<Coordinates> coordinates;
 
         public Builder() {
             super(TYPE);
@@ -91,7 +91,7 @@ public class NaviDestination extends CommandWithProperties {
          * @param coordinates The coordinates.
          * @return The builder.
          */
-        public Builder setCoordinates(ObjectProperty<Coordinates> coordinates) {
+        public Builder setCoordinates(Property<Coordinates> coordinates) {
             this.coordinates = coordinates;
             coordinates.setIdentifier(COORDINATES_IDENTIFIER);
             addProperty(coordinates);
@@ -102,7 +102,7 @@ public class NaviDestination extends CommandWithProperties {
          * @param name The name.
          * @return The builder.
          */
-        public Builder setName(ObjectPropertyString name) {
+        public Builder setName(Property<String> name) {
             this.name = name;
             addProperty(name.setIdentifier(NAME_IDENTIFIER));
             return this;

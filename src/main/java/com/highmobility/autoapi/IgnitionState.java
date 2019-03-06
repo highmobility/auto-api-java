@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -34,20 +34,20 @@ public class IgnitionState extends CommandWithProperties {
     private static final byte IDENTIFIER_ON = 0x01;
     private static final byte IDENTIFIER_ACCESSORIES = 0x02;
 
-    ObjectProperty<Boolean> on = new ObjectProperty<>(Boolean.class, IDENTIFIER_ON);
-    ObjectProperty<Boolean> accessoriesIgnition = new ObjectProperty<>(Boolean.class, IDENTIFIER_ACCESSORIES);
+    Property<Boolean> on = new Property<>(Boolean.class, IDENTIFIER_ON);
+    Property<Boolean> accessoriesIgnition = new Property<>(Boolean.class, IDENTIFIER_ACCESSORIES);
 
     /**
      * @return The ignition state.
      */
-    @Nullable public ObjectProperty<Boolean> isOn() {
+    @Nullable public Property<Boolean> isOn() {
         return on;
     }
 
     /**
      * @return Whether ignition state is powering on accessories such as radio.
      */
-    @Nullable public ObjectProperty<Boolean> isAccessoriesIgnitionOn() {
+    @Nullable public Property<Boolean> isAccessoriesIgnitionOn() {
         return accessoriesIgnition;
     }
 
@@ -78,8 +78,8 @@ public class IgnitionState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectProperty<Boolean> on;
-        private ObjectProperty<Boolean> accessoriesIgnition;
+        private Property<Boolean> on;
+        private Property<Boolean> accessoriesIgnition;
 
         public Builder() {
             super(TYPE);
@@ -89,7 +89,7 @@ public class IgnitionState extends CommandWithProperties {
          * @param isOn The ignition state.
          * @return The builder.
          */
-        public Builder setIsOn(ObjectProperty<Boolean> isOn) {
+        public Builder setIsOn(Property<Boolean> isOn) {
             this.on = isOn;
             isOn.setIdentifier(IDENTIFIER_ON);
             addProperty(isOn);
@@ -101,7 +101,7 @@ public class IgnitionState extends CommandWithProperties {
          *                            radio.
          * @return The builder.
          */
-        public Builder setAccessoriesIgnition(ObjectProperty<Boolean> accessoriesIgnition) {
+        public Builder setAccessoriesIgnition(Property<Boolean> accessoriesIgnition) {
             this.accessoriesIgnition = accessoriesIgnition;
             accessoriesIgnition.setIdentifier(IDENTIFIER_ACCESSORIES);
             addProperty(accessoriesIgnition);

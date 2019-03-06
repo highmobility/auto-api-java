@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -31,27 +30,35 @@ public class TurnIgnitionOnOff extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.ENGINE, 0x12);
     private static final byte IDENTIFIER = 0x01;
 
-    boolean on;
+    Property<Boolean> on = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return The ignition state.
      */
-    public boolean isOn() {
+    public Property<Boolean> isOn() {
         return on;
     }
 
     /**
      * @param on The ignition state.
      */
-    public TurnIgnitionOnOff(boolean on) {
-        super(TYPE.addProperty(new ObjectProperty<>(on).setIdentifier(IDENTIFIER)));
-        this.on = on;
+    public TurnIgnitionOnOff(Boolean on) {
+        super(TYPE);
+        this.on.update(on);
+        createBytes(this.on);
     }
 
-    TurnIgnitionOnOff(byte[] bytes) throws CommandParseException {
+    TurnIgnitionOnOff(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        this.on = Property.getBool(prop.getValueByte());
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return on.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

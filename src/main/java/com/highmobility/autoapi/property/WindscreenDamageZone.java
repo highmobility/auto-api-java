@@ -20,18 +20,13 @@
 
 package com.highmobility.autoapi.property;
 
-public class WindscreenDamageZone extends Property {
-    public static final byte IDENTIFIER = 0x05;
+import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.value.Bytes;
 
+public class WindscreenDamageZone extends PropertyValueObject {
     int damageZoneX;
     int damageZoneY;
 
-    public WindscreenDamageZone(byte valueByte) {
-        super(IDENTIFIER, 1);
-        damageZoneX = valueByte >> 4;
-        damageZoneY = valueByte & 0x0F;
-        setByteValue();
-    }
 
     /**
      * @return The horizontal position of the zone in a matrix seen from the inside of the car,
@@ -49,13 +44,31 @@ public class WindscreenDamageZone extends Property {
     }
 
     public WindscreenDamageZone(int damageZoneX, int damageZoneY) {
-        super(IDENTIFIER, 1);
-        this.damageZoneX = damageZoneX;
-        this.damageZoneY = damageZoneY;
-        setByteValue();
+        super(1);
+        update(damageZoneX, damageZoneY);
     }
 
-    private void setByteValue() {
-        bytes[6] = (byte) (((damageZoneX & 0x0F) << 4) | (damageZoneY & 0x0F));
+    public WindscreenDamageZone() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 1) throw new CommandParseException();
+
+        damageZoneX = get(0) >> 4;
+        damageZoneY = get(0) & 0x0F;
+    }
+
+    public void update(int damageZoneX, int damageZoneY) {
+        this.damageZoneX = damageZoneX;
+        this.damageZoneY = damageZoneY;
+        bytes = new byte[1];
+        set(0, (byte) (((damageZoneX & 0x0F) << 4) | (damageZoneY & 0x0F)));
+
+    }
+
+    public void update(WindscreenDamageZone value) {
+        update(value.damageZoneX, value.damageZoneY);
     }
 }

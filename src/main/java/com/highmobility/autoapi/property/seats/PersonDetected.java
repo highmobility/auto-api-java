@@ -59,9 +59,9 @@ public class PersonDetected extends Property {
     @Override public Property update(Property p) throws CommandParseException {
         super.update(p);
 
-        if (p.getValueLength() >= 2) {
-            this.seatLocation = SeatLocation.fromByte(p.getValueBytes().get(0));
-            this.detected = Property.getBool(p.getValueBytes().get(1));
+        if (p.getValueComponent().getValueBytes().getLength() >= 2) {
+            this.seatLocation = SeatLocation.fromByte(p.getValueComponent().getValueBytes().get(0));
+            this.detected = Property.getBool(p.getValueComponent().getValueBytes().get(1));
         }
 
         return this;

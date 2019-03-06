@@ -10,8 +10,8 @@ import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
 import com.highmobility.autoapi.StartStopCharging;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.charging.ChargeMode;
 import com.highmobility.autoapi.property.charging.ChargePortState;
 import com.highmobility.autoapi.property.charging.ChargingState;
@@ -87,7 +87,7 @@ public class ChargingTest {
 
         assertTrue(state.getDepartureTimes().length == 2);
         int timeExists = 0;
-        for (ObjectProperty<DepartureTime> time : state.getDepartureTimes()) {
+        for (Property<DepartureTime> time : state.getDepartureTimes()) {
             if (time.getValue().getTime().getHour() == 16 && time.getValue().getTime().getMinute() == 32 && time
                     .getValue().isActive()) {
                 timeExists++;
@@ -103,7 +103,7 @@ public class ChargingTest {
         timeExists = 0;
         assertTrue(state.getReductionOfChargingCurrentTimes().length == 2);
 
-        for (ObjectProperty<ReductionTime> time : state.getReductionOfChargingCurrentTimes()) {
+        for (Property<ReductionTime> time : state.getReductionOfChargingCurrentTimes()) {
             if (time.getValue().getTime().getHour() == 17 && time.getValue().getTime().getMinute() == 33 && time
                     .getValue().getStartStop() == StartStop.START) {
                 timeExists++;
@@ -150,31 +150,31 @@ public class ChargingTest {
     @Test public void build() throws ParseException {
         ChargeState.Builder builder = new ChargeState.Builder();
 
-        builder.setEstimatedRange(new ObjectPropertyInteger(432));
-        builder.setBatteryLevel(new ObjectProperty(.5d));
-        builder.setBatteryCurrentAC(new ObjectProperty(-.6f));
-        builder.setBatteryCurrentDC(new ObjectProperty(-.6f));
-        builder.setChargerVoltageAC(new ObjectProperty(400f));
-        builder.setChargerVoltageDC(new ObjectProperty(-.6f));
-        builder.setChargeLimit(new ObjectProperty(.9d));
-        builder.setTimeToCompleteCharge(new ObjectPropertyInteger(60));
-        builder.setChargingRate(new ObjectProperty(3.5f));
-        builder.setChargePortState(new ObjectProperty(ChargePortState.OPEN));
-        builder.setChargeMode(new ObjectProperty(ChargeMode.TIMER_BASED));
+        builder.setEstimatedRange(new PropertyInteger(432));
+        builder.setBatteryLevel(new Property(.5d));
+        builder.setBatteryCurrentAC(new Property(-.6f));
+        builder.setBatteryCurrentDC(new Property(-.6f));
+        builder.setChargerVoltageAC(new Property(400f));
+        builder.setChargerVoltageDC(new Property(-.6f));
+        builder.setChargeLimit(new Property(.9d));
+        builder.setTimeToCompleteCharge(new PropertyInteger(60));
+        builder.setChargingRate(new Property(3.5f));
+        builder.setChargePortState(new Property(ChargePortState.OPEN));
+        builder.setChargeMode(new Property(ChargeMode.TIMER_BASED));
 
-        builder.setMaxChargingCurrent(new ObjectProperty(25f));
-        builder.setPlugType(new ObjectProperty(PlugType.TYPE_2));
-        builder.setChargingWindowChosen(new ObjectProperty(false));
+        builder.setMaxChargingCurrent(new Property(25f));
+        builder.setPlugType(new Property(PlugType.TYPE_2));
+        builder.setChargingWindowChosen(new Property(false));
 
-        builder.addDepartureTime(new ObjectProperty(new DepartureTime(true, new Time(16, 32))));
-        builder.addDepartureTime(new ObjectProperty(new DepartureTime(false, new Time(11, 51))));
+        builder.addDepartureTime(new Property(new DepartureTime(true, new Time(16, 32))));
+        builder.addDepartureTime(new Property(new DepartureTime(false, new Time(11, 51))));
 
-        builder.addReductionOfChargingCurrentTime(new ObjectProperty(new ReductionTime(StartStop.START, new Time(17,
+        builder.addReductionOfChargingCurrentTime(new Property(new ReductionTime(StartStop.START, new Time(17,
                 33))));
-        builder.addReductionOfChargingCurrentTime(new ObjectProperty(new ReductionTime(StartStop.STOP, new Time(12,
+        builder.addReductionOfChargingCurrentTime(new Property(new ReductionTime(StartStop.STOP, new Time(12,
                 52))));
 
-        builder.setBatteryTemperature(new ObjectProperty(38.4f));
+        builder.setBatteryTemperature(new Property(38.4f));
 
         Calendar departureDate = TestUtils.getCalendar("2018-01-10T16:32:05");
         Calendar preferredEndTime = TestUtils.getCalendar("2018-01-10T18:30:00");
@@ -182,10 +182,10 @@ public class ChargingTest {
                 departureDate);
         ChargingTimer timer2 = new ChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME,
                 preferredEndTime);
-        builder.addTimer(new ObjectProperty(timer));
-        builder.addTimer(new ObjectProperty(timer2));
-        builder.setPluggedIn(new ObjectProperty(true));
-        builder.setActiveState(new ObjectProperty(ChargingState.CHARGING));
+        builder.addTimer(new Property(timer));
+        builder.addTimer(new Property(timer2));
+        builder.setPluggedIn(new Property(true));
+        builder.setActiveState(new Property(ChargingState.CHARGING));
 
         ChargeState state = builder.build();
         testState(state);
@@ -288,7 +288,7 @@ public class ChargingTest {
 
         int times = 0;
         for (int i = 0; i < command.getReductionTimes().length; i++) {
-            ObjectProperty<ReductionTime> reductionTime = command.getReductionTimes()[i];
+            Property<ReductionTime> reductionTime = command.getReductionTimes()[i];
             if ((reductionTime.getValue().getTime().equals(new Time(0, 0)) && reductionTime.getValue().getStartStop() == StartStop.START) ||
                     (reductionTime.getValue().getTime().equals(new Time(16, 32)) && reductionTime.getValue().getStartStop() == StartStop.STOP)) {
                 times++;

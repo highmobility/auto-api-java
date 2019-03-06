@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetVehicleLocation;
 import com.highmobility.autoapi.VehicleLocation;
 import com.highmobility.autoapi.property.Coordinates;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -52,9 +52,9 @@ public class VehicleLocationTest {
     @Test public void build() {
         VehicleLocation.Builder builder = new VehicleLocation.Builder();
         Coordinates coordinates = new Coordinates(52.520008, 13.404954);
-        builder.setCoordinates(new ObjectProperty<>(coordinates));
-        builder.setHeading(new ObjectProperty<>(13.370123));
-        builder.setAltitude(new ObjectProperty<>(133.5));
+        builder.setCoordinates(new Property<>(coordinates));
+        builder.setHeading(new Property<>(13.370123));
+        builder.setAltitude(new Property<>(133.5));
         assertTrue(builder.build().equals(bytes));
     }
 }

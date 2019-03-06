@@ -20,8 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectPropertyIntegerArray;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property;
 
 /**
  * Command sent when a Get Firmware Version is received by the car.
@@ -33,28 +32,28 @@ public class FirmwareVersion extends CommandWithProperties {
     private static final byte IDENTIFIER_SDK_BUILD = 0x02;
     private static final byte IDENTIFIER_APP_VERSION = 0x03;
 
-    ObjectPropertyIntegerArray carSDKVersion = new ObjectPropertyIntegerArray(IDENTIFIER_SDK_VERSION);
-    ObjectPropertyString carSDKBuild = new ObjectPropertyString(IDENTIFIER_SDK_BUILD);
-    ObjectPropertyString applicationVersion = new ObjectPropertyString(IDENTIFIER_APP_VERSION);
+    Property<int[]> carSDKVersion = new Property(int[].class, IDENTIFIER_SDK_VERSION);
+    Property<String> carSDKBuild = new Property(String.class, IDENTIFIER_SDK_BUILD);
+    Property<String> applicationVersion = new Property(String.class, IDENTIFIER_APP_VERSION);
 
     /**
      * @return The car SDK version.
      */
-    public ObjectPropertyIntegerArray getCarSDKVersion() {
+    public Property<int[]> getCarSDKVersion() {
         return carSDKVersion;
     }
 
     /**
      * @return The car SDK build.
      */
-    public ObjectPropertyString getCarSDKBuild() {
+    public Property<String> getCarSDKBuild() {
         return carSDKBuild;
     }
 
     /**
      * @return The application version.
      */
-    public ObjectPropertyString getApplicationVersion() {
+    public Property<String> getApplicationVersion() {
         return applicationVersion;
     }
 
@@ -89,9 +88,9 @@ public class FirmwareVersion extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectPropertyIntegerArray carSdkVersion;
-        private ObjectPropertyString carSDKBuild;
-        private ObjectPropertyString applicationVersion;
+        private Property<int[]> carSdkVersion;
+        private Property<String> carSDKBuild;
+        private Property<String> applicationVersion;
 
         public Builder() {
             super(TYPE);
@@ -101,8 +100,8 @@ public class FirmwareVersion extends CommandWithProperties {
          * @param carSdkVersion The Car SDK version. Version is in format: "[major,minor,patch]"
          * @return The builder.
          */
-        public Builder setCarSdkVersion(ObjectPropertyIntegerArray carSdkVersion) throws IllegalArgumentException {
-            if (carSdkVersion.getValueLength() != 3) throw new IllegalArgumentException();
+        public Builder setCarSdkVersion(Property<int[]> carSdkVersion) throws IllegalArgumentException {
+            if (carSdkVersion.getValue().length != 3) throw new IllegalArgumentException();
             this.carSdkVersion = carSdkVersion;
             addProperty(carSdkVersion.setIdentifier(IDENTIFIER_SDK_VERSION));
             return this;
@@ -112,7 +111,7 @@ public class FirmwareVersion extends CommandWithProperties {
          * @param carSDKBuild The Car SDK build.
          * @return The builder.
          */
-        public Builder setCarSDKBuild(ObjectPropertyString carSDKBuild) {
+        public Builder setCarSDKBuild(Property<String> carSDKBuild) {
             this.carSDKBuild = carSDKBuild;
             addProperty(carSDKBuild.setIdentifier(IDENTIFIER_SDK_BUILD));
             return this;
@@ -122,7 +121,7 @@ public class FirmwareVersion extends CommandWithProperties {
          * @param applicationVersion The application version.
          * @return The builder.
          */
-        public Builder setApplicationVersion(ObjectPropertyString applicationVersion) {
+        public Builder setApplicationVersion(Property<String> applicationVersion) {
             this.applicationVersion = applicationVersion;
             addProperty(applicationVersion.setIdentifier(IDENTIFIER_APP_VERSION));
             return this;

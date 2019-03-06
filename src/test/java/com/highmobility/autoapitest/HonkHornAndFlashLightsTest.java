@@ -6,7 +6,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.FlashersState;
 import com.highmobility.autoapi.GetFlashersState;
 import com.highmobility.autoapi.HonkAndFlash;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -69,7 +69,7 @@ public class HonkHornAndFlashLightsTest {
 
     @Test public void builder() {
         FlashersState.Builder builder = new FlashersState.Builder();
-        builder.setState(new ObjectProperty<>(FlashersState.Value.LEFT_ACTIVE));
+        builder.setState(new Property<>(FlashersState.Value.LEFT_ACTIVE));
         FlashersState state = builder.build();
         assertTrue(state.equals(bytes));
         assertTrue(state.getState().getValue() == FlashersState.Value.LEFT_ACTIVE);

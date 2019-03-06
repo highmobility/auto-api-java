@@ -6,7 +6,7 @@ import com.highmobility.autoapi.ControlRooftop;
 import com.highmobility.autoapi.GetRooftopState;
 import com.highmobility.autoapi.RooftopState;
 import com.highmobility.autoapi.property.ConvertibleRoofState;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.SunroofTiltState;
 import com.highmobility.utils.ByteUtils;
@@ -83,11 +83,11 @@ public class RooftopTest {
     @Test public void stateBuilder() {
         RooftopState.Builder builder = new RooftopState.Builder();
 
-        builder.setDimmingPercentage(new ObjectProperty(1d));
-        builder.setOpenPercentage(new ObjectProperty(0d));
-        builder.setConvertibleRoofState(new ObjectProperty(ConvertibleRoofState.OPEN));
-        builder.setSunroofTiltState(new ObjectProperty(SunroofTiltState.HALF_TILTED));
-        builder.setSunroofPosition(new ObjectProperty(Position.OPEN));
+        builder.setDimmingPercentage(new Property(1d));
+        builder.setOpenPercentage(new Property(0d));
+        builder.setConvertibleRoofState(new Property(ConvertibleRoofState.OPEN));
+        builder.setSunroofTiltState(new Property(SunroofTiltState.HALF_TILTED));
+        builder.setSunroofPosition(new Property(Position.OPEN));
 
         RooftopState state = builder.build();
         testState(state);

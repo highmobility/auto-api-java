@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 
 
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -33,13 +33,13 @@ public class WeatherConditions extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WEATHER_CONDITIONS, 0x01);
 
     private static final byte IDENTIFIER_RAIN = 0x01;
-    ObjectProperty<Double> rainIntensity = new ObjectProperty<>(Double.class, IDENTIFIER_RAIN);
+    Property<Double> rainIntensity = new Property<>(Double.class, IDENTIFIER_RAIN);
 
     /**
      * @return The rain intensity.
      */
 
-    @Nullable public ObjectProperty<Double> getRainIntensity() {
+    @Nullable public Property<Double> getRainIntensity() {
         return rainIntensity;
     }
 
@@ -67,7 +67,7 @@ public class WeatherConditions extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectProperty<Double> rainIntensity;
+        private Property<Double> rainIntensity;
 
         public Builder() {
             super(TYPE);
@@ -77,7 +77,7 @@ public class WeatherConditions extends CommandWithProperties {
          * @param rainIntensity The rain intensity percentage.
          * @return The builder.
          */
-        public Builder setRainIntensity(ObjectProperty<Double> rainIntensity) {
+        public Builder setRainIntensity(Property<Double> rainIntensity) {
             this.rainIntensity = rainIntensity;
             rainIntensity.setIdentifier(IDENTIFIER_RAIN);
             addProperty(rainIntensity);

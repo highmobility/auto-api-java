@@ -22,8 +22,8 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Coordinates;
 import com.highmobility.autoapi.property.NetworkSecurity;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property;
+
 import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.property.homecharger.Charging;
 import com.highmobility.autoapi.property.homecharger.PlugType;
@@ -59,138 +59,138 @@ public class HomeChargerState extends CommandWithProperties {
     private static final byte IDENTIFIER_COORDINATES = 0x11;
     private static final byte IDENTIFIER_PRICE_TARIFF = 0x12;
 
-    ObjectProperty<Charging> charging = new ObjectProperty<>(Charging.class, IDENTIFIER_CHARGING);
-    ObjectProperty<AuthenticationMechanism> authenticationMechanism =
-            new ObjectProperty<>(AuthenticationMechanism.class,
+    Property<Charging> charging = new Property<>(Charging.class, IDENTIFIER_CHARGING);
+    Property<AuthenticationMechanism> authenticationMechanism =
+            new Property<>(AuthenticationMechanism.class,
                     IDENTIFIER_AUTHENTICATION_MECHANISM);
-    ObjectProperty<PlugType> plugType = new ObjectProperty<>(PlugType.class, IDENTIFIER_PLUG_TYPE);
-    ObjectProperty<Float> chargingPower = new ObjectProperty<>(Float.class,
+    Property<PlugType> plugType = new Property<>(PlugType.class, IDENTIFIER_PLUG_TYPE);
+    Property<Float> chargingPower = new Property<>(Float.class,
             IDENTIFIER_CHARGING_POWER);
-    ObjectProperty<Boolean> solarChargingActive = new ObjectProperty<>(Boolean.class,
+    Property<Boolean> solarChargingActive = new Property<>(Boolean.class,
             IDENTIFIER_SOLAR_CHARGING_ACTIVE);
-    ObjectProperty<Boolean> hotspotEnabled = new ObjectProperty<>(Boolean.class,
+    Property<Boolean> hotspotEnabled = new Property<>(Boolean.class,
             IDENTIFIER_HOTSPOT_ENABLED);
-    ObjectPropertyString hotspotSsid = new ObjectPropertyString(IDENTIFIER_HOTSPOT_SSID);
-    ObjectProperty<NetworkSecurity> hotspotSecurity = new ObjectProperty<>(NetworkSecurity.class,
+    Property<String> hotspotSsid = new Property(String.class, IDENTIFIER_HOTSPOT_SSID);
+    Property<NetworkSecurity> hotspotSecurity = new Property<>(NetworkSecurity.class,
             IDENTIFIER_HOTSPOT_SECURITY);
-    ObjectPropertyString hotspotPassword = new ObjectPropertyString(IDENTIFIER_HOTSPOT_PASSWORD);
+    Property<String> hotspotPassword = new Property(String.class, IDENTIFIER_HOTSPOT_PASSWORD);
 
     // level8
-    ObjectProperty<Boolean> authenticated = new ObjectProperty<>(Boolean.class,
+    Property<Boolean> authenticated = new Property<>(Boolean.class,
             IDENTIFIER_AUTHENTICATED);
-    ObjectProperty<Float> chargeCurrentDC = new ObjectProperty<>(Float.class,
+    Property<Float> chargeCurrentDC = new Property<>(Float.class,
             IDENTIFIER_CHARGE_CURRENT_DC);
-    ObjectProperty<Float> maximumChargeCurrent =
-            new ObjectProperty<>(Float.class, IDENTIFIER_MAXIMUM_CHARGE_CURRENT);
-    ObjectProperty<Float> minimumChargeCurrent =
-            new ObjectProperty<>(Float.class, IDENTIFIER_MINIMUM_CHARGE_CURRENT);
-    ObjectProperty<Coordinates> coordinates = new ObjectProperty<>(Coordinates.class,
+    Property<Float> maximumChargeCurrent =
+            new Property<>(Float.class, IDENTIFIER_MAXIMUM_CHARGE_CURRENT);
+    Property<Float> minimumChargeCurrent =
+            new Property<>(Float.class, IDENTIFIER_MINIMUM_CHARGE_CURRENT);
+    Property<Coordinates> coordinates = new Property<>(Coordinates.class,
             IDENTIFIER_COORDINATES);
 
-    ObjectProperty<PriceTariff>[] priceTariffs;
+    Property<PriceTariff>[] priceTariffs;
 
     /**
      * @return The charging state.
      */
-    @Nullable public ObjectProperty<Charging> getCharging() {
+    @Nullable public Property<Charging> getCharging() {
         return charging;
     }
 
     /**
      * @return The authentication mechanism.
      */
-    @Nullable public ObjectProperty<AuthenticationMechanism> getAuthenticationMechanism() {
+    @Nullable public Property<AuthenticationMechanism> getAuthenticationMechanism() {
         return authenticationMechanism;
     }
 
     /**
      * @return The plug type.
      */
-    @Nullable public ObjectProperty<PlugType> getPlugType() {
+    @Nullable public Property<PlugType> getPlugType() {
         return plugType;
     }
 
     /**
      * @return Charging power in kW.
      */
-    @Nullable public ObjectProperty<Float> getChargingPower() {
+    @Nullable public Property<Float> getChargingPower() {
         return chargingPower;
     }
 
     /**
      * @return Solar charging state.
      */
-    @Nullable public ObjectProperty<Boolean> isSolarChargingActive() {
+    @Nullable public Property<Boolean> isSolarChargingActive() {
         return solarChargingActive;
     }
 
     /**
      * @return The hotspot state.
      */
-    @Nullable public ObjectProperty<Boolean> isHotspotEnabled() {
+    @Nullable public Property<Boolean> isHotspotEnabled() {
         return hotspotEnabled;
     }
 
     /**
      * @return The hotspot SSID.
      */
-    @Nullable public ObjectPropertyString getHotspotSsid() {
+    @Nullable public Property<String> getHotspotSsid() {
         return hotspotSsid;
     }
 
     /**
      * @return The hotspot security.
      */
-    @Nullable public ObjectProperty<NetworkSecurity> getHotspotSecurity() {
+    @Nullable public Property<NetworkSecurity> getHotspotSecurity() {
         return hotspotSecurity;
     }
 
     /**
      * @return The hotspot password.
      */
-    @Nullable public ObjectPropertyString getHotspotPassword() {
+    @Nullable public Property<String> getHotspotPassword() {
         return hotspotPassword;
     }
 
     /**
      * @return The authentication state.
      */
-    @Nullable public ObjectProperty<Boolean> isAuthenticated() {
+    @Nullable public Property<Boolean> isAuthenticated() {
         return authenticated;
     }
 
     /**
      * @return The charge current (DC).
      */
-    @Nullable public ObjectProperty<Float> getChargeCurrent() {
+    @Nullable public Property<Float> getChargeCurrent() {
         return chargeCurrentDC;
     }
 
     /**
      * @return The maximum possible charge current.
      */
-    @Nullable public ObjectProperty<Float> getMaximumChargeCurrent() {
+    @Nullable public Property<Float> getMaximumChargeCurrent() {
         return maximumChargeCurrent;
     }
 
     /**
      * @return The minimal possible charge current.
      */
-    @Nullable public ObjectProperty<Float> getMinimumChargeCurrent() {
+    @Nullable public Property<Float> getMinimumChargeCurrent() {
         return minimumChargeCurrent;
     }
 
     /**
      * @return The coordinates.
      */
-    @Nullable public ObjectProperty<Coordinates> getCoordinates() {
+    @Nullable public Property<Coordinates> getCoordinates() {
         return coordinates;
     }
 
     /**
      * @return All of the price tariffs.
      */
-    public ObjectProperty<PriceTariff>[] getPriceTariffs() {
+    public Property<PriceTariff>[] getPriceTariffs() {
         return priceTariffs;
     }
 
@@ -199,9 +199,9 @@ public class HomeChargerState extends CommandWithProperties {
      * @return Price tariff for the given pricing type.
      */
     @Nullable
-    public ObjectProperty<PriceTariff> getPriceTariff(PriceTariff.PricingType pricingType) {
+    public Property<PriceTariff> getPriceTariff(PriceTariff.PricingType pricingType) {
         if (priceTariffs != null) {
-            for (ObjectProperty<PriceTariff> tariff : priceTariffs) {
+            for (Property<PriceTariff> tariff : priceTariffs) {
                 if (tariff.getValue() != null && tariff.getValue().getPricingType() == pricingType)
                     return tariff;
             }
@@ -212,7 +212,7 @@ public class HomeChargerState extends CommandWithProperties {
 
     public HomeChargerState(byte[] bytes) {
         super(bytes);
-        ArrayList<ObjectProperty<PriceTariff>> tariffs = new ArrayList<>();
+        ArrayList<Property<PriceTariff>> tariffs = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
@@ -246,7 +246,7 @@ public class HomeChargerState extends CommandWithProperties {
                     case IDENTIFIER_COORDINATES:
                         return coordinates.update(p);
                     case IDENTIFIER_PRICE_TARIFF:
-                        ObjectProperty<PriceTariff> t = new ObjectProperty<>(PriceTariff.class, p);
+                        Property<PriceTariff> t = new Property<>(PriceTariff.class, p);
                         tariffs.add(t);
                         return t;
                 }
@@ -254,7 +254,7 @@ public class HomeChargerState extends CommandWithProperties {
             });
         }
 
-        priceTariffs = tariffs.toArray(new ObjectProperty[0]);
+        priceTariffs = tariffs.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {
@@ -273,20 +273,20 @@ public class HomeChargerState extends CommandWithProperties {
         hotspotSsid = builder.hotspotSsid;
         hotspotSecurity = builder.hotspotSecurity;
         hotspotPassword = builder.hotspotPassword;
-        priceTariffs = builder.priceTariffs.toArray(new ObjectProperty[0]);
+        priceTariffs = builder.priceTariffs.toArray(new Property[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectProperty<Charging> charging;
-        private ObjectProperty<AuthenticationMechanism> authenticationMechanism;
-        private ObjectProperty<PlugType> plugType;
-        private ObjectProperty<Float> chargingPower;
-        private ObjectProperty<Boolean> solarChargingActive;
-        private ObjectProperty<Boolean> hotspotEnabled;
-        private ObjectPropertyString hotspotSsid;
-        private ObjectProperty<NetworkSecurity> hotspotSecurity;
-        private ObjectPropertyString hotspotPassword;
-        private List<ObjectProperty<PriceTariff>> priceTariffs = new ArrayList<>();
+        private Property<Charging> charging;
+        private Property<AuthenticationMechanism> authenticationMechanism;
+        private Property<PlugType> plugType;
+        private Property<Float> chargingPower;
+        private Property<Boolean> solarChargingActive;
+        private Property<Boolean> hotspotEnabled;
+        private Property<String> hotspotSsid;
+        private Property<NetworkSecurity> hotspotSecurity;
+        private Property<String> hotspotPassword;
+        private List<Property<PriceTariff>> priceTariffs = new ArrayList<>();
 
         public Builder() {
             super(TYPE);
@@ -296,7 +296,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param charging The charging state
          * @return The builder.
          */
-        public Builder setCharging(ObjectProperty<Charging> charging) {
+        public Builder setCharging(Property<Charging> charging) {
             this.charging = charging;
             addProperty(charging.setIdentifier(IDENTIFIER_CHARGING));
             return this;
@@ -306,7 +306,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param authenticationMechanism The authentication mechanism.
          * @return The builder.
          */
-        public Builder setAuthenticationMechanism(ObjectProperty<AuthenticationMechanism> authenticationMechanism) {
+        public Builder setAuthenticationMechanism(Property<AuthenticationMechanism> authenticationMechanism) {
             this.authenticationMechanism = authenticationMechanism;
             addProperty(authenticationMechanism.setIdentifier(IDENTIFIER_AUTHENTICATION_MECHANISM));
             return this;
@@ -316,7 +316,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param plugType The plug type.
          * @return The builder.
          */
-        public Builder setPlugType(ObjectProperty<PlugType> plugType) {
+        public Builder setPlugType(Property<PlugType> plugType) {
             this.plugType = plugType;
             addProperty(plugType.setIdentifier(IDENTIFIER_PLUG_TYPE));
             return this;
@@ -326,7 +326,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param chargingPower The charging power in kW.
          * @return The builder.
          */
-        public Builder setChargingPower(ObjectProperty<Float> chargingPower) {
+        public Builder setChargingPower(Property<Float> chargingPower) {
             this.chargingPower = chargingPower;
             chargingPower.setIdentifier(IDENTIFIER_CHARGING_POWER);
             addProperty(chargingPower);
@@ -337,7 +337,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param solarChargingActive The solar charging state.
          * @return The builder.
          */
-        public Builder setSolarChargingActive(ObjectProperty<Boolean> solarChargingActive) {
+        public Builder setSolarChargingActive(Property<Boolean> solarChargingActive) {
             this.solarChargingActive = solarChargingActive;
             solarChargingActive.setIdentifier(IDENTIFIER_SOLAR_CHARGING_ACTIVE);
             addProperty(solarChargingActive);
@@ -348,7 +348,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param hotspotEnabled The Wi-Fi hotspot state.
          * @return The builder.
          */
-        public Builder setHotspotEnabled(ObjectProperty<Boolean> hotspotEnabled) {
+        public Builder setHotspotEnabled(Property<Boolean> hotspotEnabled) {
             this.hotspotEnabled = hotspotEnabled;
             hotspotEnabled.setIdentifier(IDENTIFIER_HOTSPOT_ENABLED);
             addProperty(hotspotEnabled);
@@ -359,7 +359,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param hotspotSsid The hotspot SSID.
          * @return The builder.
          */
-        public Builder setHotspotSsid(ObjectPropertyString hotspotSsid) {
+        public Builder setHotspotSsid(Property<String> hotspotSsid) {
             this.hotspotSsid = hotspotSsid;
             addProperty(hotspotSsid.setIdentifier(IDENTIFIER_HOTSPOT_SSID));
             return this;
@@ -369,7 +369,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param hotspotSecurity The hotspot security.
          * @return The builder.
          */
-        public Builder setHotspotSecurity(ObjectProperty<NetworkSecurity> hotspotSecurity) {
+        public Builder setHotspotSecurity(Property<NetworkSecurity> hotspotSecurity) {
             this.hotspotSecurity = hotspotSecurity;
             addProperty(hotspotSecurity.setIdentifier(IDENTIFIER_HOTSPOT_SECURITY));
             return this;
@@ -379,7 +379,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param hotspotPassword The hotspot password.
          * @return The builder.
          */
-        public Builder setHotspotPassword(ObjectPropertyString hotspotPassword) {
+        public Builder setHotspotPassword(Property<String> hotspotPassword) {
             this.hotspotPassword = hotspotPassword;
             addProperty(hotspotPassword.setIdentifier(IDENTIFIER_HOTSPOT_PASSWORD));
             return this;
@@ -391,9 +391,9 @@ public class HomeChargerState extends CommandWithProperties {
          * @param priceTariffs The price tariffs.
          * @return The builder.
          */
-        public Builder setPriceTariffs(ObjectProperty<PriceTariff>[] priceTariffs) {
+        public Builder setPriceTariffs(Property<PriceTariff>[] priceTariffs) {
             this.priceTariffs.clear();
-            for (ObjectProperty priceTariff : priceTariffs) {
+            for (Property priceTariff : priceTariffs) {
                 addPriceTariff(priceTariff);
             }
             return this;
@@ -405,7 +405,7 @@ public class HomeChargerState extends CommandWithProperties {
          * @param priceTariff The price tariff.
          * @return The builder.
          */
-        public Builder addPriceTariff(ObjectProperty<PriceTariff> priceTariff) {
+        public Builder addPriceTariff(Property<PriceTariff> priceTariff) {
             priceTariffs.add(priceTariff);
             priceTariff.setIdentifier(IDENTIFIER_PRICE_TARIFF);
             addProperty(priceTariff);

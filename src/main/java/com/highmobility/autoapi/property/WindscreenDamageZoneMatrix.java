@@ -20,13 +20,14 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.value.Bytes;
+
 /**
  * Created by root on 6/29/17.
  */
 
-public class WindscreenDamageZoneMatrix extends Property {
-    public static final byte IDENTIFIER = 0x04;
-
+public class WindscreenDamageZoneMatrix extends PropertyValueObject {
     int windscreenSizeHorizontal;
     int windscreenSizeVertical;
 
@@ -38,22 +39,32 @@ public class WindscreenDamageZoneMatrix extends Property {
         return windscreenSizeVertical;
     }
 
-    public WindscreenDamageZoneMatrix(byte valueByte) {
-        super(IDENTIFIER, 1);
-        windscreenSizeHorizontal = valueByte >> 4;
-        windscreenSizeVertical = valueByte & 0x0F;
-        setByte();
+    public WindscreenDamageZoneMatrix(int windscreenSizeHorizontal, int windscreenSizeVertical) {
+        super(1);
+        update(windscreenSizeHorizontal, windscreenSizeVertical);
     }
 
-    public WindscreenDamageZoneMatrix(int windscreenSizeHorizontal, int windscreenSizeVertical) {
-        super(IDENTIFIER, 1);
+    public WindscreenDamageZoneMatrix() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 1) throw new CommandParseException();
+
+        windscreenSizeHorizontal = get(0) >> 4;
+        windscreenSizeVertical = get(0) & 0x0F;
+    }
+
+    public void update(int windscreenSizeHorizontal, int windscreenSizeVertical) {
         this.windscreenSizeHorizontal = windscreenSizeHorizontal;
         this.windscreenSizeVertical = windscreenSizeVertical;
-        setByte();
+        bytes = new byte[1];
+        set(0, (byte) (((windscreenSizeHorizontal & 0x0F) << 4) | (windscreenSizeVertical & 0x0F)));
+
     }
 
-    private void setByte() {
-        bytes[6] =
-                (byte) (((windscreenSizeHorizontal & 0x0F) << 4) | (windscreenSizeVertical & 0x0F));
+    public void update(WindscreenDamageZoneMatrix value) {
+        update(value.windscreenSizeHorizontal, value.windscreenSizeVertical);
     }
 }

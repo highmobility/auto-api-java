@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ReductionTime;
 
@@ -34,12 +33,12 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x17);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
 
-    ObjectProperty<ReductionTime>[] reductionTimes;
+    Property<ReductionTime>[] reductionTimes;
 
     /**
      * @return The charging current times reductions.
      */
-    public ObjectProperty<ReductionTime>[] getReductionTimes() {
+    public Property<ReductionTime>[] getReductionTimes() {
         return reductionTimes;
     }
 
@@ -55,12 +54,12 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
 
         for (int i = 0; i < reductionTimes.length; i++) {
             ReductionTime time = reductionTimes[i];
-            ObjectProperty<ReductionTime> reductionTime =
-                    new ObjectProperty<>(PROPERTY_IDENTIFIER, time);
+            Property<ReductionTime> reductionTime =
+                    new Property<>(PROPERTY_IDENTIFIER, time);
             builder.add(reductionTime);
         }
 
-        this.reductionTimes = builder.toArray(new ObjectProperty[0]);
+        this.reductionTimes = builder.toArray(new Property[0]);
 
         createBytes(builder);
     }
@@ -74,16 +73,16 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case PROPERTY_IDENTIFIER:
-                        ObjectProperty<ReductionTime> reductionTimeObjectProperty =
-                                new ObjectProperty<>(ReductionTime.class, p);
-                        builder.add(reductionTimeObjectProperty);
-                        return reductionTimeObjectProperty;
+                        Property<ReductionTime> reductionTimeProperty =
+                                new Property<>(ReductionTime.class, p);
+                        builder.add(reductionTimeProperty);
+                        return reductionTimeProperty;
                 }
                 return null;
             });
         }
 
-        reductionTimes = builder.toArray(new ObjectProperty[0]);
+        reductionTimes = builder.toArray(new Property[0]);
     }
 
     @Override protected boolean propertiesExpected() {

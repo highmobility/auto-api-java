@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.charging.ChargingTimer;
 
@@ -36,12 +35,12 @@ public class SetChargeTimer extends CommandWithProperties {
 
     public static final byte PROPERTY_IDENTIFIER = 0x0D;
 
-    ObjectProperty<ChargingTimer>[] timers;
+    Property<ChargingTimer>[] timers;
 
     /**
      * @return The charge timers.
      */
-    public ObjectProperty<ChargingTimer>[] getChargingTimers() {
+    public Property<ChargingTimer>[] getChargingTimers() {
         return timers;
     }
 
@@ -51,10 +50,10 @@ public class SetChargeTimer extends CommandWithProperties {
      * @param type The charge timer type.
      * @return The charge timer.
      */
-    public ObjectProperty<ChargingTimer> getChargingTimer(ChargingTimer.Type type) {
+    public Property<ChargingTimer> getChargingTimer(ChargingTimer.Type type) {
         if (timers == null) return null;
         for (int i = 0; i < timers.length; i++) {
-            ObjectProperty<ChargingTimer> timer = timers[i];
+            Property<ChargingTimer> timer = timers[i];
             if (timer.getValue() != null && timer.getValue().getType() == type)
                 return timer;
         }
@@ -76,24 +75,24 @@ public class SetChargeTimer extends CommandWithProperties {
                     throw new IllegalArgumentException();
             }
 
-            ObjectProperty<ChargingTimer> prop = new ObjectProperty<>(PROPERTY_IDENTIFIER, timer);
+            Property<ChargingTimer> prop = new Property<>(PROPERTY_IDENTIFIER, timer);
             builder.add(prop);
         }
 
-        this.timers = builder.toArray(new ObjectProperty[0]);
+        this.timers = builder.toArray(new Property[0]);
         createBytes(builder);
     }
 
     SetChargeTimer(byte[] bytes) {
         super(bytes);
-        List<ObjectProperty<ChargingTimer>> builder = new ArrayList<>();
+        List<Property<ChargingTimer>> builder = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case PROPERTY_IDENTIFIER:
-                        ObjectProperty<ChargingTimer> timer =
-                                new ObjectProperty<>(ChargingTimer.class, p);
+                        Property<ChargingTimer> timer =
+                                new Property<>(ChargingTimer.class, p);
                         builder.add(timer);
                         return timer;
                 }
@@ -101,6 +100,6 @@ public class SetChargeTimer extends CommandWithProperties {
             });
         }
 
-        timers = builder.toArray(new ObjectProperty[0]);
+        timers = builder.toArray(new Property[0]);
     }
 }

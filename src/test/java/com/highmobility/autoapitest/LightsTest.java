@@ -6,7 +6,7 @@ import com.highmobility.autoapi.ControlLights;
 import com.highmobility.autoapi.GetLightsState;
 import com.highmobility.autoapi.LightsState;
 import com.highmobility.autoapi.property.Color;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.lights.FogLight;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
@@ -72,22 +72,22 @@ public class LightsTest {
     @Test public void build() {
         LightsState.Builder builder = new LightsState.Builder();
 
-        builder.setFrontExteriorLightState(new ObjectProperty<>(FrontExteriorLightState.ACTIVE_FULL_BEAM));
-        builder.setRearExteriorLightActive(new ObjectProperty<>(true));
+        builder.setFrontExteriorLightState(new Property<>(FrontExteriorLightState.ACTIVE_FULL_BEAM));
+        builder.setRearExteriorLightActive(new Property<>(true));
 
         Color ambientColor = new Color(new float[]{1f, 0, 0});
-        builder.setAmbientColor(new ObjectProperty<>(ambientColor));
-        builder.setReverseLightActive(new ObjectProperty<>(false));
-        builder.setEmergencyBrakeLightActive(new ObjectProperty<>(false));
+        builder.setAmbientColor(new Property<>(ambientColor));
+        builder.setReverseLightActive(new Property<>(false));
+        builder.setEmergencyBrakeLightActive(new Property<>(false));
 
-        builder.addFogLight(new ObjectProperty<>(new FogLight(LightLocation.FRONT, false)));
-        builder.addFogLight(new ObjectProperty<>(new FogLight(LightLocation.REAR, true)));
+        builder.addFogLight(new Property<>(new FogLight(LightLocation.FRONT, false)));
+        builder.addFogLight(new Property<>(new FogLight(LightLocation.REAR, true)));
 
-        builder.addReadingLamp(new ObjectProperty<>(new ReadingLamp(Location.FRONT_LEFT, false)));
-        builder.addReadingLamp(new ObjectProperty<>(new ReadingLamp(Location.FRONT_RIGHT, true)));
+        builder.addReadingLamp(new Property<>(new ReadingLamp(Location.FRONT_LEFT, false)));
+        builder.addReadingLamp(new Property<>(new ReadingLamp(Location.FRONT_RIGHT, true)));
 
-        builder.addInteriorLamp(new ObjectProperty<>(new InteriorLamp(LightLocation.FRONT, false)));
-        builder.addInteriorLamp(new ObjectProperty<>(new InteriorLamp(LightLocation.REAR, false)));
+        builder.addInteriorLamp(new Property<>(new InteriorLamp(LightLocation.FRONT, false)));
+        builder.addInteriorLamp(new Property<>(new InteriorLamp(LightLocation.REAR, false)));
 
         LightsState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));

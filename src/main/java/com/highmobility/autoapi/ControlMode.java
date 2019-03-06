@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
 /**
@@ -34,20 +34,20 @@ public class ControlMode extends CommandWithProperties {
     private static final byte IDENTIFIER_MODE = 0x01;
     private static final byte IDENTIFIER_ANGLE = 0x02;
 
-    ObjectProperty<Value> mode = new ObjectProperty<>(Value.class, IDENTIFIER_MODE);
-    ObjectPropertyInteger angle = new ObjectPropertyInteger(IDENTIFIER_ANGLE, false);
+    Property<Value> mode = new Property<>(Value.class, IDENTIFIER_MODE);
+    PropertyInteger angle = new PropertyInteger(IDENTIFIER_ANGLE, false);
 
     /**
      * @return the angle
      */
-    public ObjectPropertyInteger getAngle() {
+    public PropertyInteger getAngle() {
         return angle;
     }
 
     /**
      * @return the control mode
      */
-    public ObjectProperty<Value> getMode() {
+    public Property<Value> getMode() {
         return mode;
     }
 

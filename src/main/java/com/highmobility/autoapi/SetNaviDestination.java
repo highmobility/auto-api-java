@@ -21,9 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Coordinates;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.Property;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,21 +38,21 @@ public class SetNaviDestination extends CommandWithProperties {
     private static final byte COORDINATES_IDENTIFIER = 0x07;
     private static final byte NAME_IDENTIFIER = 0x02;
 
-    private ObjectProperty<Coordinates> coordinates = new ObjectProperty<>(Coordinates.class,
+    private Property<Coordinates> coordinates = new Property<>(Coordinates.class,
             COORDINATES_IDENTIFIER);
-    private ObjectPropertyString name = new ObjectPropertyString(NAME_IDENTIFIER);
+    private Property<String> name = new Property(String.class, NAME_IDENTIFIER);
 
     /**
      * @return The destination coordinates.
      */
-    public ObjectProperty<Coordinates> getCoordinates() {
+    public Property<Coordinates> getCoordinates() {
         return coordinates;
     }
 
     /**
      * @return The destination name.
      */
-    @Nullable public ObjectPropertyString getName() {
+    @Nullable public Property<String> getName() {
         return name;
     }
 

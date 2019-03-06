@@ -21,8 +21,9 @@
 package com.highmobility.autoapi.property.value;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
-public enum Gearbox {
+public enum Gearbox implements PropertyValueSingleByte {
     MANUAL((byte) 0x00),
     AUTOMATIC((byte) 0x01),
     SEMI_AUTOMATIC((byte) 0x02);
@@ -48,5 +49,9 @@ public enum Gearbox {
 
     public byte getByte() {
         return value;
+    }
+
+    @Override public int getLength() {
+        return 1;
     }
 }

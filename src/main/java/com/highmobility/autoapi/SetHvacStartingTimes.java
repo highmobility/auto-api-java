@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.HvacStartingTime;
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Weekday;
 
@@ -38,12 +37,12 @@ public class SetHvacStartingTimes extends CommandWithProperties {
 
     private static final byte AUTO_HVAC_IDENTIFIER = 0x01;
 
-    private ObjectProperty<HvacStartingTime>[] hvacStartingTimes;
+    private Property<HvacStartingTime>[] hvacStartingTimes;
 
     /**
      * @return The Auto HVAC state.
      */
-    public ObjectProperty<HvacStartingTime>[] getHvacStartingTimes() {
+    public Property<HvacStartingTime>[] getHvacStartingTimes() {
         return hvacStartingTimes;
     }
 
@@ -51,8 +50,8 @@ public class SetHvacStartingTimes extends CommandWithProperties {
      * @param weekday Weekday of the HVAC starting time.
      * @return The Auto HVAC state.
      */
-    @Nullable public ObjectProperty<HvacStartingTime> getHvacStartingTime(Weekday weekday) {
-        for (ObjectProperty<HvacStartingTime> hvacStartingTime : hvacStartingTimes) {
+    @Nullable public Property<HvacStartingTime> getHvacStartingTime(Weekday weekday) {
+        for (Property<HvacStartingTime> hvacStartingTime : hvacStartingTimes) {
             if (hvacStartingTime.getValue() != null && hvacStartingTime.getValue().getWeekday() == weekday)
                 return hvacStartingTime;
         }
@@ -71,26 +70,26 @@ public class SetHvacStartingTimes extends CommandWithProperties {
         ArrayList<Property> builder = new ArrayList<>();
 
         for (HvacStartingTime time : hvacStartingTimes) {
-            ObjectProperty<HvacStartingTime> prop = new ObjectProperty<>(AUTO_HVAC_IDENTIFIER,
+            Property<HvacStartingTime> prop = new Property<>(AUTO_HVAC_IDENTIFIER,
                     time);
             builder.add(prop);
         }
 
-        this.hvacStartingTimes = builder.toArray(new ObjectProperty[0]);
+        this.hvacStartingTimes = builder.toArray(new Property[0]);
         createBytes(builder);
     }
 
     SetHvacStartingTimes(byte[] bytes) {
         super(bytes);
 
-        ArrayList<ObjectProperty> builder = new ArrayList<>();
+        ArrayList<Property> builder = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case AUTO_HVAC_IDENTIFIER:
-                        ObjectProperty<HvacStartingTime> prop =
-                                new ObjectProperty<>(HvacStartingTime.class, p);
+                        Property<HvacStartingTime> prop =
+                                new Property<>(HvacStartingTime.class, p);
                         builder.add(prop);
                         return prop;
                 }
@@ -98,7 +97,7 @@ public class SetHvacStartingTimes extends CommandWithProperties {
             });
         }
 
-        hvacStartingTimes = builder.toArray(new ObjectProperty[0]);
+        hvacStartingTimes = builder.toArray(new Property[0]);
     }
 
     @Override protected boolean propertiesExpected() {

@@ -76,8 +76,8 @@ public class Capabilities extends CommandWithProperties {
         super(bytes);
         ArrayList<CapabilityProperty> builder = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER:
                         CapabilityProperty capability =

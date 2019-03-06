@@ -8,8 +8,8 @@ import com.highmobility.autoapi.ForgetNetwork;
 import com.highmobility.autoapi.GetWifiState;
 import com.highmobility.autoapi.WifiState;
 import com.highmobility.autoapi.property.NetworkSecurity;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property;
+
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -47,10 +47,10 @@ public class WifiTest {
     @Test public void build() {
         WifiState.Builder builder = new WifiState.Builder();
 
-        builder.setEnabled(new ObjectProperty<>(true));
-        builder.setConnected(new ObjectProperty<>(true));
-        builder.setSsid(new ObjectPropertyString("HOME"));
-        builder.setSecurity(new ObjectProperty<>(NetworkSecurity.WPA2_PERSONAL));
+        builder.setEnabled(new Property<>(true));
+        builder.setConnected(new Property<>(true));
+        builder.setSsid(new PropertyString("HOME"));
+        builder.setSecurity(new Property<>(NetworkSecurity.WPA2_PERSONAL));
 
         WifiState state = builder.build();
         assertTrue(state.equals(bytes));

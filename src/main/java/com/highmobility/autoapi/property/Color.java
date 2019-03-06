@@ -1,8 +1,6 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
 /**

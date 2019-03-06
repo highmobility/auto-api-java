@@ -20,9 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.IPropertyValue;
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -55,7 +53,7 @@ public class CommandWithProperties extends Command implements IPropertyValue {
     private static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
     private static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
 
-    ObjectProperty[] properties;
+    Property[] properties;
     Bytes nonce;
     Bytes signature;
     Calendar timestamp;
@@ -218,22 +216,22 @@ public class CommandWithProperties extends Command implements IPropertyValue {
         if (propertiesExpected() && bytes.length < 7)
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
-        ArrayList<ObjectProperty> builder = new ArrayList<>();
+        ArrayList<Property> builder = new ArrayList<>();
         PropertyEnumeration enumeration = new PropertyEnumeration(bytes);
 
         // create the base properties
         while (enumeration.hasMoreElements()) {
             PropertyEnumeration.EnumeratedProperty propertyEnumeration = enumeration.nextElement();
-            ObjectProperty property = new ObjectProperty(Arrays.copyOfRange(bytes, propertyEnumeration
+            Property property = new Property(Arrays.copyOfRange(bytes, propertyEnumeration
                     .valueStart - 3, propertyEnumeration.valueStart + propertyEnumeration.size));
             builder.add(property);
         }
 
         // find universal properties
-        findUniversalProperties(builder.toArray(new ObjectProperty[0]), false);
+        findUniversalProperties(builder.toArray(new Property[0]), false);
     }
 
-    CommandWithProperties(Type type, ObjectProperty[] properties) {
+    CommandWithProperties(Type type, Property[] properties) {
         super(type);
         // here there are no timestamps. This constructor is called from setter commands only.
         findUniversalProperties(properties, true);
@@ -243,11 +241,11 @@ public class CommandWithProperties extends Command implements IPropertyValue {
         super(type);
     }
 
-    CommandWithProperties(Type type, List<ObjectProperty> properties) {
-        this(type, properties.toArray(new ObjectProperty[0]));
+    CommandWithProperties(Type type, List<Property> properties) {
+        this(type, properties.toArray(new Property[0]));
     }
 
-    void findUniversalProperties(ObjectProperty[] properties, boolean createBytes) {
+    void findUniversalProperties(Property[] properties, boolean createBytes) {
         if (propertiesExpected() && (properties == null || properties.length == 0))
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
@@ -258,18 +256,19 @@ public class CommandWithProperties extends Command implements IPropertyValue {
 
         for (int i = 0; i < properties.length; i++) {
             try {
-                ObjectProperty property = properties[i];
+                Property property = properties[i];
                 if (createBytes) bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
 
                 if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
-                    if (property.getValueLength() != 9)
+                    if (property.getValueComponent().getValueBytes().getLength() != 9)
                         continue; // invalid nonce length, just ignore
-                    nonce = new Bytes(property.getValueBytesArray());
+                    nonce = property.getValueComponent().getValueBytes();
                 } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
-                    if (property.getValueLength() != 64) continue; // ignore invalid length
-                    signature = new Bytes(property.getValueBytesArray());
+                    if (property.getValueComponent().getValueBytes().getLength() != 64)
+                        continue; // ignore invalid length
+                    signature = property.getValueComponent().getValueBytes();
                 } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
-                    timestamp = ObjectProperty.getCalendar(property.getValueBytesArray());
+                    timestamp = Property.getCalendar(property.getValueComponent().getValueBytes());
                 }
             } catch (Exception e) {
                 // ignore if some universal property had invalid data. just keep the base one.
@@ -322,18 +321,18 @@ public class CommandWithProperties extends Command implements IPropertyValue {
 //        propertyFailures.add(failure);
 //    }
 
-    protected void createBytes(List<ObjectProperty> properties) {
+    protected void createBytes(List<Property> properties) {
         bytes = type.getIdentifierAndType();
 
         if (propertiesExpected() && properties.size() == 0) throw new IllegalArgumentException();
 
         for (int i = 0; i < properties.size(); i++) {
-            ObjectProperty property = properties.get(i);
+            Property property = properties.get(i);
             bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
         }
     }
 
-    protected void createBytes(ObjectProperty property) {
+    protected void createBytes(Property property) {
         bytes = type.getIdentifierAndType();
         bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
     }
@@ -348,13 +347,13 @@ public class CommandWithProperties extends Command implements IPropertyValue {
         private Bytes nonce;
         private Bytes signature;
         private Calendar timestamp;
-        protected ArrayList<ObjectProperty> propertiesBuilder = new ArrayList<>();
+        protected ArrayList<Property> propertiesBuilder = new ArrayList<>();
 
         public Builder(Type type) {
             this.type = type;
         }
 
-        public Builder addProperty(ObjectProperty property) {
+        public Builder addProperty(Property property) {
             propertiesBuilder.add(property);
             return this;
         }
@@ -365,7 +364,7 @@ public class CommandWithProperties extends Command implements IPropertyValue {
          */
         public Builder setNonce(Bytes nonce) {
             this.nonce = nonce;
-            addProperty(new ObjectProperty((byte) 0xA0, nonce.getByteArray()));
+            addProperty(new Property((byte) 0xA0, nonce.getByteArray()));
             return this;
         }
 
@@ -376,7 +375,7 @@ public class CommandWithProperties extends Command implements IPropertyValue {
          */
         public Builder setSignature(Bytes signature) {
             this.signature = signature;
-            addProperty(new ObjectProperty((byte) 0xA1, signature.getByteArray()));
+            addProperty(new Property((byte) 0xA1, signature.getByteArray()));
             return this;
         }
 
@@ -386,7 +385,7 @@ public class CommandWithProperties extends Command implements IPropertyValue {
          */
         public Builder setTimestamp(Calendar timestamp) {
             this.timestamp = timestamp;
-            addProperty(new CalendarProperty(TIMESTAMP_IDENTIFIER, timestamp));
+            addProperty(new Property(TIMESTAMP_IDENTIFIER, timestamp));
             return this;
         }
 
@@ -394,8 +393,8 @@ public class CommandWithProperties extends Command implements IPropertyValue {
             return new CommandWithProperties(this);
         }
 
-        protected ObjectProperty[] getProperties() {
-            return propertiesBuilder.toArray(new ObjectProperty[0]);
+        protected Property[] getProperties() {
+            return propertiesBuilder.toArray(new Property[0]);
         }
     }
 
@@ -473,7 +472,7 @@ public class CommandWithProperties extends Command implements IPropertyValue {
     // TODO: 2019-02-07 throw if propertiesExpected but returned 0 properties (child command
     //  didnt find its property)
 
-    protected class PropertiesIterator2 implements Iterator<ObjectProperty> {
+    protected class PropertiesIterator2 implements Iterator<Property> {
         private int currentSize;
 
         PropertiesIterator2() {
@@ -488,7 +487,7 @@ public class CommandWithProperties extends Command implements IPropertyValue {
         }
 
         @Override
-        public ObjectProperty next() {
+        public Property next() {
             return properties[currentIndex++];
         }
 
@@ -498,14 +497,14 @@ public class CommandWithProperties extends Command implements IPropertyValue {
         }
 
         public void parseNext(PropertyIteration2 next) {
-            ObjectProperty nextProperty = next();
+            Property nextProperty = next();
 
 //            while (nextProperty instanceof PropertyTimestamp && hasNext()) {
 //                nextProperty = next();
 //            }
 
 //            if (nextProperty instanceof PropertyFailure) {
-//                // just create temp property with propertiesIterator. So the fake
+//                // just create temp property with propertiesIterator2. So the fake
 //                // empty property is not added to properties array.
 //                // create empty property with the identifier.
 //                try {
@@ -525,7 +524,7 @@ public class CommandWithProperties extends Command implements IPropertyValue {
                 // properties array
                 if (parsedProperty != null) {
                     // replace the base property with parsed one
-                    properties[currentIndex - 1] = (ObjectProperty) parsedProperty;
+                    properties[currentIndex - 1] = (Property) parsedProperty;
 
 //                    // TODO: 2019-01-11 delete
 //                    // try to match a the property timestamp to the the property
@@ -552,6 +551,6 @@ public class CommandWithProperties extends Command implements IPropertyValue {
          *                   property.
          */
         @Nullable
-        Property iterate(@Nullable ObjectProperty p) throws Exception;
+        Property iterate(@Nullable Property p) throws Exception;
     }
 }

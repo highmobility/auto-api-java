@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -42,7 +41,7 @@ public class StartStopDefrosting extends CommandWithProperties {
      * @param start The defrosting state.
      */
     public StartStopDefrosting(boolean start) {
-        super(TYPE.addProperty(new ObjectProperty<>(start).setIdentifier(IDENTIFIER)));
+        super(TYPE.addProperty(new Property<>(start).setIdentifier(IDENTIFIER)));
         this.start = start;
     }
 

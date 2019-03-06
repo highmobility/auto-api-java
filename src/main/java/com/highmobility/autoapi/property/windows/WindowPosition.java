@@ -2,10 +2,11 @@ package com.highmobility.autoapi.property.windows;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Position;
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.value.Location;
+import com.highmobility.value.Bytes;
 
-public class WindowPosition extends Property {
+public class WindowPosition extends PropertyValueObject {
     Location location;
     Position position;
 
@@ -23,24 +24,33 @@ public class WindowPosition extends Property {
         return position;
     }
 
-    public WindowPosition(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 8) throw new CommandParseException();
-        location = Location.fromByte(bytes[6]);
-        position = Position.fromByte(bytes[7]);
+    public WindowPosition(Location location, Position position) {
+        super(2);
+        update(location, position);
     }
 
-    public WindowPosition(Location location, Position position) {
-        super((byte) 0x00, getBytes(location, position));
+    public WindowPosition() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 2) throw new CommandParseException();
+        location = Location.fromByte(get(0));
+        position = Position.fromByte(get(1));
+
+    }
+
+    public void update(Location location, Position position) {
         this.location = location;
         this.position = position;
+        bytes = new byte[2];
+
+        set(0, location.getByte());
+        set(1, position.getByte());
     }
 
-    private static byte[] getBytes(Location location, Position position) {
-        byte[] bytes = new byte[2];
-        bytes[0] = location.getByte();
-        bytes[1] = position.getByte();
-        return bytes;
+    public void update(WindowPosition value) {
+        update(value.location, value.position);
     }
-
 }

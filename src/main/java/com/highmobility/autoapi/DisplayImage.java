@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property;
 
 /**
  * Display an image in the head unit by providing the image URL.
@@ -29,12 +29,12 @@ public class DisplayImage extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.GRAPHICS, 0x00);
     private static final byte IDENTIFIER = 0x01;
 
-    ObjectPropertyString url = new ObjectPropertyString(IDENTIFIER);
+    Property<String> url = new Property(String.class, IDENTIFIER);
 
     /**
      * @return The url of the image that should be loaded to head unit.
      */
-    public ObjectPropertyString getUrl() {
+    public Property<String> getUrl() {
         return url;
     }
 
@@ -43,7 +43,7 @@ public class DisplayImage extends CommandWithProperties {
      */
     public DisplayImage(String url) {
         super(TYPE);
-        this.url = new ObjectPropertyString(IDENTIFIER, url);
+        this.url.update(url);
         createBytes(this.url);
     }
 

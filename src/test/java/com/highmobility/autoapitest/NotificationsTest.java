@@ -6,8 +6,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Notification;
 import com.highmobility.autoapi.NotificationAction;
 import com.highmobility.autoapi.property.ActionItem;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.PropertyInteger;
+
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -64,10 +64,10 @@ public class NotificationsTest {
         action2 = new ActionItem(1, "Yes");
         ActionItem[] actions = new ActionItem[]{action1, action2};
 
-        builder.setText(new ObjectPropertyString("Start navigation?"));
+        builder.setText(new PropertyString("Start navigation?"));
         builder.setActions(actions);
 
-        builder.setReceivedAction(new ObjectPropertyInteger(42));
+        builder.setReceivedAction(new PropertyInteger(42));
 
         Notification command = builder.build();
         assertTrue(command.equals(bytes));
@@ -96,7 +96,7 @@ public class NotificationsTest {
 
     @Test public void buildNotificationAction() {
         NotificationAction.Builder builder = new NotificationAction.Builder();
-        builder.setActionIdentifier(new ObjectPropertyInteger(254));
+        builder.setActionIdentifier(new PropertyInteger(254));
         NotificationAction command = builder.build();
         assertTrue(command.getActionIdentifier() == 254);
         assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex("003811" +

@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectPropertyString;
+import com.highmobility.autoapi.property.Property;
 
 /**
  * Forget a network that the car has previously connected to.
@@ -28,12 +28,12 @@ import com.highmobility.autoapi.property.ObjectPropertyString;
 public class ForgetNetwork extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x03);
     public static final byte IDENTIFIER = 0x03;
-    private ObjectPropertyString ssid = new ObjectPropertyString(IDENTIFIER);
+    private Property<String> ssid = new Property(String.class, IDENTIFIER);
 
     /**
      * @return The network SSID.
      */
-    public ObjectPropertyString getSsid() {
+    public Property<String> getSsid() {
         return ssid;
     }
 

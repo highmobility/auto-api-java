@@ -20,8 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
@@ -43,37 +41,37 @@ public class StartParking extends CommandWithProperties {
     public static final byte START_DATE_IDENTIFIER = 0x03;
     public static final byte END_DATE_IDENTIFIER = 0x04;
 
-    private ObjectPropertyString operatorName = new ObjectPropertyString(IDENTIFIER_OPERATOR_NAME);
-    private ObjectPropertyString operatorTicketId =
-            new ObjectPropertyString(IDENTIFIER_OPERATOR_TICKET_ID);
-    private Calendar startDate;
-    private Calendar endDate; // TODO: 2019-02-14 property
+    private Property<String> operatorName = new Property(String.class, IDENTIFIER_OPERATOR_NAME);
+    private Property<String> operatorTicketId =
+            new Property(String.class, IDENTIFIER_OPERATOR_TICKET_ID);
+    private Property<Calendar> startDate = new Property<>(Calendar.class, START_DATE_IDENTIFIER);
+    private Property<Calendar> endDate = new Property<>(Calendar.class, END_DATE_IDENTIFIER);
 
     /**
      * @return The operator name.
      */
-    @Nullable public ObjectPropertyString getOperatorName() {
+    public Property<String> getOperatorName() {
         return operatorName;
     }
 
     /**
      * @return The operator ticket id.
      */
-    public ObjectPropertyString getOperatorTicketId() {
+    public Property<String> getOperatorTicketId() {
         return operatorTicketId;
     }
 
     /**
      * @return The start date.
      */
-    public Calendar getStartDate() {
+    public Property<Calendar> getStartDate() {
         return startDate;
     }
 
     /**
      * @return The end date.
      */
-    @Nullable public Calendar getEndDate() {
+    public Property<Calendar> getEndDate() {
         return endDate;
     }
 
@@ -92,18 +90,14 @@ public class StartParking extends CommandWithProperties {
         List<Property> propertiesBuilder = new ArrayList<>();
 
         this.operatorName.update(operatorName);
-        propertiesBuilder.add(this.operatorName);
 
-        this.operatorTicketId.update(operatorTicketId);
-        propertiesBuilder.add(this.operatorTicketId);
-
-        propertiesBuilder.add(new CalendarProperty(START_DATE_IDENTIFIER, startDate));
-        this.startDate = startDate;
+        propertiesBuilder.add(this.operatorName.update(operatorTicketId));
+        propertiesBuilder.add(this.operatorTicketId.update(operatorTicketId));
+        propertiesBuilder.add(this.startDate.update(startDate));
 
         if (endDate != null) {
-            propertiesBuilder.add(new CalendarProperty(END_DATE_IDENTIFIER, endDate));
+            propertiesBuilder.add(this.endDate.update(endDate));
         }
-        this.endDate = endDate;
 
         createBytes(propertiesBuilder);
     }
@@ -119,11 +113,9 @@ public class StartParking extends CommandWithProperties {
                     case IDENTIFIER_OPERATOR_TICKET_ID:
                         return operatorTicketId.update(p);
                     case START_DATE_IDENTIFIER:
-                        startDate = Property.getCalendar(p.getValueBytesArray());
-                        break;
+                        return startDate.update(p);
                     case END_DATE_IDENTIFIER:
-                        endDate = Property.getCalendar(p.getValueBytesArray());
-                        break;
+                        return endDate.update(p);
                 }
                 return null;
             });

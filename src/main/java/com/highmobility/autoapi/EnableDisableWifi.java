@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -44,7 +43,7 @@ public class EnableDisableWifi extends CommandWithProperties {
      * @param enable Whether Wi-Fi should be enabled.
      */
     public EnableDisableWifi(boolean enable) {
-        super(TYPE.addProperty(new ObjectProperty<>(IDENTIFIER, enable)));
+        super(TYPE.addProperty(new Property<>(IDENTIFIER, enable)));
         this.enable = enable;
     }
 

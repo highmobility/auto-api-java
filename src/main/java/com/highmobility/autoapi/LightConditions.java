@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -31,21 +31,21 @@ public class LightConditions extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHT_CONDITIONS, 0x01);
     private static final byte IDENTIFIER_OUTSIDE_LIGHT = 0x01;
     private static final byte IDENTIFIER_INSIDE_LIGHT = 0x02;
-    ObjectProperty<Float> outsideLight = new ObjectProperty<>(Float.class,
+    Property<Float> outsideLight = new Property<>(Float.class,
             IDENTIFIER_OUTSIDE_LIGHT);
-    ObjectProperty<Float> insideLight = new ObjectProperty<>(Float.class, IDENTIFIER_INSIDE_LIGHT);
+    Property<Float> insideLight = new Property<>(Float.class, IDENTIFIER_INSIDE_LIGHT);
 
     /**
      * @return The measured outside illuminance in lux.
      */
-    @Nullable public ObjectProperty<Float> getOutsideLight() {
+    @Nullable public Property<Float> getOutsideLight() {
         return outsideLight;
     }
 
     /**
      * @return The measured inside illuminance in lux.
      */
-    @Nullable public ObjectProperty<Float> getInsideLight() {
+    @Nullable public Property<Float> getInsideLight() {
         return insideLight;
     }
 
@@ -77,8 +77,8 @@ public class LightConditions extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ObjectProperty<Float> outsideLight;
-        private ObjectProperty<Float> insideLight;
+        private Property<Float> outsideLight;
+        private Property<Float> insideLight;
 
         public Builder() {
             super(TYPE);
@@ -88,7 +88,7 @@ public class LightConditions extends CommandWithProperties {
          * @param outsideLight The measured outside illuminance in lux.
          * @return The builder.
          */
-        public Builder setOutsideLight(ObjectProperty<Float> outsideLight) {
+        public Builder setOutsideLight(Property<Float> outsideLight) {
             this.outsideLight = outsideLight;
             outsideLight.setIdentifier(IDENTIFIER_OUTSIDE_LIGHT);
             addProperty(outsideLight);
@@ -99,7 +99,7 @@ public class LightConditions extends CommandWithProperties {
          * @param insideLight The measured inside illuminance in lux.
          * @return The builder.
          */
-        public Builder setInsideLight(ObjectProperty<Float> insideLight) {
+        public Builder setInsideLight(Property<Float> insideLight) {
             this.insideLight = insideLight;
             insideLight.setIdentifier(IDENTIFIER_INSIDE_LIGHT);
             addProperty(insideLight);

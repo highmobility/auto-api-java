@@ -5,7 +5,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetPowerTakeOffState;
 import com.highmobility.autoapi.PowerTakeOffState;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -32,8 +32,8 @@ public class PowerTakeOffTest {
 
     @Test public void build() {
         PowerTakeOffState.Builder builder = new PowerTakeOffState.Builder();
-        builder.setIsActive(new ObjectProperty<>(true));
-        builder.setIsEngaged(new ObjectProperty<>(true));
+        builder.setIsActive(new Property<>(true));
+        builder.setIsEngaged(new Property<>(true));
         assertTrue(builder.build().equals(bytes));
     }
 

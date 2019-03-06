@@ -21,9 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ConvertibleRoofState;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.SunroofTiltState;
 
 import java.util.ArrayList;
@@ -41,24 +40,24 @@ public class ControlRooftop extends CommandWithProperties {
     private static final byte IDENTIFIER_SUNROOF_TILT = 0x04;
     private static final byte IDENTIFIER_SUNROOF_POSITION = 0x05;
 
-    private ObjectProperty<Double> dimmingPercentage =
-            new ObjectProperty<>(Double.class, RooftopState.DIMMING_IDENTIFIER);
+    private Property<Double> dimmingPercentage =
+            new Property<>(Double.class, RooftopState.DIMMING_IDENTIFIER);
 
-    private ObjectProperty<Double> openPercentage =
-            new ObjectProperty<>(Double.class, RooftopState.OPEN_IDENTIFIER);
+    private Property<Double> openPercentage =
+            new Property<>(Double.class, RooftopState.OPEN_IDENTIFIER);
 
-    private ObjectProperty<ConvertibleRoofState> convertibleRoofState =
-            new ObjectProperty<>(ConvertibleRoofState.class, IDENTIFIER_CONVERTIBLE_ROOFTOP);
-    private ObjectProperty<SunroofTiltState> sunroofTiltState =
-            new ObjectProperty<>(SunroofTiltState.class, IDENTIFIER_SUNROOF_TILT);
+    private Property<ConvertibleRoofState> convertibleRoofState =
+            new Property<>(ConvertibleRoofState.class, IDENTIFIER_CONVERTIBLE_ROOFTOP);
+    private Property<SunroofTiltState> sunroofTiltState =
+            new Property<>(SunroofTiltState.class, IDENTIFIER_SUNROOF_TILT);
 
-    private ObjectProperty<Position> sunroofPosition = new ObjectProperty<>(Position.class,
+    private Property<Position> sunroofPosition = new Property<>(Position.class,
             IDENTIFIER_SUNROOF_POSITION);
 
     /**
      * @return The dimming percentage.
      */
-    public ObjectProperty<Double> getDimmingPercentage() {
+    public Property<Double> getDimmingPercentage() {
         return dimmingPercentage;
     }
 
@@ -66,28 +65,28 @@ public class ControlRooftop extends CommandWithProperties {
      * @return The open percentage.
      */
 
-    public ObjectProperty<Double> getOpenPercentage() {
+    public Property<Double> getOpenPercentage() {
         return openPercentage;
     }
 
     /**
      * @return The convertible roof state.
      */
-    public ObjectProperty<ConvertibleRoofState> getConvertibleRoofState() {
+    public Property<ConvertibleRoofState> getConvertibleRoofState() {
         return convertibleRoofState;
     }
 
     /**
      * @return The sunroof tilt state.
      */
-    public ObjectProperty<SunroofTiltState> getSunroofTiltState() {
+    public Property<SunroofTiltState> getSunroofTiltState() {
         return sunroofTiltState;
     }
 
     /**
      * @return The sunroof position.
      */
-    public ObjectProperty<Position> getSunroofPosition() {
+    public Property<Position> getSunroofPosition() {
         return sunroofPosition;
     }
 

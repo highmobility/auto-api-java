@@ -20,10 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
-import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
+
 import com.highmobility.autoapi.property.ScreenLocation;
 
 import java.util.ArrayList;
@@ -42,30 +41,30 @@ public class VideoHandover extends CommandWithProperties {
     public static final byte STARTING_SECOND_IDENTIFIER = 0x02;
     public static final byte IDENTIFIER_SCREEN_LOCATION = 0x03;
 
-    private ObjectPropertyString url = new ObjectPropertyString(IDENTIFIER_URL);
-    private ObjectPropertyInteger startingSecond =
-            new ObjectPropertyInteger(STARTING_SECOND_IDENTIFIER, false);
-    private ObjectProperty<ScreenLocation> location = new ObjectProperty<>(ScreenLocation.class,
+    private Property<String> url = new Property(String.class, IDENTIFIER_URL);
+    private PropertyInteger startingSecond =
+            new PropertyInteger(STARTING_SECOND_IDENTIFIER, false);
+    private Property<ScreenLocation> location = new Property<>(ScreenLocation.class,
             IDENTIFIER_SCREEN_LOCATION);
 
     /**
      * @return The video url.
      */
-    public ObjectPropertyString getUrl() {
+    public Property<String> getUrl() {
         return url;
     }
 
     /**
      * @return The starting second.
      */
-    @Nullable public ObjectPropertyInteger getStartingSecond() {
+    @Nullable public PropertyInteger getStartingSecond() {
         return startingSecond;
     }
 
     /**
      * @return The screen location.
      */
-    @Nullable public ObjectProperty<ScreenLocation> getLocation() {
+    @Nullable public Property<ScreenLocation> getLocation() {
         return location;
     }
 

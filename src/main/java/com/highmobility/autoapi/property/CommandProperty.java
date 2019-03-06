@@ -31,55 +31,56 @@ import java.util.Calendar;
 import javax.annotation.Nullable;
 
 /**
- * The possible control mode values.
+ * A property that holds a command.
  */
-public class CommandProperty extends Property {
-    // TODO: 2019-02-27 this should be a PropertyValue, without timestamp and failure
-    CommandWithProperties value;
-
-    @Nullable public CommandWithProperties getValue() {
-        return value;
-    }
-
-    public CommandProperty() {
-        super();
-    }
-
-    public CommandProperty(byte identifier) {
-        super(identifier);
-    }
-
-    public CommandProperty(@Nullable CommandWithProperties value, @Nullable Calendar timestamp,
-                           @Nullable PropertyFailureComponent failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public CommandProperty(@Nullable CommandWithProperties value) {
-        super((IPropertyValue) value);
-        this.value = value;
-
-        if (value != null) {
-            ByteUtils.setBytes(bytes, value.getByteArray(), 3);
-            // TBODO: test for historical state
-        }
-    }
-
-    public CommandProperty(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        // TODO: 2019-02-27 update with value not property
-        super.update(p);
-
-        if (p.getValueLength() > 5) {
-            Command command = CommandResolver.resolve(p.getValueBytesArray());
-            if (command instanceof CommandWithProperties)
-                value = (CommandWithProperties) command;
-        }
-
-        return this;
-    }
-}
+// TODO: 2019-03-04 try use as <CommandWithProperties>
+//public class CommandProperty extends Property {
+//    // TODO: 2019-02-27 this should be a PropertyValue, without timestamp and failure
+//    CommandWithProperties value;
+//
+//    @Nullable public CommandWithProperties getValue() {
+//        return value;
+//    }
+//
+//    public CommandProperty() {
+//        super();
+//    }
+//
+//    public CommandProperty(byte identifier) {
+//        super(identifier);
+//    }
+//
+//    public CommandProperty(@Nullable CommandWithProperties value, @Nullable Calendar timestamp,
+//                           @Nullable PropertyFailureComponent failure) {
+//        this(value);
+//        setTimestampFailure(timestamp, failure);
+//    }
+//
+//    public CommandProperty(@Nullable CommandWithProperties value) {
+//        super((IPropertyValue) value);
+//        this.value = value;
+//
+//        if (value != null) {
+//            ByteUtils.setBytes(bytes, value.getByteArray(), 3);
+//            // TBODO: test for historical state
+//        }
+//    }
+//
+//    public CommandProperty(Property p) throws CommandParseException {
+//        super(p);
+//        update(p);
+//    }
+//
+//    @Override public Property update(Property p) throws CommandParseException {
+//        // TODO: 2019-02-27 update with value not property
+//        super.update(p);
+//
+//        if (p.getValueLength() > 5) {
+//            Command command = CommandResolver.resolve(p.getValueBytesArray());
+//            if (command instanceof CommandWithProperties)
+//                value = (CommandWithProperties) command;
+//        }
+//
+//        return this;
+//    }
+//}

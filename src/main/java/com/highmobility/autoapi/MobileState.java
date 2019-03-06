@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
 
@@ -31,22 +31,22 @@ import javax.annotation.Nullable;
 public class MobileState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MOBILE, 0x01);
     private static final byte IDENTIFIER = 0x01;
-    ObjectProperty<Boolean> connected;
+    Property<Boolean> connected;
 
     /**
      * @return Whether mobile phone is connected.
      */
-    @Nullable public ObjectProperty<Boolean> isConnected() {
+    @Nullable public Property<Boolean> isConnected() {
         return connected;
     }
 
     MobileState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER) {
-                    connected = new ObjectProperty<>(Boolean.class, p);
+                    connected = new Property<>(Boolean.class, p);
                     return connected;
 
                 }

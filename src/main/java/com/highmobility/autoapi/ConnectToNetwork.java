@@ -21,9 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.NetworkSecurity;
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyString;
 import com.highmobility.autoapi.property.Property;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,29 +38,29 @@ public class ConnectToNetwork extends CommandWithProperties {
     private static final byte IDENTIFIER_SECURITY = 0x04;
     private static final byte IDENTIFIER_PASSWORD = 0x05;
 
-    private ObjectPropertyString ssid = new ObjectPropertyString(IDENTIFIER_SSID);
-    private ObjectPropertyString password = new ObjectPropertyString(IDENTIFIER_PASSWORD);
-    private ObjectProperty<NetworkSecurity> security = new ObjectProperty<>(NetworkSecurity.class
+    private Property<String> ssid = new Property(String.class, IDENTIFIER_SSID);
+    private Property<String> password = new Property(String.class, IDENTIFIER_PASSWORD);
+    private Property<NetworkSecurity> security = new Property<>(NetworkSecurity.class
             , IDENTIFIER_SECURITY);
 
     /**
      * @return The network SSID.
      */
-    public ObjectPropertyString getSsid() {
+    public Property<String> getSsid() {
         return ssid;
     }
 
     /**
      * @return The network security.
      */
-    public ObjectProperty<NetworkSecurity> getSecurity() {
+    public Property<NetworkSecurity> getSecurity() {
         return security;
     }
 
     /**
      * @return The network password.
      */
-    @Nullable public ObjectPropertyString getPassword() {
+    @Nullable public Property<String> getPassword() {
         return password;
     }
 

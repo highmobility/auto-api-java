@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.SpringRate;
 import com.highmobility.autoapi.property.value.Axle;
 
@@ -62,13 +62,13 @@ public class SetSpringRate extends CommandWithProperties {
         this.springRates = springRates;
     }
 
-    static ObjectProperty[] getValues(SpringRate[] springRates) {
-        ArrayList<ObjectProperty<SpringRate>> builder = new ArrayList<>();
+    static Property[] getValues(SpringRate[] springRates) {
+        ArrayList<Property<SpringRate>> builder = new ArrayList<>();
         for (SpringRate springRate : springRates) {
-            builder.add(new ObjectProperty<>(PROPERTY_IDENTIFIER, springRate));
+            builder.add(new Property<>(PROPERTY_IDENTIFIER, springRate));
         }
 
-        return builder.toArray(new ObjectProperty[0]);
+        return builder.toArray(new Property[0]);
     }
 
     SetSpringRate(byte[] bytes) {
@@ -78,7 +78,7 @@ public class SetSpringRate extends CommandWithProperties {
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
-                    ObjectProperty<SpringRate> prop = new ObjectProperty<>(SpringRate.class, p);
+                    Property<SpringRate> prop = new Property<>(SpringRate.class, p);
                     builder.add(prop.getValue());
                     return prop;
                 }

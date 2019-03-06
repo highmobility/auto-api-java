@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlGasFlap;
 import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.GetGasFlapState;
-import com.highmobility.autoapi.property.ObjectProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.value.Lock;
 import com.highmobility.utils.ByteUtils;
@@ -39,8 +39,8 @@ public class FuelingTest {
     @Test public void build() {
         GasFlapState.Builder builder = new GasFlapState.Builder();
 
-        builder.setLock(new ObjectProperty<>(Lock.LOCKED));
-        builder.setPosition(new ObjectProperty<>(Position.CLOSED));
+        builder.setLock(new Property<>(Lock.LOCKED));
+        builder.setPosition(new Property<>(Position.CLOSED));
 
         GasFlapState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));

@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ObjectProperty;
-import com.highmobility.autoapi.property.ObjectPropertyInteger;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
 
 import javax.annotation.Nullable;
 
@@ -39,17 +39,17 @@ public class CruiseControlState extends CommandWithProperties {
     private static final byte ADAPTIVE_ACTIVE_IDENTIFIER = 0x04;
     private static final byte IDENTIFIER_ADAPTIVE_TARGET_SPEED = 0x05;
 
-    ObjectProperty<Boolean> active;
+    Property<Boolean> active;
     Limiter limiter;
-    ObjectPropertyInteger targetSpeed = new ObjectPropertyInteger(IDENTIFIER_TARGET_SPEED, false);
-    ObjectProperty<Boolean> adaptiveActive;
-    ObjectPropertyInteger adaptiveTargetSpeed =
-            new ObjectPropertyInteger(IDENTIFIER_ADAPTIVE_TARGET_SPEED, false);
+    PropertyInteger targetSpeed = new PropertyInteger(IDENTIFIER_TARGET_SPEED, false);
+    Property<Boolean> adaptiveActive;
+    PropertyInteger adaptiveTargetSpeed =
+            new PropertyInteger(IDENTIFIER_ADAPTIVE_TARGET_SPEED, false);
 
     /**
      * @return Whether the cruise control is active.
      */
-    @Nullable public ObjectProperty<Boolean> isActive() {
+    @Nullable public Property<Boolean> isActive() {
         return active;
     }
 
@@ -63,21 +63,21 @@ public class CruiseControlState extends CommandWithProperties {
     /**
      * @return The cruise control target speed.
      */
-    @Nullable public ObjectPropertyInteger getTargetSpeed() {
+    @Nullable public PropertyInteger getTargetSpeed() {
         return targetSpeed;
     }
 
     /**
      * @return Whether the adaptive cruise control is active.
      */
-    @Nullable public ObjectProperty<Boolean> isAdaptiveActive() {
+    @Nullable public Property<Boolean> isAdaptiveActive() {
         return adaptiveActive;
     }
 
     /**
      * @return The adaptive cruise control target speed.
      */
-    @Nullable public ObjectPropertyInteger getAdaptiveTargetSpeed() {
+    @Nullable public PropertyInteger getAdaptiveTargetSpeed() {
         return adaptiveTargetSpeed;
     }
 
@@ -88,7 +88,7 @@ public class CruiseControlState extends CommandWithProperties {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case ACTIVE_IDENTIFIER:
-                        active = new ObjectProperty<>(Boolean.class, p);
+                        active = new Property<>(Boolean.class, p);
                         return active;
                     case LIMITER_IDENTIFIER:
                         limiter = Limiter.fromByte(p.getValueByte());
@@ -96,7 +96,7 @@ public class CruiseControlState extends CommandWithProperties {
                     case IDENTIFIER_TARGET_SPEED:
                         return targetSpeed.update(p);
                     case ADAPTIVE_ACTIVE_IDENTIFIER:
-                        adaptiveActive = new ObjectProperty<>(Boolean.class, p);
+                        adaptiveActive = new Property<>(Boolean.class, p);
                         return adaptiveActive;
                     case IDENTIFIER_ADAPTIVE_TARGET_SPEED:
                         return adaptiveTargetSpeed.update(p);

@@ -20,13 +20,12 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
 
-public class PropertyTimestampComponent extends PropertyComponent {
+public class PropertyComponentTimestamp extends PropertyComponent {
     private static final byte IDENTIFIER = 0x02;
     private Calendar timestamp;
 
@@ -37,13 +36,13 @@ public class PropertyTimestampComponent extends PropertyComponent {
         return timestamp;
     }
 
-    public PropertyTimestampComponent(Bytes bytes) throws CommandParseException {
+    public PropertyComponentTimestamp(Bytes bytes) {
         super(bytes);
         // TODO: 2019-02-28
     }
 
-    public PropertyTimestampComponent(Calendar timestamp) {
-        super(IDENTIFIER, 3 + CalendarProperty.CALENDAR_SIZE);
+    public PropertyComponentTimestamp(Calendar timestamp) {
+        super(IDENTIFIER, 3 + PropertyComponentValue.CALENDAR_SIZE);
         ByteUtils.setBytes(bytes, Property.calendarToBytes(timestamp), 3);
         this.timestamp = timestamp;
     }
@@ -76,13 +75,21 @@ public class PropertyTimestampComponent extends PropertyComponent {
  * @param timestamp                   The timestamp.
  * @param timestampPropertyIdentifier The identifier of the property.
  * @param additionalData              Full property bytes to identify the property.
+ * @return The timestamp calendar.
+ * @return The property identifier this timestamp is for.
+ * @return Additional data. Full property bytes if exists.
+ * <p>
+ * Create a property timestamp.
+ * @param timestamp                   The timestamp.
+ * @param timestampPropertyIdentifier The identifier of the property.
+ * @param additionalData              Full property bytes to identify the property.
  *//*
 
 public class PropertyTimestamp extends Property {
     public static final byte IDENTIFIER = (byte) 0xA4;
     public static final int LENGTH_WITHOUT_ADDITIONAL_DATA = 15;
 
-    private Calendar timestamp;
+    private Property<Calendar> timestamp;
     private byte timestampPropertyIdentifier;
     private Bytes additionalData;
 
