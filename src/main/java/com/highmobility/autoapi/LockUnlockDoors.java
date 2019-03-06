@@ -32,24 +32,32 @@ public class LockUnlockDoors extends CommandWithProperties {
 
     private static final byte IDENTIFIER = 0x01;
 
-    Lock doorLock;
+    Property<Lock> doorLock = new Property(Lock.class, IDENTIFIER);
 
     /**
      * @return The lock state.
      */
-    public Lock getDoorLock() {
+    public Property<Lock> getDoorLock() {
         return doorLock;
     }
 
     public LockUnlockDoors(Lock doorLock) {
-        super(TYPE.addProperty(new Property(IDENTIFIER, doorLock.getByte())));
-        this.doorLock = doorLock;
+        super(TYPE);
+        this.doorLock.update(doorLock);
+        createBytes(this.doorLock);
     }
 
-    LockUnlockDoors(byte[] bytes) throws CommandParseException {
+    LockUnlockDoors(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        doorLock = Lock.fromByte(prop.getValueByte());
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return doorLock.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

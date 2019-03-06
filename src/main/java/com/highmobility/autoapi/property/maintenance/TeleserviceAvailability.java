@@ -21,14 +21,13 @@
 package com.highmobility.autoapi.property.maintenance;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
-public enum TeleserviceAvailability {
+public enum TeleserviceAvailability implements PropertyValueSingleByte {
     PENDING((byte)0x00),
     IDLE((byte)0x01),
     SUCCESSFUL((byte)0x02),
     ERROR((byte)0x03);
-
-    public static final byte IDENTIFIER = 0x05;
 
     public static TeleserviceAvailability fromByte(byte byteValue) throws CommandParseException {
         TeleserviceAvailability[] values = TeleserviceAvailability.values();

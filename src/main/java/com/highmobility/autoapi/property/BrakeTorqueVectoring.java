@@ -23,8 +23,8 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.value.Axle;
 
-public class BrakeTorqueVectoring extends Property {
-    public static final byte IDENTIFIER = 0x0A;
+public class BrakeTorqueVectoring extends PropertyValueObject {
+
     Axle axle;
     boolean active;
 

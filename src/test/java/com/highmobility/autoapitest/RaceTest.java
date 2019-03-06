@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetRaceState;
 import com.highmobility.autoapi.RaceState;
-import com.highmobility.autoapi.property.AccelerationProperty;
+import com.highmobility.autoapi.property.Acceleration;
 import com.highmobility.autoapi.property.BrakeTorqueVectoring;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.autoapi.property.Property;
@@ -54,9 +54,9 @@ public class RaceTest {
         RaceState state = (RaceState) command;
 
         assertTrue(state.getAcceleration(
-                AccelerationProperty.AccelerationType.LONGITUDINAL).getAcceleration() == .864f);
+                Acceleration.AccelerationType.LONGITUDINAL).getAcceleration() == .864f);
         assertTrue(state.getAcceleration(
-                AccelerationProperty.AccelerationType.LATERAL).getAcceleration() == -0.753f);
+                Acceleration.AccelerationType.LATERAL).getAcceleration() == -0.753f);
 
         assertTrue(state.getUnderSteering().getValue() == .19d);
         assertTrue(state.getOverSteering().getValue() == 0f);
@@ -85,9 +85,9 @@ public class RaceTest {
     @Test public void build() {
         RaceState.Builder builder = new RaceState.Builder();
 
-        builder.addAccelerationProperty(new AccelerationProperty(AccelerationProperty
+        builder.addAccelerationProperty(new Acceleration(Acceleration
                 .AccelerationType.LONGITUDINAL, .864f));
-        builder.addAccelerationProperty(new AccelerationProperty(AccelerationProperty
+        builder.addAccelerationProperty(new Acceleration(Acceleration
                 .AccelerationType.LATERAL, -.753f));
         builder.setUnderSteering(new Property(.19d));
         builder.setOverSteering(new Property(0d));

@@ -22,7 +22,9 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum ParkingTicketState {
+import sun.nio.cs.SingleByte;
+
+public enum ParkingTicketState implements SingleByte {
     ENDED((byte)0x00),
     STARTED((byte)0x01);
 

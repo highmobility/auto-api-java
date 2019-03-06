@@ -25,9 +25,9 @@ import com.highmobility.autoapi.property.DriverTimeState;
 import com.highmobility.autoapi.property.DriverWorkingState;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -39,23 +39,30 @@ import javax.annotation.Nullable;
 public class TachographState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.TACHOGRAPH, 0x01);
 
+    public static final byte IDENTIFIER_DRIVER_WORKING_STATE = 0x01;
+    public static final byte IDENTIFIER_DRIVER_TIME_STATE = 0x02;
+    public static final byte IDENTIFIER_DRIVER_CARD = 0x03;
+
     private static final byte IDENTIFIER_VEHICLE_MOTION_DETECTED = (byte) 0x04;
     private static final byte IDENTIFIER_VEHICLE_OVERSPEED = (byte) 0x05;
     private static final byte IDENTIFIER_VEHICLE_DIRECTION = (byte) 0x06;
     private static final byte IDENTIFIER_VEHICLE_SPEED = (byte) 0x07;
 
-    DriverWorkingState[] driverWorkingStates;
-    DriverTimeState[] driverTimeStates;
-    DriverCard[] driverCards;
-    Property<Boolean> vehicleMotionDetected;
-    Property<Boolean> vehicleOverspeed;
-    VehicleDirection vehicleDirection;
-    PropertyInteger vehicleSpeed = new PropertyInteger(IDENTIFIER_VEHICLE_SPEED, false);
+    Property<DriverWorkingState>[] driverWorkingStates;
+    Property<DriverTimeState>[] driverTimeStates;
+    Property<DriverCard>[] driverCards;
+    Property<Boolean> vehicleMotionDetected = new Property(Boolean.class,
+            IDENTIFIER_VEHICLE_MOTION_DETECTED);
+    Property<Boolean> vehicleOverspeed = new Property(Boolean.class, IDENTIFIER_VEHICLE_OVERSPEED);
+    Property<VehicleDirection> vehicleDirection = new Property(VehicleDirection.class,
+            IDENTIFIER_VEHICLE_DIRECTION);
+    ;
+    Property<Integer> vehicleSpeed = new PropertyInteger(IDENTIFIER_VEHICLE_SPEED, false);
 
     /**
      * @return The driver working states.
      */
-    public DriverWorkingState[] getDriverWorkingStates() {
+    public Property<DriverWorkingState>[] getDriverWorkingStates() {
         return driverWorkingStates;
     }
 
@@ -65,10 +72,11 @@ public class TachographState extends CommandWithProperties {
      * @param driverNumber The driver number.
      * @return The driver working state.
      */
-    @Nullable public DriverWorkingState getDriverWorkingState(int driverNumber) {
+    @Nullable public Property<DriverWorkingState> getDriverWorkingState(int driverNumber) {
         for (int i = 0; i < driverWorkingStates.length; i++) {
-            DriverWorkingState state = driverWorkingStates[i];
-            if (state.getDriverNumber() == driverNumber) return state;
+            Property<DriverWorkingState> state = driverWorkingStates[i];
+            if (state.getValue() != null && state.getValue().getDriverNumber() == driverNumber)
+                return state;
         }
         return null;
     }
@@ -76,7 +84,7 @@ public class TachographState extends CommandWithProperties {
     /**
      * @return The driver time states.
      */
-    public DriverTimeState[] getDriverTimeStates() {
+    public Property<DriverTimeState>[] getDriverTimeStates() {
         return driverTimeStates;
     }
 
@@ -86,10 +94,11 @@ public class TachographState extends CommandWithProperties {
      * @param driverNumber The driver number.
      * @return The driver time state.
      */
-    @Nullable public DriverTimeState getDriverTimeState(int driverNumber) {
+    @Nullable public Property<DriverTimeState> getDriverTimeState(int driverNumber) {
         for (int i = 0; i < driverTimeStates.length; i++) {
-            DriverTimeState state = driverTimeStates[i];
-            if (state.getDriverNumber() == driverNumber) return state;
+            Property<DriverTimeState> state = driverTimeStates[i];
+            if (state.getValue() != null && state.getValue().getDriverNumber() == driverNumber)
+                return state;
         }
         return null;
     }
@@ -97,7 +106,7 @@ public class TachographState extends CommandWithProperties {
     /**
      * @return The driver cards.
      */
-    public DriverCard[] getDriverCards() {
+    public Property<DriverCard>[] getDriverCards() {
         return driverCards;
     }
 
@@ -107,10 +116,11 @@ public class TachographState extends CommandWithProperties {
      * @param driverNumber The driver number.
      * @return The driver card.
      */
-    @Nullable public DriverCard getDriverCard(int driverNumber) {
+    @Nullable public Property<DriverCard> getDriverCard(int driverNumber) {
         for (int i = 0; i < driverCards.length; i++) {
-            DriverCard state = driverCards[i];
-            if (state.getDriverNumber() == driverNumber) return state;
+            Property<DriverCard> state = driverCards[i];
+            if (state.getValue() != null && state.getValue().getDriverNumber() == driverNumber)
+                return state;
         }
         return null;
     }
@@ -118,64 +128,59 @@ public class TachographState extends CommandWithProperties {
     /**
      * @return Whether vehicle motion is detected.
      */
-    @Nullable public Property<Boolean> isVehicleMotionDetected() {
+    public Property<Boolean> isVehicleMotionDetected() {
         return vehicleMotionDetected;
     }
 
     /**
      * @return Whether vehicle is overspeeding.
      */
-    @Nullable public Property<Boolean> isVehicleOverspeeding() {
+    public Property<Boolean> isVehicleOverspeeding() {
         return vehicleOverspeed;
     }
 
     /**
      * @return The vehicle direction.
      */
-    @Nullable public VehicleDirection getVehicleDirection() {
+    public Property<VehicleDirection> getVehicleDirection() {
         return vehicleDirection;
     }
 
     /**
      * @return The tachograph vehicle speed in km/h.
      */
-    @Nullable public PropertyInteger getVehicleSpeed() {
+    public Property<Integer> getVehicleSpeed() {
         return vehicleSpeed;
     }
 
     TachographState(byte[] bytes) {
         super(bytes);
 
-        List<DriverTimeState> timeStateBuilder = new ArrayList<>();
-        List<DriverWorkingState> workingStateBuilder = new ArrayList<>();
-        List<DriverCard> cardsBuilder = new ArrayList<>();
+        List<Property<DriverTimeState>> timeStateBuilder = new ArrayList<>();
+        List<Property<DriverWorkingState>> workingStateBuilder = new ArrayList<>();
+        List<Property<DriverCard>> cardsBuilder = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case DriverTimeState.IDENTIFIER:
-                        DriverTimeState driverTimeState =
-                                new DriverTimeState(p.getByteArray());
+                    case IDENTIFIER_DRIVER_TIME_STATE:
+                        Property driverTimeState = new Property(DriverTimeState.class, p);
                         timeStateBuilder.add(driverTimeState);
                         return driverTimeState;
-                    case DriverWorkingState.IDENTIFIER:
-                        DriverWorkingState driverWorkingState =
-                                new DriverWorkingState(p.getByteArray());
+                    case IDENTIFIER_DRIVER_WORKING_STATE:
+                        Property driverWorkingState = new Property(DriverWorkingState.class, p);
                         workingStateBuilder.add(driverWorkingState);
                         return driverWorkingState;
-                    case DriverCard.IDENTIFIER:
-                        DriverCard driverCard = new DriverCard(p.getByteArray());
+                    case IDENTIFIER_DRIVER_CARD:
+                        Property driverCard = new Property(DriverCard.class, p);
                         cardsBuilder.add(driverCard);
                         return driverCard;
                     case IDENTIFIER_VEHICLE_MOTION_DETECTED:
-                        vehicleMotionDetected = new Property<>(Boolean.class, p);
-                        return vehicleMotionDetected;
+                        return vehicleMotionDetected.update(p);
                     case IDENTIFIER_VEHICLE_OVERSPEED:
-                        vehicleOverspeed = new Property<>(Boolean.class, p);
-                        return vehicleOverspeed;
+                        return vehicleOverspeed.update(p);
                     case IDENTIFIER_VEHICLE_DIRECTION:
-                        vehicleDirection = VehicleDirection.fromByte(p.getValueByte());
-                        return vehicleDirection;
+                        return vehicleDirection.update(p);
                     case IDENTIFIER_VEHICLE_SPEED:
                         return vehicleSpeed.update(p);
                 }
@@ -184,9 +189,9 @@ public class TachographState extends CommandWithProperties {
             });
         }
 
-        driverTimeStates = timeStateBuilder.toArray(new DriverTimeState[0]);
-        driverWorkingStates = workingStateBuilder.toArray(new DriverWorkingState[0]);
-        driverCards = cardsBuilder.toArray(new DriverCard[0]);
+        driverTimeStates = timeStateBuilder.toArray(new Property[0]);
+        driverWorkingStates = workingStateBuilder.toArray(new Property[0]);
+        driverCards = cardsBuilder.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {
@@ -196,9 +201,9 @@ public class TachographState extends CommandWithProperties {
     private TachographState(Builder builder) {
         super(builder);
 
-        this.driverTimeStates = builder.driverTimeStates.toArray(new DriverTimeState[0]);
-        this.driverWorkingStates = builder.driverWorkingStates.toArray(new DriverWorkingState[0]);
-        this.driverCards = builder.driverCards.toArray(new DriverCard[0]);
+        this.driverTimeStates = builder.driverTimeStates.toArray(new Property[0]);
+        this.driverWorkingStates = builder.driverWorkingStates.toArray(new Property[0]);
+        this.driverCards = builder.driverCards.toArray(new Property[0]);
         this.vehicleMotionDetected = builder.vehicleMotionDetected;
         this.vehicleOverspeed = builder.vehicleOverspeed;
         this.vehicleDirection = builder.vehicleDirection;
@@ -206,12 +211,12 @@ public class TachographState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        List<DriverWorkingState> driverWorkingStates = new ArrayList<>();
-        List<DriverTimeState> driverTimeStates = new ArrayList<>();
-        List<DriverCard> driverCards = new ArrayList<>();
+        List<Property<DriverWorkingState>> driverWorkingStates = new ArrayList<>();
+        List<Property<DriverTimeState>> driverTimeStates = new ArrayList<>();
+        List<Property<DriverCard>> driverCards = new ArrayList<>();
         Property<Boolean> vehicleMotionDetected;
         Property<Boolean> vehicleOverspeed;
-        VehicleDirection vehicleDirection;
+        Property<VehicleDirection> vehicleDirection;
         PropertyInteger vehicleSpeed;
 
         /**
@@ -220,8 +225,8 @@ public class TachographState extends CommandWithProperties {
          * @param driverWorkingState The driver working state.
          * @return The builder.
          */
-        public Builder addDriverWorkingState(DriverWorkingState driverWorkingState) {
-            this.driverWorkingStates.add(driverWorkingState);
+        public Builder addDriverWorkingState(Property<DriverWorkingState> driverWorkingState) {
+            this.driverWorkingStates.add(driverWorkingState.setIdentifier(IDENTIFIER_DRIVER_WORKING_STATE));
             addProperty(driverWorkingState);
             return this;
         }
@@ -230,10 +235,10 @@ public class TachographState extends CommandWithProperties {
          * @param driverWorkingStates The driver working states.
          * @return The builder.
          */
-        public Builder setDriverWorkingStates(DriverWorkingState[] driverWorkingStates) {
-            this.driverWorkingStates = Arrays.asList(driverWorkingStates);
-            for (DriverWorkingState driverWorkingState : driverWorkingStates) {
-                addProperty(driverWorkingState);
+        public Builder setDriverWorkingStates(Property<DriverWorkingState>[] driverWorkingStates) {
+            this.driverWorkingStates.clear();
+            for (Property<DriverWorkingState> driverWorkingState : driverWorkingStates) {
+                addDriverWorkingState(driverWorkingState);
             }
             return this;
         }
@@ -244,8 +249,8 @@ public class TachographState extends CommandWithProperties {
          * @param driverTimeState The driver time state.
          * @return The builder.
          */
-        public Builder addDriverTimeState(DriverTimeState driverTimeState) {
-            this.driverTimeStates.add(driverTimeState);
+        public Builder addDriverTimeState(Property<DriverTimeState> driverTimeState) {
+            this.driverTimeStates.add(driverTimeState.setIdentifier(IDENTIFIER_DRIVER_TIME_STATE));
             addProperty(driverTimeState);
             return this;
         }
@@ -254,10 +259,10 @@ public class TachographState extends CommandWithProperties {
          * @param driverTimeStates The driver time states.
          * @return The builder.
          */
-        public Builder setDriverTimeStates(DriverTimeState[] driverTimeStates) {
-            this.driverTimeStates = Arrays.asList(driverTimeStates);
-            for (DriverTimeState driverTimeState : driverTimeStates) {
-                addProperty(driverTimeState);
+        public Builder setDriverTimeStates(Property<DriverTimeState>[] driverTimeStates) {
+            this.driverTimeStates.clear();
+            for (Property<DriverTimeState> driverTimeState : driverTimeStates) {
+                addDriverTimeState(driverTimeState);
             }
             return this;
         }
@@ -268,8 +273,8 @@ public class TachographState extends CommandWithProperties {
          * @param driverCard The driver card.
          * @return The builder.
          */
-        public Builder addDriverCard(DriverCard driverCard) {
-            this.driverCards.add(driverCard);
+        public Builder addDriverCard(Property<DriverCard> driverCard) {
+            this.driverCards.add(driverCard.setIdentifier(IDENTIFIER_DRIVER_CARD));
             addProperty(driverCard);
             return this;
         }
@@ -278,11 +283,13 @@ public class TachographState extends CommandWithProperties {
          * @param driverCards The driver cards.
          * @return The builder.
          */
-        public Builder setDriverCards(DriverCard[] driverCards) {
-            this.driverCards = Arrays.asList(driverCards);
-            for (DriverCard driverCard : driverCards) {
-                addProperty(driverCard);
+        public Builder setDriverCards(Property<DriverCard>[] driverCards) {
+            this.driverCards.clear();
+
+            for (Property<DriverCard> driverCard : driverCards) {
+                addDriverCard(driverCard);
             }
+
             return this;
         }
 
@@ -312,9 +319,9 @@ public class TachographState extends CommandWithProperties {
          * @param vehicleDirection The vehicle direction.
          * @return The builder.
          */
-        public Builder setVehicleDirection(VehicleDirection vehicleDirection) {
+        public Builder setVehicleDirection(Property<VehicleDirection> vehicleDirection) {
             this.vehicleDirection = vehicleDirection;
-            addProperty(new Property(IDENTIFIER_VEHICLE_DIRECTION, vehicleDirection.getByte()));
+            addProperty(vehicleDirection.setIdentifier(IDENTIFIER_VEHICLE_DIRECTION));
             return this;
         }
 
@@ -338,7 +345,7 @@ public class TachographState extends CommandWithProperties {
         }
     }
 
-    public enum VehicleDirection {
+    public enum VehicleDirection implements PropertyValueSingleByte {
         FORWARD((byte) 0x00),
         REVERSE((byte) 0x01);
 

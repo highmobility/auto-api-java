@@ -22,8 +22,8 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public class DriverCard extends Property {
-    public static final byte IDENTIFIER = 0x03;
+public class DriverCard extends PropertyValueObject {
+
 
     int driverNumber;
     boolean present;

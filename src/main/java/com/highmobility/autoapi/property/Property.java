@@ -95,7 +95,7 @@ public class Property<T> extends Bytes {
      * @return The property value.
      */
     @Nullable public T getValue() {
-        return value.getValue();
+        return value != null ? value.getValue() : null;
     }
 
     /**

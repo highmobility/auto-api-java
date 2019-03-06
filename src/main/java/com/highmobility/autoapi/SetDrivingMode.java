@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteProperty;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.Property;
 
@@ -30,12 +29,12 @@ import com.highmobility.autoapi.property.Property;
 public class SetDrivingMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x12);
     private static final byte IDENTIFIER = 0x01;
-    DrivingMode drivingMode;
+    Property<DrivingMode> drivingMode = new Property(DrivingMode.class, IDENTIFIER);
 
     /**
      * @return The driving mode.
      */
-    public DrivingMode getDrivingMode() {
+    public Property<DrivingMode> getDrivingMode() {
         return drivingMode;
     }
 
@@ -43,13 +42,21 @@ public class SetDrivingMode extends CommandWithProperties {
      * @param drivingMode The driving mode.
      */
     public SetDrivingMode(DrivingMode drivingMode) {
-        super(TYPE.addProperty(new ByteProperty(drivingMode.getByte()).setIdentifier(IDENTIFIER)));
-        this.drivingMode = drivingMode;
+        super(TYPE);
+        this.drivingMode.update(drivingMode);
+        createBytes(this.drivingMode);
     }
 
-    SetDrivingMode(byte[] bytes) throws CommandParseException {
+    SetDrivingMode(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop != null) this.drivingMode = DrivingMode.fromByte(prop.getValueByte());
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return drivingMode.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

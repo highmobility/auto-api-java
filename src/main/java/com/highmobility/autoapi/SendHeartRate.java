@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 
 /**
@@ -35,8 +36,8 @@ public class SendHeartRate extends CommandWithProperties {
     /**
      * @return The heart rate.
      */
-    public int getHeartRate() {
-        return heartRate.getValue();
+    public Property<Integer> getHeartRate() {
+        return heartRate;
     }
 
     /**

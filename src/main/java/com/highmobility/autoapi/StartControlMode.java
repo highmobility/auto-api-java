@@ -30,27 +30,34 @@ public class StartControlMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x12);
     private static final byte IDENTIFIER = 0x01;
 
-    private boolean start;
+    private Property<Boolean> start = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether to start the control mode.
      */
-    public boolean getStart() {
+    public Property<Boolean> getStart() {
         return start;
     }
 
     /**
      * @param start The control mode state.
      */
-    public StartControlMode(boolean start) {
-        super(TYPE.addProperty(new Property<>(start).setIdentifier(IDENTIFIER)));
-        this.start = start;
+    public StartControlMode(Boolean start) {
+        super(TYPE);
+        this.start.update(start);
+        createBytes(this.start);
     }
 
     StartControlMode(byte[] bytes) throws CommandParseException {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        start = Property.getBool(prop.getValueByte());
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return start.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

@@ -23,6 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -35,12 +36,12 @@ public class MultiCommand extends CommandWithProperties {
 
     private static final byte PROP_IDENTIFIER = 0x01;
 
-    Command[] commands;
+    Property<Command>[] commands;
 
     /**
      * @return All of the commands.
      */
-    public Command[] getCommands() {
+    public Property<Command>[] getCommands() {
         return commands;
     }
 
@@ -50,9 +51,9 @@ public class MultiCommand extends CommandWithProperties {
      * @param type The command type.
      * @return The command.
      */
-    @Nullable public Command getCommand(Type type) {
-        for (Command command : commands) {
-            if (command.is(type)) return command;
+    @Nullable public Property<Command> getCommand(Type type) {
+        for (Property<Command> command : commands) {
+            if (command.getValue() != null && command.getValue().is(type)) return command;
         }
 
         return null;
@@ -62,39 +63,36 @@ public class MultiCommand extends CommandWithProperties {
      * @param commands The commands.
      */
     public MultiCommand(Command[] commands) {
-        super(TYPE, getProperties(commands));
-        this.commands = commands;
-    }
-
-    private static Property[] getProperties(Command[] commands) {
-        ArrayList<Property> properties = new ArrayList<>();
+        super(TYPE);
+        List<Property> builder = new ArrayList<>();
 
         for (Command command : commands) {
-            Property prop = new Property(PROP_IDENTIFIER, command.getByteArray());
-            properties.add(prop);
+            Property prop = new Property(PROP_IDENTIFIER, command);
+            builder.add(prop);
         }
 
-        return properties.toArray(new Property[properties.size()]);
+        this.commands = builder.toArray(new Property[0]);
+        createBytes(builder);
     }
 
     MultiCommand(byte[] bytes) {
         super(bytes);
 
-        ArrayList<Command> builder = new ArrayList<>();
+        ArrayList<Property<Command>> builder = new ArrayList<>();
+
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROP_IDENTIFIER) {
-                    Command command = CommandResolver.resolve(p.getValueComponent().getValueBytes());
-                    if (command != null) {
-                        builder.add(command);
-                        return command;
-                    }
+                    Property c = new Property(Command.class, p);
+                    builder.add(c);
+                    return c;
+
                 }
 
                 return null;
             });
         }
 
-        commands = builder.toArray(new Command[0]);
+        commands = builder.toArray(new Property[0]);
     }
 }

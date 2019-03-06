@@ -22,8 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 
-import javax.annotation.Nullable;
-
 /**
  * This message is sent when a Get Mobile State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
@@ -31,12 +29,12 @@ import javax.annotation.Nullable;
 public class MobileState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.MOBILE, 0x01);
     private static final byte IDENTIFIER = 0x01;
-    Property<Boolean> connected;
+    Property<Boolean> connected = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether mobile phone is connected.
      */
-    @Nullable public Property<Boolean> isConnected() {
+    public Property<Boolean> isConnected() {
         return connected;
     }
 
@@ -46,9 +44,7 @@ public class MobileState extends CommandWithProperties {
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER) {
-                    connected = new Property<>(Boolean.class, p);
-                    return connected;
-
+                    return connected.update(p);
                 }
                 return null;
             });

@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-
+import com.highmobility.autoapi.property.Property;
 
 /**
  * Load a URL in the head unit browser. A URL shortener can be used in other cases. Note that for

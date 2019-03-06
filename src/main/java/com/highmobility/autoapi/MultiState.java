@@ -20,6 +20,8 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
+
 import java.util.ArrayList;
 
 import javax.annotation.Nullable;
@@ -33,12 +35,12 @@ public class MultiState extends CommandWithProperties {
 
     private static final byte PROP_IDENTIFIER = 0x01;
 
-    Command[] commands;
+    Property<CommandWithProperties>[] commands;
 
     /**
      * @return All of the commands.
      */
-    public Command[] getCommands() {
+    public Property<CommandWithProperties>[] getCommands() {
         return commands;
     }
 
@@ -48,9 +50,9 @@ public class MultiState extends CommandWithProperties {
      * @param type The command type.
      * @return The command.
      */
-    @Nullable public Command getCommand(Type type) {
-        for (Command command : commands) {
-            if (command.is(type)) return command;
+    @Nullable public Property<CommandWithProperties> getCommand(Type type) {
+        for (Property<CommandWithProperties> command : commands) {
+            if (command.getValue() != null && command.getValue().is(type)) return command;
         }
 
         return null;
@@ -59,23 +61,20 @@ public class MultiState extends CommandWithProperties {
     MultiState(byte[] bytes) {
         super(bytes);
 
-        ArrayList<Command> builder = new ArrayList<>();
+        ArrayList<Property<CommandWithProperties>> builder = new ArrayList<>();
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROP_IDENTIFIER) {
-                    Command command = CommandResolver.resolve(p.getValueComponent().getValueBytes());
-
-                    if (command != null) {
-                        builder.add(command);
-                        return command;
-                    }
+                    Property c = new Property(CommandWithProperties.class, p);
+                    builder.add(c);
+                    return c;
                 }
 
                 return null;
             });
         }
 
-        commands = builder.toArray(new Command[0]);
+        commands = builder.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {

@@ -29,12 +29,12 @@ import com.highmobility.autoapi.property.Property;
 public class StartStopCharging extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x12);
     private static final byte ACTIVE_STATE_IDENTIFIER = 0x01;
-    boolean start;
+    Property<Boolean> start = new Property(Boolean.class, ACTIVE_STATE_IDENTIFIER);
 
     /**
      * @return Whether charging should start.
      */
-    public boolean getStart() {
+    public Property<Boolean> getStart() {
         return start;
     }
 
@@ -42,22 +42,22 @@ public class StartStopCharging extends CommandWithProperties {
      * @param start The charging state.
      */
     public StartStopCharging(boolean start) {
-        super(TYPE.addProperty(new Property<>(start).setIdentifier(ACTIVE_STATE_IDENTIFIER)));
-        this.start = start;
+        super(TYPE);
+        this.start.update(start);
+        createBytes(this.start);
     }
 
     StartStopCharging(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case ACTIVE_STATE_IDENTIFIER:
-                    start = Property.getBool(property.getValueByte());
-                    break;
-            }
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case ACTIVE_STATE_IDENTIFIER:
+                        return start.update(p);
+                }
+                return null;
+            });
         }
-
-        this.start = Property.getBool(bytes[6]);
     }
 }

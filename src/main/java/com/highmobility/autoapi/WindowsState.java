@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.autoapi.property.windows.WindowOpenPercentage;
 import com.highmobility.autoapi.property.windows.WindowPosition;
@@ -40,13 +41,13 @@ public class WindowsState extends CommandWithProperties {
     private static final byte IDENTIFIER_WINDOW_OPEN_PERCENTAGES = 0x02;
     private static final byte IDENTIFIER_WINDOW_POSITION = 0x03;
 
-    WindowPosition[] windowPositions;
-    WindowOpenPercentage[] windowOpenPercentages;
+    Property<WindowPosition>[] windowPositions;
+    Property<WindowOpenPercentage>[] windowOpenPercentages;
 
     /**
      * @return The window positions.
      */
-    public WindowPosition[] getWindowPositions() {
+    public Property<WindowPosition>[] getWindowPositions() {
         return windowPositions;
     }
 
@@ -54,9 +55,10 @@ public class WindowsState extends CommandWithProperties {
      * @param location The window location.
      * @return The window position.
      */
-    @Nullable public WindowPosition getWindowPosition(Location location) {
-        for (WindowPosition windowPosition : windowPositions) {
-            if (windowPosition.getLocation() == location) return windowPosition;
+    @Nullable public Property<WindowPosition> getWindowPosition(Location location) {
+        for (Property<WindowPosition> windowPosition : windowPositions) {
+            if (windowPosition.getValue() != null && windowPosition.getValue().getLocation() == location)
+                return windowPosition;
         }
         return null;
     }
@@ -64,7 +66,7 @@ public class WindowsState extends CommandWithProperties {
     /**
      * @return The window open percentages.
      */
-    public WindowOpenPercentage[] getWindowOpenPercentages() {
+    public Property<WindowOpenPercentage>[] getWindowOpenPercentages() {
         return windowOpenPercentages;
     }
 
@@ -72,9 +74,10 @@ public class WindowsState extends CommandWithProperties {
      * @param location The window location.
      * @return The window open percentage.
      */
-    @Nullable public WindowOpenPercentage getWindowOpenPercentage(Location location) {
-        for (WindowOpenPercentage windowOpenPercentage : windowOpenPercentages) {
-            if (windowOpenPercentage.getLocation() == location) return windowOpenPercentage;
+    @Nullable public Property<WindowOpenPercentage> getWindowOpenPercentage(Location location) {
+        for (Property<WindowOpenPercentage> windowOpenPercentage : windowOpenPercentages) {
+            if (windowOpenPercentage.getValue() != null && windowOpenPercentage.getValue().getLocation() == location)
+                return windowOpenPercentage;
         }
         return null;
     }
@@ -82,19 +85,20 @@ public class WindowsState extends CommandWithProperties {
     WindowsState(byte[] bytes) {
         super(bytes);
 
-        List<WindowPosition> positionBuilder = new ArrayList<>();
-        List<WindowOpenPercentage> openBuilder = new ArrayList<>();
+        List<Property<WindowPosition>> positionBuilder = new ArrayList<>();
+        List<Property<WindowOpenPercentage>> openBuilder = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_WINDOW_OPEN_PERCENTAGES:
-                        WindowOpenPercentage windowOpenPercentage =
-                                new WindowOpenPercentage(p.getByteArray());
+                        Property<WindowOpenPercentage> windowOpenPercentage =
+                                new Property(WindowOpenPercentage.class, p);
                         openBuilder.add(windowOpenPercentage);
                         return windowOpenPercentage;
                     case IDENTIFIER_WINDOW_POSITION:
-                        WindowPosition windowPosition = new WindowPosition(p.getByteArray());
+                        Property<WindowPosition> windowPosition =
+                                new Property(WindowPosition.class, p);
                         positionBuilder.add(windowPosition);
                         return windowPosition;
                 }
@@ -103,8 +107,8 @@ public class WindowsState extends CommandWithProperties {
             });
         }
 
-        windowPositions = positionBuilder.toArray(new WindowPosition[0]);
-        windowOpenPercentages = openBuilder.toArray(new WindowOpenPercentage[0]);
+        windowPositions = positionBuilder.toArray(new Property[0]);
+        windowOpenPercentages = openBuilder.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {
@@ -113,13 +117,13 @@ public class WindowsState extends CommandWithProperties {
 
     private WindowsState(Builder builder) {
         super(builder);
-        windowPositions = builder.windowPositions.toArray(new WindowPosition[0]);
-        windowOpenPercentages = builder.windowOpenPercentages.toArray(new WindowOpenPercentage[0]);
+        windowPositions = builder.windowPositions.toArray(new Property[0]);
+        windowOpenPercentages = builder.windowOpenPercentages.toArray(new Property[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        List<WindowPosition> windowPositions = new ArrayList<>();
-        List<WindowOpenPercentage> windowOpenPercentages = new ArrayList<>();
+        List<Property<WindowPosition>> windowPositions = new ArrayList<>();
+        List<Property<WindowOpenPercentage>> windowOpenPercentages = new ArrayList<>();
 
         public Builder() {
             super(TYPE);
@@ -129,10 +133,10 @@ public class WindowsState extends CommandWithProperties {
          * @param windowPositions The window positions.
          * @return The builder.
          */
-        public Builder setWindowPositions(WindowPosition[] windowPositions) {
+        public Builder setWindowPositions(Property<WindowPosition>[] windowPositions) {
             this.windowPositions.clear();
 
-            for (WindowPosition windowPosition : windowPositions) {
+            for (Property<WindowPosition> windowPosition : windowPositions) {
                 addWindowPosition(windowPosition);
             }
 
@@ -143,10 +147,10 @@ public class WindowsState extends CommandWithProperties {
          * @param windowOpenPercentages The window open percentages.
          * @return The builder.
          */
-        public Builder setWindowOpenPercentages(WindowOpenPercentage[] windowOpenPercentages) {
+        public Builder setWindowOpenPercentages(Property<WindowOpenPercentage>[] windowOpenPercentages) {
             this.windowOpenPercentages.clear();
 
-            for (WindowOpenPercentage windowOpenPercentage : windowOpenPercentages) {
+            for (Property<WindowOpenPercentage> windowOpenPercentage : windowOpenPercentages) {
                 addWindowOpenPercentage(windowOpenPercentage);
             }
 
@@ -157,7 +161,7 @@ public class WindowsState extends CommandWithProperties {
          * @param windowPosition A window position.
          * @return The builder.
          */
-        public Builder addWindowPosition(WindowPosition windowPosition) {
+        public Builder addWindowPosition(Property<WindowPosition> windowPosition) {
             windowPosition.setIdentifier(IDENTIFIER_WINDOW_POSITION);
             addProperty(windowPosition);
             windowPositions.add(windowPosition);
@@ -168,7 +172,7 @@ public class WindowsState extends CommandWithProperties {
          * @param windowOpenPercentage A window open percentage.
          * @return The builder.
          */
-        public Builder addWindowOpenPercentage(WindowOpenPercentage windowOpenPercentage) {
+        public Builder addWindowOpenPercentage(Property<WindowOpenPercentage> windowOpenPercentage) {
             windowOpenPercentage.setIdentifier(IDENTIFIER_WINDOW_OPEN_PERCENTAGES);
             addProperty(windowOpenPercentage);
             windowOpenPercentages.add(windowOpenPercentage);

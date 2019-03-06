@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.Color;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.lights.FogLight;
 import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.property.lights.InteriorLamp;
@@ -190,17 +190,15 @@ public class LightsState extends CommandWithProperties {
                     case IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE:
                         return emergencyBrakeLightActive.update(p);
                     case IDENTIFIER_FOG_LIGHTS:
-                        Property<FogLight> fogLight = new Property<>(FogLight.class, p);
+                        Property fogLight = new Property(FogLight.class, p);
                         fogLights.add(fogLight);
                         return fogLight;
                     case IDENTIFIER_READING_LAMPS:
-                        Property<ReadingLamp> readingLamp =
-                                new Property<>(ReadingLamp.class, p);
+                        Property readingLamp = new Property(ReadingLamp.class, p);
                         readingLamps.add(readingLamp);
                         return readingLamp;
                     case IDENTIFIER_INTERIOR_LAMPS:
-                        Property<InteriorLamp> interiorLamp =
-                                new Property<>(InteriorLamp.class, p);
+                        Property interiorLamp = new Property(InteriorLamp.class, p);
                         interiorLamps.add(interiorLamp);
                         return interiorLamp;
                 }

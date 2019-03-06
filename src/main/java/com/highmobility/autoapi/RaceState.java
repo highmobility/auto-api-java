@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.AccelerationProperty;
+import com.highmobility.autoapi.property.Acceleration;
 import com.highmobility.autoapi.property.BrakeTorqueVectoring;
 import com.highmobility.autoapi.property.GearMode;
 import com.highmobility.autoapi.property.Property;
@@ -28,7 +28,6 @@ import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.value.Axle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -58,51 +57,55 @@ public class RaceState extends CommandWithProperties {
     private static final byte IDENTIFIER_VEHICLE_MOVING = 0x12;
     public static final byte IDENTIFIER_GEAR_MODE = 0x0B;
 
-    AccelerationProperty[] accelerationProperties;
+    public static final byte IDENTIFIER_ACCELERATION = 0x01;
+    public static final byte IDENTIFIER_BRAKE_TORQUE_VECTORING = 0x0A;
+
+    Property<Acceleration>[] accelerations;
 
     Property<Double> underSteering =
-            new Property<>(Double.class, IDENTIFIER_UNDER_STEERING);
-    Property<Double> overSteering = new Property<>(Double.class,
+            new Property(Double.class, IDENTIFIER_UNDER_STEERING);
+    Property<Double> overSteering = new Property(Double.class,
             IDENTIFIER_OVER_STEERING);
     Property<Double> gasPedalPosition =
-            new Property<>(Double.class, IDENTIFIER_GAS_PEDAL_POSITION);
-    PropertyInteger steeringAngle = new PropertyInteger(IDENTIFIER_STEERING_ANGLE,
+            new Property(Double.class, IDENTIFIER_GAS_PEDAL_POSITION);
+    Property<Integer> steeringAngle = new PropertyInteger(IDENTIFIER_STEERING_ANGLE,
             true);
-    Property<Float> brakePressure = new Property<>(Float.class,
+    Property<Float> brakePressure = new Property(Float.class,
             IDENTIFIER_BRAKE_PRESSURE);
-    Property<Float> yawRate = new Property<>(Float.class, IDENTIFIER_YAW_RATE);
+    Property<Float> yawRate = new Property(Float.class, IDENTIFIER_YAW_RATE);
     PropertyInteger rearSuspensionSteering =
             new PropertyInteger(IDENTIFIER_REAR_SUSPENSION_STEERING, false);
-    Property<Boolean> espInterventionActive = new Property<>(Boolean.class,
+    Property<Boolean> espInterventionActive = new Property(Boolean.class,
             IDENTIFIER_ESP_INTERVENTION_ACTIVE);
-    BrakeTorqueVectoring[] brakeTorqueVectorings;
-    GearMode gearMode;
-    PropertyInteger selectedGear = new PropertyInteger(IDENTIFIER_SELECTED_GEAR, false);
+    Property<BrakeTorqueVectoring>[] brakeTorqueVectorings;
+    Property<GearMode> gearMode = new Property(GearMode.class, IDENTIFIER_GEAR_MODE);
+    Property<Integer> selectedGear = new PropertyInteger(IDENTIFIER_SELECTED_GEAR, false);
     Property<Double> brakePedalPosition =
-            new Property<>(Double.class, IDENTIFIER_BRAKE_PEDAL_POSITION);
+            new Property(Double.class, IDENTIFIER_BRAKE_PEDAL_POSITION);
     // level7
-    Property<Boolean> brakePedalSwitchActive = new Property<>(Boolean.class,
+    Property<Boolean> brakePedalSwitchActive = new Property(Boolean.class,
             IDENTIFIER_BRAKE_PEDAL_SWITCH_ACTIVE);
-    Property<Boolean> clutchPedalSwitchActive = new Property<>(Boolean.class,
+    Property<Boolean> clutchPedalSwitchActive = new Property(Boolean.class,
             IDENTIFIER_CLUTCH_PEDAL_SWITCH_ACTIVE);
-    Property<Boolean> acceleratorPedalIdleSwitchActive = new Property<>(Boolean.class
+    Property<Boolean> acceleratorPedalIdleSwitchActive = new Property(Boolean.class
             , IDENTIFIER_ACCELERATOR_PEDAL_IDLE_SWITCH_ACTIVE);
     Property<Boolean> acceleratorPedalKickdownSwitchActive =
-            new Property<>(Boolean.class,
+            new Property(Boolean.class,
                     IDENTIFIER_ACCELERATOR_PEDAL_KICKDOWN_SWITCH_ACTIVE);
     // level8
-    Property<Boolean> vehicleMoving = new Property<>(Boolean.class,
+    Property<Boolean> vehicleMoving = new Property(Boolean.class,
             IDENTIFIER_VEHICLE_MOVING);
 
     /**
      * @param accelerationType The acceleration type.
      * @return Acceleration for the given acceleration type. Null if doesnt exist.
      */
-    @Nullable public AccelerationProperty getAcceleration(AccelerationProperty.AccelerationType
-                                                                  accelerationType) {
-        for (int i = 0; i < accelerationProperties.length; i++) {
-            AccelerationProperty property = accelerationProperties[i];
-            if (property.getAccelerationType() == accelerationType) return property;
+    @Nullable public Property<Acceleration> getAcceleration(Acceleration.AccelerationType
+                                                                    accelerationType) {
+        for (int i = 0; i < accelerations.length; i++) {
+            Property<Acceleration> property = accelerations[i];
+            if (property.getValue() != null && property.getValue().getAccelerationType() == accelerationType)
+                return property;
         }
 
         return null;
@@ -111,15 +114,15 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return All of the accelerations.
      */
-    public AccelerationProperty[] getAccelerationProperties() {
-        return accelerationProperties;
+    public Property<Acceleration>[] getAccelerations() {
+        return accelerations;
     }
 
     /**
      * @return The under steering percentage between 0-1 whereas up to .2 is considered OK, up to .3
      * marginal, over .3 critical.
      */
-    @Nullable public Property<Double> getUnderSteering() {
+    public Property<Double> getUnderSteering() {
         return underSteering;
     }
 
@@ -127,14 +130,14 @@ public class RaceState extends CommandWithProperties {
      * @return The over steering percentage between 0-1 whereas up to .2 is considered OK, up to .3
      * marginal, over .3 critical.
      */
-    @Nullable public Property<Double> getOverSteering() {
+    public Property<Double> getOverSteering() {
         return overSteering;
     }
 
     /**
      * @return The gas pedal position between 0-1, whereas 1 is full throttle.
      */
-    @Nullable public Property<Double> getGasPedalPosition() {
+    public Property<Double> getGasPedalPosition() {
         return gasPedalPosition;
     }
 
@@ -142,35 +145,35 @@ public class RaceState extends CommandWithProperties {
      * @return The steering angle in degrees, whereas 0 degrees is straight ahead, positive number
      * to the left and negative number to the right.
      */
-    @Nullable public PropertyInteger getSteeringAngle() {
+    public Property<Integer> getSteeringAngle() {
         return steeringAngle;
     }
 
     /**
      * @return The Brake pressure in bar, whereas 100bar is max value, full brake.
      */
-    @Nullable public Property<Float> getBrakePressure() {
+    public Property<Float> getBrakePressure() {
         return brakePressure;
     }
 
     /**
      * @return The yaw rate in degrees per second [°/s].
      */
-    @Nullable public Property<Float> getYawRate() {
+    public Property<Float> getYawRate() {
         return yawRate;
     }
 
     /**
      * @return The rear suspension steering in degrees.
      */
-    @Nullable public PropertyInteger getRearSuspensionSteering() {
+    public Property<Integer> getRearSuspensionSteering() {
         return rearSuspensionSteering;
     }
 
     /**
      * @return The ESP (Electronic Stability Program) intervention state.
      */
-    @Nullable public Property<Boolean> isEspInterventionActive() {
+    public Property<Boolean> isEspInterventionActive() {
         return espInterventionActive;
     }
 
@@ -178,10 +181,11 @@ public class RaceState extends CommandWithProperties {
      * @param axle The axle.
      * @return The Brake Torque Vectoring for the given axle. Null if doesn't exist.
      */
-    @Nullable public BrakeTorqueVectoring getBrakeTorqueVectoring(Axle axle) {
+    @Nullable public Property<BrakeTorqueVectoring> getBrakeTorqueVectoring(Axle axle) {
         for (int i = 0; i < brakeTorqueVectorings.length; i++) {
-            BrakeTorqueVectoring property = brakeTorqueVectorings[i];
-            if (property.getAxle() == axle) return property;
+            Property<BrakeTorqueVectoring> property = brakeTorqueVectorings[i];
+            if (property.getValue() != null && property.getValue().getAxle() == axle)
+                return property;
         }
 
         return null;
@@ -190,56 +194,56 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return All of the brake torque vectorings.
      */
-    public BrakeTorqueVectoring[] getBrakeTorqueVectorings() {
+    public Property<BrakeTorqueVectoring>[] getBrakeTorqueVectorings() {
         return brakeTorqueVectorings;
     }
 
     /**
      * @return The gear mode.
      */
-    @Nullable public GearMode getGearMode() {
+    public Property<GearMode> getGearMode() {
         return gearMode;
     }
 
     /**
      * @return The selected gear.
      */
-    @Nullable public PropertyInteger getSelectedGear() {
+    public Property<Integer> getSelectedGear() {
         return selectedGear;
     }
 
     /**
      * @return The brake pedal position between 0-1, whereas 1 is full brakes.
      */
-    @Nullable public Property<Double> getBrakePedalPosition() {
+    public Property<Double> getBrakePedalPosition() {
         return brakePedalPosition;
     }
 
     /**
      * @return The brake pedal switch state.
      */
-    @Nullable public Property<Boolean> isBrakePedalSwitchActive() {
+    public Property<Boolean> isBrakePedalSwitchActive() {
         return brakePedalSwitchActive;
     }
 
     /**
      * @return The clutch pedal switch state.
      */
-    @Nullable public Property<Boolean> isClutchPedalSwitchActive() {
+    public Property<Boolean> isClutchPedalSwitchActive() {
         return clutchPedalSwitchActive;
     }
 
     /**
      * @return The accelerator pedal idle switch state. If active, pedal is fully released.
      */
-    @Nullable public Property<Boolean> isAcceleratorPedalIdleSwitchActive() {
+    public Property<Boolean> isAcceleratorPedalIdleSwitchActive() {
         return acceleratorPedalIdleSwitchActive;
     }
 
     /**
      * @return The accelerator pedal kickdown switch state. If active, pedal is fully depressed.
      */
-    @Nullable public Property<Boolean> isAcceleratorPedalKickdownSwitchActive
+    public Property<Boolean> isAcceleratorPedalKickdownSwitchActive
     () {
         return acceleratorPedalKickdownSwitchActive;
     }
@@ -247,26 +251,24 @@ public class RaceState extends CommandWithProperties {
     /**
      * @return The vehicle moving state.
      */
-    @Nullable public Property<Boolean> isVehicleMoving() {
+    public Property<Boolean> isVehicleMoving() {
         return vehicleMoving;
     }
 
     public RaceState(byte[] bytes) {
         super(bytes);
 
-        ArrayList<AccelerationProperty> accelerationProperties = new ArrayList<>();
-        ArrayList<BrakeTorqueVectoring> brakeTorqueVectoringProperties =
+        ArrayList<Property<Acceleration>> accelerationProperties = new ArrayList<>();
+        ArrayList<Property<BrakeTorqueVectoring>> brakeTorqueVectoringProperties =
                 new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case AccelerationProperty.IDENTIFIER:
-                        AccelerationProperty a =
-                                new AccelerationProperty(p.getByteArray());
+                    case IDENTIFIER_ACCELERATION:
+                        Property a = new Property(Acceleration.class, p);
                         accelerationProperties.add(a);
                         return a;
-
                     case IDENTIFIER_UNDER_STEERING:
                         return underSteering.update(p);
                     case IDENTIFIER_OVER_STEERING:
@@ -283,14 +285,12 @@ public class RaceState extends CommandWithProperties {
                         return rearSuspensionSteering.update(p);
                     case IDENTIFIER_ESP_INTERVENTION_ACTIVE:
                         return espInterventionActive.update(p);
-                    case BrakeTorqueVectoring.IDENTIFIER:
-                        BrakeTorqueVectoring b =
-                                new BrakeTorqueVectoring(p.getByteArray());
+                    case IDENTIFIER_BRAKE_TORQUE_VECTORING:
+                        Property b = new Property(BrakeTorqueVectoring.class, p);
                         brakeTorqueVectoringProperties.add(b);
                         return b;
                     case IDENTIFIER_GEAR_MODE:
-                        gearMode = GearMode.fromByte(p.getValueByte());
-                        return null; // TODO: 2019-02-07
+                        return gearMode.update(p);
                     case IDENTIFIER_SELECTED_GEAR:
                         return selectedGear.update(p);
                     case IDENTIFIER_BRAKE_PEDAL_POSITION:
@@ -311,11 +311,8 @@ public class RaceState extends CommandWithProperties {
             });
         }
 
-        this.accelerationProperties = accelerationProperties.toArray(
-                new AccelerationProperty[0]);
-
-        this.brakeTorqueVectorings = brakeTorqueVectoringProperties.toArray(
-                new BrakeTorqueVectoring[0]);
+        this.accelerations = accelerationProperties.toArray(new Property[0]);
+        this.brakeTorqueVectorings = brakeTorqueVectoringProperties.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {
@@ -324,8 +321,7 @@ public class RaceState extends CommandWithProperties {
 
     private RaceState(Builder builder) {
         super(builder);
-        accelerationProperties =
-                builder.accelerationProperties.toArray(new AccelerationProperty[0]);
+        accelerations = builder.accelerationProperties.toArray(new Property[0]);
         underSteering = builder.underSteering;
         overSteering = builder.overSteering;
         gasPedalPosition = builder.gasPedalPosition;
@@ -334,8 +330,7 @@ public class RaceState extends CommandWithProperties {
         yawRate = builder.yawRate;
         rearSuspensionSteering = builder.rearSuspensionSteering;
         espInterventionActive = builder.espInterventionActive;
-        brakeTorqueVectorings = builder.brakeTorqueVectorings.toArray(new
-                BrakeTorqueVectoring[0]);
+        brakeTorqueVectorings = builder.brakeTorqueVectorings.toArray(new Property[0]);
         gearMode = builder.gearMode;
         selectedGear = builder.selectedGear;
         brakePedalPosition = builder.brakePedalPosition;
@@ -349,8 +344,7 @@ public class RaceState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private List<AccelerationProperty> accelerationProperties =
-                new ArrayList<>();
+        private List<Property<Acceleration>> accelerationProperties = new ArrayList<>();
 
         private Property<Double> underSteering;
         private Property<Double> overSteering;
@@ -360,9 +354,8 @@ public class RaceState extends CommandWithProperties {
         private Property<Float> yawRate;
         private PropertyInteger rearSuspensionSteering;
         private Property<Boolean> espInterventionActive;
-        private List<BrakeTorqueVectoring> brakeTorqueVectorings =
-                new ArrayList<>();
-        private GearMode gearMode;
+        private List<Property<BrakeTorqueVectoring>> brakeTorqueVectorings = new ArrayList<>();
+        private Property<GearMode> gearMode;
         private PropertyInteger selectedGear;
         private Property<Double> brakePedalPosition;
 
@@ -381,11 +374,10 @@ public class RaceState extends CommandWithProperties {
          * @param accelerationProperties All of the accelerations.
          * @return The builder.
          */
-        public Builder setAccelerationProperties(AccelerationProperty[] accelerationProperties) {
-            this.accelerationProperties = Arrays.asList(accelerationProperties);
-            for (AccelerationProperty accelerationProperty :
-                    accelerationProperties) {
-                addProperty(accelerationProperty);
+        public Builder setAccelerationProperties(Property<Acceleration>[] accelerationProperties) {
+            this.accelerationProperties.clear();
+            for (Property<Acceleration> acceleration : accelerationProperties) {
+                addAccelerationProperty(acceleration);
             }
             return this;
         }
@@ -393,12 +385,12 @@ public class RaceState extends CommandWithProperties {
         /**
          * Add a single acceleration property.
          *
-         * @param accelerationProperty The acceleration property.
+         * @param acceleration The acceleration property.
          * @return The builder.
          */
-        public Builder addAccelerationProperty(AccelerationProperty accelerationProperty) {
-            this.accelerationProperties.add(accelerationProperty);
-            addProperty(accelerationProperty);
+        public Builder addAccelerationProperty(Property<Acceleration> acceleration) {
+            this.accelerationProperties.add(acceleration);
+            addProperty(acceleration.setIdentifier(IDENTIFIER_ACCELERATION));
             return this;
         }
 
@@ -443,8 +435,7 @@ public class RaceState extends CommandWithProperties {
          *                      positive number to the left and negative number to the right.
          * @return The builder.
          */
-        public Builder setSteeringAngle(PropertyInteger
-                                                steeringAngle) {
+        public Builder setSteeringAngle(PropertyInteger steeringAngle) {
             this.steeringAngle = steeringAngle;
             steeringAngle.update(IDENTIFIER_STEERING_ANGLE, false, 1);
             addProperty(steeringAngle);
@@ -478,8 +469,7 @@ public class RaceState extends CommandWithProperties {
          * @param rearSuspensionSteering The rear suspension steering in degrees.
          * @return The builder
          */
-        public Builder setRearSuspensionSteering(PropertyInteger
-                                                         rearSuspensionSteering) {
+        public Builder setRearSuspensionSteering(PropertyInteger rearSuspensionSteering) {
             this.rearSuspensionSteering = rearSuspensionSteering;
             rearSuspensionSteering.update(IDENTIFIER_REAR_SUSPENSION_STEERING,
                     false, 1);
@@ -491,8 +481,7 @@ public class RaceState extends CommandWithProperties {
          * @param espInterventionActive The ESP (Electronic Stability Program) intervention state.
          * @return The builder.
          */
-        public Builder setEspInterventionActive
-        (Property<Boolean> espInterventionActive) {
+        public Builder setEspInterventionActive(Property<Boolean> espInterventionActive) {
             this.espInterventionActive = espInterventionActive;
             espInterventionActive.setIdentifier(IDENTIFIER_ESP_INTERVENTION_ACTIVE);
             addProperty(espInterventionActive);
@@ -503,13 +492,10 @@ public class RaceState extends CommandWithProperties {
          * @param brakeTorqueVectorings The brake torque vectorings.
          * @return The builder.
          */
-        public Builder setBrakeTorqueVectorings(BrakeTorqueVectoring[]
-                                                        brakeTorqueVectorings) {
-            this.brakeTorqueVectorings =
-                    Arrays.asList(brakeTorqueVectorings);
-            for (BrakeTorqueVectoring brakeTorqueVectoring :
-                    brakeTorqueVectorings) {
-                addProperty(brakeTorqueVectoring);
+        public Builder setBrakeTorqueVectorings(Property<BrakeTorqueVectoring>[] brakeTorqueVectorings) {
+            this.brakeTorqueVectorings.clear();
+            for (Property<BrakeTorqueVectoring> brakeTorqueVectoring : brakeTorqueVectorings) {
+                addBrakeTorqueVectoring(brakeTorqueVectoring);
             }
             return this;
         }
@@ -520,10 +506,9 @@ public class RaceState extends CommandWithProperties {
          * @param brakeTorqueVectoring The brake torque vectoring.
          * @return The builder.
          */
-        public Builder addBrakeTorqueVectoring(BrakeTorqueVectoring
-                                                       brakeTorqueVectoring) {
+        public Builder addBrakeTorqueVectoring(Property<BrakeTorqueVectoring> brakeTorqueVectoring) {
             this.brakeTorqueVectorings.add(brakeTorqueVectoring);
-            addProperty(brakeTorqueVectoring);
+            addProperty(brakeTorqueVectoring.setIdentifier(IDENTIFIER_BRAKE_TORQUE_VECTORING));
             return this;
         }
 
@@ -531,10 +516,9 @@ public class RaceState extends CommandWithProperties {
          * @param gearMode The gear mode.
          * @return The builder.
          */
-        public Builder setGearMode(GearMode gearMode) {
+        public Builder setGearMode(Property<GearMode> gearMode) {
             this.gearMode = gearMode;
-            addProperty(new Property(IDENTIFIER_GEAR_MODE,
-                    gearMode.getByte()));
+            addProperty(gearMode.setIdentifier(IDENTIFIER_GEAR_MODE));
             return this;
         }
 
@@ -542,8 +526,7 @@ public class RaceState extends CommandWithProperties {
          * @param selectedGear The selected gear.
          * @return The builder.
          */
-        public Builder setSelectedGear(PropertyInteger
-                                               selectedGear) {
+        public Builder setSelectedGear(PropertyInteger selectedGear) {
             this.selectedGear = selectedGear;
             selectedGear.update(IDENTIFIER_SELECTED_GEAR, false, 1);
             addProperty(selectedGear);
@@ -565,8 +548,7 @@ public class RaceState extends CommandWithProperties {
          * @param brakePedalSwitchActive The brake pedal switch state.
          * @return The builder.
          */
-        public Builder setBrakePedalSwitchActive
-        (Property<Boolean> brakePedalSwitchActive) {
+        public Builder setBrakePedalSwitchActive(Property<Boolean> brakePedalSwitchActive) {
             this.brakePedalSwitchActive = brakePedalSwitchActive;
             brakePedalSwitchActive.setIdentifier(IDENTIFIER_BRAKE_PEDAL_SWITCH_ACTIVE);
             addProperty(brakePedalSwitchActive);
@@ -577,8 +559,7 @@ public class RaceState extends CommandWithProperties {
          * @param clutchPedalSwitchActive The clutch pedal switch state.
          * @return The builder.
          */
-        public Builder setClutchPedalSwitchActive
-        (Property<Boolean> clutchPedalSwitchActive) {
+        public Builder setClutchPedalSwitchActive(Property<Boolean> clutchPedalSwitchActive) {
             this.clutchPedalSwitchActive = clutchPedalSwitchActive;
             clutchPedalSwitchActive.setIdentifier(IDENTIFIER_CLUTCH_PEDAL_SWITCH_ACTIVE);
             addProperty(clutchPedalSwitchActive);
@@ -590,8 +571,7 @@ public class RaceState extends CommandWithProperties {
          *                                         active, pedal is fully released.
          * @return The builder.
          */
-        public Builder setAcceleratorPedalIdleSwitchActive
-        (Property<Boolean> acceleratorPedalIdleSwitchActive) {
+        public Builder setAcceleratorPedalIdleSwitchActive(Property<Boolean> acceleratorPedalIdleSwitchActive) {
             this.acceleratorPedalIdleSwitchActive =
                     acceleratorPedalIdleSwitchActive;
             acceleratorPedalIdleSwitchActive.setIdentifier(IDENTIFIER_ACCELERATOR_PEDAL_IDLE_SWITCH_ACTIVE);
@@ -604,8 +584,7 @@ public class RaceState extends CommandWithProperties {
          *                                             If active, pedal is fully depressed.
          * @return The builder.
          */
-        public Builder setAcceleratorPedalKickdownSwitchActive
-        (Property<Boolean> acceleratorPedalKickdownSwitchActive) {
+        public Builder setAcceleratorPedalKickdownSwitchActive(Property<Boolean> acceleratorPedalKickdownSwitchActive) {
             this.acceleratorPedalKickdownSwitchActive =
                     acceleratorPedalKickdownSwitchActive;
             acceleratorPedalKickdownSwitchActive.setIdentifier(IDENTIFIER_ACCELERATOR_PEDAL_KICKDOWN_SWITCH_ACTIVE);
@@ -617,8 +596,7 @@ public class RaceState extends CommandWithProperties {
          * @param vehicleMoving The vehicle moving state.
          * @return The builder.
          */
-        public Builder setVehicleMoving
-        (Property<Boolean> vehicleMoving) {
+        public Builder setVehicleMoving(Property<Boolean> vehicleMoving) {
             this.vehicleMoving = vehicleMoving;
             vehicleMoving.setIdentifier(IDENTIFIER_VEHICLE_MOVING);
             addProperty(vehicleMoving);

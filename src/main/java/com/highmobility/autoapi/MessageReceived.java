@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,8 @@ public class MessageReceived extends CommandWithProperties {
     private static final byte IDENTIFIER_MESSAGE = 0x02;
 
     private Property<String> handle = new Property(String.class, IDENTIFIER_RECIPIENT);
-    private Property<String> message = new Property(String.class, IDENTIFIER_MESSAGE);;
+    private Property<String> message = new Property(String.class, IDENTIFIER_MESSAGE);
+    ;
 
     /**
      * @return The sender handle (e.g. phone number).

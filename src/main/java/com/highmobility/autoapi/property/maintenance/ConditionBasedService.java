@@ -22,11 +22,12 @@ package com.highmobility.autoapi.property.maintenance;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.utils.ByteUtils;
 
 import java.time.LocalDate;
 
-public class ConditionBasedService extends Property {
+public class ConditionBasedService extends PropertyValueObject {
     public static final byte IDENTIFIER = 0x0B;
 
     LocalDate date;

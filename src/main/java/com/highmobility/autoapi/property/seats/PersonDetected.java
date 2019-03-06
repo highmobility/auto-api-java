@@ -22,8 +22,10 @@ package com.highmobility.autoapi.property.seats;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.value.Bytes;
 
-public class PersonDetected extends Property {
+public class PersonDetected extends PropertyValueObject {
     public static final byte IDENTIFIER = 0x02;
 
     SeatLocation seatLocation;
@@ -44,26 +46,31 @@ public class PersonDetected extends Property {
     }
 
     public PersonDetected(SeatLocation seatLocation, boolean detected) {
-        super(IDENTIFIER, 2);
+        super(2);
+        update(seatLocation, detected);
+    }
+
+    public PersonDetected() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 2) throw new CommandParseException();
+        seatLocation = SeatLocation.fromByte(get(0));
+        detected = Property.getBool(get(1));
+    }
+
+    public void update(SeatLocation seatLocation, boolean detected) {
         this.seatLocation = seatLocation;
         this.detected = detected;
-        this.bytes[6] = seatLocation.getByte();
-        this.bytes[7] = Property.boolToByte(detected);
+        bytes = new byte[2];
+
+        set(0, seatLocation.getByte());
+        set(1, Property.boolToByte(detected));
     }
 
-    public PersonDetected(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-
-        if (p.getValueComponent().getValueBytes().getLength() >= 2) {
-            this.seatLocation = SeatLocation.fromByte(p.getValueComponent().getValueBytes().get(0));
-            this.detected = Property.getBool(p.getValueComponent().getValueBytes().get(1));
-        }
-
-        return this;
+    public void update(PersonDetected value) {
+        update(value.seatLocation, value.detected);
     }
 }

@@ -38,7 +38,6 @@ public class WindowPosition extends PropertyValueObject {
         if (bytes.length < 2) throw new CommandParseException();
         location = Location.fromByte(get(0));
         position = Position.fromByte(get(1));
-
     }
 
     public void update(Location location, Position position) {

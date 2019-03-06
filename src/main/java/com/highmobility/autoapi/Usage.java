@@ -23,7 +23,6 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.DrivingMode;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
-
 import com.highmobility.autoapi.property.usage.DrivingModeActivationPeriod;
 import com.highmobility.autoapi.property.usage.DrivingModeEnergyConsumption;
 
@@ -76,7 +75,8 @@ public class Usage extends CommandWithProperties {
             new Property<>(Float.class, IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION);
     private Property<Double> lastTripBatteryRemaining =
             new Property<>(Double.class, IDENTIFIER_LAST_TRIP_BATTERY_REMAINING);
-    private Property<Calendar> lastTripDate; // TODO: 2019-02-27 use property
+    private Property<Calendar> lastTripDate = new Property(Calendar.class,
+            IDENTIFIER_LAST_TRIP_DATE);
     private Property<Float> averageFuelConsumption = new Property<>(Float.class,
             IDENTIFIER_AVERAGE_FUEL_CONSUMPTION);
     private Property<Float> currentFuelConsumption = new Property<>(Float.class,
@@ -260,8 +260,7 @@ public class Usage extends CommandWithProperties {
                     case IDENTIFIER_LAST_TRIP_BATTERY_REMAINING:
                         return lastTripBatteryRemaining.update(p);
                     case IDENTIFIER_LAST_TRIP_DATE:
-                        lastTripDate = Property.getCalendar(p);
-                        return lastTripDate;
+                        return lastTripDate.update(p);
                     case IDENTIFIER_AVERAGE_FUEL_CONSUMPTION:
                         return averageFuelConsumption.update(p);
                     case IDENTIFIER_CURRENT_FUEL_CONSUMPTION:

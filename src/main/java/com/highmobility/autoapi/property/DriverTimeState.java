@@ -22,8 +22,8 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public class DriverTimeState extends Property {
-    public static final byte IDENTIFIER = 0x02;
+public class DriverTimeState extends PropertyValueObject {
+
 
     int driverNumber;
     TimeState timeState;

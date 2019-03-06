@@ -29,12 +29,12 @@ import com.highmobility.autoapi.property.value.StartStop;
 public class StartStopSportChrono extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x13);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    StartStop startStop;
+    Property<StartStop> startStop = new Property(StartStop.class, PROPERTY_IDENTIFIER);
 
     /**
      * @return The chronometer command.
      */
-    public StartStop getStartStop() {
+    public Property<StartStop> getStartStop() {
         return startStop;
     }
 
@@ -42,13 +42,21 @@ public class StartStopSportChrono extends CommandWithProperties {
      * @param startStop The chronometer command.
      */
     public StartStopSportChrono(StartStop startStop) {
-        super(TYPE.addProperty(new Property(PROPERTY_IDENTIFIER, startStop.getByte())));
-        this.startStop = startStop;
+        super(TYPE);
+        this.startStop.update(startStop);
+        createBytes(this.startStop);
     }
 
-    StartStopSportChrono(byte[] bytes) throws CommandParseException {
+    StartStopSportChrono(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(PROPERTY_IDENTIFIER);
-        if (prop != null) this.startStop = StartStop.fromByte(prop.getValueByte());
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case PROPERTY_IDENTIFIER:
+                        return startStop.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

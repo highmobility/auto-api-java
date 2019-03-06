@@ -20,7 +20,10 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This message is sent when a Get Historical States is received. The states are passed along as an
@@ -30,13 +33,13 @@ public class HistoricalStates extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HISTORICAL, 0x01);
     private static final byte STATE_IDENTIFIER = 0x01;
 
-    CommandProperty[] states;
+    Property<CommandWithProperties>[] states;
 
     /**
      * @return The historical states. Use {@link CommandWithProperties#getTimestamp()} to understand
      * the command time.
      */
-    public CommandProperty[] getStates() {
+    public Property<CommandWithProperties>[] getStates() {
         return states;
     }
 
@@ -44,11 +47,11 @@ public class HistoricalStates extends CommandWithProperties {
      * @param type The type.
      * @return The historical states for the type.
      */
-    public CommandProperty[] getStates(Type type) {
-        ArrayList<CommandProperty> builder = new ArrayList<>();
+    public Property<CommandWithProperties>[] getStates(Type type) {
+        List<Property> builder = new ArrayList<>();
 
         for (int i = 0; i < states.length; i++) {
-            CommandProperty prop = states[i];
+            Property<CommandWithProperties> prop = states[i];
             if (prop.getValue() != null) {
                 CommandWithProperties command = prop.getValue();
                 if (command.getType().equals(type)) {
@@ -57,27 +60,27 @@ public class HistoricalStates extends CommandWithProperties {
             }
         }
 
-        return builder.toArray(new CommandProperty[0]);
+        return builder.toArray(new Property[0]);
     }
 
     HistoricalStates(byte[] bytes) {
         super(bytes);
 
-        ArrayList<CommandProperty> builder = new ArrayList<>();
+        ArrayList<Property<CommandWithProperties>> builder = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 if (p.getPropertyIdentifier() == STATE_IDENTIFIER) {
-                    CommandProperty state = new CommandProperty(p);
-                    builder.add(state);
-                    return state;
+                    Property c = new Property(CommandWithProperties.class, p);
+                    builder.add(c);
+                    return c;
 
                 }
                 return null;
             });
         }
 
-        states = builder.toArray(new CommandProperty[0]);
+        states = builder.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {

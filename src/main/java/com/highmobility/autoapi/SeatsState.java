@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.seats.PersonDetected;
 import com.highmobility.autoapi.property.seats.SeatBeltFastened;
 import com.highmobility.autoapi.property.seats.SeatLocation;
@@ -36,13 +37,13 @@ import javax.annotation.Nullable;
 public class SeatsState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.SEATS, 0x01);
 
-    PersonDetected[] personsDetected;
-    SeatBeltFastened[] seatBeltsFastened;
+    Property<PersonDetected>[] personsDetected;
+    Property<SeatBeltFastened>[] seatBeltsFastened;
 
     /**
      * @return All of the person detections.
      */
-    public PersonDetected[] getPersonsDetected() {
+    public Property<PersonDetected>[] getPersonsDetected() {
         return personsDetected;
     }
 
@@ -50,10 +51,11 @@ public class SeatsState extends CommandWithProperties {
      * @param location The seat location.
      * @return A person detection on a seat.
      */
-    @Nullable public PersonDetected getPersonDetection(SeatLocation location) {
+    @Nullable public Property<PersonDetected> getPersonDetection(SeatLocation location) {
         for (int i = 0; i < personsDetected.length; i++) {
-            PersonDetected property = personsDetected[i];
-            if (property.getSeatLocation() == location) return property;
+            Property<PersonDetected> property = personsDetected[i];
+            if (property.getValue() != null && property.getValue().getSeatLocation() == location)
+                return property;
         }
 
         return null;
@@ -62,7 +64,7 @@ public class SeatsState extends CommandWithProperties {
     /**
      * @return All of the person detections.
      */
-    public SeatBeltFastened[] getSeatBeltsFastened() {
+    public Property<SeatBeltFastened>[] getSeatBeltsFastened() {
         return seatBeltsFastened;
     }
 
@@ -70,10 +72,11 @@ public class SeatsState extends CommandWithProperties {
      * @param location The seat location.
      * @return The seat belt state.
      */
-    @Nullable public SeatBeltFastened getSeatBeltFastened(SeatLocation location) {
+    @Nullable public Property<SeatBeltFastened> getSeatBeltFastened(SeatLocation location) {
         for (int i = 0; i < seatBeltsFastened.length; i++) {
-            SeatBeltFastened property = seatBeltsFastened[i];
-            if (property.getSeatLocation() == location) return property;
+            Property<SeatBeltFastened> property = seatBeltsFastened[i];
+            if (property.getValue() != null && property.getValue().getSeatLocation() == location)
+                return property;
         }
 
         return null;
@@ -82,19 +85,19 @@ public class SeatsState extends CommandWithProperties {
     SeatsState(byte[] bytes) {
         super(bytes);
 
-        ArrayList<PersonDetected> personsDetected = new ArrayList<>();
-        ArrayList<SeatBeltFastened> seatBeltsFastened = new ArrayList<>();
+        ArrayList<Property<PersonDetected>> personsDetected = new ArrayList<>();
+        ArrayList<Property<SeatBeltFastened>> seatBeltsFastened = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case PersonDetected.IDENTIFIER:
                         // if property, create new property.
-                        PersonDetected d = new PersonDetected(p);
+                        Property d = new Property(PersonDetected.class, p);
                         personsDetected.add(d);
                         return d;
                     case SeatBeltFastened.IDENTIFIER:
-                        SeatBeltFastened f = new SeatBeltFastened(p);
+                        Property f = new Property(SeatBeltFastened.class, p);
                         seatBeltsFastened.add(f);
                         return f;
                 }
@@ -103,8 +106,8 @@ public class SeatsState extends CommandWithProperties {
             });
         }
 
-        this.personsDetected = personsDetected.toArray(new PersonDetected[0]);
-        this.seatBeltsFastened = seatBeltsFastened.toArray(new SeatBeltFastened[0]);
+        this.personsDetected = personsDetected.toArray(new Property[0]);
+        this.seatBeltsFastened = seatBeltsFastened.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {
@@ -113,39 +116,39 @@ public class SeatsState extends CommandWithProperties {
 
     private SeatsState(Builder builder) {
         super(builder);
-        personsDetected = builder.personsDetected.toArray(new PersonDetected[0]);
-        seatBeltsFastened = builder.seatBeltsFastened.toArray(new SeatBeltFastened[0]);
+        personsDetected = builder.personsDetected.toArray(new Property[0]);
+        seatBeltsFastened = builder.seatBeltsFastened.toArray(new Property[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        List<PersonDetected> personsDetected = new ArrayList<>();
-        List<SeatBeltFastened> seatBeltsFastened = new ArrayList<>();
+        List<Property<PersonDetected>> personsDetected = new ArrayList<>();
+        List<Property<SeatBeltFastened>> seatBeltsFastened = new ArrayList<>();
 
-        public Builder setPersonsDetected(PersonDetected[] personsDetected) {
+        public Builder setPersonsDetected(Property<PersonDetected>[] personsDetected) {
             this.personsDetected.clear();
-            for (PersonDetected personDetected : personsDetected) {
+            for (Property<PersonDetected> personDetected : personsDetected) {
                 addPersonDetected(personDetected);
             }
             return this;
         }
 
-        public Builder addPersonDetected(PersonDetected personDetected) {
+        public Builder addPersonDetected(Property<PersonDetected> personDetected) {
             addProperty(personDetected);
             personsDetected.add(personDetected);
             return this;
         }
 
-        public Builder setSeatBeltsFastened(List<SeatBeltFastened> seatBeltsFastened) {
+        public Builder setSeatBeltsFastened(List<Property<SeatBeltFastened>> seatBeltsFastened) {
             this.seatBeltsFastened.clear();
 
-            for (SeatBeltFastened seatBeltFastened : seatBeltsFastened) {
+            for (Property<SeatBeltFastened> seatBeltFastened : seatBeltsFastened) {
                 addSeatBeltFastened(seatBeltFastened);
             }
 
             return this;
         }
 
-        public void addSeatBeltFastened(SeatBeltFastened seatBeltFastened) {
+        public void addSeatBeltFastened(Property<SeatBeltFastened> seatBeltFastened) {
             addProperty(seatBeltFastened);
             seatBeltsFastened.add(seatBeltFastened);
         }

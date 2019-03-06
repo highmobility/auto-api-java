@@ -54,13 +54,11 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
 
         for (int i = 0; i < reductionTimes.length; i++) {
             ReductionTime time = reductionTimes[i];
-            Property<ReductionTime> reductionTime =
-                    new Property<>(PROPERTY_IDENTIFIER, time);
+            Property reductionTime = new Property<>(PROPERTY_IDENTIFIER, time);
             builder.add(reductionTime);
         }
 
         this.reductionTimes = builder.toArray(new Property[0]);
-
         createBytes(builder);
     }
 
@@ -73,8 +71,7 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case PROPERTY_IDENTIFIER:
-                        Property<ReductionTime> reductionTimeProperty =
-                                new Property<>(ReductionTime.class, p);
+                        Property reductionTimeProperty = new Property(ReductionTime.class, p);
                         builder.add(reductionTimeProperty);
                         return reductionTimeProperty;
                 }

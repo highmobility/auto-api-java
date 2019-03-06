@@ -22,14 +22,14 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 
-public enum GearMode {
-    MANUAL((byte)0x00),
-    PARK((byte)0x01),
-    REVERSE((byte)0x02),
-    NEUTRAL((byte)0x03),
-    DRIVE((byte)0x04),
-    LOW_GEAR((byte)0x05),
-    SPORT((byte)0x06);
+public enum GearMode implements PropertyValueSingleByte {
+    MANUAL((byte) 0x00),
+    PARK((byte) 0x01),
+    REVERSE((byte) 0x02),
+    NEUTRAL((byte) 0x03),
+    DRIVE((byte) 0x04),
+    LOW_GEAR((byte) 0x05),
+    SPORT((byte) 0x06);
 
     public static GearMode fromByte(byte byteValue) throws CommandParseException {
         GearMode[] values = GearMode.values();

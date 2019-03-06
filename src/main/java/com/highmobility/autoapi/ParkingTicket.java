@@ -20,14 +20,10 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CalendarProperty;
-
 import com.highmobility.autoapi.property.ParkingTicketState;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.Calendar;
-
-import javax.annotation.Nullable;
 
 /**
  * Command sent from the car every time the parking ticket state changes. or when a Get Parking
@@ -43,44 +39,44 @@ public class ParkingTicket extends CommandWithProperties {
     private static final byte IDENTIFIER_TICKET_END = 0x05;
     private static final byte IDENTIFIER_STATE = 0x01;
 
-    ParkingTicketState state;
+    Property<ParkingTicketState> state = new Property(ParkingTicketState.class, IDENTIFIER_STATE);
     Property<String> operatorName = new Property(String.class, IDENTIFIER_OPERATOR_NAME);
     Property<String> operatorTicketId = new Property(String.class, IDENTIFIER_OPERATOR_TICKET_ID);
-    Calendar ticketStart;
-    Calendar ticketEnd;
+    Property<Calendar> ticketStart = new Property(Calendar.class, IDENTIFIER_TICKET_START);
+    Property<Calendar> ticketEnd = new Property(Calendar.class, IDENTIFIER_TICKET_END);
 
     /**
      * @return The ticket state.
      */
-    @Nullable public ParkingTicketState getState() {
+    public Property<ParkingTicketState> getState() {
         return state;
     }
 
     /**
      * @return The operator name.
      */
-    @Nullable public Property<String> getOperatorName() {
+    public Property<String> getOperatorName() {
         return operatorName;
     }
 
     /**
      * @return The ticket id.
      */
-    @Nullable public Property<String> getOperatorTicketId() {
+    public Property<String> getOperatorTicketId() {
         return operatorTicketId;
     }
 
     /**
      * @return Ticket start date.
      */
-    @Nullable public Property<Calendar> getTicketStartDate() {
+    public Property<Calendar> getTicketStartDate() {
         return ticketStart;
     }
 
     /**
      * @return Ticket end date.
      */
-    @Nullable public Property<Calendar> getTicketEndDate() {
+    public Property<Calendar> getTicketEndDate() {
         return ticketEnd;
     }
 
@@ -91,18 +87,15 @@ public class ParkingTicket extends CommandWithProperties {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_STATE:
-                        state = ParkingTicketState.fromByte(p.getValueByte());
-                        return state; // TODO: 2019-03-05
+                        return state.update(p);
                     case IDENTIFIER_OPERATOR_NAME:
                         return operatorName.update(p);
                     case IDENTIFIER_OPERATOR_TICKET_ID:
                         return operatorTicketId.update(p);
                     case IDENTIFIER_TICKET_START:
-                        ticketStart = Property.getCalendar(p);
-                        return ticketStart;
+                        return ticketStart.update(p);
                     case IDENTIFIER_TICKET_END:
-                        ticketEnd = Property.getCalendar(p);
-                        return ticketEnd;
+                        return ticketEnd.update(p);
                 }
                 return null;
             });
@@ -123,7 +116,7 @@ public class ParkingTicket extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private ParkingTicketState state;
+        private Property<ParkingTicketState> state;
         private Property<String> operatorName;
         private Property<String> operatorTicketId;
         private Property<Calendar> ticketStart;
@@ -137,9 +130,9 @@ public class ParkingTicket extends CommandWithProperties {
          * @param state The parking ticket state.
          * @return The builder.
          */
-        public Builder setState(ParkingTicketState state) {
+        public Builder setState(Property<ParkingTicketState> state) {
             this.state = state;
-            addProperty(new Property(IDENTIFIER_STATE, state.getByte()));
+            addProperty(state.setIdentifier(IDENTIFIER_STATE));
             return this;
         }
 
@@ -167,9 +160,9 @@ public class ParkingTicket extends CommandWithProperties {
          * @param ticketStart The ticket start date.
          * @return The builder.
          */
-        public Builder setTicketStart(Calendar ticketStart) {
+        public Builder setTicketStart(Property<Calendar> ticketStart) {
             this.ticketStart = ticketStart;
-            addProperty(new CalendarProperty(IDENTIFIER_TICKET_START, ticketStart));
+            addProperty(ticketStart.setIdentifier(IDENTIFIER_TICKET_START));
             return this;
         }
 
@@ -177,9 +170,9 @@ public class ParkingTicket extends CommandWithProperties {
          * @param ticketEnd The ticket end date.
          * @return The builder.
          */
-        public Builder setTicketEnd(Calendar ticketEnd) {
+        public Builder setTicketEnd(Property<Calendar> ticketEnd) {
             this.ticketEnd = ticketEnd;
-            addProperty(new CalendarProperty(IDENTIFIER_TICKET_END, ticketEnd));
+            addProperty(ticketEnd.setIdentifier(IDENTIFIER_TICKET_END));
             return this;
         }
 

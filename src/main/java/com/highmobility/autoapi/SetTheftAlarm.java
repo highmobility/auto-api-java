@@ -30,12 +30,12 @@ public class SetTheftAlarm extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.THEFT_ALARM, 0x12);
     private static final byte IDENTIFIER = 0x01;
 
-    TheftAlarmState.Value state;
+    Property<TheftAlarmState.Value> state = new Property(TheftAlarmState.Value.class, IDENTIFIER);
 
     /**
      * @return The theft alarm state.
      */
-    public TheftAlarmState.Value getState() {
+    public Property<TheftAlarmState.Value> getState() {
         return state;
     }
 
@@ -43,12 +43,20 @@ public class SetTheftAlarm extends CommandWithProperties {
      * @param state The theft alarm state.
      */
     public SetTheftAlarm(TheftAlarmState.Value state) {
-        super(TYPE.addProperty(new Property(IDENTIFIER, state.getByte())));
+        super(TYPE);
+        this.state.update(state);
     }
 
-    SetTheftAlarm(byte[] bytes) throws CommandParseException {
+    SetTheftAlarm(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        state = TheftAlarmState.Value.fromByte(prop.getValueByte());
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return state.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

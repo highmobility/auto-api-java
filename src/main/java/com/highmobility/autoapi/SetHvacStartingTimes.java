@@ -88,8 +88,7 @@ public class SetHvacStartingTimes extends CommandWithProperties {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case AUTO_HVAC_IDENTIFIER:
-                        Property<HvacStartingTime> prop =
-                                new Property<>(HvacStartingTime.class, p);
+                        Property prop = new Property<>(HvacStartingTime.class, p);
                         builder.add(prop);
                         return prop;
                 }

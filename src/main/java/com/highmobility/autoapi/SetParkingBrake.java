@@ -30,27 +30,34 @@ public class SetParkingBrake extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.PARKING_BRAKE, 0x12);
     private static final byte IDENTIFIER = 0x01;
 
-    private boolean activate;
+    private Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether the parking brake should be activated.
      */
-    public boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
     /**
-     * @param activate ObjectProperty<Boolean> indicating whether to activate parking brake.
+     * @param activate Boolean indicating whether to activate parking brake.
      */
-    public SetParkingBrake(boolean activate) {
-        super(TYPE.addProperty(new Property<>(activate).setIdentifier(IDENTIFIER)));
-        this.activate = activate;
+    public SetParkingBrake(Boolean activate) {
+        super(TYPE);
+        this.activate.update(activate);
+        createBytes(this.activate);
     }
 
-    SetParkingBrake(byte[] bytes) throws CommandParseException {
+    SetParkingBrake(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        this.activate = Property.getBool(prop.getValueByte());
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return activate.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

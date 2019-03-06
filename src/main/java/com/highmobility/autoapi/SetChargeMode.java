@@ -29,8 +29,7 @@ import com.highmobility.autoapi.property.charging.ChargeMode;
 public class SetChargeMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x15);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    Property<ChargeMode> chargeMode = new Property<>(ChargeMode.class,
-            PROPERTY_IDENTIFIER);
+    Property<ChargeMode> chargeMode = new Property(ChargeMode.class, PROPERTY_IDENTIFIER);
 
     /**
      * @return The charge mode.

@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.CommandWithProperties;
@@ -85,7 +86,7 @@ public class PropertyComponentValue<T> extends PropertyComponent {
                 value = (T) Property.getIntegerArray(valueBytes);
             } else if (Identifier.class.isAssignableFrom(valueClass)) {
                 value = (T) Property.getIdentifier(valueBytes);
-            } else if (CommandWithProperties.class.isAssignableFrom(valueClass)) {
+            } else if (Command.class.isAssignableFrom(valueClass)) {
                 value = (T) CommandResolver.resolve(valueBytes);
             } else if (Bytes.class.isAssignableFrom(valueClass)) {
                 value = (T) valueBytes;
@@ -103,7 +104,7 @@ public class PropertyComponentValue<T> extends PropertyComponent {
     public Bytes getBytes() {
         // this is for builder/set command
         if (value instanceof Bytes) {
-            return ((Bytes) value);
+            return (Bytes) value;
         } else if (value instanceof PropertyValueObject) {
             return ((PropertyValueObject) value);
         } else if (value instanceof PropertyValueSingleByte) {
@@ -132,7 +133,9 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         } else if (value instanceof Identifier) {
             return Property.identifierToBytes((Identifier) value);
         } else if (value instanceof CommandWithProperties) {
-            return ((CommandWithProperties) value);
+            return (CommandWithProperties) value;
+        } else if (value instanceof Command) {
+            return (Command) value;
         } else {
             throw new IllegalArgumentException("Type not supported for Property");
         }

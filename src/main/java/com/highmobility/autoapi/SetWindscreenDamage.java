@@ -25,7 +25,6 @@ import com.highmobility.autoapi.property.WindscreenDamage;
 import com.highmobility.autoapi.property.WindscreenDamageZone;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -38,21 +37,24 @@ public class SetWindscreenDamage extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x12);
 
     private static final byte IDENTIFIER_WINDSCREEN_DAMAGE = 0x03;
+    private static final byte IDENTIFIER_WINDSCREEN_DAMAGE_ZONE = 0x05;
 
-    private WindscreenDamage damage;
-    private WindscreenDamageZone zone;
+    private Property<WindscreenDamage> damage = new Property(WindscreenDamage.class,
+            IDENTIFIER_WINDSCREEN_DAMAGE);
+    private Property<WindscreenDamageZone> zone = new Property(WindscreenDamageZone.class,
+            IDENTIFIER_WINDSCREEN_DAMAGE_ZONE);
 
     /**
      * @return The windscreen damage.
      */
-    public WindscreenDamage getDamage() {
+    public Property<WindscreenDamage> getDamage() {
         return damage;
     }
 
     /**
      * @return The windscreen damage zone.
      */
-    @Nullable public WindscreenDamageZone getZone() {
+    public Property<WindscreenDamageZone> getZone() {
         return zone;
     }
 
@@ -61,31 +63,34 @@ public class SetWindscreenDamage extends CommandWithProperties {
      * @param zone   The damage zone
      */
     public SetWindscreenDamage(WindscreenDamage damage, @Nullable WindscreenDamageZone zone) {
-        super(TYPE, getProperties(damage, zone));
-        this.damage = damage;
-        this.zone = zone;
-    }
+        super(TYPE);
 
-    SetWindscreenDamage(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        for (Property property : properties) {
-            switch (property.getPropertyIdentifier()) {
-                case IDENTIFIER_WINDSCREEN_DAMAGE:
-                    damage = WindscreenDamage.fromByte(property.getValueByte());
-                    break;
-                case WindscreenDamageZone.IDENTIFIER:
-                    zone = new WindscreenDamageZone(property.getValueByte());
-                    break;
-            }
+        ArrayList<Property> builder = new ArrayList<>();
+
+        this.damage.update(damage);
+        builder.add(this.damage);
+
+        if (zone != null) {
+            this.zone.update(zone);
+            builder.add(this.zone);
         }
+
+        createBytes(builder);
     }
 
-    static Property[] getProperties(WindscreenDamage damage, WindscreenDamageZone zone) {
-        List<Property> propertiesBuilder = new ArrayList<>();
+    SetWindscreenDamage(byte[] bytes) {
+        super(bytes);
 
-        if (damage != null) propertiesBuilder.add(new Property(IDENTIFIER_WINDSCREEN_DAMAGE, damage.getByte()));
-        if (zone != null) propertiesBuilder.add(zone);
-
-        return propertiesBuilder.toArray(new Property[0]);
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_WINDSCREEN_DAMAGE:
+                        return damage.update(p);
+                    case IDENTIFIER_WINDSCREEN_DAMAGE_ZONE:
+                        return zone.update(p);
+                }
+                return null;
+            });
+        }
     }
 }
