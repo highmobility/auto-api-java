@@ -47,7 +47,7 @@ public class ValetModeTest {
 
         ActivateDeactivateValetMode command = (ActivateDeactivateValetMode) CommandResolver
                 .resolve(waitingForBytes);
-        assertTrue(command.activate() == true);
+        assertTrue(command.activate().getValue() == true);
     }
 
     @Test public void state0Properties() {

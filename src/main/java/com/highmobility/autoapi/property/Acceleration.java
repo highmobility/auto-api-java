@@ -21,9 +21,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.utils.ByteUtils;
-
-import java.util.Arrays;
+import com.highmobility.value.Bytes;
 
 public class Acceleration extends PropertyValueObject {
 
@@ -44,21 +42,33 @@ public class Acceleration extends PropertyValueObject {
         return acceleration;
     }
 
-    public Acceleration(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 11) throw new CommandParseException();
-        accelerationType = AccelerationType.fromByte(bytes[6]);
-        acceleration = getFloat(Arrays.copyOfRange(bytes, 7, 11));
-    }
-
     public Acceleration(AccelerationType type, float acceleration) {
-        this(IDENTIFIER, type, acceleration);
+        super(2);
+        update(type, acceleration);
     }
 
-    public Acceleration(byte identifier, AccelerationType type, float acceleration) {
-        super(identifier, 5);
-        bytes[6] = type.getByte();
-        ByteUtils.setBytes(bytes, floatToBytes(acceleration), 7);
+    public Acceleration() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes bytes) throws CommandParseException {
+        super.update(bytes);
+        if (getLength() < 5) throw new CommandParseException();
+        accelerationType = AccelerationType.fromByte(get(0));
+        acceleration = Property.getFloat(this, 1);
+    }
+
+    public void update(AccelerationType type, float acceleration) {
+        this.accelerationType = type;
+        this.acceleration = acceleration;
+        bytes = new byte[5];
+
+        set(0, accelerationType.getByte());
+        set(1, Property.floatToBytes(acceleration));
+    }
+
+    public void update(Acceleration value) {
+        update(value.accelerationType, value.acceleration);
     }
 
     public enum AccelerationType {

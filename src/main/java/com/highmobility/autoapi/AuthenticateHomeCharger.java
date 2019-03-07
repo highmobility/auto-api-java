@@ -30,27 +30,36 @@ public class AuthenticateHomeCharger extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x16);
     private static final byte IDENTIFIER = 0x01;
 
-    private boolean authenticate;
+    private Property<Boolean> authenticate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether to authenticate or not.
      */
-    public boolean getAuthenticate() {
+    public Property<Boolean> getAuthenticate() {
         return authenticate;
     }
 
     /**
      * @param authenticate Authentication state.
      */
-    public AuthenticateHomeCharger(boolean authenticate) {
-        super(TYPE.addProperty(new Property<>(authenticate).setIdentifier(IDENTIFIER)));
-        this.authenticate = authenticate;
+    public AuthenticateHomeCharger(Boolean authenticate) {
+        super(TYPE);
+
+        this.authenticate.update(authenticate);
+        createBytes(this.authenticate);
     }
 
-    AuthenticateHomeCharger(byte[] bytes) throws CommandParseException {
+    AuthenticateHomeCharger(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        authenticate = Property.getBool(prop.getValueByte());
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return authenticate.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

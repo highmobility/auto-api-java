@@ -75,7 +75,7 @@ public class ChassisSettingsTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         SetDrivingMode drivingMode = (SetDrivingMode) CommandResolver.resolve(waitingForBytes);
-        assertTrue(drivingMode.getDrivingMode() == DrivingMode.SPORT_PLUS);
+        assertTrue(drivingMode.getDrivingMode().getValue() == DrivingMode.SPORT_PLUS);
     }
 
     @Test public void startChrono() {
@@ -86,7 +86,7 @@ public class ChassisSettingsTest {
 
         StartStopSportChrono command = (StartStopSportChrono) CommandResolver.resolve(ByteUtils
                 .bytesFromHex(waitingForBytes));
-        assertTrue(command.getStartStop() == StartStop.START);
+        assertTrue(command.getStartStop().getValue() == StartStop.START);
     }
 
     @Test public void setSpringRate() {

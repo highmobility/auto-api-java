@@ -18,13 +18,14 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi.property.tachograph;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.value.Bytes;
 
 public class DriverCard extends PropertyValueObject {
-
-
     int driverNumber;
     boolean present;
 
@@ -36,23 +37,32 @@ public class DriverCard extends PropertyValueObject {
         return present;
     }
 
-    public DriverCard(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 8) throw new CommandParseException();
-        driverNumber = Property.getUnsignedInt(bytes[6]);
-        present = Property.getBool(bytes[7]);
+    public DriverCard(int driverNumber, boolean present) {
+        super(2);
+        update(driverNumber, present);
     }
 
-    public DriverCard(int driverNumber, boolean present) throws
-            IllegalArgumentException {
-        this(IDENTIFIER, driverNumber, present);
+    public DriverCard() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes bytes) throws CommandParseException {
+        super.update(bytes);
+        if (getLength() < 2) throw new CommandParseException();
+        driverNumber = Property.getUnsignedInt(get(6));
+        present = Property.getBool(get(1));
     }
 
-    public DriverCard(byte identifier, int driverNumber, boolean present) throws
-            IllegalArgumentException {
-        super(identifier, 2);
+    public void update(int driverNumber, boolean present) {
+        this.driverNumber = driverNumber;
+        this.present = present;
+        bytes = new byte[2];
+        // TODO: 2019-03-07 drivernumber is unsigned. test if there is overflow eg > 128
+        set(0, (byte) driverNumber);
+        set(1, Property.boolToByte(present));
+    }
 
-        bytes[6] = (byte) driverNumber;
-        bytes[7] = Property.boolToByte(present);
+    public void update(DriverCard value) {
+        update(value.driverNumber, value.present);
     }
 }

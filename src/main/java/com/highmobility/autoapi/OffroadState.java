@@ -41,7 +41,7 @@ public class OffroadState extends CommandWithProperties {
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.
      */
-    @Nullable public PropertyInteger getRouteIncline() {
+    @Nullable public Property<Integer> getRouteIncline() {
         return routeIncline;
     }
 

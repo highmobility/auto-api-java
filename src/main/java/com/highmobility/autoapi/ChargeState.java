@@ -105,7 +105,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The estimated range in km.
      */
-    public PropertyInteger getEstimatedRange() {
+    public Property<Integer> getEstimatedRange() {
         return estimatedRange;
     }
 
@@ -155,7 +155,7 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The time to complete the charge in minutes.
      */
-    public PropertyInteger getTimeToCompleteCharge() {
+    public Property<Integer> getTimeToCompleteCharge() {
         return timeToCompleteCharge;
     }
 

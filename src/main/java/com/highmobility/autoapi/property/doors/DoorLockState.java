@@ -21,11 +21,12 @@
 package com.highmobility.autoapi.property.doors;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.autoapi.property.value.Lock;
+import com.highmobility.value.Bytes;
 
-public class DoorLockState extends Property {
+public class DoorLockState extends PropertyValueObject {
     Location location;
     Lock doorLock;
 
@@ -43,16 +44,31 @@ public class DoorLockState extends Property {
         return doorLock;
     }
 
-    public DoorLockState(byte[] bytes) throws CommandParseException {
-        this(Location.fromByte(bytes[6]), Lock.fromByte(bytes[7]));
+    public DoorLockState(Location location, Lock lock) {
+        super(2);
+        update(location, lock);
     }
 
-    public DoorLockState(Location location, Lock doorLock) {
-        super((byte) 0x01, 2);
+    public DoorLockState() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes bytes) throws CommandParseException {
+        super.update(bytes);
+        if (getLength() < 2) throw new CommandParseException();
+        location = Location.fromByte(get(0));
+        doorLock = Lock.fromByte(get(1));
+    }
+
+    public void update(Location location, Lock doorLock) {
         this.location = location;
         this.doorLock = doorLock;
+        bytes = new byte[2];
+        set(0, location.getByte());
+        set(1, doorLock.getByte());
+    }
 
-        bytes[6] = location.getByte();
-        bytes[7] = doorLock.getByte();
+    public void update(DoorLockState value) {
+        update(value.location, value.doorLock);
     }
 }

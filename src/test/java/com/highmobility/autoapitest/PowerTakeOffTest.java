@@ -23,7 +23,6 @@ public class PowerTakeOffTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-
         assertTrue(command.is(PowerTakeOffState.TYPE));
         PowerTakeOffState state = (PowerTakeOffState) command;
         assertTrue(state.isActive().getValue() == true);
@@ -32,8 +31,8 @@ public class PowerTakeOffTest {
 
     @Test public void build() {
         PowerTakeOffState.Builder builder = new PowerTakeOffState.Builder();
-        builder.setIsActive(new Property<>(true));
-        builder.setIsEngaged(new Property<>(true));
+        builder.setIsActive(new Property(true));
+        builder.setIsEngaged(new Property(true));
         assertTrue(builder.build().equals(bytes));
     }
 
@@ -50,6 +49,6 @@ public class PowerTakeOffTest {
         assertTrue(waitingForBytes.equals(commandBytes));
         ActivateDeactivatePowerTakeoff command = (ActivateDeactivatePowerTakeoff) CommandResolver
                 .resolve(waitingForBytes);
-        assertTrue(command.activate() == true);
+        assertTrue(command.activate().getValue() == true);
     }
 }

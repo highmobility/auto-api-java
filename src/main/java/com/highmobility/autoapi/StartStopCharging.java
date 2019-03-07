@@ -41,7 +41,7 @@ public class StartStopCharging extends CommandWithProperties {
     /**
      * @param start The charging state.
      */
-    public StartStopCharging(boolean start) {
+    public StartStopCharging(Boolean start) {
         super(TYPE);
         this.start.update(start);
         createBytes(this.start);

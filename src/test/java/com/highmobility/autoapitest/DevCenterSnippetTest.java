@@ -14,6 +14,7 @@ import com.highmobility.autoapi.VehicleLocation;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.property.FailureReason;
 import com.highmobility.autoapi.property.PowerTrain;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.doors.DoorLockState;
 import com.highmobility.autoapi.property.value.Location;
 import com.highmobility.autoapi.property.value.Lock;
@@ -49,7 +50,7 @@ public class DevCenterSnippetTest {
             vehicleStatus.getVin();
 
             // check the power train
-            if (vehicleStatus.getPowerTrain() == PowerTrain.ALLELECTRIC) {
+            if (vehicleStatus.getPowerTrain().getValue() == PowerTrain.ALLELECTRIC) {
                 // vehicle has all electric power train
             }
 
@@ -104,19 +105,20 @@ public class DevCenterSnippetTest {
 
             // lock states for all of the doors available
             DoorLockState left = null, right = null, rearRight = null, rearLeft = null;
-            for (DoorLockState lockState : state.getOutsideLocks()) {
-                switch (lockState.getLocation()) {
+            for (Property<DoorLockState> lockState : state.getOutsideLocks()) {
+                if (lockState.getValue() == null) continue;
+                switch (lockState.getValue().getLocation()) {
                     case FRONT_LEFT:
-                        left = lockState;
+                        left = lockState.getValue();
                         break;
                     case FRONT_RIGHT:
-                        right = lockState;
+                        right = lockState.getValue();
                         break;
                     case REAR_RIGHT:
-                        rearRight = lockState;
+                        rearRight = lockState.getValue();
                         break;
                     case REAR_LEFT:
-                        rearLeft = lockState;
+                        rearLeft = lockState.getValue();
                         break;
                 }
             }
@@ -124,10 +126,12 @@ public class DevCenterSnippetTest {
 
         if (command instanceof Failure) {
             Failure failure = (Failure) command;
-            if (failure.getFailedType().equals(GetVehicleStatus.TYPE)) {
+            if (failure.getFailedType() != null && failure.getFailedType().equals(GetVehicleStatus.TYPE)) {
                 // The Get Vehicle Status command failed.
-                if (failure.getFailureReason() == FailureReason.UNAUTHORISED) {
-                    // The command failed because the vehicle is not authorized. Try to connect to vehicle again
+                if (failure.getFailureReason().getValue() != null &&
+                        failure.getFailureReason().getValue() == FailureReason.UNAUTHORISED) {
+                    // The command failed because the vehicle is not authorized. Try to connect
+                    // to vehicle again
                 }
             }
         }

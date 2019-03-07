@@ -34,7 +34,7 @@ public class PropertyTest {
                         "longstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstring" +
                         "longstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstring";
 
-        Property<String> stringProperty = new Property(String.class, (byte) 0x02, longString);
+        Property<String> stringProperty = new Property((byte) 0x02, longString);
         assertTrue(stringProperty.getByteArray()[4] == 0x01); // length
         assertTrue(stringProperty.getByteArray()[5] == 0x4A);
     }
@@ -76,8 +76,7 @@ public class PropertyTest {
     }
 
     void assertBaseBytesOk(Property prop) {
-        assertTrue(prop.getValueByte() == null);
-        assertTrue(prop.getValueBytes() == null);
+        assertTrue(prop.getValueComponent() == null);
     }
 
     @Test public void timeStampFailureSet() throws ParseException {

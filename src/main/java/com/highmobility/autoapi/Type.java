@@ -106,17 +106,18 @@ public class Type {
         this(new byte[]{(byte) identifierFirstByte, (byte) identifierSecondByte, (byte) type});
     }
 
-    byte[] addByte(byte extraByte) {
+    // TODO: delete 
+    /*byte[] addByte(byte extraByte) {
         return ByteUtils.concatBytes(identifierAndType, extraByte);
-    }
+    }*/
 
-    byte[] addProperty(Property property) {
+/*    byte[] addProperty(Property property) {
         return addBytes(property.getByteArray());
-    }
+    }*/
 
-    byte[] addBytes(byte[] extraBytes) {
+    /*byte[] addBytes(byte[] extraBytes) {
         return ByteUtils.concatBytes(identifierAndType, extraBytes);
-    }
+    }*/
 
     @Override public boolean equals(Object obj) {
         return obj.getClass() == Type.class

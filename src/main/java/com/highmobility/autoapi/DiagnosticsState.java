@@ -22,7 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
-
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
 import com.highmobility.autoapi.property.diagnostics.DiagnosticsTroubleCode;
@@ -81,34 +80,32 @@ public class DiagnosticsState extends CommandWithProperties {
             false);
     PropertyInteger speed = new PropertyInteger(IDENTIFIER_SPEED, false);
     PropertyInteger rpm = new PropertyInteger(IDENTIFIER_RPM, false);
-    Property<Double> fuelLevel = new Property<>(Double.class, IDENTIFIER_FUEL_LEVEL);
+    Property<Double> fuelLevel = new Property(Double.class, IDENTIFIER_FUEL_LEVEL);
     PropertyInteger range = new PropertyInteger(IDENTIFIER_RANGE, false);
     Property<WasherFluidLevel> washerFluidLevel =
-            new Property<>(WasherFluidLevel.class, IDENTIFIER_WASHER_FLUID_LEVEL);
-    Property<Float> batteryVoltage = new Property<>(Float.class,
-            IDENTIFIER_BATTERY_VOLTAGE);
-    Property<Float> adBlueLevel = new Property<>(Float.class, IDENTIFIER_AD_BLUE_LEVEL);
+            new Property(WasherFluidLevel.class, IDENTIFIER_WASHER_FLUID_LEVEL);
+    Property<Float> batteryVoltage = new Property(Float.class, IDENTIFIER_BATTERY_VOLTAGE);
+    Property<Float> adBlueLevel = new Property(Float.class, IDENTIFIER_AD_BLUE_LEVEL);
     PropertyInteger distanceDrivenSinceReset =
             new PropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET, false);
     PropertyInteger distanceDrivenSinceEngineStart =
             new PropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START, false);
-    Property<Float> fuelVolume = new Property<>(Float.class, IDENTIFIER_FUEL_VOLUME);
+    Property<Float> fuelVolume = new Property(Float.class, IDENTIFIER_FUEL_VOLUME);
 
     // level7
     Property<Boolean> antiLockBrakingActive =
-            new Property<>(Boolean.class, IDENTIFIER_ANTI_LOCK_BRAKING_ACTIVE);
+            new Property(Boolean.class, IDENTIFIER_ANTI_LOCK_BRAKING_ACTIVE);
     PropertyInteger engineCoolantTemperature =
             new PropertyInteger(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, false);
     Property<Float> engineTotalOperatingHours =
-            new Property<>(Float.class, IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
+            new Property(Float.class, IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
     Property<Float> engineTotalFuelConsumption =
-            new Property<>(Float.class, IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
-    Property<BrakeFluidLevel> brakeFluidLevel = new Property<>(BrakeFluidLevel.class,
+            new Property(Float.class, IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
+    Property<BrakeFluidLevel> brakeFluidLevel = new Property(BrakeFluidLevel.class,
             IDENTIFIER_BRAKE_FLUID_LEVEL);
-    Property<Double> engineTorque = new Property<>(Double.class, IDENTIFIER_ENGINE_TORQUE);
-    Property<Double> engineLoad = new Property<>(Double.class, IDENTIFIER_ENGINE_LOAD);
-    PropertyInteger wheelBasedSpeed =
-            new PropertyInteger(IDENTIFIER_WHEEL_BASED_SPEED, true);
+    Property<Double> engineTorque = new Property(Double.class, IDENTIFIER_ENGINE_TORQUE);
+    Property<Double> engineLoad = new Property(Double.class, IDENTIFIER_ENGINE_LOAD);
+    PropertyInteger wheelBasedSpeed = new PropertyInteger(IDENTIFIER_WHEEL_BASED_SPEED, true);
 
     // level8
     Property<Double> batteryLevel = new Property<>(Double.class, IDENTIFIER_BATTERY_LEVEL);
@@ -124,28 +121,28 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The car mileage (odometer) in km.
      */
-    public PropertyInteger getMileage() {
+    public Property<Integer> getMileage() {
         return mileage;
     }
 
     /**
      * @return The engine oil temperature in Celsius, whereas can be negative.
      */
-    public PropertyInteger getOilTemperature() {
+    public Property<Integer> getOilTemperature() {
         return oilTemperature;
     }
 
     /**
      * @return The car speed in km/h, whereas can be negative.
      */
-    public PropertyInteger getSpeed() {
+    public Property<Integer> getSpeed() {
         return speed;
     }
 
     /**
      * @return The RPM of the engine.
      */
-    public PropertyInteger getRpm() {
+    public Property<Integer> getRpm() {
         return rpm;
     }
 
@@ -160,7 +157,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The estimated range.
      */
-    public PropertyInteger getRange() {
+    public Property<Integer> getRange() {
         return range;
     }
 
@@ -188,14 +185,14 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The distance driven in km since reset.
      */
-    public PropertyInteger getDistanceDrivenSinceReset() {
+    public Property<Integer> getDistanceDrivenSinceReset() {
         return distanceDrivenSinceReset;
     }
 
     /**
      * @return The distance driven in km since engine start.
      */
-    public PropertyInteger getDistanceDrivenSinceEngineStart() {
+    public Property<Integer> getDistanceDrivenSinceEngineStart() {
         return distanceDrivenSinceEngineStart;
     }
 
@@ -216,7 +213,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The engine coolant temperature in Celsius, whereas can be negative.
      */
-    public PropertyInteger getEngineCoolantTemperature() {
+    public Property<Integer> getEngineCoolantTemperature() {
         return engineCoolantTemperature;
     }
 
@@ -259,7 +256,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The vehicle speed in km/h measured at the wheel base, whereas can be negative.
      */
-    public PropertyInteger getWheelBasedSpeed() {
+    public Property<Integer> getWheelBasedSpeed() {
         return wheelBasedSpeed;
     }
 
@@ -315,7 +312,7 @@ public class DiagnosticsState extends CommandWithProperties {
      * @return The tire temperature.
      */
     @Nullable public Property<TireTemperature> getTireTemperature(TireLocation
-                                                                                tireLocation) {
+                                                                          tireLocation) {
         for (int i = 0; i < tireTemperatures.length; i++) {
             Property<TireTemperature> temperature = tireTemperatures[i];
             if (temperature != null && temperature.getValue().getTireLocation() == tireLocation)
@@ -358,7 +355,7 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The mileage meters.
      */
-    public PropertyInteger getMileageMeters() {
+    public Property<Integer> getMileageMeters() {
         return mileageMeters;
     }
 

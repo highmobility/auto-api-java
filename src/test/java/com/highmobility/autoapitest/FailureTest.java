@@ -5,7 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Failure;
 import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.property.FailureReason;
-
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
@@ -27,19 +27,19 @@ public class FailureTest {
         assertTrue(command.is(Failure.TYPE));
         Failure failure = (Failure) command;
         assertTrue(failure.getFailedType().equals(GetTrunkState.TYPE));
-        assertTrue(failure.getFailureReason() == FailureReason.UNAUTHORISED);
+        assertTrue(failure.getFailureReason().getValue() == FailureReason.UNAUTHORISED);
         assertTrue(failure.getFailureDescription().getValue().equals("Try again"));
     }
 
     @Test public void build() {
         Failure.Builder builder = new Failure.Builder();
-        builder.setFailedTypeByte(GetTrunkState.TYPE);
-        builder.setFailureReason(FailureReason.UNAUTHORISED);
-        builder.setFailureDescription(new PropertyString("Try again"));
+        builder.setFailedTypeByte(new Property(GetTrunkState.TYPE));
+        builder.setFailureReason(new Property(FailureReason.UNAUTHORISED));
+        builder.setFailureDescription(new Property("Try again"));
         Failure failure = builder.build();
         assertTrue(TestUtils.bytesTheSame(failure, bytes));
         assertTrue(failure.getFailedType() == GetTrunkState.TYPE);
-        assertTrue(failure.getFailureReason() == FailureReason.UNAUTHORISED);
+        assertTrue(failure.getFailureReason().getValue() == FailureReason.UNAUTHORISED);
         assertTrue(failure.getType() == Failure.TYPE);
     }
 }

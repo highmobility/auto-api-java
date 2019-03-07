@@ -50,6 +50,6 @@ public class StartStopTest {
 
         ActivateDeactivateStartStop command = (ActivateDeactivateStartStop) CommandResolver
                 .resolve(waitingForBytes);
-        assertTrue(command.activate() == false);
+        assertTrue(command.activate().getValue() == false);
     }
 }

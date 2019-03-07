@@ -25,6 +25,7 @@ import com.highmobility.autoapi.property.WiperIntensity;
 import com.highmobility.autoapi.property.WiperState;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -37,47 +38,51 @@ public class ControlWipers extends CommandWithProperties {
     private static final byte IDENTIFIER_WIPER_STATE = 0x01;
     private static final byte IDENTIFIER_WIPER_INTENSITY = 0x02;
 
-    private WiperState state;
-    private WiperIntensity intensity;
+    private Property<WiperState> state = new Property(WiperState.class, IDENTIFIER_WIPER_STATE);
+    private Property<WiperIntensity> intensity = new Property(WiperIntensity.class,
+            IDENTIFIER_WIPER_INTENSITY);
 
     /**
      * @return The wipers state.
      */
-    public WiperState getState() {
+    public Property<WiperState> getState() {
         return state;
     }
 
     /**
      * @return The wipers intensity.
      */
-    @Nullable public WiperIntensity getIntensity() {
+    public Property<WiperIntensity> getIntensity() {
         return intensity;
     }
 
     public ControlWipers(WiperState state, @Nullable WiperIntensity intensity) {
-        super(TYPE, getProperties(state, intensity));
-        this.state = state;
-        this.intensity = intensity;
+        super(TYPE);
+        List<Property> builder = new ArrayList<>();
+        this.state.update(state);
+        builder.add(this.state);
+
+        if (intensity != null) {
+            this.intensity.update(intensity);
+            builder.add(this.intensity);
+        }
+
+        createBytes(builder);
     }
 
-    static Property[] getProperties(WiperState state, WiperIntensity intensity) {
-        ArrayList<Property> builder = new ArrayList<>();
-
-        if (state != null) builder.add(new Property(IDENTIFIER_WIPER_STATE, state.getByte()));
-
-        if (intensity != null)
-            builder.add(new Property(IDENTIFIER_WIPER_INTENSITY, intensity.getByte()));
-
-        return builder.toArray(new Property[0]);
-    }
-
-    ControlWipers(byte[] bytes) throws CommandParseException {
+    ControlWipers(byte[] bytes) {
         super(bytes);
-        Property state = getProperty(IDENTIFIER_WIPER_STATE);
-        if (state == null) throw new CommandParseException();
-        this.state = WiperState.fromByte(state.getValueByte());
 
-        Property intensity = getProperty(IDENTIFIER_WIPER_INTENSITY);
-        if (intensity != null) this.intensity = WiperIntensity.fromByte(intensity.getValueByte());
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_WIPER_STATE:
+                        return state.update(p);
+                    case IDENTIFIER_WIPER_INTENSITY:
+                        return intensity.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

@@ -29,24 +29,31 @@ public class ActivateDeactivateSolarCharging extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x14);
     private static final byte IDENTIFIER = 0x01;
 
+    private Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
+
     /**
      * @return Whether to activate the solar charging.
      */
-    public boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
-    private boolean activate;
-
-    public ActivateDeactivateSolarCharging(boolean activate) {
-        super(TYPE.addProperty(new Property<>(activate).setIdentifier(IDENTIFIER)));
-        this.activate = activate;
+    public ActivateDeactivateSolarCharging(Boolean activate) {
+        super(TYPE);
+        this.activate.update(activate);
+        createBytes(this.activate);
     }
 
     ActivateDeactivateSolarCharging(byte[] bytes) throws CommandParseException {
         super(bytes);
-        Property property = getProperty(IDENTIFIER);
-        if (property == null) throw new CommandParseException();
-        activate = Property.getBool(property.getValueByte());
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return activate.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

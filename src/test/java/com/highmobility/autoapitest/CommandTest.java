@@ -313,14 +313,14 @@ public class CommandTest {
             Property property = state.getProperties()[i];
 
             if (property.getPropertyIdentifier() == 0x1A) {
-                assertTrue(property.getValueLength() == 1);
+                assertTrue(property.getValueComponent().getValueBytes().getLength() == 1);
 
-                assertTrue(Arrays.equals(property.getValueBytes().getByteArray(), new byte[]{0x35}));
+                assertTrue(Arrays.equals(property.getValueComponent().getValueBytes().getByteArray(), new byte[]{0x35}));
                 assertTrue(Arrays.equals(property.getByteArray(), ByteUtils.bytesFromHex
                         ("1A000401000135")));
                 foundUnknownProperty = true;
             } else if (property.getPropertyIdentifier() == 0x01) {
-                assertTrue(property.getValueLength() == 8);
+                assertTrue(property.getValueComponent().getValueBytes().getLength() == 8);
 
                 assertTrue(Arrays.equals(property.getByteArray(), ByteUtils.bytesFromHex
                         ("01000B0100083FF0000000000000")));

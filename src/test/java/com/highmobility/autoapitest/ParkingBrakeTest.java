@@ -49,7 +49,7 @@ public class ParkingBrakeTest {
         assertTrue(TestUtils.bytesTheSame(waitingForBytes, commandBytes));
 
         SetParkingBrake command = (SetParkingBrake) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.activate() == true);
+        assertTrue(command.activate().getValue() == true);
         assertTrue(command.equals(waitingForBytes));
     }
 

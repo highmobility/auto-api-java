@@ -4,6 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetMaintenanceState;
 import com.highmobility.autoapi.MaintenanceState;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.maintenance.ConditionBasedService;
 import com.highmobility.autoapi.property.maintenance.TeleserviceAvailability;
 import com.highmobility.utils.ByteUtils;
@@ -48,21 +49,23 @@ public class MaintenanceTest {
         // level8
         assertTrue(state.getCbsReportsCount().getValue() == 3);
         assertTrue(state.getMonthsToExhaustInspection().getValue() == 5);
-        assertTrue(state.getTeleserviceAvailability() == TeleserviceAvailability.SUCCESSFUL);
+        assertTrue(state.getTeleserviceAvailability().getValue() == TeleserviceAvailability.SUCCESSFUL);
         assertTrue(state.getServiceDistanceThreshold().getValue() == 500);
         assertTrue(state.getServiceTimeThreshold().getValue() == 4);
 
-        assertTrue(TestUtils.dateIsSame(state.getAutomaticTeleserviceCallDate(),
+        assertTrue(TestUtils.dateIsSame(state.getAutomaticTeleserviceCallDate().getValue(),
                 "2018-01-10T16:32:05"));
 
-        assertTrue(TestUtils.dateIsSame(state.getTeleserviceBatteryCallDate(),
+        assertTrue(TestUtils.dateIsSame(state.getTeleserviceBatteryCallDate().getValue(),
                 "2018-01-10T18:30:00"));
 
-        assertTrue(TestUtils.dateIsSame(state.getNextInspectionDate(), "2018-01-10T16:32:05"));
+        assertTrue(TestUtils.dateIsSame(state.getNextInspectionDate().getValue(), "2018-01-10T16:32:05"));
 
         assertTrue(state.getConditionBasedServices().length == 2);
         int count = 0;
-        for (ConditionBasedService conditionBasedService : state.getConditionBasedServices()) {
+        for (Property<ConditionBasedService> conditionBasedServiceProp : state.getConditionBasedServices()) {
+            ConditionBasedService conditionBasedService = conditionBasedServiceProp.getValue();
+
             if ((conditionBasedService.getDate().getYear() == 2019 &&
                     conditionBasedService.getDate().getMonth().getValue() == 5 &&
                     conditionBasedService.getIdentifier() == 3 &&
@@ -85,7 +88,7 @@ public class MaintenanceTest {
         }
 
         assertTrue(count == 2);
-        assertTrue(TestUtils.dateIsSame(state.getBrakeFluidChangeDate(),
+        assertTrue(TestUtils.dateIsSame(state.getBrakeFluidChangeDate().getValue(),
                 "2018-01-10T18:30:00"));
     }
 

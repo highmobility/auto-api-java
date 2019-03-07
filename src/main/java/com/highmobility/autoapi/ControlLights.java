@@ -48,12 +48,10 @@ public class ControlLights extends CommandWithProperties {
     private static final byte IDENTIFIER_INTERIOR_LAMP = 0x09;
 
     private Property<FrontExteriorLightState> frontExteriorLightState =
-            new Property<>(FrontExteriorLightState.class,
-                    IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE);
+            new Property(FrontExteriorLightState.class, IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE);
     private Property<Boolean> rearExteriorLightActive =
-            new Property<>(Boolean.class, IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
-    private Property<Color> ambientColor = new Property<>(Color.class,
-            IDENTIFIER_AMBIENT_COLOR);
+            new Property(Boolean.class, IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
+    private Property<Color> ambientColor = new Property(Color.class, IDENTIFIER_AMBIENT_COLOR);
 
     private Property<FogLight>[] fogLights;
     private Property<ReadingLamp>[] readingLamps;

@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 
 /**
@@ -34,7 +35,7 @@ public class SetChassisPosition extends CommandWithProperties {
     /**
      * @return The chassis position in mm calculated from the lowest point.
      */
-    public PropertyInteger getPosition() {
+    public Property<Integer> getPosition() {
         return position;
     }
 
@@ -47,7 +48,7 @@ public class SetChassisPosition extends CommandWithProperties {
         createBytes(this.position);
     }
 
-    SetChassisPosition(byte[] bytes) throws CommandParseException {
+    SetChassisPosition(byte[] bytes) {
         super(bytes);
 
         while (propertiesIterator2.hasNext()) {

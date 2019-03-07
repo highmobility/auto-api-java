@@ -8,6 +8,7 @@ import com.highmobility.autoapi.ParkingTicket;
 import com.highmobility.autoapi.StartParking;
 
 import com.highmobility.autoapi.property.ParkingTicketState;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -37,22 +38,22 @@ public class ParkingTicketTest {
         assertTrue(command.is(ParkingTicket.TYPE));
         ParkingTicket state = (ParkingTicket) command;
 
-        assertTrue(((ParkingTicket) command).getState() == ParkingTicketState.STARTED);
+        assertTrue(((ParkingTicket) command).getState().getValue() == ParkingTicketState.STARTED);
         assertTrue(state.getOperatorName().getValue().equals("Berlin Parking"));
         assertTrue(state.getOperatorTicketId().getValue().equals("64894233"));
 
-        assertTrue(TestUtils.dateIsSame(state.getTicketStartDate(), "2018-01-10T16:32:05"));
-        assertTrue(TestUtils.dateIsSame(state.getTicketEndDate(), "2018-01-10T18:30:00"));
+        assertTrue(TestUtils.dateIsSame(state.getTicketStartDate().getValue(), "2018-01-10T16:32:05"));
+        assertTrue(TestUtils.dateIsSame(state.getTicketEndDate().getValue(), "2018-01-10T18:30:00"));
     }
 
     @Test public void build() throws ParseException {
         ParkingTicket.Builder builder = new ParkingTicket.Builder();
 
-        builder.setState(ParkingTicketState.STARTED);
-        builder.setOperatorName(new PropertyString("Berlin Parking"));
-        builder.setOperatorTicketId(new PropertyString("64894233"));
-        builder.setTicketStart(TestUtils.getCalendar("2018-01-10T16:32:05"));
-        builder.setTicketEnd(TestUtils.getCalendar("2018-01-10T18:30:00"));
+        builder.setState(new Property(ParkingTicketState.STARTED));
+        builder.setOperatorName(new Property("Berlin Parking"));
+        builder.setOperatorTicketId(new Property("64894233"));
+        builder.setTicketStart(new Property(TestUtils.getCalendar("2018-01-10T16:32:05")));
+        builder.setTicketEnd(new Property(TestUtils.getCalendar("2018-01-10T18:30:00")));
 
         ParkingTicket command = builder.build();
         assertTrue(TestUtils.bytesTheSame(command, bytes));
@@ -75,7 +76,7 @@ public class ParkingTicketTest {
         StartParking command = new StartParking("Berlin Parking", "64894233", expected, null);
         assertTrue(TestUtils.bytesTheSame(command, waitingForBytes));
         command = (StartParking) CommandResolver.resolve(waitingForBytes);
-        assertTrue(TestUtils.dateIsSame(command.getStartDate(), "2018-01-10T18:30:00"));
+        assertTrue(TestUtils.dateIsSame(command.getStartDate().getValue(), "2018-01-10T18:30:00"));
         assertTrue(command.getEndDate() == null);
         assertTrue(command.getOperatorName().getValue().equals("Berlin Parking"));
         assertTrue(command.getOperatorTicketId().getValue().equals("64894233"));

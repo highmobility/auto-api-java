@@ -58,7 +58,7 @@ public class HonkHornAndFlashLightsTest {
 
         ActivateDeactivateEmergencyFlasher command = (ActivateDeactivateEmergencyFlasher)
                 CommandResolver.resolveHex(waitingForBytes);
-        assertTrue(command.activate() == true);
+        assertTrue(command.activate().getValue() == true);
     }
 
     @Test public void state0Properties() {

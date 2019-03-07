@@ -226,7 +226,7 @@ public class ChargingTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         StartStopCharging command = (StartStopCharging) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getStart() == true);
+        assertTrue(command.getStart().getValue() == true);
     }
 
     @Test public void setChargeMode() {

@@ -18,54 +18,64 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi.property.tachograph;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.value.Bytes;
 
 public class DriverWorkingState extends PropertyValueObject {
-
-
     int driverNumber;
-    WorkingState workingState;
+    Value workingState;
 
     public int getDriverNumber() {
         return driverNumber;
     }
 
-    public WorkingState getWorkingState() {
+    public Value getWorkingState() {
         return workingState;
     }
 
-    public DriverWorkingState(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 8) throw new CommandParseException();
-        driverNumber = Property.getUnsignedInt(bytes[6]);
-        workingState = WorkingState.fromByte(bytes[7]);
+    public DriverWorkingState(int driverNumber, Value workingState) {
+        super(2);
+        update(driverNumber, workingState);
     }
 
-    public DriverWorkingState(int driverNumber, WorkingState workingState) throws IllegalArgumentException {
-        this(IDENTIFIER, driverNumber, workingState);
+    public DriverWorkingState() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 2) throw new CommandParseException();
+        driverNumber = get(0);
+        workingState = Value.fromByte(get(1));
     }
 
-    public DriverWorkingState(byte identifier, int driverNumber, WorkingState workingState) throws
-            IllegalArgumentException {
-        super(identifier, 2);
+    public void update(int driverNumber, Value workingState) {
+        this.driverNumber = driverNumber;
+        this.workingState = workingState;
+        bytes = new byte[2];
 
-        bytes[6] = (byte) driverNumber;
-        bytes[7] = workingState.getByte();
+        set(0, (byte) driverNumber);
+        set(1, workingState.getByte());
     }
 
-    public enum WorkingState {
+    public void update(DriverWorkingState value) {
+        update(value.driverNumber, value.workingState);
+    }
+
+    public enum Value {
         RESTING((byte) 0x00),
         DRIVER_AVAILABLE((byte) 0x01),
         WORKING((byte) 0x02),
         DRIVING((byte) 0x03);
 
-        public static WorkingState fromByte(byte byteValue) throws CommandParseException {
-            WorkingState[] values = WorkingState.values();
+        public static Value fromByte(byte byteValue) throws CommandParseException {
+            Value[] values = Value.values();
 
             for (int i = 0; i < values.length; i++) {
-                WorkingState state = values[i];
+                Value state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
@@ -76,7 +86,7 @@ public class DriverWorkingState extends PropertyValueObject {
 
         private byte value;
 
-        WorkingState(byte value) {
+        Value(byte value) {
             this.value = value;
         }
 

@@ -84,7 +84,7 @@ public class ClimateTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         StartStopDefogging command = (StartStopDefogging) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.start());
+        assertTrue(command.start().getValue() == true);
     }
 
     @Test public void startStopDefrosting() {
@@ -95,7 +95,7 @@ public class ClimateTest {
 
         StartStopDefrosting command = (StartStopDefrosting) CommandResolver.resolve
                 (waitingForBytes);
-        assertTrue(command.start() == true);
+        assertTrue(command.start().getValue() == true);
     }
 
     @Test public void startStopHvac() {
@@ -105,7 +105,7 @@ public class ClimateTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         StartStopHvac command = (StartStopHvac) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.start() == true);
+        assertTrue(command.start().getValue() == true);
     }
 
     @Test public void StartStopIonising() {
@@ -115,7 +115,7 @@ public class ClimateTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         StartStopIonising command = (StartStopIonising) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.start() == false);
+        assertTrue(command.start().getValue() == false);
     }
 
     @Test public void setTemperatureSettings() {

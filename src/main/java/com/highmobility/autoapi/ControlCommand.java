@@ -45,15 +45,15 @@ public class ControlCommand extends CommandWithProperties {
      * @return The speed in km/h, can range between -5 to 5 whereas a negative speed will reverse
      * the car.
      */
-    @Nullable public Integer getSpeed() {
-        return speed.getValue();
+    public Property<Integer> getSpeed() {
+        return speed;
     }
 
     /**
      * @return The angle of the car
      */
-    @Nullable public Integer getAngle() {
-        return angle.getValue();
+    public Property<Integer> getAngle() {
+        return angle;
     }
 
     /**

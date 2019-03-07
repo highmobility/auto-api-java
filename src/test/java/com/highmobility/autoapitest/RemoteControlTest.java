@@ -41,7 +41,7 @@ public class RemoteControlTest {
         StartControlMode command = new StartControlMode(true);
         assertTrue(command.equals(waitingForBytes));
         command = (StartControlMode) CommandResolver.resolveHex(waitingForBytes);
-        assertTrue(command.getStart() == true);
+        assertTrue(command.getStart().getValue() == true);
     }
 
     @Test public void stopControlMode() {
@@ -49,7 +49,7 @@ public class RemoteControlTest {
                 "01000401000100";
         assertTrue(new StartControlMode(false).equals(waitingForBytes));
         Command command = CommandResolver.resolveHex(waitingForBytes);
-        assertTrue(((StartControlMode) command).getStart() == false);
+        assertTrue(((StartControlMode) command).getStart().getValue() == false);
     }
 
     @Test public void controlCommand() {
@@ -63,8 +63,8 @@ public class RemoteControlTest {
         assertTrue(command instanceof ControlCommand);
         ControlCommand state = (ControlCommand) command;
 
-        assertTrue(state.getAngle() == 50);
-        assertTrue(state.getSpeed() == 3);
+        assertTrue(state.getAngle().getValue() == 50);
+        assertTrue(state.getSpeed().getValue() == 3);
     }
 
     @Test public void state0Properties() {

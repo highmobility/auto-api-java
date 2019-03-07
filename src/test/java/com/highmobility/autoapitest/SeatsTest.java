@@ -4,6 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetSeatsState;
 import com.highmobility.autoapi.SeatsState;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.seats.PersonDetected;
 import com.highmobility.autoapi.property.seats.SeatBeltFastened;
 import com.highmobility.autoapi.property.seats.SeatLocation;
@@ -31,11 +32,11 @@ public class SeatsTest {
 
         assertTrue(command.getClass() == SeatsState.class);
         SeatsState state = (SeatsState) command;
-        assertTrue(state.getPersonDetection(SeatLocation.REAR_RIGHT).isDetected());
-        assertTrue(state.getPersonDetection(SeatLocation.REAR_LEFT).isDetected() == false);
+        assertTrue(state.getPersonDetection(SeatLocation.REAR_RIGHT).getValue().isDetected());
+        assertTrue(state.getPersonDetection(SeatLocation.REAR_LEFT).getValue().isDetected() == false);
 
-        assertTrue(state.getSeatBeltFastened(SeatLocation.REAR_RIGHT).isFastened());
-        assertTrue(state.getSeatBeltFastened(SeatLocation.REAR_LEFT).isFastened() == false);
+        assertTrue(state.getSeatBeltFastened(SeatLocation.REAR_RIGHT).getValue().isFastened());
+        assertTrue(state.getSeatBeltFastened(SeatLocation.REAR_LEFT).getValue().isFastened() == false);
 
         assertTrue(state.getPersonsDetected().length == 2);
     }
@@ -43,11 +44,11 @@ public class SeatsTest {
     @Test public void build() {
         SeatsState.Builder builder = new SeatsState.Builder();
 
-        builder.addPersonDetected(new PersonDetected(SeatLocation.REAR_RIGHT, true));
-        builder.addPersonDetected(new PersonDetected(SeatLocation.REAR_LEFT, false));
+        builder.addPersonDetected(new Property(new PersonDetected(SeatLocation.REAR_RIGHT, true)));
+        builder.addPersonDetected(new Property(new PersonDetected(SeatLocation.REAR_LEFT, false)));
 
-        builder.addSeatBeltFastened(new SeatBeltFastened(SeatLocation.REAR_RIGHT, true));
-        builder.addSeatBeltFastened(new SeatBeltFastened(SeatLocation.REAR_LEFT, false));
+        builder.addSeatBeltFastened(new Property(new SeatBeltFastened(SeatLocation.REAR_RIGHT, true)));
+        builder.addSeatBeltFastened(new Property(new SeatBeltFastened(SeatLocation.REAR_LEFT, false)));
 
         SeatsState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));

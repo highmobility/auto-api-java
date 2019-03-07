@@ -44,7 +44,7 @@ public class EngineTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         TurnIgnitionOnOff incoming = (TurnIgnitionOnOff) CommandResolver.resolve(waitingForBytes);
-        assertTrue(incoming.isOn() == true);
+        assertTrue(incoming.isOn().getValue() == true);
     }
 
     @Test public void state0Properties() {

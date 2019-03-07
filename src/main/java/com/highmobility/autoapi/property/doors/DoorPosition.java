@@ -22,10 +22,11 @@ package com.highmobility.autoapi.property.doors;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Position;
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.value.Location;
+import com.highmobility.value.Bytes;
 
-public class DoorPosition extends Property {
+public class DoorPosition extends PropertyValueObject {
     Location location;
     Position position;
 
@@ -43,16 +44,31 @@ public class DoorPosition extends Property {
         return position;
     }
 
-    public DoorPosition(byte[] bytes) throws CommandParseException {
-        this(Location.fromByte(bytes[6]), Position.fromByte(bytes[7]));
+    public DoorPosition(Location location, Position lock) {
+        super(2);
+        update(location, lock);
     }
 
-    public DoorPosition(Location location, Position position) {
-        super((byte) 0x01, 2);
-        this.location = location;
-        this.position = position;
+    public DoorPosition() {
+        super();
+    } // needed for generic ctor
 
-        bytes[6] = location.getByte();
-        bytes[7] = position.getByte();
+    @Override public void update(Bytes bytes) throws CommandParseException {
+        super.update(bytes);
+        if (getLength() < 2) throw new CommandParseException();
+        location = Location.fromByte(get(0));
+        position = Position.fromByte(get(1));
+    }
+
+    public void update(Location location, Position doorPosition) {
+        this.location = location;
+        this.position = doorPosition;
+        bytes = new byte[2];
+        set(0, location.getByte());
+        set(1, doorPosition.getByte());
+    }
+
+    public void update(DoorPosition value) {
+        update(value.location, value.position);
     }
 }

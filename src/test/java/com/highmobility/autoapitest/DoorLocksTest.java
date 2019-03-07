@@ -6,6 +6,7 @@ import com.highmobility.autoapi.GetLockState;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.LockUnlockDoors;
 import com.highmobility.autoapi.property.Position;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.doors.DoorLockState;
 import com.highmobility.autoapi.property.doors.DoorPosition;
 import com.highmobility.autoapi.property.value.Location;
@@ -44,14 +45,14 @@ public class DoorLocksTest {
     @Test public void build() {
         LockState.Builder builder = new LockState.Builder();
 
-        builder.addInsideLock(new DoorLockState(FRONT_LEFT, UNLOCKED));
-        builder.addInsideLock(new DoorLockState(FRONT_RIGHT, UNLOCKED));
-        builder.addOutsideLock(new DoorLockState(FRONT_LEFT, LOCKED));
-        builder.addOutsideLock(new DoorLockState(FRONT_RIGHT, LOCKED));
-        builder.addPosition(new DoorPosition(FRONT_LEFT, Position.OPEN));
-        builder.addPosition(new DoorPosition(FRONT_RIGHT, Position.CLOSED));
-        builder.addPosition(new DoorPosition(REAR_RIGHT, Position.CLOSED));
-        builder.addPosition(new DoorPosition(REAR_LEFT, Position.CLOSED));
+        builder.addInsideLock(new Property(new DoorLockState(FRONT_LEFT, UNLOCKED)));
+        builder.addInsideLock(new Property(new DoorLockState(FRONT_RIGHT, UNLOCKED)));
+        builder.addOutsideLock(new Property(new DoorLockState(FRONT_LEFT, LOCKED)));
+        builder.addOutsideLock(new Property(new DoorLockState(FRONT_RIGHT, LOCKED)));
+        builder.addPosition(new Property(new DoorPosition(FRONT_LEFT, Position.OPEN)));
+        builder.addPosition(new Property(new DoorPosition(FRONT_RIGHT, Position.CLOSED)));
+        builder.addPosition(new Property(new DoorPosition(REAR_RIGHT, Position.CLOSED)));
+        builder.addPosition(new Property(new DoorPosition(REAR_LEFT, Position.CLOSED)));
 
         LockState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
@@ -63,17 +64,17 @@ public class DoorLocksTest {
         assertTrue(state.getOutsideLocks().length == 2);
         assertTrue(state.getInsideLocks().length == 2);
 
-        assertTrue(state.getInsideLock(FRONT_LEFT).getLock() == UNLOCKED);
-        assertTrue(state.getInsideLock(FRONT_RIGHT).getLock() == UNLOCKED);
+        assertTrue(state.getInsideLock(FRONT_LEFT).getValue().getLock() == UNLOCKED);
+        assertTrue(state.getInsideLock(FRONT_RIGHT).getValue().getLock() == UNLOCKED);
 
-        assertTrue(state.getOutsideLock(FRONT_LEFT).getLock() == LOCKED);
-        assertTrue(state.getOutsideLock(FRONT_RIGHT).getLock() == LOCKED);
+        assertTrue(state.getOutsideLock(FRONT_LEFT).getValue().getLock() == LOCKED);
+        assertTrue(state.getOutsideLock(FRONT_RIGHT).getValue().getLock() == LOCKED);
         assertTrue(state.isLocked());
 
-        assertTrue(state.getPosition(FRONT_LEFT).getPosition() == Position.OPEN);
-        assertTrue(state.getPosition(FRONT_RIGHT).getPosition() == Position.CLOSED);
-        assertTrue(state.getPosition(REAR_RIGHT).getPosition() == Position.CLOSED);
-        assertTrue(state.getPosition(REAR_LEFT).getPosition() == Position.CLOSED);
+        assertTrue(state.getPosition(FRONT_LEFT).getValue().getPosition() == Position.OPEN);
+        assertTrue(state.getPosition(FRONT_RIGHT).getValue().getPosition() == Position.CLOSED);
+        assertTrue(state.getPosition(REAR_RIGHT).getValue().getPosition() == Position.CLOSED);
+        assertTrue(state.getPosition(REAR_LEFT).getValue().getPosition() == Position.CLOSED);
     }
 
     @Test public void get() {
@@ -94,7 +95,7 @@ public class DoorLocksTest {
         assertTrue(command instanceof LockUnlockDoors);
 
         LockUnlockDoors state = (LockUnlockDoors) command;
-        assertTrue(state.getDoorLock() == LOCKED);
+        assertTrue(state.getDoorLock().getValue() == LOCKED);
     }
 
     @Test public void state0Properties() {
@@ -109,7 +110,7 @@ public class DoorLocksTest {
                         "0300050100020501");
         LockState state = (LockState) CommandResolver.resolve(bytes);
         assertTrue(state.getOutsideLocks().length == 1);
-        assertTrue(state.getOutsideLock(Location.ALL).getLock() == LOCKED);
+        assertTrue(state.getOutsideLock(Location.ALL).getValue().getLock() == LOCKED);
         assertTrue(state.isLocked());
     }
 }

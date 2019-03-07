@@ -85,14 +85,14 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The average weekly distance in km.
      */
-    public PropertyInteger getAverageWeeklyDistance() {
+    public Property<Integer> getAverageWeeklyDistance() {
         return averageWeeklyDistance;
     }
 
     /**
      * @return The average weekly distance, over long term, in km
      */
-    public PropertyInteger getAverageWeeklyDistanceLongTerm() {
+    public Property<Integer> getAverageWeeklyDistanceLongTerm() {
         return averageWeeklyDistanceLongTerm;
     }
 

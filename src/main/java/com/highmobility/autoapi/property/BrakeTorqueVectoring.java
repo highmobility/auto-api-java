@@ -22,9 +22,9 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.value.Axle;
+import com.highmobility.value.Bytes;
 
 public class BrakeTorqueVectoring extends PropertyValueObject {
-
     Axle axle;
     boolean active;
 
@@ -41,21 +41,33 @@ public class BrakeTorqueVectoring extends PropertyValueObject {
     public boolean isActive() {
         return active;
     }
-
-    public BrakeTorqueVectoring(byte[] bytes) throws CommandParseException {
-        super(bytes);
-
-        axle = Axle.fromByte(bytes[6]);
-        active = Property.getBool(bytes[7]);
-    }
-
+    
     public BrakeTorqueVectoring(Axle axle, boolean active) {
-        this(IDENTIFIER, axle, active);
+        super(2);
+        update(axle, active);
     }
 
-    BrakeTorqueVectoring(byte identifier, Axle axle, boolean active) {
-        super(identifier, 2);
-        bytes[6] = axle.getByte();
-        bytes[7] = Property.boolToByte(active);
+    public BrakeTorqueVectoring() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 2) throw new CommandParseException();
+        axle = Axle.fromByte(get(0));
+        active = Property.getBool(get(1));
+    }
+
+    public void update(Axle axle, boolean active) {
+        this.axle = axle;
+        this.active = active;
+        bytes = new byte[2];
+
+        set(0, axle.getByte());
+        set(1, Property.boolToByte(active));
+    }
+
+    public void update(BrakeTorqueVectoring value) {
+        update(value.axle, value.active);
     }
 }

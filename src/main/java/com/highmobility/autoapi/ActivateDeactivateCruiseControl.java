@@ -36,13 +36,13 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
     private static final byte IDENTIFIER_ACTIVATE = 0x01;
     private static final byte IDENTIFIER_SPEED = 0x02;
 
-    Boolean activate;
+    Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER_ACTIVATE);
     PropertyInteger speed = new PropertyInteger(IDENTIFIER_SPEED, false);
 
     /**
      * @return Whether cruise control should be activated.
      */
-    public boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
@@ -60,12 +60,12 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
      * @param activate The cruise control activation state.
      * @param speed    The speed. Nullable if cruise control inactive.
      */
-    public ActivateDeactivateCruiseControl(boolean activate, @Nullable Integer speed) {
+    public ActivateDeactivateCruiseControl(Boolean activate, @Nullable Integer speed) {
         super(TYPE);
         ArrayList<Property> properties = new ArrayList<>();
 
         properties.add(new Property<>(activate).setIdentifier(IDENTIFIER_ACTIVATE));
-        this.activate = activate;
+        this.activate.update(activate);
 
         if (speed != null) {
             this.speed.update(IDENTIFIER_SPEED, false, 2, speed);

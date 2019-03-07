@@ -10,12 +10,10 @@ import com.highmobility.autoapi.TheftAlarmState;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.WindowsState;
-import com.highmobility.autoapi.property.CommandProperty;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
-
 import com.highmobility.autoapi.property.Position;
 import com.highmobility.autoapi.property.PowerTrain;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.value.DisplayUnit;
 import com.highmobility.autoapi.property.value.DriverSeatLocation;
 import com.highmobility.autoapi.property.value.Gearbox;
@@ -63,54 +61,55 @@ public class VehicleStatusTest {
                     "12000B0100084D65726365646573"
     );
 
-/*<<<<<<< HEAD
-    VehicleStatus command;
+    /*<<<<<<< HEAD
+        VehicleStatus command;
 
-    @Before
-    public void setup() {
-        command = (VehicleStatus) CommandResolver.resolve(bytes);
-    }
-
-    @Test
-    public void states_size() {
-        assertTrue(command.getStates().length == 2);
-    }
-
-    @Test
-    public void properties() {
-        assertTrue(command.getVin().getValue().equals("JF2SHBDC7CH451869"));
-        assertTrue(command.getPowerTrain() == PowerTrain.ALLELECTRIC);
-        assertTrue(command.getModelName().getValue().equals("Type X"));
-        assertTrue(command.getName().getValue().equals("My Car"));
-        assertTrue(command.getLicensePlate().getValue().equals("ABC123"));
-
-        assertTrue(command.getSalesDesignation().getValue().equals("Package+"));
-        assertTrue(command.getModelYear().getValue() == 2017);
-        assertTrue(command.getColorName().getValue().equals("Estoril Blau"));
-        assertTrue(command.getPower().getValue() == 220);
-        assertTrue(command.getNumberOfDoors().getValue() == 5);
-        assertTrue(command.getNumberOfSeats().getValue() == 5);
-
-        assertTrue(command.getState(TrunkState.TYPE) != null);
-
-        assertTrue(command.getEngineVolume().getValue() == 2.5f);
-        assertTrue(command.getMaxTorque().getValue() == 245);
-        assertTrue(command.getGearBox() == Gearbox.AUTOMATIC);
-
-        assertTrue(command.getDisplayUnit() == DisplayUnit.KM);
-        assertTrue(command.getDriverSeatLocation() == DriverSeatLocation.LEFT);
-        assertTrue(command.getEquipments().length == 2);
-        int count = 0;
-        for (ObjectProperty<String> s : command.getEquipments()) {
-            if (s.getValue().equals("Parking sensors") || s.getValue().equals("Automatic wipers")) count++;
+        @Before
+        public void setup() {
+            command = (VehicleStatus) CommandResolver.resolve(bytes);
         }
-        assertTrue(count == 2);
-        assertTrue(command.getBrand().getValue().equals("Mercedes"));
-=======*/
+
+        @Test
+        public void states_size() {
+            assertTrue(command.getStates().length == 2);
+        }
+
+        @Test
+        public void properties() {
+            assertTrue(command.getVin().getValue().equals("JF2SHBDC7CH451869"));
+            assertTrue(command.getPowerTrain() == PowerTrain.ALLELECTRIC);
+            assertTrue(command.getModelName().getValue().equals("Type X"));
+            assertTrue(command.getName().getValue().equals("My Car"));
+            assertTrue(command.getLicensePlate().getValue().equals("ABC123"));
+
+            assertTrue(command.getSalesDesignation().getValue().equals("Package+"));
+            assertTrue(command.getModelYear().getValue() == 2017);
+            assertTrue(command.getColorName().getValue().equals("Estoril Blau"));
+            assertTrue(command.getPower().getValue() == 220);
+            assertTrue(command.getNumberOfDoors().getValue() == 5);
+            assertTrue(command.getNumberOfSeats().getValue() == 5);
+
+            assertTrue(command.getState(TrunkState.TYPE) != null);
+
+            assertTrue(command.getEngineVolume().getValue() == 2.5f);
+            assertTrue(command.getMaxTorque().getValue() == 245);
+            assertTrue(command.getGearBox() == Gearbox.AUTOMATIC);
+
+            assertTrue(command.getDisplayUnit() == DisplayUnit.KM);
+            assertTrue(command.getDriverSeatLocation() == DriverSeatLocation.LEFT);
+            assertTrue(command.getEquipments().length == 2);
+            int count = 0;
+            for (ObjectProperty<String> s : command.getEquipments()) {
+                if (s.getValue().equals("Parking sensors") || s.getValue().equals("Automatic
+                wipers")) count++;
+            }
+            assertTrue(count == 2);
+            assertTrue(command.getBrand().getValue().equals("Mercedes"));
+    =======*/
     private void testState(VehicleStatus state) {
         assertTrue(state.getStates().length == 2);
         assertTrue(state.getVin().getValue().equals("JF2SHBDC7CH451869"));
-        assertTrue(state.getPowerTrain() == PowerTrain.ALLELECTRIC);
+        assertTrue(state.getPowerTrain().getValue() == PowerTrain.ALLELECTRIC);
         assertTrue(state.getModelName().equals("Type X"));
         assertTrue(state.getName().equals("My Car"));
         assertTrue(state.getLicensePlate().equals("ABC123"));
@@ -126,15 +125,16 @@ public class VehicleStatusTest {
 
         assertTrue(state.getEngineVolume().getValue() == 2.5f);
         assertTrue(state.getMaxTorque().getValue() == 245);
-        assertTrue(state.getGearBox() == Gearbox.AUTOMATIC);
+        assertTrue(state.getGearBox().getValue() == Gearbox.AUTOMATIC);
 
-        assertTrue(state.getDisplayUnit() == DisplayUnit.KM);
-        assertTrue(state.getDriverSeatLocation() == DriverSeatLocation.LEFT);
+        assertTrue(state.getDisplayUnit().getValue() == DisplayUnit.KM);
+        assertTrue(state.getDriverSeatLocation().getValue() == DriverSeatLocation.LEFT);
         assertTrue(state.getEquipments().length == 2);
 
         int count = 0;
         for (Property<String> s : state.getEquipments()) {
-            if (s.getValue().equals("Parking sensors") || s.getValue().equals("Automatic wipers")) count++;
+            if (s.getValue().equals("Parking sensors") || s.getValue().equals("Automatic wipers"))
+                count++;
         }
         assertTrue(count == 2);
         assertTrue(state.getBrand().equals("Mercedes"));
@@ -168,31 +168,32 @@ public class VehicleStatusTest {
         assertTrue(command instanceof GetVehicleStatus);
     }
 
-/*<<<<<<< HEAD
-    @Test public void trunkState() {
-        Command command = getState(TrunkState.class);
-        if (command == null) fail();
-        if (command.is(TrunkState.TYPE) == false) fail();
-        TrunkState trunkState = (TrunkState) command;
-        assertTrue(trunkState.getLockState().getValue() == Lock.UNLOCKED);
-        assertTrue(trunkState.getPosition().getValue() == Position.OPEN);
-    }
+    /*<<<<<<< HEAD
+        @Test public void trunkState() {
+            Command command = getState(TrunkState.class);
+            if (command == null) fail();
+            if (command.is(TrunkState.TYPE) == false) fail();
+            TrunkState trunkState = (TrunkState) command;
+            assertTrue(trunkState.getLockState().getValue() == Lock.UNLOCKED);
+            assertTrue(trunkState.getPosition().getValue() == Position.OPEN);
+        }
 
-    @Test public void ignitionState() {
-        CommandProperty command = this.command.getState(IgnitionState.TYPE);
-        IgnitionState state = (IgnitionState) command.getValue();
-        assertTrue(state.isAccessoriesIgnitionOn().getValue());
-    }
+        @Test public void ignitionState() {
+            CommandProperty command = this.command.getState(IgnitionState.TYPE);
+            IgnitionState state = (IgnitionState) command.getValue();
+            assertTrue(state.isAccessoriesIgnitionOn().getValue());
+        }
 
-    Command getState(Class forClass) {
-        for (int i = 0; i < command.getStates().length; i++) {
-            CommandWithProperties command = this.command.getStates()[i].getValue();
-            if (command != null && command.getClass().equals(forClass)) return command;
-=======*/
+        Command getState(Class forClass) {
+            for (int i = 0; i < command.getStates().length; i++) {
+                CommandWithProperties command = this.command.getStates()[i].getValue();
+                if (command != null && command.getClass().equals(forClass)) return command;
+    =======*/
     Command getState(Class forClass, VehicleStatus command) {
         for (int i = 0; i < command.getStates().length; i++) {
-            CommandProperty state = command.getStates()[i];
-            if (state != null && state.getClass().equals(forClass)) return state.getValue();
+            Property<CommandWithProperties> state = command.getStates()[i];
+            if (state != null && state.getValue().getClass().equals(forClass))
+                return state.getValue();
 //>>>>>>> master
         }
 
@@ -201,34 +202,34 @@ public class VehicleStatusTest {
 
     VehicleStatus.Builder getVehicleStatusBuilderWithoutSignature() {
         VehicleStatus.Builder builder = new VehicleStatus.Builder();
-        builder.setVin(new PropertyString("JF2SHBDC7CH451869"));
-        builder.setPowerTrain(PowerTrain.ALLELECTRIC);
-        builder.setModelName(new PropertyString("Type X"));
-        builder.setName(new PropertyString("My Car"));
-        builder.setLicensePlate(new PropertyString("ABC123"));
-        builder.setSalesDesignation(new PropertyString("Package+"));
+        builder.setVin(new Property("JF2SHBDC7CH451869"));
+        builder.setPowerTrain(new Property(PowerTrain.ALLELECTRIC));
+        builder.setModelName(new Property("Type X"));
+        builder.setName(new Property("My Car"));
+        builder.setLicensePlate(new Property("ABC123"));
+        builder.setSalesDesignation(new Property("Package+"));
         builder.setModelYear(new PropertyInteger(2017));
 
-        builder.setColorName(new PropertyString("Estoril Blau"));
+        builder.setColorName(new Property("Estoril Blau"));
 //        build.setPower(220);
         // add an unknown property (power)
         builder.addProperty(new PropertyInteger((byte) 0x09, false, 2, 220));
         builder.setNumberOfDoors(new PropertyInteger(5)).setNumberOfSeats(new PropertyInteger(5));
 
         // l7
-        builder.setEngineVolume(new Property<>(2.5f));
+        builder.setEngineVolume(new Property(2.5f));
         builder.setMaxTorque(new PropertyInteger(245));
-        builder.setGearBox(Gearbox.AUTOMATIC);
+        builder.setGearBox(new Property(Gearbox.AUTOMATIC));
 
         TrunkState.Builder trunkState = new TrunkState.Builder();
-        trunkState.setLockState(new Property<>(Lock.UNLOCKED));
-        trunkState.setPosition(new Property<>(Position.OPEN));
-        builder.addState(new CommandProperty(trunkState.build()));
+        trunkState.setLockState(new Property(Lock.UNLOCKED));
+        trunkState.setPosition(new Property(Position.OPEN));
+        builder.addState(new Property(trunkState.build()));
 
         IgnitionState.Builder ignitionState = new IgnitionState.Builder();
-        ignitionState.setIsOn(new Property<>(true));
-        ignitionState.setAccessoriesIgnition(new Property<>(true));
-        builder.addState(new CommandProperty(ignitionState.build()));
+        ignitionState.setIsOn(new Property(true));
+        ignitionState.setAccessoriesIgnition(new Property(true));
+        builder.addState(new Property(ignitionState.build()));
 
 /*<<<<<<< HEAD
         // l7
@@ -239,13 +240,13 @@ public class VehicleStatusTest {
 =======
 >>>>>>> master*/
         // l8
-        builder.setDisplayUnit(DisplayUnit.KM);
-        builder.setDriverSeatLocation(DriverSeatLocation.LEFT);
-        builder.addEquipment(new PropertyString("Parking sensors"));
-        builder.addEquipment(new PropertyString("Automatic wipers"));
+        builder.setDisplayUnit(new Property(DisplayUnit.KM));
+        builder.setDriverSeatLocation(new Property(DriverSeatLocation.LEFT));
+        builder.addEquipment(new Property("Parking sensors"));
+        builder.addEquipment(new Property("Automatic wipers"));
 
         // l9
-        builder.setBrand(new PropertyString("Mercedes"));
+        builder.setBrand(new Property("Mercedes"));
 
         return builder;
     }
@@ -305,7 +306,7 @@ public class VehicleStatusTest {
         VehicleStatus vs = builder.build();
 
         assertTrue(vs.getStates().length == 0);
-        assertTrue(vs.getNumberOfDoors() == null);
+        assertTrue(vs.getNumberOfDoors().getValue() == null);
         assertTrue(vs.getState(TheftAlarmState.TYPE) == null);
         assertTrue(vs.getByteArray().length == 3);
 

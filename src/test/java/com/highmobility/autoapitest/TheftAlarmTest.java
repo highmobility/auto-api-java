@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetTheftAlarmState;
 import com.highmobility.autoapi.SetTheftAlarm;
 import com.highmobility.autoapi.TheftAlarmState;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -24,7 +25,7 @@ public class TheftAlarmTest {
 
         assertTrue(command.is(TheftAlarmState.TYPE));
         TheftAlarmState state = (TheftAlarmState) command;
-        assertTrue(state.getState() == TheftAlarmState.Value.ARMED);
+        assertTrue(state.getState().getValue() == TheftAlarmState.Value.ARMED);
     }
 
     @Test public void get() {
@@ -40,15 +41,15 @@ public class TheftAlarmTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         SetTheftAlarm command = (SetTheftAlarm) CommandResolver.resolveHex(waitingForBytes);
-        assertTrue(command.getState() == TheftAlarmState.Value.ARMED);
+        assertTrue(command.getState().getValue() == TheftAlarmState.Value.ARMED);
     }
 
     @Test public void build() {
         TheftAlarmState.Builder builder = new TheftAlarmState.Builder();
-        builder.setState(TheftAlarmState.Value.ARMED);
+        builder.setState(new Property(TheftAlarmState.Value.ARMED));
         TheftAlarmState state = builder.build();
         assertTrue(state.equals(bytes));
-        assertTrue(state.getState() == TheftAlarmState.Value.ARMED);
+        assertTrue(state.getState().getValue() == TheftAlarmState.Value.ARMED);
     }
 
     @Test public void state0Properties() {

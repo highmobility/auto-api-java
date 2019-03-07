@@ -185,7 +185,7 @@ public class HomeChargerTest {
 
         ActivateDeactivateSolarCharging command = (ActivateDeactivateSolarCharging)
                 CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.activate() == true);
+        assertTrue(command.activate().getValue() == true);
     }
 
     @Test public void enableWifi() {
@@ -197,7 +197,7 @@ public class HomeChargerTest {
 
         EnableDisableWifiHotspot command = (EnableDisableWifiHotspot) CommandResolver.resolve
                 (waitingForBytes);
-        assertTrue(command.enable() == false);
+        assertTrue(command.enable().getValue() == false);
     }
 
     @Test public void authenticate() {
@@ -209,7 +209,7 @@ public class HomeChargerTest {
 
         AuthenticateHomeCharger command = (AuthenticateHomeCharger) CommandResolver.resolve
                 (waitingForBytes);
-        assertTrue(command.getAuthenticate() == false);
+        assertTrue(command.getAuthenticate().getValue() == false);
     }
 
     @Test public void state0Properties() {

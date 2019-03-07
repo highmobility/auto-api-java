@@ -35,7 +35,7 @@ public class HistoricalTest {
 
         LockState state = (LockState) states.getStates()[0].getValue();
 
-        assertTrue(state.getOutsideLock(Location.FRONT_LEFT).getLock() == Lock.UNLOCKED);
+        assertTrue(state.getOutsideLock(Location.FRONT_LEFT).getValue().getLock() == Lock.UNLOCKED);
         assertTrue(TestUtils.dateIsSame(state.getTimestamp(), "2018-01-10T18:30:00"));
     }
 

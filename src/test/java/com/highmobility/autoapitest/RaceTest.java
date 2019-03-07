@@ -54,9 +54,9 @@ public class RaceTest {
         RaceState state = (RaceState) command;
 
         assertTrue(state.getAcceleration(
-                Acceleration.AccelerationType.LONGITUDINAL).getAcceleration() == .864f);
+                Acceleration.AccelerationType.LONGITUDINAL).getValue().getAcceleration() == .864f);
         assertTrue(state.getAcceleration(
-                Acceleration.AccelerationType.LATERAL).getAcceleration() == -0.753f);
+                Acceleration.AccelerationType.LATERAL).getValue().getAcceleration() == -0.753f);
 
         assertTrue(state.getUnderSteering().getValue() == .19d);
         assertTrue(state.getOverSteering().getValue() == 0f);
@@ -67,9 +67,9 @@ public class RaceTest {
         assertTrue(state.getRearSuspensionSteering().getValue() == 3);
         assertTrue(state.isEspInterventionActive().getValue() == true);
 
-        assertTrue(state.getBrakeTorqueVectoring(Axle.REAR).isActive() == true);
-        assertTrue(state.getBrakeTorqueVectoring(Axle.FRONT).isActive() == false);
-        assertTrue(state.getGearMode() == GearMode.DRIVE);
+        assertTrue(state.getBrakeTorqueVectoring(Axle.REAR).getValue().isActive() == true);
+        assertTrue(state.getBrakeTorqueVectoring(Axle.FRONT).getValue().isActive() == false);
+        assertTrue(state.getGearMode().getValue() == GearMode.DRIVE);
 
         assertTrue(state.getSelectedGear().getValue() == 4);
         assertTrue(state.getBrakePedalPosition().getValue() == 0d);
@@ -85,29 +85,29 @@ public class RaceTest {
     @Test public void build() {
         RaceState.Builder builder = new RaceState.Builder();
 
-        builder.addAccelerationProperty(new Acceleration(Acceleration
-                .AccelerationType.LONGITUDINAL, .864f));
-        builder.addAccelerationProperty(new Acceleration(Acceleration
-                .AccelerationType.LATERAL, -.753f));
+        builder.addAccelerationProperty(new Property(new Acceleration(Acceleration
+                .AccelerationType.LONGITUDINAL, .864f)));
+        builder.addAccelerationProperty(new Property(new Acceleration(Acceleration
+                .AccelerationType.LATERAL, -.753f)));
         builder.setUnderSteering(new Property(.19d));
         builder.setOverSteering(new Property(0d));
         builder.setGasPedalPosition(new Property(.98d));
         builder.setSteeringAngle(new PropertyInteger(10));
-        builder.setBrakePressure(new Property<>(20f));
-        builder.setYawRate(new Property<>(6.66f));
+        builder.setBrakePressure(new Property(20f));
+        builder.setYawRate(new Property(6.66f));
         builder.setRearSuspensionSteering(new PropertyInteger(3));
-        builder.setEspInterventionActive(new Property<>(true));
-        builder.addBrakeTorqueVectoring(new BrakeTorqueVectoring(Axle.REAR, true));
-        builder.addBrakeTorqueVectoring(new BrakeTorqueVectoring(Axle.FRONT, false));
-        builder.setGearMode(GearMode.DRIVE);
+        builder.setEspInterventionActive(new Property(true));
+        builder.addBrakeTorqueVectoring(new Property(new BrakeTorqueVectoring(Axle.REAR, true)));
+        builder.addBrakeTorqueVectoring(new Property(new BrakeTorqueVectoring(Axle.FRONT, false)));
+        builder.setGearMode(new Property(GearMode.DRIVE));
         builder.setSelectedGear(new PropertyInteger(4));
         builder.setBrakePedalPosition(new Property(0d));
 
-        builder.setBrakePedalSwitchActive(new Property<>(true));
-        builder.setClutchPedalSwitchActive(new Property<>(true));
-        builder.setAcceleratorPedalIdleSwitchActive(new Property<>(true));
-        builder.setAcceleratorPedalKickdownSwitchActive(new Property<>(true));
-        builder.setVehicleMoving(new Property<>(true));
+        builder.setBrakePedalSwitchActive(new Property(true));
+        builder.setClutchPedalSwitchActive(new Property(true));
+        builder.setAcceleratorPedalIdleSwitchActive(new Property(true));
+        builder.setAcceleratorPedalKickdownSwitchActive(new Property(true));
+        builder.setVehicleMoving(new Property(true));
 
         RaceState state = builder.build();
         assertTrue(state.equals(bytes));

@@ -40,7 +40,7 @@ public class ControlMode extends CommandWithProperties {
     /**
      * @return the angle
      */
-    public PropertyInteger getAngle() {
+    public Property<Integer> getAngle() {
         return angle;
     }
 

@@ -69,7 +69,7 @@ public class UsageTest {
         assertTrue(state.getLastTripElectricPortion().getValue() == .7d);
         assertTrue(state.getLastTripAverageEnergyRecuperation().getValue() == 5.68f);
         assertTrue(state.getLastTripBatteryRemaining().getValue() == .5d);
-        assertTrue(TestUtils.dateIsSame(state.getLastTripDate(), "2018-10-17T12:34:58"));
+        assertTrue(TestUtils.dateIsSame(state.getLastTripDate().getValue(), "2018-10-17T12:34:58"));
         assertTrue(state.getAverageFuelConsumption().getValue() == 6.5f);
         assertTrue(state.getCurrentFuelConsumption().getValue() == 7.5f);
     }

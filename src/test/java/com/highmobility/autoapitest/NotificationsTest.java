@@ -6,8 +6,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Notification;
 import com.highmobility.autoapi.NotificationAction;
 import com.highmobility.autoapi.property.ActionItem;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
-
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -39,8 +39,8 @@ public class NotificationsTest {
         assertTrue(state.getAction(0) != null);
         assertTrue(state.getAction(1) != null);
 
-        assertTrue(state.getAction(0).getName().equals("No"));
-        assertTrue(state.getAction(1).getName().equals("Yes"));
+        assertTrue(state.getAction(0).getValue().getName().equals("No"));
+        assertTrue(state.getAction(1).getValue().getName().equals("Yes"));
 
         assertTrue(state.getReceivedAction().getValue() == 42);
     }
@@ -62,9 +62,10 @@ public class NotificationsTest {
         ActionItem action1 = null, action2 = null;
         action1 = new ActionItem(0, "No");
         action2 = new ActionItem(1, "Yes");
-        ActionItem[] actions = new ActionItem[]{action1, action2};
+        Property[] actions = new Property[]{new Property(action1),
+                new Property(action2)};
 
-        builder.setText(new PropertyString("Start navigation?"));
+        builder.setText(new Property("Start navigation?"));
         builder.setActions(actions);
 
         builder.setReceivedAction(new PropertyInteger(42));

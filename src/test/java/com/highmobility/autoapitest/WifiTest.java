@@ -9,7 +9,6 @@ import com.highmobility.autoapi.GetWifiState;
 import com.highmobility.autoapi.WifiState;
 import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
-
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -18,19 +17,19 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
  */
 public class WifiTest {
-        Bytes bytes = new Bytes(
-                "005901" +
-                        "01000401000101" +
-                        "02000401000101" +
-                        "030007010004484F4D45" +
-                        "04000401000103"
-        );
+    Bytes bytes = new Bytes(
+            "005901" +
+                    "01000401000101" +
+                    "02000401000101" +
+                    "030007010004484F4D45" +
+                    "04000401000103"
+    );
+
     @Test
     public void state() {
 
@@ -49,7 +48,7 @@ public class WifiTest {
 
         builder.setEnabled(new Property<>(true));
         builder.setConnected(new Property<>(true));
-        builder.setSsid(new PropertyString("HOME"));
+        builder.setSsid(new Property("HOME"));
         builder.setSecurity(new Property<>(NetworkSecurity.WPA2_PERSONAL));
 
         WifiState state = builder.build();
@@ -98,7 +97,7 @@ public class WifiTest {
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
         EnableDisableWifi command = (EnableDisableWifi) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.enable() == true);
+        assertTrue(command.enable().getValue() == true);
     }
 
     @Test public void state0Properties() {

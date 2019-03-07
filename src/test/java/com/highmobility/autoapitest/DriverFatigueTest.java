@@ -21,6 +21,6 @@ public class DriverFatigueTest {
 
         assertTrue(command.is(DriverFatigueDetected.TYPE));
         DriverFatigueDetected state = (DriverFatigueDetected) command;
-        assertTrue(state.getFatigueLevel() == FatigueLevel.LIGHT_FATIGUE);
+        assertTrue(state.getFatigueLevel().getValue() == FatigueLevel.LIGHT_FATIGUE);
     }
 }

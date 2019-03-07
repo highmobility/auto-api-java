@@ -57,7 +57,7 @@ public class VideoHandover extends CommandWithProperties {
     /**
      * @return The starting second.
      */
-    @Nullable public PropertyInteger getStartingSecond() {
+    @Nullable public Property<Integer> getStartingSecond() {
         return startingSecond;
     }
 

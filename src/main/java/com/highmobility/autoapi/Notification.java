@@ -93,7 +93,7 @@ public class Notification extends CommandWithProperties {
         properties.add(this.text);
 
         for (ActionItem action : actions) {
-            Property p = new Property(ActionItem.class, IDENTIFIER_ACTION_ITEM, action);
+            Property p = new Property(IDENTIFIER_ACTION_ITEM, action);
             actionItemsBuilder.add(p);
             properties.add(p);
         }

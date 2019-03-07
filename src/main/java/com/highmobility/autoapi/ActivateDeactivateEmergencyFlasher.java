@@ -28,25 +28,32 @@ import com.highmobility.autoapi.property.Property;
  */
 public class ActivateDeactivateEmergencyFlasher extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x13);
-    private static final byte PROPERTY_IDENTIFIER = 0x01;
-    boolean activate;
+    private static final byte IDENTIFIER = 0x01;
+    Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether flasher should be activated.
      */
-    public boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
-    public ActivateDeactivateEmergencyFlasher(boolean activate) {
-        super(TYPE.addProperty(new Property<>(activate).setIdentifier(PROPERTY_IDENTIFIER)));
-        this.activate = activate;
+    public ActivateDeactivateEmergencyFlasher(Boolean activate) {
+        super(TYPE);
+        this.activate.update(activate);
+        createBytes(this.activate);
     }
 
-    ActivateDeactivateEmergencyFlasher(byte[] bytes) throws CommandParseException {
+    ActivateDeactivateEmergencyFlasher(byte[] bytes) {
         super(bytes);
-        Property property = getProperty(PROPERTY_IDENTIFIER);
-        if (property == null) throw new CommandParseException();
-        activate = Property.getBool(bytes[6]);
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return activate.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

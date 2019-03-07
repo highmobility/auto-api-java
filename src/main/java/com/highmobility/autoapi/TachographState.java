@@ -20,12 +20,12 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.DriverCard;
-import com.highmobility.autoapi.property.DriverTimeState;
-import com.highmobility.autoapi.property.DriverWorkingState;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.tachograph.DriverCard;
+import com.highmobility.autoapi.property.tachograph.DriverTimeState;
+import com.highmobility.autoapi.property.tachograph.DriverWorkingState;
+import com.highmobility.autoapi.property.tachograph.VehicleDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,6 @@ public class TachographState extends CommandWithProperties {
     Property<Boolean> vehicleOverspeed = new Property(Boolean.class, IDENTIFIER_VEHICLE_OVERSPEED);
     Property<VehicleDirection> vehicleDirection = new Property(VehicleDirection.class,
             IDENTIFIER_VEHICLE_DIRECTION);
-    ;
     Property<Integer> vehicleSpeed = new PropertyInteger(IDENTIFIER_VEHICLE_SPEED, false);
 
     /**
@@ -156,9 +155,9 @@ public class TachographState extends CommandWithProperties {
     TachographState(byte[] bytes) {
         super(bytes);
 
-        List<Property<DriverTimeState>> timeStateBuilder = new ArrayList<>();
-        List<Property<DriverWorkingState>> workingStateBuilder = new ArrayList<>();
-        List<Property<DriverCard>> cardsBuilder = new ArrayList<>();
+        List<Property> timeStateBuilder = new ArrayList<>();
+        List<Property> workingStateBuilder = new ArrayList<>();
+        List<Property> cardsBuilder = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
@@ -342,34 +341,6 @@ public class TachographState extends CommandWithProperties {
 
         public TachographState build() {
             return new TachographState(this);
-        }
-    }
-
-    public enum VehicleDirection implements PropertyValueSingleByte {
-        FORWARD((byte) 0x00),
-        REVERSE((byte) 0x01);
-
-        public static VehicleDirection fromByte(byte byteValue) throws CommandParseException {
-            VehicleDirection[] values = VehicleDirection.values();
-
-            for (int i = 0; i < values.length; i++) {
-                VehicleDirection state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-
-            throw new CommandParseException();
-        }
-
-        private byte value;
-
-        VehicleDirection(byte value) {
-            this.value = value;
-        }
-
-        public byte getByte() {
-            return value;
         }
     }
 }

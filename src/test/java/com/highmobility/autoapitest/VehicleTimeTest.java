@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetVehicleTime;
 import com.highmobility.autoapi.VehicleTime;
-import com.highmobility.autoapi.property.CalendarProperty;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -54,7 +54,7 @@ public class VehicleTimeTest {
     @Test public void build() throws ParseException {
         VehicleTime.Builder builder = new VehicleTime.Builder();
         Calendar c = TestUtils.getCalendar("2017-01-13T22:14:48");
-        builder.setVehicleTime(new CalendarProperty(c));
+        builder.setVehicleTime(new Property(c));
         testState(builder.build());
     }
 }

@@ -28,27 +28,35 @@ import com.highmobility.autoapi.property.Property;
 public class ActivateDeactivateValetMode extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x12);
     private static final byte IDENTIFIER = 0x01;
-    boolean activate;
+    Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether valet mode should be activated.
      */
-    public boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
     /**
      * @param activate Whether valet mode should be activated.
      */
-    public ActivateDeactivateValetMode(boolean activate) {
-        super(TYPE.addProperty(new Property<>(activate).setIdentifier(IDENTIFIER)));
-        this.activate = activate;
+    public ActivateDeactivateValetMode(Boolean activate) {
+        super(TYPE);
+        this.activate.update(activate);
+        createBytes(this.activate);
     }
 
-    ActivateDeactivateValetMode(byte[] bytes) throws CommandParseException {
+    ActivateDeactivateValetMode(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        this.activate = Property.getBool(prop.getValueByte());
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return activate.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

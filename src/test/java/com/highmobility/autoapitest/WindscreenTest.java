@@ -46,23 +46,23 @@ public class WindscreenTest {
                 .class));
         WindscreenState state = (WindscreenState) command;
 
-        assertTrue(state.getWiperState() == WiperState.AUTOMATIC);
-        assertTrue(state.getWiperIntensity() == WiperIntensity.LEVEL_3);
-        assertTrue(state.getWindscreenDamage() == WindscreenDamage.IMPACT_NO_DAMAGE);
-        assertTrue(state.getWindscreenReplacementState() == WindscreenReplacementState
+        assertTrue(state.getWiperState().getValue() == WiperState.AUTOMATIC);
+        assertTrue(state.getWiperIntensity().getValue() == WiperIntensity.LEVEL_3);
+        assertTrue(state.getWindscreenDamage().getValue() == WindscreenDamage.IMPACT_NO_DAMAGE);
+        assertTrue(state.getWindscreenReplacementState().getValue() == WindscreenReplacementState
                 .REPLACEMENT_NEEDED);
 
-        WindscreenDamageZone zone = state.getWindscreenDamageZone();
+        WindscreenDamageZone zone = state.getWindscreenDamageZone().getValue();
         assertTrue(zone.getDamageZoneX() == 1);
         assertTrue(zone.getDamageZoneY() == 2);
 
-        WindscreenDamageZoneMatrix matrix = state.getWindscreenDamageZoneMatrix();
+        WindscreenDamageZoneMatrix matrix = state.getWindscreenDamageZoneMatrix().getValue();
         assertTrue(matrix.getWindscreenSizeHorizontal() == 4);
         assertTrue(matrix.getWindscreenSizeVertical() == 3);
 
         assertTrue(state.getDamageConfidence().getValue() == .95d);
 
-        Calendar c = state.getDamageDetectionTime();
+        Calendar c = state.getDamageDetectionTime().getValue();
         assertTrue(TestUtils.dateIsSame(c, "2017-01-10T16:32:05"));
     }
 
@@ -107,8 +107,8 @@ public class WindscreenTest {
 
         SetWindscreenDamage command = (SetWindscreenDamage) CommandResolver.resolve
                 (waitingForBytes);
-        assertTrue(command.getDamage() == WindscreenDamage.IMPACT_NO_DAMAGE);
-        assertTrue(command.getZone() == null);
+        assertTrue(command.getDamage().getValue() == WindscreenDamage.IMPACT_NO_DAMAGE);
+        assertTrue(command.getZone().getValue() == null);
     }
 
     @Test public void setDamage() {
@@ -125,9 +125,9 @@ public class WindscreenTest {
 
         SetWindscreenDamage resolvedBytes = (SetWindscreenDamage) CommandResolver.resolve
                 (bytes);
-        assertTrue(resolvedBytes.getDamage() == WindscreenDamage.IMPACT_NO_DAMAGE);
-        assertTrue(resolvedBytes.getZone().getDamageZoneX() == 2);
-        assertTrue(resolvedBytes.getZone().getDamageZoneY() == 3);
+        assertTrue(resolvedBytes.getDamage().getValue() == WindscreenDamage.IMPACT_NO_DAMAGE);
+        assertTrue(resolvedBytes.getZone().getValue().getDamageZoneX() == 2);
+        assertTrue(resolvedBytes.getZone().getValue().getDamageZoneY() == 3);
     }
 
     @Test public void setReplacementNeeded() {
@@ -142,7 +142,7 @@ public class WindscreenTest {
         SetWindscreenReplacementNeeded command = (SetWindscreenReplacementNeeded) CommandResolver
                 .resolve
                         (waitingForBytes);
-        assertTrue(command.getState() == WindscreenReplacementState.REPLACEMENT_NOT_NEEDED);
+        assertTrue(command.getState().getValue() == WindscreenReplacementState.REPLACEMENT_NOT_NEEDED);
     }
 
     @Test public void state0Properties() {
@@ -157,12 +157,12 @@ public class WindscreenTest {
                 "02000401000102");
 
         ControlWipers create = new ControlWipers(WiperState.ACTIVE, WiperIntensity.LEVEL_2);
-        assertTrue(create.getIntensity() == WiperIntensity.LEVEL_2);
-        assertTrue(create.getState() == WiperState.ACTIVE);
+        assertTrue(create.getIntensity().getValue() == WiperIntensity.LEVEL_2);
+        assertTrue(create.getState().getValue() == WiperState.ACTIVE);
         assertTrue(create.equals(bytes));
 
         ControlWipers resolve = (ControlWipers) CommandResolver.resolve(bytes);
-        assertTrue(resolve.getState() == WiperState.ACTIVE);
-        assertTrue(resolve.getIntensity() == WiperIntensity.LEVEL_2);
+        assertTrue(resolve.getState().getValue() == WiperState.ACTIVE);
+        assertTrue(resolve.getIntensity().getValue() == WiperIntensity.LEVEL_2);
     }
 }

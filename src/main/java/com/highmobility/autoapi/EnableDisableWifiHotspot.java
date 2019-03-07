@@ -29,24 +29,32 @@ public class EnableDisableWifiHotspot extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x15);
     private static final byte IDENTIFIER = 0x01;
 
+    private Property<Boolean> enable = new Property(Boolean.class, IDENTIFIER);
+
     /**
      * @return Whether to enable the Wi-Fi hotspot.
      */
-    public boolean enable() {
+    public Property<Boolean> enable() {
         return enable;
     }
 
-    private boolean enable;
-
-    public EnableDisableWifiHotspot(boolean enable) {
-        super(TYPE.addProperty(new Property<>(enable).setIdentifier(IDENTIFIER)));
-        this.enable = enable;
+    public EnableDisableWifiHotspot(Boolean enable) {
+        super(TYPE);
+        this.enable.update(enable);
+        createBytes(this.enable);
     }
 
-    EnableDisableWifiHotspot(byte[] bytes) throws CommandParseException {
+    EnableDisableWifiHotspot(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        enable = Property.getBool(prop.getValueByte());
+
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return enable.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

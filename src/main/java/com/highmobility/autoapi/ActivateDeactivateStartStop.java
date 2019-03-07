@@ -30,24 +30,31 @@ import com.highmobility.autoapi.property.Property;
 public class ActivateDeactivateStartStop extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.START_STOP, 0x12);
     private static final byte IDENTIFIER = 0x01;
-    boolean activate;
+    Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether Start-Stop should be activated.
      */
-    public boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
-    public ActivateDeactivateStartStop(boolean activate) {
-        super(TYPE.addProperty(new Property<>(activate).setIdentifier(IDENTIFIER)));
-        this.activate = activate;
+    public ActivateDeactivateStartStop(Boolean activate) {
+        super(TYPE);
+        this.activate.update(activate);
+        createBytes(this.activate);
     }
 
-    ActivateDeactivateStartStop(byte[] bytes) throws CommandParseException {
+    ActivateDeactivateStartStop(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        activate = Property.getBool(prop.getValueByte());
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return activate.update(p);
+                }
+                return null;
+            });
+        }
     }
 }

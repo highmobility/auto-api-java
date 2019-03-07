@@ -18,45 +18,54 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi.property.tachograph;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.value.Bytes;
 
 public class DriverTimeState extends PropertyValueObject {
-
-
     int driverNumber;
-    TimeState timeState;
+    Value timeState;
 
     public int getDriverNumber() {
         return driverNumber;
     }
 
-    public TimeState getTimeState() {
+    public Value getTimeState() {
         return timeState;
     }
 
-    public DriverTimeState(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 8) throw new CommandParseException();
-        driverNumber = Property.getUnsignedInt(bytes[6]);
-        timeState = TimeState.fromByte(bytes[7]);
+    public DriverTimeState(int driverNumber, Value timeState) {
+        super(2);
+        update(driverNumber, timeState);
     }
 
-    public DriverTimeState(int driverNumber, TimeState timeState) throws
-            IllegalArgumentException {
-        this(IDENTIFIER, driverNumber, timeState);
+    public DriverTimeState() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 2) throw new CommandParseException();
+        driverNumber = get(0);
+        timeState = Value.fromByte(get(1));
     }
 
-    public DriverTimeState(byte identifier, int driverNumber, TimeState timeState) throws
-            IllegalArgumentException {
-        super(identifier, 2);
+    public void update(int driverNumber, Value timeState) {
+        this.driverNumber = driverNumber;
+        this.timeState = timeState;
+        bytes = new byte[2];
 
-        bytes[6] = (byte) driverNumber;
-        bytes[7] = timeState.getByte();
+        set(0, (byte) driverNumber);
+        set(1, timeState.getByte());
     }
 
-    public enum TimeState {
+    public void update(DriverTimeState value) {
+        update(value.driverNumber, value.timeState);
+    }
+
+    public enum Value {
         NORMAL((byte) 0x00),
         FIFTEEN_MINUTES_BEFORE_FOUR_AND_HALF_HOURS((byte) 0x01),
         FOUR_AND_HALF_HOURS_REACHED((byte) 0x02),
@@ -65,11 +74,11 @@ public class DriverTimeState extends PropertyValueObject {
         FIFTEEN_MINUTES_BEFORE_SIXTEEN_HOURS((byte) 0x05),
         SIXTEEN_HOURS_REACHED((byte) 0x06);
 
-        public static TimeState fromByte(byte byteValue) throws CommandParseException {
-            TimeState[] values = TimeState.values();
+        public static Value fromByte(byte byteValue) throws CommandParseException {
+            Value[] values = Value.values();
 
             for (int i = 0; i < values.length; i++) {
-                TimeState state = values[i];
+                Value state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
@@ -80,7 +89,7 @@ public class DriverTimeState extends PropertyValueObject {
 
         private byte value;
 
-        TimeState(byte value) {
+        Value(byte value) {
             this.value = value;
         }
 
@@ -88,5 +97,4 @@ public class DriverTimeState extends PropertyValueObject {
             return value;
         }
     }
-
 }
