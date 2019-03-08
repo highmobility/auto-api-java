@@ -44,7 +44,7 @@ public class NotificationAction extends CommandWithProperties {
      */
     public NotificationAction(int actionIdentifier) {
         super(TYPE);
-        this.actionIdentifier.update(IDENTIFIER, false, 1, actionIdentifier);
+        this.actionIdentifier.update(false, 1, actionIdentifier);
         createBytes(this.actionIdentifier);
     }
 

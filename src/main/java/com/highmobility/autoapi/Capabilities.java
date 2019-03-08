@@ -50,8 +50,8 @@ public class Capabilities extends CommandWithProperties {
     public CapabilityProperty getCapability(Type type) {
         for (int i = 0; i < capabilities.length; i++) {
             CapabilityProperty capability = capabilities[i];
-            if (capability.getIdentifierBytes()[0] == type.getIdentifier()[0]
-                    && capability.getIdentifierBytes()[1] == type.getIdentifier()[1]) {
+            if (capability.getIdentifierBytes()[0] == type.getIdentifierBytes()[0]
+                    && capability.getIdentifierBytes()[1] == type.getIdentifierBytes()[1]) {
                 Type[] types = capability.getTypes();
                 for (int j = 0; j < types.length; j++) {
                     Type existingType = types[j];

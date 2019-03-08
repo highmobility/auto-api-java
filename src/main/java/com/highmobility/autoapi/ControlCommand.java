@@ -69,12 +69,12 @@ public class ControlCommand extends CommandWithProperties {
         if (speed != null) {
             if (speed > 5 || speed < -5) throw new IllegalArgumentException();
 
-            this.speed.update(IDENTIFIER_SPEED, true, 1, speed);
+            this.speed.update(true, 1, speed);
             properties.add(this.speed);
         }
 
         if (angle != null) {
-            this.angle.update(IDENTIFIER_ANGLE, true, 2, angle);
+            this.angle.update(true, 2, angle);
             properties.add(this.angle);
         }
 

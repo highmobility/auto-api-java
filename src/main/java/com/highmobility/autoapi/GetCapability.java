@@ -60,7 +60,7 @@ public class GetCapability extends Command {
     static byte[] getBytes(Type type) {
         byte[] bytes = new byte[5];
         ByteUtils.setBytes(bytes, TYPE.getIdentifierAndType(), 0);
-        ByteUtils.setBytes(bytes, type.getIdentifier(), 3);
+        ByteUtils.setBytes(bytes, type.getIdentifierBytes(), 3);
         return bytes;
     }
 

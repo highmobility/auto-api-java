@@ -68,10 +68,9 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
         this.activate.update(activate);
 
         if (speed != null) {
-            this.speed.update(IDENTIFIER_SPEED, false, 2, speed);
+            this.speed.update(false, 2, speed);
             properties.add(this.speed);
         }
-
 
         createBytes(properties);
     }

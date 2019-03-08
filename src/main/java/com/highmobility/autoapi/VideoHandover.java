@@ -22,7 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
-
 import com.highmobility.autoapi.property.ScreenLocation;
 
 import java.util.ArrayList;
@@ -83,7 +82,7 @@ public class VideoHandover extends CommandWithProperties {
         properties.add(this.url);
 
         if (startingSecond != null) {
-            this.startingSecond.update(STARTING_SECOND_IDENTIFIER, false, 2, startingSecond);
+            this.startingSecond.update(false, 2, startingSecond);
             properties.add(this.startingSecond);
         }
 

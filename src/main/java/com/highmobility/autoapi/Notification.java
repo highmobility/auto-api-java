@@ -25,7 +25,6 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -101,7 +100,7 @@ public class Notification extends CommandWithProperties {
         this.actions = actionItemsBuilder.toArray(new Property[0]);
 
         if (receivedAction != null) {
-            this.receivedAction.update(IDENTIFIER_RECEIVED_ACTION, false, 1, receivedAction);
+            this.receivedAction.update(false, 1, receivedAction);
             properties.add(this.receivedAction);
         }
 

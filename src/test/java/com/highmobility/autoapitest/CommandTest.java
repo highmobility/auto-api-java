@@ -228,7 +228,7 @@ public class CommandTest {
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
 
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
-        builder.setIsActive(new Property<>(true));
+        builder.setIsActive(new Property(true));
         builder.setNonce(new Bytes("324244433743483436"));
         builder.setSignature(new Bytes
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));

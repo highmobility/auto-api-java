@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 
 import java.util.Arrays;
@@ -68,13 +67,18 @@ public class Type {
     }
 
     byte[] identifierAndType;
-    Identifier identifier; // this is for debug purpose
+
+    Identifier identifier;
+
+    public Identifier getIdentifier() {
+        return identifier;
+    }
 
     public byte[] getIdentifierAndType() {
         return identifierAndType;
     }
 
-    public byte[] getIdentifier() {
+    public byte[] getIdentifierBytes() {
         return new byte[]{identifierAndType[0], identifierAndType[1]};
     }
 

@@ -47,7 +47,7 @@ public class SendHeartRate extends CommandWithProperties {
      */
     public SendHeartRate(int heartRate) {
         super(TYPE);
-        this.heartRate.update(IDENTIFIER, false, 1, heartRate);
+        this.heartRate.update(false, 1, heartRate);
         createBytes(this.heartRate);
     }
 

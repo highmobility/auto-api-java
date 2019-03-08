@@ -35,10 +35,10 @@ public class HonkHornAndFlashLightsTest {
         String waitingForBytes = "002612" +
                 "01000401000100" +
                 "02000401000103";
-        String commandBytes = ByteUtils.hexFromBytes(new HonkAndFlash(0, 3).getByteArray());
-        assertTrue(waitingForBytes.equals(commandBytes));
+        HonkAndFlash command = new HonkAndFlash(0, 3);
+        assertTrue(command.equals(waitingForBytes));
 
-        HonkAndFlash command = (HonkAndFlash) CommandResolver.resolveHex(waitingForBytes);
+        command = (HonkAndFlash) CommandResolver.resolveHex(waitingForBytes);
         assertTrue(command.getSeconds() == 0);
         assertTrue(command.getLightFlashCount() == 3);
     }

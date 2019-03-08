@@ -42,7 +42,7 @@ public class PropertyInteger extends Property<Integer> {
         update(p);
     }
 
-    public PropertyInteger(byte identifier, boolean signed, int length, int value) {
+    public PropertyInteger(byte identifier, boolean signed, int length, Integer value) {
         this(identifier, signed);
         this.bytes = getBytes(identifier, length, value).getByteArray();
         findComponents();
@@ -73,30 +73,26 @@ public class PropertyInteger extends Property<Integer> {
      * @param newLength  The new length.
      */
     public Property update(byte identifier, boolean signed, int newLength) {
-        byte[] bytes = baseBytes(identifier, newLength);
+        bytes = baseBytes(identifier, newLength + 3);
+        // update the length/sign of the previously set int. This is used in builders.
 
         /*
         Don't need to consider signed here because we are not resetting the value, it stays
         signed int from builder ctor. Bytes would be set the same for signed/unsigned.
          */
-
-        if (value == null) return this;
-
-        if (newLength == 1) {
-            bytes[6] = value.value.byteValue();
-        } else {
-            ByteUtils.setBytes(bytes, intToBytes(value.value, newLength), 6);
-        }
-
-        findComponents();
+        if (value == null) return this; // there is no int value set before, nothing to do
+        value = new PropertyComponentValueInteger(value.value, signed, newLength);
+        set(3, value);
 
         return this;
     }
 
-    public Property update(byte identifier, boolean signed, int newLength,
-                           @Nullable Integer value) {
-        this.value.value = value;
-        return update(identifier, signed, newLength);
+    public Property update(boolean signed, int newLength, @Nullable Integer value) {
+        // create new bytes
+        bytes = baseBytes(bytes[0], newLength + 3);
+        this.value = new PropertyComponentValueInteger(value, signed, newLength);
+        set(3, this.value);
+        return this;
     }
 
     static Bytes getBytes(byte identifier, int length, Integer value) {

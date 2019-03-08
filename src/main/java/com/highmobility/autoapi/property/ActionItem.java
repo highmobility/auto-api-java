@@ -55,7 +55,7 @@ public class ActionItem extends PropertyValueObject {
         if (bytes.length == 0) throw new CommandParseException();
 
         actionIdentifier = bytes[0];
-        if (bytes.length > 1) name = Property.getString(getRange(1, bytes.length - 1));
+        if (bytes.length > 1) name = Property.getString(getRange(1, bytes.length));
     }
 
     public void update(int actionIdentifier, String name) {

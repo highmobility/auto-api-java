@@ -42,10 +42,10 @@ public class StartParking extends CommandWithProperties {
     public static final byte END_DATE_IDENTIFIER = 0x04;
 
     private Property<String> operatorName = new Property(String.class, IDENTIFIER_OPERATOR_NAME);
-    private Property<String> operatorTicketId =
-            new Property(String.class, IDENTIFIER_OPERATOR_TICKET_ID);
-    private Property<Calendar> startDate = new Property<>(Calendar.class, START_DATE_IDENTIFIER);
-    private Property<Calendar> endDate = new Property<>(Calendar.class, END_DATE_IDENTIFIER);
+    private Property<String> operatorTicketId = new Property(String.class,
+            IDENTIFIER_OPERATOR_TICKET_ID);
+    private Property<Calendar> startDate = new Property(Calendar.class, START_DATE_IDENTIFIER);
+    private Property<Calendar> endDate = new Property(Calendar.class, END_DATE_IDENTIFIER);
 
     /**
      * @return The operator name.
@@ -89,9 +89,10 @@ public class StartParking extends CommandWithProperties {
 
         List<Property> propertiesBuilder = new ArrayList<>();
 
-        this.operatorName.update(operatorName);
+        if (operatorName != null) {
+            propertiesBuilder.add(this.operatorName.update(operatorName));
+        }
 
-        propertiesBuilder.add(this.operatorName.update(operatorTicketId));
         propertiesBuilder.add(this.operatorTicketId.update(operatorTicketId));
         propertiesBuilder.add(this.startDate.update(startDate));
 

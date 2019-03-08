@@ -45,6 +45,7 @@ public class SetTheftAlarm extends CommandWithProperties {
     public SetTheftAlarm(TheftAlarmState.Value state) {
         super(TYPE);
         this.state.update(state);
+        createBytes(this.state);
     }
 
     SetTheftAlarm(byte[] bytes) {

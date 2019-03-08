@@ -69,6 +69,7 @@ public class ChargingTest {
     }
 
     private void testState(ChargeState state) throws ParseException {
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
         assertTrue(state.getEstimatedRange().getValue() == 432);
         assertTrue(state.getBatteryLevel().getValue() == .5d);
         assertTrue(state.getBatteryCurrentAC().getValue() == -.6f);

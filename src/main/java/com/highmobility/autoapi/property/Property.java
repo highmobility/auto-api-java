@@ -22,6 +22,7 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.utils.ByteUtils;
@@ -237,8 +238,7 @@ public class Property<T> extends Bytes {
         if (timestamp == null) {
             this.bytes = baseBytes(identifier, this.value.getLength());
             set(3, this.value);
-        }
-        else {
+        } else {
             // TODO: 2019-03-07 ^^ resets the timestamp bytes. make logic to consider other
             //  components as well when creating new bytes
         }
@@ -260,9 +260,9 @@ public class Property<T> extends Bytes {
 
     public boolean isUniversalProperty() {
         byte propertyIdentifier = getPropertyIdentifier();
-        return propertyIdentifier == (byte) 0xA2 ||
-                propertyIdentifier == (byte) 0xA0 ||
-                propertyIdentifier == (byte) 0xA1;
+        return propertyIdentifier == CommandWithProperties.SIGNATURE_IDENTIFIER ||
+                propertyIdentifier == CommandWithProperties.NONCE_IDENTIFIER ||
+                propertyIdentifier == CommandWithProperties.TIMESTAMP_IDENTIFIER;
     }
 
     // TODO: 2019-02-04 make private
@@ -483,6 +483,8 @@ public class Property<T> extends Bytes {
      * @throws IllegalArgumentException when input is invalid
      */
     public static byte[] intToBytes(int value, int length) throws IllegalArgumentException {
+        if (length == 1) return new byte[]{(byte) value};
+
         byte[] bytes = BigInteger.valueOf(value).toByteArray();
 
         if (bytes.length == length) {

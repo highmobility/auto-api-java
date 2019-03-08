@@ -44,7 +44,7 @@ public class SetChassisPosition extends CommandWithProperties {
      */
     public SetChassisPosition(int position) {
         super(TYPE);
-        this.position.update(PROPERTY_IDENTIFIER, true, 1, position);
+        this.position.update(true, 1, position);
         createBytes(this.position);
     }
 

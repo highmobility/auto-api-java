@@ -77,7 +77,7 @@ public class ParkingTicketTest {
         assertTrue(TestUtils.bytesTheSame(command, waitingForBytes));
         command = (StartParking) CommandResolver.resolve(waitingForBytes);
         assertTrue(TestUtils.dateIsSame(command.getStartDate().getValue(), "2018-01-10T18:30:00"));
-        assertTrue(command.getEndDate() == null);
+        assertTrue(command.getEndDate().getValue() == null);
         assertTrue(command.getOperatorName().getValue().equals("Berlin Parking"));
         assertTrue(command.getOperatorTicketId().getValue().equals("64894233"));
     }

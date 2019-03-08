@@ -49,9 +49,9 @@ public class CommandWithProperties extends Command implements IPropertyValue {
      */
     private static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be " +
             "null";
-    private static final byte NONCE_IDENTIFIER = (byte) 0xA0;
-    private static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
-    private static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
+    public static final byte NONCE_IDENTIFIER = (byte) 0xA0;
+    public static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
+    public static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
 
     Property[] properties;
     Bytes nonce;
@@ -328,6 +328,7 @@ public class CommandWithProperties extends Command implements IPropertyValue {
 
         for (int i = 0; i < properties.size(); i++) {
             Property property = properties.get(i);
+            // TODO: 2019-03-08 could alloc 1x before the loop
             bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
         }
     }
@@ -364,7 +365,7 @@ public class CommandWithProperties extends Command implements IPropertyValue {
          */
         public Builder setNonce(Bytes nonce) {
             this.nonce = nonce;
-            addProperty(new Property((byte) 0xA0, nonce.getByteArray()));
+            addProperty(new Property(NONCE_IDENTIFIER, nonce));
             return this;
         }
 
@@ -375,7 +376,7 @@ public class CommandWithProperties extends Command implements IPropertyValue {
          */
         public Builder setSignature(Bytes signature) {
             this.signature = signature;
-            addProperty(new Property((byte) 0xA1, signature.getByteArray()));
+            addProperty(new Property(SIGNATURE_IDENTIFIER, signature));
             return this;
         }
 

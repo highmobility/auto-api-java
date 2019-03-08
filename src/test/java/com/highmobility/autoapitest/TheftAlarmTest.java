@@ -15,8 +15,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TheftAlarmTest {
-        Bytes bytes = new Bytes(
-                "00460101000401000101");
+    Bytes bytes = new Bytes(
+            "00460101000401000101");
+
     @Test
     public void state() {
 
@@ -35,12 +36,13 @@ public class TheftAlarmTest {
     }
 
     @Test public void setAlarm() {
-        String waitingForBytes = "00461201000401000101";
-        String commandBytes = ByteUtils.hexFromBytes(new SetTheftAlarm(TheftAlarmState.Value
-                .ARMED).getByteArray());
-        assertTrue(waitingForBytes.equals(commandBytes));
+        Bytes waitingForBytes = new Bytes(
+                "004612" +
+                        "01000401000101");
+        SetTheftAlarm command = new SetTheftAlarm(TheftAlarmState.Value.ARMED);
+        assertTrue(TestUtils.bytesTheSame(command, waitingForBytes));
 
-        SetTheftAlarm command = (SetTheftAlarm) CommandResolver.resolveHex(waitingForBytes);
+        command = (SetTheftAlarm) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getState().getValue() == TheftAlarmState.Value.ARMED);
     }
 
@@ -55,6 +57,6 @@ public class TheftAlarmTest {
     @Test public void state0Properties() {
         byte[] bytes = ByteUtils.bytesFromHex("004601");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((TheftAlarmState) state).getState() == null);
+        assertTrue(((TheftAlarmState) state).getState().getValue() == null);
     }
 }

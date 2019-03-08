@@ -25,7 +25,6 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.Identifier;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
@@ -33,8 +32,7 @@ import java.util.Calendar;
 import javax.annotation.Nullable;
 
 public class PropertyComponentValue<T> extends PropertyComponent {
-    private static final byte IDENTIFIER = 0x01;
-
+    static final byte IDENTIFIER = 0x01;
 
     Class<T> valueClass = null;
     @Nullable protected T value;
@@ -58,14 +56,18 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         return valueClass;
     }
 
-    public PropertyComponentValue(Bytes value) {
+    PropertyComponentValue(byte identifier, int valueSize) {
+        super(identifier, valueSize);
+    }
+
+    PropertyComponentValue(Bytes value) {
         super(value);
         if (length > 0) {
             this.valueBytes = value.getRange(3, value.getLength());
         }
     }
 
-    public PropertyComponentValue(T value) {
+    PropertyComponentValue(T value) {
         super(IDENTIFIER, getBytes(value));
         valueClass = (Class<T>) value.getClass();
         this.value = value;
@@ -77,7 +79,8 @@ public class PropertyComponentValue<T> extends PropertyComponent {
             if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
                 value = valueClass.newInstance();
                 ((PropertyValueObject) value).update(valueBytes);
-            } else if (Enum.class.isAssignableFrom(valueClass)) {
+            } else if (PropertyValueSingleByte.class.isAssignableFrom(valueClass)) {
+                // enum values
                 value = valueClass.getEnumConstants()[valueBytes.get(0)];
             } else if (Boolean.class.isAssignableFrom(valueClass)) {
                 value = (T) Property.getBool(valueBytes.get(0));
@@ -97,6 +100,8 @@ public class PropertyComponentValue<T> extends PropertyComponent {
                 value = (T) CommandResolver.resolve(valueBytes);
             } else if (Bytes.class.isAssignableFrom(valueClass)) {
                 value = (T) valueBytes;
+            } else if (Byte.class.isAssignableFrom(valueClass)) {
+                value = (T) valueBytes.get(0);
             }
         } catch (IllegalAccessException e) {
 
@@ -143,6 +148,8 @@ public class PropertyComponentValue<T> extends PropertyComponent {
             return (CommandWithProperties) value;
         } else if (value instanceof Command) {
             return (Command) value;
+        } else if (value instanceof Byte) {
+            return new Bytes(new byte[]{(Byte) value});
         } else {
             throw new IllegalArgumentException("Type not supported for Property");
         }

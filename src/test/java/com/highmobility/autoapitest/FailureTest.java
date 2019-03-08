@@ -33,12 +33,13 @@ public class FailureTest {
 
     @Test public void build() {
         Failure.Builder builder = new Failure.Builder();
-        builder.setFailedTypeByte(new Property(GetTrunkState.TYPE));
+        builder.setFailedIdentifier(new Property(GetTrunkState.TYPE.getIdentifier()));
+        builder.setFailedTypeByte(new Property(GetTrunkState.TYPE.getType()));
         builder.setFailureReason(new Property(FailureReason.UNAUTHORISED));
         builder.setFailureDescription(new Property("Try again"));
         Failure failure = builder.build();
         assertTrue(TestUtils.bytesTheSame(failure, bytes));
-        assertTrue(failure.getFailedType() == GetTrunkState.TYPE);
+        assertTrue(failure.getFailedType().equals(GetTrunkState.TYPE));
         assertTrue(failure.getFailureReason().getValue() == FailureReason.UNAUTHORISED);
         assertTrue(failure.getType() == Failure.TYPE);
     }
