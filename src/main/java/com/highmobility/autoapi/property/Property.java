@@ -156,14 +156,13 @@ public class Property<T> extends Bytes {
             try {
                 if (bytes[index] == 0x01) {
                     // data component
-                    value = new PropertyComponentValue(getRange(index + 3, index + 3 + size));
+                    value = new PropertyComponentValue(getRange(index, index + 3 + size));
                 } else if (bytes[index] == 0x02) {
                     // timestamp component
-                    timestamp = new PropertyComponentTimestamp(getRange(index + 3,
-                            index + 3 + size));
+                    timestamp = new PropertyComponentTimestamp(getRange(index, index + 3 + size));
                 } else if (bytes[index] == 0x03) {
                     // failure component
-                    failure = new PropertyComponentFailure(getRange(index + 3, index + 3 + size));
+                    failure = new PropertyComponentFailure(getRange(index, index + 3 + size));
                 }
             } catch (CommandParseException e) {
                 printFailedToParse(e);
@@ -232,13 +231,18 @@ public class Property<T> extends Bytes {
     }
 
     // TODO: 2019-02-05 make internal
-    public Property update(byte identifier, T value) {
-        // TODO: 2019-03-04 create/update the value component
-        /*this.value = getBytes(value);
-        this.bytes = baseBytes(identifier, this.value.getLength());
-        ByteUtils.setBytes(bytes, this.value.getByteArray(), 6);
-        this.value = value;
-        */
+    private Property update(byte identifier, T value) {
+        this.value = new PropertyComponentValue(value);
+
+        if (timestamp == null) {
+            this.bytes = baseBytes(identifier, this.value.getLength());
+            set(3, this.value);
+        }
+        else {
+            // TODO: 2019-03-07 ^^ resets the timestamp bytes. make logic to consider other
+            //  components as well when creating new bytes
+        }
+
         return this;
     }
 
@@ -294,10 +298,10 @@ public class Property<T> extends Bytes {
         this.failure = failure;
     }
 
-    // helper methods
-    protected void setValueBytes(byte[] valueBytes) {
-        ByteUtils.setBytes(bytes, valueBytes, 6);
-    }
+//    // helper methods
+//    protected void setValueBytes(byte[] valueBytes) {
+//        ByteUtils.setBytes(bytes, valueBytes, 6);
+//    }
 
     /*public boolean isUniversalProperty() {
         return this instanceof PropertyFailure || this instanceof PropertyTimestamp;
@@ -308,26 +312,11 @@ public class Property<T> extends Bytes {
 
     public static byte[] baseBytes(byte identifier, int dataComponentSize) {
         // if have a value, create bytes for data component
-        int propertySize = dataComponentSize + 3;
-
-        byte[] bytes = new byte[3 + (dataComponentSize > 0 ? dataComponentSize + 3 : 0)];
+        int propertySize = 3 + dataComponentSize;
+        byte[] bytes = new byte[propertySize];
 
         bytes[0] = identifier;
-
-        if (propertySize > 255) {
-            byte[] propertyLengthBytes = intToBytes(propertySize, 2);
-            bytes[1] = propertyLengthBytes[0];
-            bytes[2] = propertyLengthBytes[1];
-        } else if (propertySize != 3) {
-            // if property size 3, we don't have data component and can omit the bytes.
-            bytes[1] = 0x00;
-            bytes[2] = (byte) propertySize;
-        }
-
-        if (dataComponentSize > 0) {
-            bytes[3] = 0x01; // data component
-            ByteUtils.setBytes(bytes, intToBytes(dataComponentSize, 2), 4); // data component size
-        }
+        ByteUtils.setBytes(bytes, intToBytes(dataComponentSize, 2), 1);
 
         return bytes;
     }

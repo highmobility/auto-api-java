@@ -25,6 +25,7 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.Identifier;
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
@@ -34,7 +35,7 @@ import javax.annotation.Nullable;
 public class PropertyComponentValue<T> extends PropertyComponent {
     private static final byte IDENTIFIER = 0x01;
 
-    Bytes valueBytes = new Bytes();
+
     Class<T> valueClass = null;
     @Nullable protected T value;
 
@@ -62,6 +63,12 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         if (length > 0) {
             this.valueBytes = value.getRange(3, value.getLength());
         }
+    }
+
+    public PropertyComponentValue(T value) {
+        super(IDENTIFIER, getBytes(value));
+        valueClass = (Class<T>) value.getClass();
+        this.value = value;
     }
 
     public void setClass(Class<T> valueClass) {
@@ -101,7 +108,7 @@ public class PropertyComponentValue<T> extends PropertyComponent {
 
     }
 
-    public Bytes getBytes() {
+    public static Bytes getBytes(Object value) {
         // this is for builder/set command
         if (value instanceof Bytes) {
             return (Bytes) value;

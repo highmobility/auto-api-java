@@ -27,19 +27,31 @@ import com.highmobility.value.Bytes;
 public class PropertyComponent extends Bytes {
     byte identifier;
     int length;
+    Bytes valueBytes;
 
     PropertyComponent(Bytes value) {
         if (value.getLength() < 3) throw new ParseException();
         bytes = value.getByteArray();
         identifier = bytes[0];
-        length = Property.getUnsignedInt(bytes, 0, 2);
+        length = Property.getUnsignedInt(bytes, 1, 2);
+        valueBytes = value;
     }
 
-    PropertyComponent(byte identifier, int length) {
-        this.length = length;
+    PropertyComponent(byte identifier, Bytes value) {
+        this(identifier, value.getLength());
+        valueBytes = value;
+        set(3, value);
+    }
+
+    // property header:010015 component header: 010012 value: 68747470733a2f2f676f6f676c652e636f6d
+    // 01001B 010018 01001501001268747470733A2F2F676F6F676C652E636F6D
+    PropertyComponent(byte identifier, int valueSize) {
+        this.length = valueSize;
         this.identifier = identifier;
-        bytes = new byte[3 + length];
+        bytes = new byte[3 + valueSize];
+        // component identifier
         bytes[0] = identifier;
-        ByteUtils.setBytes(bytes, Property.intToBytes(length, 2), 1);
+        // component length
+        ByteUtils.setBytes(bytes, Property.intToBytes(valueSize, 2), 1); // value length
     }
 }
