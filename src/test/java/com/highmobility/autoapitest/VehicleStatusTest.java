@@ -283,7 +283,7 @@ public class VehicleStatusTest {
         Bytes bytes = new Bytes
                 ("001101" +
                         "0100140100094a46325348424443374348343531383639" +
-                        "99002E002B01" + // 2b // 43
+                        "99002E01002B" + // 2b // 43
                         "004501" + // windows
                         "0200050100020238" +
                         "0200050100020312" +
@@ -306,7 +306,7 @@ public class VehicleStatusTest {
         VehicleStatus vs = builder.build();
 
         assertTrue(vs.getStates().length == 0);
-        assertTrue(vs.getNumberOfDoors().getValue() == null);
+        assertTrue(vs.getNumberOfDoors() == null);
         assertTrue(vs.getState(TheftAlarmState.TYPE) == null);
         assertTrue(vs.getByteArray().length == 3);
 

@@ -117,7 +117,7 @@ public class CapabilityProperty extends Property {
                 newTypes[newTypes.length - 1] = stateCommand;
 
                 byte[] newValue = getValue(categoryIdentifier, newTypes);
-                byte[] newBytes = baseBytes((byte) 0x00, newValue.length);
+                byte[] newBytes = baseBytesWithDataComponent((byte) 0x00, newValue.length);
                 ByteUtils.setBytes(newBytes, newValue, 6);
                 this.bytes = newBytes;
                 this.types = newTypes;

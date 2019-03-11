@@ -73,7 +73,7 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         this.value = value;
     }
 
-    public void setClass(Class<T> valueClass) {
+    public void setClass(Class<T> valueClass) throws CommandParseException {
         // not can parse the bytes
         try {
             if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
@@ -104,13 +104,10 @@ public class PropertyComponentValue<T> extends PropertyComponent {
                 value = (T) valueBytes.get(0);
             }
         } catch (IllegalAccessException e) {
-
+            e.printStackTrace(); // TODO: 2019-03-11 handle error?
         } catch (InstantiationException e) {
-
-        } catch (CommandParseException e) {
-            // TODO: 2019-02-01 error handling
+            e.printStackTrace(); // TODO: 2019-03-11 handle error?
         }
-
     }
 
     public static Bytes getBytes(Object value) {

@@ -200,7 +200,7 @@ public class Property<T> extends Bytes {
 
     public Property(@Nullable T value) {
         if (value == null) {
-            bytes = baseBytes((byte) 0, 0);
+            bytes = baseBytesWithDataComponent((byte) 0, 0);
         } else {
             update((byte) 0, value);
         }
@@ -215,7 +215,7 @@ public class Property<T> extends Bytes {
 
     public Property(Class<T> valueClass, byte identifier) {
         this.valueClass = valueClass;
-        this.bytes = baseBytes(identifier, 0);
+        this.bytes = baseBytesWithDataComponent(identifier, 0);
     }
 
     public Property(Class<T> valueClass, Property property) throws CommandParseException {
@@ -236,7 +236,7 @@ public class Property<T> extends Bytes {
         this.value = new PropertyComponentValue(value);
 
         if (timestamp == null) {
-            this.bytes = baseBytes(identifier, this.value.getLength());
+            this.bytes = baseBytesWithDataComponent(identifier, this.value.getValueBytes().getLength());
             set(3, this.value);
         } else {
             // TODO: 2019-03-07 ^^ resets the timestamp bytes. make logic to consider other
@@ -270,7 +270,7 @@ public class Property<T> extends Bytes {
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
-//        e.printStackTrace();
+        e.printStackTrace(); // TODO: 2019-03-11 comment
     }
 
 
@@ -282,7 +282,7 @@ public class Property<T> extends Bytes {
             if (newValue != null) {
                 if (getValueLength() < newValue.getLength()) {
                     // reset the bytes
-                    bytes = baseBytes(getPropertyIdentifier(), newValue.getLength());
+                    bytes = baseBytesWithDataComponent(getPropertyIdentifier(), newValue.getLength());
                 }
 
                 ByteUtils.setBytes(bytes, newValue.getByteArray(), 3);
@@ -310,13 +310,16 @@ public class Property<T> extends Bytes {
 
     // MARK: ctor helpers
 
-    public static byte[] baseBytes(byte identifier, int dataComponentSize) {
+    public static byte[] baseBytesWithDataComponent(byte propertyIdentifier, int dataComponentSize) {
         // if have a value, create bytes for data component
-        int propertySize = 3 + dataComponentSize;
+        int propertySize = 3 + 3 + dataComponentSize; // property header 3 bytes, component header 3 bytes
         byte[] bytes = new byte[propertySize];
 
-        bytes[0] = identifier;
-        ByteUtils.setBytes(bytes, intToBytes(dataComponentSize, 2), 1);
+        bytes[0] = propertyIdentifier;
+        ByteUtils.setBytes(bytes, intToBytes(dataComponentSize + 3, 2), 1);
+        bytes[3] = PropertyComponentValue.IDENTIFIER;
+        // TODO: should create the component here already? update it later?
+        ByteUtils.setBytes(bytes, intToBytes(dataComponentSize, 2), 4);
 
         return bytes;
     }

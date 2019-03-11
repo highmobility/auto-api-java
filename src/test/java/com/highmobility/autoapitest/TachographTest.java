@@ -34,10 +34,11 @@ public class TachographTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-
-        assertTrue(command.is(TachographState.TYPE));
         TachographState state = (TachographState) command;
+        testState(state);
+    }
 
+    private void testState(TachographState state) {
         assertTrue(state.getDriverWorkingState(1).getValue().getWorkingState() == DriverWorkingState.Value.WORKING);
         assertTrue(state.getDriverWorkingState(2).getValue().getWorkingState() == DriverWorkingState.Value.RESTING);
 
@@ -80,6 +81,7 @@ public class TachographTest {
 
         TachographState state = builder.build();
         assertTrue(state.equals(bytes));
+        testState(state);
     }
 
     @Test public void get() {

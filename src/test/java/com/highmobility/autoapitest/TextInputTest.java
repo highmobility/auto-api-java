@@ -29,7 +29,7 @@ public class TextInputTest {
 
     @Test public void textInputNoLetters() {
         Bytes waitingForBytes = new Bytes("004400" +
-                "010000");
+                "010003010000");
         TextInput ti = new TextInput("");
         assertTrue(TestUtils.bytesTheSame(ti, waitingForBytes));
     }

@@ -6,7 +6,6 @@ import com.highmobility.autoapi.EndParking;
 import com.highmobility.autoapi.GetParkingTicket;
 import com.highmobility.autoapi.ParkingTicket;
 import com.highmobility.autoapi.StartParking;
-
 import com.highmobility.autoapi.property.ParkingTicketState;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
@@ -19,7 +18,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ParkingTicketTest {
     Bytes bytes = new Bytes(
@@ -42,8 +40,10 @@ public class ParkingTicketTest {
         assertTrue(state.getOperatorName().getValue().equals("Berlin Parking"));
         assertTrue(state.getOperatorTicketId().getValue().equals("64894233"));
 
-        assertTrue(TestUtils.dateIsSame(state.getTicketStartDate().getValue(), "2018-01-10T16:32:05"));
-        assertTrue(TestUtils.dateIsSame(state.getTicketEndDate().getValue(), "2018-01-10T18:30:00"));
+        assertTrue(TestUtils.dateIsSame(state.getTicketStartDate().getValue(), "2018-01-10T16:32" +
+                ":05"));
+        assertTrue(TestUtils.dateIsSame(state.getTicketEndDate().getValue(), "2018-01-10T18:30:00"
+        ));
     }
 
     @Test public void build() throws ParseException {
@@ -91,6 +91,6 @@ public class ParkingTicketTest {
     @Test public void state0Properties() {
         Bytes bytes = new Bytes("004701");
         Command state = CommandResolver.resolve(bytes);
-        assertTrue(((ParkingTicket) state).getState() == null);
+        assertTrue(((ParkingTicket) state).getState().getValue() == null);
     }
 }

@@ -49,7 +49,7 @@ public class DriverCard extends PropertyValueObject {
     @Override public void update(Bytes bytes) throws CommandParseException {
         super.update(bytes);
         if (getLength() < 2) throw new CommandParseException();
-        driverNumber = Property.getUnsignedInt(get(6));
+        driverNumber = Property.getUnsignedInt(get(0));
         present = Property.getBool(get(1));
     }
 

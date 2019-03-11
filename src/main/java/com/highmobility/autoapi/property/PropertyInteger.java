@@ -73,7 +73,7 @@ public class PropertyInteger extends Property<Integer> {
      * @param newLength  The new length.
      */
     public Property update(byte identifier, boolean signed, int newLength) {
-        bytes = baseBytes(identifier, newLength + 3);
+        bytes = baseBytesWithDataComponent(identifier, newLength + 3);
         // update the length/sign of the previously set int. This is used in builders.
 
         /*
@@ -89,14 +89,14 @@ public class PropertyInteger extends Property<Integer> {
 
     public Property update(boolean signed, int newLength, @Nullable Integer value) {
         // create new bytes
-        bytes = baseBytes(bytes[0], newLength + 3);
+        bytes = baseBytesWithDataComponent(bytes[0], newLength);
         this.value = new PropertyComponentValueInteger(value, signed, newLength);
         set(3, this.value);
         return this;
     }
 
     static Bytes getBytes(byte identifier, int length, Integer value) {
-        byte[] bytes = baseBytes(identifier, length);
+        byte[] bytes = baseBytesWithDataComponent(identifier, length);
 
         if (value == null) return new Bytes();
 

@@ -73,16 +73,22 @@ public class ControlWindows extends CommandWithProperties {
         createBytes(builder);
     }
 
-    ControlWindows(byte[] bytes) throws CommandParseException {
+    ControlWindows(byte[] bytes) {
         super(bytes);
         ArrayList<Property<WindowPosition>> builder = new ArrayList<>();
 
-        for (Property property : properties) {
-            if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER)
-                builder.add(new Property(new WindowPosition(
-                        Location.fromByte(property.getValueComponent().getValueByte()),
-                        Position.fromByte(property.getValueComponent().getValueByte())
-                )));
+        while (propertiesIterator2.hasNext()) {
+            propertiesIterator2.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case PROPERTY_IDENTIFIER:
+                        Property prop = new Property(new WindowPosition(
+                                Location.fromByte(p.getValueComponent().getValueBytes().get(0)),
+                                Position.fromByte(p.getValueComponent().getValueBytes().get(1))));
+                        builder.add(prop);
+                        return prop;
+                }
+                return null;
+            });
         }
 
         windowPositions = builder.toArray(new Property[0]);

@@ -30,7 +30,7 @@ public class WeatherConditionsTest {
     }
 
     private void testState(WeatherConditions state) {
-        assertTrue(state.getRainIntensity().getValue() == 100);
+        assertTrue(state.getRainIntensity().getValue() == 1d);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
