@@ -1,13 +1,12 @@
-package com.highmobility.autoapitest;
+package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.ClimateState;
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.CapabilityProperty;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
 
-import com.highmobility.autoapi.property.PropertyComponentFailure;
+import com.highmobility.autoapitest.TestUtils;
 import com.highmobility.value.Bytes;
+
+import junit.framework.TestCase;
 
 import org.junit.Test;
 
@@ -40,14 +39,16 @@ public class PropertyTest {
     }
 
     @Test public void emptyValueProperty() {
-        Bytes bytes = new Bytes("");
-        new Property((byte) 0x00, bytes.getByteArray());
+        Bytes bytes = new Bytes("010000"); // data component with 00 length
+        new PropertyComponentValue(bytes);
     }
 
-    @Test public void nullString() {
-        new Property<String>((byte) 0x00, null);
-        new Property<String>((byte) 0x00, "");
-    }
+    // TODO: 2019-03-11 figure out how to represent null/"" string for builder.
+    //  should add new Property ctor? with null component/component with empty bytes
+    /*@Test public void nullString() {
+        new Property((byte) 0x00, null);
+        new Property((byte) 0x00, "");
+    }*/
 
     // TODO: 2019-01-09
     // test boolean property ctor with null bytes. Only failure or timestamp
@@ -62,17 +63,11 @@ public class PropertyTest {
         // TODO: 2019-03-04
         Property timestamp = new Property((byte) 0xA2, new Bytes("41D6F1C07F800000"));
         Property nonce = new Property((byte) 0xA0, new Bytes("324244433743483436"));
-        Property sig = new Property((byte) 0xA1, new Bytes("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
+        Property sig = new Property((byte) 0xA1, new Bytes(
+                "4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
         assertTrue(timestamp.isUniversalProperty());
         assertTrue(nonce.isUniversalProperty());
         assertTrue(sig.isUniversalProperty());
-    }
-
-    @Test public void invalidLengthOk() {
-        Bytes bytes = new Bytes("0100");
-        Property prop = new Property(bytes);
-        assertBaseBytesOk(prop);
-        assertTrue(prop.getPropertyIdentifier() == 0x01);
     }
 
     void assertBaseBytesOk(Property prop) {
@@ -96,7 +91,8 @@ public class PropertyTest {
     public void propertyTimestampParsed() throws ParseException {
         String parkingStateProperty = "01000101";
         PropertyTimestamp timestamp =
-                new PropertyTimestamp(new Bytes("A4000D11010A112200000001" + parkingStateProperty).getByteArray());
+                new PropertyTimestamp(new Bytes("A4000D11010A112200000001" +
+                parkingStateProperty).getByteArray());
         assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), "2017-01-10T17:34:00+0000"));
         assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
     }*/
@@ -134,10 +130,10 @@ public class PropertyTest {
         String s = Property.getString(bytes.getByteArray());
     }
 
-    @Test public void capability() {
-        Bytes bytes = new Bytes("01000D01000A" +
-                "00240001121314151617");
-        CapabilityProperty capabilityProperty = new CapabilityProperty(bytes.getByteArray());
+    @Test public void capability() throws CommandParseException {
+        Bytes bytes = new Bytes("00240001121314151617");
+        Capability capabilityProperty = new Capability();
+        capabilityProperty.update(bytes);
         assertTrue(capabilityProperty.isSupported(ClimateState.TYPE));
     }
 }

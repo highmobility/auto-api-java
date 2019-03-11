@@ -113,10 +113,5 @@ public class FlashersState extends CommandWithProperties {
         public byte getByte() {
             return value;
         }
-
-        @Override public int getLength() {
-            return 1;
-        }
     }
-
 }

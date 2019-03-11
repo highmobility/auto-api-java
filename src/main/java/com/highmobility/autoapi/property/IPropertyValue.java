@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi.property;
 
+// TODO: 2019-03-11 is this needed??
 public interface IPropertyValue {
     int getLength();
 }

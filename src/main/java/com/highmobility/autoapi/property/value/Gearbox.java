@@ -50,8 +50,4 @@ public enum Gearbox implements PropertyValueSingleByte {
     public byte getByte() {
         return value;
     }
-
-    @Override public int getLength() {
-        return 1;
-    }
 }

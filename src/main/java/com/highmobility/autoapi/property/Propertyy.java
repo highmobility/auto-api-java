@@ -87,15 +87,15 @@
 ////    }
 //
 //    protected Property(int length) {
-//        this.bytes = baseBytes((byte) 0x00, length);
+//        this.bytes = baseBytesWithDataComponent((byte) 0x00, length);
 //    }
 //
 //    /*protected Property(byte identifier, @Nullable PropertyValue value) {
-//        this.bytes = baseBytes(identifier, value == null ? 0 : value.getLength());
+//        this.bytes = baseBytesWithDataComponent(identifier, value == null ? 0 : value.getLength());
 //    }*/
 //
 //    protected Property(byte identifier, int valueSize) {
-//        this.bytes = baseBytes(identifier, valueSize);
+//        this.bytes = baseBytesWithDataComponent(identifier, valueSize);
 //    }
 //
 //    /**
@@ -255,7 +255,7 @@
 //            if (newValue != null) {
 //                if (getValueLength() < newValue.getLength()) {
 //                    // reset the bytes
-//                    bytes = baseBytes(getPropertyIdentifier(), newValue.getLength());
+//                    bytes = baseBytesWithDataComponent(getPropertyIdentifier(), newValue.getLength());
 //                }
 //
 //                ByteUtils.setBytes(bytes, newValue.getByteArray(), 3);
@@ -278,7 +278,7 @@
 //
 //    // MARK: ctor helpers
 //
-//    public static byte[] baseBytes(byte identifier, int dataComponentSize) {
+//    public static byte[] baseBytesWithDataComponent(byte identifier, int dataComponentSize) {
 //        // if have a value, create bytes for data component
 //        int propertySize = dataComponentSize + 3;
 //
@@ -310,7 +310,7 @@
 //
 //    protected static byte[] getPropertyBytes(byte identifier, byte[] value) throws
 //            IllegalArgumentException {
-//        byte[] bytes = baseBytes(identifier, value.length);
+//        byte[] bytes = baseBytesWithDataComponent(identifier, value.length);
 //        ByteUtils.setBytes(bytes, value, 6);
 //        return bytes;
 //    }

@@ -183,6 +183,7 @@ public class Property<T> extends Bytes {
         this.value = p.value;
         this.value.setClass(valueClass);
 
+
         this.timestamp = p.timestamp;
         this.failure = p.failure;
 

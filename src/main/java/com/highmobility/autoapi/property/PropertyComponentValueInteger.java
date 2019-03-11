@@ -20,13 +20,14 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
 // int needs to be updated later, so builder users dont need to consider the int length or sign
 class PropertyComponentValueInteger extends PropertyComponentValue<Integer> {
     PropertyComponentValueInteger(Integer value, boolean signed, int newLength) {
         super(PropertyComponentValue.IDENTIFIER, newLength);
-        ByteUtils.setBytes(bytes, Property.intToBytes(value, newLength), 3);
+        this.valueBytes = new Bytes(Property.intToBytes(value, newLength));
+        set(3, valueBytes);
         this.value = value;
     }
 }

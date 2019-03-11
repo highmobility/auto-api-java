@@ -50,8 +50,4 @@ public enum NetworkSecurity implements PropertyValueSingleByte {
     NetworkSecurity(byte value) {
         this.value = value;
     }
-
-    @Override public int getLength() {
-        return 1;
-    }
 }

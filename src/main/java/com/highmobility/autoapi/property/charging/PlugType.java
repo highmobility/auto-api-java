@@ -32,7 +32,5 @@ public enum PlugType implements PropertyValueSingleByte {
         return value;
     }
 
-    @Override public int getLength() {
-        return 1;
-    }
+
 }

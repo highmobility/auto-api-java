@@ -20,7 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CapabilityProperty;
+import com.highmobility.autoapi.property.Capability;
+import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +33,13 @@ public class Capabilities extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CAPABILITIES, 0x01);
     private static final byte IDENTIFIER = 0x01;
 
-    CapabilityProperty[] capabilities;
+    Property<Capability>[] capabilities;
 
     public boolean isSupported(Type type) {
-        CapabilityProperty capability = getCapability(type);
-        if (capability == null) return false;
+        Property<Capability> capability = getCapability(type);
+        if (capability == null || capability.getValue() == null) return false;
 
-        return capability.isSupported(type);
+        return capability.getValue().isSupported(type);
     }
 
     /**
@@ -47,12 +48,14 @@ public class Capabilities extends CommandWithProperties {
      * @param type The type of the capability.
      * @return The capability if exists, otherwise null
      */
-    public CapabilityProperty getCapability(Type type) {
+    public Property<Capability> getCapability(Type type) {
         for (int i = 0; i < capabilities.length; i++) {
-            CapabilityProperty capability = capabilities[i];
-            if (capability.getIdentifierBytes()[0] == type.getIdentifierBytes()[0]
-                    && capability.getIdentifierBytes()[1] == type.getIdentifierBytes()[1]) {
-                Type[] types = capability.getTypes();
+            Property<Capability> capability = capabilities[i];
+            if (capability.getValue() == null) continue;
+
+            if (capability.getValue().getIdentifierBytes()[0] == type.getIdentifierBytes()[0]
+                    && capability.getValue().getIdentifierBytes()[1] == type.getIdentifierBytes()[1]) {
+                Type[] types = capability.getValue().getTypes();
                 for (int j = 0; j < types.length; j++) {
                     Type existingType = types[j];
                     if (existingType.getType() == type.getType()) {
@@ -68,20 +71,19 @@ public class Capabilities extends CommandWithProperties {
     /**
      * @return All of the Capabilities that are available for the vehicle.
      */
-    public CapabilityProperty[] getCapabilities() {
+    public Property<Capability>[] getCapabilities() {
         return capabilities;
     }
 
     Capabilities(byte[] bytes) {
         super(bytes);
-        ArrayList<CapabilityProperty> builder = new ArrayList<>();
+        ArrayList<Property> builder = new ArrayList<>();
 
         while (propertiesIterator2.hasNext()) {
             propertiesIterator2.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER:
-                        CapabilityProperty capability =
-                                new CapabilityProperty(p.getByteArray());
+                        Property capability = new Property(Capability.class, p);
                         builder.add(capability);
                         return capability;
                 }
@@ -89,7 +91,7 @@ public class Capabilities extends CommandWithProperties {
             });
         }
 
-        capabilities = builder.toArray(new CapabilityProperty[0]);
+        capabilities = builder.toArray(new Property[0]);
     }
 
     @Override protected boolean propertiesExpected() {
@@ -98,11 +100,11 @@ public class Capabilities extends CommandWithProperties {
 
     private Capabilities(Builder builder) {
         super(builder);
-        capabilities = builder.capabilities.toArray(new CapabilityProperty[0]);
+        capabilities = builder.capabilities.toArray(new Property[0]);
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private List<CapabilityProperty> capabilities = new ArrayList<>();
+        private List<Property> capabilities = new ArrayList<>();
 
         public Builder() {
             super(TYPE);
@@ -114,7 +116,7 @@ public class Capabilities extends CommandWithProperties {
          * @param capability The capability.
          * @return The builder.
          */
-        public Builder addCapability(CapabilityProperty capability) {
+        public Builder addCapability(Property<Capability> capability) {
             capability.setIdentifier(IDENTIFIER);
             capabilities.add(capability);
             addProperty(capability);
@@ -127,7 +129,7 @@ public class Capabilities extends CommandWithProperties {
          * @param capabilities The capabilities.
          * @return The builder.
          */
-        public Builder setCapabilities(CapabilityProperty[] capabilities) {
+        public Builder setCapabilities(Property<Capability>[] capabilities) {
             this.capabilities.clear();
             for (int i = 0; i < capabilities.length; i++) addCapability(capabilities[i]);
             return this;

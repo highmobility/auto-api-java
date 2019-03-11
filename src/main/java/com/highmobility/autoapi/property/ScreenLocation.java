@@ -48,9 +48,4 @@ public enum ScreenLocation implements PropertyValueSingleByte {
     public byte getByte() {
         return value;
     }
-
-    // TODO: 2019-02-14 is getlength 1 necessary?
-    @Override public int getLength() {
-        return 1;
-    }
 }

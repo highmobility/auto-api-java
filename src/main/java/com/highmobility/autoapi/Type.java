@@ -25,6 +25,8 @@ import com.highmobility.utils.ByteUtils;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import javax.annotation.Nullable;
+
 public class Type {
     static HashMap<Type, Type> stateCommands;
 
@@ -86,7 +88,7 @@ public class Type {
         return identifierAndType[2];
     }
 
-    public Type getStateCommand() {
+    @Nullable public Type getStateCommand() {
         return stateCommands.get(this);
     }
 

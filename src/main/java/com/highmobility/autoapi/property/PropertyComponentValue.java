@@ -148,7 +148,8 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         } else if (value instanceof Byte) {
             return new Bytes(new byte[]{(Byte) value});
         } else {
-            throw new IllegalArgumentException("Type not supported for Property");
+            throw new IllegalArgumentException("Type " + (value != null ? value.getClass() :
+                    "null") + " not supported for Property");
         }
 
         return null;

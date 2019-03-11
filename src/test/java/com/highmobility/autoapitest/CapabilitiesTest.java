@@ -46,7 +46,8 @@ import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.Type;
 import com.highmobility.autoapi.ValetMode;
 import com.highmobility.autoapi.VehicleLocation;
-import com.highmobility.autoapi.property.CapabilityProperty;
+import com.highmobility.autoapi.property.Capability;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -142,7 +143,7 @@ public class CapabilitiesTest {
                         "010006010003002912" +
                         "01000701000400300001" +
                         "0100080100050031000102" +
-                        "010006010003ABAB12" ); // unknown ABAB
+                        "010006010003ABAB12"); // unknown ABAB
 
         Capabilities unknownCapabilities =
                 (Capabilities) CommandResolver.resolve(bytes);
@@ -214,7 +215,7 @@ public class CapabilitiesTest {
                 StartStopIonising.TYPE
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        Property property = new Property(new Capability(Identifier.CLIMATE, supportedTypes));
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
         byte[] message = capabilities.getByteArray();
@@ -240,8 +241,7 @@ public class CapabilitiesTest {
                 StartStopIonising.TYPE
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE,
-                climateSupportedTypes);
+        Property property = new Property(new Capability(Identifier.CLIMATE, climateSupportedTypes));
         builder.addCapability(property);
 
         Type[] remoteControlTypes = new Type[]{
@@ -251,8 +251,8 @@ public class CapabilitiesTest {
                 ControlCommand.TYPE
         };
 
-        CapabilityProperty property2 = new CapabilityProperty(Identifier.REMOTE_CONTROL,
-                remoteControlTypes);
+        Property property2 = new Property(new Capability(Identifier.REMOTE_CONTROL,
+                remoteControlTypes));
         builder.addCapability(property2);
 
         Bytes expected = new Bytes(
@@ -278,7 +278,7 @@ public class CapabilitiesTest {
                 GetTrunkState.TYPE
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        Property property = new Property(new Capability(Identifier.CLIMATE, supportedTypes));
 
         builder.addCapability(property);
         builder.build().getByteArray();
@@ -291,7 +291,7 @@ public class CapabilitiesTest {
                 GetClimateState.TYPE,
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        Property property = new Property(new Capability(Identifier.CLIMATE, supportedTypes));
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
         assertTrue(capabilities.isSupported(ClimateState.TYPE));
@@ -309,10 +309,10 @@ public class CapabilitiesTest {
                 ClimateState.TYPE
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        Property property = new Property(new Capability(Identifier.CLIMATE, supportedTypes));
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
-        assertTrue(capabilities.getCapability(GetClimateState.TYPE).getTypes().length == 2);
+        assertTrue(capabilities.getCapability(GetClimateState.TYPE).getValue().getTypes().length == 2);
     }
 
     @Test public void buildDontAddStateAutomaticallyWithNonGetStateType() {
@@ -322,11 +322,10 @@ public class CapabilitiesTest {
                 Notification.TYPE,
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.NOTIFICATIONS,
-                supportedTypes);
+        Property property = new Property(new Capability(Identifier.NOTIFICATIONS, supportedTypes));
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
-        assertTrue(capabilities.getCapability(Notification.TYPE).getTypes().length == 1);
+        assertTrue(capabilities.getCapability(Notification.TYPE).getValue().getTypes().length == 1);
     }
 
     @Test public void handleUnknownCapability() {
@@ -338,10 +337,10 @@ public class CapabilitiesTest {
                 new Type(Identifier.CLIMATE.getBytes(), 0x22)
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        Property property = new Property(new Capability(Identifier.CLIMATE, supportedTypes));
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
-        assertTrue(capabilities.getCapability(GetClimateState.TYPE).getTypes().length == 3);
+        assertTrue(capabilities.getCapability(GetClimateState.TYPE).getValue().getTypes().length == 3);
     }
 
     @Test public void zeroProperties() {

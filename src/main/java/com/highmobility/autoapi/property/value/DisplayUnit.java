@@ -21,8 +21,9 @@
 package com.highmobility.autoapi.property.value;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
-public enum DisplayUnit {
+public enum DisplayUnit implements PropertyValueSingleByte {
     KM((byte)0x00),
     MILES((byte)0x01);
 
