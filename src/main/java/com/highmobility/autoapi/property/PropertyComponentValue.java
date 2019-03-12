@@ -75,38 +75,38 @@ public class PropertyComponentValue<T> extends PropertyComponent {
 
     public void setClass(Class<T> valueClass) throws CommandParseException {
         // not can parse the bytes
-        try {
-            if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
+        if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
+            try {
                 value = valueClass.newInstance();
                 ((PropertyValueObject) value).update(valueBytes);
-            } else if (PropertyValueSingleByte.class.isAssignableFrom(valueClass)) {
-                // enum values
-                value = valueClass.getEnumConstants()[valueBytes.get(0)];
-            } else if (Boolean.class.isAssignableFrom(valueClass)) {
-                value = (T) Property.getBool(valueBytes.get(0));
-            } else if (Float.class.isAssignableFrom(valueClass)) {
-                value = (T) (Float) Property.getFloat(valueBytes);
-            } else if (Double.class.isAssignableFrom(valueClass)) {
-                value = (T) (Double) Property.getDouble(valueBytes);
-            } else if (Calendar.class.isAssignableFrom(valueClass)) {
-                value = (T) Property.getCalendar(valueBytes);
-            } else if (String.class.isAssignableFrom(valueClass)) {
-                value = (T) Property.getString(valueBytes);
-            } else if (int[].class.isAssignableFrom(valueClass)) {
-                value = (T) Property.getIntegerArray(valueBytes);
-            } else if (Identifier.class.isAssignableFrom(valueClass)) {
-                value = (T) Property.getIdentifier(valueBytes);
-            } else if (Command.class.isAssignableFrom(valueClass)) {
-                value = (T) CommandResolver.resolve(valueBytes);
-            } else if (Bytes.class.isAssignableFrom(valueClass)) {
-                value = (T) valueBytes;
-            } else if (Byte.class.isAssignableFrom(valueClass)) {
-                value = (T) valueBytes.get(0);
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+                throw new IllegalArgumentException("Cannot instantiate value: " + valueClass +
+                        "\n" + e.getMessage());
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace(); // TODO: 2019-03-11 handle error?
-        } catch (InstantiationException e) {
-            e.printStackTrace(); // TODO: 2019-03-11 handle error?
+        } else if (PropertyValueSingleByte.class.isAssignableFrom(valueClass)) {
+            // enum values
+            value = valueClass.getEnumConstants()[valueBytes.get(0)];
+        } else if (Boolean.class.isAssignableFrom(valueClass)) {
+            value = (T) Property.getBool(valueBytes.get(0));
+        } else if (Float.class.isAssignableFrom(valueClass)) {
+            value = (T) (Float) Property.getFloat(valueBytes);
+        } else if (Double.class.isAssignableFrom(valueClass)) {
+            value = (T) (Double) Property.getDouble(valueBytes);
+        } else if (Calendar.class.isAssignableFrom(valueClass)) {
+            value = (T) Property.getCalendar(valueBytes);
+        } else if (String.class.isAssignableFrom(valueClass)) {
+            value = (T) Property.getString(valueBytes);
+        } else if (int[].class.isAssignableFrom(valueClass)) {
+            value = (T) Property.getIntegerArray(valueBytes);
+        } else if (Identifier.class.isAssignableFrom(valueClass)) {
+            value = (T) Property.getIdentifier(valueBytes);
+        } else if (Command.class.isAssignableFrom(valueClass)) {
+            value = (T) CommandResolver.resolve(valueBytes);
+        } else if (Bytes.class.isAssignableFrom(valueClass)) {
+            value = (T) valueBytes;
+        } else if (Byte.class.isAssignableFrom(valueClass)) {
+            value = (T) valueBytes.get(0);
         }
     }
 

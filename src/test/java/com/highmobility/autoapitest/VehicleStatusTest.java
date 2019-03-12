@@ -5,7 +5,6 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetVehicleStatus;
-import com.highmobility.autoapi.IgnitionState;
 import com.highmobility.autoapi.TheftAlarmState;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
@@ -49,8 +48,8 @@ public class VehicleStatusTest {
                     "0C000701000440200000" +
                     "0D000501000200F5" +
                     "0E000401000101" +
-                    "9900140100110021010100040100010002000401000101" +
-                    "99000D01000A00270101000401000102" +
+                    "9900140100110021010100040100010002000401000101" + // Trunk open
+                    "99000D01000A00270101000401000102" + // Remote Control Started
 
                     // l8
                     "0F000401000100" + // display unit km
@@ -61,67 +60,26 @@ public class VehicleStatusTest {
                     "12000B0100084D65726365646573"
     );
 
-    /*<<<<<<< HEAD
-        VehicleStatus command;
+    @Test public void state() {
+        testState((VehicleStatus) CommandResolver.resolve(bytes));
+    }
 
-        @Before
-        public void setup() {
-            command = (VehicleStatus) CommandResolver.resolve(bytes);
-        }
-
-        @Test
-        public void states_size() {
-            assertTrue(command.getStates().length == 2);
-        }
-
-        @Test
-        public void properties() {
-            assertTrue(command.getVin().getValue().equals("JF2SHBDC7CH451869"));
-            assertTrue(command.getPowerTrain() == PowerTrain.ALLELECTRIC);
-            assertTrue(command.getModelName().getValue().equals("Type X"));
-            assertTrue(command.getName().getValue().equals("My Car"));
-            assertTrue(command.getLicensePlate().getValue().equals("ABC123"));
-
-            assertTrue(command.getSalesDesignation().getValue().equals("Package+"));
-            assertTrue(command.getModelYear().getValue() == 2017);
-            assertTrue(command.getColorName().getValue().equals("Estoril Blau"));
-            assertTrue(command.getPower().getValue() == 220);
-            assertTrue(command.getNumberOfDoors().getValue() == 5);
-            assertTrue(command.getNumberOfSeats().getValue() == 5);
-
-            assertTrue(command.getState(TrunkState.TYPE) != null);
-
-            assertTrue(command.getEngineVolume().getValue() == 2.5f);
-            assertTrue(command.getMaxTorque().getValue() == 245);
-            assertTrue(command.getGearBox() == Gearbox.AUTOMATIC);
-
-            assertTrue(command.getDisplayUnit() == DisplayUnit.KM);
-            assertTrue(command.getDriverSeatLocation() == DriverSeatLocation.LEFT);
-            assertTrue(command.getEquipments().length == 2);
-            int count = 0;
-            for (ObjectProperty<String> s : command.getEquipments()) {
-                if (s.getValue().equals("Parking sensors") || s.getValue().equals("Automatic
-                wipers")) count++;
-            }
-            assertTrue(count == 2);
-            assertTrue(command.getBrand().getValue().equals("Mercedes"));
-    =======*/
     private void testState(VehicleStatus state) {
         assertTrue(state.getStates().length == 2);
         assertTrue(state.getVin().getValue().equals("JF2SHBDC7CH451869"));
         assertTrue(state.getPowerTrain().getValue() == PowerTrain.ALLELECTRIC);
-        assertTrue(state.getModelName().equals("Type X"));
-        assertTrue(state.getName().equals("My Car"));
-        assertTrue(state.getLicensePlate().equals("ABC123"));
+        assertTrue(state.getModelName().getValue().equals("Type X"));
+        assertTrue(state.getName().getValue().equals("My Car"));
+        assertTrue(state.getLicensePlate().getValue().equals("ABC123"));
 
-        assertTrue(state.getSalesDesignation().equals("Package+"));
+        assertTrue(state.getSalesDesignation().getValue().equals("Package+"));
         assertTrue(state.getModelYear().getValue() == 2017);
-        assertTrue(state.getColorName().equals("Estoril Blau"));
+        assertTrue(state.getColorName().getValue().equals("Estoril Blau"));
         assertTrue(state.getPower().getValue() == 220);
         assertTrue(state.getNumberOfDoors().getValue() == 5);
         assertTrue(state.getNumberOfSeats().getValue() == 5);
 
-        assertTrue(state.getState(TrunkState.TYPE) != null);
+        assertTrue(state.getState(TrunkState.TYPE).getValue() != null);
 
         assertTrue(state.getEngineVolume().getValue() == 2.5f);
         assertTrue(state.getMaxTorque().getValue() == 245);
@@ -137,7 +95,7 @@ public class VehicleStatusTest {
                 count++;
         }
         assertTrue(count == 2);
-        assertTrue(state.getBrand().equals("Mercedes"));
+        assertTrue(state.getBrand().getValue().equals("Mercedes"));
 
         Command command = getState(ControlMode.class, state);
         if (command == null) fail();
@@ -151,12 +109,12 @@ public class VehicleStatusTest {
         TrunkState trunkState = (TrunkState) command;
         assertTrue(trunkState.getLockState().getValue() == Lock.UNLOCKED);
         assertTrue(trunkState.getPosition().getValue() == Position.OPEN);
-//>>>>>>> master
     }
 
     @Test public void build() {
         VehicleStatus status = getVehicleStatusBuilderWithoutSignature().build();
         assertTrue(TestUtils.bytesTheSame(status, bytes));
+        testState(status);
     }
 
     @Test public void get() {
@@ -168,33 +126,11 @@ public class VehicleStatusTest {
         assertTrue(command instanceof GetVehicleStatus);
     }
 
-    /*<<<<<<< HEAD
-        @Test public void trunkState() {
-            Command command = getState(TrunkState.class);
-            if (command == null) fail();
-            if (command.is(TrunkState.TYPE) == false) fail();
-            TrunkState trunkState = (TrunkState) command;
-            assertTrue(trunkState.getLockState().getValue() == Lock.UNLOCKED);
-            assertTrue(trunkState.getPosition().getValue() == Position.OPEN);
-        }
-
-        @Test public void ignitionState() {
-            CommandProperty command = this.command.getState(IgnitionState.TYPE);
-            IgnitionState state = (IgnitionState) command.getValue();
-            assertTrue(state.isAccessoriesIgnitionOn().getValue());
-        }
-
-        Command getState(Class forClass) {
-            for (int i = 0; i < command.getStates().length; i++) {
-                CommandWithProperties command = this.command.getStates()[i].getValue();
-                if (command != null && command.getClass().equals(forClass)) return command;
-    =======*/
     Command getState(Class forClass, VehicleStatus command) {
         for (int i = 0; i < command.getStates().length; i++) {
             Property<CommandWithProperties> state = command.getStates()[i];
             if (state != null && state.getValue().getClass().equals(forClass))
                 return state.getValue();
-//>>>>>>> master
         }
 
         return null;
@@ -211,9 +147,7 @@ public class VehicleStatusTest {
         builder.setModelYear(new PropertyInteger(2017));
 
         builder.setColorName(new Property("Estoril Blau"));
-//        build.setPower(220);
-        // add an unknown property (power)
-        builder.addProperty(new PropertyInteger((byte) 0x09, false, 2, 220));
+        builder.setPower(new PropertyInteger(220));
         builder.setNumberOfDoors(new PropertyInteger(5)).setNumberOfSeats(new PropertyInteger(5));
 
         // l7
@@ -226,19 +160,9 @@ public class VehicleStatusTest {
         trunkState.setPosition(new Property(Position.OPEN));
         builder.addState(new Property(trunkState.build()));
 
-        IgnitionState.Builder ignitionState = new IgnitionState.Builder();
-        ignitionState.setIsOn(new Property(true));
-        ignitionState.setAccessoriesIgnition(new Property(true));
-        builder.addState(new Property(ignitionState.build()));
+        ControlMode controlMode = new ControlMode(new Bytes("00270101000401000102").getByteArray());
+        builder.addState(new Property(controlMode));
 
-/*<<<<<<< HEAD
-        // l7
-        builder.setEngineVolume(new ObjectProperty<>(2.5f));
-        builder.setMaxTorque(new ObjectPropertyInteger(245));
-        builder.setGearBox(Gearbox.AUTOMATIC);
-
-=======
->>>>>>> master*/
         // l8
         builder.setDisplayUnit(new Property(DisplayUnit.KM));
         builder.setDriverSeatLocation(new Property(DriverSeatLocation.LEFT));
@@ -264,12 +188,6 @@ public class VehicleStatusTest {
         assertTrue(Arrays.equals(command, command));
         assertTrue(status.getNonce().equals(nonce));
         assertTrue(status.getSignature().equals(signature));
-    }
-
-    @Test public void maiduTest() {
-        Bytes bytes = new Bytes
-                ("0011010A000105991B002001010003000100010003010000010003020001010003030001");
-        Command command = CommandResolver.resolve(bytes);
     }
 
     @Test public void maiduTestTwo() {

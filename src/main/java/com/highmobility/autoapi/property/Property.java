@@ -183,7 +183,6 @@ public class Property<T> extends Bytes {
         this.value = p.value;
         this.value.setClass(valueClass);
 
-
         this.timestamp = p.timestamp;
         this.failure = p.failure;
 
@@ -237,7 +236,8 @@ public class Property<T> extends Bytes {
         this.value = new PropertyComponentValue(value);
 
         if (timestamp == null) {
-            this.bytes = baseBytesWithDataComponent(identifier, this.value.getValueBytes().getLength());
+            this.bytes = baseBytesWithDataComponent(identifier,
+                    this.value.getValueBytes().getLength());
             set(3, this.value);
         } else {
             // TODO: 2019-03-07 ^^ resets the timestamp bytes. make logic to consider other
@@ -271,27 +271,8 @@ public class Property<T> extends Bytes {
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
-        e.printStackTrace(); // TODO: 2019-03-11 comment
+//        e.printStackTrace();
     }
-
-
-
-    /*ObjectProperty update(T value) {
-        if (value != null) {
-            Bytes newValue = value.getBytes();
-
-            if (newValue != null) {
-                if (getValueLength() < newValue.getLength()) {
-                    // reset the bytes
-                    bytes = baseBytesWithDataComponent(getPropertyIdentifier(), newValue.getLength());
-                }
-
-                ByteUtils.setBytes(bytes, newValue.getByteArray(), 3);
-            }
-        }
-
-        return this;
-    }*/
 
     protected void setTimestampFailure(Calendar timestamp, PropertyComponentFailure failure) {
         if (timestamp != null) this.timestamp = new PropertyComponentTimestamp(timestamp);
@@ -299,21 +280,13 @@ public class Property<T> extends Bytes {
         this.failure = failure;
     }
 
-//    // helper methods
-//    protected void setValueBytes(byte[] valueBytes) {
-//        ByteUtils.setBytes(bytes, valueBytes, 6);
-//    }
-
-    /*public boolean isUniversalProperty() {
-        return this instanceof PropertyFailure || this instanceof PropertyTimestamp;
-    }*/
-    // TODO: 2019-02-01
-
     // MARK: ctor helpers
 
-    public static byte[] baseBytesWithDataComponent(byte propertyIdentifier, int dataComponentSize) {
+    public static byte[] baseBytesWithDataComponent(byte propertyIdentifier,
+                                                    int dataComponentSize) {
         // if have a value, create bytes for data component
-        int propertySize = 3 + 3 + dataComponentSize; // property header 3 bytes, component header 3 bytes
+        int propertySize = 3 + 3 + dataComponentSize; // property header 3 bytes, component
+        // header 3 bytes
         byte[] bytes = new byte[propertySize];
 
         bytes[0] = propertyIdentifier;

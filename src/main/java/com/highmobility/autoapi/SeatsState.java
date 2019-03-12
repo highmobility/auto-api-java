@@ -134,7 +134,7 @@ public class SeatsState extends CommandWithProperties {
 
         public Builder addPersonDetected(Property<PersonDetected> personDetected) {
             addProperty(personDetected);
-            personsDetected.add(personDetected);
+            personsDetected.add(personDetected.setIdentifier(PersonDetected.IDENTIFIER));
             return this;
         }
 
@@ -150,7 +150,7 @@ public class SeatsState extends CommandWithProperties {
 
         public void addSeatBeltFastened(Property<SeatBeltFastened> seatBeltFastened) {
             addProperty(seatBeltFastened);
-            seatBeltsFastened.add(seatBeltFastened);
+            seatBeltsFastened.add(seatBeltFastened.setIdentifier(SeatBeltFastened.IDENTIFIER));
         }
 
         public Builder() {

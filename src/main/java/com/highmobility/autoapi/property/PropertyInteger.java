@@ -73,7 +73,7 @@ public class PropertyInteger extends Property<Integer> {
      * @param newLength  The new length.
      */
     public Property update(byte identifier, boolean signed, int newLength) {
-        bytes = baseBytesWithDataComponent(identifier, newLength + 3);
+        bytes = baseBytesWithDataComponent(identifier, newLength);
         // update the length/sign of the previously set int. This is used in builders.
 
         /*
