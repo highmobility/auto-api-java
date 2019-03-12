@@ -32,40 +32,46 @@ public class Type {
 
     static {
         stateCommands = new HashMap<>();
-        stateCommands.put(GetDiagnosticsState.TYPE, DiagnosticsState.TYPE);
-        stateCommands.put(GetMaintenanceState.TYPE, MaintenanceState.TYPE);
-        stateCommands.put(GetRaceState.TYPE, RaceState.TYPE);
-        stateCommands.put(GetOffroadState.TYPE, OffroadState.TYPE);
-        stateCommands.put(GetLockState.TYPE, LockState.TYPE);
-        stateCommands.put(GetIgnitionState.TYPE, IgnitionState.TYPE);
-        stateCommands.put(GetTrunkState.TYPE, TrunkState.TYPE);
-        stateCommands.put(GetChassisSettings.TYPE, ChassisSettings.TYPE);
         stateCommands.put(GetChargeState.TYPE, ChargeState.TYPE);
+        stateCommands.put(GetChassisSettings.TYPE, ChassisSettings.TYPE);
         stateCommands.put(GetClimateState.TYPE, ClimateState.TYPE);
-        stateCommands.put(GetLightsState.TYPE, LightsState.TYPE);
-        stateCommands.put(GetRooftopState.TYPE, RooftopState.TYPE);
-        stateCommands.put(GetSeatsState.TYPE, SeatsState.TYPE);
-        stateCommands.put(GetWindscreenState.TYPE, WindscreenState.TYPE);
-        stateCommands.put(GetWindowsState.TYPE, WindowsState.TYPE);
-        stateCommands.put(GetFlashersState.TYPE, FlashersState.TYPE);
-        stateCommands.put(GetWifiState.TYPE, WifiState.TYPE);
         stateCommands.put(GetControlMode.TYPE, ControlMode.TYPE);
-        stateCommands.put(GetKeyfobPosition.TYPE, KeyFobPosition.TYPE);
+        stateCommands.put(GetCruiseControlState.TYPE, CruiseControlState.TYPE);
+        stateCommands.put(GetDashboardLights.TYPE, DashboardLights.TYPE);
+        stateCommands.put(GetDiagnosticsState.TYPE, DiagnosticsState.TYPE);
+        stateCommands.put(GetFirmwareVersion.TYPE, FirmwareVersion.TYPE);
+        stateCommands.put(GetFlashersState.TYPE, FlashersState.TYPE);
+        stateCommands.put(GetGasFlapState.TYPE, GasFlapState.TYPE);
+        stateCommands.put(GetHistoricalStates.TYPE, HistoricalStates.TYPE);
+        stateCommands.put(GetHomeChargerState.TYPE, HomeChargerState.TYPE);
+        stateCommands.put(GetIgnitionState.TYPE, IgnitionState.TYPE);
+        stateCommands.put(GetKeyFobPosition.TYPE, KeyFobPosition.TYPE);
+        stateCommands.put(GetLightConditions.TYPE, LightConditions.TYPE);
+        stateCommands.put(GetLightsState.TYPE, LightsState.TYPE);
+        stateCommands.put(GetLockState.TYPE, LockState.TYPE);
+        stateCommands.put(GetMaintenanceState.TYPE, MaintenanceState.TYPE);
+        stateCommands.put(GetMobileState.TYPE, MobileState.TYPE);
+        stateCommands.put(GetNaviDestination.TYPE, NaviDestination.TYPE);
+        stateCommands.put(GetOffroadState.TYPE, OffroadState.TYPE);
         stateCommands.put(GetParkingBrakeState.TYPE, ParkingBrakeState.TYPE);
         stateCommands.put(GetParkingTicket.TYPE, ParkingTicket.TYPE);
+        stateCommands.put(GetPowerTakeOffState.TYPE, PowerTakeOffState.TYPE);
+        stateCommands.put(GetRaceState.TYPE, RaceState.TYPE);
+        stateCommands.put(GetRooftopState.TYPE, RooftopState.TYPE);
+        stateCommands.put(GetSeatsState.TYPE, SeatsState.TYPE);
+        stateCommands.put(GetStartStopState.TYPE, StartStopState.TYPE);
+        stateCommands.put(GetTachographState.TYPE, TachographState.TYPE);
         stateCommands.put(GetTheftAlarmState.TYPE, TheftAlarmState.TYPE);
+        stateCommands.put(GetTrunkState.TYPE, TrunkState.TYPE);
+        stateCommands.put(GetUsage.TYPE, Usage.TYPE);
         stateCommands.put(GetValetMode.TYPE, ValetMode.TYPE);
         stateCommands.put(GetVehicleLocation.TYPE, VehicleLocation.TYPE);
+        stateCommands.put(GetVehicleStatus.TYPE, VehicleStatus.TYPE);
         stateCommands.put(GetVehicleTime.TYPE, VehicleTime.TYPE);
-        stateCommands.put(GetNaviDestination.TYPE, NaviDestination.TYPE);
-        stateCommands.put(GetLightConditions.TYPE, LightConditions.TYPE);
         stateCommands.put(GetWeatherConditions.TYPE, WeatherConditions.TYPE);
-        stateCommands.put(GetHomeChargerState.TYPE, HomeChargerState.TYPE);
-        stateCommands.put(GetGasFlapState.TYPE, GasFlapState.TYPE);
-        stateCommands.put(GetFirmwareVersion.TYPE, FirmwareVersion.TYPE);
-        stateCommands.put(GetDashboardLights.TYPE, DashboardLights.TYPE);
-        stateCommands.put(GetUsage.TYPE, Usage.TYPE);
-        stateCommands.put(GetHistoricalStates.TYPE, HistoricalStates.TYPE);
+        stateCommands.put(GetWifiState.TYPE, WifiState.TYPE);
+        stateCommands.put(GetWindowsState.TYPE, WindowsState.TYPE);
+        stateCommands.put(GetWindscreenState.TYPE, WindscreenState.TYPE);
     }
 
     byte[] identifierAndType;
@@ -111,19 +117,6 @@ public class Type {
     Type(int identifierFirstByte, int identifierSecondByte, int type) {
         this(new byte[]{(byte) identifierFirstByte, (byte) identifierSecondByte, (byte) type});
     }
-
-    // TODO: delete 
-    /*byte[] addByte(byte extraByte) {
-        return ByteUtils.concatBytes(identifierAndType, extraByte);
-    }*/
-
-/*    byte[] addProperty(Property property) {
-        return addBytes(property.getByteArray());
-    }*/
-
-    /*byte[] addBytes(byte[] extraBytes) {
-        return ByteUtils.concatBytes(identifierAndType, extraBytes);
-    }*/
 
     @Override public boolean equals(Object obj) {
         return obj.getClass() == Type.class

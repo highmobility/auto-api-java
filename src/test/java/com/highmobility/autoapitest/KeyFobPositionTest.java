@@ -2,7 +2,7 @@ package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.GetKeyfobPosition;
+import com.highmobility.autoapi.GetKeyFobPosition;
 import com.highmobility.autoapi.KeyFobPosition;
 import com.highmobility.autoapi.property.KeyFobPositionValue;
 import com.highmobility.utils.ByteUtils;
@@ -29,7 +29,7 @@ public class KeyFobPositionTest {
 
     @Test public void get() {
         String waitingForBytes = "004800";
-        String commandBytes = ByteUtils.hexFromBytes(new GetKeyfobPosition().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new GetKeyFobPosition().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 

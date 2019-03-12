@@ -282,8 +282,8 @@ public class CommandResolver {
             } else if (bytesAreForIdentifier(bytes, Identifier.KEYFOB_POSITION)) {
                 if (bytesAreForType(bytes, KeyFobPosition.TYPE)) {
                     command = new KeyFobPosition(bytes);
-                } else if (bytesAreForType(bytes, GetKeyfobPosition.TYPE)) {
-                    command = new GetKeyfobPosition(bytes);
+                } else if (bytesAreForType(bytes, GetKeyFobPosition.TYPE)) {
+                    command = new GetKeyFobPosition(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.FIRMWARE_VERSION)) {
                 if (bytesAreForType(bytes, FirmwareVersion.TYPE)) {

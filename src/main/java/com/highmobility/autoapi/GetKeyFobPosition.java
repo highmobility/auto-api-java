@@ -21,17 +21,17 @@
 package com.highmobility.autoapi;
 
 /**
- * Command to request the keyfob position relative to the car. The car will respond with the Keyfob Position
- * message.
+ * Command to request the KeyFob position relative to the car. The car will respond with the KeyFob
+ * Position message.
  */
-public class GetKeyfobPosition extends Command {
+public class GetKeyFobPosition extends Command {
     public static final Type TYPE = new Type(Identifier.KEYFOB_POSITION, 0x00);
 
-    public GetKeyfobPosition() {
+    public GetKeyFobPosition() {
         super(TYPE);
     }
 
-    GetKeyfobPosition(byte[] bytes) {
+    GetKeyFobPosition(byte[] bytes) {
         super(bytes);
     }
 }
