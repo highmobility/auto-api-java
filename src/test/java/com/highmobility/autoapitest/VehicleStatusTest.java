@@ -144,15 +144,15 @@ public class VehicleStatusTest {
         builder.setName(new Property("My Car"));
         builder.setLicensePlate(new Property("ABC123"));
         builder.setSalesDesignation(new Property("Package+"));
-        builder.setModelYear(new PropertyInteger(2017));
+        builder.setModelYear(new Property(2017));
 
         builder.setColorName(new Property("Estoril Blau"));
-        builder.setPower(new PropertyInteger(220));
-        builder.setNumberOfDoors(new PropertyInteger(5)).setNumberOfSeats(new PropertyInteger(5));
+        builder.setPower(new Property(220));
+        builder.setNumberOfDoors(new Property(5)).setNumberOfSeats(new Property(5));
 
         // l7
         builder.setEngineVolume(new Property(2.5f));
-        builder.setMaxTorque(new PropertyInteger(245));
+        builder.setMaxTorque(new Property(245));
         builder.setGearBox(new Property(Gearbox.AUTOMATIC));
 
         TrunkState.Builder trunkState = new TrunkState.Builder();

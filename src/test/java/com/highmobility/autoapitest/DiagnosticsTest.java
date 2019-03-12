@@ -5,7 +5,6 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.property.diagnostics.CheckControlMessage;
 import com.highmobility.autoapi.property.diagnostics.DiagnosticsTroubleCode;
@@ -196,67 +195,68 @@ public class DiagnosticsTest {
     @Test public void build() {
         DiagnosticsState.Builder builder = new DiagnosticsState.Builder();
 
-        builder.setMileage(new PropertyInteger(150000));
-        builder.setOilTemperature(new PropertyInteger(99));
-        builder.setSpeed(new PropertyInteger(60));
-        builder.setRpm(new PropertyInteger(2500));
+        builder.setMileage(new Property(150000));
+        builder.setOilTemperature(new Property(99));
+        builder.setSpeed(new Property(60));
+        builder.setRpm(new Property(2500));
         builder.setFuelLevel(new Property(.9d));
-        builder.setRange(new PropertyInteger(265));
-        builder.setWasherFluidLevel(new Property<>(WasherFluidLevel.FULL));
+        builder.setRange(new Property(265));
+        builder.setWasherFluidLevel(new Property(WasherFluidLevel.FULL));
 
-        builder.setBatteryVoltage(new Property<>(12f));
-        builder.setAdBlueLevel(new Property<>(.5f));
-        builder.setDistanceDrivenSinceReset(new PropertyInteger(1500));
-        builder.setDistanceDrivenSinceEngineStart(new PropertyInteger(10));
-        builder.setFuelVolume(new Property<>(35.5f));
+        builder.setBatteryVoltage(new Property(12f));
+        builder.setAdBlueLevel(new Property(.5f));
+        builder.setDistanceDrivenSinceReset(new Property(1500));
+        builder.setDistanceDrivenSinceEngineStart(new Property(10));
+        builder.setFuelVolume(new Property(35.5f));
 
-        builder.setAntiLockBrakingActive(new Property<>(true));
-        builder.setEngineCoolantTemperature(new PropertyInteger(20));
-        builder.setEngineTotalOperatingHours(new Property<>(1500.65f));
-        builder.setEngineTotalFuelConsumption(new Property<>(27587.0f));
-        builder.setBrakeFluidLevel(new Property<>(BrakeFluidLevel.LOW));
+        builder.setAntiLockBrakingActive(new Property(true));
+        builder.setEngineCoolantTemperature(new Property(20));
+        builder.setEngineTotalOperatingHours(new Property(1500.65f));
+        builder.setEngineTotalFuelConsumption(new Property(27587.0f));
+        builder.setBrakeFluidLevel(new Property(BrakeFluidLevel.LOW));
         builder.setEngineTorque(new Property(.2d));
         builder.setEngineLoad(new Property(.1d));
-        builder.setWheelBasedSpeed(new PropertyInteger(65));
+        builder.setWheelBasedSpeed(new Property(65));
 
         // level8
         builder.setBatteryLevel(new Property(.56d));
 
-        Property msg1 = new Property<>(new CheckControlMessage(1, 105592, "Check " +
+        Property msg1 = new Property(new CheckControlMessage(1, 105592, "Check " +
                 "engine", "Alert"));
-        Property msg2 = new Property<>(new CheckControlMessage(1, 105592, "Check " +
+        Property msg2 = new Property(new CheckControlMessage(1, 105592, "Check " +
                 "engine", "Alertt"));
         builder.addCheckControlMessage(msg1);
         builder.addCheckControlMessage(msg2);
 
-        builder.addTirePressure(new Property<>(new TirePressure(TireLocation.FRONT_LEFT,
+        builder.addTirePressure(new Property(new TirePressure(TireLocation.FRONT_LEFT,
                 2.31f)));
-        builder.addTirePressure(new Property<>(new TirePressure(TireLocation.FRONT_RIGHT,
+        builder.addTirePressure(new Property(new TirePressure(TireLocation.FRONT_RIGHT,
                 2.31f)));
-        builder.addTirePressure(new Property<>(new TirePressure(TireLocation.REAR_RIGHT,
+        builder.addTirePressure(new Property(new TirePressure(TireLocation.REAR_RIGHT,
                 2.31f)));
-        builder.addTirePressure(new Property<>(new TirePressure(TireLocation.REAR_LEFT,
+        builder.addTirePressure(new Property(new TirePressure(TireLocation.REAR_LEFT,
                 2.31f)));
 
-        builder.addTireTemperature(new Property<>(new TireTemperature(TireLocation.FRONT_LEFT, 40f)));
-        builder.addTireTemperature(new Property<>(new TireTemperature(TireLocation.FRONT_RIGHT, 40f)));
-        builder.addTireTemperature(new Property<>(new TireTemperature(TireLocation.REAR_RIGHT, 40f)));
-        builder.addTireTemperature(new Property<>(new TireTemperature(TireLocation.REAR_LEFT, 40f)));
+        builder.addTireTemperature(new Property(new TireTemperature(TireLocation.FRONT_LEFT, 40f)));
+        builder.addTireTemperature(new Property(new TireTemperature(TireLocation.FRONT_RIGHT,
+                40f)));
+        builder.addTireTemperature(new Property(new TireTemperature(TireLocation.REAR_RIGHT, 40f)));
+        builder.addTireTemperature(new Property(new TireTemperature(TireLocation.REAR_LEFT, 40f)));
 
-        builder.addWheelRpm(new Property<>(new WheelRpm(TireLocation.FRONT_LEFT, 746)));
-        builder.addWheelRpm(new Property<>(new WheelRpm(TireLocation.FRONT_RIGHT, 746)));
-        builder.addWheelRpm(new Property<>(new WheelRpm(TireLocation.REAR_RIGHT, 746)));
-        builder.addWheelRpm(new Property<>(new WheelRpm(TireLocation.REAR_LEFT, 746)));
+        builder.addWheelRpm(new Property(new WheelRpm(TireLocation.FRONT_LEFT, 746)));
+        builder.addWheelRpm(new Property(new WheelRpm(TireLocation.FRONT_RIGHT, 746)));
+        builder.addWheelRpm(new Property(new WheelRpm(TireLocation.REAR_RIGHT, 746)));
+        builder.addWheelRpm(new Property(new WheelRpm(TireLocation.REAR_LEFT, 746)));
 
-        Property code1 = new Property<>(new DiagnosticsTroubleCode(2, "C1116FA",
+        Property code1 = new Property(new DiagnosticsTroubleCode(2, "C1116FA",
                 "RDU_212FR",
                 "PENDING"));
-        Property code2 = new Property<>(new DiagnosticsTroubleCode(2, "C163AFA",
+        Property code2 = new Property(new DiagnosticsTroubleCode(2, "C163AFA",
                 "DTR212",
                 "PENDING"));
         builder.addTroubleCode(code1);
         builder.addTroubleCode(code2);
-        builder.setMileageMeters(new PropertyInteger(150000));
+        builder.setMileageMeters(new Property(150000));
         DiagnosticsState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
         testState(state);

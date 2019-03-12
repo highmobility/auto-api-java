@@ -151,14 +151,14 @@ public class ChargingTest {
     @Test public void build() throws ParseException {
         ChargeState.Builder builder = new ChargeState.Builder();
 
-        builder.setEstimatedRange(new PropertyInteger(432));
+        builder.setEstimatedRange(new Property(432));
         builder.setBatteryLevel(new Property(.5d));
         builder.setBatteryCurrentAC(new Property(-.6f));
         builder.setBatteryCurrentDC(new Property(-.6f));
         builder.setChargerVoltageAC(new Property(400f));
         builder.setChargerVoltageDC(new Property(-.6f));
         builder.setChargeLimit(new Property(.9d));
-        builder.setTimeToCompleteCharge(new PropertyInteger(60));
+        builder.setTimeToCompleteCharge(new Property(60));
         builder.setChargingRate(new Property(3.5f));
         builder.setChargePortState(new Property(ChargePortState.OPEN));
         builder.setChargeMode(new Property(ChargeMode.TIMER_BASED));

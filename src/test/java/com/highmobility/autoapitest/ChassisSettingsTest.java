@@ -142,21 +142,21 @@ public class ChassisSettingsTest {
     @Test public void build() {
         ChassisSettings.Builder builder = new ChassisSettings.Builder();
 
-        builder.setDrivingMode(new Property<>(DrivingMode.ECO));
-        builder.setSportChronoActive(new Property<>(true));
+        builder.setDrivingMode(new Property(DrivingMode.ECO));
+        builder.setSportChronoActive(new Property(true));
 
-        builder.addCurrentSpringRate(new Property<>(new SpringRate(Axle.FRONT, 21)));
-        builder.addCurrentSpringRate(new Property<>(new SpringRate(Axle.REAR, 23)));
+        builder.addCurrentSpringRate(new Property(new SpringRate(Axle.FRONT, 21)));
+        builder.addCurrentSpringRate(new Property(new SpringRate(Axle.REAR, 23)));
 
-        builder.addMaximumSpringRate(new Property<>(new SpringRate(Axle.FRONT, 37)));
-        builder.addMaximumSpringRate(new Property<>(new SpringRate(Axle.REAR, 39)));
+        builder.addMaximumSpringRate(new Property(new SpringRate(Axle.FRONT, 37)));
+        builder.addMaximumSpringRate(new Property(new SpringRate(Axle.REAR, 39)));
 
-        builder.addMinimumSpringRate(new Property<>(new SpringRate(Axle.FRONT, 16)));
-        builder.addMinimumSpringRate(new Property<>(new SpringRate(Axle.REAR, 18)));
+        builder.addMinimumSpringRate(new Property(new SpringRate(Axle.FRONT, 16)));
+        builder.addMinimumSpringRate(new Property(new SpringRate(Axle.REAR, 18)));
 
-        builder.setCurrentChassisPosition(new PropertyInteger(25));
-        builder.setMaximumChassisPosition(new PropertyInteger(55));
-        builder.setMinimumChassisPosition(new PropertyInteger(-28));
+        builder.setCurrentChassisPosition(new Property(25));
+        builder.setMaximumChassisPosition(new Property(55));
+        builder.setMinimumChassisPosition(new Property(-28));
 
         ChassisSettings state = builder.build();
         assertTrue(state.equals(bytes));

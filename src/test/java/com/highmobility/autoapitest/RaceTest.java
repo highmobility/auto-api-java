@@ -92,15 +92,15 @@ public class RaceTest {
         builder.setUnderSteering(new Property(.19d));
         builder.setOverSteering(new Property(0d));
         builder.setGasPedalPosition(new Property(.98d));
-        builder.setSteeringAngle(new PropertyInteger(10));
+        builder.setSteeringAngle(new Property(10));
         builder.setBrakePressure(new Property(20f));
         builder.setYawRate(new Property(6.66f));
-        builder.setRearSuspensionSteering(new PropertyInteger(3));
+        builder.setRearSuspensionSteering(new Property(3));
         builder.setEspInterventionActive(new Property(true));
         builder.addBrakeTorqueVectoring(new Property(new BrakeTorqueVectoring(Axle.REAR, true)));
         builder.addBrakeTorqueVectoring(new Property(new BrakeTorqueVectoring(Axle.FRONT, false)));
         builder.setGearMode(new Property(GearMode.DRIVE));
-        builder.setSelectedGear(new PropertyInteger(4));
+        builder.setSelectedGear(new Property(4));
         builder.setBrakePedalPosition(new Property(0d));
 
         builder.setBrakePedalSwitchActive(new Property(true));

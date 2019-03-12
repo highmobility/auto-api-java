@@ -632,12 +632,11 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param distanceDrivenSinceReset The distance driven in km since reset.
          * @return The builder.
          */
-        public Builder setDistanceDrivenSinceReset(PropertyInteger
-                                                           distanceDrivenSinceReset) {
-            this.distanceDrivenSinceReset = distanceDrivenSinceReset;
-            distanceDrivenSinceReset.update(IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET,
-                    false, 2);
-            addProperty(distanceDrivenSinceReset);
+        public Builder setDistanceDrivenSinceReset(Property<Integer> distanceDrivenSinceReset) {
+            this.distanceDrivenSinceReset =
+                    new PropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET, false, 2,
+                            distanceDrivenSinceReset);
+            addProperty(this.distanceDrivenSinceReset);
             return this;
         }
 
@@ -645,12 +644,11 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param distanceDrivenSinceEngineStart The distance driven in km since engine start
          * @return The builder.
          */
-        public Builder setDistanceDrivenSinceEngineStart(PropertyInteger
-                                                                 distanceDrivenSinceEngineStart) {
-            this.distanceDrivenSinceEngineStart = distanceDrivenSinceEngineStart;
-            distanceDrivenSinceEngineStart.update(IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START,
-                    false, 2);
-            addProperty(distanceDrivenSinceEngineStart);
+        public Builder setDistanceDrivenSinceEngineStart(Property<Integer> distanceDrivenSinceEngineStart) {
+            this.distanceDrivenSinceEngineStart =
+                    new PropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START, false, 2,
+                            distanceDrivenSinceEngineStart);
+            addProperty(this.distanceDrivenSinceEngineStart);
             return this;
         }
 
@@ -682,12 +680,11 @@ public class DiagnosticsState extends CommandWithProperties {
          *                                 negative.
          * @return The builder.
          */
-        public Builder setEngineCoolantTemperature(PropertyInteger
-                                                           engineCoolantTemperature) {
-            this.engineCoolantTemperature = engineCoolantTemperature;
-            engineCoolantTemperature.update(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE,
-                    false, 2);
-            addProperty(engineCoolantTemperature);
+        public Builder setEngineCoolantTemperature(Property<Integer> engineCoolantTemperature) {
+            this.engineCoolantTemperature =
+                    new PropertyInteger(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, false, 2,
+                            engineCoolantTemperature);
+            addProperty(this.engineCoolantTemperature);
             return this;
         }
 
@@ -695,8 +692,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param engineTotalOperatingHours The the accumulated time of engine operation.
          * @return The builder.
          */
-        public Builder setEngineTotalOperatingHours
-        (Property<Float> engineTotalOperatingHours) {
+        public Builder setEngineTotalOperatingHours(Property<Float> engineTotalOperatingHours) {
             this.engineTotalOperatingHours = engineTotalOperatingHours;
             engineTotalOperatingHours.setIdentifier(IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
             addProperty(engineTotalOperatingHours);
@@ -708,8 +704,7 @@ public class DiagnosticsState extends CommandWithProperties {
          *                                   liters.
          * @return The builder.
          */
-        public Builder setEngineTotalFuelConsumption
-        (Property<Float> engineTotalFuelConsumption) {
+        public Builder setEngineTotalFuelConsumption(Property<Float> engineTotalFuelConsumption) {
             this.engineTotalFuelConsumption = engineTotalFuelConsumption;
             engineTotalFuelConsumption.setIdentifier(IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
             addProperty(engineTotalFuelConsumption);
@@ -720,8 +715,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param brakeFluidLevel The brake fluid level.
          * @return The builder.
          */
-        public Builder setBrakeFluidLevel
-        (Property<BrakeFluidLevel> brakeFluidLevel) {
+        public Builder setBrakeFluidLevel(Property<BrakeFluidLevel> brakeFluidLevel) {
             this.brakeFluidLevel = brakeFluidLevel;
             brakeFluidLevel.setIdentifier(IDENTIFIER_BRAKE_FLUID_LEVEL);
             addProperty(brakeFluidLevel);
@@ -782,8 +776,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param pressures The tire pressures.
          * @return The builder.
          */
-        public Builder setTirePressures(Property<TirePressure>[]
-                                                pressures) {
+        public Builder setTirePressures(Property<TirePressure>[] pressures) {
             tirePressures.clear();
             for (int i = 0; i < pressures.length; i++) {
                 addTirePressure(pressures[i]);
@@ -798,8 +791,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param pressure The tire pressure.
          * @return The builder.
          */
-        public Builder addTirePressure
-        (Property<TirePressure> pressure) {
+        public Builder addTirePressure(Property<TirePressure> pressure) {
             pressure.setIdentifier(IDENTIFIER_TIRE_PRESSURES);
             addProperty(pressure);
             tirePressures.add(pressure);
@@ -812,8 +804,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param temperatures The tire temperatures.
          * @return The builder.
          */
-        public Builder setTireTemperatures
-        (Property<TireTemperature>[] temperatures) {
+        public Builder setTireTemperatures(Property<TireTemperature>[] temperatures) {
             this.tireTemperatures.clear();
 
             for (int i = 0; i < temperatures.length; i++) {
@@ -829,8 +820,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param temperature The tire temperature.
          * @return The builder.
          */
-        public Builder addTireTemperature
-        (Property<TireTemperature> temperature) {
+        public Builder addTireTemperature(Property<TireTemperature> temperature) {
             temperature.setIdentifier(IDENTIFIER_TIRE_TEMPERATURES);
             addProperty(temperature);
             tireTemperatures.add(temperature);

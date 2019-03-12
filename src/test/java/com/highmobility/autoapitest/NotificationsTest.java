@@ -68,7 +68,7 @@ public class NotificationsTest {
         builder.setText(new Property("Start navigation?"));
         builder.setActions(actions);
 
-        builder.setReceivedAction(new PropertyInteger(42));
+        builder.setReceivedAction(new Property(42));
 
         Notification command = builder.build();
         assertTrue(command.equals(bytes));
@@ -97,7 +97,7 @@ public class NotificationsTest {
 
     @Test public void buildNotificationAction() {
         NotificationAction.Builder builder = new NotificationAction.Builder();
-        builder.setActionIdentifier(new PropertyInteger(254));
+        builder.setActionIdentifier(new Property(254));
         NotificationAction command = builder.build();
         assertTrue(command.getActionIdentifier() == 254);
         assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex("003811" +
