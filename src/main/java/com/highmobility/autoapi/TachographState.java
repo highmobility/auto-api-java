@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.tachograph.DriverCard;
 import com.highmobility.autoapi.value.tachograph.DriverTimeState;
 import com.highmobility.autoapi.value.tachograph.DriverWorkingState;
@@ -56,7 +56,7 @@ public class TachographState extends CommandWithProperties {
     Property<Boolean> vehicleOverspeed = new Property(Boolean.class, IDENTIFIER_VEHICLE_OVERSPEED);
     Property<VehicleDirection> vehicleDirection = new Property(VehicleDirection.class,
             IDENTIFIER_VEHICLE_DIRECTION);
-    Property<Integer> vehicleSpeed = new IntegerProperty(IDENTIFIER_VEHICLE_SPEED, false);
+    Property<Integer> vehicleSpeed = new PropertyInteger(IDENTIFIER_VEHICLE_SPEED, false);
 
     /**
      * @return The driver working states.
@@ -216,7 +216,7 @@ public class TachographState extends CommandWithProperties {
         Property<Boolean> vehicleMotionDetected;
         Property<Boolean> vehicleOverspeed;
         Property<VehicleDirection> vehicleDirection;
-        IntegerProperty vehicleSpeed;
+        PropertyInteger vehicleSpeed;
 
         /**
          * Add a single driver working state.
@@ -329,7 +329,7 @@ public class TachographState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setVehicleSpeed(Property<Integer> vehicleSpeed) {
-            this.vehicleSpeed = new IntegerProperty(IDENTIFIER_VEHICLE_SPEED, false, 2,
+            this.vehicleSpeed = new PropertyInteger(IDENTIFIER_VEHICLE_SPEED, false, 2,
                     vehicleSpeed);
             addProperty(this.vehicleSpeed);
             return this;

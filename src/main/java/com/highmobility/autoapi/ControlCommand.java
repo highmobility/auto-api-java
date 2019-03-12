@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
@@ -38,8 +38,8 @@ public class ControlCommand extends CommandWithProperties {
     private static final byte IDENTIFIER_SPEED = 0x01;
     private static final byte IDENTIFIER_ANGLE = 0x02;
 
-    IntegerProperty speed = new IntegerProperty(IDENTIFIER_SPEED, true);
-    IntegerProperty angle = new IntegerProperty(IDENTIFIER_ANGLE, true);
+    PropertyInteger speed = new PropertyInteger(IDENTIFIER_SPEED, true);
+    PropertyInteger angle = new PropertyInteger(IDENTIFIER_ANGLE, true);
 
     /**
      * @return The speed in km/h, can range between -5 to 5 whereas a negative speed will reverse

@@ -25,7 +25,7 @@ public class PropertyTest {
     }
 
     @Test public void propertyLength() {
-        IntegerProperty property = new IntegerProperty((byte) 0x01, false, 2, new Property(2));
+        PropertyInteger property = new PropertyInteger((byte) 0x01, false, 2, new Property(2));
         assertTrue(property.equals("0100050100020002"));
         String longString =
                 "longstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstring" +
@@ -114,12 +114,12 @@ public class PropertyTest {
     }*/
 
     @Test public void integerPropertySignChecked() throws CommandParseException {
-        IntegerProperty integerProperty = new IntegerProperty(253);
+        PropertyInteger integerProperty = new PropertyInteger(253);
         integerProperty.update((byte) 0x00, false, 1);
 
         assertTrue(integerProperty.getValue() == 253);
 
-        IntegerProperty checked = new IntegerProperty(integerProperty, false);
+        PropertyInteger checked = new PropertyInteger(integerProperty, false);
         // assert that the bytes are correct to create 253 int
         assertTrue(checked.getValue() == 253);
     }

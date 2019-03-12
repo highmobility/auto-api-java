@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.SpringRate;
 import com.highmobility.autoapi.value.Axle;
 
@@ -58,13 +58,13 @@ public class ChassisSettings extends CommandWithProperties {
     Property<SpringRate>[] minimumSpringRates;
 
     Property<Integer> currentChassisPosition =
-            new IntegerProperty(IDENTIFIER_CURRENT_CHASSIS_POSITION, true);
+            new PropertyInteger(IDENTIFIER_CURRENT_CHASSIS_POSITION, true);
 
     Property<Integer> maximumChassisPosition =
-            new IntegerProperty(IDENTIFIER_MAXIMUM_CHASSIS_POSITION, true);
+            new PropertyInteger(IDENTIFIER_MAXIMUM_CHASSIS_POSITION, true);
 
     Property<Integer> minimumChassisPosition =
-            new IntegerProperty(IDENTIFIER_MINIMUM_CHASSIS_POSITION, true);
+            new PropertyInteger(IDENTIFIER_MINIMUM_CHASSIS_POSITION, true);
 
     /**
      * @return The driving mode.
@@ -269,7 +269,7 @@ public class ChassisSettings extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setCurrentChassisPosition(Property<Integer> chassisPosition) {
-            this.currentChassisPosition = new IntegerProperty(IDENTIFIER_CURRENT_CHASSIS_POSITION
+            this.currentChassisPosition = new PropertyInteger(IDENTIFIER_CURRENT_CHASSIS_POSITION
                     , true, 1, chassisPosition);
             addProperty(this.currentChassisPosition);
             return this;
@@ -280,7 +280,7 @@ public class ChassisSettings extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setMinimumChassisPosition(Property<Integer> chassisPosition) {
-            this.minimumChassisPosition = new IntegerProperty(IDENTIFIER_MINIMUM_CHASSIS_POSITION
+            this.minimumChassisPosition = new PropertyInteger(IDENTIFIER_MINIMUM_CHASSIS_POSITION
                     , true, 1, chassisPosition);
             addProperty(this.minimumChassisPosition);
             return this;
@@ -291,7 +291,7 @@ public class ChassisSettings extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setMaximumChassisPosition(Property<Integer> chassisPosition) {
-            this.maximumChassisPosition = new IntegerProperty(IDENTIFIER_MAXIMUM_CHASSIS_POSITION
+            this.maximumChassisPosition = new PropertyInteger(IDENTIFIER_MAXIMUM_CHASSIS_POSITION
                     , true, 1, chassisPosition);
             addProperty(this.maximumChassisPosition);
             return this;

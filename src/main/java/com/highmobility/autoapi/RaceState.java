@@ -24,7 +24,7 @@ import com.highmobility.autoapi.value.Acceleration;
 import com.highmobility.autoapi.value.BrakeTorqueVectoring;
 import com.highmobility.autoapi.value.GearMode;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.Axle;
 
 import java.util.ArrayList;
@@ -68,18 +68,18 @@ public class RaceState extends CommandWithProperties {
             IDENTIFIER_OVER_STEERING);
     Property<Double> gasPedalPosition =
             new Property(Double.class, IDENTIFIER_GAS_PEDAL_POSITION);
-    Property<Integer> steeringAngle = new IntegerProperty(IDENTIFIER_STEERING_ANGLE,
+    Property<Integer> steeringAngle = new PropertyInteger(IDENTIFIER_STEERING_ANGLE,
             true);
     Property<Float> brakePressure = new Property(Float.class,
             IDENTIFIER_BRAKE_PRESSURE);
     Property<Float> yawRate = new Property(Float.class, IDENTIFIER_YAW_RATE);
-    IntegerProperty rearSuspensionSteering =
-            new IntegerProperty(IDENTIFIER_REAR_SUSPENSION_STEERING, false);
+    PropertyInteger rearSuspensionSteering =
+            new PropertyInteger(IDENTIFIER_REAR_SUSPENSION_STEERING, false);
     Property<Boolean> espInterventionActive = new Property(Boolean.class,
             IDENTIFIER_ESP_INTERVENTION_ACTIVE);
     Property<BrakeTorqueVectoring>[] brakeTorqueVectorings;
     Property<GearMode> gearMode = new Property(GearMode.class, IDENTIFIER_GEAR_MODE);
-    Property<Integer> selectedGear = new IntegerProperty(IDENTIFIER_SELECTED_GEAR, false);
+    Property<Integer> selectedGear = new PropertyInteger(IDENTIFIER_SELECTED_GEAR, false);
     Property<Double> brakePedalPosition =
             new Property(Double.class, IDENTIFIER_BRAKE_PEDAL_POSITION);
     // level7
@@ -349,14 +349,14 @@ public class RaceState extends CommandWithProperties {
         private Property<Double> underSteering;
         private Property<Double> overSteering;
         private Property<Double> gasPedalPosition;
-        private IntegerProperty steeringAngle;
+        private PropertyInteger steeringAngle;
         private Property<Float> brakePressure;
         private Property<Float> yawRate;
-        private IntegerProperty rearSuspensionSteering;
+        private PropertyInteger rearSuspensionSteering;
         private Property<Boolean> espInterventionActive;
         private List<Property<BrakeTorqueVectoring>> brakeTorqueVectorings = new ArrayList<>();
         private Property<GearMode> gearMode;
-        private IntegerProperty selectedGear;
+        private PropertyInteger selectedGear;
         private Property<Double> brakePedalPosition;
 
         private Property<Boolean> brakePedalSwitchActive;
@@ -436,7 +436,7 @@ public class RaceState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setSteeringAngle(Property<Integer> steeringAngle) {
-            this.steeringAngle = new IntegerProperty(IDENTIFIER_STEERING_ANGLE, false, 1,
+            this.steeringAngle = new PropertyInteger(IDENTIFIER_STEERING_ANGLE, false, 1,
                     steeringAngle);
             addProperty(this.steeringAngle);
             return this;
@@ -470,7 +470,7 @@ public class RaceState extends CommandWithProperties {
          * @return The builder
          */
         public Builder setRearSuspensionSteering(Property<Integer> rearSuspensionSteering) {
-            this.rearSuspensionSteering = new IntegerProperty(IDENTIFIER_REAR_SUSPENSION_STEERING
+            this.rearSuspensionSteering = new PropertyInteger(IDENTIFIER_REAR_SUSPENSION_STEERING
                     , false, 1, rearSuspensionSteering);
             addProperty(this.rearSuspensionSteering);
             return this;
@@ -526,7 +526,7 @@ public class RaceState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setSelectedGear(Property<Integer> selectedGear) {
-            this.selectedGear = new IntegerProperty(IDENTIFIER_SELECTED_GEAR, false, 1, selectedGear);
+            this.selectedGear = new PropertyInteger(IDENTIFIER_SELECTED_GEAR, false, 1, selectedGear);
             addProperty(this.selectedGear);
             return this;
         }

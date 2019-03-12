@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 
 import javax.annotation.Nullable;
 
@@ -34,7 +34,7 @@ public class OffroadState extends CommandWithProperties {
     private static final byte IDENTIFIER_ROUTE_INCLINE = 0x01;
     private static final byte IDENTIFIER_WHEEL_SUSPENSION = 0x02;
 
-    IntegerProperty routeIncline = new IntegerProperty(IDENTIFIER_ROUTE_INCLINE, false);
+    PropertyInteger routeIncline = new PropertyInteger(IDENTIFIER_ROUTE_INCLINE, false);
     Property<Double> wheelSuspension =
             new Property<>(Double.class, IDENTIFIER_WHEEL_SUSPENSION);
 
@@ -81,7 +81,7 @@ public class OffroadState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private IntegerProperty routeIncline;
+        private PropertyInteger routeIncline;
         private Property<Double> wheelSuspension;
 
         public Builder() {
@@ -94,7 +94,7 @@ public class OffroadState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setRouteIncline(Property<Integer> routeIncline) {
-            this.routeIncline = new IntegerProperty(IDENTIFIER_ROUTE_INCLINE, false, 2,
+            this.routeIncline = new PropertyInteger(IDENTIFIER_ROUTE_INCLINE, false, 2,
                     routeIncline);
             addProperty(this.routeIncline);
             return this;

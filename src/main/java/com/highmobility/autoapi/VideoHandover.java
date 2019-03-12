@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.ScreenLocation;
 
 import java.util.ArrayList;
@@ -41,8 +41,8 @@ public class VideoHandover extends CommandWithProperties {
     public static final byte IDENTIFIER_SCREEN_LOCATION = 0x03;
 
     private Property<String> url = new Property(String.class, IDENTIFIER_URL);
-    private IntegerProperty startingSecond =
-            new IntegerProperty(STARTING_SECOND_IDENTIFIER, false);
+    private PropertyInteger startingSecond =
+            new PropertyInteger(STARTING_SECOND_IDENTIFIER, false);
     private Property<ScreenLocation> location = new Property<>(ScreenLocation.class,
             IDENTIFIER_SCREEN_LOCATION);
 

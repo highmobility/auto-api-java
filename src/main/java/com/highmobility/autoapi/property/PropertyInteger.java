@@ -27,22 +27,22 @@ import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 
 // since int has different signed and length options, its better to have a property subclass.
-public class IntegerProperty extends Property<Integer> {
+public class PropertyInteger extends Property<Integer> {
     boolean signed;
 
-    public IntegerProperty(Integer value) {
+    public PropertyInteger(Integer value) {
         // This will create int32. Can be updated later in {@link #update(byte, boolean, int)}
         super(value);
     }
 
-    public IntegerProperty(Property p, boolean signed) throws CommandParseException {
+    public PropertyInteger(Property p, boolean signed) throws CommandParseException {
         super(Integer.class, p.getPropertyIdentifier());
         this.signed = signed;
         update(p);
     }
 
     // used in builders
-    public IntegerProperty(byte identifier, boolean signed, int length, Property<Integer> value) {
+    public PropertyInteger(byte identifier, boolean signed, int length, Property<Integer> value) {
         this(identifier, signed);
         this.bytes = getBytes(identifier, length, value.value.value).getByteArray();
         findComponents();
@@ -50,7 +50,7 @@ public class IntegerProperty extends Property<Integer> {
         this.value.value = value.value.value;
     }
 
-    public IntegerProperty(byte identifier, boolean signed) {
+    public PropertyInteger(byte identifier, boolean signed) {
         super(Integer.class, identifier);
         this.signed = signed;
     }

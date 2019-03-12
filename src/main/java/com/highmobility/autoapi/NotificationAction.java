@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 
 /**
  * Send an action to a previously received Notification message.
@@ -31,7 +31,7 @@ public class NotificationAction extends CommandWithProperties {
 
     private static final byte IDENTIFIER = 0x01;
 
-    IntegerProperty actionIdentifier = new IntegerProperty(IDENTIFIER, false);
+    PropertyInteger actionIdentifier = new PropertyInteger(IDENTIFIER, false);
 
     /**
      * @return The identifier of selected action item.
@@ -69,7 +69,7 @@ public class NotificationAction extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private IntegerProperty actionIdentifier;
+        private PropertyInteger actionIdentifier;
 
         public Builder() {
             super(TYPE);
@@ -80,7 +80,7 @@ public class NotificationAction extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setActionIdentifier(Property<Integer> actionIdentifier) {
-            this.actionIdentifier = new IntegerProperty(IDENTIFIER, false, 1, actionIdentifier);
+            this.actionIdentifier = new PropertyInteger(IDENTIFIER, false, 1, actionIdentifier);
             addProperty(this.actionIdentifier);
             return this;
         }

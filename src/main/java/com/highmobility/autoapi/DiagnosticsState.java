@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.value.diagnostics.CheckControlMessage;
 import com.highmobility.autoapi.value.diagnostics.DiagnosticsTroubleCode;
@@ -75,28 +75,28 @@ public class DiagnosticsState extends CommandWithProperties {
 
     private static final byte IDENTIFIER_MILEAGE_METERS = 0x1E;
 
-    IntegerProperty mileage = new IntegerProperty(IDENTIFIER_MILEAGE, false);
-    IntegerProperty oilTemperature = new IntegerProperty(IDENTIFIER_OIL_TEMPERATURE,
+    PropertyInteger mileage = new PropertyInteger(IDENTIFIER_MILEAGE, false);
+    PropertyInteger oilTemperature = new PropertyInteger(IDENTIFIER_OIL_TEMPERATURE,
             false);
-    IntegerProperty speed = new IntegerProperty(IDENTIFIER_SPEED, false);
-    IntegerProperty rpm = new IntegerProperty(IDENTIFIER_RPM, false);
+    PropertyInteger speed = new PropertyInteger(IDENTIFIER_SPEED, false);
+    PropertyInteger rpm = new PropertyInteger(IDENTIFIER_RPM, false);
     Property<Double> fuelLevel = new Property(Double.class, IDENTIFIER_FUEL_LEVEL);
-    IntegerProperty range = new IntegerProperty(IDENTIFIER_RANGE, false);
+    PropertyInteger range = new PropertyInteger(IDENTIFIER_RANGE, false);
     Property<WasherFluidLevel> washerFluidLevel =
             new Property(WasherFluidLevel.class, IDENTIFIER_WASHER_FLUID_LEVEL);
     Property<Float> batteryVoltage = new Property(Float.class, IDENTIFIER_BATTERY_VOLTAGE);
     Property<Float> adBlueLevel = new Property(Float.class, IDENTIFIER_AD_BLUE_LEVEL);
-    IntegerProperty distanceDrivenSinceReset =
-            new IntegerProperty(IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET, false);
-    IntegerProperty distanceDrivenSinceEngineStart =
-            new IntegerProperty(IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START, false);
+    PropertyInteger distanceDrivenSinceReset =
+            new PropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET, false);
+    PropertyInteger distanceDrivenSinceEngineStart =
+            new PropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START, false);
     Property<Float> fuelVolume = new Property(Float.class, IDENTIFIER_FUEL_VOLUME);
 
     // level7
     Property<Boolean> antiLockBrakingActive =
             new Property(Boolean.class, IDENTIFIER_ANTI_LOCK_BRAKING_ACTIVE);
-    IntegerProperty engineCoolantTemperature =
-            new IntegerProperty(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, false);
+    PropertyInteger engineCoolantTemperature =
+            new PropertyInteger(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, false);
     Property<Float> engineTotalOperatingHours =
             new Property(Float.class, IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
     Property<Float> engineTotalFuelConsumption =
@@ -105,7 +105,7 @@ public class DiagnosticsState extends CommandWithProperties {
             IDENTIFIER_BRAKE_FLUID_LEVEL);
     Property<Double> engineTorque = new Property(Double.class, IDENTIFIER_ENGINE_TORQUE);
     Property<Double> engineLoad = new Property(Double.class, IDENTIFIER_ENGINE_LOAD);
-    IntegerProperty wheelBasedSpeed = new IntegerProperty(IDENTIFIER_WHEEL_BASED_SPEED, true);
+    PropertyInteger wheelBasedSpeed = new PropertyInteger(IDENTIFIER_WHEEL_BASED_SPEED, true);
 
     // level8
     Property<Double> batteryLevel = new Property<>(Double.class, IDENTIFIER_BATTERY_LEVEL);
@@ -115,7 +115,7 @@ public class DiagnosticsState extends CommandWithProperties {
     Property<WheelRpm>[] wheelRpms;
     Property<DiagnosticsTroubleCode>[] troubleCodes;
 
-    IntegerProperty mileageMeters = new IntegerProperty(IDENTIFIER_MILEAGE_METERS,
+    PropertyInteger mileageMeters = new PropertyInteger(IDENTIFIER_MILEAGE_METERS,
             false);
 
     /**
@@ -494,27 +494,27 @@ public class DiagnosticsState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private IntegerProperty mileage;
-        private IntegerProperty oilTemperature;
-        private IntegerProperty speed;
-        private IntegerProperty rpm;
+        private PropertyInteger mileage;
+        private PropertyInteger oilTemperature;
+        private PropertyInteger speed;
+        private PropertyInteger rpm;
         private Property<Double> fuelLevel;
-        private IntegerProperty range;
+        private PropertyInteger range;
         private Property<WasherFluidLevel> washerFluidLevel;
         private Property<Float> batteryVoltage;
         private Property<Float> adBlueLevel;
-        private IntegerProperty distanceDrivenSinceReset;
-        private IntegerProperty distanceDrivenSinceEngineStart;
+        private PropertyInteger distanceDrivenSinceReset;
+        private PropertyInteger distanceDrivenSinceEngineStart;
         private Property<Float> fuelVolume;
 
         private Property<Boolean> antiLockBrakingActive;
-        private IntegerProperty engineCoolantTemperature;
+        private PropertyInteger engineCoolantTemperature;
         private Property<Float> engineTotalOperatingHours;
         private Property<Float> engineTotalFuelConsumption;
         private Property<BrakeFluidLevel> brakeFluidLevel;
         private Property<Double> engineTorque;
         private Property<Double> engineLoad;
-        private IntegerProperty wheelBasedSpeed;
+        private PropertyInteger wheelBasedSpeed;
 
         private Property<Double> batteryLevel;
         private List<Property> tirePressures = new ArrayList<>();
@@ -522,7 +522,7 @@ public class DiagnosticsState extends CommandWithProperties {
         private List<Property> wheelRpms = new ArrayList<>();
         private List<Property> checkControlMessages = new ArrayList<>();
         private List<Property> troubleCodes = new ArrayList<>();
-        private IntegerProperty mileageMeters;
+        private PropertyInteger mileageMeters;
 
         public Builder() {
             super(TYPE);
@@ -537,7 +537,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setMileage(Property<Integer> mileage) {
-            this.mileage = new IntegerProperty(IDENTIFIER_MILEAGE, false, 3, mileage);
+            this.mileage = new PropertyInteger(IDENTIFIER_MILEAGE, false, 3, mileage);
             addProperty(this.mileage);
             return this;
         }
@@ -547,7 +547,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setOilTemperature(Property<Integer> oilTemperature) {
-            this.oilTemperature = new IntegerProperty(IDENTIFIER_OIL_TEMPERATURE, false, 2,
+            this.oilTemperature = new PropertyInteger(IDENTIFIER_OIL_TEMPERATURE, false, 2,
                     oilTemperature);
             addProperty(this.oilTemperature);
             return this;
@@ -558,7 +558,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setSpeed(Property<Integer> speed) {
-            this.speed = new IntegerProperty(IDENTIFIER_SPEED, false, 2, speed);
+            this.speed = new PropertyInteger(IDENTIFIER_SPEED, false, 2, speed);
             addProperty(this.speed);
             return this;
         }
@@ -568,7 +568,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setRpm(Property<Integer> rpm) {
-            this.rpm = new IntegerProperty(IDENTIFIER_RPM, false, 2, rpm);
+            this.rpm = new PropertyInteger(IDENTIFIER_RPM, false, 2, rpm);
             addProperty(this.rpm);
             return this;
         }
@@ -589,7 +589,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setRange(Property<Integer> range) {
-            this.range = new IntegerProperty(IDENTIFIER_RANGE, false, 2, range);
+            this.range = new PropertyInteger(IDENTIFIER_RANGE, false, 2, range);
             addProperty(this.range);
             return this;
         }
@@ -634,7 +634,7 @@ public class DiagnosticsState extends CommandWithProperties {
          */
         public Builder setDistanceDrivenSinceReset(Property<Integer> distanceDrivenSinceReset) {
             this.distanceDrivenSinceReset =
-                    new IntegerProperty(IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET, false, 2,
+                    new PropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_RESET, false, 2,
                             distanceDrivenSinceReset);
             addProperty(this.distanceDrivenSinceReset);
             return this;
@@ -646,7 +646,7 @@ public class DiagnosticsState extends CommandWithProperties {
          */
         public Builder setDistanceDrivenSinceEngineStart(Property<Integer> distanceDrivenSinceEngineStart) {
             this.distanceDrivenSinceEngineStart =
-                    new IntegerProperty(IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START, false, 2,
+                    new PropertyInteger(IDENTIFIER_DISTANCE_DRIVEN_SINCE_ENGINE_START, false, 2,
                             distanceDrivenSinceEngineStart);
             addProperty(this.distanceDrivenSinceEngineStart);
             return this;
@@ -682,7 +682,7 @@ public class DiagnosticsState extends CommandWithProperties {
          */
         public Builder setEngineCoolantTemperature(Property<Integer> engineCoolantTemperature) {
             this.engineCoolantTemperature =
-                    new IntegerProperty(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, false, 2,
+                    new PropertyInteger(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, false, 2,
                             engineCoolantTemperature);
             addProperty(this.engineCoolantTemperature);
             return this;
@@ -751,7 +751,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setWheelBasedSpeed(Property<Integer> wheelBasedSpeed) {
-            this.wheelBasedSpeed = new IntegerProperty(IDENTIFIER_WHEEL_BASED_SPEED, true, 2,
+            this.wheelBasedSpeed = new PropertyInteger(IDENTIFIER_WHEEL_BASED_SPEED, true, 2,
                     wheelBasedSpeed);
             addProperty(this.wheelBasedSpeed);
             return this;
@@ -898,7 +898,7 @@ public class DiagnosticsState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setMileageMeters(Property<Integer> mileageMeters) {
-            this.mileageMeters = new IntegerProperty(IDENTIFIER_MILEAGE_METERS, false, 4,
+            this.mileageMeters = new PropertyInteger(IDENTIFIER_MILEAGE_METERS, false, 4,
                     mileageMeters);
             addProperty(this.mileageMeters);
             return this;

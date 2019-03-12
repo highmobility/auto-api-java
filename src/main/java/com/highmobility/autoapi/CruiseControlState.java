@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
 /**
@@ -40,9 +40,9 @@ public class CruiseControlState extends CommandWithProperties {
 
     Property<Boolean> active = new Property(Boolean.class, IDENTIFIER_ACTIVE);
     Property<Limiter> limiter = new Property(Limiter.class, IDENTIFIER_LIMITER);
-    IntegerProperty targetSpeed = new IntegerProperty(IDENTIFIER_TARGET_SPEED, false);
+    PropertyInteger targetSpeed = new PropertyInteger(IDENTIFIER_TARGET_SPEED, false);
     Property<Boolean> adaptiveActive = new Property(Boolean.class, IDENTIFIER_ADAPTIVE_ACTIVE);
-    IntegerProperty adaptiveTargetSpeed = new IntegerProperty(IDENTIFIER_ADAPTIVE_TARGET_SPEED,
+    PropertyInteger adaptiveTargetSpeed = new PropertyInteger(IDENTIFIER_ADAPTIVE_TARGET_SPEED,
             false);
 
     /**

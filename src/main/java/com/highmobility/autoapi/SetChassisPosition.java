@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 
 /**
  * Set the chassis position. The result is sent through the Chassis Settings command.
@@ -30,7 +30,7 @@ public class SetChassisPosition extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x15);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
 
-    IntegerProperty position = new IntegerProperty(PROPERTY_IDENTIFIER, true);
+    PropertyInteger position = new PropertyInteger(PROPERTY_IDENTIFIER, true);
 
     /**
      * @return The chassis position in mm calculated from the lowest point.

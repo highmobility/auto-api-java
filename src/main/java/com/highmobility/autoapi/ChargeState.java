@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.charging.ChargeMode;
 import com.highmobility.autoapi.value.charging.ChargePortState;
 import com.highmobility.autoapi.value.charging.ChargingState;
@@ -66,7 +66,7 @@ public class ChargeState extends CommandWithProperties {
 
     private static final byte ACTIVE_STATE_IDENTIFIER = 0x17;
 
-    IntegerProperty estimatedRange = new IntegerProperty(ESTIMATED_RANGE_IDENTIFIER,
+    PropertyInteger estimatedRange = new PropertyInteger(ESTIMATED_RANGE_IDENTIFIER,
             false);
     Property<Double> batteryLevel = new Property<>(Double.class,
             BATTERY_LEVEL_IDENTIFIER);
@@ -80,8 +80,8 @@ public class ChargeState extends CommandWithProperties {
             new Property<>(Float.class, CHARGER_VOLTAGE_DC_IDENTIFIER);
     Property<Double> chargeLimit = new Property<>(Double.class,
             CHARGE_LIMIT_IDENTIFIER);
-    IntegerProperty timeToCompleteCharge =
-            new IntegerProperty(TIME_TO_COMPLETE_CHARGE_IDENTIFIER, false);
+    PropertyInteger timeToCompleteCharge =
+            new PropertyInteger(TIME_TO_COMPLETE_CHARGE_IDENTIFIER, false);
     Property<Float> chargingRate = new Property<>(Float.class,
             CHARGING_RATE_IDENTIFIER);
     Property<ChargePortState> chargePortState = new Property<>(ChargePortState.class,
@@ -364,7 +364,7 @@ public class ChargeState extends CommandWithProperties {
 
     public static final class Builder extends CommandWithProperties.Builder {
 
-        private IntegerProperty estimatedRange;
+        private PropertyInteger estimatedRange;
         private Property<Double> batteryLevel;
         private Property<Float> batteryCurrentAC;
         private Property<Float> batteryCurrentDC;
@@ -372,7 +372,7 @@ public class ChargeState extends CommandWithProperties {
         private Property<Float> chargerVoltageDC;
 
         private Property<Double> chargeLimit;
-        private IntegerProperty timeToCompleteCharge;
+        private PropertyInteger timeToCompleteCharge;
 
         private Property<Float> chargingRate;
         private Property<ChargePortState> chargePortState;
@@ -410,7 +410,7 @@ public class ChargeState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setEstimatedRange(Property<Integer> estimatedRange) {
-            this.estimatedRange = new IntegerProperty(ESTIMATED_RANGE_IDENTIFIER, false, 2,
+            this.estimatedRange = new PropertyInteger(ESTIMATED_RANGE_IDENTIFIER, false, 2,
                     estimatedRange);
             addProperty(this.estimatedRange);
             return this;
@@ -487,7 +487,7 @@ public class ChargeState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setTimeToCompleteCharge(Property<Integer> timeToCompleteCharge) {
-            this.timeToCompleteCharge = new IntegerProperty(TIME_TO_COMPLETE_CHARGE_IDENTIFIER,
+            this.timeToCompleteCharge = new PropertyInteger(TIME_TO_COMPLETE_CHARGE_IDENTIFIER,
                     false, 1, timeToCompleteCharge);
             addProperty(this.timeToCompleteCharge);
             return this;

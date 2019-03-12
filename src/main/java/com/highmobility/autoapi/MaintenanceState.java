@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.maintenance.ConditionBasedService;
 import com.highmobility.autoapi.value.maintenance.TeleserviceAvailability;
 
@@ -48,22 +48,22 @@ public class MaintenanceState extends CommandWithProperties {
     private static final byte IDENTIFIER_BRAKE_FLUID_CHANGE_DATE = 0x0C;
     private static final byte IDENTIFIER_TELESERVICE_AVAILABILITY = 0x05;
 
-    private IntegerProperty kilometersToNextService =
-            new IntegerProperty(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false);
-    private IntegerProperty daysToNextService =
-            new IntegerProperty(IDENTIFIER_DAYS_TO_NEXT_SERVICE, false);
+    private PropertyInteger kilometersToNextService =
+            new PropertyInteger(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false);
+    private PropertyInteger daysToNextService =
+            new PropertyInteger(IDENTIFIER_DAYS_TO_NEXT_SERVICE, false);
 
     // level8
-    private IntegerProperty cbsReportsCount =
-            new IntegerProperty(IDENTIFIER_CBS_REPORTS_COUNT, false);
-    private IntegerProperty monthsToExhaustInspection =
-            new IntegerProperty(IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION, false);
+    private PropertyInteger cbsReportsCount =
+            new PropertyInteger(IDENTIFIER_CBS_REPORTS_COUNT, false);
+    private PropertyInteger monthsToExhaustInspection =
+            new PropertyInteger(IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION, false);
     private Property<TeleserviceAvailability> teleserviceAvailability =
             new Property(TeleserviceAvailability.class, IDENTIFIER_TELESERVICE_AVAILABILITY);
-    private IntegerProperty serviceDistanceThreshold =
-            new IntegerProperty(IDENTIFIER_SERVICE_DISTANCE_THRESHOLD, false);
-    private IntegerProperty serviceTimeThreshold =
-            new IntegerProperty(IDENTIFIER_SERVICE_TIME_THRESHOLD, false);
+    private PropertyInteger serviceDistanceThreshold =
+            new PropertyInteger(IDENTIFIER_SERVICE_DISTANCE_THRESHOLD, false);
+    private PropertyInteger serviceTimeThreshold =
+            new PropertyInteger(IDENTIFIER_SERVICE_TIME_THRESHOLD, false);
 
     private Property<Calendar> automaticTeleserviceCallDate = new Property(Calendar.class,
             IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE);
@@ -222,13 +222,13 @@ public class MaintenanceState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private IntegerProperty kilometersToNextService;
-        private IntegerProperty daysToNextService;
-        private IntegerProperty cbsReportsCount;
-        private IntegerProperty monthsToExhaustInspection;
+        private PropertyInteger kilometersToNextService;
+        private PropertyInteger daysToNextService;
+        private PropertyInteger cbsReportsCount;
+        private PropertyInteger monthsToExhaustInspection;
         private Property<TeleserviceAvailability> teleserviceAvailability;
-        private IntegerProperty serviceDistanceThreshold;
-        private IntegerProperty serviceTimeThreshold;
+        private PropertyInteger serviceDistanceThreshold;
+        private PropertyInteger serviceTimeThreshold;
         private Property<Calendar> automaticTeleserviceCallDate;
         private Property<Calendar> teleserviceBatteryCallDate;
         private Property<Calendar> nextInspectionDate;
@@ -246,7 +246,7 @@ public class MaintenanceState extends CommandWithProperties {
          */
         public Builder setKilometersToNextService(Property<Integer> kilometersToNextService) {
             this.kilometersToNextService =
-                    new IntegerProperty(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false, 3,
+                    new PropertyInteger(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false, 3,
                     kilometersToNextService);
             addProperty(this.kilometersToNextService);
             return this;
@@ -258,7 +258,7 @@ public class MaintenanceState extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setDaysToNextService(Property<Integer> daysToNextService) {
-            this.daysToNextService = new IntegerProperty(IDENTIFIER_DAYS_TO_NEXT_SERVICE, false,
+            this.daysToNextService = new PropertyInteger(IDENTIFIER_DAYS_TO_NEXT_SERVICE, false,
                     2, daysToNextService);
 
             addProperty(this.daysToNextService);
