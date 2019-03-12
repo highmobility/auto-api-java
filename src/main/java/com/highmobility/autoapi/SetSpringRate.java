@@ -21,8 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.SpringRate;
-import com.highmobility.autoapi.property.value.Axle;
+import com.highmobility.autoapi.value.SpringRate;
+import com.highmobility.autoapi.value.Axle;
 
 import java.util.ArrayList;
 

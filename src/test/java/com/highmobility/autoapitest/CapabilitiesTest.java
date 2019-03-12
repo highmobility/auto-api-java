@@ -46,7 +46,7 @@ import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.Type;
 import com.highmobility.autoapi.ValetMode;
 import com.highmobility.autoapi.VehicleLocation;
-import com.highmobility.autoapi.property.Capability;
+import com.highmobility.autoapi.value.Capability;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;

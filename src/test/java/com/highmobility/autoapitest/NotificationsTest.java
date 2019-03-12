@@ -5,9 +5,8 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Notification;
 import com.highmobility.autoapi.NotificationAction;
-import com.highmobility.autoapi.property.ActionItem;
+import com.highmobility.autoapi.value.ActionItem;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 

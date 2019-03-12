@@ -8,12 +8,11 @@ import com.highmobility.autoapi.SetChassisPosition;
 import com.highmobility.autoapi.SetDrivingMode;
 import com.highmobility.autoapi.SetSpringRate;
 import com.highmobility.autoapi.StartStopSportChrono;
-import com.highmobility.autoapi.property.DrivingMode;
+import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.autoapi.property.SpringRate;
-import com.highmobility.autoapi.property.value.Axle;
-import com.highmobility.autoapi.property.value.StartStop;
+import com.highmobility.autoapi.value.SpringRate;
+import com.highmobility.autoapi.value.Axle;
+import com.highmobility.autoapi.value.StartStop;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 

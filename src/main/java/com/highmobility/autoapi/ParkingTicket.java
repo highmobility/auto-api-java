@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ParkingTicketState;
+import com.highmobility.autoapi.value.ParkingTicketState;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.Calendar;

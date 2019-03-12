@@ -20,10 +20,10 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Position;
+import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.value.Location;
-import com.highmobility.autoapi.property.windows.WindowPosition;
+import com.highmobility.autoapi.value.Location;
+import com.highmobility.autoapi.value.windows.WindowPosition;
 
 import java.util.ArrayList;
 

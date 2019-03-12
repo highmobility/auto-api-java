@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Coordinates;
+import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.property.Property;
 
 

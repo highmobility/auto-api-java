@@ -21,12 +21,12 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.WindscreenDamage;
-import com.highmobility.autoapi.property.WindscreenDamageZone;
-import com.highmobility.autoapi.property.WindscreenDamageZoneMatrix;
-import com.highmobility.autoapi.property.WindscreenReplacementState;
-import com.highmobility.autoapi.property.WiperIntensity;
-import com.highmobility.autoapi.property.WiperState;
+import com.highmobility.autoapi.value.windscreen.WindscreenDamage;
+import com.highmobility.autoapi.value.windscreen.WindscreenDamageZone;
+import com.highmobility.autoapi.value.windscreen.WindscreenDamageZoneMatrix;
+import com.highmobility.autoapi.value.windscreen.WindscreenReplacementState;
+import com.highmobility.autoapi.value.windscreen.WiperIntensity;
+import com.highmobility.autoapi.value.windscreen.WiperState;
 
 import java.util.Calendar;
 

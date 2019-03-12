@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.FailureReason;
+import com.highmobility.autoapi.value.FailureReason;
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;

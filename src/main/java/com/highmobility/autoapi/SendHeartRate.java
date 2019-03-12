@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.property.IntegerProperty;
 
 /**
  * Heart rate can be sent to the car from a health accessory of a smart watch. This is only possible
@@ -31,7 +31,7 @@ public class SendHeartRate extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HEART_RATE, 0x12);
     private static final byte IDENTIFIER = 0x01;
 
-    PropertyInteger heartRate = new PropertyInteger(IDENTIFIER, false);
+    IntegerProperty heartRate = new IntegerProperty(IDENTIFIER, false);
 
     /**
      * @return The heart rate.

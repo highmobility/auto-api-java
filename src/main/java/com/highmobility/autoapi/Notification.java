@@ -20,9 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ActionItem;
+import com.highmobility.autoapi.value.ActionItem;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.property.IntegerProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class Notification extends CommandWithProperties {
 
     Property<String> text = new Property(String.class, IDENTIFIER_TEXT);
     Property<ActionItem>[] actions;
-    PropertyInteger receivedAction = new PropertyInteger(IDENTIFIER_RECEIVED_ACTION, false);
+    IntegerProperty receivedAction = new IntegerProperty(IDENTIFIER_RECEIVED_ACTION, false);
 
     /**
      * @return Notification text.
@@ -141,7 +141,7 @@ public class Notification extends CommandWithProperties {
     public static final class Builder extends CommandWithProperties.Builder {
         private List<Property<ActionItem>> actions = new ArrayList<>();
         Property<String> text;
-        PropertyInteger receivedAction;
+        IntegerProperty receivedAction;
 
         public Builder() {
             super(TYPE);
@@ -187,7 +187,7 @@ public class Notification extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setReceivedAction(Property<Integer> receivedAction) {
-            this.receivedAction = new PropertyInteger(IDENTIFIER_RECEIVED_ACTION, false, 1,
+            this.receivedAction = new IntegerProperty(IDENTIFIER_RECEIVED_ACTION, false, 1,
                     receivedAction);
             addProperty(this.receivedAction);
             return this;

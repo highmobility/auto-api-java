@@ -7,7 +7,7 @@ import com.highmobility.autoapi.EnableDisableWifi;
 import com.highmobility.autoapi.ForgetNetwork;
 import com.highmobility.autoapi.GetWifiState;
 import com.highmobility.autoapi.WifiState;
-import com.highmobility.autoapi.property.NetworkSecurity;
+import com.highmobility.autoapi.value.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;

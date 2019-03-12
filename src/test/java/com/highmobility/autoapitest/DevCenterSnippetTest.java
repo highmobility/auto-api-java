@@ -12,12 +12,12 @@ import com.highmobility.autoapi.LockUnlockDoors;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleLocation;
 import com.highmobility.autoapi.VehicleStatus;
-import com.highmobility.autoapi.property.FailureReason;
-import com.highmobility.autoapi.property.PowerTrain;
+import com.highmobility.autoapi.value.FailureReason;
+import com.highmobility.autoapi.value.PowerTrain;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.doors.DoorLockState;
-import com.highmobility.autoapi.property.value.Location;
-import com.highmobility.autoapi.property.value.Lock;
+import com.highmobility.autoapi.value.doors.DoorLockState;
+import com.highmobility.autoapi.value.Location;
+import com.highmobility.autoapi.value.Lock;
 import com.highmobility.value.Bytes;
 
 public class DevCenterSnippetTest {

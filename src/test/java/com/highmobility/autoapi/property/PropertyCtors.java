@@ -1,10 +1,8 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyComponentFailure;
-import com.highmobility.autoapi.property.charging.ChargeMode;
-import com.highmobility.autoapi.property.diagnostics.TirePressure;
+import com.highmobility.autoapi.value.charging.ChargeMode;
+import com.highmobility.autoapi.value.diagnostics.TirePressure;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
@@ -23,9 +21,8 @@ public class PropertyCtors {
             PropertyComponentFailure.Reason.EXECUTION_TIMEOUT, "ba");
 
     @Test public void failure() {
-        assertTrue(new Property<ChargeMode>(null, null, failure).getFailure() != null);
+        assertTrue(new Property<ChargeMode>(null, null, failure).getFailureComponent() != null);
         // TODO: 2019-03-11 verify bytes are correct
-
     }
 
     @Test public void enumValue() throws CommandParseException {

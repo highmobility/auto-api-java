@@ -20,11 +20,11 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.DrivingMode;
+import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.autoapi.property.usage.DrivingModeActivationPeriod;
-import com.highmobility.autoapi.property.usage.DrivingModeEnergyConsumption;
+import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.value.usage.DrivingModeActivationPeriod;
+import com.highmobility.autoapi.value.usage.DrivingModeEnergyConsumption;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,10 +53,10 @@ public class Usage extends CommandWithProperties {
     private static final byte IDENTIFIER_AVERAGE_FUEL_CONSUMPTION = ((byte) 0x0E);
     private static final byte IDENTIFIER_CURRENT_FUEL_CONSUMPTION = ((byte) 0x0F);
 
-    private PropertyInteger averageWeeklyDistance =
-            new PropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE, false);
-    private PropertyInteger averageWeeklyDistanceLongTerm =
-            new PropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_TERM, false);
+    private IntegerProperty averageWeeklyDistance =
+            new IntegerProperty(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE, false);
+    private IntegerProperty averageWeeklyDistanceLongTerm =
+            new IntegerProperty(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_TERM, false);
     private Property<Double> accelerationEvaluation =
             new Property<>(Double.class, IDENTIFIER_ACCELERATION_EVALUATION);
     private Property<Double> drivingStyleEvaluation =
@@ -305,8 +305,8 @@ public class Usage extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-        private PropertyInteger averageWeeklyDistance;
-        private PropertyInteger averageWeeklyDistanceLongTerm;
+        private IntegerProperty averageWeeklyDistance;
+        private IntegerProperty averageWeeklyDistanceLongTerm;
         private Property<Double> accelerationEvaluation;
         private Property<Double> drivingStyleEvaluation;
         private List<DrivingModeActivationPeriod> drivingModeActivationPeriods =

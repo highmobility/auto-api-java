@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.homecharger.PriceTariff;
+import com.highmobility.autoapi.value.homecharger.PriceTariff;
 
 import java.util.ArrayList;
 import java.util.List;

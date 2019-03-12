@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.charging.ChargePortState;
+import com.highmobility.autoapi.value.charging.ChargePortState;
 
 /**
  * Open or close the charge port of the car. This is possible even if the car is locked.

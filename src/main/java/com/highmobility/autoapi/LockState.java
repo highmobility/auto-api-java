@@ -21,16 +21,16 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.doors.DoorLockState;
-import com.highmobility.autoapi.property.doors.DoorPosition;
-import com.highmobility.autoapi.property.value.Location;
+import com.highmobility.autoapi.value.doors.DoorLockState;
+import com.highmobility.autoapi.value.doors.DoorPosition;
+import com.highmobility.autoapi.value.Location;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
-import static com.highmobility.autoapi.property.value.Lock.UNLOCKED;
+import static com.highmobility.autoapi.value.Lock.UNLOCKED;
 
 /**
  * Command sent from the car every time the lock state changes or when a Get Lock State is received.

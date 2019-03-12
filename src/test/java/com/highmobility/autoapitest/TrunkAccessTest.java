@@ -5,8 +5,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlTrunk;
 import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.TrunkState;
-import com.highmobility.autoapi.property.Position;
-import com.highmobility.autoapi.property.value.Lock;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.Lock;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;

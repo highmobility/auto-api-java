@@ -21,8 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.WindscreenDamage;
-import com.highmobility.autoapi.property.WindscreenDamageZone;
+import com.highmobility.autoapi.value.windscreen.WindscreenDamage;
+import com.highmobility.autoapi.value.windscreen.WindscreenDamageZone;
 
 import java.util.ArrayList;
 

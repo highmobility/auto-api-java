@@ -3,7 +3,7 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DashboardLights;
 import com.highmobility.autoapi.GetDashboardLights;
-import com.highmobility.autoapi.property.DashboardLight;
+import com.highmobility.autoapi.value.DashboardLight;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;

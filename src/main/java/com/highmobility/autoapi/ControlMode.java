@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.PropertyValueSingleByte;
 
 /**
@@ -35,7 +35,7 @@ public class ControlMode extends CommandWithProperties {
     private static final byte IDENTIFIER_ANGLE = 0x02;
 
     Property<Value> mode = new Property<>(Value.class, IDENTIFIER_MODE);
-    PropertyInteger angle = new PropertyInteger(IDENTIFIER_ANGLE, false);
+    IntegerProperty angle = new IntegerProperty(IDENTIFIER_ANGLE, false);
 
     /**
      * @return the angle

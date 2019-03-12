@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetKeyFobPosition;
 import com.highmobility.autoapi.KeyFobPosition;
-import com.highmobility.autoapi.property.KeyFobPositionValue;
+import com.highmobility.autoapi.value.KeyFobPositionValue;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.value.Lock;
+import com.highmobility.autoapi.value.Lock;
 
 /**
  * Command to lock or unlock all doors of the car. The car will respond with the updated lock state

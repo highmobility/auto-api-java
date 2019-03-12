@@ -20,10 +20,10 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ConvertibleRoofState;
+import com.highmobility.autoapi.value.ConvertibleRoofState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.Position;
-import com.highmobility.autoapi.property.SunroofTiltState;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.SunroofTiltState;
 
 /**
  * Command sent from the car every time the rooftop state changes or when a Get Rooftop State is

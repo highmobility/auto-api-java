@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Capability;
+import com.highmobility.autoapi.value.Capability;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;

@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.DrivingMode;
+import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.property.Property;
 
 /**

@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.DashboardLight;
+import com.highmobility.autoapi.value.DashboardLight;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;

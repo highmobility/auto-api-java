@@ -6,8 +6,8 @@ import com.highmobility.autoapi.ControlGasFlap;
 import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.GetGasFlapState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.Position;
-import com.highmobility.autoapi.property.value.Lock;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.Lock;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 

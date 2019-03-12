@@ -10,10 +10,10 @@ import com.highmobility.autoapi.StartStopDefogging;
 import com.highmobility.autoapi.StartStopDefrosting;
 import com.highmobility.autoapi.StartStopHvac;
 import com.highmobility.autoapi.StartStopIonising;
-import com.highmobility.autoapi.property.HvacStartingTime;
+import com.highmobility.autoapi.value.HvacStartingTime;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.value.Time;
-import com.highmobility.autoapi.property.value.Weekday;
+import com.highmobility.autoapi.value.Time;
+import com.highmobility.autoapi.value.Weekday;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.value.StartStop;
+import com.highmobility.autoapi.value.StartStop;
 
 /**
  * Start/stop the sports chronometer. The result is sent through the Chassis Settings message.
