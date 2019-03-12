@@ -25,22 +25,28 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
-import java.time.LocalDate;
-
 public class ConditionBasedService extends PropertyValueObject {
     public static final byte IDENTIFIER = 0x0B;
 
-    LocalDate date; // TODO: 2019-03-07 replace localdate with own
+    Integer year;
+    Integer month;
     Integer id;
     DueStatus dueStatus;
     String text;
     String description;
 
     /**
-     * @return The date.
+     * @return The year.
      */
-    public LocalDate getDate() {
-        return date;
+    public Integer getYear() {
+        return year;
+    }
+
+    /**
+     * @return The month.
+     */
+    public Integer getMonth() {
+        return month;
     }
 
     /**
@@ -71,9 +77,10 @@ public class ConditionBasedService extends PropertyValueObject {
         return description;
     }
 
-    public ConditionBasedService(LocalDate date, int id, DueStatus dueStatus, String text) {
+    public ConditionBasedService(Integer year, Integer month, int id, DueStatus dueStatus,
+                                 String text) {
         super(7 + text.length());
-        update(date, id, dueStatus, text);
+        update(year, month, id, dueStatus, text);
     }
 
     public ConditionBasedService() {
@@ -84,9 +91,9 @@ public class ConditionBasedService extends PropertyValueObject {
         super.update(value);
         if (bytes.length < 4) throw new CommandParseException();
 
-        int year = get(0) + 2000;
-        int month = get(1);
-        this.date = LocalDate.of(year, month, 1);
+        this.year = Property.getUnsignedInt(get(0)) + 2000;
+        this.month = Property.getUnsignedInt(get(1));
+
         this.id = Property.getUnsignedInt(bytes, 2, 2);
         this.dueStatus = DueStatus.fromByte(get(4));
 
@@ -98,19 +105,19 @@ public class ConditionBasedService extends PropertyValueObject {
         textLength = Property.getUnsignedInt(bytes, textPosition, 2);
         textPosition += 2;
         this.description = Property.getString(bytes, textPosition, textLength);
-
     }
 
-    public void update(LocalDate date, int id, DueStatus dueStatus, String text) {
-        this.date = date;
+    public void update(Integer year, Integer month, int id, DueStatus dueStatus, String text) {
+        this.year = year;
+        this.month = month;
         this.id = id;
         this.dueStatus = dueStatus;
         this.text = text;
 
         bytes = new byte[7 + text.length()];
 
-        set(0, (byte) (date.getYear() - 2000));
-        set(1, (byte) date.getMonth().getValue());
+        set(0, Property.intToBytes(year - 2000, 1));
+        set(1, Property.intToBytes(month, 1));
         set(2, Property.intToBytes(id, 2));
         set(4, dueStatus.getByte());
         set(5, Property.intToBytes(text.length(), 2));
@@ -118,7 +125,7 @@ public class ConditionBasedService extends PropertyValueObject {
     }
 
     public void update(ConditionBasedService value) {
-        update(value.date, value.id, value.dueStatus, value.text);
+        update(value.year, value.month, value.id, value.dueStatus, value.text);
     }
 
     public enum DueStatus {

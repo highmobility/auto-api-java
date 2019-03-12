@@ -59,30 +59,32 @@ public class MaintenanceTest {
         assertTrue(TestUtils.dateIsSame(state.getTeleserviceBatteryCallDate().getValue(),
                 "2018-01-10T18:30:00"));
 
-        assertTrue(TestUtils.dateIsSame(state.getNextInspectionDate().getValue(), "2018-01-10T16:32:05"));
+        assertTrue(TestUtils.dateIsSame(state.getNextInspectionDate().getValue(), "2018-01-10T16" +
+                ":32:05"));
 
         assertTrue(state.getConditionBasedServices().length == 2);
         int count = 0;
-        for (Property<ConditionBasedService> conditionBasedServiceProp : state.getConditionBasedServices()) {
+        for (Property<ConditionBasedService> conditionBasedServiceProp :
+                state.getConditionBasedServices()) {
             ConditionBasedService conditionBasedService = conditionBasedServiceProp.getValue();
 
-            if ((conditionBasedService.getDate().getYear() == 2019 &&
-                    conditionBasedService.getDate().getMonth().getValue() == 5 &&
+            if ((conditionBasedService.getYear() == 2019 &&
+                    conditionBasedService.getMonth() == 5 &&
                     conditionBasedService.getIdentifier() == 3 &&
                     conditionBasedService.getDueStatus() == ConditionBasedService.DueStatus.OK &&
                     conditionBasedService.getText().equals("Brake fluid") &&
                     conditionBasedService.getDescription().equals("Next change at specified date " +
                             "at the latest."))
                     ||
-                    (conditionBasedService.getDate().getYear() == 2019 &&
-                            conditionBasedService.getDate().getMonth().getValue() == 3 &&
+                    (conditionBasedService.getYear() == 2019 &&
+                            conditionBasedService.getMonth() == 3 &&
                             conditionBasedService.getIdentifier() == 32 &&
                             conditionBasedService.getDueStatus() == ConditionBasedService
                                     .DueStatus.PENDING &&
                             conditionBasedService.getText().equals("Vehicle inspection") &&
                             conditionBasedService.getDescription().equals("Next mandatory vehicle" +
                                     " inspection on specified date."))
-                    ) {
+            ) {
                 count++;
             }
         }
@@ -121,9 +123,9 @@ public class MaintenanceTest {
         builder.setTeleserviceBatteryCallDate(TestUtils.getValue("2018-11-23T10:33:50+0100"));
         builder.setNextInspectionDate(TestUtils.getValue("2018-11-23T10:33:50+0100"));
 
-        ConditionBasedService service1 = new ConditionBasedService(LocalDate.of(2019, 5, 1), 3,
+        ConditionBasedService service1 = new ConditionBasedService(2019, 5, 3,
                 ConditionBasedService.DueStatus.OK, "Brake fluid");
-        ConditionBasedService service2 = new ConditionBasedService(LocalDate.of(2019, 3, 1), 32,
+        ConditionBasedService service2 = new ConditionBasedService(2019, 3, 32,
                 ConditionBasedService.DueStatus.PENDING, "Vehicle inspection");
 
         builder.addConditionBasedService(service1);
