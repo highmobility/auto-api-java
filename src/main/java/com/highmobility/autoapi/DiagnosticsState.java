@@ -536,10 +536,9 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param mileage The mileage.
          * @return The builder.
          */
-        public Builder setMileage(PropertyInteger mileage) {
-            this.mileage = mileage;
-            mileage.update(IDENTIFIER_MILEAGE, false, 3);
-            addProperty(mileage);
+        public Builder setMileage(Property<Integer> mileage) {
+            this.mileage = new PropertyInteger(IDENTIFIER_MILEAGE, false, 3, mileage);
+            addProperty(this.mileage);
             return this;
         }
 
@@ -547,10 +546,10 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param oilTemperature The oil temperature in Celsius.
          * @return The builder.
          */
-        public Builder setOilTemperature(PropertyInteger oilTemperature) {
-            this.oilTemperature = oilTemperature;
-            oilTemperature.update(IDENTIFIER_OIL_TEMPERATURE, false, 2);
-            addProperty(oilTemperature);
+        public Builder setOilTemperature(Property<Integer> oilTemperature) {
+            this.oilTemperature = new PropertyInteger(IDENTIFIER_OIL_TEMPERATURE, false, 2,
+                    oilTemperature);
+            addProperty(this.oilTemperature);
             return this;
         }
 
@@ -558,10 +557,9 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param speed The speed in km/h.
          * @return The builder.
          */
-        public Builder setSpeed(PropertyInteger speed) {
-            this.speed = speed;
-            speed.update(IDENTIFIER_SPEED, false, 2);
-            addProperty(speed);
+        public Builder setSpeed(Property<Integer> speed) {
+            this.speed = new PropertyInteger(IDENTIFIER_SPEED, false, 2, speed);
+            addProperty(this.speed);
             return this;
         }
 
@@ -569,10 +567,9 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param rpm The RPM of the engine.
          * @return The builder.
          */
-        public Builder setRpm(PropertyInteger rpm) {
-            this.rpm = rpm;
-            rpm.update(IDENTIFIER_RPM, false, 2);
-            addProperty(rpm);
+        public Builder setRpm(Property<Integer> rpm) {
+            this.rpm = new PropertyInteger(IDENTIFIER_RPM, false, 2, rpm);
+            addProperty(this.rpm);
             return this;
         }
 
@@ -591,10 +588,9 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param range The estimated range.
          * @return The builder.
          */
-        public Builder setRange(PropertyInteger range) {
-            this.range = range;
-            range.update(IDENTIFIER_RANGE, false, 2);
-            addProperty(range);
+        public Builder setRange(Property<Integer> range) {
+            this.range = new PropertyInteger(IDENTIFIER_RANGE, false, 2, range);
+            addProperty(this.range);
             return this;
         }
 
@@ -760,10 +756,10 @@ public class DiagnosticsState extends CommandWithProperties {
          *                        be negative.
          * @return The builder.
          */
-        public Builder setWheelBasedSpeed(PropertyInteger wheelBasedSpeed) {
-            this.wheelBasedSpeed = wheelBasedSpeed;
-            wheelBasedSpeed.update(IDENTIFIER_WHEEL_BASED_SPEED, true, 2);
-            addProperty(wheelBasedSpeed);
+        public Builder setWheelBasedSpeed(Property<Integer> wheelBasedSpeed) {
+            this.wheelBasedSpeed = new PropertyInteger(IDENTIFIER_WHEEL_BASED_SPEED, true, 2,
+                    wheelBasedSpeed);
+            addProperty(this.wheelBasedSpeed);
             return this;
         }
 
@@ -911,10 +907,10 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param mileageMeters The mileage meters.
          * @return The builder.
          */
-        public Builder setMileageMeters(PropertyInteger mileageMeters) {
-            this.mileageMeters = mileageMeters;
-            mileageMeters.update(IDENTIFIER_MILEAGE_METERS, false, 4);
-            addProperty(mileageMeters);
+        public Builder setMileageMeters(Property<Integer> mileageMeters) {
+            this.mileageMeters = new PropertyInteger(IDENTIFIER_MILEAGE_METERS, false, 4,
+                    mileageMeters);
+            addProperty(this.mileageMeters);
             return this;
         }
     }

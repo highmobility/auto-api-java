@@ -20,6 +20,7 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 
 /**
@@ -78,9 +79,9 @@ public class NotificationAction extends CommandWithProperties {
          * @param actionIdentifier The identifier of selected action item.
          * @return The builder.
          */
-        public Builder setActionIdentifier(PropertyInteger actionIdentifier) {
-            this.actionIdentifier = actionIdentifier;
-            addProperty(this.actionIdentifier.update(IDENTIFIER, false, 1));
+        public Builder setActionIdentifier(Property<Integer> actionIdentifier) {
+            this.actionIdentifier = new PropertyInteger(IDENTIFIER, false, 1, actionIdentifier);
+            addProperty(this.actionIdentifier);
             return this;
         }
 

@@ -5,7 +5,6 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetTachographState;
 import com.highmobility.autoapi.TachographState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.tachograph.DriverCard;
 import com.highmobility.autoapi.property.tachograph.DriverTimeState;
 import com.highmobility.autoapi.property.tachograph.DriverWorkingState;
@@ -77,7 +76,7 @@ public class TachographTest {
         builder.setVehicleMotionDetected(new Property(true));
         builder.setVehicleOverspeed(new Property(false));
         builder.setVehicleDirection(new Property(VehicleDirection.FORWARD));
-        builder.setVehicleSpeed(new PropertyInteger(80));
+        builder.setVehicleSpeed(new Property(80));
 
         TachographState state = builder.build();
         assertTrue(state.equals(bytes));

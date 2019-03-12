@@ -268,10 +268,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setCurrentChassisPosition(PropertyInteger chassisPosition) {
-            this.currentChassisPosition = chassisPosition;
-            chassisPosition.update(IDENTIFIER_CURRENT_CHASSIS_POSITION, true, 1);
-            addProperty(chassisPosition);
+        public Builder setCurrentChassisPosition(Property<Integer> chassisPosition) {
+            this.currentChassisPosition = new PropertyInteger(IDENTIFIER_CURRENT_CHASSIS_POSITION
+                    , true, 1, chassisPosition);
+            addProperty(this.currentChassisPosition);
             return this;
         }
 
@@ -279,10 +279,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setMinimumChassisPosition(PropertyInteger chassisPosition) {
-            this.minimumChassisPosition = chassisPosition;
-            chassisPosition.update(IDENTIFIER_MINIMUM_CHASSIS_POSITION, true, 1);
-            addProperty(chassisPosition);
+        public Builder setMinimumChassisPosition(Property<Integer> chassisPosition) {
+            this.minimumChassisPosition = new PropertyInteger(IDENTIFIER_MINIMUM_CHASSIS_POSITION
+                    , true, 1, chassisPosition);
+            addProperty(this.minimumChassisPosition);
             return this;
         }
 
@@ -290,10 +290,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setMaximumChassisPosition(PropertyInteger chassisPosition) {
-            this.maximumChassisPosition = chassisPosition;
-            chassisPosition.update(IDENTIFIER_MAXIMUM_CHASSIS_POSITION, true, 1);
-            addProperty(chassisPosition);
+        public Builder setMaximumChassisPosition(Property<Integer> chassisPosition) {
+            this.maximumChassisPosition = new PropertyInteger(IDENTIFIER_MAXIMUM_CHASSIS_POSITION
+                    , true, 1, chassisPosition);
+            addProperty(this.maximumChassisPosition);
             return this;
         }
 

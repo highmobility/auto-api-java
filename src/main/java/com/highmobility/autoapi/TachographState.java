@@ -328,10 +328,10 @@ public class TachographState extends CommandWithProperties {
          * @param vehicleSpeed The tachograph vehicle speed in km/h.
          * @return The builder.
          */
-        public Builder setVehicleSpeed(PropertyInteger vehicleSpeed) {
-            this.vehicleSpeed = vehicleSpeed;
-            vehicleSpeed.update(IDENTIFIER_VEHICLE_SPEED, false, 2);
-            addProperty(vehicleSpeed);
+        public Builder setVehicleSpeed(Property<Integer> vehicleSpeed) {
+            this.vehicleSpeed = new PropertyInteger(IDENTIFIER_VEHICLE_SPEED, false, 2,
+                    vehicleSpeed);
+            addProperty(this.vehicleSpeed);
             return this;
         }
 

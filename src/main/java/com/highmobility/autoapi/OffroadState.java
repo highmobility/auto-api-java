@@ -93,10 +93,10 @@ public class OffroadState extends CommandWithProperties {
          *                     for decline.
          * @return The builder.
          */
-        public Builder setRouteIncline(PropertyInteger routeIncline) {
-            this.routeIncline = routeIncline;
-            routeIncline.update(IDENTIFIER_ROUTE_INCLINE, false, 2);
-            addProperty(routeIncline);
+        public Builder setRouteIncline(Property<Integer> routeIncline) {
+            this.routeIncline = new PropertyInteger(IDENTIFIER_ROUTE_INCLINE, false, 2,
+                    routeIncline);
+            addProperty(this.routeIncline);
             return this;
         }
 

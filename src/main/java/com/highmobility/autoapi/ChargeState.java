@@ -409,10 +409,10 @@ public class ChargeState extends CommandWithProperties {
          * @param estimatedRange The estimated range in km.
          * @return The builder.
          */
-        public Builder setEstimatedRange(PropertyInteger estimatedRange) {
-            this.estimatedRange = estimatedRange;
-            estimatedRange.update(ESTIMATED_RANGE_IDENTIFIER, false, 2);
-            addProperty(estimatedRange);
+        public Builder setEstimatedRange(Property<Integer> estimatedRange) {
+            this.estimatedRange = new PropertyInteger(ESTIMATED_RANGE_IDENTIFIER, false, 2,
+                    estimatedRange);
+            addProperty(this.estimatedRange);
             return this;
         }
 
@@ -486,10 +486,10 @@ public class ChargeState extends CommandWithProperties {
          * @param timeToCompleteCharge The time to complete the charge in minutes.
          * @return The builder.
          */
-        public Builder setTimeToCompleteCharge(PropertyInteger timeToCompleteCharge) {
-            this.timeToCompleteCharge = timeToCompleteCharge;
-            timeToCompleteCharge.update(TIME_TO_COMPLETE_CHARGE_IDENTIFIER, false, 1);
-            addProperty(timeToCompleteCharge);
+        public Builder setTimeToCompleteCharge(Property<Integer> timeToCompleteCharge) {
+            this.timeToCompleteCharge = new PropertyInteger(TIME_TO_COMPLETE_CHARGE_IDENTIFIER,
+                    false, 1, timeToCompleteCharge);
+            addProperty(this.timeToCompleteCharge);
             return this;
         }
 

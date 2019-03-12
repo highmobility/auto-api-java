@@ -42,10 +42,13 @@ public class PropertyInteger extends Property<Integer> {
         update(p);
     }
 
-    public PropertyInteger(byte identifier, boolean signed, int length, Integer value) {
+    // used in builders
+    public PropertyInteger(byte identifier, boolean signed, int length, Property<Integer> value) {
         this(identifier, signed);
-        this.bytes = getBytes(identifier, length, value).getByteArray();
+        this.bytes = getBytes(identifier, length, value.value.value).getByteArray();
         findComponents();
+        // TODO: 2019-03-12 copy the components from Property<Integer>
+        this.value.value = value.value.value;
     }
 
     public PropertyInteger(byte identifier, boolean signed) {

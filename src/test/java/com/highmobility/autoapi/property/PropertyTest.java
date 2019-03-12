@@ -26,7 +26,7 @@ public class PropertyTest {
     }
 
     @Test public void propertyLength() {
-        PropertyInteger property = new PropertyInteger((byte) 0x01, false, 2, 2);
+        PropertyInteger property = new PropertyInteger((byte) 0x01, false, 2, new Property(2));
         assertTrue(property.equals("0100050100020002"));
         String longString =
                 "longstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstring" +

@@ -435,10 +435,10 @@ public class RaceState extends CommandWithProperties {
          *                      positive number to the left and negative number to the right.
          * @return The builder.
          */
-        public Builder setSteeringAngle(PropertyInteger steeringAngle) {
-            this.steeringAngle = steeringAngle;
-            steeringAngle.update(IDENTIFIER_STEERING_ANGLE, false, 1);
-            addProperty(steeringAngle);
+        public Builder setSteeringAngle(Property<Integer> steeringAngle) {
+            this.steeringAngle = new PropertyInteger(IDENTIFIER_STEERING_ANGLE, false, 1,
+                    steeringAngle);
+            addProperty(this.steeringAngle);
             return this;
         }
 
@@ -469,11 +469,10 @@ public class RaceState extends CommandWithProperties {
          * @param rearSuspensionSteering The rear suspension steering in degrees.
          * @return The builder
          */
-        public Builder setRearSuspensionSteering(PropertyInteger rearSuspensionSteering) {
-            this.rearSuspensionSteering = rearSuspensionSteering;
-            rearSuspensionSteering.update(IDENTIFIER_REAR_SUSPENSION_STEERING,
-                    false, 1);
-            addProperty(rearSuspensionSteering);
+        public Builder setRearSuspensionSteering(Property<Integer> rearSuspensionSteering) {
+            this.rearSuspensionSteering = new PropertyInteger(IDENTIFIER_REAR_SUSPENSION_STEERING
+                    , false, 1, rearSuspensionSteering);
+            addProperty(this.rearSuspensionSteering);
             return this;
         }
 
@@ -526,10 +525,9 @@ public class RaceState extends CommandWithProperties {
          * @param selectedGear The selected gear.
          * @return The builder.
          */
-        public Builder setSelectedGear(PropertyInteger selectedGear) {
-            this.selectedGear = selectedGear;
-            selectedGear.update(IDENTIFIER_SELECTED_GEAR, false, 1);
-            addProperty(selectedGear);
+        public Builder setSelectedGear(Property<Integer> selectedGear) {
+            this.selectedGear = new PropertyInteger(IDENTIFIER_SELECTED_GEAR, false, 1, selectedGear);
+            addProperty(this.selectedGear);
             return this;
         }
 

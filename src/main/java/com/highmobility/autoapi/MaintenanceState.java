@@ -244,10 +244,11 @@ public class MaintenanceState extends CommandWithProperties {
          * @param kilometersToNextService The amount of kilometers until next servicing of the car.
          * @return The builder.
          */
-        public Builder setKilometersToNextService(PropertyInteger kilometersToNextService) {
-            this.kilometersToNextService = kilometersToNextService;
-            kilometersToNextService.update(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false, 3);
-            addProperty(kilometersToNextService);
+        public Builder setKilometersToNextService(Property<Integer> kilometersToNextService) {
+            this.kilometersToNextService =
+                    new PropertyInteger(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false, 3,
+                    kilometersToNextService);
+            addProperty(this.kilometersToNextService);
             return this;
         }
 
@@ -256,10 +257,11 @@ public class MaintenanceState extends CommandWithProperties {
          *                          negative is overdue.
          * @return The builder.
          */
-        public Builder setDaysToNextService(PropertyInteger daysToNextService) {
-            this.daysToNextService = daysToNextService;
-            daysToNextService.update(IDENTIFIER_DAYS_TO_NEXT_SERVICE, false, 2);
-            addProperty(daysToNextService);
+        public Builder setDaysToNextService(Property<Integer> daysToNextService) {
+            this.daysToNextService = new PropertyInteger(IDENTIFIER_DAYS_TO_NEXT_SERVICE, false,
+                    2, daysToNextService);
+
+            addProperty(this.daysToNextService);
             return this;
         }
 /*

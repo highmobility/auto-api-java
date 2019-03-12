@@ -186,10 +186,10 @@ public class Notification extends CommandWithProperties {
          * @param receivedAction The received action.
          * @return The builder.
          */
-        public Builder setReceivedAction(PropertyInteger receivedAction) {
-            this.receivedAction = receivedAction;
-            receivedAction.update(IDENTIFIER_RECEIVED_ACTION, false, 1);
-            addProperty(receivedAction);
+        public Builder setReceivedAction(Property<Integer> receivedAction) {
+            this.receivedAction = new PropertyInteger(IDENTIFIER_RECEIVED_ACTION, false, 1,
+                    receivedAction);
+            addProperty(this.receivedAction);
             return this;
         }
 

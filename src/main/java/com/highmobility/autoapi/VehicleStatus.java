@@ -83,7 +83,7 @@ public class VehicleStatus extends CommandWithProperties {
     Property<Float> engineVolume = new Property(Float.class, IDENTIFIER_ENGINE_VOLUME);
     Property<Integer> maxTorque = new PropertyInteger(IDENTIFIER_MAX_TORQUE, false);
     Property<Gearbox> gearBox = new Property(Gearbox.class, IDENTIFIER_GEARBOX);
-    
+
     // l8
     Property<DisplayUnit> displayUnit = new Property(DisplayUnit.class, IDENTIFIER_DISPLAY_UNIT);
     Property<DriverSeatLocation> driverSeatLocation = new Property(DriverSeatLocation.class,
@@ -423,10 +423,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param modelYear The model year.
          * @return The builder.
          */
-        public Builder setModelYear(PropertyInteger modelYear) {
-            this.modelYear = modelYear;
-            modelYear.update(IDENTIFIER_MODEL_YEAR, false, 2);
-            addProperty(modelYear);
+        public Builder setModelYear(Property<Integer> modelYear) {
+            this.modelYear = new PropertyInteger(IDENTIFIER_MODEL_YEAR, false, 2, modelYear);
+            addProperty(this.modelYear);
             return this;
         }
 
@@ -444,10 +443,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param power The power in kw.
          * @return The builder.
          */
-        public Builder setPower(PropertyInteger power) {
-            this.power = power;
-            power.update(IDENTIFIER_POWER, false, 2);
-            addProperty(power);
+        public Builder setPower(Property<Integer> power) {
+            this.power = new PropertyInteger(IDENTIFIER_POWER, false, 2, power);
+            addProperty(this.power);
             return this;
         }
 
@@ -455,10 +453,10 @@ public class VehicleStatus extends CommandWithProperties {
          * @param numberOfDoors The number of doors.
          * @return The builder.
          */
-        public Builder setNumberOfDoors(PropertyInteger numberOfDoors) {
-            this.numberOfDoors = numberOfDoors;
-            numberOfDoors.update(IDENTIFIER_NUMBER_OF_DOORS, false, 1);
-            addProperty(numberOfDoors);
+        public Builder setNumberOfDoors(Property<Integer> numberOfDoors) {
+            this.numberOfDoors = new PropertyInteger(IDENTIFIER_NUMBER_OF_DOORS, false, 1,
+                    numberOfDoors);
+            addProperty(this.numberOfDoors);
             return this;
         }
 
@@ -466,10 +464,10 @@ public class VehicleStatus extends CommandWithProperties {
          * @param numberOfSeats The number of seats.
          * @return The builder.
          */
-        public Builder setNumberOfSeats(PropertyInteger numberOfSeats) {
-            this.numberOfSeats = numberOfSeats;
-            numberOfSeats.update(IDENTIFIER_NUMBER_OF_SEATS, false, 1);
-            addProperty(numberOfSeats);
+        public Builder setNumberOfSeats(Property<Integer> numberOfSeats) {
+            this.numberOfSeats = new PropertyInteger(IDENTIFIER_NUMBER_OF_SEATS, false, 1,
+                    numberOfSeats);
+            addProperty(this.numberOfSeats);
             return this;
         }
 
@@ -515,10 +513,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param maxTorque The maximum engine torque in Nm.
          * @return The builder.
          */
-        public Builder setMaxTorque(PropertyInteger maxTorque) {
-            this.maxTorque = maxTorque;
-            maxTorque.update(IDENTIFIER_MAX_TORQUE, false, 2);
-            addProperty(maxTorque);
+        public Builder setMaxTorque(Property<Integer> maxTorque) {
+            this.maxTorque = new PropertyInteger(IDENTIFIER_MAX_TORQUE, false, 2, maxTorque);
+            addProperty(this.maxTorque);
             return this;
         }
 
