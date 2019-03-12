@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.charging.ChargingTimer;
+import com.highmobility.autoapi.value.charging.ChargingTimer;
 
 import java.util.ArrayList;
 import java.util.List;

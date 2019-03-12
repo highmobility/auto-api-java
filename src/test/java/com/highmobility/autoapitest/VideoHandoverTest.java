@@ -2,7 +2,7 @@ package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.VideoHandover;
-import com.highmobility.autoapi.property.ScreenLocation;
+import com.highmobility.autoapi.value.ScreenLocation;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;

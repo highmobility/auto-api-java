@@ -3,10 +3,9 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.ClimateState;
 import com.highmobility.autoapi.CommandParseException;
 
+import com.highmobility.autoapi.value.Capability;
 import com.highmobility.autoapitest.TestUtils;
 import com.highmobility.value.Bytes;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 
@@ -26,7 +25,7 @@ public class PropertyTest {
     }
 
     @Test public void propertyLength() {
-        PropertyInteger property = new PropertyInteger((byte) 0x01, false, 2, new Property(2));
+        IntegerProperty property = new IntegerProperty((byte) 0x01, false, 2, new Property(2));
         assertTrue(property.equals("0100050100020002"));
         String longString =
                 "longstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstring" +
@@ -84,7 +83,7 @@ public class PropertyTest {
         Property<Boolean> property = new Property<>(null, timestamp, failure);
         assertBaseBytesOk(property);
         assertTrue(TestUtils.dateIsSameIgnoreTimezone(property.getTimestamp(), timestamp));
-        assertTrue(property.getFailure() == failure);
+        assertTrue(property.getFailureComponent() == failure);
     }
 
     /*@Test
@@ -104,7 +103,7 @@ public class PropertyTest {
                 new PropertyTimestamp(timestamp));
 
         p.update(new Property(new Bytes("02000101")), null, null);
-        assertTrue(p.getFailure().getFailedPropertyIdentifier() == 0x02);
+        assertTrue(p.getFailureComponent().getFailedPropertyIdentifier() == 0x02);
         // ^^ this is actually not an use case. In android properties are full.
         // In builder setIdentifier method is used.
 
@@ -115,12 +114,12 @@ public class PropertyTest {
     }*/
 
     @Test public void integerPropertySignChecked() throws CommandParseException {
-        PropertyInteger propertyInteger = new PropertyInteger(253);
-        propertyInteger.update((byte) 0x00, false, 1);
+        IntegerProperty integerProperty = new IntegerProperty(253);
+        integerProperty.update((byte) 0x00, false, 1);
 
-        assertTrue(propertyInteger.getValue() == 253);
+        assertTrue(integerProperty.getValue() == 253);
 
-        PropertyInteger checked = new PropertyInteger(propertyInteger, false);
+        IntegerProperty checked = new IntegerProperty(integerProperty, false);
         // assert that the bytes are correct to create 253 int
         assertTrue(checked.getValue() == 253);
     }

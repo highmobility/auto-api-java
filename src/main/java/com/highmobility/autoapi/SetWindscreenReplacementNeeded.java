@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.WindscreenReplacementState;
+import com.highmobility.autoapi.value.windscreen.WindscreenReplacementState;
 
 /**
  * Set if the windscreen needs replacement. The result is sent through the Windscreen State

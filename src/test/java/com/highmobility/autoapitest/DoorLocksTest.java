@@ -5,21 +5,21 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetLockState;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.LockUnlockDoors;
-import com.highmobility.autoapi.property.Position;
+import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.doors.DoorLockState;
-import com.highmobility.autoapi.property.doors.DoorPosition;
-import com.highmobility.autoapi.property.value.Location;
+import com.highmobility.autoapi.value.doors.DoorLockState;
+import com.highmobility.autoapi.value.doors.DoorPosition;
+import com.highmobility.autoapi.value.Location;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import static com.highmobility.autoapi.property.value.Location.FRONT_LEFT;
-import static com.highmobility.autoapi.property.value.Location.FRONT_RIGHT;
-import static com.highmobility.autoapi.property.value.Location.REAR_LEFT;
-import static com.highmobility.autoapi.property.value.Location.REAR_RIGHT;
-import static com.highmobility.autoapi.property.value.Lock.LOCKED;
-import static com.highmobility.autoapi.property.value.Lock.UNLOCKED;
+import static com.highmobility.autoapi.value.Location.FRONT_LEFT;
+import static com.highmobility.autoapi.value.Location.FRONT_RIGHT;
+import static com.highmobility.autoapi.value.Location.REAR_LEFT;
+import static com.highmobility.autoapi.value.Location.REAR_RIGHT;
+import static com.highmobility.autoapi.value.Lock.LOCKED;
+import static com.highmobility.autoapi.value.Lock.UNLOCKED;
 import static org.junit.Assert.assertTrue;
 
 public class DoorLocksTest {

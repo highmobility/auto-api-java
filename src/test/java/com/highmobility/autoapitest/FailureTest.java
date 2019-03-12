@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Failure;
 import com.highmobility.autoapi.GetTrunkState;
-import com.highmobility.autoapi.property.FailureReason;
+import com.highmobility.autoapi.value.FailureReason;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.value.Bytes;
 

@@ -20,12 +20,12 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.PowerTrain;
+import com.highmobility.autoapi.value.PowerTrain;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.autoapi.property.value.DisplayUnit;
-import com.highmobility.autoapi.property.value.DriverSeatLocation;
-import com.highmobility.autoapi.property.value.Gearbox;
+import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.value.DisplayUnit;
+import com.highmobility.autoapi.value.DriverSeatLocation;
+import com.highmobility.autoapi.value.Gearbox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,15 +73,15 @@ public class VehicleStatus extends CommandWithProperties {
     Property<String> licensePlate = new Property(String.class, IDENTIFIER_LICENSE_PLATE);
 
     Property<String> salesDesignation = new Property(String.class, IDENTIFIER_SALES_DESIGNATION);
-    Property<Integer> modelYear = new PropertyInteger(IDENTIFIER_MODEL_YEAR, false);
+    Property<Integer> modelYear = new IntegerProperty(IDENTIFIER_MODEL_YEAR, false);
     Property<String> color = new Property(String.class, IDENTIFIER_COLOR);
-    Property<Integer> power = new PropertyInteger(IDENTIFIER_POWER, false);
-    Property<Integer> numberOfDoors = new PropertyInteger(IDENTIFIER_NUMBER_OF_DOORS, false);
-    Property<Integer> numberOfSeats = new PropertyInteger(IDENTIFIER_NUMBER_OF_SEATS, false);
+    Property<Integer> power = new IntegerProperty(IDENTIFIER_POWER, false);
+    Property<Integer> numberOfDoors = new IntegerProperty(IDENTIFIER_NUMBER_OF_DOORS, false);
+    Property<Integer> numberOfSeats = new IntegerProperty(IDENTIFIER_NUMBER_OF_SEATS, false);
 
     // l7
     Property<Float> engineVolume = new Property(Float.class, IDENTIFIER_ENGINE_VOLUME);
-    Property<Integer> maxTorque = new PropertyInteger(IDENTIFIER_MAX_TORQUE, false);
+    Property<Integer> maxTorque = new IntegerProperty(IDENTIFIER_MAX_TORQUE, false);
     Property<Gearbox> gearBox = new Property(Gearbox.class, IDENTIFIER_GEARBOX);
 
     // l8
@@ -338,15 +338,15 @@ public class VehicleStatus extends CommandWithProperties {
         private Property<String> name;
         private Property<String> licensePlate;
         private Property<String> salesDesignation;
-        private PropertyInteger modelYear;
+        private IntegerProperty modelYear;
         private Property<String> color;
-        private PropertyInteger power;
-        private PropertyInteger numberOfDoors;
-        private PropertyInteger numberOfSeats;
+        private IntegerProperty power;
+        private IntegerProperty numberOfDoors;
+        private IntegerProperty numberOfSeats;
         private List<Property<CommandWithProperties>> states = new ArrayList<>();
 
         private Property<Float> engineVolume;
-        private PropertyInteger maxTorque;
+        private IntegerProperty maxTorque;
         private Property<Gearbox> gearBox;
 
         Property<DisplayUnit> displayUnit;
@@ -424,7 +424,7 @@ public class VehicleStatus extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setModelYear(Property<Integer> modelYear) {
-            this.modelYear = new PropertyInteger(IDENTIFIER_MODEL_YEAR, false, 2, modelYear);
+            this.modelYear = new IntegerProperty(IDENTIFIER_MODEL_YEAR, false, 2, modelYear);
             addProperty(this.modelYear);
             return this;
         }
@@ -444,7 +444,7 @@ public class VehicleStatus extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setPower(Property<Integer> power) {
-            this.power = new PropertyInteger(IDENTIFIER_POWER, false, 2, power);
+            this.power = new IntegerProperty(IDENTIFIER_POWER, false, 2, power);
             addProperty(this.power);
             return this;
         }
@@ -454,7 +454,7 @@ public class VehicleStatus extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setNumberOfDoors(Property<Integer> numberOfDoors) {
-            this.numberOfDoors = new PropertyInteger(IDENTIFIER_NUMBER_OF_DOORS, false, 1,
+            this.numberOfDoors = new IntegerProperty(IDENTIFIER_NUMBER_OF_DOORS, false, 1,
                     numberOfDoors);
             addProperty(this.numberOfDoors);
             return this;
@@ -465,7 +465,7 @@ public class VehicleStatus extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setNumberOfSeats(Property<Integer> numberOfSeats) {
-            this.numberOfSeats = new PropertyInteger(IDENTIFIER_NUMBER_OF_SEATS, false, 1,
+            this.numberOfSeats = new IntegerProperty(IDENTIFIER_NUMBER_OF_SEATS, false, 1,
                     numberOfSeats);
             addProperty(this.numberOfSeats);
             return this;
@@ -514,7 +514,7 @@ public class VehicleStatus extends CommandWithProperties {
          * @return The builder.
          */
         public Builder setMaxTorque(Property<Integer> maxTorque) {
-            this.maxTorque = new PropertyInteger(IDENTIFIER_MAX_TORQUE, false, 2, maxTorque);
+            this.maxTorque = new IntegerProperty(IDENTIFIER_MAX_TORQUE, false, 2, maxTorque);
             addProperty(this.maxTorque);
             return this;
         }

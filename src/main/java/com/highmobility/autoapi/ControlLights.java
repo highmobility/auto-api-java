@@ -20,14 +20,14 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Color;
+import com.highmobility.autoapi.value.Color;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.lights.FogLight;
-import com.highmobility.autoapi.property.lights.FrontExteriorLightState;
-import com.highmobility.autoapi.property.lights.InteriorLamp;
-import com.highmobility.autoapi.property.lights.LightLocation;
-import com.highmobility.autoapi.property.lights.ReadingLamp;
-import com.highmobility.autoapi.property.value.Location;
+import com.highmobility.autoapi.value.lights.FogLight;
+import com.highmobility.autoapi.value.lights.FrontExteriorLightState;
+import com.highmobility.autoapi.value.lights.InteriorLamp;
+import com.highmobility.autoapi.value.lights.LightLocation;
+import com.highmobility.autoapi.value.lights.ReadingLamp;
+import com.highmobility.autoapi.value.Location;
 
 import java.util.ArrayList;
 

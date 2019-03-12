@@ -5,9 +5,9 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetSeatsState;
 import com.highmobility.autoapi.SeatsState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.seats.PersonDetected;
-import com.highmobility.autoapi.property.seats.SeatBeltFastened;
-import com.highmobility.autoapi.property.seats.SeatLocation;
+import com.highmobility.autoapi.value.seats.PersonDetected;
+import com.highmobility.autoapi.value.seats.SeatBeltFastened;
+import com.highmobility.autoapi.value.seats.SeatLocation;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 

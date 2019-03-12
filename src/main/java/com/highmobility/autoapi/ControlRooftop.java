@@ -20,10 +20,10 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ConvertibleRoofState;
+import com.highmobility.autoapi.value.ConvertibleRoofState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.Position;
-import com.highmobility.autoapi.property.SunroofTiltState;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.SunroofTiltState;
 
 import java.util.ArrayList;
 import java.util.List;

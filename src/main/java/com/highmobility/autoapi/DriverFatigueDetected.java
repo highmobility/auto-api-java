@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.FatigueLevel;
+import com.highmobility.autoapi.value.FatigueLevel;
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;

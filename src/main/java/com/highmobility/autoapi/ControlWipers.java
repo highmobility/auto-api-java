@@ -21,8 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.WiperIntensity;
-import com.highmobility.autoapi.property.WiperState;
+import com.highmobility.autoapi.value.windscreen.WiperIntensity;
+import com.highmobility.autoapi.value.windscreen.WiperState;
 
 import java.util.ArrayList;
 import java.util.List;

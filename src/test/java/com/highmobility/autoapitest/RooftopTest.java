@@ -5,10 +5,10 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlRooftop;
 import com.highmobility.autoapi.GetRooftopState;
 import com.highmobility.autoapi.RooftopState;
-import com.highmobility.autoapi.property.ConvertibleRoofState;
+import com.highmobility.autoapi.value.ConvertibleRoofState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.Position;
-import com.highmobility.autoapi.property.SunroofTiltState;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.SunroofTiltState;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 

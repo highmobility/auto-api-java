@@ -1,9 +1,5 @@
 package com.highmobility.autoapi.property;
 
-public interface PropertyValueSingleByte extends IPropertyValue {
+public interface PropertyValueSingleByte {
     byte getByte();
-
-    @Override default int getLength() {
-        return 1;
-    }
 }

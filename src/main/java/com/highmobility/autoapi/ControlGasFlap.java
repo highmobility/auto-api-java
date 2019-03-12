@@ -21,8 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.Position;
-import com.highmobility.autoapi.property.value.Lock;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.Lock;
 
 import java.util.ArrayList;
 

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.property.IntegerProperty;
 
 import java.util.ArrayList;
 
@@ -37,9 +37,9 @@ public class HonkAndFlash extends CommandWithProperties {
     private static final byte IDENTIFIER_SECONDS = 0x01;
     private static final byte IDENTIFIER_COUNT = 0x02;
 
-    private PropertyInteger lightFlashCount = new PropertyInteger(IDENTIFIER_COUNT,
+    private IntegerProperty lightFlashCount = new IntegerProperty(IDENTIFIER_COUNT,
             false);
-    private PropertyInteger seconds = new PropertyInteger(IDENTIFIER_SECONDS, false);
+    private IntegerProperty seconds = new IntegerProperty(IDENTIFIER_SECONDS, false);
 
     /**
      * @return How many seconds the horn should be honked.

@@ -20,14 +20,14 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Coordinates;
-import com.highmobility.autoapi.property.NetworkSecurity;
+import com.highmobility.autoapi.value.Coordinates;
+import com.highmobility.autoapi.value.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
 
-import com.highmobility.autoapi.property.homecharger.AuthenticationMechanism;
-import com.highmobility.autoapi.property.homecharger.Charging;
-import com.highmobility.autoapi.property.homecharger.PlugType;
-import com.highmobility.autoapi.property.homecharger.PriceTariff;
+import com.highmobility.autoapi.value.homecharger.AuthenticationMechanism;
+import com.highmobility.autoapi.value.homecharger.Charging;
+import com.highmobility.autoapi.value.homecharger.PlugType;
+import com.highmobility.autoapi.value.homecharger.PriceTariff;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IPropertyValue;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -36,7 +35,7 @@ import javax.annotation.Nullable;
 /**
  * Used for commands with properties. Can have 0 properties.
  */
-public class CommandWithProperties extends Command implements IPropertyValue {
+public class CommandWithProperties extends Command {
     /*
     Properties logic:
     * Empty properties are always created in subclasses with correct identifier but 0x00 bytes.

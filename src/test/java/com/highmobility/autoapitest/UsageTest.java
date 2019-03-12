@@ -4,7 +4,7 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetUsage;
 import com.highmobility.autoapi.Usage;
-import com.highmobility.autoapi.property.DrivingMode;
+import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;

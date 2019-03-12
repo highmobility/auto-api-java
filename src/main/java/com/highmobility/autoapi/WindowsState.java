@@ -21,9 +21,9 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.value.Location;
-import com.highmobility.autoapi.property.windows.WindowOpenPercentage;
-import com.highmobility.autoapi.property.windows.WindowPosition;
+import com.highmobility.autoapi.value.Location;
+import com.highmobility.autoapi.value.windows.WindowOpenPercentage;
+import com.highmobility.autoapi.value.windows.WindowPosition;
 
 import java.util.ArrayList;
 import java.util.List;

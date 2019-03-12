@@ -5,10 +5,10 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetTachographState;
 import com.highmobility.autoapi.TachographState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.tachograph.DriverCard;
-import com.highmobility.autoapi.property.tachograph.DriverTimeState;
-import com.highmobility.autoapi.property.tachograph.DriverWorkingState;
-import com.highmobility.autoapi.property.tachograph.VehicleDirection;
+import com.highmobility.autoapi.value.tachograph.DriverCard;
+import com.highmobility.autoapi.value.tachograph.DriverTimeState;
+import com.highmobility.autoapi.value.tachograph.DriverWorkingState;
+import com.highmobility.autoapi.value.tachograph.VehicleDirection;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;

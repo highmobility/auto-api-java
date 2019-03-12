@@ -8,8 +8,8 @@ import com.highmobility.autoapi.MultiCommand;
 import com.highmobility.autoapi.MultiState;
 import com.highmobility.autoapi.SetTheftAlarm;
 import com.highmobility.autoapi.TheftAlarmState;
-import com.highmobility.autoapi.property.value.Location;
-import com.highmobility.autoapi.property.value.Lock;
+import com.highmobility.autoapi.value.Location;
+import com.highmobility.autoapi.value.Lock;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;

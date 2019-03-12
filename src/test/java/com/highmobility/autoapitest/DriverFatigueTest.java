@@ -3,7 +3,7 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DriverFatigueDetected;
-import com.highmobility.autoapi.property.FatigueLevel;
+import com.highmobility.autoapi.value.FatigueLevel;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;

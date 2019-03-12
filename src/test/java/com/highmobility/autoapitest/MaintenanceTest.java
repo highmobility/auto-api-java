@@ -5,8 +5,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetMaintenanceState;
 import com.highmobility.autoapi.MaintenanceState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.maintenance.ConditionBasedService;
-import com.highmobility.autoapi.property.maintenance.TeleserviceAvailability;
+import com.highmobility.autoapi.value.maintenance.ConditionBasedService;
+import com.highmobility.autoapi.value.maintenance.TeleserviceAvailability;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 

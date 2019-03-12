@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.charging.ChargeMode;
+import com.highmobility.autoapi.value.charging.ChargeMode;
 
 /**
  * Set the charge mode of the car.

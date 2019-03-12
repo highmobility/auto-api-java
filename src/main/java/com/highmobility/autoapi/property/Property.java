@@ -39,12 +39,10 @@ import java.util.GregorianCalendar;
 import javax.annotation.Nullable;
 
 /**
- * Property is a representation of some AutoAPI data. Specific data have specific subclasses like
- * StringProperty and ObjectProperty<Float>.
- * <p>
- * Property has to have a value with a size greater or equal to 1.
+ * Property is a representation of some AutoAPI data.
+ * It consists of 3 optional components:
+ * data, timestamp, failure
  */
-// TODO: 2019-02-28 clear comments
 public class Property<T> extends Bytes {
 
     /*
@@ -52,8 +50,8 @@ public class Property<T> extends Bytes {
 
     1:
     Incoming command:
-    Logic is: Base Command parses the components but doesnt know the typ. Sub command updates its
-    properties with base component value.
+    Base Command parses the components but doesn't know the type. Sub command updates its
+    properties with base components.
 
     new Property(bytes);
     findComponents(bytes)
@@ -62,22 +60,17 @@ public class Property<T> extends Bytes {
      ^^ subclass update is needed because base does not know the property type
 
     2:
-    in ctor from builder. this should create components. if integerProperty components should be
+    in ctor from builder. this creates components itself. if IntegerProperty components should be
     updated when length/sign is set
-        new ObjectProperty(GasFlapState)
-        update(GasFlapState, null, null)
-        >> same as 3
+        new Property(GasFlapState) > update(GasFlapState, null, null) >> goto 3
 
-    new ObjectProperty(null, null, failure);
-    update(null, null, failure)
-    >> same as 3
+    new Property(null, null, failure) > update(null, null, failure) >> goto 3
 
     3:
-    in control commands the object is created in static as well, but updated with real value (eg
-    GasFlapState).
-    new ObjectProperty()
-    update(GasFlapState, null, null)
-        bytes = setBytes(GasFlapState, null, null);
+    in control commands the object is created as field, but updated with real value (eg GasFlapState).
+    Property<GasFlapState> field = new Property(GasFlapState.class, IDENTIFIER)
+    update(GasFlapState, timestamp, failure)
+        bytes = setBytes(GasFlapState, timestamp, failure);
         findComponents()
      */
 
@@ -102,7 +95,6 @@ public class Property<T> extends Bytes {
     /**
      * @return The value component.
      */
-    // TODO: 2019-03-05 make private
     @Nullable public PropertyComponentValue getValueComponent() {
         return value;
     }
@@ -115,18 +107,18 @@ public class Property<T> extends Bytes {
         return timestamp.getCalendar();
     }
 
-    @Nullable PropertyComponentTimestamp getPropertyTimestamp() {
+    @Nullable PropertyComponentTimestamp getTimestampComponent() {
         return timestamp;
     }
 
     /**
      * @return The failure of the property.
      */
-    @Nullable public PropertyComponentFailure getFailure() {
+    @Nullable public PropertyComponentFailure getFailureComponent() {
         return failure;
     }
 
-    @Nullable public Class<T> getValueClass() { // TODO: 2019-02-28 should be private
+    @Nullable Class<T> getValueClass() { // TODO: 2019-02-28 should be private
         return valueClass;
     }
 //

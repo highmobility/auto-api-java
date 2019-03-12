@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.KeyFobPositionValue;
+import com.highmobility.autoapi.value.KeyFobPositionValue;
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;

@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.NetworkSecurity;
+import com.highmobility.autoapi.value.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
 
 

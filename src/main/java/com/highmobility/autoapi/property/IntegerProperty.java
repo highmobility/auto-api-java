@@ -20,17 +20,105 @@
 
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.utils.ByteUtils;
+import com.highmobility.value.Bytes;
 
-public class IntegerProperty extends Property {
-    public IntegerProperty(byte identifier, int value, int length) {
-        super(identifier, length);
+import javax.annotation.Nullable;
+
+// since int has different signed and length options, its better to have a property subclass.
+public class IntegerProperty extends Property<Integer> {
+    boolean signed;
+
+    public IntegerProperty(Integer value) {
+        // This will create int32. Can be updated later in {@link #update(byte, boolean, int)}
+        super(value);
+    }
+
+    public IntegerProperty(Property p, boolean signed) throws CommandParseException {
+        super(Integer.class, p.getPropertyIdentifier());
+        this.signed = signed;
+        update(p);
+    }
+
+    // used in builders
+    public IntegerProperty(byte identifier, boolean signed, int length, Property<Integer> value) {
+        this(identifier, signed);
+        this.bytes = getBytes(identifier, length, value.value.value).getByteArray();
+        findComponents();
+        // TODO: 2019-03-12 copy the components from Property<Integer>
+        this.value.value = value.value.value;
+    }
+
+    public IntegerProperty(byte identifier, boolean signed) {
+        super(Integer.class, identifier);
+        this.signed = signed;
+    }
+
+    @Override public Property update(Property p) throws CommandParseException {
+        super.update(p);
+
+        if (p.getValueComponent().getValueBytes().getLength() >= 1) {
+            if (signed) value.value = getSignedInt(p.getValueComponent().getValueBytes());
+            else value.value = getUnsignedInt(p.getValueComponent().getValueBytes());
+        }
+
+        return this;
+    }
+
+    /**
+     * Reset the value length. This will create a new base byte array. It is used for Integer
+     * builders because we don't want the user to bother about whether Integer is signed or how many
+     * bytes is it's length.
+     *
+     * @param identifier The property identifier.
+     * @param newLength  The new length.
+     */
+    public Property update(byte identifier, boolean signed, int newLength) {
+        bytes = baseBytesWithDataComponent(identifier, newLength);
+        // update the length/sign of the previously set int. This is used in builders.
+
+        /*
+        Don't need to consider signed here because we are not resetting the value, it stays
+        signed int from builder ctor. Bytes would be set the same for signed/unsigned.
+         */
+        if (value == null) return this; // there is no int value set before, nothing to do
+        value = new PropertyComponentValueInteger(value.value, signed, newLength);
+        set(3, value);
+
+        return this;
+    }
+
+    public Property update(boolean signed, int newLength, @Nullable Integer value) {
+        // create new bytes
+        bytes = baseBytesWithDataComponent(bytes[0], newLength);
+        this.value = new PropertyComponentValueInteger(value, signed, newLength);
+        set(3, this.value);
+        return this;
+    }
+
+    static Bytes getBytes(byte identifier, int length, Integer value) {
+        // TODO: 2019-03-12 should consider other components of the property as well.
+        byte[] bytes = baseBytesWithDataComponent(identifier, length);
+
+        if (value == null) return new Bytes();
 
         if (length == 1) {
-            bytes[6] = (byte)value;
-        }
-        else {
+            bytes[6] = value.byteValue();
+        } else {
             ByteUtils.setBytes(bytes, intToBytes(value, length), 6);
+        }
+
+        return new Bytes(bytes);
+    }
+
+    // int needs to be updated later, so builder users dont need to consider the int length or sign
+    private class PropertyComponentValueInteger extends PropertyComponentValue<Integer> {
+        PropertyComponentValueInteger(Integer value, boolean signed, int newLength) {
+            super(PropertyComponentValue.IDENTIFIER, newLength);
+            this.valueBytes = new Bytes(intToBytes(value, newLength));
+            set(3, valueBytes);
+            this.value = value;
         }
     }
 }

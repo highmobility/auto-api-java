@@ -7,8 +7,8 @@ import com.highmobility.autoapi.HistoricalStates;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.RaceState;
-import com.highmobility.autoapi.property.value.Location;
-import com.highmobility.autoapi.property.value.Lock;
+import com.highmobility.autoapi.value.Location;
+import com.highmobility.autoapi.value.Lock;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;

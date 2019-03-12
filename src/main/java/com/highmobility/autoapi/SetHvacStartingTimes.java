@@ -20,9 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HvacStartingTime;
+import com.highmobility.autoapi.value.HvacStartingTime;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.value.Weekday;
+import com.highmobility.autoapi.value.Weekday;
 
 import java.util.ArrayList;
 
