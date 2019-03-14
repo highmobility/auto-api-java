@@ -29,52 +29,6 @@ import com.highmobility.value.Bytes;
 
 import java.io.UnsupportedEncodingException;
 
-/*public class PriceTariff extends Property {
-    Value value;
-
-    @Nullable public Value getValue() {
-        return value;
-    }
-
-    public PriceTariff(byte identifier) {
-        super(identifier);
-    }
-
-    public PriceTariff(@Nullable Value value, @Nullable Calendar timestamp,
-                       @Nullable PropertyFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
-    }
-
-    public PriceTariff(Value value) {
-        super(value);
-
-        this.value = value;
-
-        if (value != null) {
-            bytes[3] = value.pricingType.getByte();
-            ByteUtils.setBytes(bytes, Property.floatToBytes(value.price), 4);
-            ByteUtils.setBytes(bytes, Property.intToBytes(value.currency.length(), 1), 8);
-            ByteUtils.setBytes(bytes, Property.stringToBytes(value.currency), 9);
-
-        }
-    }
-
-    public PriceTariff(PricingType pricingType, String currency, float price) {
-        this(new Value(pricingType, currency, price));
-    }
-
-    public PriceTariff(Property p) throws CommandParseException {
-        super(p);
-        update(p);
-    }
-
-    @Override public Property update(Property p) throws CommandParseException {
-        super.update(p);
-        if (p.getValueLength() >= 7) value = new Value(p);
-        return this;
-    }*/
-
 public class PriceTariff extends PropertyValueObject {
     PricingType pricingType;
     String currency;
@@ -100,24 +54,6 @@ public class PriceTariff extends PropertyValueObject {
     public float getPrice() {
         return price;
     }
-
-        /*public PriceTariff(Property bytes) throws CommandParseException {
-            super(bytes);
-            if (bytes.getLength() < 10) throw new CommandParseException();
-            pricingType = PricingType.fromByte(bytes.get(3));
-            price = Property.getFloat(bytes, 4);
-            int currencyLength = Property.getUnsignedInt(bytes, 8, 1);
-            currency = Property.getString(bytes, 9, currencyLength);
-        }
-
-        public PriceTariff(PricingType pricingType, String currency, float price) {
-            if (currency.length() < 3)
-                throw new IllegalArgumentException("Currency length needs to be > 3");
-
-            this.pricingType = pricingType;
-            this.currency = currency;
-            this.price = price;
-        }*/
 
     public PriceTariff(PricingType pricingType, String currency, float price) {
         super(1 + 1 + currency.length() + 4);
@@ -188,5 +124,4 @@ public class PriceTariff extends PropertyValueObject {
             return value;
         }
     }
-
 }

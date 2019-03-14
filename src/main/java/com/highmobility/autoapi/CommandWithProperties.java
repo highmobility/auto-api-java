@@ -271,11 +271,10 @@ public class CommandWithProperties extends Command {
 
     // Used to catch the property parsing exception, managing parsed properties in this class.
     protected PropertyIterator propertyIterator;
-    // TODO: 2019-02-07 throw if propertiesExpected but returned 0 properties (child command
-    //  didnt find its property)
 
     protected class PropertyIterator implements Iterator<Property> {
         private int currentSize;
+        private int propertiesReplaced = 0;
 
         PropertyIterator() {
             this.currentSize = CommandWithProperties.this.properties.length;
@@ -285,7 +284,15 @@ public class CommandWithProperties extends Command {
 
         @Override
         public boolean hasNext() {
-            return currentIndex < currentSize && properties[currentIndex] != null;
+            boolean hasNext = currentIndex < currentSize && properties[currentIndex] != null;
+
+            if (hasNext == false && propertiesExpected() && propertiesReplaced == 0) {
+                // throw if propertiesExpected but returned 0 properties (child command
+                // didn't find its property)
+                throw new IllegalArgumentException();
+            }
+
+            return hasNext;
         }
 
         @Override
@@ -308,6 +315,7 @@ public class CommandWithProperties extends Command {
                 if (parsedProperty != null) {
                     // replace the base property with parsed one
                     properties[currentIndex - 1] = (Property) parsedProperty;
+                    propertiesReplaced++;
                 }
             } catch (Exception e) {
                 nextProperty.printFailedToParse(e);

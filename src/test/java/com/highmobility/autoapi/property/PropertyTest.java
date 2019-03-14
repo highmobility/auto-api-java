@@ -1,7 +1,9 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.ClimateState;
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.value.Capability;
 import com.highmobility.autoapi.value.charging.ChargeMode;
 import com.highmobility.autoapitest.TestUtils;
@@ -233,5 +235,14 @@ public class PropertyTest {
         Capability capabilityProperty = new Capability();
         capabilityProperty.update(bytes);
         assertTrue(capabilityProperty.isSupported(ClimateState.TYPE));
+    }
+
+    @Test public void returnBaseClassIfRequiredPropertyDoesNotExist() {
+        // if child class didnt find a property but it expects that at least one exists, return
+        // base command
+
+        Bytes expected = new Bytes("002313" + // SetChargeLimit
+                "DD000B0100083FECCCCCCCCCCCCD"); // invalid property identifier
+        assertTrue(CommandResolver.resolve(expected).getClass() == Command.class);
     }
 }
