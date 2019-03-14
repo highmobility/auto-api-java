@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value.charging;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum ChargeMode implements PropertyValueSingleByte {
+public enum ChargeMode implements ByteEnum {
     IMMEDIATE((byte) 0x00),
     TIMER_BASED((byte) 0x01),
     INDUCTIVE((byte) 0x02);

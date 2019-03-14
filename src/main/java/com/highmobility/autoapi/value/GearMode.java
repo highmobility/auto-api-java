@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum GearMode implements PropertyValueSingleByte {
+public enum GearMode implements ByteEnum {
     MANUAL((byte) 0x00),
     PARK((byte) 0x01),
     REVERSE((byte) 0x02),

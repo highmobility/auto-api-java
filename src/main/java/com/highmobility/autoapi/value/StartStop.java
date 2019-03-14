@@ -1,9 +1,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum StartStop implements PropertyValueSingleByte {
+public enum StartStop implements ByteEnum {
     START((byte) 0x00),
     STOP((byte) 0x01),
     RESET((byte) 0x02);

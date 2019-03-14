@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum KeyFobPositionValue implements PropertyValueSingleByte {
+public enum KeyFobPositionValue implements ByteEnum {
     OUT_OF_RANGE((byte) 0x00),
     OUTSIDE_DRIVER_SIDE((byte) 0x01),
     OUTSIDE_IN_FRONT_OF_CAR((byte) 0x02),

@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
 import javax.annotation.Nullable;
 
@@ -85,7 +85,7 @@ public class FlashersState extends CommandWithProperties {
         }
     }
 
-    public enum Value implements PropertyValueSingleByte {
+    public enum Value implements ByteEnum {
         INACTIVE((byte) 0x00),
         EMERGENCY_ACTIVE((byte) 0x01),
         LEFT_ACTIVE((byte) 0x02),

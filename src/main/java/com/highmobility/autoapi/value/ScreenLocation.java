@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum ScreenLocation implements PropertyValueSingleByte {
+public enum ScreenLocation implements ByteEnum {
     FRONT((byte) 0x00),
     REAR((byte) 0x01);
 

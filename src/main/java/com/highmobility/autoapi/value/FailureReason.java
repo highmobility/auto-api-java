@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum FailureReason implements PropertyValueSingleByte {
+public enum FailureReason implements ByteEnum {
     UNSUPPORTED_CAPABILITY((byte)0x00),
     UNAUTHORISED((byte)0x01),
     INCORRECT_STATE((byte)0x02),

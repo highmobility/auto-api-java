@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
 /**
  * This message is sent when a Get Cruise Control State message is received by the car. The new
@@ -107,7 +107,7 @@ public class CruiseControlState extends CommandWithProperties {
         return true;
     }
 
-    public enum Limiter implements PropertyValueSingleByte {
+    public enum Limiter implements ByteEnum {
         NOT_SET((byte) 0x00),
         HIGHER_SPEED_REQUESTED((byte) 0x01),
         LOWER_SPEED_REQUESTED((byte) 0x02),

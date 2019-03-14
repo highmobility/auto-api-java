@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value.homecharger;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum Charging implements PropertyValueSingleByte {
+public enum Charging implements ByteEnum {
     DISCONNECTED((byte) 0x00),
     PLUGGED_IN((byte) 0x01),
     CHARGING((byte) 0x02);

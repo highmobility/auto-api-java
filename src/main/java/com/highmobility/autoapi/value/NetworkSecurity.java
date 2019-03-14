@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum NetworkSecurity implements PropertyValueSingleByte {
+public enum NetworkSecurity implements ByteEnum {
     NONE((byte) 0x00),
     WEP((byte) 0x01),
     WPA_WPA2_PERSONAL((byte) 0x02),

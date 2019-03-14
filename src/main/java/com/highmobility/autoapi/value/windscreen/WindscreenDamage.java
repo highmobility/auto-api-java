@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value.windscreen;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum WindscreenDamage implements PropertyValueSingleByte {
+public enum WindscreenDamage implements ByteEnum {
     NO_IMPACT((byte)0x00),
     IMPACT_NO_DAMAGE((byte)0x01),
     DAMAGE_SMALLER_THAN_1((byte)0x02),

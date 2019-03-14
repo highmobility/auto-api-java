@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum PowerTrain implements PropertyValueSingleByte {
+public enum PowerTrain implements ByteEnum {
     UNKNOWN((byte) 0x00),
     ALLELECTRIC((byte) 0x01),
     COMBUSTIONENGINE((byte) 0x02),

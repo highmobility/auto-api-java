@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value.maintenance;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum TeleserviceAvailability implements PropertyValueSingleByte {
+public enum TeleserviceAvailability implements ByteEnum {
     PENDING((byte)0x00),
     IDLE((byte)0x01),
     SUCCESSFUL((byte)0x02),

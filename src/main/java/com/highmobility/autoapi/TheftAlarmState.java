@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
 import javax.annotation.Nullable;
 
@@ -59,7 +59,7 @@ public class TheftAlarmState extends CommandWithProperties {
         return true;
     }
 
-    public enum Value implements PropertyValueSingleByte {
+    public enum Value implements ByteEnum {
         NOT_ARMED((byte) 0x00),
         ARMED((byte) 0x01),
         TRIGGERED((byte) 0x02);

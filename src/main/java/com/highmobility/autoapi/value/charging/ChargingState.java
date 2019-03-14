@@ -21,12 +21,12 @@
 package com.highmobility.autoapi.value.charging;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
 /**
  * The possible charging states.
  */
-public enum ChargingState implements PropertyValueSingleByte {
+public enum ChargingState implements ByteEnum {
     NOT_CHARGING((byte) 0x00),
     CHARGING((byte) 0x01),
     CHARGING_COMPLETE((byte) 0x02),

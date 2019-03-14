@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value.windscreen;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum WiperState implements PropertyValueSingleByte {
+public enum WiperState implements ByteEnum {
     INACTIVE((byte)0x00),
     ACTIVE((byte)0x01),
     AUTOMATIC((byte)0x02);

@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum ParkingTicketState implements PropertyValueSingleByte {
+public enum ParkingTicketState implements ByteEnum {
     ENDED((byte)0x00),
     STARTED((byte)0x01);
 

@@ -22,7 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
 /**
  * Command sent from the car every time the remote control mode changes or when a Get Control
@@ -77,7 +77,7 @@ public class ControlMode extends CommandWithProperties {
      * The possible control mode values.
      */
 
-    public enum Value implements PropertyValueSingleByte {
+    public enum Value implements ByteEnum {
         UNAVAILABLE((byte) 0x00),
         AVAILABLE((byte) 0x01),
         STARTED((byte) 0x02),

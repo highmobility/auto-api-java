@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum SunroofTiltState implements PropertyValueSingleByte {
+public enum SunroofTiltState implements ByteEnum {
     CLOSED((byte) 0x00),
     TILTED((byte) 0x01),
     HALF_TILTED((byte) 0x02);

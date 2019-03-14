@@ -1,12 +1,12 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
 /**
  * The possible states of the car doorLock.
  */
-public enum Lock implements PropertyValueSingleByte {
+public enum Lock implements ByteEnum {
     UNLOCKED((byte) 0x00),
     LOCKED((byte) 0x01);
 

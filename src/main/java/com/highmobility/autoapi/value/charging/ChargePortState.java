@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value.charging;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum ChargePortState implements PropertyValueSingleByte {
+public enum ChargePortState implements ByteEnum {
     CLOSED((byte) 0x00), OPEN((byte) 0x01);
 
     public static ChargePortState fromByte(byte byteValue) throws CommandParseException {

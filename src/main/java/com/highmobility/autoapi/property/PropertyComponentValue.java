@@ -74,8 +74,7 @@ public class PropertyComponentValue<T> extends PropertyComponent {
                 throw new IllegalArgumentException("Cannot instantiate value: " + valueClass +
                         "\n" + e.getMessage());
             }
-        } else if (PropertyValueSingleByte.class.isAssignableFrom(valueClass)) {
-            // enum values
+        } else if (ByteEnum.class.isAssignableFrom(valueClass)) {
             value = valueClass.getEnumConstants()[valueBytes.get(0)];
         } else if (Boolean.class.isAssignableFrom(valueClass)) {
             value = (T) Property.getBool(valueBytes.get(0));
@@ -89,15 +88,16 @@ public class PropertyComponentValue<T> extends PropertyComponent {
             value = (T) Property.getString(valueBytes);
         } else if (int[].class.isAssignableFrom(valueClass)) {
             value = (T) Property.getIntegerArray(valueBytes);
-        } else if (Identifier.class.isAssignableFrom(valueClass)) {
-            value = (T) Property.getIdentifier(valueBytes);
         } else if (Command.class.isAssignableFrom(valueClass)) {
             value = (T) CommandResolver.resolve(valueBytes);
+        } else if (Identifier.class.isAssignableFrom(valueClass)) {
+            value = (T) Property.getIdentifier(valueBytes);
         } else if (Bytes.class.isAssignableFrom(valueClass)) {
             value = (T) valueBytes;
         } else if (Byte.class.isAssignableFrom(valueClass)) {
             value = (T) valueBytes.get(0);
         }
+
     }
 
     public static Bytes getBytes(Object value) {
@@ -106,8 +106,8 @@ public class PropertyComponentValue<T> extends PropertyComponent {
             return (Bytes) value;
         } else if (value instanceof PropertyValueObject) {
             return ((PropertyValueObject) value);
-        } else if (value instanceof PropertyValueSingleByte) {
-            byte byteValue = ((PropertyValueSingleByte) value).getByte();
+        } else if (value instanceof ByteEnum) {
+            byte byteValue = ((ByteEnum) value).getByte();
             return new Bytes(new byte[]{byteValue});
         } else if (value instanceof Boolean) {
             return new Bytes(new byte[]{Property.boolToByte((Boolean) value)});

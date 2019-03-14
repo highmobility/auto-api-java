@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value.windscreen;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum WindscreenReplacementState implements PropertyValueSingleByte {
+public enum WindscreenReplacementState implements ByteEnum {
     UNKNOWN((byte) 0x00),
     REPLACEMENT_NOT_NEEDED((byte) 0x01),
     REPLACEMENT_NEEDED((byte) 0x02);

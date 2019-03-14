@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value.diagnostics;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum BrakeFluidLevel implements PropertyValueSingleByte {
+public enum BrakeFluidLevel implements ByteEnum {
     LOW((byte) 0x00),
     FULL((byte) 0x01);
 

@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value.homecharger;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum AuthenticationMechanism implements PropertyValueSingleByte {
+public enum AuthenticationMechanism implements ByteEnum {
     PIN((byte) 0x00),
     APP((byte) 0x01);
 

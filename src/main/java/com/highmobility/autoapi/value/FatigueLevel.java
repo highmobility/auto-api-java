@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum FatigueLevel implements PropertyValueSingleByte {
+public enum FatigueLevel implements ByteEnum {
     LIGHT_FATIGUE((byte) 0x00),
     PAUSE_RECOMMENDED((byte) 0x01),
     ACTION_NEEDED_DRIVER_NEEDS_REST((byte) 0x02),

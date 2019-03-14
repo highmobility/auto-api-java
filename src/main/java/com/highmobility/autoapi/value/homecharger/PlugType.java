@@ -20,9 +20,9 @@
 
 package com.highmobility.autoapi.value.homecharger;
 
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum PlugType implements PropertyValueSingleByte {
+public enum PlugType implements ByteEnum {
     TYPE_ONE((byte) 0x00),
     TYPE_TWO((byte) 0x01),
     COMBINED_CHARGING_SYSTEM((byte) 0x02),

@@ -1,9 +1,9 @@
 package com.highmobility.autoapi.value.charging;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum PlugType implements PropertyValueSingleByte {
+public enum PlugType implements ByteEnum {
     TYPE_1((byte) 0x00),
     TYPE_2((byte) 0x01),
     COMBINED_CHARGING_SYSTEM((byte) 0x02),

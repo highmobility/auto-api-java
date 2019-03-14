@@ -1,9 +1,9 @@
 package com.highmobility.autoapi.value.tachograph;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum VehicleDirection implements PropertyValueSingleByte {
+public enum VehicleDirection implements ByteEnum {
     FORWARD((byte) 0x00),
     REVERSE((byte) 0x01);
 

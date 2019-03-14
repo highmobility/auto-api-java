@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum Position implements PropertyValueSingleByte {
+public enum Position implements ByteEnum {
     CLOSED((byte) 0x00),
     OPEN((byte) 0x01),
     INTERMEDIATE((byte) 0x02);

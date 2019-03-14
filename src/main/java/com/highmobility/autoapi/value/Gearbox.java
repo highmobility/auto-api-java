@@ -21,9 +21,9 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.PropertyValueSingleByte;
+import com.highmobility.autoapi.property.ByteEnum;
 
-public enum Gearbox implements PropertyValueSingleByte {
+public enum Gearbox implements ByteEnum {
     MANUAL((byte) 0x00),
     AUTOMATIC((byte) 0x01),
     SEMI_AUTOMATIC((byte) 0x02);
