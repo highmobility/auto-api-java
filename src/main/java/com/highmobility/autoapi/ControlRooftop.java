@@ -41,17 +41,17 @@ public class ControlRooftop extends CommandWithProperties {
     private static final byte IDENTIFIER_SUNROOF_POSITION = 0x05;
 
     private Property<Double> dimmingPercentage =
-            new Property<>(Double.class, RooftopState.DIMMING_IDENTIFIER);
+            new Property(Double.class, RooftopState.DIMMING_IDENTIFIER);
 
     private Property<Double> openPercentage =
-            new Property<>(Double.class, RooftopState.OPEN_IDENTIFIER);
+            new Property(Double.class, RooftopState.OPEN_IDENTIFIER);
 
     private Property<ConvertibleRoofState> convertibleRoofState =
-            new Property<>(ConvertibleRoofState.class, IDENTIFIER_CONVERTIBLE_ROOFTOP);
+            new Property(ConvertibleRoofState.class, IDENTIFIER_CONVERTIBLE_ROOFTOP);
     private Property<SunroofTiltState> sunroofTiltState =
-            new Property<>(SunroofTiltState.class, IDENTIFIER_SUNROOF_TILT);
+            new Property(SunroofTiltState.class, IDENTIFIER_SUNROOF_TILT);
 
-    private Property<Position> sunroofPosition = new Property<>(Position.class,
+    private Property<Position> sunroofPosition = new Property(Position.class,
             IDENTIFIER_SUNROOF_POSITION);
 
     /**

@@ -35,7 +35,7 @@ public class NaviDestination extends CommandWithProperties {
     private static final byte COORDINATES_IDENTIFIER = 0x07;
     private static final byte NAME_IDENTIFIER = 0x02;
 
-    private Property<Coordinates> coordinates = new Property<>(Coordinates.class,
+    private Property<Coordinates> coordinates = new Property(Coordinates.class,
             COORDINATES_IDENTIFIER);
     private Property<String> name = new Property(String.class, NAME_IDENTIFIER);
 

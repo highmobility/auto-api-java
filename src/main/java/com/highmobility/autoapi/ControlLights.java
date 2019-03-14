@@ -185,13 +185,13 @@ public class ControlLights extends CommandWithProperties {
         }
 
         for (ReadingLamp readingLamp : readingLamps) {
-            Property<ReadingLamp> prop = new Property<>(IDENTIFIER_READING_LAMP, readingLamp);
+            Property<ReadingLamp> prop = new Property(IDENTIFIER_READING_LAMP, readingLamp);
             readingLampsBuilder.add(prop);
             properties.add(prop);
         }
 
         for (InteriorLamp interiorLamp : interiorLamps) {
-            Property<InteriorLamp> prop = new Property<>(IDENTIFIER_INTERIOR_LAMP, interiorLamp);
+            Property<InteriorLamp> prop = new Property(IDENTIFIER_INTERIOR_LAMP, interiorLamp);
             interiorLampsBuilder.add(prop);
             properties.add(prop);
         }
@@ -220,17 +220,17 @@ public class ControlLights extends CommandWithProperties {
                     case IDENTIFIER_AMBIENT_COLOR:
                         return ambientColor.update(p);
                     case IDENTIFIER_FOG_LIGHT:
-                        Property<FogLight> fogLight = new Property<>(FogLight.class, p);
+                        Property<FogLight> fogLight = new Property(FogLight.class, p);
                         fogLights.add(fogLight);
                         return fogLight;
                     case IDENTIFIER_READING_LAMP:
                         Property<ReadingLamp> readingLamp =
-                                new Property<>(ReadingLamp.class, p);
+                                new Property(ReadingLamp.class, p);
                         readingLamps.add(readingLamp);
                         return readingLamp;
                     case IDENTIFIER_INTERIOR_LAMP:
                         Property<InteriorLamp> interiorLamp =
-                                new Property<>(InteriorLamp.class, p);
+                                new Property(InteriorLamp.class, p);
                         interiorLamps.add(interiorLamp);
                         return interiorLamp;
                 }

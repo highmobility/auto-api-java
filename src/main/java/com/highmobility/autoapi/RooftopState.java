@@ -39,9 +39,9 @@ public class RooftopState extends CommandWithProperties {
     private static final byte IDENTIFIER_SUNROOF_TILT = 0x04;
     private static final byte IDENTIFIER_SUNROOF_POSITION = 0x05;
 
-    Property<Double> dimmingPercentage = new Property<>(Double.class,
+    Property<Double> dimmingPercentage = new Property(Double.class,
             DIMMING_IDENTIFIER);
-    Property<Double> openPercentage = new Property<>(Double.class, OPEN_IDENTIFIER);
+    Property<Double> openPercentage = new Property(Double.class, OPEN_IDENTIFIER);
     Property<ConvertibleRoofState> convertibleRoofState =
             new Property(ConvertibleRoofState.class, IDENTIFIER_CONVERTIBLE_ROOF);
     Property<SunroofTiltState> sunroofTiltState =

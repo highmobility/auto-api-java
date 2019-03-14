@@ -72,22 +72,22 @@ public class LightsTest {
     @Test public void build() {
         LightsState.Builder builder = new LightsState.Builder();
 
-        builder.setFrontExteriorLightState(new Property<>(FrontExteriorLightState.ACTIVE_FULL_BEAM));
-        builder.setRearExteriorLightActive(new Property<>(true));
+        builder.setFrontExteriorLightState(new Property(FrontExteriorLightState.ACTIVE_FULL_BEAM));
+        builder.setRearExteriorLightActive(new Property(true));
 
         Color ambientColor = new Color(new float[]{1f, 0, 0});
-        builder.setAmbientColor(new Property<>(ambientColor));
-        builder.setReverseLightActive(new Property<>(false));
-        builder.setEmergencyBrakeLightActive(new Property<>(false));
+        builder.setAmbientColor(new Property(ambientColor));
+        builder.setReverseLightActive(new Property(false));
+        builder.setEmergencyBrakeLightActive(new Property(false));
 
-        builder.addFogLight(new Property<>(new FogLight(LightLocation.FRONT, false)));
-        builder.addFogLight(new Property<>(new FogLight(LightLocation.REAR, true)));
+        builder.addFogLight(new Property(new FogLight(LightLocation.FRONT, false)));
+        builder.addFogLight(new Property(new FogLight(LightLocation.REAR, true)));
 
-        builder.addReadingLamp(new Property<>(new ReadingLamp(Location.FRONT_LEFT, false)));
-        builder.addReadingLamp(new Property<>(new ReadingLamp(Location.FRONT_RIGHT, true)));
+        builder.addReadingLamp(new Property(new ReadingLamp(Location.FRONT_LEFT, false)));
+        builder.addReadingLamp(new Property(new ReadingLamp(Location.FRONT_RIGHT, true)));
 
-        builder.addInteriorLamp(new Property<>(new InteriorLamp(LightLocation.FRONT, false)));
-        builder.addInteriorLamp(new Property<>(new InteriorLamp(LightLocation.REAR, false)));
+        builder.addInteriorLamp(new Property(new InteriorLamp(LightLocation.FRONT, false)));
+        builder.addInteriorLamp(new Property(new InteriorLamp(LightLocation.REAR, false)));
 
         LightsState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));

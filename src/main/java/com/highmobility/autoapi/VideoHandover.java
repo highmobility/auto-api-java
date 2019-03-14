@@ -43,7 +43,7 @@ public class VideoHandover extends CommandWithProperties {
     private Property<String> url = new Property(String.class, IDENTIFIER_URL);
     private PropertyInteger startingSecond =
             new PropertyInteger(STARTING_SECOND_IDENTIFIER, false);
-    private Property<ScreenLocation> location = new Property<>(ScreenLocation.class,
+    private Property<ScreenLocation> location = new Property(ScreenLocation.class,
             IDENTIFIER_SCREEN_LOCATION);
 
     /**

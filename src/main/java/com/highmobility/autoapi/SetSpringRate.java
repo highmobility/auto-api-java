@@ -65,7 +65,7 @@ public class SetSpringRate extends CommandWithProperties {
     static Property[] getValues(SpringRate[] springRates) {
         ArrayList<Property<SpringRate>> builder = new ArrayList<>();
         for (SpringRate springRate : springRates) {
-            builder.add(new Property<>(PROPERTY_IDENTIFIER, springRate));
+            builder.add(new Property(PROPERTY_IDENTIFIER, springRate));
         }
 
         return builder.toArray(new Property[0]);
@@ -78,7 +78,7 @@ public class SetSpringRate extends CommandWithProperties {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
-                    Property<SpringRate> prop = new Property<>(SpringRate.class, p);
+                    Property<SpringRate> prop = new Property(SpringRate.class, p);
                     builder.add(prop.getValue());
                     return prop;
                 }

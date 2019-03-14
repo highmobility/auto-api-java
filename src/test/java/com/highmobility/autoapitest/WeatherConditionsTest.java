@@ -48,7 +48,7 @@ public class WeatherConditionsTest {
 
     @Test public void builder() {
         WeatherConditions.Builder builder = new WeatherConditions.Builder();
-        builder.setRainIntensity(new Property<>(1d));
+        builder.setRainIntensity(new Property(1d));
         testState(builder.build());
     }
 }

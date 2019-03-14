@@ -48,9 +48,9 @@ public class ChassisSettings extends CommandWithProperties {
     public static final byte IDENTIFIER_MAXIMUM_CHASSIS_POSITION = 0x09;
     public static final byte IDENTIFIER_MINIMUM_CHASSIS_POSITION = 0x0A;
 
-    Property<DrivingMode> drivingMode = new Property<>(DrivingMode.class,
+    Property<DrivingMode> drivingMode = new Property(DrivingMode.class,
             IDENTIFIER_DRIVING_MODE);
-    Property<Boolean> sportChronoActive = new Property<>(Boolean.class,
+    Property<Boolean> sportChronoActive = new Property(Boolean.class,
             IDENTIFIER_SPORT_CHRONO_ACTIVE);
 
     Property<SpringRate>[] currentSpringRates;
@@ -180,17 +180,17 @@ public class ChassisSettings extends CommandWithProperties {
                         return sportChronoActive.update(p);
                     case CURRENT_SPRING_RATE_PROPERTIES_IDENTIFIER:
                         Property<SpringRate> newProperty =
-                                new Property<>(SpringRate.class, p);
+                                new Property(SpringRate.class, p);
                         currentSpringRates.add(newProperty);
                         return newProperty;
                     case MAXIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER:
                         Property<SpringRate> newProperty2 =
-                                new Property<>(SpringRate.class, p);
+                                new Property(SpringRate.class, p);
                         maximumSpringRates.add(newProperty2);
                         return newProperty2;
                     case MINIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER:
                         Property<SpringRate> newProperty3 =
-                                new Property<>(SpringRate.class, p);
+                                new Property(SpringRate.class, p);
                         minimumSpringRates.add(newProperty3);
                         return newProperty3;
                     case IDENTIFIER_CURRENT_CHASSIS_POSITION:

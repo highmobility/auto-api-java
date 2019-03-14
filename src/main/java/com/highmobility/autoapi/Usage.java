@@ -58,28 +58,28 @@ public class Usage extends CommandWithProperties {
     private PropertyInteger averageWeeklyDistanceLongTerm =
             new PropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_TERM, false);
     private Property<Double> accelerationEvaluation =
-            new Property<>(Double.class, IDENTIFIER_ACCELERATION_EVALUATION);
+            new Property(Double.class, IDENTIFIER_ACCELERATION_EVALUATION);
     private Property<Double> drivingStyleEvaluation =
-            new Property<>(Double.class, IDENTIFIER_DRIVING_STYLE_EVALUATION);
+            new Property(Double.class, IDENTIFIER_DRIVING_STYLE_EVALUATION);
     private DrivingModeActivationPeriod[] drivingModeActivationPeriods;
     private DrivingModeEnergyConsumption[] drivingModeEnergyConsumptions;
-    private Property<Float> lastTripEnergyConsumption = new Property<>(Float.class,
+    private Property<Float> lastTripEnergyConsumption = new Property(Float.class,
             IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION);
-    private Property<Float> lastTripFuelConsumption = new Property<>(Float.class,
+    private Property<Float> lastTripFuelConsumption = new Property(Float.class,
             IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION);
-    private Property<Float> mileageAfterLastTrip = new Property<>(Float.class,
+    private Property<Float> mileageAfterLastTrip = new Property(Float.class,
             IDENTIFIER_MILEAGE_AFTER_LAST_TRIP);
     private Property<Double> lastTripElectricPortion =
-            new Property<>(Double.class, IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION);
+            new Property(Double.class, IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION);
     private Property<Float> lastTripAverageEnergyRecuperation =
-            new Property<>(Float.class, IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION);
+            new Property(Float.class, IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION);
     private Property<Double> lastTripBatteryRemaining =
-            new Property<>(Double.class, IDENTIFIER_LAST_TRIP_BATTERY_REMAINING);
+            new Property(Double.class, IDENTIFIER_LAST_TRIP_BATTERY_REMAINING);
     private Property<Calendar> lastTripDate = new Property(Calendar.class,
             IDENTIFIER_LAST_TRIP_DATE);
-    private Property<Float> averageFuelConsumption = new Property<>(Float.class,
+    private Property<Float> averageFuelConsumption = new Property(Float.class,
             IDENTIFIER_AVERAGE_FUEL_CONSUMPTION);
-    private Property<Float> currentFuelConsumption = new Property<>(Float.class,
+    private Property<Float> currentFuelConsumption = new Property(Float.class,
             IDENTIFIER_CURRENT_FUEL_CONSUMPTION);
 
     /**

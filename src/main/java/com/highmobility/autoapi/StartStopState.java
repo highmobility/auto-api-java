@@ -44,7 +44,7 @@ public class StartStopState extends CommandWithProperties {
         super(bytes);
 
         Property p = getProperty((byte) 0x01);
-        if (p != null) active = new Property<>(Boolean.class, p);
+        if (p != null) active = new Property(Boolean.class, p);
     }
 
     @Override public boolean isState() {

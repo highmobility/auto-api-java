@@ -37,8 +37,8 @@ public class TrunkState extends CommandWithProperties {
     private static final byte IDENTIFIER_LOCK = 0x01;
     private static final byte IDENTIFIER_POSITION = 0x02;
 
-    Property<Lock> lock = new Property<>(Lock.class, IDENTIFIER_LOCK);
-    Property<Position> position = new Property<>(Position.class, IDENTIFIER_POSITION);
+    Property<Lock> lock = new Property(Lock.class, IDENTIFIER_LOCK);
+    Property<Position> position = new Property(Position.class, IDENTIFIER_POSITION);
 
     /**
      * @return the current lock status of the trunk.

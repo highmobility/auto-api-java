@@ -33,7 +33,7 @@ public class WeatherConditions extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.WEATHER_CONDITIONS, 0x01);
 
     private static final byte IDENTIFIER_RAIN = 0x01;
-    Property<Double> rainIntensity = new Property<>(Double.class, IDENTIFIER_RAIN);
+    Property<Double> rainIntensity = new Property(Double.class, IDENTIFIER_RAIN);
 
     /**
      * @return The rain intensity.

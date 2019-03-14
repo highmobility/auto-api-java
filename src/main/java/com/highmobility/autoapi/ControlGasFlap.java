@@ -37,8 +37,8 @@ public class ControlGasFlap extends CommandWithProperties {
     private static final byte LOCK_IDENTIFIER = 0x02;
     private static final byte POSITION_IDENTIFIER = 0x03;
 
-    @Nullable private Property<Lock> lock = new Property<>(Lock.class, LOCK_IDENTIFIER);
-    @Nullable private Property<Position> position = new Property<>(Position.class,
+    @Nullable private Property<Lock> lock = new Property(Lock.class, LOCK_IDENTIFIER);
+    @Nullable private Property<Position> position = new Property(Position.class,
             POSITION_IDENTIFIER);
 
     /**

@@ -34,7 +34,7 @@ public class ControlMode extends CommandWithProperties {
     private static final byte IDENTIFIER_MODE = 0x01;
     private static final byte IDENTIFIER_ANGLE = 0x02;
 
-    Property<Value> mode = new Property<>(Value.class, IDENTIFIER_MODE);
+    Property<Value> mode = new Property(Value.class, IDENTIFIER_MODE);
     PropertyInteger angle = new PropertyInteger(IDENTIFIER_ANGLE, false);
 
     /**

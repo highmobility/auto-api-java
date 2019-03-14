@@ -36,7 +36,7 @@ public class OffroadState extends CommandWithProperties {
 
     PropertyInteger routeIncline = new PropertyInteger(IDENTIFIER_ROUTE_INCLINE, false);
     Property<Double> wheelSuspension =
-            new Property<>(Double.class, IDENTIFIER_WHEEL_SUSPENSION);
+            new Property(Double.class, IDENTIFIER_WHEEL_SUSPENSION);
 
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.

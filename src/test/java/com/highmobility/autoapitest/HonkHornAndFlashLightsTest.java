@@ -69,7 +69,7 @@ public class HonkHornAndFlashLightsTest {
 
     @Test public void builder() {
         FlashersState.Builder builder = new FlashersState.Builder();
-        builder.setState(new Property<>(FlashersState.Value.LEFT_ACTIVE));
+        builder.setState(new Property(FlashersState.Value.LEFT_ACTIVE));
         FlashersState state = builder.build();
         assertTrue(state.equals(bytes));
         assertTrue(state.getState().getValue() == FlashersState.Value.LEFT_ACTIVE);

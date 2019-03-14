@@ -58,7 +58,7 @@ public class ValetModeTest {
 
     @Test public void builder() {
         ValetMode.Builder builder = new ValetMode.Builder();
-        builder.setActive(new Property<>(true));
+        builder.setActive(new Property(true));
         testState(builder.build());
     }
 }

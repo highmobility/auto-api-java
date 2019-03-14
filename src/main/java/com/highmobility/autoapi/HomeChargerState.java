@@ -59,32 +59,32 @@ public class HomeChargerState extends CommandWithProperties {
     private static final byte IDENTIFIER_COORDINATES = 0x11;
     private static final byte IDENTIFIER_PRICE_TARIFF = 0x12;
 
-    Property<Charging> charging = new Property<>(Charging.class, IDENTIFIER_CHARGING);
+    Property<Charging> charging = new Property(Charging.class, IDENTIFIER_CHARGING);
     Property<AuthenticationMechanism> authenticationMechanism =
-            new Property<>(AuthenticationMechanism.class,
+            new Property(AuthenticationMechanism.class,
                     IDENTIFIER_AUTHENTICATION_MECHANISM);
-    Property<PlugType> plugType = new Property<>(PlugType.class, IDENTIFIER_PLUG_TYPE);
-    Property<Float> chargingPower = new Property<>(Float.class,
+    Property<PlugType> plugType = new Property(PlugType.class, IDENTIFIER_PLUG_TYPE);
+    Property<Float> chargingPower = new Property(Float.class,
             IDENTIFIER_CHARGING_POWER);
-    Property<Boolean> solarChargingActive = new Property<>(Boolean.class,
+    Property<Boolean> solarChargingActive = new Property(Boolean.class,
             IDENTIFIER_SOLAR_CHARGING_ACTIVE);
-    Property<Boolean> hotspotEnabled = new Property<>(Boolean.class,
+    Property<Boolean> hotspotEnabled = new Property(Boolean.class,
             IDENTIFIER_HOTSPOT_ENABLED);
     Property<String> hotspotSsid = new Property(String.class, IDENTIFIER_HOTSPOT_SSID);
-    Property<NetworkSecurity> hotspotSecurity = new Property<>(NetworkSecurity.class,
+    Property<NetworkSecurity> hotspotSecurity = new Property(NetworkSecurity.class,
             IDENTIFIER_HOTSPOT_SECURITY);
     Property<String> hotspotPassword = new Property(String.class, IDENTIFIER_HOTSPOT_PASSWORD);
 
     // level8
-    Property<Boolean> authenticated = new Property<>(Boolean.class,
+    Property<Boolean> authenticated = new Property(Boolean.class,
             IDENTIFIER_AUTHENTICATED);
-    Property<Float> chargeCurrentDC = new Property<>(Float.class,
+    Property<Float> chargeCurrentDC = new Property(Float.class,
             IDENTIFIER_CHARGE_CURRENT_DC);
     Property<Float> maximumChargeCurrent =
-            new Property<>(Float.class, IDENTIFIER_MAXIMUM_CHARGE_CURRENT);
+            new Property(Float.class, IDENTIFIER_MAXIMUM_CHARGE_CURRENT);
     Property<Float> minimumChargeCurrent =
-            new Property<>(Float.class, IDENTIFIER_MINIMUM_CHARGE_CURRENT);
-    Property<Coordinates> coordinates = new Property<>(Coordinates.class,
+            new Property(Float.class, IDENTIFIER_MINIMUM_CHARGE_CURRENT);
+    Property<Coordinates> coordinates = new Property(Coordinates.class,
             IDENTIFIER_COORDINATES);
 
     Property<PriceTariff>[] priceTariffs;
@@ -246,7 +246,7 @@ public class HomeChargerState extends CommandWithProperties {
                     case IDENTIFIER_COORDINATES:
                         return coordinates.update(p);
                     case IDENTIFIER_PRICE_TARIFF:
-                        Property<PriceTariff> t = new Property<>(PriceTariff.class, p);
+                        Property<PriceTariff> t = new Property(PriceTariff.class, p);
                         tariffs.add(t);
                         return t;
                 }

@@ -50,13 +50,13 @@ public class DashboardLightsTest {
 
     @Test public void build() {
         DashboardLights.Builder builder = new DashboardLights.Builder();
-        builder.addLight(new Property<>(new DashboardLight(DashboardLight.Type.HIGH_BEAM_MAIN_BEAM,
+        builder.addLight(new Property(new DashboardLight(DashboardLight.Type.HIGH_BEAM_MAIN_BEAM,
                 DashboardLight.State.INACTIVE)));
-        builder.addLight(new Property<>(new DashboardLight(DashboardLight.Type.HAZARD_WARNING, DashboardLight
+        builder.addLight(new Property(new DashboardLight(DashboardLight.Type.HAZARD_WARNING, DashboardLight
                 .State.INFO)));
-        builder.addLight(new Property<>(new DashboardLight(DashboardLight.Type.TRANSMISSION_FLUID_TEMPERATURE,
+        builder.addLight(new Property(new DashboardLight(DashboardLight.Type.TRANSMISSION_FLUID_TEMPERATURE,
                 DashboardLight.State.RED)));
-        builder.addLight(new Property<>(new DashboardLight(DashboardLight.Type.ENGINE_OIL_LEVEL, DashboardLight
+        builder.addLight(new Property(new DashboardLight(DashboardLight.Type.ENGINE_OIL_LEVEL, DashboardLight
                 .State.YELLOW)));
         DashboardLights state = builder.build();
         assertTrue(state.equals(bytes));

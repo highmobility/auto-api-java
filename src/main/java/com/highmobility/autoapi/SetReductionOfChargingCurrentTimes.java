@@ -54,7 +54,7 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
 
         for (int i = 0; i < reductionTimes.length; i++) {
             ReductionTime time = reductionTimes[i];
-            Property reductionTime = new Property<>(PROPERTY_IDENTIFIER, time);
+            Property reductionTime = new Property(PROPERTY_IDENTIFIER, time);
             builder.add(reductionTime);
         }
 

@@ -41,7 +41,7 @@ public class FirmwareVersionTest {
     @Test public void build() {
         FirmwareVersion.Builder builder = new FirmwareVersion.Builder();
 
-        builder.setCarSdkVersion(new Property<>(new int[]{1, 15, 33}));
+        builder.setCarSdkVersion(new Property(new int[]{1, 15, 33}));
         builder.setCarSDKBuild(new Property("btstack-uart"));
         builder.setApplicationVersion(new Property("v1.5-prod"));
 

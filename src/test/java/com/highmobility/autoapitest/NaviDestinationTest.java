@@ -65,7 +65,7 @@ public class NaviDestinationTest {
 
     @Test public void build() {
         NaviDestination.Builder builder = new NaviDestination.Builder();
-        builder.setCoordinates(new Property<>(new Coordinates(52.520008, 13.404954)));
+        builder.setCoordinates(new Property(new Coordinates(52.520008, 13.404954)));
         builder.setName(new Property("Berlin"));
         Command state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));

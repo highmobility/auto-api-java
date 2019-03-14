@@ -30,7 +30,7 @@ public class SetChargeLimit extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x13);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
 
-    Property<Double> percentage = new Property<>(Double.class, PROPERTY_IDENTIFIER);
+    Property<Double> percentage = new Property(Double.class, PROPERTY_IDENTIFIER);
 
     /**
      * @return The charge limit percentage.

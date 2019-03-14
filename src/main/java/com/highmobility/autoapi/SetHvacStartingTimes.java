@@ -70,7 +70,7 @@ public class SetHvacStartingTimes extends CommandWithProperties {
         ArrayList<Property> builder = new ArrayList<>();
 
         for (HvacStartingTime time : hvacStartingTimes) {
-            Property<HvacStartingTime> prop = new Property<>(AUTO_HVAC_IDENTIFIER,
+            Property<HvacStartingTime> prop = new Property(AUTO_HVAC_IDENTIFIER,
                     time);
             builder.add(prop);
         }
@@ -88,7 +88,7 @@ public class SetHvacStartingTimes extends CommandWithProperties {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case AUTO_HVAC_IDENTIFIER:
-                        Property prop = new Property<>(HvacStartingTime.class, p);
+                        Property prop = new Property(HvacStartingTime.class, p);
                         builder.add(prop);
                         return prop;
                 }

@@ -51,28 +51,28 @@ public class ClimateState extends CommandWithProperties {
     private static final byte IDENTIFIER_HVAC_TIME = 0x0B;
     private static final byte IDENTIFIER_REAR_TEMPERATURE_SETTING = 0x0C;
 
-    Property<Float> insideTemperature = new Property<>(Float.class,
+    Property<Float> insideTemperature = new Property(Float.class,
             IDENTIFIER_INSIDE_TEMPERATURE);
-    Property<Float> outsideTemperature = new Property<>(Float.class,
+    Property<Float> outsideTemperature = new Property(Float.class,
             IDENTIFIER_OUTSIDE_TEMPERATURE);
     Property<Float> driverTemperatureSetting =
-            new Property<>(Float.class, IDENTIFIER_DRIVER_TEMPERATURE_SETTING);
+            new Property(Float.class, IDENTIFIER_DRIVER_TEMPERATURE_SETTING);
     Property<Float> passengerTemperatureSetting =
-            new Property<>(Float.class, IDENTIFIER_PASSENGER_TEMPERATURE_SETTING);
-    Property<Boolean> hvacActive = new Property<>(Boolean.class,
+            new Property(Float.class, IDENTIFIER_PASSENGER_TEMPERATURE_SETTING);
+    Property<Boolean> hvacActive = new Property(Boolean.class,
             IDENTIFIER_HVAC_ACTIVE);
-    Property<Boolean> defoggingActive = new Property<>(Boolean.class,
+    Property<Boolean> defoggingActive = new Property(Boolean.class,
             IDENTIFIER_DEFOGGING_ACTIVE);
-    Property<Boolean> defrostingActive = new Property<>(Boolean.class,
+    Property<Boolean> defrostingActive = new Property(Boolean.class,
             IDENTIFIER_DEFROSTING_ACTIVE);
-    Property<Boolean> ionisingActive = new Property<>(Boolean.class,
+    Property<Boolean> ionisingActive = new Property(Boolean.class,
             IDENTIFIER_IONISING_ACTIVE);
-    Property<Float> defrostingTemperature = new Property<>(Float.class,
+    Property<Float> defrostingTemperature = new Property(Float.class,
             IDENTIFIER_DEFROSTING_TEMPERATURE);
 
     // level8
     Property<HvacStartingTime>[] hvacStartingTimes;
-    Property<Float> rearTemperatureSetting = new Property<>(Float.class,
+    Property<Float> rearTemperatureSetting = new Property(Float.class,
             IDENTIFIER_REAR_TEMPERATURE_SETTING);
 
     /**
@@ -192,7 +192,7 @@ public class ClimateState extends CommandWithProperties {
                         return defrostingTemperature.update(p);
                     case IDENTIFIER_HVAC_TIME:
                         Property<HvacStartingTime> time =
-                                new Property<>(HvacStartingTime.class, p);
+                                new Property(HvacStartingTime.class, p);
                         builder.add(time);
                         return time;
                     case IDENTIFIER_REAR_TEMPERATURE_SETTING:

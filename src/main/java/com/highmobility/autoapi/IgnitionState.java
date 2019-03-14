@@ -34,8 +34,8 @@ public class IgnitionState extends CommandWithProperties {
     private static final byte IDENTIFIER_ON = 0x01;
     private static final byte IDENTIFIER_ACCESSORIES = 0x02;
 
-    Property<Boolean> on = new Property<>(Boolean.class, IDENTIFIER_ON);
-    Property<Boolean> accessoriesIgnition = new Property<>(Boolean.class, IDENTIFIER_ACCESSORIES);
+    Property<Boolean> on = new Property(Boolean.class, IDENTIFIER_ON);
+    Property<Boolean> accessoriesIgnition = new Property(Boolean.class, IDENTIFIER_ACCESSORIES);
 
     /**
      * @return The ignition state.

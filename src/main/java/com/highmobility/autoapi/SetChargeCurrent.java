@@ -29,7 +29,7 @@ public class SetChargeCurrent extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x12);
     private static final byte IDENTIFIER = 0x01;
 
-    private Property<Float> current = new Property<>(Float.class, IDENTIFIER);
+    private Property<Float> current = new Property(Float.class, IDENTIFIER);
 
     /**
      * @return The charge current.

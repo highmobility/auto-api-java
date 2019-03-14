@@ -46,10 +46,10 @@ public class WifiTest {
     @Test public void build() {
         WifiState.Builder builder = new WifiState.Builder();
 
-        builder.setEnabled(new Property<>(true));
-        builder.setConnected(new Property<>(true));
+        builder.setEnabled(new Property(true));
+        builder.setConnected(new Property(true));
         builder.setSsid(new Property("HOME"));
-        builder.setSecurity(new Property<>(NetworkSecurity.WPA2_PERSONAL));
+        builder.setSecurity(new Property(NetworkSecurity.WPA2_PERSONAL));
 
         WifiState state = builder.build();
         assertTrue(state.equals(bytes));

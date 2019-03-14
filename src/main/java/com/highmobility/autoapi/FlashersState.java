@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 public class FlashersState extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x01);
     private static final byte STATE_IDENTIFIER = 0x01;
-    Property<Value> state = new Property<>(Value.class, STATE_IDENTIFIER);
+    Property<Value> state = new Property(Value.class, STATE_IDENTIFIER);
 
     /**
      * @return The flashers state.

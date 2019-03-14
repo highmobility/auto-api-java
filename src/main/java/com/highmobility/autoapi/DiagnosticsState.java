@@ -108,7 +108,7 @@ public class DiagnosticsState extends CommandWithProperties {
     PropertyInteger wheelBasedSpeed = new PropertyInteger(IDENTIFIER_WHEEL_BASED_SPEED, true);
 
     // level8
-    Property<Double> batteryLevel = new Property<>(Double.class, IDENTIFIER_BATTERY_LEVEL);
+    Property<Double> batteryLevel = new Property(Double.class, IDENTIFIER_BATTERY_LEVEL);
     Property<CheckControlMessage>[] checkControlMessages;
     Property<TirePressure>[] tirePressures;
     Property<TireTemperature>[] tireTemperatures;
@@ -412,27 +412,27 @@ public class DiagnosticsState extends CommandWithProperties {
                         return batteryLevel.update(p);
                     case IDENTIFIER_CHECK_CONTROL_MESSAGES:
                         Property<CheckControlMessage> message =
-                                new Property<>(CheckControlMessage.class, p);
+                                new Property(CheckControlMessage.class, p);
                         checkControlMessages.add(message);
                         return message;
                     case IDENTIFIER_TIRE_PRESSURES:
                         Property<TirePressure> tirePressure =
-                                new Property<>(TirePressure.class, p);
+                                new Property(TirePressure.class, p);
                         tirePressures.add(tirePressure);
                         return tirePressure;
                     case IDENTIFIER_TIRE_TEMPERATURES:
                         Property<TireTemperature> tireTemperature =
-                                new Property<>(TireTemperature.class, p);
+                                new Property(TireTemperature.class, p);
                         tireTemperatures.add(tireTemperature);
                         return tireTemperature;
                     case IDENTIFIER_WHEEL_RPM:
                         Property<WheelRpm> wheelRpm =
-                                new Property<>(WheelRpm.class, p);
+                                new Property(WheelRpm.class, p);
                         wheelRpms.add(wheelRpm);
                         return wheelRpm;
                     case IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE:
                         Property<DiagnosticsTroubleCode> troubleCode =
-                                new Property<>(DiagnosticsTroubleCode.class, p);
+                                new Property(DiagnosticsTroubleCode.class, p);
                         troubleCodes.add(troubleCode);
                         return troubleCode;
                     case IDENTIFIER_MILEAGE_METERS:

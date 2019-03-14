@@ -50,19 +50,19 @@ public class LightsState extends CommandWithProperties {
     private static final byte IDENTIFIER_INTERIOR_LAMPS = 0x09;
 
     Property<FrontExteriorLightState> frontExteriorLightState =
-            new Property<>(FrontExteriorLightState.class,
+            new Property(FrontExteriorLightState.class,
                     IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE);
     Property<Boolean> rearExteriorLightActive =
-            new Property<>(Boolean.class, IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
+            new Property(Boolean.class, IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
 
-    Property<Color> ambientColor = new Property<>(Color.class,
+    Property<Color> ambientColor = new Property(Color.class,
             IDENTIFIER_AMBIENT_COLOR);
 
     // l7
-    Property<Boolean> reverseLightActive = new Property<>(Boolean.class,
+    Property<Boolean> reverseLightActive = new Property(Boolean.class,
             IDENTIFIER_REVERSE_LIGHT_ACTIVE);
     Property<Boolean> emergencyBrakeLightActive =
-            new Property<>(Boolean.class, IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE);
+            new Property(Boolean.class, IDENTIFIER_EMERGENCY_BRAKE_LIGHT_ACTIVE);
 
     // l9
     Property<FogLight>[] fogLights;

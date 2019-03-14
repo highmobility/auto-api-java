@@ -39,8 +39,8 @@ public class FuelingTest {
     @Test public void build() {
         GasFlapState.Builder builder = new GasFlapState.Builder();
 
-        builder.setLock(new Property<>(Lock.LOCKED));
-        builder.setPosition(new Property<>(Position.CLOSED));
+        builder.setLock(new Property(Lock.LOCKED));
+        builder.setPosition(new Property(Position.CLOSED));
 
         GasFlapState state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));

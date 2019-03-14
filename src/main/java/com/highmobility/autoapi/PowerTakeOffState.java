@@ -57,10 +57,10 @@ public class PowerTakeOffState extends CommandWithProperties {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case ACTIVE_IDENTIFIER:
-                        active = new Property<>(Boolean.class, p);
+                        active = new Property(Boolean.class, p);
                         return active;
                     case ENGAGED_IDENTIFIER:
-                        engaged = new Property<>(Boolean.class, p);
+                        engaged = new Property(Boolean.class, p);
                         return engaged;
                 }
 

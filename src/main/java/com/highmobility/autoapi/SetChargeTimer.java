@@ -75,7 +75,7 @@ public class SetChargeTimer extends CommandWithProperties {
                     throw new IllegalArgumentException();
             }
 
-            Property<ChargingTimer> prop = new Property<>(PROPERTY_IDENTIFIER, timer);
+            Property<ChargingTimer> prop = new Property(PROPERTY_IDENTIFIER, timer);
             builder.add(prop);
         }
 
@@ -92,7 +92,7 @@ public class SetChargeTimer extends CommandWithProperties {
                 switch (p.getPropertyIdentifier()) {
                     case PROPERTY_IDENTIFIER:
                         Property<ChargingTimer> timer =
-                                new Property<>(ChargingTimer.class, p);
+                                new Property(ChargingTimer.class, p);
                         builder.add(timer);
                         return timer;
                 }

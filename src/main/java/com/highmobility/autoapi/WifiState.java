@@ -37,8 +37,8 @@ public class WifiState extends CommandWithProperties {
     public static final byte IDENTIFIER_SSID = 0x03;
     public static final byte IDENTIFIER_SECURITY = 0x04;
 
-    Property<Boolean> enabled = new Property<>(Boolean.class, IDENTIFIER_ENABLED);
-    Property<Boolean> connected = new Property<>(Boolean.class, IDENTIFIER_CONNECTED);
+    Property<Boolean> enabled = new Property(Boolean.class, IDENTIFIER_ENABLED);
+    Property<Boolean> connected = new Property(Boolean.class, IDENTIFIER_CONNECTED);
     Property<String> ssid = new Property(String.class, IDENTIFIER_SSID);
     Property<NetworkSecurity> security = new Property(NetworkSecurity.class, IDENTIFIER_SECURITY);
 

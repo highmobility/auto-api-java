@@ -35,9 +35,9 @@ public class VehicleLocation extends CommandWithProperties {
     private static final byte IDENTIFIER_HEADING = 0x05;
     private static final byte IDENTIFIER_ALTITUDE = 0x06;
 
-    private Property<Coordinates> coordinates = new Property<>(Coordinates.class, IDENTIFIER_COORDINATES);
-    private Property<Double> heading = new Property<>(Double.class, IDENTIFIER_HEADING);
-    private Property<Double> altitude = new Property<>(Double.class, IDENTIFIER_ALTITUDE);
+    private Property<Coordinates> coordinates = new Property(Coordinates.class, IDENTIFIER_COORDINATES);
+    private Property<Double> heading = new Property(Double.class, IDENTIFIER_HEADING);
+    private Property<Double> altitude = new Property(Double.class, IDENTIFIER_ALTITUDE);
 
     /**
      * @return The vehicle coordinates.

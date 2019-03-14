@@ -55,7 +55,7 @@ public class ParkingBrakeTest {
 
     @Test public void build() {
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
-        builder.setIsActive(new Property<>(true));
+        builder.setIsActive(new Property(true));
         ParkingBrakeState state = builder.build();
         assertTrue(state.equals(bytes));
         testState(state);

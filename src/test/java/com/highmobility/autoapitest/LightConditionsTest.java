@@ -34,8 +34,8 @@ public class LightConditionsTest {
 
     @Test public void build() {
         LightConditions.Builder builder = new LightConditions.Builder();
-        builder.setOutsideLight(new Property<>(111000f));
-        builder.setInsideLight(new Property<>(.25f));
+        builder.setOutsideLight(new Property(111000f));
+        builder.setInsideLight(new Property(.25f));
         Command command = builder.build();
         assertTrue(command.equals(bytes));
     }

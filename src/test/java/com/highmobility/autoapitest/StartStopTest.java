@@ -29,7 +29,7 @@ public class StartStopTest {
 
     @Test public void build() {
         StartStopState.Builder builder = new StartStopState.Builder();
-        builder.setIsActive(new Property<>(true));
+        builder.setIsActive(new Property(true));
         assertTrue(builder.build().equals(bytes));
     }
 

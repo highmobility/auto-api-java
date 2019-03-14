@@ -32,7 +32,7 @@ public class ParkingBrakeState extends CommandWithProperties {
 
     private static final byte ACTIVE_IDENTIFIER = 0x01;
 
-    Property<Boolean> active = new Property<>(Boolean.class, ACTIVE_IDENTIFIER);
+    Property<Boolean> active = new Property(Boolean.class, ACTIVE_IDENTIFIER);
 
     /**
      * @return Whether parking brake is active.

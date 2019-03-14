@@ -64,7 +64,7 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
         super(TYPE);
         ArrayList<Property> properties = new ArrayList<>();
 
-        properties.add(new Property<>(activate).setIdentifier(IDENTIFIER_ACTIVATE));
+        properties.add(new Property(activate).setIdentifier(IDENTIFIER_ACTIVATE));
         this.activate.update(activate);
 
         if (speed != null) {

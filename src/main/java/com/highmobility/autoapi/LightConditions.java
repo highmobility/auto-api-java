@@ -31,9 +31,9 @@ public class LightConditions extends CommandWithProperties {
     public static final Type TYPE = new Type(Identifier.LIGHT_CONDITIONS, 0x01);
     private static final byte IDENTIFIER_OUTSIDE_LIGHT = 0x01;
     private static final byte IDENTIFIER_INSIDE_LIGHT = 0x02;
-    Property<Float> outsideLight = new Property<>(Float.class,
+    Property<Float> outsideLight = new Property(Float.class,
             IDENTIFIER_OUTSIDE_LIGHT);
-    Property<Float> insideLight = new Property<>(Float.class, IDENTIFIER_INSIDE_LIGHT);
+    Property<Float> insideLight = new Property(Float.class, IDENTIFIER_INSIDE_LIGHT);
 
     /**
      * @return The measured outside illuminance in lux.

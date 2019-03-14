@@ -70,7 +70,7 @@ public class DashboardLights extends CommandWithProperties {
             propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER_DASHBOARD_LIGHT) {
                     Property<DashboardLight> light =
-                            new Property<>(DashboardLight.class, p);
+                            new Property(DashboardLight.class, p);
                     builder.add(light);
                     return light;
                 }

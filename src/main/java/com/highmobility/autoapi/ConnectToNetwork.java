@@ -40,7 +40,7 @@ public class ConnectToNetwork extends CommandWithProperties {
 
     private Property<String> ssid = new Property(String.class, IDENTIFIER_SSID);
     private Property<String> password = new Property(String.class, IDENTIFIER_PASSWORD);
-    private Property<NetworkSecurity> security = new Property<>(NetworkSecurity.class
+    private Property<NetworkSecurity> security = new Property(NetworkSecurity.class
             , IDENTIFIER_SECURITY);
 
     /**
