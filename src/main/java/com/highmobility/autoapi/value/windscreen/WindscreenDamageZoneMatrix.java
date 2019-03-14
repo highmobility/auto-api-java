@@ -24,10 +24,6 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
-/**
- * Created by root on 6/29/17.
- */
-
 public class WindscreenDamageZoneMatrix extends PropertyValueObject {
     int windscreenSizeHorizontal;
     int windscreenSizeVertical;

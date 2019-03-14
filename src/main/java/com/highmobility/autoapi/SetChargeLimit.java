@@ -35,7 +35,6 @@ public class SetChargeLimit extends CommandWithProperties {
     /**
      * @return The charge limit percentage.
      */
-
     public Property<Double> getChargeLimit() {
         return percentage;
     }
@@ -45,7 +44,6 @@ public class SetChargeLimit extends CommandWithProperties {
      *
      * @param percentage The charge limit percentage.
      */
-
     public SetChargeLimit(Double percentage) throws IllegalArgumentException {
         super(TYPE);
         this.percentage.update(percentage);

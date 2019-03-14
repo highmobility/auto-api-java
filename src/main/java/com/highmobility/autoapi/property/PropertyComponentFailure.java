@@ -58,7 +58,6 @@ public class PropertyComponentFailure extends PropertyComponent {
      * @param failureReason The failure reason.
      * @param description   The failure description.
      */
-
     public PropertyComponentFailure(Reason failureReason, @Nullable String description) {
         super(IDENTIFIER, 2 + description.length());
 

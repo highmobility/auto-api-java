@@ -99,7 +99,6 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The acceleration evaluation.
      */
-
     public Property<Double> getAccelerationEvaluation() {
         return accelerationEvaluation;
     }

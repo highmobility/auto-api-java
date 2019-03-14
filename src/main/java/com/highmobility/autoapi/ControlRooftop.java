@@ -64,7 +64,6 @@ public class ControlRooftop extends CommandWithProperties {
     /**
      * @return The open percentage.
      */
-
     public Property<Double> getOpenPercentage() {
         return openPercentage;
     }
@@ -97,7 +96,6 @@ public class ControlRooftop extends CommandWithProperties {
      * @param sunroofTiltState     The sunroof tilt state.
      * @param sunroofPosition      The sunroof position.
      */
-
     public ControlRooftop(@Nullable Double dimmingPercentage,
                           @Nullable Double openPercentage,
                           @Nullable ConvertibleRoofState convertibleRoofState,

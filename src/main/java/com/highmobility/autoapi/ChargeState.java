@@ -137,7 +137,6 @@ public class ChargeState extends CommandWithProperties {
     /**
      * @return The Charge limit percentage.
      */
-
     public Property<Double> getChargeLimit() {
         return chargeLimit;
     }

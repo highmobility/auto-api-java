@@ -52,7 +52,6 @@ public class RooftopState extends CommandWithProperties {
     /**
      * @return The dim percentage of the rooftop.
      */
-
     public Property<Double> getDimmingPercentage() {
         return dimmingPercentage;
     }

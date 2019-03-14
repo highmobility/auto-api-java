@@ -149,7 +149,6 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The Fuel level percentage.
      */
-
     public Property<Double> getFuelLevel() {
         return fuelLevel;
     }
@@ -241,7 +240,6 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The current engine torque percentage.
      */
-
     public Property<Double> getEngineTorque() {
         return engineTorque;
     }
@@ -263,7 +261,6 @@ public class DiagnosticsState extends CommandWithProperties {
     /**
      * @return The battery level percentage.
      */
-
     public Property<Double> getBatteryLevel() {
         return batteryLevel;
     }
@@ -726,7 +723,6 @@ public class DiagnosticsState extends CommandWithProperties {
          * @param engineTorque The current engine torque percentage between 0-1.
          * @return The builder.
          */
-
         public Builder setEngineTorque(Property<Double> engineTorque) {
             this.engineTorque = engineTorque;
             engineTorque.setIdentifier(IDENTIFIER_ENGINE_TORQUE);

@@ -76,7 +76,6 @@ public class ControlMode extends CommandWithProperties {
     /**
      * The possible control mode values.
      */
-
     public enum Value implements ByteEnum {
         UNAVAILABLE((byte) 0x00),
         AVAILABLE((byte) 0x01),
