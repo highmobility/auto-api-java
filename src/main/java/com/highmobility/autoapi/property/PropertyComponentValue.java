@@ -64,7 +64,7 @@ public class PropertyComponentValue<T> extends PropertyComponent {
     }
 
     public void setClass(Class<T> valueClass) throws CommandParseException {
-        // not can parse the bytes
+        // map bytes to the type
         if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
             try {
                 value = valueClass.newInstance();

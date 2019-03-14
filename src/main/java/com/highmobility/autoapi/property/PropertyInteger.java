@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
 
 import javax.annotation.Nullable;
 
-// since int has different signed and length options, its better to have a property subclass.
+// since int has different signed and length options, its better to have a subclass.
 public class PropertyInteger extends Property<Integer> {
     boolean signed;
 
@@ -61,8 +61,8 @@ public class PropertyInteger extends Property<Integer> {
     }
 
     /**
-     * Reset the value. This will create new bytes. It is used in Integer builders internally
-     * because we don't want to bother the user about integer length or sign.
+     * Reset the value and create new bytes according to the new length. Used internally because we
+     * don't want to bother the user about integer length or sign.
      *
      * @param newLength The new length.
      */

@@ -25,7 +25,6 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.exception.ParseException;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import java.io.UnsupportedEncodingException;
@@ -288,34 +287,6 @@ public class Property<T> extends Bytes {
     }
 
     // MARK: ctor helpers
-
-//    public static byte[] baseBytesWithDataComponent(byte propertyIdentifier,
-//                                                    int dataComponentSize) {
-//        // if have a value, create bytes for data component
-//        int propertySize = 3 + 3 + dataComponentSize; // property header 3 bytes, component
-//        // header 3 bytes
-//        byte[] bytes = new byte[propertySize];
-//
-//        bytes[0] = propertyIdentifier;
-//        ByteUtils.setBytes(bytes, intToBytes(dataComponentSize + 3, 2), 1);
-//        bytes[3] = PropertyComponentValue.IDENTIFIER;
-//        // TODO: should create the component here already? update it later?
-//        ByteUtils.setBytes(bytes, intToBytes(dataComponentSize, 2), 4);
-//
-//        return bytes;
-//    }
-
-    public static byte[] getIntProperty(byte identifier, int value, int length) throws
-            IllegalArgumentException {
-        byte[] bytes = new byte[]{
-                identifier,
-                0x00,
-                (byte) length
-        };
-
-        byte[] valueBytes = intToBytes(value, length);
-        return ByteUtils.concatBytes(bytes, valueBytes);
-    }
 
     public static long getLong(byte[] b, int at) throws IllegalArgumentException {
         if (b.length - at < 8) throw new IllegalArgumentException();
