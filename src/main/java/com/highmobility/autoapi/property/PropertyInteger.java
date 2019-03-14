@@ -21,7 +21,6 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import javax.annotation.Nullable;
@@ -35,27 +34,22 @@ public class PropertyInteger extends Property<Integer> {
         super(value);
     }
 
-    public PropertyInteger(Property p, boolean signed) throws CommandParseException {
-        super(Integer.class, p.getPropertyIdentifier());
-        this.signed = signed;
-        update(p);
-    }
-
-    // used in builders
+    // used in builders. Create new bytes
     public PropertyInteger(byte identifier, boolean signed, int length, Property<Integer> value) {
-        this(identifier, signed);
-        this.bytes = getBytes(identifier, length, value.value.value).getByteArray();
-        findComponents();
-        // TODO: 2019-03-12 copy the components from Property<Integer>
-        this.value.value = value.value.value;
+        super(Integer.class, identifier);
+        this.failure = value.failure;
+        this.timestamp = value.timestamp;
+        update(signed, length, value.value.value);
     }
 
+    // used in fields
     public PropertyInteger(byte identifier, boolean signed) {
         super(Integer.class, identifier);
         this.signed = signed;
     }
 
     @Override public Property update(Property p) throws CommandParseException {
+        // this copies the components and creates bytes
         super.update(p);
 
         if (p.getValueComponent().getValueBytes().getLength() >= 1) {
@@ -67,49 +61,16 @@ public class PropertyInteger extends Property<Integer> {
     }
 
     /**
-     * Reset the value length. This will create a new base byte array. It is used for Integer
-     * builders because we don't want the user to bother about whether Integer is signed or how many
-     * bytes is it's length.
+     * Reset the value. This will create new bytes. It is used in Integer builders internally
+     * because we don't want to bother the user about integer length or sign.
      *
-     * @param identifier The property identifier.
-     * @param newLength  The new length.
+     * @param newLength The new length.
      */
-    public Property update(byte identifier, boolean signed, int newLength) {
-        bytes = baseBytesWithDataComponent(identifier, newLength);
-        // update the length/sign of the previously set int. This is used in builders.
-
-        /*
-        Don't need to consider signed here because we are not resetting the value, it stays
-        signed int from builder ctor. Bytes would be set the same for signed/unsigned.
-         */
-        if (value == null) return this; // there is no int value set before, nothing to do
-        value = new PropertyComponentValueInteger(value.value, signed, newLength);
-        set(3, value);
-
-        return this;
-    }
-
     public Property update(boolean signed, int newLength, @Nullable Integer value) {
-        // create new bytes
-        bytes = baseBytesWithDataComponent(bytes[0], newLength);
+        this.signed = signed;
         this.value = new PropertyComponentValueInteger(value, signed, newLength);
-        set(3, this.value);
+        createBytesFromComponents(bytes[0]);
         return this;
-    }
-
-    static Bytes getBytes(byte identifier, int length, Integer value) {
-        // TODO: 2019-03-12 should consider other components of the property as well.
-        byte[] bytes = baseBytesWithDataComponent(identifier, length);
-
-        if (value == null) return new Bytes();
-
-        if (length == 1) {
-            bytes[6] = value.byteValue();
-        } else {
-            ByteUtils.setBytes(bytes, intToBytes(value, length), 6);
-        }
-
-        return new Bytes(bytes);
     }
 
     // int needs to be updated later, so builder users dont need to consider the int length or sign

@@ -39,46 +39,50 @@ import java.util.GregorianCalendar;
 import javax.annotation.Nullable;
 
 /**
- * Property is a representation of some AutoAPI data.
- * It consists of 3 optional components:
- * data, timestamp, failure
+ * Property is a representation of some AutoAPI data. It consists of 3 optional components: data,
+ * timestamp, failure
  */
 public class Property<T> extends Bytes {
-
     /*
-    property is created/updated in 3 places:
+    Property is created/updated in 3 places:
 
     1:
     Incoming command:
     Base Command parses the components but doesn't know the type. Sub command updates its
     properties with base components.
 
-    new Property(bytes);
+    base command:
+    properties[i] = new Property(bytes);
     findComponents(bytes)
 
-     >> subclass update(property) > copy the components to sub property
-     ^^ subclass update is needed because base does not know the property type
+    sub command update is needed because base does not know the property type:
+     >> field.update(property) > copy the components to sub property, replace the base property
+      with parsed one
 
     2:
-    in ctor from builder. this creates components itself. if IntegerProperty components should be
-    updated when length/sign is set
-        new Property(GasFlapState) > update(GasFlapState, null, null) >> goto 3
-
-    new Property(null, null, failure) > update(null, null, failure) >> goto 3
+    User creates the property herself and passes it to builder.
+    IntegerProperty is updated later in the builder to set length/sign
+    * new Property(GasFlapState) > update(GasFlapState, timestamp, null) >> goto 3
+    or
+    * new Property(null, null, failure) > update(null, null, failure) >> goto 3
 
     3:
-    in control commands the object is created as field, but updated with real value (eg GasFlapState).
+    in control commands the object is created as field, but updated with real value (eg
+    GasFlapState).
     Property<GasFlapState> field = new Property(GasFlapState.class, IDENTIFIER)
-    update(GasFlapState, timestamp, failure)
-        bytes = setBytes(GasFlapState, timestamp, failure);
-        findComponents()
+
+    ControlGasFlap((GasFlapState, timestamp, failure) {
+        field.update(GasFlapState, timestamp, failure)
+         > bytes = setBytes(GasFlapState, timestamp, failure);
+         > findComponents()
+    }
      */
 
     protected static final byte[] unknownBytes = new byte[]{0x00, 0x00, 0x00};
 
     @Nullable protected PropertyComponentValue<T> value;
-    @Nullable private PropertyComponentTimestamp timestamp;
-    @Nullable private PropertyComponentFailure failure;
+    @Nullable protected PropertyComponentTimestamp timestamp;
+    @Nullable protected PropertyComponentFailure failure;
     private Class<T> valueClass = null;
 
     public byte getPropertyIdentifier() {
@@ -118,54 +122,55 @@ public class Property<T> extends Bytes {
         return failure;
     }
 
-    @Nullable Class<T> getValueClass() { // TODO: 2019-02-28 should be private
+    @Nullable Class<T> getValueClass() {
         return valueClass;
     }
-//
-//    /**
-//     * @return The one value byte. Returns null if property has no value set.
-//     */
-//    @Nullable public Byte getValueByte() {
-//        return (value != null && value.getLength() > 0) ? value.get(0) : null;
-//    }
+
+    /**
+     * @return The length of the property components(not including the header).
+     */
+    public int getPropertyLength() {
+        return getLength() - 3;
+    }
 
     // MARK: incoming ctor
 
-    // TODO: 2019-03-04 make private
     public Property(byte[] bytes) {
         if (bytes == null || bytes.length == 0) bytes = unknownBytes;
         if (bytes.length < 3) bytes = Arrays.copyOf(bytes, 3);
         this.bytes = bytes;
-
-        // TODO: 2019-03-04 find components
         findComponents();
     }
 
     protected void findComponents() {
-        int index = 3;
+
         for (int i = 3; i < bytes.length; i++) {
-            int size = getUnsignedInt(bytes, index + 1, 2);
+            int size = getUnsignedInt(bytes, i + 1, 2);
+            byte componentIdentifier = bytes[i];
 
             try {
-                if (bytes[index] == 0x01) {
-                    // data component
-                    value = new PropertyComponentValue(getRange(index, index + 3 + size));
-                } else if (bytes[index] == 0x02) {
-                    // timestamp component
-                    timestamp = new PropertyComponentTimestamp(getRange(index, index + 3 + size));
-                } else if (bytes[index] == 0x03) {
-                    // failure component
-                    failure = new PropertyComponentFailure(getRange(index, index + 3 + size));
+                switch (componentIdentifier) {
+                    case 0x01:
+                        // value component
+                        value = new PropertyComponentValue(getRange(i, i + 3 + size));
+                        break;
+                    case 0x02:
+                        // timestamp component
+                        timestamp = new PropertyComponentTimestamp(getRange(i, i + 3 + size));
+                        break;
+                    case 0x03:
+                        // failure component
+                        failure = new PropertyComponentFailure(getRange(i, i + 3 + size));
+                        break;
                 }
             } catch (CommandParseException e) {
                 printFailedToParse(e);
             }
 
-            i += size + 3;
+            i += size + 2;
         }
     }
 
-    // TODO: 2019-02-04 private
     public Property update(Property p) throws CommandParseException {
         if (valueClass == null)
             throw new IllegalArgumentException("Initialise with a class to update.");
@@ -173,7 +178,7 @@ public class Property<T> extends Bytes {
         this.bytes = p.getByteArray();
 
         this.value = p.value;
-        this.value.setClass(valueClass);
+        if (this.value != null) this.value.setClass(valueClass);
 
         this.timestamp = p.timestamp;
         this.failure = p.failure;
@@ -186,28 +191,22 @@ public class Property<T> extends Bytes {
     public Property(@Nullable T value,
                     @Nullable Calendar timestamp,
                     @Nullable PropertyComponentFailure failure) {
-        this(value);
-        setTimestampFailure(timestamp, failure);
+        update((byte) 0, value, timestamp, failure);
     }
 
     public Property(@Nullable T value) {
-        if (value == null) {
-            bytes = baseBytesWithDataComponent((byte) 0, 0);
-        } else {
-            update((byte) 0, value);
-        }
+        update((byte) 0, value, null, null);
     }
 
     // MARK: internal ctor
-    // TODO: 2019-02-04 make internal
 
     public Property(byte identifier, T value) {
-        update(identifier, value);
+        update(identifier, value, null, null);
     }
 
     public Property(Class<T> valueClass, byte identifier) {
+        this.bytes = new byte[]{identifier, 0, 0};
         this.valueClass = valueClass;
-        this.bytes = baseBytesWithDataComponent(identifier, 0);
     }
 
     public Property(Class<T> valueClass, Property property) throws CommandParseException {
@@ -218,28 +217,52 @@ public class Property<T> extends Bytes {
         update(property);
     }
 
-    // TODO: 2019-02-05 make internal
     public Property update(T value) {
-        return update(bytes[0], value);
+        return update(bytes[0], value, null, null);
     }
 
-    // TODO: 2019-02-05 make internal
-    private Property update(byte identifier, T value) {
-        this.value = new PropertyComponentValue(value);
+    private Property update(byte identifier,
+                            @Nullable T value,
+                            @Nullable Calendar timestamp,
+                            @Nullable PropertyComponentFailure failure) {
 
-        if (timestamp == null) {
-            this.bytes = baseBytesWithDataComponent(identifier,
-                    this.value.getValueBytes().getLength());
-            set(3, this.value);
-        } else {
-            // TODO: 2019-03-07 ^^ resets the timestamp bytes. make logic to consider other
-            //  components as well when creating new bytes
-        }
+        if (value != null && failure == null) this.value = new PropertyComponentValue(value);
+        if (timestamp != null) this.timestamp = new PropertyComponentTimestamp(timestamp);
+        if (failure != null) this.failure = failure;
+
+        createBytesFromComponents(identifier);
 
         return this;
     }
 
-    // TODO: 2019-02-04 make private 
+    protected void createBytesFromComponents(byte propertyIdentifier) {
+        int componentsLength = (value != null ? value.getLength() : 0) +
+                (timestamp != null ? timestamp.getLength() : 0) +
+                (failure != null ? failure.getLength() : 0);
+
+        Bytes builder = new Bytes(3 + componentsLength);
+
+        builder.set(0, propertyIdentifier);
+        builder.set(1, Property.intToBytes(componentsLength, 2));
+
+        int pointer = 3;
+
+        if (value != null) {
+            builder.set(pointer, value);
+            pointer += value.getLength();
+        }
+
+        if (timestamp != null) {
+            builder.set(pointer, timestamp);
+            pointer += timestamp.getLength();
+        }
+
+        if (failure != null) {
+            builder.set(pointer, failure);
+        }
+
+        bytes = builder.getByteArray();
+    }
 
     /**
      * Set a new identifier for the property
@@ -258,37 +281,29 @@ public class Property<T> extends Bytes {
                 propertyIdentifier == CommandWithProperties.TIMESTAMP_IDENTIFIER;
     }
 
-    // TODO: 2019-02-04 make private
-
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
 //        e.printStackTrace();
     }
 
-    protected void setTimestampFailure(Calendar timestamp, PropertyComponentFailure failure) {
-        if (timestamp != null) this.timestamp = new PropertyComponentTimestamp(timestamp);
-        // TODO: 2019-02-28 verify that bytes are correct when timestamp/failure are set
-        this.failure = failure;
-    }
-
     // MARK: ctor helpers
 
-    public static byte[] baseBytesWithDataComponent(byte propertyIdentifier,
-                                                    int dataComponentSize) {
-        // if have a value, create bytes for data component
-        int propertySize = 3 + 3 + dataComponentSize; // property header 3 bytes, component
-        // header 3 bytes
-        byte[] bytes = new byte[propertySize];
-
-        bytes[0] = propertyIdentifier;
-        ByteUtils.setBytes(bytes, intToBytes(dataComponentSize + 3, 2), 1);
-        bytes[3] = PropertyComponentValue.IDENTIFIER;
-        // TODO: should create the component here already? update it later?
-        ByteUtils.setBytes(bytes, intToBytes(dataComponentSize, 2), 4);
-
-        return bytes;
-    }
+//    public static byte[] baseBytesWithDataComponent(byte propertyIdentifier,
+//                                                    int dataComponentSize) {
+//        // if have a value, create bytes for data component
+//        int propertySize = 3 + 3 + dataComponentSize; // property header 3 bytes, component
+//        // header 3 bytes
+//        byte[] bytes = new byte[propertySize];
+//
+//        bytes[0] = propertyIdentifier;
+//        ByteUtils.setBytes(bytes, intToBytes(dataComponentSize + 3, 2), 1);
+//        bytes[3] = PropertyComponentValue.IDENTIFIER;
+//        // TODO: should create the component here already? update it later?
+//        ByteUtils.setBytes(bytes, intToBytes(dataComponentSize, 2), 4);
+//
+//        return bytes;
+//    }
 
     public static byte[] getIntProperty(byte identifier, int value, int length) throws
             IllegalArgumentException {

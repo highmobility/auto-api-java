@@ -41,13 +41,6 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         return value;
     }
 
-    /**
-     * @return The actual bytes of the value(String, double, etc), not including headers.
-     */
-    public Bytes getValueBytes() {
-        return valueBytes;
-    }
-
     @Nullable public Byte getValueByte() {
         return valueBytes != null && valueBytes.getLength() > 0 ? valueBytes.get(0) : null;
     }
@@ -62,9 +55,6 @@ public class PropertyComponentValue<T> extends PropertyComponent {
 
     PropertyComponentValue(Bytes value) {
         super(value);
-        if (length > 0) {
-            this.valueBytes = value.getRange(3, value.getLength());
-        }
     }
 
     PropertyComponentValue(T value) {
@@ -154,8 +144,6 @@ public class PropertyComponentValue<T> extends PropertyComponent {
 
         return null;
     }
-
-    // TODO: 2019-02-28
 
     public static final int CALENDAR_SIZE = 8;
     public static final String CHARSET = "UTF-8";

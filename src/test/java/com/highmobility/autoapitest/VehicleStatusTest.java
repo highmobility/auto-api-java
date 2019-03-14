@@ -202,13 +202,12 @@ public class VehicleStatusTest {
                         "0100140100094a46325348424443374348343531383639" +
                         "99002E01002B" + // 2b // 43
                         "004501" + // windows
-                        "0200050100020238" +
-                        "0200050100020312" +
+                        "0200050100020238" + // invalid
+                        "0200050100020312" + // invalid
                         "0300050100020201" +
                         "0300050100020300" +
                         "03000501000201FF" + // invalid Window Position FF
-
-                        "99000D01000700270101000401000102");
+                        "99000D01000A00270101000401000102"); // control mode command
 
         Command command = CommandResolver.resolve(bytes);
         VehicleStatus vs = (VehicleStatus) command;

@@ -2,31 +2,174 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.ClimateState;
 import com.highmobility.autoapi.CommandParseException;
-
 import com.highmobility.autoapi.value.Capability;
+import com.highmobility.autoapi.value.charging.ChargeMode;
 import com.highmobility.autoapitest.TestUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.text.ParseException;
 import java.util.Calendar;
 
 import static junit.framework.TestCase.assertTrue;
 
 public class PropertyTest {
+    // bytes: 00000160E0EA1388
     Calendar timestamp = TestUtils.getCalendar("2018-01-10T16:32:05+0000");
 
-    // TODO: 2019-02-28 write component test: if components are ordered timestamp first for
-    //  instance. if there is only failure component
-    //  write tests for failure, timestamp and data + also for building these (ObjectProperty ctor)
+    @Test public void parseValue() throws CommandParseException {
+        // assert that bytes are parsed to the value component
+        Bytes completeBytes = new Bytes("000004" +
+                "01000100"); // value
 
-    public PropertyTest() throws ParseException {
+        Property<ChargeMode> property = new Property(ChargeMode.class, (byte) 0);
+        property.update(new Property(completeBytes.getByteArray()));
+        assertTrue(property.getValueComponent().getValue() == ChargeMode.IMMEDIATE);
+        testValueComponent(property, 1, ChargeMode.IMMEDIATE);
+    }
+
+    @Test public void parseValueWithTimestamp() throws CommandParseException {
+        // assert that bytes are parsed to the value/timestamp component
+
+        Bytes completeBytes = new Bytes("00000F" +
+                "01000100" + // value
+                "02000800000160E0EA1388"); // timestamp
+
+        Property property = new Property(ChargeMode.class, (byte) 0);
+        property.update(new Property(completeBytes.getByteArray()));
+
+        testValueComponent(property, 1, ChargeMode.IMMEDIATE);
+        testTimestampComponent(property);
+
+        // parse in different order as well
+        completeBytes = new Bytes("00000F" +
+                "02000800000160E0EA1388" + // timestamp
+                "01000100" // value
+        );
+
+        property.update(new Property(completeBytes.getByteArray()));
+
+        testValueComponent(property, 1, ChargeMode.IMMEDIATE);
+        testTimestampComponent(property);
+    }
+
+    @Test public void parseFailure() throws CommandParseException {
+        // test bytes correct and components exist
+        Bytes completeBytes = new Bytes("00001A" +
+                "" + // value
+                "02000800000160E0EA1388" + // timestamp
+                "03000C000A54727920696e20343073"); //failure
+
+        Property property = new Property(ChargeMode.class, (byte) 0);
+        property.update(new Property(completeBytes.getByteArray()));
+
+        testTimestampComponent(property);
+        testFailureComponent(property, completeBytes);
+        // parse in different order as well
+
+        completeBytes = new Bytes("00001A" +
+                "" + // value
+                "03000C000A54727920696e20343073" + //failure
+                "02000800000160E0EA1388"  // timestamp
+        );
+
+        property.update(new Property(completeBytes.getByteArray()));
+
+        testTimestampComponent(property);
+        testFailureComponent(property, completeBytes);
+    }
+
+    @Test public void buildValue() {
+        Property property = new Property(ChargeMode.IMMEDIATE);
+
+        int propertyLength = Property.getUnsignedInt(property.getRange(1, 3));
+        assertTrue(propertyLength == 4);
+        assertTrue(property.getPropertyLength() == 4);
+
+        testValueComponent(property, 1, ChargeMode.IMMEDIATE);
+        Bytes completeBytes = new Bytes("00000401000100");
+        assertTrue(property.equals(completeBytes));
+    }
+
+    @Test public void buildValueWithTimestamp() {
+        // test bytes correct and components exist
+        Property property = new Property(
+                ChargeMode.IMMEDIATE,
+                timestamp,
+                null);
+
+        testValueComponent(property, 1, ChargeMode.IMMEDIATE);
+        testTimestampComponent(property);
+
+        Bytes completeBytes = new Bytes("00000F" +
+                "01000100" + // value
+                "02000800000160E0EA1388"); // timestamp
+        assertTrue(property.equals(completeBytes));
+    }
+
+    private void testValueComponent(Property property, int length, Object value) {
+        // test bytes value component identifier and length is correct
+        assertTrue(property.getValueComponent() != null);
+        assertTrue(property.getValueComponent().getValue() != null);
+        assertTrue(property.getValueComponent().getValueBytes().getLength() == length);
+
+        assertTrue(property.getValueComponent().getValue() == value);
+    }
+
+    private void testTimestampComponent(Property property) {
+        assertTrue(property.getTimestampComponent() != null);
+        assertTrue(property.getTimestampComponent().identifier == 0x02);
+        assertTrue(TestUtils.dateIsSame(property.getTimestampComponent().getCalendar(), timestamp));
+        assertTrue(property.getTimestampComponent().getValueBytes().equals("00000160E0EA1388"));
+    }
+
+    private void testFailureComponent(Property property, Bytes expectedBytes) {
+        PropertyComponentFailure failureComponent = property.getFailureComponent();
+        assertTrue(failureComponent != null);
+        assertTrue(failureComponent.identifier == 0x03);
+        assertTrue(failureComponent.getFailureDescription().equals("Try in 40s"));
+        assertTrue(failureComponent.getFailureReason() == PropertyComponentFailure.Reason.RATE_LIMIT);
+        assertTrue(property.equals(expectedBytes));
+    }
+
+    @Test public void buildFailure() {
+        // test bytes correct
+        Property property = new Property(
+                null,
+                null,
+                new PropertyComponentFailure(PropertyComponentFailure.Reason.RATE_LIMIT,
+                        "Try in 40s"));
+
+        assertTrue(property.getTimestampComponent() == null);
+        assertTrue(property.getValueComponent() == null);
+        Bytes completeBytes = new Bytes("00000F" +
+                "" + // value
+                "" + // timestamp
+                "03000C000A54727920696e20343073"); //failure
+        testFailureComponent(property, completeBytes);
+    }
+
+    @Test public void buildFailureIgnoreValue() {
+        Property property = new Property(
+                ChargeMode.IMMEDIATE,
+                timestamp,
+                new PropertyComponentFailure(PropertyComponentFailure.Reason.RATE_LIMIT, "Try in " +
+                        "40s"));
+
+        assertTrue(property.getTimestampComponent() != null);
+        assertTrue(property.getValueComponent() == null);
+        Bytes completeBytes = new Bytes("00001A" +
+                "" + // value
+                "02000800000160E0EA1388" + // timestamp
+                "03000C000A54727920696e20343073"); //failure
+        testFailureComponent(property, completeBytes);
+        testTimestampComponent(property);
     }
 
     @Test public void propertyLength() {
         PropertyInteger property = new PropertyInteger((byte) 0x01, false, 2, new Property(2));
         assertTrue(property.equals("0100050100020002"));
+
         String longString =
                 "longstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstring" +
                         "longstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstringlongstring" +
@@ -53,13 +196,12 @@ public class PropertyTest {
     // test boolean property ctor with null bytes. Only failure or timestamp
 
     @Test public void nullBytesOk() {
-        Property prop = new Property(Double.class, (byte) 0x00);
-        assertBaseBytesOk(prop);
-        assertTrue(prop.getPropertyIdentifier() == 0x00);
+        Property prop = new Property(Double.class, (byte) 0x01);
+        assertTrue(prop.getValueComponent() == null);
+        assertTrue(prop.getPropertyIdentifier() == 0x01);
     }
 
     @Test public void universalProperty() {
-        // TODO: 2019-03-04
         Property timestamp = new Property((byte) 0xA2, new Bytes("41D6F1C07F800000"));
         Property nonce = new Property((byte) 0xA0, new Bytes("324244433743483436"));
         Property sig = new Property((byte) 0xA1, new Bytes(
@@ -69,57 +211,14 @@ public class PropertyTest {
         assertTrue(sig.isUniversalProperty());
     }
 
-    void assertBaseBytesOk(Property prop) {
-        assertTrue(prop.getValueComponent() == null);
-    }
-
-    @Test public void timeStampFailureSet() throws ParseException {
-        PropertyComponentFailure failure = new PropertyComponentFailure(
-                (byte) 0x03,
-                PropertyComponentFailure.Reason.EXECUTION_TIMEOUT,
-                "ero"
-        );
-
-        Property<Boolean> property = new Property<>(null, timestamp, failure);
-        assertBaseBytesOk(property);
-        assertTrue(TestUtils.dateIsSameIgnoreTimezone(property.getTimestamp(), timestamp));
-        assertTrue(property.getFailureComponent() == failure);
-    }
-
-    /*@Test
-    public void propertyTimestampParsed() throws ParseException {
-        String parkingStateProperty = "01000101";
-        PropertyTimestamp timestamp =
-                new PropertyTimestamp(new Bytes("A4000D11010A112200000001" +
-                parkingStateProperty).getByteArray());
-        assertTrue(TestUtils.dateIsSame(timestamp.getCalendar(), "2017-01-10T17:34:00+0000"));
-        assertTrue(timestamp.getAdditionalData().equals(parkingStateProperty));
-    }*/
-
-    /*@Test public void settingPropertyAfterFailureAddsToFailure() throws CommandParseException {
-        PositionProperty p = new PositionProperty();
-        p.update(null,
-                new PropertyFailure(PropertyFailure.Reason.EXECUTION_TIMEOUT, ""),
-                new PropertyTimestamp(timestamp));
-
-        p.update(new Property(new Bytes("02000101")), null, null);
-        assertTrue(p.getFailureComponent().getFailedPropertyIdentifier() == 0x02);
-        // ^^ this is actually not an use case. In android properties are full.
-        // In builder setIdentifier method is used.
-
-        // update and setIdentifier should be protected
-
-        // TODO: 2019-01-11 test for builders that setIdentifier sets the failure and
-        //  timestamp identifier.
-    }*/
-
     @Test public void integerPropertySignChecked() throws CommandParseException {
         PropertyInteger integerProperty = new PropertyInteger(253);
-        integerProperty.update((byte) 0x00, false, 1);
+        integerProperty.update(false, 1, 253);
 
         assertTrue(integerProperty.getValue() == 253);
 
-        PropertyInteger checked = new PropertyInteger(integerProperty, false);
+        PropertyInteger checked = new PropertyInteger((byte) 0x00, false);
+        checked.update(integerProperty);
         // assert that the bytes are correct to create 253 int
         assertTrue(checked.getValue() == 253);
     }

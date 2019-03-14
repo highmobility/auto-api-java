@@ -68,38 +68,28 @@ public class ChargeState extends CommandWithProperties {
 
     PropertyInteger estimatedRange = new PropertyInteger(ESTIMATED_RANGE_IDENTIFIER,
             false);
-    Property<Double> batteryLevel = new Property<>(Double.class,
-            BATTERY_LEVEL_IDENTIFIER);
-    Property<Float> batteryCurrentAC =
-            new Property<>(Float.class, BATTERY_CURRENT_AC_IDENTIFIER);
-    Property<Float> batteryCurrentDC =
-            new Property<>(Float.class, BATTERY_CURRENT_DC_IDENTIFIER);
-    Property<Float> chargerVoltageAC =
-            new Property<>(Float.class, CHARGER_VOLTAGE_AC_IDENTIFIER);
-    Property<Float> chargerVoltageDC =
-            new Property<>(Float.class, CHARGER_VOLTAGE_DC_IDENTIFIER);
-    Property<Double> chargeLimit = new Property<>(Double.class,
-            CHARGE_LIMIT_IDENTIFIER);
-    PropertyInteger timeToCompleteCharge =
-            new PropertyInteger(TIME_TO_COMPLETE_CHARGE_IDENTIFIER, false);
-    Property<Float> chargingRate = new Property<>(Float.class,
-            CHARGING_RATE_IDENTIFIER);
-    Property<ChargePortState> chargePortState = new Property<>(ChargePortState.class,
+    Property<Double> batteryLevel = new Property(Double.class, BATTERY_LEVEL_IDENTIFIER);
+    Property<Float> batteryCurrentAC = new Property(Float.class, BATTERY_CURRENT_AC_IDENTIFIER);
+    Property<Float> batteryCurrentDC = new Property(Float.class, BATTERY_CURRENT_DC_IDENTIFIER);
+    Property<Float> chargerVoltageAC = new Property(Float.class, CHARGER_VOLTAGE_AC_IDENTIFIER);
+    Property<Float> chargerVoltageDC = new Property(Float.class, CHARGER_VOLTAGE_DC_IDENTIFIER);
+    Property<Double> chargeLimit = new Property(Double.class, CHARGE_LIMIT_IDENTIFIER);
+    PropertyInteger timeToCompleteCharge = new PropertyInteger(TIME_TO_COMPLETE_CHARGE_IDENTIFIER
+            , false);
+    Property<Float> chargingRate = new Property(Float.class, CHARGING_RATE_IDENTIFIER);
+    Property<ChargePortState> chargePortState = new Property(ChargePortState.class,
             CHARGE_PORT_STATE_IDENTIFIER);
-    Property<ChargeMode> chargeMode = new Property<>(ChargeMode.class,
-            CHARGE_MODE_IDENTIFIER);
-    Property<Float> maxChargingCurrent =
-            new Property<>(Float.class, MAX_CHARGING_CURRENT_IDENTIFIER);
+    Property<ChargeMode> chargeMode = new Property(ChargeMode.class, CHARGE_MODE_IDENTIFIER);
+    Property<Float> maxChargingCurrent = new Property(Float.class, MAX_CHARGING_CURRENT_IDENTIFIER);
     Property<PlugType> plugType = new Property(PlugType.class, PLUG_TYPE_IDENTIFIER);
-    Property<Boolean> chargingWindowChosen = new Property<>(Boolean.class,
+    Property<Boolean> chargingWindowChosen = new Property(Boolean.class,
             CHARGING_WINDOW_CHOSEN_IDENTIFIER);
     Property<DepartureTime>[] departureTimes;
     Property<ReductionTime>[] reductionOfChargingCurrentTimes;
-    Property<Float> batteryTemperature =
-            new Property<>(Float.class, BATTERY_TEMPERATURE_IDENTIFIER);
+    Property<Float> batteryTemperature = new Property(Float.class, BATTERY_TEMPERATURE_IDENTIFIER);
     Property<ChargingTimer>[] timers;
-    Property<Boolean> pluggedIn = new Property<>(Boolean.class, PLUGGED_IN_IDENTIFIER);
-    Property<ChargingState> activeState = new Property<>(ChargingState.class,
+    Property<Boolean> pluggedIn = new Property(Boolean.class, PLUGGED_IN_IDENTIFIER);
+    Property<ChargingState> activeState = new Property(ChargingState.class,
             ACTIVE_STATE_IDENTIFIER);
 
     /**
@@ -301,13 +291,11 @@ public class ChargeState extends CommandWithProperties {
                     case CHARGING_WINDOW_CHOSEN_IDENTIFIER:
                         return chargingWindowChosen.update(p);
                     case DEPARTURE_TIMES_IDENTIFIER:
-                        Property<DepartureTime> time =
-                                new Property<>(DepartureTime.class, p);
+                        Property<DepartureTime> time = new Property(DepartureTime.class, p);
                         departureTimes.add(time);
                         return time;
                     case REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER:
-                        Property<ReductionTime> time2 =
-                                new Property<>(ReductionTime.class, p);
+                        Property<ReductionTime> time2 = new Property(ReductionTime.class, p);
                         reductionOfChargingCurrentTimes.add(time2);
                         return time2;
                     case BATTERY_TEMPERATURE_IDENTIFIER:
@@ -317,8 +305,7 @@ public class ChargeState extends CommandWithProperties {
                         pluggedIn.update(p);
                         return pluggedIn;
                     case TIMER_IDENTIFIER:
-                        Property<ChargingTimer> time3 =
-                                new Property<>(ChargingTimer.class, p);
+                        Property<ChargingTimer> time3 = new Property(ChargingTimer.class, p);
                         timers.add(time3);
                         return time3;
                 }
@@ -363,7 +350,6 @@ public class ChargeState extends CommandWithProperties {
     }
 
     public static final class Builder extends CommandWithProperties.Builder {
-
         private PropertyInteger estimatedRange;
         private Property<Double> batteryLevel;
         private Property<Float> batteryCurrentAC;
@@ -383,8 +369,7 @@ public class ChargeState extends CommandWithProperties {
         private Property<Boolean> chargingWindowChosen;
         private List<Property<DepartureTime>> departureTimes = new ArrayList<>();
 
-        private List<Property<ReductionTime>> reductionOfChargingCurrentTimes =
-                new ArrayList<>();
+        private List<Property<ReductionTime>> reductionOfChargingCurrentTimes = new ArrayList<>();
         private Property<Float> batteryTemperature;
         private List<Property<ChargingTimer>> timers = new ArrayList<>();
         private Property<Boolean> pluggedIn;

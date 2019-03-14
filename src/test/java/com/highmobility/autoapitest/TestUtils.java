@@ -16,7 +16,7 @@ import static junit.framework.TestCase.assertTrue;
 
 public class TestUtils {
 
-    public static boolean dateIsSame(Calendar c, String dateString) throws ParseException {
+    public static boolean dateIsSame(Calendar c, String dateString) {
         return dateIsSameIgnoreTimezone(c, dateString); // currently ignoring time zone.
         /*DateFormat format = getFormat(dateString);
         Date expectedDate;
@@ -39,6 +39,10 @@ public class TestUtils {
         String expectedDateString = getUTCFormat().format(expectedDate);
 
         return (commandDateString.equals(expectedDateString));*/
+    }
+
+    public static boolean dateIsSame(Calendar c, Calendar c2) {
+        return dateIsSameIgnoreTimezone(c, c2);
     }
 
     public static DateFormat getFormat(String date) {
@@ -68,17 +72,22 @@ public class TestUtils {
      * This does not consider time zone.
      */
     public static boolean dateIsSameIgnoreTimezone(Calendar c1, Calendar c2) {
-        if (c1.get(Calendar.YEAR) != c2.get(Calendar.YEAR)) return false;
+        return c1.getTimeInMillis() == c2.getTimeInMillis();
+        /*if (c1.get(Calendar.YEAR) != c2.get(Calendar.YEAR)) return false;
         if (c1.get(Calendar.MONTH) != c2.get(Calendar.MONTH)) return false;
         if (c1.get(Calendar.DAY_OF_MONTH) != c2.get(Calendar.DAY_OF_MONTH)) return false;
         if (c1.get(Calendar.HOUR_OF_DAY) != c2.get(Calendar.HOUR_OF_DAY)) return false;
         if (c1.get(Calendar.MINUTE) != c2.get(Calendar.MINUTE)) return false;
-        if (c1.get(Calendar.SECOND) != c2.get(Calendar.SECOND)) return false;
-        return true;
+        if (c1.get(Calendar.SECOND) != c2.get(Calendar.SECOND)) return false;*/
     }
 
-    public static boolean dateIsSameIgnoreTimezone(Calendar c1, String c2) throws ParseException {
-        Date expectedDate = getUTCFormat().parse(c2);
+    public static boolean dateIsSameIgnoreTimezone(Calendar c1, String c2) {
+        Date expectedDate = null;
+        try {
+            expectedDate = getUTCFormat().parse(c2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         Date commandDate = c1.getTime();
         String commandDateString = getUTCFormat().format(commandDate);
         String expectedDateString = getUTCFormat().format(expectedDate);
@@ -108,13 +117,17 @@ public class TestUtils {
         return getUTCCalendar(dateString, 0);
     }
 
-    public static Calendar getCalendar(String dateString) throws ParseException {
+    public static Calendar getCalendar(String dateString) {
         DateFormat format = getFormat(dateString);
         Date date = null;
         try {
             date = format.parse(dateString);
         } catch (ParseException e) {
-            date = format.parse(dateString + "+0000"); // add timezone
+            try {
+                date = format.parse(dateString + "+0000"); // add timezone
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
         }
         Calendar c = new GregorianCalendar();
         c.setTime(date);

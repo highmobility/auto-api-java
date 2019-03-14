@@ -29,29 +29,21 @@ import javax.annotation.Nullable;
 public class PropertyComponentFailure extends PropertyComponent {
     private static final byte IDENTIFIER = 0x03;
 
-    byte failedPropertyIdentifier;
+    Reason failureReason;
     String description;
-    Reason reason;
 
     public PropertyComponentFailure(Bytes bytes) throws CommandParseException {
         super(bytes);
-        // TODO: 2019-02-28
-    }
-
-    /**
-     * @return The identifier of the failed property.
-     */
-
-    public byte getFailedPropertyIdentifier() {
-        return failedPropertyIdentifier;
+        failureReason = Reason.fromByte(get(3));
+        int descriptionLength = Property.getUnsignedInt(this, 4, 1);
+        description = Property.getString(this, 5, descriptionLength);
     }
 
     /**
      * @return The failure reason.
      */
-
     public Reason getFailureReason() {
-        return reason;
+        return failureReason;
     }
 
     /**
@@ -63,18 +55,21 @@ public class PropertyComponentFailure extends PropertyComponent {
     }
 
     /**
-     * @param identifier    The identifier of the failed property.
      * @param failureReason The failure reason.
      * @param description   The failure description.
      */
 
-    public PropertyComponentFailure(byte identifier, Reason failureReason, @Nullable String description) {
-        super(IDENTIFIER, 1 + 1 + 1 + description.length());
+    public PropertyComponentFailure(Reason failureReason, @Nullable String description) {
+        super(IDENTIFIER, 2 + description.length());
 
-        bytes[3] = identifier;
-        bytes[4] = failureReason.getByte();
-        bytes[5] = (byte) description.length();
-        ByteUtils.setBytes(bytes, description.getBytes(), 6);
+        bytes[3] = failureReason.getByte();
+        if (description != null) {
+            bytes[4] = (byte) description.length();
+            ByteUtils.setBytes(bytes, description.getBytes(), 5);
+        }
+
+        this.failureReason = failureReason;
+        this.description = description;
     }
 
     public enum Reason {
@@ -137,6 +132,21 @@ public class PropertyComponentFailure extends PropertyComponent {
  * @param description   The failure description.
  * @param failureReason The failure reason.
  * @param description   The failure description.
+ * @return The identifier of the failed property.
+ * @return The failure reason.
+ * @return The failure description.
+ * @return The identifier of the failed property.
+ * @return The failure reason.
+ * @return The failure description.
+ * @return The identifier of the failed property.
+ * @return The failure reason.
+ * @return The failure description.
+ * @return The identifier of the failed property.
+ * @return The failure reason.
+ * @return The failure description.
+ * @return The identifier of the failed property.
+ * @return The failure reason.
+ * @return The failure description.
  * @return The identifier of the failed property.
  * @return The failure reason.
  * @return The failure description.
