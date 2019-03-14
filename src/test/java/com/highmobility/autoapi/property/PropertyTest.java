@@ -189,18 +189,30 @@ public class PropertyTest {
 
     // TODO: 2019-03-11 figure out how to represent null/"" string for builder.
     //  should add new Property ctor? with null component/component with empty bytes
-    /*@Test public void nullString() {
-        new Property((byte) 0x00, null);
-        new Property((byte) 0x00, "");
-    }*/
+    @Test public void emptyString() throws CommandParseException {
 
-    // TODO: 2019-01-09
-    // test boolean property ctor with null bytes. Only failure or timestamp
+        Property nullStringBytes = new Property(new Bytes("000000").getByteArray());
+        Property emptyStringBytes = new Property(new Bytes("000003010000").getByteArray());
 
-    @Test public void nullBytesOk() {
-        Property prop = new Property(Double.class, (byte) 0x01);
-        assertTrue(prop.getValueComponent() == null);
-        assertTrue(prop.getPropertyIdentifier() == 0x01);
+        Property<String> nullStringProperty = new Property((byte) 0x00, null);
+        assertTrue(nullStringProperty.getValueComponent() == null);
+        assertTrue(nullStringProperty.equals(nullStringBytes));
+
+        Property<String> emptyStringProperty = new Property("");
+        assertTrue(emptyStringProperty.getValueComponent() != null);
+        assertTrue(emptyStringProperty.getValueComponent().getValue() instanceof String);
+        assertTrue(emptyStringProperty.getValueComponent().getValue().equals(""));
+        assertTrue(emptyStringProperty.equals(emptyStringBytes));
+
+
+        nullStringProperty = new Property(String.class, (byte) 0);
+        nullStringProperty.update(nullStringBytes);
+        assertTrue(nullStringProperty.getValueComponent() == null);
+
+        emptyStringProperty = new Property(String.class, (byte) 0);
+        emptyStringProperty.update(emptyStringBytes);
+        assertTrue(emptyStringProperty.getValueComponent() != null);
+        assertTrue(emptyStringProperty.getValueComponent().getValue().equals(""));
     }
 
     @Test public void universalProperty() {
