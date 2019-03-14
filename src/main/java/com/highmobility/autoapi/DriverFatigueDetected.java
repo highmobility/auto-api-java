@@ -45,8 +45,8 @@ public class DriverFatigueDetected extends CommandWithProperties {
     public DriverFatigueDetected(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER) {
                     return fatigueLevel.update(p);
                 }

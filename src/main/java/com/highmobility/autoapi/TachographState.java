@@ -159,8 +159,8 @@ public class TachographState extends CommandWithProperties {
         List<Property> workingStateBuilder = new ArrayList<>();
         List<Property> cardsBuilder = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_DRIVER_TIME_STATE:
                         Property driverTimeState = new Property(DriverTimeState.class, p);

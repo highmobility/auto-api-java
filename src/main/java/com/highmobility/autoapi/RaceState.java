@@ -262,8 +262,8 @@ public class RaceState extends CommandWithProperties {
         ArrayList<Property<BrakeTorqueVectoring>> brakeTorqueVectoringProperties =
                 new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_ACCELERATION:
                         Property a = new Property(Acceleration.class, p);

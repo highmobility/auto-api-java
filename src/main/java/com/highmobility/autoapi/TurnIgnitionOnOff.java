@@ -51,8 +51,8 @@ public class TurnIgnitionOnOff extends CommandWithProperties {
     TurnIgnitionOnOff(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER:
                         return on.update(p);

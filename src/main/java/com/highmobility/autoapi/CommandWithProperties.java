@@ -38,13 +38,12 @@ import javax.annotation.Nullable;
 public class CommandWithProperties extends Command {
     /*
     Properties logic:
-    * Empty properties are always created in subclasses with correct identifier but 0x00 bytes.
-    These will not be replaced in base properties.
+    * Empty properties are created as fields in subclasses with correct identifier but 0x00 bytes
+      and no components.
 
-    * The empty property will be updated with property, timestamp and failure. If with the real
-    property, then base property is replaced in base command properties array.
-
-    * Otherwise timestamp and failure added as ivars.
+    * Empty property will be updated with a base property that has the components parsed. If
+      the subclass knows the identifier, it copies the components and replaces the base property
+      with itself.
      */
     private static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be " +
             "null";
@@ -77,93 +76,6 @@ public class CommandWithProperties extends Command {
     @Nullable public Calendar getTimestamp() {
         return timestamp;
     }
-
-    // TODO: 2019-03-01 cleanup comments
-//    /**
-//     * @return Timestamps for specific properties of when they were recorded by the car.
-//     */
-//    public PropertyTimestamp[] getPropertyTimestamps() {
-//        return propertyTimestamps;
-//    }
-
-//    /**
-//     * Get property timestamps for a property identifier.
-//     *
-//     * @param identifier The property identifier the timestamps are returned for.
-//     * @return An array of property timestamps.
-//     */
-//    public PropertyTimestamp[] getPropertyTimestamps(byte identifier) {
-//        ArrayList<PropertyTimestamp> builder = new ArrayList<>();
-//
-//        for (PropertyTimestamp propertyTimestamp : propertyTimestamps) {
-//            if (propertyTimestamp.getTimestampPropertyIdentifier() == identifier) {
-//                builder.add(propertyTimestamp);
-//            }
-//        }
-//
-//        return builder.toArray(new PropertyTimestamp[0]);
-//    }
-//
-//    /**
-//     * Get the timestamp for a property. This compares the additional data of the timestamp
-//     with the
-//     * property data.
-//     *
-//     * @param property The property.
-//     * @return The property timestamp.
-//     */
-//    @Nullable public PropertyTimestamp getPropertyTimestamp(Property property) {
-//        // TODO: delete
-//        for (PropertyTimestamp propertyTimestamp : propertyTimestamps) {
-//            if (propertyTimestamp.getAdditionalData() != null &&
-//                    propertyTimestamp.getAdditionalData().equals(property)) {
-//                return propertyTimestamp;
-//            }
-//        }
-//
-//        return null;
-//    }
-//
-//    /**
-//     * Get the timestamp for a subclass field. Use the getter values in the parsed Command
-//     subclass
-//     * as the parameter.
-//     *
-//     * @param property The property.
-//     * @return The property timestamp.
-//     */
-//    @Nullable public PropertyTimestamp getPropertyTimestamp(Object property) {
-//        // TODO: 2019-01-11 delete
-//        if (linkedPropertyTimestamps == null) return null;
-//        for (HashMap.Entry<Object, PropertyTimestamp> pair : linkedPropertyTimestamps.entrySet
-//        ()) {
-//            if (pair.getKey() == property) return pair.getValue();
-//        }
-//
-//        return null;
-//    }
-//
-//    /**
-//     * @return Failures of properties.
-//     */
-//    public PropertyFailure[] getPropertyFailures() {
-//        return propertyFailures;
-//    }
-//
-//    /**
-//     * Get the failure for a property identifier.
-//     *
-//     * @param identifier The property identifier of the failure.
-//     * @return An array of property failures.
-//     */
-//    @Nullable public PropertyFailure getPropertyFailure(byte identifier) {
-//        for (PropertyFailure propertyFailure : propertyFailures) {
-//            if (propertyFailure.getFailedPropertyIdentifier() == identifier) return
-//            propertyFailure;
-//        }
-//
-//        return null;
-//    }
 
     /**
      * @return The bytes that are signed with the signature
@@ -275,61 +187,20 @@ public class CommandWithProperties extends Command {
         }
 
         // iterator is used by subclass
-//        propertiesIterator = new PropertiesIterator();
-        propertiesIterator2 = new PropertiesIterator2();
+        propertyIterator = new PropertyIterator();
     }
 
-//    private void addTimestamp(Property property, int index,
-//                              ArrayList<PropertyTimestamp> propertyTimestamps) {
-//        PropertyTimestamp timestamp = new PropertyTimestamp(property.getByteArray());
-//        properties[index] = timestamp;
-//        propertyTimestamps.add(timestamp);
-//
-//        // match the timestamp to a property
-//
-//        // find if there are multiple properties with this identifier
-//        ArrayList<Property> propertiesForTimestamps = new ArrayList<>();
-//        for (int i = 0; i < properties.length; i++) {
-//            Property p = properties[i];
-//            if (p.isUniversalProperty() == false &&
-//                    p.getPropertyIdentifier() == timestamp.getTimestampPropertyIdentifier()) {
-//                propertiesForTimestamps.add(p);
-//            }
-//        }
-//
-//        // if single property, add the timestamp
-//        if (propertiesForTimestamps.size() == 1) {
-//            propertiesForTimestamps.get(0).setPropertyTimestamp(timestamp);
-//        } else if (propertiesForTimestamps.size() > 1 && timestamp.getAdditionalData() != null) {
-//            // if multiple properties, check the additional data
-//            for (int i = 0; i < propertiesForTimestamps.size(); i++) {
-//                Property p = propertiesForTimestamps.get(i);
-//                if (p.equals(timestamp.getAdditionalData())) {
-//                    p.setPropertyTimestamp(timestamp);
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//
-//    private void addFailure(Property property, int index,
-//                            ArrayList<PropertyFailure> propertyFailures) throws
-//                            CommandParseException {
-//        PropertyFailure failure = new PropertyFailure(property.getByteArray());
-//        properties[index] = failure;
-//        propertyFailures.add(failure);
-//    }
-
     protected void createBytes(List<Property> properties) {
-        bytes = type.getIdentifierAndType();
+        Bytes builder = new Bytes(3);
+        builder.set(0, type.getIdentifierAndType());
 
         if (propertiesExpected() && properties.size() == 0) throw new IllegalArgumentException();
 
         for (int i = 0; i < properties.size(); i++) {
-            Property property = properties.get(i);
-            // TODO: 2019-03-08 could alloc 1x before the loop
-            bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
+            builder = builder.concat(properties.get(i));
         }
+
+        bytes = builder.getByteArray();
     }
 
     protected void createBytes(Property property) {
@@ -398,14 +269,15 @@ public class CommandWithProperties extends Command {
         }
     }
 
-    /*// TODO: 2019-01-11 delete v1 iterator
     // Used to catch the property parsing exception, managing parsed properties in this class.
-    protected PropertiesIterator propertiesIterator;
+    protected PropertyIterator propertyIterator;
+    // TODO: 2019-02-07 throw if propertiesExpected but returned 0 properties (child command
+    //  didnt find its property)
 
-    protected class PropertiesIterator implements Iterator<Property> {
+    protected class PropertyIterator implements Iterator<Property> {
         private int currentSize;
 
-        PropertiesIterator() {
+        PropertyIterator() {
             this.currentSize = CommandWithProperties.this.properties.length;
         }
 
@@ -429,95 +301,6 @@ public class CommandWithProperties extends Command {
         public void parseNext(PropertyIteration next) {
             Property nextProperty = next();
 
-            while (nextProperty.isUniversalProperty()) {
-                nextProperty = next();
-            }
-
-            try {
-                Object parsedProperty = next.iterate(nextProperty);
-                if (parsedProperty != null) {
-                    if (parsedProperty instanceof Property) {
-                        // replace the base property with parsed one
-                        Property castParsedProperty = (Property) parsedProperty;
-                        properties[currentIndex - 1] = castParsedProperty;
-                    }
-
-                    // try to match a the property timestamp to the the property
-//                    for (PropertyTimestamp propertyTimestamp : propertyTimestamps) {
-//                        if (propertyTimestamp.getAdditionalData().equals(nextProperty)) {
-//                            // TODO: delete
-//                            if (linkedPropertyTimestamps == null)
-//                                linkedPropertyTimestamps = new HashMap<>();
-//                            linkedPropertyTimestamps.put(parsedProperty, propertyTimestamp);
-//                        }
-//                    }
-                }
-            } catch (Exception e) {
-                nextProperty.printFailedToParse(e);
-            }
-        }
-    }*/
-
-    public interface PropertyIteration {
-        /**
-         * @param p The base property.
-         * @return A parsed property or object, if did parse.
-         * @throws Exception Any exception.
-         */
-        @Nullable Object iterate(Property p) throws Exception;
-    }
-
-    // Used to catch the property parsing exception, managing parsed properties in this class.
-    protected PropertiesIterator2 propertiesIterator2;
-    // TODO: 2019-02-07 throw if propertiesExpected but returned 0 properties (child command
-    //  didnt find its property)
-
-    protected class PropertiesIterator2 implements Iterator<Property> {
-        private int currentSize;
-
-        PropertiesIterator2() {
-            this.currentSize = CommandWithProperties.this.properties.length;
-        }
-
-        private int currentIndex = 0;
-
-        @Override
-        public boolean hasNext() {
-            return currentIndex < currentSize && properties[currentIndex] != null;
-        }
-
-        @Override
-        public Property next() {
-            return properties[currentIndex++];
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-
-        public void parseNext(PropertyIteration2 next) {
-            Property nextProperty = next();
-
-//            while (nextProperty instanceof PropertyTimestamp && hasNext()) {
-//                nextProperty = next();
-//            }
-
-//            if (nextProperty instanceof PropertyFailure) {
-//                // just create temp property with propertiesIterator2. So the fake
-//                // empty property is not added to properties array.
-//                // create empty property with the identifier.
-//                try {
-//                    PropertyFailure failure = (PropertyFailure) nextProperty;
-//                    Property fakeProperty = new Property(failure.getFailedPropertyIdentifier());
-//                    fakeProperty.setPropertyFailure(failure);
-//                    next.iterate(fakeProperty);
-//                } catch (Exception e) {
-//                    nextProperty.printFailedToParse(e);
-//                }
-//                return;
-//            }
-
             try {
                 Object parsedProperty = next.iterate(nextProperty);
                 // failure and timestamp are separate properties and should be retained in base
@@ -525,16 +308,6 @@ public class CommandWithProperties extends Command {
                 if (parsedProperty != null) {
                     // replace the base property with parsed one
                     properties[currentIndex - 1] = (Property) parsedProperty;
-
-//                    // TODO: 2019-01-11 delete
-//                    // try to match a the property timestamp to the the property
-//                    for (PropertyTimestamp propertyTimestamp : propertyTimestamps) {
-//                        if (propertyTimestamp.getAdditionalData().equals(nextProperty)) {
-//                            if (linkedPropertyTimestamps == null)
-//                                linkedPropertyTimestamps = new HashMap<>();
-//                            linkedPropertyTimestamps.put(parsedProperty, propertyTimestamp);
-//                        }
-//                    }
                 }
             } catch (Exception e) {
                 nextProperty.printFailedToParse(e);
@@ -542,7 +315,7 @@ public class CommandWithProperties extends Command {
         }
     }
 
-    public interface PropertyIteration2 {
+    public interface PropertyIteration {
         /**
          * @param p The base property.
          * @return The parsed property or object, if matched to a field.

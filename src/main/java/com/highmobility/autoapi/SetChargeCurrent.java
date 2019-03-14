@@ -49,8 +49,8 @@ public class SetChargeCurrent extends CommandWithProperties {
 
     SetChargeCurrent(byte[] bytes) {
         super(bytes);
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER) {
                     return current.update(p);
                 }

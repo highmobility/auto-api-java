@@ -62,8 +62,8 @@ public class MultiState extends CommandWithProperties {
         super(bytes);
 
         ArrayList<Property<CommandWithProperties>> builder = new ArrayList<>();
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROP_IDENTIFIER) {
                     Property c = new Property(CommandWithProperties.class, p);
                     builder.add(c);

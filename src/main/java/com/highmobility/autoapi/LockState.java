@@ -132,8 +132,8 @@ public class LockState extends CommandWithProperties {
         ArrayList<Property> outsideLocksBuilder = new ArrayList<>();
         ArrayList<Property> lockAndPositionStatesBuilder = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case POSITION_IDENTIFIER:
                         Property pos = new Property(DoorPosition.class, p);

@@ -163,8 +163,8 @@ public class MaintenanceState extends CommandWithProperties {
         super(bytes);
         ArrayList<Property<ConditionBasedService>> conditionBasedServices = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_DAYS_TO_NEXT_SERVICE:
                         return daysToNextService.update(p);

@@ -88,8 +88,8 @@ public class RooftopState extends CommandWithProperties {
     RooftopState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 // can update with failure, timestamp or the real property
                 switch (p.getPropertyIdentifier()) {
                     case DIMMING_IDENTIFIER:

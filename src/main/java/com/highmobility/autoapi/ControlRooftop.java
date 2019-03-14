@@ -133,8 +133,8 @@ public class ControlRooftop extends CommandWithProperties {
     ControlRooftop(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case RooftopState.DIMMING_IDENTIFIER:
                         return dimmingPercentage.update(p);

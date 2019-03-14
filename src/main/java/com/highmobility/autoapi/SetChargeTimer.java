@@ -87,8 +87,8 @@ public class SetChargeTimer extends CommandWithProperties {
         super(bytes);
         List<Property<ChargingTimer>> builder = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case PROPERTY_IDENTIFIER:
                         Property<ChargingTimer> timer =

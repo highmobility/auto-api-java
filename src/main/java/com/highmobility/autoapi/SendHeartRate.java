@@ -54,8 +54,8 @@ public class SendHeartRate extends CommandWithProperties {
     SendHeartRate(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER:
                         return this.heartRate.update(p);

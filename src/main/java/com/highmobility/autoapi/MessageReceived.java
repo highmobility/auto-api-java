@@ -78,8 +78,8 @@ public class MessageReceived extends CommandWithProperties {
     MessageReceived(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_RECIPIENT:
                         return handle.update(p);

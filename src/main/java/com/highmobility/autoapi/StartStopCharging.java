@@ -50,8 +50,8 @@ public class StartStopCharging extends CommandWithProperties {
     StartStopCharging(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case ACTIVE_STATE_IDENTIFIER:
                         return start.update(p);

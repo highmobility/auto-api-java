@@ -46,8 +46,8 @@ public class WeatherConditions extends CommandWithProperties {
     WeatherConditions(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER_RAIN) {
                     return rainIntensity.update(p);
                 }

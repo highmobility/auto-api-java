@@ -77,8 +77,8 @@ public class ControlWindows extends CommandWithProperties {
         super(bytes);
         ArrayList<Property<WindowPosition>> builder = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case PROPERTY_IDENTIFIER:
                         Property prop = new Property(new WindowPosition(

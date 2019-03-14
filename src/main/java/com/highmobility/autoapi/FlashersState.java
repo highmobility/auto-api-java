@@ -43,8 +43,8 @@ public class FlashersState extends CommandWithProperties {
     FlashersState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == STATE_IDENTIFIER) {
                     return state.update(p);
                 }

@@ -88,8 +88,8 @@ public class WindowsState extends CommandWithProperties {
         List<Property<WindowPosition>> positionBuilder = new ArrayList<>();
         List<Property<WindowOpenPercentage>> openBuilder = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_WINDOW_OPEN_PERCENTAGES:
                         Property<WindowOpenPercentage> windowOpenPercentage =

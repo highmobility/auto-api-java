@@ -84,8 +84,8 @@ public class ControlTrunk extends CommandWithProperties {
     ControlTrunk(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER_LOCK) {
                     return lock.update(p);
                 } else if (p.getPropertyIdentifier() == IDENTIFIER_POSITION) {

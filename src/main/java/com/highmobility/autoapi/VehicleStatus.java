@@ -247,8 +247,8 @@ public class VehicleStatus extends CommandWithProperties {
         ArrayList<Property<CommandWithProperties>> states = new ArrayList<>();
         ArrayList<Property<String>> equipments = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_VIN:
                         return vin.update(p);

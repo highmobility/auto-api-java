@@ -75,8 +75,8 @@ public class SetSpringRate extends CommandWithProperties {
         super(bytes);
         ArrayList<SpringRate> builder = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
                     Property<SpringRate> prop = new Property<>(SpringRate.class, p);
                     builder.add(prop.getValue());

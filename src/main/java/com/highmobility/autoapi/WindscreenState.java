@@ -124,8 +124,8 @@ public class WindscreenState extends CommandWithProperties {
 
     WindscreenState(byte[] bytes) {
         super(bytes);
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_WIPERS_STATE:
                         return wiperState.update(p);

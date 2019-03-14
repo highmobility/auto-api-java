@@ -226,8 +226,8 @@ public class Usage extends CommandWithProperties {
         ArrayList<DrivingModeEnergyConsumption> drivingModeEnergyConsumptions =
                 new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_AVERAGE_WEEKLY_DISTANCE:
                         return averageWeeklyDistance.update(p);

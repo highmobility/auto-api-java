@@ -86,8 +86,8 @@ public class ControlCommand extends CommandWithProperties {
 
         // Not used in telematics.
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_SPEED:
                         return speed.update(p);

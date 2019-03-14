@@ -169,8 +169,8 @@ public class ClimateState extends CommandWithProperties {
 
         ArrayList<Property> builder = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_INSIDE_TEMPERATURE:
                         return insideTemperature.update(p);

@@ -176,8 +176,8 @@ public class LightsState extends CommandWithProperties {
         ArrayList<Property> interiorLamps = new ArrayList<>();
         ArrayList<Property> readingLamps = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE:
                         return frontExteriorLightState.update(p);

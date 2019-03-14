@@ -368,8 +368,8 @@ public class DiagnosticsState extends CommandWithProperties {
         ArrayList<Property> wheelRpms = new ArrayList<>();
         ArrayList<Property> troubleCodes = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_MILEAGE:
                         return mileage.update(p);

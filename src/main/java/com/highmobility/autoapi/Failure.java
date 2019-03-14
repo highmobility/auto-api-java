@@ -86,8 +86,8 @@ public class Failure extends CommandWithProperties {
     Failure(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_IDENTIFIER:
                         return failedIdentifier.update(p);

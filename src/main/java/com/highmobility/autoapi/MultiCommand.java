@@ -80,8 +80,8 @@ public class MultiCommand extends CommandWithProperties {
 
         ArrayList<Property<Command>> builder = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROP_IDENTIFIER) {
                     Property c = new Property(Command.class, p);
                     builder.add(c);

@@ -66,8 +66,8 @@ public class DashboardLights extends CommandWithProperties {
 
         List<Property<DashboardLight>> builder = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER_DASHBOARD_LIGHT) {
                     Property<DashboardLight> light =
                             new Property<>(DashboardLight.class, p);

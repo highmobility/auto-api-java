@@ -47,8 +47,8 @@ public class ActivateDeactivateStartStop extends CommandWithProperties {
 
     ActivateDeactivateStartStop(byte[] bytes) {
         super(bytes);
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER:
                         return activate.update(p);

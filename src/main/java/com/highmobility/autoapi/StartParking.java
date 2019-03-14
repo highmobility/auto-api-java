@@ -106,8 +106,8 @@ public class StartParking extends CommandWithProperties {
     StartParking(byte[] bytes) throws CommandParseException {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_OPERATOR_NAME:
                         return operatorName.update(p);

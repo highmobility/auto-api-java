@@ -171,8 +171,8 @@ public class ChassisSettings extends CommandWithProperties {
         ArrayList<Property> minimumSpringRates = new ArrayList<>();
         ArrayList<Property> maximumSpringRates = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_DRIVING_MODE:
                         return drivingMode.update(p);

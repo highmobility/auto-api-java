@@ -45,8 +45,8 @@ public class ValetMode extends CommandWithProperties {
     ValetMode(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == ACTIVE_IDENTIFIER) {
                     active = new Property<>(Boolean.class, p);
                     return active;

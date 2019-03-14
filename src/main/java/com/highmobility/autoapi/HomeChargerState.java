@@ -214,8 +214,8 @@ public class HomeChargerState extends CommandWithProperties {
         super(bytes);
         ArrayList<Property<PriceTariff>> tariffs = new ArrayList<>();
 
-        while (propertiesIterator2.hasNext()) {
-            propertiesIterator2.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_CHARGING:
                         return charging.update(p);
