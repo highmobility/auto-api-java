@@ -20,9 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.value.usage.DrivingModeActivationPeriod;
 import com.highmobility.autoapi.value.usage.DrivingModeEnergyConsumption;
 
@@ -61,8 +61,8 @@ public class Usage extends CommandWithProperties {
             new Property(Double.class, IDENTIFIER_ACCELERATION_EVALUATION);
     private Property<Double> drivingStyleEvaluation =
             new Property(Double.class, IDENTIFIER_DRIVING_STYLE_EVALUATION);
-    private DrivingModeActivationPeriod[] drivingModeActivationPeriods;
-    private DrivingModeEnergyConsumption[] drivingModeEnergyConsumptions;
+    private Property<DrivingModeActivationPeriod>[] drivingModeActivationPeriods;
+    private Property<DrivingModeEnergyConsumption>[] drivingModeEnergyConsumptions;
     private Property<Float> lastTripEnergyConsumption = new Property(Float.class,
             IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION);
     private Property<Float> lastTripFuelConsumption = new Property(Float.class,
@@ -113,7 +113,7 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The % values of the period used for the driving modes.
      */
-    public DrivingModeActivationPeriod[] getDrivingModeActivationPeriods() {
+    public Property<DrivingModeActivationPeriod>[] getDrivingModeActivationPeriods() {
         return drivingModeActivationPeriods;
     }
 
@@ -121,11 +121,11 @@ public class Usage extends CommandWithProperties {
      * @param mode The driving mode.
      * @return The driving mode activation period for given mode.
      */
-    @Nullable public DrivingModeActivationPeriod getDrivingModeActivationPeriod(DrivingMode
-                                                                                        mode) {
-        for (DrivingModeActivationPeriod drivingModeActivationPeriod :
+    @Nullable
+    public Property<DrivingModeActivationPeriod> getDrivingModeActivationPeriod(DrivingMode mode) {
+        for (Property<DrivingModeActivationPeriod> drivingModeActivationPeriod :
                 drivingModeActivationPeriods) {
-            if (drivingModeActivationPeriod.getDrivingMode() == mode) {
+            if (drivingModeActivationPeriod.getValue() != null && drivingModeActivationPeriod.getValue().getDrivingMode() == mode) {
                 return drivingModeActivationPeriod;
             }
         }
@@ -135,7 +135,7 @@ public class Usage extends CommandWithProperties {
     /**
      * @return The energy consumptions in the driving modes in kWh.
      */
-    public DrivingModeEnergyConsumption[] getDrivingModeEnergyConsumptions() {
+    public Property<DrivingModeEnergyConsumption>[] getDrivingModeEnergyConsumptions() {
         return drivingModeEnergyConsumptions;
     }
 
@@ -144,10 +144,10 @@ public class Usage extends CommandWithProperties {
      * @return The driving mode energy consumptionfor given mode.
      */
     @Nullable
-    public DrivingModeEnergyConsumption getDrivingModeEnergyConsumption(DrivingMode mode) {
-        for (DrivingModeEnergyConsumption drivingModeEnergyConsumption :
+    public Property<DrivingModeEnergyConsumption> getDrivingModeEnergyConsumption(DrivingMode mode) {
+        for (Property<DrivingModeEnergyConsumption> drivingModeEnergyConsumption :
                 drivingModeEnergyConsumptions) {
-            if (drivingModeEnergyConsumption.getDrivingMode() == mode) {
+            if (drivingModeEnergyConsumption.getValue() != null && drivingModeEnergyConsumption.getValue().getDrivingMode() == mode) {
                 return drivingModeEnergyConsumption;
             }
         }
@@ -220,9 +220,9 @@ public class Usage extends CommandWithProperties {
     Usage(byte[] bytes) {
         super(bytes);
 
-        ArrayList<DrivingModeActivationPeriod> drivingModeActivationPeriods =
+        ArrayList<Property> drivingModeActivationPeriods =
                 new ArrayList<>();
-        ArrayList<DrivingModeEnergyConsumption> drivingModeEnergyConsumptions =
+        ArrayList<Property> drivingModeEnergyConsumptions =
                 new ArrayList<>();
 
         while (propertyIterator.hasNext()) {
@@ -237,13 +237,13 @@ public class Usage extends CommandWithProperties {
                     case IDENTIFIER_DRIVING_STYLE_EVALUATION:
                         return drivingStyleEvaluation.update(p);
                     case DrivingModeActivationPeriod.IDENTIFIER:
-                        DrivingModeActivationPeriod drivingModeActivationPeriod =
-                                new DrivingModeActivationPeriod(p.getByteArray());
+                        Property drivingModeActivationPeriod =
+                                new Property(DrivingModeActivationPeriod.class, p);
                         drivingModeActivationPeriods.add(drivingModeActivationPeriod);
                         return drivingModeActivationPeriod;
                     case DrivingModeEnergyConsumption.IDENTIFIER:
-                        DrivingModeEnergyConsumption drivingModeEnergyConsumption =
-                                new DrivingModeEnergyConsumption(p.getByteArray());
+                        Property drivingModeEnergyConsumption =
+                                new Property(DrivingModeEnergyConsumption.class, p);
                         drivingModeEnergyConsumptions.add(drivingModeEnergyConsumption);
                         return drivingModeEnergyConsumption;
                     case IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION:
@@ -270,10 +270,8 @@ public class Usage extends CommandWithProperties {
             });
         }
 
-        this.drivingModeActivationPeriods =
-                drivingModeActivationPeriods.toArray(new DrivingModeActivationPeriod[0]);
-        this.drivingModeEnergyConsumptions =
-                drivingModeEnergyConsumptions.toArray(new DrivingModeEnergyConsumption[0]);
+        this.drivingModeActivationPeriods = drivingModeActivationPeriods.toArray(new Property[0]);
+        this.drivingModeEnergyConsumptions = drivingModeEnergyConsumptions.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {
@@ -287,11 +285,10 @@ public class Usage extends CommandWithProperties {
         averageWeeklyDistanceLongTerm = builder.averageWeeklyDistanceLongTerm;
         accelerationEvaluation = builder.accelerationEvaluation;
         drivingStyleEvaluation = builder.drivingStyleEvaluation;
-        drivingModeActivationPeriods = builder.drivingModeActivationPeriods.toArray(new
-                DrivingModeActivationPeriod[0]);
+        drivingModeActivationPeriods =
+                builder.drivingModeActivationPeriods.toArray(new Property[0]);
         drivingModeEnergyConsumptions =
-                builder.drivingModeEnergyConsumptions.toArray(new
-                        DrivingModeEnergyConsumption[0]);
+                builder.drivingModeEnergyConsumptions.toArray(new Property[0]);
         lastTripEnergyConsumption = builder.lastTripEnergyConsumption;
         lastTripFuelConsumption = builder.lastTripFuelConsumption;
         mileageAfterLastTrip = builder.mileageAfterLastTrip;
@@ -308,9 +305,9 @@ public class Usage extends CommandWithProperties {
         private PropertyInteger averageWeeklyDistanceLongTerm;
         private Property<Double> accelerationEvaluation;
         private Property<Double> drivingStyleEvaluation;
-        private List<DrivingModeActivationPeriod> drivingModeActivationPeriods =
+        private List<Property<DrivingModeActivationPeriod>> drivingModeActivationPeriods =
                 new ArrayList<>();
-        private List<DrivingModeEnergyConsumption> drivingModeEnergyConsumptions = new
+        private List<Property<DrivingModeEnergyConsumption>> drivingModeEnergyConsumptions = new
                 ArrayList<>();
         private Property<Float> lastTripEnergyConsumption;
         private Property<Float> lastTripFuelConsumption;

@@ -21,11 +21,12 @@
 package com.highmobility.autoapi.value.usage;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.autoapi.value.DrivingMode;
+import com.highmobility.value.Bytes;
 
-public class DrivingModeEnergyConsumption extends Property {
+public class DrivingModeEnergyConsumption extends PropertyValueObject {
     public static final byte IDENTIFIER = 0x06;
 
     DrivingMode drivingMode;
@@ -45,20 +46,31 @@ public class DrivingModeEnergyConsumption extends Property {
         return energyConsumption;
     }
 
-    public DrivingModeEnergyConsumption(byte[] bytes) throws CommandParseException {
-        super(bytes);
+    public DrivingModeEnergyConsumption(DrivingMode drivingMode, Float energyConsumption) {
+        super(5);
+        update(drivingMode, energyConsumption);
+    }
+
+    public DrivingModeEnergyConsumption() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
         if (bytes.length < 5) throw new CommandParseException();
-        drivingMode = DrivingMode.fromByte(bytes[6]);
-        energyConsumption = getFloat(bytes, 7);
+        drivingMode = DrivingMode.fromByte(get(0));
+        energyConsumption = Property.getFloat(getRange(1, 5));
     }
 
-    public DrivingModeEnergyConsumption(DrivingMode mode, float energyConsumption) {
-        this(IDENTIFIER, mode, energyConsumption);
+    public void update(DrivingMode drivingMode, Float energyConsumption) {
+        this.drivingMode = drivingMode;
+        this.energyConsumption = energyConsumption;
+
+        set(0, drivingMode.getByte());
+        set(1, Property.floatToBytes(energyConsumption));
     }
 
-    DrivingModeEnergyConsumption(byte identifier, DrivingMode mode, float energyConsumption) {
-        super(identifier, 5);
-        bytes[6] = mode.getByte();
-        ByteUtils.setBytes(bytes, Property.floatToBytes(energyConsumption), 7);
+    public void update(DrivingModeEnergyConsumption value) {
+        update(value.drivingMode, value.energyConsumption);
     }
 }

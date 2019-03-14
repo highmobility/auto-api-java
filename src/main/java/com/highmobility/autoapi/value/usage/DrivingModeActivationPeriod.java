@@ -21,11 +21,12 @@
 package com.highmobility.autoapi.value.usage;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.ByteUtils;
+import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.autoapi.value.DrivingMode;
+import com.highmobility.value.Bytes;
 
-public class DrivingModeActivationPeriod extends Property {
+public class DrivingModeActivationPeriod extends PropertyValueObject {
     public static final byte IDENTIFIER = 0x05;
     DrivingMode drivingMode;
     Double percentage;
@@ -44,20 +45,31 @@ public class DrivingModeActivationPeriod extends Property {
         return percentage;
     }
 
-    public DrivingModeActivationPeriod(byte[] bytes) throws CommandParseException {
-        super(bytes);
-        if (bytes.length < 8) throw new CommandParseException();
-        drivingMode = DrivingMode.fromByte(bytes[6]);
-        percentage = Property.getDouble(bytes, 7);
+    public DrivingModeActivationPeriod(DrivingMode drivingMode, Double percentage) {
+        super(9);
+        update(drivingMode, percentage);
     }
 
-    public DrivingModeActivationPeriod(DrivingMode type, Double percentage) {
-        this(IDENTIFIER, type, percentage);
+    public DrivingModeActivationPeriod() {
+        super();
+    } // needed for generic ctor
+
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 9) throw new CommandParseException();
+        drivingMode = DrivingMode.fromByte(get(0));
+        percentage = Property.getDouble(getRange(1, 9));
     }
 
-    DrivingModeActivationPeriod(byte identifier, DrivingMode type, Double percentage) {
-        super(identifier, 2);
-        bytes[6] = type.getByte();
-        ByteUtils.setBytes(bytes, Property.doubleToBytes(percentage), 7);
+    public void update(DrivingMode drivingMode, Double percentage) {
+        this.drivingMode = drivingMode;
+        this.percentage = percentage;
+
+        set(0, drivingMode.getByte());
+        set(1, Property.doubleToBytes(percentage));
+    }
+
+    public void update(DrivingModeActivationPeriod value) {
+        update(value.drivingMode, value.percentage);
     }
 }

@@ -290,11 +290,11 @@ public class ChargeState extends CommandWithProperties {
                     case CHARGING_WINDOW_CHOSEN_IDENTIFIER:
                         return chargingWindowChosen.update(p);
                     case DEPARTURE_TIMES_IDENTIFIER:
-                        Property<DepartureTime> time = new Property(DepartureTime.class, p);
+                        Property time = new Property(DepartureTime.class, p);
                         departureTimes.add(time);
                         return time;
                     case REDUCTION_OF_CHARGING_CURRENT_TIMES_IDENTIFIER:
-                        Property<ReductionTime> time2 = new Property(ReductionTime.class, p);
+                        Property time2 = new Property(ReductionTime.class, p);
                         reductionOfChargingCurrentTimes.add(time2);
                         return time2;
                     case BATTERY_TEMPERATURE_IDENTIFIER:
@@ -304,7 +304,7 @@ public class ChargeState extends CommandWithProperties {
                         pluggedIn.update(p);
                         return pluggedIn;
                     case TIMER_IDENTIFIER:
-                        Property<ChargingTimer> time3 = new Property(ChargingTimer.class, p);
+                        Property time3 = new Property(ChargingTimer.class, p);
                         timers.add(time3);
                         return time3;
                 }

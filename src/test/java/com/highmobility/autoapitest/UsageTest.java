@@ -9,8 +9,6 @@ import com.highmobility.value.Bytes;
 
 import org.junit.Test;
 
-import java.text.ParseException;
-
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -25,8 +23,8 @@ public class UsageTest {
                     "04000B0100083FE6666666666666" +
                     "05000C010009013FE3333333333333" +
                     "05000C010009003FD999999999999A" +
-                    "060008010002014204CCCD" +
-                    "06000801000200425D999A" +
+                    "060008010005014204CCCD" +
+                    "06000801000500425D999A" +
                     "07000701000442CA999A" +
                     "08000701000441B40000" +
                     "09000701000447BAC85A" +
@@ -39,7 +37,7 @@ public class UsageTest {
 
     );
 
-    @Test public void state() throws ParseException {
+    @Test public void state() {
         Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == Usage.class);
@@ -53,14 +51,14 @@ public class UsageTest {
         assertTrue(state.getDrivingStyleEvaluation().getValue() == .7d);
 
         assertTrue(state.getDrivingModeActivationPeriods().length == 2);
-        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.ECO).getPercentage() == .6d);
-        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.REGULAR).getPercentage() ==
+        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.ECO).getValue().getPercentage() == .6d);
+        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.REGULAR).getValue().getPercentage() ==
                 .4d);
 
         assertTrue(state.getDrivingModeEnergyConsumptions().length == 2);
-        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.ECO).getEnergyConsumption()
+        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.ECO).getValue().getEnergyConsumption()
                 == 33.2f);
-        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.REGULAR)
+        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.REGULAR).getValue()
                 .getEnergyConsumption() == 55.4f);
 
         assertTrue(state.getLastTripEnergyConsumption().getValue() == 101.3f);
