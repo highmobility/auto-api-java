@@ -187,10 +187,10 @@ public class PropertyTest {
         new PropertyComponentValue(bytes);
     }
 
-    // TODO: 2019-03-11 figure out how to represent null/"" string for builder.
-    //  should add new Property ctor? with null component/component with empty bytes
     @Test public void emptyString() throws CommandParseException {
-
+        // representing null/"" string
+        // null = no value component
+        // "" = value component with 0 length
         Property nullStringBytes = new Property(new Bytes("000000").getByteArray());
         Property emptyStringBytes = new Property(new Bytes("000003010000").getByteArray());
 
@@ -203,7 +203,6 @@ public class PropertyTest {
         assertTrue(emptyStringProperty.getValueComponent().getValue() instanceof String);
         assertTrue(emptyStringProperty.getValueComponent().getValue().equals(""));
         assertTrue(emptyStringProperty.equals(emptyStringBytes));
-
 
         nullStringProperty = new Property(String.class, (byte) 0);
         nullStringProperty.update(nullStringBytes);
