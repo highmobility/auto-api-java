@@ -9,13 +9,13 @@ import com.highmobility.autoapi.TheftAlarmState;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.WindowsState;
-import com.highmobility.autoapi.value.Position;
-import com.highmobility.autoapi.value.PowerTrain;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.DisplayUnit;
 import com.highmobility.autoapi.value.DriverSeatLocation;
 import com.highmobility.autoapi.value.Gearbox;
 import com.highmobility.autoapi.value.Lock;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.PowerTrain;
 import com.highmobility.value.Bytes;
 
 import org.junit.Test;
@@ -24,8 +24,6 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-// TODO: 2019-02-28 cleanup comments from merge >>>>>>
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -238,7 +236,6 @@ public class VehicleStatusTest {
                 ("001101" +
                         "9900140100110021010100040100010002000401000101" +
                         "99000D01000A00270101000401000115"); //invalid control mode
-// 0102000401000103
         VehicleStatus command = (VehicleStatus) CommandResolver.resolve(bytes);
         assertTrue(command.getStates().length == 2); // invalid command is added as a base
         // command class

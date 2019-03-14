@@ -57,8 +57,8 @@ public class DriverCard extends PropertyValueObject {
         this.driverNumber = driverNumber;
         this.present = present;
         bytes = new byte[2];
-        // TODO: 2019-03-07 drivernumber is unsigned. test if there is overflow eg > 128
-        set(0, (byte) driverNumber);
+        
+        set(0, Property.intToBytes(driverNumber, 1));
         set(1, Property.boolToByte(present));
     }
 
