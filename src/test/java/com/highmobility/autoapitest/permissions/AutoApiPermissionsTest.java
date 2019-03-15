@@ -4,9 +4,9 @@ import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.certificate.PermissionLocation;
 import com.highmobility.value.BitLocation;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AutoApiPermissionsTest {
     @Test public void resetTest() {

@@ -17,12 +17,12 @@ import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.value.PowerTrain;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Created by ttiganik on 15/09/16.

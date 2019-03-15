@@ -9,8 +9,8 @@ import com.highmobility.autoapi.GetHomeChargerState;
 import com.highmobility.autoapi.HomeChargerState;
 import com.highmobility.autoapi.SetChargeCurrent;
 import com.highmobility.autoapi.SetPriceTariffs;
-import com.highmobility.autoapi.value.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.NetworkSecurity;
 import com.highmobility.autoapi.value.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.value.homecharger.Charging;
 import com.highmobility.autoapi.value.homecharger.PlugType;
@@ -18,11 +18,12 @@ import com.highmobility.autoapi.value.homecharger.PriceTariff;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HomeChargerTest {
     Bytes bytes = new Bytes(
@@ -159,17 +160,17 @@ public class HomeChargerTest {
         assertTrue(command.getPriceTariffs().length == 0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void failSamePriceTariffTypes() {
-
         Property[] tariffs = new Property[2];
 
         tariffs[0] = new Property(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
                 4.5f));
         tariffs[1] = new Property(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
                 .3f));
-
-        new SetPriceTariffs(tariffs).getByteArray();
+        assertThrows(IllegalArgumentException.class, () -> {
+            new SetPriceTariffs(tariffs).getByteArray();
+        });
     }
 
     @Test public void accept1CharTariff() {

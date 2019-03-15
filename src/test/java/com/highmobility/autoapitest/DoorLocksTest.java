@@ -12,7 +12,7 @@ import com.highmobility.autoapi.value.doors.DoorPosition;
 import com.highmobility.autoapi.value.Location;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.highmobility.autoapi.value.Location.FRONT_LEFT;
 import static com.highmobility.autoapi.value.Location.FRONT_RIGHT;
@@ -20,7 +20,7 @@ import static com.highmobility.autoapi.value.Location.REAR_LEFT;
 import static com.highmobility.autoapi.value.Location.REAR_RIGHT;
 import static com.highmobility.autoapi.value.Lock.LOCKED;
 import static com.highmobility.autoapi.value.Lock.UNLOCKED;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DoorLocksTest {
     Bytes bytes = new Bytes(

@@ -51,12 +51,13 @@ import com.highmobility.autoapi.value.Capability;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CapabilitiesTest {
     Bytes bytes = new Bytes
@@ -262,10 +263,7 @@ public class CapabilitiesTest {
         assertTrue(TestUtils.bytesTheSame(message, expected));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void buildTypesFromDifferentCategories() {
-        Capabilities.Builder builder = new Capabilities.Builder();
-
+    @Test public void buildTypesFromDifferentCategories() {
         Type[] supportedTypes = new Type[]{
                 GetClimateState.TYPE,
                 ClimateState.TYPE,
@@ -276,10 +274,10 @@ public class CapabilitiesTest {
                 GetTrunkState.TYPE
         };
 
-        Property property = new Property(new Capability(Identifier.CLIMATE, supportedTypes));
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Property(new Capability(Identifier.CLIMATE, supportedTypes));
+        });
 
-        builder.addCapability(property);
-        builder.build().getByteArray();
     }
 
     @Test public void buildAddStateAutomaticallyWithGet() {

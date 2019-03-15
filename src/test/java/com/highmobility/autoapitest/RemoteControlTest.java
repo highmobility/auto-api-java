@@ -8,9 +8,9 @@ import com.highmobility.autoapi.GetControlMode;
 import com.highmobility.autoapi.StartControlMode;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RemoteControlTest {
     Bytes bytes = new Bytes(

@@ -1,8 +1,8 @@
 package com.highmobility.autoapi.property;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ValueTest {
     @Test public void testUnsignedIntOverflow() {

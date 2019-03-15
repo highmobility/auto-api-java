@@ -1,8 +1,8 @@
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.autoapi.RooftopState;
@@ -13,15 +13,15 @@ import com.highmobility.autoapitest.TestUtils;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /*
  * Timestamp + failure properties:
@@ -175,16 +175,18 @@ public class CommandTest {
         assertTrue(foundUnknownProperty == true);
     }
 
-    @Test(expected = IllegalArgumentException.class) public void builderFailsIfPropertiesExpected() {
+    @Test public void builderFailsIfPropertiesExpected() {
         ReductionTime[] timers = new ReductionTime[0];
-        new SetReductionOfChargingCurrentTimes(timers);
+        assertThrows(IllegalArgumentException.class, () -> {
+            new SetReductionOfChargingCurrentTimes(timers);
+        });
         // TODO: 2019-03-15 add these for all of the classes
     }
 
     @Test public void parserFailsIfPropertiesExpected() {
         Bytes waitingForBytes = new Bytes("002317");
         Command command = CommandResolver.resolve(waitingForBytes);
-        Assert.assertTrue(command.getClass() == Command.class);
-        Assert.assertTrue(command.getProperties().length == 0);
+        assertTrue(command.getClass() == Command.class);
+        assertTrue(command.getProperties().length == 0);
     }
 }

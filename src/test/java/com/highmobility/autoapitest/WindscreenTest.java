@@ -16,13 +16,13 @@ import com.highmobility.autoapi.value.windscreen.WiperState;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WindscreenTest {
     Bytes bytes = new Bytes(

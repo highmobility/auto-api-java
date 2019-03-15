@@ -9,11 +9,12 @@ import com.highmobility.autoapi.value.charging.ChargeMode;
 import com.highmobility.autoapitest.TestUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PropertyTest {
     // bytes: 00000160E0EA1388

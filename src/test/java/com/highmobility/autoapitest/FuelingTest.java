@@ -11,11 +11,11 @@ import com.highmobility.autoapi.value.Lock;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FuelingTest {
     Bytes bytes = new Bytes("004001" +

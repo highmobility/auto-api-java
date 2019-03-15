@@ -10,9 +10,10 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HonkHornAndFlashLightsTest {
     Bytes bytes = new Bytes("002601" +
@@ -43,9 +44,11 @@ public class HonkHornAndFlashLightsTest {
         assertTrue(command.getLightFlashCount() == 3);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void honkAndFlashNoArguments() throws IllegalArgumentException {
-        new HonkAndFlash(null, null);
+        assertThrows(IllegalArgumentException.class, () -> {
+            new HonkAndFlash(null, null);
+        });
     }
 
     @Test public void activateDeactivate() {

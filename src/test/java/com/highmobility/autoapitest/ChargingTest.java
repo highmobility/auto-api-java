@@ -10,8 +10,9 @@ import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
 import com.highmobility.autoapi.StartStopCharging;
-import com.highmobility.autoapi.property.CommandTest;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.StartStop;
+import com.highmobility.autoapi.value.Time;
 import com.highmobility.autoapi.value.charging.ChargeMode;
 import com.highmobility.autoapi.value.charging.ChargePortState;
 import com.highmobility.autoapi.value.charging.ChargingState;
@@ -19,17 +20,16 @@ import com.highmobility.autoapi.value.charging.ChargingTimer;
 import com.highmobility.autoapi.value.charging.DepartureTime;
 import com.highmobility.autoapi.value.charging.PlugType;
 import com.highmobility.autoapi.value.charging.ReductionTime;
-import com.highmobility.autoapi.value.StartStop;
-import com.highmobility.autoapi.value.Time;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Calendar;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChargingTest {
     Bytes bytes = new Bytes(
@@ -140,13 +140,14 @@ public class ChargingTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test(expected = IllegalArgumentException.class)
     public void failSameChargingTimers() throws ParseException {
         Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
         ChargingTimer[] timers = new ChargingTimer[2];
         timers[0] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
         timers[1] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
-        new SetChargeTimer(timers);
+        assertThrows(IllegalArgumentException.class, () -> {
+            new SetChargeTimer(timers);
+        });
     }
 
     @Test public void build() throws ParseException {
@@ -171,10 +172,12 @@ public class ChargingTest {
         builder.addDepartureTime(new Property(new DepartureTime(true, new Time(16, 32))));
         builder.addDepartureTime(new Property(new DepartureTime(false, new Time(11, 51))));
 
-        builder.addReductionOfChargingCurrentTime(new Property(new ReductionTime(StartStop.START, new Time(17,
-                33))));
-        builder.addReductionOfChargingCurrentTime(new Property(new ReductionTime(StartStop.STOP, new Time(12,
-                52))));
+        builder.addReductionOfChargingCurrentTime(new Property(new ReductionTime(StartStop.START,
+                new Time(17,
+                        33))));
+        builder.addReductionOfChargingCurrentTime(new Property(new ReductionTime(StartStop.STOP,
+                new Time(12,
+                        52))));
 
         builder.setBatteryTemperature(new Property(38.4f));
 
@@ -240,8 +243,10 @@ public class ChargingTest {
         assertTrue(command.getChargeMode().getValue() == ChargeMode.INDUCTIVE);
     }
 
-    @Test(expected = IllegalArgumentException.class) public void setChargeModeThrowsOnImmediate() {
-        new SetChargeMode(ChargeMode.IMMEDIATE);
+    @Test public void setChargeModeThrowsOnImmediate() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new SetChargeMode(ChargeMode.IMMEDIATE);
+        });
     }
 
     @Test public void SetChargeTimer() throws ParseException {

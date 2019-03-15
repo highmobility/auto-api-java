@@ -2,9 +2,9 @@ package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.SendHeartRate;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HeartRate {
     @Test public void send() {

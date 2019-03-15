@@ -8,9 +8,9 @@ import com.highmobility.autoapi.value.FailureReason;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FailureTest {
     Bytes bytes = new Bytes("000201" +
