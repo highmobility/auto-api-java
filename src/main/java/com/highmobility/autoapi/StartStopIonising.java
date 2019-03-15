@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * Manually start or stop ionising. The result is sent through the evented Climate State command.
  */
-public class StartStopIonising extends CommandWithProperties {
+public class StartStopIonising extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x16);
     private static final byte IDENTIFIER = 0x01;
 

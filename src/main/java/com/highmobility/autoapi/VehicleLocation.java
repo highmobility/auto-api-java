@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * This command is sent when a Get Vehicle Location message is received by the car.
  */
-public class VehicleLocation extends CommandWithProperties {
+public class VehicleLocation extends Command {
     public static final Type TYPE = new Type(Identifier.VEHICLE_LOCATION, 0x01);
 
     private static final byte IDENTIFIER_COORDINATES = 0x04;
@@ -90,7 +90,7 @@ public class VehicleLocation extends CommandWithProperties {
         altitude = builder.altitude;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Coordinates> coordinates;
         private Property<Double> heading;
         private Property<Double> altitude;

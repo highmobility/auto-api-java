@@ -30,17 +30,17 @@ import javax.annotation.Nullable;
  * This message is sent when a Multi Command message is received by the car. The new states are
  * included in the message payload.
  */
-public class MultiState extends CommandWithProperties {
+public class MultiState extends Command {
     public static final Type TYPE = new Type(Identifier.MULTI_COMMAND, 0x01);
 
     private static final byte PROP_IDENTIFIER = 0x01;
 
-    Property<CommandWithProperties>[] commands;
+    Property<Command>[] commands;
 
     /**
      * @return All of the commands.
      */
-    public Property<CommandWithProperties>[] getCommands() {
+    public Property<Command>[] getCommands() {
         return commands;
     }
 
@@ -50,8 +50,8 @@ public class MultiState extends CommandWithProperties {
      * @param type The command type.
      * @return The command.
      */
-    @Nullable public Property<CommandWithProperties> getCommand(Type type) {
-        for (Property<CommandWithProperties> command : commands) {
+    @Nullable public Property<Command> getCommand(Type type) {
+        for (Property<Command> command : commands) {
             if (command.getValue() != null && command.getValue().is(type)) return command;
         }
 
@@ -61,11 +61,11 @@ public class MultiState extends CommandWithProperties {
     MultiState(byte[] bytes) {
         super(bytes);
 
-        ArrayList<Property<CommandWithProperties>> builder = new ArrayList<>();
+        ArrayList<Property<Command>> builder = new ArrayList<>();
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROP_IDENTIFIER) {
-                    Property c = new Property(CommandWithProperties.class, p);
+                    Property c = new Property(Command.class, p);
                     builder.add(c);
                     return c;
                 }

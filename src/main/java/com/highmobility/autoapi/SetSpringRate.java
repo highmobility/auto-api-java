@@ -21,8 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.SpringRate;
 import com.highmobility.autoapi.value.Axle;
+import com.highmobility.autoapi.value.SpringRate;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 /**
  * Set the spring rate. The result is sent through the Chassis Settings message.
  */
-public class SetSpringRate extends CommandWithProperties {
+public class SetSpringRate extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x14);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
 
@@ -87,9 +87,5 @@ public class SetSpringRate extends CommandWithProperties {
         }
 
         springRates = builder.toArray(new SpringRate[0]);
-    }
-
-    @Override protected boolean propertiesExpected() {
-        return false;
     }
 }

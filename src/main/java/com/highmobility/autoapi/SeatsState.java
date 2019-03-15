@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  * This message is sent when a Get Seats State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
-public class SeatsState extends CommandWithProperties {
+public class SeatsState extends Command {
     public static final Type TYPE = new Type(Identifier.SEATS, 0x01);
 
     Property<PersonDetected>[] personsDetected;
@@ -120,7 +120,7 @@ public class SeatsState extends CommandWithProperties {
         seatBeltsFastened = builder.seatBeltsFastened.toArray(new Property[0]);
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         List<Property<PersonDetected>> personsDetected = new ArrayList<>();
         List<Property<SeatBeltFastened>> seatBeltsFastened = new ArrayList<>();
 

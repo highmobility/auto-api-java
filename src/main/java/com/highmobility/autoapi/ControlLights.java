@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 /**
  * Set the lights state. The result is sent through the Lights State command.
  */
-public class ControlLights extends CommandWithProperties {
+public class ControlLights extends Command {
     public static final Type TYPE = new Type(Identifier.LIGHTS, 0x12);
 
     private static final byte IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE = 0x01;

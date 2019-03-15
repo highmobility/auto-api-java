@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * at the time. It is also possible to pass in how many times the lights should be flashed and how
  * many seconds the horn should be honked.
  */
-public class HonkAndFlash extends CommandWithProperties {
+public class HonkAndFlash extends Command {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x12);
     private static final byte IDENTIFIER_SECONDS = 0x01;
     private static final byte IDENTIFIER_COUNT = 0x02;
@@ -91,5 +91,9 @@ public class HonkAndFlash extends CommandWithProperties {
                 return null;
             });
         }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

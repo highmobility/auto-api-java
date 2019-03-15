@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * Set the charge current of the home charger.
  */
-public class SetChargeCurrent extends CommandWithProperties {
+public class SetChargeCurrent extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x12);
     private static final byte IDENTIFIER = 0x01;
 

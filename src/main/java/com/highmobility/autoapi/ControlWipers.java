@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 /**
  * Control the wipers. The result is sent through the Windscreen State message.
  */
-public class ControlWipers extends CommandWithProperties {
+public class ControlWipers extends Command {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x14);
 
     private static final byte IDENTIFIER_WIPER_STATE = 0x01;

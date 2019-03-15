@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
 /**
  * Command sent when a Get Chassis Settings is received by the car.
  */
-public class ChassisSettings extends CommandWithProperties {
+public class ChassisSettings extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x01);
 
     public static final byte IDENTIFIER_DRIVING_MODE = 0x01;
@@ -228,7 +228,7 @@ public class ChassisSettings extends CommandWithProperties {
         maximumChassisPosition = builder.maximumChassisPosition;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<DrivingMode> drivingMode;
         private Property<Boolean> sportChronoActive;
 

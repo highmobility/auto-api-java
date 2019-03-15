@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * Command to tell the smart device to send a message. This could be a response to a received
  * message or input through voice by the driver.
  */
-public class SendMessage extends CommandWithProperties {
+public class SendMessage extends Command {
     public static final Type TYPE = new Type(Identifier.MESSAGING, 0x01);
 
     private static final byte RECIPIENT_IDENTIFIER = 0x01;
@@ -69,17 +69,13 @@ public class SendMessage extends CommandWithProperties {
         }
     }
 
-    @Override protected boolean propertiesExpected() {
-        return false;
-    }
-
     private SendMessage(Builder builder) {
         super(builder);
         message = builder.message;
         recipientHandle = builder.recipientHandle;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<String> message;
         private Property<String> recipientHandle;
 

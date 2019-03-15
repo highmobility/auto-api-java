@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * Command sent when a Get Navi Destination command is received by the car.
  */
-public class NaviDestination extends CommandWithProperties {
+public class NaviDestination extends Command {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x01);
 
     private static final byte COORDINATES_IDENTIFIER = 0x07;
@@ -79,7 +79,7 @@ public class NaviDestination extends CommandWithProperties {
         coordinates = builder.coordinates;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<String> name;
         private Property<Coordinates> coordinates;
 

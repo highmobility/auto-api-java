@@ -24,7 +24,6 @@ public class ParkingBrakeTest {
 
     @Test
     public void state() {
-
         Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == ParkingBrakeState.class);

@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
  * Command sent when a Get Charge State command is received by the car or when the car is plugged
  * in, disconnected, starts or stops charging, or when the charge limit is changed.
  */
-public class ChargeState extends CommandWithProperties {
+public class ChargeState extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x01);
 
     private static final byte ESTIMATED_RANGE_IDENTIFIER = 0x02;
@@ -348,7 +348,7 @@ public class ChargeState extends CommandWithProperties {
         activeState = builder.activeState;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private PropertyInteger estimatedRange;
         private Property<Double> batteryLevel;
         private Property<Float> batteryCurrentAC;

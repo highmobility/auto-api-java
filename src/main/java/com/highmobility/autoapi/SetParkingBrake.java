@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Turn on or off the parking brake. The result is sent through the evented Parking Brake State
  * message.
  */
-public class SetParkingBrake extends CommandWithProperties {
+public class SetParkingBrake extends Command {
     public static final Type TYPE = new Type(Identifier.PARKING_BRAKE, 0x12);
     private static final byte IDENTIFIER = 0x01;
 

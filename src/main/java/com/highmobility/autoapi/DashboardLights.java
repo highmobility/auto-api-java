@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * This message is sent when a Get Dashboard Lights message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
-public class DashboardLights extends CommandWithProperties {
+public class DashboardLights extends Command {
     public static final Type TYPE = new Type(Identifier.DASHBOARD_LIGHTS, 0x01);
     public static final byte IDENTIFIER_DASHBOARD_LIGHT = 0x01;
 
@@ -90,7 +90,7 @@ public class DashboardLights extends CommandWithProperties {
         lights = builder.lights.toArray(new Property[0]);
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         List<Property<DashboardLight>> lights = new ArrayList<>();
 
         /**

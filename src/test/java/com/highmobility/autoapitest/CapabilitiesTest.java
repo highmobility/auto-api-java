@@ -46,8 +46,8 @@ import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.Type;
 import com.highmobility.autoapi.ValetMode;
 import com.highmobility.autoapi.VehicleLocation;
-import com.highmobility.autoapi.value.Capability;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Capability;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -193,13 +193,12 @@ public class CapabilitiesTest {
 
     @Test public void getCapability() {
         byte[] bytes = ByteUtils.bytesFromHex("0010020029");
-        byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getByteArray();
+        GetCapability command = new GetCapability(SendHeartRate.TYPE);
+        byte[] commandBytes = command.getByteArray();
         assertTrue(Arrays.equals(bytes, commandBytes));
 
-        Command command = CommandResolver.resolve(bytes);
-        assertTrue(command instanceof GetCapability);
-        GetCapability get = (GetCapability) command;
-        assertTrue(get.getCapabilityIdentifier() == Identifier.HEART_RATE);
+        command = (GetCapability) CommandResolver.resolve(bytes);
+        assertTrue(command.getCapabilityIdentifier() == Identifier.HEART_RATE);
     }
 
     @Test public void buildClimate() {
@@ -225,7 +224,6 @@ public class CapabilitiesTest {
         assertTrue(capabilities.getCapability(GetClimateState.TYPE) != null);
         assertTrue(capabilities.getCapability(EnableDisableWifi.TYPE) == null);
         assertTrue(capabilities.getCapabilities().length == 1);
-
     }
 
     @Test public void buildClimateAndRemoteControl() throws IllegalArgumentException {

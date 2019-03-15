@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Command sent when a Get Capabilities command is received by the car.
  */
-public class Capabilities extends CommandWithProperties {
+public class Capabilities extends Command {
     public static final Type TYPE = new Type(Identifier.CAPABILITIES, 0x01);
     private static final byte IDENTIFIER = 0x01;
 
@@ -94,16 +94,12 @@ public class Capabilities extends CommandWithProperties {
         capabilities = builder.toArray(new Property[0]);
     }
 
-    @Override protected boolean propertiesExpected() {
-        return false;
-    }
-
     private Capabilities(Builder builder) {
         super(builder);
         capabilities = builder.capabilities.toArray(new Property[0]);
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private List<Property> capabilities = new ArrayList<>();
 
         public Builder() {

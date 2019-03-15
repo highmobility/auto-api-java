@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 /**
  * Command sent when a Get Parking Brake State command is received by the car.
  */
-public class ParkingBrakeState extends CommandWithProperties {
+public class ParkingBrakeState extends Command {
     public static final Type TYPE = new Type(Identifier.PARKING_BRAKE, 0x01);
 
     private static final byte ACTIVE_IDENTIFIER = 0x01;
@@ -64,7 +64,7 @@ public class ParkingBrakeState extends CommandWithProperties {
         active = builder.active;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Boolean> active;
 
         public Builder() {

@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * Open or close the windows. Either one or all windows can be controlled with the same command. The
  * result is sent through the evented Windows State command.
  */
-public class ControlWindows extends CommandWithProperties {
+public class ControlWindows extends Command {
     public static final Type TYPE = new Type(Identifier.WINDOWS, 0x12);
     private static final byte PROPERTY_IDENTIFIER = 0x02;
 
@@ -92,9 +92,5 @@ public class ControlWindows extends CommandWithProperties {
         }
 
         windowPositions = builder.toArray(new Property[0]);
-    }
-
-    @Override protected boolean propertiesExpected() {
-        return false;
     }
 }

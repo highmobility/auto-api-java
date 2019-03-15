@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * Set the preferred temperature settings. The result is sent through the Climate State message.
  */
-public class SetTemperatureSettings extends CommandWithProperties {
+public class SetTemperatureSettings extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x17);
     private static final byte IDENTIFIER_DRIVER_TEMPERATURE = 0x01;
     private static final byte IDENTIFIER_PASSENGER_TEMPERATURE = 0x02;

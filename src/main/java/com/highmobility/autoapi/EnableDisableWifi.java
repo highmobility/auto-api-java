@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * Enable or disable Wi-Fi completely.
  */
-public class EnableDisableWifi extends CommandWithProperties {
+public class EnableDisableWifi extends Command {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x04);
     private static final byte IDENTIFIER = 0x01;
     private Property<Boolean> enable = new Property(Boolean.class, IDENTIFIER);

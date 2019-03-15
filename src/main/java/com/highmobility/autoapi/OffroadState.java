@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * Command sent when a Get Offroad State is received by the car.
  */
-public class OffroadState extends CommandWithProperties {
+public class OffroadState extends Command {
     public static final Type TYPE = new Type(Identifier.OFF_ROAD, 0x01);
 
     private static final byte IDENTIFIER_ROUTE_INCLINE = 0x01;
@@ -79,7 +79,7 @@ public class OffroadState extends CommandWithProperties {
         wheelSuspension = builder.wheelSuspension;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private PropertyInteger routeIncline;
         private Property<Double> wheelSuspension;
 

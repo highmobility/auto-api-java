@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  * Activate or deactivate cruise control. The result is sent through the Cruise Control State
  * message.
  */
-public class ActivateDeactivateCruiseControl extends CommandWithProperties {
+public class ActivateDeactivateCruiseControl extends Command {
     public static final Type TYPE = new Type(Identifier.CRUISE_CONTROL, 0x12);
     private static final byte IDENTIFIER_ACTIVATE = 0x01;
     private static final byte IDENTIFIER_SPEED = 0x02;

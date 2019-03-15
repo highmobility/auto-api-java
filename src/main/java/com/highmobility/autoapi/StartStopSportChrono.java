@@ -26,7 +26,7 @@ import com.highmobility.autoapi.value.StartStop;
 /**
  * Start/stop the sports chronometer. The result is sent through the Chassis Settings message.
  */
-public class StartStopSportChrono extends CommandWithProperties {
+public class StartStopSportChrono extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x13);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
     Property<StartStop> startStop = new Property(StartStop.class, PROPERTY_IDENTIFIER);

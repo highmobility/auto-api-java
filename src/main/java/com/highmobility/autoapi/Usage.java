@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * This message is sent when a Get Usage message is received by the car. The new state is included
  * in the message payload and may be the result of user, device or car triggered action.
  */
-public class Usage extends CommandWithProperties {
+public class Usage extends Command {
     public static final Type TYPE = new Type(Identifier.USAGE, 0x01);
 
     private static final byte IDENTIFIER_AVERAGE_WEEKLY_DISTANCE = ((byte) 0x01);
@@ -300,7 +300,7 @@ public class Usage extends CommandWithProperties {
         currentFuelConsumption = builder.currentFuelConsumption;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private PropertyInteger averageWeeklyDistance;
         private PropertyInteger averageWeeklyDistanceLongTerm;
         private Property<Double> accelerationEvaluation;

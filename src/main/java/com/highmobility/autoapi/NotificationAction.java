@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.PropertyInteger;
 /**
  * Send an action to a previously received Notification message.
  */
-public class NotificationAction extends CommandWithProperties {
+public class NotificationAction extends Command {
     public static final Type TYPE = new Type(Identifier.NOTIFICATIONS, 0x11);
 
     private static final byte IDENTIFIER = 0x01;
@@ -68,7 +68,7 @@ public class NotificationAction extends CommandWithProperties {
         actionIdentifier = builder.actionIdentifier;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private PropertyInteger actionIdentifier;
 
         public Builder() {

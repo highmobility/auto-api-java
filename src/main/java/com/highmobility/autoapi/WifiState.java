@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * Command sent when a Wi-Fi State command is received by the car. The new state is included in the
  * command payload and may be the result of user, device or car triggered action.
  */
-public class WifiState extends CommandWithProperties {
+public class WifiState extends Command {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x01);
     private static final byte IDENTIFIER_ENABLED = 0x01;
     private static final byte IDENTIFIER_CONNECTED = 0x02;
@@ -103,7 +103,7 @@ public class WifiState extends CommandWithProperties {
         security = builder.security;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Boolean> enabled;
         private Property<Boolean> connected;
         private Property<String> ssid;

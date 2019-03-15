@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 /**
  * Get historical states. The car will respond with the Historical States message.
  */
-public class GetHistoricalStates extends CommandWithProperties {
+public class GetHistoricalStates extends Command {
     public static final Type TYPE = new Type(Identifier.HISTORICAL, 0x00);
 
     private static final byte IDENTIFIER_CAPABILITY = 0x01;

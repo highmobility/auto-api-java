@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Set Reduction of Charging-current Times.
  */
-public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
+public class SetReductionOfChargingCurrentTimes extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x17);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
 
@@ -80,9 +80,5 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
         }
 
         reductionTimes = builder.toArray(new Property[0]);
-    }
-
-    @Override protected boolean propertiesExpected() {
-        return false;
     }
 }

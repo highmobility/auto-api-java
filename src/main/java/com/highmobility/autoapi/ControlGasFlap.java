@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 /**
  * Open or close the gas flap of the car.
  */
-public class ControlGasFlap extends CommandWithProperties {
+public class ControlGasFlap extends Command {
     public static final Type TYPE = new Type(Identifier.FUELING, 0x12);
 
     private static final byte LOCK_IDENTIFIER = 0x02;

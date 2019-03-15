@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * Command sent when a Get Firmware Version is received by the car.
  */
-public class FirmwareVersion extends CommandWithProperties {
+public class FirmwareVersion extends Command {
     public static final Type TYPE = new Type(Identifier.FIRMWARE_VERSION, 0x01);
 
     private static final byte IDENTIFIER_SDK_VERSION = 0x01;
@@ -87,7 +87,7 @@ public class FirmwareVersion extends CommandWithProperties {
         applicationVersion = builder.applicationVersion;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<int[]> carSdkVersion;
         private Property<String> carSDKBuild;
         private Property<String> applicationVersion;

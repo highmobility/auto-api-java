@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Activate or deactivate power take-off. The result is sent through the Power Take-Off State
  * message.
  */
-public class ActivateDeactivatePowerTakeoff extends CommandWithProperties {
+public class ActivateDeactivatePowerTakeoff extends Command {
     public static final Type TYPE = new Type(Identifier.POWER_TAKE_OFF, 0x02);
     private static final byte IDENTIFIER = 0x01;
     Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);

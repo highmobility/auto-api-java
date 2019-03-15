@@ -134,6 +134,7 @@ public class ChargingTest {
 
     @Test public void get() {
         String waitingForBytes = "002300";
+        Bytes get = new GetChargeState();
         String commandBytes = ByteUtils.hexFromBytes(new GetChargeState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }

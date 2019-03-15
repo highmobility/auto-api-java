@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * This message is sent when a Start Stop State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
-public class StartStopState extends CommandWithProperties {
+public class StartStopState extends Command {
     public static final Type TYPE = new Type(Identifier.START_STOP, 0x01);
     private static final byte ACTIVE_IDENTIFIER = 0x01;
     Property<Boolean> active;
@@ -56,7 +56,7 @@ public class StartStopState extends CommandWithProperties {
         active = builder.active;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Boolean> active;
 
         public Builder() {

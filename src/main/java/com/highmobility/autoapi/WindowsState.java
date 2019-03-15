@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
  * received. The new status is included in the command payload and may be the result of user, device
  * or car triggered action.
  */
-public class WindowsState extends CommandWithProperties {
+public class WindowsState extends Command {
     public static final Type TYPE = new Type(Identifier.WINDOWS, 0x01);
 
     private static final byte IDENTIFIER_WINDOW_OPEN_PERCENTAGES = 0x02;
@@ -121,7 +121,7 @@ public class WindowsState extends CommandWithProperties {
         windowOpenPercentages = builder.windowOpenPercentages.toArray(new Property[0]);
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         List<Property<WindowPosition>> windowPositions = new ArrayList<>();
         List<Property<WindowOpenPercentage>> windowOpenPercentages = new ArrayList<>();
 

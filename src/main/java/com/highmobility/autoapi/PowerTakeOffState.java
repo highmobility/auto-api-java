@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * This message is sent when a Power Take-Off State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
-public class PowerTakeOffState extends CommandWithProperties {
+public class PowerTakeOffState extends Command {
     public static final Type TYPE = new Type(Identifier.POWER_TAKE_OFF, 0x01);
     private static final byte ACTIVE_IDENTIFIER = 0x01;
     private static final byte ENGAGED_IDENTIFIER = 0x02;
@@ -79,7 +79,7 @@ public class PowerTakeOffState extends CommandWithProperties {
         engaged = builder.engaged;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Boolean> active;
         private Property<Boolean> engaged;
 

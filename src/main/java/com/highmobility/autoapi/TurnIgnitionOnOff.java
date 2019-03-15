@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Command to turn the car ignition on or off. The result is sent through the evented Ignition State
  * command.
  */
-public class TurnIgnitionOnOff extends CommandWithProperties {
+public class TurnIgnitionOnOff extends Command {
     public static final Type TYPE = new Type(Identifier.ENGINE, 0x12);
     private static final byte IDENTIFIER = 0x01;
 

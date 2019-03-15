@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * is sent through the evented Parking Ticket command. The end time can be left unset depending on
  * the operator.
  */
-public class StartParking extends CommandWithProperties {
+public class StartParking extends Command {
     public static final Type TYPE = new Type(Identifier.PARKING_TICKET, 0x02);
 
     public static final byte IDENTIFIER_OPERATOR_NAME = 0x01;

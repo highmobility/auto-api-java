@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Set the price tariffs of the home charger.
  */
-public class SetPriceTariffs extends CommandWithProperties {
+public class SetPriceTariffs extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x13);
     private static final byte IDENTIFIER_TARIFF = 0x0C;
 
@@ -95,9 +95,5 @@ public class SetPriceTariffs extends CommandWithProperties {
         }
 
         priceTariffs = builder.toArray(new Property[0]);
-    }
-
-    @Override protected boolean propertiesExpected() {
-        return false;
     }
 }

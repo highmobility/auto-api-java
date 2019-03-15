@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 /**
  * This command is sent when a Get Light Conditions is received by the car.
  */
-public class LightConditions extends CommandWithProperties {
+public class LightConditions extends Command {
     public static final Type TYPE = new Type(Identifier.LIGHT_CONDITIONS, 0x01);
     private static final byte IDENTIFIER_OUTSIDE_LIGHT = 0x01;
     private static final byte IDENTIFIER_INSIDE_LIGHT = 0x02;
@@ -76,7 +76,7 @@ public class LightConditions extends CommandWithProperties {
         outsideLight = builder.outsideLight;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Float> outsideLight;
         private Property<Float> insideLight;
 

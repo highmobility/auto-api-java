@@ -25,7 +25,6 @@ public class VehicleTimeTest {
 
     @Test
     public void state() throws ParseException {
-
         Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == VehicleTime.class);

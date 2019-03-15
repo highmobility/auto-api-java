@@ -29,7 +29,7 @@ import com.highmobility.autoapi.property.ByteEnum;
  * ControlMode is received. The new mode is included in the command and may be the result of both
  * user or car triggered action.
  */
-public class ControlMode extends CommandWithProperties {
+public class ControlMode extends Command {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x01);
     private static final byte IDENTIFIER_MODE = 0x01;
     private static final byte IDENTIFIER_ANGLE = 0x02;

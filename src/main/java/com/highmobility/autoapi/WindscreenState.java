@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * Command sent when a Get Windscreen State command is received by the car. The wipers intensity is
  * indicated even if the car has automatic wipers activated.
  */
-public class WindscreenState extends CommandWithProperties {
+public class WindscreenState extends Command {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x01);
 
     private static final byte IDENTIFIER_DAMAGE_CONFIDENCE = 0x07;
@@ -165,7 +165,7 @@ public class WindscreenState extends CommandWithProperties {
         damageDetectionTime = builder.damageDetectionTime;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<WiperState> wiperState;
         private Property<WiperIntensity> wiperIntensity;
         private Property<WindscreenDamage> windscreenDamage;

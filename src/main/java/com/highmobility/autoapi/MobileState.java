@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * This message is sent when a Get Mobile State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
-public class MobileState extends CommandWithProperties {
+public class MobileState extends Command {
     public static final Type TYPE = new Type(Identifier.MOBILE, 0x01);
     private static final byte IDENTIFIER = 0x01;
     Property<Boolean> connected = new Property(Boolean.class, IDENTIFIER);
@@ -60,7 +60,7 @@ public class MobileState extends CommandWithProperties {
         super(builder);
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         public Builder() {
             super(TYPE);
         }

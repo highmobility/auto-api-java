@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  * Send multiple commands to the car. The car will respond with the Multi State message that
  * includes the new states of every affected capability.
  */
-public class MultiCommand extends CommandWithProperties {
+public class MultiCommand extends Command {
     public static final Type TYPE = new Type(Identifier.MULTI_COMMAND, 0x02);
 
     private static final byte PROP_IDENTIFIER = 0x01;

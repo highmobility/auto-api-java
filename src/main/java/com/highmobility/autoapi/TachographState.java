@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * This message is sent when a Get Tachograph State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
-public class TachographState extends CommandWithProperties {
+public class TachographState extends Command {
     public static final Type TYPE = new Type(Identifier.TACHOGRAPH, 0x01);
 
     public static final byte IDENTIFIER_DRIVER_WORKING_STATE = 0x01;
@@ -209,7 +209,7 @@ public class TachographState extends CommandWithProperties {
         this.vehicleSpeed = builder.vehicleSpeed;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         List<Property<DriverWorkingState>> driverWorkingStates = new ArrayList<>();
         List<Property<DriverTimeState>> driverTimeStates = new ArrayList<>();
         List<Property<DriverCard>> driverCards = new ArrayList<>();

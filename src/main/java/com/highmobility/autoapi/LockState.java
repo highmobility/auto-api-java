@@ -37,7 +37,7 @@ import static com.highmobility.autoapi.value.Lock.UNLOCKED;
  * The new status is included in the command payload and may be the result of user, device or car
  * triggered action.
  */
-public class LockState extends CommandWithProperties {
+public class LockState extends Command {
     public static final Type TYPE = new Type(Identifier.DOOR_LOCKS, 0x01);
 
     private static final byte INSIDE_LOCK_IDENTIFIER = 0x02;
@@ -170,7 +170,7 @@ public class LockState extends CommandWithProperties {
         outsideLocks = builder.locks.toArray(new Property[0]);
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private List<Property> positions = new ArrayList<>();
         private List<Property> insideLocks = new ArrayList<>();
         private List<Property> locks = new ArrayList<>();

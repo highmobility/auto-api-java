@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * Set the rooftop state. The result is sent through the evented Rooftop State command.
  */
-public class ControlRooftop extends CommandWithProperties {
+public class ControlRooftop extends Command {
     public static final Type TYPE = new Type(Identifier.ROOFTOP, 0x12);
 
     private static final byte IDENTIFIER_CONVERTIBLE_ROOFTOP = 0x03;

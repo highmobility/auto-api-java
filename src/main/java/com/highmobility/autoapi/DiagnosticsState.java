@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
  * Command sent when a Get Diagnostics State command is received by the car. The new status is
  * included in the command payload and may be the result of user, device or car triggered action.
  */
-public class DiagnosticsState extends CommandWithProperties {
+public class DiagnosticsState extends Command {
     public static final Type TYPE = new Type(Identifier.DIAGNOSTICS, 0x01);
 
     private static final byte IDENTIFIER_MILEAGE = 0x01;
@@ -490,7 +490,7 @@ public class DiagnosticsState extends CommandWithProperties {
         mileageMeters = builder.mileageMeters;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private PropertyInteger mileage;
         private PropertyInteger oilTemperature;
         private PropertyInteger speed;

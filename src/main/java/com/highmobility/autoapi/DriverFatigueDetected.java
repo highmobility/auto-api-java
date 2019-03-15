@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * This is an evented command that notifies about driver fatigue. Sent continuously when level 1 or
  * higher.
  */
-public class DriverFatigueDetected extends CommandWithProperties {
+public class DriverFatigueDetected extends Command {
     public static final Type TYPE = new Type(Identifier.DRIVER_FATIGUE, 0x01);
     private static final byte IDENTIFIER = 0x01;
 

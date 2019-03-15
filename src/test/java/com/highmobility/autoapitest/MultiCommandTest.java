@@ -70,7 +70,8 @@ public class MultiCommandTest {
 
         LockState lockState = (LockState) state.getCommand(LockState.TYPE).getValue();
         assertTrue(lockState.getInsideLock(Location.FRONT_LEFT).getValue().getLock() == Lock.UNLOCKED);
-        TheftAlarmState theftAlarmState = (TheftAlarmState) state.getCommand(TheftAlarmState.TYPE).getValue();
+        TheftAlarmState theftAlarmState =
+                (TheftAlarmState) state.getCommand(TheftAlarmState.TYPE).getValue();
         assertTrue(theftAlarmState.getState().getValue() == TheftAlarmState.Value.ARMED);
     }
 

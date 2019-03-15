@@ -32,7 +32,7 @@ import java.util.Calendar;
  * Command sent when a Get Maintenance State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
-public class MaintenanceState extends CommandWithProperties {
+public class MaintenanceState extends Command {
     public static final Type TYPE = new Type(Identifier.MAINTENANCE, 0x01);
 
     private static final byte IDENTIFIER_DAYS_TO_NEXT_SERVICE = 0x01;
@@ -221,7 +221,7 @@ public class MaintenanceState extends CommandWithProperties {
         return true;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private PropertyInteger kilometersToNextService;
         private PropertyInteger daysToNextService;
         private PropertyInteger cbsReportsCount;

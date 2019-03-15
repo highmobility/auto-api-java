@@ -32,7 +32,7 @@ public class CommandResolverTest {
     }
 
     @Test public void testReturnsBaseClassForUnknownBytes() {
-        Bytes bytes = new Bytes("00200208"); // invalid door lock state
+        Bytes bytes = new Bytes("002002"); // invalid door lock state
         Command command = CommandResolver.resolve(bytes);
         assertTrue(command instanceof Command);
     }

@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * Set the driving mode. The result is sent through the Chassis Settings command.
  */
-public class SetDrivingMode extends CommandWithProperties {
+public class SetDrivingMode extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x12);
     private static final byte IDENTIFIER = 0x01;
     Property<DrivingMode> drivingMode = new Property(DrivingMode.class, IDENTIFIER);

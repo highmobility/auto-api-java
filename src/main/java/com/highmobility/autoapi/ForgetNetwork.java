@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * Forget a network that the car has previously connected to.
  */
-public class ForgetNetwork extends CommandWithProperties {
+public class ForgetNetwork extends Command {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x03);
     public static final byte IDENTIFIER = 0x03;
     private Property<String> ssid = new Property(String.class, IDENTIFIER);

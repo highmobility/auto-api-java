@@ -23,7 +23,6 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.CommandWithProperties;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.value.Bytes;
 
@@ -97,14 +96,11 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         } else if (Byte.class.isAssignableFrom(valueClass)) {
             value = (T) valueBytes.get(0);
         }
-
     }
 
     public static Bytes getBytes(Object value) {
         // this is for builder/set command
-        if (value instanceof Bytes) {
-            return (Bytes) value;
-        } else if (value instanceof PropertyValueObject) {
+        if (value instanceof PropertyValueObject) {
             return ((PropertyValueObject) value);
         } else if (value instanceof ByteEnum) {
             byte byteValue = ((ByteEnum) value).getByte();
@@ -131,12 +127,12 @@ public class PropertyComponentValue<T> extends PropertyComponent {
             return Property.integerArrayToBytes((int[]) value);
         } else if (value instanceof Identifier) {
             return Property.identifierToBytes((Identifier) value);
-        } else if (value instanceof CommandWithProperties) {
-            return (CommandWithProperties) value;
         } else if (value instanceof Command) {
             return (Command) value;
         } else if (value instanceof Byte) {
             return new Bytes(new byte[]{(Byte) value});
+        } else if (value instanceof Bytes) {
+            return (Bytes) value;
         } else {
             throw new IllegalArgumentException("Type " + (value != null ? value.getClass() :
                     "null") + " not supported for Property");

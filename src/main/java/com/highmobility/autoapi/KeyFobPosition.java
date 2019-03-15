@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * Command sent by the car every time the relative position of the keyfob changes or when a Get Key
  * fob Position command is received.
  */
-public class KeyFobPosition extends CommandWithProperties {
+public class KeyFobPosition extends Command {
     public static final Type TYPE = new Type(Identifier.KEYFOB_POSITION, 0x01);
     private static final byte IDENTIFIER = 0x01;
 

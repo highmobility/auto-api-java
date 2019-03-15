@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * Unlock/Lock and Open/Close the trunk. The result is received through the evented Trunk State
  * command.
  */
-public class ControlTrunk extends CommandWithProperties {
+public class ControlTrunk extends Command {
     public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x12);
 
     private static final byte IDENTIFIER_LOCK = 0x01;

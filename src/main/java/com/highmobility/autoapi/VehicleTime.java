@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * This command is sent when a Get Vehicle Time message is received by the car. The local time of
  * the car is returned, hence the UTC timezone offset is included as well.
  */
-public class VehicleTime extends CommandWithProperties {
+public class VehicleTime extends Command {
     public static final Type TYPE = new Type(Identifier.VEHICLE_TIME, 0x01);
 
     private static final byte IDENTIFIER = 0x01;
@@ -65,7 +65,7 @@ public class VehicleTime extends CommandWithProperties {
         vehicleTime = builder.vehicleTime;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         Property<Calendar> vehicleTime;
 
         public Builder() {

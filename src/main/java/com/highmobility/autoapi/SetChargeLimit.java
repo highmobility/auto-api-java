@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Set the charge limit, to which point the car will charge itself. The result is sent through the
  * evented Charge State command.
  */
-public class SetChargeLimit extends CommandWithProperties {
+public class SetChargeLimit extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x13);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
 
@@ -61,5 +61,9 @@ public class SetChargeLimit extends CommandWithProperties {
                 return null;
             });
         }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

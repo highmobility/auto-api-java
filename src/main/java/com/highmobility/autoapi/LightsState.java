@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 /**
  * This command is sent when a Get Lights State message is received by the car.
  */
-public class LightsState extends CommandWithProperties {
+public class LightsState extends Command {
     public static final Type TYPE = new Type(Identifier.LIGHTS, 0x01);
 
     private static final byte IDENTIFIER_FRONT_EXTERIOR_LIGHT_STATE = 0x01;
@@ -228,7 +228,7 @@ public class LightsState extends CommandWithProperties {
         interiorLamps = builder.interiorLamps.toArray(new Property[0]);
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<FrontExteriorLightState> frontExteriorLightState;
         private Property<Boolean> rearExteriorLightActive;
         private Property<Color> ambientColor;

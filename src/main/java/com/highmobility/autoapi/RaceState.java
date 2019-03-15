@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
 /**
  * Command sent when a Get Race State is received by the car.
  */
-public class RaceState extends CommandWithProperties {
+public class RaceState extends Command {
     public static final Type TYPE = new Type(Identifier.RACE, 0x01);
 
     private static final byte IDENTIFIER_UNDER_STEERING = 0x02;
@@ -343,7 +343,7 @@ public class RaceState extends CommandWithProperties {
         vehicleMoving = builder.vehicleMoving;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private List<Property<Acceleration>> accelerationProperties = new ArrayList<>();
 
         private Property<Double> underSteering;

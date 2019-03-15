@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  * received. The new status is included in the command payload and may be the result of user, device
  * or car triggered action.
  */
-public class TrunkState extends CommandWithProperties {
+public class TrunkState extends Command {
     public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x01);
 
     private static final byte IDENTIFIER_LOCK = 0x01;
@@ -80,7 +80,7 @@ public class TrunkState extends CommandWithProperties {
         position = builder.position;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Lock> lock;
         private Property<Position> position;
 

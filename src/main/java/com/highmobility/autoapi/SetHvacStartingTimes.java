@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * Set the HVAC (Heating, ventilation, and air conditioning) automated starting times. The result is
  * sent through the evented Climate State message with the new state.
  */
-public class SetHvacStartingTimes extends CommandWithProperties {
+public class SetHvacStartingTimes extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x12);
 
     private static final byte AUTO_HVAC_IDENTIFIER = 0x01;
@@ -97,9 +97,5 @@ public class SetHvacStartingTimes extends CommandWithProperties {
         }
 
         hvacStartingTimes = builder.toArray(new Property[0]);
-    }
-
-    @Override protected boolean propertiesExpected() {
-        return false;
     }
 }

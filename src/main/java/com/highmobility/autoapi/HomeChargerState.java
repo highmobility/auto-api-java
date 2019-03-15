@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
  * This command is sent when a Home Charger State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
-public class HomeChargerState extends CommandWithProperties {
+public class HomeChargerState extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x01);
 
     private static final byte IDENTIFIER_CHARGING = 0x01;
@@ -276,7 +276,7 @@ public class HomeChargerState extends CommandWithProperties {
         priceTariffs = builder.priceTariffs.toArray(new Property[0]);
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Charging> charging;
         private Property<AuthenticationMechanism> authenticationMechanism;
         private Property<PlugType> plugType;

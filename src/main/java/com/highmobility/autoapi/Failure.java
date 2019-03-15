@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * For different reasons a command sent to the car might not be successful. When this happens, a
  * failure command is sent to the smart device with details about what went wrong.
  */
-public class Failure extends CommandWithProperties {
+public class Failure extends Command {
     public static final Type TYPE = new Type(Identifier.FAILURE, 0x01);
 
     private static final byte IDENTIFIER_IDENTIFIER = 0x01;
@@ -121,7 +121,7 @@ public class Failure extends CommandWithProperties {
         createType();
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<FailureReason> failureReason;
 
         private Property<Byte> failedTypeByte;

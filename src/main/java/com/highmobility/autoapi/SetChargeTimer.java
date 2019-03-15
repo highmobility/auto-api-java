@@ -30,7 +30,7 @@ import java.util.List;
  * Set the charge timer of the car. The command can include one of the different timer types or
  * all.
  */
-public class SetChargeTimer extends CommandWithProperties {
+public class SetChargeTimer extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x16);
 
     public static final byte PROPERTY_IDENTIFIER = 0x0D;

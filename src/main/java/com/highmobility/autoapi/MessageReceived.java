@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  * Command to notify the car that a message has been received. Depending on the car system, it will
  * display or read it loud to the driver.
  */
-public class MessageReceived extends CommandWithProperties {
+public class MessageReceived extends Command {
     public static final Type TYPE = new Type(Identifier.MESSAGING, 0x00);
 
     private static final byte IDENTIFIER_RECIPIENT = 0x01;

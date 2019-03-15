@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * result is sent through the Windscreen State command. Damage confidence percentage is
  * automatically set to either 0% or 100%.
  */
-public class SetWindscreenDamage extends CommandWithProperties {
+public class SetWindscreenDamage extends Command {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x12);
 
     private static final byte IDENTIFIER_WINDSCREEN_DAMAGE = 0x03;

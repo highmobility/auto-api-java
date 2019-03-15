@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.Lock;
  * Command to lock or unlock all doors of the car. The car will respond with the updated lock state
  * in a Lock State message.
  */
-public class LockUnlockDoors extends CommandWithProperties {
+public class LockUnlockDoors extends Command {
     public static final Type TYPE = new Type(Identifier.DOOR_LOCKS, 0x12);
 
     private static final byte IDENTIFIER = 0x01;

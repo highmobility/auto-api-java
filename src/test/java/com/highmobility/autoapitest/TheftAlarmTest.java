@@ -20,7 +20,6 @@ public class TheftAlarmTest {
 
     @Test
     public void state() {
-
         Command command = CommandResolver.resolve(bytes);
         if (command == null) fail();
 

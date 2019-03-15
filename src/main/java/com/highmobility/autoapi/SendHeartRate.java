@@ -27,7 +27,7 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * Heart rate can be sent to the car from a health accessory of a smart watch. This is only possible
  * to send through a direct Bluetooth link for privacy reasons.
  */
-public class SendHeartRate extends CommandWithProperties {
+public class SendHeartRate extends Command {
     public static final Type TYPE = new Type(Identifier.HEART_RATE, 0x12);
     private static final byte IDENTIFIER = 0x01;
 

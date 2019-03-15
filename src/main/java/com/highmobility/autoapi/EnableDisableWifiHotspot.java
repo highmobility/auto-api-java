@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * Enable or disable the home charger Wi-Fi Hotspot.
  */
-public class EnableDisableWifiHotspot extends CommandWithProperties {
+public class EnableDisableWifiHotspot extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x15);
     private static final byte IDENTIFIER = 0x01;
 

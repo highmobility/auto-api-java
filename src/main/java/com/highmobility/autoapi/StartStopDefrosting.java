@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * Manually start or stop defrosting. The result is sent through the evented Climate State message.
  */
-public class StartStopDefrosting extends CommandWithProperties {
+public class StartStopDefrosting extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x15);
     private static final byte IDENTIFIER = 0x01;
     private Property<Boolean> start = new Property(Boolean.class, IDENTIFIER);

@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 /**
  * Connect the car to a Wi-Fi network.
  */
-public class ConnectToNetwork extends CommandWithProperties {
+public class ConnectToNetwork extends Command {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x02);
     private static final byte IDENTIFIER_SSID = 0x03;
     private static final byte IDENTIFIER_SECURITY = 0x04;

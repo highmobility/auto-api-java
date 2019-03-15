@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * Manually start or stop defogging. The result is sent through the evented Climate State message.
  */
-public class StartStopDefogging extends CommandWithProperties {
+public class StartStopDefogging extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x14);
     private static final byte IDENTIFIER = 0x01;
 

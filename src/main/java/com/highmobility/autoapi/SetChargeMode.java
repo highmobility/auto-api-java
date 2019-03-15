@@ -26,7 +26,7 @@ import com.highmobility.autoapi.value.charging.ChargeMode;
 /**
  * Set the charge mode of the car.
  */
-public class SetChargeMode extends CommandWithProperties {
+public class SetChargeMode extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x15);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
     Property<ChargeMode> chargeMode = new Property(ChargeMode.class, PROPERTY_IDENTIFIER);

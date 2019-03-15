@@ -1,9 +1,8 @@
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.CommandWithProperties;
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.autoapi.RooftopState;
@@ -67,7 +66,7 @@ public class CommandTest {
                 "0100050100020201" +
                 "0100050100020F03" +
                 "0100050100021500");
-        CommandWithProperties command = (CommandWithProperties) CommandResolver.resolve(bytes);
+        Command command = (Command) CommandResolver.resolve(bytes);
 
         boolean found = false;
         for (Property property : command.getProperties()) {
@@ -83,14 +82,14 @@ public class CommandTest {
     }
 
     @Test public void nonce() {
-        CommandWithProperties command = getCommandWithSignature();
+        Command command = getCommandWithSignature();
         Bytes nonce = command.getNonce();
         assertTrue(nonce.equals("324244433743483436"));
         // build with #signature()
     }
 
     @Test public void signature() {
-        CommandWithProperties command = getCommandWithSignature();
+        Command command = getCommandWithSignature();
         assertTrue(command.getSignature().equals
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
 
@@ -104,13 +103,13 @@ public class CommandTest {
     }
 
     @Test public void signedBytes() {
-        CommandWithProperties command = getCommandWithSignature();
+        Command command = getCommandWithSignature();
         Bytes signedBytes = command.getSignedBytes();
         assertTrue(signedBytes.equals(new Bytes(parkingBrakeCommand +
                 "A0000C010009324244433743483436")));
     }
 
-    CommandWithProperties getCommandWithSignature() {
+    Command getCommandWithSignature() {
         Bytes bytes = new Bytes
                 (parkingBrakeCommand +
                         "A0000C010009324244433743483436" +
@@ -118,8 +117,8 @@ public class CommandTest {
         try {
             Command command = CommandResolver.resolve(bytes);
 
-            if (command instanceof CommandWithProperties) {
-                return (CommandWithProperties) command;
+            if (command instanceof Command) {
+                return (Command) command;
             }
 
             throw new CommandParseException();

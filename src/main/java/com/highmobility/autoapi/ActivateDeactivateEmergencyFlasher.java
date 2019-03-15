@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * This activates or deactivates the emergency flashers of the car, typically the blinkers to alarm
  * other drivers.
  */
-public class ActivateDeactivateEmergencyFlasher extends CommandWithProperties {
+public class ActivateDeactivateEmergencyFlasher extends Command {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x13);
     private static final byte IDENTIFIER = 0x01;
     Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);

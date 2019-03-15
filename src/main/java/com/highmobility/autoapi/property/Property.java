@@ -20,9 +20,8 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.CommandWithProperties;
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.value.Bytes;
@@ -275,9 +274,9 @@ public class Property<T> extends Bytes {
 
     public boolean isUniversalProperty() {
         byte propertyIdentifier = getPropertyIdentifier();
-        return propertyIdentifier == CommandWithProperties.SIGNATURE_IDENTIFIER ||
-                propertyIdentifier == CommandWithProperties.NONCE_IDENTIFIER ||
-                propertyIdentifier == CommandWithProperties.TIMESTAMP_IDENTIFIER;
+        return propertyIdentifier == Command.SIGNATURE_IDENTIFIER ||
+                propertyIdentifier == Command.NONCE_IDENTIFIER ||
+                propertyIdentifier == Command.TIMESTAMP_IDENTIFIER;
     }
 
     public void printFailedToParse(Exception e) {

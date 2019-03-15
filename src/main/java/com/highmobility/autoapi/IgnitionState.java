@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * received. The new status is included in the message payload and may be the result of user, device
  * or car triggered action.
  */
-public class IgnitionState extends CommandWithProperties {
+public class IgnitionState extends Command {
     public static final Type TYPE = new Type(Identifier.ENGINE, 0x01);
     private static final byte IDENTIFIER_ON = 0x01;
     private static final byte IDENTIFIER_ACCESSORIES = 0x02;
@@ -77,7 +77,7 @@ public class IgnitionState extends CommandWithProperties {
         accessoriesIgnition = builder.accessoriesIgnition;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Boolean> on;
         private Property<Boolean> accessoriesIgnition;
 

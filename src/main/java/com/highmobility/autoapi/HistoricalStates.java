@@ -29,17 +29,17 @@ import java.util.List;
  * This message is sent when a Get Historical States is received. The states are passed along as an
  * array of all states for the given period.
  */
-public class HistoricalStates extends CommandWithProperties {
+public class HistoricalStates extends Command {
     public static final Type TYPE = new Type(Identifier.HISTORICAL, 0x01);
     private static final byte STATE_IDENTIFIER = 0x01;
 
-    Property<CommandWithProperties>[] states;
+    Property<Command>[] states;
 
     /**
-     * @return The historical states. Use {@link CommandWithProperties#getTimestamp()} to understand
+     * @return The historical states. Use {@link Command#getTimestamp()} to understand
      * the command time.
      */
-    public Property<CommandWithProperties>[] getStates() {
+    public Property<Command>[] getStates() {
         return states;
     }
 
@@ -47,13 +47,13 @@ public class HistoricalStates extends CommandWithProperties {
      * @param type The type.
      * @return The historical states for the type.
      */
-    public Property<CommandWithProperties>[] getStates(Type type) {
+    public Property<Command>[] getStates(Type type) {
         List<Property> builder = new ArrayList<>();
 
         for (int i = 0; i < states.length; i++) {
-            Property<CommandWithProperties> prop = states[i];
+            Property<Command> prop = states[i];
             if (prop.getValue() != null) {
-                CommandWithProperties command = prop.getValue();
+                Command command = prop.getValue();
                 if (command.getType().equals(type)) {
                     builder.add(prop);
                 }
@@ -66,12 +66,12 @@ public class HistoricalStates extends CommandWithProperties {
     HistoricalStates(byte[] bytes) {
         super(bytes);
 
-        ArrayList<Property<CommandWithProperties>> builder = new ArrayList<>();
+        ArrayList<Property<Command>> builder = new ArrayList<>();
 
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == STATE_IDENTIFIER) {
-                    Property c = new Property(CommandWithProperties.class, p);
+                    Property c = new Property(Command.class, p);
                     builder.add(c);
                     return c;
 
@@ -93,7 +93,7 @@ public class HistoricalStates extends CommandWithProperties {
         state = builder.state;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends  Command.Builder {
         public Builder() {
             super(TYPE);
         }

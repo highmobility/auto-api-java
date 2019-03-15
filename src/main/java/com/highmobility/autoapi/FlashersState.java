@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * Command sent when a Get Flashers State command is received by the car.
  */
-public class FlashersState extends CommandWithProperties {
+public class FlashersState extends Command {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x01);
     private static final byte STATE_IDENTIFIER = 0x01;
     Property<Value> state = new Property(Value.class, STATE_IDENTIFIER);
@@ -63,7 +63,7 @@ public class FlashersState extends CommandWithProperties {
         state = builder.state;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Value> state;
 
         public Builder() {

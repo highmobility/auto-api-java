@@ -29,7 +29,7 @@ public class HistoricalTest {
     );
 
     @Test
-    public void state() throws ParseException {
+    public void state() {
         HistoricalStates states = (HistoricalStates) CommandResolver.resolve(bytes);
         assertTrue(states.getStates().length == 1);
 

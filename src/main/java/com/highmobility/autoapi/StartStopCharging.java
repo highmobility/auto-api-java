@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Start or stop charging, which can only be controlled when the car is plugged in. The result is
  * sent through the evented Charge State command.
  */
-public class StartStopCharging extends CommandWithProperties {
+public class StartStopCharging extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x12);
     private static final byte ACTIVE_STATE_IDENTIFIER = 0x01;
     Property<Boolean> start = new Property(Boolean.class, ACTIVE_STATE_IDENTIFIER);

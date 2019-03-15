@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * Command sent from the car every time the valet mode changes or when a Get Valet Mode command is
  * received.
  */
-public class ValetMode extends CommandWithProperties {
+public class ValetMode extends Command {
     public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x01);
 
     private static final byte ACTIVE_IDENTIFIER = 0x01;
@@ -67,7 +67,7 @@ public class ValetMode extends CommandWithProperties {
         active = builder.active;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Boolean> active;
 
         public Builder() {

@@ -38,7 +38,7 @@ public class MaintenanceTest {
     );
 
     @Test
-    public void state() throws ParseException {
+    public void state() {
         Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == MaintenanceState.class);

@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Authenticate or expire the charging session. Only if the session is authenticated can the
  * charging be started by the vehicle.
  */
-public class AuthenticateHomeCharger extends CommandWithProperties {
+public class AuthenticateHomeCharger extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x16);
     private static final byte IDENTIFIER = 0x01;
 

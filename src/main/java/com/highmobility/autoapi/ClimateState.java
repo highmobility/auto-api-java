@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * Auto-HVAC (Heating, Ventilation and Air Conditioning) allows you to schedule times when HVAC is
  * triggered automatically to reach the desired driver temperature setting.
  */
-public class ClimateState extends CommandWithProperties {
+public class ClimateState extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x01);
 
     private static final byte IDENTIFIER_INSIDE_TEMPERATURE = 0x01;
@@ -224,7 +224,7 @@ public class ClimateState extends CommandWithProperties {
         rearTemperatureSetting = builder.rearTemperatureSetting;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Float> insideTemperature;
         private Property<Float> outsideTemperature;
         private Property<Float> driverTemperatureSetting;

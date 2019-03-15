@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Attempt to start or stop the control mode of the car. The result is sent through the Control Mode
  * message.
  */
-public class StartControlMode extends CommandWithProperties {
+public class StartControlMode extends Command {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x12);
     private static final byte IDENTIFIER = 0x01;
 

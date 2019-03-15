@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * Activate or deactivate charging from solar power.
  */
-public class ActivateDeactivateSolarCharging extends CommandWithProperties {
+public class ActivateDeactivateSolarCharging extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x14);
     private static final byte IDENTIFIER = 0x01;
 

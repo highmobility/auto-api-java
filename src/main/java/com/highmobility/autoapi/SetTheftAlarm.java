@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Unarm or arm the theft alarm of the car. The result is sent through the evented Theft Alarm State
  * message.
  */
-public class SetTheftAlarm extends CommandWithProperties {
+public class SetTheftAlarm extends Command {
     public static final Type TYPE = new Type(Identifier.THEFT_ALARM, 0x12);
     private static final byte IDENTIFIER = 0x01;
 

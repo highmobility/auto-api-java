@@ -27,7 +27,7 @@ import com.highmobility.autoapi.property.Property;
  * cooling, defrosting and defogging as appropriate. The result is sent through the evented Climate
  * State message.
  */
-public class StartStopHvac extends CommandWithProperties {
+public class StartStopHvac extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x13);
     private static final byte IDENTIFIER = 0x01;
 

@@ -254,6 +254,7 @@ public class PropertyTest {
 
         Bytes expected = new Bytes("002313" + // SetChargeLimit
                 "DD000B0100083FECCCCCCCCCCCCD"); // invalid property identifier
-        assertTrue(CommandResolver.resolve(expected).getClass() == Command.class);
+        Command command = CommandResolver.resolve(expected);
+        assertTrue(command.getClass() == Command.class);
     }
 }

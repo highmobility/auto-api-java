@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Send a keystroke or entire sentences as input to the car head unit. This can act as an
  * alternative to the input devices that the car is equipped with.
  */
-public class TextInput extends CommandWithProperties {
+public class TextInput extends Command {
     public static final Type TYPE = new Type(Identifier.TEXT_INPUT, 0x00);
     private static final byte IDENTIFIER = 0x01;
 

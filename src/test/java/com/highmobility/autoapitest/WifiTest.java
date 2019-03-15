@@ -32,7 +32,6 @@ public class WifiTest {
 
     @Test
     public void state() {
-
         Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == WifiState.class);

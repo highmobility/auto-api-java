@@ -30,7 +30,7 @@ import java.util.Calendar;
  * Ticket message is received. The state is Ended also when the parking ticket has never been set.
  * Afterwards the car always keeps the last parking ticket information.
  */
-public class ParkingTicket extends CommandWithProperties {
+public class ParkingTicket extends Command {
     public static final Type TYPE = new Type(Identifier.PARKING_TICKET, 0x01);
 
     private static final byte IDENTIFIER_OPERATOR_NAME = 0x02;
@@ -115,7 +115,7 @@ public class ParkingTicket extends CommandWithProperties {
         state = builder.state;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<ParkingTicketState> state;
         private Property<String> operatorName;
         private Property<String> operatorTicketId;

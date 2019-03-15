@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * Send a notification to the car or smart device. The notification can have action items that the
  * user can respond with.
  */
-public class Notification extends CommandWithProperties {
+public class Notification extends Command {
     public static final Type TYPE = new Type(Identifier.NOTIFICATIONS, 0x00);
 
     private static final byte IDENTIFIER_TEXT = 0x01;
@@ -138,7 +138,7 @@ public class Notification extends CommandWithProperties {
         receivedAction = builder.receivedAction;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private List<Property<ActionItem>> actions = new ArrayList<>();
         Property<String> text;
         PropertyInteger receivedAction;

@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * array of all states that the vehicle possesses. No states are included for Capabilities that are
  * unsupported.
  */
-public class VehicleStatus extends CommandWithProperties {
+public class VehicleStatus extends Command {
     public static final Type TYPE = new Type(Identifier.VEHICLE_STATUS, 0x01);
 
     private static final byte IDENTIFIER_VIN = 0x01;
@@ -64,7 +64,7 @@ public class VehicleStatus extends CommandWithProperties {
     private static final byte IDENTIFIER_BRAND = 0x12;
     private static final byte IDENTIFIER_STATE = (byte) 0x99;
 
-    Property<CommandWithProperties>[] states;
+    Property<Command>[] states;
 
     Property<String> vin = new Property(String.class, IDENTIFIER_VIN);
     Property<PowerTrain> powerTrain = new Property(PowerTrain.class, IDENTIFIER_POWER_TRAIN);
@@ -96,7 +96,7 @@ public class VehicleStatus extends CommandWithProperties {
     /**
      * @return All of the states.
      */
-    public Property<CommandWithProperties>[] getStates() {
+    public Property<Command>[] getStates() {
         return states;
     }
 
@@ -104,10 +104,10 @@ public class VehicleStatus extends CommandWithProperties {
      * @param type The type of the command.
      * @return The state for the given Command type, if exists.
      */
-    @Nullable public Property<CommandWithProperties> getState(Type type) {
+    @Nullable public Property<Command> getState(Type type) {
         if (states == null) return null;
         for (int i = 0; i < states.length; i++) {
-            Property<CommandWithProperties> command = states[i];
+            Property<Command> command = states[i];
             if (command.getValue() != null && command.getValue().getType().equals(type))
                 return command;
         }
@@ -244,7 +244,7 @@ public class VehicleStatus extends CommandWithProperties {
     VehicleStatus(byte[] bytes) {
         super(bytes);
 
-        ArrayList<Property<CommandWithProperties>> states = new ArrayList<>();
+        ArrayList<Property<Command>> states = new ArrayList<>();
         ArrayList<Property<String>> equipments = new ArrayList<>();
 
         while (propertyIterator.hasNext()) {
@@ -273,8 +273,8 @@ public class VehicleStatus extends CommandWithProperties {
                     case IDENTIFIER_NUMBER_OF_SEATS:
                         return numberOfSeats.update(p);
                     case COMMAND_IDENTIFIER:
-                        Property<CommandWithProperties> command =
-                                new Property(CommandWithProperties.class, p);
+                        Property<Command> command =
+                                new Property(Command.class, p);
                         states.add(command);
                         return command;
                     case IDENTIFIER_ENGINE_VOLUME:
@@ -303,10 +303,6 @@ public class VehicleStatus extends CommandWithProperties {
         this.equipments = equipments.toArray(new Property[0]);
     }
 
-    @Override protected boolean propertiesExpected() {
-        return false;
-    }
-
     private VehicleStatus(Builder builder) {
         super(builder);
         vin = builder.vin;
@@ -331,7 +327,7 @@ public class VehicleStatus extends CommandWithProperties {
         brand = builder.brand;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<String> vin;
         private Property<PowerTrain> powerTrain;
         private Property<String> modelName;
@@ -343,7 +339,7 @@ public class VehicleStatus extends CommandWithProperties {
         private PropertyInteger power;
         private PropertyInteger numberOfDoors;
         private PropertyInteger numberOfSeats;
-        private List<Property<CommandWithProperties>> states = new ArrayList<>();
+        private List<Property<Command>> states = new ArrayList<>();
 
         private Property<Float> engineVolume;
         private PropertyInteger maxTorque;
@@ -475,7 +471,7 @@ public class VehicleStatus extends CommandWithProperties {
          * @param states The states.
          * @return The builder.
          */
-        public Builder setStates(Property<CommandWithProperties>[] states) {
+        public Builder setStates(Property<Command>[] states) {
             this.states.clear();
 
             for (int i = 0; i < states.length; i++) {
@@ -491,7 +487,7 @@ public class VehicleStatus extends CommandWithProperties {
          * @param state A state.
          * @return The builder.
          */
-        public Builder addState(Property<CommandWithProperties> state) {
+        public Builder addState(Property<Command> state) {
             state.setIdentifier(IDENTIFIER_STATE);
             addProperty(state);
             states.add(state);

@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * Command sent when a Get Gas Flap State command is received by the car.
  */
-public class GasFlapState extends CommandWithProperties {
+public class GasFlapState extends Command {
     public static final Type TYPE = new Type(Identifier.FUELING, 0x01);
     private static final byte IDENTIFIER_LOCK = 0x02;
     private static final byte IDENTIFIER_POSITION = 0x03;
@@ -77,7 +77,7 @@ public class GasFlapState extends CommandWithProperties {
         this.position = builder.position;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         Property<Lock> lock;
         Property<Position> position;
 

@@ -29,7 +29,7 @@ import com.highmobility.autoapi.property.ByteEnum;
  * state is included in the message payload and may be the result of user, device or car triggered
  * action.
  */
-public class CruiseControlState extends CommandWithProperties {
+public class CruiseControlState extends Command {
     public static final Type TYPE = new Type(Identifier.CRUISE_CONTROL, 0x01);
 
     private static final byte IDENTIFIER_ACTIVE = 0x01;

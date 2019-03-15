@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * controls remain the same. If the car does not receive the command every second it will stop the
  * control mode.
  */
-public class ControlCommand extends CommandWithProperties {
+public class ControlCommand extends Command {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x04);
     private static final byte IDENTIFIER_SPEED = 0x01;
     private static final byte IDENTIFIER_ANGLE = 0x02;

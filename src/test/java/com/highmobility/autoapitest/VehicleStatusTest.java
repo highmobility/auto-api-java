@@ -1,8 +1,7 @@
 package com.highmobility.autoapitest;
 
-import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.CommandWithProperties;
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetVehicleStatus;
 import com.highmobility.autoapi.TheftAlarmState;
@@ -125,7 +124,7 @@ public class VehicleStatusTest {
 
     Command getState(Class forClass, VehicleStatus command) {
         for (int i = 0; i < command.getStates().length; i++) {
-            Property<CommandWithProperties> state = command.getStates()[i];
+            Property<Command> state = command.getStates()[i];
             if (state != null && state.getValue().getClass().equals(forClass))
                 return state.getValue();
         }
@@ -191,7 +190,7 @@ public class VehicleStatusTest {
         Bytes bytes = new Bytes
                 ("00110131484D31363241363748333232393645460208757573206175746F21452D436C61737320436F6D666F7274202620506572736F6E616C69736174696F6E000400230800001C50BF19999A00330B000BB8001200000000500000200D04000001010001020001030001003008425210E741561BEA");
         Command command = CommandResolver.resolve(bytes);
-        assertTrue(((CommandWithProperties) command).getProperties().length != 0);
+        assertTrue(((Command) command).getProperties().length != 0);
     }
 
     @Test public void testInvalidProperty() {

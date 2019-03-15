@@ -29,7 +29,7 @@ import com.highmobility.autoapi.value.SunroofTiltState;
  * Command sent from the car every time the rooftop state changes or when a Get Rooftop State is
  * received.
  */
-public class RooftopState extends CommandWithProperties {
+public class RooftopState extends Command {
     public static final Type TYPE = new Type(Identifier.ROOFTOP, 0x01);
 
     static final byte DIMMING_IDENTIFIER = 0x01;
@@ -121,7 +121,7 @@ public class RooftopState extends CommandWithProperties {
         sunroofPosition = builder.sunroofPosition;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Double> openPercentage;
         private Property<Double> dimmingPercentage;
         private Property<ConvertibleRoofState> convertibleRoofState;

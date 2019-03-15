@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.windscreen.WindscreenReplacementState;
  * Set if the windscreen needs replacement. The result is sent through the Windscreen State
  * message.
  */
-public class SetWindscreenReplacementNeeded extends CommandWithProperties {
+public class SetWindscreenReplacementNeeded extends Command {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x13);
     private static final byte IDENTIFIER = 0x01;
 

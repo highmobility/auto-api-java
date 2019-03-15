@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * Command sent from the car every time the theft alarm state changes or when a Get Theft Alarm
  * State command is received.
  */
-public class TheftAlarmState extends CommandWithProperties {
+public class TheftAlarmState extends Command {
     public static final Type TYPE = new Type(Identifier.THEFT_ALARM, 0x01);
     private static final byte IDENTIFIER = 0x01;
 
@@ -93,7 +93,7 @@ public class TheftAlarmState extends CommandWithProperties {
         state = builder.state;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Value> state;
 
         public Builder() {

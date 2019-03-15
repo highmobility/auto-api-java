@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * Command sent when a Get Weather Conditions is received by the car.
  */
-public class WeatherConditions extends CommandWithProperties {
+public class WeatherConditions extends Command {
     public static final Type TYPE = new Type(Identifier.WEATHER_CONDITIONS, 0x01);
 
     private static final byte IDENTIFIER_RAIN = 0x01;
@@ -66,7 +66,7 @@ public class WeatherConditions extends CommandWithProperties {
         rainIntensity = builder.rainIntensity;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
         private Property<Double> rainIntensity;
 
         public Builder() {

@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
 /**
  * Activate or deactivate valet mode. The result is sent through the Valet Mode message.
  */
-public class ActivateDeactivateValetMode extends CommandWithProperties {
+public class ActivateDeactivateValetMode extends Command {
     public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x12);
     private static final byte IDENTIFIER = 0x01;
     Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
