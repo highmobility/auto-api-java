@@ -91,8 +91,7 @@ public class SetChargeTimer extends CommandWithProperties {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case PROPERTY_IDENTIFIER:
-                        Property<ChargingTimer> timer =
-                                new Property(ChargingTimer.class, p);
+                        Property<ChargingTimer> timer = new Property(ChargingTimer.class, p);
                         builder.add(timer);
                         return timer;
                 }
