@@ -117,11 +117,6 @@ public class CommandWithProperties extends Command {
         return null;
     }
 
-    CommandWithProperties(Type type, byte[] bytes) {
-        this(bytes);
-        this.type = type;
-    }
-
     CommandWithProperties(byte[] bytes) {
         super(bytes);
         if (propertiesExpected() && bytes.length < 7)

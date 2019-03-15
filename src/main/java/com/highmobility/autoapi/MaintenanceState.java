@@ -232,7 +232,7 @@ public class MaintenanceState extends CommandWithProperties {
         private Property<Calendar> automaticTeleserviceCallDate;
         private Property<Calendar> teleserviceBatteryCallDate;
         private Property<Calendar> nextInspectionDate;
-        private ArrayList<Property<ConditionBasedService>> conditionBasedServices =
+        private ArrayList<Property> conditionBasedServices =
                 new ArrayList<>();
         private Property<Calendar> brakeFluidChangeDate;
 

@@ -539,9 +539,8 @@ public class Property<T> extends Bytes {
     public static Calendar getCalendar(byte[] bytes, int at) throws IllegalArgumentException {
         Calendar c = new GregorianCalendar();
         if (bytes.length >= at + PropertyComponentValue.CALENDAR_SIZE) {
-            Long epoch = Property.getLong(bytes, at);
+            long epoch = Property.getLong(bytes, at);
             c.setTimeInMillis(epoch);
-
         } else {
             throw new IllegalArgumentException();
         }

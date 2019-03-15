@@ -48,7 +48,7 @@ public class StartControlMode extends CommandWithProperties {
         createBytes(this.start);
     }
 
-    StartControlMode(byte[] bytes) throws CommandParseException {
+    StartControlMode(byte[] bytes) {
         super(bytes);
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {

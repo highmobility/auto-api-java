@@ -41,10 +41,10 @@ public class PropertyComponent extends Bytes {
         valueBytes = componentBytes.getRange(3, getLength());
     }
 
-    PropertyComponent(byte identifier, Bytes value) {
-        this(identifier, value.getLength());
-        valueBytes = value;
-        set(3, value);
+    PropertyComponent(byte identifier, Bytes valueBytes) {
+        this(identifier, valueBytes.getLength());
+        this.valueBytes = valueBytes;
+        set(3, valueBytes);
     }
 
     // property header:010015 component header: 010012 value: 68747470733a2f2f676f6f676c652e636f6d

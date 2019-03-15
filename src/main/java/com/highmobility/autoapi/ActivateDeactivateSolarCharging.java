@@ -44,7 +44,7 @@ public class ActivateDeactivateSolarCharging extends CommandWithProperties {
         createBytes(this.activate);
     }
 
-    ActivateDeactivateSolarCharging(byte[] bytes) throws CommandParseException {
+    ActivateDeactivateSolarCharging(byte[] bytes) {
         super(bytes);
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {

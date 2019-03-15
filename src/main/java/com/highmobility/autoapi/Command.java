@@ -53,7 +53,7 @@ public class Command extends Bytes {
     }
 
     private void setTypeAndBytes(byte[] bytes) {
-        if (bytes == null || bytes.length == 0 || bytes.length < 3) {
+        if (bytes == null || bytes.length < 3) {
             type = new Type(0x00, 0x00, 0x00);
         } else {
             type = new Type(bytes[0], bytes[1], bytes[2]);

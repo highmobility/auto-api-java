@@ -54,8 +54,7 @@ public class OffroadState extends CommandWithProperties {
     }
 
     public OffroadState(byte[] bytes) {
-        super(TYPE, bytes);
-
+        super(bytes);
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {

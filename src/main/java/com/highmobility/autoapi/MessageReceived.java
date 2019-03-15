@@ -39,7 +39,6 @@ public class MessageReceived extends CommandWithProperties {
 
     private Property<String> handle = new Property(String.class, IDENTIFIER_RECIPIENT);
     private Property<String> message = new Property(String.class, IDENTIFIER_MESSAGE);
-    ;
 
     /**
      * @return The sender handle (e.g. phone number).

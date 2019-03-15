@@ -305,9 +305,9 @@ public class Usage extends CommandWithProperties {
         private PropertyInteger averageWeeklyDistanceLongTerm;
         private Property<Double> accelerationEvaluation;
         private Property<Double> drivingStyleEvaluation;
-        private List<Property<DrivingModeActivationPeriod>> drivingModeActivationPeriods =
+        private List<Property> drivingModeActivationPeriods =
                 new ArrayList<>();
-        private List<Property<DrivingModeEnergyConsumption>> drivingModeEnergyConsumptions = new
+        private List<Property> drivingModeEnergyConsumptions = new
                 ArrayList<>();
         private Property<Float> lastTripEnergyConsumption;
         private Property<Float> lastTripFuelConsumption;
