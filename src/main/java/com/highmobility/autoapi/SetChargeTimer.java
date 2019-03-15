@@ -101,4 +101,8 @@ public class SetChargeTimer extends Command {
 
         timers = builder.toArray(new Property[0]);
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

@@ -58,4 +58,8 @@ public class SetChargeCurrent extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

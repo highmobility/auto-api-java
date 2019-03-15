@@ -1,5 +1,6 @@
 package com.highmobility.autoapitest;
 
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.LoadUrl;
 import com.highmobility.value.Bytes;
@@ -18,5 +19,10 @@ public class BrowserTest {
 
         command = (LoadUrl) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getUrl().getValue().equals("https://google.com"));
+    }
+
+    @Test public void failsWithNoProperties() {
+        Bytes waitingForBytes = new Bytes("004900");
+        assertTrue(CommandResolver.resolve(waitingForBytes).getClass() == Command.class);
     }
 }

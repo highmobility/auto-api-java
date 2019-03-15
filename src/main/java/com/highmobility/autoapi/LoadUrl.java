@@ -60,4 +60,8 @@ public class LoadUrl extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

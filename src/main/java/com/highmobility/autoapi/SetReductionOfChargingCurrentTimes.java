@@ -81,4 +81,8 @@ public class SetReductionOfChargingCurrentTimes extends Command {
 
         reductionTimes = builder.toArray(new Property[0]);
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

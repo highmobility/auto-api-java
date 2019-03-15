@@ -61,4 +61,8 @@ public class OpenCloseChargePort extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

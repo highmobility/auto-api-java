@@ -10,6 +10,7 @@ import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
 import com.highmobility.autoapi.StartStopCharging;
+import com.highmobility.autoapi.property.CommandTest;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.charging.ChargeMode;
 import com.highmobility.autoapi.value.charging.ChargePortState;
@@ -299,15 +300,7 @@ public class ChargingTest {
         assertTrue(times == 2);
     }
 
-    @Test public void SetReductionTimes0Properties() {
-        Bytes waitingForBytes = new Bytes("002317");
+    @Test public void propertiesExist() {
 
-        ReductionTime[] timers = new ReductionTime[0];
-        SetReductionOfChargingCurrentTimes commandBytes =
-                new SetReductionOfChargingCurrentTimes(timers);
-        assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
-        SetReductionOfChargingCurrentTimes command = (SetReductionOfChargingCurrentTimes)
-                CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getProperties().length == 0);
     }
 }

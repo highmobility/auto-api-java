@@ -60,4 +60,8 @@ public class StartStopCharging extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }
