@@ -35,7 +35,7 @@ public class KeyFobPosition extends Command {
 
     Property keyFobPosition = new Property(KeyFobPositionValue.class, IDENTIFIER);
 
-    @Nullable public Property<KeyFobPositionValue> getKeyFobPosition() {
+    public Property<KeyFobPositionValue> getKeyFobPosition() {
         return keyFobPosition;
     }
 

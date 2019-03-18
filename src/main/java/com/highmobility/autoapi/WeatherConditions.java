@@ -39,7 +39,7 @@ public class WeatherConditions extends Command {
      * @return The rain intensity.
      */
 
-    @Nullable public Property<Double> getRainIntensity() {
+    public Property<Double> getRainIntensity() {
         return rainIntensity;
     }
 

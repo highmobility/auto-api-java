@@ -42,14 +42,14 @@ public class SendMessage extends Command {
     /**
      * @return The recipient handle (e.g. phone number).
      */
-    @Nullable public Property<String> getRecipientHandle() {
+    public Property<String> getRecipientHandle() {
         return recipientHandle;
     }
 
     /**
      * @return The message content text.
      */
-    @Nullable public Property<String> getMessage() {
+    public Property<String> getMessage() {
         return message;
     }
 

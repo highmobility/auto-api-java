@@ -56,14 +56,14 @@ public class VideoHandover extends Command {
     /**
      * @return The starting second.
      */
-    @Nullable public Property<Integer> getStartingSecond() {
+    public Property<Integer> getStartingSecond() {
         return startingSecond;
     }
 
     /**
      * @return The screen location.
      */
-    @Nullable public Property<ScreenLocation> getLocation() {
+    public Property<ScreenLocation> getLocation() {
         return location;
     }
 

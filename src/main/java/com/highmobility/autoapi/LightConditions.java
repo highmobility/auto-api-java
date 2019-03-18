@@ -38,14 +38,14 @@ public class LightConditions extends Command {
     /**
      * @return The measured outside illuminance in lux.
      */
-    @Nullable public Property<Float> getOutsideLight() {
+    public Property<Float> getOutsideLight() {
         return outsideLight;
     }
 
     /**
      * @return The measured inside illuminance in lux.
      */
-    @Nullable public Property<Float> getInsideLight() {
+    public Property<Float> getInsideLight() {
         return insideLight;
     }
 

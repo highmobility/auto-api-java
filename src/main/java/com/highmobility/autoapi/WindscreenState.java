@@ -30,8 +30,6 @@ import com.highmobility.autoapi.value.windscreen.WiperState;
 
 import java.util.Calendar;
 
-import javax.annotation.Nullable;
-
 /**
  * Command sent when a Get Windscreen State command is received by the car. The wipers intensity is
  * indicated even if the car has automatic wipers activated.
@@ -68,42 +66,42 @@ public class WindscreenState extends Command {
     /**
      * @return The wiper state.
      */
-    @Nullable public Property<WiperState> getWiperState() {
+    public Property<WiperState> getWiperState() {
         return wiperState;
     }
 
     /**
      * @return The wiper intensity.
      */
-    @Nullable public Property<WiperIntensity> getWiperIntensity() {
+    public Property<WiperIntensity> getWiperIntensity() {
         return wiperIntensity;
     }
 
     /**
      * @return The windscreen damage.
      */
-    @Nullable public Property<WindscreenDamage> getWindscreenDamage() {
+    public Property<WindscreenDamage> getWindscreenDamage() {
         return windscreenDamage;
     }
 
     /**
      * @return The windscreen damage position, as viewed from inside the car.
      */
-    @Nullable public Property<WindscreenDamageZone> getWindscreenDamageZone() {
+    public Property<WindscreenDamageZone> getWindscreenDamageZone() {
         return windscreenDamageZone;
     }
 
     /**
      * @return The windscreen zone matrix, as viewed from inside the car.
      */
-    @Nullable public Property<WindscreenDamageZoneMatrix> getWindscreenDamageZoneMatrix() {
+    public Property<WindscreenDamageZoneMatrix> getWindscreenDamageZoneMatrix() {
         return windscreenDamageZoneMatrix;
     }
 
     /**
      * @return The windscreen replacement state.
      */
-    @Nullable public Property<WindscreenReplacementState> getWindscreenReplacementState() {
+    public Property<WindscreenReplacementState> getWindscreenReplacementState() {
         return windscreenReplacementState;
     }
 
@@ -111,14 +109,14 @@ public class WindscreenState extends Command {
      * @return The damage confidence.
      */
 
-    @Nullable public Property<Double> getDamageConfidence() {
+    public Property<Double> getDamageConfidence() {
         return damageConfidence;
     }
 
     /**
      * @return The damage detection time.
      */
-    @Nullable public Property<Calendar> getDamageDetectionTime() {
+    public Property<Calendar> getDamageDetectionTime() {
         return damageDetectionTime;
     }
 

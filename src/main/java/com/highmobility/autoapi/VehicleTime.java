@@ -40,7 +40,7 @@ public class VehicleTime extends Command {
     /**
      * @return The vehicle time.
      */
-    @Nullable public Property<Calendar> getVehicleTime() {
+    public Property<Calendar> getVehicleTime() {
         return vehicleTime;
     }
 

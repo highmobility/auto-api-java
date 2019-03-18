@@ -38,7 +38,7 @@ public class ValetMode extends Command {
     /**
      * @return The valet mode state.
      */
-    @Nullable public Property<Boolean> isActive() {
+    public Property<Boolean> isActive() {
         return active;
     }
 

@@ -40,14 +40,14 @@ public class IgnitionState extends Command {
     /**
      * @return The ignition state.
      */
-    @Nullable public Property<Boolean> isOn() {
+    public Property<Boolean> isOn() {
         return on;
     }
 
     /**
      * @return Whether ignition state is powering on accessories such as radio.
      */
-    @Nullable public Property<Boolean> isAccessoriesIgnitionOn() {
+    public Property<Boolean> isAccessoriesIgnitionOn() {
         return accessoriesIgnition;
     }
 

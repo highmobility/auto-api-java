@@ -23,7 +23,6 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.ByteEnum;
 
-import javax.annotation.Nullable;
 
 /**
  * Command sent when a Get Flashers State command is received by the car.
@@ -36,7 +35,7 @@ public class FlashersState extends Command {
     /**
      * @return The flashers state.
      */
-    @Nullable public Property<Value> getState() {
+    public Property<Value> getState() {
         return state;
     }
 

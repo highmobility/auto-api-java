@@ -24,8 +24,6 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.value.Lock;
 
-import javax.annotation.Nullable;
-
 /**
  * Command sent when a Get Gas Flap State command is received by the car.
  */
@@ -47,7 +45,7 @@ public class GasFlapState extends Command {
     /**
      * @return The gas flap position.
      */
-    @Nullable public Property<Position> getPosition() {
+    public Property<Position> getPosition() {
         return position;
     }
 

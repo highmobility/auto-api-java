@@ -79,7 +79,7 @@ public class Failure extends Command {
     /**
      * @return The failure description.
      */
-    @Nullable public Property<String> getFailureDescription() {
+    public Property<String> getFailureDescription() {
         return failureDescription;
     }
 

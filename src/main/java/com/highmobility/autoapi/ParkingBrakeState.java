@@ -37,7 +37,7 @@ public class ParkingBrakeState extends Command {
     /**
      * @return Whether parking brake is active.
      */
-    @Nullable public Property<Boolean> isActive() {
+    public Property<Boolean> isActive() {
         return active;
     }
 

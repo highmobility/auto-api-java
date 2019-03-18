@@ -118,112 +118,112 @@ public class VehicleStatus extends Command {
     /**
      * @return The vehicle's VIN number
      */
-    @Nullable public Property<String> getVin() {
+    public Property<String> getVin() {
         return vin;
     }
 
     /**
      * @return The vehicle's power train
      */
-    @Nullable public Property<PowerTrain> getPowerTrain() {
+    public Property<PowerTrain> getPowerTrain() {
         return powerTrain;
     }
 
     /**
      * @return The vehicle's model name
      */
-    @Nullable public Property<String> getModelName() {
+    public Property<String> getModelName() {
         return modelName;
     }
 
     /**
      * @return The vehicle's name
      */
-    @Nullable public Property<String> getName() {
+    public Property<String> getName() {
         return name;
     }
 
     /**
      * @return The vehicle's license plate
      */
-    @Nullable public Property<String> getLicensePlate() {
+    public Property<String> getLicensePlate() {
         return licensePlate;
     }
 
     /**
      * @return The sales designation of the model
      */
-    @Nullable public Property<String> getSalesDesignation() {
+    public Property<String> getSalesDesignation() {
         return salesDesignation;
     }
 
     /**
      * @return The car model manufacturing year number
      */
-    @Nullable public Property<Integer> getModelYear() {
+    public Property<Integer> getModelYear() {
         return modelYear;
     }
 
     /**
      * @return The color name
      */
-    @Nullable public Property<String> getColorName() {
+    public Property<String> getColorName() {
         return color;
     }
 
     /**
      * @return The power of the car measured in kw
      */
-    @Nullable public Property<Integer> getPower() {
+    public Property<Integer> getPower() {
         return power;
     }
 
     /**
      * @return The number of doors
      */
-    @Nullable public Property<Integer> getNumberOfDoors() {
+    public Property<Integer> getNumberOfDoors() {
         return numberOfDoors;
     }
 
     /**
      * @return The number of seats
      */
-    @Nullable public Property<Integer> getNumberOfSeats() {
+    public Property<Integer> getNumberOfSeats() {
         return numberOfSeats;
     }
 
     /**
      * @return The engine volume displacement in liters.
      */
-    @Nullable public Property<Float> getEngineVolume() {
+    public Property<Float> getEngineVolume() {
         return engineVolume;
     }
 
     /**
      * @return The maximum engine torque in Nm.
      */
-    @Nullable public Property<Integer> getMaxTorque() {
+    public Property<Integer> getMaxTorque() {
         return maxTorque;
     }
 
     /**
      * @return The gearbox type.
      */
-    @Nullable public Property<Gearbox> getGearBox() {
+    public Property<Gearbox> getGearBox() {
         return gearBox;
     }
 
     /**
      * @return The display unit.
      */
-    @Nullable public Property<DisplayUnit> getDisplayUnit() {
+    public Property<DisplayUnit> getDisplayUnit() {
         return displayUnit;
     }
 
     /**
      * @return The driver seat location.
      */
-    @Nullable public Property<DriverSeatLocation> getDriverSeatLocation() {
+    public Property<DriverSeatLocation> getDriverSeatLocation() {
         return driverSeatLocation;
     }
 
@@ -237,7 +237,7 @@ public class VehicleStatus extends Command {
     /**
      * @return The vehicle brand name.
      */
-    @Nullable public Property<String> getBrand() {
+    public Property<String> getBrand() {
         return brand;
     }
 

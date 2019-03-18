@@ -72,35 +72,35 @@ public class LightsState extends Command {
     /**
      * @return The front exterior light state.
      */
-    @Nullable public Property<FrontExteriorLightState> getFrontExteriorLightState() {
+    public Property<FrontExteriorLightState> getFrontExteriorLightState() {
         return frontExteriorLightState;
     }
 
     /**
      * @return The rear exterior light state.
      */
-    @Nullable public Property<Boolean> isRearExteriorLightActive() {
+    public Property<Boolean> isRearExteriorLightActive() {
         return rearExteriorLightActive;
     }
 
     /**
      * @return The ambient color, in rgb values.
      */
-    @Nullable public Property<Color> getAmbientColor() {
+    public Property<Color> getAmbientColor() {
         return ambientColor;
     }
 
     /**
      * @return The reverse light state.
      */
-    @Nullable public Property<Boolean> isReverseLightActive() {
+    public Property<Boolean> isReverseLightActive() {
         return reverseLightActive;
     }
 
     /**
      * @return The emergency brake light state.
      */
-    @Nullable public Property<Boolean> isEmergencyBrakeLightActive() {
+    public Property<Boolean> isEmergencyBrakeLightActive() {
         return emergencyBrakeLightActive;
     }
 

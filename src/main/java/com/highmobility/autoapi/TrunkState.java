@@ -50,7 +50,7 @@ public class TrunkState extends Command {
     /**
      * @return the current position of the trunk.
      */
-    @Nullable public Property<Position> getPosition() {
+    public Property<Position> getPosition() {
         return position;
     }
 

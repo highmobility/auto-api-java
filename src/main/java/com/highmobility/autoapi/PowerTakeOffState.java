@@ -39,14 +39,14 @@ public class PowerTakeOffState extends Command {
     /**
      * @return Whether the power take-off is active.
      */
-    @Nullable public Property<Boolean> isActive() {
+    public Property<Boolean> isActive() {
         return active;
     }
 
     /**
      * @return Whether at least one Power Take-Off drive is engaged.
      */
-    @Nullable public Property<Boolean> isEngaged() {
+    public Property<Boolean> isEngaged() {
         return engaged;
     }
 

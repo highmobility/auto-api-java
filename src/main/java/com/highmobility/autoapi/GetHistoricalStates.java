@@ -51,14 +51,14 @@ public class GetHistoricalStates extends Command {
     /**
      * @return The start date of the historical states.
      */
-    @Nullable public Property<Calendar> getStartDate() {
+    public Property<Calendar> getStartDate() {
         return startDate;
     }
 
     /**
      * @return The end date of the historical states.
      */
-    @Nullable public Property<Calendar> getEndDate() {
+    public Property<Calendar> getEndDate() {
         return endDate;
     }
 

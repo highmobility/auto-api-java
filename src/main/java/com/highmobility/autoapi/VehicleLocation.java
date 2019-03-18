@@ -42,21 +42,21 @@ public class VehicleLocation extends Command {
     /**
      * @return The vehicle coordinates.
      */
-    @Nullable public Property<Coordinates> getCoordinates() {
+    public Property<Coordinates> getCoordinates() {
         return coordinates;
     }
 
     /**
      * @return The heading.
      */
-    @Nullable public Property<Double> getHeading() {
+    public Property<Double> getHeading() {
         return heading;
     }
 
     /**
      * @return The altitude in meters above the WGS 84 reference ellipsoid.
      */
-    @Nullable public Property<Double> getAltitude() {
+    public Property<Double> getAltitude() {
         return altitude;
     }
 

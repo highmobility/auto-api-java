@@ -51,7 +51,7 @@ public class SetNaviDestination extends Command {
     /**
      * @return The destination name.
      */
-    @Nullable public Property<String> getName() {
+    public Property<String> getName() {
         return name;
     }
 

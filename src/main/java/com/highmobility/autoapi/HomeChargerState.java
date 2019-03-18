@@ -20,10 +20,9 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.value.NetworkSecurity;
-import com.highmobility.autoapi.property.Property;
-
 import com.highmobility.autoapi.value.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.value.homecharger.Charging;
 import com.highmobility.autoapi.value.homecharger.PlugType;
@@ -92,98 +91,98 @@ public class HomeChargerState extends Command {
     /**
      * @return The charging state.
      */
-    @Nullable public Property<Charging> getCharging() {
+    public Property<Charging> getCharging() {
         return charging;
     }
 
     /**
      * @return The authentication mechanism.
      */
-    @Nullable public Property<AuthenticationMechanism> getAuthenticationMechanism() {
+    public Property<AuthenticationMechanism> getAuthenticationMechanism() {
         return authenticationMechanism;
     }
 
     /**
      * @return The plug type.
      */
-    @Nullable public Property<PlugType> getPlugType() {
+    public Property<PlugType> getPlugType() {
         return plugType;
     }
 
     /**
      * @return Charging power in kW.
      */
-    @Nullable public Property<Float> getChargingPower() {
+    public Property<Float> getChargingPower() {
         return chargingPower;
     }
 
     /**
      * @return Solar charging state.
      */
-    @Nullable public Property<Boolean> isSolarChargingActive() {
+    public Property<Boolean> isSolarChargingActive() {
         return solarChargingActive;
     }
 
     /**
      * @return The hotspot state.
      */
-    @Nullable public Property<Boolean> isHotspotEnabled() {
+    public Property<Boolean> isHotspotEnabled() {
         return hotspotEnabled;
     }
 
     /**
      * @return The hotspot SSID.
      */
-    @Nullable public Property<String> getHotspotSsid() {
+    public Property<String> getHotspotSsid() {
         return hotspotSsid;
     }
 
     /**
      * @return The hotspot security.
      */
-    @Nullable public Property<NetworkSecurity> getHotspotSecurity() {
+    public Property<NetworkSecurity> getHotspotSecurity() {
         return hotspotSecurity;
     }
 
     /**
      * @return The hotspot password.
      */
-    @Nullable public Property<String> getHotspotPassword() {
+    public Property<String> getHotspotPassword() {
         return hotspotPassword;
     }
 
     /**
      * @return The authentication state.
      */
-    @Nullable public Property<Boolean> isAuthenticated() {
+    public Property<Boolean> isAuthenticated() {
         return authenticated;
     }
 
     /**
      * @return The charge current (DC).
      */
-    @Nullable public Property<Float> getChargeCurrent() {
+    public Property<Float> getChargeCurrent() {
         return chargeCurrentDC;
     }
 
     /**
      * @return The maximum possible charge current.
      */
-    @Nullable public Property<Float> getMaximumChargeCurrent() {
+    public Property<Float> getMaximumChargeCurrent() {
         return maximumChargeCurrent;
     }
 
     /**
      * @return The minimal possible charge current.
      */
-    @Nullable public Property<Float> getMinimumChargeCurrent() {
+    public Property<Float> getMinimumChargeCurrent() {
         return minimumChargeCurrent;
     }
 
     /**
      * @return The coordinates.
      */
-    @Nullable public Property<Coordinates> getCoordinates() {
+    public Property<Coordinates> getCoordinates() {
         return coordinates;
     }
 
@@ -198,8 +197,7 @@ public class HomeChargerState extends Command {
      * @param pricingType The pricing type.
      * @return Price tariff for the given pricing type.
      */
-    @Nullable
-    public Property<PriceTariff> getPriceTariff(PriceTariff.PricingType pricingType) {
+    @Nullable public Property<PriceTariff> getPriceTariff(PriceTariff.PricingType pricingType) {
         if (priceTariffs != null) {
             for (Property<PriceTariff> tariff : priceTariffs) {
                 if (tariff.getValue() != null && tariff.getValue().getPricingType() == pricingType)

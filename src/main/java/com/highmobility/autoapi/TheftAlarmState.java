@@ -38,7 +38,7 @@ public class TheftAlarmState extends Command {
     /**
      * @return Theft alarm state.
      */
-    @Nullable public Property<Value> getState() {
+    public Property<Value> getState() {
         return state;
     }
 

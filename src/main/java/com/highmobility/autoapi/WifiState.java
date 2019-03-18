@@ -45,28 +45,28 @@ public class WifiState extends Command {
     /**
      * @return Whether Wi-Fi is enabled.
      */
-    @Nullable public Property<Boolean> isEnabled() {
+    public Property<Boolean> isEnabled() {
         return enabled;
     }
 
     /**
      * @return Whether Wi-Fi is connected.
      */
-    @Nullable public Property<Boolean> isConnected() {
+    public Property<Boolean> isConnected() {
         return connected;
     }
 
     /**
      * @return The network SSID.
      */
-    @Nullable public Property<String> getSsid() {
+    public Property<String> getSsid() {
         return ssid;
     }
 
     /**
      * @return The network security.
      */
-    @Nullable public Property<NetworkSecurity> getSecurity() {
+    public Property<NetworkSecurity> getSecurity() {
         return security;
     }
 
