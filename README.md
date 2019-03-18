@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-  implementation('com.highmobility:hmkit-auto-api:1.8.0')
+  implementation('com.highmobility:hmkit-auto-api:1.10.0')
 }
 ```
 
@@ -67,7 +67,7 @@ if (capabilities.isSupported(LockState.TYPE)) {
 
 ### Send a command
 ```java
-Bytes commandBytes = new LockUnlockDoors(DoorLock.LOCKED).getBytes();
+Bytes commandBytes = new LockUnlockDoors(Lock.LOCKED).getBytes();
 sendCommand(commandBytes)
 ```
 
@@ -82,7 +82,7 @@ sendCommand(commandBytes)
 Failure failure;
 if (command instanceof Failure) {
     failure = (Failure)command;
-    if (failure.getFailedType.equals(LockUnlockDoors.TYPE) {
+    if (failure.getFailedType != null && failure.getFailedType.equals(LockUnlockDoors.TYPE) {
         // the lock unlock command failed
     }
 }
@@ -96,29 +96,24 @@ Builder pattern is used to build commands with more properties, for instance Veh
 // create the builder
 VehicleStatus.Builder builder = new VehicleStatus.Builder();
 // add known properties as simple values 
-builder.setVin("JF2SHBDC7CH451869");
-builder.setPowerTrain(PowerTrain.ALLELECTRIC);
-builder.setModelName("Type X");
-builder.setName("My Car");
-builder.setLicensePlate("ABC123");
-builder.setSalesDesignation("Package+");
-builder.setModelYear(2017);
-builder.setColor("Estoril Blau");
+builder.setVin(new Property("JF2SHBDC7CH451869"));
+builder.setPowerTrain(new Property(PowerTrain.ALLELECTRIC));;
+builder.setModelYear(new Property(2017));
 //        builder.setPower(220);
 // can also add unknown properties
-builder.addProperty(new IntProperty((byte) 0x09, 220, 2));
+builder.addProperty(new Property(220));
 // can chain the properties adding
-builder.setNumberOfDoors(5).setNumberOfSeats(5);
+builder.setNumberOfDoors(new Property(5)).setNumberOfSeats(new Property(5));
 
 // use builders from other commands to append them to vehicle status
 TrunkState.Builder trunkState = new TrunkState.Builder();
-trunkState.setLockState(TrunkLockState.UNLOCKED);
-trunkState.setPosition(TrunkPosition.OPEN);
-builder.addProperty(new CommandProperty(trunkState.build()));
+trunkState.setLockState(new Property(Lock.UNLOCKED));
+trunkState.setPosition(new Property(Position.OPEN));
+builder.addProperty(new Property(trunkState.build()));
 
 ControlMode.Builder controlCommand = new ControlMode.Builder();
-controlCommand.setMode(ControlModeValue.STARTED);
-builder.addProperty(new CommandProperty(controlCommand.build()));
+controlCommand.setMode(new Property(ControlModeValue.STARTED));
+builder.addProperty(new Property(controlCommand.build()));
 
 // build the actual vehicleStatus command
 VehicleStatus status = builder.build();
