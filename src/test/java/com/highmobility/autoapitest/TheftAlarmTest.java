@@ -58,4 +58,8 @@ public class TheftAlarmTest {
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((TheftAlarmState) state).getState().getValue() == null);
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(SetTheftAlarm.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

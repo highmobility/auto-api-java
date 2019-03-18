@@ -6,8 +6,8 @@ import com.highmobility.autoapi.EndParking;
 import com.highmobility.autoapi.GetParkingTicket;
 import com.highmobility.autoapi.ParkingTicket;
 import com.highmobility.autoapi.StartParking;
-import com.highmobility.autoapi.value.ParkingTicketState;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.ParkingTicketState;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -92,5 +92,9 @@ public class ParkingTicketTest {
         Bytes bytes = new Bytes("004701");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((ParkingTicket) state).getState().getValue() == null);
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(StartParking.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

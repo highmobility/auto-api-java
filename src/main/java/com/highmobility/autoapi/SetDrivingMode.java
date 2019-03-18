@@ -59,4 +59,8 @@ public class SetDrivingMode extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

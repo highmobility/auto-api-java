@@ -305,7 +305,12 @@ public class ChargingTest {
         assertTrue(times == 2);
     }
 
-    @Test public void propertiesExist() {
-
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(StartStopCharging.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(SetChargeLimit.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(OpenCloseChargePort.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(SetChargeMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(SetChargeTimer.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(SetReductionOfChargingCurrentTimes.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

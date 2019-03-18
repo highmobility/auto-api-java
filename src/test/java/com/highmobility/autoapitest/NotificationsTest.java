@@ -5,8 +5,8 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Notification;
 import com.highmobility.autoapi.NotificationAction;
-import com.highmobility.autoapi.value.ActionItem;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.ActionItem;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -120,5 +120,9 @@ public class NotificationsTest {
         byte[] bytes = ByteUtils.bytesFromHex
                 ("003802");
         assertTrue(Arrays.equals(new ClearNotification().getByteArray(), bytes));
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(NotificationAction.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

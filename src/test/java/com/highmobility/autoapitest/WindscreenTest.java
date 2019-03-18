@@ -165,4 +165,10 @@ public class WindscreenTest {
         assertTrue(resolve.getState().getValue() == WiperState.ACTIVE);
         assertTrue(resolve.getIntensity().getValue() == WiperIntensity.LEVEL_2);
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(SetWindscreenDamage.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(SetWindscreenReplacementNeeded.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(ControlWipers.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

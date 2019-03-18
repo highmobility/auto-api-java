@@ -113,4 +113,8 @@ public class DoorLocksTest {
         assertTrue(state.getOutsideLock(Location.ALL).getValue().getLock() == LOCKED);
         assertTrue(state.isLocked());
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(LockUnlockDoors.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

@@ -61,4 +61,8 @@ public class TextInput extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

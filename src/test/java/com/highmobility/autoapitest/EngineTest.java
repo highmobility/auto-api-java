@@ -65,4 +65,8 @@ public class EngineTest {
         assertTrue(state.isAccessoriesIgnitionOn().getValue() == true);
         assertTrue(state.getType() == IgnitionState.TYPE);
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(TurnIgnitionOnOff.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

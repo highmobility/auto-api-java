@@ -52,4 +52,8 @@ public class StartStopTest {
                 .resolve(waitingForBytes);
         assertTrue(command.activate().getValue() == false);
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(ActivateDeactivateStartStop.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

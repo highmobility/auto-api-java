@@ -91,4 +91,8 @@ public class MessageReceived extends Command {
 
         if (message.getValue() == null) throw new CommandParseException();
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

@@ -61,4 +61,8 @@ public class StartStopHvac extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

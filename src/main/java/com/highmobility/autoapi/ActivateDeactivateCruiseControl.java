@@ -80,4 +80,8 @@ public class ActivateDeactivateCruiseControl extends Command {
 
         // no telematics
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

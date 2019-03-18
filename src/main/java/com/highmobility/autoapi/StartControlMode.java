@@ -60,4 +60,8 @@ public class StartControlMode extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

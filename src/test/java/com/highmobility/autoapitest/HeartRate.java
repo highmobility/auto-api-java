@@ -1,6 +1,7 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.SendHeartRate;
 import org.junit.jupiter.api.Test;
 
@@ -11,5 +12,9 @@ public class HeartRate {
         Command actual = new SendHeartRate(70);
         assertTrue(actual.equals("002912" +
                 "01000401000146"));
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(SendHeartRate.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

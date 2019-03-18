@@ -61,4 +61,9 @@ public class ValetModeTest {
         builder.setActive(new Property(true));
         testState(builder.build());
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(ActivateDeactivateValetMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
+
+    }
 }

@@ -57,4 +57,8 @@ public class ActivateDeactivateStartStop extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

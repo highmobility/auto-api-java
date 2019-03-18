@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CruiseControlTest {
@@ -59,5 +58,9 @@ public class CruiseControlTest {
         byte[] commandBytes = new ActivateDeactivateCruiseControl(false, null)
                 .getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(ActivateDeactivateCruiseControl.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

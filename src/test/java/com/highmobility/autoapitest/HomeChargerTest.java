@@ -218,4 +218,11 @@ public class HomeChargerTest {
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((HomeChargerState) state).getChargeCurrent().getValue() == null);
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(SetChargeCurrent.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(ActivateDeactivateSolarCharging.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(EnableDisableWifiHotspot.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(AuthenticateHomeCharger.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

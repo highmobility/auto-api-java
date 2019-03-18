@@ -64,4 +64,8 @@ public class HistoricalTest {
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((RaceState) state).getGearMode().getValue() == null);
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(GetHistoricalStates.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

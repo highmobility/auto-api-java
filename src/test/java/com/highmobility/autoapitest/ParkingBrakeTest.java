@@ -12,7 +12,6 @@ import com.highmobility.value.Bytes;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -64,5 +63,9 @@ public class ParkingBrakeTest {
         Bytes bytes = new Bytes("005801");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((ParkingBrakeState) state).isActive().getValue() == null);
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(SetParkingBrake.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

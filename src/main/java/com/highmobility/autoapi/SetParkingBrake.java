@@ -60,4 +60,8 @@ public class SetParkingBrake extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

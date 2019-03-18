@@ -10,8 +10,8 @@ import com.highmobility.autoapi.StartStopDefogging;
 import com.highmobility.autoapi.StartStopDefrosting;
 import com.highmobility.autoapi.StartStopHvac;
 import com.highmobility.autoapi.StartStopIonising;
-import com.highmobility.autoapi.value.HvacStartingTime;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.HvacStartingTime;
 import com.highmobility.autoapi.value.Time;
 import com.highmobility.autoapi.value.Weekday;
 import com.highmobility.utils.ByteUtils;
@@ -205,5 +205,12 @@ public class ClimateTest {
         ClimateState command = builder.build();
         byte[] bytes = command.getByteArray();
         assertTrue(Arrays.equals(bytes, expectedBytes));*/
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(StartStopHvac.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(StartStopDefogging.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(StartStopDefrosting.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(StartStopIonising.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

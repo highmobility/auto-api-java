@@ -88,4 +88,8 @@ public class SetSpringRate extends Command {
 
         springRates = builder.toArray(new SpringRate[0]);
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

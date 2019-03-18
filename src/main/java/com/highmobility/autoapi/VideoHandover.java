@@ -110,7 +110,9 @@ public class VideoHandover extends Command {
                 return null;
             });
         }
-
     }
 
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

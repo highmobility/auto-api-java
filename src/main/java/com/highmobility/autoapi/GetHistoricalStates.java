@@ -93,4 +93,8 @@ public class GetHistoricalStates extends Command {
         super(bytes);
         // TBODO: 31/10/2018
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

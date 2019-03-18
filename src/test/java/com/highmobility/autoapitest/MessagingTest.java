@@ -4,7 +4,6 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.MessageReceived;
 import com.highmobility.autoapi.SendMessage;
-
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.value.Bytes;
 
@@ -51,5 +50,9 @@ public class MessagingTest {
         builder.setRecipientHandle(new Property("+1 555-555-555"));
         builder.setMessage(new Property("Hello you too"));
         assertTrue(TestUtils.bytesTheSame(builder.build(), bytes));
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(MessageReceived.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

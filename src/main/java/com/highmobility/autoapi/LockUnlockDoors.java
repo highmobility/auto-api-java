@@ -60,4 +60,8 @@ public class LockUnlockDoors extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

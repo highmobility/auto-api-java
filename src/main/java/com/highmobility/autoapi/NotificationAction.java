@@ -89,4 +89,8 @@ public class NotificationAction extends Command {
             return new NotificationAction(this);
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

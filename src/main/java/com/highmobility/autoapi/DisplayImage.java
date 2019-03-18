@@ -60,4 +60,8 @@ public class DisplayImage extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

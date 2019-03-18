@@ -1,5 +1,6 @@
 package com.highmobility.autoapitest;
 
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.VideoHandover;
 import com.highmobility.autoapi.value.ScreenLocation;
@@ -27,5 +28,10 @@ public class VideoHandoverTest {
                 ".com/watch?v=yWVB7U6mX2Y"));
         assertTrue(command.getLocation().getValue() == ScreenLocation.FRONT);
         assertTrue(command.getStartingSecond().getValue() == 90);
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(VideoHandover.TYPE.getIdentifierAndType()).getClass() == Command.class);
+
     }
 }

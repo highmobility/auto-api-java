@@ -58,4 +58,8 @@ public class StartStopDefrosting extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

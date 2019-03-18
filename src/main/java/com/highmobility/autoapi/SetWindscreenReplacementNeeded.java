@@ -62,4 +62,8 @@ public class SetWindscreenReplacementNeeded extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

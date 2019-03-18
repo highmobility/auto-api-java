@@ -77,4 +77,8 @@ public class HonkHornAndFlashLightsTest {
         assertTrue(state.equals(bytes));
         assertTrue(state.getState().getValue() == FlashersState.Value.LEFT_ACTIVE);
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(ActivateDeactivateEmergencyFlasher.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

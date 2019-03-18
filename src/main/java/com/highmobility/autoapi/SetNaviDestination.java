@@ -20,9 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.property.Property;
-
+import com.highmobility.autoapi.value.Coordinates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,5 +91,9 @@ public class SetNaviDestination extends Command {
                 return null;
             });
         }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

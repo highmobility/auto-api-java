@@ -60,4 +60,8 @@ public class SetTheftAlarm extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

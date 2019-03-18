@@ -62,4 +62,8 @@ public class AuthenticateHomeCharger extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

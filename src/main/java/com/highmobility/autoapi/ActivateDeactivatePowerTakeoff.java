@@ -57,4 +57,8 @@ public class ActivateDeactivatePowerTakeoff extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

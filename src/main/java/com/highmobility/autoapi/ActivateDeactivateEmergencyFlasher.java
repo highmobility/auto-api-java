@@ -56,4 +56,8 @@ public class ActivateDeactivateEmergencyFlasher extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

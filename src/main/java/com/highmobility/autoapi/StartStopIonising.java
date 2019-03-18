@@ -60,4 +60,8 @@ public class StartStopIonising extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

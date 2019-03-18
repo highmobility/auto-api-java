@@ -51,7 +51,7 @@ public class SendHeartRate extends Command {
         createBytes(this.heartRate);
     }
 
-    SendHeartRate(byte[] bytes) throws CommandParseException {
+    SendHeartRate(byte[] bytes) {
         super(bytes);
 
         while (propertyIterator.hasNext()) {
@@ -63,7 +63,9 @@ public class SendHeartRate extends Command {
                 return null;
             });
         }
+    }
 
-        if (this.heartRate.getValue() == null) throw new CommandParseException();
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

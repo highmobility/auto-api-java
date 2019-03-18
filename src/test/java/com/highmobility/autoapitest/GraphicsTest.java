@@ -20,4 +20,8 @@ public class GraphicsTest {
         assertTrue(command instanceof DisplayImage);
         assertTrue(((DisplayImage)command).getUrl().getValue().equals("https://goo.gl/VyU1ip"));
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(DisplayImage.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

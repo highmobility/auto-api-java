@@ -20,9 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.value.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
-
+import com.highmobility.autoapi.value.NetworkSecurity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,5 +106,9 @@ public class ConnectToNetwork extends Command {
                 return null;
             });
         }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

@@ -7,8 +7,8 @@ import com.highmobility.autoapi.EnableDisableWifi;
 import com.highmobility.autoapi.ForgetNetwork;
 import com.highmobility.autoapi.GetWifiState;
 import com.highmobility.autoapi.WifiState;
-import com.highmobility.autoapi.value.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.NetworkSecurity;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -103,5 +103,11 @@ public class WifiTest {
         Bytes bytes = new Bytes("005901");
         Command state = CommandResolver.resolve(bytes);
         assertTrue(((WifiState) state).getSecurity().getValue() == null);
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(ConnectToNetwork.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(ForgetNetwork.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(EnableDisableWifi.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

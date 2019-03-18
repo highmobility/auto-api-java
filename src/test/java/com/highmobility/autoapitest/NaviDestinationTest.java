@@ -5,9 +5,8 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetNaviDestination;
 import com.highmobility.autoapi.NaviDestination;
 import com.highmobility.autoapi.SetNaviDestination;
-import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.property.Property;
-
+import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -69,5 +68,9 @@ public class NaviDestinationTest {
         builder.setName(new Property("Berlin"));
         Command state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(SetNaviDestination.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

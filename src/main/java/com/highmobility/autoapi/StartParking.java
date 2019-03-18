@@ -124,4 +124,8 @@ public class StartParking extends Command {
 
         if (operatorTicketId == null || startDate == null) throw new CommandParseException();
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

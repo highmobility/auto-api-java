@@ -61,4 +61,8 @@ public class TurnIgnitionOnOff extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }

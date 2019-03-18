@@ -51,4 +51,8 @@ public class PowerTakeOffTest {
                 .resolve(waitingForBytes);
         assertTrue(command.activate().getValue() == true);
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(ActivateDeactivatePowerTakeoff.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

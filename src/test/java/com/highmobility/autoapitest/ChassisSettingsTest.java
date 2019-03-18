@@ -162,4 +162,10 @@ public class ChassisSettingsTest {
         assertTrue(state.getType() == ChassisSettings.TYPE);
         testState(state);
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(SetDrivingMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(StartStopSportChrono.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(SetSpringRate.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

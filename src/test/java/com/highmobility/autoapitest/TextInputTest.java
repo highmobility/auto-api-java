@@ -41,4 +41,8 @@ public class TextInputTest {
         assertTrue(command instanceof TextInput);
         assertTrue(((TextInput)command).getText().getValue().equals("yes"));
     }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(TextInput.TYPE.getIdentifierAndType()).getClass() == Command.class);
+    }
 }

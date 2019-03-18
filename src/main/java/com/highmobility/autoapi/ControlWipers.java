@@ -85,4 +85,8 @@ public class ControlWipers extends Command {
             });
         }
     }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
+    }
 }
