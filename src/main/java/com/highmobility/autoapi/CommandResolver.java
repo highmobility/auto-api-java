@@ -441,7 +441,7 @@ public class CommandResolver {
 //            e.printStackTrace();
         }
 
-        // The identifier was unknown. Return the base class.
+        // The identifier was unknown or failed to parse. Return the base class.
         if (command == null) command = new Command(bytes);
 
         return command;
