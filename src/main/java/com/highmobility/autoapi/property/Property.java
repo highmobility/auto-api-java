@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.value.Bytes;
@@ -266,6 +266,7 @@ public class Property<T> extends Bytes {
      * Set a new identifier for the property
      *
      * @param identifier The identifier.
+     * @return Self.
      */
     public Property setIdentifier(byte identifier) {
         bytes[0] = identifier;

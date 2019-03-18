@@ -65,6 +65,7 @@ public class PropertyInteger extends Property<Integer> {
      * don't want to bother the user about integer length or sign.
      *
      * @param newLength The new length.
+     * @return Self.
      */
     public Property update(boolean signed, int newLength, @Nullable Integer value) {
         this.signed = signed;

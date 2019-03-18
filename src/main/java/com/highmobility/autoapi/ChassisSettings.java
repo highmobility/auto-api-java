@@ -74,7 +74,7 @@ public class ChassisSettings extends Command {
     }
 
     /**
-     * @return ObjectProperty<Boolean> indicating whether the sport chronometer is active.
+     * @return A boolean indicating whether the sport chronometer is active.
      */
     public Property<Boolean> isSportChronoActive() {
         return sportChronoActive;
