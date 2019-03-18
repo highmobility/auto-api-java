@@ -20,12 +20,12 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.value.PowerTrain;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.DisplayUnit;
 import com.highmobility.autoapi.value.DriverSeatLocation;
 import com.highmobility.autoapi.value.Gearbox;
+import com.highmobility.autoapi.value.PowerTrain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -273,8 +273,7 @@ public class VehicleStatus extends Command {
                     case IDENTIFIER_NUMBER_OF_SEATS:
                         return numberOfSeats.update(p);
                     case COMMAND_IDENTIFIER:
-                        Property<Command> command =
-                                new Property(Command.class, p);
+                        Property<Command> command = new Property(Command.class, p);
                         states.add(command);
                         return command;
                     case IDENTIFIER_ENGINE_VOLUME:

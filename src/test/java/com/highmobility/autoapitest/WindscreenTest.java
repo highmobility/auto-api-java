@@ -39,7 +39,7 @@ public class WindscreenTest {
     );
 
     @Test
-    public void state() throws ParseException {
+    public void state() {
         Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(WindscreenState.TYPE) && command.getClass().equals(WindscreenState
