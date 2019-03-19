@@ -27,8 +27,10 @@ import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.value.Bytes;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -284,6 +286,17 @@ public class Property<T> extends Bytes {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
 //        e.printStackTrace();
+    }
+
+    // MARK: Helpers
+
+    public static <T> T[] propertiesToValues(Property<T>[] properties, Class<T> tClass) {
+        ArrayList<T> values = new ArrayList<>();
+        for (int i = 0; i < properties.length; i++) {
+            values.add(properties[i].getValue());
+        }
+
+        return values.toArray((T[]) Array.newInstance(tClass, 0));
     }
 
     // MARK: ctor helpers

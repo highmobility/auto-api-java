@@ -20,14 +20,14 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.value.Color;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Color;
+import com.highmobility.autoapi.value.Location;
 import com.highmobility.autoapi.value.lights.FogLight;
 import com.highmobility.autoapi.value.lights.FrontExteriorLightState;
 import com.highmobility.autoapi.value.lights.InteriorLamp;
 import com.highmobility.autoapi.value.lights.LightLocation;
 import com.highmobility.autoapi.value.lights.ReadingLamp;
-import com.highmobility.autoapi.value.Location;
 
 import java.util.ArrayList;
 
@@ -55,8 +55,7 @@ public class LightsState extends Command {
     Property<Boolean> rearExteriorLightActive =
             new Property(Boolean.class, IDENTIFIER_REAR_EXTERIOR_LIGHT_ACTIVE);
 
-    Property<Color> ambientColor = new Property(Color.class,
-            IDENTIFIER_AMBIENT_COLOR);
+    Property<Color> ambientColor = new Property(Color.class, IDENTIFIER_AMBIENT_COLOR);
 
     // l7
     Property<Boolean> reverseLightActive = new Property(Boolean.class,
