@@ -60,6 +60,7 @@ public class ChassisSettingsTest {
         assertTrue(state.getCurrentChassisPosition().getValue() == 25);
         assertTrue(state.getMaximumChassisPosition().getValue() == 55);
         assertTrue(state.getMinimumChassisPosition().getValue() == -28);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {

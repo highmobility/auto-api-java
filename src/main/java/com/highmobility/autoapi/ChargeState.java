@@ -559,8 +559,10 @@ public class ChargeState extends Command {
             return this;
         }
 
-        // TBODO: translate
-
+        /**
+         * @param departureTime The departure time.
+         * @return The builder.
+         */
         public Builder addDepartureTime(Property<DepartureTime> departureTime) {
             departureTime.setIdentifier(DEPARTURE_TIMES_IDENTIFIER);
             this.departureTimes.add(departureTime);
@@ -568,6 +570,10 @@ public class ChargeState extends Command {
             return this;
         }
 
+        /**
+         * @param reductionOfChargingCurrentTimes The reduction of charging current times.
+         * @return The builder.
+         */
         public Builder setReductionOfChargingCurrentTimes(Property<ReductionTime>[]
                                                                   reductionOfChargingCurrentTimes) {
             this.reductionOfChargingCurrentTimes.clear();
@@ -579,6 +585,10 @@ public class ChargeState extends Command {
             return this;
         }
 
+        /**
+         * @param reductionOfChargingCurrentTime The reduction of charging current time.
+         * @return The builder.
+         */
         public Builder addReductionOfChargingCurrentTime(Property<ReductionTime>
                                                                  reductionOfChargingCurrentTime) {
             reductionOfChargingCurrentTime.setIdentifier
@@ -589,6 +599,10 @@ public class ChargeState extends Command {
 
         }
 
+        /**
+         * @param batteryTemperature The battery temperature.
+         * @return The builder.
+         */
         public Builder setBatteryTemperature(Property<Float> batteryTemperature) {
             this.batteryTemperature = batteryTemperature;
             batteryTemperature.setIdentifier(BATTERY_TEMPERATURE_IDENTIFIER);
@@ -623,6 +637,10 @@ public class ChargeState extends Command {
             return this;
         }
 
+        /**
+         * @param pluggedIn The plugged in state.
+         * @return The builder.
+         */
         public Builder setPluggedIn(Property<Boolean> pluggedIn) {
             this.pluggedIn = pluggedIn;
             pluggedIn.setIdentifier(PLUGGED_IN_IDENTIFIER);

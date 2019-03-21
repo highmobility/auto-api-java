@@ -68,7 +68,7 @@ public class ChargingTest {
         testState(state);
     }
 
-    private void testState(ChargeState state) throws ParseException {
+    private void testState(ChargeState state) {
         assertTrue(TestUtils.bytesTheSame(state, bytes));
         assertTrue(state.getEstimatedRange().getValue() == 432);
         assertTrue(state.getBatteryLevel().getValue() == .5d);
@@ -140,14 +140,12 @@ public class ChargingTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    public void failSameChargingTimers() throws ParseException {
+    @Test public void failSameChargingTimers() throws ParseException {
         Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
         ChargingTimer[] timers = new ChargingTimer[2];
         timers[0] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
         timers[1] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
-        assertThrows(IllegalArgumentException.class, () -> {
-            new SetChargeTimer(timers);
-        });
+        assertThrows(IllegalArgumentException.class, () -> new SetChargeTimer(timers));
     }
 
     @Test public void build() throws ParseException {
