@@ -66,6 +66,7 @@ public class PropertyInteger extends Property<Integer> {
      *
      * @param newLength The new length.
      * @param signed The sign.
+     * @param value The value.
      * @return Self.
      */
     public Property update(boolean signed, int newLength, @Nullable Integer value) {
