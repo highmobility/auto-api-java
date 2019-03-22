@@ -10,6 +10,7 @@ import com.highmobility.autoapi.HomeChargerState;
 import com.highmobility.autoapi.SetChargeCurrent;
 import com.highmobility.autoapi.SetPriceTariffs;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.value.NetworkSecurity;
 import com.highmobility.autoapi.value.homecharger.AuthenticationMechanism;
 import com.highmobility.autoapi.value.homecharger.Charging;
@@ -44,16 +45,18 @@ public class HomeChargerTest {
                     "110013010010404A428F9F44D445402ACF562174C4CE" +
                     "12000C010009004090000003455552" +
                     "12000F01000C023E99999A06526970706C65"
-
     );
+
+    // charge current ok, after that should be max charge current
 
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-
-        assertTrue(command instanceof HomeChargerState);
         HomeChargerState state = (HomeChargerState) command;
+        testState(state);
+    }
 
+    private void testState(HomeChargerState state) {
         assertTrue(state.getCharging().getValue() == Charging.CHARGING);
         assertTrue(state.getAuthenticationMechanism().getValue() == AuthenticationMechanism.APP);
         assertTrue(state.getPlugType().getValue() == PlugType.TYPE_TWO);
@@ -79,29 +82,36 @@ public class HomeChargerTest {
         assertTrue(state.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getPrice() == .3f);
         assertTrue(state.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getCurrency()
                 .equals("Ripple"));
+
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
-        // TBODO:
-        /*HomeChargerState.Builder builder = new HomeChargerState.Builder();
+        HomeChargerState.Builder builder = new HomeChargerState.Builder();
 
-        builder.setCharging(Charging.CHARGING);
-        builder.setAuthenticationMechanism(AuthenticationMechanism.APP);
-        builder.setPlugType(PlugType.TYPE_TWO);
-        builder.setChargingPower(11.5f);
-        builder.setSolarChargingActive(true);
-//        builder.setCo(new CoordinatesProperty(52.520008f, 13.404954f));
+        builder.setCharging(new Property(Charging.CHARGING));
+        builder.setAuthenticationMechanism(new Property(AuthenticationMechanism.APP));
+        builder.setPlugType(new Property(PlugType.TYPE_TWO));
+        builder.setChargingPower(new Property(11.5f));
+        builder.setSolarChargingActive(new Property(true));
+        builder.setHotspotEnabled(new Property(true));
+        builder.setHotspotSsid(new Property("Charger 7612"));
+        builder.setHotspotSecurity(new Property(NetworkSecurity.WPA2_PERSONAL));
+        builder.setHotspotPassword(new Property("ZW3vARNUBe"));
+        builder.setAuthenticated(new Property(true));
+        builder.setChargeCurrent(new Property(.5f));
+        builder.setMaximumChargeCurrent(new Property(1f));
+        builder.setMinimumChargeCurrent(new Property(0f));
+        builder.setCoordinates(new Property(new Coordinates(52.520008d, 13.404954d)));
 
-        builder.setHotspotEnabled(true);
-        builder.setHotspotSsid("Charger 7612");
-        builder.setHotspotSecurity(NetworkSecurity.WPA2_PERSONAL);
-        builder.setHotspotPassword("ZW3vARNUBe");
+        builder.addPriceTariff(new Property(new PriceTariff(
+                PriceTariff.PricingType.STARTING_FEE, "EUR", 4.5f)));
 
-        builder.addPriceTariff(new PriceTariff(PriceTariff.PricingType.STARTING_FEE, "EUR", 4.5f));
-        builder.addPriceTariff(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR", .3f));
-        HomeChargerState command = builder.build();
-        assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex
-                ("00600101000102020001010300010104000441380000050001010600084252147d41567ab107000C3f0000003f800000000000000800010109000C4368617267657220373631320A0001030B000A5a57337641524e5542650C000800455552409000000C0008024555523e99999a")));*/
+        builder.addPriceTariff(new Property(new PriceTariff(
+                PriceTariff.PricingType.PER_KWH, "Ripple", .3f)));
+
+        HomeChargerState state = builder.build();
+        testState(state);
     }
 
     @Test public void get() {
@@ -131,8 +141,8 @@ public class HomeChargerTest {
 
         Property[] tariffs = new Property[2];
 
-        tariffs[0] = new Property(new PriceTariff(PriceTariff.PricingType.STARTING_FEE,
-                "EUR", 4.5f));
+        tariffs[0] = new Property(new PriceTariff(PriceTariff.PricingType.STARTING_FEE, "EUR",
+                4.5f));
         tariffs[1] = new Property(new PriceTariff(PriceTariff.PricingType.PER_KWH, "EUR",
                 .3f));
 
@@ -142,13 +152,15 @@ public class HomeChargerTest {
         SetPriceTariffs command = (SetPriceTariffs) CommandResolver.resolve(bytes);
 
         assertTrue(command.getPriceTariffs().length == 2);
-        assertTrue(command.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getValue().getCurrency()
-                .equals("EUR"));
-        assertTrue(command.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getValue().getPrice() == 4.5f);
+        assertTrue(command.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getValue()
+                .getCurrency().equals("EUR"));
+        assertTrue(command.getPriceTariff(PriceTariff.PricingType.STARTING_FEE).getValue()
+                .getPrice() == 4.5f);
 
-        assertTrue(command.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getCurrency().equals
-                ("EUR"));
-        assertTrue(command.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getPrice() == .3f);
+        assertTrue(command.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getCurrency
+                ().equals("EUR"));
+        assertTrue(command.getPriceTariff(PriceTariff.PricingType.PER_KWH).getValue().getPrice()
+                == .3f);
     }
 
     @Test public void setPriceTariffs0Properties() {
@@ -220,9 +232,13 @@ public class HomeChargerTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(SetChargeCurrent.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(ActivateDeactivateSolarCharging.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(EnableDisableWifiHotspot.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(AuthenticateHomeCharger.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(SetChargeCurrent.TYPE.getIdentifierAndType()).getClass
+                () == Command.class);
+        assertTrue(CommandResolver.resolve(ActivateDeactivateSolarCharging.TYPE
+                .getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(EnableDisableWifiHotspot.TYPE.getIdentifierAndType())
+                .getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(AuthenticateHomeCharger.TYPE.getIdentifierAndType())
+                .getClass() == Command.class);
     }
 }

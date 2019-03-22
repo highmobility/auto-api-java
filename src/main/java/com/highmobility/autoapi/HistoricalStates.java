@@ -36,8 +36,8 @@ public class HistoricalStates extends Command {
     Property<Command>[] states;
 
     /**
-     * @return The historical states. Use {@link Command#getTimestamp()} to understand
-     * the command time.
+     * @return The historical states. Use {@link Command#getTimestamp()} to understand the command
+     * time.
      */
     public Property<Command>[] getStates() {
         return states;
@@ -66,7 +66,7 @@ public class HistoricalStates extends Command {
     HistoricalStates(byte[] bytes) {
         super(bytes);
 
-        ArrayList<Property<Command>> builder = new ArrayList<>();
+        List<Property> builder = new ArrayList<>();
 
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
@@ -87,13 +87,36 @@ public class HistoricalStates extends Command {
         return true;
     }
 
-    // TBODO:
-    /*private HistoricalStates(Builder builder) {
+    private HistoricalStates(Builder builder) {
         super(builder);
-        state = builder.state;
+        states = builder.states.toArray(new Property[0]);
     }
 
-    public static final class Builder extends  Command.Builder {
+    public static final class Builder extends Command.Builder {
+        public List<Property> states = new ArrayList<>();
+
+        /**
+         * @param state The historical state.
+         * @return The builder.
+         */
+        public Builder addState(Property<Command> state) {
+            this.states.add(state.setIdentifier(STATE_IDENTIFIER));
+            addProperty(state);
+            return this;
+        }
+
+        /**
+         * @param states The states.
+         * @return The builder.
+         */
+        public Builder setStates(Property<Command>[] states) {
+            this.states.clear();
+            for (Property<Command> state : states) {
+                addState(state);
+            }
+            return this;
+        }
+
         public Builder() {
             super(TYPE);
         }
@@ -101,5 +124,5 @@ public class HistoricalStates extends Command {
         public HistoricalStates build() {
             return new HistoricalStates(this);
         }
-    }*/
+    }
 }

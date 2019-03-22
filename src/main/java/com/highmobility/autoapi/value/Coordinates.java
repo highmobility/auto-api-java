@@ -43,7 +43,7 @@ public class Coordinates extends PropertyValueObject {
         return longitude;
     }
 
-    public Coordinates(double latitude, double longitude) {
+    public Coordinates(Double latitude, Double longitude) {
         super(16);
         update(latitude, longitude);
     }

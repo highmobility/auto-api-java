@@ -271,10 +271,16 @@ public class HomeChargerState extends Command {
         hotspotSsid = builder.hotspotSsid;
         hotspotSecurity = builder.hotspotSecurity;
         hotspotPassword = builder.hotspotPassword;
+        authenticated = builder.authenticated;
         priceTariffs = builder.priceTariffs.toArray(new Property[0]);
+        coordinates = builder.coordinates;
+        chargeCurrentDC = builder.chargeCurrent;
+        minimumChargeCurrent = builder.minimumChargeCurrent;
+        maximumChargeCurrent = builder.maximumChargeCurrent;
     }
 
     public static final class Builder extends Command.Builder {
+        public Property<Boolean> authenticated;
         private Property<Charging> charging;
         private Property<AuthenticationMechanism> authenticationMechanism;
         private Property<PlugType> plugType;
@@ -285,6 +291,10 @@ public class HomeChargerState extends Command {
         private Property<NetworkSecurity> hotspotSecurity;
         private Property<String> hotspotPassword;
         private List<Property<PriceTariff>> priceTariffs = new ArrayList<>();
+        private Property<Coordinates> coordinates;
+        private Property chargeCurrent;
+        public Property<Float> minimumChargeCurrent;
+        public Property<Float> maximumChargeCurrent;
 
         public Builder() {
             super(TYPE);
@@ -384,6 +394,46 @@ public class HomeChargerState extends Command {
         }
 
         /**
+         * @param authenticated The authentication state.
+         * @return The builder
+         */
+        public Builder setAuthenticated(Property<Boolean> authenticated) {
+            this.authenticated = authenticated.setIdentifier(IDENTIFIER_AUTHENTICATED);
+            addProperty(authenticated);
+            return this;
+        }
+
+        /**
+         * @param chargeCurrent The authentication state.
+         * @return The builder
+         */
+        public Builder setChargeCurrent(Property<Float> chargeCurrent) {
+            this.chargeCurrent = chargeCurrent.setIdentifier(IDENTIFIER_CHARGE_CURRENT_DC);
+            addProperty(chargeCurrent);
+            return this;
+        }
+
+        /**
+         * @param minimumChargeCurrent The minimum charge current.
+         * @return The builder.
+         */
+        public Builder setMinimumChargeCurrent(Property<Float> minimumChargeCurrent) {
+            this.minimumChargeCurrent = minimumChargeCurrent;
+            addProperty(minimumChargeCurrent.setIdentifier(IDENTIFIER_MINIMUM_CHARGE_CURRENT));
+            return this;
+        }
+
+        /**
+         * @param maximumChargeCurrent The maximum charge current.
+         * @return The maximum charge current.
+         */
+        public Builder setMaximumChargeCurrent(Property<Float> maximumChargeCurrent) {
+            this.maximumChargeCurrent = maximumChargeCurrent;
+            addProperty(maximumChargeCurrent.setIdentifier(IDENTIFIER_MAXIMUM_CHARGE_CURRENT));
+            return this;
+        }
+
+        /**
          * Set the price tariffs.
          *
          * @param priceTariffs The price tariffs.
@@ -407,6 +457,16 @@ public class HomeChargerState extends Command {
             priceTariffs.add(priceTariff);
             priceTariff.setIdentifier(IDENTIFIER_PRICE_TARIFF);
             addProperty(priceTariff);
+            return this;
+        }
+
+        /**
+         * @param coordinates The coordinates.
+         * @return The builder.
+         */
+        public Builder setCoordinates(Property<Coordinates> coordinates) {
+            this.coordinates = coordinates.setIdentifier(IDENTIFIER_COORDINATES);
+            addProperty(coordinates);
             return this;
         }
 

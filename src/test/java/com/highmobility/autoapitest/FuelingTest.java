@@ -25,15 +25,14 @@ public class FuelingTest {
 
     @Test
     public void state() {
-        Command command = CommandResolver.resolve(bytes);
-        assertTrue(command.is(GasFlapState.TYPE));
-        GasFlapState state = (GasFlapState) command;
-        testState(state);
+        Command state = CommandResolver.resolve(bytes);
+        testState((GasFlapState) state);
     }
 
     private void testState(GasFlapState state) {
         assertTrue(state.getLock().getValue() == Lock.LOCKED);
         assertTrue(state.getPosition().getValue() == Position.CLOSED);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
@@ -43,7 +42,6 @@ public class FuelingTest {
         builder.setPosition(new Property(Position.CLOSED));
 
         GasFlapState state = builder.build();
-        assertTrue(TestUtils.bytesTheSame(state, bytes));
         testState(state);
     }
 

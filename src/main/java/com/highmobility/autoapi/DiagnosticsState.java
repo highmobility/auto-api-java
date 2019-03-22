@@ -22,6 +22,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.TireLocation;
 import com.highmobility.autoapi.value.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.value.diagnostics.CheckControlMessage;
 import com.highmobility.autoapi.value.diagnostics.DiagnosticsTroubleCode;
@@ -29,7 +30,6 @@ import com.highmobility.autoapi.value.diagnostics.TirePressure;
 import com.highmobility.autoapi.value.diagnostics.TireTemperature;
 import com.highmobility.autoapi.value.diagnostics.WasherFluidLevel;
 import com.highmobility.autoapi.value.diagnostics.WheelRpm;
-import com.highmobility.autoapi.value.TireLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,8 +115,7 @@ public class DiagnosticsState extends Command {
     Property<WheelRpm>[] wheelRpms;
     Property<DiagnosticsTroubleCode>[] troubleCodes;
 
-    PropertyInteger mileageMeters = new PropertyInteger(IDENTIFIER_MILEAGE_METERS,
-            false);
+    PropertyInteger mileageMeters = new PropertyInteger(IDENTIFIER_MILEAGE_METERS, false);
 
     /**
      * @return The car mileage (odometer) in km.
@@ -416,8 +415,7 @@ public class DiagnosticsState extends Command {
                         checkControlMessages.add(message);
                         return message;
                     case IDENTIFIER_TIRE_PRESSURES:
-                        Property<TirePressure> tirePressure =
-                                new Property(TirePressure.class, p);
+                        Property<TirePressure> tirePressure = new Property(TirePressure.class, p);
                         tirePressures.add(tirePressure);
                         return tirePressure;
                     case IDENTIFIER_TIRE_TEMPERATURES:
@@ -426,8 +424,7 @@ public class DiagnosticsState extends Command {
                         tireTemperatures.add(tireTemperature);
                         return tireTemperature;
                     case IDENTIFIER_WHEEL_RPM:
-                        Property<WheelRpm> wheelRpm =
-                                new Property(WheelRpm.class, p);
+                        Property<WheelRpm> wheelRpm = new Property(WheelRpm.class, p);
                         wheelRpms.add(wheelRpm);
                         return wheelRpm;
                     case IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE:
@@ -850,27 +847,34 @@ public class DiagnosticsState extends Command {
             return this;
         }
 
-        public Builder setCheckControlMessages
-                (Property<CheckControlMessage>[] checkControlMessages) {
+        /**
+         * @param checkControlMessages The check control messages.
+         * @return The builder.
+         */
+        public Builder setCheckControlMessages(Property<CheckControlMessage>[] checkControlMessages) {
             this.checkControlMessages.clear();
 
-            for (Property<CheckControlMessage> checkControlMessage :
-                    checkControlMessages) {
+            for (Property<CheckControlMessage> checkControlMessage : checkControlMessages) {
                 addCheckControlMessage(checkControlMessage);
             }
 
             return this;
         }
 
-        public void addCheckControlMessage
-                (Property<CheckControlMessage> checkControlMessage) {
-            checkControlMessage.setIdentifier(IDENTIFIER_CHECK_CONTROL_MESSAGES);
+        /**
+         * @param checkControlMessage The check control message.
+         */
+        public Builder addCheckControlMessage(Property<CheckControlMessage> checkControlMessage) {
             addProperty(checkControlMessage);
-            checkControlMessages.add(checkControlMessage);
+            checkControlMessages.add(checkControlMessage.setIdentifier(IDENTIFIER_CHECK_CONTROL_MESSAGES));
+            return this;
         }
 
-        public Builder setTroubleCodes
-                (Property<DiagnosticsTroubleCode>[] troubleCodes) {
+        /**
+         * @param troubleCodes The trouble codes
+         * @return The builder.
+         */
+        public Builder setTroubleCodes(Property<DiagnosticsTroubleCode>[] troubleCodes) {
             this.troubleCodes.clear();
 
             for (Property<DiagnosticsTroubleCode> troubleCode :
@@ -881,8 +885,11 @@ public class DiagnosticsState extends Command {
             return this;
         }
 
-        public Builder addTroubleCode
-                (Property<DiagnosticsTroubleCode> code) {
+        /**
+         * @param code The trouble code.
+         * @return The builder.
+         */
+        public Builder addTroubleCode(Property<DiagnosticsTroubleCode> code) {
             code.setIdentifier(IDENTIFIER_DIAGNOSTICS_TROUBLE_CODE);
             addProperty(code);
             troubleCodes.add(code);

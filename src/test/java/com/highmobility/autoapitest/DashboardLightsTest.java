@@ -40,6 +40,8 @@ public class DashboardLightsTest {
                 == DashboardLight.State.RED);
         assertTrue(state.getLight(DashboardLight.Type.ENGINE_OIL_LEVEL).getValue().getState() ==
                 DashboardLight.State.YELLOW);
+
+        assertTrue(TestUtils.bytesTheSame(bytes, state));
     }
 
     @Test public void get() {

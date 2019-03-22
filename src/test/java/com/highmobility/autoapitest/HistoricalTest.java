@@ -7,13 +7,15 @@ import com.highmobility.autoapi.HistoricalStates;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.RaceState;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Location;
 import com.highmobility.autoapi.value.Lock;
+import com.highmobility.autoapi.value.doors.DoorLockState;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
+import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -24,26 +26,42 @@ public class HistoricalTest {
     Bytes bytes = new Bytes(
             "001201" +
                     "01001C010019" + // >> length 19 + 3 + 3
-                    "0020010300050100020000" +
+                    "0020010300050100020000" + // 1 outside lock front left unlocked
                     "A2000B01000800000160E1560840"
     );
 
     @Test
     public void state() {
         HistoricalStates states = (HistoricalStates) CommandResolver.resolve(bytes);
-        assertTrue(states.getStates().length == 1);
+        testState(states);
+    }
 
-        LockState state = (LockState) states.getStates()[0].getValue();
+    private void testState(HistoricalStates state) {
+        assertTrue(state.getStates().length == 1);
+        LockState lockState = (LockState) state.getStates()[0].getValue();
 
-        assertTrue(state.getOutsideLock(Location.FRONT_LEFT).getValue().getLock() == Lock.UNLOCKED);
-        assertTrue(TestUtils.dateIsSame(state.getTimestamp(), "2018-01-10T18:30:00"));
+        assertTrue(lockState.getOutsideLock(Location.FRONT_LEFT).getValue().getLock() == Lock.UNLOCKED);
+        assertTrue(TestUtils.dateIsSame(lockState.getTimestamp(), "2018-01-10T18:30:00"));
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
-        // TBODO:
+        DoorLockState outsideLock = new DoorLockState(Location.FRONT_LEFT, Lock.UNLOCKED);
+        Calendar timestamp = TestUtils.getCalendar("2018-01-10T18:30:00");
+        Property outsideLockProperty = new Property(outsideLock);
+        LockState.Builder lockStateBuilder = new LockState.Builder();
+        lockStateBuilder.addOutsideLock(outsideLockProperty);
+        lockStateBuilder.setTimestamp(timestamp);
+        LockState lockState = lockStateBuilder.build();
+
+        HistoricalStates.Builder historicalStatesBuilder = new HistoricalStates.Builder();
+        historicalStatesBuilder.addState(new Property(lockState));
+
+        HistoricalStates historicalStates = historicalStatesBuilder.build();
+        testState(historicalStates);
     }
 
-    @Test public void get() throws ParseException {
+    @Test public void get() {
         Bytes waitingForBytes = new Bytes("001200" +
                 "0100050100020020" +
                 "02000B01000800000160E0EA1388" +

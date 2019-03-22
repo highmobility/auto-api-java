@@ -5,7 +5,6 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.FirmwareVersion;
 import com.highmobility.autoapi.GetFirmwareVersion;
 import com.highmobility.autoapi.property.Property;
-
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ public class FirmwareVersionTest {
         assertTrue(Arrays.equals(state.getCarSDKVersion().getValue(), new int[]{1, 15, 33}));
         assertTrue(state.getCarSDKBuild().getValue().equals("btstack-uart"));
         assertTrue(state.getApplicationVersion().getValue().equals("v1.5-prod"));
-        assertTrue(state.equals(bytes));
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {

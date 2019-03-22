@@ -23,7 +23,12 @@ public class HonkHornAndFlashLightsTest {
     @Test
     public void state() {
         FlashersState state = (FlashersState) CommandResolver.resolve(bytes);
+        testState(state);
+    }
+
+    private void testState(FlashersState state) {
         assertTrue(state.getState().getValue() == FlashersState.Value.LEFT_ACTIVE);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -74,8 +79,7 @@ public class HonkHornAndFlashLightsTest {
         FlashersState.Builder builder = new FlashersState.Builder();
         builder.setState(new Property(FlashersState.Value.LEFT_ACTIVE));
         FlashersState state = builder.build();
-        assertTrue(state.equals(bytes));
-        assertTrue(state.getState().getValue() == FlashersState.Value.LEFT_ACTIVE);
+        testState(state);
     }
 
     @Test public void failsWherePropertiesMandatory() {

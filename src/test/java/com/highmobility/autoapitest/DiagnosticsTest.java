@@ -5,6 +5,7 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.TireLocation;
 import com.highmobility.autoapi.value.diagnostics.BrakeFluidLevel;
 import com.highmobility.autoapi.value.diagnostics.CheckControlMessage;
 import com.highmobility.autoapi.value.diagnostics.DiagnosticsTroubleCode;
@@ -12,7 +13,6 @@ import com.highmobility.autoapi.value.diagnostics.TirePressure;
 import com.highmobility.autoapi.value.diagnostics.TireTemperature;
 import com.highmobility.autoapi.value.diagnostics.WasherFluidLevel;
 import com.highmobility.autoapi.value.diagnostics.WheelRpm;
-import com.highmobility.autoapi.value.TireLocation;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -181,6 +181,8 @@ public class DiagnosticsTest {
 
         assertTrue(propertyCount == 2);
         assertTrue(state.getMileageMeters().getValue() == 150000);
+
+        assertTrue(TestUtils.bytesTheSame(bytes, state));
     }
 
     @Test public void get() {
