@@ -20,10 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.value.KeyFobPositionValue;
 import com.highmobility.autoapi.property.Property;
-
-import javax.annotation.Nullable;
+import com.highmobility.autoapi.value.KeyFobPositionValue;
 
 /**
  * Command sent by the car every time the relative position of the keyfob changes or when a Get Key

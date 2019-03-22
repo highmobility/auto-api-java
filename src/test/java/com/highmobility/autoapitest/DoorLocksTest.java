@@ -5,11 +5,11 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetLockState;
 import com.highmobility.autoapi.LockState;
 import com.highmobility.autoapi.LockUnlockDoors;
-import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Location;
+import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.value.doors.DoorLockState;
 import com.highmobility.autoapi.value.doors.DoorPosition;
-import com.highmobility.autoapi.value.Location;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -75,6 +75,8 @@ public class DoorLocksTest {
         assertTrue(state.getPosition(FRONT_RIGHT).getValue().getPosition() == Position.CLOSED);
         assertTrue(state.getPosition(REAR_RIGHT).getValue().getPosition() == Position.CLOSED);
         assertTrue(state.getPosition(REAR_LEFT).getValue().getPosition() == Position.CLOSED);
+
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {

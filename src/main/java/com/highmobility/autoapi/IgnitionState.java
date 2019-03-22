@@ -22,8 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 
-import javax.annotation.Nullable;
-
 /**
  * Command sent from the car every time the ignition state changes or when a Get Ignition State is
  * received. The new status is included in the message payload and may be the result of user, device

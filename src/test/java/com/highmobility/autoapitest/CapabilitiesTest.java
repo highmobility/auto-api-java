@@ -77,56 +77,58 @@ public class CapabilitiesTest {
     @Test
     public void capabilities() {
         Command command = CommandResolver.resolve(bytes);
+        testState((Capabilities) command);
+    }
 
-        assertTrue(command.is(Capabilities.TYPE));
-        Capabilities capabilities = (Capabilities) command;
+    private void testState(Capabilities state) {
+        assertTrue(state.isSupported(GetLockState.TYPE));
+        assertTrue(state.isSupported(LockState.TYPE));
+        assertTrue(state.isSupported(LockUnlockDoors.TYPE));
 
-        assertTrue(capabilities.isSupported(GetLockState.TYPE));
-        assertTrue(capabilities.isSupported(LockState.TYPE));
-        assertTrue(capabilities.isSupported(LockUnlockDoors.TYPE));
+        assertTrue(state.isSupported(GetTrunkState.TYPE));
+        assertTrue(state.isSupported(ControlTrunk.TYPE));
+        assertTrue(state.isSupported(TrunkState.TYPE));
 
-        assertTrue(capabilities.isSupported(GetTrunkState.TYPE));
-        assertTrue(capabilities.isSupported(ControlTrunk.TYPE));
-        assertTrue(capabilities.isSupported(TrunkState.TYPE));
+        assertTrue(state.isSupported(GetChargeState.TYPE));
+        assertTrue(state.isSupported(ChargeState.TYPE));
+        assertTrue(state.isSupported(StartStopCharging.TYPE));
+        assertTrue(state.isSupported(SetChargeLimit.TYPE));
 
-        assertTrue(capabilities.isSupported(GetChargeState.TYPE));
-        assertTrue(capabilities.isSupported(ChargeState.TYPE));
-        assertTrue(capabilities.isSupported(StartStopCharging.TYPE));
-        assertTrue(capabilities.isSupported(SetChargeLimit.TYPE));
+        assertTrue(state.isSupported(GetClimateState.TYPE));
+        assertTrue(state.isSupported(ClimateState.TYPE));
+        assertTrue(state.isSupported(SetHvacStartingTimes.TYPE));
+        assertTrue(state.isSupported(StartStopHvac.TYPE));
+        assertTrue(state.isSupported(StartStopDefogging.TYPE));
+        assertTrue(state.isSupported(StartStopDefrosting.TYPE));
+        assertTrue(state.isSupported(StartStopIonising.TYPE));
 
-        assertTrue(capabilities.isSupported(GetClimateState.TYPE));
-        assertTrue(capabilities.isSupported(ClimateState.TYPE));
-        assertTrue(capabilities.isSupported(SetHvacStartingTimes.TYPE));
-        assertTrue(capabilities.isSupported(StartStopHvac.TYPE));
-        assertTrue(capabilities.isSupported(StartStopDefogging.TYPE));
-        assertTrue(capabilities.isSupported(StartStopDefrosting.TYPE));
-        assertTrue(capabilities.isSupported(StartStopIonising.TYPE));
+        assertTrue(state.isSupported(GetRooftopState.TYPE));
+        assertTrue(state.isSupported(RooftopState.TYPE));
+        assertTrue(state.isSupported(ControlRooftop.TYPE));
 
-        assertTrue(capabilities.isSupported(GetRooftopState.TYPE));
-        assertTrue(capabilities.isSupported(RooftopState.TYPE));
-        assertTrue(capabilities.isSupported(ControlRooftop.TYPE));
+        assertTrue(state.isSupported(GetFlashersState.TYPE));
+        assertTrue(state.isSupported(FlashersState.TYPE));
+        assertTrue(state.isSupported(HonkAndFlash.TYPE));
+        assertTrue(state.isSupported(ActivateDeactivateEmergencyFlasher.TYPE));
 
-        assertTrue(capabilities.isSupported(GetFlashersState.TYPE));
-        assertTrue(capabilities.isSupported(FlashersState.TYPE));
-        assertTrue(capabilities.isSupported(HonkAndFlash.TYPE));
-        assertTrue(capabilities.isSupported(ActivateDeactivateEmergencyFlasher.TYPE));
+        assertTrue(state.isSupported(GetControlMode.TYPE));
+        assertTrue(state.isSupported(ControlMode.TYPE));
+        assertTrue(state.isSupported(StartControlMode.TYPE));
+        assertTrue(state.isSupported(ControlCommand.TYPE));
 
-        assertTrue(capabilities.isSupported(GetControlMode.TYPE));
-        assertTrue(capabilities.isSupported(ControlMode.TYPE));
-        assertTrue(capabilities.isSupported(StartControlMode.TYPE));
-        assertTrue(capabilities.isSupported(ControlCommand.TYPE));
+        assertTrue(state.isSupported(GetValetMode.TYPE));
+        assertTrue(state.isSupported(ValetMode.TYPE));
+        assertTrue(state.isSupported(ActivateDeactivateValetMode.TYPE));
 
-        assertTrue(capabilities.isSupported(GetValetMode.TYPE));
-        assertTrue(capabilities.isSupported(ValetMode.TYPE));
-        assertTrue(capabilities.isSupported(ActivateDeactivateValetMode.TYPE));
+        assertTrue(state.isSupported(SendHeartRate.TYPE));
 
-        assertTrue(capabilities.isSupported(SendHeartRate.TYPE));
+        assertTrue(state.isSupported(GetVehicleLocation.TYPE));
+        assertTrue(state.isSupported(VehicleLocation.TYPE));
 
-        assertTrue(capabilities.isSupported(GetVehicleLocation.TYPE));
-        assertTrue(capabilities.isSupported(VehicleLocation.TYPE));
+        assertTrue(state.isSupported(GetNaviDestination.TYPE));
+        assertTrue(state.isSupported(NaviDestination.TYPE));
 
-        assertTrue(capabilities.isSupported(GetNaviDestination.TYPE));
-        assertTrue(capabilities.isSupported(NaviDestination.TYPE));
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test

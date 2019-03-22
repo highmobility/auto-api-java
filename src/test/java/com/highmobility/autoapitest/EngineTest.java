@@ -26,10 +26,13 @@ public class EngineTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        assertTrue(command.is(IgnitionState.TYPE));
-        IgnitionState state = (IgnitionState) command;
+        testState((IgnitionState) command);
+    }
+
+    private void testState(IgnitionState state) {
         assertTrue(state.isOn().getValue() == true);
         assertTrue(state.isAccessoriesIgnitionOn().getValue() == true);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -59,11 +62,7 @@ public class EngineTest {
         builder.setAccessoriesIgnition(new Property(true));
 
         IgnitionState state = builder.build();
-
-        assertTrue(state.equals(bytes));
-        assertTrue(state.isOn().getValue() == true);
-        assertTrue(state.isAccessoriesIgnitionOn().getValue() == true);
-        assertTrue(state.getType() == IgnitionState.TYPE);
+        testState(state);
     }
 
     @Test public void failsWherePropertiesMandatory() {
