@@ -50,12 +50,6 @@ public class EngineTest {
         assertTrue(incoming.isOn().getValue() == true);
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("003501");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((IgnitionState) state).isOn().getValue() == null);
-    }
-
     @Test public void build() {
         IgnitionState.Builder builder = new IgnitionState.Builder();
         builder.setIsOn(new Property(true));

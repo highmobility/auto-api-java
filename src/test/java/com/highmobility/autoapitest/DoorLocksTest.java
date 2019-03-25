@@ -100,12 +100,6 @@ public class DoorLocksTest {
         assertTrue(state.getDoorLock().getValue() == LOCKED);
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("002001");
-        LockState state = (LockState) CommandResolver.resolve(bytes);
-        assertTrue(state.getOutsideLocks().length == 0);
-    }
-
     @Test public void allLocksValue() {
         Bytes bytes = new Bytes(
                 "002001" +

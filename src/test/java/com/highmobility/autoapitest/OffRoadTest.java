@@ -42,12 +42,6 @@ public class OffRoadTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("005201");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((OffroadState) state).getRouteIncline().getValue() == null);
-    }
-
     @Test public void build() {
         OffroadState.Builder builder = new OffroadState.Builder();
         builder.setRouteIncline(new Property(10));

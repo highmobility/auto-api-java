@@ -22,8 +22,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 
-import javax.annotation.Nullable;
-
 /**
  * This command is sent when a Get Light Conditions is received by the car.
  */
@@ -31,8 +29,7 @@ public class LightConditions extends Command {
     public static final Type TYPE = new Type(Identifier.LIGHT_CONDITIONS, 0x01);
     private static final byte IDENTIFIER_OUTSIDE_LIGHT = 0x01;
     private static final byte IDENTIFIER_INSIDE_LIGHT = 0x02;
-    Property<Float> outsideLight = new Property(Float.class,
-            IDENTIFIER_OUTSIDE_LIGHT);
+    Property<Float> outsideLight = new Property(Float.class, IDENTIFIER_OUTSIDE_LIGHT);
     Property<Float> insideLight = new Property(Float.class, IDENTIFIER_INSIDE_LIGHT);
 
     /**

@@ -64,10 +64,4 @@ public class FuelingTest {
                 (ControlGasFlap) CommandResolver.resolve(waitingForBytes);
         assertTrue(Arrays.equals(openCloseGasFlap.getByteArray(), waitingForBytes));
     }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("004001");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((GasFlapState) state).getLock().getValue() == null);
-    }
 }

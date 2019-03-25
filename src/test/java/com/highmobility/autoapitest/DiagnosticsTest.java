@@ -263,10 +263,4 @@ public class DiagnosticsTest {
         assertTrue(TestUtils.bytesTheSame(state, bytes));
         testState(state);
     }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("003301");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((DiagnosticsState) state).getBatteryVoltage().getValue() == null);
-    }
 }

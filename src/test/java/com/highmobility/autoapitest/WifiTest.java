@@ -99,12 +99,6 @@ public class WifiTest {
         assertTrue(command.enable().getValue() == true);
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("005901");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((WifiState) state).getSecurity().getValue() == null);
-    }
-
     @Test public void failsWherePropertiesMandatory() {
         assertTrue(CommandResolver.resolve(ConnectToNetwork.TYPE.getIdentifierAndType()).getClass() == Command.class);
         assertTrue(CommandResolver.resolve(ForgetNetwork.TYPE.getIdentifierAndType()).getClass() == Command.class);

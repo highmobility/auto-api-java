@@ -40,12 +40,6 @@ public class WeatherConditionsTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("005501");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((WeatherConditions) state).getRainIntensity().getValue() == null);
-    }
-
     @Test public void builder() {
         WeatherConditions.Builder builder = new WeatherConditions.Builder();
         builder.setRainIntensity(new Property(1d));

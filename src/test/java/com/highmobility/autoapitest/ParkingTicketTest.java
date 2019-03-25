@@ -88,12 +88,6 @@ public class ParkingTicketTest {
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("004701");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((ParkingTicket) state).getState().getValue() == null);
-    }
-
     @Test public void failsWherePropertiesMandatory() {
         assertTrue(CommandResolver.resolve(StartParking.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }

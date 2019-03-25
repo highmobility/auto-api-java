@@ -53,12 +53,6 @@ public class TheftAlarmTest {
         assertTrue(state.getState().getValue() == TheftAlarmState.Value.ARMED);
     }
 
-    @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("004601");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((TheftAlarmState) state).getState().getValue() == null);
-    }
-
     @Test public void failsWherePropertiesMandatory() {
         assertTrue(CommandResolver.resolve(SetTheftAlarm.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }

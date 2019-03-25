@@ -54,10 +54,4 @@ public class TrunkAccessTest {
         assertTrue(state.getLock().getValue() == Lock.UNLOCKED);
         assertTrue(state.getPosition().getValue() == Position.OPEN);
     }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("002101");
-        TrunkState state = (TrunkState) CommandResolver.resolve(bytes);
-        assertTrue(state.getLockState().getValue() == null);
-    }
 }

@@ -225,12 +225,6 @@ public class HomeChargerTest {
         assertTrue(command.getAuthenticate().getValue() == false);
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("006001");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((HomeChargerState) state).getChargeCurrent().getValue() == null);
-    }
-
     @Test public void failsWherePropertiesMandatory() {
         assertTrue(CommandResolver.resolve(SetChargeCurrent.TYPE.getIdentifierAndType()).getClass
                 () == Command.class);

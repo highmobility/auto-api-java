@@ -77,12 +77,6 @@ public class HistoricalTest {
         assertTrue(TestUtils.bytesTheSame(command, waitingForBytes));
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("005701");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((RaceState) state).getGearMode().getValue() == null);
-    }
-
     @Test public void failsWherePropertiesMandatory() {
         assertTrue(CommandResolver.resolve(GetHistoricalStates.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }

@@ -194,12 +194,6 @@ public class ChargingTest {
         testState(state);
     }
 
-    @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("002301");
-        ChargeState state = (ChargeState) CommandResolver.resolve(bytes);
-        assertTrue(state.getBatteryCurrentAC().getValue() == null);
-    }
-
     @Test public void setChargeLimit() {
         Bytes expected = new Bytes("002313" +
                 "01000B0100083FECCCCCCCCCCCCD");

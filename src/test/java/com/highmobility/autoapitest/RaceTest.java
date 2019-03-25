@@ -117,10 +117,4 @@ public class RaceTest {
         String commandBytes = ByteUtils.hexFromBytes(new GetRaceState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("005701");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((RaceState) state).getGearMode().getValue() == null);
-    }
 }

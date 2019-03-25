@@ -102,10 +102,4 @@ public class WindowsTest {
 
         assertTrue(TestUtils.bytesTheSame(builder.build(), bytes));
     }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("004501");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((WindowsState) state).getProperties().length == 0);
-    }
 }

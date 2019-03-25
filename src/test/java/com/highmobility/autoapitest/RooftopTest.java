@@ -101,10 +101,4 @@ public class RooftopTest {
         assertTrue(state.getSunroofTiltState().getValue() == SunroofTiltState.HALF_TILTED);
         assertTrue(state.getSunroofPosition().getValue() == Position.OPEN);
     }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("002501");
-        RooftopState state = (RooftopState) CommandResolver.resolve(bytes);
-        assertTrue(state.getOpenPercentage().getValue() == null);
-    }
 }

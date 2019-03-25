@@ -55,12 +55,24 @@ public class MobileState extends Command {
         return true;
     }
 
-    // TBODO:
-    /*private MobileState(Builder builder) {
+    private MobileState(Builder builder) {
         super(builder);
+        this.connected = builder.connected;
     }
 
     public static final class Builder extends Command.Builder {
+        Property connected;
+
+        /**
+         * @param connected The connection state.
+         * @return The builder.
+         */
+        public Builder setConnected(Property<Boolean> connected) {
+            this.connected = connected;
+            addProperty(connected.setIdentifier(IDENTIFIER));
+            return this;
+        }
+
         public Builder() {
             super(TYPE);
         }
@@ -68,5 +80,5 @@ public class MobileState extends Command {
         public MobileState build() {
             return new MobileState(this);
         }
-    }*/
+    }
 }

@@ -26,13 +26,16 @@ public class NaviDestinationTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-
         assertTrue(command.getClass() == NaviDestination.class);
         NaviDestination state = (NaviDestination) command;
+        testState(state);
+    }
 
+    private void testState(NaviDestination state) {
         assertTrue(state.getName().getValue().equals("Berlin"));
         assertTrue(state.getCoordinates().getValue().getLatitude() == 52.520008);
         assertTrue(state.getCoordinates().getValue().getLongitude() == 13.404954);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -56,18 +59,12 @@ public class NaviDestinationTest {
         assertTrue(command.getCoordinates().getValue().getLongitude() == 13.404954);
     }
 
-    @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("003101");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((NaviDestination) state).getName().getValue() == null);
-    }
-
     @Test public void build() {
         NaviDestination.Builder builder = new NaviDestination.Builder();
         builder.setCoordinates(new Property(new Coordinates(52.520008, 13.404954)));
         builder.setName(new Property("Berlin"));
-        Command state = builder.build();
-        assertTrue(TestUtils.bytesTheSame(state, bytes));
+        NaviDestination state = builder.build();
+        testState(state);
     }
 
     @Test public void failsWherePropertiesMandatory() {

@@ -20,14 +20,15 @@ public class MessagingTest {
                     "01001101000e2b31203535352d3535352d353535" +
                     "02001001000d48656c6c6f20796f7520746f6f");
 
-    @Test
-    public void send() {
+    @Test public void send() {
         Command command = CommandResolver.resolve(bytes);
+        testState((SendMessage) command);
+    }
 
-        assertTrue(command.getClass() == SendMessage.class);
-        SendMessage state = (SendMessage) command;
+    private void testState(SendMessage state) {
         assertTrue(state.getRecipientHandle().getValue().equals("+1 555-555-555"));
         assertTrue(state.getMessage().getValue().equals("Hello you too"));
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void received() {
@@ -49,7 +50,7 @@ public class MessagingTest {
         SendMessage.Builder builder = new SendMessage.Builder();
         builder.setRecipientHandle(new Property("+1 555-555-555"));
         builder.setMessage(new Property("Hello you too"));
-        assertTrue(TestUtils.bytesTheSame(builder.build(), bytes));
+        testState(builder.build());
     }
 
     @Test public void failsWherePropertiesMandatory() {

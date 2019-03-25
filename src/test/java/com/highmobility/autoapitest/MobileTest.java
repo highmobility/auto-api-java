@@ -4,29 +4,32 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetMobileState;
 import com.highmobility.autoapi.MobileState;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
  */
 public class MobileTest {
+    Bytes bytes = new Bytes(
+            "006601" +
+                    "01000401000101");
+
     @Test
     public void state() {
-        Bytes bytes = new Bytes(
-                "006601" +
-                        "01000401000101");
-
         Command command = CommandResolver.resolve(bytes);
-
-        assertTrue(command.is(MobileState.TYPE));
         MobileState state = (MobileState) command;
+        testState(state);
+    }
+
+    private void testState(MobileState state) {
         assertTrue(state.isConnected().getValue() == true);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -35,11 +38,9 @@ public class MobileTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void state0Properties() {
-        /*Bytes bytes = new Bytes("006601");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((MobileState) state).isConnected() == null);*/
+    @Test public void build() {
+        MobileState.Builder builder = new MobileState.Builder();
+        builder.setConnected(new Property(true));
+        testState(builder.build());
     }
-
-    // TBODO:
 }

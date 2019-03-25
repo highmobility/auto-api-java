@@ -84,10 +84,4 @@ public class UsageTest {
         Bytes commandBytes = new GetUsage();
         assertTrue(waitingForBytes.equals(commandBytes));
     }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("006801");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((Usage) state).getAverageFuelConsumption().getValue() == null);
-    }
 }

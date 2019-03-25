@@ -103,7 +103,6 @@ public class Command extends Bytes {
     }
 
     protected boolean propertiesExpected() {
-        // TODO: 2019-03-15 return true for set commands that have a required property
         return false;
     }
 

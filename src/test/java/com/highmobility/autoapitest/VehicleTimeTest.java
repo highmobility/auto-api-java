@@ -44,12 +44,6 @@ public class VehicleTimeTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("005001");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((VehicleTime) state).getVehicleTime().getValue() == null);
-    }
-
     @Test public void build() throws ParseException {
         VehicleTime.Builder builder = new VehicleTime.Builder();
         Calendar c = TestUtils.getCalendar("2017-01-13T22:14:48");

@@ -32,10 +32,4 @@ public class KeyFobPositionTest {
         String commandBytes = ByteUtils.hexFromBytes(new GetKeyFobPosition().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("004801");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((KeyFobPosition) state).getKeyFobPosition().getValue() == null);
-    }
 }

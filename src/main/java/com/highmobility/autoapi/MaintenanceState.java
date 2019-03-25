@@ -226,15 +226,14 @@ public class MaintenanceState extends Command {
         private PropertyInteger daysToNextService;
         private PropertyInteger cbsReportsCount;
         private PropertyInteger monthsToExhaustInspection;
-        private Property<TeleserviceAvailability> teleserviceAvailability;
+        private Property teleserviceAvailability;
         private PropertyInteger serviceDistanceThreshold;
         private PropertyInteger serviceTimeThreshold;
-        private Property<Calendar> automaticTeleserviceCallDate;
-        private Property<Calendar> teleserviceBatteryCallDate;
-        private Property<Calendar> nextInspectionDate;
-        private ArrayList<Property> conditionBasedServices =
-                new ArrayList<>();
-        private Property<Calendar> brakeFluidChangeDate;
+        private Property automaticTeleserviceCallDate;
+        private Property teleserviceBatteryCallDate;
+        private Property nextInspectionDate;
+        private ArrayList<Property> conditionBasedServices = new ArrayList<>();
+        private Property brakeFluidChangeDate;
 
         public Builder() {
             super(TYPE);
@@ -247,7 +246,7 @@ public class MaintenanceState extends Command {
         public Builder setKilometersToNextService(Property<Integer> kilometersToNextService) {
             this.kilometersToNextService =
                     new PropertyInteger(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false, 3,
-                    kilometersToNextService);
+                            kilometersToNextService);
             addProperty(this.kilometersToNextService);
             return this;
         }
@@ -264,83 +263,125 @@ public class MaintenanceState extends Command {
             addProperty(this.daysToNextService);
             return this;
         }
-/*
-        public Builder setCbsReportsCount(ObjectPropertyInteger cbsReportsCount) {
-            this.cbsReportsCount = cbsReportsCount;
-            addProperty(new ObjectPropertyInteger(IDENTIFIER_CBS_REPORTS_COUNT, cbsReportsCount,
-            1));
+
+        /**
+         * @param cbsReportsCount The cbs report count.
+         * @return The builder.
+         */
+        public Builder setCbsReportsCount(Property<Integer> cbsReportsCount) {
+            this.cbsReportsCount = new PropertyInteger(IDENTIFIER_CBS_REPORTS_COUNT, false, 1,
+                    cbsReportsCount);
+            addProperty(this.cbsReportsCount);
             return this;
         }
 
-        public Builder setMonthsToExhaustInspection(ObjectPropertyInteger
-        monthsToExhaustInspection) {
-            this.monthsToExhaustInspection = monthsToExhaustInspection;
-            addProperty(new ObjectPropertyInteger(IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION,
-                    monthsToExhaustInspection, 1));
+        /**
+         * @param monthsToExhaustInspection The months to exhaust inspection.
+         * @return The builder.
+         */
+        public Builder setMonthsToExhaustInspection(Property<Integer> monthsToExhaustInspection) {
+            this.monthsToExhaustInspection =
+                    new PropertyInteger(IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION, false, 1,
+                            monthsToExhaustInspection);
+            addProperty(this.monthsToExhaustInspection);
             return this;
         }
 
-        public Builder setTeleserviceAvailability(TeleserviceAvailability teleserviceAvailability) {
+        /**
+         * @param teleserviceAvailability The teleservice availability.
+         * @return The builder.
+         */
+        public Builder setTeleserviceAvailability(Property<TeleserviceAvailability> teleserviceAvailability) {
             this.teleserviceAvailability = teleserviceAvailability;
-            addProperty(teleserviceAvailability);
+            addProperty(teleserviceAvailability.setIdentifier(IDENTIFIER_TELESERVICE_AVAILABILITY));
             return this;
         }
 
-        public Builder setServiceDistanceThreshold(ObjectPropertyInteger serviceDistanceThreshold) {
-            this.serviceDistanceThreshold = serviceDistanceThreshold;
-            addProperty(new ObjectPropertyInteger(IDENTIFIER_SERVICE_DISTANCE_THRESHOLD,
-                    serviceDistanceThreshold, 2));
+        /**
+         * @param serviceDistanceThreshold The service distance threshold.
+         * @return The builder.
+         */
+        public Builder setServiceDistanceThreshold(Property<Integer> serviceDistanceThreshold) {
+            this.serviceDistanceThreshold =
+                    new PropertyInteger(IDENTIFIER_SERVICE_DISTANCE_THRESHOLD, false, 2,
+                            serviceDistanceThreshold);
+            addProperty(this.serviceDistanceThreshold);
             return this;
         }
 
-        public Builder setServiceTimeThreshold(ObjectPropertyInteger serviceTimeThreshold) {
-            this.serviceTimeThreshold = serviceTimeThreshold;
-            addProperty(new ObjectPropertyInteger(IDENTIFIER_SERVICE_TIME_THRESHOLD,
-                    serviceDistanceThreshold, 1));
+        /**
+         * @param serviceTimeThreshold The service time threshold.
+         * @return The builder.
+         */
+        public Builder setServiceTimeThreshold(Property<Integer> serviceTimeThreshold) {
+            this.serviceTimeThreshold = new PropertyInteger(IDENTIFIER_SERVICE_TIME_THRESHOLD,
+                    false, 1, serviceTimeThreshold);
+            addProperty(this.serviceTimeThreshold);
             return this;
         }
 
-        public Builder setAutomaticTeleserviceCallDate(Calendar automaticTeleserviceCallDate) {
+        /**
+         * @param automaticTeleserviceCallDate The automatic teleservice call date.
+         * @return The builder.
+         */
+        public Builder setAutomaticTeleserviceCallDate(Property<Calendar> automaticTeleserviceCallDate) {
             this.automaticTeleserviceCallDate = automaticTeleserviceCallDate;
-            addProperty(new CalendarProperty(IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE,
-                    automaticTeleserviceCallDate));
+            addProperty(automaticTeleserviceCallDate.setIdentifier(IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE));
             return this;
         }
 
-        public Builder setTeleserviceBatteryCallDate(Calendar teleserviceBatteryCallDate) {
+        /**
+         * @param teleserviceBatteryCallDate The teleservice battery call date.
+         * @return The builder.
+         */
+        public Builder setTeleserviceBatteryCallDate(Property<Calendar> teleserviceBatteryCallDate) {
             this.teleserviceBatteryCallDate = teleserviceBatteryCallDate;
-            addProperty(new CalendarProperty(IDENTIFIER_TELESERVICE_BATTERY_CALL_DATE,
-                    teleserviceBatteryCallDate));
+            addProperty(teleserviceBatteryCallDate.setIdentifier(IDENTIFIER_TELESERVICE_BATTERY_CALL_DATE));
             return this;
         }
 
-        public Builder setNextInspectionDate(Calendar nextInspectionDate) {
+        /**
+         * @param nextInspectionDate The next inspection date.
+         * @return The builder.
+         */
+        public Builder setNextInspectionDate(Property<Calendar> nextInspectionDate) {
             this.nextInspectionDate = nextInspectionDate;
-            addProperty(new CalendarProperty(IDENTIFIER_NEXT_INSPECTION_DATE, nextInspectionDate));
+            addProperty(nextInspectionDate.setIdentifier(IDENTIFIER_NEXT_INSPECTION_DATE));
             return this;
         }
 
-        public Builder setConditionBasedServices(ConditionBasedService[] conditionBasedServices) {
-            for (ConditionBasedService conditionBasedService : conditionBasedServices) {
+        /**
+         * @param conditionBasedServices The condition based services.
+         * @return The builder.
+         */
+        public Builder setConditionBasedServices(Property<ConditionBasedService>[] conditionBasedServices) {
+            this.conditionBasedServices.clear();
+            for (Property<ConditionBasedService> conditionBasedService : conditionBasedServices) {
                 addConditionBasedService(conditionBasedService);
             }
 
             return this;
         }
 
-        public Builder addConditionBasedService(ConditionBasedService conditionBasedService) {
+        /**
+         * @param conditionBasedService The condition based service.
+         * @return The builder.
+         */
+        public Builder addConditionBasedService(Property<ConditionBasedService> conditionBasedService) {
             addProperty(conditionBasedService);
-            conditionBasedServices.add(conditionBasedService);
+            conditionBasedServices.add(conditionBasedService.setIdentifier(IDENTIFIER_CONDITION_BASED_SERVICES));
             return this;
         }
 
-        public Builder setBrakeFluidChangeDate(Calendar brakeFluidChangeDate) {
+        /**
+         * @param brakeFluidChangeDate The brake fluid change date.
+         * @return The builder.
+         */
+        public Builder setBrakeFluidChangeDate(Property<Calendar> brakeFluidChangeDate) {
             this.brakeFluidChangeDate = brakeFluidChangeDate;
-            addProperty(new CalendarProperty(IDENTIFIER_BRAKE_FLUID_CHANGE_DATE,
-                    brakeFluidChangeDate));
+            addProperty(brakeFluidChangeDate.setIdentifier(IDENTIFIER_BRAKE_FLUID_CHANGE_DATE));
             return this;
         }
-        */
 
         public MaintenanceState build() {
             return new MaintenanceState(this);

@@ -50,12 +50,6 @@ public class ValetModeTest {
         assertTrue(command.activate().getValue() == true);
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("002801");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((ValetMode) state).isActive() == null);
-    }
-
     @Test public void builder() {
         ValetMode.Builder builder = new ValetMode.Builder();
         builder.setActive(new Property(true));

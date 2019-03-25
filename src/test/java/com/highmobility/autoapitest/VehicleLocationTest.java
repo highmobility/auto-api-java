@@ -43,12 +43,6 @@ public class VehicleLocationTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("003001");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((VehicleLocation) state).getCoordinates().getValue() == null);
-    }
-
     @Test public void build() {
         VehicleLocation.Builder builder = new VehicleLocation.Builder();
         Coordinates coordinates = new Coordinates(52.520008, 13.404954);

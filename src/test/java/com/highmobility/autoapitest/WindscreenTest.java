@@ -145,12 +145,6 @@ public class WindscreenTest {
         assertTrue(command.getState().getValue() == WindscreenReplacementState.REPLACEMENT_NOT_NEEDED);
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("004201");
-        WindscreenState state = (WindscreenState) CommandResolver.resolve(bytes);
-        assertTrue(state.getDamageConfidence().getValue() == null);
-    }
-
     @Test public void controlWipersTest() {
         Bytes bytes = new Bytes("004214" +
                 "01000401000101" +

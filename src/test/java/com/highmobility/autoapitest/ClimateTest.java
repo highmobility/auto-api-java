@@ -161,12 +161,6 @@ public class ClimateTest {
         assertTrue(profile.getHvacStartingTimes().length == 0);
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("002401");
-        ClimateState state = (ClimateState) CommandResolver.resolve(bytes);
-        assertTrue(state.getRearTemperatureSetting().getValue() == null);
-    }
-
     @Test public void build() {
         ClimateState.Builder builder = new ClimateState.Builder();
 

@@ -7,15 +7,11 @@ import com.highmobility.autoapi.Notification;
 import com.highmobility.autoapi.NotificationAction;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActionItem;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -29,19 +25,14 @@ public class NotificationsTest {
                     "1000040100012A" // 42
     );
 
+    Bytes actionBytes = new Bytes("003811" +
+            "010004010001FE");
+
+    Bytes clearBytes = new Bytes("003802");
+
     @Test public void incomingNotification() {
         Command command = CommandResolver.resolve(bytes);
-        assertTrue(command.getClass() == Notification.class);
-        Notification state = (Notification) command;
-        assertTrue(state.getText().getValue().equals("Start navigation?"));
-
-        assertTrue(state.getAction(0) != null);
-        assertTrue(state.getAction(1) != null);
-
-        assertTrue(state.getAction(0).getValue().getName().equals("No"));
-        assertTrue(state.getAction(1).getValue().getName().equals("Yes"));
-
-        assertTrue(state.getReceivedAction().getValue() == 42);
+        testStateNotification((Notification) command);
     }
 
     @Test public void outgoingNotification() {
@@ -50,9 +41,8 @@ public class NotificationsTest {
         action2 = new ActionItem(1, "Yes");
         ActionItem[] actions = new ActionItem[]{action1, action2};
         Notification notification = new Notification("Start navigation?", actions, 42);
-
-        // we expect that testState are ordered in this test. It should not matter really
-        assertTrue(TestUtils.bytesTheSame(notification, bytes));
+        // we expect that items are ordered in this test. It should not matter really
+        testStateNotification(notification);
     }
 
     @Test public void buildNotification() {
@@ -68,58 +58,49 @@ public class NotificationsTest {
         builder.setActions(actions);
 
         builder.setReceivedAction(new Property(42));
+        testStateNotification(builder.build());
+    }
 
-        Notification command = builder.build();
-        assertTrue(command.equals(bytes));
-        assertTrue(command.getActions().length == 2);
+    private void testStateNotification(Notification state) {
+        assertTrue(state.getText().getValue().equals("Start navigation?"));
+
+        assertTrue(state.getAction(0) != null);
+        assertTrue(state.getAction(1) != null);
+
+        assertTrue(state.getAction(0).getValue().getName().equals("No"));
+        assertTrue(state.getAction(1).getValue().getName().equals("Yes"));
+
+        assertTrue(state.getReceivedAction().getValue() == 42);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void incomingNotificationAction() {
-        Bytes bytes = new Bytes(
-                "003811" +
-                        "010004010001FE");
-
-        NotificationAction command = (NotificationAction) CommandResolver.resolve(bytes);
-        assertTrue(command.getActionIdentifier() == 254);
+        NotificationAction command = (NotificationAction) CommandResolver.resolve(actionBytes);
+        testStateNotificationAction(command);
     }
 
     @Test public void outgoingNotificationAction() {
-        Bytes waitingForBytes = new Bytes
-                ("003811" +
-                        "010004010001FE");
-        byte[] bytes = new NotificationAction(254).getByteArray();
-        assertTrue(waitingForBytes.equals(bytes));
-
-        NotificationAction action = (NotificationAction) CommandResolver.resolve(waitingForBytes);
-        assertTrue(action.getActionIdentifier() == 254);
+        testStateNotificationAction(new NotificationAction(254));
     }
 
     @Test public void buildNotificationAction() {
         NotificationAction.Builder builder = new NotificationAction.Builder();
         builder.setActionIdentifier(new Property(254));
-        NotificationAction command = builder.build();
-        assertTrue(command.getActionIdentifier() == 254);
-        assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex("003811" +
-                "010004010001FE")));
+        testStateNotificationAction(builder.build());
+    }
+
+    private void testStateNotificationAction(NotificationAction state) {
+        assertTrue(state.getActionIdentifier() == 254);
+        assertTrue(TestUtils.bytesTheSame(state, actionBytes));
     }
 
     @Test public void incomingClear() {
-        Bytes waitingForBytes = new Bytes
-                ("003802");
-
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(waitingForBytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(clearBytes);
         assertTrue(command.is(ClearNotification.TYPE));
     }
 
     @Test public void outgoingClear() {
-        byte[] bytes = ByteUtils.bytesFromHex
-                ("003802");
-        assertTrue(Arrays.equals(new ClearNotification().getByteArray(), bytes));
+        assertTrue(TestUtils.bytesTheSame(new ClearNotification(), clearBytes));
     }
 
     @Test public void failsWherePropertiesMandatory() {

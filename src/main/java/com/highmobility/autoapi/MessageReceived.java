@@ -88,8 +88,6 @@ public class MessageReceived extends Command {
                 return null;
             });
         }
-
-        if (message.getValue() == null) throw new CommandParseException();
     }
 
     @Override protected boolean propertiesExpected() {

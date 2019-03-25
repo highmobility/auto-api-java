@@ -28,27 +28,26 @@ public class LightConditionsTest {
 
         assertTrue(command.getClass() == LightConditions.class);
         LightConditions state = (LightConditions) command;
+        testState(state);
+    }
+
+    private void testState(LightConditions state) {
         assertTrue(state.getOutsideLight().getValue() == 111000f);
         assertTrue(state.getInsideLight().getValue() == .25f);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
         LightConditions.Builder builder = new LightConditions.Builder();
         builder.setOutsideLight(new Property(111000f));
         builder.setInsideLight(new Property(.25f));
-        Command command = builder.build();
-        assertTrue(command.equals(bytes));
+        LightConditions command = builder.build();
+        testState(command);
     }
 
     @Test public void get() {
         String waitingForBytes = "005400";
         String commandBytes = ByteUtils.hexFromBytes(new GetLightConditions().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
-    }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("005401");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((LightConditions) state).getOutsideLight().getValue() == null);
     }
 }

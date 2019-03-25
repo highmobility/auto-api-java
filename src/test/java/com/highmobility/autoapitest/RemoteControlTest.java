@@ -67,12 +67,6 @@ public class RemoteControlTest {
         assertTrue(state.getSpeed().getValue() == 3);
     }
 
-    @Test public void state0Properties() {
-        String bytes = "002701";
-        Command state = CommandResolver.resolveHex(bytes);
-        assertTrue(((ControlMode) state).getAngle().getValue() == null);
-    }
-
     @Test public void failsWherePropertiesMandatory() {
         assertTrue(CommandResolver.resolve(StartControlMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }

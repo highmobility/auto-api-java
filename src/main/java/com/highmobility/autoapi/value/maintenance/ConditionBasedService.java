@@ -78,9 +78,9 @@ public class ConditionBasedService extends PropertyValueObject {
     }
 
     public ConditionBasedService(Integer year, Integer month, int id, DueStatus dueStatus,
-                                 String text) {
+                                 String text, String description) {
         super(7 + text.length());
-        update(year, month, id, dueStatus, text);
+        update(year, month, id, dueStatus, text, description);
     }
 
     public ConditionBasedService() {
@@ -107,25 +107,31 @@ public class ConditionBasedService extends PropertyValueObject {
         this.description = Property.getString(bytes, textPosition, textLength);
     }
 
-    public void update(Integer year, Integer month, int id, DueStatus dueStatus, String text) {
+    public void update(Integer year, Integer month, int id, DueStatus dueStatus, String text,
+                       String description) {
         this.year = year;
         this.month = month;
         this.id = id;
         this.dueStatus = dueStatus;
         this.text = text;
+        this.description = description;
 
-        bytes = new byte[7 + text.length()];
+        bytes = new byte[7 + text.length() + 2 + description.length()];
 
         set(0, Property.intToBytes(year - 2000, 1));
         set(1, Property.intToBytes(month, 1));
         set(2, Property.intToBytes(id, 2));
         set(4, dueStatus.getByte());
         set(5, Property.intToBytes(text.length(), 2));
+        int position = 7;
         set(7, Property.stringToBytes(text));
+        position += text.length();
+        set(position, Property.intToBytes(description.length(), 2));
+        set(position + 2, Property.stringToBytes(description));
     }
 
     public void update(ConditionBasedService value) {
-        update(value.year, value.month, value.id, value.dueStatus, value.text);
+        update(value.year, value.month, value.id, value.dueStatus, value.text, value.description);
     }
 
     public enum DueStatus {

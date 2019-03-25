@@ -67,6 +67,7 @@ public class LightsTest {
         assertTrue(state.getInteriorLamps().length == 2);
         assertTrue(state.getInteriorLamp(LightLocation.FRONT).getValue().isActive() == false);
         assertTrue(state.getInteriorLamp(LightLocation.REAR).getValue().isActive() == false);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
@@ -90,7 +91,6 @@ public class LightsTest {
         builder.addInteriorLamp(new Property(new InteriorLamp(LightLocation.REAR, false)));
 
         LightsState state = builder.build();
-        assertTrue(TestUtils.bytesTheSame(state, bytes));
         testState(state);
     }
 
@@ -151,11 +151,5 @@ public class LightsTest {
         assertTrue(command.getInteriorLamps().length == 2);
         assertTrue(command.getInteriorLamp(LightLocation.FRONT).getValue().isActive() == false);
         assertTrue(command.getInteriorLamp(LightLocation.REAR).getValue().isActive() == false);
-    }
-
-    @Test public void state0Properties() {
-        Bytes waitingForBytes = new Bytes("003601");
-        Command state = CommandResolver.resolve(waitingForBytes);
-        assertTrue(((LightsState) state).getAmbientColor().getValue() == null);
     }
 }

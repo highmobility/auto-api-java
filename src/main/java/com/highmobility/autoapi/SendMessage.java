@@ -20,11 +20,7 @@
 
 package com.highmobility.autoapi;
 
-
-
 import com.highmobility.autoapi.property.Property;
-
-import javax.annotation.Nullable;
 
 /**
  * Command to tell the smart device to send a message. This could be a response to a received

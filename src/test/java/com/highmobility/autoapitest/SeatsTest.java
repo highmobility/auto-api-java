@@ -59,10 +59,4 @@ public class SeatsTest {
         String commandBytes = ByteUtils.hexFromBytes(new GetSeatsState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("005601");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((SeatsState) state).getPersonsDetected().length == 0);
-    }
 }

@@ -133,12 +133,6 @@ public class ChassisSettingsTest {
         assertTrue(command.getPosition().getValue() == -28);
     }
 
-    @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("005301");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((ChassisSettings) state).getMinimumSpringRate(Axle.REAR) == null);
-    }
-
     @Test public void build() {
         ChassisSettings.Builder builder = new ChassisSettings.Builder();
 
