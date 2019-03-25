@@ -91,7 +91,21 @@ public class GetHistoricalStates extends Command {
 
     GetHistoricalStates(byte[] bytes) {
         super(bytes);
-        // TBODO: 31/10/2018
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_CAPABILITY:
+                        return identifier.update(p);
+                    case IDENTIFIER_START_DATE:
+                        return startDate.update(p);
+                    case IDENTIFIER_END_DATE:
+                        return endDate.update(p);
+                }
+
+                return null;
+            });
+        }
     }
 
     @Override protected boolean propertiesExpected() {

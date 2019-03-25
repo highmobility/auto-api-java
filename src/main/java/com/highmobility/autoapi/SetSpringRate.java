@@ -35,9 +35,9 @@ public class SetSpringRate extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x14);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
 
-    SpringRate[] springRates;
+    Property<SpringRate>[] springRates;
 
-    public SpringRate[] getSpringRates() {
+    public Property<SpringRate>[] getSpringRates() {
         return springRates;
     }
 
@@ -45,9 +45,9 @@ public class SetSpringRate extends Command {
      * @param axle The axle.
      * @return The spring rate for the given axle.
      */
-    @Nullable public SpringRate getSpringRate(Axle axle) {
-        for (SpringRate springRate : springRates) {
-            if (springRate.getAxle() == axle)
+    @Nullable public Property<SpringRate> getSpringRate(Axle axle) {
+        for (Property<SpringRate> springRate : springRates) {
+            if (springRate.getValue() != null && springRate.getValue().getAxle() == axle)
                 return springRate;
         }
 
@@ -58,35 +58,35 @@ public class SetSpringRate extends Command {
      * @param springRates The spring rates.
      */
     public SetSpringRate(SpringRate[] springRates) {
-        super(TYPE, getValues(springRates));
-        this.springRates = springRates;
-    }
+        super(TYPE);
 
-    static Property[] getValues(SpringRate[] springRates) {
-        ArrayList<Property<SpringRate>> builder = new ArrayList<>();
+        ArrayList<Property> builder = new ArrayList<>();
+
         for (SpringRate springRate : springRates) {
             builder.add(new Property(PROPERTY_IDENTIFIER, springRate));
         }
 
-        return builder.toArray(new Property[0]);
+        this.springRates = builder.toArray(new Property[0]);
+
+        createBytes(builder);
     }
 
     SetSpringRate(byte[] bytes) {
         super(bytes);
-        ArrayList<SpringRate> builder = new ArrayList<>();
+        ArrayList<Property> builder = new ArrayList<>();
 
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
                     Property<SpringRate> prop = new Property(SpringRate.class, p);
-                    builder.add(prop.getValue());
+                    builder.add(prop);
                     return prop;
                 }
                 return null;
             });
         }
 
-        springRates = builder.toArray(new SpringRate[0]);
+        springRates = builder.toArray(new Property[0]);
     }
 
     @Override protected boolean propertiesExpected() {

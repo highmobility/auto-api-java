@@ -259,7 +259,6 @@ public class HomeChargerState extends Command {
         return true;
     }
 
-    // TBODO:
     private HomeChargerState(Builder builder) {
         super(builder);
         charging = builder.charging;

@@ -94,24 +94,13 @@ public class ChassisSettingsTest {
                 "0100050100020119");
 
         SpringRate prop = new SpringRate(Axle.REAR, 25);
-        SpringRate[] props = new SpringRate[1];
-        props[0] = prop;
+        SpringRate[] props = new SpringRate[]{prop};
         Bytes commandBytes = new SetSpringRate(props);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         SetSpringRate command = (SetSpringRate) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getSpringRates().length == 1);
-        assertTrue(command.getSpringRate(Axle.REAR).getSpringRate() == 25);
-    }
-
-    @Test public void setSpringRate0Properties() {
-        Bytes waitingForBytes = new Bytes("005314");
-        SpringRate[] props = new SpringRate[0];
-        Bytes commandBytes = new SetSpringRate(props);
-        assertTrue(waitingForBytes.equals(commandBytes));
-
-        SetSpringRate command = (SetSpringRate) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getSpringRates().length == 0);
+        assertTrue(command.getSpringRate(Axle.REAR).getValue().getSpringRate() == 25);
     }
 
     @Test public void setChassisPosition() {
