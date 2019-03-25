@@ -27,7 +27,6 @@ import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.value.Bytes;
 
 public class DrivingModeActivationPeriod extends PropertyValueObject {
-    public static final byte IDENTIFIER = 0x05;
     DrivingMode drivingMode;
     Double percentage;
 

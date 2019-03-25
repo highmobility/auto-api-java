@@ -51,7 +51,10 @@ public class RaceTest {
 
         assertTrue(command.getClass() == RaceState.class);
         RaceState state = (RaceState) command;
+        testState(state);
+    }
 
+    private void testState(RaceState state) {
         assertTrue(state.getAcceleration(
                 Acceleration.AccelerationType.LONGITUDINAL).getValue().getAcceleration() == .864f);
         assertTrue(state.getAcceleration(
@@ -79,6 +82,7 @@ public class RaceTest {
         assertTrue(state.isAcceleratorPedalKickdownSwitchActive().getValue() == true);
 
         assertTrue(state.isVehicleMoving().getValue() == true);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
@@ -109,7 +113,7 @@ public class RaceTest {
         builder.setVehicleMoving(new Property(true));
 
         RaceState state = builder.build();
-        assertTrue(state.equals(bytes));
+        testState(state);
     }
 
     @Test public void get() {

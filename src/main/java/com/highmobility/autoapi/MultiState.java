@@ -23,6 +23,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -81,22 +82,42 @@ public class MultiState extends Command {
         return true;
     }
 
-    // TBODO:
-    /*
-    MultiState(Command[] commands) {
-        super(TYPE, getProperties(commands));
-        this.commands = commands;
+    private MultiState(Builder builder) {
+        super(builder);
+        commands = builder.commands.toArray(new Property[0]);
     }
 
-    private static Property[] getProperties(Command[] commands) {
-        ArrayList<Property> properties = new ArrayList<>();
+    public static final class Builder extends Command.Builder {
+        private List<Property<Command>> commands = new ArrayList<>();
 
-        for (Command command : commands) {
-            Property prop = new Property(PROP_IDENTIFIER, command);
-            properties.add(prop);
+        public Builder() {
+            super(TYPE);
         }
 
-        return properties.toArray(new Property[properties.size()]);
+        /**
+         * @param command The command.
+         * @return The builder.
+         */
+        public Builder addCommand(Property<Command> command) {
+            commands.add(command);
+            addProperty(command.setIdentifier(PROP_IDENTIFIER));
+            return this;
+        }
+
+        /**
+         * @param commands The commands.
+         * @return The builder.
+         */
+        public Builder setCommands(Property<Command>[] commands) {
+            this.commands.clear();
+            for (Property<Command> command : commands) {
+                addCommand(command);
+            }
+            return this;
+        }
+
+        public MultiState build() {
+            return new MultiState(this);
+        }
     }
-     */
 }

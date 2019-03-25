@@ -100,5 +100,6 @@ public class RooftopTest {
         assertTrue(state.getConvertibleRoofState().getValue() == ConvertibleRoofState.OPEN);
         assertTrue(state.getSunroofTiltState().getValue() == SunroofTiltState.HALF_TILTED);
         assertTrue(state.getSunroofPosition().getValue() == Position.OPEN);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 }

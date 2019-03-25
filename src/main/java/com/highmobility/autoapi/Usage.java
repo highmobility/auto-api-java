@@ -52,6 +52,8 @@ public class Usage extends Command {
     private static final byte IDENTIFIER_LAST_TRIP_DATE = ((byte) 0x0D);
     private static final byte IDENTIFIER_AVERAGE_FUEL_CONSUMPTION = ((byte) 0x0E);
     private static final byte IDENTIFIER_CURRENT_FUEL_CONSUMPTION = ((byte) 0x0F);
+    public static final byte IDENTIFIER_DRIVING_MODE_ENERGY_CONSUMPTION = 0x06;
+    public static final byte IDENTIFIER_DRIVING_MODE_ACTIVATION_PERIOD = 0x05;
 
     private PropertyInteger averageWeeklyDistance =
             new PropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE, false);
@@ -236,12 +238,12 @@ public class Usage extends Command {
                         return accelerationEvaluation.update(p);
                     case IDENTIFIER_DRIVING_STYLE_EVALUATION:
                         return drivingStyleEvaluation.update(p);
-                    case DrivingModeActivationPeriod.IDENTIFIER:
+                    case IDENTIFIER_DRIVING_MODE_ACTIVATION_PERIOD:
                         Property drivingModeActivationPeriod =
                                 new Property(DrivingModeActivationPeriod.class, p);
                         drivingModeActivationPeriods.add(drivingModeActivationPeriod);
                         return drivingModeActivationPeriod;
-                    case DrivingModeEnergyConsumption.IDENTIFIER:
+                    case IDENTIFIER_DRIVING_MODE_ENERGY_CONSUMPTION:
                         Property drivingModeEnergyConsumption =
                                 new Property(DrivingModeEnergyConsumption.class, p);
                         drivingModeEnergyConsumptions.add(drivingModeEnergyConsumption);
@@ -305,10 +307,8 @@ public class Usage extends Command {
         private PropertyInteger averageWeeklyDistanceLongTerm;
         private Property<Double> accelerationEvaluation;
         private Property<Double> drivingStyleEvaluation;
-        private List<Property> drivingModeActivationPeriods =
-                new ArrayList<>();
-        private List<Property> drivingModeEnergyConsumptions = new
-                ArrayList<>();
+        private List<Property> drivingModeActivationPeriods = new ArrayList<>();
+        private List<Property> drivingModeEnergyConsumptions = new ArrayList<>();
         private Property<Float> lastTripEnergyConsumption;
         private Property<Float> lastTripFuelConsumption;
         private Property<Float> mileageAfterLastTrip;
@@ -319,7 +319,187 @@ public class Usage extends Command {
         private Property<Float> averageFuelConsumption;
         private Property<Float> currentFuelConsumption;
 
-        // TBODO:
+        /**
+         * @param averageWeeklyDistance The average weekly distance.
+         * @return The builder
+         */
+        public Builder setAverageWeeklyDistance(Property<Integer> averageWeeklyDistance) {
+            this.averageWeeklyDistance = new PropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE,
+                    false, 2, averageWeeklyDistance);
+            addProperty(this.averageWeeklyDistance);
+            return this;
+        }
+
+        /**
+         * @param averageWeeklyDistanceLongTerm The average weekly distance long term.
+         * @return The builder.
+         */
+        public Builder setAverageWeeklyDistanceLongTerm(Property<Integer> averageWeeklyDistanceLongTerm) {
+            this.averageWeeklyDistanceLongTerm =
+                    new PropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_TERM, false, 2,
+                            averageWeeklyDistanceLongTerm);
+            addProperty(this.averageWeeklyDistanceLongTerm);
+            return this;
+        }
+
+        /**
+         * @param accelerationEvaluation The acceleration evaluation.
+         * @return The builder.
+         */
+        public Builder setAccelerationEvaluation(Property<Double> accelerationEvaluation) {
+            this.accelerationEvaluation = accelerationEvaluation;
+            addProperty(accelerationEvaluation.setIdentifier(IDENTIFIER_ACCELERATION_EVALUATION));
+            return this;
+        }
+
+        /**
+         * @param drivingStyleEvaluation The driving style evaluation.
+         * @return The builder.
+         */
+        public Builder setDrivingStyleEvaluation(Property<Double> drivingStyleEvaluation) {
+            this.drivingStyleEvaluation = drivingStyleEvaluation;
+            addProperty(drivingStyleEvaluation.setIdentifier(IDENTIFIER_DRIVING_STYLE_EVALUATION));
+            return this;
+        }
+
+        /**
+         * @param drivingModeActivationPeriod The driving mode activation period.
+         * @return The builder.
+         */
+        public Builder addDrivingModeActivationPeriod(Property<DrivingModeActivationPeriod> drivingModeActivationPeriod) {
+            this.drivingModeActivationPeriods.add(drivingModeActivationPeriod);
+            addProperty(drivingModeActivationPeriod.setIdentifier(IDENTIFIER_DRIVING_MODE_ACTIVATION_PERIOD));
+            return this;
+        }
+
+        /**
+         * @param drivingModeActivationPeriods The driving mode activation periods.
+         * @return The builder.
+         */
+        public Builder setDrivingModeActivationPeriods(Property<DrivingModeActivationPeriod>[] drivingModeActivationPeriods) {
+            this.drivingModeActivationPeriods.clear();
+            for (Property<DrivingModeActivationPeriod> drivingModeActivationPeriod :
+                    drivingModeActivationPeriods) {
+                addProperty(drivingModeActivationPeriod);
+            }
+
+            return this;
+        }
+
+        /**
+         * @param drivingModeEnergyConsumption The driving mode energy consumption.
+         * @return The builder.
+         */
+        public Builder addDrivingModeEnergyConsumption(Property<DrivingModeEnergyConsumption> drivingModeEnergyConsumption) {
+            this.drivingModeEnergyConsumptions.add(drivingModeEnergyConsumption);
+            addProperty(drivingModeEnergyConsumption.setIdentifier(IDENTIFIER_DRIVING_MODE_ENERGY_CONSUMPTION));
+            return this;
+        }
+
+        /**
+         * @param drivingModeEnergyConsumptions The driving mode energy consumptions.
+         * @return The builder.
+         */
+        public Builder setDrivingModeEnergyConsumptions(Property<DrivingModeEnergyConsumption>[] drivingModeEnergyConsumptions) {
+            this.drivingModeEnergyConsumptions.clear();
+            for (Property<DrivingModeEnergyConsumption> drivingModeEnergyConsumption :
+                    drivingModeEnergyConsumptions) {
+                addDrivingModeEnergyConsumption(drivingModeEnergyConsumption);
+            }
+
+            return this;
+        }
+
+        /**
+         * @param lastTripEnergyConsumption The last trip energy consumption.
+         * @return The builder.
+         */
+        public Builder setLastTripEnergyConsumption(Property<Float> lastTripEnergyConsumption) {
+            this.lastTripEnergyConsumption = lastTripEnergyConsumption;
+            addProperty(lastTripEnergyConsumption.setIdentifier(IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION));
+            return this;
+        }
+
+        /**
+         * @param lastTripFuelConsumption The last trip fuel consumption.
+         * @return The builder.
+         */
+        public Builder setLastTripFuelConsumption(Property<Float> lastTripFuelConsumption) {
+            this.lastTripFuelConsumption = lastTripFuelConsumption;
+            addProperty(lastTripFuelConsumption.setIdentifier(IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION));
+            return this;
+        }
+
+        /**
+         * @param mileageAfterLastTrip The mileage after last trip.
+         * @return The builder.
+         */
+        public Builder setMileageAfterLastTrip(Property<Float> mileageAfterLastTrip) {
+            this.mileageAfterLastTrip = mileageAfterLastTrip;
+            addProperty(mileageAfterLastTrip.setIdentifier(IDENTIFIER_MILEAGE_AFTER_LAST_TRIP));
+            return this;
+        }
+
+        /**
+         * @param lastTripElectricPortion The last trip electric portion.
+         * @return The builder.
+         */
+        public Builder setLastTripElectricPortion(Property<Double> lastTripElectricPortion) {
+            this.lastTripElectricPortion = lastTripElectricPortion;
+            addProperty(lastTripElectricPortion.setIdentifier(IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION));
+            return this;
+        }
+
+        /**
+         * @param lastTripAverageEnergyRecuperation The last trip average energy recuperation.
+         * @return The builder.
+         */
+        public Builder setLastTripAverageEnergyRecuperation(Property<Float> lastTripAverageEnergyRecuperation) {
+            this.lastTripAverageEnergyRecuperation = lastTripAverageEnergyRecuperation;
+            addProperty(lastTripAverageEnergyRecuperation.setIdentifier(IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION));
+            return this;
+        }
+
+        /**
+         * @param lastTripBatteryRemaining The last trip battery remaining.
+         * @return The builder.
+         */
+        public Builder setLastTripBatteryRemaining(Property<Double> lastTripBatteryRemaining) {
+            this.lastTripBatteryRemaining = lastTripBatteryRemaining;
+            addProperty(lastTripBatteryRemaining.setIdentifier(IDENTIFIER_LAST_TRIP_BATTERY_REMAINING));
+            return this;
+        }
+
+        /**
+         * @param lastTripDate The last trip date.
+         * @return The builder.
+         */
+        public Builder setLastTripDate(Property<Calendar> lastTripDate) {
+            this.lastTripDate = lastTripDate;
+            addProperty(lastTripDate.setIdentifier(IDENTIFIER_LAST_TRIP_DATE));
+            return this;
+        }
+
+        /**
+         * @param averageFuelConsumption The average fuel consumption.
+         * @return The builder.
+         */
+        public Builder setAverageFuelConsumption(Property<Float> averageFuelConsumption) {
+            this.averageFuelConsumption = averageFuelConsumption;
+            addProperty(averageFuelConsumption.setIdentifier(IDENTIFIER_AVERAGE_FUEL_CONSUMPTION));
+            return this;
+        }
+
+        /**
+         * @param currentFuelConsumption The current fuel consumption.
+         * @return The builder.
+         */
+        public Builder setCurrentFuelConsumption(Property<Float> currentFuelConsumption) {
+            this.currentFuelConsumption = currentFuelConsumption;
+            addProperty(currentFuelConsumption.setIdentifier(IDENTIFIER_CURRENT_FUEL_CONSUMPTION));
+            return this;
+        }
+
         public Builder() {
             super(TYPE);
         }

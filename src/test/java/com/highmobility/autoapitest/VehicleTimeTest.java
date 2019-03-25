@@ -24,7 +24,7 @@ public class VehicleTimeTest {
     );
 
     @Test
-    public void state() throws ParseException {
+    public void state() {
         Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == VehicleTime.class);
@@ -32,7 +32,7 @@ public class VehicleTimeTest {
         testState(state);
     }
 
-    private void testState(VehicleTime state) throws ParseException {
+    private void testState(VehicleTime state) {
         Calendar c = state.getVehicleTime().getValue();
         assertTrue(TestUtils.dateIsSame(c, "2017-01-13T22:14:48"));
         assertTrue(TestUtils.bytesTheSame(state, bytes));

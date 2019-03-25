@@ -20,10 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.property.Property;
-
-import javax.annotation.Nullable;
+import com.highmobility.autoapi.value.Coordinates;
 
 /**
  * This command is sent when a Get Vehicle Location message is received by the car.
@@ -35,7 +33,8 @@ public class VehicleLocation extends Command {
     private static final byte IDENTIFIER_HEADING = 0x05;
     private static final byte IDENTIFIER_ALTITUDE = 0x06;
 
-    private Property<Coordinates> coordinates = new Property(Coordinates.class, IDENTIFIER_COORDINATES);
+    private Property<Coordinates> coordinates = new Property(Coordinates.class,
+            IDENTIFIER_COORDINATES);
     private Property<Double> heading = new Property(Double.class, IDENTIFIER_HEADING);
     private Property<Double> altitude = new Property(Double.class, IDENTIFIER_ALTITUDE);
 

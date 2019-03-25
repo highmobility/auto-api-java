@@ -32,6 +32,10 @@ public class SeatsTest {
 
         assertTrue(command.getClass() == SeatsState.class);
         SeatsState state = (SeatsState) command;
+        testState(state);
+    }
+
+    private void testState(SeatsState state) {
         assertTrue(state.getPersonDetection(SeatLocation.REAR_RIGHT).getValue().isDetected());
         assertTrue(state.getPersonDetection(SeatLocation.REAR_LEFT).getValue().isDetected() == false);
 
@@ -39,6 +43,7 @@ public class SeatsTest {
         assertTrue(state.getSeatBeltFastened(SeatLocation.REAR_LEFT).getValue().isFastened() == false);
 
         assertTrue(state.getPersonsDetected().length == 2);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
@@ -51,7 +56,7 @@ public class SeatsTest {
         builder.addSeatBeltFastened(new Property(new SeatBeltFastened(SeatLocation.REAR_LEFT, false)));
 
         SeatsState state = builder.build();
-        assertTrue(TestUtils.bytesTheSame(state, bytes));
+        testState(state);
     }
 
     @Test public void get() {

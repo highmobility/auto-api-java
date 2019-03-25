@@ -5,8 +5,9 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlTrunk;
 import com.highmobility.autoapi.GetTrunkState;
 import com.highmobility.autoapi.TrunkState;
-import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Lock;
+import com.highmobility.autoapi.value.Position;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -27,8 +28,20 @@ public class TrunkAccessTest {
         Command command = CommandResolver.resolve(bytes);
         assertTrue(command.getClass() == TrunkState.class);
         TrunkState state = (TrunkState) command;
+        testState(state);
+    }
+
+    private void testState(TrunkState state) {
         assertTrue(state.getLockState().getValue() == Lock.UNLOCKED);
         assertTrue(state.getPosition().getValue() == Position.OPEN);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
+    }
+
+    @Test public void build() {
+        TrunkState.Builder builder = new TrunkState.Builder();
+        builder.setLockState(new Property(Lock.UNLOCKED));
+        builder.setPosition(new Property(Position.OPEN));
+        testState(builder.build());
     }
 
     @Test public void get() {

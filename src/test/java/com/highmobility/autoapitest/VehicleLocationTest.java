@@ -27,14 +27,16 @@ public class VehicleLocationTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-
-        assertTrue(command.getClass() == VehicleLocation.class);
         VehicleLocation state = (VehicleLocation) command;
+        testState(state);
+    }
 
+    private void testState(VehicleLocation state) {
         assertTrue(state.getCoordinates().getValue().getLatitude() == 52.520008);
         assertTrue(state.getCoordinates().getValue().getLongitude() == 13.404954);
         assertTrue(state.getHeading().getValue() == 13.370123);
         assertTrue(state.getAltitude().getValue() == 133.5);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -49,6 +51,6 @@ public class VehicleLocationTest {
         builder.setCoordinates(new Property(coordinates));
         builder.setHeading(new Property(13.370123));
         builder.setAltitude(new Property(133.5));
-        assertTrue(builder.build().equals(bytes));
+        testState(builder.build());
     }
 }

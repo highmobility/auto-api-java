@@ -4,7 +4,10 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetUsage;
 import com.highmobility.autoapi.Usage;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.DrivingMode;
+import com.highmobility.autoapi.value.usage.DrivingModeActivationPeriod;
+import com.highmobility.autoapi.value.usage.DrivingModeEnergyConsumption;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -39,10 +42,11 @@ public class UsageTest {
 
     @Test public void state() {
         Command command = CommandResolver.resolve(bytes);
-
-        assertTrue(command.getClass() == Usage.class);
         Usage state = (Usage) command;
+        testState(state);
+    }
 
+    private void testState(Usage state) {
         assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
         assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
         assertTrue(state.getAverageWeeklyDistanceLongTerm().getValue() == 666);
@@ -70,13 +74,36 @@ public class UsageTest {
         assertTrue(TestUtils.dateIsSame(state.getLastTripDate().getValue(), "2018-10-17T12:34:58"));
         assertTrue(state.getAverageFuelConsumption().getValue() == 6.5f);
         assertTrue(state.getCurrentFuelConsumption().getValue() == 7.5f);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
-        // TBODO:
-        /*Usage.Builder builder = new Usage.Builder();
+        Usage.Builder builder = new Usage.Builder();
+
+        builder.setAverageWeeklyDistance(new Property(666));
+        builder.setAverageWeeklyDistanceLongTerm(new Property(666));
+        builder.setAccelerationEvaluation(new Property(.7d));
+        builder.setDrivingStyleEvaluation(new Property(.7d));
+
+        builder.addDrivingModeActivationPeriod(new Property(new DrivingModeActivationPeriod(DrivingMode.ECO, .6d)));
+        builder.addDrivingModeActivationPeriod(new Property(new DrivingModeActivationPeriod(DrivingMode.REGULAR, .4d)));
+
+        builder.addDrivingModeEnergyConsumption(new Property(new DrivingModeEnergyConsumption(DrivingMode.ECO, 33.2f)));
+        builder.addDrivingModeEnergyConsumption(new Property(new DrivingModeEnergyConsumption(DrivingMode.REGULAR, 55.4f)));
+
+        builder.setLastTripEnergyConsumption(new Property(101.3f));
+        builder.setLastTripFuelConsumption(new Property(22.5f));
+        builder.setMileageAfterLastTrip(new Property(95632.7f));
+        builder.setLastTripElectricPortion(new Property(.7d));
+        builder.setLastTripAverageEnergyRecuperation(new Property(5.68f));
+        builder.setLastTripBatteryRemaining(new Property(.5d));
+
+        builder.setLastTripDate(new Property(TestUtils.getCalendar("2018-10-17T12:34:58")));
+        builder.setAverageFuelConsumption(new Property(6.5f));
+        builder.setCurrentFuelConsumption(new Property(7.5f));
+
         Usage state = builder.build();
-        assertTrue(state.equals(bytes));*/
+        testState(state);
     }
 
     @Test public void get() {

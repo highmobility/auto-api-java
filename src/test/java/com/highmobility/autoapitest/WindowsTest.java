@@ -33,6 +33,10 @@ public class WindowsTest {
 
         assertTrue(command.is(WindowsState.TYPE));
         WindowsState state = (WindowsState) command;
+        testState(state);
+    }
+
+    private void testState(WindowsState state) {
         assertTrue(state.getWindowOpenPercentages().length == 2);
         assertTrue(state.getWindowPositions().length == 2);
 
@@ -43,6 +47,7 @@ public class WindowsTest {
 
         assertTrue(state.getWindowPosition(Location.REAR_RIGHT).getValue().getPosition() == Position.OPEN);
         assertTrue(state.getWindowPosition(Location.REAR_LEFT).getValue().getPosition() == Position.CLOSED);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -96,10 +101,6 @@ public class WindowsTest {
         builder.addWindowPosition(new Property(new WindowPosition(Location.REAR_LEFT,
                 Position.CLOSED)));
         WindowsState state = builder.build();
-
-        assertTrue(state.getWindowOpenPercentages().length == 2);
-        assertTrue(state.getWindowPositions().length == 2);
-
-        assertTrue(TestUtils.bytesTheSame(builder.build(), bytes));
+        testState(state);
     }
 }

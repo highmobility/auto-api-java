@@ -32,6 +32,7 @@ public class ParkingBrakeTest {
 
     private void testState(ParkingBrakeState state) {
         assertTrue(state.isActive().getValue() == true);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -55,7 +56,6 @@ public class ParkingBrakeTest {
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
         builder.setIsActive(new Property(true));
         ParkingBrakeState state = builder.build();
-        assertTrue(state.equals(bytes));
         testState(state);
     }
 

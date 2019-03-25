@@ -7,6 +7,7 @@ import com.highmobility.autoapi.GetWindscreenState;
 import com.highmobility.autoapi.SetWindscreenDamage;
 import com.highmobility.autoapi.SetWindscreenReplacementNeeded;
 import com.highmobility.autoapi.WindscreenState;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.windscreen.WindscreenDamage;
 import com.highmobility.autoapi.value.windscreen.WindscreenDamageZone;
 import com.highmobility.autoapi.value.windscreen.WindscreenDamageZoneMatrix;
@@ -41,54 +42,51 @@ public class WindscreenTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-
         assertTrue(command.is(WindscreenState.TYPE) && command.getClass().equals(WindscreenState
                 .class));
         WindscreenState state = (WindscreenState) command;
+        testState(state);
+    }
 
+    private void testState(WindscreenState state) {
         assertTrue(state.getWiperState().getValue() == WiperState.AUTOMATIC);
         assertTrue(state.getWiperIntensity().getValue() == WiperIntensity.LEVEL_3);
         assertTrue(state.getWindscreenDamage().getValue() == WindscreenDamage.IMPACT_NO_DAMAGE);
-        assertTrue(state.getWindscreenReplacementState().getValue() == WindscreenReplacementState
-                .REPLACEMENT_NEEDED);
-
-        WindscreenDamageZone zone = state.getWindscreenDamageZone().getValue();
-        assertTrue(zone.getDamageZoneX() == 1);
-        assertTrue(zone.getDamageZoneY() == 2);
 
         WindscreenDamageZoneMatrix matrix = state.getWindscreenDamageZoneMatrix().getValue();
         assertTrue(matrix.getWindscreenSizeHorizontal() == 4);
         assertTrue(matrix.getWindscreenSizeVertical() == 3);
 
+        WindscreenDamageZone zone = state.getWindscreenDamageZone().getValue();
+        assertTrue(zone.getDamageZoneX() == 1);
+        assertTrue(zone.getDamageZoneY() == 2);
+
+        assertTrue(state.getWindscreenReplacementState().getValue() == WindscreenReplacementState
+                .REPLACEMENT_NEEDED);
+
         assertTrue(state.getDamageConfidence().getValue() == .95d);
 
         Calendar c = state.getDamageDetectionTime().getValue();
         assertTrue(TestUtils.dateIsSame(c, "2017-01-10T16:32:05"));
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
-    @Test public void build() throws ParseException {
-        // TBODO:
-        /*WindscreenState.Builder builder = new WindscreenState.Builder();
+    @Test public void build() {
+        WindscreenState.Builder builder = new WindscreenState.Builder();
 
-        builder.setWiperState(WiperState.AUTOMATIC);
-        builder.setWiperIntensity(WiperIntensity.LEVEL_3);
-        builder.setWindscreenDamage(WindscreenDamage.DAMAGE_SMALLER_THAN_1);
+        builder.setWiperState(new Property(WiperState.AUTOMATIC));
+        builder.setWiperIntensity(new Property(WiperIntensity.LEVEL_3));
+        builder.setWindscreenDamage(new Property(WindscreenDamage.IMPACT_NO_DAMAGE));
         WindscreenDamageZoneMatrix matrix = new WindscreenDamageZoneMatrix(4, 3);
-        builder.setWindscreenDamageZoneMatrix(matrix);
+        builder.setWindscreenDamageZoneMatrix(new Property(matrix));
         WindscreenDamageZone zone = new WindscreenDamageZone(1, 2);
-        builder.setWindscreenDamageZone(zone);
-        builder.setWindscreenReplacementState(WindscreenReplacementState.REPLACEMENT_NEEDED);
-
-        builder.setDamageConfidence(.95f);
-
-        //2017-07-29T14:09:31+00:00
-        Calendar date = TestUtils.getUTCCalendar("2017-01-10T16:32:05");
-        builder.setDamageDetectionTime(date);
-
+        builder.setWindscreenDamageZone(new Property(zone));
+        builder.setWindscreenReplacementState(new Property(WindscreenReplacementState.REPLACEMENT_NEEDED));
+        builder.setDamageConfidence(new Property(.95d));
+        Calendar date = TestUtils.getCalendar("2017-01-10T16:32:05");
+        builder.setDamageDetectionTime(new Property(date));
         WindscreenState command = builder.build();
-        assertTrue(Arrays.equals(command.getByteArray(), ByteUtils.bytesFromHex
-                ("0042010100010202000103030001020400014305000112060001020700015f08000811010a1020050000")));
-*/
+        testState(command);
     }
 
     @Test public void get() {

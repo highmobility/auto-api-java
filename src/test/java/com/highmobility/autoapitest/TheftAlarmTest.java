@@ -25,7 +25,12 @@ public class TheftAlarmTest {
 
         assertTrue(command.is(TheftAlarmState.TYPE));
         TheftAlarmState state = (TheftAlarmState) command;
+        testState(state);
+    }
+
+    private void testState(TheftAlarmState state) {
         assertTrue(state.getState().getValue() == TheftAlarmState.Value.ARMED);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -49,8 +54,7 @@ public class TheftAlarmTest {
         TheftAlarmState.Builder builder = new TheftAlarmState.Builder();
         builder.setState(new Property(TheftAlarmState.Value.ARMED));
         TheftAlarmState state = builder.build();
-        assertTrue(state.equals(bytes));
-        assertTrue(state.getState().getValue() == TheftAlarmState.Value.ARMED);
+        testState(state);
     }
 
     @Test public void failsWherePropertiesMandatory() {

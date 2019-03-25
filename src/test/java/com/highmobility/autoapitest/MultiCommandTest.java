@@ -8,12 +8,21 @@ import com.highmobility.autoapi.MultiCommand;
 import com.highmobility.autoapi.MultiState;
 import com.highmobility.autoapi.SetTheftAlarm;
 import com.highmobility.autoapi.TheftAlarmState;
-import com.highmobility.autoapi.value.Location;
-import com.highmobility.autoapi.value.Lock;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.doors.DoorLockState;
+import com.highmobility.autoapi.value.doors.DoorPosition;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
 
+import static com.highmobility.autoapi.value.Location.FRONT_LEFT;
+import static com.highmobility.autoapi.value.Location.FRONT_RIGHT;
+import static com.highmobility.autoapi.value.Location.REAR_LEFT;
+import static com.highmobility.autoapi.value.Location.REAR_RIGHT;
+import static com.highmobility.autoapi.value.Lock.LOCKED;
+import static com.highmobility.autoapi.value.Lock.UNLOCKED;
+import static com.highmobility.autoapi.value.Position.CLOSED;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -49,14 +58,14 @@ public class MultiCommandTest {
                 (LockUnlockDoors) state.getCommand(LockUnlockDoors.TYPE).getValue();
         SetTheftAlarm setTheftAlarm =
                 (SetTheftAlarm) state.getCommand(SetTheftAlarm.TYPE).getValue();
-        assertTrue(lockUnlockDoors.getDoorLock().getValue() == Lock.LOCKED);
+        assertTrue(lockUnlockDoors.getDoorLock().getValue() == LOCKED);
         assertTrue(setTheftAlarm.getState().getValue() == TheftAlarmState.Value.ARMED);
     }
 
     @Test
     public void commandBuild() {
         Command[] commands = new Command[2];
-        commands[0] = new LockUnlockDoors(Lock.LOCKED);
+        commands[0] = new LockUnlockDoors(LOCKED);
         commands[1] = new SetTheftAlarm(TheftAlarmState.Value.ARMED);
         MultiCommand command = new MultiCommand(commands);
         assertTrue(TestUtils.bytesTheSame(command, commandBytes));
@@ -66,39 +75,50 @@ public class MultiCommandTest {
     public void stateIncoming() {
         Command command = CommandResolver.resolve(stateBytes);
         MultiState state = (MultiState) command;
+        testState(state);
+    }
+
+    private void testState(MultiState state) {
         assertTrue(state.getCommands().length == 2);
 
         LockState lockState = (LockState) state.getCommand(LockState.TYPE).getValue();
-        assertTrue(lockState.getInsideLock(Location.FRONT_LEFT).getValue().getLock() == Lock.UNLOCKED);
+        assertTrue(lockState.getInsideLock(FRONT_LEFT).getValue().getLock() == UNLOCKED);
+        assertTrue(lockState.getPosition(FRONT_RIGHT).getValue().getPosition() == CLOSED);
         TheftAlarmState theftAlarmState =
                 (TheftAlarmState) state.getCommand(TheftAlarmState.TYPE).getValue();
         assertTrue(theftAlarmState.getState().getValue() == TheftAlarmState.Value.ARMED);
+        assertTrue(TestUtils.bytesTheSame(state, stateBytes));
     }
 
-    // TBODO:
-    /*@Test
+    @Test
     public void stateBuild() {
-        Command[] commands = new Command[2];
+        Property[] commands = new Property[2];
 
         LockState.Builder builder = new LockState.Builder();
-        builder.addInsideLock(new DoorLockState(FRONT_LEFT, UNLOCKED));
-        builder.addInsideLock(new DoorLockState(FRONT_RIGHT, UNLOCKED));
-        builder.addLock(new DoorLockState(FRONT_LEFT, LOCKED));
-        builder.addLock(new DoorLockState(FRONT_RIGHT, LOCKED));
-        builder.addPosition(new DoorPosition(FRONT_LEFT, Position.OPEN));
-        builder.addPosition(new DoorPosition(FRONT_RIGHT, Position.CLOSED));
-        builder.addPosition(new DoorPosition(REAR_RIGHT, Position.CLOSED));
-        builder.addPosition(new DoorPosition(REAR_LEFT, Position.CLOSED));
+
+        builder.addInsideLock(new Property(new DoorLockState(FRONT_LEFT, UNLOCKED)));
+        builder.addInsideLock(new Property(new DoorLockState(FRONT_RIGHT, UNLOCKED)));
+
+        builder.addOutsideLock(new Property(new DoorLockState(FRONT_LEFT, LOCKED)));
+        builder.addOutsideLock(new Property(new DoorLockState(FRONT_RIGHT, LOCKED)));
+
+        builder.addPosition(new Property(new DoorPosition(FRONT_LEFT, Position.OPEN)));
+        builder.addPosition(new Property(new DoorPosition(FRONT_RIGHT, CLOSED)));
+        builder.addPosition(new Property(new DoorPosition(REAR_RIGHT, CLOSED)));
+        builder.addPosition(new Property(new DoorPosition(REAR_LEFT, CLOSED)));
+
         LockState lockState = builder.build();
 
         TheftAlarmState.Builder tBuilder = new TheftAlarmState.Builder();
-        tBuilder.setState(TheftAlarmState.State.ARMED);
+        tBuilder.setState(new Property(TheftAlarmState.Value.ARMED));
         TheftAlarmState theftAlarmState = tBuilder.build();
 
-        commands[0] = lockState;
-        commands[1] = theftAlarmState;
+        commands[0] = new Property(lockState);
+        commands[1] = new Property(theftAlarmState);
 
-        MultiState command = new MultiState(commands);
-        assertTrue(TestUtils.bytesTheSame(command, stateBytes));
-    }*/
+        MultiState.Builder multiStateBuilder = new MultiState.Builder();
+        multiStateBuilder.setCommands(commands);
+        testState(multiStateBuilder.build());
+    }
+
 }

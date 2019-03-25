@@ -105,11 +105,11 @@ public class VehicleStatusTest {
         TrunkState trunkState = (TrunkState) command;
         assertTrue(trunkState.getLockState().getValue() == Lock.UNLOCKED);
         assertTrue(trunkState.getPosition().getValue() == Position.OPEN);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
         VehicleStatus status = getVehicleStatusBuilderWithoutSignature().build();
-        assertTrue(TestUtils.bytesTheSame(status, bytes));
         testState(status);
     }
 

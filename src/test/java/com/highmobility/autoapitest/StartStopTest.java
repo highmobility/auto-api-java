@@ -24,13 +24,18 @@ public class StartStopTest {
 
         assertTrue(command.is(StartStopState.TYPE));
         StartStopState state = (StartStopState) command;
+        testState(state);
+    }
+
+    private void testState(StartStopState state) {
         assertTrue(state.isActive().getValue() == true);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
         StartStopState.Builder builder = new StartStopState.Builder();
         builder.setIsActive(new Property(true));
-        assertTrue(builder.build().equals(bytes));
+        testState(builder.build());
     }
 
     @Test public void get() {

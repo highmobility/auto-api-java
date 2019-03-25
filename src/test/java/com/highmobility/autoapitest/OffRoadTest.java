@@ -25,8 +25,6 @@ public class OffRoadTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-
-        assertTrue(command.getClass() == OffroadState.class);
         OffroadState state = (OffroadState) command;
         testState(state);
     }
@@ -34,6 +32,7 @@ public class OffRoadTest {
     private void testState(OffroadState state) {
         assertTrue(state.getRouteIncline().getValue() == 10);
         assertTrue(state.getWheelSuspension().getValue() == .5d);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -47,7 +46,6 @@ public class OffRoadTest {
         builder.setRouteIncline(new Property(10));
         builder.setWheelSuspension(new Property(.5d));
         OffroadState state = builder.build();
-        assertTrue(TestUtils.bytesTheSame(state, bytes));
         testState(state);
     }
 }

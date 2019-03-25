@@ -13,7 +13,6 @@ import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -30,13 +29,15 @@ public class ParkingTicketTest {
     );
 
     @Test
-    public void state() throws ParseException {
+    public void state() {
         Command command = CommandResolver.resolve(bytes);
-
         assertTrue(command.is(ParkingTicket.TYPE));
         ParkingTicket state = (ParkingTicket) command;
+        testState(state);
+    }
 
-        assertTrue(((ParkingTicket) command).getState().getValue() == ParkingTicketState.STARTED);
+    private void testState(ParkingTicket state) {
+        assertTrue(state.getState().getValue() == ParkingTicketState.STARTED);
         assertTrue(state.getOperatorName().getValue().equals("Berlin Parking"));
         assertTrue(state.getOperatorTicketId().getValue().equals("64894233"));
 
@@ -44,9 +45,10 @@ public class ParkingTicketTest {
                 ":05"));
         assertTrue(TestUtils.dateIsSame(state.getTicketEndDate().getValue(), "2018-01-10T18:30:00"
         ));
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
-    @Test public void build() throws ParseException {
+    @Test public void build() {
         ParkingTicket.Builder builder = new ParkingTicket.Builder();
 
         builder.setState(new Property(ParkingTicketState.STARTED));
@@ -56,7 +58,7 @@ public class ParkingTicketTest {
         builder.setTicketEnd(new Property(TestUtils.getCalendar("2018-01-10T18:30:00")));
 
         ParkingTicket command = builder.build();
-        assertTrue(TestUtils.bytesTheSame(command, bytes));
+        testState(command);
     }
 
     @Test public void get() {
@@ -65,7 +67,7 @@ public class ParkingTicketTest {
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
-    @Test public void startParking() throws ParseException {
+    @Test public void startParking() {
         Bytes waitingForBytes = new Bytes(
                 "004702" +
                         "01001101000E4265726c696e205061726b696e67" +

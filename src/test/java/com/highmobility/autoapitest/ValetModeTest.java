@@ -29,8 +29,8 @@ public class ValetModeTest {
     }
 
     private void testState(ValetMode state) {
-        assertTrue(TestUtils.bytesTheSame(state, bytes));
         assertTrue(state.isActive().getValue() == true);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {

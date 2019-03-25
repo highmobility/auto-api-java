@@ -55,6 +55,7 @@ public class TachographTest {
         assertTrue(state.isVehicleOverspeeding().getValue() == false);
         assertTrue(state.getVehicleDirection().getValue() == VehicleDirection.FORWARD);
         assertTrue(state.getVehicleSpeed().getValue() == 80);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
@@ -79,7 +80,6 @@ public class TachographTest {
         builder.setVehicleSpeed(new Property(80));
 
         TachographState state = builder.build();
-        assertTrue(state.equals(bytes));
         testState(state);
     }
 

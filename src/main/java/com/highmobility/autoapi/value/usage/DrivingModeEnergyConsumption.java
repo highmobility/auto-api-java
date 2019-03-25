@@ -27,8 +27,6 @@ import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.value.Bytes;
 
 public class DrivingModeEnergyConsumption extends PropertyValueObject {
-    public static final byte IDENTIFIER = 0x06;
-
     DrivingMode drivingMode;
     Float energyConsumption;
 

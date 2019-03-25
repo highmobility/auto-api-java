@@ -36,10 +36,15 @@ public class WifiTest {
 
         assertTrue(command.getClass() == WifiState.class);
         WifiState state = (WifiState) command;
+        testState(state);
+    }
+
+    private void testState(WifiState state) {
         assertTrue(state.isEnabled().getValue() == true);
         assertTrue(state.isConnected().getValue() == true);
         assertTrue(state.getSsid().getValue().equals("HOME"));
         assertTrue(state.getSecurity().getValue() == NetworkSecurity.WPA2_PERSONAL);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
@@ -50,8 +55,7 @@ public class WifiTest {
         builder.setSsid(new Property("HOME"));
         builder.setSecurity(new Property(NetworkSecurity.WPA2_PERSONAL));
 
-        WifiState state = builder.build();
-        assertTrue(state.equals(bytes));
+        testState(builder.build());
     }
 
     @Test public void get() {
