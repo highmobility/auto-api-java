@@ -1,31 +1,28 @@
 package com.highmobility.autoapitest;
 
-import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.CommandWithProperties;
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetVehicleStatus;
 import com.highmobility.autoapi.TheftAlarmState;
 import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.WindowsState;
-import com.highmobility.autoapi.property.CommandProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.PowerTrain;
-import com.highmobility.autoapi.property.value.DisplayUnit;
-import com.highmobility.autoapi.property.value.DriverSeatLocation;
-import com.highmobility.autoapi.property.value.Gearbox;
-import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.DisplayUnit;
+import com.highmobility.autoapi.value.DriverSeatLocation;
+import com.highmobility.autoapi.value.Gearbox;
+import com.highmobility.autoapi.value.Lock;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.PowerTrain;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static com.highmobility.autoapi.property.ControlModeValue.STARTED;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -47,8 +44,9 @@ public class VehicleStatusTest {
                     "0C000701000440200000" +
                     "0D000501000200F5" +
                     "0E000401000101" +
-                    "9900140100110021010100040100010002000401000101" +
-                    "99000D01000A00270101000401000102" +
+                    "9900140100110021010100040100010002000401000101" + // Trunk open
+                    "99000D01000A00270101000401000102" + // Remote Control Started
+
                     // l8
                     "0F000401000100" + // display unit km
                     "10000401000100" + // driver seat left
@@ -58,54 +56,61 @@ public class VehicleStatusTest {
                     "12000B0100084D65726365646573"
     );
 
-    private void testState(VehicleStatus vs) {
-        assertTrue(vs.getStates().length == 2);
-        assertTrue(vs.getVin().equals("JF2SHBDC7CH451869"));
-        assertTrue(vs.getPowerTrain() == PowerTrain.ALLELECTRIC);
-        assertTrue(vs.getModelName().equals("Type X"));
-        assertTrue(vs.getName().equals("My Car"));
-        assertTrue(vs.getLicensePlate().equals("ABC123"));
+    @Test public void state() {
+        testState((VehicleStatus) CommandResolver.resolve(bytes));
+    }
 
-        assertTrue(vs.getSalesDesignation().equals("Package+"));
-        assertTrue(vs.getModelYear() == 2017);
-        assertTrue(vs.getColorName().equals("Estoril Blau"));
-        assertTrue(vs.getPower() == 220);
-        assertTrue(vs.getNumberOfDoors() == 5);
-        assertTrue(vs.getNumberOfSeats() == 5);
+    private void testState(VehicleStatus state) {
+        assertTrue(state.getStates().length == 2);
+        assertTrue(state.getVin().getValue().equals("JF2SHBDC7CH451869"));
+        assertTrue(state.getPowerTrain().getValue() == PowerTrain.ALLELECTRIC);
+        assertTrue(state.getModelName().getValue().equals("Type X"));
+        assertTrue(state.getName().getValue().equals("My Car"));
+        assertTrue(state.getLicensePlate().getValue().equals("ABC123"));
 
-        assertTrue(vs.getState(TrunkState.TYPE) != null);
+        assertTrue(state.getSalesDesignation().getValue().equals("Package+"));
+        assertTrue(state.getModelYear().getValue() == 2017);
+        assertTrue(state.getColorName().getValue().equals("Estoril Blau"));
+        assertTrue(state.getPower().getValue() == 220);
+        assertTrue(state.getNumberOfDoors().getValue() == 5);
+        assertTrue(state.getNumberOfSeats().getValue() == 5);
 
-        assertTrue(vs.getEngineVolume() == 2.5f);
-        assertTrue(vs.getMaxTorque() == 245);
-        assertTrue(vs.getGearBox() == Gearbox.AUTOMATIC);
+        assertTrue(state.getState(TrunkState.TYPE).getValue() != null);
 
-        assertTrue(vs.getDisplayUnit() == DisplayUnit.KM);
-        assertTrue(vs.getDriverSeatLocation() == DriverSeatLocation.LEFT);
-        assertTrue(vs.getEquipments().length == 2);
+        assertTrue(state.getEngineVolume().getValue() == 2.5f);
+        assertTrue(state.getMaxTorque().getValue() == 245);
+        assertTrue(state.getGearBox().getValue() == Gearbox.AUTOMATIC);
+
+        assertTrue(state.getDisplayUnit().getValue() == DisplayUnit.KM);
+        assertTrue(state.getDriverSeatLocation().getValue() == DriverSeatLocation.LEFT);
+        assertTrue(state.getEquipments().length == 2);
+
         int count = 0;
-        for (String s : vs.getEquipments()) {
-            if (s.equals("Parking sensors") || s.equals("Automatic wipers")) count++;
+        for (Property<String> s : state.getEquipments()) {
+            if (s.getValue().equals("Parking sensors") || s.getValue().equals("Automatic wipers"))
+                count++;
         }
         assertTrue(count == 2);
-        assertTrue(vs.getBrand().equals("Mercedes"));
+        assertTrue(state.getBrand().getValue().equals("Mercedes"));
 
-        Command command = getState(ControlMode.class, vs);
+        Command command = getState(ControlMode.class, state);
         if (command == null) fail();
         if (command.is(ControlMode.TYPE) == false) fail();
-        ControlMode state = (ControlMode) command;
-        assertTrue(state.getMode() == STARTED);
+        ControlMode controlMode = (ControlMode) command;
+        assertTrue(controlMode.getMode().getValue() == ControlMode.Value.STARTED);
 
-        command = getState(TrunkState.class, vs);
+        command = getState(TrunkState.class, state);
         if (command == null) fail();
         if (command.is(TrunkState.TYPE) == false) fail();
         TrunkState trunkState = (TrunkState) command;
-        assertTrue(trunkState.getLockState() == Lock.UNLOCKED);
-        assertTrue(trunkState.getPosition() == Position.OPEN);
+        assertTrue(trunkState.getLockState().getValue() == Lock.UNLOCKED);
+        assertTrue(trunkState.getPosition().getValue() == Position.OPEN);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
         VehicleStatus status = getVehicleStatusBuilderWithoutSignature().build();
-        assertTrue(TestUtils.bytesTheSame(status, bytes));
+        testState(status);
     }
 
     @Test public void get() {
@@ -113,19 +118,15 @@ public class VehicleStatusTest {
         Bytes commandBytes = new GetVehicleStatus();
         assertTrue(bytes.equals(commandBytes));
 
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(command instanceof GetVehicleStatus);
     }
 
     Command getState(Class forClass, VehicleStatus command) {
         for (int i = 0; i < command.getStates().length; i++) {
-            Command state = command.getStates()[i];
-            if (state.getClass().equals(forClass)) return state;
+            Property<Command> state = command.getStates()[i];
+            if (state != null && state.getValue().getClass().equals(forClass))
+                return state.getValue();
         }
 
         return null;
@@ -133,42 +134,39 @@ public class VehicleStatusTest {
 
     VehicleStatus.Builder getVehicleStatusBuilderWithoutSignature() {
         VehicleStatus.Builder builder = new VehicleStatus.Builder();
-        builder.setVin("JF2SHBDC7CH451869");
-        builder.setPowerTrain(PowerTrain.ALLELECTRIC);
-        builder.setModelName("Type X");
-        builder.setName("My Car");
-        builder.setLicensePlate("ABC123");
-        builder.setSalesDesignation("Package+");
-        builder.setModelYear(2017);
+        builder.setVin(new Property("JF2SHBDC7CH451869"));
+        builder.setPowerTrain(new Property(PowerTrain.ALLELECTRIC));
+        builder.setModelName(new Property("Type X"));
+        builder.setName(new Property("My Car"));
+        builder.setLicensePlate(new Property("ABC123"));
+        builder.setSalesDesignation(new Property("Package+"));
+        builder.setModelYear(new Property(2017));
 
-        builder.setColorName("Estoril Blau");
-//        build.setPower(220);
-        // add an unknown property (power)
-        builder.addProperty(new IntegerProperty((byte) 0x09, 220, 2));
-        builder.setNumberOfDoors(5).setNumberOfSeats(5);
+        builder.setColorName(new Property("Estoril Blau"));
+        builder.setPower(new Property(220));
+        builder.setNumberOfDoors(new Property(5)).setNumberOfSeats(new Property(5));
 
         // l7
-        builder.setEngineVolume(2.5f);
-        builder.setMaxTorque(245);
-        builder.setGearBox(Gearbox.AUTOMATIC);
+        builder.setEngineVolume(new Property(2.5f));
+        builder.setMaxTorque(new Property(245));
+        builder.setGearBox(new Property(Gearbox.AUTOMATIC));
 
         TrunkState.Builder trunkState = new TrunkState.Builder();
-        trunkState.setLockState(Lock.UNLOCKED);
-        trunkState.setPosition(Position.OPEN);
-        builder.addProperty(new CommandProperty(trunkState.build()));
+        trunkState.setLockState(new Property(Lock.UNLOCKED));
+        trunkState.setPosition(new Property(Position.OPEN));
+        builder.addState(new Property(trunkState.build()));
 
-        ControlMode.Builder controlCommand = new ControlMode.Builder();
-        controlCommand.setMode(STARTED);
-        builder.addProperty(new CommandProperty(controlCommand.build()));
+        ControlMode controlMode = new ControlMode(new Bytes("00270101000401000102").getByteArray());
+        builder.addState(new Property(controlMode));
 
         // l8
-        builder.setDisplayUnit(DisplayUnit.KM);
-        builder.setDriverSeatLocation(DriverSeatLocation.LEFT);
-        builder.addEquipment("Parking sensors");
-        builder.addEquipment("Automatic wipers");
+        builder.setDisplayUnit(new Property(DisplayUnit.KM));
+        builder.setDriverSeatLocation(new Property(DriverSeatLocation.LEFT));
+        builder.addEquipment(new Property("Parking sensors"));
+        builder.addEquipment(new Property("Automatic wipers"));
 
         // l9
-        builder.setBrand("Mercedes");
+        builder.setBrand(new Property("Mercedes"));
 
         return builder;
     }
@@ -188,42 +186,30 @@ public class VehicleStatusTest {
         assertTrue(status.getSignature().equals(signature));
     }
 
-    @Test public void maiduTest() {
-        Bytes bytes = new Bytes
-                ("0011010A000105991B002001010003000100010003010000010003020001010003030001");
-        Command command = CommandResolver.resolve(bytes);
-    }
-
     @Test public void maiduTestTwo() {
         Bytes bytes = new Bytes
                 ("00110131484D31363241363748333232393645460208757573206175746F21452D436C61737320436F6D666F7274202620506572736F6E616C69736174696F6E000400230800001C50BF19999A00330B000BB8001200000000500000200D04000001010001020001030001003008425210E741561BEA");
         Command command = CommandResolver.resolve(bytes);
-        assertTrue(((CommandWithProperties) command).getProperties().length != 0);
+        assertTrue(((Command) command).getProperties().length != 0);
     }
 
     @Test public void testInvalidProperty() {
         Bytes bytes = new Bytes
                 ("001101" +
                         "0100140100094a46325348424443374348343531383639" +
-                        "99002E002B01" + // 2b // 43
+                        "99002E01002B" + // 2b // 43
                         "004501" + // windows
-                        "0200050100020238" +
-                        "0200050100020312" +
+                        "0200050100020238" + // invalid
+                        "0200050100020312" + // invalid
                         "0300050100020201" +
                         "0300050100020300" +
                         "03000501000201FF" + // invalid Window Position FF
+                        "99000D01000A00270101000401000102"); // control mode command
 
-                        "99000D01000700270101000401000102");
-
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
         VehicleStatus vs = (VehicleStatus) command;
         // one window property will fail to parse
-        WindowsState ws = (WindowsState) vs.getState(WindowsState.TYPE);
+        WindowsState ws = (WindowsState) vs.getState(WindowsState.TYPE).getValue();
         assertTrue(ws.getProperties().length == 5);
         assertTrue(ws.getWindowPositions().length == 2);
     }
@@ -231,23 +217,16 @@ public class VehicleStatusTest {
     @Test public void zeroProperties() {
         VehicleStatus.Builder builder = new VehicleStatus.Builder();
         VehicleStatus vs = builder.build();
-        testEmptyCommand(vs);
-        assertTrue(vs.getByteArray().length == 3);
+
+        assertTrue(vs.getStates().length == 0);
+        assertTrue(vs.getNumberOfDoors() == null);
+        assertTrue(vs.getState(TheftAlarmState.TYPE) == null);
         assertTrue(vs.getByteArray().length == 3);
 
         Bytes bytes = new Bytes("00110100");
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-        testEmptyCommand((VehicleStatus) command);
-    }
-
-    void testEmptyCommand(VehicleStatus vs) {
+        vs = (VehicleStatus) CommandResolver.resolve(bytes);
         assertTrue(vs.getStates().length == 0);
-        assertTrue(vs.getNumberOfDoors() == null);
+        assertTrue(vs.getNumberOfDoors().getValue() == null);
         assertTrue(vs.getState(TheftAlarmState.TYPE) == null);
     }
 
@@ -256,7 +235,6 @@ public class VehicleStatusTest {
                 ("001101" +
                         "9900140100110021010100040100010002000401000101" +
                         "99000D01000A00270101000401000115"); //invalid control mode
-// 0102000401000103
         VehicleStatus command = (VehicleStatus) CommandResolver.resolve(bytes);
         assertTrue(command.getStates().length == 2); // invalid command is added as a base
         // command class

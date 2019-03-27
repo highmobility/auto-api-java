@@ -20,9 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CoordinatesProperty;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.value.Coordinates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,26 +31,27 @@ import javax.annotation.Nullable;
 /**
  * Set the navigation destination. This will be forwarded to the navigation system of the car.
  */
-public class SetNaviDestination extends CommandWithProperties {
+public class SetNaviDestination extends Command {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x02);
 
     private static final byte COORDINATES_IDENTIFIER = 0x07;
     private static final byte NAME_IDENTIFIER = 0x02;
 
-    private CoordinatesProperty coordinates;
-    private String name;
+    private Property<Coordinates> coordinates = new Property(Coordinates.class,
+            COORDINATES_IDENTIFIER);
+    private Property<String> name = new Property(String.class, NAME_IDENTIFIER);
 
     /**
      * @return The destination coordinates.
      */
-    public CoordinatesProperty getCoordinates() {
+    public Property<Coordinates> getCoordinates() {
         return coordinates;
     }
 
     /**
      * @return The destination name.
      */
-    @Nullable public String getName() {
+    public Property<String> getName() {
         return name;
     }
 
@@ -59,39 +59,41 @@ public class SetNaviDestination extends CommandWithProperties {
      * @param coordinates The destination coordinates.
      * @param name        The destination name.
      */
-    public SetNaviDestination(CoordinatesProperty coordinates, @Nullable String name) {
-        super(TYPE, getProperties(coordinates, name));
-        this.coordinates = coordinates;
-        this.name = name;
-    }
+    public SetNaviDestination(Coordinates coordinates, @Nullable String name) {
+        super(TYPE);
 
-    static Property[] getProperties(CoordinatesProperty coordinates, String name) {
         List<Property> properties = new ArrayList<>();
 
-        if (coordinates == null) throw new IllegalArgumentException();
-
-        coordinates.setIdentifier(COORDINATES_IDENTIFIER);
-        properties.add(coordinates);
+        this.coordinates.update(coordinates);
+        properties.add(this.coordinates);
 
         if (name != null) {
-            Property prop = new StringProperty(NAME_IDENTIFIER, name);
-            properties.add(prop);
+            this.name.update(name);
+            properties.add(this.name);
         }
 
-        return properties.toArray(new Property[0]);
+        createBytes(properties);
     }
 
     SetNaviDestination(byte[] bytes) {
         super(bytes);
-        for (Property property : properties) {
-            switch (property.getPropertyIdentifier()) {
-                case COORDINATES_IDENTIFIER:
-                    coordinates = new CoordinatesProperty(property.getPropertyBytes());
-                    break;
-                case NAME_IDENTIFIER:
-                    name = Property.getString(property.getValueBytes());
-                    break;
-            }
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case COORDINATES_IDENTIFIER:
+                        return coordinates.update(p);
+                    case NAME_IDENTIFIER:
+                        return name.update(p);
+
+                }
+
+                return null;
+            });
         }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

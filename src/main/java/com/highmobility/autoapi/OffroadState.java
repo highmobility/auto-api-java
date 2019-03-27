@@ -20,29 +20,28 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.DoubleProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
 
 import javax.annotation.Nullable;
 
 /**
  * Command sent when a Get Offroad State is received by the car.
  */
-public class OffroadState extends CommandWithProperties {
+public class OffroadState extends Command {
     public static final Type TYPE = new Type(Identifier.OFF_ROAD, 0x01);
 
-    private static final byte ROUTE_ID = 0x01;
-    private static final byte WHEEL_ID = 0x02;
+    private static final byte IDENTIFIER_ROUTE_INCLINE = 0x01;
+    private static final byte IDENTIFIER_WHEEL_SUSPENSION = 0x02;
 
-    Integer routeIncline;
-    Double wheelSuspension;
+    PropertyInteger routeIncline = new PropertyInteger(IDENTIFIER_ROUTE_INCLINE, false);
+    Property<Double> wheelSuspension =
+            new Property(Double.class, IDENTIFIER_WHEEL_SUSPENSION);
 
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline.
      */
-    @Nullable public Integer getRouteIncline() {
+    @Nullable public Property<Integer> getRouteIncline() {
         return routeIncline;
     }
 
@@ -50,22 +49,19 @@ public class OffroadState extends CommandWithProperties {
      * @return The wheel suspension level percentage, whereas 0 is no suspension and 1 maximum.
      * suspension
      */
-    @Nullable public Double getWheelSuspension() {
+    @Nullable public Property<Double> getWheelSuspension() {
         return wheelSuspension;
     }
 
     public OffroadState(byte[] bytes) {
         super(bytes);
-
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case ROUTE_ID:
-                        routeIncline = Property.getUnsignedInt(p.getValueBytes());
-                        return routeIncline;
-                    case WHEEL_ID:
-                        wheelSuspension = Property.getDouble(p.getValueBytes());
-                        return wheelSuspension;
+                    case IDENTIFIER_ROUTE_INCLINE:
+                        return routeIncline.update(p);
+                    case IDENTIFIER_WHEEL_SUSPENSION:
+                        return wheelSuspension.update(p);
                 }
 
                 return null;
@@ -83,9 +79,9 @@ public class OffroadState extends CommandWithProperties {
         wheelSuspension = builder.wheelSuspension;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private Integer routeIncline;
-        private Double wheelSuspension;
+    public static final class Builder extends Command.Builder {
+        private PropertyInteger routeIncline;
+        private Property<Double> wheelSuspension;
 
         public Builder() {
             super(TYPE);
@@ -96,9 +92,10 @@ public class OffroadState extends CommandWithProperties {
          *                     for decline.
          * @return The builder.
          */
-        public Builder setRouteIncline(Integer routeIncline) {
-            this.routeIncline = routeIncline;
-            addProperty(new IntegerProperty(ROUTE_ID, routeIncline, 2));
+        public Builder setRouteIncline(Property<Integer> routeIncline) {
+            this.routeIncline = new PropertyInteger(IDENTIFIER_ROUTE_INCLINE, false, 2,
+                    routeIncline);
+            addProperty(this.routeIncline);
             return this;
         }
 
@@ -107,9 +104,10 @@ public class OffroadState extends CommandWithProperties {
          *                        and 1 maximum suspension.
          * @return The builder.
          */
-        public Builder setWheelSuspension(Double wheelSuspension) {
+        public Builder setWheelSuspension(Property<Double> wheelSuspension) {
             this.wheelSuspension = wheelSuspension;
-            addProperty(new DoubleProperty(WHEEL_ID, wheelSuspension));
+            wheelSuspension.setIdentifier(IDENTIFIER_WHEEL_SUSPENSION);
+            addProperty(wheelSuspension);
             return this;
         }
 

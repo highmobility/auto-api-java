@@ -20,8 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.SpringRateProperty;
-import com.highmobility.autoapi.property.value.Axle;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Axle;
+import com.highmobility.autoapi.value.SpringRate;
 
 import java.util.ArrayList;
 
@@ -30,13 +31,13 @@ import javax.annotation.Nullable;
 /**
  * Set the spring rate. The result is sent through the Chassis Settings message.
  */
-public class SetSpringRate extends CommandWithProperties {
+public class SetSpringRate extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x14);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
 
-    SpringRateProperty[] springRates;
+    Property<SpringRate>[] springRates;
 
-    public SpringRateProperty[] getSpringRates() {
+    public Property<SpringRate>[] getSpringRates() {
         return springRates;
     }
 
@@ -44,9 +45,10 @@ public class SetSpringRate extends CommandWithProperties {
      * @param axle The axle.
      * @return The spring rate for the given axle.
      */
-    @Nullable public SpringRateProperty getSpringRate(Axle axle) {
-        for (SpringRateProperty springRate : springRates) {
-            if (springRate.getAxle() == axle) return springRate;
+    @Nullable public Property<SpringRate> getSpringRate(Axle axle) {
+        for (Property<SpringRate> springRate : springRates) {
+            if (springRate.getValue() != null && springRate.getValue().getAxle() == axle)
+                return springRate;
         }
 
         return null;
@@ -55,36 +57,39 @@ public class SetSpringRate extends CommandWithProperties {
     /**
      * @param springRates The spring rates.
      */
-    public SetSpringRate(SpringRateProperty[] springRates) {
-        super(TYPE, getValues(springRates));
-        this.springRates = springRates;
-    }
+    public SetSpringRate(SpringRate[] springRates) {
+        super(TYPE);
 
-    static SpringRateProperty[] getValues(SpringRateProperty[] springRates) {
-        for (SpringRateProperty springRate : springRates) {
-            springRate.setIdentifier(PROPERTY_IDENTIFIER);
+        ArrayList<Property> builder = new ArrayList<>();
+
+        for (SpringRate springRate : springRates) {
+            builder.add(new Property(PROPERTY_IDENTIFIER, springRate));
         }
 
-        return springRates;
+        this.springRates = builder.toArray(new Property[0]);
+
+        createBytes(builder);
     }
 
     SetSpringRate(byte[] bytes) {
         super(bytes);
-        ArrayList<SpringRateProperty> builder = new ArrayList<>();
+        ArrayList<Property> builder = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
-                    builder.add(new SpringRateProperty(p.getPropertyBytes()));
+                    Property<SpringRate> prop = new Property(SpringRate.class, p);
+                    builder.add(prop);
+                    return prop;
                 }
-                return null; // TODO: 12/11/2018
+                return null;
             });
         }
 
-        springRates = builder.toArray(new SpringRateProperty[0]);
+        springRates = builder.toArray(new Property[0]);
     }
 
     @Override protected boolean propertiesExpected() {
-        return false;
+        return true;
     }
 }

@@ -20,131 +20,127 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.WindscreenDamage;
-import com.highmobility.autoapi.property.WindscreenDamageZone;
-import com.highmobility.autoapi.property.WindscreenDamageZoneMatrix;
-import com.highmobility.autoapi.property.WindscreenReplacementState;
-import com.highmobility.autoapi.property.WiperIntensity;
-import com.highmobility.autoapi.property.WiperState;
+import com.highmobility.autoapi.value.windscreen.WindscreenDamage;
+import com.highmobility.autoapi.value.windscreen.WindscreenDamageZone;
+import com.highmobility.autoapi.value.windscreen.WindscreenDamageZoneMatrix;
+import com.highmobility.autoapi.value.windscreen.WindscreenReplacementState;
+import com.highmobility.autoapi.value.windscreen.WiperIntensity;
+import com.highmobility.autoapi.value.windscreen.WiperState;
 
 import java.util.Calendar;
-
-import javax.annotation.Nullable;
 
 /**
  * Command sent when a Get Windscreen State command is received by the car. The wipers intensity is
  * indicated even if the car has automatic wipers activated.
  */
-public class WindscreenState extends CommandWithProperties {
+public class WindscreenState extends Command {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x01);
 
-    private static final byte DAMAGE_CONFIDENCE_IDENTIFIER = 0x07;
-    private static final byte DAMAGE_DETECTION_TIME_IDENTIFIER = 0x08;
+    private static final byte IDENTIFIER_DAMAGE_CONFIDENCE = 0x07;
+    private static final byte IDENTIFIER_DAMAGE_DETECTION_TIME = 0x08;
     private static final byte WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER = 0x06;
 
     private static final byte IDENTIFIER_WIPERS_STATE = 0x01;
     private static final byte IDENTIFIER_WIPER_INTENSITY = 0x02;
     private static final byte IDENTIFIER_WINDSCREEN_DAMAGE = 0x03;
+    private static final byte IDENTIFIER_DAMAGE_ZONE_MATRIX = 0x04;
+    public static final byte IDENTIFIER_DAMAGE_ZONE = 0x05;
 
-    WiperState wiperState;
-    WiperIntensity wiperIntensity;
-    WindscreenDamage windscreenDamage;
-    WindscreenDamageZone windscreenDamageZone;
-    WindscreenDamageZoneMatrix windscreenDamageZoneMatrix;
-    WindscreenReplacementState windscreenReplacementState;
-    Double damageConfidence;
-    Calendar damageDetectionTime;
+    Property<WiperState> wiperState = new Property(WiperState.class, IDENTIFIER_WIPERS_STATE);
+    Property<WiperIntensity> wiperIntensity = new Property(WiperIntensity.class,
+            IDENTIFIER_WIPER_INTENSITY);
+    Property<WindscreenDamage> windscreenDamage = new Property(WindscreenDamage.class,
+            WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER);
+    Property<WindscreenDamageZone> windscreenDamageZone = new Property(WindscreenDamageZone.class
+            , IDENTIFIER_WINDSCREEN_DAMAGE);
+    Property<WindscreenDamageZoneMatrix> windscreenDamageZoneMatrix =
+            new Property(WindscreenDamageZoneMatrix.class, IDENTIFIER_DAMAGE_ZONE_MATRIX);
+    Property<WindscreenReplacementState> windscreenReplacementState =
+            new Property(WindscreenReplacementState.class, WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER);
+    Property<Double> damageConfidence =
+            new Property(Double.class, IDENTIFIER_DAMAGE_CONFIDENCE);
+    Property<Calendar> damageDetectionTime = new Property(Calendar.class,
+            IDENTIFIER_DAMAGE_DETECTION_TIME);
 
     /**
      * @return The wiper state.
      */
-    @Nullable public WiperState getWiperState() {
+    public Property<WiperState> getWiperState() {
         return wiperState;
     }
 
     /**
      * @return The wiper intensity.
      */
-    @Nullable public WiperIntensity getWiperIntensity() {
+    public Property<WiperIntensity> getWiperIntensity() {
         return wiperIntensity;
     }
 
     /**
      * @return The windscreen damage.
      */
-    @Nullable public WindscreenDamage getWindscreenDamage() {
+    public Property<WindscreenDamage> getWindscreenDamage() {
         return windscreenDamage;
     }
 
     /**
      * @return The windscreen damage position, as viewed from inside the car.
      */
-    @Nullable public WindscreenDamageZone getWindscreenDamageZone() {
+    public Property<WindscreenDamageZone> getWindscreenDamageZone() {
         return windscreenDamageZone;
     }
 
     /**
      * @return The windscreen zone matrix, as viewed from inside the car.
      */
-    @Nullable public WindscreenDamageZoneMatrix getWindscreenDamageZoneMatrix() {
+    public Property<WindscreenDamageZoneMatrix> getWindscreenDamageZoneMatrix() {
         return windscreenDamageZoneMatrix;
     }
 
     /**
      * @return The windscreen replacement state.
      */
-    @Nullable public WindscreenReplacementState getWindscreenReplacementState() {
+    public Property<WindscreenReplacementState> getWindscreenReplacementState() {
         return windscreenReplacementState;
     }
 
     /**
      * @return The damage confidence.
      */
-    @Nullable public Double getDamageConfidence() {
+
+    public Property<Double> getDamageConfidence() {
         return damageConfidence;
     }
 
     /**
      * @return The damage detection time.
      */
-    @Nullable public Calendar getDamageDetectionTime() {
+    public Property<Calendar> getDamageDetectionTime() {
         return damageDetectionTime;
     }
 
     WindscreenState(byte[] bytes) {
         super(bytes);
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_WIPERS_STATE:
-                        wiperState = WiperState.fromByte(property.getValueByte());
-                        return wiperState;
+                        return wiperState.update(p);
                     case IDENTIFIER_WIPER_INTENSITY:
-                        wiperIntensity = WiperIntensity.fromByte(property.getValueByte());
-                        return wiperIntensity;
+                        return wiperIntensity.update(p);
                     case IDENTIFIER_WINDSCREEN_DAMAGE:
-                        windscreenDamage = WindscreenDamage.fromByte(property.getValueByte());
-                        return windscreenDamage;
-                    case WindscreenDamageZoneMatrix.IDENTIFIER:
-                        windscreenDamageZoneMatrix = new WindscreenDamageZoneMatrix(property
-                                .getValueByte());
-                        return windscreenDamageZoneMatrix;
-                    case WindscreenDamageZone.IDENTIFIER:
-                        windscreenDamageZone = new WindscreenDamageZone(property.getValueByte());
-                        return windscreenDamageZone;
+                        return windscreenDamage.update(p);
+                    case IDENTIFIER_DAMAGE_ZONE_MATRIX:
+                        return windscreenDamageZoneMatrix.update(p);
+                    case IDENTIFIER_DAMAGE_ZONE:
+                        return windscreenDamageZone.update(p);
                     case WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER:
-                        windscreenReplacementState = WindscreenReplacementState.fromByte(property
-                                .getValueByte());
-                        return windscreenReplacementState;
-                    case DAMAGE_CONFIDENCE_IDENTIFIER:
-                        damageConfidence = Property.getDouble(property.getValueBytes());
-                        return damageConfidence;
-                    case DAMAGE_DETECTION_TIME_IDENTIFIER:
-                        damageDetectionTime = Property.getCalendar(property.getValueBytes());
-                        return damageDetectionTime;
+                        return windscreenReplacementState.update(p);
+                    case IDENTIFIER_DAMAGE_CONFIDENCE:
+                        return damageConfidence.update(p);
+                    case IDENTIFIER_DAMAGE_DETECTION_TIME:
+                        return damageDetectionTime.update(p);
                 }
                 return null;
             });
@@ -167,15 +163,16 @@ public class WindscreenState extends CommandWithProperties {
         damageDetectionTime = builder.damageDetectionTime;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private WiperState wiperState;
-        private WiperIntensity wiperIntensity;
-        private WindscreenDamage windscreenDamage;
-        private WindscreenDamageZone windscreenDamageZone;
-        private WindscreenDamageZoneMatrix windscreenDamageZoneMatrix;
-        private WindscreenReplacementState windscreenReplacementState;
-        private Double damageConfidence;
-        private Calendar damageDetectionTime;
+    public static final class Builder extends Command.Builder {
+        private Property<WiperState> wiperState;
+        private Property<WiperIntensity> wiperIntensity;
+        private Property<WindscreenDamage> windscreenDamage;
+        private Property<WindscreenDamageZone> windscreenDamageZone;
+        private Property<WindscreenDamageZoneMatrix> windscreenDamageZoneMatrix;
+        private Property<WindscreenReplacementState> windscreenReplacementState;
+
+        private Property<Double> damageConfidence;
+        private Property<Calendar> damageDetectionTime;
 
         public Builder() {
             super(TYPE);
@@ -185,9 +182,9 @@ public class WindscreenState extends CommandWithProperties {
          * @param wiperState The wiper state.
          * @return The builder.
          */
-        public Builder setWiperState(WiperState wiperState) {
+        public Builder setWiperState(Property<WiperState> wiperState) {
             this.wiperState = wiperState;
-            addProperty(new Property(IDENTIFIER_WIPERS_STATE, wiperState.getByte()));
+            addProperty(wiperState.setIdentifier(IDENTIFIER_WIPERS_STATE));
             return this;
         }
 
@@ -195,9 +192,9 @@ public class WindscreenState extends CommandWithProperties {
          * @param wiperIntensity The wipers intensity.
          * @return The builder.
          */
-        public Builder setWiperIntensity(WiperIntensity wiperIntensity) {
+        public Builder setWiperIntensity(Property<WiperIntensity> wiperIntensity) {
             this.wiperIntensity = wiperIntensity;
-            addProperty(new Property(IDENTIFIER_WIPER_INTENSITY, wiperIntensity.getByte()));
+            addProperty(wiperIntensity.setIdentifier(IDENTIFIER_WIPER_INTENSITY));
             return this;
         }
 
@@ -205,9 +202,9 @@ public class WindscreenState extends CommandWithProperties {
          * @param windscreenDamage The windscreen damage.
          * @return The builder.
          */
-        public Builder setWindscreenDamage(WindscreenDamage windscreenDamage) {
+        public Builder setWindscreenDamage(Property<WindscreenDamage> windscreenDamage) {
             this.windscreenDamage = windscreenDamage;
-            addProperty(new Property(IDENTIFIER_WINDSCREEN_DAMAGE, windscreenDamage.getByte()));
+            addProperty(windscreenDamage.setIdentifier(IDENTIFIER_WINDSCREEN_DAMAGE));
             return this;
         }
 
@@ -216,9 +213,9 @@ public class WindscreenState extends CommandWithProperties {
          *                             car.
          * @return The builder.
          */
-        public Builder setWindscreenDamageZone(WindscreenDamageZone windscreenDamageZone) {
+        public Builder setWindscreenDamageZone(Property<WindscreenDamageZone> windscreenDamageZone) {
             this.windscreenDamageZone = windscreenDamageZone;
-            addProperty(windscreenDamageZone);
+            addProperty(windscreenDamageZone.setIdentifier(IDENTIFIER_DAMAGE_ZONE));
             return this;
         }
 
@@ -227,10 +224,10 @@ public class WindscreenState extends CommandWithProperties {
          *                                   inside the car.
          * @return The builder.
          */
-        public Builder setWindscreenDamageZoneMatrix(WindscreenDamageZoneMatrix
+        public Builder setWindscreenDamageZoneMatrix(Property<WindscreenDamageZoneMatrix>
                                                              windscreenDamageZoneMatrix) {
             this.windscreenDamageZoneMatrix = windscreenDamageZoneMatrix;
-            addProperty(windscreenDamageZoneMatrix);
+            addProperty(windscreenDamageZoneMatrix.setIdentifier(IDENTIFIER_DAMAGE_ZONE_MATRIX));
             return this;
         }
 
@@ -238,11 +235,10 @@ public class WindscreenState extends CommandWithProperties {
          * @param windscreenReplacementState The windscreen replacement state.
          * @return The builder.
          */
-        public Builder setWindscreenReplacementState(WindscreenReplacementState
+        public Builder setWindscreenReplacementState(Property<WindscreenReplacementState>
                                                              windscreenReplacementState) {
             this.windscreenReplacementState = windscreenReplacementState;
-            addProperty(new Property(WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER,
-                    windscreenReplacementState.getByte()));
+            addProperty(windscreenReplacementState.setIdentifier(WINDSCREEN_REPLACEMENT_STATE_IDENTIFIER));
             return this;
         }
 
@@ -250,9 +246,10 @@ public class WindscreenState extends CommandWithProperties {
          * @param damageConfidence The damage confidence.
          * @return The builder.
          */
-        public Builder setDamageConfidence(Double damageConfidence) {
+        public Builder setDamageConfidence(Property<Double> damageConfidence) {
             this.damageConfidence = damageConfidence;
-            addProperty(new DoubleProperty(DAMAGE_CONFIDENCE_IDENTIFIER, damageConfidence));
+            damageConfidence.setIdentifier(IDENTIFIER_DAMAGE_CONFIDENCE);
+            addProperty(damageConfidence);
             return this;
         }
 
@@ -260,10 +257,9 @@ public class WindscreenState extends CommandWithProperties {
          * @param damageDetectionTime The damage detection time.
          * @return The builder.
          */
-        public Builder setDamageDetectionTime(Calendar damageDetectionTime) {
+        public Builder setDamageDetectionTime(Property<Calendar> damageDetectionTime) {
             this.damageDetectionTime = damageDetectionTime;
-            addProperty(new CalendarProperty(DAMAGE_DETECTION_TIME_IDENTIFIER,
-                    damageDetectionTime));
+            addProperty(damageDetectionTime.setIdentifier(IDENTIFIER_DAMAGE_DETECTION_TIME));
             return this;
         }
 

@@ -5,13 +5,13 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetPowerTakeOffState;
 import com.highmobility.autoapi.PowerTakeOffState;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PowerTakeOffTest {
     Bytes bytes = new Bytes(
@@ -22,24 +22,23 @@ public class PowerTakeOffTest {
 
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(command.is(PowerTakeOffState.TYPE));
         PowerTakeOffState state = (PowerTakeOffState) command;
-        assertTrue(state.isActive() == true);
-        assertTrue(state.isEngaged() == true);
+        testState(state);
+    }
+
+    private void testState(PowerTakeOffState state) {
+        assertTrue(state.isActive().getValue() == true);
+        assertTrue(state.isEngaged().getValue() == true);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
         PowerTakeOffState.Builder builder = new PowerTakeOffState.Builder();
-        builder.setIsActive(true);
-        builder.setIsEngaged(true);
-        assertTrue(builder.build().equals(bytes));
+        builder.setIsActive(new Property(true));
+        builder.setIsEngaged(new Property(true));
+        testState(builder.build());
     }
 
     @Test public void get() {
@@ -55,6 +54,10 @@ public class PowerTakeOffTest {
         assertTrue(waitingForBytes.equals(commandBytes));
         ActivateDeactivatePowerTakeoff command = (ActivateDeactivatePowerTakeoff) CommandResolver
                 .resolve(waitingForBytes);
-        assertTrue(command.activate() == true);
+        assertTrue(command.activate().getValue() == true);
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(ActivateDeactivatePowerTakeoff.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

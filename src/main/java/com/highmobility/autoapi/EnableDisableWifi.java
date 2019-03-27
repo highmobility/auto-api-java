@@ -20,21 +20,20 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Enable or disable Wi-Fi completely.
  */
-public class EnableDisableWifi extends CommandWithProperties {
+public class EnableDisableWifi extends Command {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x04);
-private static final byte IDENTIFIER = 0x01;
-    private boolean enable;
+    private static final byte IDENTIFIER = 0x01;
+    private Property<Boolean> enable = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether Wi-Fi should be enabled.
      */
-    public boolean enable() {
+    public Property<Boolean> enable() {
         return enable;
     }
 
@@ -43,16 +42,27 @@ private static final byte IDENTIFIER = 0x01;
      *
      * @param enable Whether Wi-Fi should be enabled.
      */
-    public EnableDisableWifi(boolean enable) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, enable)));
-        this.enable = enable;
+    public EnableDisableWifi(Boolean enable) {
+        super(TYPE);
+        this.enable.update(enable);
+        createBytes(this.enable);
     }
 
-    EnableDisableWifi(byte[] bytes) throws CommandParseException {
+    EnableDisableWifi(byte[] bytes) {
         super(bytes);
 
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        this.enable = Property.getBool(prop.getValueByte());
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return enable.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

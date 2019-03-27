@@ -20,34 +20,44 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * This activates or deactivates the emergency flashers of the car, typically the blinkers to alarm
  * other drivers.
  */
-public class ActivateDeactivateEmergencyFlasher extends CommandWithProperties {
+public class ActivateDeactivateEmergencyFlasher extends Command {
     public static final Type TYPE = new Type(Identifier.HONK_FLASH, 0x13);
-    private static final byte PROPERTY_IDENTIFIER = 0x01;
-    boolean activate;
+    private static final byte IDENTIFIER = 0x01;
+    Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether flasher should be activated.
      */
-    public boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
-    public ActivateDeactivateEmergencyFlasher(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(PROPERTY_IDENTIFIER, activate)));
-        this.activate = activate;
+    public ActivateDeactivateEmergencyFlasher(Boolean activate) {
+        super(TYPE);
+        this.activate.update(activate);
+        createBytes(this.activate);
     }
 
-    ActivateDeactivateEmergencyFlasher(byte[] bytes) throws CommandParseException {
+    ActivateDeactivateEmergencyFlasher(byte[] bytes) {
         super(bytes);
-        Property property = getProperty(PROPERTY_IDENTIFIER);
-        if (property == null) throw new CommandParseException();
-        activate = Property.getBool(bytes[6]);
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return activate.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

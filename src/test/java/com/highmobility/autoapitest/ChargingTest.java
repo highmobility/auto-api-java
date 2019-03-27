@@ -10,24 +10,26 @@ import com.highmobility.autoapi.SetChargeMode;
 import com.highmobility.autoapi.SetChargeTimer;
 import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
 import com.highmobility.autoapi.StartStopCharging;
-import com.highmobility.autoapi.property.ChargeMode;
-import com.highmobility.autoapi.property.ChargePortState;
-import com.highmobility.autoapi.property.ChargingState;
-import com.highmobility.autoapi.property.charging.ChargingTimer;
-import com.highmobility.autoapi.property.charging.DepartureTime;
-import com.highmobility.autoapi.property.charging.PlugType;
-import com.highmobility.autoapi.property.charging.ReductionTime;
-import com.highmobility.autoapi.property.value.StartStop;
-import com.highmobility.autoapi.property.value.Time;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.StartStop;
+import com.highmobility.autoapi.value.Time;
+import com.highmobility.autoapi.value.charging.ChargeMode;
+import com.highmobility.autoapi.value.charging.ChargePortState;
+import com.highmobility.autoapi.value.charging.ChargingState;
+import com.highmobility.autoapi.value.charging.ChargingTimer;
+import com.highmobility.autoapi.value.charging.DepartureTime;
+import com.highmobility.autoapi.value.charging.PlugType;
+import com.highmobility.autoapi.value.charging.ReductionTime;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Calendar;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChargingTest {
     Bytes bytes = new Bytes(
@@ -63,32 +65,36 @@ public class ChargingTest {
         Command command = CommandResolver.resolve(bytes);
         assertTrue(command.is(ChargeState.TYPE));
         ChargeState state = (ChargeState) command;
+        testState(state);
+    }
 
-        assertTrue(state.getEstimatedRange() == 432);
-        assertTrue(state.getBatteryLevel() == .5d);
-        assertTrue(state.getBatteryCurrentAC() == -.6f);
-        assertTrue(state.getBatteryCurrentDC() == -.6f);
-        assertTrue(state.getChargerVoltageAC() == 400f);
-        assertTrue(state.getChargerVoltageDC() == -.6f);
-        assertTrue(state.getTimeToCompleteCharge() == 60);
-        assertTrue(state.getChargeLimit() == .9d);
-        assertTrue(state.getChargingRate() == 3.5f);
-        assertTrue(state.getChargeChargePortState() == ChargePortState.OPEN);
-        assertTrue(state.getChargeMode() == ChargeMode.TIMER_BASED);
+    private void testState(ChargeState state) {
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
+        assertTrue(state.getEstimatedRange().getValue() == 432);
+        assertTrue(state.getBatteryLevel().getValue() == .5d);
+        assertTrue(state.getBatteryCurrentAC().getValue() == -.6f);
+        assertTrue(state.getBatteryCurrentDC().getValue() == -.6f);
+        assertTrue(state.getChargerVoltageAC().getValue() == 400f);
+        assertTrue(state.getChargerVoltageDC().getValue() == -.6f);
+        assertTrue(state.getTimeToCompleteCharge().getValue() == 60);
+        assertTrue(state.getChargeLimit().getValue() == .9d);
+        assertTrue(state.getChargingRate().getValue() == 3.5f);
+        assertTrue(state.getChargePortState().getValue() == ChargePortState.OPEN);
+        assertTrue(state.getChargeMode().getValue() == ChargeMode.TIMER_BASED);
 
-        assertTrue(state.getMaxChargingCurrent() == 25f);
-        assertTrue(state.getPlugType() == PlugType.TYPE_2);
-        assertTrue(state.getChargingWindowChosen() == false);
+        assertTrue(state.getMaxChargingCurrent().getValue() == 25f);
+        assertTrue(state.getPlugType().getValue() == PlugType.TYPE_2);
+        assertTrue(state.getChargingWindowChosen().getValue() == false);
 
         assertTrue(state.getDepartureTimes().length == 2);
         int timeExists = 0;
-        for (DepartureTime time : state.getDepartureTimes()) {
-            if (time.getTime().getHour() == 16 && time.getTime().getMinute() == 32 && time
-                    .isActive()) {
+        for (Property<DepartureTime> time : state.getDepartureTimes()) {
+            if (time.getValue().getTime().getHour() == 16 && time.getValue().getTime().getMinute() == 32 && time
+                    .getValue().isActive()) {
                 timeExists++;
             }
 
-            if (time.getTime().getHour() == 11 && time.getTime().getMinute() == 51 && !time
+            if (time.getValue().getTime().getHour() == 11 && time.getValue().getTime().getMinute() == 51 && !time.getValue()
                     .isActive()) {
                 timeExists++;
             }
@@ -98,77 +104,80 @@ public class ChargingTest {
         timeExists = 0;
         assertTrue(state.getReductionOfChargingCurrentTimes().length == 2);
 
-        for (ReductionTime time : state.getReductionOfChargingCurrentTimes()) {
-            if (time.getTime().getHour() == 17 && time.getTime().getMinute() == 33 && time
-                    .getStartStop() == StartStop.START) {
+        for (Property<ReductionTime> time : state.getReductionOfChargingCurrentTimes()) {
+            if (time.getValue().getTime().getHour() == 17 && time.getValue().getTime().getMinute() == 33 && time
+                    .getValue().getStartStop() == StartStop.START) {
                 timeExists++;
             }
-            if (time.getTime().getHour() == 12 && time.getTime().getMinute() == 52 && time
-                    .getStartStop() == StartStop.STOP) {
+            if (time.getValue().getTime().getHour() == 12 && time.getValue().getTime().getMinute() == 52 && time
+                    .getValue().getStartStop() == StartStop.STOP) {
                 timeExists++;
             }
         }
 
         assertTrue(timeExists == 2);
 
-        assertTrue(state.getBatteryTemperature() == 38.4f);
+        assertTrue(state.getBatteryTemperature().getValue() == 38.4f);
 
         assertTrue(state.getTimers().length == 2);
-        Calendar departureDate = state.getTimer(ChargingTimer.Type.PREFERRED_START_TIME).getTime();
+
+        Calendar departureDate =
+                state.getTimer(ChargingTimer.Type.PREFERRED_START_TIME).getValue().getTime();
         assertTrue(TestUtils.dateIsSameIgnoreTimezone(departureDate, "2018-01-10T16:32:05"));
 
-        Calendar preferredEndTime = state.getTimer(ChargingTimer.Type.PREFERRED_END_TIME).getTime();
+        Calendar preferredEndTime =
+                state.getTimer(ChargingTimer.Type.PREFERRED_END_TIME).getValue().getTime();
         assertTrue(TestUtils.dateIsSameIgnoreTimezone(preferredEndTime, "2018-01-10T18:30:00"));
 
-        assertTrue(state.getPluggedIn() == true);
-        assertTrue(state.getActiveState() == ChargingState.CHARGING);
+        assertTrue(state.getPluggedIn().getValue() == true);
+        assertTrue(state.getActiveState().getValue() == ChargingState.CHARGING);
     }
 
     @Test public void get() {
         String waitingForBytes = "002300";
+        Bytes get = new GetChargeState();
         String commandBytes = ByteUtils.hexFromBytes(new GetChargeState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test(expected = IllegalArgumentException.class) public void failSameChargingTimers() {
-        try {
-            Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
-            ChargingTimer[] timers = new ChargingTimer[2];
-            timers[0] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
-            timers[1] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
-            new SetChargeTimer(timers);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    @Test public void failSameChargingTimers() throws ParseException {
+        Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
+        ChargingTimer[] timers = new ChargingTimer[2];
+        timers[0] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
+        timers[1] = new ChargingTimer(ChargingTimer.Type.DEPARTURE_TIME, c);
+        assertThrows(IllegalArgumentException.class, () -> new SetChargeTimer(timers));
     }
 
     @Test public void build() throws ParseException {
         ChargeState.Builder builder = new ChargeState.Builder();
-        builder.setEstimatedRange(432);
-        builder.setBatteryLevel(.5d);
-        builder.setBatteryCurrentAC(-.6f);
-        builder.setBatteryCurrentDC(-.6f);
-        builder.setChargerVoltageAC(400f);
-        builder.setChargerVoltageDC(-.6f);
-        builder.setChargeLimit(.9d);
-        builder.setTimeToCompleteCharge(60);
-        builder.setChargingRate(3.5f);
-        builder.setChargePortState(ChargePortState.OPEN);
-        builder.setChargeMode(ChargeMode.TIMER_BASED);
 
-        builder.setMaxChargingCurrent(25f);
-        builder.setPlugType(PlugType.TYPE_2);
-        builder.setChargingWindowChosen(false);
+        builder.setEstimatedRange(new Property(432));
+        builder.setBatteryLevel(new Property(.5d));
+        builder.setBatteryCurrentAC(new Property(-.6f));
+        builder.setBatteryCurrentDC(new Property(-.6f));
+        builder.setChargerVoltageAC(new Property(400f));
+        builder.setChargerVoltageDC(new Property(-.6f));
+        builder.setChargeLimit(new Property(.9d));
+        builder.setTimeToCompleteCharge(new Property(60));
+        builder.setChargingRate(new Property(3.5f));
+        builder.setChargePortState(new Property(ChargePortState.OPEN));
+        builder.setChargeMode(new Property(ChargeMode.TIMER_BASED));
 
-        builder.addDepartureTime(new DepartureTime(true, new Time(16, 32)));
-        builder.addDepartureTime(new DepartureTime(false, new Time(11, 51)));
+        builder.setMaxChargingCurrent(new Property(25f));
+        builder.setPlugType(new Property(PlugType.TYPE_2));
+        builder.setChargingWindowChosen(new Property(false));
 
-        builder.addReductionOfChargingCurrentTime(new ReductionTime(StartStop.START, new Time(17,
-                33)));
-        builder.addReductionOfChargingCurrentTime(new ReductionTime(StartStop.STOP, new Time(12,
-                52)));
+        builder.addDepartureTime(new Property(new DepartureTime(true, new Time(16, 32))));
+        builder.addDepartureTime(new Property(new DepartureTime(false, new Time(11, 51))));
 
-        builder.setBatteryTemperature(38.4f);
+        builder.addReductionOfChargingCurrentTime(new Property(new ReductionTime(StartStop.START,
+                new Time(17,
+                        33))));
+        builder.addReductionOfChargingCurrentTime(new Property(new ReductionTime(StartStop.STOP,
+                new Time(12,
+                        52))));
+
+        builder.setBatteryTemperature(new Property(38.4f));
 
         Calendar departureDate = TestUtils.getCalendar("2018-01-10T16:32:05");
         Calendar preferredEndTime = TestUtils.getCalendar("2018-01-10T18:30:00");
@@ -176,29 +185,24 @@ public class ChargingTest {
                 departureDate);
         ChargingTimer timer2 = new ChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME,
                 preferredEndTime);
-        builder.addTimer(timer);
-        builder.addTimer(timer2);
-        builder.setPluggedIn(true);
-        builder.setActiveState(ChargingState.CHARGING);
+        builder.addTimer(new Property(timer));
+        builder.addTimer(new Property(timer2));
+        builder.setPluggedIn(new Property(true));
+        builder.setActiveState(new Property(ChargingState.CHARGING));
 
         ChargeState state = builder.build();
-        assertTrue(TestUtils.bytesTheSame(state, bytes));
-    }
-
-    @Test public void state0Properties() {
-        byte[] bytes = ByteUtils.bytesFromHex("002301");
-        ChargeState state = (ChargeState) CommandResolver.resolve(bytes);
-        assertTrue(state.getBatteryCurrentAC() == null);
+        testState(state);
     }
 
     @Test public void setChargeLimit() {
-        Bytes expected = new Bytes("00231301000B0100083FECCCCCCCCCCCCD");
+        Bytes expected = new Bytes("002313" +
+                "01000B0100083FECCCCCCCCCCCCD");
 
         Bytes commandBytes = new SetChargeLimit(.9d);
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
 
         SetChargeLimit command = (SetChargeLimit) CommandResolver.resolve(expected);
-        assertTrue(command.getChargeLimit() == .9d);
+        assertTrue(command.getChargeLimit().getValue() == .9d);
     }
 
     @Test public void openCloseChargePort() {
@@ -208,7 +212,7 @@ public class ChargingTest {
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
 
         OpenCloseChargePort command = (OpenCloseChargePort) CommandResolver.resolve(expected);
-        assertTrue(command.getChargePortState() == ChargePortState.OPEN);
+        assertTrue(command.getChargePortState().getValue() == ChargePortState.OPEN);
     }
 
     @Test public void startStopCharging() {
@@ -219,7 +223,7 @@ public class ChargingTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         StartStopCharging command = (StartStopCharging) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getStart() == true);
+        assertTrue(command.getStart().getValue() == true);
     }
 
     @Test public void setChargeMode() {
@@ -228,11 +232,13 @@ public class ChargingTest {
 
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
         SetChargeMode command = (SetChargeMode) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getChargeMode() == ChargeMode.INDUCTIVE);
+        assertTrue(command.getChargeMode().getValue() == ChargeMode.INDUCTIVE);
     }
 
-    @Test(expected = IllegalArgumentException.class) public void setChargeModeThrowsOnImmediate() {
-        new SetChargeMode(ChargeMode.IMMEDIATE);
+    @Test public void setChargeModeThrowsOnImmediate() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new SetChargeMode(ChargeMode.IMMEDIATE);
+        });
     }
 
     @Test public void SetChargeTimer() throws ParseException {
@@ -254,9 +260,10 @@ public class ChargingTest {
         assertTrue(command.getChargingTimers().length == 2);
 
         Calendar departureTime = command.getChargingTimer(ChargingTimer.Type.DEPARTURE_TIME)
-                .getTime();
-        Calendar preferredEndTime = command.getChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME)
-                .getTime();
+                .getValue().getTime();
+        Calendar preferredEndTime =
+                command.getChargingTimer(ChargingTimer.Type.PREFERRED_END_TIME)
+                        .getValue().getTime();
 
         assertTrue(TestUtils.dateIsSame(departureTime, "2018-01-10T16:32:05"));
         assertTrue(TestUtils.dateIsSame(preferredEndTime, "2018-01-10T18:30:00"));
@@ -278,23 +285,24 @@ public class ChargingTest {
                 CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getReductionTimes().length == 2);
 
-        assertTrue(command.getReductionTimes()[0].getStartStop() == StartStop.START);
-        assertTrue(command.getReductionTimes()[0].getTime().equals(new Time(0, 0)));
+        int times = 0;
+        for (int i = 0; i < command.getReductionTimes().length; i++) {
+            Property<ReductionTime> reductionTime = command.getReductionTimes()[i];
+            if ((reductionTime.getValue().getTime().equals(new Time(0, 0)) && reductionTime.getValue().getStartStop() == StartStop.START) ||
+                    (reductionTime.getValue().getTime().equals(new Time(16, 32)) && reductionTime.getValue().getStartStop() == StartStop.STOP)) {
+                times++;
+            }
+        }
 
-        assertTrue(command.getReductionTimes()[1].getStartStop() == StartStop.STOP);
-        assertTrue(command.getReductionTimes()[1].getTime().equals(new Time(16, 32)));
+        assertTrue(times == 2);
     }
 
-    @Test public void SetReductionTimes0Properties() {
-        Bytes waitingForBytes = new Bytes("002317");
-
-        ReductionTime[] timers = new ReductionTime[0];
-        SetReductionOfChargingCurrentTimes commandBytes =
-                new SetReductionOfChargingCurrentTimes(timers);
-        assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
-        SetReductionOfChargingCurrentTimes command = (SetReductionOfChargingCurrentTimes)
-                CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getProperties().length == 0);
-
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(StartStopCharging.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(SetChargeLimit.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(OpenCloseChargePort.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(SetChargeMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(SetChargeTimer.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(SetReductionOfChargingCurrentTimes.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

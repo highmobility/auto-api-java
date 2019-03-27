@@ -21,8 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.Lock;
 
 import java.util.ArrayList;
 
@@ -31,11 +31,15 @@ import javax.annotation.Nullable;
 /**
  * Open or close the gas flap of the car.
  */
-public class ControlGasFlap extends CommandWithProperties {
+public class ControlGasFlap extends Command {
     public static final Type TYPE = new Type(Identifier.FUELING, 0x12);
 
     private static final byte LOCK_IDENTIFIER = 0x02;
     private static final byte POSITION_IDENTIFIER = 0x03;
+
+    @Nullable private Property<Lock> lock = new Property(Lock.class, LOCK_IDENTIFIER);
+    @Nullable private Property<Position> position = new Property(Position.class,
+            POSITION_IDENTIFIER);
 
     /**
      * Control the gas flap.
@@ -44,23 +48,37 @@ public class ControlGasFlap extends CommandWithProperties {
      * @param position The position.
      */
     public ControlGasFlap(@Nullable Lock lock, @Nullable Position position) {
-        super(TYPE, getProperties(lock, position));
-    }
+        super(TYPE);
 
-    static Property[] getProperties(@Nullable Lock lock, @Nullable Position position) {
-        ArrayList<Property> propertyList = new ArrayList<>();
+        ArrayList<Property> properties = new ArrayList<>();
+
         if (lock != null) {
-            propertyList.add(new Property(LOCK_IDENTIFIER, lock.getByte()));
+            this.lock.update(lock);
+            properties.add(this.lock);
         }
 
         if (position != null) {
-            propertyList.add(new Property(POSITION_IDENTIFIER, position.getByte()));
+            this.position.update(position);
+            properties.add(this.position);
         }
 
-        return propertyList.toArray(new Property[0]);
+        createBytes(properties);
     }
 
     ControlGasFlap(byte[] bytes) {
         super(bytes);
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                // can update with failure, timestamp or the real property
+                switch (p.getPropertyIdentifier()) {
+                    case LOCK_IDENTIFIER:
+                        return lock.update(p);
+                    case POSITION_IDENTIFIER:
+                        return position.update(p);
+                }
+
+                return null;
+            });
+        }
     }
 }

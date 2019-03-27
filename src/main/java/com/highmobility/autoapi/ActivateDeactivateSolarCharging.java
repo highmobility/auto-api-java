@@ -20,34 +20,44 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Activate or deactivate charging from solar power.
  */
-public class ActivateDeactivateSolarCharging extends CommandWithProperties {
+public class ActivateDeactivateSolarCharging extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x14);
     private static final byte IDENTIFIER = 0x01;
+
+    private Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether to activate the solar charging.
      */
-    public boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
-    private boolean activate;
-
-    public ActivateDeactivateSolarCharging(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
-        this.activate = activate;
+    public ActivateDeactivateSolarCharging(Boolean activate) {
+        super(TYPE);
+        this.activate.update(activate);
+        createBytes(this.activate);
     }
 
-    ActivateDeactivateSolarCharging(byte[] bytes) throws CommandParseException {
+    ActivateDeactivateSolarCharging(byte[] bytes) {
         super(bytes);
-        Property property = getProperty(IDENTIFIER);
-        if (property == null) throw new CommandParseException();
-        activate = Property.getBool(property.getValueByte());
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return activate.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

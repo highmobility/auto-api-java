@@ -21,6 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ByteEnum;
 
 import javax.annotation.Nullable;
 
@@ -28,26 +29,25 @@ import javax.annotation.Nullable;
  * Command sent from the car every time the theft alarm state changes or when a Get Theft Alarm
  * State command is received.
  */
-public class TheftAlarmState extends CommandWithProperties {
+public class TheftAlarmState extends Command {
     public static final Type TYPE = new Type(Identifier.THEFT_ALARM, 0x01);
     private static final byte IDENTIFIER = 0x01;
 
-    State state;
+    Property<Value> state = new Property(Value.class, IDENTIFIER);
 
     /**
      * @return Theft alarm state.
      */
-    @Nullable public State getState() {
+    public Property<Value> getState() {
         return state;
     }
 
     TheftAlarmState(byte[] bytes) {
         super(bytes);
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER) {
-                    state = State.fromByte(p.getValueByte());
-                    return state;
+                    return state.update(p);
                 }
 
                 return null;
@@ -59,14 +59,16 @@ public class TheftAlarmState extends CommandWithProperties {
         return true;
     }
 
-    public enum State {
-        NOT_ARMED((byte) 0x00), ARMED((byte) 0x01), TRIGGERED((byte) 0x02);
+    public enum Value implements ByteEnum {
+        NOT_ARMED((byte) 0x00),
+        ARMED((byte) 0x01),
+        TRIGGERED((byte) 0x02);
 
-        public static State fromByte(byte value) throws CommandParseException {
-            State[] values = State.values();
+        public static Value fromByte(byte value) throws CommandParseException {
+            Value[] values = Value.values();
 
             for (int i = 0; i < values.length; i++) {
-                State value1 = values[i];
+                Value value1 = values[i];
                 if (value1.getByte() == value) {
                     return value1;
                 }
@@ -77,7 +79,7 @@ public class TheftAlarmState extends CommandWithProperties {
 
         private byte value;
 
-        State(byte value) {
+        Value(byte value) {
             this.value = value;
         }
 
@@ -91,8 +93,8 @@ public class TheftAlarmState extends CommandWithProperties {
         state = builder.state;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private State state;
+    public static final class Builder extends Command.Builder {
+        private Property<Value> state;
 
         public Builder() {
             super(TYPE);
@@ -102,9 +104,9 @@ public class TheftAlarmState extends CommandWithProperties {
          * @param state The theft alarm state.
          * @return The builder.
          */
-        public Builder setState(State state) {
+        public Builder setState(Property<Value> state) {
             this.state = state;
-            addProperty(new Property(IDENTIFIER, state.getByte()));
+            addProperty(state.setIdentifier(IDENTIFIER));
             return this;
         }
 

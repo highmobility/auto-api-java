@@ -2,19 +2,20 @@ package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
+import com.highmobility.autoapi.ControlGasFlap;
 import com.highmobility.autoapi.GasFlapState;
 import com.highmobility.autoapi.GetGasFlapState;
-import com.highmobility.autoapi.ControlGasFlap;
-import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.Lock;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FuelingTest {
     Bytes bytes = new Bytes("004001" +
@@ -24,21 +25,24 @@ public class FuelingTest {
 
     @Test
     public void state() {
-        Command command = CommandResolver.resolve(bytes);
-        assertTrue(command.is(GasFlapState.TYPE));
-        GasFlapState state = (GasFlapState) command;
-        assertTrue(state.getLock() == Lock.LOCKED);
-        assertTrue(state.getPosition() == Position.CLOSED);
+        Command state = CommandResolver.resolve(bytes);
+        testState((GasFlapState) state);
+    }
+
+    private void testState(GasFlapState state) {
+        assertTrue(state.getLock().getValue() == Lock.LOCKED);
+        assertTrue(state.getPosition().getValue() == Position.CLOSED);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
         GasFlapState.Builder builder = new GasFlapState.Builder();
 
-        builder.setLock(Lock.LOCKED);
-        builder.setPosition(Position.CLOSED);
+        builder.setLock(new Property(Lock.LOCKED));
+        builder.setPosition(new Property(Position.CLOSED));
 
         GasFlapState state = builder.build();
-        assertTrue(TestUtils.bytesTheSame(state, bytes));
+        testState(state);
     }
 
     @Test public void get() {
@@ -59,11 +63,5 @@ public class FuelingTest {
         ControlGasFlap openCloseGasFlap =
                 (ControlGasFlap) CommandResolver.resolve(waitingForBytes);
         assertTrue(Arrays.equals(openCloseGasFlap.getByteArray(), waitingForBytes));
-    }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("004001");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((GasFlapState) state).getLock() == null);
     }
 }

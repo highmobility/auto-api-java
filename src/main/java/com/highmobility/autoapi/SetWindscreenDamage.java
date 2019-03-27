@@ -21,11 +21,10 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.WindscreenDamage;
-import com.highmobility.autoapi.property.WindscreenDamageZone;
+import com.highmobility.autoapi.value.windscreen.WindscreenDamage;
+import com.highmobility.autoapi.value.windscreen.WindscreenDamageZone;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -34,25 +33,28 @@ import javax.annotation.Nullable;
  * result is sent through the Windscreen State command. Damage confidence percentage is
  * automatically set to either 0% or 100%.
  */
-public class SetWindscreenDamage extends CommandWithProperties {
+public class SetWindscreenDamage extends Command {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x12);
 
     private static final byte IDENTIFIER_WINDSCREEN_DAMAGE = 0x03;
+    private static final byte IDENTIFIER_WINDSCREEN_DAMAGE_ZONE = 0x05;
 
-    private WindscreenDamage damage;
-    private WindscreenDamageZone zone;
+    private Property<WindscreenDamage> damage = new Property(WindscreenDamage.class,
+            IDENTIFIER_WINDSCREEN_DAMAGE);
+    private Property<WindscreenDamageZone> zone = new Property(WindscreenDamageZone.class,
+            IDENTIFIER_WINDSCREEN_DAMAGE_ZONE);
 
     /**
      * @return The windscreen damage.
      */
-    public WindscreenDamage getDamage() {
+    public Property<WindscreenDamage> getDamage() {
         return damage;
     }
 
     /**
      * @return The windscreen damage zone.
      */
-    @Nullable public WindscreenDamageZone getZone() {
+    public Property<WindscreenDamageZone> getZone() {
         return zone;
     }
 
@@ -61,31 +63,38 @@ public class SetWindscreenDamage extends CommandWithProperties {
      * @param zone   The damage zone
      */
     public SetWindscreenDamage(WindscreenDamage damage, @Nullable WindscreenDamageZone zone) {
-        super(TYPE, getProperties(damage, zone));
-        this.damage = damage;
-        this.zone = zone;
+        super(TYPE);
+
+        ArrayList<Property> builder = new ArrayList<>();
+
+        this.damage.update(damage);
+        builder.add(this.damage);
+
+        if (zone != null) {
+            this.zone.update(zone);
+            builder.add(this.zone);
+        }
+
+        createBytes(builder);
     }
 
-    SetWindscreenDamage(byte[] bytes) throws CommandParseException {
+    SetWindscreenDamage(byte[] bytes) {
         super(bytes);
-        for (Property property : properties) {
-            switch (property.getPropertyIdentifier()) {
-                case IDENTIFIER_WINDSCREEN_DAMAGE:
-                    damage = WindscreenDamage.fromByte(property.getValueByte());
-                    break;
-                case WindscreenDamageZone.IDENTIFIER:
-                    zone = new WindscreenDamageZone(property.getValueByte());
-                    break;
-            }
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_WINDSCREEN_DAMAGE:
+                        return damage.update(p);
+                    case IDENTIFIER_WINDSCREEN_DAMAGE_ZONE:
+                        return zone.update(p);
+                }
+                return null;
+            });
         }
     }
 
-    static Property[] getProperties(WindscreenDamage damage, WindscreenDamageZone zone) {
-        List<Property> propertiesBuilder = new ArrayList<>();
-
-        if (damage != null) propertiesBuilder.add(new Property(IDENTIFIER_WINDSCREEN_DAMAGE, damage.getByte()));
-        if (zone != null) propertiesBuilder.add(zone);
-
-        return propertiesBuilder.toArray(new Property[0]);
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

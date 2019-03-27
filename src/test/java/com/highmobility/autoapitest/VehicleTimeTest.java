@@ -4,19 +4,16 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetVehicleTime;
 import com.highmobility.autoapi.VehicleTime;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.TimeZone;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -27,20 +24,18 @@ public class VehicleTimeTest {
     );
 
     @Test
-    public void state() throws ParseException {
-
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+    public void state() {
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == VehicleTime.class);
         VehicleTime state = (VehicleTime) command;
-        Calendar c = state.getVehicleTime();
-        assertTrue(TestUtils.dateIsSame(c, "2017-01-13T22:14:48"));
+        testState(state);
+    }
 
+    private void testState(VehicleTime state) {
+        Calendar c = state.getVehicleTime().getValue();
+        assertTrue(TestUtils.dateIsSame(c, "2017-01-13T22:14:48"));
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -49,18 +44,10 @@ public class VehicleTimeTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("005001");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((VehicleTime) state).getVehicleTime() == null);
-    }
-
     @Test public void build() throws ParseException {
         VehicleTime.Builder builder = new VehicleTime.Builder();
         Calendar c = TestUtils.getCalendar("2017-01-13T22:14:48");
-        builder.setVehicleTime(c);
-        VehicleTime time = builder.build();
-        assertTrue(time.equals(bytes));
-
+        builder.setVehicleTime(new Property(c));
+        testState(builder.build());
     }
 }

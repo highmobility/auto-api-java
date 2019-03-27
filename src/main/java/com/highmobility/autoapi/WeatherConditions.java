@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.DoubleProperty;
-import com.highmobility.autoapi.property.DoubleProperty;
+
+
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
@@ -29,27 +29,29 @@ import javax.annotation.Nullable;
 /**
  * Command sent when a Get Weather Conditions is received by the car.
  */
-public class WeatherConditions extends CommandWithProperties {
+public class WeatherConditions extends Command {
     public static final Type TYPE = new Type(Identifier.WEATHER_CONDITIONS, 0x01);
-    private static final byte RAIN_IDENTIFIER = 0x01;
-    Double rainIntensity;
+
+    private static final byte IDENTIFIER_RAIN = 0x01;
+    Property<Double> rainIntensity = new Property(Double.class, IDENTIFIER_RAIN);
 
     /**
-     * @return The rain intensity percentage.
+     * @return The rain intensity.
      */
-    @Nullable public Double getRainIntensity() {
+
+    public Property<Double> getRainIntensity() {
         return rainIntensity;
     }
 
     WeatherConditions(byte[] bytes) {
         super(bytes);
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == RAIN_IDENTIFIER) {
-                    rainIntensity = Property.getDouble(p.getValueBytes());
-                    return rainIntensity;
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == IDENTIFIER_RAIN) {
+                    return rainIntensity.update(p);
                 }
-                
+
                 return null;
             });
         }
@@ -64,8 +66,8 @@ public class WeatherConditions extends CommandWithProperties {
         rainIntensity = builder.rainIntensity;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private Double rainIntensity;
+    public static final class Builder extends Command.Builder {
+        private Property<Double> rainIntensity;
 
         public Builder() {
             super(TYPE);
@@ -75,9 +77,10 @@ public class WeatherConditions extends CommandWithProperties {
          * @param rainIntensity The rain intensity percentage.
          * @return The builder.
          */
-        public Builder setRainIntensity(Double rainIntensity) {
+        public Builder setRainIntensity(Property<Double> rainIntensity) {
             this.rainIntensity = rainIntensity;
-            addProperty(new DoubleProperty(RAIN_IDENTIFIER, rainIntensity));
+            rainIntensity.setIdentifier(IDENTIFIER_RAIN);
+            addProperty(rainIntensity);
             return this;
         }
 

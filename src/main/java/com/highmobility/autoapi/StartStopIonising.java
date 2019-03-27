@@ -20,37 +20,48 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Manually start or stop ionising. The result is sent through the evented Climate State command.
  */
-public class StartStopIonising extends CommandWithProperties {
+public class StartStopIonising extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x16);
     private static final byte IDENTIFIER = 0x01;
+
+    private Property<Boolean> start = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether ionising should start.
      */
-    public boolean start() {
+    public Property<Boolean> start() {
         return start;
     }
-
-    private final boolean start;
 
     /**
      * @param start The ionising state.
      */
-    public StartStopIonising(boolean start) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, start)));
-        this.start = start;
+    public StartStopIonising(Boolean start) {
+        super(TYPE);
+        this.start.update(start);
+        createBytes(this.start);
     }
 
-    StartStopIonising(byte[] bytes) throws CommandParseException {
+    StartStopIonising(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        start = Property.getBool(prop.getValueByte());
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return start.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

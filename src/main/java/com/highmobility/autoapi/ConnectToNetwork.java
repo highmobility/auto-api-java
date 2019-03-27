@@ -20,9 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.NetworkSecurity;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.value.NetworkSecurity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,32 +31,35 @@ import javax.annotation.Nullable;
 /**
  * Connect the car to a Wi-Fi network.
  */
-public class ConnectToNetwork extends CommandWithProperties {
+public class ConnectToNetwork extends Command {
     public static final Type TYPE = new Type(Identifier.WIFI, 0x02);
-    public static final byte PASSWORD_IDENTIFIER = 0x05;
+    private static final byte IDENTIFIER_SSID = 0x03;
+    private static final byte IDENTIFIER_SECURITY = 0x04;
+    private static final byte IDENTIFIER_PASSWORD = 0x05;
 
-    private String ssid;
-    private NetworkSecurity security;
-    private String password;
+    private Property<String> ssid = new Property(String.class, IDENTIFIER_SSID);
+    private Property<String> password = new Property(String.class, IDENTIFIER_PASSWORD);
+    private Property<NetworkSecurity> security = new Property(NetworkSecurity.class
+            , IDENTIFIER_SECURITY);
 
     /**
      * @return The network SSID.
      */
-    public String getSsid() {
+    public Property<String> getSsid() {
         return ssid;
     }
 
     /**
      * @return The network security.
      */
-    public NetworkSecurity getSecurity() {
+    public Property<NetworkSecurity> getSecurity() {
         return security;
     }
 
     /**
      * @return The network password.
      */
-    @Nullable public String getPassword() {
+    @Nullable public Property<String> getPassword() {
         return password;
     }
 
@@ -68,43 +70,45 @@ public class ConnectToNetwork extends CommandWithProperties {
      * @param security Network security.
      * @param password The password.
      */
-    public ConnectToNetwork(String ssid, NetworkSecurity security, @Nullable String password) {
-        super(TYPE, getProperties(ssid, security, password));
-        this.ssid = ssid;
-        this.security = security;
-        this.password = password;
-    }
+    public ConnectToNetwork(String ssid, NetworkSecurity security,
+                            @Nullable String password) {
+        super(TYPE);
 
-    static Property[] getProperties(String ssid, NetworkSecurity security, String password) {
         List<Property> propertiesBuilder = new ArrayList<>();
 
-        if (ssid != null)
-            propertiesBuilder.add(new StringProperty(WifiState.SSID_IDENTIFIER, ssid));
+        this.ssid.update(ssid);
+        propertiesBuilder.add(this.ssid);
 
-        if (security != null) {
-            propertiesBuilder.add(new Property(WifiState.SECURITY_IDENTIFIER, security.getByte()));
+        this.security.update(security);
+        propertiesBuilder.add(this.security);
+
+        if (password != null) {
+            this.password.update(password);
+            propertiesBuilder.add(this.password);
         }
-        if (password != null)
-            propertiesBuilder.add(new StringProperty(PASSWORD_IDENTIFIER, password));
 
-        return propertiesBuilder.toArray(new Property[0]);
+        createBytes(propertiesBuilder);
     }
 
-    ConnectToNetwork(byte[] bytes) throws CommandParseException {
+    ConnectToNetwork(byte[] bytes) {
         super(bytes);
 
-        for (Property property : properties) {
-            switch (property.getPropertyIdentifier()) {
-                case WifiState.SSID_IDENTIFIER:
-                    ssid = Property.getString(property.getValueBytes());
-                    break;
-                case WifiState.SECURITY_IDENTIFIER:
-                    security = NetworkSecurity.fromByte(property.getValueByte());
-                    break;
-                case PASSWORD_IDENTIFIER:
-                    password = Property.getString(property.getValueBytes());
-                    break;
-            }
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_SSID:
+                        return ssid.update(p);
+                    case IDENTIFIER_SECURITY:
+                        return security.update(p);
+                    case IDENTIFIER_PASSWORD:
+                        return password.update(p);
+                }
+                return null;
+            });
         }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

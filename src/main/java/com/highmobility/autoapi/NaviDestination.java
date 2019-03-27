@@ -20,52 +20,50 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CoordinatesProperty;
+import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
+
 
 import javax.annotation.Nullable;
 
 /**
  * Command sent when a Get Navi Destination command is received by the car.
  */
-public class NaviDestination extends CommandWithProperties {
+public class NaviDestination extends Command {
     public static final Type TYPE = new Type(Identifier.NAVI_DESTINATION, 0x01);
 
     private static final byte COORDINATES_IDENTIFIER = 0x07;
     private static final byte NAME_IDENTIFIER = 0x02;
 
-    private CoordinatesProperty coordinates;
-    private String name;
+    private Property<Coordinates> coordinates = new Property(Coordinates.class,
+            COORDINATES_IDENTIFIER);
+    private Property<String> name = new Property(String.class, NAME_IDENTIFIER);
 
     /**
      * @return The coordinates.
      */
-    @Nullable public CoordinatesProperty getCoordinates() {
+    @Nullable public Property<Coordinates> getCoordinates() {
         return coordinates;
     }
 
     /**
      * @return The name.
      */
-    @Nullable public String getName() {
+    @Nullable public Property<String> getName() {
         return name;
     }
 
     NaviDestination(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case COORDINATES_IDENTIFIER:
-                        coordinates = new CoordinatesProperty(p.getPropertyBytes());
-                        return coordinates;
+                        return coordinates.update(p);
                     case NAME_IDENTIFIER:
-                        name = Property.getString(p.getValueBytes());
-                        return name;
+                        return name.update(p);
                 }
-                
                 return null;
             });
         }
@@ -81,9 +79,9 @@ public class NaviDestination extends CommandWithProperties {
         coordinates = builder.coordinates;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private String name;
-        private CoordinatesProperty coordinates;
+    public static final class Builder extends Command.Builder {
+        private Property<String> name;
+        private Property<Coordinates> coordinates;
 
         public Builder() {
             super(TYPE);
@@ -93,7 +91,7 @@ public class NaviDestination extends CommandWithProperties {
          * @param coordinates The coordinates.
          * @return The builder.
          */
-        public Builder setCoordinates(CoordinatesProperty coordinates) {
+        public Builder setCoordinates(Property<Coordinates> coordinates) {
             this.coordinates = coordinates;
             coordinates.setIdentifier(COORDINATES_IDENTIFIER);
             addProperty(coordinates);
@@ -104,9 +102,9 @@ public class NaviDestination extends CommandWithProperties {
          * @param name The name.
          * @return The builder.
          */
-        public Builder setName(String name) {
+        public Builder setName(Property<String> name) {
             this.name = name;
-            addProperty(new StringProperty(NAME_IDENTIFIER, name));
+            addProperty(name.setIdentifier(NAME_IDENTIFIER));
             return this;
         }
 

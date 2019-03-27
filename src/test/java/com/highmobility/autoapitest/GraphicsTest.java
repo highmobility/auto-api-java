@@ -5,9 +5,9 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DisplayImage;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GraphicsTest {
     @Test public void displayImage() {
@@ -18,6 +18,10 @@ public class GraphicsTest {
 
         Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof DisplayImage);
-        assertTrue(((DisplayImage)command).getUrl().equals("https://goo.gl/VyU1ip"));
+        assertTrue(((DisplayImage)command).getUrl().getValue().equals("https://goo.gl/VyU1ip"));
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(DisplayImage.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

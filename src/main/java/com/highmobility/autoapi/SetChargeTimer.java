@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.charging.ChargingTimer;
+import com.highmobility.autoapi.value.charging.ChargingTimer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,17 +30,17 @@ import java.util.List;
  * Set the charge timer of the car. The command can include one of the different timer types or
  * all.
  */
-public class SetChargeTimer extends CommandWithProperties {
+public class SetChargeTimer extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x16);
 
     public static final byte PROPERTY_IDENTIFIER = 0x0D;
 
-    ChargingTimer[] timers;
+    Property<ChargingTimer>[] timers;
 
     /**
      * @return The charge timers.
      */
-    public ChargingTimer[] getChargingTimers() {
+    public Property<ChargingTimer>[] getChargingTimers() {
         return timers;
     }
 
@@ -50,11 +50,12 @@ public class SetChargeTimer extends CommandWithProperties {
      * @param type The charge timer type.
      * @return The charge timer.
      */
-    public ChargingTimer getChargingTimer(ChargingTimer.Type type) {
+    public Property<ChargingTimer> getChargingTimer(ChargingTimer.Type type) {
         if (timers == null) return null;
         for (int i = 0; i < timers.length; i++) {
-            ChargingTimer timer = timers[i];
-            if (timer.getType() == type) return timer;
+            Property<ChargingTimer> timer = timers[i];
+            if (timer.getValue() != null && timer.getValue().getType() == type)
+                return timer;
         }
         return null;
     }
@@ -63,34 +64,45 @@ public class SetChargeTimer extends CommandWithProperties {
      * @param timers The charging timers.
      */
     public SetChargeTimer(ChargingTimer[] timers) {
-        super(TYPE, validateTimers(timers));
-        this.timers = timers;
-    }
+        super(TYPE);
 
-    static ChargingTimer[] validateTimers(ChargingTimer[] timers) throws IllegalArgumentException {
-        if (timers.length == 0) throw new IllegalArgumentException();
+        ArrayList<Property> builder = new ArrayList<>();
 
-        ArrayList<ChargingTimer.Type> types = new ArrayList<>(3);
         for (ChargingTimer timer : timers) {
-            if (types.contains(timer.getType()) == false) types.add(timer.getType());
-            else throw new IllegalArgumentException("Duplicate timer types are not allowed");
-            timer.setIdentifier(PROPERTY_IDENTIFIER);
+
+            for (ChargingTimer timer2 : timers) {
+                if (timer2 != timer && timer2.getType() == timer.getType())
+                    throw new IllegalArgumentException();
+            }
+
+            Property<ChargingTimer> prop = new Property(PROPERTY_IDENTIFIER, timer);
+            builder.add(prop);
         }
 
-        return timers;
+        this.timers = builder.toArray(new Property[0]);
+        createBytes(builder);
     }
 
-    SetChargeTimer(byte[] bytes) throws CommandParseException {
+    SetChargeTimer(byte[] bytes) {
         super(bytes);
-        List<ChargingTimer> builder = new ArrayList<>();
+        List<Property<ChargingTimer>> builder = new ArrayList<>();
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            if (property.getPropertyIdentifier() == 0x0D) {
-                builder.add(new ChargingTimer(property.getPropertyBytes()));
-            }
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case PROPERTY_IDENTIFIER:
+                        Property<ChargingTimer> timer = new Property(ChargingTimer.class, p);
+                        builder.add(timer);
+                        return timer;
+                }
+                return null;
+            });
         }
 
-        timers = builder.toArray(new ChargingTimer[0]);
+        timers = builder.toArray(new Property[0]);
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

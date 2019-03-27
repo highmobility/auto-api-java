@@ -20,9 +20,10 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
+
+import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
@@ -30,15 +31,18 @@ import javax.annotation.Nullable;
  * Activate or deactivate cruise control. The result is sent through the Cruise Control State
  * message.
  */
-public class ActivateDeactivateCruiseControl extends CommandWithProperties {
+public class ActivateDeactivateCruiseControl extends Command {
     public static final Type TYPE = new Type(Identifier.CRUISE_CONTROL, 0x12);
-    Boolean activate;
-    Integer speed;
+    private static final byte IDENTIFIER_ACTIVATE = 0x01;
+    private static final byte IDENTIFIER_SPEED = 0x02;
+
+    Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER_ACTIVATE);
+    PropertyInteger speed = new PropertyInteger(IDENTIFIER_SPEED, false);
 
     /**
      * @return Whether cruise control should be activated.
      */
-    public Boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
@@ -46,7 +50,7 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
      * @return The target speed in km/h.
      */
     @Nullable public Integer getSpeed() {
-        return speed;
+        return speed.getValue();
     }
 
     /**
@@ -57,23 +61,27 @@ public class ActivateDeactivateCruiseControl extends CommandWithProperties {
      * @param speed    The speed. Nullable if cruise control inactive.
      */
     public ActivateDeactivateCruiseControl(Boolean activate, @Nullable Integer speed) {
-        super(TYPE, getProperties(activate, speed));
-        this.activate = activate;
-        this.speed = speed;
-    }
+        super(TYPE);
+        ArrayList<Property> properties = new ArrayList<>();
 
-    static Property[] getProperties(Boolean activate, Integer speed) {
-        Property[] properties = new Property[speed == null ? 1 : 2];
+        properties.add(new Property(activate).setIdentifier(IDENTIFIER_ACTIVATE));
+        this.activate.update(activate);
 
-        properties[0] = new BooleanProperty((byte) 0x01, activate);
-        if (speed != null) properties[1] = new IntegerProperty((byte) 0x02, speed, 2);
+        if (speed != null) {
+            this.speed.update(false, 2, speed);
+            properties.add(this.speed);
+        }
 
-        return properties;
+        createBytes(properties);
     }
 
     ActivateDeactivateCruiseControl(byte[] bytes) {
         super(bytes);
 
         // no telematics
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

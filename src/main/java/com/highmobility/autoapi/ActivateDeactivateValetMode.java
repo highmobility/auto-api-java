@@ -20,36 +20,47 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Activate or deactivate valet mode. The result is sent through the Valet Mode message.
  */
-public class ActivateDeactivateValetMode extends CommandWithProperties {
+public class ActivateDeactivateValetMode extends Command {
     public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x12);
     private static final byte IDENTIFIER = 0x01;
-    boolean activate;
+    Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether valet mode should be activated.
      */
-    public boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
     /**
      * @param activate Whether valet mode should be activated.
      */
-    public ActivateDeactivateValetMode(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
-        this.activate = activate;
+    public ActivateDeactivateValetMode(Boolean activate) {
+        super(TYPE);
+        this.activate.update(activate);
+        createBytes(this.activate);
     }
 
-    ActivateDeactivateValetMode(byte[] bytes) throws CommandParseException {
+    ActivateDeactivateValetMode(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        this.activate = Property.getBool(prop.getValueByte());
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return activate.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

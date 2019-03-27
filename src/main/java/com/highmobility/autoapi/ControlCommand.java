@@ -20,37 +20,39 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * To be sent every time the controls for the car wants to be changed or once a second if the
  * controls remain the same. If the car does not receive the command every second it will stop the
  * control mode.
  */
-public class ControlCommand extends CommandWithProperties {
+public class ControlCommand extends Command {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x04);
-    private static final byte speedIdentifier = 0x01;
-    private static final byte angleIdentifier = 0x02;
+    private static final byte IDENTIFIER_SPEED = 0x01;
+    private static final byte IDENTIFIER_ANGLE = 0x02;
 
-    Integer speed;
-    Integer angle;
+    PropertyInteger speed = new PropertyInteger(IDENTIFIER_SPEED, true);
+    PropertyInteger angle = new PropertyInteger(IDENTIFIER_ANGLE, true);
 
     /**
      * @return The speed in km/h, can range between -5 to 5 whereas a negative speed will reverse
      * the car.
      */
-    public Integer getSpeed() {
+    public Property<Integer> getSpeed() {
         return speed;
     }
 
     /**
      * @return The angle of the car
      */
-    public Integer getAngle() {
+    public Property<Integer> getAngle() {
         return angle;
     }
 
@@ -60,42 +62,41 @@ public class ControlCommand extends CommandWithProperties {
      * @param angle angle of the car.
      * @throws IllegalArgumentException When all arguments are null or invalid
      */
-    public ControlCommand(Integer speed, Integer angle) {
-        super(TYPE, getProperties(speed, angle));
-        this.speed = speed;
-        this.angle = angle;
-    }
-
-    static Property[] getProperties(Integer speed, Integer angle) {
+    public ControlCommand(@Nullable Integer speed, @Nullable Integer angle) {
+        super(TYPE);
         List<Property> properties = new ArrayList<>();
 
         if (speed != null) {
             if (speed > 5 || speed < -5) throw new IllegalArgumentException();
 
-            IntegerProperty prop = new IntegerProperty(speedIdentifier, speed, 1);
-            properties.add(prop);
+            this.speed.update(true, 1, speed);
+            properties.add(this.speed);
         }
 
         if (angle != null) {
-            IntegerProperty prop = new IntegerProperty(angleIdentifier, angle, 2);
-            properties.add(prop);
+            this.angle.update(true, 2, angle);
+            properties.add(this.angle);
         }
 
-        return properties.toArray(new Property[0]);
+        createBytes(properties);
     }
 
     ControlCommand(byte[] bytes) {
         super(bytes);
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case speedIdentifier:
-                    speed = Property.getSignedInt(property.getValueByte());
-                    break;
-                case angleIdentifier:
-                    angle = Property.getSignedInt(property.getValueBytes());
-                    break;
-            }
+
+        // Not used in telematics.
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_SPEED:
+                        return speed.update(p);
+                    case IDENTIFIER_ANGLE:
+                        return angle.update(p);
+                }
+                
+                return null;
+            });
         }
     }
 }

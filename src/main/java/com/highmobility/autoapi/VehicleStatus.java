@@ -20,15 +20,12 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CommandProperty;
-import com.highmobility.autoapi.property.FloatProperty;
-import com.highmobility.autoapi.property.IntegerProperty;
-import com.highmobility.autoapi.property.PowerTrain;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
-import com.highmobility.autoapi.property.value.DisplayUnit;
-import com.highmobility.autoapi.property.value.DriverSeatLocation;
-import com.highmobility.autoapi.property.value.Gearbox;
+import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.DisplayUnit;
+import com.highmobility.autoapi.value.DriverSeatLocation;
+import com.highmobility.autoapi.value.Gearbox;
+import com.highmobility.autoapi.value.PowerTrain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,64 +37,66 @@ import javax.annotation.Nullable;
  * array of all states that the vehicle possesses. No states are included for Capabilities that are
  * unsupported.
  */
-public class VehicleStatus extends CommandWithProperties {
+public class VehicleStatus extends Command {
     public static final Type TYPE = new Type(Identifier.VEHICLE_STATUS, 0x01);
 
-    private static final byte VIN_IDENTIFIER = 0x01;
-    private static final byte POWER_TRAIN_IDENTIFIER = 0x02;
-    private static final byte MODEL_NAME_IDENTIFIER = 0x03;
-    private static final byte NAME_IDENTIFIER = 0x04;
-    private static final byte LICENSE_PLATE_IDENTIFIER = 0x05;
-    private static final byte SALES_DESIGNATION_IDENTIFIER = 0x06;
-    private static final byte MODEL_YEAR_IDENTIFIER = 0x07;
-    private static final byte COLOR_IDENTIFIER = 0x08;
-    private static final byte POWER_IDENTIFIER = 0x09;
-    private static final byte NUMBER_OF_DOORS_IDENTIFIER = 0x0A;
-    private static final byte NUMBER_OF_SEATS_IDENTIFIER = 0x0B;
+    private static final byte IDENTIFIER_VIN = 0x01;
+    private static final byte IDENTIFIER_POWER_TRAIN = 0x02;
+    private static final byte IDENTIFIER_MODEL_NAME = 0x03;
+    private static final byte IDENTIFIER_NAME = 0x04;
+    private static final byte IDENTIFIER_LICENSE_PLATE = 0x05;
+    private static final byte IDENTIFIER_SALES_DESIGNATION = 0x06;
+    private static final byte IDENTIFIER_MODEL_YEAR = 0x07;
+    private static final byte IDENTIFIER_COLOR = 0x08;
+    private static final byte IDENTIFIER_POWER = 0x09;
+    private static final byte IDENTIFIER_NUMBER_OF_DOORS = 0x0A;
+    private static final byte IDENTIFIER_NUMBER_OF_SEATS = 0x0B;
     private static final byte COMMAND_IDENTIFIER = (byte) 0x99;
 
-    private static final byte ENGINE_VOLUME_IDENTIFIER = 0x0C;
-    private static final byte MAX_TORQUE_IDENTIFIER = 0x0D;
-    private static final byte GEARBOX_IDENTIFIER = 0x0E;
+    private static final byte IDENTIFIER_ENGINE_VOLUME = 0x0C;
+    private static final byte IDENTIFIER_MAX_TORQUE = 0x0D;
+    private static final byte IDENTIFIER_GEARBOX = 0x0E;
 
     private static final byte IDENTIFIER_DISPLAY_UNIT = 0x0F;
     private static final byte IDENTIFIER_DRIVER_SEAT_LOCATION = 0x10;
     private static final byte IDENTIFIER_EQUIPMENTS = 0x11;
 
     private static final byte IDENTIFIER_BRAND = 0x12;
+    private static final byte IDENTIFIER_STATE = (byte) 0x99;
 
-    Command[] states;
+    Property<Command>[] states;
 
-    String vin;
-    PowerTrain powerTrain;
-    String modelName;
-    String name;
-    String licensePlate;
+    Property<String> vin = new Property(String.class, IDENTIFIER_VIN);
+    Property<PowerTrain> powerTrain = new Property(PowerTrain.class, IDENTIFIER_POWER_TRAIN);
+    Property<String> modelName = new Property(String.class, IDENTIFIER_MODEL_NAME);
+    Property<String> name = new Property(String.class, IDENTIFIER_NAME);
+    Property<String> licensePlate = new Property(String.class, IDENTIFIER_LICENSE_PLATE);
 
-    String salesDesignation;
-    Integer modelYear;
-    String color;
-    Integer power;
-    Integer numberOfDoors;
-    Integer numberOfSeats;
+    Property<String> salesDesignation = new Property(String.class, IDENTIFIER_SALES_DESIGNATION);
+    Property<Integer> modelYear = new PropertyInteger(IDENTIFIER_MODEL_YEAR, false);
+    Property<String> color = new Property(String.class, IDENTIFIER_COLOR);
+    Property<Integer> power = new PropertyInteger(IDENTIFIER_POWER, false);
+    Property<Integer> numberOfDoors = new PropertyInteger(IDENTIFIER_NUMBER_OF_DOORS, false);
+    Property<Integer> numberOfSeats = new PropertyInteger(IDENTIFIER_NUMBER_OF_SEATS, false);
 
     // l7
-    Float engineVolume; // 0c The engine volume displacement in liters
-    Integer maxTorque; // 0d maximum engine torque in Nm
-    Gearbox gearBox; // 0e Gearbox type
+    Property<Float> engineVolume = new Property(Float.class, IDENTIFIER_ENGINE_VOLUME);
+    Property<Integer> maxTorque = new PropertyInteger(IDENTIFIER_MAX_TORQUE, false);
+    Property<Gearbox> gearBox = new Property(Gearbox.class, IDENTIFIER_GEARBOX);
 
     // l8
-    DisplayUnit displayUnit;
-    DriverSeatLocation driverSeatLocation;
-    String[] equipments;
+    Property<DisplayUnit> displayUnit = new Property(DisplayUnit.class, IDENTIFIER_DISPLAY_UNIT);
+    Property<DriverSeatLocation> driverSeatLocation = new Property(DriverSeatLocation.class,
+            IDENTIFIER_DRIVER_SEAT_LOCATION);
+    Property<String>[] equipments;
 
     // l9
-    String brand;
+    Property<String> brand = new Property(String.class, IDENTIFIER_BRAND);
 
     /**
      * @return All of the states.
      */
-    public Command[] getStates() {
+    public Property<Command>[] getStates() {
         return states;
     }
 
@@ -105,11 +104,12 @@ public class VehicleStatus extends CommandWithProperties {
      * @param type The type of the command.
      * @return The state for the given Command type, if exists.
      */
-    @Nullable public Command getState(Type type) {
+    @Nullable public Property<Command> getState(Type type) {
         if (states == null) return null;
         for (int i = 0; i < states.length; i++) {
-            Command command = states[i];
-            if (command.getType().equals(type)) return command;
+            Property<Command> command = states[i];
+            if (command.getValue() != null && command.getValue().getType().equals(type))
+                return command;
         }
 
         return null;
@@ -118,209 +118,188 @@ public class VehicleStatus extends CommandWithProperties {
     /**
      * @return The vehicle's VIN number
      */
-    @Nullable public String getVin() {
+    public Property<String> getVin() {
         return vin;
     }
 
     /**
      * @return The vehicle's power train
      */
-    @Nullable public PowerTrain getPowerTrain() {
+    public Property<PowerTrain> getPowerTrain() {
         return powerTrain;
     }
 
     /**
      * @return The vehicle's model name
      */
-    @Nullable public String getModelName() {
+    public Property<String> getModelName() {
         return modelName;
     }
 
     /**
      * @return The vehicle's name
      */
-    @Nullable public String getName() {
+    public Property<String> getName() {
         return name;
     }
 
     /**
      * @return The vehicle's license plate
      */
-    @Nullable public String getLicensePlate() {
+    public Property<String> getLicensePlate() {
         return licensePlate;
     }
 
     /**
      * @return The sales designation of the model
      */
-    @Nullable public String getSalesDesignation() {
+    public Property<String> getSalesDesignation() {
         return salesDesignation;
     }
 
     /**
      * @return The car model manufacturing year number
      */
-    @Nullable public Integer getModelYear() {
+    public Property<Integer> getModelYear() {
         return modelYear;
     }
 
     /**
      * @return The color name
      */
-    @Nullable public String getColorName() {
+    public Property<String> getColorName() {
         return color;
     }
 
     /**
      * @return The power of the car measured in kw
      */
-    @Nullable public Integer getPower() {
+    public Property<Integer> getPower() {
         return power;
     }
 
     /**
      * @return The number of doors
      */
-    @Nullable public Integer getNumberOfDoors() {
+    public Property<Integer> getNumberOfDoors() {
         return numberOfDoors;
     }
 
     /**
      * @return The number of seats
      */
-    @Nullable public Integer getNumberOfSeats() {
+    public Property<Integer> getNumberOfSeats() {
         return numberOfSeats;
     }
 
     /**
      * @return The engine volume displacement in liters.
      */
-    @Nullable public Float getEngineVolume() {
+    public Property<Float> getEngineVolume() {
         return engineVolume;
     }
 
     /**
      * @return The maximum engine torque in Nm.
      */
-    @Nullable public Integer getMaxTorque() {
+    public Property<Integer> getMaxTorque() {
         return maxTorque;
     }
 
     /**
      * @return The gearbox type.
      */
-    @Nullable public Gearbox getGearBox() {
+    public Property<Gearbox> getGearBox() {
         return gearBox;
     }
 
     /**
      * @return The display unit.
      */
-    @Nullable public DisplayUnit getDisplayUnit() {
+    public Property<DisplayUnit> getDisplayUnit() {
         return displayUnit;
     }
 
     /**
      * @return The driver seat location.
      */
-    @Nullable public DriverSeatLocation getDriverSeatLocation() {
+    public Property<DriverSeatLocation> getDriverSeatLocation() {
         return driverSeatLocation;
     }
 
     /**
      * @return The equipments that the vehicle is equipped with.
      */
-    public String[] getEquipments() {
+    public Property<String>[] getEquipments() {
         return equipments;
     }
 
     /**
      * @return The vehicle brand name.
      */
-    @Nullable public String getBrand() {
+    public Property<String> getBrand() {
         return brand;
     }
 
     VehicleStatus(byte[] bytes) {
         super(bytes);
 
-        ArrayList<Command> states = new ArrayList<>();
-        ArrayList<String> equipments = new ArrayList<>();
+        ArrayList<Property<Command>> states = new ArrayList<>();
+        ArrayList<Property<String>> equipments = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case VIN_IDENTIFIER:
-                        vin = Property.getString(p.getValueBytes());
-                        return vin;
-                    case POWER_TRAIN_IDENTIFIER:
-                        powerTrain = PowerTrain.fromByte(p.getValueByte());
-                        return powerTrain;
-                    case MODEL_NAME_IDENTIFIER:
-                        modelName = Property.getString(p.getValueBytes());
-                        return modelName;
-                    case NAME_IDENTIFIER:
-                        name = Property.getString(p.getValueBytes());
-                        return name;
-                    case LICENSE_PLATE_IDENTIFIER:
-                        licensePlate = Property.getString(p.getValueBytes());
-                        return licensePlate;
-                    case SALES_DESIGNATION_IDENTIFIER:
-                        salesDesignation = Property.getString(p.getValueBytes());
-                        return salesDesignation;
-                    case MODEL_YEAR_IDENTIFIER:
-                        modelYear = Property.getUnsignedInt(p.getValueBytes());
-                        return modelYear;
-                    case COLOR_IDENTIFIER:
-                        color = Property.getString(p.getValueBytes());
-                        return color;
-                    case POWER_IDENTIFIER:
-                        power = Property.getUnsignedInt(p.getValueBytes());
-                        return power;
-                    case NUMBER_OF_DOORS_IDENTIFIER:
-                        numberOfDoors = Property.getUnsignedInt(p.getValueBytes());
-                        return numberOfDoors;
-                    case NUMBER_OF_SEATS_IDENTIFIER:
-                        numberOfSeats = Property.getUnsignedInt(p.getValueBytes());
-                        return numberOfSeats;
+                    case IDENTIFIER_VIN:
+                        return vin.update(p);
+                    case IDENTIFIER_POWER_TRAIN:
+                        return powerTrain.update(p);
+                    case IDENTIFIER_MODEL_NAME:
+                        return modelName.update(p);
+                    case IDENTIFIER_NAME:
+                        return name.update(p);
+                    case IDENTIFIER_LICENSE_PLATE:
+                        return licensePlate.update(p);
+                    case IDENTIFIER_SALES_DESIGNATION:
+                        return salesDesignation.update(p);
+                    case IDENTIFIER_MODEL_YEAR:
+                        return modelYear.update(p);
+                    case IDENTIFIER_COLOR:
+                        return color.update(p);
+                    case IDENTIFIER_POWER:
+                        return power.update(p);
+                    case IDENTIFIER_NUMBER_OF_DOORS:
+                        return numberOfDoors.update(p);
+                    case IDENTIFIER_NUMBER_OF_SEATS:
+                        return numberOfSeats.update(p);
                     case COMMAND_IDENTIFIER:
-                        Command command = CommandResolver.resolve(p.getValueBytes());
+                        Property<Command> command = new Property(Command.class, p);
                         states.add(command);
                         return command;
-                    case ENGINE_VOLUME_IDENTIFIER:
-                        engineVolume = Property.getFloat(p.getValueBytes());
-                        return engineVolume;
-                    case MAX_TORQUE_IDENTIFIER:
-                        maxTorque = Property.getUnsignedInt(p.getValueBytes());
-                        return maxTorque;
-                    case GEARBOX_IDENTIFIER:
-                        gearBox = Gearbox.fromByte(p.getValueByte());
-                        return gearBox;
+                    case IDENTIFIER_ENGINE_VOLUME:
+                        return engineVolume.update(p);
+                    case IDENTIFIER_MAX_TORQUE:
+                        return maxTorque.update(p);
+                    case IDENTIFIER_GEARBOX:
+                        return gearBox.update(p);
                     case IDENTIFIER_DISPLAY_UNIT:
-                        displayUnit = DisplayUnit.fromByte(p.getValueByte());
-                        return displayUnit;
+                        return displayUnit.update(p);
                     case IDENTIFIER_DRIVER_SEAT_LOCATION:
-                        driverSeatLocation = DriverSeatLocation.fromByte(p.getValueByte());
-                        return driverSeatLocation;
+                        return driverSeatLocation.update(p);
                     case IDENTIFIER_EQUIPMENTS:
-                        String equipment = Property.getString(p.getValueBytes());
+                        Property<String> equipment = new Property(String.class, p);
                         equipments.add(equipment);
                         return equipment;
                     case IDENTIFIER_BRAND:
-                        brand = Property.getString(p.getValueBytes());
-                        return brand;
+                        return brand.update(p);
                 }
 
                 return null;
             });
         }
 
-        this.states = states.toArray(new Command[0]);
-        this.equipments = equipments.toArray(new String[states.size()]);
-    }
-
-    @Override protected boolean propertiesExpected() {
-        return false;
+        this.states = states.toArray(new Property[0]);
+        this.equipments = equipments.toArray(new Property[0]);
     }
 
     private VehicleStatus(Builder builder) {
@@ -336,40 +315,40 @@ public class VehicleStatus extends CommandWithProperties {
         power = builder.power;
         numberOfDoors = builder.numberOfDoors;
         numberOfSeats = builder.numberOfSeats;
-        states = builder.states.toArray(new Command[0]);
+        states = builder.states.toArray(new Property[0]);
         engineVolume = builder.engineVolume;
         maxTorque = builder.maxTorque;
         gearBox = builder.gearBox;
 
         displayUnit = builder.displayUnit;
         driverSeatLocation = builder.driverSeatLocation;
-        equipments = builder.equipments.toArray(new String[0]);
+        equipments = builder.equipments.toArray(new Property[0]);
         brand = builder.brand;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private String vin;
-        private PowerTrain powerTrain;
-        private String modelName;
-        private String name;
-        private String licensePlate;
-        private String salesDesignation;
-        private Integer modelYear;
-        private String color;
-        private Integer power;
-        private Integer numberOfDoors;
-        private Integer numberOfSeats;
-        private List<Command> states = new ArrayList<>();
+    public static final class Builder extends Command.Builder {
+        private Property<String> vin;
+        private Property<PowerTrain> powerTrain;
+        private Property<String> modelName;
+        private Property<String> name;
+        private Property<String> licensePlate;
+        private Property<String> salesDesignation;
+        private PropertyInteger modelYear;
+        private Property<String> color;
+        private PropertyInteger power;
+        private PropertyInteger numberOfDoors;
+        private PropertyInteger numberOfSeats;
+        private List<Property<Command>> states = new ArrayList<>();
 
-        private Float engineVolume;
-        private Integer maxTorque;
-        private Gearbox gearBox;
+        private Property<Float> engineVolume;
+        private PropertyInteger maxTorque;
+        private Property<Gearbox> gearBox;
 
-        DisplayUnit displayUnit;
-        DriverSeatLocation driverSeatLocation;
-        List<String> equipments = new ArrayList<>();
+        Property<DisplayUnit> displayUnit;
+        Property<DriverSeatLocation> driverSeatLocation;
+        List<Property<String>> equipments = new ArrayList<>();
 
-        private String brand;
+        private Property<String> brand;
 
         public Builder() {
             super(TYPE);
@@ -379,9 +358,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param vin The VIN.
          * @return The builder.
          */
-        public Builder setVin(String vin) {
+        public Builder setVin(Property<String> vin) {
             this.vin = vin;
-            addProperty(new StringProperty(VIN_IDENTIFIER, vin));
+            addProperty(vin.setIdentifier(IDENTIFIER_VIN));
             return this;
         }
 
@@ -389,9 +368,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param powerTrain The power train.
          * @return The builder.
          */
-        public Builder setPowerTrain(PowerTrain powerTrain) {
+        public Builder setPowerTrain(Property<PowerTrain> powerTrain) {
             this.powerTrain = powerTrain;
-            addProperty(new Property(POWER_TRAIN_IDENTIFIER, powerTrain.getByte()));
+            addProperty(powerTrain.setIdentifier(IDENTIFIER_POWER_TRAIN));
             return this;
         }
 
@@ -399,9 +378,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param modelName The model name.
          * @return The builder.
          */
-        public Builder setModelName(String modelName) {
+        public Builder setModelName(Property<String> modelName) {
             this.modelName = modelName;
-            addProperty(new StringProperty(MODEL_NAME_IDENTIFIER, modelName));
+            addProperty(modelName.setIdentifier(IDENTIFIER_MODEL_NAME));
             return this;
         }
 
@@ -409,9 +388,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param name The vehicle name.
          * @return The builder.
          */
-        public Builder setName(String name) {
+        public Builder setName(Property<String> name) {
             this.name = name;
-            addProperty(new StringProperty(NAME_IDENTIFIER, name));
+            addProperty(name.setIdentifier(IDENTIFIER_NAME));
             return this;
         }
 
@@ -419,9 +398,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param licensePlate The license plate number.
          * @return The builder.
          */
-        public Builder setLicensePlate(String licensePlate) {
+        public Builder setLicensePlate(Property<String> licensePlate) {
             this.licensePlate = licensePlate;
-            addProperty(new StringProperty(LICENSE_PLATE_IDENTIFIER, licensePlate));
+            addProperty(licensePlate.setIdentifier(IDENTIFIER_LICENSE_PLATE));
             return this;
         }
 
@@ -429,9 +408,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param salesDesignation The sales designation.
          * @return The builder.
          */
-        public Builder setSalesDesignation(String salesDesignation) {
+        public Builder setSalesDesignation(Property<String> salesDesignation) {
             this.salesDesignation = salesDesignation;
-            addProperty(new StringProperty(SALES_DESIGNATION_IDENTIFIER, salesDesignation));
+            addProperty(salesDesignation.setIdentifier(IDENTIFIER_SALES_DESIGNATION));
             return this;
         }
 
@@ -439,9 +418,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param modelYear The model year.
          * @return The builder.
          */
-        public Builder setModelYear(Integer modelYear) {
-            this.modelYear = modelYear;
-            addProperty(new IntegerProperty(MODEL_YEAR_IDENTIFIER, modelYear, 2));
+        public Builder setModelYear(Property<Integer> modelYear) {
+            this.modelYear = new PropertyInteger(IDENTIFIER_MODEL_YEAR, false, 2, modelYear);
+            addProperty(this.modelYear);
             return this;
         }
 
@@ -449,9 +428,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param color The color name
          * @return The builder.
          */
-        public Builder setColorName(String color) {
+        public Builder setColorName(Property<String> color) {
             this.color = color;
-            addProperty(new StringProperty(COLOR_IDENTIFIER, color));
+            addProperty(color.setIdentifier(IDENTIFIER_COLOR));
             return this;
         }
 
@@ -459,9 +438,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param power The power in kw.
          * @return The builder.
          */
-        public Builder setPower(Integer power) {
-            this.power = power;
-            addProperty(new IntegerProperty(POWER_IDENTIFIER, power, 2));
+        public Builder setPower(Property<Integer> power) {
+            this.power = new PropertyInteger(IDENTIFIER_POWER, false, 2, power);
+            addProperty(this.power);
             return this;
         }
 
@@ -469,9 +448,10 @@ public class VehicleStatus extends CommandWithProperties {
          * @param numberOfDoors The number of doors.
          * @return The builder.
          */
-        public Builder setNumberOfDoors(Integer numberOfDoors) {
-            this.numberOfDoors = numberOfDoors;
-            addProperty(new IntegerProperty(NUMBER_OF_DOORS_IDENTIFIER, numberOfDoors, 1));
+        public Builder setNumberOfDoors(Property<Integer> numberOfDoors) {
+            this.numberOfDoors = new PropertyInteger(IDENTIFIER_NUMBER_OF_DOORS, false, 1,
+                    numberOfDoors);
+            addProperty(this.numberOfDoors);
             return this;
         }
 
@@ -479,9 +459,10 @@ public class VehicleStatus extends CommandWithProperties {
          * @param numberOfSeats The number of seats.
          * @return The builder.
          */
-        public Builder setNumberOfSeats(Integer numberOfSeats) {
-            this.numberOfSeats = numberOfSeats;
-            addProperty(new IntegerProperty(NUMBER_OF_SEATS_IDENTIFIER, numberOfSeats, 1));
+        public Builder setNumberOfSeats(Property<Integer> numberOfSeats) {
+            this.numberOfSeats = new PropertyInteger(IDENTIFIER_NUMBER_OF_SEATS, false, 1,
+                    numberOfSeats);
+            addProperty(this.numberOfSeats);
             return this;
         }
 
@@ -489,7 +470,7 @@ public class VehicleStatus extends CommandWithProperties {
          * @param states The states.
          * @return The builder.
          */
-        public Builder setStates(Command[] states) {
+        public Builder setStates(Property<Command>[] states) {
             this.states.clear();
 
             for (int i = 0; i < states.length; i++) {
@@ -505,8 +486,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param state A state.
          * @return The builder.
          */
-        public Builder addState(Command state) {
-            addProperty(new CommandProperty(state));
+        public Builder addState(Property<Command> state) {
+            state.setIdentifier(IDENTIFIER_STATE);
+            addProperty(state);
             states.add(state);
             return this;
         }
@@ -515,9 +497,10 @@ public class VehicleStatus extends CommandWithProperties {
          * @param engineVolume The engine volume displacement in liters.
          * @return The builder.
          */
-        public Builder setEngineVolume(Float engineVolume) {
+        public Builder setEngineVolume(Property<Float> engineVolume) {
             this.engineVolume = engineVolume;
-            addProperty(new FloatProperty(ENGINE_VOLUME_IDENTIFIER, engineVolume));
+            engineVolume.setIdentifier(IDENTIFIER_ENGINE_VOLUME);
+            addProperty(engineVolume);
             return this;
         }
 
@@ -525,9 +508,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param maxTorque The maximum engine torque in Nm.
          * @return The builder.
          */
-        public Builder setMaxTorque(Integer maxTorque) {
-            this.maxTorque = maxTorque;
-            addProperty(new IntegerProperty(MAX_TORQUE_IDENTIFIER, maxTorque, 2));
+        public Builder setMaxTorque(Property<Integer> maxTorque) {
+            this.maxTorque = new PropertyInteger(IDENTIFIER_MAX_TORQUE, false, 2, maxTorque);
+            addProperty(this.maxTorque);
             return this;
         }
 
@@ -535,9 +518,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param gearBox The gearbox type.
          * @return The builder.
          */
-        public Builder setGearBox(Gearbox gearBox) {
+        public Builder setGearBox(Property<Gearbox> gearBox) {
             this.gearBox = gearBox;
-            addProperty(new Property(GEARBOX_IDENTIFIER, gearBox.getByte()));
+            addProperty(gearBox.setIdentifier(IDENTIFIER_GEARBOX));
             return this;
         }
 
@@ -545,9 +528,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param displayUnit The display unit.
          * @return The builder.
          */
-        public Builder setDisplayUnit(DisplayUnit displayUnit) {
+        public Builder setDisplayUnit(Property<DisplayUnit> displayUnit) {
             this.displayUnit = displayUnit;
-            addProperty(new Property(IDENTIFIER_DISPLAY_UNIT, displayUnit.getByte()));
+            addProperty(displayUnit.setIdentifier(IDENTIFIER_DISPLAY_UNIT));
             return this;
         }
 
@@ -555,10 +538,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param driverSeatLocation The driver seat location.
          * @return The builder.
          */
-        public Builder setDriverSeatLocation(DriverSeatLocation driverSeatLocation) {
+        public Builder setDriverSeatLocation(Property<DriverSeatLocation> driverSeatLocation) {
             this.driverSeatLocation = driverSeatLocation;
-            addProperty(new Property(IDENTIFIER_DRIVER_SEAT_LOCATION, driverSeatLocation.getByte
-                    ()));
+            addProperty(driverSeatLocation.setIdentifier(IDENTIFIER_DRIVER_SEAT_LOCATION));
             return this;
         }
 
@@ -566,9 +548,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param equipments The equipments that the vehicle is equipped with.
          * @return The builder.
          */
-        public Builder setEquipments(String[] equipments) {
+        public Builder setEquipments(Property<String>[] equipments) {
             this.equipments.clear();
-            for (String equipment : equipments) {
+            for (Property<String> equipment : equipments) {
                 addEquipment(equipment);
             }
             return this;
@@ -580,9 +562,10 @@ public class VehicleStatus extends CommandWithProperties {
          * @param equipment The equipment.
          * @return The builder.
          */
-        public Builder addEquipment(String equipment) {
+        public Builder addEquipment(Property<String> equipment) {
+            equipment.setIdentifier(IDENTIFIER_EQUIPMENTS);
             equipments.add(equipment);
-            addProperty(new StringProperty(IDENTIFIER_EQUIPMENTS, equipment));
+            addProperty(equipment);
             return this;
         }
 
@@ -590,9 +573,9 @@ public class VehicleStatus extends CommandWithProperties {
          * @param brand The brand.
          * @return The builder.
          */
-        public Builder setBrand(String brand) {
+        public Builder setBrand(Property<String> brand) {
             this.brand = brand;
-            addProperty(new StringProperty(IDENTIFIER_BRAND, brand));
+            addProperty(brand.setIdentifier(IDENTIFIER_BRAND));
             return this;
         }
 

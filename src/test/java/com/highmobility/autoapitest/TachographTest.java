@@ -4,15 +4,16 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetTachographState;
 import com.highmobility.autoapi.TachographState;
-import com.highmobility.autoapi.property.DriverCard;
-import com.highmobility.autoapi.property.DriverTimeState;
-import com.highmobility.autoapi.property.DriverWorkingState;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.tachograph.DriverCard;
+import com.highmobility.autoapi.value.tachograph.DriverTimeState;
+import com.highmobility.autoapi.value.tachograph.DriverWorkingState;
+import com.highmobility.autoapi.value.tachograph.VehicleDirection;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TachographTest {
     Bytes bytes = new Bytes
@@ -31,60 +32,55 @@ public class TachographTest {
 
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-
-        assertTrue(command.is(TachographState.TYPE));
+        Command command = CommandResolver.resolve(bytes);
         TachographState state = (TachographState) command;
+        testState(state);
+    }
 
-        assertTrue(state.getDriverWorkingState(1).getWorkingState() == DriverWorkingState
-                .WorkingState.WORKING);
-        assertTrue(state.getDriverWorkingState(2).getWorkingState() == DriverWorkingState
-                .WorkingState.RESTING);
+    private void testState(TachographState state) {
+        assertTrue(state.getDriverWorkingState(1).getValue().getWorkingState() == DriverWorkingState.Value.WORKING);
+        assertTrue(state.getDriverWorkingState(2).getValue().getWorkingState() == DriverWorkingState.Value.RESTING);
 
-        assertTrue(state.getDriverTimeState(1).getTimeState() == DriverTimeState.TimeState
+        assertTrue(state.getDriverTimeState(1).getValue().getTimeState() == DriverTimeState.Value
                 .FOUR_AND_HALF_HOURS_REACHED
         );
-        assertTrue(state.getDriverTimeState(2).getTimeState() == DriverTimeState.TimeState
+        assertTrue(state.getDriverTimeState(2).getValue().getTimeState() == DriverTimeState.Value
                 .SIXTEEN_HOURS_REACHED
         );
 
-        assertTrue(state.getDriverCard(1).isPresent());
-        assertTrue(state.getDriverCard(2).isPresent());
+        assertTrue(state.getDriverCard(1).getValue().isPresent());
+        assertTrue(state.getDriverCard(2).getValue().isPresent());
 
-        assertTrue(state.isVehicleMotionDetected() == true);
-        assertTrue(state.isVehicleOverspeeding() == false);
-        assertTrue(state.getVehicleDirection() == TachographState.VehicleDirection.FORWARD);
-        assertTrue(state.getVehicleSpeed() == 80);
+        assertTrue(state.isVehicleMotionDetected().getValue() == true);
+        assertTrue(state.isVehicleOverspeeding().getValue() == false);
+        assertTrue(state.getVehicleDirection().getValue() == VehicleDirection.FORWARD);
+        assertTrue(state.getVehicleSpeed().getValue() == 80);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
         TachographState.Builder builder = new TachographState.Builder();
 
-        builder.addDriverWorkingState(new DriverWorkingState(1, DriverWorkingState.WorkingState
-                .WORKING));
-        builder.addDriverWorkingState(new DriverWorkingState(2, DriverWorkingState.WorkingState
-                .RESTING));
+        builder.addDriverWorkingState(new Property(new DriverWorkingState(1,
+                DriverWorkingState.Value.WORKING)));
+        builder.addDriverWorkingState(new Property(new DriverWorkingState(2,
+                DriverWorkingState.Value.RESTING)));
 
-        builder.addDriverTimeState(new DriverTimeState(1, DriverTimeState.TimeState
-                .FOUR_AND_HALF_HOURS_REACHED));
-        builder.addDriverTimeState(new DriverTimeState(2, DriverTimeState.TimeState
-                .SIXTEEN_HOURS_REACHED));
+        builder.addDriverTimeState(new Property(new DriverTimeState(1, DriverTimeState.Value
+                .FOUR_AND_HALF_HOURS_REACHED)));
+        builder.addDriverTimeState(new Property(new DriverTimeState(2, DriverTimeState.Value
+                .SIXTEEN_HOURS_REACHED)));
 
-        builder.addDriverCard(new DriverCard(1, true));
-        builder.addDriverCard(new DriverCard(2, true));
+        builder.addDriverCard(new Property(new DriverCard(1, true)));
+        builder.addDriverCard(new Property(new DriverCard(2, true)));
 
-        builder.setVehicleMotionDetected(true);
-        builder.setVehicleOverspeed(false);
-        builder.setVehicleDirection(TachographState.VehicleDirection.FORWARD);
-        builder.setVehicleSpeed(80);
+        builder.setVehicleMotionDetected(new Property(true));
+        builder.setVehicleOverspeed(new Property(false));
+        builder.setVehicleDirection(new Property(VehicleDirection.FORWARD));
+        builder.setVehicleSpeed(new Property(80));
 
         TachographState state = builder.build();
-        assertTrue(state.equals(bytes));
+        testState(state);
     }
 
     @Test public void get() {

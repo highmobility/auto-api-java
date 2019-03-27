@@ -20,21 +20,22 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ChargePortState;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.charging.ChargePortState;
 
 /**
  * Open or close the charge port of the car. This is possible even if the car is locked.
  */
-public class OpenCloseChargePort extends CommandWithProperties {
+public class OpenCloseChargePort extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x14);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    ChargePortState chargePortState;
+    Property<ChargePortState> chargePortState = new Property(ChargePortState.class,
+            PROPERTY_IDENTIFIER);
 
     /**
      * @return The charge port state.
      */
-    public ChargePortState getChargePortState() {
+    public Property<ChargePortState> getChargePortState() {
         return chargePortState;
     }
 
@@ -42,25 +43,26 @@ public class OpenCloseChargePort extends CommandWithProperties {
      * @param chargePortState The charge port state.
      */
     public OpenCloseChargePort(ChargePortState chargePortState) {
-        super(getBytes(chargePortState));
-        this.chargePortState = chargePortState;
+        super(TYPE);
+        this.chargePortState.update(chargePortState);
+        createBytes(this.chargePortState);
     }
 
-    static byte[] getBytes(ChargePortState chargePortState) {
-        chargePortState.setIdentifier(PROPERTY_IDENTIFIER);
-        return TYPE.addProperty(new Property(PROPERTY_IDENTIFIER, chargePortState.getByte()));
-    }
-
-    OpenCloseChargePort(byte[] bytes) throws CommandParseException {
+    OpenCloseChargePort(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case PROPERTY_IDENTIFIER:
-                    chargePortState = ChargePortState.fromByte(property.getValueByte());
-                    break;
-            }
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case PROPERTY_IDENTIFIER:
+                        return chargePortState.update(p);
+                }
+                return null;
+            });
         }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

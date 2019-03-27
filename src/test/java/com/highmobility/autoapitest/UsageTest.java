@@ -4,15 +4,15 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetUsage;
 import com.highmobility.autoapi.Usage;
-import com.highmobility.autoapi.property.DrivingMode;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.DrivingMode;
+import com.highmobility.autoapi.value.usage.DrivingModeActivationPeriod;
+import com.highmobility.autoapi.value.usage.DrivingModeEnergyConsumption;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -26,8 +26,8 @@ public class UsageTest {
                     "04000B0100083FE6666666666666" +
                     "05000C010009013FE3333333333333" +
                     "05000C010009003FD999999999999A" +
-                    "060008010002014204CCCD" +
-                    "06000801000200425D999A" +
+                    "060008010005014204CCCD" +
+                    "06000801000500425D999A" +
                     "07000701000442CA999A" +
                     "08000701000441B40000" +
                     "09000701000447BAC85A" +
@@ -40,62 +40,75 @@ public class UsageTest {
 
     );
 
-    @Test public void state() throws ParseException {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-
-        assertTrue(command.getClass() == Usage.class);
+    @Test public void state() {
+        Command command = CommandResolver.resolve(bytes);
         Usage state = (Usage) command;
+        testState(state);
+    }
 
-        assertTrue(state.getAverageWeeklyDistance() == 666);
-        assertTrue(state.getAverageWeeklyDistance() == 666);
-        assertTrue(state.getAverageWeeklyDistanceLongTerm() == 666);
-        assertTrue(state.getAccelerationEvaluation() == .7d);
-        assertTrue(state.getDrivingStyleEvaluation() == .7d);
-        assertTrue(state.getDrivingStyleEvaluation() == .7d);
+    private void testState(Usage state) {
+        assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
+        assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
+        assertTrue(state.getAverageWeeklyDistanceLongTerm().getValue() == 666);
+        assertTrue(state.getAccelerationEvaluation().getValue() == .7d);
+        assertTrue(state.getDrivingStyleEvaluation().getValue() == .7d);
+        assertTrue(state.getDrivingStyleEvaluation().getValue() == .7d);
 
         assertTrue(state.getDrivingModeActivationPeriods().length == 2);
-        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.ECO).getPercentage() == .6d);
-        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.REGULAR).getPercentage() ==
+        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.ECO).getValue().getPercentage() == .6d);
+        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.REGULAR).getValue().getPercentage() ==
                 .4d);
 
         assertTrue(state.getDrivingModeEnergyConsumptions().length == 2);
-        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.ECO).getEnergyConsumption()
+        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.ECO).getValue().getEnergyConsumption()
                 == 33.2f);
-        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.REGULAR)
+        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.REGULAR).getValue()
                 .getEnergyConsumption() == 55.4f);
 
-        assertTrue(state.getLastTripEnergyConsumption() == 101.3f);
-        assertTrue(state.getLastTripFuelConsumption() == 22.5f);
-        assertTrue(state.getMileageAfterLastTrip() == 95632.7f);
-        assertTrue(state.getLastTripElectricPortion() == .7d);
-        assertTrue(state.getLastTripAverageEnergyRecuperation() == 5.68f);
-        assertTrue(state.getLastTripBatteryRemaining() == .5f);
-        assertTrue(TestUtils.dateIsSame(state.getLastTripDate(), "2018-10-17T12:34:58"));
-        assertTrue(state.getAverageFuelConsumption() == 6.5f);
-        assertTrue(state.getCurrentFuelConsumption() == 7.5f);
+        assertTrue(state.getLastTripEnergyConsumption().getValue() == 101.3f);
+        assertTrue(state.getLastTripFuelConsumption().getValue() == 22.5f);
+        assertTrue(state.getMileageAfterLastTrip().getValue() == 95632.7f);
+        assertTrue(state.getLastTripElectricPortion().getValue() == .7d);
+        assertTrue(state.getLastTripAverageEnergyRecuperation().getValue() == 5.68f);
+        assertTrue(state.getLastTripBatteryRemaining().getValue() == .5d);
+        assertTrue(TestUtils.dateIsSame(state.getLastTripDate().getValue(), "2018-10-17T12:34:58"));
+        assertTrue(state.getAverageFuelConsumption().getValue() == 6.5f);
+        assertTrue(state.getCurrentFuelConsumption().getValue() == 7.5f);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
-        // TBODO:
-        /*Usage.Builder builder = new Usage.Builder();
+        Usage.Builder builder = new Usage.Builder();
+
+        builder.setAverageWeeklyDistance(new Property(666));
+        builder.setAverageWeeklyDistanceLongTerm(new Property(666));
+        builder.setAccelerationEvaluation(new Property(.7d));
+        builder.setDrivingStyleEvaluation(new Property(.7d));
+
+        builder.addDrivingModeActivationPeriod(new Property(new DrivingModeActivationPeriod(DrivingMode.ECO, .6d)));
+        builder.addDrivingModeActivationPeriod(new Property(new DrivingModeActivationPeriod(DrivingMode.REGULAR, .4d)));
+
+        builder.addDrivingModeEnergyConsumption(new Property(new DrivingModeEnergyConsumption(DrivingMode.ECO, 33.2f)));
+        builder.addDrivingModeEnergyConsumption(new Property(new DrivingModeEnergyConsumption(DrivingMode.REGULAR, 55.4f)));
+
+        builder.setLastTripEnergyConsumption(new Property(101.3f));
+        builder.setLastTripFuelConsumption(new Property(22.5f));
+        builder.setMileageAfterLastTrip(new Property(95632.7f));
+        builder.setLastTripElectricPortion(new Property(.7d));
+        builder.setLastTripAverageEnergyRecuperation(new Property(5.68f));
+        builder.setLastTripBatteryRemaining(new Property(.5d));
+
+        builder.setLastTripDate(new Property(TestUtils.getCalendar("2018-10-17T12:34:58")));
+        builder.setAverageFuelConsumption(new Property(6.5f));
+        builder.setCurrentFuelConsumption(new Property(7.5f));
+
         Usage state = builder.build();
-        assertTrue(state.equals(bytes));*/
+        testState(state);
     }
 
     @Test public void get() {
         Bytes waitingForBytes = new Bytes("006800");
         Bytes commandBytes = new GetUsage();
         assertTrue(waitingForBytes.equals(commandBytes));
-    }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("006801");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((Usage) state).getAverageFuelConsumption() == null);
     }
 }

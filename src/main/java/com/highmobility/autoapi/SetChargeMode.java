@@ -20,21 +20,21 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ChargeMode;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.charging.ChargeMode;
 
 /**
  * Set the charge mode of the car.
  */
-public class SetChargeMode extends CommandWithProperties {
+public class SetChargeMode extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x15);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    ChargeMode chargeMode;
+    Property<ChargeMode> chargeMode = new Property(ChargeMode.class, PROPERTY_IDENTIFIER);
 
     /**
      * @return The charge mode.
      */
-    public ChargeMode getChargeMode() {
+    public Property<ChargeMode> getChargeMode() {
         return chargeMode;
     }
 
@@ -45,20 +45,27 @@ public class SetChargeMode extends CommandWithProperties {
      * @throws IllegalArgumentException for {@link ChargeMode#IMMEDIATE}.
      */
     public SetChargeMode(ChargeMode chargeMode) {
-        super(TYPE.addProperty(new Property(PROPERTY_IDENTIFIER, chargeMode.getByte())));
+        super(TYPE);
         if (chargeMode == ChargeMode.IMMEDIATE) throw new IllegalArgumentException();
-        this.chargeMode = chargeMode;
+        this.chargeMode.update(chargeMode);
+        createBytes(this.chargeMode);
     }
 
-
-    SetChargeMode(byte[] bytes) throws CommandParseException {
+    SetChargeMode(byte[] bytes) {
         super(bytes);
-        if (bytes.length < 7) throw new CommandParseException();
-        for (int i = 0; i < properties.length; i++) {
-            Property property = properties[i];
-            if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
-                this.chargeMode = ChargeMode.fromByte(property.getValueByte());
-            }
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
+                    return chargeMode.update(p);
+                }
+
+                return null;
+            });
         }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

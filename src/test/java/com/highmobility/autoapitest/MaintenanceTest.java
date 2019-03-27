@@ -4,16 +4,15 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetMaintenanceState;
 import com.highmobility.autoapi.MaintenanceState;
-import com.highmobility.autoapi.property.maintenance.ConditionBasedService;
-import com.highmobility.autoapi.property.maintenance.TeleserviceAvailability;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.maintenance.ConditionBasedService;
+import com.highmobility.autoapi.value.maintenance.TeleserviceAvailability;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -37,56 +36,65 @@ public class MaintenanceTest {
     );
 
     @Test
-    public void state() throws ParseException {
+    public void state() {
         Command command = CommandResolver.resolve(bytes);
+        testState((MaintenanceState) command);
+    }
 
-        assertTrue(command.getClass() == MaintenanceState.class);
-        MaintenanceState state = (MaintenanceState) command;
-        assertTrue(state.getDaysToNextService() == 501);
-        assertTrue(state.getKilometersToNextService() == 3681);
+    private void testState(MaintenanceState command) {
+        MaintenanceState state = command;
+        assertTrue(state.getDaysToNextService().getValue() == 501);
+        assertTrue(state.getKilometersToNextService().getValue() == 3681);
 
         // level8
-        assertTrue(state.getCbsReportsCount() == 3);
-        assertTrue(state.getMonthsToExhaustInspection() == 5);
-        assertTrue(state.getTeleserviceAvailability() == TeleserviceAvailability.SUCCESSFUL);
-        assertTrue(state.getServiceDistanceThreshold() == 500);
-        assertTrue(state.getServiceTimeThreshold() == 4);
+        assertTrue(state.getCbsReportsCount().getValue() == 3);
+        assertTrue(state.getMonthsToExhaustInspection().getValue() == 5);
+        assertTrue(state.getTeleserviceAvailability().getValue() == TeleserviceAvailability.SUCCESSFUL);
+        assertTrue(state.getServiceDistanceThreshold().getValue() == 500);
+        assertTrue(state.getServiceTimeThreshold().getValue() == 4);
 
-        assertTrue(TestUtils.dateIsSame(state.getAutomaticTeleserviceCallDate(),
+        assertTrue(TestUtils.dateIsSame(state.getAutomaticTeleserviceCallDate().getValue(),
                 "2018-01-10T16:32:05"));
 
-        assertTrue(TestUtils.dateIsSame(state.getTeleserviceBatteryCallDate(),
+        assertTrue(TestUtils.dateIsSame(state.getTeleserviceBatteryCallDate().getValue(),
                 "2018-01-10T18:30:00"));
 
-        assertTrue(TestUtils.dateIsSame(state.getNextInspectionDate(), "2018-01-10T16:32:05"));
+        assertTrue(TestUtils.dateIsSame(state.getNextInspectionDate().getValue(), "2018-01-10T16" +
+                ":32:05"));
 
         assertTrue(state.getConditionBasedServices().length == 2);
+
         int count = 0;
-        for (ConditionBasedService conditionBasedService : state.getConditionBasedServices()) {
-            if ((conditionBasedService.getDate().getYear() == 2019 &&
-                    conditionBasedService.getDate().getMonth().getValue() == 5 &&
+        for (Property<ConditionBasedService> conditionBasedServiceProp :
+                state.getConditionBasedServices()) {
+            ConditionBasedService conditionBasedService = conditionBasedServiceProp.getValue();
+
+            if ((conditionBasedService.getYear() == 2019 &&
+                    conditionBasedService.getMonth() == 5 &&
                     conditionBasedService.getIdentifier() == 3 &&
                     conditionBasedService.getDueStatus() == ConditionBasedService.DueStatus.OK &&
                     conditionBasedService.getText().equals("Brake fluid") &&
                     conditionBasedService.getDescription().equals("Next change at specified date " +
                             "at the latest."))
                     ||
-                    (conditionBasedService.getDate().getYear() == 2019 &&
-                            conditionBasedService.getDate().getMonth().getValue() == 3 &&
+                    (conditionBasedService.getYear() == 2019 &&
+                            conditionBasedService.getMonth() == 3 &&
                             conditionBasedService.getIdentifier() == 32 &&
                             conditionBasedService.getDueStatus() == ConditionBasedService
                                     .DueStatus.PENDING &&
                             conditionBasedService.getText().equals("Vehicle inspection") &&
                             conditionBasedService.getDescription().equals("Next mandatory vehicle" +
                                     " inspection on specified date."))
-                    ) {
+            ) {
                 count++;
             }
         }
 
         assertTrue(count == 2);
-        assertTrue(TestUtils.dateIsSame(state.getBrakeFluidChangeDate(),
+        assertTrue(TestUtils.dateIsSame(state.getBrakeFluidChangeDate().getValue(),
                 "2018-01-10T18:30:00"));
+        
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -95,40 +103,36 @@ public class MaintenanceTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("003401");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((MaintenanceState) state).getKilometersToNextService() == null);
-    }
+    @Test public void build() {
+        MaintenanceState.Builder builder = new MaintenanceState.Builder();
+        builder.setDaysToNextService(new Property(501));
+        builder.setKilometersToNextService(new Property(3681));
 
-    @Test public void build() throws ParseException {
-        // TBODO: 29/10/2018 uncomment/fix test.
-        return;
-        /*MaintenanceState.Builder builder = new MaintenanceState.Builder();
-        builder.setDaysToNextService(501);
-        builder.setKilometersToNextService(3681);
+        builder.setCbsReportsCount(new Property(3));
+        builder.setMonthsToExhaustInspection(new Property(5));
+        builder.setTeleserviceAvailability(new Property(TeleserviceAvailability.SUCCESSFUL));
+        builder.setServiceDistanceThreshold(new Property(500));
+        builder.setServiceTimeThreshold(new Property(4));
 
-        builder.setCbsReportsCount(3);
-        builder.setMonthsToExhaustInspection(5);
-        builder.setTeleserviceAvailability(TeleserviceAvailability.SUCCESSFUL);
-        builder.setServiceDistanceThreshold(500);
-        builder.setServiceTimeThreshold(4);
+        builder.setAutomaticTeleserviceCallDate(new Property(TestUtils.getCalendar("2018-01-10T16" +
+                ":32:05")));
+        builder.setTeleserviceBatteryCallDate(new Property(TestUtils.getCalendar("2018-01-10T18" +
+                ":30:00")));
+        builder.setNextInspectionDate(new Property(TestUtils.getCalendar("2018-01-10T16:32:05")));
 
-        builder.setAutomaticTeleserviceCallDate(TestUtils.getCalendar("2018-11-23T10:33:50+0100"));
-        builder.setTeleserviceBatteryCallDate(TestUtils.getCalendar("2018-11-23T10:33:50+0100"));
-        builder.setNextInspectionDate(TestUtils.getCalendar("2018-11-23T10:33:50+0100"));
+        ConditionBasedService service1 = new ConditionBasedService(2019, 5, 3,
+                ConditionBasedService.DueStatus.OK, "Brake fluid", "Next change at specified date" +
+                " at the latest.");
+        ConditionBasedService service2 = new ConditionBasedService(2019, 3, 32,
+                ConditionBasedService.DueStatus.PENDING, "Vehicle inspection", "Next mandatory " +
+                "vehicle inspection on specified date.");
 
-        ConditionBasedService service1 = new ConditionBasedService(LocalDate.of(2019, 5, 1), 3,
-                ConditionBasedService.DueStatus.OK, "Brake fluid");
-        ConditionBasedService service2 = new ConditionBasedService(LocalDate.of(2019, 3, 1), 32,
-                ConditionBasedService.DueStatus.PENDING, "Vehicle inspection");
+        builder.addConditionBasedService(new Property(service1));
+        builder.addConditionBasedService(new Property(service2));
 
-        builder.addConditionBasedService(service1);
-        builder.addConditionBasedService(service2);
-
-        builder.setBrakeFluidChangeDate(TestUtils.getCalendar("2018-11-23T10:33:50+0100"));
+        builder.setBrakeFluidChangeDate(new Property(TestUtils.getCalendar("2018-01-10T18:30:00")));
 
         MaintenanceState state = builder.build();
-        assertTrue(TestUtils.bytesTheSame(state, bytes));*/
+        testState(state);
     }
 }

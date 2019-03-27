@@ -6,11 +6,11 @@ import com.highmobility.autoapi.TextInput;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TextInputTest {
     @Test public void textInputTest() {
@@ -29,7 +29,7 @@ public class TextInputTest {
 
     @Test public void textInputNoLetters() {
         Bytes waitingForBytes = new Bytes("004400" +
-                "010000");
+                "010003010000");
         TextInput ti = new TextInput("");
         assertTrue(TestUtils.bytesTheSame(ti, waitingForBytes));
     }
@@ -39,6 +39,10 @@ public class TextInputTest {
                 "010006010003796573");
         Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof TextInput);
-        assertTrue(((TextInput) command).getText().equals("yes"));
+        assertTrue(((TextInput)command).getText().getValue().equals("yes"));
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(TextInput.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

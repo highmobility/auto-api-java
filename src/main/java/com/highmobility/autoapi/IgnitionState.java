@@ -20,50 +20,45 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
-
-import javax.annotation.Nullable;
 
 /**
  * Command sent from the car every time the ignition state changes or when a Get Ignition State is
  * received. The new status is included in the message payload and may be the result of user, device
  * or car triggered action.
  */
-public class IgnitionState extends CommandWithProperties {
+public class IgnitionState extends Command {
     public static final Type TYPE = new Type(Identifier.ENGINE, 0x01);
-    private static final byte ON_IDENTIFIER = 0x01;
-    private static final byte ACCESSORIES_IDENTIFIER = 0x02;
+    private static final byte IDENTIFIER_ON = 0x01;
+    private static final byte IDENTIFIER_ACCESSORIES = 0x02;
 
-    Boolean on;
-    Boolean accessoriesIgnition;
+    Property<Boolean> on = new Property(Boolean.class, IDENTIFIER_ON);
+    Property<Boolean> accessoriesIgnition = new Property(Boolean.class, IDENTIFIER_ACCESSORIES);
 
     /**
      * @return The ignition state.
      */
-    @Nullable public Boolean isOn() {
+    public Property<Boolean> isOn() {
         return on;
     }
 
     /**
      * @return Whether ignition state is powering on accessories such as radio.
      */
-    @Nullable public Boolean isAccessoriesIgnitionOn() {
+    public Property<Boolean> isAccessoriesIgnitionOn() {
         return accessoriesIgnition;
     }
 
     IgnitionState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case ON_IDENTIFIER:
-                        on = Property.getBool(p.getValueByte());
-                        return on;
-                    case ACCESSORIES_IDENTIFIER:
-                        accessoriesIgnition = Property.getBool(p.getValueByte());
-                        return accessoriesIgnition;
+                    case IDENTIFIER_ON:
+                        return on.update(p);
+                    case IDENTIFIER_ACCESSORIES:
+                        return accessoriesIgnition.update(p);
                 }
                 return null;
             });
@@ -80,9 +75,9 @@ public class IgnitionState extends CommandWithProperties {
         accessoriesIgnition = builder.accessoriesIgnition;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private Boolean on;
-        private Boolean accessoriesIgnition;
+    public static final class Builder extends Command.Builder {
+        private Property<Boolean> on;
+        private Property<Boolean> accessoriesIgnition;
 
         public Builder() {
             super(TYPE);
@@ -92,9 +87,10 @@ public class IgnitionState extends CommandWithProperties {
          * @param isOn The ignition state.
          * @return The builder.
          */
-        public Builder setIsOn(boolean isOn) {
+        public Builder setIsOn(Property<Boolean> isOn) {
             this.on = isOn;
-            addProperty(new BooleanProperty(ON_IDENTIFIER, isOn));
+            isOn.setIdentifier(IDENTIFIER_ON);
+            addProperty(isOn);
             return this;
         }
 
@@ -103,9 +99,10 @@ public class IgnitionState extends CommandWithProperties {
          *                            radio.
          * @return The builder.
          */
-        public Builder setAccessoriesIgnition(Boolean accessoriesIgnition) {
+        public Builder setAccessoriesIgnition(Property<Boolean> accessoriesIgnition) {
             this.accessoriesIgnition = accessoriesIgnition;
-            addProperty(new BooleanProperty(ACCESSORIES_IDENTIFIER, accessoriesIgnition));
+            accessoriesIgnition.setIdentifier(IDENTIFIER_ACCESSORIES);
+            addProperty(accessoriesIgnition);
             return this;
         }
 

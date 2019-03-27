@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
@@ -28,28 +27,27 @@ import javax.annotation.Nullable;
 /**
  * Command sent when a Get Parking Brake State command is received by the car.
  */
-public class ParkingBrakeState extends CommandWithProperties {
+public class ParkingBrakeState extends Command {
     public static final Type TYPE = new Type(Identifier.PARKING_BRAKE, 0x01);
 
     private static final byte ACTIVE_IDENTIFIER = 0x01;
 
-    Boolean active;
+    Property<Boolean> active = new Property(Boolean.class, ACTIVE_IDENTIFIER);
 
     /**
      * @return Whether parking brake is active.
      */
-    @Nullable public Boolean isActive() {
+    public Property<Boolean> isActive() {
         return active;
     }
 
     ParkingBrakeState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == ACTIVE_IDENTIFIER) {
-                    active = Property.getBool(p.getValueByte());
-                    return active;
+                    return active.update(p);
                 }
 
                 return null;
@@ -66,8 +64,8 @@ public class ParkingBrakeState extends CommandWithProperties {
         active = builder.active;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private boolean active;
+    public static final class Builder extends Command.Builder {
+        private Property<Boolean> active;
 
         public Builder() {
             super(TYPE);
@@ -77,9 +75,10 @@ public class ParkingBrakeState extends CommandWithProperties {
          * @param active The parking brake state.
          * @return The builder.
          */
-        public Builder setIsActive(boolean active) {
+        public Builder setIsActive(Property<Boolean> active) {
             this.active = active;
-            addProperty(new BooleanProperty(ACTIVE_IDENTIFIER, active));
+            active.setIdentifier(ACTIVE_IDENTIFIER);
+            addProperty(active);
             return this;
         }
 

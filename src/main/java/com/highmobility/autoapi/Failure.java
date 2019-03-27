@@ -20,9 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.FailureReason;
+import com.highmobility.autoapi.value.FailureReason;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
 
 import javax.annotation.Nullable;
 
@@ -30,7 +29,7 @@ import javax.annotation.Nullable;
  * For different reasons a command sent to the car might not be successful. When this happens, a
  * failure command is sent to the smart device with details about what went wrong.
  */
-public class Failure extends CommandWithProperties {
+public class Failure extends Command {
     public static final Type TYPE = new Type(Identifier.FAILURE, 0x01);
 
     private static final byte IDENTIFIER_IDENTIFIER = 0x01;
@@ -38,88 +37,97 @@ public class Failure extends CommandWithProperties {
     private static final byte IDENTIFIER_FAILURE_REASON = 0x03;
     private static final byte IDENTIFIER_FAILURE_DESCRIPTION = 0x04;
 
-    byte[] identifier;
-    Byte failedTypeByte;
+    private Property<Identifier> failedIdentifier = new Property(Identifier.class,
+            IDENTIFIER_IDENTIFIER);
+
+    private Property<Byte> failedTypeByte = new Property(Byte.class, IDENTIFIER_TYPE);
+    private Property<FailureReason> failureReason = new Property(FailureReason.class,
+            IDENTIFIER_FAILURE_REASON);
+    private Property<String> failureDescription = new Property(String.class,
+            IDENTIFIER_FAILURE_DESCRIPTION);
 
     private Type failedType;
-    private FailureReason failureReason;
-
-    private String failureDescription;
 
     /**
      * @return The failed identifier bytes.
      */
-    public byte[] getFailedIdentifier() {
-        return identifier;
+    public Property<Identifier> getFailedIdentifier() {
+        return failedIdentifier;
     }
 
     /**
      * @return The failed type byte.
      */
-    public Byte getFailedTypeByte() {
+    public Property<Byte> getFailedTypeByte() {
         return failedTypeByte;
     }
 
     /**
      * @return The type of the command that failed.
      */
-    public Type getFailedType() {
+    @Nullable public Type getFailedType() {
         return failedType;
     }
 
     /**
      * @return The failure reason.
      */
-    public FailureReason getFailureReason() {
+    public Property<FailureReason> getFailureReason() {
         return failureReason;
     }
 
     /**
      * @return The failure description.
      */
-    @Nullable public String getFailureDescription() {
+    public Property<String> getFailureDescription() {
         return failureDescription;
     }
 
     Failure(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_IDENTIFIER:
-                        identifier = p.getValueBytes();
-                        return identifier;
+                        return failedIdentifier.update(p);
                     case IDENTIFIER_TYPE:
-                        failedTypeByte = p.getValueByte();
-                        return failedTypeByte;
+                        return failedTypeByte.update(p);
                     case IDENTIFIER_FAILURE_REASON:
-                        failureReason = FailureReason.fromByte(p.getValueByte());
-                        return failureReason;
+                        return failureReason.update(p);
                     case IDENTIFIER_FAILURE_DESCRIPTION:
-                        failureDescription = Property.getString(p.getValueBytes());
-                        return failureDescription;
+                        return failureDescription.update(p);
                 }
-                
+
                 return null;
             });
         }
 
-        if (identifier != null && failedTypeByte != null)
-            failedType = new Type(identifier, failedTypeByte);
+        createType();
+    }
+
+    private void createType() {
+        if (failedIdentifier != null && failedTypeByte != null)
+            failedType = new Type(failedIdentifier.getValue(), failedTypeByte.getValue());
     }
 
     private Failure(Builder builder) {
         super(builder);
         failureReason = builder.failureReason;
-        failedType = builder.failedType;
+        failedTypeByte = builder.failedTypeByte;
+        failedIdentifier = builder.failedIdentifier;
         failureDescription = builder.failureDescription;
+
+        createType();
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private FailureReason failureReason;
-        private Type failedType;
-        private String failureDescription;
+    public static final class Builder extends Command.Builder {
+        private Property<FailureReason> failureReason;
+
+        private Property<Byte> failedTypeByte;
+        private Property<Identifier> failedIdentifier;
+
+        private Property<String> failureDescription;
 
         public Builder() {
             super(TYPE);
@@ -131,10 +139,21 @@ public class Failure extends CommandWithProperties {
          * @param type The failed type.
          * @return The builder.
          */
-        public Builder setFailedType(Type type) {
-            this.failedType = type;
-            addProperty(new Property(IDENTIFIER_IDENTIFIER, type.getIdentifier()));
-            addProperty(new Property(IDENTIFIER_TYPE, type.getType()));
+        public Builder setFailedTypeByte(Property<Byte> type) {
+            this.failedTypeByte = type;
+            addProperty(this.failedTypeByte.setIdentifier(IDENTIFIER_TYPE));
+            return this;
+        }
+
+        /**
+         * Set the identifier of the failed command.
+         *
+         * @param failedIdentifier the failed identifier.
+         * @return The builder
+         */
+        public Builder setFailedIdentifier(Property<Identifier> failedIdentifier) {
+            this.failedIdentifier = failedIdentifier;
+            addProperty(this.failedIdentifier.setIdentifier(IDENTIFIER_IDENTIFIER));
             return this;
         }
 
@@ -144,9 +163,9 @@ public class Failure extends CommandWithProperties {
          * @param failureReason The failure reason.
          * @return The builder.
          */
-        public Builder setFailureReason(FailureReason failureReason) {
+        public Builder setFailureReason(Property<FailureReason> failureReason) {
             this.failureReason = failureReason;
-            addProperty(new Property(IDENTIFIER_FAILURE_REASON, failureReason.getByte()));
+            addProperty(failureReason.setIdentifier(IDENTIFIER_FAILURE_REASON));
             return this;
         }
 
@@ -154,9 +173,9 @@ public class Failure extends CommandWithProperties {
          * @param description The failure description.
          * @return The builder.
          */
-        public Builder setFailureDescription(String description) {
+        public Builder setFailureDescription(Property<String> description) {
+            addProperty(description.setIdentifier(IDENTIFIER_FAILURE_DESCRIPTION));
             this.failureDescription = description;
-            addProperty(new StringProperty(IDENTIFIER_FAILURE_DESCRIPTION, description));
             return this;
         }
 

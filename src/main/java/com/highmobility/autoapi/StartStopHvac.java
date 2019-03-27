@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -28,31 +27,42 @@ import com.highmobility.autoapi.property.Property;
  * cooling, defrosting and defogging as appropriate. The result is sent through the evented Climate
  * State message.
  */
-public class StartStopHvac extends CommandWithProperties {
+public class StartStopHvac extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x13);
     private static final byte IDENTIFIER = 0x01;
+
+    private final Property<Boolean> start = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether HVAC should be started.
      */
-    public boolean start() {
+    public Property<Boolean> start() {
         return start;
     }
-
-    private final boolean start;
 
     /**
      * @param start The HVAC state.
      */
-    public StartStopHvac(boolean start) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, start)));
-        this.start = start;
+    public StartStopHvac(Boolean start) {
+        super(TYPE);
+        this.start.update(start);
+        createBytes(this.start);
     }
 
-    StartStopHvac(byte[] bytes) throws CommandParseException {
+    StartStopHvac(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        start = Property.getBool(prop.getValueByte());
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return start.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

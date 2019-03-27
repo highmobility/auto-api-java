@@ -20,36 +20,34 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.Property;
 
 import java.util.Calendar;
-
-import javax.annotation.Nullable;
 
 /**
  * This command is sent when a Get Vehicle Time message is received by the car. The local time of
  * the car is returned, hence the UTC timezone offset is included as well.
  */
-public class VehicleTime extends CommandWithProperties {
+public class VehicleTime extends Command {
     public static final Type TYPE = new Type(Identifier.VEHICLE_TIME, 0x01);
 
-    Calendar vehicleTime;
+    private static final byte IDENTIFIER = 0x01;
+
+    Property<Calendar> vehicleTime = new Property(Calendar.class, IDENTIFIER);
 
     /**
      * @return The vehicle time.
      */
-    @Nullable public Calendar getVehicleTime() {
+    public Property<Calendar> getVehicleTime() {
         return vehicleTime;
     }
 
     VehicleTime(byte[] bytes) {
         super(bytes);
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == 0x01) {
-                    vehicleTime = Property.getCalendar(p.getValueBytes());
-                    return vehicleTime;
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == IDENTIFIER) {
+                    return vehicleTime.update(p);
                 }
                 return null;
             });
@@ -65,8 +63,8 @@ public class VehicleTime extends CommandWithProperties {
         vehicleTime = builder.vehicleTime;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        Calendar vehicleTime;
+    public static final class Builder extends Command.Builder {
+        Property<Calendar> vehicleTime;
 
         public Builder() {
             super(TYPE);
@@ -76,9 +74,10 @@ public class VehicleTime extends CommandWithProperties {
          * @param vehicleTime The vehicle time.
          * @return The builder.
          */
-        public Builder setVehicleTime(Calendar vehicleTime) {
+        public Builder setVehicleTime(Property<Calendar> vehicleTime) {
             this.vehicleTime = vehicleTime;
-            addProperty(new CalendarProperty((byte) 0x01, vehicleTime));
+            vehicleTime.setIdentifier(IDENTIFIER);
+            addProperty(vehicleTime);
             return this;
         }
 

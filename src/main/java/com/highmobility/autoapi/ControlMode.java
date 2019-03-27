@@ -20,88 +20,92 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ControlModeValue;
-import com.highmobility.autoapi.property.IntegerProperty;
 import com.highmobility.autoapi.property.Property;
-
-import javax.annotation.Nullable;
+import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.property.ByteEnum;
 
 /**
  * Command sent from the car every time the remote control mode changes or when a Get Control
  * ControlMode is received. The new mode is included in the command and may be the result of both
  * user or car triggered action.
  */
-public class ControlMode extends CommandWithProperties {
+public class ControlMode extends Command {
     public static final Type TYPE = new Type(Identifier.REMOTE_CONTROL, 0x01);
     private static final byte IDENTIFIER_MODE = 0x01;
     private static final byte IDENTIFIER_ANGLE = 0x02;
 
-    ControlModeValue mode;
-    Integer angle;
+    Property<Value> mode = new Property(Value.class, IDENTIFIER_MODE);
+    PropertyInteger angle = new PropertyInteger(IDENTIFIER_ANGLE, false);
 
     /**
      * @return the angle
      */
-    @Nullable public Integer getAngle() {
+    public Property<Integer> getAngle() {
         return angle;
     }
 
     /**
      * @return the control mode
      */
-    @Nullable public ControlModeValue getMode() {
+    public Property<Value> getMode() {
         return mode;
     }
 
-    public ControlMode(byte[] bytes) throws CommandParseException {
+    public ControlMode(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_MODE:
+                        return mode.update(p);
+                    case IDENTIFIER_ANGLE:
+                        return angle.update(p);
+                }
 
-            switch (property.getPropertyIdentifier()) {
-                case IDENTIFIER_MODE:
-                    mode = ControlModeValue.fromByte(property.getValueByte());
-                    break;
-                case IDENTIFIER_ANGLE:
-                    angle = Property.getUnsignedInt(property.getValueBytes());
-                    break;
-            }
+                return null;
+            });
         }
+
     }
 
     @Override public boolean isState() {
         return true;
     }
 
-    private ControlMode(Builder builder) {
-        super(builder);
-        angle = builder.angle;
-        mode = builder.mode;
-    }
+    /**
+     * The possible control mode values.
+     */
+    public enum Value implements ByteEnum {
+        UNAVAILABLE((byte) 0x00),
+        AVAILABLE((byte) 0x01),
+        STARTED((byte) 0x02),
+        FAILED_TO_START((byte) 0x03),
+        ABORTED((byte) 0x04),
+        ENDED((byte) 0x05),
+        UNSUPPORTED((byte) 0xFF);
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private int angle;
-        private ControlModeValue mode;
+        public static Value fromByte(byte value) throws CommandParseException {
+            Value[] allValues = Value.values();
 
-        public Builder() {
-            super(TYPE);
+            for (int i = 0; i < allValues.length; i++) {
+                Value value1 = allValues[i];
+                if (value1.getByte() == value) {
+                    return value1;
+                }
+            }
+
+            throw new CommandParseException();
         }
 
-        public Builder setAngle(int angle) {
-            this.angle = angle;
-            addProperty(new IntegerProperty(IDENTIFIER_ANGLE, angle, 2));
-            return this;
+        private byte value;
+
+        Value(byte value) {
+            this.value = value;
         }
 
-        public Builder setMode(ControlModeValue mode) {
-            this.mode = mode;
-            addProperty(new Property(IDENTIFIER_MODE, mode.getByte()));
-            return this;
-        }
-
-        public ControlMode build() {
-            return new ControlMode(this);
+        public byte getByte() {
+            return value;
         }
     }
 }

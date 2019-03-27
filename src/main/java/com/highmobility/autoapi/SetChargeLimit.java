@@ -20,22 +20,22 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.DoubleProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Set the charge limit, to which point the car will charge itself. The result is sent through the
  * evented Charge State command.
  */
-public class SetChargeLimit extends CommandWithProperties {
+public class SetChargeLimit extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x13);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
-    Double percentage;
+
+    Property<Double> percentage = new Property(Double.class, PROPERTY_IDENTIFIER);
 
     /**
      * @return The charge limit percentage.
      */
-    public Double getChargeLimit() {
+    public Property<Double> getChargeLimit() {
         return percentage;
     }
 
@@ -45,20 +45,25 @@ public class SetChargeLimit extends CommandWithProperties {
      * @param percentage The charge limit percentage.
      */
     public SetChargeLimit(Double percentage) throws IllegalArgumentException {
-        super(TYPE.addProperty(new DoubleProperty(PROPERTY_IDENTIFIER, percentage)));
-        this.percentage = percentage;
+        super(TYPE);
+        this.percentage.update(percentage);
+        createBytes(this.percentage);
     }
 
     SetChargeLimit(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case PROPERTY_IDENTIFIER:
-                    percentage = Property.getDouble(property.getValueBytes());
-                    break;
-            }
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
+                    return percentage.update(p);
+                }
+                return null;
+            });
         }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

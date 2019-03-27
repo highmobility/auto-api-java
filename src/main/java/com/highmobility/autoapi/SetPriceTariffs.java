@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.homecharger.PriceTariff;
+import com.highmobility.autoapi.value.homecharger.PriceTariff;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,16 +29,16 @@ import java.util.List;
 /**
  * Set the price tariffs of the home charger.
  */
-public class SetPriceTariffs extends CommandWithProperties {
+public class SetPriceTariffs extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x13);
     private static final byte IDENTIFIER_TARIFF = 0x0C;
 
-    private PriceTariff[] priceTariffs;
+    private Property<PriceTariff>[] priceTariffs;
 
     /**
      * @return All of the price tariffs.
      */
-    public PriceTariff[] getPriceTariffs() {
+    public Property<PriceTariff>[] getPriceTariffs() {
         return priceTariffs;
     }
 
@@ -48,9 +48,10 @@ public class SetPriceTariffs extends CommandWithProperties {
      * @param type The pricing type.
      * @return The price tariff, if exists.
      */
-    public PriceTariff getPriceTariff(PriceTariff.PricingType type) {
-        for (PriceTariff priceTariff : priceTariffs) {
-            if (priceTariff.getPricingType() == type) return priceTariff;
+    public Property<PriceTariff> getPriceTariff(PriceTariff.PricingType type) {
+        for (Property<PriceTariff> priceTariff : priceTariffs) {
+            if (priceTariff.getValue() != null && priceTariff.getValue().getPricingType() == type)
+                return priceTariff;
         }
         return null;
     }
@@ -58,37 +59,41 @@ public class SetPriceTariffs extends CommandWithProperties {
     /**
      * @param priceTariffs The price tariffs of the different pricing types.
      */
-    public SetPriceTariffs(PriceTariff[] priceTariffs) throws IllegalArgumentException {
+    public SetPriceTariffs(Property<PriceTariff>[] priceTariffs) throws IllegalArgumentException {
         super(TYPE, validateTariffs(priceTariffs));
         this.priceTariffs = priceTariffs;
     }
 
-    static PriceTariff[] validateTariffs(PriceTariff[] tariffs) throws IllegalArgumentException {
+    static Property<PriceTariff>[] validateTariffs(Property<PriceTariff>[] tariffs) throws IllegalArgumentException {
         ArrayList<PriceTariff.PricingType> types = new ArrayList<>(3);
-        for (PriceTariff tariff : tariffs) {
+
+        for (Property<PriceTariff> tariff : tariffs) {
             tariff.setIdentifier(IDENTIFIER_TARIFF);
-            if (types.contains(tariff.getPricingType()) == false)
-                types.add(tariff.getPricingType());
+            if (tariff.getValue() != null && types.contains(tariff.getValue().getPricingType()) == false)
+                types.add(tariff.getValue().getPricingType());
             else throw new IllegalArgumentException("Duplicate pricing type of the pricing tariff");
         }
 
         return tariffs;
     }
 
-    SetPriceTariffs(byte[] bytes) throws CommandParseException {
+    SetPriceTariffs(byte[] bytes) {
         super(bytes);
-        List<PriceTariff> builder = new ArrayList<>();
+        List<Property> builder = new ArrayList<>();
 
-        for (Property property : properties) {
-            if (property.getPropertyIdentifier() == IDENTIFIER_TARIFF) {
-                builder.add(new PriceTariff(property.getPropertyBytes()));
-            }
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_TARIFF:
+                        Property tariff = new Property(PriceTariff.class, p);
+                        builder.add(tariff);
+                        return tariff;
+                }
+
+                return null;
+            });
         }
 
-        priceTariffs = builder.toArray(new PriceTariff[0]);
-    }
-
-    @Override protected boolean propertiesExpected() {
-        return false;
+        priceTariffs = builder.toArray(new Property[0]);
     }
 }

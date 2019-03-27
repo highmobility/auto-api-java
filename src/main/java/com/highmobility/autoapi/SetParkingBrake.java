@@ -20,38 +20,48 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Turn on or off the parking brake. The result is sent through the evented Parking Brake State
  * message.
  */
-public class SetParkingBrake extends CommandWithProperties {
+public class SetParkingBrake extends Command {
     public static final Type TYPE = new Type(Identifier.PARKING_BRAKE, 0x12);
     private static final byte IDENTIFIER = 0x01;
 
-    private boolean activate;
+    private Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether the parking brake should be activated.
      */
-    public boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
     /**
      * @param activate Boolean indicating whether to activate parking brake.
      */
-    public SetParkingBrake(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
-        this.activate = activate;
+    public SetParkingBrake(Boolean activate) {
+        super(TYPE);
+        this.activate.update(activate);
+        createBytes(this.activate);
     }
 
-    SetParkingBrake(byte[] bytes) throws CommandParseException {
+    SetParkingBrake(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        this.activate = Property.getBool(prop.getValueByte());
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return activate.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

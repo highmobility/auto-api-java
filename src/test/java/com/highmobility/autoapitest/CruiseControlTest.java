@@ -8,12 +8,11 @@ import com.highmobility.autoapi.GetCruiseControlState;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CruiseControlTest {
     Bytes bytes = new Bytes("006201" +
@@ -26,20 +25,16 @@ public class CruiseControlTest {
 
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(CruiseControlState.TYPE));
         CruiseControlState state = (CruiseControlState) command;
-        assertTrue(state.isActive() == true);
-        assertTrue(state.getLimiter() == CruiseControlState.Limiter.HIGHER_SPEED_REQUESTED);
-        assertTrue(state.getTargetSpeed() == 61);
-        assertTrue(state.isAdaptiveActive() == false);
-        assertTrue(state.getAdaptiveTargetSpeed() == 60);
+        assertTrue(state.isActive().getValue() == true);
+        assertTrue(state.getLimiter().getValue() == CruiseControlState.Limiter.HIGHER_SPEED_REQUESTED);
+
+        assertTrue(state.getTargetSpeed().getValue() == 61);
+        assertTrue(state.isAdaptiveActive().getValue() == false);
+        assertTrue(state.getAdaptiveTargetSpeed().getValue() == 60);
     }
 
     @Test public void get() {
@@ -63,5 +58,9 @@ public class CruiseControlTest {
         byte[] commandBytes = new ActivateDeactivateCruiseControl(false, null)
                 .getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(ActivateDeactivateCruiseControl.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

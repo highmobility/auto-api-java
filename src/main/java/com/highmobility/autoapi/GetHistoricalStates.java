@@ -20,10 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CalendarProperty;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.ByteUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
@@ -31,35 +30,35 @@ import javax.annotation.Nullable;
 /**
  * Get historical states. The car will respond with the Historical States message.
  */
-public class GetHistoricalStates extends CommandWithProperties {
+public class GetHistoricalStates extends Command {
     public static final Type TYPE = new Type(Identifier.HISTORICAL, 0x00);
 
     private static final byte IDENTIFIER_CAPABILITY = 0x01;
     private static final byte IDENTIFIER_START_DATE = 0x02;
     private static final byte IDENTIFIER_END_DATE = 0x03;
 
-    private Identifier identifier;
-    private Calendar startDate;
-    private Calendar endDate;
+    private Property<Identifier> identifier = new Property(Identifier.class, IDENTIFIER_CAPABILITY);
+    private Property<Calendar> startDate = new Property(Calendar.class, IDENTIFIER_START_DATE);
+    private Property<Calendar> endDate = new Property(Calendar.class, IDENTIFIER_END_DATE);
 
     /**
      * @return The identifier of the command historical states are requested for.
      */
-    public Identifier getIdentifier() {
+    public Property<Identifier> getIdentifier() {
         return identifier;
     }
 
     /**
      * @return The start date of the historical states.
      */
-    @Nullable public Calendar getStartDate() {
+    public Property<Calendar> getStartDate() {
         return startDate;
     }
 
     /**
      * @return The end date of the historical states.
      */
-    @Nullable public Calendar getEndDate() {
+    public Property<Calendar> getEndDate() {
         return endDate;
     }
 
@@ -70,33 +69,46 @@ public class GetHistoricalStates extends CommandWithProperties {
      */
     public GetHistoricalStates(Identifier identifier, @Nullable Calendar startDate, @Nullable
             Calendar endDate) {
-        super(TYPE.addBytes(getBytes(identifier, startDate, endDate)));
-        this.identifier = identifier;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+        super(TYPE);
 
-    private static byte[] getBytes(Identifier identifier, Calendar startDate, Calendar endDate) {
-        byte[] bytes = new byte[8 + 14 + 14];
+        ArrayList<Property> properties = new ArrayList<>();
 
-        Property identifierProperty = new Property(IDENTIFIER_CAPABILITY, identifier.getBytes());
-        ByteUtils.setBytes(bytes, identifierProperty.getByteArray(), 0);
+        this.identifier.update(identifier);
+        properties.add(this.identifier);
 
         if (startDate != null) {
-            CalendarProperty startDateProp = new CalendarProperty(IDENTIFIER_START_DATE, startDate);
-            ByteUtils.setBytes(bytes, startDateProp.getByteArray(), 8);
+            this.startDate.update(startDate);
+            properties.add(this.startDate);
         }
 
         if (endDate != null) {
-            CalendarProperty endDateProp = new CalendarProperty(IDENTIFIER_END_DATE, endDate);
-            ByteUtils.setBytes(bytes, endDateProp.getByteArray(), 22);
+            this.endDate.update(endDate);
+            properties.add(this.endDate);
         }
 
-        return bytes;
+        createBytes(properties);
     }
 
     GetHistoricalStates(byte[] bytes) {
         super(bytes);
-        // TBODO: 31/10/2018
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER_CAPABILITY:
+                        return identifier.update(p);
+                    case IDENTIFIER_START_DATE:
+                        return startDate.update(p);
+                    case IDENTIFIER_END_DATE:
+                        return endDate.update(p);
+                }
+
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

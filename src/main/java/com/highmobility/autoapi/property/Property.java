@@ -21,175 +21,285 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.exception.ParseException;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import static com.highmobility.autoapi.property.StringProperty.CHARSET;
+import javax.annotation.Nullable;
 
 /**
- * Property is a representation of some AutoAPI data. Specific data have specific subclasses like
- * StringProperty and FloatProperty.
- * <p>
- * Property has to have a value with a size greater or equal to 1.
+ * Property is a representation of some AutoAPI data. It consists of 3 optional components: data,
+ * timestamp, failure
  */
-public class Property extends Bytes {
-    public static final int CALENDAR_SIZE = 8;
+public class Property<T> extends Bytes {
+    /*
+    Property is created/updated in 3 places:
 
-    private Calendar timestamp;
+    1:
+    Incoming command:
+    Base Command parses the components but doesn't know the type. Sub command updates its
+    properties with base components.
+
+    base command:
+    properties[i] = new Property(bytes);
+    findComponents(bytes)
+
+    sub command update is needed because base does not know the property type:
+     >> field.update(property) > copy the components to sub property, replace the base property
+      with parsed one
+
+    2:
+    User creates the property herself and passes it to builder.
+    IntegerProperty is updated later in the builder to set length/sign
+    * new Property(GasFlapState) > update(GasFlapState, timestamp, null) >> goto 3
+    or
+    * new Property(null, null, failure) > update(null, null, failure) >> goto 3
+
+    3:
+    in control commands the object is created as field, but updated with real value (eg
+    GasFlapState).
+    Property<GasFlapState> field = new Property(GasFlapState.class, IDENTIFIER)
+
+    ControlGasFlap((GasFlapState, timestamp, failure) {
+        field.update(GasFlapState, timestamp, failure)
+         > bytes = setBytes(GasFlapState, timestamp, failure);
+         > findComponents()
+    }
+     */
+
+    protected static final byte[] unknownBytes = new byte[]{0x00, 0x00, 0x00};
+
+    @Nullable protected PropertyComponentValue<T> value;
+    @Nullable protected PropertyComponentTimestamp timestamp;
+    @Nullable protected PropertyComponentFailure failure;
+    private Class<T> valueClass = null;
+
+    public byte getPropertyIdentifier() {
+        return bytes[0];
+    }
+
+    /**
+     * @return The property value.
+     */
+    @Nullable public T getValue() {
+        return value != null ? value.getValue() : null;
+    }
+
+    /**
+     * @return The value component.
+     */
+    @Nullable public PropertyComponentValue getValueComponent() {
+        return value;
+    }
 
     /**
      * @return The timestamp of the property.
      */
-    public Calendar getTimestamp() {
+    @Nullable public Calendar getTimestamp() {
+        if (timestamp == null) return null;
+        return timestamp.getCalendar();
+    }
+
+    @Nullable PropertyComponentTimestamp getTimestampComponent() {
         return timestamp;
     }
 
     /**
-     * @param timestamp Set the property timestamp.
+     * @return The failure of the property.
      */
-    public void setTimestamp(Calendar timestamp) {
-        this.timestamp = timestamp;
+    @Nullable public PropertyComponentFailure getFailureComponent() {
+        return failure;
     }
 
-    protected Property(byte identifier, int valueSize) {
-        this.bytes = baseBytes(identifier, valueSize);
+    @Nullable Class<T> getValueClass() {
+        return valueClass;
     }
 
     /**
-     * @param identifier The identifier byte of the property.
-     * @param value      The value of the property.
+     * @return The length of the property components(not including the header).
      */
-    public Property(byte identifier, byte value) {
-        bytes = getPropertyBytes(identifier, value);
+    public int getPropertyLength() {
+        return getLength() - 3;
     }
 
-    /**
-     * @param identifier The identifier byte of the property.
-     * @param value      The value of the property.
-     */
-    public Property(byte identifier, byte[] value) {
-        bytes = getPropertyBytes(identifier, value);
-    }
-
-    /**
-     * @param identifier The identifier byte of the property.
-     * @param value      The value of the property.
-     */
-    public Property(byte identifier, Bytes value) {
-        this(identifier, value.getByteArray());
-    }
-
-    public Property(Bytes bytes) {
-        this(bytes.getByteArray());
-    }
+    // MARK: incoming ctor
 
     public Property(byte[] bytes) {
-        if (bytes == null || bytes.length < 3) throw new IllegalArgumentException();
+        if (bytes == null || bytes.length == 0) bytes = unknownBytes;
+        if (bytes.length < 3) bytes = Arrays.copyOf(bytes, 3);
         this.bytes = bytes;
+        findComponents();
     }
 
-    public int getValueLength() {
-        return Property.getUnsignedInt(bytes, 4, 2);
+    protected void findComponents() {
+
+        for (int i = 3; i < bytes.length; i++) {
+            int size = getUnsignedInt(bytes, i + 1, 2);
+            byte componentIdentifier = bytes[i];
+
+            try {
+                switch (componentIdentifier) {
+                    case 0x01:
+                        // value component
+                        value = new PropertyComponentValue(getRange(i, i + 3 + size));
+                        break;
+                    case 0x02:
+                        // timestamp component
+                        timestamp = new PropertyComponentTimestamp(getRange(i, i + 3 + size));
+                        break;
+                    case 0x03:
+                        // failure component
+                        failure = new PropertyComponentFailure(getRange(i, i + 3 + size));
+                        break;
+                }
+            } catch (CommandParseException e) {
+                printFailedToParse(e);
+            }
+
+            i += size + 2;
+        }
     }
 
-    /**
-     * @return The value bytes.
-     */
-    public byte[] getValueBytes() {
-        if (bytes.length < 7) return new byte[0];
-        return Arrays.copyOfRange(bytes, 6, bytes.length);
+    public Property update(Property p) throws CommandParseException {
+        if (valueClass == null)
+            throw new IllegalArgumentException("Initialise with a class to update.");
+
+        this.bytes = p.getByteArray();
+
+        this.value = p.value;
+        if (this.value != null) this.value.setClass(valueClass);
+
+        this.timestamp = p.timestamp;
+        this.failure = p.failure;
+
+        return this;
     }
 
-    /**
-     * @return The one value byte. Returns null if property has no value set.
-     */
-    public Byte getValueByte() {
-        if (bytes.length < 7) return null;
-        return bytes[6];
+    // MARK: builder ctor
+
+    public Property(@Nullable T value,
+                    @Nullable Calendar timestamp,
+                    @Nullable PropertyComponentFailure failure) {
+        update((byte) 0, value, timestamp, failure);
+    }
+
+    public Property(@Nullable T value) {
+        update((byte) 0, value, null, null);
+    }
+
+    // MARK: internal ctor
+
+    public Property(byte identifier, T value) {
+        update(identifier, value, null, null);
+    }
+
+    public Property(Class<T> valueClass, byte identifier) {
+        this.bytes = new byte[]{identifier, 0, 0};
+        this.valueClass = valueClass;
+    }
+
+    public Property(Class<T> valueClass, Property property) throws CommandParseException {
+        this.valueClass = valueClass;
+        if (property == null || property.getLength() == 0) this.bytes = unknownBytes;
+        if (property.getLength() < 3) this.bytes = Arrays.copyOf(property.getByteArray(), 3);
+        else this.bytes = property.getByteArray();
+        update(property);
+    }
+
+    public Property update(T value) {
+        return update(bytes[0], value, null, null);
+    }
+
+    private Property update(byte identifier,
+                            @Nullable T value,
+                            @Nullable Calendar timestamp,
+                            @Nullable PropertyComponentFailure failure) {
+
+        if (value != null && failure == null) this.value = new PropertyComponentValue(value);
+        if (timestamp != null) this.timestamp = new PropertyComponentTimestamp(timestamp);
+        if (failure != null) this.failure = failure;
+
+        createBytesFromComponents(identifier);
+
+        return this;
+    }
+
+    protected void createBytesFromComponents(byte propertyIdentifier) {
+        int componentsLength = (value != null ? value.getLength() : 0) +
+                (timestamp != null ? timestamp.getLength() : 0) +
+                (failure != null ? failure.getLength() : 0);
+
+        Bytes builder = new Bytes(3 + componentsLength);
+
+        builder.set(0, propertyIdentifier);
+        builder.set(1, Property.intToBytes(componentsLength, 2));
+
+        int pointer = 3;
+
+        if (value != null) {
+            builder.set(pointer, value);
+            pointer += value.getLength();
+        }
+
+        if (timestamp != null) {
+            builder.set(pointer, timestamp);
+            pointer += timestamp.getLength();
+        }
+
+        if (failure != null) {
+            builder.set(pointer, failure);
+        }
+
+        bytes = builder.getByteArray();
     }
 
     /**
      * Set a new identifier for the property
      *
      * @param identifier The identifier.
+     * @return Self.
      */
-    public void setIdentifier(byte identifier) {
+    public Property setIdentifier(byte identifier) {
         bytes[0] = identifier;
+        return this;
+    }
+
+    public boolean isUniversalProperty() {
+        byte propertyIdentifier = getPropertyIdentifier();
+        return propertyIdentifier == Command.SIGNATURE_IDENTIFIER ||
+                propertyIdentifier == Command.NONCE_IDENTIFIER ||
+                propertyIdentifier == Command.TIMESTAMP_IDENTIFIER;
     }
 
     public void printFailedToParse(Exception e) {
         Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
                 .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
+//        e.printStackTrace();
     }
 
-    public byte getPropertyIdentifier() {
-        return bytes[0];
-    }
+    // MARK: Helpers
 
-    public int getPropertyLength() {
-        return bytes.length;
-    }
+    public static <T> T[] propertiesToValues(Property<T>[] properties, Class<T> tClass) {
+        ArrayList<T> values = new ArrayList<>();
+        for (int i = 0; i < properties.length; i++) {
+            values.add(properties[i].getValue());
+        }
 
-    /**
-     * @return All of the property bytes - with the identifier and length.
-     */
-    public byte[] getPropertyBytes() {
-        return bytes;
-    }
-
-    protected void setValueBytes(byte[] valueBytes) {
-        ByteUtils.setBytes(bytes, valueBytes, 6);
+        return values.toArray((T[]) Array.newInstance(tClass, 0));
     }
 
     // MARK: ctor helpers
-
-    public static byte[] baseBytes(byte identifier, int dataComponentSize) {
-        // if have a value, create bytes for data component
-        int propertySize = dataComponentSize + 3;
-
-        byte[] bytes = new byte[3 + (dataComponentSize > 0 ? dataComponentSize + 3 : 0)];
-
-        bytes[0] = identifier;
-
-        if (propertySize > 255) {
-            byte[] propertyLengthBytes = intToBytes(propertySize, 2);
-            bytes[1] = propertyLengthBytes[0];
-            bytes[2] = propertyLengthBytes[1];
-        } else if (propertySize != 3) {
-            // if property size 3, we don't have data component and can omit the bytes.
-            bytes[1] = 0x00;
-            bytes[2] = (byte) propertySize;
-        }
-
-        if (dataComponentSize > 0) {
-            bytes[3] = 0x01; // data component
-            ByteUtils.setBytes(bytes, intToBytes(dataComponentSize, 2), 4); // data component size
-        }
-
-        return bytes;
-    }
-
-    protected static byte[] getPropertyBytes(byte identifier, byte value) throws IllegalArgumentException {
-        return getPropertyBytes(identifier, new byte[]{value});
-    }
-
-    protected static byte[] getPropertyBytes(byte identifier, byte[] value) throws
-            IllegalArgumentException {
-        byte[] bytes = baseBytes(identifier, value.length);
-        ByteUtils.setBytes(bytes, value, 6);
-        return bytes;
-    }
-
-    // MARK: static helpers
 
     public static long getLong(byte[] b, int at) throws IllegalArgumentException {
         if (b.length - at < 8) throw new IllegalArgumentException();
@@ -216,6 +326,10 @@ public class Property extends Bytes {
         return result;
     }
 
+    public static float getFloat(Bytes bytes) throws IllegalArgumentException {
+        return getFloat(bytes.getByteArray());
+    }
+
     public static float getFloat(byte[] bytes) throws IllegalArgumentException {
         if (bytes.length < 4) throw new IllegalArgumentException();
         return Float.intBitsToFloat(getUnsignedInt(bytes, 0, 4));
@@ -226,8 +340,17 @@ public class Property extends Bytes {
         return Float.intBitsToFloat(intValue);
     }
 
+    public static float getFloat(Bytes bytes, int at) throws IllegalArgumentException {
+        int intValue = getUnsignedInt(bytes.getByteArray(), at, 4);
+        return Float.intBitsToFloat(intValue);
+    }
+
     public static byte[] floatToBytes(float value) {
         return ByteBuffer.allocate(4).putFloat(value).array();
+    }
+
+    public static double getDouble(Bytes bytes) throws IllegalArgumentException {
+        return getDouble(bytes.getByteArray());
     }
 
     public static double getDouble(byte[] bytes) throws IllegalArgumentException {
@@ -239,6 +362,10 @@ public class Property extends Bytes {
         return Double.longBitsToDouble(getLong(bytes, at));
     }
 
+    public static double getDouble(Bytes bytes, int at) throws IllegalArgumentException {
+        return getDouble(bytes.getByteArray(), at);
+    }
+
     public static byte[] doubleToBytes(double value) {
         long bits = Double.doubleToLongBits(value);
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
@@ -246,12 +373,33 @@ public class Property extends Bytes {
         return buffer.array();
     }
 
+    public static int floatToIntPercentage(float value) {
+        return Math.round(value * 100f);
+    }
+
+    public static byte floatToIntPercentageByte(float value) {
+        return (byte) Math.round(value * 100f);
+    }
+
+    public static float getPercentage(byte value) {
+        return getUnsignedInt(value) / 100f;
+    }
+
     public static int getUnsignedInt(byte value) {
         return value & 0xFF;
     }
 
+    public static int getUnsignedInt(Bytes bytes) throws IllegalArgumentException {
+        return getUnsignedInt(bytes.getByteArray());
+    }
+
     public static int getUnsignedInt(byte[] bytes) throws IllegalArgumentException {
         return getUnsignedInt(bytes, 0, bytes.length);
+    }
+
+    public static int getUnsignedInt(Bytes bytes, int at, int length) throws
+            IllegalArgumentException {
+        return getUnsignedInt(bytes.getByteArray(), at, length);
     }
 
     public static int getUnsignedInt(byte[] bytes, int at, int length) throws
@@ -269,7 +417,7 @@ public class Property extends Bytes {
                 int result = ((bytes[at] & 0xff) << 8) | (bytes[at + 1] & 0xff);
                 return result;
             } else if (length == 1) {
-                return (int) bytes[at];
+                return bytes[at] & 0xFF;
             }
         }
 
@@ -280,9 +428,15 @@ public class Property extends Bytes {
         return (int) value;
     }
 
+    public static int getSignedInt(Bytes bytes) throws IllegalArgumentException {
+        return getSignedInt(bytes.getByteArray());
+    }
+
     public static int getSignedInt(byte[] bytes) throws IllegalArgumentException {
-        if (bytes.length >= 2) {
-            return bytes[0] << 8 | bytes[1];
+        if (bytes.length == 1) return getSignedInt(bytes[0]);
+        else if (bytes.length >= 2) {
+            int result = bytes[0] << 8 | bytes[1];
+            return result;
         }
 
         throw new IllegalArgumentException();
@@ -297,6 +451,8 @@ public class Property extends Bytes {
      * @throws IllegalArgumentException when input is invalid
      */
     public static byte[] intToBytes(int value, int length) throws IllegalArgumentException {
+        if (length == 1) return new byte[]{(byte) value};
+
         byte[] bytes = BigInteger.valueOf(value).toByteArray();
 
         if (bytes.length == length) {
@@ -315,7 +471,7 @@ public class Property extends Bytes {
         }
     }
 
-    public static boolean getBool(byte value) {
+    public static Boolean getBool(byte value) {
         return value != 0x00;
     }
 
@@ -327,13 +483,21 @@ public class Property extends Bytes {
         return (byte) (value == false ? 0x00 : 0x01);
     }
 
+    public static String getString(Bytes bytes) {
+        return getString(bytes.getByteArray());
+    }
+
     public static String getString(byte[] bytes) {
         try {
-            return new String(bytes, CHARSET);
+            return new String(bytes, PropertyComponentValue.CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             throw new ParseException();
         }
+    }
+
+    public static String getString(Bytes bytes, int at, int length) {
+        return getString(bytes.getByteArray(), at, length);
     }
 
     public static String getString(byte[] bytes, int at, int length) {
@@ -342,7 +506,7 @@ public class Property extends Bytes {
 
     public static byte[] stringToBytes(String string) {
         try {
-            return string.getBytes(StringProperty.CHARSET);
+            return string.getBytes(PropertyComponentValue.CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             throw new ParseException();
@@ -369,15 +533,26 @@ public class Property extends Bytes {
         return c.getTime();
     }
 
+    public static Calendar getCalendar(Property property) throws IllegalArgumentException {
+        return getCalendar(property.getValueComponent().getValueBytes());
+    }
+
+    public static Calendar getCalendar(Bytes bytes) throws IllegalArgumentException {
+        return getCalendar(bytes.getByteArray());
+    }
+
     public static Calendar getCalendar(byte[] bytes) throws IllegalArgumentException {
         return getCalendar(bytes, 0);
     }
 
+    public static Calendar getCalendar(Bytes bytes, int at) throws IllegalArgumentException {
+        return getCalendar(bytes.getByteArray(), at);
+    }
+
     public static Calendar getCalendar(byte[] bytes, int at) throws IllegalArgumentException {
         Calendar c = new GregorianCalendar();
-
-        if (bytes.length >= at + CALENDAR_SIZE) {
-            Long epoch = Property.getLong(bytes, at);
+        if (bytes.length >= at + PropertyComponentValue.CALENDAR_SIZE) {
+            long epoch = Property.getLong(bytes, at);
             c.setTimeInMillis(epoch);
         } else {
             throw new IllegalArgumentException();
@@ -389,5 +564,35 @@ public class Property extends Bytes {
 
     public static byte[] calendarToBytes(Calendar calendar) {
         return Property.longToBytes(calendar.getTimeInMillis());
+    }
+
+    public static int[] getIntegerArray(Bytes valueBytes) {
+        int length = valueBytes.getLength();
+
+        int[] value = new int[length];
+        for (int i = 0; i < length; i++) {
+            value[i] = Property.getUnsignedInt(valueBytes.get(i));
+        }
+
+        return value;
+    }
+
+    public static Bytes integerArrayToBytes(int[] value) {
+        Bytes result = new Bytes(value.length);
+
+        for (int i = 0; i < value.length; i++) {
+            byte byteValue = Property.intToBytes(value[i], 1)[0];
+            result.set(i, byteValue);
+        }
+
+        return result;
+    }
+
+    public static Identifier getIdentifier(Bytes valueBytes) {
+        return Identifier.fromBytes(valueBytes.getByteArray());
+    }
+
+    public static Bytes identifierToBytes(Identifier value) {
+        return new Bytes(value.getBytes());
     }
 }

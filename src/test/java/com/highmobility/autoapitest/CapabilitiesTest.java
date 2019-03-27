@@ -46,95 +46,111 @@ import com.highmobility.autoapi.TrunkState;
 import com.highmobility.autoapi.Type;
 import com.highmobility.autoapi.ValetMode;
 import com.highmobility.autoapi.VehicleLocation;
-import com.highmobility.autoapi.property.CapabilityProperty;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Capability;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CapabilitiesTest {
     Bytes bytes = new Bytes
             ("001001" +
-                    "0100050020000112" +
-                    "0100050021000112" +
-                    "010006002300011213" +
-                    "010009002400011213141516" +
-                    "0100050025000112" +
-                    "010006002600011213" +
-                    "010006002700011204" +
-                    "0100050028000112" +
-                    "010003002912" +
-                    "01000400300001" +
-                    "0100050031000102");
+                    "0100080100050020000112" +
+                    "0100080100050021000112" +
+                    "010009010006002300011213" +
+                    "01000C010009002400011213141516" +
+                    "0100080100050025000112" +
+                    "010009010006002600011213" +
+                    "010009010006002700011204" +
+                    "0100080100050028000112" +
+                    "010006010003002912" +
+                    "01000701000400300001" +
+                    "0100080100050031000102");
 
     @Test
     public void capabilities() {
         Command command = CommandResolver.resolve(bytes);
+        testState((Capabilities) command);
+    }
 
-        assertTrue(command.is(Capabilities.TYPE));
-        Capabilities capabilities = (Capabilities) command;
+    private void testState(Capabilities state) {
+        assertTrue(state.isSupported(GetLockState.TYPE));
+        assertTrue(state.isSupported(LockState.TYPE));
+        assertTrue(state.isSupported(LockUnlockDoors.TYPE));
 
-        assertTrue(capabilities.isSupported(GetLockState.TYPE));
-        assertTrue(capabilities.isSupported(LockState.TYPE));
-        assertTrue(capabilities.isSupported(LockUnlockDoors.TYPE));
+        assertTrue(state.isSupported(GetTrunkState.TYPE));
+        assertTrue(state.isSupported(ControlTrunk.TYPE));
+        assertTrue(state.isSupported(TrunkState.TYPE));
 
-        assertTrue(capabilities.isSupported(GetTrunkState.TYPE));
-        assertTrue(capabilities.isSupported(ControlTrunk.TYPE));
-        assertTrue(capabilities.isSupported(TrunkState.TYPE));
+        assertTrue(state.isSupported(GetChargeState.TYPE));
+        assertTrue(state.isSupported(ChargeState.TYPE));
+        assertTrue(state.isSupported(StartStopCharging.TYPE));
+        assertTrue(state.isSupported(SetChargeLimit.TYPE));
 
-        assertTrue(capabilities.isSupported(GetChargeState.TYPE));
-        assertTrue(capabilities.isSupported(ChargeState.TYPE));
-        assertTrue(capabilities.isSupported(StartStopCharging.TYPE));
-        assertTrue(capabilities.isSupported(SetChargeLimit.TYPE));
+        assertTrue(state.isSupported(GetClimateState.TYPE));
+        assertTrue(state.isSupported(ClimateState.TYPE));
+        assertTrue(state.isSupported(SetHvacStartingTimes.TYPE));
+        assertTrue(state.isSupported(StartStopHvac.TYPE));
+        assertTrue(state.isSupported(StartStopDefogging.TYPE));
+        assertTrue(state.isSupported(StartStopDefrosting.TYPE));
+        assertTrue(state.isSupported(StartStopIonising.TYPE));
 
-        assertTrue(capabilities.isSupported(GetClimateState.TYPE));
-        assertTrue(capabilities.isSupported(ClimateState.TYPE));
-        assertTrue(capabilities.isSupported(SetHvacStartingTimes.TYPE));
-        assertTrue(capabilities.isSupported(StartStopHvac.TYPE));
-        assertTrue(capabilities.isSupported(StartStopDefogging.TYPE));
-        assertTrue(capabilities.isSupported(StartStopDefrosting.TYPE));
-        assertTrue(capabilities.isSupported(StartStopIonising.TYPE));
+        assertTrue(state.isSupported(GetRooftopState.TYPE));
+        assertTrue(state.isSupported(RooftopState.TYPE));
+        assertTrue(state.isSupported(ControlRooftop.TYPE));
 
-        assertTrue(capabilities.isSupported(GetRooftopState.TYPE));
-        assertTrue(capabilities.isSupported(RooftopState.TYPE));
-        assertTrue(capabilities.isSupported(ControlRooftop.TYPE));
+        assertTrue(state.isSupported(GetFlashersState.TYPE));
+        assertTrue(state.isSupported(FlashersState.TYPE));
+        assertTrue(state.isSupported(HonkAndFlash.TYPE));
+        assertTrue(state.isSupported(ActivateDeactivateEmergencyFlasher.TYPE));
 
-        assertTrue(capabilities.isSupported(GetFlashersState.TYPE));
-        assertTrue(capabilities.isSupported(FlashersState.TYPE));
-        assertTrue(capabilities.isSupported(HonkAndFlash.TYPE));
-        assertTrue(capabilities.isSupported(ActivateDeactivateEmergencyFlasher.TYPE));
+        assertTrue(state.isSupported(GetControlMode.TYPE));
+        assertTrue(state.isSupported(ControlMode.TYPE));
+        assertTrue(state.isSupported(StartControlMode.TYPE));
+        assertTrue(state.isSupported(ControlCommand.TYPE));
 
-        assertTrue(capabilities.isSupported(GetControlMode.TYPE));
-        assertTrue(capabilities.isSupported(ControlMode.TYPE));
-        assertTrue(capabilities.isSupported(StartControlMode.TYPE));
-        assertTrue(capabilities.isSupported(ControlCommand.TYPE));
+        assertTrue(state.isSupported(GetValetMode.TYPE));
+        assertTrue(state.isSupported(ValetMode.TYPE));
+        assertTrue(state.isSupported(ActivateDeactivateValetMode.TYPE));
 
-        assertTrue(capabilities.isSupported(GetValetMode.TYPE));
-        assertTrue(capabilities.isSupported(ValetMode.TYPE));
-        assertTrue(capabilities.isSupported(ActivateDeactivateValetMode.TYPE));
+        assertTrue(state.isSupported(SendHeartRate.TYPE));
 
-        assertTrue(capabilities.isSupported(SendHeartRate.TYPE));
+        assertTrue(state.isSupported(GetVehicleLocation.TYPE));
+        assertTrue(state.isSupported(VehicleLocation.TYPE));
 
-        assertTrue(capabilities.isSupported(GetVehicleLocation.TYPE));
-        assertTrue(capabilities.isSupported(VehicleLocation.TYPE));
+        assertTrue(state.isSupported(GetNaviDestination.TYPE));
+        assertTrue(state.isSupported(NaviDestination.TYPE));
 
-        assertTrue(capabilities.isSupported(GetNaviDestination.TYPE));
-        assertTrue(capabilities.isSupported(NaviDestination.TYPE));
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test
     public void oneUnknownCapability() {
-        // 00 AB unknown
-        byte[] unknownCapabilitiesBytes = ByteUtils.bytesFromHex
-                ("00100101000500AB00010201000500210001020100060023000102030100090024000102030405060100050025000102010006002600010203010007002700010203040100050028000102010003002902010004003000010100050031000102");
+        Bytes bytes = new Bytes
+                ("001001" +
+                        "0100080100050020000112" +
+                        "0100080100050021000112" +
+                        "010009010006002300011213" +
+                        "01000C010009002400011213141516" +
+                        "0100080100050025000112" +
+                        "010009010006002600011213" +
+                        "010009010006002700011204" +
+                        "0100080100050028000112" +
+                        "010006010003002912" +
+                        "01000701000400300001" +
+                        "0100080100050031000102" +
+                        "010006010003ABAB12"); // unknown ABAB
+
         Capabilities unknownCapabilities =
-                (Capabilities) CommandResolver.resolve(unknownCapabilitiesBytes);
-        assertTrue(unknownCapabilities.getCapabilities().length == 11); // unknown capa still
+                (Capabilities) CommandResolver.resolve(bytes);
+        assertTrue(unknownCapabilities.getCapabilities().length == 12); // unknown capa still
         // added to array
 
         for (int i = 0; i < unknownCapabilities.getCapabilities().length; i++) {
@@ -146,7 +162,8 @@ public class CapabilitiesTest {
 
     @Test
     public void climateCapability() {
-        byte[] message = ByteUtils.bytesFromHex("001001010009002400011213141516");
+        byte[] message = ByteUtils.bytesFromHex("001001" +
+                "01000C010009002400011213141516");
         Capabilities capability = null;
         capability = (Capabilities) CommandResolver.resolve(message);
         if (capability == null) fail();
@@ -161,7 +178,8 @@ public class CapabilitiesTest {
 
     @Test
     public void heartRateCapability() {
-        Bytes message = new Bytes("001001010003002912");
+        Bytes message = new Bytes("001001" +
+                "010006010003002912");
 
         Capabilities capability = (Capabilities) CommandResolver.resolve(message);
         assertTrue(capability.isSupported(SendHeartRate.TYPE));
@@ -172,29 +190,18 @@ public class CapabilitiesTest {
         byte[] commandBytes = new GetCapabilities().getByteArray();
         assertTrue(Arrays.equals(bytes, commandBytes));
 
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
         assertTrue(command instanceof GetCapabilities);
     }
 
     @Test public void getCapability() {
         byte[] bytes = ByteUtils.bytesFromHex("0010020029");
-        byte[] commandBytes = new GetCapability(SendHeartRate.TYPE).getByteArray();
+        GetCapability command = new GetCapability(SendHeartRate.TYPE);
+        byte[] commandBytes = command.getByteArray();
         assertTrue(Arrays.equals(bytes, commandBytes));
 
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-        assertTrue(command instanceof GetCapability);
-        GetCapability get = (GetCapability) command;
-        assertTrue(get.getCapabilityIdentifier() == Identifier.HEART_RATE);
+        command = (GetCapability) CommandResolver.resolve(bytes);
+        assertTrue(command.getCapabilityIdentifier() == Identifier.HEART_RATE);
     }
 
     @Test public void buildClimate() {
@@ -210,7 +217,7 @@ public class CapabilitiesTest {
                 StartStopIonising.TYPE
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        Property property = new Property(new Capability(Identifier.CLIMATE, supportedTypes));
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
         byte[] message = capabilities.getByteArray();
@@ -220,7 +227,6 @@ public class CapabilitiesTest {
         assertTrue(capabilities.getCapability(GetClimateState.TYPE) != null);
         assertTrue(capabilities.getCapability(EnableDisableWifi.TYPE) == null);
         assertTrue(capabilities.getCapabilities().length == 1);
-
     }
 
     @Test public void buildClimateAndRemoteControl() throws IllegalArgumentException {
@@ -236,8 +242,7 @@ public class CapabilitiesTest {
                 StartStopIonising.TYPE
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE,
-                climateSupportedTypes);
+        Property property = new Property(new Capability(Identifier.CLIMATE, climateSupportedTypes));
         builder.addCapability(property);
 
         Type[] remoteControlTypes = new Type[]{
@@ -247,8 +252,8 @@ public class CapabilitiesTest {
                 ControlCommand.TYPE
         };
 
-        CapabilityProperty property2 = new CapabilityProperty(Identifier.REMOTE_CONTROL,
-                remoteControlTypes);
+        Property property2 = new Property(new Capability(Identifier.REMOTE_CONTROL,
+                remoteControlTypes));
         builder.addCapability(property2);
 
         Bytes expected = new Bytes(
@@ -260,10 +265,7 @@ public class CapabilitiesTest {
         assertTrue(TestUtils.bytesTheSame(message, expected));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void buildTypesFromDifferentCategories() {
-        Capabilities.Builder builder = new Capabilities.Builder();
-
+    @Test public void buildTypesFromDifferentCategories() {
         Type[] supportedTypes = new Type[]{
                 GetClimateState.TYPE,
                 ClimateState.TYPE,
@@ -274,10 +276,10 @@ public class CapabilitiesTest {
                 GetTrunkState.TYPE
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Property(new Capability(Identifier.CLIMATE, supportedTypes));
+        });
 
-        builder.addCapability(property);
-        builder.build().getByteArray();
     }
 
     @Test public void buildAddStateAutomaticallyWithGet() {
@@ -287,7 +289,7 @@ public class CapabilitiesTest {
                 GetClimateState.TYPE,
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        Property property = new Property(new Capability(Identifier.CLIMATE, supportedTypes));
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
         assertTrue(capabilities.isSupported(ClimateState.TYPE));
@@ -305,10 +307,10 @@ public class CapabilitiesTest {
                 ClimateState.TYPE
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        Property property = new Property(new Capability(Identifier.CLIMATE, supportedTypes));
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
-        assertTrue(capabilities.getCapability(GetClimateState.TYPE).getTypes().length == 2);
+        assertTrue(capabilities.getCapability(GetClimateState.TYPE).getValue().getTypes().length == 2);
     }
 
     @Test public void buildDontAddStateAutomaticallyWithNonGetStateType() {
@@ -318,11 +320,10 @@ public class CapabilitiesTest {
                 Notification.TYPE,
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.NOTIFICATIONS,
-                supportedTypes);
+        Property property = new Property(new Capability(Identifier.NOTIFICATIONS, supportedTypes));
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
-        assertTrue(capabilities.getCapability(Notification.TYPE).getTypes().length == 1);
+        assertTrue(capabilities.getCapability(Notification.TYPE).getValue().getTypes().length == 1);
     }
 
     @Test public void handleUnknownCapability() {
@@ -334,10 +335,10 @@ public class CapabilitiesTest {
                 new Type(Identifier.CLIMATE.getBytes(), 0x22)
         };
 
-        CapabilityProperty property = new CapabilityProperty(Identifier.CLIMATE, supportedTypes);
+        Property property = new Property(new Capability(Identifier.CLIMATE, supportedTypes));
         builder.addCapability(property);
         Capabilities capabilities = builder.build();
-        assertTrue(capabilities.getCapability(GetClimateState.TYPE).getTypes().length == 3);
+        assertTrue(capabilities.getCapability(GetClimateState.TYPE).getValue().getTypes().length == 3);
     }
 
     @Test public void zeroProperties() {

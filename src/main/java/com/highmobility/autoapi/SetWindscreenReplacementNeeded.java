@@ -21,22 +21,23 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.WindscreenReplacementState;
+import com.highmobility.autoapi.value.windscreen.WindscreenReplacementState;
 
 /**
  * Set if the windscreen needs replacement. The result is sent through the Windscreen State
  * message.
  */
-public class SetWindscreenReplacementNeeded extends CommandWithProperties {
+public class SetWindscreenReplacementNeeded extends Command {
     public static final Type TYPE = new Type(Identifier.WINDSCREEN, 0x13);
     private static final byte IDENTIFIER = 0x01;
 
-    private WindscreenReplacementState state;
+    private Property<WindscreenReplacementState> state =
+            new Property(WindscreenReplacementState.class, IDENTIFIER);
 
     /**
      * @return The windscreen replacement state.
      */
-    public WindscreenReplacementState getState() {
+    public Property<WindscreenReplacementState> getState() {
         return state;
     }
 
@@ -44,18 +45,25 @@ public class SetWindscreenReplacementNeeded extends CommandWithProperties {
      * @param state The windscreen replacement state.
      */
     public SetWindscreenReplacementNeeded(WindscreenReplacementState state) {
-        super(TYPE.addProperty(getProperty(state)));
-        this.state = state;
+        super(TYPE);
+        this.state.update(state);
+        createBytes(this.state);
     }
 
-    static Property getProperty(WindscreenReplacementState state) {
-        return new Property(IDENTIFIER, state.getByte());
-    }
-
-    SetWindscreenReplacementNeeded(byte[] bytes) throws CommandParseException {
+    SetWindscreenReplacementNeeded(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        state = WindscreenReplacementState.fromByte(prop.getValueByte());
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return state.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

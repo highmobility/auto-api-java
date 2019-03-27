@@ -20,36 +20,46 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Manually start or stop defrosting. The result is sent through the evented Climate State message.
  */
-public class StartStopDefrosting extends CommandWithProperties {
+public class StartStopDefrosting extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x15);
-    private final boolean start;
     private static final byte IDENTIFIER = 0x01;
+    private Property<Boolean> start = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether defrosting should be started.
      */
-    public boolean start() {
+    public Property<Boolean> start() {
         return start;
     }
 
     /**
      * @param start The defrosting state.
      */
-    public StartStopDefrosting(boolean start) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, start)));
-        this.start = start;
+    public StartStopDefrosting(Boolean start) {
+        super(TYPE);
+        this.start.update(start);
+        createBytes(this.start);
     }
 
-    StartStopDefrosting(byte[] bytes) throws CommandParseException {
+    StartStopDefrosting(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        start = Property.getBool(prop.getValueByte());
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return start.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

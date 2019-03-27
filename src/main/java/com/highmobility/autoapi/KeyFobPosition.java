@@ -20,31 +20,30 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.KeyFobPositionValue;
-
-import javax.annotation.Nullable;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.KeyFobPositionValue;
 
 /**
  * Command sent by the car every time the relative position of the keyfob changes or when a Get Key
  * fob Position command is received.
  */
-public class KeyFobPosition extends CommandWithProperties {
+public class KeyFobPosition extends Command {
     public static final Type TYPE = new Type(Identifier.KEYFOB_POSITION, 0x01);
+    private static final byte IDENTIFIER = 0x01;
 
-    KeyFobPositionValue keyFobPosition;
+    Property keyFobPosition = new Property(KeyFobPositionValue.class, IDENTIFIER);
 
-    @Nullable public KeyFobPositionValue getKeyFobPosition() {
+    public Property<KeyFobPositionValue> getKeyFobPosition() {
         return keyFobPosition;
     }
 
     KeyFobPosition(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == 0x01) {
-                    keyFobPosition = KeyFobPositionValue.fromByte(p.getValueByte());
-                    return keyFobPosition;
+                    return keyFobPosition.update(p);
                 }
 
                 return null;

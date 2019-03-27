@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
@@ -28,27 +27,38 @@ import com.highmobility.autoapi.property.Property;
  * automatically shut down and restart the internal combustion engine when the car is stopped. The
  * result is sent through the Start-Stop State message.
  */
-public class ActivateDeactivateStartStop extends CommandWithProperties {
+public class ActivateDeactivateStartStop extends Command {
     public static final Type TYPE = new Type(Identifier.START_STOP, 0x12);
     private static final byte IDENTIFIER = 0x01;
-    boolean activate;
+    Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether Start-Stop should be activated.
      */
-    public boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
-    public ActivateDeactivateStartStop(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, activate)));
-        this.activate = activate;
+    public ActivateDeactivateStartStop(Boolean activate) {
+        super(TYPE);
+        this.activate.update(activate);
+        createBytes(this.activate);
     }
 
-    ActivateDeactivateStartStop(byte[] bytes) throws CommandParseException {
+    ActivateDeactivateStartStop(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        activate = Property.getBool(prop.getValueByte());
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return activate.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

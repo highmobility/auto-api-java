@@ -10,15 +10,16 @@ import com.highmobility.autoapi.StartStopDefogging;
 import com.highmobility.autoapi.StartStopDefrosting;
 import com.highmobility.autoapi.StartStopHvac;
 import com.highmobility.autoapi.StartStopIonising;
-import com.highmobility.autoapi.property.HvacStartingTime;
-import com.highmobility.autoapi.property.value.Time;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.HvacStartingTime;
+import com.highmobility.autoapi.value.Time;
+import com.highmobility.autoapi.value.Weekday;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ClimateTest {
     Bytes bytes = new Bytes(
@@ -39,39 +40,32 @@ public class ClimateTest {
 
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
-        if (command == null) fail();
+        Command command = CommandResolver.resolve(bytes);
+        testState((ClimateState) command);
+    }
 
-        assertTrue(command.is(ClimateState.TYPE));
-        ClimateState state = (ClimateState) command;
+    private void testState(ClimateState state) {
+        assertTrue(state.getInsideTemperature().getValue() == 19f);
+        assertTrue(state.getOutsideTemperature().getValue() == 12f);
+        assertTrue(state.getDriverTemperatureSetting().getValue() == 21.5f);
+        assertTrue(state.getPassengerTemperatureSetting().getValue() == 21.5f);
 
-        assertTrue(command.getClass() == ClimateState.class);
-        assertTrue(state.getInsideTemperature() == 19f);
-        assertTrue(state.getOutsideTemperature() == 12f);
-        assertTrue(state.getDriverTemperatureSetting() == 21.5f);
-        assertTrue(state.getPassengerTemperatureSetting() == 21.5f);
+        assertTrue(state.isHvacActive().getValue() == true);
+        assertTrue(state.isDefoggingActive().getValue() == false);
+        assertTrue(state.isDefrostingActive().getValue() == false);
+        assertTrue(state.isIonisingActive().getValue() == false);
+        assertTrue(state.getDefrostingTemperature().getValue() == 21.5f);
+        assertTrue(state.getHvacStartingTime(Weekday.MONDAY) == null);
 
-        assertTrue(state.isHvacActive() == true);
-        assertTrue(state.isDefoggingActive() == false);
-        assertTrue(state.isDefrostingActive() == false);
-        assertTrue(state.isIonisingActive() == false);
-        assertTrue(state.getDefrostingTemperature() == 21.5f);
+        Property<HvacStartingTime> time1 = state.getHvacStartingTime(Weekday.SATURDAY);
+        Property<HvacStartingTime> time2 = state.getHvacStartingTime(Weekday.SUNDAY);
+        assertTrue(time1.getValue().getTime().getHour() == 18);
+        assertTrue(time1.getValue().getTime().getMinute() == 30);
+        assertTrue(time2.getValue().getTime().getHour() == 18);
+        assertTrue(time2.getValue().getTime().getMinute() == 30);
 
-        assertTrue(state.getHvacStartingTime(HvacStartingTime.Weekday.MONDAY) == null);
-
-        HvacStartingTime time1 = state.getHvacStartingTime(HvacStartingTime.Weekday.SATURDAY);
-        HvacStartingTime time2 = state.getHvacStartingTime(HvacStartingTime.Weekday.SUNDAY);
-        assertTrue(time1.getTime().getHour() == 18);
-        assertTrue(time1.getTime().getMinute() == 30);
-        assertTrue(time2.getTime().getHour() == 18);
-        assertTrue(time2.getTime().getMinute() == 30);
-
-        assertTrue(state.getRearTemperatureSetting() == 21.5f);
+        assertTrue(state.getRearTemperatureSetting().getValue() == 21.5f);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -87,7 +81,7 @@ public class ClimateTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         StartStopDefogging command = (StartStopDefogging) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.start());
+        assertTrue(command.start().getValue() == true);
     }
 
     @Test public void startStopDefrosting() {
@@ -98,7 +92,7 @@ public class ClimateTest {
 
         StartStopDefrosting command = (StartStopDefrosting) CommandResolver.resolve
                 (waitingForBytes);
-        assertTrue(command.start() == true);
+        assertTrue(command.start().getValue() == true);
     }
 
     @Test public void startStopHvac() {
@@ -108,7 +102,7 @@ public class ClimateTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         StartStopHvac command = (StartStopHvac) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.start() == true);
+        assertTrue(command.start().getValue() == true);
     }
 
     @Test public void StartStopIonising() {
@@ -118,7 +112,7 @@ public class ClimateTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         StartStopIonising command = (StartStopIonising) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.start() == false);
+        assertTrue(command.start().getValue() == false);
     }
 
     @Test public void setTemperatureSettings() {
@@ -142,19 +136,19 @@ public class ClimateTest {
                 "01000601000302080A");
 
         HvacStartingTime[] times = new HvacStartingTime[2];
-        times[0] = new HvacStartingTime(HvacStartingTime.Weekday.MONDAY, new Time(8, 0));
-        times[1] = new HvacStartingTime(HvacStartingTime.Weekday.WEDNESDAY, new Time(8, 10));
+        times[0] = new HvacStartingTime(Weekday.MONDAY, new Time(8, 0));
+        times[1] = new HvacStartingTime(Weekday.WEDNESDAY, new Time(8, 10));
         Bytes commandBytes = new SetHvacStartingTimes(times);
         assertTrue(TestUtils.bytesTheSame(commandBytes, bytes));
 
         SetHvacStartingTimes profile = (SetHvacStartingTimes) CommandResolver.resolve(bytes);
 
         assertTrue(profile.getHvacStartingTimes().length == 2);
-        assertTrue(profile.getHvacStartingTime(HvacStartingTime.Weekday.TUESDAY) == null);
+        assertTrue(profile.getHvacStartingTime(Weekday.TUESDAY) == null);
 
-        assertTrue(profile.getHvacStartingTime(HvacStartingTime.Weekday.MONDAY).getTime().equals
+        assertTrue(profile.getHvacStartingTime(Weekday.MONDAY).getValue().getTime().equals
                 (new Time(8, 0)));
-        assertTrue(profile.getHvacStartingTime(HvacStartingTime.Weekday.WEDNESDAY).getTime().equals
+        assertTrue(profile.getHvacStartingTime(Weekday.WEDNESDAY).getValue().getTime().equals
                 (new Time(8, 10)));
     }
 
@@ -167,46 +161,33 @@ public class ClimateTest {
         assertTrue(profile.getHvacStartingTimes().length == 0);
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("002401");
-        ClimateState state = (ClimateState) CommandResolver.resolve(bytes);
-        assertTrue(state.getRearTemperatureSetting() == null);
-    }
-
     @Test public void build() {
-        // TBODO: 29/10/2018
-/*        byte[] expectedBytes = ByteUtils.bytesFromHex(
-                "002401010004419800000200044140000003000441ac000004000441ac00000500010106000100070001000800010009000441ac00000A000FE000000000000000000000071E071E");
         ClimateState.Builder builder = new ClimateState.Builder();
 
-        builder.setInsideTemperature(19f);
+        builder.setInsideTemperature(new Property(19f));
 
-        builder.setOutsideTemperature(12f);
-        builder.setDriverTemperatureSetting(21.5f);
-        builder.setPassengerTemperatureSetting(21.5f);
+        builder.setOutsideTemperature(new Property(12f));
+        builder.setDriverTemperatureSetting(new Property(21.5f));
+        builder.setPassengerTemperatureSetting(new Property(21.5f));
 
-        builder.setHvacActive(true);
-        builder.setDefoggingActive(false);
-        builder.setDefrostingActive(false);
-        builder.setIonisingActive(false);
-        builder.setDefrostingTemperature(21.5f);
+        builder.setHvacActive(new Property(true));
+        builder.setDefoggingActive(new Property(false));
+        builder.setDefrostingActive(new Property(false));
+        builder.setIonisingActive(new Property(false));
+        builder.setDefrostingTemperature(new Property(21.5f));
 
-        AutoHvacProperty.WeekdayState[] weekdayWeekdayStates = new AutoHvacProperty.WeekdayState[7];
-        for (int i = 0; i < 7; i++) {
-            AutoHvacProperty.WeekdayState weekdayState;
-            if (i < 5) {
-                weekdayState = new AutoHvacProperty.WeekdayState(false, i, 0, 0);
-            } else {
-                weekdayState = new AutoHvacProperty.WeekdayState(true, i, 7, 30);
-            }
+        builder.addHvacStartingTime(new Property(new HvacStartingTime(Weekday.SATURDAY, new Time(18,30))));
+        builder.addHvacStartingTime(new Property(new HvacStartingTime(Weekday.SUNDAY, new Time(18,30))));
 
-            weekdayWeekdayStates[i] = weekdayState;
-        }
-        AutoHvacProperty autoHvac = new AutoHvacProperty(weekdayWeekdayStates, true);
-        builder.setAutoHvacState(autoHvac);
-
+        builder.setRearTemperatureSetting(new Property(21.5f));
         ClimateState command = builder.build();
-        byte[] bytes = command.getByteArray();
-        assertTrue(Arrays.equals(bytes, expectedBytes));*/
+        testState(command);
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(StartStopHvac.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(StartStopDefogging.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(StartStopDefrosting.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        assertTrue(CommandResolver.resolve(StartStopIonising.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

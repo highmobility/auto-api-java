@@ -22,33 +22,29 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 
-import javax.annotation.Nullable;
-
 /**
  * This message is sent when a Get Mobile State message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
-public class MobileState extends CommandWithProperties {
+public class MobileState extends Command {
     public static final Type TYPE = new Type(Identifier.MOBILE, 0x01);
     private static final byte IDENTIFIER = 0x01;
-    Boolean connected;
+    Property<Boolean> connected = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether mobile phone is connected.
      */
-    @Nullable public Boolean isConnected() {
+    public Property<Boolean> isConnected() {
         return connected;
     }
 
     MobileState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == IDENTIFIER) {
-                    connected = Property.getBool(p.getValueByte());
-                    return connected;
-
+                    return connected.update(p);
                 }
                 return null;
             });
@@ -59,12 +55,24 @@ public class MobileState extends CommandWithProperties {
         return true;
     }
 
-    // TBODO:
-    /*private MobileState(Builder builder) {
+    private MobileState(Builder builder) {
         super(builder);
+        this.connected = builder.connected;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
+        Property connected;
+
+        /**
+         * @param connected The connection state.
+         * @return The builder.
+         */
+        public Builder setConnected(Property<Boolean> connected) {
+            this.connected = connected;
+            addProperty(connected.setIdentifier(IDENTIFIER));
+            return this;
+        }
+
         public Builder() {
             super(TYPE);
         }
@@ -72,5 +80,5 @@ public class MobileState extends CommandWithProperties {
         public MobileState build() {
             return new MobileState(this);
         }
-    }*/
+    }
 }

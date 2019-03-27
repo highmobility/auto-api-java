@@ -20,7 +20,6 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 import javax.annotation.Nullable;
@@ -29,27 +28,27 @@ import javax.annotation.Nullable;
  * Command sent from the car every time the valet mode changes or when a Get Valet Mode command is
  * received.
  */
-public class ValetMode extends CommandWithProperties {
+public class ValetMode extends Command {
     public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x01);
 
     private static final byte ACTIVE_IDENTIFIER = 0x01;
 
-    Boolean active;
+    Property<Boolean> active;
 
     /**
      * @return The valet mode state.
      */
-    @Nullable public Boolean isActive() {
+    public Property<Boolean> isActive() {
         return active;
     }
 
     ValetMode(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == ACTIVE_IDENTIFIER) {
-                    active = Property.getBool(p.getValueByte());
+                    active = new Property(Boolean.class, p);
                     return active;
                 }
 
@@ -68,8 +67,8 @@ public class ValetMode extends CommandWithProperties {
         active = builder.active;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private boolean active;
+    public static final class Builder extends Command.Builder {
+        private Property<Boolean> active;
 
         public Builder() {
             super(TYPE);
@@ -79,9 +78,10 @@ public class ValetMode extends CommandWithProperties {
          * @param active The valet mode state.
          * @return The builder.
          */
-        public Builder setActive(boolean active) {
+        public Builder setActive(Property<Boolean> active) {
             this.active = active;
-            addProperty(new BooleanProperty(ACTIVE_IDENTIFIER, active));
+            active.setIdentifier(ACTIVE_IDENTIFIER);
+            addProperty(active);
             return this;
         }
 

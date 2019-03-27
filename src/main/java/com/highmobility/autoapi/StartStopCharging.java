@@ -20,45 +20,48 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Start or stop charging, which can only be controlled when the car is plugged in. The result is
  * sent through the evented Charge State command.
  */
-public class StartStopCharging extends CommandWithProperties {
+public class StartStopCharging extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x12);
     private static final byte ACTIVE_STATE_IDENTIFIER = 0x01;
-    boolean start;
+    Property<Boolean> start = new Property(Boolean.class, ACTIVE_STATE_IDENTIFIER);
 
     /**
      * @return Whether charging should start.
      */
-    public boolean getStart() {
+    public Property<Boolean> getStart() {
         return start;
     }
 
     /**
      * @param start The charging state.
      */
-    public StartStopCharging(boolean start) {
-        super(TYPE.addProperty(new BooleanProperty(ACTIVE_STATE_IDENTIFIER, start)));
-        this.start = start;
+    public StartStopCharging(Boolean start) {
+        super(TYPE);
+        this.start.update(start);
+        createBytes(this.start);
     }
 
     StartStopCharging(byte[] bytes) {
         super(bytes);
 
-        for (int i = 0; i < getProperties().length; i++) {
-            Property property = getProperties()[i];
-            switch (property.getPropertyIdentifier()) {
-                case ACTIVE_STATE_IDENTIFIER:
-                    start = Property.getBool(property.getValueByte());
-                    break;
-            }
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case ACTIVE_STATE_IDENTIFIER:
+                        return start.update(p);
+                }
+                return null;
+            });
         }
+    }
 
-        this.start = Property.getBool(bytes[6]);
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

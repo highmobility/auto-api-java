@@ -5,12 +5,12 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetStartStopState;
 import com.highmobility.autoapi.StartStopState;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StartStopTest {
     Bytes bytes = new Bytes(
@@ -20,22 +20,22 @@ public class StartStopTest {
 
     @Test
     public void state() {
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.is(StartStopState.TYPE));
         StartStopState state = (StartStopState) command;
-        assertTrue(state.isActive() == true);
+        testState(state);
+    }
+
+    private void testState(StartStopState state) {
+        assertTrue(state.isActive().getValue() == true);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
         StartStopState.Builder builder = new StartStopState.Builder();
-        builder.setIsActive(true);
-        assertTrue(builder.build().equals(bytes));
+        builder.setIsActive(new Property(true));
+        testState(builder.build());
     }
 
     @Test public void get() {
@@ -55,6 +55,10 @@ public class StartStopTest {
 
         ActivateDeactivateStartStop command = (ActivateDeactivateStartStop) CommandResolver
                 .resolve(waitingForBytes);
-        assertTrue(command.activate() == false);
+        assertTrue(command.activate().getValue() == false);
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(ActivateDeactivateStartStop.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

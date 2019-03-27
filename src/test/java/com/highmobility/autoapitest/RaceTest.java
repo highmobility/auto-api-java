@@ -4,17 +4,17 @@ import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetRaceState;
 import com.highmobility.autoapi.RaceState;
-import com.highmobility.autoapi.property.AccelerationProperty;
-import com.highmobility.autoapi.property.BrakeTorqueVectoringProperty;
-import com.highmobility.autoapi.property.GearMode;
-import com.highmobility.autoapi.property.value.Axle;
+import com.highmobility.autoapi.value.Acceleration;
+import com.highmobility.autoapi.value.BrakeTorqueVectoring;
+import com.highmobility.autoapi.value.GearMode;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Axle;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -47,84 +47,78 @@ public class RaceTest {
 
     @Test
     public void state() {
-
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == RaceState.class);
         RaceState state = (RaceState) command;
+        testState(state);
+    }
 
+    private void testState(RaceState state) {
         assertTrue(state.getAcceleration(
-                AccelerationProperty.AccelerationType.LONGITUDINAL).getAcceleration() == .864f);
+                Acceleration.AccelerationType.LONGITUDINAL).getValue().getAcceleration() == .864f);
         assertTrue(state.getAcceleration(
-                AccelerationProperty.AccelerationType.LATERAL).getAcceleration() == -0.753f);
-        assertTrue(state.getUnderSteering() == .19d);
-        assertTrue(state.getOverSteering() == 0f);
-        assertTrue(state.getGasPedalPosition() == .98d);
-        assertTrue(state.getSteeringAngle() == 10);
-        assertTrue(state.getBrakePressure() == 20f);
-        assertTrue(state.getYawRate() == 6.66f);
-        assertTrue(state.getRearSuspensionSteering() == 3);
-        assertTrue(state.isEspInterventionActive() == true);
+                Acceleration.AccelerationType.LATERAL).getValue().getAcceleration() == -0.753f);
 
-        assertTrue(state.getBrakeTorqueVectoring(Axle.REAR).isActive() == true);
-        assertTrue(state.getBrakeTorqueVectoring(Axle.FRONT).isActive() == false);
-        assertTrue(state.getGearMode() == GearMode.DRIVE);
-        assertTrue(state.getSelectedGear() == 4);
-        assertTrue(state.getBrakePedalPosition() == 0d);
+        assertTrue(state.getUnderSteering().getValue() == .19d);
+        assertTrue(state.getOverSteering().getValue() == 0f);
+        assertTrue(state.getGasPedalPosition().getValue() == .98d);
+        assertTrue(state.getSteeringAngle().getValue() == 10);
+        assertTrue(state.getBrakePressure().getValue() == 20f);
+        assertTrue(state.getYawRate().getValue() == 6.66f);
+        assertTrue(state.getRearSuspensionSteering().getValue() == 3);
+        assertTrue(state.isEspInterventionActive().getValue() == true);
 
-        assertTrue(state.isBrakePedalSwitchActive() == true);
-        assertTrue(state.isClutchPedalSwitchActive() == true);
-        assertTrue(state.isAcceleratorPedalIdleSwitchActive() == true);
-        assertTrue(state.isAcceleratorPedalKickdownSwitchActive() == true);
+        assertTrue(state.getBrakeTorqueVectoring(Axle.REAR).getValue().isActive() == true);
+        assertTrue(state.getBrakeTorqueVectoring(Axle.FRONT).getValue().isActive() == false);
+        assertTrue(state.getGearMode().getValue() == GearMode.DRIVE);
 
-        assertTrue(state.isVehicleMoving() == true);
+        assertTrue(state.getSelectedGear().getValue() == 4);
+        assertTrue(state.getBrakePedalPosition().getValue() == 0d);
+
+        assertTrue(state.isBrakePedalSwitchActive().getValue() == true);
+        assertTrue(state.isClutchPedalSwitchActive().getValue() == true);
+        assertTrue(state.isAcceleratorPedalIdleSwitchActive().getValue() == true);
+        assertTrue(state.isAcceleratorPedalKickdownSwitchActive().getValue() == true);
+
+        assertTrue(state.isVehicleMoving().getValue() == true);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
         RaceState.Builder builder = new RaceState.Builder();
 
-        builder.addAccelerationProperty(new AccelerationProperty(AccelerationProperty
-                .AccelerationType.LONGITUDINAL, .864f));
-        builder.addAccelerationProperty(new AccelerationProperty(AccelerationProperty
-                .AccelerationType.LATERAL, -.753f));
-        builder.setUnderSteering(.19d);
-        builder.setOverSteering(0d);
-        builder.setGasPedalPosition(.98d);
-        builder.setSteeringAngle(10);
-        builder.setBrakePressure(20f);
-        builder.setYawRate(6.66f);
-        builder.setRearSuspensionSteering(3);
-        builder.setEspInterventionActive(true);
-        builder.addBrakeTorqueVectoring(new BrakeTorqueVectoringProperty(Axle.REAR, true));
-        builder.addBrakeTorqueVectoring(new BrakeTorqueVectoringProperty(Axle.FRONT, false));
-        builder.setGearMode(GearMode.DRIVE);
-        builder.setSelectedGear(4);
-        builder.setBrakePedalPosition(0d);
+        builder.addAccelerationProperty(new Property(new Acceleration(Acceleration
+                .AccelerationType.LONGITUDINAL, .864f)));
+        builder.addAccelerationProperty(new Property(new Acceleration(Acceleration
+                .AccelerationType.LATERAL, -.753f)));
+        builder.setUnderSteering(new Property(.19d));
+        builder.setOverSteering(new Property(0d));
+        builder.setGasPedalPosition(new Property(.98d));
+        builder.setSteeringAngle(new Property(10));
+        builder.setBrakePressure(new Property(20f));
+        builder.setYawRate(new Property(6.66f));
+        builder.setRearSuspensionSteering(new Property(3));
+        builder.setEspInterventionActive(new Property(true));
+        builder.addBrakeTorqueVectoring(new Property(new BrakeTorqueVectoring(Axle.REAR, true)));
+        builder.addBrakeTorqueVectoring(new Property(new BrakeTorqueVectoring(Axle.FRONT, false)));
+        builder.setGearMode(new Property(GearMode.DRIVE));
+        builder.setSelectedGear(new Property(4));
+        builder.setBrakePedalPosition(new Property(0d));
 
-        builder.setBrakePedalSwitchActive(true);
-        builder.setClutchPedalSwitchActive(true);
-        builder.setAcceleratorPedalIdleSwitchActive(true);
-        builder.setAcceleratorPedalKickdownSwitchActive(true);
-        builder.setVehicleMoving(true);
+        builder.setBrakePedalSwitchActive(new Property(true));
+        builder.setClutchPedalSwitchActive(new Property(true));
+        builder.setAcceleratorPedalIdleSwitchActive(new Property(true));
+        builder.setAcceleratorPedalKickdownSwitchActive(new Property(true));
+        builder.setVehicleMoving(new Property(true));
 
         RaceState state = builder.build();
-        assertTrue(state.equals(bytes));
+        testState(state);
     }
 
     @Test public void get() {
         String waitingForBytes = "005700";
         String commandBytes = ByteUtils.hexFromBytes(new GetRaceState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
-    }
-
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("005701");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((RaceState) state).getGearMode() == null);
     }
 }

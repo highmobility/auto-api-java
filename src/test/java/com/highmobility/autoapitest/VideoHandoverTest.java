@@ -1,13 +1,14 @@
 package com.highmobility.autoapitest;
 
+import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.VideoHandover;
-import com.highmobility.autoapi.property.ScreenLocation;
+import com.highmobility.autoapi.value.ScreenLocation;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VideoHandoverTest {
     @Test public void videoHandover() {
@@ -18,14 +19,19 @@ public class VideoHandoverTest {
                         "03000401000100"
         );
 
-
         VideoHandover state = new VideoHandover("https://www.youtube.com/watch?v=yWVB7U6mX2Y", 90,
                 ScreenLocation.FRONT);
         assertTrue(TestUtils.bytesTheSame(state, waitingForBytes));
 
         VideoHandover command = (VideoHandover) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getUrl().equals("https://www.youtube.com/watch?v=yWVB7U6mX2Y"));
-        assertTrue(command.getLocation() == ScreenLocation.FRONT);
-        assertTrue(command.getStartingSecond() == 90);
+        assertTrue(command.getUrl().getValue().equals("https://www.youtube" +
+                ".com/watch?v=yWVB7U6mX2Y"));
+        assertTrue(command.getLocation().getValue() == ScreenLocation.FRONT);
+        assertTrue(command.getStartingSecond().getValue() == 90);
+    }
+
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(VideoHandover.TYPE.getIdentifierAndType()).getClass() == Command.class);
+
     }
 }

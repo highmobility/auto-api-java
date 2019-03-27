@@ -20,38 +20,49 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Command to turn the car ignition on or off. The result is sent through the evented Ignition State
  * command.
  */
-public class TurnIgnitionOnOff extends CommandWithProperties {
+public class TurnIgnitionOnOff extends Command {
     public static final Type TYPE = new Type(Identifier.ENGINE, 0x12);
     private static final byte IDENTIFIER = 0x01;
 
-    boolean on;
+    Property<Boolean> on = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return The ignition state.
      */
-    public boolean isOn() {
+    public Property<Boolean> isOn() {
         return on;
     }
 
     /**
      * @param on The ignition state.
      */
-    public TurnIgnitionOnOff(boolean on) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, on)));
-        this.on = on;
+    public TurnIgnitionOnOff(Boolean on) {
+        super(TYPE);
+        this.on.update(on);
+        createBytes(this.on);
     }
 
-    TurnIgnitionOnOff(byte[] bytes) throws CommandParseException {
+    TurnIgnitionOnOff(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        this.on = Property.getBool(prop.getValueByte());
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return on.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

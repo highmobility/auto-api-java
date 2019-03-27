@@ -21,8 +21,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.value.Lock;
-import com.highmobility.autoapi.property.value.Position;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.Lock;
 
 import javax.annotation.Nullable;
 
@@ -31,40 +31,38 @@ import javax.annotation.Nullable;
  * received. The new status is included in the command payload and may be the result of user, device
  * or car triggered action.
  */
-public class TrunkState extends CommandWithProperties {
+public class TrunkState extends Command {
     public static final Type TYPE = new Type(Identifier.TRUNK_ACCESS, 0x01);
 
     private static final byte IDENTIFIER_LOCK = 0x01;
     private static final byte IDENTIFIER_POSITION = 0x02;
 
-    Lock lock;
-    Position position;
+    Property<Lock> lock = new Property(Lock.class, IDENTIFIER_LOCK);
+    Property<Position> position = new Property(Position.class, IDENTIFIER_POSITION);
 
     /**
      * @return the current lock status of the trunk.
      */
-    @Nullable public Lock getLockState() {
+    public Property<Lock> getLockState() {
         return lock;
     }
 
     /**
      * @return the current position of the trunk.
      */
-    @Nullable public Position getPosition() {
+    public Property<Position> getPosition() {
         return position;
     }
 
     TrunkState(byte[] bytes) {
         super(bytes);
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(property -> {
-                switch (property.getPropertyIdentifier()) {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_LOCK:
-                        lock = Lock.fromByte(property.getValueByte());
-                        return lock;
+                        return lock.update(p);
                     case IDENTIFIER_POSITION:
-                        position = Position.fromByte(property.getValueByte());
-                        return position;
+                        return position.update(p);
                 }
 
                 return null;
@@ -82,9 +80,9 @@ public class TrunkState extends CommandWithProperties {
         position = builder.position;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private Lock lock;
-        private Position position;
+    public static final class Builder extends Command.Builder {
+        private Property<Lock> lock;
+        private Property<Position> position;
 
         public Builder() {
             super(TYPE);
@@ -94,9 +92,9 @@ public class TrunkState extends CommandWithProperties {
          * @param lock The lock state of the trunk.
          * @return The builder.
          */
-        public Builder setLockState(Lock lock) {
+        public Builder setLockState(Property<Lock> lock) {
+            addProperty(lock.setIdentifier(IDENTIFIER_LOCK));
             this.lock = lock;
-            addProperty(new Property(IDENTIFIER_LOCK, lock.getByte()));
             return this;
         }
 
@@ -104,9 +102,9 @@ public class TrunkState extends CommandWithProperties {
          * @param position The position of the trunk.
          * @return The builder.
          */
-        public Builder setPosition(Position position) {
+        public Builder setPosition(Property<Position> position) {
             this.position = position;
-            addProperty(new Property(IDENTIFIER_POSITION, position.getByte()));
+            addProperty(position.setIdentifier(IDENTIFIER_POSITION));
             return this;
         }
 

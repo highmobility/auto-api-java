@@ -20,38 +20,50 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Authenticate or expire the charging session. Only if the session is authenticated can the
  * charging be started by the vehicle.
  */
-public class AuthenticateHomeCharger extends CommandWithProperties {
+public class AuthenticateHomeCharger extends Command {
     public static final Type TYPE = new Type(Identifier.HOME_CHARGER, 0x16);
     private static final byte IDENTIFIER = 0x01;
 
-    private boolean authenticate;
+    private Property<Boolean> authenticate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether to authenticate or not.
      */
-    public boolean getAuthenticate() {
+    public Property<Boolean> getAuthenticate() {
         return authenticate;
     }
 
     /**
      * @param authenticate Authentication state.
      */
-    public AuthenticateHomeCharger(boolean authenticate) {
-        super(TYPE.addProperty(new BooleanProperty(IDENTIFIER, authenticate)));
-        this.authenticate = authenticate;
+    public AuthenticateHomeCharger(Boolean authenticate) {
+        super(TYPE);
+
+        this.authenticate.update(authenticate);
+        createBytes(this.authenticate);
     }
 
-    AuthenticateHomeCharger(byte[] bytes) throws CommandParseException {
+    AuthenticateHomeCharger(byte[] bytes) {
         super(bytes);
-        Property prop = getProperty(IDENTIFIER);
-        if (prop == null) throw new CommandParseException();
-        authenticate = Property.getBool(prop.getValueByte());
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return authenticate.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

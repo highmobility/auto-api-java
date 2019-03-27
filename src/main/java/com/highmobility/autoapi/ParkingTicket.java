@@ -20,91 +20,82 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.CalendarProperty;
-import com.highmobility.autoapi.property.ParkingTicketState;
+import com.highmobility.autoapi.value.ParkingTicketState;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
 
 import java.util.Calendar;
-
-import javax.annotation.Nullable;
 
 /**
  * Command sent from the car every time the parking ticket state changes. or when a Get Parking
  * Ticket message is received. The state is Ended also when the parking ticket has never been set.
  * Afterwards the car always keeps the last parking ticket information.
  */
-public class ParkingTicket extends CommandWithProperties {
+public class ParkingTicket extends Command {
     public static final Type TYPE = new Type(Identifier.PARKING_TICKET, 0x01);
 
-    private static final byte OPERATOR_NAME_IDENTIFIER = 0x02;
-    private static final byte OPERATOR_TICKET_ID_IDENTIFIER = 0x03;
-    private static final byte TICKET_START_IDENTIFIER = 0x04;
-    private static final byte TICKET_END_IDENTIFIER = 0x05;
+    private static final byte IDENTIFIER_OPERATOR_NAME = 0x02;
+    private static final byte IDENTIFIER_OPERATOR_TICKET_ID = 0x03;
+    private static final byte IDENTIFIER_TICKET_START = 0x04;
+    private static final byte IDENTIFIER_TICKET_END = 0x05;
     private static final byte IDENTIFIER_STATE = 0x01;
 
-    ParkingTicketState state;
-    String operatorName;
-    String operatorTicketId;
-    Calendar ticketStart;
-    Calendar ticketEnd;
+    Property<ParkingTicketState> state = new Property(ParkingTicketState.class, IDENTIFIER_STATE);
+    Property<String> operatorName = new Property(String.class, IDENTIFIER_OPERATOR_NAME);
+    Property<String> operatorTicketId = new Property(String.class, IDENTIFIER_OPERATOR_TICKET_ID);
+    Property<Calendar> ticketStart = new Property(Calendar.class, IDENTIFIER_TICKET_START);
+    Property<Calendar> ticketEnd = new Property(Calendar.class, IDENTIFIER_TICKET_END);
 
     /**
      * @return The ticket state.
      */
-    @Nullable public ParkingTicketState getState() {
+    public Property<ParkingTicketState> getState() {
         return state;
     }
 
     /**
      * @return The operator name.
      */
-    @Nullable public String getOperatorName() {
+    public Property<String> getOperatorName() {
         return operatorName;
     }
 
     /**
      * @return The ticket id.
      */
-    @Nullable public String getOperatorTicketId() {
+    public Property<String> getOperatorTicketId() {
         return operatorTicketId;
     }
 
     /**
      * @return Ticket start date.
      */
-    @Nullable public Calendar getTicketStartDate() {
+    public Property<Calendar> getTicketStartDate() {
         return ticketStart;
     }
 
     /**
      * @return Ticket end date.
      */
-    @Nullable public Calendar getTicketEndDate() {
+    public Property<Calendar> getTicketEndDate() {
         return ticketEnd;
     }
 
     ParkingTicket(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_STATE:
-                        state = ParkingTicketState.fromByte(p.getValueByte());
-                        return state;
-                    case OPERATOR_NAME_IDENTIFIER:
-                        operatorName = Property.getString(p.getValueBytes());
-                        return operatorName;
-                    case OPERATOR_TICKET_ID_IDENTIFIER:
-                        operatorTicketId = Property.getString(p.getValueBytes());
-                        return operatorTicketId;
-                    case TICKET_START_IDENTIFIER:
-                        ticketStart = Property.getCalendar(p.getValueBytes());
-                        return ticketStart;
-                    case TICKET_END_IDENTIFIER:
-                        ticketEnd = Property.getCalendar(p.getValueBytes());
-                        return ticketEnd;
+                        return state.update(p);
+                    case IDENTIFIER_OPERATOR_NAME:
+                        return operatorName.update(p);
+                    case IDENTIFIER_OPERATOR_TICKET_ID:
+                        return operatorTicketId.update(p);
+                    case IDENTIFIER_TICKET_START:
+                        return ticketStart.update(p);
+                    case IDENTIFIER_TICKET_END:
+                        return ticketEnd.update(p);
                 }
                 return null;
             });
@@ -124,12 +115,12 @@ public class ParkingTicket extends CommandWithProperties {
         state = builder.state;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private ParkingTicketState state;
-        private String operatorName;
-        private String operatorTicketId;
-        private Calendar ticketStart;
-        private Calendar ticketEnd;
+    public static final class Builder extends Command.Builder {
+        private Property<ParkingTicketState> state;
+        private Property<String> operatorName;
+        private Property<String> operatorTicketId;
+        private Property<Calendar> ticketStart;
+        private Property<Calendar> ticketEnd;
 
         public Builder() {
             super(TYPE);
@@ -139,9 +130,9 @@ public class ParkingTicket extends CommandWithProperties {
          * @param state The parking ticket state.
          * @return The builder.
          */
-        public Builder setState(ParkingTicketState state) {
+        public Builder setState(Property<ParkingTicketState> state) {
             this.state = state;
-            addProperty(new Property(IDENTIFIER_STATE, state.getByte()));
+            addProperty(state.setIdentifier(IDENTIFIER_STATE));
             return this;
         }
 
@@ -149,9 +140,9 @@ public class ParkingTicket extends CommandWithProperties {
          * @param operatorName The operator name.
          * @return The builder.
          */
-        public Builder setOperatorName(String operatorName) {
+        public Builder setOperatorName(Property<String> operatorName) {
             this.operatorName = operatorName;
-            addProperty(new StringProperty(OPERATOR_NAME_IDENTIFIER, operatorName));
+            addProperty(operatorName.setIdentifier(IDENTIFIER_OPERATOR_NAME));
             return this;
         }
 
@@ -159,9 +150,9 @@ public class ParkingTicket extends CommandWithProperties {
          * @param operatorTicketId The ticket id.
          * @return The builder.
          */
-        public Builder setOperatorTicketId(String operatorTicketId) {
+        public Builder setOperatorTicketId(Property<String> operatorTicketId) {
             this.operatorTicketId = operatorTicketId;
-            addProperty(new StringProperty(OPERATOR_TICKET_ID_IDENTIFIER, operatorTicketId));
+            addProperty(operatorTicketId.setIdentifier(IDENTIFIER_OPERATOR_TICKET_ID));
             return this;
         }
 
@@ -169,9 +160,9 @@ public class ParkingTicket extends CommandWithProperties {
          * @param ticketStart The ticket start date.
          * @return The builder.
          */
-        public Builder setTicketStart(Calendar ticketStart) {
+        public Builder setTicketStart(Property<Calendar> ticketStart) {
             this.ticketStart = ticketStart;
-            addProperty(new CalendarProperty(TICKET_START_IDENTIFIER, ticketStart));
+            addProperty(ticketStart.setIdentifier(IDENTIFIER_TICKET_START));
             return this;
         }
 
@@ -179,9 +170,9 @@ public class ParkingTicket extends CommandWithProperties {
          * @param ticketEnd The ticket end date.
          * @return The builder.
          */
-        public Builder setTicketEnd(Calendar ticketEnd) {
+        public Builder setTicketEnd(Property<Calendar> ticketEnd) {
             this.ticketEnd = ticketEnd;
-            addProperty(new CalendarProperty(TICKET_END_IDENTIFIER, ticketEnd));
+            addProperty(ticketEnd.setIdentifier(IDENTIFIER_TICKET_END));
             return this;
         }
 

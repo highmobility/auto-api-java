@@ -21,85 +21,81 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-
-import javax.annotation.Nullable;
+import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.property.ByteEnum;
 
 /**
  * This message is sent when a Get Cruise Control State message is received by the car. The new
  * state is included in the message payload and may be the result of user, device or car triggered
  * action.
  */
-public class CruiseControlState extends CommandWithProperties {
+public class CruiseControlState extends Command {
     public static final Type TYPE = new Type(Identifier.CRUISE_CONTROL, 0x01);
 
-    private static final byte ACTIVE_IDENTIFIER = 0x01;
-    private static final byte LIMITER_IDENTIFIER = 0x02;
-    private static final byte TARGET_SPEED_IDENTIFIER = 0x03;
-    private static final byte ADAPTIVE_ACTIVE_IDENTIFIER = 0x04;
-    private static final byte ADAPTIVE_TARGET_SPEED_IDENTIFIER = 0x05;
+    private static final byte IDENTIFIER_ACTIVE = 0x01;
+    private static final byte IDENTIFIER_LIMITER = 0x02;
+    private static final byte IDENTIFIER_TARGET_SPEED = 0x03;
+    private static final byte IDENTIFIER_ADAPTIVE_ACTIVE = 0x04;
+    private static final byte IDENTIFIER_ADAPTIVE_TARGET_SPEED = 0x05;
 
-    Boolean active;
-    Limiter limiter;
-    Integer targetSpeed;
-    Boolean adaptiveActive;
-    Integer adaptiveTargetSpeed;
+    Property<Boolean> active = new Property(Boolean.class, IDENTIFIER_ACTIVE);
+    Property<Limiter> limiter = new Property(Limiter.class, IDENTIFIER_LIMITER);
+    PropertyInteger targetSpeed = new PropertyInteger(IDENTIFIER_TARGET_SPEED, false);
+    Property<Boolean> adaptiveActive = new Property(Boolean.class, IDENTIFIER_ADAPTIVE_ACTIVE);
+    PropertyInteger adaptiveTargetSpeed = new PropertyInteger(IDENTIFIER_ADAPTIVE_TARGET_SPEED,
+            false);
 
     /**
      * @return Whether the cruise control is active.
      */
-    @Nullable public Boolean isActive() {
+    public Property<Boolean> isActive() {
         return active;
     }
 
     /**
      * @return The limiter.
      */
-    @Nullable public Limiter getLimiter() {
+    public Property<Limiter> getLimiter() {
         return limiter;
     }
 
     /**
      * @return The cruise control target speed.
      */
-    @Nullable public Integer getTargetSpeed() {
+    public Property<Integer> getTargetSpeed() {
         return targetSpeed;
     }
 
     /**
      * @return Whether the adaptive cruise control is active.
      */
-    @Nullable public Boolean isAdaptiveActive() {
+    public Property<Boolean> isAdaptiveActive() {
         return adaptiveActive;
     }
 
     /**
      * @return The adaptive cruise control target speed.
      */
-    @Nullable public Integer getAdaptiveTargetSpeed() {
+    public Property<Integer> getAdaptiveTargetSpeed() {
         return adaptiveTargetSpeed;
     }
 
     CruiseControlState(byte[] bytes) {
         super(bytes);
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case ACTIVE_IDENTIFIER:
-                        active = Property.getBool(p.getValueByte());
-                        return active;
-                    case LIMITER_IDENTIFIER:
-                        limiter = Limiter.fromByte(p.getValueByte());
-                        return limiter;
-                    case TARGET_SPEED_IDENTIFIER:
-                        targetSpeed = Property.getUnsignedInt(p.getValueBytes());
-                        return targetSpeed;
-                    case ADAPTIVE_ACTIVE_IDENTIFIER:
-                        adaptiveActive = Property.getBool(p.getValueByte());
-                        return adaptiveActive;
-                    case ADAPTIVE_TARGET_SPEED_IDENTIFIER:
-                        adaptiveTargetSpeed = Property.getUnsignedInt(p.getValueBytes());
-                        return adaptiveTargetSpeed;
+                    case IDENTIFIER_ACTIVE:
+                        return active.update(p);
+                    case IDENTIFIER_LIMITER:
+                        return limiter.update(p);
+                    case IDENTIFIER_TARGET_SPEED:
+                        return targetSpeed.update(p);
+                    case IDENTIFIER_ADAPTIVE_ACTIVE:
+                        return adaptiveActive.update(p);
+                    case IDENTIFIER_ADAPTIVE_TARGET_SPEED:
+                        return adaptiveTargetSpeed.update(p);
                 }
 
                 return null;
@@ -111,7 +107,7 @@ public class CruiseControlState extends CommandWithProperties {
         return true;
     }
 
-    public enum Limiter {
+    public enum Limiter implements ByteEnum {
         NOT_SET((byte) 0x00),
         HIGHER_SPEED_REQUESTED((byte) 0x01),
         LOWER_SPEED_REQUESTED((byte) 0x02),

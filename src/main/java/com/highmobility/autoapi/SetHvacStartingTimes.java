@@ -20,8 +20,9 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.HvacStartingTime;
+import com.highmobility.autoapi.value.HvacStartingTime;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Weekday;
 
 import java.util.ArrayList;
 
@@ -31,17 +32,17 @@ import javax.annotation.Nullable;
  * Set the HVAC (Heating, ventilation, and air conditioning) automated starting times. The result is
  * sent through the evented Climate State message with the new state.
  */
-public class SetHvacStartingTimes extends CommandWithProperties {
+public class SetHvacStartingTimes extends Command {
     public static final Type TYPE = new Type(Identifier.CLIMATE, 0x12);
 
     private static final byte AUTO_HVAC_IDENTIFIER = 0x01;
 
-    private HvacStartingTime[] hvacStartingTimes;
+    private Property<HvacStartingTime>[] hvacStartingTimes;
 
     /**
      * @return The Auto HVAC state.
      */
-    public HvacStartingTime[] getHvacStartingTimes() {
+    public Property<HvacStartingTime>[] getHvacStartingTimes() {
         return hvacStartingTimes;
     }
 
@@ -49,9 +50,10 @@ public class SetHvacStartingTimes extends CommandWithProperties {
      * @param weekday Weekday of the HVAC starting time.
      * @return The Auto HVAC state.
      */
-    @Nullable public HvacStartingTime getHvacStartingTime(HvacStartingTime.Weekday weekday) {
-        for (HvacStartingTime hvacStartingTime : hvacStartingTimes) {
-            if (hvacStartingTime.getWeekday() == weekday) return hvacStartingTime;
+    @Nullable public Property<HvacStartingTime> getHvacStartingTime(Weekday weekday) {
+        for (Property<HvacStartingTime> hvacStartingTime : hvacStartingTimes) {
+            if (hvacStartingTime.getValue() != null && hvacStartingTime.getValue().getWeekday() == weekday)
+                return hvacStartingTime;
         }
         return null;
     }
@@ -63,37 +65,37 @@ public class SetHvacStartingTimes extends CommandWithProperties {
      * @param hvacStartingTimes The Auto HVAC starting times.
      */
     public SetHvacStartingTimes(HvacStartingTime[] hvacStartingTimes) {
-        super(TYPE, getProperties(hvacStartingTimes));
-        this.hvacStartingTimes = hvacStartingTimes;
-    }
+        super(TYPE);
 
-    static Property[] getProperties(HvacStartingTime[] hvacStartingTimes) {
-        for (HvacStartingTime hvacStartingTime : hvacStartingTimes) {
-            hvacStartingTime.setIdentifier(AUTO_HVAC_IDENTIFIER);
+        ArrayList<Property> builder = new ArrayList<>();
+
+        for (HvacStartingTime time : hvacStartingTimes) {
+            Property<HvacStartingTime> prop = new Property(AUTO_HVAC_IDENTIFIER,
+                    time);
+            builder.add(prop);
         }
 
-        return hvacStartingTimes;
+        this.hvacStartingTimes = builder.toArray(new Property[0]);
+        createBytes(builder);
     }
 
-    SetHvacStartingTimes(byte[] bytes) throws CommandParseException {
+    SetHvacStartingTimes(byte[] bytes) {
         super(bytes);
-        Property[] properties = getProperties();
-        ArrayList<HvacStartingTime> builder = new ArrayList<>();
 
-        for (int i = 0; i < properties.length; i++) {
-            Property prop = properties[i];
+        ArrayList<Property> builder = new ArrayList<>();
 
-            switch (prop.getPropertyIdentifier()) {
-                case AUTO_HVAC_IDENTIFIER:
-                    builder.add(new HvacStartingTime(prop.getPropertyBytes()));
-                    break;
-            }
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case AUTO_HVAC_IDENTIFIER:
+                        Property prop = new Property(HvacStartingTime.class, p);
+                        builder.add(prop);
+                        return prop;
+                }
+                return null;
+            });
         }
 
-        hvacStartingTimes = builder.toArray(new HvacStartingTime[0]);
-    }
-
-    @Override protected boolean propertiesExpected() {
-        return false;
+        hvacStartingTimes = builder.toArray(new Property[0]);
     }
 }

@@ -20,15 +20,13 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
-import com.highmobility.autoapi.property.DrivingMode;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.SpringRateProperty;
-import com.highmobility.autoapi.property.value.Axle;
+import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.SpringRate;
+import com.highmobility.autoapi.value.Axle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -36,63 +34,70 @@ import javax.annotation.Nullable;
 /**
  * Command sent when a Get Chassis Settings is received by the car.
  */
-public class ChassisSettings extends CommandWithProperties {
+public class ChassisSettings extends Command {
     public static final Type TYPE = new Type(Identifier.CHASSIS_SETTINGS, 0x01);
 
-    public static final byte DRIVING_MODE_IDENTIFIER = 0x01;
-    public static final byte SPORT_CHRONO_ACTIVE_IDENTIFIER = 0x02;
+    public static final byte IDENTIFIER_DRIVING_MODE = 0x01;
+    public static final byte IDENTIFIER_SPORT_CHRONO_ACTIVE = 0x02;
 
     public static final byte CURRENT_SPRING_RATE_PROPERTIES_IDENTIFIER = 0x05;
     public static final byte MAXIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER = 0x06;
     public static final byte MINIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER = 0x07;
 
-    public static final byte CURRENT_CHASSIS_POSITION_IDENTIFIER = 0x08;
-    public static final byte MAXIMUM_CHASSIS_POSITION_IDENTIFIER = 0x09;
-    public static final byte MINIMUM_CHASSIS_POSITION_IDENTIFIER = 0x0A;
+    public static final byte IDENTIFIER_CURRENT_CHASSIS_POSITION = 0x08;
+    public static final byte IDENTIFIER_MAXIMUM_CHASSIS_POSITION = 0x09;
+    public static final byte IDENTIFIER_MINIMUM_CHASSIS_POSITION = 0x0A;
 
-    DrivingMode drivingMode;
-    Boolean sportChronoActive;
+    Property<DrivingMode> drivingMode = new Property(DrivingMode.class,
+            IDENTIFIER_DRIVING_MODE);
+    Property<Boolean> sportChronoActive = new Property(Boolean.class,
+            IDENTIFIER_SPORT_CHRONO_ACTIVE);
 
-    SpringRateProperty[] currentSpringRates;
-    SpringRateProperty[] maximumSpringRates;
-    SpringRateProperty[] minimumSpringRates;
+    Property<SpringRate>[] currentSpringRates;
+    Property<SpringRate>[] maximumSpringRates;
+    Property<SpringRate>[] minimumSpringRates;
 
-    Integer currentChassisPosition;
-    Integer maximumChassisPosition;
-    Integer minimumChassisPosition;
+    Property<Integer> currentChassisPosition =
+            new PropertyInteger(IDENTIFIER_CURRENT_CHASSIS_POSITION, true);
+
+    Property<Integer> maximumChassisPosition =
+            new PropertyInteger(IDENTIFIER_MAXIMUM_CHASSIS_POSITION, true);
+
+    Property<Integer> minimumChassisPosition =
+            new PropertyInteger(IDENTIFIER_MINIMUM_CHASSIS_POSITION, true);
 
     /**
      * @return The driving mode.
      */
-    @Nullable public DrivingMode getDrivingMode() {
+    public Property<DrivingMode> getDrivingMode() {
         return drivingMode;
     }
 
     /**
-     * @return Boolean indicating whether the sport chronometer is active.
+     * @return A boolean indicating whether the sport chronometer is active.
      */
-    @Nullable public Boolean isSportChronoActive() {
+    public Property<Boolean> isSportChronoActive() {
         return sportChronoActive;
     }
 
     /**
      * @return The current spring rate values.
      */
-    public SpringRateProperty[] getCurrentSpringRates() {
+    public Property<SpringRate>[] getCurrentSpringRates() {
         return currentSpringRates;
     }
 
     /**
      * @return The maximum possible values for the spring rates.
      */
-    public SpringRateProperty[] getMaximumSpringRates() {
+    public Property<SpringRate>[] getMaximumSpringRates() {
         return maximumSpringRates;
     }
 
     /**
      * @return The minimum possible values for the spring rates.
      */
-    public SpringRateProperty[] getMinimumSpringRates() {
+    public Property<SpringRate>[] getMinimumSpringRates() {
         return minimumSpringRates;
     }
 
@@ -100,10 +105,11 @@ public class ChassisSettings extends CommandWithProperties {
      * @param axle The spring rate's axle.
      * @return The current spring rate for the given axle. Null if does not exists.
      */
-    @Nullable public SpringRateProperty getCurrentSpringRate(Axle axle) {
+    @Nullable public Property<SpringRate> getCurrentSpringRate(Axle axle) {
         for (int i = 0; i < currentSpringRates.length; i++) {
-            SpringRateProperty property = currentSpringRates[i];
-            if (property.getAxle() == axle) return property;
+            Property<SpringRate> property = currentSpringRates[i];
+            if (property.getValue() != null && property.getValue().getAxle() == axle)
+                return property;
         }
 
         return null;
@@ -113,10 +119,11 @@ public class ChassisSettings extends CommandWithProperties {
      * @param axle The spring rate's axle.
      * @return The maximum spring rate for the given axle. Null if does not exists.
      */
-    @Nullable public SpringRateProperty getMaximumSpringRate(Axle axle) {
+    @Nullable public Property<SpringRate> getMaximumSpringRate(Axle axle) {
         for (int i = 0; i < maximumSpringRates.length; i++) {
-            SpringRateProperty property = maximumSpringRates[i];
-            if (property.getAxle() == axle) return property;
+            Property<SpringRate> property = maximumSpringRates[i];
+            if (property.getValue() != null && property.getValue().getAxle() == axle)
+                return property;
         }
 
         return null;
@@ -126,10 +133,11 @@ public class ChassisSettings extends CommandWithProperties {
      * @param axle The spring rate's axle.
      * @return The current spring rate for the given axle. Null if does not exists.
      */
-    @Nullable public SpringRateProperty getMinimumSpringRate(Axle axle) {
+    @Nullable public Property<SpringRate> getMinimumSpringRate(Axle axle) {
         for (int i = 0; i < minimumSpringRates.length; i++) {
-            SpringRateProperty property = minimumSpringRates[i];
-            if (property.getAxle() == axle) return property;
+            Property<SpringRate> property = minimumSpringRates[i];
+            if (property.getValue() != null && property.getValue().getAxle() == axle)
+                return property;
         }
 
         return null;
@@ -138,70 +146,68 @@ public class ChassisSettings extends CommandWithProperties {
     /**
      * @return The chassis position in mm calculated from the lowest point.
      */
-    @Nullable public Integer getCurrentChassisPosition() {
+    public Property<Integer> getCurrentChassisPosition() {
         return currentChassisPosition;
     }
 
     /**
      * @return The minimum possible value for the chassis position.
      */
-    @Nullable public Integer getMaximumChassisPosition() {
+    public Property<Integer> getMaximumChassisPosition() {
         return maximumChassisPosition;
     }
 
     /**
      * @return The minimum possible value for the chassis position.
      */
-    @Nullable public Integer getMinimumChassisPosition() {
+    public Property<Integer> getMinimumChassisPosition() {
         return minimumChassisPosition;
     }
 
     ChassisSettings(byte[] bytes) {
         super(bytes);
 
-        ArrayList<SpringRateProperty> currentSpringRates = new ArrayList<>();
-        ArrayList<SpringRateProperty> minimumSpringRates = new ArrayList<>();
-        ArrayList<SpringRateProperty> maximumSpringRates = new ArrayList<>();
+        ArrayList<Property> currentSpringRates = new ArrayList<>();
+        ArrayList<Property> minimumSpringRates = new ArrayList<>();
+        ArrayList<Property> maximumSpringRates = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case DRIVING_MODE_IDENTIFIER:
-                        drivingMode = DrivingMode.fromByte(p.getValueByte());
-                        return drivingMode;
-                    case SPORT_CHRONO_ACTIVE_IDENTIFIER:
-                        sportChronoActive = Property.getBool(p.getValueByte());
-                        return sportChronoActive;
+                    case IDENTIFIER_DRIVING_MODE:
+                        return drivingMode.update(p);
+                    case IDENTIFIER_SPORT_CHRONO_ACTIVE:
+                        return sportChronoActive.update(p);
                     case CURRENT_SPRING_RATE_PROPERTIES_IDENTIFIER:
-                        SpringRateProperty prop1 = new SpringRateProperty(p.getPropertyBytes());
-                        currentSpringRates.add(prop1);
-                        return prop1;
+                        Property<SpringRate> newProperty =
+                                new Property(SpringRate.class, p);
+                        currentSpringRates.add(newProperty);
+                        return newProperty;
                     case MAXIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER:
-                        SpringRateProperty prop2 = new SpringRateProperty(p.getPropertyBytes());
-                        maximumSpringRates.add(prop2);
-                        return prop2;
+                        Property<SpringRate> newProperty2 =
+                                new Property(SpringRate.class, p);
+                        maximumSpringRates.add(newProperty2);
+                        return newProperty2;
                     case MINIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER:
-                        SpringRateProperty prop = new SpringRateProperty(p.getPropertyBytes());
-                        minimumSpringRates.add(prop);
-                        return prop;
-                    case CURRENT_CHASSIS_POSITION_IDENTIFIER:
-                        currentChassisPosition = Property.getSignedInt(p.getValueByte());
-                        return currentChassisPosition;
-                    case MAXIMUM_CHASSIS_POSITION_IDENTIFIER:
-                        maximumChassisPosition = Property.getSignedInt(p.getValueByte());
-                        return maximumChassisPosition;
-                    case MINIMUM_CHASSIS_POSITION_IDENTIFIER:
-                        minimumChassisPosition = Property.getSignedInt(p.getValueByte());
-                        return minimumChassisPosition;
+                        Property<SpringRate> newProperty3 =
+                                new Property(SpringRate.class, p);
+                        minimumSpringRates.add(newProperty3);
+                        return newProperty3;
+                    case IDENTIFIER_CURRENT_CHASSIS_POSITION:
+                        return currentChassisPosition.update(p);
+                    case IDENTIFIER_MAXIMUM_CHASSIS_POSITION:
+                        return maximumChassisPosition.update(p);
+                    case IDENTIFIER_MINIMUM_CHASSIS_POSITION:
+                        return minimumChassisPosition.update(p);
                 }
-                
+
                 return null;
             });
         }
 
-        this.currentSpringRates = currentSpringRates.toArray(new SpringRateProperty[0]);
-        this.minimumSpringRates = minimumSpringRates.toArray(new SpringRateProperty[0]);
-        this.maximumSpringRates = maximumSpringRates.toArray(new SpringRateProperty[0]);
+        this.currentSpringRates = currentSpringRates.toArray(new Property[0]);
+        this.minimumSpringRates = minimumSpringRates.toArray(new Property[0]);
+        this.maximumSpringRates = maximumSpringRates.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {
@@ -213,26 +219,26 @@ public class ChassisSettings extends CommandWithProperties {
         drivingMode = builder.drivingMode;
         sportChronoActive = builder.sportChronoActive;
 
-        currentSpringRates = builder.currentSpringRates.toArray(new SpringRateProperty[0]);
-        minimumSpringRates = builder.minimumSpringRates.toArray(new SpringRateProperty[0]);
-        maximumSpringRates = builder.maximumSpringRates.toArray(new SpringRateProperty[0]);
+        currentSpringRates = builder.currentSpringRates.toArray(new Property[0]);
+        minimumSpringRates = builder.minimumSpringRates.toArray(new Property[0]);
+        maximumSpringRates = builder.maximumSpringRates.toArray(new Property[0]);
 
         currentChassisPosition = builder.currentChassisPosition;
         minimumChassisPosition = builder.minimumChassisPosition;
         maximumChassisPosition = builder.maximumChassisPosition;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private DrivingMode drivingMode;
-        private Boolean sportChronoActive;
+    public static final class Builder extends Command.Builder {
+        private Property<DrivingMode> drivingMode;
+        private Property<Boolean> sportChronoActive;
 
-        List<SpringRateProperty> currentSpringRates = new ArrayList<>();
-        List<SpringRateProperty> maximumSpringRates = new ArrayList<>();
-        List<SpringRateProperty> minimumSpringRates = new ArrayList<>();
+        List<Property<SpringRate>> currentSpringRates = new ArrayList<>();
+        List<Property<SpringRate>> maximumSpringRates = new ArrayList<>();
+        List<Property<SpringRate>> minimumSpringRates = new ArrayList<>();
 
-        Integer currentChassisPosition;
-        Integer maximumChassisPosition;
-        Integer minimumChassisPosition;
+        Property<Integer> currentChassisPosition;
+        Property<Integer> maximumChassisPosition;
+        Property<Integer> minimumChassisPosition;
 
         public Builder() {
             super(TYPE);
@@ -242,9 +248,9 @@ public class ChassisSettings extends CommandWithProperties {
          * @param drivingMode Set the driving mode.
          * @return The builder.
          */
-        public Builder setDrivingMode(DrivingMode drivingMode) {
+        public Builder setDrivingMode(Property<DrivingMode> drivingMode) {
             this.drivingMode = drivingMode;
-            addProperty(new Property(DRIVING_MODE_IDENTIFIER, drivingMode.getByte()));
+            addProperty(drivingMode.setIdentifier(IDENTIFIER_DRIVING_MODE));
             return this;
         }
 
@@ -252,10 +258,9 @@ public class ChassisSettings extends CommandWithProperties {
          * @param sportChronoActive Set the sport chronometer state.
          * @return The builder.
          */
-        public Builder setSportChronoActive(Boolean sportChronoActive) {
+        public Builder setSportChronoActive(Property<Boolean> sportChronoActive) {
             this.sportChronoActive = sportChronoActive;
-            addProperty(new BooleanProperty(SPORT_CHRONO_ACTIVE_IDENTIFIER,
-                    sportChronoActive));
+            addProperty(sportChronoActive.setIdentifier(IDENTIFIER_SPORT_CHRONO_ACTIVE));
             return this;
         }
 
@@ -263,11 +268,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setCurrentChassisPosition(Integer chassisPosition) {
-            this.currentChassisPosition = chassisPosition;
-            addProperty(new IntegerProperty(CURRENT_CHASSIS_POSITION_IDENTIFIER,
-                    chassisPosition,
-                    1));
+        public Builder setCurrentChassisPosition(Property<Integer> chassisPosition) {
+            this.currentChassisPosition = new PropertyInteger(IDENTIFIER_CURRENT_CHASSIS_POSITION
+                    , true, 1, chassisPosition);
+            addProperty(this.currentChassisPosition);
             return this;
         }
 
@@ -275,11 +279,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setMinimumChassisPosition(Integer chassisPosition) {
-            this.minimumChassisPosition = chassisPosition;
-            addProperty(new IntegerProperty(MINIMUM_CHASSIS_POSITION_IDENTIFIER,
-                    chassisPosition,
-                    1));
+        public Builder setMinimumChassisPosition(Property<Integer> chassisPosition) {
+            this.minimumChassisPosition = new PropertyInteger(IDENTIFIER_MINIMUM_CHASSIS_POSITION
+                    , true, 1, chassisPosition);
+            addProperty(this.minimumChassisPosition);
             return this;
         }
 
@@ -287,11 +290,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param chassisPosition The chassis position.
          * @return The builder.
          */
-        public Builder setMaximumChassisPosition(Integer chassisPosition) {
-            this.maximumChassisPosition = chassisPosition;
-            addProperty(new IntegerProperty(MAXIMUM_CHASSIS_POSITION_IDENTIFIER,
-                    chassisPosition,
-                    1));
+        public Builder setMaximumChassisPosition(Property<Integer> chassisPosition) {
+            this.maximumChassisPosition = new PropertyInteger(IDENTIFIER_MAXIMUM_CHASSIS_POSITION
+                    , true, 1, chassisPosition);
+            addProperty(this.maximumChassisPosition);
             return this;
         }
 
@@ -301,12 +303,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param springRates The spring rates.
          * @return The builder.
          */
-        public Builder setCurrentSpringRates(SpringRateProperty[] springRates) {
-            this.currentSpringRates = Arrays.asList(springRates);
-
+        public Builder setCurrentSpringRates(Property<SpringRate>[] springRates) {
+            this.currentSpringRates.clear();
             for (int i = 0; i < springRates.length; i++) {
-                springRates[i].setIdentifier(CURRENT_SPRING_RATE_PROPERTIES_IDENTIFIER);
-                addProperty(springRates[i]);
+                addCurrentSpringRate(springRates[i]);
             }
 
             return this;
@@ -318,10 +318,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param springRate A spring rate.
          * @return The builder.
          */
-        public Builder addCurrentSpringRate(SpringRateProperty springRate) {
+        public Builder addCurrentSpringRate(Property<SpringRate> springRate) {
             springRate.setIdentifier(CURRENT_SPRING_RATE_PROPERTIES_IDENTIFIER);
-            this.currentSpringRates.add(springRate);
             addProperty(springRate);
+            this.currentSpringRates.add(springRate);
             return this;
         }
 
@@ -331,12 +331,11 @@ public class ChassisSettings extends CommandWithProperties {
          * @param springRates The spring rates.
          * @return The builder.
          */
-        public Builder setMinimumSpringRates(SpringRateProperty[] springRates) {
-            this.currentSpringRates = Arrays.asList(springRates);
+        public Builder setMinimumSpringRates(Property<SpringRate>[] springRates) {
+            this.minimumSpringRates.clear();
 
             for (int i = 0; i < springRates.length; i++) {
-                springRates[i].setIdentifier(MINIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER);
-                addProperty(springRates[i]);
+                addMinimumSpringRate(springRates[i]);
             }
 
             return this;
@@ -348,10 +347,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param springRate A spring rate.
          * @return The builder.
          */
-        public Builder addMinimumSpringRate(SpringRateProperty springRate) {
+        public Builder addMinimumSpringRate(Property<SpringRate> springRate) {
             springRate.setIdentifier(MINIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER);
-            this.currentSpringRates.add(springRate);
             addProperty(springRate);
+            this.minimumSpringRates.add(springRate);
             return this;
         }
 
@@ -361,12 +360,11 @@ public class ChassisSettings extends CommandWithProperties {
          * @param springRates The spring rates.
          * @return The builder.
          */
-        public Builder setMaximumSpringRates(SpringRateProperty[] springRates) {
-            this.maximumSpringRates = Arrays.asList(springRates);
+        public Builder setMaximumSpringRates(Property<SpringRate>[] springRates) {
+            this.maximumSpringRates.clear();
 
             for (int i = 0; i < springRates.length; i++) {
-                springRates[i].setIdentifier(MAXIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER);
-                addProperty(springRates[i]);
+                addMaximumSpringRate(springRates[i]);
             }
 
             return this;
@@ -378,10 +376,10 @@ public class ChassisSettings extends CommandWithProperties {
          * @param springRate A spring rate.
          * @return The builder.
          */
-        public Builder addMaximumSpringRate(SpringRateProperty springRate) {
+        public Builder addMaximumSpringRate(Property<SpringRate> springRate) {
             springRate.setIdentifier(MAXIMUM_SPRING_RATE_PROPERTIES_IDENTIFIER);
-            this.maximumSpringRates.add(springRate);
             addProperty(springRate);
+            this.maximumSpringRates.add(springRate);
             return this;
         }
 

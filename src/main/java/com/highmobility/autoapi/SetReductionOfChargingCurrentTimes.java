@@ -21,7 +21,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.charging.ReductionTime;
+import com.highmobility.autoapi.value.charging.ReductionTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,16 +29,16 @@ import java.util.List;
 /**
  * Set Reduction of Charging-current Times.
  */
-public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
+public class SetReductionOfChargingCurrentTimes extends Command {
     public static final Type TYPE = new Type(Identifier.CHARGING, 0x17);
     private static final byte PROPERTY_IDENTIFIER = 0x01;
 
-    ReductionTime[] reductionTimes;
+    Property<ReductionTime>[] reductionTimes;
 
     /**
      * @return The charging current times reductions.
      */
-    public ReductionTime[] getReductionTimes() {
+    public Property<ReductionTime>[] getReductionTimes() {
         return reductionTimes;
     }
 
@@ -48,35 +48,41 @@ public class SetReductionOfChargingCurrentTimes extends CommandWithProperties {
      * @param reductionTimes The charging current times reductions..
      */
     public SetReductionOfChargingCurrentTimes(ReductionTime[] reductionTimes) {
-        super(TYPE, setIdentifiers(reductionTimes));
-        this.reductionTimes = reductionTimes;
-    }
+        super(TYPE);
 
-    static ReductionTime[] setIdentifiers(ReductionTime[] reductionTimes) {
+        List<Property> builder = new ArrayList<>();
+
         for (int i = 0; i < reductionTimes.length; i++) {
-            ReductionTime reductionTime = reductionTimes[i];
-            reductionTime.setIdentifier(PROPERTY_IDENTIFIER);
+            ReductionTime time = reductionTimes[i];
+            Property reductionTime = new Property(PROPERTY_IDENTIFIER, time);
+            builder.add(reductionTime);
         }
 
-        return reductionTimes;
+        this.reductionTimes = builder.toArray(new Property[0]);
+        createBytes(builder);
     }
 
-    SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException {
+    SetReductionOfChargingCurrentTimes(byte[] bytes) {
         super(bytes);
 
-        List<ReductionTime> builder = new ArrayList<>();
+        List<Property> builder = new ArrayList<>();
 
-        for (int i = 0; i < properties.length; i++) {
-            Property property = properties[i];
-            if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER) {
-                builder.add(new ReductionTime(property.getPropertyBytes()));
-            }
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case PROPERTY_IDENTIFIER:
+                        Property reductionTimeProperty = new Property(ReductionTime.class, p);
+                        builder.add(reductionTimeProperty);
+                        return reductionTimeProperty;
+                }
+                return null;
+            });
         }
 
-        reductionTimes = builder.toArray(new ReductionTime[0]);
+        reductionTimes = builder.toArray(new Property[0]);
     }
 
     @Override protected boolean propertiesExpected() {
-        return false;
+        return true;
     }
 }

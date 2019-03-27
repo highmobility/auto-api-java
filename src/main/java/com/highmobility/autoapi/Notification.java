@@ -20,13 +20,11 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ActionItem;
-import com.highmobility.autoapi.property.IntegerProperty;
+import com.highmobility.autoapi.value.ActionItem;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
+import com.highmobility.autoapi.property.PropertyInteger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -35,35 +33,38 @@ import javax.annotation.Nullable;
  * Send a notification to the car or smart device. The notification can have action items that the
  * user can respond with.
  */
-public class Notification extends CommandWithProperties {
+public class Notification extends Command {
     public static final Type TYPE = new Type(Identifier.NOTIFICATIONS, 0x00);
 
-    private static final byte TEXT_IDENTIFIER = 0x01;
-    private static final byte RECEIVED_ACTION_IDENTIFIER = 0x10;
+    private static final byte IDENTIFIER_TEXT = 0x01;
+    private static final byte IDENTIFIER_ACTION_ITEM = 0x02;
+    private static final byte IDENTIFIER_RECEIVED_ACTION = 0x10;
 
-    String text;
-    ActionItem[] actions;
-    Integer receivedAction;
+    Property<String> text = new Property(String.class, IDENTIFIER_TEXT);
+    Property<ActionItem>[] actions;
+    PropertyInteger receivedAction = new PropertyInteger(IDENTIFIER_RECEIVED_ACTION, false);
 
     /**
      * @return Notification text.
      */
-    @Nullable public String getText() {
+    public Property<String> getText() {
         return text;
     }
 
     /**
      * @return Notification action items.
      */
-    public ActionItem[] getActions() {
+    public Property<ActionItem>[] getActions() {
         return actions;
     }
 
-    @Nullable public ActionItem getAction(int actionIdentifier) {
+    @Nullable public Property<ActionItem> getAction(int actionIdentifier) {
         if (actions == null) return null;
 
         for (int i = 0; i < actions.length; i++) {
-            if (actions[i].getActionIdentifier() == actionIdentifier) return actions[i];
+            if (actions[i].getValue() != null &&
+                    actions[i].getValue().getActionIdentifier() == actionIdentifier)
+                return actions[i];
         }
 
         return null;
@@ -72,7 +73,7 @@ public class Notification extends CommandWithProperties {
     /**
      * @return The received action.
      */
-    @Nullable public Integer getReceivedAction() {
+    public Property<Integer> getReceivedAction() {
         return receivedAction;
     }
 
@@ -81,62 +82,66 @@ public class Notification extends CommandWithProperties {
      * @param actions        Notification action items.
      * @param receivedAction The received action.
      */
-    public Notification(String text, ActionItem[] actions, Integer receivedAction) {
-        super(TYPE, getProperties(text, actions, receivedAction));
-        this.text = text;
-        this.actions = actions;
-        this.receivedAction = receivedAction;
+    public Notification(String text, ActionItem[] actions, @Nullable Integer receivedAction) {
+        super(TYPE);
+
+        ArrayList<Property> properties = new ArrayList<>();
+        List<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
+
+        this.text.update(text);
+        properties.add(this.text);
+
+        for (ActionItem action : actions) {
+            Property p = new Property(IDENTIFIER_ACTION_ITEM, action);
+            actionItemsBuilder.add(p);
+            properties.add(p);
+        }
+
+        this.actions = actionItemsBuilder.toArray(new Property[0]);
+
+        if (receivedAction != null) {
+            this.receivedAction.update(false, 1, receivedAction);
+            properties.add(this.receivedAction);
+        }
+
+        createBytes(properties);
     }
 
     Notification(byte[] bytes) {
         super(bytes);
-        ArrayList<ActionItem> actionsBuilder = new ArrayList<>();
+        ArrayList<Property> actionsBuilder = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case TEXT_IDENTIFIER:
-                        text = Property.getString(p.getValueBytes());
-                        return text;
-                    case ActionItem.IDENTIFIER:
-                        ActionItem item = new ActionItem(p.getPropertyBytes());
+                    case IDENTIFIER_TEXT:
+                        return text.update(p);
+                    case IDENTIFIER_ACTION_ITEM:
+                        Property item = new Property(ActionItem.class, p);
                         actionsBuilder.add(item);
                         return item;
-                    case RECEIVED_ACTION_IDENTIFIER:
-                        receivedAction = Property.getSignedInt(p.getValueByte());
-                        return receivedAction;
+                    case IDENTIFIER_RECEIVED_ACTION:
+                        return receivedAction.update(p);
                 }
 
                 return null;
             });
         }
 
-        actions = actionsBuilder.toArray(new ActionItem[0]);
-    }
-
-    static Property[] getProperties(String text, ActionItem[] actions, Integer receivedAction) {
-        Property[] properties = new Property[actions.length + 2];
-        properties[0] = new StringProperty(TEXT_IDENTIFIER, text);
-
-        System.arraycopy(actions, 0, properties, 1, actions.length);
-
-        properties[properties.length - 1] = new IntegerProperty(RECEIVED_ACTION_IDENTIFIER,
-                receivedAction, 1);
-
-        return properties;
+        actions = actionsBuilder.toArray(new Property[0]);
     }
 
     private Notification(Builder builder) {
         super(builder);
-        actions = builder.actions.toArray(new ActionItem[0]);
+        actions = builder.actions.toArray(new Property[0]);
         text = builder.text;
         receivedAction = builder.receivedAction;
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        private List<ActionItem> actions = new ArrayList<>();
-        String text;
-        Integer receivedAction;
+    public static final class Builder extends Command.Builder {
+        private List<Property<ActionItem>> actions = new ArrayList<>();
+        Property<String> text;
+        PropertyInteger receivedAction;
 
         public Builder() {
             super(TYPE);
@@ -146,10 +151,10 @@ public class Notification extends CommandWithProperties {
          * @param actions The notification action items.
          * @return The builder.
          */
-        public Builder setActions(ActionItem[] actions) {
-            this.actions = Arrays.asList(actions);
+        public Builder setActions(Property<ActionItem>[] actions) {
+            this.actions.clear();
             for (int i = 0; i < actions.length; i++) {
-                addProperty(actions[i]);
+                addAction(actions[i]);
             }
             return this;
         }
@@ -160,9 +165,9 @@ public class Notification extends CommandWithProperties {
          * @param action The notification action item.
          * @return The builder.
          */
-        public Builder addAction(ActionItem action) {
+        public Builder addAction(Property<ActionItem> action) {
             this.actions.add(action);
-            addProperty(action);
+            addProperty(action.setIdentifier(IDENTIFIER_ACTION_ITEM));
             return this;
         }
 
@@ -170,9 +175,10 @@ public class Notification extends CommandWithProperties {
          * @param text The notification text.
          * @return The builder.
          */
-        public Builder setText(String text) {
+        public Builder setText(Property<String> text) {
             this.text = text;
-            addProperty(new StringProperty(TEXT_IDENTIFIER, text));
+            text.setIdentifier(IDENTIFIER_TEXT);
+            addProperty(text);
             return this;
         }
 
@@ -180,9 +186,10 @@ public class Notification extends CommandWithProperties {
          * @param receivedAction The received action.
          * @return The builder.
          */
-        public Builder setReceivedAction(Integer receivedAction) {
-            this.receivedAction = receivedAction;
-            addProperty(new IntegerProperty(RECEIVED_ACTION_IDENTIFIER, receivedAction, 1));
+        public Builder setReceivedAction(Property<Integer> receivedAction) {
+            this.receivedAction = new PropertyInteger(IDENTIFIER_RECEIVED_ACTION, false, 1,
+                    receivedAction);
+            addProperty(this.receivedAction);
             return this;
         }
 

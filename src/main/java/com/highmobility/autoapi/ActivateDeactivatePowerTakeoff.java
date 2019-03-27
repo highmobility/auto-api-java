@@ -20,34 +20,45 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.BooleanProperty;
 import com.highmobility.autoapi.property.Property;
 
 /**
  * Activate or deactivate power take-off. The result is sent through the Power Take-Off State
  * message.
  */
-public class ActivateDeactivatePowerTakeoff extends CommandWithProperties {
+public class ActivateDeactivatePowerTakeoff extends Command {
     public static final Type TYPE = new Type(Identifier.POWER_TAKE_OFF, 0x02);
-    Boolean activate;
+    private static final byte IDENTIFIER = 0x01;
+    Property<Boolean> activate = new Property(Boolean.class, IDENTIFIER);
 
     /**
      * @return Whether power take-off should be activated.
      */
-    public Boolean activate() {
+    public Property<Boolean> activate() {
         return activate;
     }
 
-    public ActivateDeactivatePowerTakeoff(boolean activate) {
-        super(TYPE.addProperty(new BooleanProperty((byte) 0x01, activate)));
-        this.activate = activate;
+    public ActivateDeactivatePowerTakeoff(Boolean activate) {
+        super(TYPE);
+        this.activate.update(activate);
+        createBytes(this.activate);
     }
 
     ActivateDeactivatePowerTakeoff(byte[] bytes) {
         super(bytes);
-        for (Property property : properties) {
-            if (property.getPropertyIdentifier() == 0x01)
-                activate = Property.getBool(property.getValueByte());
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return activate.update(p);
+                }
+                return null;
+            });
         }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }

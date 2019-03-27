@@ -20,10 +20,10 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.value.Position;
-import com.highmobility.autoapi.property.value.Location;
-import com.highmobility.autoapi.property.windows.WindowPosition;
+import com.highmobility.autoapi.value.Location;
+import com.highmobility.autoapi.value.windows.WindowPosition;
 
 import java.util.ArrayList;
 
@@ -31,15 +31,16 @@ import java.util.ArrayList;
  * Open or close the windows. Either one or all windows can be controlled with the same command. The
  * result is sent through the evented Windows State command.
  */
-public class ControlWindows extends CommandWithProperties {
+public class ControlWindows extends Command {
     public static final Type TYPE = new Type(Identifier.WINDOWS, 0x12);
     private static final byte PROPERTY_IDENTIFIER = 0x02;
-    private WindowPosition[] windowPositions;
+
+    private Property<WindowPosition>[] windowPositions;
 
     /**
      * @return The window positions.
      */
-    public WindowPosition[] getWindowPositions() {
+    public Property<WindowPosition>[] getWindowPositions() {
         return windowPositions;
     }
 
@@ -49,44 +50,47 @@ public class ControlWindows extends CommandWithProperties {
      * @param location The window location.
      * @return The window position.
      */
-    public WindowPosition getWindowPosition(Location location) {
+    public Property<WindowPosition> getWindowPosition(Location location) {
         for (int i = 0; i < windowPositions.length; i++) {
-            WindowPosition prop = windowPositions[i];
-            if (prop.getLocation() == location) return prop;
+            Property<WindowPosition> prop = windowPositions[i];
+            if (prop.getValue().getLocation() == location) return prop;
         }
 
         return null;
     }
 
     public ControlWindows(WindowPosition[] windowPositions) {
-        super(TYPE, updatePositions(windowPositions));
-        this.windowPositions = windowPositions;
-    }
+        super(TYPE);
 
-    static WindowPosition[] updatePositions(WindowPosition[] windowPositions) {
-        for (WindowPosition windowPosition : windowPositions) {
-            windowPosition.setIdentifier(PROPERTY_IDENTIFIER);
+        ArrayList<Property> builder = new ArrayList<>();
+
+        for (WindowPosition windowPos : windowPositions) {
+            Property prop = new Property(PROPERTY_IDENTIFIER, windowPos);
+            builder.add(prop);
         }
 
-        return windowPositions;
+        this.windowPositions = builder.toArray(new Property[0]);
+        createBytes(builder);
     }
 
-    ControlWindows(byte[] bytes) throws CommandParseException {
+    ControlWindows(byte[] bytes) {
         super(bytes);
-        ArrayList<WindowPosition> builder = new ArrayList<>();
+        ArrayList<Property<WindowPosition>> builder = new ArrayList<>();
 
-        for (Property property : properties) {
-            if (property.getPropertyIdentifier() == PROPERTY_IDENTIFIER)
-                builder.add(new WindowPosition(
-                        Location.fromByte(property.getValueBytes()[0]),
-                        Position.fromByte(property.getValueBytes()[1])
-                ));
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case PROPERTY_IDENTIFIER:
+                        Property prop = new Property(new WindowPosition(
+                                Location.fromByte(p.getValueComponent().getValueBytes().get(0)),
+                                Position.fromByte(p.getValueComponent().getValueBytes().get(1))));
+                        builder.add(prop);
+                        return prop;
+                }
+                return null;
+            });
         }
 
-        windowPositions = builder.toArray(new WindowPosition[0]);
-    }
-
-    @Override protected boolean propertiesExpected() {
-        return false;
+        windowPositions = builder.toArray(new Property[0]);
     }
 }

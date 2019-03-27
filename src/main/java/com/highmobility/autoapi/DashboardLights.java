@@ -20,7 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.DashboardLight;
+import com.highmobility.autoapi.value.DashboardLight;
+import com.highmobility.autoapi.property.Property;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,15 +33,16 @@ import javax.annotation.Nullable;
  * This message is sent when a Get Dashboard Lights message is received by the car. The new state is
  * included in the message payload and may be the result of user, device or car triggered action.
  */
-public class DashboardLights extends CommandWithProperties {
+public class DashboardLights extends Command {
     public static final Type TYPE = new Type(Identifier.DASHBOARD_LIGHTS, 0x01);
+    public static final byte IDENTIFIER_DASHBOARD_LIGHT = 0x01;
 
-    DashboardLight[] lights;
+    Property<DashboardLight>[] lights;
 
     /**
      * @return All of the available dashboard lights.
      */
-    public DashboardLight[] getLights() {
+    public Property<DashboardLight>[] getLights() {
         return lights;
     }
 
@@ -50,10 +52,10 @@ public class DashboardLights extends CommandWithProperties {
      * @param type The dashboard light type.
      * @return The Dashboard light, if exists.
      */
-    @Nullable public DashboardLight getLight(DashboardLight.Type type) {
+    @Nullable public Property<DashboardLight> getLight(DashboardLight.Type type) {
         for (int i = 0; i < lights.length; i++) {
-            DashboardLight light = lights[i];
-            if (light.getType() == type) return light;
+            Property<DashboardLight> light = lights[i];
+            if (light.getValue() != null && light.getValue().getType() == type) return light;
         }
 
         return null;
@@ -62,12 +64,13 @@ public class DashboardLights extends CommandWithProperties {
     DashboardLights(byte[] bytes) {
         super(bytes);
 
-        List<DashboardLight> builder = new ArrayList<>();
+        List<Property<DashboardLight>> builder = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == DashboardLight.IDENTIFIER) {
-                    DashboardLight light = new DashboardLight(p.getPropertyBytes());
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                if (p.getPropertyIdentifier() == IDENTIFIER_DASHBOARD_LIGHT) {
+                    Property<DashboardLight> light =
+                            new Property(DashboardLight.class, p);
                     builder.add(light);
                     return light;
                 }
@@ -75,7 +78,7 @@ public class DashboardLights extends CommandWithProperties {
             });
         }
 
-        lights = builder.toArray(new DashboardLight[0]);
+        lights = builder.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {
@@ -84,17 +87,17 @@ public class DashboardLights extends CommandWithProperties {
 
     private DashboardLights(Builder builder) {
         super(builder);
-        lights = builder.lights.toArray(new DashboardLight[0]);
+        lights = builder.lights.toArray(new Property[0]);
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
-        List<DashboardLight> lights = new ArrayList<>();
+    public static final class Builder extends Command.Builder {
+        List<Property<DashboardLight>> lights = new ArrayList<>();
 
         /**
          * @param lights The dashboard lights.
          * @return The builder.
          */
-        public Builder setLights(DashboardLight[] lights) {
+        public Builder setLights(Property<DashboardLight>[] lights) {
             this.lights = Arrays.asList(lights);
             for (int i = 0; i < lights.length; i++) {
                 addProperty(lights[i]);
@@ -108,9 +111,9 @@ public class DashboardLights extends CommandWithProperties {
          * @param light The Dashboard light.
          * @return The builder.
          */
-        public Builder addLight(DashboardLight light) {
+        public Builder addLight(Property<DashboardLight> light) {
             this.lights.add(light);
-            addProperty(light);
+            addProperty(light.setIdentifier(IDENTIFIER_DASHBOARD_LIGHT));
             return this;
         }
 

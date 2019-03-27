@@ -20,58 +20,103 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This message is sent when a Get Historical States is received. The states are passed along as an
  * array of all states for the given period.
  */
-public class HistoricalStates extends CommandWithProperties {
+public class HistoricalStates extends Command {
     public static final Type TYPE = new Type(Identifier.HISTORICAL, 0x01);
     private static final byte STATE_IDENTIFIER = 0x01;
 
+    Property<Command>[] states;
+
     /**
-     * @return The historical states. Use {@link CommandWithProperties#getTimestamp()} to understand
-     * the command time.
+     * @return The historical states. Use {@link Command#getTimestamp()} to understand the command
+     * time.
      */
-    public CommandWithProperties[] getStates() {
+    public Property<Command>[] getStates() {
         return states;
     }
 
-    CommandWithProperties[] states;
+    /**
+     * @param type The type.
+     * @return The historical states for the type.
+     */
+    public Property<Command>[] getStates(Type type) {
+        List<Property> builder = new ArrayList<>();
+
+        for (int i = 0; i < states.length; i++) {
+            Property<Command> prop = states[i];
+            if (prop.getValue() != null) {
+                Command command = prop.getValue();
+                if (command.getType().equals(type)) {
+                    builder.add(prop);
+                }
+            }
+        }
+
+        return builder.toArray(new Property[0]);
+    }
 
     HistoricalStates(byte[] bytes) {
         super(bytes);
 
-        ArrayList<CommandWithProperties> builder = new ArrayList<>();
+        List<Property> builder = new ArrayList<>();
 
-        while (propertiesIterator.hasNext()) {
-            propertiesIterator.parseNext(p -> {
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
                 if (p.getPropertyIdentifier() == STATE_IDENTIFIER) {
-                    CommandWithProperties state = (CommandWithProperties) CommandResolver.resolve
-                            (p.getValueBytes());
-                    builder.add(state);
-                    return state;
+                    Property c = new Property(Command.class, p);
+                    builder.add(c);
+                    return c;
 
                 }
                 return null;
             });
         }
 
-        states = builder.toArray(new CommandWithProperties[0]);
+        states = builder.toArray(new Property[0]);
     }
 
     @Override public boolean isState() {
         return true;
     }
 
-    // TBODO:
-    /*private HistoricalStates(Builder builder) {
+    private HistoricalStates(Builder builder) {
         super(builder);
-        state = builder.state;
+        states = builder.states.toArray(new Property[0]);
     }
 
-    public static final class Builder extends CommandWithProperties.Builder {
+    public static final class Builder extends Command.Builder {
+        public List<Property> states = new ArrayList<>();
+
+        /**
+         * @param state The historical state.
+         * @return The builder.
+         */
+        public Builder addState(Property<Command> state) {
+            this.states.add(state.setIdentifier(STATE_IDENTIFIER));
+            addProperty(state);
+            return this;
+        }
+
+        /**
+         * @param states The historical states.
+         * @return The builder.
+         */
+        public Builder setStates(Property<Command>[] states) {
+            this.states.clear();
+            for (Property<Command> state : states) {
+                addState(state);
+            }
+            return this;
+        }
+
         public Builder() {
             super(TYPE);
         }
@@ -79,5 +124,5 @@ public class HistoricalStates extends CommandWithProperties {
         public HistoricalStates build() {
             return new HistoricalStates(this);
         }
-    }*/
+    }
 }

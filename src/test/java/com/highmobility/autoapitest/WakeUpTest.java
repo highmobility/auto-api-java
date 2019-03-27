@@ -3,9 +3,9 @@ package com.highmobility.autoapitest;
 import com.highmobility.autoapi.WakeUp;
 import com.highmobility.utils.ByteUtils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by ttiganik on 15/09/16.

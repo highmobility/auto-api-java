@@ -5,15 +5,13 @@ import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.GetParkingBrakeState;
 import com.highmobility.autoapi.ParkingBrakeState;
 import com.highmobility.autoapi.SetParkingBrake;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by ttiganik on 15/09/16.
@@ -22,19 +20,19 @@ public class ParkingBrakeTest {
     Bytes bytes = new Bytes(
             "005801" +
                     "01000401000101");
+
     @Test
     public void state() {
-
-        Command command = null;
-        try {
-            command = CommandResolver.resolve(bytes);
-        } catch (Exception e) {
-            fail();
-        }
+        Command command = CommandResolver.resolve(bytes);
 
         assertTrue(command.getClass() == ParkingBrakeState.class);
         ParkingBrakeState state = (ParkingBrakeState) command;
-        assertTrue(state.isActive() == true);
+        testState(state);
+    }
+
+    private void testState(ParkingBrakeState state) {
+        assertTrue(state.isActive().getValue() == true);
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
@@ -50,19 +48,18 @@ public class ParkingBrakeTest {
         assertTrue(TestUtils.bytesTheSame(waitingForBytes, commandBytes));
 
         SetParkingBrake command = (SetParkingBrake) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.activate() == true);
+        assertTrue(command.activate().getValue() == true);
         assertTrue(command.equals(waitingForBytes));
     }
 
     @Test public void build() {
         ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
-        builder.setIsActive(true);
-        assertTrue(builder.build().equals(bytes));
+        builder.setIsActive(new Property(true));
+        ParkingBrakeState state = builder.build();
+        testState(state);
     }
 
-    @Test public void state0Properties() {
-        Bytes bytes = new Bytes("005801");
-        Command state = CommandResolver.resolve(bytes);
-        assertTrue(((ParkingBrakeState)state).isActive() == null);
+    @Test public void failsWherePropertiesMandatory() {
+        assertTrue(CommandResolver.resolve(SetParkingBrake.TYPE.getIdentifierAndType()).getClass() == Command.class);
     }
 }

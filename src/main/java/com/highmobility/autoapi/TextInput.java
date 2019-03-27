@@ -21,21 +21,21 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.StringProperty;
 
 /**
  * Send a keystroke or entire sentences as input to the car head unit. This can act as an
  * alternative to the input devices that the car is equipped with.
  */
-public class TextInput extends CommandWithProperties {
+public class TextInput extends Command {
     public static final Type TYPE = new Type(Identifier.TEXT_INPUT, 0x00);
+    private static final byte IDENTIFIER = 0x01;
 
-    String text;
+    Property<String> text = new Property(String.class, IDENTIFIER);
 
     /**
      * @return The text.
      */
-    public String getText() {
+    public Property<String> getText() {
         return text;
     }
 
@@ -43,13 +43,26 @@ public class TextInput extends CommandWithProperties {
      * @param text The text.
      */
     public TextInput(String text) {
-        super(TYPE, StringProperty.getProperties(text, (byte) 0x01));
+        super(TYPE);
+        this.text.update(text);
+        createBytes(this.text);
     }
 
-    TextInput(byte[] bytes) throws CommandParseException {
+    TextInput(byte[] bytes) {
         super(bytes);
-        Property urlProp = getProperty((byte) 0x01);
-        if (urlProp == null) throw new CommandParseException();
-        text = Property.getString(urlProp.getValueBytes());
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case IDENTIFIER:
+                        return text.update(p);
+                }
+                return null;
+            });
+        }
+    }
+
+    @Override protected boolean propertiesExpected() {
+        return true;
     }
 }
