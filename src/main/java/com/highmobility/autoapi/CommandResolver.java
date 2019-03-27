@@ -73,8 +73,7 @@ public class CommandResolver {
             } else if (bytesAreForIdentifier(bytes, Identifier.MULTI_COMMAND)) {
                 if (bytesAreForType(bytes, MultiCommand.TYPE)) {
                     command = new MultiCommand(bytes);
-                }
-                else if (bytesAreForType(bytes, MultiState.TYPE)) {
+                } else if (bytesAreForType(bytes, MultiState.TYPE)) {
                     command = new MultiState(bytes);
                 }
             } else if (bytesAreForIdentifier(bytes, Identifier.DOOR_LOCKS)) {

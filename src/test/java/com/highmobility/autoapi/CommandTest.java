@@ -74,7 +74,7 @@ public class CommandTest {
         boolean found = false;
         for (Property property : command.getProperties()) {
             if (property instanceof Property) {
-                if (property.getValueClass() == DashboardLight.class) {
+                if (property.getValue().getClass() == DashboardLight.class) {
                     found = true;
                 }
             }
@@ -173,14 +173,6 @@ public class CommandTest {
 
         assertTrue(foundDimmingProperty == true);
         assertTrue(foundUnknownProperty == true);
-    }
-
-    @Test public void builderFailsIfPropertiesExpected() {
-        ReductionTime[] timers = new ReductionTime[0];
-        assertThrows(IllegalArgumentException.class, () -> {
-            new SetReductionOfChargingCurrentTimes(timers);
-        });
-        // TODO: 2019-03-15 add these for all of the classes
     }
 
     @Test public void parserFailsIfPropertiesExpected() {

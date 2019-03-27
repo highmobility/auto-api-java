@@ -21,7 +21,8 @@ public class BrowserTest {
         assertTrue(command.getUrl().getValue().equals("https://google.com"));
     }
 
-    @Test public void failsWithNoProperties() {
+    @Test public void failsWherePropertiesMandatory() {
+
         Bytes waitingForBytes = new Bytes("004900");
         assertTrue(CommandResolver.resolve(waitingForBytes).getClass() == Command.class);
     }

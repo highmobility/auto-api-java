@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PropertyTest {
     // bytes: 00000160E0EA1388
@@ -249,13 +248,5 @@ public class PropertyTest {
         assertTrue(capabilityProperty.isSupported(ClimateState.TYPE));
     }
 
-    @Test public void returnBaseClassIfRequiredPropertyDoesNotExist() {
-        // if child class didnt find a property but it expects that at least one exists, return
-        // base command
 
-        Bytes expected = new Bytes("002313" + // SetChargeLimit
-                "DD000B0100083FECCCCCCCCCCCCD"); // invalid property identifier
-        Command command = CommandResolver.resolve(expected);
-        assertTrue(command.getClass() == Command.class);
-    }
 }
