@@ -97,7 +97,7 @@ public class FirmwareVersion extends Command {
         }
 
         /**
-         * @param carSdkVersion The Car SDK version. Version is in format: "[major,minor,patch]"
+         * @param carSdkVersion The Car SDK version. Version is in format: [major, minor, patch]
          * @return The builder.
          */
         public Builder setCarSdkVersion(Property<int[]> carSdkVersion) throws IllegalArgumentException {

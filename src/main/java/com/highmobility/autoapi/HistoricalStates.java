@@ -106,7 +106,7 @@ public class HistoricalStates extends Command {
         }
 
         /**
-         * @param states The states.
+         * @param states The historical states.
          * @return The builder.
          */
         public Builder setStates(Property<Command>[] states) {

@@ -863,6 +863,7 @@ public class DiagnosticsState extends Command {
 
         /**
          * @param checkControlMessage The check control message.
+         * @return The builder.
          */
         public Builder addCheckControlMessage(Property<CheckControlMessage> checkControlMessage) {
             addProperty(checkControlMessage);

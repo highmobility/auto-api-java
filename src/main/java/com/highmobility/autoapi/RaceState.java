@@ -20,12 +20,12 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.value.Acceleration;
-import com.highmobility.autoapi.value.BrakeTorqueVectoring;
-import com.highmobility.autoapi.value.GearMode;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.Acceleration;
 import com.highmobility.autoapi.value.Axle;
+import com.highmobility.autoapi.value.BrakeTorqueVectoring;
+import com.highmobility.autoapi.value.GearMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -396,7 +396,7 @@ public class RaceState extends Command {
 
         /**
          * @param underSteering The under steering percentage between 0-1 whereas up to .2 is
-         *                      considered OK, up to .3 * marginal, over .3 critical.
+         *                      considered OK, up to .3 marginal, over .3 critical.
          * @return The builder.
          */
         public Builder setUnderSteering(Property<Double> underSteering) {
@@ -526,7 +526,8 @@ public class RaceState extends Command {
          * @return The builder.
          */
         public Builder setSelectedGear(Property<Integer> selectedGear) {
-            this.selectedGear = new PropertyInteger(IDENTIFIER_SELECTED_GEAR, false, 1, selectedGear);
+            this.selectedGear = new PropertyInteger(IDENTIFIER_SELECTED_GEAR, false, 1,
+                    selectedGear);
             addProperty(this.selectedGear);
             return this;
         }
