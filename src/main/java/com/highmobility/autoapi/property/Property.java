@@ -143,7 +143,6 @@ public class Property<T> extends Bytes {
     }
 
     protected void findComponents() {
-
         for (int i = 3; i < bytes.length; i++) {
             int size = getUnsignedInt(bytes, i + 1, 2);
             byte componentIdentifier = bytes[i];

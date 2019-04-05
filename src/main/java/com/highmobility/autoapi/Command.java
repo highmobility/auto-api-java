@@ -147,9 +147,12 @@ public class Command extends Bytes {
         // create the base properties
         while (enumeration.hasMoreElements()) {
             PropertyEnumeration.EnumeratedProperty propertyEnumeration = enumeration.nextElement();
-            Property property = new Property(Arrays.copyOfRange(bytes, propertyEnumeration
-                    .valueStart - 3, propertyEnumeration.valueStart + propertyEnumeration.size));
-            builder.add(property);
+            if (propertyEnumeration.isValid(bytes.length)) {
+                Property property = new Property(Arrays.copyOfRange(bytes, propertyEnumeration
+                                .valueStart - 3,
+                        propertyEnumeration.valueStart + propertyEnumeration.size));
+                builder.add(property);
+            }
         }
 
         // find universal properties
@@ -174,7 +177,13 @@ public class Command extends Bytes {
 
     private void setTypeAndBytes(byte[] bytes) {
         if (bytes == null || bytes.length < 3) {
-            type = new Type(0x00, 0x00, 0x00);
+            byte firstByte = 0, secondByte = 0, thirdByte = 0;
+            if (bytes != null) {
+                if (bytes.length > 0) firstByte = bytes[0];
+                if (bytes.length > 1) secondByte = bytes[1];
+                if (bytes.length > 2) thirdByte = bytes[2];
+            }
+            type = new Type(firstByte, secondByte, thirdByte);
         } else {
             type = new Type(bytes[0], bytes[1], bytes[2]);
         }
