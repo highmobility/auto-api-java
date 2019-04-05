@@ -68,7 +68,7 @@ class PropertyEnumeration implements Enumeration {
         }
 
         public boolean isValid(int totalCommandLength) {
-            return valueStart + size < totalCommandLength;
+            return valueStart + size <= totalCommandLength;
         }
     }
 }
