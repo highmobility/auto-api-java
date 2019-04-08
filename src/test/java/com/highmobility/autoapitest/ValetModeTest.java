@@ -57,7 +57,8 @@ public class ValetModeTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(ActivateDeactivateValetMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
-
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(ActivateDeactivateValetMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

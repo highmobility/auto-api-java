@@ -22,8 +22,9 @@ public class BrowserTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-
-        Bytes waitingForBytes = new Bytes("004900");
-        assertTrue(CommandResolver.resolve(waitingForBytes).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            Bytes waitingForBytes = new Bytes("004900");
+            assertTrue(CommandResolver.resolve(waitingForBytes).getClass() == Command.class);
+        });
     }
 }

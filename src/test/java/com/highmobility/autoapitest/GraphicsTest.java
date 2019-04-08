@@ -18,10 +18,12 @@ public class GraphicsTest {
 
         Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof DisplayImage);
-        assertTrue(((DisplayImage)command).getUrl().getValue().equals("https://goo.gl/VyU1ip"));
+        assertTrue(((DisplayImage) command).getUrl().getValue().equals("https://goo.gl/VyU1ip"));
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(DisplayImage.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(DisplayImage.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

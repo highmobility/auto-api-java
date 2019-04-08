@@ -7,7 +7,6 @@ import com.highmobility.autoapi.NaviDestination;
 import com.highmobility.autoapi.SetNaviDestination;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Coordinates;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -68,6 +67,8 @@ public class NaviDestinationTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(SetNaviDestination.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(SetNaviDestination.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

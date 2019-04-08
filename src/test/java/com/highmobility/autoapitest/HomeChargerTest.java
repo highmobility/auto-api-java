@@ -226,13 +226,15 @@ public class HomeChargerTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(SetChargeCurrent.TYPE.getIdentifierAndType()).getClass
-                () == Command.class);
-        assertTrue(CommandResolver.resolve(ActivateDeactivateSolarCharging.TYPE
-                .getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(EnableDisableWifiHotspot.TYPE.getIdentifierAndType())
-                .getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(AuthenticateHomeCharger.TYPE.getIdentifierAndType())
-                .getClass() == Command.class);
+        TestUtils.errorLogExpected(4, () -> {
+            assertTrue(CommandResolver.resolve(SetChargeCurrent.TYPE.getIdentifierAndType()).getClass
+                    () == Command.class);
+            assertTrue(CommandResolver.resolve(ActivateDeactivateSolarCharging.TYPE
+                    .getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(EnableDisableWifiHotspot.TYPE.getIdentifierAndType())
+                    .getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(AuthenticateHomeCharger.TYPE.getIdentifierAndType())
+                    .getClass() == Command.class);
+        });
     }
 }

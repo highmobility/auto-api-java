@@ -39,10 +39,12 @@ public class TextInputTest {
                 "010006010003796573");
         Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof TextInput);
-        assertTrue(((TextInput)command).getText().getValue().equals("yes"));
+        assertTrue(((TextInput) command).getText().getValue().equals("yes"));
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(TextInput.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(TextInput.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

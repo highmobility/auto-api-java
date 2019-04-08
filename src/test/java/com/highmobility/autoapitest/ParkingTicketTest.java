@@ -91,6 +91,8 @@ public class ParkingTicketTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(StartParking.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(StartParking.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

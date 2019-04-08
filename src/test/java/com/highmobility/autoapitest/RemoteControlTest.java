@@ -68,6 +68,8 @@ public class RemoteControlTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(StartControlMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(StartControlMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

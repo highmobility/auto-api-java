@@ -31,7 +31,8 @@ public class VideoHandoverTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(VideoHandover.TYPE.getIdentifierAndType()).getClass() == Command.class);
-
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(VideoHandover.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

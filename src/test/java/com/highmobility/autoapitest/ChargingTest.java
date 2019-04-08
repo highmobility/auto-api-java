@@ -298,11 +298,13 @@ public class ChargingTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(StartStopCharging.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(SetChargeLimit.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(OpenCloseChargePort.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(SetChargeMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(SetChargeTimer.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(SetReductionOfChargingCurrentTimes.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(6, () -> {
+            assertTrue(CommandResolver.resolve(StartStopCharging.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(SetChargeLimit.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(OpenCloseChargePort.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(SetChargeMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(SetChargeTimer.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(SetReductionOfChargingCurrentTimes.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

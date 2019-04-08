@@ -104,8 +104,10 @@ public class WifiTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(ConnectToNetwork.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(ForgetNetwork.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(EnableDisableWifi.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(3, () -> {
+            assertTrue(CommandResolver.resolve(ConnectToNetwork.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(ForgetNetwork.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(EnableDisableWifi.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

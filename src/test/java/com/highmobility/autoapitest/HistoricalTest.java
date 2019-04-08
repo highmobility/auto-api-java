@@ -6,7 +6,6 @@ import com.highmobility.autoapi.GetHistoricalStates;
 import com.highmobility.autoapi.HistoricalStates;
 import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.LockState;
-import com.highmobility.autoapi.RaceState;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Location;
 import com.highmobility.autoapi.value.Lock;
@@ -78,6 +77,8 @@ public class HistoricalTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(GetHistoricalStates.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(GetHistoricalStates.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

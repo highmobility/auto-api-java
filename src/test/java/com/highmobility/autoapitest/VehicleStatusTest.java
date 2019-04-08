@@ -1,7 +1,7 @@
 package com.highmobility.autoapitest;
 
-import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.ControlMode;
 import com.highmobility.autoapi.GetVehicleStatus;
 import com.highmobility.autoapi.TheftAlarmState;
@@ -205,13 +205,14 @@ public class VehicleStatusTest {
                         "0300050100020300" +
                         "03000501000201FF" + // invalid Window Position FF
                         "99000D01000A00270101000401000102"); // control mode command
-
-        Command command = CommandResolver.resolve(bytes);
-        VehicleStatus vs = (VehicleStatus) command;
-        // one window property will fail to parse
-        WindowsState ws = (WindowsState) vs.getState(WindowsState.TYPE).getValue();
-        assertTrue(ws.getProperties().length == 5);
-        assertTrue(ws.getWindowPositions().length == 2);
+        TestUtils.errorLogExpected(3, () -> {
+            Command command = CommandResolver.resolve(bytes);
+            VehicleStatus vs = (VehicleStatus) command;
+            // one window property will fail to parse
+            WindowsState ws = (WindowsState) vs.getState(WindowsState.TYPE).getValue();
+            assertTrue(ws.getProperties().length == 5);
+            assertTrue(ws.getWindowPositions().length == 2);
+        });
     }
 
     @Test public void zeroProperties() {
@@ -235,8 +236,10 @@ public class VehicleStatusTest {
                 ("001101" +
                         "9900140100110021010100040100010002000401000101" +
                         "99000D01000A00270101000401000115"); //invalid control mode
-        VehicleStatus command = (VehicleStatus) CommandResolver.resolve(bytes);
-        assertTrue(command.getStates().length == 2); // invalid command is added as a base
-        // command class
+        TestUtils.errorLogExpected(() -> {
+            VehicleStatus command = (VehicleStatus) CommandResolver.resolve(bytes);
+            assertTrue(command.getStates().length == 2); // invalid command is added as a base
+            // command class
+        });
     }
 }

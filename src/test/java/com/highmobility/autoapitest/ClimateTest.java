@@ -176,8 +176,10 @@ public class ClimateTest {
         builder.setIonisingActive(new Property(false));
         builder.setDefrostingTemperature(new Property(21.5f));
 
-        builder.addHvacStartingTime(new Property(new HvacStartingTime(Weekday.SATURDAY, new Time(18,30))));
-        builder.addHvacStartingTime(new Property(new HvacStartingTime(Weekday.SUNDAY, new Time(18,30))));
+        builder.addHvacStartingTime(new Property(new HvacStartingTime(Weekday.SATURDAY,
+                new Time(18, 30))));
+        builder.addHvacStartingTime(new Property(new HvacStartingTime(Weekday.SUNDAY, new Time(18
+                , 30))));
 
         builder.setRearTemperatureSetting(new Property(21.5f));
         ClimateState command = builder.build();
@@ -185,9 +187,11 @@ public class ClimateTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(StartStopHvac.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(StartStopDefogging.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(StartStopDefrosting.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(StartStopIonising.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(4, () -> {
+            assertTrue(CommandResolver.resolve(StartStopHvac.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(StartStopDefogging.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(StartStopDefrosting.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(StartStopIonising.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

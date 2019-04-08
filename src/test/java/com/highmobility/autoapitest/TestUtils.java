@@ -1,7 +1,10 @@
 package com.highmobility.autoapitest;
 
+import com.highmobility.autoapi.Command;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
+
+import org.slf4j.Logger;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -15,6 +18,22 @@ import java.util.TimeZone;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestUtils {
+    static FakeLogger fakeLogger = new FakeLogger();
+
+    public static void errorLogExpected(Runnable runnable) {
+        errorLogExpected(1, runnable);
+    }
+
+    public static void errorLogExpected(int count, Runnable runnable) {
+        // could add a log count to logger, and if it exceeds the param count, write an error
+        Logger correctLogger = Command.logger;
+        int logsBefore = fakeLogger.logCount;
+        Command.logger = fakeLogger;
+        runnable.run();
+        Command.logger = correctLogger;
+        // if this fails, don't use fake logger and check what error message should not be present
+        assertTrue(logsBefore + count == fakeLogger.logCount);
+    }
 
     public static boolean dateIsSame(Calendar c, String dateString) {
         return dateIsSameIgnoreTimezone(c, dateString); // currently ignoring time zone.

@@ -59,6 +59,8 @@ public class StartStopTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(ActivateDeactivateStartStop.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(ActivateDeactivateStartStop.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }
