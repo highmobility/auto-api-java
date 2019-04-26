@@ -472,7 +472,7 @@ public class ChargeState extends Command {
          */
         public Builder setTimeToCompleteCharge(Property<Integer> timeToCompleteCharge) {
             this.timeToCompleteCharge = new PropertyInteger(TIME_TO_COMPLETE_CHARGE_IDENTIFIER,
-                    false, 1, timeToCompleteCharge);
+                    false, 2, timeToCompleteCharge);
             addProperty(this.timeToCompleteCharge);
             return this;
         }
