@@ -342,7 +342,7 @@ public class Command extends Bytes {
                     propertiesReplaced++;
                 }
             } catch (Exception e) {
-                nextProperty.printFailedToParse(e);
+                nextProperty.printFailedToParse(e, null);
             }
         }
     }

@@ -34,6 +34,13 @@ public class PropertyComponent extends Bytes {
         return valueBytes;
     }
 
+    /**
+     * @return The identifier.
+     */
+    public byte getIdentifier() {
+        return identifier;
+    }
+
     PropertyComponent(Bytes componentBytes) {
         if (componentBytes.getLength() < 3) throw new ParseException();
         bytes = componentBytes.getByteArray();

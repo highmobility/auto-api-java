@@ -211,7 +211,7 @@ public class VehicleStatusTest {
             // one window property will fail to parse
             WindowsState ws = (WindowsState) vs.getState(WindowsState.TYPE).getValue();
             assertTrue(ws.getProperties().length == 5);
-            assertTrue(ws.getWindowPositions().length == 2);
+            assertTrue(ws.getWindowPositions().length == 3);
         });
     }
 

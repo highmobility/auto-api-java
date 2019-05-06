@@ -66,8 +66,9 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         // map bytes to the type
         if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
             try {
-                value = valueClass.newInstance();
-                ((PropertyValueObject) value).update(valueBytes);
+                T parsedValue = valueClass.newInstance();
+                ((PropertyValueObject) parsedValue).update(valueBytes);
+                this.value = parsedValue;
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
                 throw new IllegalArgumentException("Cannot instantiate value: " + valueClass +

@@ -436,8 +436,7 @@ public class CommandResolver {
         } catch (Exception e) {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
-            Command.logger.info("Failed to parse command " + commandToString(bytes));
-//            e.printStackTrace();
+            Command.logger.error("Failed to parse command {}", commandToString(bytes), e);
         }
 
         // The identifier was unknown or failed to parse. Return the base class.
