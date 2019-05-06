@@ -199,7 +199,6 @@ public class Property<T> extends Bytes {
         }
 
         components = builder.toArray(new PropertyComponent[0]);
-
     }
 
     public Property update(Property p) throws CommandParseException {
