@@ -1,14 +1,7 @@
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.GasFlapState;
-import com.highmobility.autoapi.ParkingBrakeState;
-import com.highmobility.autoapi.RooftopState;
-import com.highmobility.autoapi.SetReductionOfChargingCurrentTimes;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.DashboardLight;
-import com.highmobility.autoapi.value.charging.ReductionTime;
 import com.highmobility.autoapitest.TestUtils;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -19,7 +12,6 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -55,12 +47,15 @@ public class CommandTest {
     // MARK: Universal Properties
 
     @Test public void invalidProperty() {
-        // test that invalid gasflapstate just sets the property to null and keeps the base property
-        Bytes bytes = new Bytes("00400102000401000103"); // 3 is invalid gasflap lock state
-        GasFlapState state = (GasFlapState) CommandResolver.resolve(bytes);
+        TestUtils.errorLogExpected(() -> {
+            // test that invalid gasflapstate just sets the property to null and keeps the base
+            // property
+            Bytes bytes = new Bytes("00400102000401000103"); // 3 is invalid gasflap lock state
+            GasFlapState state = (GasFlapState) CommandResolver.resolve(bytes);
 
-        assertTrue(state.getLock().getValue() == null);
-        assertTrue(state.getProperty((byte) 0x02) != null);
+            assertTrue(state.getLock().getValue() == null);
+            assertTrue(state.getProperty((byte) 0x02) != null);
+        });
     }
 
     @Test public void basePropertiesArrayObjectReplaced() {
@@ -176,9 +171,22 @@ public class CommandTest {
     }
 
     @Test public void parserFailsIfPropertiesExpected() {
-        Bytes waitingForBytes = new Bytes("002317");
-        Command command = CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getClass() == Command.class);
-        assertTrue(command.getProperties().length == 0);
+        TestUtils.errorLogExpected(() -> {
+            Bytes waitingForBytes = new Bytes("002317");
+            Command command = CommandResolver.resolve(waitingForBytes);
+            assertTrue(command.getClass() == Command.class);
+            assertTrue(command.getProperties().length == 0);
+        });
+    }
+
+    @Test public void returnBaseClassIfRequiredPropertyDoesNotExist() {
+        // if child class didnt find a property but it expects that at least one exists, return
+        // base command
+        TestUtils.errorLogExpected(() -> {
+            Bytes expected = new Bytes("002313" + // SetChargeLimit
+                    "DD000B0100083FECCCCCCCCCCCCD"); // invalid property identifier
+            Command command = CommandResolver.resolve(expected);
+            assertTrue(command.getClass() == Command.class);
+        });
     }
 }

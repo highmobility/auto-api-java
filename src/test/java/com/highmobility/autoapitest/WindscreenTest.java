@@ -19,7 +19,6 @@ import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -159,8 +158,10 @@ public class WindscreenTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(SetWindscreenDamage.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(SetWindscreenReplacementNeeded.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(ControlWipers.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(3, () -> {
+            assertTrue(CommandResolver.resolve(SetWindscreenDamage.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(SetWindscreenReplacementNeeded.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(ControlWipers.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

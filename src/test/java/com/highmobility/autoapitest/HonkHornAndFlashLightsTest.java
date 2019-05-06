@@ -77,6 +77,8 @@ public class HonkHornAndFlashLightsTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(ActivateDeactivateEmergencyFlasher.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(ActivateDeactivateEmergencyFlasher.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

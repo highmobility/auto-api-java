@@ -111,6 +111,8 @@ public class DoorLocksTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(LockUnlockDoors.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(LockUnlockDoors.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

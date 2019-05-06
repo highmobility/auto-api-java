@@ -60,6 +60,8 @@ public class ParkingBrakeTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(SetParkingBrake.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(SetParkingBrake.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

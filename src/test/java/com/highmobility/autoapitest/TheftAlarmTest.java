@@ -58,6 +58,8 @@ public class TheftAlarmTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(SetTheftAlarm.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(SetTheftAlarm.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

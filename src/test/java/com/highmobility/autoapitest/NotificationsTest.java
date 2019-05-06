@@ -104,6 +104,8 @@ public class NotificationsTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(NotificationAction.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(NotificationAction.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

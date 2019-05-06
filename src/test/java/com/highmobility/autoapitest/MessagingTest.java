@@ -54,6 +54,8 @@ public class MessagingTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(MessageReceived.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(MessageReceived.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

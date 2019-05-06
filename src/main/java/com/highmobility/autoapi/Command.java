@@ -48,7 +48,7 @@ public class Command extends Bytes {
       the subclass knows the identifier, it copies the components and replaces the base property
       with itself.
      */
-    public static final Logger logger = LoggerFactory.getLogger(Command.class);
+    public static Logger logger = LoggerFactory.getLogger(Command.class);
     private static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be " +
             "null";
     public static final byte NONCE_IDENTIFIER = (byte) 0xA0;

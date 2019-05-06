@@ -8,10 +8,10 @@ import com.highmobility.autoapi.SetChassisPosition;
 import com.highmobility.autoapi.SetDrivingMode;
 import com.highmobility.autoapi.SetSpringRate;
 import com.highmobility.autoapi.StartStopSportChrono;
-import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.SpringRate;
 import com.highmobility.autoapi.value.Axle;
+import com.highmobility.autoapi.value.DrivingMode;
+import com.highmobility.autoapi.value.SpringRate;
 import com.highmobility.autoapi.value.StartStop;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -148,8 +148,10 @@ public class ChassisSettingsTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(SetDrivingMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(StartStopSportChrono.TYPE.getIdentifierAndType()).getClass() == Command.class);
-        assertTrue(CommandResolver.resolve(SetSpringRate.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(3, () -> {
+            assertTrue(CommandResolver.resolve(SetDrivingMode.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(StartStopSportChrono.TYPE.getIdentifierAndType()).getClass() == Command.class);
+            assertTrue(CommandResolver.resolve(SetSpringRate.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }

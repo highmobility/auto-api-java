@@ -60,6 +60,8 @@ public class EngineTest {
     }
 
     @Test public void failsWherePropertiesMandatory() {
-        assertTrue(CommandResolver.resolve(TurnIgnitionOnOff.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        TestUtils.errorLogExpected(() -> {
+            assertTrue(CommandResolver.resolve(TurnIgnitionOnOff.TYPE.getIdentifierAndType()).getClass() == Command.class);
+        });
     }
 }
