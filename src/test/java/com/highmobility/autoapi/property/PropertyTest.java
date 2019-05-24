@@ -55,6 +55,18 @@ public class PropertyTest {
         testTimestampComponent(property);
     }
 
+    @Test public void parseValueWithTimestampLessThanEightBytesLong() throws CommandParseException {
+        // assert that bytes are parsed to the value/timestamp component
+
+        Bytes completeBytes = new Bytes("00000F" +
+                "01000100" + // value
+                "0200060160E0EA1388"); // timestamp 6 bytes
+
+        Property property = new Property(ChargeMode.class, (byte) 0);
+        property.update(new Property(completeBytes.getByteArray()));
+        testTimestampComponent(property);
+    }
+
     @Test public void parseFailure() throws CommandParseException {
         // test bytes correct and components exist
         Bytes completeBytes = new Bytes("00001A" +
@@ -122,7 +134,8 @@ public class PropertyTest {
         assertTrue(property.getTimestampComponent() != null);
         assertTrue(property.getTimestampComponent().identifier == 0x02);
         assertTrue(TestUtils.dateIsSame(property.getTimestampComponent().getCalendar(), timestamp));
-        assertTrue(property.getTimestampComponent().getValueBytes().equals("00000160E0EA1388"));
+        // test that bytes are set in component
+        assertTrue(Property.getLong(property.getTimestampComponent().getValueBytes().getByteArray()) == 1515601925000L);
     }
 
     private void testFailureComponent(Property property, Bytes expectedBytes) {
@@ -147,21 +160,6 @@ public class PropertyTest {
             assertTrue(command.getBatteryCurrentAC().getComponent((byte) 0x01).equals(
                     "010003BF1999"));
             assertTrue(command.getBatteryCurrentDC().getValue() != null);
-        });
-    }
-
-    @Test public void testTimestampComponentFailedParsing() {
-        // timestamp expects 8 bytes
-        // 020006016A7810E89B < this one has 6 bytes
-        TestUtils.errorLogExpected(() -> {
-            ChargeState command = (ChargeState) CommandResolver.resolve(
-                    "002301" +
-                            "040010010004BF19999A" + "020006016A7810E89B" +
-                            "050007010004BF19999A");
-
-            assertTrue(command.getBatteryCurrentAC().getTimestamp() == null);
-            assertTrue(command.getBatteryCurrentAC().getComponent((byte) 0x02).equals(
-                    "020006016A7810E89B"));
         });
     }
 

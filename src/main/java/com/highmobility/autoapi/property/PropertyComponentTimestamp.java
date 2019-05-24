@@ -37,9 +37,7 @@ public class PropertyComponentTimestamp extends PropertyComponent {
 
     public PropertyComponentTimestamp(Bytes bytes) {
         super(bytes);
-        if (getLength() < 11) throw new IllegalArgumentException();
-        timestamp = Property.getCalendar(this, 3);
-
+        timestamp = Property.getCalendar(valueBytes);
     }
 
     public PropertyComponentTimestamp(Calendar timestamp) {

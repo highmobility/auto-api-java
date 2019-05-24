@@ -344,10 +344,14 @@ public class Property<T> extends Bytes {
     // MARK: ctor helpers
 
     public static long getLong(byte[] b, int at) throws IllegalArgumentException {
-        if (b.length - at < 8) throw new IllegalArgumentException();
+        return getLong(b, at, 8);
+    }
+
+    public static long getLong(byte[] b, int at, int length) throws IllegalArgumentException {
+        if (b.length - at < length) throw new IllegalArgumentException();
 
         long result = 0;
-        for (int i = at; i < at + 8; i++) {
+        for (int i = at; i < at + length; i++) {
             result <<= 8;
             result |= (b[i] & 0xFF);
         }
@@ -356,7 +360,7 @@ public class Property<T> extends Bytes {
     }
 
     public static long getLong(byte[] b) throws IllegalArgumentException {
-        return getLong(b, 0);
+        return getLong(b, 0, b.length);
     }
 
     public static byte[] longToBytes(long l) {
@@ -584,17 +588,18 @@ public class Property<T> extends Bytes {
     }
 
     public static Calendar getCalendar(byte[] bytes) throws IllegalArgumentException {
-        return getCalendar(bytes, 0);
-    }
-
-    public static Calendar getCalendar(Bytes bytes, int at) throws IllegalArgumentException {
-        return getCalendar(bytes.getByteArray(), at);
+        return getCalendar(bytes, 0, bytes.length);
     }
 
     public static Calendar getCalendar(byte[] bytes, int at) throws IllegalArgumentException {
-        Calendar c = new GregorianCalendar();
-        if (bytes.length >= at + PropertyComponentValue.CALENDAR_SIZE) {
-            long epoch = Property.getLong(bytes, at);
+        return getCalendar(bytes, at, PropertyComponentValue.CALENDAR_SIZE);
+    }
+
+    public static Calendar getCalendar(byte[] bytes, int at, int length) throws IllegalArgumentException {
+        Calendar c;
+        if (bytes.length >= at + length) {
+            c = new GregorianCalendar();
+            long epoch = Property.getLong(bytes, at, length);
             c.setTimeInMillis(epoch);
         } else {
             throw new IllegalArgumentException();
