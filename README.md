@@ -136,3 +136,10 @@ builder.setSignature(sig);
 // get the final bytes with signature
 Bytes command = builder.build();
 ```
+
+
+### Adding a new Capability
+* Add the Type in Identifier.java
+* If there is a getState and State, Add the type in to Type.java's stateCommands.  
+* Create Get/State commands. Copy these from previous ones like GetGasflapState and GasflapState
+* Create the tests. Copy this from previous FuelingTest.

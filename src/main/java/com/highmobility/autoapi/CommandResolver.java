@@ -430,6 +430,12 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, MobileState.TYPE)) {
                     command = new MobileState(bytes);
                 }
+            } else if (bytesAreForIdentifier(bytes, Identifier.HOOD)) {
+                if (bytesAreForType(bytes, GetHoodState.TYPE)) {
+                    command = new GetHoodState(bytes);
+                } else if (bytesAreForType(bytes, HoodState.TYPE)) {
+                    command = new HoodState(bytes);
+                }
             } else {
                 Command.logger.info("Unknown command " + commandToString(bytes) + ".. ");
             }

@@ -77,6 +77,7 @@ public enum Identifier {
     TACHOGRAPH(new byte[]{0x00, (byte) 0x64}),
     POWER_TAKE_OFF(new byte[]{0x00, (byte) 0x65}),
     MOBILE(new byte[]{0x00, (byte) 0x66}),
+    HOOD(new byte[]{0x00, (byte) 0x67}),
     USAGE(new byte[]{0x00, (byte) 0x68});
 
     public static Identifier fromBytes(byte[] bytes) {
