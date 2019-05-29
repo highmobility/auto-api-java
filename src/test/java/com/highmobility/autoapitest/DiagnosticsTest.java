@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class DiagnosticsTest {
     Bytes bytes = new Bytes(
             "003301" +
-                    "0100060100030249F0" +
+                    "010007010004000249F0" +
                     "0200050100020063" +
                     "030005010002003C" +
                     "04000501000209C4" +
