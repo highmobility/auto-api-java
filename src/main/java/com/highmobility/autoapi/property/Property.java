@@ -157,6 +157,10 @@ public class Property<T> extends Bytes {
 
     // MARK: incoming ctor
 
+    public Property(Bytes bytes) {
+        this(bytes.getByteArray());
+    }
+
     public Property(byte[] bytes) {
         if (bytes == null || bytes.length == 0) bytes = unknownBytes;
         if (bytes.length < 3) bytes = Arrays.copyOf(bytes, 3);
@@ -213,7 +217,8 @@ public class Property<T> extends Bytes {
                 this.value.setClass(valueClass);
             } catch (Exception e) {
                 Command.logger.warn("Property value in invalid format: {} > {}",
-                        p.value.valueBytes, valueClass.getSimpleName());
+                        p.value.valueBytes, valueClass.getSimpleName(), e);
+
             }
         }
 

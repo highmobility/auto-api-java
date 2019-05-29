@@ -1,6 +1,7 @@
 package com.highmobility.autoapitest;
 
 import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.DiagnosticsState;
 import com.highmobility.autoapi.GetDiagnosticsState;
@@ -192,6 +193,13 @@ public class DiagnosticsTest {
 
         Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof GetDiagnosticsState);
+    }
+
+    @Test public void troubleCodeWithZeroValues() throws CommandParseException {
+        Property prop = new Property(new Bytes("1D001001000400000000020006016A7CF2AEAD"));
+        Property<DiagnosticsTroubleCode> troubleCode =
+                new Property(DiagnosticsTroubleCode.class, prop);
+        assertTrue(troubleCode.getValue().getStatus().equals(""));
     }
 
     @Test public void build() {

@@ -61,7 +61,7 @@ public class DiagnosticsTroubleCode extends PropertyValueObject {
 
     @Override public void update(Bytes value) throws CommandParseException {
         super.update(value);
-        if (bytes.length < 5) throw new CommandParseException();
+        if (bytes.length < 4) throw new CommandParseException();
 
         this.numberOfOccurences = get(0);
 
