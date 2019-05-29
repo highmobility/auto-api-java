@@ -196,7 +196,7 @@ public class DiagnosticsTest {
     }
 
     @Test public void troubleCodeWithZeroValues() throws CommandParseException {
-        Property prop = new Property(new Bytes("1D001001000400000000020006016A7CF2AEAD"));
+        Property prop = new Property(new Bytes("1D001001000400000000020006016A7CF2AEAD").getByteArray());
         Property<DiagnosticsTroubleCode> troubleCode =
                 new Property(DiagnosticsTroubleCode.class, prop);
         assertTrue(troubleCode.getValue().getStatus().equals(""));

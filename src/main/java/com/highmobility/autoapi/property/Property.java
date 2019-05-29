@@ -157,10 +157,8 @@ public class Property<T> extends Bytes {
 
     // MARK: incoming ctor
 
-    public Property(Bytes bytes) {
-        this(bytes.getByteArray());
-    }
-
+    // cannot create Bytes ctor because it would overlap with some Bytes subclasses that need to use
+    // the class ctor.
     public Property(byte[] bytes) {
         if (bytes == null || bytes.length == 0) bytes = unknownBytes;
         if (bytes.length < 3) bytes = Arrays.copyOf(bytes, 3);
