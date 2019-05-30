@@ -430,14 +430,19 @@ public class CommandResolver {
                 } else if (bytesAreForType(bytes, MobileState.TYPE)) {
                     command = new MobileState(bytes);
                 }
+            } else if (bytesAreForIdentifier(bytes, Identifier.HOOD)) {
+                if (bytesAreForType(bytes, GetHoodState.TYPE)) {
+                    command = new GetHoodState(bytes);
+                } else if (bytesAreForType(bytes, HoodState.TYPE)) {
+                    command = new HoodState(bytes);
+                }
             } else {
                 Command.logger.info("Unknown command " + commandToString(bytes) + ".. ");
             }
         } catch (Exception e) {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
-            Command.logger.info("Failed to parse command " + commandToString(bytes));
-//            e.printStackTrace();
+            Command.logger.error("Failed to parse command {}", commandToString(bytes), e);
         }
 
         // The identifier was unknown or failed to parse. Return the base class.

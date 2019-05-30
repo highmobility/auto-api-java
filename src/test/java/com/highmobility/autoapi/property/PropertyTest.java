@@ -1,7 +1,7 @@
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.ChargeState;
 import com.highmobility.autoapi.ClimateState;
-import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.value.Capability;
@@ -52,6 +52,18 @@ public class PropertyTest {
         property.update(new Property(completeBytes.getByteArray()));
 
         testValueComponent(property, 1, ChargeMode.IMMEDIATE);
+        testTimestampComponent(property);
+    }
+
+    @Test public void parseValueWithTimestampLessThanEightBytesLong() throws CommandParseException {
+        // assert that bytes are parsed to the value/timestamp component
+
+        Bytes completeBytes = new Bytes("00000F" +
+                "01000100" + // value
+                "0200060160E0EA1388"); // timestamp 6 bytes
+
+        Property property = new Property(ChargeMode.class, (byte) 0);
+        property.update(new Property(completeBytes.getByteArray()));
         testTimestampComponent(property);
     }
 
@@ -122,7 +134,8 @@ public class PropertyTest {
         assertTrue(property.getTimestampComponent() != null);
         assertTrue(property.getTimestampComponent().identifier == 0x02);
         assertTrue(TestUtils.dateIsSame(property.getTimestampComponent().getCalendar(), timestamp));
-        assertTrue(property.getTimestampComponent().getValueBytes().equals("00000160E0EA1388"));
+        // test that bytes are set in component
+        assertTrue(Property.getLong(property.getTimestampComponent().getValueBytes().getByteArray()) == 1515601925000L);
     }
 
     private void testFailureComponent(Property property, Bytes expectedBytes) {
@@ -132,6 +145,37 @@ public class PropertyTest {
         assertTrue(failureComponent.getFailureDescription().equals("Try in 40s"));
         assertTrue(failureComponent.getFailureReason() == PropertyComponentFailure.Reason.RATE_LIMIT);
         assertTrue(property.equals(expectedBytes));
+    }
+
+    @Test public void testValueComponentFailedParsing() {
+        TestUtils.errorLogExpected(() -> {
+            // test if float expected but bytes are with smaller length
+            // charging with invalid length chargeCurrentAC. cannot parse to float
+            // correct chargeCurrentDC
+            ChargeState command = (ChargeState) CommandResolver.resolve(
+                    "002301" +
+                            "040006010003BF1999" +
+                            "050007010004BF19999A");
+            assertTrue(command.getBatteryCurrentAC().getValue() == null);
+            assertTrue(command.getBatteryCurrentAC().getComponent((byte) 0x01).equals(
+                    "010003BF1999"));
+            assertTrue(command.getBatteryCurrentDC().getValue() != null);
+        });
+    }
+
+    @Test public void testFailureComponentFailedParsing() {
+        // test if invalid failure reason
+        // 0x11 is invalid failure reason
+        TestUtils.errorLogExpected(() -> {
+            ChargeState command = (ChargeState) CommandResolver.resolve(
+                    "002301" +
+                            "040016010004BF19999A" + "03000C110A54727920696e20343073" +
+                            "050007010004BF19999A");
+
+            assertTrue(command.getBatteryCurrentAC().getFailureComponent() == null);
+            assertTrue(command.getBatteryCurrentAC().getComponent((byte) 0x03).equals(
+                    "03000C110A54727920696e20343073"));
+        });
     }
 
     @Test public void buildFailure() {
@@ -247,6 +291,4 @@ public class PropertyTest {
         capabilityProperty.update(bytes);
         assertTrue(capabilityProperty.isSupported(ClimateState.TYPE));
     }
-
-
 }

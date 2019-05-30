@@ -83,6 +83,9 @@ public class Property<T> extends Bytes {
     @Nullable protected PropertyComponentValue<T> value;
     @Nullable protected PropertyComponentTimestamp timestamp;
     @Nullable protected PropertyComponentFailure failure;
+
+    protected PropertyComponent[] components;
+
     private Class<T> valueClass = null;
 
     public byte getPropertyIdentifier() {
@@ -94,6 +97,25 @@ public class Property<T> extends Bytes {
      */
     @Nullable public T getValue() {
         return value != null ? value.getValue() : null;
+    }
+
+    /**
+     * @return All of the components.
+     */
+    public PropertyComponent[] getComponents() {
+        return components;
+    }
+
+    /**
+     * @param identifier The component identifier.
+     * @return The component with the given identifier.
+     */
+    @Nullable public PropertyComponent getComponent(byte identifier) {
+        for (int i = 0; i < components.length; i++) {
+            PropertyComponent component = components[i];
+            if (component.getIdentifier() == identifier) return component;
+        }
+        return null;
     }
 
     /**
@@ -135,6 +157,8 @@ public class Property<T> extends Bytes {
 
     // MARK: incoming ctor
 
+    // cannot create Bytes ctor because it would overlap with some Bytes subclasses that need to use
+    // the class ctor.
     public Property(byte[] bytes) {
         if (bytes == null || bytes.length == 0) bytes = unknownBytes;
         if (bytes.length < 3) bytes = Arrays.copyOf(bytes, 3);
@@ -143,32 +167,40 @@ public class Property<T> extends Bytes {
     }
 
     protected void findComponents() {
+        ArrayList<PropertyComponent> builder = new ArrayList<>();
 
         for (int i = 3; i < bytes.length; i++) {
             int size = getUnsignedInt(bytes, i + 1, 2);
             byte componentIdentifier = bytes[i];
+            Bytes componentBytes = getRange(i, i + 3 + size);
 
             try {
                 switch (componentIdentifier) {
                     case 0x01:
                         // value component
-                        value = new PropertyComponentValue(getRange(i, i + 3 + size));
+                        value = new PropertyComponentValue(componentBytes);
+                        builder.add(value);
                         break;
                     case 0x02:
                         // timestamp component
-                        timestamp = new PropertyComponentTimestamp(getRange(i, i + 3 + size));
+                        timestamp = new PropertyComponentTimestamp(componentBytes);
+                        builder.add(timestamp);
                         break;
                     case 0x03:
                         // failure component
-                        failure = new PropertyComponentFailure(getRange(i, i + 3 + size));
+                        failure = new PropertyComponentFailure(componentBytes);
+                        builder.add(failure);
                         break;
                 }
-            } catch (CommandParseException e) {
-                printFailedToParse(e);
+            } catch (Exception e) {
+                builder.add(new PropertyComponent(componentBytes));
+                printFailedToParse(e, componentBytes);
             }
 
             i += size + 2;
         }
+
+        components = builder.toArray(new PropertyComponent[0]);
     }
 
     public Property update(Property p) throws CommandParseException {
@@ -178,10 +210,19 @@ public class Property<T> extends Bytes {
         this.bytes = p.getByteArray();
 
         this.value = p.value;
-        if (this.value != null) this.value.setClass(valueClass);
+        if (this.value != null) {
+            try {
+                this.value.setClass(valueClass);
+            } catch (Exception e) {
+                Command.logger.warn("Property value in invalid format: {} > {}",
+                        p.value.valueBytes, valueClass.getSimpleName(), e);
+
+            }
+        }
 
         this.timestamp = p.timestamp;
         this.failure = p.failure;
+        this.components = p.components;
 
         return this;
     }
@@ -282,10 +323,13 @@ public class Property<T> extends Bytes {
                 propertyIdentifier == Command.TIMESTAMP_IDENTIFIER;
     }
 
-    public void printFailedToParse(Exception e) {
-        Command.logger.info("Failed to parse property: " + toString() + (e != null ? (". " + e
-                .getClass().getSimpleName() + ": " + e.getMessage()) : ""));
-//        e.printStackTrace();
+    public void printFailedToParse(Exception e, Bytes component) {
+        String componentString = (component != null ? " | Component " + component : "");
+
+        String exceptionString = (e != null ?
+                (" | " + e.getClass().getSimpleName() + ": " + e.getMessage()) : "");
+
+        Command.logger.error("Failed to parse property: " + toString() + componentString + exceptionString, e);
     }
 
     // MARK: Helpers
@@ -302,10 +346,14 @@ public class Property<T> extends Bytes {
     // MARK: ctor helpers
 
     public static long getLong(byte[] b, int at) throws IllegalArgumentException {
-        if (b.length - at < 8) throw new IllegalArgumentException();
+        return getLong(b, at, 8);
+    }
+
+    public static long getLong(byte[] b, int at, int length) throws IllegalArgumentException {
+        if (b.length - at < length) throw new IllegalArgumentException();
 
         long result = 0;
-        for (int i = at; i < at + 8; i++) {
+        for (int i = at; i < at + length; i++) {
             result <<= 8;
             result |= (b[i] & 0xFF);
         }
@@ -314,7 +362,7 @@ public class Property<T> extends Bytes {
     }
 
     public static long getLong(byte[] b) throws IllegalArgumentException {
-        return getLong(b, 0);
+        return getLong(b, 0, b.length);
     }
 
     public static byte[] longToBytes(long l) {
@@ -542,17 +590,18 @@ public class Property<T> extends Bytes {
     }
 
     public static Calendar getCalendar(byte[] bytes) throws IllegalArgumentException {
-        return getCalendar(bytes, 0);
-    }
-
-    public static Calendar getCalendar(Bytes bytes, int at) throws IllegalArgumentException {
-        return getCalendar(bytes.getByteArray(), at);
+        return getCalendar(bytes, 0, bytes.length);
     }
 
     public static Calendar getCalendar(byte[] bytes, int at) throws IllegalArgumentException {
-        Calendar c = new GregorianCalendar();
-        if (bytes.length >= at + PropertyComponentValue.CALENDAR_SIZE) {
-            long epoch = Property.getLong(bytes, at);
+        return getCalendar(bytes, at, PropertyComponentValue.CALENDAR_SIZE);
+    }
+
+    public static Calendar getCalendar(byte[] bytes, int at, int length) throws IllegalArgumentException {
+        Calendar c;
+        if (bytes.length >= at + length) {
+            c = new GregorianCalendar();
+            long epoch = Property.getLong(bytes, at, length);
             c.setTimeInMillis(epoch);
         } else {
             throw new IllegalArgumentException();

@@ -71,6 +71,7 @@ public class Type {
         stateCommands.put(GetWeatherConditions.TYPE, WeatherConditions.TYPE);
         stateCommands.put(GetWifiState.TYPE, WifiState.TYPE);
         stateCommands.put(GetWindowsState.TYPE, WindowsState.TYPE);
+        stateCommands.put(GetHoodState.TYPE, HoodState.TYPE);
         stateCommands.put(GetWindscreenState.TYPE, WindscreenState.TYPE);
     }
 

@@ -18,32 +18,19 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi;
 
-import com.highmobility.value.Bytes;
+/**
+ * Get the hood state of the car. The car will respond with the Hood State message.
+ */
+public class GetHoodState extends Command {
+    public static final Type TYPE = new Type(Identifier.HOOD, 0x00);
 
-import java.util.Calendar;
-
-public class PropertyComponentTimestamp extends PropertyComponent {
-    private static final byte IDENTIFIER = 0x02;
-    private Calendar timestamp;
-
-    /**
-     * @return The timestamp calendar.
-     */
-    public Calendar getCalendar() {
-        return timestamp;
+    public GetHoodState() {
+        super(TYPE);
     }
 
-    public PropertyComponentTimestamp(Bytes bytes) {
+    GetHoodState(byte[] bytes) {
         super(bytes);
-        timestamp = Property.getCalendar(valueBytes);
-    }
-
-    public PropertyComponentTimestamp(Calendar timestamp) {
-        super(IDENTIFIER, PropertyComponentValue.CALENDAR_SIZE);
-        this.timestamp = timestamp;
-        valueBytes = new Bytes(Property.calendarToBytes(timestamp));
-        set(3, valueBytes);
     }
 }

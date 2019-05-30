@@ -69,8 +69,8 @@ public class Usage extends Command {
             IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION);
     private Property<Float> lastTripFuelConsumption = new Property(Float.class,
             IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION);
-    private Property<Float> mileageAfterLastTrip = new Property(Float.class,
-            IDENTIFIER_MILEAGE_AFTER_LAST_TRIP);
+    private PropertyInteger mileageAfterLastTrip =
+            new PropertyInteger(IDENTIFIER_MILEAGE_AFTER_LAST_TRIP, false);
     private Property<Double> lastTripElectricPortion =
             new Property(Double.class, IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION);
     private Property<Float> lastTripAverageEnergyRecuperation =
@@ -173,7 +173,7 @@ public class Usage extends Command {
     /**
      * @return The mileage after the last trip in km.
      */
-    public Property<Float> getMileageAfterLastTrip() {
+    public Property<Integer> getMileageAfterLastTrip() {
         return mileageAfterLastTrip;
     }
 
@@ -311,7 +311,7 @@ public class Usage extends Command {
         private List<Property> drivingModeEnergyConsumptions = new ArrayList<>();
         private Property<Float> lastTripEnergyConsumption;
         private Property<Float> lastTripFuelConsumption;
-        private Property<Float> mileageAfterLastTrip;
+        private PropertyInteger mileageAfterLastTrip;
         private Property<Double> lastTripElectricPortion;
         private Property<Float> lastTripAverageEnergyRecuperation;
         private Property<Double> lastTripBatteryRemaining;
@@ -434,9 +434,9 @@ public class Usage extends Command {
          * @param mileageAfterLastTrip The mileage after last trip.
          * @return The builder.
          */
-        public Builder setMileageAfterLastTrip(Property<Float> mileageAfterLastTrip) {
-            this.mileageAfterLastTrip = mileageAfterLastTrip;
-            addProperty(mileageAfterLastTrip.setIdentifier(IDENTIFIER_MILEAGE_AFTER_LAST_TRIP));
+        public Builder setMileageAfterLastTrip(Property<Integer> mileageAfterLastTrip) {
+            this.mileageAfterLastTrip = new PropertyInteger(IDENTIFIER_MILEAGE_AFTER_LAST_TRIP, false, 4, mileageAfterLastTrip);
+            addProperty(this.mileageAfterLastTrip);
             return this;
         }
 

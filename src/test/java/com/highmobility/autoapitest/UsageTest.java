@@ -67,7 +67,7 @@ public class UsageTest {
 
         assertTrue(state.getLastTripEnergyConsumption().getValue() == 101.3f);
         assertTrue(state.getLastTripFuelConsumption().getValue() == 22.5f);
-        assertTrue(state.getMileageAfterLastTrip().getValue() == 95632.7f);
+        assertTrue(state.getMileageAfterLastTrip().getValue() == 1203423322);
         assertTrue(state.getLastTripElectricPortion().getValue() == .7d);
         assertTrue(state.getLastTripAverageEnergyRecuperation().getValue() == 5.68f);
         assertTrue(state.getLastTripBatteryRemaining().getValue() == .5d);
@@ -93,7 +93,7 @@ public class UsageTest {
 
         builder.setLastTripEnergyConsumption(new Property(101.3f));
         builder.setLastTripFuelConsumption(new Property(22.5f));
-        builder.setMileageAfterLastTrip(new Property(95632.7f));
+        builder.setMileageAfterLastTrip(new Property(1203423322));
         builder.setLastTripElectricPortion(new Property(.7d));
         builder.setLastTripAverageEnergyRecuperation(new Property(5.68f));
         builder.setLastTripBatteryRemaining(new Property(.5d));

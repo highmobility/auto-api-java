@@ -531,7 +531,7 @@ public class DiagnosticsState extends Command {
          * @return The builder.
          */
         public Builder setMileage(Property<Integer> mileage) {
-            this.mileage = new PropertyInteger(IDENTIFIER_MILEAGE, false, 3, mileage);
+            this.mileage = new PropertyInteger(IDENTIFIER_MILEAGE, false, 4, mileage);
             addProperty(this.mileage);
             return this;
         }

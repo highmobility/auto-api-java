@@ -51,7 +51,6 @@ public class VehicleStatus extends Command {
     private static final byte IDENTIFIER_POWER = 0x09;
     private static final byte IDENTIFIER_NUMBER_OF_DOORS = 0x0A;
     private static final byte IDENTIFIER_NUMBER_OF_SEATS = 0x0B;
-    private static final byte COMMAND_IDENTIFIER = (byte) 0x99;
 
     private static final byte IDENTIFIER_ENGINE_VOLUME = 0x0C;
     private static final byte IDENTIFIER_MAX_TORQUE = 0x0D;
@@ -272,7 +271,7 @@ public class VehicleStatus extends Command {
                         return numberOfDoors.update(p);
                     case IDENTIFIER_NUMBER_OF_SEATS:
                         return numberOfSeats.update(p);
-                    case COMMAND_IDENTIFIER:
+                    case IDENTIFIER_STATE:
                         Property<Command> command = new Property(Command.class, p);
                         states.add(command);
                         return command;

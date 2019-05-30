@@ -186,13 +186,6 @@ public class VehicleStatusTest {
         assertTrue(status.getSignature().equals(signature));
     }
 
-    @Test public void maiduTestTwo() {
-        Bytes bytes = new Bytes
-                ("00110131484D31363241363748333232393645460208757573206175746F21452D436C61737320436F6D666F7274202620506572736F6E616C69736174696F6E000400230800001C50BF19999A00330B000BB8001200000000500000200D04000001010001020001030001003008425210E741561BEA");
-        Command command = CommandResolver.resolve(bytes);
-        assertTrue(((Command) command).getProperties().length != 0);
-    }
-
     @Test public void testInvalidProperty() {
         Bytes bytes = new Bytes
                 ("001101" +
@@ -211,7 +204,7 @@ public class VehicleStatusTest {
             // one window property will fail to parse
             WindowsState ws = (WindowsState) vs.getState(WindowsState.TYPE).getValue();
             assertTrue(ws.getProperties().length == 5);
-            assertTrue(ws.getWindowPositions().length == 2);
+            assertTrue(ws.getWindowPositions().length == 3);
         });
     }
 
