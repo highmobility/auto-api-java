@@ -237,28 +237,6 @@ public class Command extends Bytes {
         propertyIterator = new PropertyIterator();
     }
 
-    protected void createBytes(Identifier identifier, Type type, List<Property> properties) {
-        Bytes builder = new Bytes(3);
-        builder.set(0, identifier.getBytes());
-        builder.set(2, type.getByte());
-
-        if (propertiesExpected() && properties.size() == 0) throw new IllegalArgumentException();
-
-        for (int i = 0; i < properties.size(); i++) {
-            builder = builder.concat(properties.get(i));
-        }
-
-        bytes = builder.getByteArray();
-    }
-
-    protected void createBytes(Identifier identifier, Type type, Property property) {
-        Bytes builder = new Bytes(3);
-        builder.set(0, identifier.getBytes());
-        builder.set(2, type.getByte());
-
-        bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
-    }
-
     Command(Builder builder) throws IllegalArgumentException {
         super();
         type = Type.SET;

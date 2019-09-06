@@ -1,33 +1,18 @@
-/*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
- */
-
+// TODO: license
 package com.highmobility.autoapi.v2;
 /**
- * GetDiagnosticsState
+ * Get all diagnostics properties.
  */
 public class GetDiagnosticsState extends GetCommand {
     public GetDiagnosticsState() {
-        super(Identifier.DIAGNOSTICS);
+        super(Identifier.DIAGNOSTICS, getStateIdentifiers());
     }
 
     GetDiagnosticsState(byte[] bytes) {
         super(bytes);
+    }
+
+    public static byte[] getStateIdentifiers() {
+        return new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e };
     }
 }

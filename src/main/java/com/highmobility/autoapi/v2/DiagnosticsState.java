@@ -380,7 +380,7 @@ public class DiagnosticsState extends Command {
             addProperty(mileage);
             return this;
         }
-
+        
         /**
          * @param engineOilTemperature Engine oil temperature in Celsius, whereas can be negative
          * @return The builder
@@ -390,7 +390,7 @@ public class DiagnosticsState extends Command {
             addProperty(engineOilTemperature);
             return this;
         }
-
+        
         /**
          * @param speed The vehicle speed in km/h, whereas can be negative
          * @return The builder
@@ -400,7 +400,7 @@ public class DiagnosticsState extends Command {
             addProperty(speed);
             return this;
         }
-
+        
         /**
          * @param engineRPM Engine RPM (revolutions per minute)
          * @return The builder
@@ -410,7 +410,7 @@ public class DiagnosticsState extends Command {
             addProperty(engineRPM);
             return this;
         }
-
+        
         /**
          * @param fuelLevel Fuel level percentage between 0.0-1.0
          * @return The builder
@@ -420,7 +420,7 @@ public class DiagnosticsState extends Command {
             addProperty(fuelLevel);
             return this;
         }
-
+        
         /**
          * @param estimatedRange Estimated range (with combustion engine)
          * @return The builder
@@ -430,7 +430,7 @@ public class DiagnosticsState extends Command {
             addProperty(estimatedRange);
             return this;
         }
-
+        
         /**
          * @param washerFluidLevel The washer fluid level
          * @return The builder
@@ -440,7 +440,7 @@ public class DiagnosticsState extends Command {
             addProperty(washerFluidLevel);
             return this;
         }
-
+        
         /**
          * @param batteryVoltage Battery voltage per IEEE 754 formatting
          * @return The builder
@@ -450,7 +450,7 @@ public class DiagnosticsState extends Command {
             addProperty(batteryVoltage);
             return this;
         }
-
+        
         /**
          * @param adBlueLevel AdBlue level in liters formatted in 4-bytes per IEEE 754 formatting
          * @return The builder
@@ -460,7 +460,7 @@ public class DiagnosticsState extends Command {
             addProperty(adBlueLevel);
             return this;
         }
-
+        
         /**
          * @param distanceSinceReset The distance driven in km since reset
          * @return The builder
@@ -470,7 +470,7 @@ public class DiagnosticsState extends Command {
             addProperty(distanceSinceReset);
             return this;
         }
-
+        
         /**
          * @param distanceSinceStart The distance driven in km since trip start
          * @return The builder
@@ -480,7 +480,7 @@ public class DiagnosticsState extends Command {
             addProperty(distanceSinceStart);
             return this;
         }
-
+        
         /**
          * @param fuelVolume The fuel volume measured in liters formatted in 4-bytes per IEEE 754 formatting
          * @return The builder
@@ -490,7 +490,7 @@ public class DiagnosticsState extends Command {
             addProperty(fuelVolume);
             return this;
         }
-
+        
         /**
          * @param antiLockBraking The anti lock braking
          * @return The builder
@@ -500,7 +500,7 @@ public class DiagnosticsState extends Command {
             addProperty(antiLockBraking);
             return this;
         }
-
+        
         /**
          * @param engineCoolantTemperature Engine coolant temperature in Celsius, whereas can be negative
          * @return The builder
@@ -510,7 +510,7 @@ public class DiagnosticsState extends Command {
             addProperty(engineCoolantTemperature);
             return this;
         }
-
+        
         /**
          * @param engineTotalOperatingHours The accumulated time of engine operation per IEEE 754 formatting
          * @return The builder
@@ -520,7 +520,7 @@ public class DiagnosticsState extends Command {
             addProperty(engineTotalOperatingHours);
             return this;
         }
-
+        
         /**
          * @param engineTotalFuelConsumption The accumulated lifespan fuel consumption in liters per IEEE 754 formatting
          * @return The builder
@@ -530,7 +530,7 @@ public class DiagnosticsState extends Command {
             addProperty(engineTotalFuelConsumption);
             return this;
         }
-
+        
         /**
          * @param brakeFluidLevel The brake fluid level
          * @return The builder
@@ -540,7 +540,7 @@ public class DiagnosticsState extends Command {
             addProperty(brakeFluidLevel);
             return this;
         }
-
+        
         /**
          * @param engineTorque Current engine torque percentage between 0.0-1.0
          * @return The builder
@@ -550,7 +550,7 @@ public class DiagnosticsState extends Command {
             addProperty(engineTorque);
             return this;
         }
-
+        
         /**
          * @param engineLoad Current engine load percentage between 0.0-1.0
          * @return The builder
@@ -560,7 +560,7 @@ public class DiagnosticsState extends Command {
             addProperty(engineLoad);
             return this;
         }
-
+        
         /**
          * @param wheelBasedSpeed The vehicle speed in km/h measured at the wheel base, whereas can be negative
          * @return The builder
@@ -570,7 +570,7 @@ public class DiagnosticsState extends Command {
             addProperty(wheelBasedSpeed);
             return this;
         }
-
+        
         /**
          * @param batteryLevel Battery level in %, value between 0.0 and 1.0
          * @return The builder
@@ -580,10 +580,10 @@ public class DiagnosticsState extends Command {
             addProperty(batteryLevel);
             return this;
         }
-
+        
         /**
          * Add an array of check control messages.
-         *
+         * 
          * @param checkControlMessages The check control messages
          * @return The builder
          */
@@ -592,13 +592,13 @@ public class DiagnosticsState extends Command {
             for (int i = 0; i < checkControlMessages.length; i++) {
                 addCheckControlMessage(checkControlMessages[i]);
             }
-
+        
             return this;
         }
-
+        
         /**
          * Add a single check control message.
-         *
+         * 
          * @param checkControlMessage The check control message
          * @return The builder
          */
@@ -608,10 +608,10 @@ public class DiagnosticsState extends Command {
             checkControlMessages.add(checkControlMessage);
             return this;
         }
-
+        
         /**
          * Add an array of tire pressures.
-         *
+         * 
          * @param tirePressures The tire pressures
          * @return The builder
          */
@@ -620,13 +620,13 @@ public class DiagnosticsState extends Command {
             for (int i = 0; i < tirePressures.length; i++) {
                 addTirePressure(tirePressures[i]);
             }
-
+        
             return this;
         }
-
+        
         /**
          * Add a single tire pressure.
-         *
+         * 
          * @param tirePressure The tire pressure
          * @return The builder
          */
@@ -636,10 +636,10 @@ public class DiagnosticsState extends Command {
             tirePressures.add(tirePressure);
             return this;
         }
-
+        
         /**
          * Add an array of tire temperatures.
-         *
+         * 
          * @param tireTemperatures The tire temperatures
          * @return The builder
          */
@@ -648,13 +648,13 @@ public class DiagnosticsState extends Command {
             for (int i = 0; i < tireTemperatures.length; i++) {
                 addTireTemperature(tireTemperatures[i]);
             }
-
+        
             return this;
         }
-
+        
         /**
          * Add a single tire temperature.
-         *
+         * 
          * @param tireTemperature The tire temperature
          * @return The builder
          */
@@ -664,10 +664,10 @@ public class DiagnosticsState extends Command {
             tireTemperatures.add(tireTemperature);
             return this;
         }
-
+        
         /**
          * Add an array of wheel rpms.
-         *
+         * 
          * @param wheelRPMs The wheel rpms
          * @return The builder
          */
@@ -676,13 +676,13 @@ public class DiagnosticsState extends Command {
             for (int i = 0; i < wheelRPMs.length; i++) {
                 addWheelRPM(wheelRPMs[i]);
             }
-
+        
             return this;
         }
-
+        
         /**
          * Add a single wheel rpm.
-         *
+         * 
          * @param wheelRPM The wheel rpm
          * @return The builder
          */
@@ -692,10 +692,10 @@ public class DiagnosticsState extends Command {
             wheelRPMs.add(wheelRPM);
             return this;
         }
-
+        
         /**
          * Add an array of trouble codes.
-         *
+         * 
          * @param troubleCodes The trouble codes
          * @return The builder
          */
@@ -704,13 +704,13 @@ public class DiagnosticsState extends Command {
             for (int i = 0; i < troubleCodes.length; i++) {
                 addTroubleCode(troubleCodes[i]);
             }
-
+        
             return this;
         }
-
+        
         /**
          * Add a single trouble code.
-         *
+         * 
          * @param troubleCode The trouble code
          * @return The builder
          */
@@ -720,7 +720,7 @@ public class DiagnosticsState extends Command {
             troubleCodes.add(troubleCode);
             return this;
         }
-
+        
         /**
          * @param mileageMeters The car mileage (odometer) in meters
          * @return The builder
