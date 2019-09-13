@@ -1,7 +1,10 @@
 package com.highmobility.autoapi.v2;
 
 import com.highmobility.autoapi.v2.property.Property;
+import com.highmobility.value.Bytes;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 class SetCommand extends Command {
@@ -46,11 +49,71 @@ class SetCommand extends Command {
         super(bytes);
     }
 
-    public SetCommand(Command.Builder builder) {
-        super(builder);
+    public SetCommand(Builder builder) {
+        super(builder.identifier, Type.SET, builder.propertiesBuilder.toArray(new Property[0]));
     }
 
     @Override protected boolean propertiesExpected() {
         return true;
+    }
+
+    public static class Builder {
+        private Identifier identifier;
+
+        private Bytes nonce;
+        private Bytes signature;
+        private Calendar timestamp;
+
+        protected ArrayList<Property> propertiesBuilder = new ArrayList<>();
+
+        public Builder(Identifier identifier) {
+            this.identifier = identifier;
+        }
+
+        public Builder addProperty(Property property) {
+            propertiesBuilder.add(property);
+            return this;
+        }
+
+        /**
+         * @param nonce The nonce used for the signature.
+         * @return The nonce.
+         */
+        public Builder setNonce(Bytes nonce) {
+            this.nonce = nonce;
+            addProperty(new Property(NONCE_IDENTIFIER, nonce));
+            return this;
+        }
+
+        /**
+         * @param signature The signature for the signed bytes(the whole command except the
+         *                  signature property)
+         * @return The builder.
+         */
+        public Builder setSignature(Bytes signature) {
+            this.signature = signature;
+            addProperty(new Property(SIGNATURE_IDENTIFIER,
+                    signature));
+            return this;
+        }
+
+        /**
+         * @param timestamp The timestamp of when the data was transmitted from the car.
+         * @return The builder.
+         */
+        public Builder setTimestamp(Calendar timestamp) {
+            this.timestamp = timestamp;
+            addProperty(new Property(TIMESTAMP_IDENTIFIER,
+                    timestamp));
+            return this;
+        }
+
+        protected SetCommand build() {
+            return new SetCommand(this);
+        }
+
+        protected Property[] getProperties() {
+            return propertiesBuilder.toArray(new Property[0]);
+        }
     }
 }

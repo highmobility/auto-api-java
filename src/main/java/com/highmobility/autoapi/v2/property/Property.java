@@ -20,10 +20,10 @@
 
 package com.highmobility.autoapi.v2.property;
 
-import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.Identifier;
-import com.highmobility.autoapi.exception.ParseException;
+import com.highmobility.autoapi.v2.Command;
+import com.highmobility.autoapi.v2.CommandParseException;
+import com.highmobility.autoapi.v2.Identifier;
+import com.highmobility.autoapi.v2.exception.ParseException;
 import com.highmobility.value.Bytes;
 
 import java.io.UnsupportedEncodingException;
@@ -178,7 +178,7 @@ public class Property<T> extends Bytes {
                 switch (componentIdentifier) {
                     case 0x01:
                         // value component
-                        value = new PropertyComponentValue(componentBytes);
+                        value = new PropertyComponentValue(componentBytes, valueClass);
                         builder.add(value);
                         break;
                     case 0x02:
@@ -241,12 +241,16 @@ public class Property<T> extends Bytes {
 
     // MARK: internal ctor
 
+    public Property(int identifier, T value) {
+        this((byte) identifier, value);
+    }
+
     public Property(byte identifier, T value) {
         update(identifier, value, null, null);
     }
 
     public Property(Class<T> valueClass, int identifier) {
-        this(valueClass, ((byte)identifier));
+        this(valueClass, ((byte) identifier));
     }
 
     public Property(Class<T> valueClass, byte identifier) {
@@ -264,6 +268,16 @@ public class Property<T> extends Bytes {
 
     public Property update(T value) {
         return update(bytes[0], value, null, null);
+    }
+
+    public Property addValueComponent(Bytes valueComponentBytes) {
+        try {
+            this.value = new PropertyComponentValue(valueComponentBytes, valueClass);
+        } catch (CommandParseException e) {
+            throw new IllegalArgumentException();
+        }
+        createBytesFromComponents(getPropertyIdentifier());
+        return this;
     }
 
     private Property update(byte identifier,
@@ -321,7 +335,7 @@ public class Property<T> extends Bytes {
     }
 
     public Property setIdentifier(int identifier) {
-        setIdentifier((byte)identifier);
+        setIdentifier((byte) identifier);
         return this;
     }
 

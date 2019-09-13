@@ -20,10 +20,10 @@
 
 package com.highmobility.autoapi.v2.property;
 
-import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.v2.Command;
+import com.highmobility.autoapi.v2.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.Identifier;
+import com.highmobility.autoapi.v2.Identifier;
 import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
@@ -52,8 +52,9 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         super(identifier, valueSize);
     }
 
-    PropertyComponentValue(Bytes value) {
+    PropertyComponentValue(Bytes value, Class<T> valueClass) throws CommandParseException {
         super(value);
+        if (valueClass != null) setClass(valueClass);
     }
 
     PropertyComponentValue(T value) {
@@ -97,6 +98,8 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         } else if (Byte.class.isAssignableFrom(valueClass)) {
             value = (T) valueBytes.get(0);
         }
+
+        this.valueClass = valueClass;
     }
 
     public static Bytes getBytes(Object value) {

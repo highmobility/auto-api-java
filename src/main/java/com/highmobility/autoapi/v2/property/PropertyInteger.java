@@ -20,7 +20,7 @@
 
 package com.highmobility.autoapi.v2.property;
 
-import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.v2.CommandParseException;
 import com.highmobility.value.Bytes;
 
 import javax.annotation.Nullable;

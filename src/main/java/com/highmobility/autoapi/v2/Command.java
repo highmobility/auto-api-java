@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -68,6 +67,10 @@ public class Command extends Bytes {
         this.identifier = identifier;
     }
 
+    protected Command() {
+        super();
+    }
+
     /**
      * @return The nonce for the signature.
      */
@@ -99,7 +102,7 @@ public class Command extends Bytes {
     /**
      * States are commands that describe some properties of the vehicle. They are usually returned
      * after the state changes, as a response for a get command or as a state in {@link
-     * VehicleStatus#getStates()}.
+     * VehicleStatusState#getStates()}.
      * <p>
      * States can have 0 or more properties.
      *
@@ -129,17 +132,13 @@ public class Command extends Bytes {
         return null;
     }
 
-    /*public Type getType() {
+    public Type getType() {
         return type;
-    }*/
+    }
 
-//    /**
-//     * @param type The command value to compare this command with.
-//     * @return True if the command has the given commandType.
-//     */
-//    public boolean is(Type type) {
-//        return type.equals(this.type);
-//    }
+    Command(Bytes bytes) {
+        this(bytes.getByteArray());
+    }
 
     Command(byte[] bytes) {
         super(bytes);
@@ -163,22 +162,22 @@ public class Command extends Bytes {
         }
 
         // find universal properties
-        findUniversalProperties(identifier, builder.toArray(new Property[0]), false);
+        findUniversalProperties(identifier, type, builder.toArray(new Property[0]));
     }
 
-//    Command(Type type, Property[] properties) {
-//        this(type.getIdentifierAndType());
-//        this.type = type;
-//        // here there are no timestamps. This constructor is called from setter commands only.
-//        findUniversalProperties(properties, true);
-//    }
+    Command(Identifier identifier, Type type, Property[] properties) {
+        this(null); // bytes will be created in findUniversalProperties
+        this.type = type;
+        // here there are no timestamps. This constructor is called from setter commands only.
+        findUniversalProperties(identifier, type, properties, true);
+    }
 //
 //    Command(Type type) {
 //        super(type.getIdentifierAndType());
 //        this.type = type;
 //    }
 
-//    Command(Type type, List<Property> properties) {
+    //    Command(Type type, List<Property> properties) {
 //        this(type, properties.toArray(new Property[0]));
 //    }
 //
@@ -193,15 +192,19 @@ public class Command extends Bytes {
 
             identifier = Identifier.fromBytes(firstByte, secondByte);
             type = Type.fromByte(thirdByte);
-
         } else {
             identifier = Identifier.fromBytes(bytes);
             type = Type.fromByte(bytes[3]);
         }
     }
 
-    private void findUniversalProperties(Identifier identifier, Property[] properties,
-                                         boolean createBytes) {
+    protected void findUniversalProperties(Identifier identifier, Type type,
+                                           Property[] properties) {
+        findUniversalProperties(identifier, type, properties, false);
+    }
+
+    protected void findUniversalProperties(Identifier identifier, Type type, Property[] properties,
+                                           boolean createBytes) {
         if (propertiesExpected() && (properties == null || properties.length == 0))
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
@@ -235,68 +238,6 @@ public class Command extends Bytes {
 
         // iterator is used by subclass
         propertyIterator = new PropertyIterator();
-    }
-
-    Command(Builder builder) throws IllegalArgumentException {
-        super();
-        type = Type.SET;
-        findUniversalProperties(builder.identifier, builder.getProperties(), true);
-    }
-
-    public static class Builder {
-        private Identifier identifier;
-        private Bytes nonce;
-        private Bytes signature;
-        private Calendar timestamp;
-        protected ArrayList<Property> propertiesBuilder = new ArrayList<>();
-
-        public Builder(Identifier identifier) {
-            this.identifier = identifier;
-        }
-
-        public Builder addProperty(Property property) {
-            propertiesBuilder.add(property);
-            return this;
-        }
-
-        /**
-         * @param nonce The nonce used for the signature.
-         * @return The nonce.
-         */
-        public Builder setNonce(Bytes nonce) {
-            this.nonce = nonce;
-            addProperty(new Property(NONCE_IDENTIFIER, nonce));
-            return this;
-        }
-
-        /**
-         * @param signature The signature for the signed bytes(the whole command except the
-         *                  signature property)
-         * @return The builder.
-         */
-        public Builder setSignature(Bytes signature) {
-            this.signature = signature;
-            addProperty(new Property(SIGNATURE_IDENTIFIER, signature));
-            return this;
-        }
-
-        /**
-         * @param timestamp The timestamp of when the data was transmitted from the car.
-         * @return The builder.
-         */
-        public Builder setTimestamp(Calendar timestamp) {
-            this.timestamp = timestamp;
-            addProperty(new Property(TIMESTAMP_IDENTIFIER, timestamp));
-            return this;
-        }
-
-        public Command build() {
-            return new Command(this);
-        }
-
-        protected Property[] getProperties() {
-            return propertiesBuilder.toArray(new Property[0]);
-        }
     }
 
     // Used to catch the property parsing exception, managing parsed properties in this class.
