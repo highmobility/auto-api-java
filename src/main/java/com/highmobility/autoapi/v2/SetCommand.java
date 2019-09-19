@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.List;
 
 class SetCommand extends Command {
+    ArrayList<Property> propertiesBuilder;
+
     SetCommand(Identifier identifier) {
         super(identifier, 3);
 
@@ -23,9 +25,22 @@ class SetCommand extends Command {
         set(3, propertyIdentifiers);
     }*/
 
+    /**
+     * Used in SetCommands, to create the bytes and base properties.
+     */
     protected void addProperty(Property property) {
-        concat(property);
-        // TODO: 04/09/2019 should add to base properties as well
+        if (property.getValueComponent() == null) return;
+        if (propertiesBuilder == null) propertiesBuilder = new ArrayList();
+        propertiesBuilder.add(property);
+    }
+
+    /**
+     * Used in SetCommands, to create the bytes and base properties.
+     */
+    protected void addProperty(Property property, boolean createBytes) {
+        if (property.getValueComponent() != null) addProperty(property);
+        findUniversalProperties(identifier, type, propertiesBuilder.toArray(new Property[0]),
+                createBytes);
     }
 
     protected void addProperties(List<Property> properties) {
@@ -45,16 +60,13 @@ class SetCommand extends Command {
         return length;
     }
 
-    SetCommand(byte[] bytes) {
+    SetCommand(byte[] bytes) throws CommandParseException {
         super(bytes);
+        if (bytes[2] != 0x01) throw new CommandParseException();
     }
 
     public SetCommand(Builder builder) {
         super(builder.identifier, Type.SET, builder.propertiesBuilder.toArray(new Property[0]));
-    }
-
-    @Override protected boolean propertiesExpected() {
-        return true;
     }
 
     public static class Builder {

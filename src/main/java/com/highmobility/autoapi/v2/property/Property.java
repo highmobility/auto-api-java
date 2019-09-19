@@ -214,9 +214,7 @@ public class Property<T> extends Bytes {
             try {
                 this.value.setClass(valueClass);
             } catch (Exception e) {
-                Command.logger.warn("Property value in invalid format: {} > {}",
-                        p.value.valueBytes, valueClass.getSimpleName(), e);
-
+                Command.logger.warn("Invalid bytes {} for property: {}", p, valueClass.getSimpleName(), e);
             }
         }
 
@@ -270,9 +268,14 @@ public class Property<T> extends Bytes {
         return update(bytes[0], value, null, null);
     }
 
-    public Property addValueComponent(Bytes valueComponentBytes) {
+    public Property addValueComponent(Bytes valueComponentValue) {
         try {
-            this.value = new PropertyComponentValue(valueComponentBytes, valueClass);
+            byte[] valueLength = Property.intToBytes(valueComponentValue.getLength(), 2);
+            Bytes value = new Bytes(3 + valueComponentValue.getLength());
+            value.set(0, (byte) 0x01);
+            value.set(1, valueLength);
+            value.set(3, valueComponentValue);
+            this.value = new PropertyComponentValue(value, valueClass);
         } catch (CommandParseException e) {
             throw new IllegalArgumentException();
         }

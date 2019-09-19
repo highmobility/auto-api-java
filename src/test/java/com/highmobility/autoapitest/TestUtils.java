@@ -1,6 +1,6 @@
 package com.highmobility.autoapitest;
 
-import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.v2.Command;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -26,11 +26,11 @@ public class TestUtils {
 
     public static void errorLogExpected(int count, Runnable runnable) {
         // could add a log count to logger, and if it exceeds the param count, write an error
-        Logger correctLogger = Command.logger;
+        Logger previousLogger = Command.logger;
         int logsBefore = fakeLogger.logCount;
         Command.logger = fakeLogger;
         runnable.run();
-        Command.logger = correctLogger;
+        Command.logger = previousLogger;
         // if this fails, don't use fake logger and check what error message should not be present
         assertTrue(logsBefore + count == fakeLogger.logCount);
     }

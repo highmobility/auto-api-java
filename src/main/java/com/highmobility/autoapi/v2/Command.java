@@ -166,7 +166,7 @@ public class Command extends Bytes {
     }
 
     Command(Identifier identifier, Type type, Property[] properties) {
-        this(null); // bytes will be created in findUniversalProperties
+//        this((byte[]) null); // bytes will be created in findUniversalProperties
         this.type = type;
         // here there are no timestamps. This constructor is called from setter commands only.
         findUniversalProperties(identifier, type, properties, true);
@@ -194,7 +194,7 @@ public class Command extends Bytes {
             type = Type.fromByte(thirdByte);
         } else {
             identifier = Identifier.fromBytes(bytes);
-            type = Type.fromByte(bytes[3]);
+            type = Type.fromByte(bytes[2]);
         }
     }
 
@@ -257,11 +257,11 @@ public class Command extends Bytes {
         public boolean hasNext() {
             boolean hasNext = currentIndex < currentSize && properties[currentIndex] != null;
 
-            if (hasNext == false && propertiesExpected() && propertiesReplaced == 0) {
+            /*if (hasNext == false && propertiesExpected() && propertiesReplaced == 0) {
                 // throw if propertiesExpected but returned 0 properties (child command
                 // didn't find its property)
-                throw new IllegalArgumentException();
-            }
+                throw new NoPropertiesException();
+            }*/
 
             return hasNext;
         }
