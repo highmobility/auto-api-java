@@ -20,8 +20,6 @@
 
 package com.highmobility.autoapi.v2;
 
-import com.highmobility.utils.ByteUtils;
-
 /**
  * Used for identifying known auto api categories
  */
@@ -106,24 +104,6 @@ public enum Identifier {
     public byte[] getBytes() {
         return identifier;
     }
-    
-    /*byte[] getBytesWithType(Type type) {
-        return ByteUtils.concatBytes(identifier, type.getType());
-    }
-
-    byte[] getBytesWithType(byte type) {
-        return ByteUtils.concatBytes(identifier, type);
-    }
-
-    byte[] getBytesWithType(Type type, byte extraValue) {
-        return new byte[]{
-                identifier[0],
-                identifier[1],
-                type.getType(),
-                extraValue
-        };
-    }*/
-
 
     static boolean is(Identifier feature, byte firstByte, byte secondByte) {
         return feature.getBytes()[0] == firstByte && feature.getBytes()[1] == secondByte;
