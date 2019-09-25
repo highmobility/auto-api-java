@@ -1,5 +1,8 @@
 package com.highmobility.autoapi.v2;
 
+import com.highmobility.autoapitest.TestUtils;
+import com.highmobility.value.Bytes;
+
 import org.junit.jupiter.api.BeforeEach;
 
 class BaseTest {
@@ -10,5 +13,9 @@ class BaseTest {
 
     void setRuntime(CommandResolver.RunTime runtime) {
         CommandResolver._runtime = runtime;
+    }
+
+    boolean bytesTheSame(Bytes state, Bytes bytes) {
+        return TestUtils.bytesTheSame(state, bytes);
     }
 }
