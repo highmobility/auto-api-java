@@ -132,6 +132,16 @@ public class Command extends Bytes {
         return null;
     }
 
+    /**
+     * @return The identifier of the command.
+     */
+    public Identifier getIdentifier() {
+        return identifier;
+    }
+
+    /**
+     * @return The type of the command.
+     */
     public Type getType() {
         return type;
     }
@@ -166,21 +176,11 @@ public class Command extends Bytes {
     }
 
     Command(Identifier identifier, Type type, Property[] properties) {
-//        this((byte[]) null); // bytes will be created in findUniversalProperties
         this.type = type;
         // here there are no timestamps. This constructor is called from setter commands only.
         findUniversalProperties(identifier, type, properties, true);
     }
-//
-//    Command(Type type) {
-//        super(type.getIdentifierAndType());
-//        this.type = type;
-//    }
 
-    //    Command(Type type, List<Property> properties) {
-//        this(type, properties.toArray(new Property[0]));
-//    }
-//
     private void setTypeAndBytes(byte[] bytes) {
         if (bytes == null || bytes.length < 3) {
             byte firstByte = 0, secondByte = 0, thirdByte = 0;

@@ -30,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -214,7 +215,8 @@ public class Property<T> extends Bytes {
             try {
                 this.value.setClass(valueClass);
             } catch (Exception e) {
-                Command.logger.warn("Invalid bytes {} for property: {}", p, valueClass.getSimpleName(), e);
+                Command.logger.warn("Invalid bytes {} for property: {}", p,
+                        valueClass.getSimpleName(), e);
             }
         }
 
@@ -502,14 +504,14 @@ public class Property<T> extends Bytes {
         return (int) value;
     }
 
-    public static int getSignedInt(Bytes bytes) throws IllegalArgumentException {
+    public static int getSignedInt(Bytes bytes) {
         return getSignedInt(bytes.getByteArray());
     }
 
-    public static int getSignedInt(byte[] bytes) throws IllegalArgumentException {
+    public static int getSignedInt(byte[] bytes) {
         if (bytes.length == 1) return getSignedInt(bytes[0]);
         else if (bytes.length >= 2) {
-            int result = bytes[0] << 8 | bytes[1];
+            short result = ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getShort();
             return result;
         }
 

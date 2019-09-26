@@ -48,6 +48,10 @@ public enum Type implements ByteEnum {
     public byte getByte() {
         return value;
     }
+
+    public int asInt() {
+        return value;
+    }
 }
 
 //public class Type {

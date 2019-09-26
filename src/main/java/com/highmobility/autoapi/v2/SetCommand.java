@@ -19,12 +19,6 @@ class SetCommand extends Command {
         type = Type.SET;
     }
 
-    /*SetCommand(Identifier identifier, byte[] propertyIdentifiers) {
-        super(identifier, 3 + (propertyIdentifiers != null ? propertyIdentifiers.length : 0));
-        setBaseBytes();
-        set(3, propertyIdentifiers);
-    }*/
-
     /**
      * Used in SetCommands, to create the bytes and base properties.
      */
@@ -38,9 +32,13 @@ class SetCommand extends Command {
      * Used in SetCommands, to create the bytes and base properties.
      */
     protected void addProperty(Property property, boolean createBytes) {
-        if (property.getValueComponent() != null) addProperty(property);
-        findUniversalProperties(identifier, type, propertiesBuilder.toArray(new Property[0]),
-                createBytes);
+        if (property != null && property.getValueComponent() != null) addProperty(property);
+
+        if (createBytes) {
+            if (propertiesBuilder == null) propertiesBuilder = new ArrayList();
+            findUniversalProperties(identifier, type, propertiesBuilder.toArray(new Property[0]),
+                    true);
+        }
     }
 
     protected void addProperties(List<Property> properties) {

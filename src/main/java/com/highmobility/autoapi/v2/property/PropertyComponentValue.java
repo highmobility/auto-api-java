@@ -22,7 +22,7 @@ package com.highmobility.autoapi.v2.property;
 
 import com.highmobility.autoapi.v2.Command;
 import com.highmobility.autoapi.v2.CommandParseException;
-import com.highmobility.autoapi.CommandResolver;
+import com.highmobility.autoapi.v2.CommandResolver;
 import com.highmobility.autoapi.v2.Identifier;
 import com.highmobility.value.Bytes;
 

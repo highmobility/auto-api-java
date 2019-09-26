@@ -20,6 +20,10 @@
 
 package com.highmobility.autoapi.v2;
 
+import com.highmobility.autoapi.property.Property;
+
+import java.util.Arrays;
+
 /**
  * Used for identifying known auto api categories
  */
@@ -105,7 +109,15 @@ public enum Identifier {
         return identifier;
     }
 
-    static boolean is(Identifier feature, byte firstByte, byte secondByte) {
+    public Integer asInt() {
+        return Property.getSignedInt(getBytes());
+    }
+
+    public static boolean is(Identifier feature, byte firstByte, byte secondByte) {
         return feature.getBytes()[0] == firstByte && feature.getBytes()[1] == secondByte;
+    }
+
+    public boolean equals(Integer intValue) {
+        return Arrays.equals(getBytes(), Property.intToBytes(intValue, 2));
     }
 }
