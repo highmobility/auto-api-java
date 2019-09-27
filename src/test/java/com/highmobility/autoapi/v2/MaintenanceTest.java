@@ -26,8 +26,8 @@ public class MaintenanceTest extends BaseTest {
                     "08000B01000800000160E0EA1388" +
                     "09000B01000800000160E1560840" +
                     "0A000B01000800000160E0EA1388" +
-                    "0B00430100401305000300000B4272616B6520666C756964002C4E657874206368616E676520617420737065636966696564206461746520617420746865206C61746573742E" +
-                    "0B005201004F1303002001001256656869636C6520696E7370656374696F6E00344E657874206D616E6461746F72792076656869636C6520696E7370656374696F6E206F6E2073706563696669656420646174652E" +
+                    "0B004401004107E305000300000B4272616B6520666C756964002C4E657874206368616E676520617420737065636966696564206461746520617420746865206C61746573742E" +
+                    "0B005301005007E303002001001256656869636C6520696E7370656374696F6E00344E657874206D616E6461746F72792076656869636C6520696E7370656374696F6E206F6E2073706563696669656420646174652E" +
                     "0C000B01000800000160E1560840"
     );
 
@@ -65,7 +65,7 @@ public class MaintenanceTest extends BaseTest {
                 state.getConditionBasedServices()) {
             ConditionBasedService conditionBasedService = conditionBasedServiceProp.getValue();
 
-            if ((conditionBasedService.getYear() == 19 &&
+            if ((conditionBasedService.getYear() == 2019 &&
                     conditionBasedService.getMonth() == 5 &&
                     conditionBasedService.getId() == 3 &&
                     conditionBasedService.getDueStatus() == ConditionBasedService.DueStatus.OK &&
@@ -73,7 +73,7 @@ public class MaintenanceTest extends BaseTest {
                     conditionBasedService.getDescription().equals("Next change at specified date " +
                             "at the latest."))
                     ||
-                    (conditionBasedService.getYear() == 19 &&
+                    (conditionBasedService.getYear() == 2019 &&
                             conditionBasedService.getMonth() == 3 &&
                             conditionBasedService.getId() == 32 &&
                             conditionBasedService.getDueStatus() == ConditionBasedService
@@ -116,10 +116,10 @@ public class MaintenanceTest extends BaseTest {
                 ":30:00")));
         builder.setNextInspectionDate(new Property(TestUtils.getCalendar("2018-01-10T16:32:05")));
 
-        ConditionBasedService service1 = new ConditionBasedService(19, 5, 3,
+        ConditionBasedService service1 = new ConditionBasedService(2019, 5, 3,
                 ConditionBasedService.DueStatus.OK, "Brake fluid", "Next change at specified date" +
                 " at the latest.");
-        ConditionBasedService service2 = new ConditionBasedService(19, 3, 32,
+        ConditionBasedService service2 = new ConditionBasedService(2019, 3, 32,
                 ConditionBasedService.DueStatus.PENDING, "Vehicle inspection", "Next mandatory " +
                 "vehicle inspection on specified date.");
 
