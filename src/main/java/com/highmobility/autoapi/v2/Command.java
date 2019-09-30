@@ -146,6 +146,7 @@ public class Command extends Bytes {
         return type;
     }
 
+
     Command(Bytes bytes) {
         this(bytes.getByteArray());
     }
@@ -177,6 +178,7 @@ public class Command extends Bytes {
 
     Command(Identifier identifier, Type type, Property[] properties) {
         this.type = type;
+        this.identifier = identifier;
         // here there are no timestamps. This constructor is called from setter commands only.
         findUniversalProperties(identifier, type, properties, true);
     }
