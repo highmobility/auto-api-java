@@ -20,7 +20,10 @@
 
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.utils.ByteUtils;
+
+import java.util.Arrays;
 
 /**
  * Used for identifying known auto api categories
@@ -106,7 +109,7 @@ public enum Identifier {
     public byte[] getBytes() {
         return identifier;
     }
-    
+
     byte[] getBytesWithType(Type type) {
         return ByteUtils.concatBytes(identifier, type.getType());
     }
@@ -123,7 +126,6 @@ public enum Identifier {
                 extraValue
         };
     }
-
 
     static boolean is(Identifier feature, byte firstByte, byte secondByte) {
         return feature.getBytes()[0] == firstByte && feature.getBytes()[1] == secondByte;

@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CapabilitiesTest extends BaseTest {
     Bytes bytes = new Bytes
             ("001001" +
-                    "01000A01000700200203040506" +
-                    "0100080100050021020811");
+                    "01000C010009002000050203040506" +
+                    "01000A01000700230003020811");
 
     @Test
     public void capabilities() {
@@ -35,9 +35,9 @@ public class CapabilitiesTest extends BaseTest {
         assertTrue(state.getSupported(Identifier.DOORS, (byte) 0x06));
 
         // trunk
-        assertTrue(state.getSupported(Identifier.TRUNK, (byte) 0x02));
-        assertTrue(state.getSupported(Identifier.TRUNK, (byte) 0x08));
-        assertTrue(state.getSupported(Identifier.TRUNK, (byte) 0x11));
+        assertTrue(state.getSupported(Identifier.CHARGING, (byte) 0x02));
+        assertTrue(state.getSupported(Identifier.CHARGING, (byte) 0x08));
+        assertTrue(state.getSupported(Identifier.CHARGING, (byte) 0x11));
 
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
@@ -55,7 +55,7 @@ public class CapabilitiesTest extends BaseTest {
 
         builder.addCapabilitie(new Property(new SupportedCapability(Identifier.DOORS.asInt(),
                 new Bytes("0203040506"))));
-        builder.addCapabilitie(new Property(new SupportedCapability(Identifier.TRUNK.asInt(),
+        builder.addCapabilitie(new Property(new SupportedCapability(Identifier.CHARGING.asInt(),
                 new Bytes("020811"))));
 
         CapabilitiesState state = builder.build();
