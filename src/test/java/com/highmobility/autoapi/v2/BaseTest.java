@@ -15,7 +15,7 @@ class BaseTest {
         CommandResolver._runtime = runtime;
     }
 
-    boolean bytesTheSame(Bytes state, Bytes bytes) {
+    static boolean bytesTheSame(Bytes state, Bytes bytes) {
         return TestUtils.bytesTheSame(state, bytes);
     }
 }

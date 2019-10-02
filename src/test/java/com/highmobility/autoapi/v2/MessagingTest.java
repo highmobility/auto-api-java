@@ -1,4 +1,3 @@
-/*
 package com.highmobility.autoapi.v2;
 
 import com.highmobility.autoapi.v2.property.Property;
@@ -8,48 +7,45 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-*/
 /**
  * Created by ttiganik on 15/09/16.
- *//*
+ */
 public class MessagingTest extends BaseTest {
     Bytes bytes = new Bytes(
             "003701" +
-                    "01001101000e2b31203535352d3535352d353535" +
-                    "02001001000d48656c6c6f20796f7520746f6f");
+                    "01001001000D48656c6c6f20796f7520746f6f" +
+                    "02001101000E2b31203535352d3535352d353535");
 
     @Test public void send() {
         Command command = CommandResolver.resolve(bytes);
-        testState((SendMessage) command);
+        testState((MessagingState) command);
     }
 
-    private void testState(SendMessage state) {
-        assertTrue(state.getRecipientHandle().getValue().equals("+1 555-555-555"));
-        assertTrue(state.getMessage().getValue().equals("Hello you too"));
+    private void testState(MessagingState state) {
+        assertTrue(state.getHandle().getValue().equals("+1 555-555-555"));
+        assertTrue(state.getText().getValue().equals("Hello you too"));
         assertTrue(bytesTheSame(state, bytes));
     }
 
     @Test public void received() {
-        Bytes waitingForBytes = new Bytes("003700" +
-                "01001101000e2b31203535352d3535352d353535" +
-                "02000801000548656c6c6f");
+        Bytes waitingForBytes = new Bytes("003701" +
+                "01000801000548656c6c6f" +
+                "02001101000E2b31203535352d3535352d353535");
 
-        byte[] commandBytes = null;
-        commandBytes = new MessageReceived("+1 555-555-555", "Hello").getByteArray();
+        Bytes commandBytes = new MessageReceived("Hello", "+1 555-555-555");
 
-        assertTrue(waitingForBytes.equals(commandBytes));
+        assertTrue(bytesTheSame(commandBytes, waitingForBytes));
 
+        setRuntime(CommandResolver.RunTime.JAVA);
         MessageReceived command = (MessageReceived) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getSenderHandle().getValue().equals("+1 555-555-555"));
-        assertTrue(command.getMessage().getValue().equals("Hello"));
+        assertTrue(command.getHandle().getValue().equals("+1 555-555-555"));
+        assertTrue(command.getText().getValue().equals("Hello"));
     }
 
     @Test public void build() {
-        SendMessage.Builder builder = new SendMessage.Builder();
-        builder.setRecipientHandle(new Property("+1 555-555-555"));
-        builder.setMessage(new Property("Hello you too"));
+        MessagingState.Builder builder = new MessagingState.Builder();
+        builder.setText(new Property("Hello you too"));
+        builder.setHandle(new Property("+1 555-555-555"));
         testState(builder.build());
     }
-}*/
-
-// TODO: 26/09/2019  SendMessage is missing
+}

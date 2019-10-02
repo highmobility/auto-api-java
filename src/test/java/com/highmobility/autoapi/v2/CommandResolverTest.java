@@ -7,16 +7,18 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CommandResolverTest {
+public class CommandResolverTest extends BaseTest {
     @Test public void logsInvalidProperties() {
-        // It tries to match 2 commands where 2 properties will fail
-        TestUtils.errorLogExpected(2, () -> {
-            Bytes invalidStartParking = new Bytes(
+        setRuntime(CommandResolver.RunTime.JAVA);
+
+        // It tries to match 3 to commands, but in all of these the property parsing will fail
+        TestUtils.errorLogExpected(3, () -> {
+            Bytes invalidEndParking = new Bytes(
                     "004701" +
                             "01000401000104"
             );
-            Command command = CommandResolver.resolve(invalidStartParking);
-            assertTrue(command.getClass() == Command.class);
+            Command command = CommandResolver.resolve(invalidEndParking);
+            assertTrue(command.getClass() == ParkingTicketState.class);
             assertTrue(command.getProperties().length == 1);
         });
     }

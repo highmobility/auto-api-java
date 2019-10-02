@@ -159,7 +159,7 @@ public class TestUtils {
             byte stateByte = state.getByteArray()[i];
 
             if (bytes.getByteArray().length < i + 1) {
-                System.out.println("state bytes has more bytes");
+                System.out.println("state bytes has more bytes\nbytes ex: " + bytes + "\nbytes in: " + state);
                 return false;
             }
 
@@ -173,14 +173,14 @@ public class TestUtils {
                         "\nbytes2: " + ByteUtils.hexFromBytes(Arrays.copyOf(state
                         .getByteArray(), i + 1)));
 
-                System.out.println("bytes1: " + bytes);
-                System.out.println("bytes2: " + state);
+                System.out.println("bytes ex: " + bytes);
+                System.out.println("bytes in: " + state);
                 return false;
             }
         }
 
         if (bytes.getLength() > state.getLength()) {
-            System.out.println("expected bytes has more bytes");
+            System.out.println("expected bytes has more bytes\nbytes ex: " + bytes + "\nbytes in: " + state);
             return false;
         }
 
