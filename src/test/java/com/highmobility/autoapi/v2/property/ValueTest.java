@@ -1,4 +1,4 @@
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi.v2.property;
 
 import org.junit.jupiter.api.Test;
 

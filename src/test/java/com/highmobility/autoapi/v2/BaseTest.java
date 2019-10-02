@@ -5,7 +5,7 @@ import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.BeforeEach;
 
-class BaseTest {
+public class BaseTest {
     @BeforeEach
     public void before() {
         setRuntime(CommandResolver.RunTime.ANDROID);

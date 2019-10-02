@@ -1,11 +1,10 @@
-package com.highmobility.autoapi.property;
+package com.highmobility.autoapi.v2.property;
 
-import com.highmobility.autoapi.ChargeState;
-import com.highmobility.autoapi.ClimateState;
-import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.value.Capability;
-import com.highmobility.autoapi.value.charging.ChargeMode;
+import com.highmobility.autoapi.v2.BaseTest;
+import com.highmobility.autoapi.v2.ChargingState;
+import com.highmobility.autoapi.v2.ChargingState.ChargeMode;
+import com.highmobility.autoapi.v2.CommandParseException;
+import com.highmobility.autoapi.v2.CommandResolver;
 import com.highmobility.autoapitest.TestUtils;
 import com.highmobility.value.Bytes;
 
@@ -15,7 +14,7 @@ import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PropertyTest {
+public class PropertyTest extends BaseTest {
     // bytes: 00000160E0EA1388
     Calendar timestamp = TestUtils.getCalendar("2018-01-10T16:32:05+0000");
 
@@ -152,7 +151,7 @@ public class PropertyTest {
             // test if float expected but bytes are with smaller length
             // charging with invalid length chargeCurrentAC. cannot parse to float
             // correct chargeCurrentDC
-            ChargeState command = (ChargeState) CommandResolver.resolve(
+            ChargingState command = (ChargingState) CommandResolver.resolve(
                     "002301" +
                             "040006010003BF1999" +
                             "050007010004BF19999A");
@@ -167,7 +166,7 @@ public class PropertyTest {
         // test if invalid failure reason
         // 0x11 is invalid failure reason
         TestUtils.errorLogExpected(() -> {
-            ChargeState command = (ChargeState) CommandResolver.resolve(
+            ChargingState command = (ChargingState) CommandResolver.resolve(
                     "002301" +
                             "040016010004BF19999A" + "03000C110A54727920696e20343073" +
                             "050007010004BF19999A");
@@ -278,17 +277,5 @@ public class PropertyTest {
         checked.update(integerProperty);
         // assert that the bytes are correct to create 253 int
         assertTrue(checked.getValue() == 253);
-    }
-
-    @Test public void string() {
-        Bytes bytes = new Bytes("01001401001131484D3345303733314837373936393543");
-        String s = Property.getString(bytes.getByteArray());
-    }
-
-    @Test public void capability() throws CommandParseException {
-        Bytes bytes = new Bytes("00240001121314151617");
-        Capability capabilityProperty = new Capability();
-        capabilityProperty.update(bytes);
-        assertTrue(capabilityProperty.isSupported(ClimateState.TYPE));
     }
 }
