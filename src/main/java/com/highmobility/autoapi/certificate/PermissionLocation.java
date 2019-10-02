@@ -23,15 +23,15 @@ public class PermissionLocation {
             case DIAGNOSTICS:
                 if (type == Type.READ) return new BitLocation(2, 2);
                 break;
-            case DOOR_LOCKS:
+            case DOORS:
                 if (type == Type.READ) return new BitLocation(2, 3);
                 else if (type == Type.WRITE) return new BitLocation(2, 4);
                 break;
-            case ENGINE:
+            case IGNITION:
                 if (type == Type.READ) return new BitLocation(2, 5);
                 else if (type == Type.WRITE) return new BitLocation(2, 6);
                 break;
-            case TRUNK_ACCESS:
+            case TRUNK:
                 if (type == Type.READ) return new BitLocation(2, 7);
                 else if (type == Type.WRITE) return new BitLocation(3, 0);
                 break;
@@ -54,7 +54,7 @@ public class PermissionLocation {
                 if (type == Type.READ) return new BitLocation(7, 1);
                 else if (type == Type.WRITE) return new BitLocation(4, 1);
                 break;
-            case ROOFTOP:
+            case ROOFTOP_CONTROL:
                 if (type == Type.READ) return new BitLocation(4, 2);
                 else if (type == Type.WRITE) return new BitLocation(4, 3);
                 break;
@@ -62,7 +62,7 @@ public class PermissionLocation {
                 if (type == Type.READ) return new BitLocation(4, 4);
                 else if (type == Type.WRITE) return new BitLocation(4, 5);
                 break;
-            case HONK_FLASH:
+            case HONK_HORN_FLASH_LIGHTS:
                 if (type == Type.READ) return new BitLocation(7, 2);
                 else if (type == Type.WRITE) return new BitLocation(4, 6);
                 break;
@@ -127,7 +127,7 @@ public class PermissionLocation {
             case RACE:
                 if (type == Type.READ) return new BitLocation(7, 4);
                 break;
-            case OFF_ROAD:
+            case OFFROAD:
                 if (type == Type.READ) return new BitLocation(7, 5);
                 break;
             case CHASSIS_SETTINGS:
@@ -146,7 +146,7 @@ public class PermissionLocation {
             case WEATHER_CONDITIONS:
                 if (type == Type.READ) return new BitLocation(8, 4);
                 break;
-            case WIFI:
+            case WI_FI:
                 if (type == Type.READ) return new BitLocation(8, 6);
                 else if (type == Type.WRITE) return new BitLocation(8, 7);
                 break;
@@ -161,14 +161,14 @@ public class PermissionLocation {
                 if (type == Type.READ) return new BitLocation(9, 3);
                 else if (type == Type.WRITE) return new BitLocation(9, 4);
                 break;
-            case START_STOP:
+            case ENGINE_START_STOP:
                 if (type == Type.READ) return new BitLocation(9, 5);
                 else if (type == Type.WRITE) return new BitLocation(9, 6);
                 break;
             case TACHOGRAPH:
                 if (type == Type.READ) return new BitLocation(9, 7);
                 break;
-            case POWER_TAKE_OFF:
+            case POWER_TAKEOFF:
                 if (type == Type.READ) return new BitLocation(10, 0);
                 else if (type == Type.WRITE) return new BitLocation(10, 1);
                 break;

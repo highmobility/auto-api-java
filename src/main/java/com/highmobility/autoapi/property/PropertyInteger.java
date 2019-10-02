@@ -42,10 +42,18 @@ public class PropertyInteger extends Property<Integer> {
         update(signed, length, value.value.value);
     }
 
+    public PropertyInteger(int identifier, boolean signed, int length, Property<Integer> value) {
+        this((byte) identifier, signed, length, value);
+    }
+
     // used in fields
     public PropertyInteger(byte identifier, boolean signed) {
         super(Integer.class, identifier);
         this.signed = signed;
+    }
+
+    public PropertyInteger(int identifier, boolean signed) {
+        this((byte) identifier, signed);
     }
 
     @Override public Property update(Property p) throws CommandParseException {
@@ -65,14 +73,16 @@ public class PropertyInteger extends Property<Integer> {
      * don't want to bother the user about integer length or sign.
      *
      * @param newLength The new length.
-     * @param signed The sign.
-     * @param value The value.
+     * @param signed    The sign.
+     * @param value     The value.
      * @return Self.
      */
     public Property update(boolean signed, int newLength, @Nullable Integer value) {
         this.signed = signed;
-        this.value = new PropertyComponentValueInteger(value, signed, newLength);
-        createBytesFromComponents(bytes[0]);
+        if (value != null) {
+            this.value = new PropertyComponentValueInteger(value, signed, newLength);
+            createBytesFromComponents(bytes[0]);
+        }
         return this;
     }
 

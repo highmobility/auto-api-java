@@ -21,7 +21,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.ByteUtils;
 
 import java.util.Arrays;
 
@@ -29,18 +28,18 @@ import java.util.Arrays;
  * Used for identifying known auto api categories
  */
 public enum Identifier {
-    FAILURE(new byte[]{0x00, (byte) 0x02}),
+    FAILURE_MESSAGE(new byte[]{0x00, (byte) 0x02}),
     CAPABILITIES(new byte[]{0x00, (byte) 0x10}),
     VEHICLE_STATUS(new byte[]{0x00, (byte) 0x11}),
     HISTORICAL(new byte[]{0x00, (byte) 0x12}),
     MULTI_COMMAND(new byte[]{0x00, (byte) 0x13}),
-    DOOR_LOCKS(new byte[]{0x00, (byte) 0x20}),
-    TRUNK_ACCESS(new byte[]{0x00, (byte) 0x21}),
+    DOORS(new byte[]{0x00, (byte) 0x20}),
+    TRUNK(new byte[]{0x00, (byte) 0x21}),
     WAKE_UP(new byte[]{0x00, (byte) 0x22}),
     CHARGING(new byte[]{0x00, (byte) 0x23}),
     CLIMATE(new byte[]{0x00, (byte) 0x24}),
-    ROOFTOP(new byte[]{0x00, (byte) 0x25}),
-    HONK_FLASH(new byte[]{0x00, (byte) 0x26}),
+    ROOFTOP_CONTROL(new byte[]{0x00, (byte) 0x25}),
+    HONK_HORN_FLASH_LIGHTS(new byte[]{0x00, (byte) 0x26}),
     REMOTE_CONTROL(new byte[]{0x00, (byte) 0x27}),
     VALET_MODE(new byte[]{0x00, (byte) 0x28}),
     HEART_RATE(new byte[]{0x00, (byte) 0x29}),
@@ -49,7 +48,7 @@ public enum Identifier {
     NAVI_DESTINATION(new byte[]{0x00, (byte) 0x31}),
     DIAGNOSTICS(new byte[]{0x00, (byte) 0x33}),
     MAINTENANCE(new byte[]{0x00, (byte) 0x34}),
-    ENGINE(new byte[]{0x00, (byte) 0x35}),
+    IGNITION(new byte[]{0x00, (byte) 0x35}),
     LIGHTS(new byte[]{0x00, (byte) 0x36}),
     MESSAGING(new byte[]{0x00, (byte) 0x37}),
     NOTIFICATIONS(new byte[]{0x00, (byte) 0x38}),
@@ -67,18 +66,18 @@ public enum Identifier {
     FIRMWARE_VERSION(new byte[]{0x00, (byte) 0x03}),
     SEATS(new byte[]{0x00, (byte) 0x56}),
     RACE(new byte[]{0x00, (byte) 0x57}),
-    OFF_ROAD(new byte[]{0x00, (byte) 0x52}),
+    OFFROAD(new byte[]{0x00, (byte) 0x52}),
     PARKING_BRAKE(new byte[]{0x00, (byte) 0x58}),
     LIGHT_CONDITIONS(new byte[]{0x00, (byte) 0x54}),
     WEATHER_CONDITIONS(new byte[]{0x00, (byte) 0x55}),
     CHASSIS_SETTINGS(new byte[]{0x00, (byte) 0x53}),
-    WIFI(new byte[]{0x00, (byte) 0x59}),
+    WI_FI(new byte[]{0x00, (byte) 0x59}),
     HOME_CHARGER(new byte[]{0x00, (byte) 0x60}),
     DASHBOARD_LIGHTS(new byte[]{0x00, (byte) 0x61}),
     CRUISE_CONTROL(new byte[]{0x00, (byte) 0x62}),
-    START_STOP(new byte[]{0x00, (byte) 0x63}),
+    ENGINE_START_STOP(new byte[]{0x00, (byte) 0x63}),
     TACHOGRAPH(new byte[]{0x00, (byte) 0x64}),
-    POWER_TAKE_OFF(new byte[]{0x00, (byte) 0x65}),
+    POWER_TAKEOFF(new byte[]{0x00, (byte) 0x65}),
     MOBILE(new byte[]{0x00, (byte) 0x66}),
     HOOD(new byte[]{0x00, (byte) 0x67}),
     USAGE(new byte[]{0x00, (byte) 0x68});
@@ -110,24 +109,15 @@ public enum Identifier {
         return identifier;
     }
 
-    byte[] getBytesWithType(Type type) {
-        return ByteUtils.concatBytes(identifier, type.getType());
+    public Integer asInt() {
+        return Property.getSignedInt(getBytes());
     }
 
-    byte[] getBytesWithType(byte type) {
-        return ByteUtils.concatBytes(identifier, type);
-    }
-
-    byte[] getBytesWithType(Type type, byte extraValue) {
-        return new byte[]{
-                identifier[0],
-                identifier[1],
-                type.getType(),
-                extraValue
-        };
-    }
-
-    static boolean is(Identifier feature, byte firstByte, byte secondByte) {
+    public static boolean is(Identifier feature, byte firstByte, byte secondByte) {
         return feature.getBytes()[0] == firstByte && feature.getBytes()[1] == secondByte;
+    }
+
+    public boolean equals(Integer intValue) {
+        return Arrays.equals(getBytes(), Property.intToBytes(intValue, 2));
     }
 }

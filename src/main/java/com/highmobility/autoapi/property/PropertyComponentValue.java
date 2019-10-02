@@ -52,8 +52,9 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         super(identifier, valueSize);
     }
 
-    PropertyComponentValue(Bytes value) {
+    PropertyComponentValue(Bytes value, Class<T> valueClass) throws CommandParseException {
         super(value);
+        if (valueClass != null) setClass(valueClass);
     }
 
     PropertyComponentValue(T value) {
@@ -97,6 +98,8 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         } else if (Byte.class.isAssignableFrom(valueClass)) {
             value = (T) valueBytes.get(0);
         }
+
+        this.valueClass = valueClass;
     }
 
     public static Bytes getBytes(Object value) {

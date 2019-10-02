@@ -30,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -178,7 +179,7 @@ public class Property<T> extends Bytes {
                 switch (componentIdentifier) {
                     case 0x01:
                         // value component
-                        value = new PropertyComponentValue(componentBytes);
+                        value = new PropertyComponentValue(componentBytes, valueClass);
                         builder.add(value);
                         break;
                     case 0x02:
@@ -214,9 +215,8 @@ public class Property<T> extends Bytes {
             try {
                 this.value.setClass(valueClass);
             } catch (Exception e) {
-                Command.logger.warn("Property value in invalid format: {} > {}",
-                        p.value.valueBytes, valueClass.getSimpleName(), e);
-
+                Command.logger.warn("Invalid bytes {} for property: {}", p,
+                        valueClass.getSimpleName(), e);
             }
         }
 
@@ -241,8 +241,16 @@ public class Property<T> extends Bytes {
 
     // MARK: internal ctor
 
+    public Property(int identifier, T value) {
+        this((byte) identifier, value);
+    }
+
     public Property(byte identifier, T value) {
         update(identifier, value, null, null);
+    }
+
+    public Property(Class<T> valueClass, int identifier) {
+        this(valueClass, ((byte) identifier));
     }
 
     public Property(Class<T> valueClass, byte identifier) {
@@ -260,6 +268,21 @@ public class Property<T> extends Bytes {
 
     public Property update(T value) {
         return update(bytes[0], value, null, null);
+    }
+
+    public Property addValueComponent(Bytes valueComponentValue) {
+        try {
+            byte[] valueLength = Property.intToBytes(valueComponentValue.getLength(), 2);
+            Bytes value = new Bytes(3 + valueComponentValue.getLength());
+            value.set(0, (byte) 0x01);
+            value.set(1, valueLength);
+            value.set(3, valueComponentValue);
+            this.value = new PropertyComponentValue(value, valueClass);
+        } catch (CommandParseException e) {
+            throw new IllegalArgumentException();
+        }
+        createBytesFromComponents(getPropertyIdentifier());
+        return this;
     }
 
     private Property update(byte identifier,
@@ -313,6 +336,11 @@ public class Property<T> extends Bytes {
      */
     public Property setIdentifier(byte identifier) {
         bytes[0] = identifier;
+        return this;
+    }
+
+    public Property setIdentifier(int identifier) {
+        setIdentifier((byte) identifier);
         return this;
     }
 
@@ -476,14 +504,23 @@ public class Property<T> extends Bytes {
         return (int) value;
     }
 
-    public static int getSignedInt(Bytes bytes) throws IllegalArgumentException {
+    public static int getSignedInt(Bytes bytes) {
         return getSignedInt(bytes.getByteArray());
     }
 
-    public static int getSignedInt(byte[] bytes) throws IllegalArgumentException {
+    public static int getSignedInt(byte[] bytes) {
         if (bytes.length == 1) return getSignedInt(bytes[0]);
         else if (bytes.length >= 2) {
-            int result = bytes[0] << 8 | bytes[1];
+            short result = ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getShort();
+            return result;
+        }
+
+        throw new IllegalArgumentException();
+    }
+
+    public static int getSignedInt(byte[] bytes, int at, int length) {
+        if (bytes.length >= 2) {
+            int result = bytes[at] << 8 | bytes[at + 1];
             return result;
         }
 
