@@ -1,0 +1,266 @@
+// TODO: license
+package com.highmobility.autoapi;
+
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Lock;
+import com.highmobility.autoapi.value.DoorPosition;
+import com.highmobility.autoapi.value.LockState;
+import javax.annotation.Nullable;
+import com.highmobility.autoapi.value.Location;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DoorsState extends SetCommand {
+    Property<Lock>[] insideLocks;
+    Property<Lock>[] locks;
+    Property<DoorPosition>[] positions;
+    Property<LockState> insideLocksState = new Property(LockState.class, 0x05);
+    Property<LockState> locksState = new Property(LockState.class, 0x06);
+
+    /**
+     * @return Inside lock states for the given doors
+     */
+    public Property<Lock>[] getInsideLocks() {
+        return insideLocks;
+    }
+
+    /**
+     * @return Lock states for the given doors
+     */
+    public Property<Lock>[] getLocks() {
+        return locks;
+    }
+
+    /**
+     * @return Door positions for the given doors
+     */
+    public Property<DoorPosition>[] getPositions() {
+        return positions;
+    }
+
+    /**
+     * @return Inside locks state for the whole car (combines all specific lock states if available)
+     */
+    public Property<LockState> getInsideLocksState() {
+        return insideLocksState;
+    }
+
+    /**
+     * @return Locks state for the whole car (combines all specific lock states if available)
+     */
+    public Property<LockState> getLocksState() {
+        return locksState;
+    }
+
+    /**
+     * Get the outside lock state for a specific door.
+     *
+     * @param doorLocation The door doorLocation.
+     * @return The outside lock state.
+     */
+    @Nullable public Property<Lock> getLock(Location doorLocation) {
+        for (Property<Lock> outsideLockState : locks) {
+            if (outsideLockState.getValue() != null && outsideLockState.getValue().getLocation() == doorLocation)
+                return outsideLockState;
+        }
+        return null;
+    }
+
+    /**
+     * Get the inside lock state for a specific door.
+     *
+     * @param doorLocation The door doorLocation.
+     * @return The inside lock state.
+     */
+    @Nullable public Property<Lock> getInsideLock(Location doorLocation) {
+        for (Property<Lock> insideLockState : insideLocks) {
+            if (insideLockState.getValue() != null && insideLockState.getValue().getLocation() == doorLocation)
+                return insideLockState;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the outside lock state for a specific door.
+     *
+     * @param doorLocation The door doorLocation.
+     * @return The outside lock state.
+     */
+    @Nullable public Property<DoorPosition> getPosition(DoorPosition.Location doorLocation) {
+        for (Property<DoorPosition> position : positions) {
+            if (position.getValue() != null && position.getValue().getLocation() == doorLocation)
+                return position;
+        }
+        return null;
+    }
+
+    DoorsState(byte[] bytes) throws CommandParseException {
+        super(bytes);
+
+        ArrayList<Property> insideLocksBuilder = new ArrayList<>();
+        ArrayList<Property> locksBuilder = new ArrayList<>();
+        ArrayList<Property> positionsBuilder = new ArrayList<>();
+
+        while (propertyIterator.hasNext()) {
+            propertyIterator.parseNext(p -> {
+                switch (p.getPropertyIdentifier()) {
+                    case 0x02:
+                        Property<Lock> insideLock = new Property(Lock.class, p);
+                        insideLocksBuilder.add(insideLock);
+                        return insideLock;
+                    case 0x03:
+                        Property<Lock> lock = new Property(Lock.class, p);
+                        locksBuilder.add(lock);
+                        return lock;
+                    case 0x04:
+                        Property<DoorPosition> position = new Property(DoorPosition.class, p);
+                        positionsBuilder.add(position);
+                        return position;
+                    case 0x05: return insideLocksState.update(p);
+                    case 0x06: return locksState.update(p);
+                }
+
+                return null;
+            });
+        }
+
+        insideLocks = insideLocksBuilder.toArray(new Property[0]);
+        locks = locksBuilder.toArray(new Property[0]);
+        positions = positionsBuilder.toArray(new Property[0]);
+    }
+
+    @Override public boolean isState() {
+        return true;
+    }
+
+    private DoorsState(Builder builder) {
+        super(builder);
+
+        insideLocks = builder.insideLocks.toArray(new Property[0]);
+        locks = builder.locks.toArray(new Property[0]);
+        positions = builder.positions.toArray(new Property[0]);
+        insideLocksState = builder.insideLocksState;
+        locksState = builder.locksState;
+    }
+
+    public static final class Builder extends SetCommand.Builder {
+        private List<Property> insideLocks = new ArrayList<>();
+        private List<Property> locks = new ArrayList<>();
+        private List<Property> positions = new ArrayList<>();
+        private Property<LockState> insideLocksState;
+        private Property<LockState> locksState;
+
+        public Builder() {
+            super(Identifier.DOORS);
+        }
+
+        public DoorsState build() {
+            return new DoorsState(this);
+        }
+
+        /**
+         * Add an array of inside locks.
+         * 
+         * @param insideLocks The inside locks. Inside lock states for the given doors
+         * @return The builder
+         */
+        public Builder setInsideLocks(Property<Lock>[] insideLocks) {
+            this.insideLocks.clear();
+            for (int i = 0; i < insideLocks.length; i++) {
+                addInsideLock(insideLocks[i]);
+            }
+        
+            return this;
+        }
+        
+        /**
+         * Add a single inside lock.
+         * 
+         * @param insideLock The inside lock. Inside lock states for the given doors
+         * @return The builder
+         */
+        public Builder addInsideLock(Property<Lock> insideLock) {
+            insideLock.setIdentifier(0x02);
+            addProperty(insideLock);
+            insideLocks.add(insideLock);
+            return this;
+        }
+        
+        /**
+         * Add an array of locks.
+         * 
+         * @param locks The locks. Lock states for the given doors
+         * @return The builder
+         */
+        public Builder setLocks(Property<Lock>[] locks) {
+            this.locks.clear();
+            for (int i = 0; i < locks.length; i++) {
+                addLock(locks[i]);
+            }
+        
+            return this;
+        }
+        
+        /**
+         * Add a single lock.
+         * 
+         * @param lock The lock. Lock states for the given doors
+         * @return The builder
+         */
+        public Builder addLock(Property<Lock> lock) {
+            lock.setIdentifier(0x03);
+            addProperty(lock);
+            locks.add(lock);
+            return this;
+        }
+        
+        /**
+         * Add an array of positions.
+         * 
+         * @param positions The positions. Door positions for the given doors
+         * @return The builder
+         */
+        public Builder setPositions(Property<DoorPosition>[] positions) {
+            this.positions.clear();
+            for (int i = 0; i < positions.length; i++) {
+                addPosition(positions[i]);
+            }
+        
+            return this;
+        }
+        
+        /**
+         * Add a single position.
+         * 
+         * @param position The position. Door positions for the given doors
+         * @return The builder
+         */
+        public Builder addPosition(Property<DoorPosition> position) {
+            position.setIdentifier(0x04);
+            addProperty(position);
+            positions.add(position);
+            return this;
+        }
+        
+        /**
+         * @param insideLocksState Inside locks state for the whole car (combines all specific lock states if available)
+         * @return The builder
+         */
+        public Builder setInsideLocksState(Property<LockState> insideLocksState) {
+            this.insideLocksState = insideLocksState.setIdentifier(0x05);
+            addProperty(this.insideLocksState);
+            return this;
+        }
+        
+        /**
+         * @param locksState Locks state for the whole car (combines all specific lock states if available)
+         * @return The builder
+         */
+        public Builder setLocksState(Property<LockState> locksState) {
+            this.locksState = locksState.setIdentifier(0x06);
+            addProperty(this.locksState);
+            return this;
+        }
+    }
+}
