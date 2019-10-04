@@ -70,6 +70,12 @@ public class MultiCommandTest extends BaseTest {
     }
 
     @Test
+    public void commandBuildWithZeroCommands() {
+        Command[] commands = new Command[0];
+        new MultiCommand(commands);
+    }
+
+    @Test
     public void stateIncoming() {
         MultiCommandState command = (MultiCommandState) CommandResolver.resolve(stateBytes);
         testState(command);

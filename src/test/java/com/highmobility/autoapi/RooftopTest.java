@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RooftopTest extends BaseTest {
     Bytes bytes = new Bytes("002501" +
-            "01000B0100084059000000000000" +
-            "02000B010008404A800000000000" +
+            "01000B0100083ff0000000000000" +
+            "02000B0100083fe0000000000000" +
             "03000401000101" +
             "04000401000102" +
             "05000401000101"
@@ -55,8 +55,8 @@ public class RooftopTest extends BaseTest {
     @Test public void stateBuilder() {
         RooftopControlState.Builder builder = new RooftopControlState.Builder();
 
-        builder.setDimming(new Property(100d));
-        builder.setPosition(new Property(53d));
+        builder.setDimming(new Property(1d));
+        builder.setPosition(new Property(.5d));
         builder.setConvertibleRoofState(new Property(RooftopControlState.ConvertibleRoofState.OPEN));
         builder.setSunroofTiltState(new Property(RooftopControlState.SunroofTiltState.HALF_TILTED));
         builder.setSunroofState(new Property(RooftopControlState.SunroofState.OPEN));
@@ -67,8 +67,8 @@ public class RooftopTest extends BaseTest {
 
     private void testState(RooftopControlState state) {
         assertTrue(bytesTheSame(state, bytes));
-        assertTrue(state.getDimming().getValue() == 100d);
-        assertTrue(state.getPosition().getValue() == 53d);
+        assertTrue(state.getDimming().getValue() == 1d);
+        assertTrue(state.getPosition().getValue() == .5d);
         assertTrue(state.getConvertibleRoofState().getValue() == RooftopControlState.ConvertibleRoofState.OPEN);
         assertTrue(state.getSunroofTiltState().getValue() == RooftopControlState.SunroofTiltState.HALF_TILTED);
         assertTrue(state.getSunroofState().getValue() == RooftopControlState.SunroofState.OPEN);

@@ -1,4 +1,22 @@
-// TODO: license
+/*
+ * HMKit Auto API - Auto API Parser for Java
+ * Copyright (C) 2019 High-Mobility <licensing@high-mobility.com>
+ *
+ * This file is part of HMKit Auto API.
+ *
+ * HMKit Auto API is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HMKit Auto API is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
@@ -6,7 +24,12 @@ import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.value.Bytes;
 
+/**
+ * The failure message state
+ */
 public class FailureMessageState extends SetCommand {
+    public static final Identifier identifier = Identifier.FAILURE_MESSAGE;
+
     PropertyInteger failedMessageID = new PropertyInteger(0x01, false);
     PropertyInteger failedMessageType = new PropertyInteger(0x02, false);
     Property<FailureReason> failureReason = new Property(FailureReason.class, 0x03);
@@ -55,7 +78,7 @@ public class FailureMessageState extends SetCommand {
      * @param propertyIdentifier   The property identifier
      * @return Boolean indicating whether the queried message failed.
      */
-    public boolean propertyFailed(Identifier capabilityIdentifier, byte propertyIdentifier) {
+    public boolean getPropertyFailed(Identifier capabilityIdentifier, byte propertyIdentifier) {
         if ((getFailedMessageID().getValue() != null && getFailedPropertyIDs().getValue() != null) &&
                 capabilityIdentifier.equals(getFailedMessageID().getValue())) {
             Bytes failedIds = getFailedPropertyIDs().getValue();
@@ -107,7 +130,7 @@ public class FailureMessageState extends SetCommand {
         private Property<Bytes> failedPropertyIDs;
 
         public Builder() {
-            super(Identifier.FAILURE_MESSAGE);
+            super(identifier);
         }
 
         public FailureMessageState build() {

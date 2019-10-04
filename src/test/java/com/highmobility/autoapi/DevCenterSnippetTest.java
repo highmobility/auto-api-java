@@ -1,17 +1,7 @@
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.CapabilitiesState;
-import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.DoorsState;
-import com.highmobility.autoapi.FailureMessageState;
-import com.highmobility.autoapi.Identifier;
-import com.highmobility.autoapi.LockUnlockDoors;
-import com.highmobility.autoapi.TrunkState;
-import com.highmobility.autoapi.Type;
-import com.highmobility.autoapi.VehicleLocationState;
-import com.highmobility.autoapi.VehicleStatusState;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Location;
 import com.highmobility.autoapi.value.Lock;
 import com.highmobility.autoapi.value.LockState;
 import com.highmobility.value.Bytes;
@@ -25,57 +15,68 @@ public class DevCenterSnippetTest {
 
     // if test does not compile, a snippet needs to be updated somewhere in docs.
     // these tests are not supposed to pass as tests
-    Bytes incomingBytes = null;
+    Bytes bytes = null;
+
+    void lockCommand() {
+        // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        // tabs/resources/tutorials/sdk/android/android-bluetooth.html
+        // tabs/resources/tutorials/sdk/android/android-tutorial.html
+        // tabs/resources/samples/android/scaffold.html
+        Command command = new LockUnlockDoors(LockState.UNLOCKED);
+    }
 
     void lockState() {
-        // developer-center/tabs/resources/tutorials/sdk/android/android-bluetooth.html
-        Command command = CommandResolver.resolve(incomingBytes);
+        // tabs/resources/tutorials/sdk/android/android-bluetooth.html
+        // tabs/resources/tutorials/sdk/android/android-tutorial.html
+        Command command = CommandResolver.resolve(bytes);
 
         if (command instanceof DoorsState) {
-            DoorsState lockState = (DoorsState) command;
+            DoorsState doorsState = (DoorsState) command;
             // access the doors state object
         }
     }
 
-    void lockCommand() {
-        // developer-center/tabs/resources/documentation/mobile-sdks/android/auto-api.html
-        // developer-center/tabs/resources/tutorials/sdk/android/android-bluetooth.html
-        // developer-center/tabs/resources/tutorials/sdk/android/android-tutorial.html
-        Command command = new LockUnlockDoors(LockState.UNLOCKED);
+    // auto-api tutorial
+
+    void getCommands() {
+        new GetVehicleStatus();
+        new GetCapabilities();
+        new GetVehicleLocation();
+        new LockUnlockDoors(LockState.UNLOCKED);
     }
 
-    void vehicleStatus() {
-        // developer-center/tabs/resources/documentation/mobile-sdks/android/auto-api.html
 
-        Command command = CommandResolver.resolve(incomingBytes);
+    void vehicleStatus() {
+        // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+
+        Command command = CommandResolver.resolve(bytes);
 
         if (command instanceof VehicleStatusState) {
             VehicleStatusState vehicleStatus = (VehicleStatusState) command;
-            // now you can inspect the Vehicle Status testState, for example
+            // Now you can inspect the Vehicle Status testState, for example
 
-            // get the VIN number
+            // Get the VIN number
             vehicleStatus.getVin().getValue();
 
-            // check the power train type
+            // Check the power train type
             if (vehicleStatus.getPowertrain().getValue() == VehicleStatusState.Powertrain.ALL_ELECTRIC) {
                 // vehicle has all electric power train
             }
 
-            // find the trunk state
-            for (Property<Command> state : vehicleStatus.getStates()) {
-                if (state.getValue().getIdentifier() == Identifier.TRUNK) {
-                    TrunkState trunkState = (TrunkState) state.getValue();
-                    if (trunkState.getLock().getValue() == LockState.UNLOCKED) {
-                        // trunk is unlocked
-                    }
+            // Check the trunk state, if exists
+            Command subState = vehicleStatus.getState(Identifier.TRUNK).getValue();
+            if (subState != null) {
+                TrunkState trunkState = (TrunkState) subState;
+                if (trunkState.getLock().getValue() == LockState.UNLOCKED) {
+                    // Trunk is unlocked
                 }
             }
         }
     }
 
     void capabilites() {
-        // developer-center/tabs/resources/documentation/mobile-sdks/android/auto-api.html
-        Command command = CommandResolver.resolve(incomingBytes);
+        // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        Command command = CommandResolver.resolve(bytes);
 
         if (command instanceof CapabilitiesState) {
             CapabilitiesState capabilities = (CapabilitiesState) command;
@@ -94,8 +95,8 @@ public class DevCenterSnippetTest {
     }
 
     void vehicleLocation() {
-        // developer-center/tabs/resources/documentation/mobile-sdks/android/auto-api.html
-        Command command = CommandResolver.resolve(incomingBytes);
+        // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        Command command = CommandResolver.resolve(bytes);
 
         if (command instanceof VehicleLocationState) {
             VehicleLocationState location = (VehicleLocationState) command;
@@ -111,13 +112,16 @@ public class DevCenterSnippetTest {
     }
 
     void lockStateLong() {
-        // developer-center/tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        // tabs/resources/documentation/mobile-sdks/android/auto-api.html
 
-        Command command = CommandResolver.resolve(incomingBytes);
+        Command command = CommandResolver.resolve(bytes);
 
         if (command instanceof DoorsState) {
             DoorsState state = (DoorsState) command;
             // vehicle lock state testState can now be accessed:
+
+            // lock state for a specific door
+            state.getLock(Location.FRONT_LEFT).getValue();
 
             // lock states for all of the doors available
             LockState left = null, right = null, rearRight = null, rearLeft = null;
@@ -142,11 +146,12 @@ public class DevCenterSnippetTest {
     }
 
     void failure() {
-        // developer-center/tabs/resources/documentation/mobile-sdks/android/auto-api.html
-        Command command = CommandResolver.resolve(incomingBytes);
+        // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        Command command = CommandResolver.resolve(bytes);
 
         if (command instanceof FailureMessageState) {
             FailureMessageState failure = (FailureMessageState) command;
+
             if (failure.getFailedMessageID().getValue() == Identifier.VEHICLE_STATUS.asInt() &&
                     failure.getFailedMessageType().getValue() == Type.GET.asInt()) {
                 // The Get Vehicle Status command failed.

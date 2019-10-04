@@ -1,4 +1,22 @@
-// TODO: license
+/*
+ * HMKit Auto API - Auto API Parser for Java
+ * Copyright (C) 2019 High-Mobility <licensing@high-mobility.com>
+ *
+ * This file is part of HMKit Auto API.
+ *
+ * HMKit Auto API is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HMKit Auto API is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.highmobility.autoapi;
 
@@ -11,6 +29,8 @@ import javax.annotation.Nullable;
  * Set windscreen damage
  */
 public class SetWindscreenDamage extends SetCommand {
+    public static final Identifier identifier = Identifier.WINDSCREEN;
+
     Property<WindscreenDamage> windscreenDamage = new Property(WindscreenDamage.class, 0x03);
     @Nullable Property<Zone> windscreenDamageZone = new Property(Zone.class, 0x05);
 
@@ -32,10 +52,10 @@ public class SetWindscreenDamage extends SetCommand {
      * Set windscreen damage
      *
      * @param windscreenDamage The windscreen damage
-     * @param windscreenDamageZone The Representing the position in the zone, seen from the inside of the vehicle (1-based index)
+     * @param windscreenDamageZone Representing the position in the zone, seen from the inside of the vehicle (1-based index)
      */
     public SetWindscreenDamage(WindscreenDamage windscreenDamage, @Nullable Zone windscreenDamageZone) {
-        super(Identifier.WINDSCREEN);
+        super(identifier);
     
         addProperty(this.windscreenDamage.update(windscreenDamage));
         addProperty(this.windscreenDamageZone.update(windscreenDamageZone), true);

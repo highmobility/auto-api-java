@@ -1,4 +1,22 @@
-// TODO: license
+/*
+ * HMKit Auto API - Auto API Parser for Java
+ * Copyright (C) 2019 High-Mobility <licensing@high-mobility.com>
+ *
+ * This file is part of HMKit Auto API.
+ *
+ * HMKit Auto API is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HMKit Auto API is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.highmobility.autoapi;
 
@@ -9,6 +27,8 @@ import javax.annotation.Nullable;
  * Set temperature settings
  */
 public class SetTemperatureSettings extends SetCommand {
+    public static final Identifier identifier = Identifier.CLIMATE;
+
     @Nullable Property<Float> driverTemperatureSetting = new Property(Float.class, 0x03);
     @Nullable Property<Float> passengerTemperatureSetting = new Property(Float.class, 0x04);
     @Nullable Property<Float> rearTemperatureSetting = new Property(Float.class, 0x0c);
@@ -37,12 +57,12 @@ public class SetTemperatureSettings extends SetCommand {
     /**
      * Set temperature settings
      *
-     * @param driverTemperatureSetting The The driver temperature setting in celsius
-     * @param passengerTemperatureSetting The The passenger temperature setting in celsius
-     * @param rearTemperatureSetting The The rear temperature in celsius
+     * @param driverTemperatureSetting The driver temperature setting in celsius
+     * @param passengerTemperatureSetting The passenger temperature setting in celsius
+     * @param rearTemperatureSetting The rear temperature in celsius
      */
     public SetTemperatureSettings(@Nullable Float driverTemperatureSetting, @Nullable Float passengerTemperatureSetting, @Nullable Float rearTemperatureSetting) {
-        super(Identifier.CLIMATE);
+        super(identifier);
     
         addProperty(this.driverTemperatureSetting.update(driverTemperatureSetting));
         addProperty(this.passengerTemperatureSetting.update(passengerTemperatureSetting));

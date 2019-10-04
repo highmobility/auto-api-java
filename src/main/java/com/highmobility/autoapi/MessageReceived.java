@@ -1,4 +1,22 @@
-// TODO: license
+/*
+ * HMKit Auto API - Auto API Parser for Java
+ * Copyright (C) 2019 High-Mobility <licensing@high-mobility.com>
+ *
+ * This file is part of HMKit Auto API.
+ *
+ * HMKit Auto API is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HMKit Auto API is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.highmobility.autoapi;
 
@@ -9,6 +27,8 @@ import javax.annotation.Nullable;
  * Message received
  */
 public class MessageReceived extends SetCommand {
+    public static final Identifier identifier = Identifier.MESSAGING;
+
     Property<String> text = new Property(String.class, 0x01);
     @Nullable Property<String> handle = new Property(String.class, 0x02);
 
@@ -29,11 +49,11 @@ public class MessageReceived extends SetCommand {
     /**
      * Message received
      *
-     * @param text The The text
-     * @param handle The The optional handle of message
+     * @param text The text
+     * @param handle The optional handle of message
      */
     public MessageReceived(String text, @Nullable String handle) {
-        super(Identifier.MESSAGING);
+        super(identifier);
     
         addProperty(this.text.update(text));
         addProperty(this.handle.update(handle), true);

@@ -1,4 +1,22 @@
-// TODO: license
+/*
+ * HMKit Auto API - Auto API Parser for Java
+ * Copyright (C) 2019 High-Mobility <licensing@high-mobility.com>
+ *
+ * This file is part of HMKit Auto API.
+ *
+ * HMKit Auto API is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HMKit Auto API is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.highmobility.autoapi;
 
@@ -11,6 +29,8 @@ import javax.annotation.Nullable;
  * Request states
  */
 public class RequestStates extends SetCommand {
+    public static final Identifier identifier = Identifier.HISTORICAL;
+
     PropertyInteger capabilityID = new PropertyInteger(0x02, false);
     @Nullable Property<Calendar> startDate = new Property(Calendar.class, 0x03);
     @Nullable Property<Calendar> endDate = new Property(Calendar.class, 0x04);
@@ -39,12 +59,12 @@ public class RequestStates extends SetCommand {
     /**
      * Request states
      *
-     * @param capabilityID The The identifier of the Capability
-     * @param startDate The Milliseconds since UNIX Epoch time
-     * @param endDate The Milliseconds since UNIX Epoch time
+     * @param capabilityID The identifier of the Capability
+     * @param startDate Milliseconds since UNIX Epoch time
+     * @param endDate Milliseconds since UNIX Epoch time
      */
     public RequestStates(Integer capabilityID, @Nullable Calendar startDate, @Nullable Calendar endDate) {
-        super(Identifier.HISTORICAL);
+        super(identifier);
     
         addProperty(this.capabilityID.update(false, 2, capabilityID));
         addProperty(this.startDate.update(startDate));

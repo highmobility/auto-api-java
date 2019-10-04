@@ -72,6 +72,7 @@ public class CommandTest extends BaseTest {
                     found = true;
                 }
             }
+
             break;
         }
 
@@ -152,5 +153,18 @@ public class CommandTest extends BaseTest {
 
         assertTrue(foundDimmingProperty == true);
         assertTrue(foundUnknownProperty == true);
+    }
+
+    @Test public void getProperties() {
+        Bytes waitingForBytes = new Bytes("00470001");
+        GetParkingTicketProperties getter = new GetParkingTicketProperties(new Bytes("01"));
+        assertTrue(bytesTheSame(getter, waitingForBytes));
+
+        setRuntime(CommandResolver.RunTime.JAVA);
+        GetParkingTicketProperties resolved = (GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes);
+        assertTrue(resolved.getPropertyIdentifiers().equals("01"));
+
+        GetParkingTicketProperties resolved2 = (GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes.concat(new Bytes("02")));
+        assertTrue(resolved2.getPropertyIdentifiers().equals("0102"));
     }
 }

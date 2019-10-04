@@ -1,6 +1,6 @@
 /*
  * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
+ * Copyright (C) 2019 High-Mobility <licensing@high-mobility.com>
  *
  * This file is part of HMKit Auto API.
  *
