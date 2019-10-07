@@ -40,7 +40,7 @@ public class LoadUrl extends SetCommand {
     /**
      * Load url
      *
-     * @param url The UTF8 bytes of the URL string
+     * @param url The URL
      */
     public LoadUrl(String url) {
         super(identifier);

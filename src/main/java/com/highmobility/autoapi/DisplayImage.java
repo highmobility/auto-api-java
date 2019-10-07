@@ -40,7 +40,7 @@ public class DisplayImage extends SetCommand {
     /**
      * Display image
      *
-     * @param imageURL The UTF8 bytes of the image URL string
+     * @param imageURL The image URL
      */
     public DisplayImage(String imageURL) {
         super(identifier);

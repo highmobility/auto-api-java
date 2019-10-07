@@ -76,8 +76,8 @@ public class ControlRooftop extends SetCommand {
     /**
      * Control rooftop
      *
-     * @param dimming 100% is opaque, 0% is transparent
-     * @param position 100% is fully open, 0% is closed
+     * @param dimming 1.0 (100%) is opaque, 0.0 (0%) is transparent
+     * @param position 1.0 (100%) is fully open, 0.0 (0%) is closed
      * @param convertibleRoofState The convertible roof state
      * @param sunroofTiltState The sunroof tilt state
      * @param sunroofState The sunroof state

@@ -28,6 +28,7 @@ public class DevCenterSnippetTest {
     void lockState() {
         // tabs/resources/tutorials/sdk/android/android-bluetooth.html
         // tabs/resources/tutorials/sdk/android/android-tutorial.html
+        // tabs/resources/tutorials/for-carmakers/cloud-sdk/cloud-tutorial.html
         Command command = CommandResolver.resolve(bytes);
 
         if (command instanceof DoorsState) {
@@ -44,7 +45,6 @@ public class DevCenterSnippetTest {
         new GetVehicleLocation();
         new LockUnlockDoors(LockState.UNLOCKED);
     }
-
 
     void vehicleStatus() {
         // tabs/resources/documentation/mobile-sdks/android/auto-api.html
@@ -161,5 +161,24 @@ public class DevCenterSnippetTest {
                 }
             }
         }
+    }
+
+    // oem
+
+    void oem() {
+        Lock frontLeftState = new Lock(
+                Location.FRONT_LEFT,
+                LockState.LOCKED
+        );
+
+        Lock frontRightState = new Lock(
+                Location.FRONT_RIGHT,
+                LockState.UNLOCKED
+        );
+
+        DoorsState hmLockState = new DoorsState.Builder()
+                .addLock(new Property(frontLeftState))
+                .addLock(new Property(frontRightState))
+                .build();
     }
 }

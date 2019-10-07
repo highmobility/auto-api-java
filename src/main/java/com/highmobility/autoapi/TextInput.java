@@ -40,7 +40,7 @@ public class TextInput extends SetCommand {
     /**
      * Text input
      *
-     * @param text The UTF8 bytes of the string
+     * @param text The text
      */
     public TextInput(String text) {
         super(identifier);

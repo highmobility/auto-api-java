@@ -35,14 +35,14 @@ public class RooftopControlState extends SetCommand {
     Property<SunroofState> sunroofState = new Property(SunroofState.class, 0x05);
 
     /**
-     * @return 100% is opaque, 0% is transparent
+     * @return 1.0 (100%) is opaque, 0.0 (0%) is transparent
      */
     public Property<Double> getDimming() {
         return dimming;
     }
 
     /**
-     * @return 100% is fully open, 0% is closed
+     * @return 1.0 (100%) is fully open, 0.0 (0%) is closed
      */
     public Property<Double> getPosition() {
         return position;
@@ -116,7 +116,7 @@ public class RooftopControlState extends SetCommand {
         }
 
         /**
-         * @param dimming 100% is opaque, 0% is transparent
+         * @param dimming 1.0 (100%) is opaque, 0.0 (0%) is transparent
          * @return The builder
          */
         public Builder setDimming(Property<Double> dimming) {
@@ -126,7 +126,7 @@ public class RooftopControlState extends SetCommand {
         }
         
         /**
-         * @param position 100% is fully open, 0% is closed
+         * @param position 1.0 (100%) is fully open, 0.0 (0%) is closed
          * @return The builder
          */
         public Builder setPosition(Property<Double> position) {
