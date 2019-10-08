@@ -501,7 +501,7 @@ public class Property<T> extends Bytes {
     }
 
     public static int getSignedInt(byte value) {
-        return (int) value;
+        return value;
     }
 
     public static int getSignedInt(Bytes bytes) {

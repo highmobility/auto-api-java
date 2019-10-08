@@ -25,7 +25,6 @@ import com.highmobility.value.Bytes;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 class SetCommand extends Command {
     ArrayList<Property> propertiesBuilder;
@@ -40,7 +39,10 @@ class SetCommand extends Command {
     }
 
     /**
-     * Used in SetCommands, to create the bytes and base properties.
+     * Add a property to the command. It is used in SetCommands, to create the bytes and properties
+     * array.
+     *
+     * @param property The property.
      */
     protected void addProperty(Property property) {
         if (property.getValueComponent() == null) return;
@@ -49,7 +51,11 @@ class SetCommand extends Command {
     }
 
     /**
-     * Used in SetCommands, to create the bytes and base properties.
+     * Add a property to the command. It is used in SetCommands, to create the bytes and properties
+     * array.
+     *
+     * @param property    The property.
+     * @param createBytes Whether to create the bytes array.
      */
     protected void addProperty(Property property, boolean createBytes) {
         if (property != null && property.getValueComponent() != null) addProperty(property);
@@ -61,23 +67,6 @@ class SetCommand extends Command {
         }
     }
 
-    protected void addProperties(List<Property> properties) {
-        for (int i = 0; i < properties.size(); i++) {
-            concat(properties.get(i));
-        }
-    }
-
-    private static int getPropertiesLength(Property[] properties) {
-        int length = 0;
-
-        for (int i = 0; i < properties.length; i++) {
-            Property property = properties[i];
-            length += property.size();
-        }
-
-        return length;
-    }
-
     SetCommand(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes[2] != 0x01) throw new CommandParseException();
@@ -85,14 +74,11 @@ class SetCommand extends Command {
 
     public SetCommand(Builder builder) {
         super(builder.identifier, Type.SET, builder.propertiesBuilder.toArray(new Property[0]));
+
     }
 
     public static class Builder {
         private Identifier identifier;
-
-        private Bytes nonce;
-        private Bytes signature;
-        private Calendar timestamp;
 
         protected ArrayList<Property> propertiesBuilder = new ArrayList<>();
 
@@ -110,7 +96,6 @@ class SetCommand extends Command {
          * @return The nonce.
          */
         public Builder setNonce(Bytes nonce) {
-            this.nonce = nonce;
             addProperty(new Property(NONCE_IDENTIFIER, nonce));
             return this;
         }
@@ -121,9 +106,7 @@ class SetCommand extends Command {
          * @return The builder.
          */
         public Builder setSignature(Bytes signature) {
-            this.signature = signature;
-            addProperty(new Property(SIGNATURE_IDENTIFIER,
-                    signature));
+            addProperty(new Property(SIGNATURE_IDENTIFIER, signature));
             return this;
         }
 
@@ -132,9 +115,7 @@ class SetCommand extends Command {
          * @return The builder.
          */
         public Builder setTimestamp(Calendar timestamp) {
-            this.timestamp = timestamp;
-            addProperty(new Property(TIMESTAMP_IDENTIFIER,
-                    timestamp));
+            addProperty(new Property(TIMESTAMP_IDENTIFIER, timestamp));
             return this;
         }
 

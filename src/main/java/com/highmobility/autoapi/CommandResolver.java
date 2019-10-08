@@ -952,14 +952,14 @@ public class CommandResolver {
 
     private static String commandToString(byte[] bytes) {
         return ByteUtils.hexFromBytes(ByteUtils
-                .trimmedBytes(bytes, bytes.length >= 3 ? 3 : bytes.length));
+                .trimmedBytes(bytes, Math.min(bytes.length, 3)));
     }
 
     static RunTime _runtime;
 
     static RunTime getRuntime() {
         if (_runtime == null)
-            _runtime = (System.getProperty("java.runtime.name") == "Android Runtime") ?
+            _runtime = (System.getProperty("java.runtime.name").equals("Android Runtime")) ?
                 RunTime.ANDROID : RunTime.JAVA;
             return _runtime;
     }

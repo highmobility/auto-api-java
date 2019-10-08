@@ -51,7 +51,7 @@ public class ClearNotification extends SetCommand {
                 return null;
             });
         }
-        if ((clear.getValue() == null || clear.getValueComponent().getValueBytes().equals(new Bytes("00")) == false)) 
+        if (clear.getValue() == null || clear.getValueComponent().getValueBytes().equals(new Bytes("00")) == false)
             throw new NoPropertiesException();
     }
 }

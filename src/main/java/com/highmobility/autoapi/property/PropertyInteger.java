@@ -87,7 +87,7 @@ public class PropertyInteger extends Property<Integer> {
     }
 
     // int needs to be updated later, so builder users dont need to consider the int length or sign
-    private class PropertyComponentValueInteger extends PropertyComponentValue<Integer> {
+    private static class PropertyComponentValueInteger extends PropertyComponentValue<Integer> {
         PropertyComponentValueInteger(Integer value, boolean signed, int newLength) {
             super(PropertyComponentValue.IDENTIFIER, newLength);
             this.valueBytes = new Bytes(intToBytes(value, newLength));

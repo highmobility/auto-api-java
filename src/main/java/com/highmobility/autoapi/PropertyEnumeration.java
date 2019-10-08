@@ -56,7 +56,7 @@ class PropertyEnumeration implements Enumeration {
         return new EnumeratedProperty(propertyIdentifier, propertySize, propertyStart);
     }
 
-    class EnumeratedProperty {
+    static class EnumeratedProperty {
         byte identifier;
         int size;
         int valueStart;
