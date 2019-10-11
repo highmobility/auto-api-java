@@ -1,6 +1,6 @@
 /*
  * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2019 High-Mobility <licensing@high-mobility.com>
+ * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
  *
  * This file is part of HMKit Auto API.
  *
@@ -952,14 +952,14 @@ public class CommandResolver {
 
     private static String commandToString(byte[] bytes) {
         return ByteUtils.hexFromBytes(ByteUtils
-                .trimmedBytes(bytes, Math.min(bytes.length, 3)));
+                .trimmedBytes(bytes, bytes.length >= 3 ? 3 : bytes.length));
     }
 
     static RunTime _runtime;
 
     static RunTime getRuntime() {
         if (_runtime == null)
-            _runtime = (System.getProperty("java.runtime.name").equals("Android Runtime")) ?
+            _runtime = (System.getProperty("java.runtime.name") == "Android Runtime") ?
                 RunTime.ANDROID : RunTime.JAVA;
             return _runtime;
     }
