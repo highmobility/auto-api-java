@@ -328,9 +328,9 @@ public class DiagnosticsState extends SetCommand {
                         tireTemperaturesBuilder.add(tireTemperature);
                         return tireTemperature;
                     case IDENTIFIER_WHEEL_RPMS:
-                        Property<WheelRpm> wheelRPM = new Property(WheelRpm.class, p);
-                        wheelRPMsBuilder.add(wheelRPM);
-                        return wheelRPM;
+                        Property<WheelRpm> wheelRpm = new Property(WheelRpm.class, p);
+                        wheelRPMsBuilder.add(wheelRpm);
+                        return wheelRpm;
                     case IDENTIFIER_TROUBLE_CODES:
                         Property<TroubleCode> troubleCode = new Property(TroubleCode.class, p);
                         troubleCodesBuilder.add(troubleCode);
@@ -725,7 +725,7 @@ public class DiagnosticsState extends SetCommand {
         public Builder setWheelRPMs(Property<WheelRpm>[] wheelRPMs) {
             this.wheelRPMs.clear();
             for (int i = 0; i < wheelRPMs.length; i++) {
-                addWheelRPM(wheelRPMs[i]);
+                addWheelRpm(wheelRPMs[i]);
             }
         
             return this;
@@ -734,13 +734,13 @@ public class DiagnosticsState extends SetCommand {
         /**
          * Add a single wheel rpm.
          * 
-         * @param wheelRPM The wheel rpm
+         * @param wheelRpm The wheel rpm
          * @return The builder
          */
-        public Builder addWheelRPM(Property<WheelRpm> wheelRPM) {
-            wheelRPM.setIdentifier(IDENTIFIER_WHEEL_RPMS);
-            addProperty(wheelRPM);
-            wheelRPMs.add(wheelRPM);
+        public Builder addWheelRpm(Property<WheelRpm> wheelRpm) {
+            wheelRpm.setIdentifier(IDENTIFIER_WHEEL_RPMS);
+            addProperty(wheelRpm);
+            wheelRPMs.add(wheelRpm);
             return this;
         }
         

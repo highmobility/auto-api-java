@@ -157,17 +157,17 @@ public class TachographState extends SetCommand {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_DRIVERS_WORKING_STATES:
-                        Property<DriverWorkingState> driversWorkingState = new Property(DriverWorkingState.class, p);
-                        driversWorkingStatesBuilder.add(driversWorkingState);
-                        return driversWorkingState;
+                        Property<DriverWorkingState> driverWorkingState = new Property(DriverWorkingState.class, p);
+                        driversWorkingStatesBuilder.add(driverWorkingState);
+                        return driverWorkingState;
                     case IDENTIFIER_DRIVERS_TIME_STATES:
                         Property<DriverTimeState> driversTimeState = new Property(DriverTimeState.class, p);
                         driversTimeStatesBuilder.add(driversTimeState);
                         return driversTimeState;
                     case IDENTIFIER_DRIVERS_CARDS_PRESENT:
-                        Property<DriverCardPresent> driversCardsPresent = new Property(DriverCardPresent.class, p);
-                        driversCardsPresentBuilder.add(driversCardsPresent);
-                        return driversCardsPresent;
+                        Property<DriverCardPresent> driversCardPresent = new Property(DriverCardPresent.class, p);
+                        driversCardsPresentBuilder.add(driversCardPresent);
+                        return driversCardPresent;
                     case IDENTIFIER_VEHICLE_MOTION: return vehicleMotion.update(p);
                     case IDENTIFIER_VEHICLE_OVERSPEED: return vehicleOverspeed.update(p);
                     case IDENTIFIER_VEHICLE_DIRECTION: return vehicleDirection.update(p);
@@ -225,22 +225,22 @@ public class TachographState extends SetCommand {
         public Builder setDriversWorkingStates(Property<DriverWorkingState>[] driversWorkingStates) {
             this.driversWorkingStates.clear();
             for (int i = 0; i < driversWorkingStates.length; i++) {
-                addDriversWorkingState(driversWorkingStates[i]);
+                addDriverWorkingState(driversWorkingStates[i]);
             }
         
             return this;
         }
         
         /**
-         * Add a single drivers working state.
+         * Add a single driver working state.
          * 
-         * @param driversWorkingState The drivers working state
+         * @param driverWorkingState The driver working state
          * @return The builder
          */
-        public Builder addDriversWorkingState(Property<DriverWorkingState> driversWorkingState) {
-            driversWorkingState.setIdentifier(IDENTIFIER_DRIVERS_WORKING_STATES);
-            addProperty(driversWorkingState);
-            driversWorkingStates.add(driversWorkingState);
+        public Builder addDriverWorkingState(Property<DriverWorkingState> driverWorkingState) {
+            driverWorkingState.setIdentifier(IDENTIFIER_DRIVERS_WORKING_STATES);
+            addProperty(driverWorkingState);
+            driversWorkingStates.add(driverWorkingState);
             return this;
         }
         
@@ -281,22 +281,22 @@ public class TachographState extends SetCommand {
         public Builder setDriversCardsPresent(Property<DriverCardPresent>[] driversCardsPresent) {
             this.driversCardsPresent.clear();
             for (int i = 0; i < driversCardsPresent.length; i++) {
-                addDriversCardsPresen(driversCardsPresent[i]);
+                addDriversCardPresent(driversCardsPresent[i]);
             }
         
             return this;
         }
         
         /**
-         * Add a single drivers cards presen.
+         * Add a single drivers card present.
          * 
-         * @param driversCardsPresen The drivers cards presen
+         * @param driversCardPresent The drivers card present
          * @return The builder
          */
-        public Builder addDriversCardsPresen(Property<DriverCardPresent> driversCardsPresen) {
-            driversCardsPresen.setIdentifier(IDENTIFIER_DRIVERS_CARDS_PRESENT);
-            addProperty(driversCardsPresen);
-            driversCardsPresent.add(driversCardsPresen);
+        public Builder addDriversCardPresent(Property<DriverCardPresent> driversCardPresent) {
+            driversCardPresent.setIdentifier(IDENTIFIER_DRIVERS_CARDS_PRESENT);
+            addProperty(driversCardPresent);
+            driversCardsPresent.add(driversCardPresent);
             return this;
         }
         

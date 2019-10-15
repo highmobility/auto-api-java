@@ -71,9 +71,9 @@ public class CapabilitiesState extends SetCommand {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_CAPABILITIES:
-                        Property<SupportedCapability> capabilitie = new Property(SupportedCapability.class, p);
-                        capabilitiesBuilder.add(capabilitie);
-                        return capabilitie;
+                        Property<SupportedCapability> capability = new Property(SupportedCapability.class, p);
+                        capabilitiesBuilder.add(capability);
+                        return capability;
                 }
 
                 return null;
@@ -113,21 +113,21 @@ public class CapabilitiesState extends SetCommand {
         public Builder setCapabilities(Property<SupportedCapability>[] capabilities) {
             this.capabilities.clear();
             for (int i = 0; i < capabilities.length; i++) {
-                addCapabilitie(capabilities[i]);
+                addCapability(capabilities[i]);
             }
         
             return this;
         }
         /**
-         * Add a single capabilitie.
+         * Add a single capability.
          * 
-         * @param capabilitie The capabilitie
+         * @param capability The capability
          * @return The builder
          */
-        public Builder addCapabilitie(Property<SupportedCapability> capabilitie) {
-            capabilitie.setIdentifier(IDENTIFIER_CAPABILITIES);
-            addProperty(capabilitie);
-            capabilities.add(capabilitie);
+        public Builder addCapability(Property<SupportedCapability> capability) {
+            capability.setIdentifier(IDENTIFIER_CAPABILITIES);
+            addProperty(capability);
+            capabilities.add(capability);
             return this;
         }
     }

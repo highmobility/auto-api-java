@@ -91,13 +91,13 @@ public class SeatsState extends SetCommand {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_PERSONS_DETECTED:
-                        Property<PersonDetected> personsDetected = new Property(PersonDetected.class, p);
-                        personsDetectedBuilder.add(personsDetected);
-                        return personsDetected;
+                        Property<PersonDetected> personDetected = new Property(PersonDetected.class, p);
+                        personsDetectedBuilder.add(personDetected);
+                        return personDetected;
                     case IDENTIFIER_SEATBELTS_STATE:
-                        Property<SeatbeltState> seatbeltsState = new Property(SeatbeltState.class, p);
-                        seatbeltsStateBuilder.add(seatbeltsState);
-                        return seatbeltsState;
+                        Property<SeatbeltState> seatbeltState = new Property(SeatbeltState.class, p);
+                        seatbeltsStateBuilder.add(seatbeltState);
+                        return seatbeltState;
                 }
 
                 return null;
@@ -140,22 +140,22 @@ public class SeatsState extends SetCommand {
         public Builder setPersonsDetected(Property<PersonDetected>[] personsDetected) {
             this.personsDetected.clear();
             for (int i = 0; i < personsDetected.length; i++) {
-                addPersonsDetecte(personsDetected[i]);
+                addPersonDetected(personsDetected[i]);
             }
         
             return this;
         }
         
         /**
-         * Add a single persons detecte.
+         * Add a single person detected.
          * 
-         * @param personsDetecte The persons detecte
+         * @param personDetected The person detected
          * @return The builder
          */
-        public Builder addPersonsDetecte(Property<PersonDetected> personsDetecte) {
-            personsDetecte.setIdentifier(IDENTIFIER_PERSONS_DETECTED);
-            addProperty(personsDetecte);
-            personsDetected.add(personsDetecte);
+        public Builder addPersonDetected(Property<PersonDetected> personDetected) {
+            personDetected.setIdentifier(IDENTIFIER_PERSONS_DETECTED);
+            addProperty(personDetected);
+            personsDetected.add(personDetected);
             return this;
         }
         
@@ -168,21 +168,21 @@ public class SeatsState extends SetCommand {
         public Builder setSeatbeltsState(Property<SeatbeltState>[] seatbeltsState) {
             this.seatbeltsState.clear();
             for (int i = 0; i < seatbeltsState.length; i++) {
-                addSeatbeltsStat(seatbeltsState[i]);
+                addSeatbeltState(seatbeltsState[i]);
             }
         
             return this;
         }
         /**
-         * Add a single seatbelts stat.
+         * Add a single seatbelt state.
          * 
-         * @param seatbeltsStat The seatbelts stat
+         * @param seatbeltState The seatbelt state
          * @return The builder
          */
-        public Builder addSeatbeltsStat(Property<SeatbeltState> seatbeltsStat) {
-            seatbeltsStat.setIdentifier(IDENTIFIER_SEATBELTS_STATE);
-            addProperty(seatbeltsStat);
-            seatbeltsState.add(seatbeltsStat);
+        public Builder addSeatbeltState(Property<SeatbeltState> seatbeltState) {
+            seatbeltState.setIdentifier(IDENTIFIER_SEATBELTS_STATE);
+            addProperty(seatbeltState);
+            seatbeltsState.add(seatbeltState);
             return this;
         }
     }

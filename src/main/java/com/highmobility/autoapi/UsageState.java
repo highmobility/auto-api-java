@@ -218,9 +218,9 @@ public class UsageState extends SetCommand {
                         drivingModesActivationPeriodsBuilder.add(drivingModesActivationPeriod);
                         return drivingModesActivationPeriod;
                     case IDENTIFIER_DRIVING_MODES_ENERGY_CONSUMPTIONS:
-                        Property<DrivingModeEnergyConsumption> drivingModesEnergyConsumption = new Property(DrivingModeEnergyConsumption.class, p);
-                        drivingModesEnergyConsumptionsBuilder.add(drivingModesEnergyConsumption);
-                        return drivingModesEnergyConsumption;
+                        Property<DrivingModeEnergyConsumption> drivingModeEnergyConsumption = new Property(DrivingModeEnergyConsumption.class, p);
+                        drivingModesEnergyConsumptionsBuilder.add(drivingModeEnergyConsumption);
+                        return drivingModeEnergyConsumption;
                     case IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION: return lastTripEnergyConsumption.update(p);
                     case IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION: return lastTripFuelConsumption.update(p);
                     case IDENTIFIER_MILEAGE_AFTER_LAST_TRIP: return mileageAfterLastTrip.update(p);
@@ -366,22 +366,22 @@ public class UsageState extends SetCommand {
         public Builder setDrivingModesEnergyConsumptions(Property<DrivingModeEnergyConsumption>[] drivingModesEnergyConsumptions) {
             this.drivingModesEnergyConsumptions.clear();
             for (int i = 0; i < drivingModesEnergyConsumptions.length; i++) {
-                addDrivingModesEnergyConsumption(drivingModesEnergyConsumptions[i]);
+                addDrivingModeEnergyConsumption(drivingModesEnergyConsumptions[i]);
             }
         
             return this;
         }
         
         /**
-         * Add a single driving modes energy consumption.
+         * Add a single driving mode energy consumption.
          * 
-         * @param drivingModesEnergyConsumption The driving modes energy consumption
+         * @param drivingModeEnergyConsumption The driving mode energy consumption
          * @return The builder
          */
-        public Builder addDrivingModesEnergyConsumption(Property<DrivingModeEnergyConsumption> drivingModesEnergyConsumption) {
-            drivingModesEnergyConsumption.setIdentifier(IDENTIFIER_DRIVING_MODES_ENERGY_CONSUMPTIONS);
-            addProperty(drivingModesEnergyConsumption);
-            drivingModesEnergyConsumptions.add(drivingModesEnergyConsumption);
+        public Builder addDrivingModeEnergyConsumption(Property<DrivingModeEnergyConsumption> drivingModeEnergyConsumption) {
+            drivingModeEnergyConsumption.setIdentifier(IDENTIFIER_DRIVING_MODES_ENERGY_CONSUMPTIONS);
+            addProperty(drivingModeEnergyConsumption);
+            drivingModesEnergyConsumptions.add(drivingModeEnergyConsumption);
             return this;
         }
         
