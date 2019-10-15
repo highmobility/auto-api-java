@@ -28,7 +28,9 @@ import java.util.ArrayList;
  * Set spring rates
  */
 public class SetSpringRates extends SetCommand {
-    public static final Identifier identifier = Identifier.CHASSIS_SETTINGS;
+    public static final Identifier IDENTIFIER = Identifier.CHASSIS_SETTINGS;
+
+    public static final byte IDENTIFIER_CURRENT_SPRING_RATES = 0x05;
 
     Property<SpringRate>[] currentSpringRates;
 
@@ -45,7 +47,7 @@ public class SetSpringRates extends SetCommand {
      * @param currentSpringRates The current values for the spring rates
      */
     public SetSpringRates(SpringRate[] currentSpringRates) {
-        super(identifier);
+        super(IDENTIFIER);
     
         ArrayList<Property> currentSpringRatesBuilder = new ArrayList<>();
         if (currentSpringRates != null) {
@@ -66,7 +68,7 @@ public class SetSpringRates extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x05: {
+                    case IDENTIFIER_CURRENT_SPRING_RATES: {
                         Property currentSpringRate = new Property(SpringRate.class, p);
                         currentSpringRatesBuilder.add(currentSpringRate);
                         return currentSpringRate;

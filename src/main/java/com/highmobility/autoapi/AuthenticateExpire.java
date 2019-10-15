@@ -27,9 +27,11 @@ import com.highmobility.autoapi.property.Property;
  * Authenticate expire
  */
 public class AuthenticateExpire extends SetCommand {
-    public static final Identifier identifier = Identifier.HOME_CHARGER;
+    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
 
-    Property<AuthenticationState> authenticationState = new Property(AuthenticationState.class, 0x0d);
+    public static final byte IDENTIFIER_AUTHENTICATION_STATE = 0x0d;
+
+    Property<AuthenticationState> authenticationState = new Property(AuthenticationState.class, IDENTIFIER_AUTHENTICATION_STATE);
 
     /**
      * @return The authentication state
@@ -44,7 +46,7 @@ public class AuthenticateExpire extends SetCommand {
      * @param authenticationState The authentication state
      */
     public AuthenticateExpire(AuthenticationState authenticationState) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.authenticationState.update(authenticationState), true);
     }
@@ -54,7 +56,7 @@ public class AuthenticateExpire extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x0d: return authenticationState.update(p);
+                    case IDENTIFIER_AUTHENTICATION_STATE: return authenticationState.update(p);
                 }
                 return null;
             });

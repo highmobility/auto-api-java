@@ -26,9 +26,11 @@ import com.highmobility.autoapi.value.ActiveState;
  * The parking brake state
  */
 public class ParkingBrakeState extends SetCommand {
-    public static final Identifier identifier = Identifier.PARKING_BRAKE;
+    public static final Identifier IDENTIFIER = Identifier.PARKING_BRAKE;
 
-    Property<ActiveState> status = new Property(ActiveState.class, 0x01);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+
+    Property<ActiveState> status = new Property(ActiveState.class, IDENTIFIER_STATUS);
 
     /**
      * @return The status
@@ -42,7 +44,7 @@ public class ParkingBrakeState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return status.update(p);
+                    case IDENTIFIER_STATUS: return status.update(p);
                 }
 
                 return null;
@@ -64,7 +66,7 @@ public class ParkingBrakeState extends SetCommand {
         private Property<ActiveState> status;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public ParkingBrakeState build() {
@@ -76,7 +78,7 @@ public class ParkingBrakeState extends SetCommand {
          * @return The builder
          */
         public Builder setStatus(Property<ActiveState> status) {
-            this.status = status.setIdentifier(0x01);
+            this.status = status.setIdentifier(IDENTIFIER_STATUS);
             addProperty(this.status);
             return this;
         }

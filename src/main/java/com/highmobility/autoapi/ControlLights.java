@@ -33,11 +33,18 @@ import javax.annotation.Nullable;
  * Control lights
  */
 public class ControlLights extends SetCommand {
-    public static final Identifier identifier = Identifier.LIGHTS;
+    public static final Identifier IDENTIFIER = Identifier.LIGHTS;
 
-    @Nullable Property<FrontExteriorLight> frontExteriorLight = new Property(FrontExteriorLight.class, 0x01);
-    @Nullable Property<ActiveState> rearExteriorLight = new Property(ActiveState.class, 0x02);
-    @Nullable Property<RgbColour> ambientLightColour = new Property(RgbColour.class, 0x04);
+    public static final byte IDENTIFIER_FRONT_EXTERIOR_LIGHT = 0x01;
+    public static final byte IDENTIFIER_REAR_EXTERIOR_LIGHT = 0x02;
+    public static final byte IDENTIFIER_AMBIENT_LIGHT_COLOUR = 0x04;
+    public static final byte IDENTIFIER_FOG_LIGHTS = 0x07;
+    public static final byte IDENTIFIER_READING_LAMPS = 0x08;
+    public static final byte IDENTIFIER_INTERIOR_LIGHTS = 0x09;
+
+    @Nullable Property<FrontExteriorLight> frontExteriorLight = new Property(FrontExteriorLight.class, IDENTIFIER_FRONT_EXTERIOR_LIGHT);
+    @Nullable Property<ActiveState> rearExteriorLight = new Property(ActiveState.class, IDENTIFIER_REAR_EXTERIOR_LIGHT);
+    @Nullable Property<RgbColour> ambientLightColour = new Property(RgbColour.class, IDENTIFIER_AMBIENT_LIGHT_COLOUR);
     @Nullable Property<Light>[] fogLights;
     @Nullable Property<ReadingLamp>[] readingLamps;
     @Nullable Property<Light>[] interiorLights;
@@ -95,7 +102,7 @@ public class ControlLights extends SetCommand {
      * @param interiorLights The interior lights
      */
     public ControlLights(@Nullable FrontExteriorLight frontExteriorLight, @Nullable ActiveState rearExteriorLight, @Nullable RgbColour ambientLightColour, @Nullable Light[] fogLights, @Nullable ReadingLamp[] readingLamps, @Nullable Light[] interiorLights) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.frontExteriorLight.update(frontExteriorLight));
         addProperty(this.rearExteriorLight.update(rearExteriorLight));
@@ -142,20 +149,20 @@ public class ControlLights extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return frontExteriorLight.update(p);
-                    case 0x02: return rearExteriorLight.update(p);
-                    case 0x04: return ambientLightColour.update(p);
-                    case 0x07: {
+                    case IDENTIFIER_FRONT_EXTERIOR_LIGHT: return frontExteriorLight.update(p);
+                    case IDENTIFIER_REAR_EXTERIOR_LIGHT: return rearExteriorLight.update(p);
+                    case IDENTIFIER_AMBIENT_LIGHT_COLOUR: return ambientLightColour.update(p);
+                    case IDENTIFIER_FOG_LIGHTS: {
                         Property fogLight = new Property(Light.class, p);
                         fogLightsBuilder.add(fogLight);
                         return fogLight;
                     }
-                    case 0x08: {
+                    case IDENTIFIER_READING_LAMPS: {
                         Property readingLamp = new Property(ReadingLamp.class, p);
                         readingLampsBuilder.add(readingLamp);
                         return readingLamp;
                     }
-                    case 0x09: {
+                    case IDENTIFIER_INTERIOR_LIGHTS: {
                         Property interiorLight = new Property(Light.class, p);
                         interiorLightsBuilder.add(interiorLight);
                         return interiorLight;

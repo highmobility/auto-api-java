@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific wi fi properties.
  */
 public class GetWiFiProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.WI_FI;
+    public static final Identifier IDENTIFIER = Identifier.WI_FI;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetWiFiProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetWiFiProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

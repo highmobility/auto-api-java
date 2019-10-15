@@ -27,9 +27,11 @@ import com.highmobility.autoapi.property.Property;
  * Set windscreen replacement needed
  */
 public class SetWindscreenReplacementNeeded extends SetCommand {
-    public static final Identifier identifier = Identifier.WINDSCREEN;
+    public static final Identifier IDENTIFIER = Identifier.WINDSCREEN;
 
-    Property<WindscreenNeedsReplacement> windscreenNeedsReplacement = new Property(WindscreenNeedsReplacement.class, 0x06);
+    public static final byte IDENTIFIER_WINDSCREEN_NEEDS_REPLACEMENT = 0x06;
+
+    Property<WindscreenNeedsReplacement> windscreenNeedsReplacement = new Property(WindscreenNeedsReplacement.class, IDENTIFIER_WINDSCREEN_NEEDS_REPLACEMENT);
 
     /**
      * @return The windscreen needs replacement
@@ -44,7 +46,7 @@ public class SetWindscreenReplacementNeeded extends SetCommand {
      * @param windscreenNeedsReplacement The windscreen needs replacement
      */
     public SetWindscreenReplacementNeeded(WindscreenNeedsReplacement windscreenNeedsReplacement) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.windscreenNeedsReplacement.update(windscreenNeedsReplacement), true);
     }
@@ -54,7 +56,7 @@ public class SetWindscreenReplacementNeeded extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x06: return windscreenNeedsReplacement.update(p);
+                    case IDENTIFIER_WINDSCREEN_NEEDS_REPLACEMENT: return windscreenNeedsReplacement.update(p);
                 }
                 return null;
             });

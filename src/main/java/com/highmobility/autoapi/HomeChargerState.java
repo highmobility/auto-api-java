@@ -34,22 +34,38 @@ import java.util.List;
  * The home charger state
  */
 public class HomeChargerState extends SetCommand {
-    public static final Identifier identifier = Identifier.HOME_CHARGER;
+    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
 
-    Property<ChargingStatus> chargingStatus = new Property(ChargingStatus.class, 0x01);
-    Property<AuthenticationMechanism> authenticationMechanism = new Property(AuthenticationMechanism.class, 0x02);
-    Property<PlugType> plugType = new Property(PlugType.class, 0x03);
-    Property<Float> chargingPowerKW = new Property(Float.class, 0x04);
-    Property<ActiveState> solarCharging = new Property(ActiveState.class, 0x05);
-    Property<EnabledState> wifiHotspotEnabled = new Property(EnabledState.class, 0x08);
-    Property<String> wifiHotspotSSID = new Property(String.class, 0x09);
-    Property<NetworkSecurity> wiFiHotspotSecurity = new Property(NetworkSecurity.class, 0x0a);
-    Property<String> wiFiHotspotPassword = new Property(String.class, 0x0b);
-    Property<AuthenticationState> authenticationState = new Property(AuthenticationState.class, 0x0d);
-    Property<Float> chargeCurrentDC = new Property(Float.class, 0x0e);
-    Property<Float> maximumChargeCurrent = new Property(Float.class, 0x0f);
-    Property<Float> minimumChargeCurrent = new Property(Float.class, 0x10);
-    Property<Coordinates> coordinates = new Property(Coordinates.class, 0x11);
+    public static final byte IDENTIFIER_CHARGING_STATUS = 0x01;
+    public static final byte IDENTIFIER_AUTHENTICATION_MECHANISM = 0x02;
+    public static final byte IDENTIFIER_PLUG_TYPE = 0x03;
+    public static final byte IDENTIFIER_CHARGING_POWER_KW = 0x04;
+    public static final byte IDENTIFIER_SOLAR_CHARGING = 0x05;
+    public static final byte IDENTIFIER_WI_FI_HOTSPOT_ENABLED = 0x08;
+    public static final byte IDENTIFIER_WI_FI_HOTSPOT_SSID = 0x09;
+    public static final byte IDENTIFIER_WI_FI_HOTSPOT_SECURITY = 0x0a;
+    public static final byte IDENTIFIER_WI_FI_HOTSPOT_PASSWORD = 0x0b;
+    public static final byte IDENTIFIER_AUTHENTICATION_STATE = 0x0d;
+    public static final byte IDENTIFIER_CHARGE_CURRENT_DC = 0x0e;
+    public static final byte IDENTIFIER_MAXIMUM_CHARGE_CURRENT = 0x0f;
+    public static final byte IDENTIFIER_MINIMUM_CHARGE_CURRENT = 0x10;
+    public static final byte IDENTIFIER_COORDINATES = 0x11;
+    public static final byte IDENTIFIER_PRICE_TARIFFS = 0x12;
+
+    Property<ChargingStatus> chargingStatus = new Property(ChargingStatus.class, IDENTIFIER_CHARGING_STATUS);
+    Property<AuthenticationMechanism> authenticationMechanism = new Property(AuthenticationMechanism.class, IDENTIFIER_AUTHENTICATION_MECHANISM);
+    Property<PlugType> plugType = new Property(PlugType.class, IDENTIFIER_PLUG_TYPE);
+    Property<Float> chargingPowerKW = new Property(Float.class, IDENTIFIER_CHARGING_POWER_KW);
+    Property<ActiveState> solarCharging = new Property(ActiveState.class, IDENTIFIER_SOLAR_CHARGING);
+    Property<EnabledState> wifiHotspotEnabled = new Property(EnabledState.class, IDENTIFIER_WI_FI_HOTSPOT_ENABLED);
+    Property<String> wifiHotspotSSID = new Property(String.class, IDENTIFIER_WI_FI_HOTSPOT_SSID);
+    Property<NetworkSecurity> wiFiHotspotSecurity = new Property(NetworkSecurity.class, IDENTIFIER_WI_FI_HOTSPOT_SECURITY);
+    Property<String> wiFiHotspotPassword = new Property(String.class, IDENTIFIER_WI_FI_HOTSPOT_PASSWORD);
+    Property<AuthenticationState> authenticationState = new Property(AuthenticationState.class, IDENTIFIER_AUTHENTICATION_STATE);
+    Property<Float> chargeCurrentDC = new Property(Float.class, IDENTIFIER_CHARGE_CURRENT_DC);
+    Property<Float> maximumChargeCurrent = new Property(Float.class, IDENTIFIER_MAXIMUM_CHARGE_CURRENT);
+    Property<Float> minimumChargeCurrent = new Property(Float.class, IDENTIFIER_MINIMUM_CHARGE_CURRENT);
+    Property<Coordinates> coordinates = new Property(Coordinates.class, IDENTIFIER_COORDINATES);
     Property<PriceTariff>[] priceTariffs;
 
     /**
@@ -180,21 +196,21 @@ public class HomeChargerState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return chargingStatus.update(p);
-                    case 0x02: return authenticationMechanism.update(p);
-                    case 0x03: return plugType.update(p);
-                    case 0x04: return chargingPowerKW.update(p);
-                    case 0x05: return solarCharging.update(p);
-                    case 0x08: return wifiHotspotEnabled.update(p);
-                    case 0x09: return wifiHotspotSSID.update(p);
-                    case 0x0a: return wiFiHotspotSecurity.update(p);
-                    case 0x0b: return wiFiHotspotPassword.update(p);
-                    case 0x0d: return authenticationState.update(p);
-                    case 0x0e: return chargeCurrentDC.update(p);
-                    case 0x0f: return maximumChargeCurrent.update(p);
-                    case 0x10: return minimumChargeCurrent.update(p);
-                    case 0x11: return coordinates.update(p);
-                    case 0x12:
+                    case IDENTIFIER_CHARGING_STATUS: return chargingStatus.update(p);
+                    case IDENTIFIER_AUTHENTICATION_MECHANISM: return authenticationMechanism.update(p);
+                    case IDENTIFIER_PLUG_TYPE: return plugType.update(p);
+                    case IDENTIFIER_CHARGING_POWER_KW: return chargingPowerKW.update(p);
+                    case IDENTIFIER_SOLAR_CHARGING: return solarCharging.update(p);
+                    case IDENTIFIER_WI_FI_HOTSPOT_ENABLED: return wifiHotspotEnabled.update(p);
+                    case IDENTIFIER_WI_FI_HOTSPOT_SSID: return wifiHotspotSSID.update(p);
+                    case IDENTIFIER_WI_FI_HOTSPOT_SECURITY: return wiFiHotspotSecurity.update(p);
+                    case IDENTIFIER_WI_FI_HOTSPOT_PASSWORD: return wiFiHotspotPassword.update(p);
+                    case IDENTIFIER_AUTHENTICATION_STATE: return authenticationState.update(p);
+                    case IDENTIFIER_CHARGE_CURRENT_DC: return chargeCurrentDC.update(p);
+                    case IDENTIFIER_MAXIMUM_CHARGE_CURRENT: return maximumChargeCurrent.update(p);
+                    case IDENTIFIER_MINIMUM_CHARGE_CURRENT: return minimumChargeCurrent.update(p);
+                    case IDENTIFIER_COORDINATES: return coordinates.update(p);
+                    case IDENTIFIER_PRICE_TARIFFS:
                         Property<PriceTariff> priceTariff = new Property(PriceTariff.class, p);
                         priceTariffsBuilder.add(priceTariff);
                         return priceTariff;
@@ -249,7 +265,7 @@ public class HomeChargerState extends SetCommand {
         private List<Property> priceTariffs = new ArrayList<>();
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public HomeChargerState build() {
@@ -261,7 +277,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setChargingStatus(Property<ChargingStatus> chargingStatus) {
-            this.chargingStatus = chargingStatus.setIdentifier(0x01);
+            this.chargingStatus = chargingStatus.setIdentifier(IDENTIFIER_CHARGING_STATUS);
             addProperty(this.chargingStatus);
             return this;
         }
@@ -271,7 +287,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setAuthenticationMechanism(Property<AuthenticationMechanism> authenticationMechanism) {
-            this.authenticationMechanism = authenticationMechanism.setIdentifier(0x02);
+            this.authenticationMechanism = authenticationMechanism.setIdentifier(IDENTIFIER_AUTHENTICATION_MECHANISM);
             addProperty(this.authenticationMechanism);
             return this;
         }
@@ -281,7 +297,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setPlugType(Property<PlugType> plugType) {
-            this.plugType = plugType.setIdentifier(0x03);
+            this.plugType = plugType.setIdentifier(IDENTIFIER_PLUG_TYPE);
             addProperty(this.plugType);
             return this;
         }
@@ -291,7 +307,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setChargingPowerKW(Property<Float> chargingPowerKW) {
-            this.chargingPowerKW = chargingPowerKW.setIdentifier(0x04);
+            this.chargingPowerKW = chargingPowerKW.setIdentifier(IDENTIFIER_CHARGING_POWER_KW);
             addProperty(this.chargingPowerKW);
             return this;
         }
@@ -301,7 +317,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setSolarCharging(Property<ActiveState> solarCharging) {
-            this.solarCharging = solarCharging.setIdentifier(0x05);
+            this.solarCharging = solarCharging.setIdentifier(IDENTIFIER_SOLAR_CHARGING);
             addProperty(this.solarCharging);
             return this;
         }
@@ -311,7 +327,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setWifiHotspotEnabled(Property<EnabledState> wifiHotspotEnabled) {
-            this.wifiHotspotEnabled = wifiHotspotEnabled.setIdentifier(0x08);
+            this.wifiHotspotEnabled = wifiHotspotEnabled.setIdentifier(IDENTIFIER_WI_FI_HOTSPOT_ENABLED);
             addProperty(this.wifiHotspotEnabled);
             return this;
         }
@@ -321,7 +337,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setWifiHotspotSSID(Property<String> wifiHotspotSSID) {
-            this.wifiHotspotSSID = wifiHotspotSSID.setIdentifier(0x09);
+            this.wifiHotspotSSID = wifiHotspotSSID.setIdentifier(IDENTIFIER_WI_FI_HOTSPOT_SSID);
             addProperty(this.wifiHotspotSSID);
             return this;
         }
@@ -331,7 +347,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setWiFiHotspotSecurity(Property<NetworkSecurity> wiFiHotspotSecurity) {
-            this.wiFiHotspotSecurity = wiFiHotspotSecurity.setIdentifier(0x0a);
+            this.wiFiHotspotSecurity = wiFiHotspotSecurity.setIdentifier(IDENTIFIER_WI_FI_HOTSPOT_SECURITY);
             addProperty(this.wiFiHotspotSecurity);
             return this;
         }
@@ -341,7 +357,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setWiFiHotspotPassword(Property<String> wiFiHotspotPassword) {
-            this.wiFiHotspotPassword = wiFiHotspotPassword.setIdentifier(0x0b);
+            this.wiFiHotspotPassword = wiFiHotspotPassword.setIdentifier(IDENTIFIER_WI_FI_HOTSPOT_PASSWORD);
             addProperty(this.wiFiHotspotPassword);
             return this;
         }
@@ -351,7 +367,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setAuthenticationState(Property<AuthenticationState> authenticationState) {
-            this.authenticationState = authenticationState.setIdentifier(0x0d);
+            this.authenticationState = authenticationState.setIdentifier(IDENTIFIER_AUTHENTICATION_STATE);
             addProperty(this.authenticationState);
             return this;
         }
@@ -361,7 +377,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setChargeCurrentDC(Property<Float> chargeCurrentDC) {
-            this.chargeCurrentDC = chargeCurrentDC.setIdentifier(0x0e);
+            this.chargeCurrentDC = chargeCurrentDC.setIdentifier(IDENTIFIER_CHARGE_CURRENT_DC);
             addProperty(this.chargeCurrentDC);
             return this;
         }
@@ -371,7 +387,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setMaximumChargeCurrent(Property<Float> maximumChargeCurrent) {
-            this.maximumChargeCurrent = maximumChargeCurrent.setIdentifier(0x0f);
+            this.maximumChargeCurrent = maximumChargeCurrent.setIdentifier(IDENTIFIER_MAXIMUM_CHARGE_CURRENT);
             addProperty(this.maximumChargeCurrent);
             return this;
         }
@@ -381,7 +397,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setMinimumChargeCurrent(Property<Float> minimumChargeCurrent) {
-            this.minimumChargeCurrent = minimumChargeCurrent.setIdentifier(0x10);
+            this.minimumChargeCurrent = minimumChargeCurrent.setIdentifier(IDENTIFIER_MINIMUM_CHARGE_CURRENT);
             addProperty(this.minimumChargeCurrent);
             return this;
         }
@@ -391,7 +407,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder setCoordinates(Property<Coordinates> coordinates) {
-            this.coordinates = coordinates.setIdentifier(0x11);
+            this.coordinates = coordinates.setIdentifier(IDENTIFIER_COORDINATES);
             addProperty(this.coordinates);
             return this;
         }
@@ -417,7 +433,7 @@ public class HomeChargerState extends SetCommand {
          * @return The builder
          */
         public Builder addPriceTariff(Property<PriceTariff> priceTariff) {
-            priceTariff.setIdentifier(0x12);
+            priceTariff.setIdentifier(IDENTIFIER_PRICE_TARIFFS);
             addProperty(priceTariff);
             priceTariffs.add(priceTariff);
             return this;

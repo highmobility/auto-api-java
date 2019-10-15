@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.ActiveState;
  * Start stop defrosting
  */
 public class StartStopDefrosting extends SetCommand {
-    public static final Identifier identifier = Identifier.CLIMATE;
+    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
 
-    Property<ActiveState> defrostingState = new Property(ActiveState.class, 0x07);
+    public static final byte IDENTIFIER_DEFROSTING_STATE = 0x07;
+
+    Property<ActiveState> defrostingState = new Property(ActiveState.class, IDENTIFIER_DEFROSTING_STATE);
 
     /**
      * @return The defrosting state
@@ -44,7 +46,7 @@ public class StartStopDefrosting extends SetCommand {
      * @param defrostingState The defrosting state
      */
     public StartStopDefrosting(ActiveState defrostingState) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.defrostingState.update(defrostingState), true);
     }
@@ -54,7 +56,7 @@ public class StartStopDefrosting extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x07: return defrostingState.update(p);
+                    case IDENTIFIER_DEFROSTING_STATE: return defrostingState.update(p);
                 }
                 return null;
             });

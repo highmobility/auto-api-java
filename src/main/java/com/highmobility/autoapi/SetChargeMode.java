@@ -27,9 +27,11 @@ import com.highmobility.autoapi.property.Property;
  * Set charge mode
  */
 public class SetChargeMode extends SetCommand {
-    public static final Identifier identifier = Identifier.CHARGING;
+    public static final Identifier IDENTIFIER = Identifier.CHARGING;
 
-    Property<ChargeMode> chargeMode = new Property(ChargeMode.class, 0x0c);
+    public static final byte IDENTIFIER_CHARGE_MODE = 0x0c;
+
+    Property<ChargeMode> chargeMode = new Property(ChargeMode.class, IDENTIFIER_CHARGE_MODE);
 
     /**
      * @return The charge mode
@@ -44,7 +46,7 @@ public class SetChargeMode extends SetCommand {
      * @param chargeMode The charge mode
      */
     public SetChargeMode(ChargeMode chargeMode) {
-        super(identifier);
+        super(IDENTIFIER);
     
         if (chargeMode == ChargeMode.INDUCTIVE) throw new IllegalArgumentException();
     
@@ -56,7 +58,7 @@ public class SetChargeMode extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x0c: return chargeMode.update(p);
+                    case IDENTIFIER_CHARGE_MODE: return chargeMode.update(p);
                 }
                 return null;
             });

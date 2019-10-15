@@ -31,16 +31,25 @@ import java.util.List;
  * The chassis settings state
  */
 public class ChassisSettingsState extends SetCommand {
-    public static final Identifier identifier = Identifier.CHASSIS_SETTINGS;
+    public static final Identifier IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
-    Property<DrivingMode> drivingMode = new Property(DrivingMode.class, 0x01);
-    Property<SportChrono> sportChrono = new Property(SportChrono.class, 0x02);
+    public static final byte IDENTIFIER_DRIVING_MODE = 0x01;
+    public static final byte IDENTIFIER_SPORT_CHRONO = 0x02;
+    public static final byte IDENTIFIER_CURRENT_SPRING_RATES = 0x05;
+    public static final byte IDENTIFIER_MAXIMUM_SPRING_RATES = 0x06;
+    public static final byte IDENTIFIER_MINIMUM_SPRING_RATES = 0x07;
+    public static final byte IDENTIFIER_CURRENT_CHASSIS_POSITION = 0x08;
+    public static final byte IDENTIFIER_MAXIMUM_CHASSIS_POSITION = 0x09;
+    public static final byte IDENTIFIER_MINIMUM_CHASSIS_POSITION = 0x0a;
+
+    Property<DrivingMode> drivingMode = new Property(DrivingMode.class, IDENTIFIER_DRIVING_MODE);
+    Property<SportChrono> sportChrono = new Property(SportChrono.class, IDENTIFIER_SPORT_CHRONO);
     Property<SpringRate>[] currentSpringRates;
     Property<SpringRate>[] maximumSpringRates;
     Property<SpringRate>[] minimumSpringRates;
-    PropertyInteger currentChassisPosition = new PropertyInteger(0x08, true);
-    PropertyInteger maximumChassisPosition = new PropertyInteger(0x09, true);
-    PropertyInteger minimumChassisPosition = new PropertyInteger(0x0a, true);
+    PropertyInteger currentChassisPosition = new PropertyInteger(IDENTIFIER_CURRENT_CHASSIS_POSITION, true);
+    PropertyInteger maximumChassisPosition = new PropertyInteger(IDENTIFIER_MAXIMUM_CHASSIS_POSITION, true);
+    PropertyInteger minimumChassisPosition = new PropertyInteger(IDENTIFIER_MINIMUM_CHASSIS_POSITION, true);
 
     /**
      * @return The driving mode
@@ -108,23 +117,23 @@ public class ChassisSettingsState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return drivingMode.update(p);
-                    case 0x02: return sportChrono.update(p);
-                    case 0x05:
+                    case IDENTIFIER_DRIVING_MODE: return drivingMode.update(p);
+                    case IDENTIFIER_SPORT_CHRONO: return sportChrono.update(p);
+                    case IDENTIFIER_CURRENT_SPRING_RATES:
                         Property<SpringRate> currentSpringRate = new Property(SpringRate.class, p);
                         currentSpringRatesBuilder.add(currentSpringRate);
                         return currentSpringRate;
-                    case 0x06:
+                    case IDENTIFIER_MAXIMUM_SPRING_RATES:
                         Property<SpringRate> maximumSpringRate = new Property(SpringRate.class, p);
                         maximumSpringRatesBuilder.add(maximumSpringRate);
                         return maximumSpringRate;
-                    case 0x07:
+                    case IDENTIFIER_MINIMUM_SPRING_RATES:
                         Property<SpringRate> minimumSpringRate = new Property(SpringRate.class, p);
                         minimumSpringRatesBuilder.add(minimumSpringRate);
                         return minimumSpringRate;
-                    case 0x08: return currentChassisPosition.update(p);
-                    case 0x09: return maximumChassisPosition.update(p);
-                    case 0x0a: return minimumChassisPosition.update(p);
+                    case IDENTIFIER_CURRENT_CHASSIS_POSITION: return currentChassisPosition.update(p);
+                    case IDENTIFIER_MAXIMUM_CHASSIS_POSITION: return maximumChassisPosition.update(p);
+                    case IDENTIFIER_MINIMUM_CHASSIS_POSITION: return minimumChassisPosition.update(p);
                 }
 
                 return null;
@@ -164,7 +173,7 @@ public class ChassisSettingsState extends SetCommand {
         private PropertyInteger minimumChassisPosition;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public ChassisSettingsState build() {
@@ -176,7 +185,7 @@ public class ChassisSettingsState extends SetCommand {
          * @return The builder
          */
         public Builder setDrivingMode(Property<DrivingMode> drivingMode) {
-            this.drivingMode = drivingMode.setIdentifier(0x01);
+            this.drivingMode = drivingMode.setIdentifier(IDENTIFIER_DRIVING_MODE);
             addProperty(this.drivingMode);
             return this;
         }
@@ -186,7 +195,7 @@ public class ChassisSettingsState extends SetCommand {
          * @return The builder
          */
         public Builder setSportChrono(Property<SportChrono> sportChrono) {
-            this.sportChrono = sportChrono.setIdentifier(0x02);
+            this.sportChrono = sportChrono.setIdentifier(IDENTIFIER_SPORT_CHRONO);
             addProperty(this.sportChrono);
             return this;
         }
@@ -213,7 +222,7 @@ public class ChassisSettingsState extends SetCommand {
          * @return The builder
          */
         public Builder addCurrentSpringRate(Property<SpringRate> currentSpringRate) {
-            currentSpringRate.setIdentifier(0x05);
+            currentSpringRate.setIdentifier(IDENTIFIER_CURRENT_SPRING_RATES);
             addProperty(currentSpringRate);
             currentSpringRates.add(currentSpringRate);
             return this;
@@ -241,7 +250,7 @@ public class ChassisSettingsState extends SetCommand {
          * @return The builder
          */
         public Builder addMaximumSpringRate(Property<SpringRate> maximumSpringRate) {
-            maximumSpringRate.setIdentifier(0x06);
+            maximumSpringRate.setIdentifier(IDENTIFIER_MAXIMUM_SPRING_RATES);
             addProperty(maximumSpringRate);
             maximumSpringRates.add(maximumSpringRate);
             return this;
@@ -269,7 +278,7 @@ public class ChassisSettingsState extends SetCommand {
          * @return The builder
          */
         public Builder addMinimumSpringRate(Property<SpringRate> minimumSpringRate) {
-            minimumSpringRate.setIdentifier(0x07);
+            minimumSpringRate.setIdentifier(IDENTIFIER_MINIMUM_SPRING_RATES);
             addProperty(minimumSpringRate);
             minimumSpringRates.add(minimumSpringRate);
             return this;
@@ -280,7 +289,7 @@ public class ChassisSettingsState extends SetCommand {
          * @return The builder
          */
         public Builder setCurrentChassisPosition(Property<Integer> currentChassisPosition) {
-            this.currentChassisPosition = new PropertyInteger(0x08, true, 1, currentChassisPosition);
+            this.currentChassisPosition = new PropertyInteger(IDENTIFIER_CURRENT_CHASSIS_POSITION, true, 1, currentChassisPosition);
             addProperty(this.currentChassisPosition);
             return this;
         }
@@ -290,7 +299,7 @@ public class ChassisSettingsState extends SetCommand {
          * @return The builder
          */
         public Builder setMaximumChassisPosition(Property<Integer> maximumChassisPosition) {
-            this.maximumChassisPosition = new PropertyInteger(0x09, true, 1, maximumChassisPosition);
+            this.maximumChassisPosition = new PropertyInteger(IDENTIFIER_MAXIMUM_CHASSIS_POSITION, true, 1, maximumChassisPosition);
             addProperty(this.maximumChassisPosition);
             return this;
         }
@@ -300,7 +309,7 @@ public class ChassisSettingsState extends SetCommand {
          * @return The builder
          */
         public Builder setMinimumChassisPosition(Property<Integer> minimumChassisPosition) {
-            this.minimumChassisPosition = new PropertyInteger(0x0a, true, 1, minimumChassisPosition);
+            this.minimumChassisPosition = new PropertyInteger(IDENTIFIER_MINIMUM_CHASSIS_POSITION, true, 1, minimumChassisPosition);
             addProperty(this.minimumChassisPosition);
             return this;
         }

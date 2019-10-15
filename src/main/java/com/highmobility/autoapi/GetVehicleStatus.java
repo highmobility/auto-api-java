@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all vehicle status properties.
  */
 public class GetVehicleStatus extends GetCommand {
-    public static final Identifier identifier = Identifier.VEHICLE_STATUS;
+    public static final Identifier IDENTIFIER = Identifier.VEHICLE_STATUS;
 
     public GetVehicleStatus() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetVehicleStatus(byte[] bytes) {

@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.OnOffState;
  * Turn ignition on off
  */
 public class TurnIgnitionOnOff extends SetCommand {
-    public static final Identifier identifier = Identifier.IGNITION;
+    public static final Identifier IDENTIFIER = Identifier.IGNITION;
 
-    Property<OnOffState> status = new Property(OnOffState.class, 0x01);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+
+    Property<OnOffState> status = new Property(OnOffState.class, IDENTIFIER_STATUS);
 
     /**
      * @return The status
@@ -44,7 +46,7 @@ public class TurnIgnitionOnOff extends SetCommand {
      * @param status The status
      */
     public TurnIgnitionOnOff(OnOffState status) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.status.update(status), true);
     }
@@ -54,7 +56,7 @@ public class TurnIgnitionOnOff extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return status.update(p);
+                    case IDENTIFIER_STATUS: return status.update(p);
                 }
                 return null;
             });

@@ -35,13 +35,22 @@ import java.util.List;
  * The lights state
  */
 public class LightsState extends SetCommand {
-    public static final Identifier identifier = Identifier.LIGHTS;
+    public static final Identifier IDENTIFIER = Identifier.LIGHTS;
 
-    Property<FrontExteriorLight> frontExteriorLight = new Property(FrontExteriorLight.class, 0x01);
-    Property<ActiveState> rearExteriorLight = new Property(ActiveState.class, 0x02);
-    Property<RgbColour> ambientLightColour = new Property(RgbColour.class, 0x04);
-    Property<ActiveState> reverseLight = new Property(ActiveState.class, 0x05);
-    Property<ActiveState> emergencyBrakeLight = new Property(ActiveState.class, 0x06);
+    public static final byte IDENTIFIER_FRONT_EXTERIOR_LIGHT = 0x01;
+    public static final byte IDENTIFIER_REAR_EXTERIOR_LIGHT = 0x02;
+    public static final byte IDENTIFIER_AMBIENT_LIGHT_COLOUR = 0x04;
+    public static final byte IDENTIFIER_REVERSE_LIGHT = 0x05;
+    public static final byte IDENTIFIER_EMERGENCY_BRAKE_LIGHT = 0x06;
+    public static final byte IDENTIFIER_FOG_LIGHTS = 0x07;
+    public static final byte IDENTIFIER_READING_LAMPS = 0x08;
+    public static final byte IDENTIFIER_INTERIOR_LIGHTS = 0x09;
+
+    Property<FrontExteriorLight> frontExteriorLight = new Property(FrontExteriorLight.class, IDENTIFIER_FRONT_EXTERIOR_LIGHT);
+    Property<ActiveState> rearExteriorLight = new Property(ActiveState.class, IDENTIFIER_REAR_EXTERIOR_LIGHT);
+    Property<RgbColour> ambientLightColour = new Property(RgbColour.class, IDENTIFIER_AMBIENT_LIGHT_COLOUR);
+    Property<ActiveState> reverseLight = new Property(ActiveState.class, IDENTIFIER_REVERSE_LIGHT);
+    Property<ActiveState> emergencyBrakeLight = new Property(ActiveState.class, IDENTIFIER_EMERGENCY_BRAKE_LIGHT);
     Property<Light>[] fogLights;
     Property<ReadingLamp>[] readingLamps;
     Property<Light>[] interiorLights;
@@ -155,20 +164,20 @@ public class LightsState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return frontExteriorLight.update(p);
-                    case 0x02: return rearExteriorLight.update(p);
-                    case 0x04: return ambientLightColour.update(p);
-                    case 0x05: return reverseLight.update(p);
-                    case 0x06: return emergencyBrakeLight.update(p);
-                    case 0x07:
+                    case IDENTIFIER_FRONT_EXTERIOR_LIGHT: return frontExteriorLight.update(p);
+                    case IDENTIFIER_REAR_EXTERIOR_LIGHT: return rearExteriorLight.update(p);
+                    case IDENTIFIER_AMBIENT_LIGHT_COLOUR: return ambientLightColour.update(p);
+                    case IDENTIFIER_REVERSE_LIGHT: return reverseLight.update(p);
+                    case IDENTIFIER_EMERGENCY_BRAKE_LIGHT: return emergencyBrakeLight.update(p);
+                    case IDENTIFIER_FOG_LIGHTS:
                         Property<Light> fogLight = new Property(Light.class, p);
                         fogLightsBuilder.add(fogLight);
                         return fogLight;
-                    case 0x08:
+                    case IDENTIFIER_READING_LAMPS:
                         Property<ReadingLamp> readingLamp = new Property(ReadingLamp.class, p);
                         readingLampsBuilder.add(readingLamp);
                         return readingLamp;
-                    case 0x09:
+                    case IDENTIFIER_INTERIOR_LIGHTS:
                         Property<Light> interiorLight = new Property(Light.class, p);
                         interiorLightsBuilder.add(interiorLight);
                         return interiorLight;
@@ -211,7 +220,7 @@ public class LightsState extends SetCommand {
         private List<Property> interiorLights = new ArrayList<>();
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public LightsState build() {
@@ -223,7 +232,7 @@ public class LightsState extends SetCommand {
          * @return The builder
          */
         public Builder setFrontExteriorLight(Property<FrontExteriorLight> frontExteriorLight) {
-            this.frontExteriorLight = frontExteriorLight.setIdentifier(0x01);
+            this.frontExteriorLight = frontExteriorLight.setIdentifier(IDENTIFIER_FRONT_EXTERIOR_LIGHT);
             addProperty(this.frontExteriorLight);
             return this;
         }
@@ -233,7 +242,7 @@ public class LightsState extends SetCommand {
          * @return The builder
          */
         public Builder setRearExteriorLight(Property<ActiveState> rearExteriorLight) {
-            this.rearExteriorLight = rearExteriorLight.setIdentifier(0x02);
+            this.rearExteriorLight = rearExteriorLight.setIdentifier(IDENTIFIER_REAR_EXTERIOR_LIGHT);
             addProperty(this.rearExteriorLight);
             return this;
         }
@@ -243,7 +252,7 @@ public class LightsState extends SetCommand {
          * @return The builder
          */
         public Builder setAmbientLightColour(Property<RgbColour> ambientLightColour) {
-            this.ambientLightColour = ambientLightColour.setIdentifier(0x04);
+            this.ambientLightColour = ambientLightColour.setIdentifier(IDENTIFIER_AMBIENT_LIGHT_COLOUR);
             addProperty(this.ambientLightColour);
             return this;
         }
@@ -253,7 +262,7 @@ public class LightsState extends SetCommand {
          * @return The builder
          */
         public Builder setReverseLight(Property<ActiveState> reverseLight) {
-            this.reverseLight = reverseLight.setIdentifier(0x05);
+            this.reverseLight = reverseLight.setIdentifier(IDENTIFIER_REVERSE_LIGHT);
             addProperty(this.reverseLight);
             return this;
         }
@@ -263,7 +272,7 @@ public class LightsState extends SetCommand {
          * @return The builder
          */
         public Builder setEmergencyBrakeLight(Property<ActiveState> emergencyBrakeLight) {
-            this.emergencyBrakeLight = emergencyBrakeLight.setIdentifier(0x06);
+            this.emergencyBrakeLight = emergencyBrakeLight.setIdentifier(IDENTIFIER_EMERGENCY_BRAKE_LIGHT);
             addProperty(this.emergencyBrakeLight);
             return this;
         }
@@ -290,7 +299,7 @@ public class LightsState extends SetCommand {
          * @return The builder
          */
         public Builder addFogLight(Property<Light> fogLight) {
-            fogLight.setIdentifier(0x07);
+            fogLight.setIdentifier(IDENTIFIER_FOG_LIGHTS);
             addProperty(fogLight);
             fogLights.add(fogLight);
             return this;
@@ -318,7 +327,7 @@ public class LightsState extends SetCommand {
          * @return The builder
          */
         public Builder addReadingLamp(Property<ReadingLamp> readingLamp) {
-            readingLamp.setIdentifier(0x08);
+            readingLamp.setIdentifier(IDENTIFIER_READING_LAMPS);
             addProperty(readingLamp);
             readingLamps.add(readingLamp);
             return this;
@@ -345,7 +354,7 @@ public class LightsState extends SetCommand {
          * @return The builder
          */
         public Builder addInteriorLight(Property<Light> interiorLight) {
-            interiorLight.setIdentifier(0x09);
+            interiorLight.setIdentifier(IDENTIFIER_INTERIOR_LIGHTS);
             addProperty(interiorLight);
             interiorLights.add(interiorLight);
             return this;

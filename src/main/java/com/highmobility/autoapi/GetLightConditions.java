@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all light conditions properties.
  */
 public class GetLightConditions extends GetCommand {
-    public static final Identifier identifier = Identifier.LIGHT_CONDITIONS;
+    public static final Identifier IDENTIFIER = Identifier.LIGHT_CONDITIONS;
 
     public GetLightConditions() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetLightConditions(byte[] bytes) {

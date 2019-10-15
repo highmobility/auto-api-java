@@ -26,9 +26,11 @@ import com.highmobility.autoapi.value.ConnectionState;
  * The mobile state
  */
 public class MobileState extends SetCommand {
-    public static final Identifier identifier = Identifier.MOBILE;
+    public static final Identifier IDENTIFIER = Identifier.MOBILE;
 
-    Property<ConnectionState> connection = new Property(ConnectionState.class, 0x01);
+    public static final byte IDENTIFIER_CONNECTION = 0x01;
+
+    Property<ConnectionState> connection = new Property(ConnectionState.class, IDENTIFIER_CONNECTION);
 
     /**
      * @return The connection
@@ -42,7 +44,7 @@ public class MobileState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return connection.update(p);
+                    case IDENTIFIER_CONNECTION: return connection.update(p);
                 }
 
                 return null;
@@ -64,7 +66,7 @@ public class MobileState extends SetCommand {
         private Property<ConnectionState> connection;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public MobileState build() {
@@ -76,7 +78,7 @@ public class MobileState extends SetCommand {
          * @return The builder
          */
         public Builder setConnection(Property<ConnectionState> connection) {
-            this.connection = connection.setIdentifier(0x01);
+            this.connection = connection.setIdentifier(IDENTIFIER_CONNECTION);
             addProperty(this.connection);
             return this;
         }

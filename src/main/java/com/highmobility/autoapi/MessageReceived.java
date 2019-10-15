@@ -27,10 +27,13 @@ import javax.annotation.Nullable;
  * Message received
  */
 public class MessageReceived extends SetCommand {
-    public static final Identifier identifier = Identifier.MESSAGING;
+    public static final Identifier IDENTIFIER = Identifier.MESSAGING;
 
-    Property<String> text = new Property(String.class, 0x01);
-    @Nullable Property<String> handle = new Property(String.class, 0x02);
+    public static final byte IDENTIFIER_TEXT = 0x01;
+    public static final byte IDENTIFIER_HANDLE = 0x02;
+
+    Property<String> text = new Property(String.class, IDENTIFIER_TEXT);
+    @Nullable Property<String> handle = new Property(String.class, IDENTIFIER_HANDLE);
 
     /**
      * @return The text
@@ -53,7 +56,7 @@ public class MessageReceived extends SetCommand {
      * @param handle The optional handle of message
      */
     public MessageReceived(String text, @Nullable String handle) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.text.update(text));
         addProperty(this.handle.update(handle), true);
@@ -64,8 +67,8 @@ public class MessageReceived extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return text.update(p);
-                    case 0x02: return handle.update(p);
+                    case IDENTIFIER_TEXT: return text.update(p);
+                    case IDENTIFIER_HANDLE: return handle.update(p);
                 }
                 return null;
             });

@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all race properties.
  */
 public class GetRaceState extends GetCommand {
-    public static final Identifier identifier = Identifier.RACE;
+    public static final Identifier IDENTIFIER = Identifier.RACE;
 
     public GetRaceState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetRaceState(byte[] bytes) {

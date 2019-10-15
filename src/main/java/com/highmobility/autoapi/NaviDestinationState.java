@@ -28,14 +28,21 @@ import com.highmobility.autoapi.value.Time;
  * The navi destination state
  */
 public class NaviDestinationState extends SetCommand {
-    public static final Identifier identifier = Identifier.NAVI_DESTINATION;
+    public static final Identifier IDENTIFIER = Identifier.NAVI_DESTINATION;
 
-    Property<Coordinates> coordinates = new Property(Coordinates.class, 0x01);
-    Property<String> destinationName = new Property(String.class, 0x02);
-    PropertyInteger dataSlotsFree = new PropertyInteger(0x03, false);
-    PropertyInteger dataSlotsMax = new PropertyInteger(0x04, false);
-    Property<Time> arrivalDuration = new Property(Time.class, 0x05);
-    PropertyInteger distanceToDestination = new PropertyInteger(0x06, false);
+    public static final byte IDENTIFIER_COORDINATES = 0x01;
+    public static final byte IDENTIFIER_DESTINATION_NAME = 0x02;
+    public static final byte IDENTIFIER_DATA_SLOTS_FREE = 0x03;
+    public static final byte IDENTIFIER_DATA_SLOTS_MAX = 0x04;
+    public static final byte IDENTIFIER_ARRIVAL_DURATION = 0x05;
+    public static final byte IDENTIFIER_DISTANCE_TO_DESTINATION = 0x06;
+
+    Property<Coordinates> coordinates = new Property(Coordinates.class, IDENTIFIER_COORDINATES);
+    Property<String> destinationName = new Property(String.class, IDENTIFIER_DESTINATION_NAME);
+    PropertyInteger dataSlotsFree = new PropertyInteger(IDENTIFIER_DATA_SLOTS_FREE, false);
+    PropertyInteger dataSlotsMax = new PropertyInteger(IDENTIFIER_DATA_SLOTS_MAX, false);
+    Property<Time> arrivalDuration = new Property(Time.class, IDENTIFIER_ARRIVAL_DURATION);
+    PropertyInteger distanceToDestination = new PropertyInteger(IDENTIFIER_DISTANCE_TO_DESTINATION, false);
 
     /**
      * @return The coordinates
@@ -84,12 +91,12 @@ public class NaviDestinationState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return coordinates.update(p);
-                    case 0x02: return destinationName.update(p);
-                    case 0x03: return dataSlotsFree.update(p);
-                    case 0x04: return dataSlotsMax.update(p);
-                    case 0x05: return arrivalDuration.update(p);
-                    case 0x06: return distanceToDestination.update(p);
+                    case IDENTIFIER_COORDINATES: return coordinates.update(p);
+                    case IDENTIFIER_DESTINATION_NAME: return destinationName.update(p);
+                    case IDENTIFIER_DATA_SLOTS_FREE: return dataSlotsFree.update(p);
+                    case IDENTIFIER_DATA_SLOTS_MAX: return dataSlotsMax.update(p);
+                    case IDENTIFIER_ARRIVAL_DURATION: return arrivalDuration.update(p);
+                    case IDENTIFIER_DISTANCE_TO_DESTINATION: return distanceToDestination.update(p);
                 }
 
                 return null;
@@ -121,7 +128,7 @@ public class NaviDestinationState extends SetCommand {
         private PropertyInteger distanceToDestination;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public NaviDestinationState build() {
@@ -133,7 +140,7 @@ public class NaviDestinationState extends SetCommand {
          * @return The builder
          */
         public Builder setCoordinates(Property<Coordinates> coordinates) {
-            this.coordinates = coordinates.setIdentifier(0x01);
+            this.coordinates = coordinates.setIdentifier(IDENTIFIER_COORDINATES);
             addProperty(this.coordinates);
             return this;
         }
@@ -143,7 +150,7 @@ public class NaviDestinationState extends SetCommand {
          * @return The builder
          */
         public Builder setDestinationName(Property<String> destinationName) {
-            this.destinationName = destinationName.setIdentifier(0x02);
+            this.destinationName = destinationName.setIdentifier(IDENTIFIER_DESTINATION_NAME);
             addProperty(this.destinationName);
             return this;
         }
@@ -153,7 +160,7 @@ public class NaviDestinationState extends SetCommand {
          * @return The builder
          */
         public Builder setDataSlotsFree(Property<Integer> dataSlotsFree) {
-            this.dataSlotsFree = new PropertyInteger(0x03, false, 1, dataSlotsFree);
+            this.dataSlotsFree = new PropertyInteger(IDENTIFIER_DATA_SLOTS_FREE, false, 1, dataSlotsFree);
             addProperty(this.dataSlotsFree);
             return this;
         }
@@ -163,7 +170,7 @@ public class NaviDestinationState extends SetCommand {
          * @return The builder
          */
         public Builder setDataSlotsMax(Property<Integer> dataSlotsMax) {
-            this.dataSlotsMax = new PropertyInteger(0x04, false, 1, dataSlotsMax);
+            this.dataSlotsMax = new PropertyInteger(IDENTIFIER_DATA_SLOTS_MAX, false, 1, dataSlotsMax);
             addProperty(this.dataSlotsMax);
             return this;
         }
@@ -173,7 +180,7 @@ public class NaviDestinationState extends SetCommand {
          * @return The builder
          */
         public Builder setArrivalDuration(Property<Time> arrivalDuration) {
-            this.arrivalDuration = arrivalDuration.setIdentifier(0x05);
+            this.arrivalDuration = arrivalDuration.setIdentifier(IDENTIFIER_ARRIVAL_DURATION);
             addProperty(this.arrivalDuration);
             return this;
         }
@@ -183,7 +190,7 @@ public class NaviDestinationState extends SetCommand {
          * @return The builder
          */
         public Builder setDistanceToDestination(Property<Integer> distanceToDestination) {
-            this.distanceToDestination = new PropertyInteger(0x06, false, 2, distanceToDestination);
+            this.distanceToDestination = new PropertyInteger(IDENTIFIER_DISTANCE_TO_DESTINATION, false, 2, distanceToDestination);
             addProperty(this.distanceToDestination);
             return this;
         }

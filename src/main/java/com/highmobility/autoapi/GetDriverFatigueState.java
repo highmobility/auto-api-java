@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all driver fatigue properties.
  */
 public class GetDriverFatigueState extends GetCommand {
-    public static final Identifier identifier = Identifier.DRIVER_FATIGUE;
+    public static final Identifier IDENTIFIER = Identifier.DRIVER_FATIGUE;
 
     public GetDriverFatigueState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetDriverFatigueState(byte[] bytes) {

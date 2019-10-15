@@ -29,10 +29,13 @@ import javax.annotation.Nullable;
  * Control wipers
  */
 public class ControlWipers extends SetCommand {
-    public static final Identifier identifier = Identifier.WINDSCREEN;
+    public static final Identifier IDENTIFIER = Identifier.WINDSCREEN;
 
-    Property<Wipers> wipers = new Property(Wipers.class, 0x01);
-    @Nullable Property<WipersIntensity> wipersIntensity = new Property(WipersIntensity.class, 0x02);
+    public static final byte IDENTIFIER_WIPERS = 0x01;
+    public static final byte IDENTIFIER_WIPERS_INTENSITY = 0x02;
+
+    Property<Wipers> wipers = new Property(Wipers.class, IDENTIFIER_WIPERS);
+    @Nullable Property<WipersIntensity> wipersIntensity = new Property(WipersIntensity.class, IDENTIFIER_WIPERS_INTENSITY);
 
     /**
      * @return The wipers
@@ -55,7 +58,7 @@ public class ControlWipers extends SetCommand {
      * @param wipersIntensity The wipers intensity
      */
     public ControlWipers(Wipers wipers, @Nullable WipersIntensity wipersIntensity) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.wipers.update(wipers));
         addProperty(this.wipersIntensity.update(wipersIntensity), true);
@@ -66,8 +69,8 @@ public class ControlWipers extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return wipers.update(p);
-                    case 0x02: return wipersIntensity.update(p);
+                    case IDENTIFIER_WIPERS: return wipers.update(p);
+                    case IDENTIFIER_WIPERS_INTENSITY: return wipersIntensity.update(p);
                 }
                 return null;
             });

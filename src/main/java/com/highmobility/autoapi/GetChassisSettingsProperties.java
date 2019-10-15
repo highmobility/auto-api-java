@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific chassis settings properties.
  */
 public class GetChassisSettingsProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.CHASSIS_SETTINGS;
+    public static final Identifier IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetChassisSettingsProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetChassisSettingsProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

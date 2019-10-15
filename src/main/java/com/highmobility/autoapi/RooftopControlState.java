@@ -26,13 +26,19 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The rooftop control state
  */
 public class RooftopControlState extends SetCommand {
-    public static final Identifier identifier = Identifier.ROOFTOP_CONTROL;
+    public static final Identifier IDENTIFIER = Identifier.ROOFTOP_CONTROL;
 
-    Property<Double> dimming = new Property(Double.class, 0x01);
-    Property<Double> position = new Property(Double.class, 0x02);
-    Property<ConvertibleRoofState> convertibleRoofState = new Property(ConvertibleRoofState.class, 0x03);
-    Property<SunroofTiltState> sunroofTiltState = new Property(SunroofTiltState.class, 0x04);
-    Property<SunroofState> sunroofState = new Property(SunroofState.class, 0x05);
+    public static final byte IDENTIFIER_DIMMING = 0x01;
+    public static final byte IDENTIFIER_POSITION = 0x02;
+    public static final byte IDENTIFIER_CONVERTIBLE_ROOF_STATE = 0x03;
+    public static final byte IDENTIFIER_SUNROOF_TILT_STATE = 0x04;
+    public static final byte IDENTIFIER_SUNROOF_STATE = 0x05;
+
+    Property<Double> dimming = new Property(Double.class, IDENTIFIER_DIMMING);
+    Property<Double> position = new Property(Double.class, IDENTIFIER_POSITION);
+    Property<ConvertibleRoofState> convertibleRoofState = new Property(ConvertibleRoofState.class, IDENTIFIER_CONVERTIBLE_ROOF_STATE);
+    Property<SunroofTiltState> sunroofTiltState = new Property(SunroofTiltState.class, IDENTIFIER_SUNROOF_TILT_STATE);
+    Property<SunroofState> sunroofState = new Property(SunroofState.class, IDENTIFIER_SUNROOF_STATE);
 
     /**
      * @return 1.0 (100%) is opaque, 0.0 (0%) is transparent
@@ -74,11 +80,11 @@ public class RooftopControlState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return dimming.update(p);
-                    case 0x02: return position.update(p);
-                    case 0x03: return convertibleRoofState.update(p);
-                    case 0x04: return sunroofTiltState.update(p);
-                    case 0x05: return sunroofState.update(p);
+                    case IDENTIFIER_DIMMING: return dimming.update(p);
+                    case IDENTIFIER_POSITION: return position.update(p);
+                    case IDENTIFIER_CONVERTIBLE_ROOF_STATE: return convertibleRoofState.update(p);
+                    case IDENTIFIER_SUNROOF_TILT_STATE: return sunroofTiltState.update(p);
+                    case IDENTIFIER_SUNROOF_STATE: return sunroofState.update(p);
                 }
 
                 return null;
@@ -108,7 +114,7 @@ public class RooftopControlState extends SetCommand {
         private Property<SunroofState> sunroofState;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public RooftopControlState build() {
@@ -120,7 +126,7 @@ public class RooftopControlState extends SetCommand {
          * @return The builder
          */
         public Builder setDimming(Property<Double> dimming) {
-            this.dimming = dimming.setIdentifier(0x01);
+            this.dimming = dimming.setIdentifier(IDENTIFIER_DIMMING);
             addProperty(this.dimming);
             return this;
         }
@@ -130,7 +136,7 @@ public class RooftopControlState extends SetCommand {
          * @return The builder
          */
         public Builder setPosition(Property<Double> position) {
-            this.position = position.setIdentifier(0x02);
+            this.position = position.setIdentifier(IDENTIFIER_POSITION);
             addProperty(this.position);
             return this;
         }
@@ -140,7 +146,7 @@ public class RooftopControlState extends SetCommand {
          * @return The builder
          */
         public Builder setConvertibleRoofState(Property<ConvertibleRoofState> convertibleRoofState) {
-            this.convertibleRoofState = convertibleRoofState.setIdentifier(0x03);
+            this.convertibleRoofState = convertibleRoofState.setIdentifier(IDENTIFIER_CONVERTIBLE_ROOF_STATE);
             addProperty(this.convertibleRoofState);
             return this;
         }
@@ -150,7 +156,7 @@ public class RooftopControlState extends SetCommand {
          * @return The builder
          */
         public Builder setSunroofTiltState(Property<SunroofTiltState> sunroofTiltState) {
-            this.sunroofTiltState = sunroofTiltState.setIdentifier(0x04);
+            this.sunroofTiltState = sunroofTiltState.setIdentifier(IDENTIFIER_SUNROOF_TILT_STATE);
             addProperty(this.sunroofTiltState);
             return this;
         }
@@ -160,7 +166,7 @@ public class RooftopControlState extends SetCommand {
          * @return The builder
          */
         public Builder setSunroofState(Property<SunroofState> sunroofState) {
-            this.sunroofState = sunroofState.setIdentifier(0x05);
+            this.sunroofState = sunroofState.setIdentifier(IDENTIFIER_SUNROOF_STATE);
             addProperty(this.sunroofState);
             return this;
         }

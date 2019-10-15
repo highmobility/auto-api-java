@@ -26,10 +26,13 @@ import com.highmobility.autoapi.value.OnOffState;
  * The ignition state
  */
 public class IgnitionState extends SetCommand {
-    public static final Identifier identifier = Identifier.IGNITION;
+    public static final Identifier IDENTIFIER = Identifier.IGNITION;
 
-    Property<OnOffState> status = new Property(OnOffState.class, 0x01);
-    Property<OnOffState> accessoriesStatus = new Property(OnOffState.class, 0x02);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+    public static final byte IDENTIFIER_ACCESSORIES_STATUS = 0x02;
+
+    Property<OnOffState> status = new Property(OnOffState.class, IDENTIFIER_STATUS);
+    Property<OnOffState> accessoriesStatus = new Property(OnOffState.class, IDENTIFIER_ACCESSORIES_STATUS);
 
     /**
      * @return The status
@@ -50,8 +53,8 @@ public class IgnitionState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return status.update(p);
-                    case 0x02: return accessoriesStatus.update(p);
+                    case IDENTIFIER_STATUS: return status.update(p);
+                    case IDENTIFIER_ACCESSORIES_STATUS: return accessoriesStatus.update(p);
                 }
 
                 return null;
@@ -75,7 +78,7 @@ public class IgnitionState extends SetCommand {
         private Property<OnOffState> accessoriesStatus;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public IgnitionState build() {
@@ -87,7 +90,7 @@ public class IgnitionState extends SetCommand {
          * @return The builder
          */
         public Builder setStatus(Property<OnOffState> status) {
-            this.status = status.setIdentifier(0x01);
+            this.status = status.setIdentifier(IDENTIFIER_STATUS);
             addProperty(this.status);
             return this;
         }
@@ -97,7 +100,7 @@ public class IgnitionState extends SetCommand {
          * @return The builder
          */
         public Builder setAccessoriesStatus(Property<OnOffState> accessoriesStatus) {
-            this.accessoriesStatus = accessoriesStatus.setIdentifier(0x02);
+            this.accessoriesStatus = accessoriesStatus.setIdentifier(IDENTIFIER_ACCESSORIES_STATUS);
             addProperty(this.accessoriesStatus);
             return this;
         }

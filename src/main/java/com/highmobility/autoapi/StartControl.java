@@ -28,15 +28,17 @@ import com.highmobility.value.Bytes;
  * Start control
  */
 public class StartControl extends SetCommand {
-    public static final Identifier identifier = Identifier.REMOTE_CONTROL;
+    public static final Identifier IDENTIFIER = Identifier.REMOTE_CONTROL;
 
-    Property<ControlMode> controlMode = new Property(ControlMode.class, 0x01);
+    public static final byte IDENTIFIER_CONTROL_MODE = 0x01;
+
+    Property<ControlMode> controlMode = new Property(ControlMode.class, IDENTIFIER_CONTROL_MODE);
 
     /**
      * Start control
      */
     public StartControl() {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(controlMode.addValueComponent(new Bytes("02")), true);
     }
@@ -46,7 +48,7 @@ public class StartControl extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: controlMode.update(p);
+                    case IDENTIFIER_CONTROL_MODE: controlMode.update(p);
                 }
                 return null;
             });

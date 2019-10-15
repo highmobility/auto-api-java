@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific offroad properties.
  */
 public class GetOffroadProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.OFFROAD;
+    public static final Identifier IDENTIFIER = Identifier.OFFROAD;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetOffroadProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetOffroadProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

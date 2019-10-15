@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.Property;
  * Set charge limit
  */
 public class SetChargeLimit extends SetCommand {
-    public static final Identifier identifier = Identifier.CHARGING;
+    public static final Identifier IDENTIFIER = Identifier.CHARGING;
 
-    Property<Double> chargeLimit = new Property(Double.class, 0x08);
+    public static final byte IDENTIFIER_CHARGE_LIMIT = 0x08;
+
+    Property<Double> chargeLimit = new Property(Double.class, IDENTIFIER_CHARGE_LIMIT);
 
     /**
      * @return The charge limit
@@ -43,7 +45,7 @@ public class SetChargeLimit extends SetCommand {
      * @param chargeLimit Charge limit percentage between 0.0-1.0
      */
     public SetChargeLimit(Double chargeLimit) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.chargeLimit.update(chargeLimit), true);
     }
@@ -53,7 +55,7 @@ public class SetChargeLimit extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x08: return chargeLimit.update(p);
+                    case IDENTIFIER_CHARGE_LIMIT: return chargeLimit.update(p);
                 }
                 return null;
             });

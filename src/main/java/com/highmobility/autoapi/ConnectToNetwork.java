@@ -28,11 +28,15 @@ import javax.annotation.Nullable;
  * Connect to network
  */
 public class ConnectToNetwork extends SetCommand {
-    public static final Identifier identifier = Identifier.WI_FI;
+    public static final Identifier IDENTIFIER = Identifier.WI_FI;
 
-    Property<String> networkSSID = new Property(String.class, 0x03);
-    Property<NetworkSecurity> networkSecurity = new Property(NetworkSecurity.class, 0x04);
-    @Nullable Property<String> password = new Property(String.class, 0x05);
+    public static final byte IDENTIFIER_NETWORK_SSID = 0x03;
+    public static final byte IDENTIFIER_NETWORK_SECURITY = 0x04;
+    public static final byte IDENTIFIER_PASSWORD = 0x05;
+
+    Property<String> networkSSID = new Property(String.class, IDENTIFIER_NETWORK_SSID);
+    Property<NetworkSecurity> networkSecurity = new Property(NetworkSecurity.class, IDENTIFIER_NETWORK_SECURITY);
+    @Nullable Property<String> password = new Property(String.class, IDENTIFIER_PASSWORD);
 
     /**
      * @return The network ssid
@@ -63,7 +67,7 @@ public class ConnectToNetwork extends SetCommand {
      * @param password The network password
      */
     public ConnectToNetwork(String networkSSID, NetworkSecurity networkSecurity, @Nullable String password) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.networkSSID.update(networkSSID));
         addProperty(this.networkSecurity.update(networkSecurity));
@@ -75,9 +79,9 @@ public class ConnectToNetwork extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x03: return networkSSID.update(p);
-                    case 0x04: return networkSecurity.update(p);
-                    case 0x05: return password.update(p);
+                    case IDENTIFIER_NETWORK_SSID: return networkSSID.update(p);
+                    case IDENTIFIER_NETWORK_SECURITY: return networkSecurity.update(p);
+                    case IDENTIFIER_PASSWORD: return password.update(p);
                 }
                 return null;
             });

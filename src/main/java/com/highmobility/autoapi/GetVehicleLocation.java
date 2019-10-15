@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all vehicle location properties.
  */
 public class GetVehicleLocation extends GetCommand {
-    public static final Identifier identifier = Identifier.VEHICLE_LOCATION;
+    public static final Identifier IDENTIFIER = Identifier.VEHICLE_LOCATION;
 
     public GetVehicleLocation() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetVehicleLocation(byte[] bytes) {

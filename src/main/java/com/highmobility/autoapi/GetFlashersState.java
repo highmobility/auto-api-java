@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all honk horn flash lights properties.
  */
 public class GetFlashersState extends GetCommand {
-    public static final Identifier identifier = Identifier.HONK_HORN_FLASH_LIGHTS;
+    public static final Identifier IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
 
     public GetFlashersState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetFlashersState(byte[] bytes) {

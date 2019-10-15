@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific race properties.
  */
 public class GetRaceProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.RACE;
+    public static final Identifier IDENTIFIER = Identifier.RACE;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetRaceProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetRaceProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

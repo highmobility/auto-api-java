@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all windscreen properties.
  */
 public class GetWindscreenState extends GetCommand {
-    public static final Identifier identifier = Identifier.WINDSCREEN;
+    public static final Identifier IDENTIFIER = Identifier.WINDSCREEN;
 
     public GetWindscreenState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetWindscreenState(byte[] bytes) {

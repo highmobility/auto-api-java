@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific vehicle location properties.
  */
 public class GetVehicleLocationProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.VEHICLE_LOCATION;
+    public static final Identifier IDENTIFIER = Identifier.VEHICLE_LOCATION;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetVehicleLocationProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetVehicleLocationProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

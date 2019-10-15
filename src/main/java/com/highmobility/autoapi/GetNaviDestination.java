@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all navi destination properties.
  */
 public class GetNaviDestination extends GetCommand {
-    public static final Identifier identifier = Identifier.NAVI_DESTINATION;
+    public static final Identifier IDENTIFIER = Identifier.NAVI_DESTINATION;
 
     public GetNaviDestination() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetNaviDestination(byte[] bytes) {

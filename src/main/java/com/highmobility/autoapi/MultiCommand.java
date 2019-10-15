@@ -27,7 +27,9 @@ import java.util.ArrayList;
  * Multi command
  */
 public class MultiCommand extends SetCommand {
-    public static final Identifier identifier = Identifier.MULTI_COMMAND;
+    public static final Identifier IDENTIFIER = Identifier.MULTI_COMMAND;
+
+    public static final byte IDENTIFIER_MULTI_COMMANDS = 0x02;
 
     Property<Command>[] multiCommands;
 
@@ -44,7 +46,7 @@ public class MultiCommand extends SetCommand {
      * @param multiCommands The bytes of outgoing capabilities (commands)
      */
     public MultiCommand(Command[] multiCommands) {
-        super(identifier);
+        super(IDENTIFIER);
     
         ArrayList<Property> multiCommandsBuilder = new ArrayList<>();
         if (multiCommands != null) {
@@ -65,7 +67,7 @@ public class MultiCommand extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x02: {
+                    case IDENTIFIER_MULTI_COMMANDS: {
                         Property multiCommand = new Property(Command.class, p);
                         multiCommandsBuilder.add(multiCommand);
                         return multiCommand;

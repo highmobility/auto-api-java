@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific doors properties.
  */
 public class GetDoorsProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.DOORS;
+    public static final Identifier IDENTIFIER = Identifier.DOORS;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetDoorsProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetDoorsProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

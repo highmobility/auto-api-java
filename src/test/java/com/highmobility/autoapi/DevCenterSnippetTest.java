@@ -82,12 +82,14 @@ public class DevCenterSnippetTest {
             CapabilitiesState capabilities = (CapabilitiesState) command;
             // you can now inspect which capabilities are supported, for example:
 
-            if (capabilities.getSupported(Identifier.DOORS, (byte) 0x05) == true) {
+            if (capabilities.getSupported(LockUnlockDoors.IDENTIFIER,
+                    LockUnlockDoors.IDENTIFIER_INSIDE_LOCKS_STATE)) {
                 // Vehicle supports the doors inside locks property. You can query/set the inside
                 // locks state with LockUnlockDoors.
             }
 
-            if (capabilities.getSupported(Identifier.TRUNK, (byte) 0x02) == true) {
+            if (capabilities.getSupported(ControlTrunk.IDENTIFIER,
+                    ControlTrunk.IDENTIFIER_LOCK)) {
                 // Vehicle supports the trunk position property. You can query/set the trunk
                 // position with the ControlTrunk command.
             }
@@ -180,5 +182,26 @@ public class DevCenterSnippetTest {
                 .addLock(new Property(frontLeftState))
                 .addLock(new Property(frontRightState))
                 .build();
+    }
+
+    // BleCommandQueue in sandBoxUi
+
+    void bleCommandQueue() {
+        Command command = new LockUnlockDoors(LockState.LOCKED);
+        Command response = new DoorsState.Builder().addInsideLock(new Property(new Lock
+                (Location.FRONT_LEFT, LockState.LOCKED))).build();
+
+        Identifier id = DoorsState.IDENTIFIER;
+        Type type = Type.SET;
+
+
+        // error ctor
+
+        FailureMessageState firstResponse =
+                new FailureMessageState.Builder()
+                        .setFailedMessageType(new Property(Type.SET))
+                        .setFailedMessageID(new Property(LockUnlockDoors.IDENTIFIER))
+                        .setFailedPropertyIDs(new Property(new Bytes(LockUnlockDoors.IDENTIFIER_INSIDE_LOCKS_STATE)))
+                        .setFailureReason(new Property(FailureMessageState.FailureReason.UNSUPPORTED_CAPABILITY)).build();
     }
 }

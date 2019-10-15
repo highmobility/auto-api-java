@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all ignition properties.
  */
 public class GetIgnitionState extends GetCommand {
-    public static final Identifier identifier = Identifier.IGNITION;
+    public static final Identifier IDENTIFIER = Identifier.IGNITION;
 
     public GetIgnitionState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetIgnitionState(byte[] bytes) {

@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.Property;
  * Set charge current
  */
 public class SetChargeCurrent extends SetCommand {
-    public static final Identifier identifier = Identifier.HOME_CHARGER;
+    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
 
-    Property<Float> chargeCurrentDC = new Property(Float.class, 0x0e);
+    public static final byte IDENTIFIER_CHARGE_CURRENT_DC = 0x0e;
+
+    Property<Float> chargeCurrentDC = new Property(Float.class, IDENTIFIER_CHARGE_CURRENT_DC);
 
     /**
      * @return The charge current dc
@@ -43,7 +45,7 @@ public class SetChargeCurrent extends SetCommand {
      * @param chargeCurrentDC The charge direct current
      */
     public SetChargeCurrent(Float chargeCurrentDC) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.chargeCurrentDC.update(chargeCurrentDC), true);
     }
@@ -53,7 +55,7 @@ public class SetChargeCurrent extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x0e: return chargeCurrentDC.update(p);
+                    case IDENTIFIER_CHARGE_CURRENT_DC: return chargeCurrentDC.update(p);
                 }
                 return null;
             });

@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The theft alarm state
  */
 public class TheftAlarmState extends SetCommand {
-    public static final Identifier identifier = Identifier.THEFT_ALARM;
+    public static final Identifier IDENTIFIER = Identifier.THEFT_ALARM;
 
-    Property<Status> status = new Property(Status.class, 0x01);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+
+    Property<Status> status = new Property(Status.class, IDENTIFIER_STATUS);
 
     /**
      * @return The status
@@ -42,7 +44,7 @@ public class TheftAlarmState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return status.update(p);
+                    case IDENTIFIER_STATUS: return status.update(p);
                 }
 
                 return null;
@@ -64,7 +66,7 @@ public class TheftAlarmState extends SetCommand {
         private Property<Status> status;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public TheftAlarmState build() {
@@ -76,7 +78,7 @@ public class TheftAlarmState extends SetCommand {
          * @return The builder
          */
         public Builder setStatus(Property<Status> status) {
-            this.status = status.setIdentifier(0x01);
+            this.status = status.setIdentifier(IDENTIFIER_STATUS);
             addProperty(this.status);
             return this;
         }

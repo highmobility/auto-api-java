@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific vehicle status properties.
  */
 public class GetVehicleStatusProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.VEHICLE_STATUS;
+    public static final Identifier IDENTIFIER = Identifier.VEHICLE_STATUS;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetVehicleStatusProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetVehicleStatusProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * Send heart rate
  */
 public class SendHeartRate extends SetCommand {
-    public static final Identifier identifier = Identifier.HEART_RATE;
+    public static final Identifier IDENTIFIER = Identifier.HEART_RATE;
 
-    PropertyInteger heartRate = new PropertyInteger(0x01, false);
+    public static final byte IDENTIFIER_HEART_RATE = 0x01;
+
+    PropertyInteger heartRate = new PropertyInteger(IDENTIFIER_HEART_RATE, false);
 
     /**
      * @return The heart rate
@@ -43,7 +45,7 @@ public class SendHeartRate extends SetCommand {
      * @param heartRate The heart rate
      */
     public SendHeartRate(Integer heartRate) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.heartRate.update(false, 1, heartRate), true);
     }
@@ -53,7 +55,7 @@ public class SendHeartRate extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return heartRate.update(p);
+                    case IDENTIFIER_HEART_RATE: return heartRate.update(p);
                 }
                 return null;
             });

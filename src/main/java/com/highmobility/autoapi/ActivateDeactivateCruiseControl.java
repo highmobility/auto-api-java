@@ -29,10 +29,13 @@ import javax.annotation.Nullable;
  * Activate deactivate cruise control
  */
 public class ActivateDeactivateCruiseControl extends SetCommand {
-    public static final Identifier identifier = Identifier.CRUISE_CONTROL;
+    public static final Identifier IDENTIFIER = Identifier.CRUISE_CONTROL;
 
-    Property<ActiveState> cruiseControl = new Property(ActiveState.class, 0x01);
-    @Nullable PropertyInteger targetSpeed = new PropertyInteger(0x03, true);
+    public static final byte IDENTIFIER_CRUISE_CONTROL = 0x01;
+    public static final byte IDENTIFIER_TARGET_SPEED = 0x03;
+
+    Property<ActiveState> cruiseControl = new Property(ActiveState.class, IDENTIFIER_CRUISE_CONTROL);
+    @Nullable PropertyInteger targetSpeed = new PropertyInteger(IDENTIFIER_TARGET_SPEED, true);
 
     /**
      * @return The cruise control
@@ -55,7 +58,7 @@ public class ActivateDeactivateCruiseControl extends SetCommand {
      * @param targetSpeed The target speed in km/h
      */
     public ActivateDeactivateCruiseControl(ActiveState cruiseControl, @Nullable Integer targetSpeed) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.cruiseControl.update(cruiseControl));
         addProperty(this.targetSpeed.update(true, 2, targetSpeed), true);
@@ -66,8 +69,8 @@ public class ActivateDeactivateCruiseControl extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return cruiseControl.update(p);
-                    case 0x03: return targetSpeed.update(p);
+                    case IDENTIFIER_CRUISE_CONTROL: return cruiseControl.update(p);
+                    case IDENTIFIER_TARGET_SPEED: return targetSpeed.update(p);
                 }
                 return null;
             });

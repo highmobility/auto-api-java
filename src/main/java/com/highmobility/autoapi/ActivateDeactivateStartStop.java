@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.ActiveState;
  * Activate deactivate start stop
  */
 public class ActivateDeactivateStartStop extends SetCommand {
-    public static final Identifier identifier = Identifier.ENGINE_START_STOP;
+    public static final Identifier IDENTIFIER = Identifier.ENGINE_START_STOP;
 
-    Property<ActiveState> status = new Property(ActiveState.class, 0x01);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+
+    Property<ActiveState> status = new Property(ActiveState.class, IDENTIFIER_STATUS);
 
     /**
      * @return The status
@@ -44,7 +46,7 @@ public class ActivateDeactivateStartStop extends SetCommand {
      * @param status The status
      */
     public ActivateDeactivateStartStop(ActiveState status) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.status.update(status), true);
     }
@@ -54,7 +56,7 @@ public class ActivateDeactivateStartStop extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return status.update(p);
+                    case IDENTIFIER_STATUS: return status.update(p);
                 }
                 return null;
             });

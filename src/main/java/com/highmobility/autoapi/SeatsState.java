@@ -31,7 +31,10 @@ import java.util.List;
  * The seats state
  */
 public class SeatsState extends SetCommand {
-    public static final Identifier identifier = Identifier.SEATS;
+    public static final Identifier IDENTIFIER = Identifier.SEATS;
+
+    public static final byte IDENTIFIER_PERSONS_DETECTED = 0x02;
+    public static final byte IDENTIFIER_SEATBELTS_STATE = 0x03;
 
     Property<PersonDetected>[] personsDetected;
     Property<SeatbeltState>[] seatbeltsState;
@@ -87,11 +90,11 @@ public class SeatsState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x02:
+                    case IDENTIFIER_PERSONS_DETECTED:
                         Property<PersonDetected> personsDetected = new Property(PersonDetected.class, p);
                         personsDetectedBuilder.add(personsDetected);
                         return personsDetected;
-                    case 0x03:
+                    case IDENTIFIER_SEATBELTS_STATE:
                         Property<SeatbeltState> seatbeltsState = new Property(SeatbeltState.class, p);
                         seatbeltsStateBuilder.add(seatbeltsState);
                         return seatbeltsState;
@@ -121,7 +124,7 @@ public class SeatsState extends SetCommand {
         private List<Property> seatbeltsState = new ArrayList<>();
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public SeatsState build() {
@@ -150,7 +153,7 @@ public class SeatsState extends SetCommand {
          * @return The builder
          */
         public Builder addPersonsDetecte(Property<PersonDetected> personsDetecte) {
-            personsDetecte.setIdentifier(0x02);
+            personsDetecte.setIdentifier(IDENTIFIER_PERSONS_DETECTED);
             addProperty(personsDetecte);
             personsDetected.add(personsDetecte);
             return this;
@@ -177,7 +180,7 @@ public class SeatsState extends SetCommand {
          * @return The builder
          */
         public Builder addSeatbeltsStat(Property<SeatbeltState> seatbeltsStat) {
-            seatbeltsStat.setIdentifier(0x03);
+            seatbeltsStat.setIdentifier(IDENTIFIER_SEATBELTS_STATE);
             addProperty(seatbeltsStat);
             seatbeltsState.add(seatbeltsStat);
             return this;

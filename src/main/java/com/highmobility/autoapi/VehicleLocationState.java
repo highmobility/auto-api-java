@@ -26,11 +26,15 @@ import com.highmobility.autoapi.value.Coordinates;
  * The vehicle location state
  */
 public class VehicleLocationState extends SetCommand {
-    public static final Identifier identifier = Identifier.VEHICLE_LOCATION;
+    public static final Identifier IDENTIFIER = Identifier.VEHICLE_LOCATION;
 
-    Property<Coordinates> coordinates = new Property(Coordinates.class, 0x04);
-    Property<Double> heading = new Property(Double.class, 0x05);
-    Property<Double> altitude = new Property(Double.class, 0x06);
+    public static final byte IDENTIFIER_COORDINATES = 0x04;
+    public static final byte IDENTIFIER_HEADING = 0x05;
+    public static final byte IDENTIFIER_ALTITUDE = 0x06;
+
+    Property<Coordinates> coordinates = new Property(Coordinates.class, IDENTIFIER_COORDINATES);
+    Property<Double> heading = new Property(Double.class, IDENTIFIER_HEADING);
+    Property<Double> altitude = new Property(Double.class, IDENTIFIER_ALTITUDE);
 
     /**
      * @return The coordinates
@@ -58,9 +62,9 @@ public class VehicleLocationState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x04: return coordinates.update(p);
-                    case 0x05: return heading.update(p);
-                    case 0x06: return altitude.update(p);
+                    case IDENTIFIER_COORDINATES: return coordinates.update(p);
+                    case IDENTIFIER_HEADING: return heading.update(p);
+                    case IDENTIFIER_ALTITUDE: return altitude.update(p);
                 }
 
                 return null;
@@ -86,7 +90,7 @@ public class VehicleLocationState extends SetCommand {
         private Property<Double> altitude;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public VehicleLocationState build() {
@@ -98,7 +102,7 @@ public class VehicleLocationState extends SetCommand {
          * @return The builder
          */
         public Builder setCoordinates(Property<Coordinates> coordinates) {
-            this.coordinates = coordinates.setIdentifier(0x04);
+            this.coordinates = coordinates.setIdentifier(IDENTIFIER_COORDINATES);
             addProperty(this.coordinates);
             return this;
         }
@@ -108,7 +112,7 @@ public class VehicleLocationState extends SetCommand {
          * @return The builder
          */
         public Builder setHeading(Property<Double> heading) {
-            this.heading = heading.setIdentifier(0x05);
+            this.heading = heading.setIdentifier(IDENTIFIER_HEADING);
             addProperty(this.heading);
             return this;
         }
@@ -118,7 +122,7 @@ public class VehicleLocationState extends SetCommand {
          * @return The builder
          */
         public Builder setAltitude(Property<Double> altitude) {
-            this.altitude = altitude.setIdentifier(0x06);
+            this.altitude = altitude.setIdentifier(IDENTIFIER_ALTITUDE);
             addProperty(this.altitude);
             return this;
         }

@@ -34,26 +34,45 @@ import java.util.List;
  * The race state
  */
 public class RaceState extends SetCommand {
-    public static final Identifier identifier = Identifier.RACE;
+    public static final Identifier IDENTIFIER = Identifier.RACE;
+
+    public static final byte IDENTIFIER_ACCELERATIONS = 0x01;
+    public static final byte IDENTIFIER_UNDERSTEERING = 0x02;
+    public static final byte IDENTIFIER_OVERSTEERING = 0x03;
+    public static final byte IDENTIFIER_GAS_PEDAL_POSITION = 0x04;
+    public static final byte IDENTIFIER_STEERING_ANGLE = 0x05;
+    public static final byte IDENTIFIER_BRAKE_PRESSURE = 0x06;
+    public static final byte IDENTIFIER_YAW_RATE = 0x07;
+    public static final byte IDENTIFIER_REAR_SUSPENSION_STEERING = 0x08;
+    public static final byte IDENTIFIER_ELECTRONIC_STABILITY_PROGRAM = 0x09;
+    public static final byte IDENTIFIER_BRAKE_TORQUE_VECTORINGS = 0x0a;
+    public static final byte IDENTIFIER_GEAR_MODE = 0x0b;
+    public static final byte IDENTIFIER_SELECTED_GEAR = 0x0c;
+    public static final byte IDENTIFIER_BRAKE_PEDAL_POSITION = 0x0d;
+    public static final byte IDENTIFIER_BRAKE_PEDAL_SWITCH = 0x0e;
+    public static final byte IDENTIFIER_CLUTCH_PEDAL_SWITCH = 0x0f;
+    public static final byte IDENTIFIER_ACCELERATOR_PEDAL_IDLE_SWITCH = 0x10;
+    public static final byte IDENTIFIER_ACCELERATOR_PEDAL_KICKDOWN_SWITCH = 0x11;
+    public static final byte IDENTIFIER_VEHICLE_MOVING = 0x12;
 
     Property<Acceleration>[] accelerations;
-    Property<Double> understeering = new Property(Double.class, 0x02);
-    Property<Double> oversteering = new Property(Double.class, 0x03);
-    Property<Double> gasPedalPosition = new Property(Double.class, 0x04);
-    PropertyInteger steeringAngle = new PropertyInteger(0x05, true);
-    Property<Float> brakePressure = new Property(Float.class, 0x06);
-    Property<Float> yawRate = new Property(Float.class, 0x07);
-    PropertyInteger rearSuspensionSteering = new PropertyInteger(0x08, true);
-    Property<ActiveState> electronicStabilityProgram = new Property(ActiveState.class, 0x09);
+    Property<Double> understeering = new Property(Double.class, IDENTIFIER_UNDERSTEERING);
+    Property<Double> oversteering = new Property(Double.class, IDENTIFIER_OVERSTEERING);
+    Property<Double> gasPedalPosition = new Property(Double.class, IDENTIFIER_GAS_PEDAL_POSITION);
+    PropertyInteger steeringAngle = new PropertyInteger(IDENTIFIER_STEERING_ANGLE, true);
+    Property<Float> brakePressure = new Property(Float.class, IDENTIFIER_BRAKE_PRESSURE);
+    Property<Float> yawRate = new Property(Float.class, IDENTIFIER_YAW_RATE);
+    PropertyInteger rearSuspensionSteering = new PropertyInteger(IDENTIFIER_REAR_SUSPENSION_STEERING, true);
+    Property<ActiveState> electronicStabilityProgram = new Property(ActiveState.class, IDENTIFIER_ELECTRONIC_STABILITY_PROGRAM);
     Property<BrakeTorqueVectoring>[] brakeTorqueVectorings;
-    Property<GearMode> gearMode = new Property(GearMode.class, 0x0b);
-    PropertyInteger selectedGear = new PropertyInteger(0x0c, true);
-    Property<Double> brakePedalPosition = new Property(Double.class, 0x0d);
-    Property<ActiveState> brakePedalSwitch = new Property(ActiveState.class, 0x0e);
-    Property<ActiveState> clutchPedalSwitch = new Property(ActiveState.class, 0x0f);
-    Property<ActiveState> acceleratorPedalIdleSwitch = new Property(ActiveState.class, 0x10);
-    Property<ActiveState> acceleratorPedalKickdownSwitch = new Property(ActiveState.class, 0x11);
-    Property<VehicleMoving> vehicleMoving = new Property(VehicleMoving.class, 0x12);
+    Property<GearMode> gearMode = new Property(GearMode.class, IDENTIFIER_GEAR_MODE);
+    PropertyInteger selectedGear = new PropertyInteger(IDENTIFIER_SELECTED_GEAR, true);
+    Property<Double> brakePedalPosition = new Property(Double.class, IDENTIFIER_BRAKE_PEDAL_POSITION);
+    Property<ActiveState> brakePedalSwitch = new Property(ActiveState.class, IDENTIFIER_BRAKE_PEDAL_SWITCH);
+    Property<ActiveState> clutchPedalSwitch = new Property(ActiveState.class, IDENTIFIER_CLUTCH_PEDAL_SWITCH);
+    Property<ActiveState> acceleratorPedalIdleSwitch = new Property(ActiveState.class, IDENTIFIER_ACCELERATOR_PEDAL_IDLE_SWITCH);
+    Property<ActiveState> acceleratorPedalKickdownSwitch = new Property(ActiveState.class, IDENTIFIER_ACCELERATOR_PEDAL_KICKDOWN_SWITCH);
+    Property<VehicleMoving> vehicleMoving = new Property(VehicleMoving.class, IDENTIFIER_VEHICLE_MOVING);
 
     /**
      * @return The accelerations
@@ -218,30 +237,30 @@ public class RaceState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01:
+                    case IDENTIFIER_ACCELERATIONS:
                         Property<Acceleration> acceleration = new Property(Acceleration.class, p);
                         accelerationsBuilder.add(acceleration);
                         return acceleration;
-                    case 0x02: return understeering.update(p);
-                    case 0x03: return oversteering.update(p);
-                    case 0x04: return gasPedalPosition.update(p);
-                    case 0x05: return steeringAngle.update(p);
-                    case 0x06: return brakePressure.update(p);
-                    case 0x07: return yawRate.update(p);
-                    case 0x08: return rearSuspensionSteering.update(p);
-                    case 0x09: return electronicStabilityProgram.update(p);
-                    case 0x0a:
+                    case IDENTIFIER_UNDERSTEERING: return understeering.update(p);
+                    case IDENTIFIER_OVERSTEERING: return oversteering.update(p);
+                    case IDENTIFIER_GAS_PEDAL_POSITION: return gasPedalPosition.update(p);
+                    case IDENTIFIER_STEERING_ANGLE: return steeringAngle.update(p);
+                    case IDENTIFIER_BRAKE_PRESSURE: return brakePressure.update(p);
+                    case IDENTIFIER_YAW_RATE: return yawRate.update(p);
+                    case IDENTIFIER_REAR_SUSPENSION_STEERING: return rearSuspensionSteering.update(p);
+                    case IDENTIFIER_ELECTRONIC_STABILITY_PROGRAM: return electronicStabilityProgram.update(p);
+                    case IDENTIFIER_BRAKE_TORQUE_VECTORINGS:
                         Property<BrakeTorqueVectoring> brakeTorqueVectoring = new Property(BrakeTorqueVectoring.class, p);
                         brakeTorqueVectoringsBuilder.add(brakeTorqueVectoring);
                         return brakeTorqueVectoring;
-                    case 0x0b: return gearMode.update(p);
-                    case 0x0c: return selectedGear.update(p);
-                    case 0x0d: return brakePedalPosition.update(p);
-                    case 0x0e: return brakePedalSwitch.update(p);
-                    case 0x0f: return clutchPedalSwitch.update(p);
-                    case 0x10: return acceleratorPedalIdleSwitch.update(p);
-                    case 0x11: return acceleratorPedalKickdownSwitch.update(p);
-                    case 0x12: return vehicleMoving.update(p);
+                    case IDENTIFIER_GEAR_MODE: return gearMode.update(p);
+                    case IDENTIFIER_SELECTED_GEAR: return selectedGear.update(p);
+                    case IDENTIFIER_BRAKE_PEDAL_POSITION: return brakePedalPosition.update(p);
+                    case IDENTIFIER_BRAKE_PEDAL_SWITCH: return brakePedalSwitch.update(p);
+                    case IDENTIFIER_CLUTCH_PEDAL_SWITCH: return clutchPedalSwitch.update(p);
+                    case IDENTIFIER_ACCELERATOR_PEDAL_IDLE_SWITCH: return acceleratorPedalIdleSwitch.update(p);
+                    case IDENTIFIER_ACCELERATOR_PEDAL_KICKDOWN_SWITCH: return acceleratorPedalKickdownSwitch.update(p);
+                    case IDENTIFIER_VEHICLE_MOVING: return vehicleMoving.update(p);
                 }
 
                 return null;
@@ -300,7 +319,7 @@ public class RaceState extends SetCommand {
         private Property<VehicleMoving> vehicleMoving;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public RaceState build() {
@@ -329,7 +348,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder addAcceleration(Property<Acceleration> acceleration) {
-            acceleration.setIdentifier(0x01);
+            acceleration.setIdentifier(IDENTIFIER_ACCELERATIONS);
             addProperty(acceleration);
             accelerations.add(acceleration);
             return this;
@@ -340,7 +359,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setUndersteering(Property<Double> understeering) {
-            this.understeering = understeering.setIdentifier(0x02);
+            this.understeering = understeering.setIdentifier(IDENTIFIER_UNDERSTEERING);
             addProperty(this.understeering);
             return this;
         }
@@ -350,7 +369,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setOversteering(Property<Double> oversteering) {
-            this.oversteering = oversteering.setIdentifier(0x03);
+            this.oversteering = oversteering.setIdentifier(IDENTIFIER_OVERSTEERING);
             addProperty(this.oversteering);
             return this;
         }
@@ -360,7 +379,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setGasPedalPosition(Property<Double> gasPedalPosition) {
-            this.gasPedalPosition = gasPedalPosition.setIdentifier(0x04);
+            this.gasPedalPosition = gasPedalPosition.setIdentifier(IDENTIFIER_GAS_PEDAL_POSITION);
             addProperty(this.gasPedalPosition);
             return this;
         }
@@ -370,7 +389,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setSteeringAngle(Property<Integer> steeringAngle) {
-            this.steeringAngle = new PropertyInteger(0x05, true, 1, steeringAngle);
+            this.steeringAngle = new PropertyInteger(IDENTIFIER_STEERING_ANGLE, true, 1, steeringAngle);
             addProperty(this.steeringAngle);
             return this;
         }
@@ -380,7 +399,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setBrakePressure(Property<Float> brakePressure) {
-            this.brakePressure = brakePressure.setIdentifier(0x06);
+            this.brakePressure = brakePressure.setIdentifier(IDENTIFIER_BRAKE_PRESSURE);
             addProperty(this.brakePressure);
             return this;
         }
@@ -390,7 +409,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setYawRate(Property<Float> yawRate) {
-            this.yawRate = yawRate.setIdentifier(0x07);
+            this.yawRate = yawRate.setIdentifier(IDENTIFIER_YAW_RATE);
             addProperty(this.yawRate);
             return this;
         }
@@ -400,7 +419,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setRearSuspensionSteering(Property<Integer> rearSuspensionSteering) {
-            this.rearSuspensionSteering = new PropertyInteger(0x08, true, 1, rearSuspensionSteering);
+            this.rearSuspensionSteering = new PropertyInteger(IDENTIFIER_REAR_SUSPENSION_STEERING, true, 1, rearSuspensionSteering);
             addProperty(this.rearSuspensionSteering);
             return this;
         }
@@ -410,7 +429,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setElectronicStabilityProgram(Property<ActiveState> electronicStabilityProgram) {
-            this.electronicStabilityProgram = electronicStabilityProgram.setIdentifier(0x09);
+            this.electronicStabilityProgram = electronicStabilityProgram.setIdentifier(IDENTIFIER_ELECTRONIC_STABILITY_PROGRAM);
             addProperty(this.electronicStabilityProgram);
             return this;
         }
@@ -437,7 +456,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder addBrakeTorqueVectoring(Property<BrakeTorqueVectoring> brakeTorqueVectoring) {
-            brakeTorqueVectoring.setIdentifier(0x0a);
+            brakeTorqueVectoring.setIdentifier(IDENTIFIER_BRAKE_TORQUE_VECTORINGS);
             addProperty(brakeTorqueVectoring);
             brakeTorqueVectorings.add(brakeTorqueVectoring);
             return this;
@@ -448,7 +467,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setGearMode(Property<GearMode> gearMode) {
-            this.gearMode = gearMode.setIdentifier(0x0b);
+            this.gearMode = gearMode.setIdentifier(IDENTIFIER_GEAR_MODE);
             addProperty(this.gearMode);
             return this;
         }
@@ -458,7 +477,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setSelectedGear(Property<Integer> selectedGear) {
-            this.selectedGear = new PropertyInteger(0x0c, true, 1, selectedGear);
+            this.selectedGear = new PropertyInteger(IDENTIFIER_SELECTED_GEAR, true, 1, selectedGear);
             addProperty(this.selectedGear);
             return this;
         }
@@ -468,7 +487,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setBrakePedalPosition(Property<Double> brakePedalPosition) {
-            this.brakePedalPosition = brakePedalPosition.setIdentifier(0x0d);
+            this.brakePedalPosition = brakePedalPosition.setIdentifier(IDENTIFIER_BRAKE_PEDAL_POSITION);
             addProperty(this.brakePedalPosition);
             return this;
         }
@@ -478,7 +497,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setBrakePedalSwitch(Property<ActiveState> brakePedalSwitch) {
-            this.brakePedalSwitch = brakePedalSwitch.setIdentifier(0x0e);
+            this.brakePedalSwitch = brakePedalSwitch.setIdentifier(IDENTIFIER_BRAKE_PEDAL_SWITCH);
             addProperty(this.brakePedalSwitch);
             return this;
         }
@@ -488,7 +507,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setClutchPedalSwitch(Property<ActiveState> clutchPedalSwitch) {
-            this.clutchPedalSwitch = clutchPedalSwitch.setIdentifier(0x0f);
+            this.clutchPedalSwitch = clutchPedalSwitch.setIdentifier(IDENTIFIER_CLUTCH_PEDAL_SWITCH);
             addProperty(this.clutchPedalSwitch);
             return this;
         }
@@ -498,7 +517,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setAcceleratorPedalIdleSwitch(Property<ActiveState> acceleratorPedalIdleSwitch) {
-            this.acceleratorPedalIdleSwitch = acceleratorPedalIdleSwitch.setIdentifier(0x10);
+            this.acceleratorPedalIdleSwitch = acceleratorPedalIdleSwitch.setIdentifier(IDENTIFIER_ACCELERATOR_PEDAL_IDLE_SWITCH);
             addProperty(this.acceleratorPedalIdleSwitch);
             return this;
         }
@@ -508,7 +527,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setAcceleratorPedalKickdownSwitch(Property<ActiveState> acceleratorPedalKickdownSwitch) {
-            this.acceleratorPedalKickdownSwitch = acceleratorPedalKickdownSwitch.setIdentifier(0x11);
+            this.acceleratorPedalKickdownSwitch = acceleratorPedalKickdownSwitch.setIdentifier(IDENTIFIER_ACCELERATOR_PEDAL_KICKDOWN_SWITCH);
             addProperty(this.acceleratorPedalKickdownSwitch);
             return this;
         }
@@ -518,7 +537,7 @@ public class RaceState extends SetCommand {
          * @return The builder
          */
         public Builder setVehicleMoving(Property<VehicleMoving> vehicleMoving) {
-            this.vehicleMoving = vehicleMoving.setIdentifier(0x12);
+            this.vehicleMoving = vehicleMoving.setIdentifier(IDENTIFIER_VEHICLE_MOVING);
             addProperty(this.vehicleMoving);
             return this;
         }

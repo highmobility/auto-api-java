@@ -28,15 +28,17 @@ import com.highmobility.value.Bytes;
  * Wake up
  */
 public class WakeUp extends SetCommand {
-    public static final Identifier identifier = Identifier.WAKE_UP;
+    public static final Identifier IDENTIFIER = Identifier.WAKE_UP;
 
-    Property<Status> status = new Property(Status.class, 0x01);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+
+    Property<Status> status = new Property(Status.class, IDENTIFIER_STATUS);
 
     /**
      * Wake up
      */
     public WakeUp() {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(status.addValueComponent(new Bytes("00")), true);
     }
@@ -46,7 +48,7 @@ public class WakeUp extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: status.update(p);
+                    case IDENTIFIER_STATUS: status.update(p);
                 }
                 return null;
             });

@@ -27,9 +27,11 @@ import com.highmobility.autoapi.property.Property;
  * Set theft alarm
  */
 public class SetTheftAlarm extends SetCommand {
-    public static final Identifier identifier = Identifier.THEFT_ALARM;
+    public static final Identifier IDENTIFIER = Identifier.THEFT_ALARM;
 
-    Property<Status> status = new Property(Status.class, 0x01);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+
+    Property<Status> status = new Property(Status.class, IDENTIFIER_STATUS);
 
     /**
      * @return The status
@@ -44,7 +46,7 @@ public class SetTheftAlarm extends SetCommand {
      * @param status The status
      */
     public SetTheftAlarm(Status status) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.status.update(status), true);
     }
@@ -54,7 +56,7 @@ public class SetTheftAlarm extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return status.update(p);
+                    case IDENTIFIER_STATUS: return status.update(p);
                 }
                 return null;
             });

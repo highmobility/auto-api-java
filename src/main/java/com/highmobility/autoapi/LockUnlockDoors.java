@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.LockState;
  * Lock unlock doors
  */
 public class LockUnlockDoors extends SetCommand {
-    public static final Identifier identifier = Identifier.DOORS;
+    public static final Identifier IDENTIFIER = Identifier.DOORS;
 
-    Property<LockState> insideLocksState = new Property(LockState.class, 0x05);
+    public static final byte IDENTIFIER_INSIDE_LOCKS_STATE = 0x05;
+
+    Property<LockState> insideLocksState = new Property(LockState.class, IDENTIFIER_INSIDE_LOCKS_STATE);
 
     /**
      * @return The inside locks state
@@ -44,7 +46,7 @@ public class LockUnlockDoors extends SetCommand {
      * @param insideLocksState Inside locks state for the whole car (combines all specific lock states if available)
      */
     public LockUnlockDoors(LockState insideLocksState) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.insideLocksState.update(insideLocksState), true);
     }
@@ -54,7 +56,7 @@ public class LockUnlockDoors extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x05: return insideLocksState.update(p);
+                    case IDENTIFIER_INSIDE_LOCKS_STATE: return insideLocksState.update(p);
                 }
                 return null;
             });

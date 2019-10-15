@@ -27,10 +27,13 @@ import javax.annotation.Nullable;
  * Honk flash
  */
 public class HonkFlash extends SetCommand {
-    public static final Identifier identifier = Identifier.HONK_HORN_FLASH_LIGHTS;
+    public static final Identifier IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
 
-    @Nullable PropertyInteger honkSeconds = new PropertyInteger(0x02, false);
-    @Nullable PropertyInteger flashTimes = new PropertyInteger(0x03, false);
+    public static final byte IDENTIFIER_HONK_SECONDS = 0x02;
+    public static final byte IDENTIFIER_FLASH_TIMES = 0x03;
+
+    @Nullable PropertyInteger honkSeconds = new PropertyInteger(IDENTIFIER_HONK_SECONDS, false);
+    @Nullable PropertyInteger flashTimes = new PropertyInteger(IDENTIFIER_FLASH_TIMES, false);
 
     /**
      * @return The honk seconds
@@ -53,7 +56,7 @@ public class HonkFlash extends SetCommand {
      * @param flashTimes Number of times to flash the lights
      */
     public HonkFlash(@Nullable Integer honkSeconds, @Nullable Integer flashTimes) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.honkSeconds.update(false, 1, honkSeconds));
         addProperty(this.flashTimes.update(false, 1, flashTimes), true);
@@ -65,8 +68,8 @@ public class HonkFlash extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x02: return honkSeconds.update(p);
-                    case 0x03: return flashTimes.update(p);
+                    case IDENTIFIER_HONK_SECONDS: return honkSeconds.update(p);
+                    case IDENTIFIER_FLASH_TIMES: return flashTimes.update(p);
                 }
                 return null;
             });

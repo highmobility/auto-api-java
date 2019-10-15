@@ -27,9 +27,11 @@ import com.highmobility.autoapi.property.Property;
  * Start stop sports chrono
  */
 public class StartStopSportsChrono extends SetCommand {
-    public static final Identifier identifier = Identifier.CHASSIS_SETTINGS;
+    public static final Identifier IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
-    Property<SportChrono> sportChrono = new Property(SportChrono.class, 0x02);
+    public static final byte IDENTIFIER_SPORT_CHRONO = 0x02;
+
+    Property<SportChrono> sportChrono = new Property(SportChrono.class, IDENTIFIER_SPORT_CHRONO);
 
     /**
      * @return The sport chrono
@@ -44,7 +46,7 @@ public class StartStopSportsChrono extends SetCommand {
      * @param sportChrono The sport chrono
      */
     public StartStopSportsChrono(SportChrono sportChrono) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.sportChrono.update(sportChrono), true);
     }
@@ -54,7 +56,7 @@ public class StartStopSportsChrono extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x02: return sportChrono.update(p);
+                    case IDENTIFIER_SPORT_CHRONO: return sportChrono.update(p);
                 }
                 return null;
             });

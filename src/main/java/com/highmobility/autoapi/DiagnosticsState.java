@@ -35,35 +35,63 @@ import java.util.List;
  * The diagnostics state
  */
 public class DiagnosticsState extends SetCommand {
-    public static final Identifier identifier = Identifier.DIAGNOSTICS;
+    public static final Identifier IDENTIFIER = Identifier.DIAGNOSTICS;
 
-    PropertyInteger mileage = new PropertyInteger(0x01, false);
-    PropertyInteger engineOilTemperature = new PropertyInteger(0x02, true);
-    PropertyInteger speed = new PropertyInteger(0x03, true);
-    PropertyInteger engineRPM = new PropertyInteger(0x04, false);
-    Property<Double> fuelLevel = new Property(Double.class, 0x05);
-    PropertyInteger estimatedRange = new PropertyInteger(0x06, true);
-    Property<FluidLevel> washerFluidLevel = new Property(FluidLevel.class, 0x09);
-    Property<Float> batteryVoltage = new Property(Float.class, 0x0b);
-    Property<Float> adBlueLevel = new Property(Float.class, 0x0c);
-    PropertyInteger distanceSinceReset = new PropertyInteger(0x0d, false);
-    PropertyInteger distanceSinceStart = new PropertyInteger(0x0e, false);
-    Property<Float> fuelVolume = new Property(Float.class, 0x0f);
-    Property<ActiveState> antiLockBraking = new Property(ActiveState.class, 0x10);
-    PropertyInteger engineCoolantTemperature = new PropertyInteger(0x11, true);
-    Property<Float> engineTotalOperatingHours = new Property(Float.class, 0x12);
-    Property<Float> engineTotalFuelConsumption = new Property(Float.class, 0x13);
-    Property<FluidLevel> brakeFluidLevel = new Property(FluidLevel.class, 0x14);
-    Property<Double> engineTorque = new Property(Double.class, 0x15);
-    Property<Double> engineLoad = new Property(Double.class, 0x16);
-    PropertyInteger wheelBasedSpeed = new PropertyInteger(0x17, true);
-    Property<Double> batteryLevel = new Property(Double.class, 0x18);
+    public static final byte IDENTIFIER_MILEAGE = 0x01;
+    public static final byte IDENTIFIER_ENGINE_OIL_TEMPERATURE = 0x02;
+    public static final byte IDENTIFIER_SPEED = 0x03;
+    public static final byte IDENTIFIER_ENGINE_RPM = 0x04;
+    public static final byte IDENTIFIER_FUEL_LEVEL = 0x05;
+    public static final byte IDENTIFIER_ESTIMATED_RANGE = 0x06;
+    public static final byte IDENTIFIER_WASHER_FLUID_LEVEL = 0x09;
+    public static final byte IDENTIFIER_BATTERY_VOLTAGE = 0x0b;
+    public static final byte IDENTIFIER_ADBLUE_LEVEL = 0x0c;
+    public static final byte IDENTIFIER_DISTANCE_SINCE_RESET = 0x0d;
+    public static final byte IDENTIFIER_DISTANCE_SINCE_START = 0x0e;
+    public static final byte IDENTIFIER_FUEL_VOLUME = 0x0f;
+    public static final byte IDENTIFIER_ANTI_LOCK_BRAKING = 0x10;
+    public static final byte IDENTIFIER_ENGINE_COOLANT_TEMPERATURE = 0x11;
+    public static final byte IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS = 0x12;
+    public static final byte IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION = 0x13;
+    public static final byte IDENTIFIER_BRAKE_FLUID_LEVEL = 0x14;
+    public static final byte IDENTIFIER_ENGINE_TORQUE = 0x15;
+    public static final byte IDENTIFIER_ENGINE_LOAD = 0x16;
+    public static final byte IDENTIFIER_WHEEL_BASED_SPEED = 0x17;
+    public static final byte IDENTIFIER_BATTERY_LEVEL = 0x18;
+    public static final byte IDENTIFIER_CHECK_CONTROL_MESSAGES = 0x19;
+    public static final byte IDENTIFIER_TIRE_PRESSURES = 0x1a;
+    public static final byte IDENTIFIER_TIRE_TEMPERATURES = 0x1b;
+    public static final byte IDENTIFIER_WHEEL_RPMS = 0x1c;
+    public static final byte IDENTIFIER_TROUBLE_CODES = 0x1d;
+    public static final byte IDENTIFIER_MILEAGE_METERS = 0x1e;
+
+    PropertyInteger mileage = new PropertyInteger(IDENTIFIER_MILEAGE, false);
+    PropertyInteger engineOilTemperature = new PropertyInteger(IDENTIFIER_ENGINE_OIL_TEMPERATURE, true);
+    PropertyInteger speed = new PropertyInteger(IDENTIFIER_SPEED, true);
+    PropertyInteger engineRPM = new PropertyInteger(IDENTIFIER_ENGINE_RPM, false);
+    Property<Double> fuelLevel = new Property(Double.class, IDENTIFIER_FUEL_LEVEL);
+    PropertyInteger estimatedRange = new PropertyInteger(IDENTIFIER_ESTIMATED_RANGE, true);
+    Property<FluidLevel> washerFluidLevel = new Property(FluidLevel.class, IDENTIFIER_WASHER_FLUID_LEVEL);
+    Property<Float> batteryVoltage = new Property(Float.class, IDENTIFIER_BATTERY_VOLTAGE);
+    Property<Float> adBlueLevel = new Property(Float.class, IDENTIFIER_ADBLUE_LEVEL);
+    PropertyInteger distanceSinceReset = new PropertyInteger(IDENTIFIER_DISTANCE_SINCE_RESET, false);
+    PropertyInteger distanceSinceStart = new PropertyInteger(IDENTIFIER_DISTANCE_SINCE_START, false);
+    Property<Float> fuelVolume = new Property(Float.class, IDENTIFIER_FUEL_VOLUME);
+    Property<ActiveState> antiLockBraking = new Property(ActiveState.class, IDENTIFIER_ANTI_LOCK_BRAKING);
+    PropertyInteger engineCoolantTemperature = new PropertyInteger(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, true);
+    Property<Float> engineTotalOperatingHours = new Property(Float.class, IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
+    Property<Float> engineTotalFuelConsumption = new Property(Float.class, IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
+    Property<FluidLevel> brakeFluidLevel = new Property(FluidLevel.class, IDENTIFIER_BRAKE_FLUID_LEVEL);
+    Property<Double> engineTorque = new Property(Double.class, IDENTIFIER_ENGINE_TORQUE);
+    Property<Double> engineLoad = new Property(Double.class, IDENTIFIER_ENGINE_LOAD);
+    PropertyInteger wheelBasedSpeed = new PropertyInteger(IDENTIFIER_WHEEL_BASED_SPEED, true);
+    Property<Double> batteryLevel = new Property(Double.class, IDENTIFIER_BATTERY_LEVEL);
     Property<CheckControlMessage>[] checkControlMessages;
     Property<TirePressure>[] tirePressures;
     Property<TireTemperature>[] tireTemperatures;
     Property<WheelRpm>[] wheelRPMs;
     Property<TroubleCode>[] troubleCodes;
-    PropertyInteger mileageMeters = new PropertyInteger(0x1e, false);
+    PropertyInteger mileageMeters = new PropertyInteger(IDENTIFIER_MILEAGE_METERS, false);
 
     /**
      * @return The car mileage (odometer) in km
@@ -266,48 +294,48 @@ public class DiagnosticsState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return mileage.update(p);
-                    case 0x02: return engineOilTemperature.update(p);
-                    case 0x03: return speed.update(p);
-                    case 0x04: return engineRPM.update(p);
-                    case 0x05: return fuelLevel.update(p);
-                    case 0x06: return estimatedRange.update(p);
-                    case 0x09: return washerFluidLevel.update(p);
-                    case 0x0b: return batteryVoltage.update(p);
-                    case 0x0c: return adBlueLevel.update(p);
-                    case 0x0d: return distanceSinceReset.update(p);
-                    case 0x0e: return distanceSinceStart.update(p);
-                    case 0x0f: return fuelVolume.update(p);
-                    case 0x10: return antiLockBraking.update(p);
-                    case 0x11: return engineCoolantTemperature.update(p);
-                    case 0x12: return engineTotalOperatingHours.update(p);
-                    case 0x13: return engineTotalFuelConsumption.update(p);
-                    case 0x14: return brakeFluidLevel.update(p);
-                    case 0x15: return engineTorque.update(p);
-                    case 0x16: return engineLoad.update(p);
-                    case 0x17: return wheelBasedSpeed.update(p);
-                    case 0x18: return batteryLevel.update(p);
-                    case 0x19:
+                    case IDENTIFIER_MILEAGE: return mileage.update(p);
+                    case IDENTIFIER_ENGINE_OIL_TEMPERATURE: return engineOilTemperature.update(p);
+                    case IDENTIFIER_SPEED: return speed.update(p);
+                    case IDENTIFIER_ENGINE_RPM: return engineRPM.update(p);
+                    case IDENTIFIER_FUEL_LEVEL: return fuelLevel.update(p);
+                    case IDENTIFIER_ESTIMATED_RANGE: return estimatedRange.update(p);
+                    case IDENTIFIER_WASHER_FLUID_LEVEL: return washerFluidLevel.update(p);
+                    case IDENTIFIER_BATTERY_VOLTAGE: return batteryVoltage.update(p);
+                    case IDENTIFIER_ADBLUE_LEVEL: return adBlueLevel.update(p);
+                    case IDENTIFIER_DISTANCE_SINCE_RESET: return distanceSinceReset.update(p);
+                    case IDENTIFIER_DISTANCE_SINCE_START: return distanceSinceStart.update(p);
+                    case IDENTIFIER_FUEL_VOLUME: return fuelVolume.update(p);
+                    case IDENTIFIER_ANTI_LOCK_BRAKING: return antiLockBraking.update(p);
+                    case IDENTIFIER_ENGINE_COOLANT_TEMPERATURE: return engineCoolantTemperature.update(p);
+                    case IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS: return engineTotalOperatingHours.update(p);
+                    case IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION: return engineTotalFuelConsumption.update(p);
+                    case IDENTIFIER_BRAKE_FLUID_LEVEL: return brakeFluidLevel.update(p);
+                    case IDENTIFIER_ENGINE_TORQUE: return engineTorque.update(p);
+                    case IDENTIFIER_ENGINE_LOAD: return engineLoad.update(p);
+                    case IDENTIFIER_WHEEL_BASED_SPEED: return wheelBasedSpeed.update(p);
+                    case IDENTIFIER_BATTERY_LEVEL: return batteryLevel.update(p);
+                    case IDENTIFIER_CHECK_CONTROL_MESSAGES:
                         Property<CheckControlMessage> checkControlMessage = new Property(CheckControlMessage.class, p);
                         checkControlMessagesBuilder.add(checkControlMessage);
                         return checkControlMessage;
-                    case 0x1a:
+                    case IDENTIFIER_TIRE_PRESSURES:
                         Property<TirePressure> tirePressure = new Property(TirePressure.class, p);
                         tirePressuresBuilder.add(tirePressure);
                         return tirePressure;
-                    case 0x1b:
+                    case IDENTIFIER_TIRE_TEMPERATURES:
                         Property<TireTemperature> tireTemperature = new Property(TireTemperature.class, p);
                         tireTemperaturesBuilder.add(tireTemperature);
                         return tireTemperature;
-                    case 0x1c:
+                    case IDENTIFIER_WHEEL_RPMS:
                         Property<WheelRpm> wheelRPM = new Property(WheelRpm.class, p);
                         wheelRPMsBuilder.add(wheelRPM);
                         return wheelRPM;
-                    case 0x1d:
+                    case IDENTIFIER_TROUBLE_CODES:
                         Property<TroubleCode> troubleCode = new Property(TroubleCode.class, p);
                         troubleCodesBuilder.add(troubleCode);
                         return troubleCode;
-                    case 0x1e: return mileageMeters.update(p);
+                    case IDENTIFIER_MILEAGE_METERS: return mileageMeters.update(p);
                 }
 
                 return null;
@@ -387,7 +415,7 @@ public class DiagnosticsState extends SetCommand {
         private PropertyInteger mileageMeters;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public DiagnosticsState build() {
@@ -399,7 +427,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setMileage(Property<Integer> mileage) {
-            this.mileage = new PropertyInteger(0x01, false, 4, mileage);
+            this.mileage = new PropertyInteger(IDENTIFIER_MILEAGE, false, 4, mileage);
             addProperty(this.mileage);
             return this;
         }
@@ -409,7 +437,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setEngineOilTemperature(Property<Integer> engineOilTemperature) {
-            this.engineOilTemperature = new PropertyInteger(0x02, true, 2, engineOilTemperature);
+            this.engineOilTemperature = new PropertyInteger(IDENTIFIER_ENGINE_OIL_TEMPERATURE, true, 2, engineOilTemperature);
             addProperty(this.engineOilTemperature);
             return this;
         }
@@ -419,7 +447,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setSpeed(Property<Integer> speed) {
-            this.speed = new PropertyInteger(0x03, true, 2, speed);
+            this.speed = new PropertyInteger(IDENTIFIER_SPEED, true, 2, speed);
             addProperty(this.speed);
             return this;
         }
@@ -429,7 +457,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setEngineRPM(Property<Integer> engineRPM) {
-            this.engineRPM = new PropertyInteger(0x04, false, 2, engineRPM);
+            this.engineRPM = new PropertyInteger(IDENTIFIER_ENGINE_RPM, false, 2, engineRPM);
             addProperty(this.engineRPM);
             return this;
         }
@@ -439,7 +467,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setFuelLevel(Property<Double> fuelLevel) {
-            this.fuelLevel = fuelLevel.setIdentifier(0x05);
+            this.fuelLevel = fuelLevel.setIdentifier(IDENTIFIER_FUEL_LEVEL);
             addProperty(this.fuelLevel);
             return this;
         }
@@ -449,7 +477,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setEstimatedRange(Property<Integer> estimatedRange) {
-            this.estimatedRange = new PropertyInteger(0x06, true, 2, estimatedRange);
+            this.estimatedRange = new PropertyInteger(IDENTIFIER_ESTIMATED_RANGE, true, 2, estimatedRange);
             addProperty(this.estimatedRange);
             return this;
         }
@@ -459,7 +487,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setWasherFluidLevel(Property<FluidLevel> washerFluidLevel) {
-            this.washerFluidLevel = washerFluidLevel.setIdentifier(0x09);
+            this.washerFluidLevel = washerFluidLevel.setIdentifier(IDENTIFIER_WASHER_FLUID_LEVEL);
             addProperty(this.washerFluidLevel);
             return this;
         }
@@ -469,7 +497,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setBatteryVoltage(Property<Float> batteryVoltage) {
-            this.batteryVoltage = batteryVoltage.setIdentifier(0x0b);
+            this.batteryVoltage = batteryVoltage.setIdentifier(IDENTIFIER_BATTERY_VOLTAGE);
             addProperty(this.batteryVoltage);
             return this;
         }
@@ -479,7 +507,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setAdBlueLevel(Property<Float> adBlueLevel) {
-            this.adBlueLevel = adBlueLevel.setIdentifier(0x0c);
+            this.adBlueLevel = adBlueLevel.setIdentifier(IDENTIFIER_ADBLUE_LEVEL);
             addProperty(this.adBlueLevel);
             return this;
         }
@@ -489,7 +517,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setDistanceSinceReset(Property<Integer> distanceSinceReset) {
-            this.distanceSinceReset = new PropertyInteger(0x0d, false, 2, distanceSinceReset);
+            this.distanceSinceReset = new PropertyInteger(IDENTIFIER_DISTANCE_SINCE_RESET, false, 2, distanceSinceReset);
             addProperty(this.distanceSinceReset);
             return this;
         }
@@ -499,7 +527,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setDistanceSinceStart(Property<Integer> distanceSinceStart) {
-            this.distanceSinceStart = new PropertyInteger(0x0e, false, 2, distanceSinceStart);
+            this.distanceSinceStart = new PropertyInteger(IDENTIFIER_DISTANCE_SINCE_START, false, 2, distanceSinceStart);
             addProperty(this.distanceSinceStart);
             return this;
         }
@@ -509,7 +537,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setFuelVolume(Property<Float> fuelVolume) {
-            this.fuelVolume = fuelVolume.setIdentifier(0x0f);
+            this.fuelVolume = fuelVolume.setIdentifier(IDENTIFIER_FUEL_VOLUME);
             addProperty(this.fuelVolume);
             return this;
         }
@@ -519,7 +547,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setAntiLockBraking(Property<ActiveState> antiLockBraking) {
-            this.antiLockBraking = antiLockBraking.setIdentifier(0x10);
+            this.antiLockBraking = antiLockBraking.setIdentifier(IDENTIFIER_ANTI_LOCK_BRAKING);
             addProperty(this.antiLockBraking);
             return this;
         }
@@ -529,7 +557,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setEngineCoolantTemperature(Property<Integer> engineCoolantTemperature) {
-            this.engineCoolantTemperature = new PropertyInteger(0x11, true, 2, engineCoolantTemperature);
+            this.engineCoolantTemperature = new PropertyInteger(IDENTIFIER_ENGINE_COOLANT_TEMPERATURE, true, 2, engineCoolantTemperature);
             addProperty(this.engineCoolantTemperature);
             return this;
         }
@@ -539,7 +567,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setEngineTotalOperatingHours(Property<Float> engineTotalOperatingHours) {
-            this.engineTotalOperatingHours = engineTotalOperatingHours.setIdentifier(0x12);
+            this.engineTotalOperatingHours = engineTotalOperatingHours.setIdentifier(IDENTIFIER_ENGINE_TOTAL_OPERATING_HOURS);
             addProperty(this.engineTotalOperatingHours);
             return this;
         }
@@ -549,7 +577,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setEngineTotalFuelConsumption(Property<Float> engineTotalFuelConsumption) {
-            this.engineTotalFuelConsumption = engineTotalFuelConsumption.setIdentifier(0x13);
+            this.engineTotalFuelConsumption = engineTotalFuelConsumption.setIdentifier(IDENTIFIER_ENGINE_TOTAL_FUEL_CONSUMPTION);
             addProperty(this.engineTotalFuelConsumption);
             return this;
         }
@@ -559,7 +587,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setBrakeFluidLevel(Property<FluidLevel> brakeFluidLevel) {
-            this.brakeFluidLevel = brakeFluidLevel.setIdentifier(0x14);
+            this.brakeFluidLevel = brakeFluidLevel.setIdentifier(IDENTIFIER_BRAKE_FLUID_LEVEL);
             addProperty(this.brakeFluidLevel);
             return this;
         }
@@ -569,7 +597,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setEngineTorque(Property<Double> engineTorque) {
-            this.engineTorque = engineTorque.setIdentifier(0x15);
+            this.engineTorque = engineTorque.setIdentifier(IDENTIFIER_ENGINE_TORQUE);
             addProperty(this.engineTorque);
             return this;
         }
@@ -579,7 +607,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setEngineLoad(Property<Double> engineLoad) {
-            this.engineLoad = engineLoad.setIdentifier(0x16);
+            this.engineLoad = engineLoad.setIdentifier(IDENTIFIER_ENGINE_LOAD);
             addProperty(this.engineLoad);
             return this;
         }
@@ -589,7 +617,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setWheelBasedSpeed(Property<Integer> wheelBasedSpeed) {
-            this.wheelBasedSpeed = new PropertyInteger(0x17, true, 2, wheelBasedSpeed);
+            this.wheelBasedSpeed = new PropertyInteger(IDENTIFIER_WHEEL_BASED_SPEED, true, 2, wheelBasedSpeed);
             addProperty(this.wheelBasedSpeed);
             return this;
         }
@@ -599,7 +627,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setBatteryLevel(Property<Double> batteryLevel) {
-            this.batteryLevel = batteryLevel.setIdentifier(0x18);
+            this.batteryLevel = batteryLevel.setIdentifier(IDENTIFIER_BATTERY_LEVEL);
             addProperty(this.batteryLevel);
             return this;
         }
@@ -626,7 +654,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder addCheckControlMessage(Property<CheckControlMessage> checkControlMessage) {
-            checkControlMessage.setIdentifier(0x19);
+            checkControlMessage.setIdentifier(IDENTIFIER_CHECK_CONTROL_MESSAGES);
             addProperty(checkControlMessage);
             checkControlMessages.add(checkControlMessage);
             return this;
@@ -654,7 +682,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder addTirePressure(Property<TirePressure> tirePressure) {
-            tirePressure.setIdentifier(0x1a);
+            tirePressure.setIdentifier(IDENTIFIER_TIRE_PRESSURES);
             addProperty(tirePressure);
             tirePressures.add(tirePressure);
             return this;
@@ -682,7 +710,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder addTireTemperature(Property<TireTemperature> tireTemperature) {
-            tireTemperature.setIdentifier(0x1b);
+            tireTemperature.setIdentifier(IDENTIFIER_TIRE_TEMPERATURES);
             addProperty(tireTemperature);
             tireTemperatures.add(tireTemperature);
             return this;
@@ -710,7 +738,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder addWheelRPM(Property<WheelRpm> wheelRPM) {
-            wheelRPM.setIdentifier(0x1c);
+            wheelRPM.setIdentifier(IDENTIFIER_WHEEL_RPMS);
             addProperty(wheelRPM);
             wheelRPMs.add(wheelRPM);
             return this;
@@ -738,7 +766,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder addTroubleCode(Property<TroubleCode> troubleCode) {
-            troubleCode.setIdentifier(0x1d);
+            troubleCode.setIdentifier(IDENTIFIER_TROUBLE_CODES);
             addProperty(troubleCode);
             troubleCodes.add(troubleCode);
             return this;
@@ -749,7 +777,7 @@ public class DiagnosticsState extends SetCommand {
          * @return The builder
          */
         public Builder setMileageMeters(Property<Integer> mileageMeters) {
-            this.mileageMeters = new PropertyInteger(0x1e, false, 4, mileageMeters);
+            this.mileageMeters = new PropertyInteger(IDENTIFIER_MILEAGE_METERS, false, 4, mileageMeters);
             addProperty(this.mileageMeters);
             return this;
         }

@@ -27,10 +27,13 @@ import com.highmobility.autoapi.value.ActiveState;
  * The power takeoff state
  */
 public class PowerTakeoffState extends SetCommand {
-    public static final Identifier identifier = Identifier.POWER_TAKEOFF;
+    public static final Identifier IDENTIFIER = Identifier.POWER_TAKEOFF;
 
-    Property<ActiveState> status = new Property(ActiveState.class, 0x01);
-    Property<Engaged> engaged = new Property(Engaged.class, 0x02);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+    public static final byte IDENTIFIER_ENGAGED = 0x02;
+
+    Property<ActiveState> status = new Property(ActiveState.class, IDENTIFIER_STATUS);
+    Property<Engaged> engaged = new Property(Engaged.class, IDENTIFIER_ENGAGED);
 
     /**
      * @return The status
@@ -51,8 +54,8 @@ public class PowerTakeoffState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return status.update(p);
-                    case 0x02: return engaged.update(p);
+                    case IDENTIFIER_STATUS: return status.update(p);
+                    case IDENTIFIER_ENGAGED: return engaged.update(p);
                 }
 
                 return null;
@@ -76,7 +79,7 @@ public class PowerTakeoffState extends SetCommand {
         private Property<Engaged> engaged;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public PowerTakeoffState build() {
@@ -88,7 +91,7 @@ public class PowerTakeoffState extends SetCommand {
          * @return The builder
          */
         public Builder setStatus(Property<ActiveState> status) {
-            this.status = status.setIdentifier(0x01);
+            this.status = status.setIdentifier(IDENTIFIER_STATUS);
             addProperty(this.status);
             return this;
         }
@@ -98,7 +101,7 @@ public class PowerTakeoffState extends SetCommand {
          * @return The builder
          */
         public Builder setEngaged(Property<Engaged> engaged) {
-            this.engaged = engaged.setIdentifier(0x02);
+            this.engaged = engaged.setIdentifier(IDENTIFIER_ENGAGED);
             addProperty(this.engaged);
             return this;
         }

@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * Set chassis position
  */
 public class SetChassisPosition extends SetCommand {
-    public static final Identifier identifier = Identifier.CHASSIS_SETTINGS;
+    public static final Identifier IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
-    PropertyInteger currentChassisPosition = new PropertyInteger(0x08, true);
+    public static final byte IDENTIFIER_CURRENT_CHASSIS_POSITION = 0x08;
+
+    PropertyInteger currentChassisPosition = new PropertyInteger(IDENTIFIER_CURRENT_CHASSIS_POSITION, true);
 
     /**
      * @return The current chassis position
@@ -43,7 +45,7 @@ public class SetChassisPosition extends SetCommand {
      * @param currentChassisPosition The chassis position in mm calculated from the lowest point
      */
     public SetChassisPosition(Integer currentChassisPosition) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.currentChassisPosition.update(true, 1, currentChassisPosition), true);
     }
@@ -53,7 +55,7 @@ public class SetChassisPosition extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x08: return currentChassisPosition.update(p);
+                    case IDENTIFIER_CURRENT_CHASSIS_POSITION: return currentChassisPosition.update(p);
                 }
                 return null;
             });

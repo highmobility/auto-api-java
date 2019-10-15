@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all valet mode properties.
  */
 public class GetValetMode extends GetCommand {
-    public static final Identifier identifier = Identifier.VALET_MODE;
+    public static final Identifier IDENTIFIER = Identifier.VALET_MODE;
 
     public GetValetMode() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetValetMode(byte[] bytes) {

@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.EnabledState;
  * Enable disable wi fi hotspot
  */
 public class EnableDisableWiFiHotspot extends SetCommand {
-    public static final Identifier identifier = Identifier.HOME_CHARGER;
+    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
 
-    Property<EnabledState> wifiHotspotEnabled = new Property(EnabledState.class, 0x08);
+    public static final byte IDENTIFIER_WI_FI_HOTSPOT_ENABLED = 0x08;
+
+    Property<EnabledState> wifiHotspotEnabled = new Property(EnabledState.class, IDENTIFIER_WI_FI_HOTSPOT_ENABLED);
 
     /**
      * @return The wi fi hotspot enabled
@@ -44,7 +46,7 @@ public class EnableDisableWiFiHotspot extends SetCommand {
      * @param wifiHotspotEnabled The wi fi hotspot enabled
      */
     public EnableDisableWiFiHotspot(EnabledState wifiHotspotEnabled) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.wifiHotspotEnabled.update(wifiHotspotEnabled), true);
     }
@@ -54,7 +56,7 @@ public class EnableDisableWiFiHotspot extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x08: return wifiHotspotEnabled.update(p);
+                    case IDENTIFIER_WI_FI_HOTSPOT_ENABLED: return wifiHotspotEnabled.update(p);
                 }
                 return null;
             });

@@ -28,15 +28,17 @@ import com.highmobility.value.Bytes;
  * Clear notification
  */
 public class ClearNotification extends SetCommand {
-    public static final Identifier identifier = Identifier.NOTIFICATIONS;
+    public static final Identifier IDENTIFIER = Identifier.NOTIFICATIONS;
 
-    Property<Clear> clear = new Property(Clear.class, 0x04);
+    public static final byte IDENTIFIER_CLEAR = 0x04;
+
+    Property<Clear> clear = new Property(Clear.class, IDENTIFIER_CLEAR);
 
     /**
      * Clear notification
      */
     public ClearNotification() {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(clear.addValueComponent(new Bytes("00")), true);
     }
@@ -46,7 +48,7 @@ public class ClearNotification extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x04: clear.update(p);
+                    case IDENTIFIER_CLEAR: clear.update(p);
                 }
                 return null;
             });

@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.EnabledState;
  * Enable disable wi fi
  */
 public class EnableDisableWiFi extends SetCommand {
-    public static final Identifier identifier = Identifier.WI_FI;
+    public static final Identifier IDENTIFIER = Identifier.WI_FI;
 
-    Property<EnabledState> status = new Property(EnabledState.class, 0x01);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+
+    Property<EnabledState> status = new Property(EnabledState.class, IDENTIFIER_STATUS);
 
     /**
      * @return The status
@@ -44,7 +46,7 @@ public class EnableDisableWiFi extends SetCommand {
      * @param status The status
      */
     public EnableDisableWiFi(EnabledState status) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.status.update(status), true);
     }
@@ -54,7 +56,7 @@ public class EnableDisableWiFi extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return status.update(p);
+                    case IDENTIFIER_STATUS: return status.update(p);
                 }
                 return null;
             });

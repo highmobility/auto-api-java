@@ -27,10 +27,13 @@ import com.highmobility.autoapi.value.Position;
  * The fueling state
  */
 public class FuelingState extends SetCommand {
-    public static final Identifier identifier = Identifier.FUELING;
+    public static final Identifier IDENTIFIER = Identifier.FUELING;
 
-    Property<LockState> gasFlapLock = new Property(LockState.class, 0x02);
-    Property<Position> gasFlapPosition = new Property(Position.class, 0x03);
+    public static final byte IDENTIFIER_GAS_FLAP_LOCK = 0x02;
+    public static final byte IDENTIFIER_GAS_FLAP_POSITION = 0x03;
+
+    Property<LockState> gasFlapLock = new Property(LockState.class, IDENTIFIER_GAS_FLAP_LOCK);
+    Property<Position> gasFlapPosition = new Property(Position.class, IDENTIFIER_GAS_FLAP_POSITION);
 
     /**
      * @return The gas flap lock
@@ -51,8 +54,8 @@ public class FuelingState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x02: return gasFlapLock.update(p);
-                    case 0x03: return gasFlapPosition.update(p);
+                    case IDENTIFIER_GAS_FLAP_LOCK: return gasFlapLock.update(p);
+                    case IDENTIFIER_GAS_FLAP_POSITION: return gasFlapPosition.update(p);
                 }
 
                 return null;
@@ -76,7 +79,7 @@ public class FuelingState extends SetCommand {
         private Property<Position> gasFlapPosition;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public FuelingState build() {
@@ -88,7 +91,7 @@ public class FuelingState extends SetCommand {
          * @return The builder
          */
         public Builder setGasFlapLock(Property<LockState> gasFlapLock) {
-            this.gasFlapLock = gasFlapLock.setIdentifier(0x02);
+            this.gasFlapLock = gasFlapLock.setIdentifier(IDENTIFIER_GAS_FLAP_LOCK);
             addProperty(this.gasFlapLock);
             return this;
         }
@@ -98,7 +101,7 @@ public class FuelingState extends SetCommand {
          * @return The builder
          */
         public Builder setGasFlapPosition(Property<Position> gasFlapPosition) {
-            this.gasFlapPosition = gasFlapPosition.setIdentifier(0x03);
+            this.gasFlapPosition = gasFlapPosition.setIdentifier(IDENTIFIER_GAS_FLAP_POSITION);
             addProperty(this.gasFlapPosition);
             return this;
         }

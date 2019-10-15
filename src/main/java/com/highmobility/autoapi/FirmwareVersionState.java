@@ -26,11 +26,15 @@ import com.highmobility.autoapi.value.HmkitVersion;
  * The firmware version state
  */
 public class FirmwareVersionState extends SetCommand {
-    public static final Identifier identifier = Identifier.FIRMWARE_VERSION;
+    public static final Identifier IDENTIFIER = Identifier.FIRMWARE_VERSION;
 
-    Property<HmkitVersion> hmKitVersion = new Property(HmkitVersion.class, 0x01);
-    Property<String> hmKitBuildName = new Property(String.class, 0x02);
-    Property<String> applicationVersion = new Property(String.class, 0x03);
+    public static final byte IDENTIFIER_HMKIT_VERSION = 0x01;
+    public static final byte IDENTIFIER_HMKIT_BUILD_NAME = 0x02;
+    public static final byte IDENTIFIER_APPLICATION_VERSION = 0x03;
+
+    Property<HmkitVersion> hmKitVersion = new Property(HmkitVersion.class, IDENTIFIER_HMKIT_VERSION);
+    Property<String> hmKitBuildName = new Property(String.class, IDENTIFIER_HMKIT_BUILD_NAME);
+    Property<String> applicationVersion = new Property(String.class, IDENTIFIER_APPLICATION_VERSION);
 
     /**
      * @return HMKit version
@@ -58,9 +62,9 @@ public class FirmwareVersionState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return hmKitVersion.update(p);
-                    case 0x02: return hmKitBuildName.update(p);
-                    case 0x03: return applicationVersion.update(p);
+                    case IDENTIFIER_HMKIT_VERSION: return hmKitVersion.update(p);
+                    case IDENTIFIER_HMKIT_BUILD_NAME: return hmKitBuildName.update(p);
+                    case IDENTIFIER_APPLICATION_VERSION: return applicationVersion.update(p);
                 }
 
                 return null;
@@ -86,7 +90,7 @@ public class FirmwareVersionState extends SetCommand {
         private Property<String> applicationVersion;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public FirmwareVersionState build() {
@@ -98,7 +102,7 @@ public class FirmwareVersionState extends SetCommand {
          * @return The builder
          */
         public Builder setHmKitVersion(Property<HmkitVersion> hmKitVersion) {
-            this.hmKitVersion = hmKitVersion.setIdentifier(0x01);
+            this.hmKitVersion = hmKitVersion.setIdentifier(IDENTIFIER_HMKIT_VERSION);
             addProperty(this.hmKitVersion);
             return this;
         }
@@ -108,7 +112,7 @@ public class FirmwareVersionState extends SetCommand {
          * @return The builder
          */
         public Builder setHmKitBuildName(Property<String> hmKitBuildName) {
-            this.hmKitBuildName = hmKitBuildName.setIdentifier(0x02);
+            this.hmKitBuildName = hmKitBuildName.setIdentifier(IDENTIFIER_HMKIT_BUILD_NAME);
             addProperty(this.hmKitBuildName);
             return this;
         }
@@ -118,7 +122,7 @@ public class FirmwareVersionState extends SetCommand {
          * @return The builder
          */
         public Builder setApplicationVersion(Property<String> applicationVersion) {
-            this.applicationVersion = applicationVersion.setIdentifier(0x03);
+            this.applicationVersion = applicationVersion.setIdentifier(IDENTIFIER_APPLICATION_VERSION);
             addProperty(this.applicationVersion);
             return this;
         }

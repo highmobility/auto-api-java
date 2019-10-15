@@ -27,7 +27,9 @@ import java.util.List;
  * The historical state
  */
 public class HistoricalState extends SetCommand {
-    public static final Identifier identifier = Identifier.HISTORICAL;
+    public static final Identifier IDENTIFIER = Identifier.HISTORICAL;
+
+    public static final byte IDENTIFIER_STATES = 0x01;
 
     Property<Command>[] states;
 
@@ -46,7 +48,7 @@ public class HistoricalState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01:
+                    case IDENTIFIER_STATES:
                         Property<Command> state = new Property(Command.class, p);
                         statesBuilder.add(state);
                         return state;
@@ -73,7 +75,7 @@ public class HistoricalState extends SetCommand {
         private List<Property> states = new ArrayList<>();
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public HistoricalState build() {
@@ -101,7 +103,7 @@ public class HistoricalState extends SetCommand {
          * @return The builder
          */
         public Builder addState(Property<Command> state) {
-            state.setIdentifier(0x01);
+            state.setIdentifier(IDENTIFIER_STATES);
             addProperty(state);
             states.add(state);
             return this;

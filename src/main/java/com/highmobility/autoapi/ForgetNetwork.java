@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.Property;
  * Forget network
  */
 public class ForgetNetwork extends SetCommand {
-    public static final Identifier identifier = Identifier.WI_FI;
+    public static final Identifier IDENTIFIER = Identifier.WI_FI;
 
-    Property<String> networkSSID = new Property(String.class, 0x03);
+    public static final byte IDENTIFIER_NETWORK_SSID = 0x03;
+
+    Property<String> networkSSID = new Property(String.class, IDENTIFIER_NETWORK_SSID);
 
     /**
      * @return The network ssid
@@ -43,7 +45,7 @@ public class ForgetNetwork extends SetCommand {
      * @param networkSSID The network SSID
      */
     public ForgetNetwork(String networkSSID) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.networkSSID.update(networkSSID), true);
     }
@@ -53,7 +55,7 @@ public class ForgetNetwork extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x03: return networkSSID.update(p);
+                    case IDENTIFIER_NETWORK_SSID: return networkSSID.update(p);
                 }
                 return null;
             });

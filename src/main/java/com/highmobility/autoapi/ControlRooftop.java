@@ -30,13 +30,19 @@ import javax.annotation.Nullable;
  * Control rooftop
  */
 public class ControlRooftop extends SetCommand {
-    public static final Identifier identifier = Identifier.ROOFTOP_CONTROL;
+    public static final Identifier IDENTIFIER = Identifier.ROOFTOP_CONTROL;
 
-    @Nullable Property<Double> dimming = new Property(Double.class, 0x01);
-    @Nullable Property<Double> position = new Property(Double.class, 0x02);
-    @Nullable Property<ConvertibleRoofState> convertibleRoofState = new Property(ConvertibleRoofState.class, 0x03);
-    @Nullable Property<SunroofTiltState> sunroofTiltState = new Property(SunroofTiltState.class, 0x04);
-    @Nullable Property<SunroofState> sunroofState = new Property(SunroofState.class, 0x05);
+    public static final byte IDENTIFIER_DIMMING = 0x01;
+    public static final byte IDENTIFIER_POSITION = 0x02;
+    public static final byte IDENTIFIER_CONVERTIBLE_ROOF_STATE = 0x03;
+    public static final byte IDENTIFIER_SUNROOF_TILT_STATE = 0x04;
+    public static final byte IDENTIFIER_SUNROOF_STATE = 0x05;
+
+    @Nullable Property<Double> dimming = new Property(Double.class, IDENTIFIER_DIMMING);
+    @Nullable Property<Double> position = new Property(Double.class, IDENTIFIER_POSITION);
+    @Nullable Property<ConvertibleRoofState> convertibleRoofState = new Property(ConvertibleRoofState.class, IDENTIFIER_CONVERTIBLE_ROOF_STATE);
+    @Nullable Property<SunroofTiltState> sunroofTiltState = new Property(SunroofTiltState.class, IDENTIFIER_SUNROOF_TILT_STATE);
+    @Nullable Property<SunroofState> sunroofState = new Property(SunroofState.class, IDENTIFIER_SUNROOF_STATE);
 
     /**
      * @return The dimming
@@ -83,7 +89,7 @@ public class ControlRooftop extends SetCommand {
      * @param sunroofState The sunroof state
      */
     public ControlRooftop(@Nullable Double dimming, @Nullable Double position, @Nullable ConvertibleRoofState convertibleRoofState, @Nullable SunroofTiltState sunroofTiltState, @Nullable SunroofState sunroofState) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.dimming.update(dimming));
         addProperty(this.position.update(position));
@@ -106,11 +112,11 @@ public class ControlRooftop extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return dimming.update(p);
-                    case 0x02: return position.update(p);
-                    case 0x03: return convertibleRoofState.update(p);
-                    case 0x04: return sunroofTiltState.update(p);
-                    case 0x05: return sunroofState.update(p);
+                    case IDENTIFIER_DIMMING: return dimming.update(p);
+                    case IDENTIFIER_POSITION: return position.update(p);
+                    case IDENTIFIER_CONVERTIBLE_ROOF_STATE: return convertibleRoofState.update(p);
+                    case IDENTIFIER_SUNROOF_TILT_STATE: return sunroofTiltState.update(p);
+                    case IDENTIFIER_SUNROOF_STATE: return sunroofState.update(p);
                 }
                 return null;
             });

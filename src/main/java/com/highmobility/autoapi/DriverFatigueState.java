@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The driver fatigue state
  */
 public class DriverFatigueState extends SetCommand {
-    public static final Identifier identifier = Identifier.DRIVER_FATIGUE;
+    public static final Identifier IDENTIFIER = Identifier.DRIVER_FATIGUE;
 
-    Property<DetectedFatigueLevel> detectedFatigueLevel = new Property(DetectedFatigueLevel.class, 0x01);
+    public static final byte IDENTIFIER_DETECTED_FATIGUE_LEVEL = 0x01;
+
+    Property<DetectedFatigueLevel> detectedFatigueLevel = new Property(DetectedFatigueLevel.class, IDENTIFIER_DETECTED_FATIGUE_LEVEL);
 
     /**
      * @return The detected fatigue level
@@ -42,7 +44,7 @@ public class DriverFatigueState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return detectedFatigueLevel.update(p);
+                    case IDENTIFIER_DETECTED_FATIGUE_LEVEL: return detectedFatigueLevel.update(p);
                 }
 
                 return null;

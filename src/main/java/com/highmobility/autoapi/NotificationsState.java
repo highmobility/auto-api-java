@@ -30,12 +30,17 @@ import java.util.List;
  * The notifications state
  */
 public class NotificationsState extends SetCommand {
-    public static final Identifier identifier = Identifier.NOTIFICATIONS;
+    public static final Identifier IDENTIFIER = Identifier.NOTIFICATIONS;
 
-    Property<String> text = new Property(String.class, 0x01);
+    public static final byte IDENTIFIER_TEXT = 0x01;
+    public static final byte IDENTIFIER_ACTION_ITEMS = 0x02;
+    public static final byte IDENTIFIER_ACTIVATED_ACTION = 0x03;
+    public static final byte IDENTIFIER_CLEAR = 0x04;
+
+    Property<String> text = new Property(String.class, IDENTIFIER_TEXT);
     Property<ActionItem>[] actionItems;
-    PropertyInteger activatedAction = new PropertyInteger(0x03, false);
-    Property<Clear> clear = new Property(Clear.class, 0x04);
+    PropertyInteger activatedAction = new PropertyInteger(IDENTIFIER_ACTIVATED_ACTION, false);
+    Property<Clear> clear = new Property(Clear.class, IDENTIFIER_CLEAR);
 
     /**
      * @return Text for the notification
@@ -73,13 +78,13 @@ public class NotificationsState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return text.update(p);
-                    case 0x02:
+                    case IDENTIFIER_TEXT: return text.update(p);
+                    case IDENTIFIER_ACTION_ITEMS:
                         Property<ActionItem> actionItem = new Property(ActionItem.class, p);
                         actionItemsBuilder.add(actionItem);
                         return actionItem;
-                    case 0x03: return activatedAction.update(p);
-                    case 0x04: return clear.update(p);
+                    case IDENTIFIER_ACTIVATED_ACTION: return activatedAction.update(p);
+                    case IDENTIFIER_CLEAR: return clear.update(p);
                 }
 
                 return null;
@@ -109,7 +114,7 @@ public class NotificationsState extends SetCommand {
         private Property<Clear> clear;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public NotificationsState build() {
@@ -121,7 +126,7 @@ public class NotificationsState extends SetCommand {
          * @return The builder
          */
         public Builder setText(Property<String> text) {
-            this.text = text.setIdentifier(0x01);
+            this.text = text.setIdentifier(IDENTIFIER_TEXT);
             addProperty(this.text);
             return this;
         }
@@ -148,7 +153,7 @@ public class NotificationsState extends SetCommand {
          * @return The builder
          */
         public Builder addActionItem(Property<ActionItem> actionItem) {
-            actionItem.setIdentifier(0x02);
+            actionItem.setIdentifier(IDENTIFIER_ACTION_ITEMS);
             addProperty(actionItem);
             actionItems.add(actionItem);
             return this;
@@ -159,7 +164,7 @@ public class NotificationsState extends SetCommand {
          * @return The builder
          */
         public Builder setActivatedAction(Property<Integer> activatedAction) {
-            this.activatedAction = new PropertyInteger(0x03, false, 1, activatedAction);
+            this.activatedAction = new PropertyInteger(IDENTIFIER_ACTIVATED_ACTION, false, 1, activatedAction);
             addProperty(this.activatedAction);
             return this;
         }
@@ -169,7 +174,7 @@ public class NotificationsState extends SetCommand {
          * @return The builder
          */
         public Builder setClear(Property<Clear> clear) {
-            this.clear = clear.setIdentifier(0x04);
+            this.clear = clear.setIdentifier(IDENTIFIER_CLEAR);
             addProperty(this.clear);
             return this;
         }

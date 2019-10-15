@@ -28,12 +28,17 @@ import com.highmobility.autoapi.value.NetworkSecurity;
  * The wi fi state
  */
 public class WiFiState extends SetCommand {
-    public static final Identifier identifier = Identifier.WI_FI;
+    public static final Identifier IDENTIFIER = Identifier.WI_FI;
 
-    Property<EnabledState> status = new Property(EnabledState.class, 0x01);
-    Property<ConnectionState> networkConnection = new Property(ConnectionState.class, 0x02);
-    Property<String> networkSSID = new Property(String.class, 0x03);
-    Property<NetworkSecurity> networkSecurity = new Property(NetworkSecurity.class, 0x04);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+    public static final byte IDENTIFIER_NETWORK_CONNECTED = 0x02;
+    public static final byte IDENTIFIER_NETWORK_SSID = 0x03;
+    public static final byte IDENTIFIER_NETWORK_SECURITY = 0x04;
+
+    Property<EnabledState> status = new Property(EnabledState.class, IDENTIFIER_STATUS);
+    Property<ConnectionState> networkConnection = new Property(ConnectionState.class, IDENTIFIER_NETWORK_CONNECTED);
+    Property<String> networkSSID = new Property(String.class, IDENTIFIER_NETWORK_SSID);
+    Property<NetworkSecurity> networkSecurity = new Property(NetworkSecurity.class, IDENTIFIER_NETWORK_SECURITY);
 
     /**
      * @return The status
@@ -68,10 +73,10 @@ public class WiFiState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return status.update(p);
-                    case 0x02: return networkConnection.update(p);
-                    case 0x03: return networkSSID.update(p);
-                    case 0x04: return networkSecurity.update(p);
+                    case IDENTIFIER_STATUS: return status.update(p);
+                    case IDENTIFIER_NETWORK_CONNECTED: return networkConnection.update(p);
+                    case IDENTIFIER_NETWORK_SSID: return networkSSID.update(p);
+                    case IDENTIFIER_NETWORK_SECURITY: return networkSecurity.update(p);
                 }
 
                 return null;
@@ -99,7 +104,7 @@ public class WiFiState extends SetCommand {
         private Property<NetworkSecurity> networkSecurity;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public WiFiState build() {
@@ -111,7 +116,7 @@ public class WiFiState extends SetCommand {
          * @return The builder
          */
         public Builder setStatus(Property<EnabledState> status) {
-            this.status = status.setIdentifier(0x01);
+            this.status = status.setIdentifier(IDENTIFIER_STATUS);
             addProperty(this.status);
             return this;
         }
@@ -121,7 +126,7 @@ public class WiFiState extends SetCommand {
          * @return The builder
          */
         public Builder setNetworkConnection(Property<ConnectionState> networkConnection) {
-            this.networkConnection = networkConnection.setIdentifier(0x02);
+            this.networkConnection = networkConnection.setIdentifier(IDENTIFIER_NETWORK_CONNECTED);
             addProperty(this.networkConnection);
             return this;
         }
@@ -131,7 +136,7 @@ public class WiFiState extends SetCommand {
          * @return The builder
          */
         public Builder setNetworkSSID(Property<String> networkSSID) {
-            this.networkSSID = networkSSID.setIdentifier(0x03);
+            this.networkSSID = networkSSID.setIdentifier(IDENTIFIER_NETWORK_SSID);
             addProperty(this.networkSSID);
             return this;
         }
@@ -141,7 +146,7 @@ public class WiFiState extends SetCommand {
          * @return The builder
          */
         public Builder setNetworkSecurity(Property<NetworkSecurity> networkSecurity) {
-            this.networkSecurity = networkSecurity.setIdentifier(0x04);
+            this.networkSecurity = networkSecurity.setIdentifier(IDENTIFIER_NETWORK_SECURITY);
             addProperty(this.networkSecurity);
             return this;
         }

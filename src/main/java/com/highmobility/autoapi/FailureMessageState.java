@@ -28,13 +28,19 @@ import com.highmobility.value.Bytes;
  * The failure message state
  */
 public class FailureMessageState extends SetCommand {
-    public static final Identifier identifier = Identifier.FAILURE_MESSAGE;
+    public static final Identifier IDENTIFIER = Identifier.FAILURE_MESSAGE;
 
-    PropertyInteger failedMessageID = new PropertyInteger(0x01, false);
-    PropertyInteger failedMessageType = new PropertyInteger(0x02, false);
-    Property<FailureReason> failureReason = new Property(FailureReason.class, 0x03);
-    Property<String> failureDescription = new Property(String.class, 0x04);
-    Property<Bytes> failedPropertyIDs = new Property(Bytes.class, 0x05);
+    public static final byte IDENTIFIER_FAILED_MESSAGE_ID = 0x01;
+    public static final byte IDENTIFIER_FAILED_MESSAGE_TYPE = 0x02;
+    public static final byte IDENTIFIER_FAILURE_REASON = 0x03;
+    public static final byte IDENTIFIER_FAILURE_DESCRIPTION = 0x04;
+    public static final byte IDENTIFIER_FAILED_PROPERTY_IDS = 0x05;
+
+    PropertyInteger failedMessageID = new PropertyInteger(IDENTIFIER_FAILED_MESSAGE_ID, false);
+    PropertyInteger failedMessageType = new PropertyInteger(IDENTIFIER_FAILED_MESSAGE_TYPE, false);
+    Property<FailureReason> failureReason = new Property(FailureReason.class, IDENTIFIER_FAILURE_REASON);
+    Property<String> failureDescription = new Property(String.class, IDENTIFIER_FAILURE_DESCRIPTION);
+    Property<Bytes> failedPropertyIDs = new Property(Bytes.class, IDENTIFIER_FAILED_PROPERTY_IDS);
 
     /**
      * @return Capability identifier of the failed message
@@ -76,7 +82,7 @@ public class FailureMessageState extends SetCommand {
      *
      * @param capabilityIdentifier The command capability identifier
      * @param propertyIdentifier   The property identifier
-     * @return Boolean indicating whether the queried message failed.
+     * @return Whether the command failed.
      */
     public boolean getPropertyFailed(Identifier capabilityIdentifier, byte propertyIdentifier) {
         if ((getFailedMessageID().getValue() != null && getFailedPropertyIDs().getValue() != null) &&
@@ -87,20 +93,35 @@ public class FailureMessageState extends SetCommand {
                 if (failedId == propertyIdentifier) return true;
             }
         }
-        
+
         return false;
     }
 
+    /**
+     * Understand whether a set/get command failed
+     *
+     * @param identifier The command identifier
+     * @param type       The command type
+     * @return Whether the command failed.
+     */
+    public boolean getCommandFailed(Identifier identifier, Type type) {
+        if (identifier.asInt() == getFailedMessageID().getValue() &&
+                type.asInt() == getFailedMessageType().getValue()) {
+            return true;
+        }
+
+        return false;
+    }
     FailureMessageState(byte[] bytes) throws CommandParseException {
         super(bytes);
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return failedMessageID.update(p);
-                    case 0x02: return failedMessageType.update(p);
-                    case 0x03: return failureReason.update(p);
-                    case 0x04: return failureDescription.update(p);
-                    case 0x05: return failedPropertyIDs.update(p);
+                    case IDENTIFIER_FAILED_MESSAGE_ID: return failedMessageID.update(p);
+                    case IDENTIFIER_FAILED_MESSAGE_TYPE: return failedMessageType.update(p);
+                    case IDENTIFIER_FAILURE_REASON: return failureReason.update(p);
+                    case IDENTIFIER_FAILURE_DESCRIPTION: return failureDescription.update(p);
+                    case IDENTIFIER_FAILED_PROPERTY_IDS: return failedPropertyIDs.update(p);
                 }
 
                 return null;
@@ -130,7 +151,7 @@ public class FailureMessageState extends SetCommand {
         private Property<Bytes> failedPropertyIDs;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public FailureMessageState build() {
@@ -142,7 +163,7 @@ public class FailureMessageState extends SetCommand {
          * @return The builder
          */
         public Builder setFailedMessageID(Property<Integer> failedMessageID) {
-            this.failedMessageID = new PropertyInteger(0x01, false, 2, failedMessageID);
+            this.failedMessageID = new PropertyInteger(IDENTIFIER_FAILED_MESSAGE_ID, false, 2, failedMessageID);
             addProperty(this.failedMessageID);
             return this;
         }
@@ -152,7 +173,7 @@ public class FailureMessageState extends SetCommand {
          * @return The builder
          */
         public Builder setFailedMessageType(Property<Integer> failedMessageType) {
-            this.failedMessageType = new PropertyInteger(0x02, false, 1, failedMessageType);
+            this.failedMessageType = new PropertyInteger(IDENTIFIER_FAILED_MESSAGE_TYPE, false, 1, failedMessageType);
             addProperty(this.failedMessageType);
             return this;
         }
@@ -162,7 +183,7 @@ public class FailureMessageState extends SetCommand {
          * @return The builder
          */
         public Builder setFailureReason(Property<FailureReason> failureReason) {
-            this.failureReason = failureReason.setIdentifier(0x03);
+            this.failureReason = failureReason.setIdentifier(IDENTIFIER_FAILURE_REASON);
             addProperty(this.failureReason);
             return this;
         }
@@ -172,7 +193,7 @@ public class FailureMessageState extends SetCommand {
          * @return The builder
          */
         public Builder setFailureDescription(Property<String> failureDescription) {
-            this.failureDescription = failureDescription.setIdentifier(0x04);
+            this.failureDescription = failureDescription.setIdentifier(IDENTIFIER_FAILURE_DESCRIPTION);
             addProperty(this.failureDescription);
             return this;
         }
@@ -182,7 +203,7 @@ public class FailureMessageState extends SetCommand {
          * @return The builder
          */
         public Builder setFailedPropertyIDs(Property<Bytes> failedPropertyIDs) {
-            this.failedPropertyIDs = failedPropertyIDs.setIdentifier(0x05);
+            this.failedPropertyIDs = failedPropertyIDs.setIdentifier(IDENTIFIER_FAILED_PROPERTY_IDS);
             addProperty(this.failedPropertyIDs);
             return this;
         }

@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The hood state
  */
 public class HoodState extends SetCommand {
-    public static final Identifier identifier = Identifier.HOOD;
+    public static final Identifier IDENTIFIER = Identifier.HOOD;
 
-    Property<Position> position = new Property(Position.class, 0x01);
+    public static final byte IDENTIFIER_POSITION = 0x01;
+
+    Property<Position> position = new Property(Position.class, IDENTIFIER_POSITION);
 
     /**
      * @return The position
@@ -42,7 +44,7 @@ public class HoodState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return position.update(p);
+                    case IDENTIFIER_POSITION: return position.update(p);
                 }
 
                 return null;
@@ -64,7 +66,7 @@ public class HoodState extends SetCommand {
         private Property<Position> position;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public HoodState build() {
@@ -76,7 +78,7 @@ public class HoodState extends SetCommand {
          * @return The builder
          */
         public Builder setPosition(Property<Position> position) {
-            this.position = position.setIdentifier(0x01);
+            this.position = position.setIdentifier(IDENTIFIER_POSITION);
             addProperty(this.position);
             return this;
         }

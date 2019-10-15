@@ -29,10 +29,13 @@ import javax.annotation.Nullable;
  * Set windscreen damage
  */
 public class SetWindscreenDamage extends SetCommand {
-    public static final Identifier identifier = Identifier.WINDSCREEN;
+    public static final Identifier IDENTIFIER = Identifier.WINDSCREEN;
 
-    Property<WindscreenDamage> windscreenDamage = new Property(WindscreenDamage.class, 0x03);
-    @Nullable Property<Zone> windscreenDamageZone = new Property(Zone.class, 0x05);
+    public static final byte IDENTIFIER_WINDSCREEN_DAMAGE = 0x03;
+    public static final byte IDENTIFIER_WINDSCREEN_DAMAGE_ZONE = 0x05;
+
+    Property<WindscreenDamage> windscreenDamage = new Property(WindscreenDamage.class, IDENTIFIER_WINDSCREEN_DAMAGE);
+    @Nullable Property<Zone> windscreenDamageZone = new Property(Zone.class, IDENTIFIER_WINDSCREEN_DAMAGE_ZONE);
 
     /**
      * @return The windscreen damage
@@ -55,7 +58,7 @@ public class SetWindscreenDamage extends SetCommand {
      * @param windscreenDamageZone Representing the position in the zone, seen from the inside of the vehicle (1-based index)
      */
     public SetWindscreenDamage(WindscreenDamage windscreenDamage, @Nullable Zone windscreenDamageZone) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.windscreenDamage.update(windscreenDamage));
         addProperty(this.windscreenDamageZone.update(windscreenDamageZone), true);
@@ -66,8 +69,8 @@ public class SetWindscreenDamage extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x03: return windscreenDamage.update(p);
-                    case 0x05: return windscreenDamageZone.update(p);
+                    case IDENTIFIER_WINDSCREEN_DAMAGE: return windscreenDamage.update(p);
+                    case IDENTIFIER_WINDSCREEN_DAMAGE_ZONE: return windscreenDamageZone.update(p);
                 }
                 return null;
             });

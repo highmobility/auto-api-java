@@ -27,11 +27,15 @@ import javax.annotation.Nullable;
  * Set temperature settings
  */
 public class SetTemperatureSettings extends SetCommand {
-    public static final Identifier identifier = Identifier.CLIMATE;
+    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
 
-    @Nullable Property<Float> driverTemperatureSetting = new Property(Float.class, 0x03);
-    @Nullable Property<Float> passengerTemperatureSetting = new Property(Float.class, 0x04);
-    @Nullable Property<Float> rearTemperatureSetting = new Property(Float.class, 0x0c);
+    public static final byte IDENTIFIER_DRIVER_TEMPERATURE_SETTING = 0x03;
+    public static final byte IDENTIFIER_PASSENGER_TEMPERATURE_SETTING = 0x04;
+    public static final byte IDENTIFIER_REAR_TEMPERATURE_SETTING = 0x0c;
+
+    @Nullable Property<Float> driverTemperatureSetting = new Property(Float.class, IDENTIFIER_DRIVER_TEMPERATURE_SETTING);
+    @Nullable Property<Float> passengerTemperatureSetting = new Property(Float.class, IDENTIFIER_PASSENGER_TEMPERATURE_SETTING);
+    @Nullable Property<Float> rearTemperatureSetting = new Property(Float.class, IDENTIFIER_REAR_TEMPERATURE_SETTING);
 
     /**
      * @return The driver temperature setting
@@ -62,7 +66,7 @@ public class SetTemperatureSettings extends SetCommand {
      * @param rearTemperatureSetting The rear temperature in celsius
      */
     public SetTemperatureSettings(@Nullable Float driverTemperatureSetting, @Nullable Float passengerTemperatureSetting, @Nullable Float rearTemperatureSetting) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.driverTemperatureSetting.update(driverTemperatureSetting));
         addProperty(this.passengerTemperatureSetting.update(passengerTemperatureSetting));
@@ -75,9 +79,9 @@ public class SetTemperatureSettings extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x03: return driverTemperatureSetting.update(p);
-                    case 0x04: return passengerTemperatureSetting.update(p);
-                    case 0x0c: return rearTemperatureSetting.update(p);
+                    case IDENTIFIER_DRIVER_TEMPERATURE_SETTING: return driverTemperatureSetting.update(p);
+                    case IDENTIFIER_PASSENGER_TEMPERATURE_SETTING: return passengerTemperatureSetting.update(p);
+                    case IDENTIFIER_REAR_TEMPERATURE_SETTING: return rearTemperatureSetting.update(p);
                 }
                 return null;
             });

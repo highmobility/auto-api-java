@@ -32,13 +32,19 @@ import java.util.List;
  * The doors state
  */
 public class DoorsState extends SetCommand {
-    public static final Identifier identifier = Identifier.DOORS;
+    public static final Identifier IDENTIFIER = Identifier.DOORS;
+
+    public static final byte IDENTIFIER_INSIDE_LOCKS = 0x02;
+    public static final byte IDENTIFIER_LOCKS = 0x03;
+    public static final byte IDENTIFIER_POSITIONS = 0x04;
+    public static final byte IDENTIFIER_INSIDE_LOCKS_STATE = 0x05;
+    public static final byte IDENTIFIER_LOCKS_STATE = 0x06;
 
     Property<Lock>[] insideLocks;
     Property<Lock>[] locks;
     Property<DoorPosition>[] positions;
-    Property<LockState> insideLocksState = new Property(LockState.class, 0x05);
-    Property<LockState> locksState = new Property(LockState.class, 0x06);
+    Property<LockState> insideLocksState = new Property(LockState.class, IDENTIFIER_INSIDE_LOCKS_STATE);
+    Property<LockState> locksState = new Property(LockState.class, IDENTIFIER_LOCKS_STATE);
 
     /**
      * @return Inside lock states for the given doors
@@ -128,20 +134,20 @@ public class DoorsState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x02:
+                    case IDENTIFIER_INSIDE_LOCKS:
                         Property<Lock> insideLock = new Property(Lock.class, p);
                         insideLocksBuilder.add(insideLock);
                         return insideLock;
-                    case 0x03:
+                    case IDENTIFIER_LOCKS:
                         Property<Lock> lock = new Property(Lock.class, p);
                         locksBuilder.add(lock);
                         return lock;
-                    case 0x04:
+                    case IDENTIFIER_POSITIONS:
                         Property<DoorPosition> position = new Property(DoorPosition.class, p);
                         positionsBuilder.add(position);
                         return position;
-                    case 0x05: return insideLocksState.update(p);
-                    case 0x06: return locksState.update(p);
+                    case IDENTIFIER_INSIDE_LOCKS_STATE: return insideLocksState.update(p);
+                    case IDENTIFIER_LOCKS_STATE: return locksState.update(p);
                 }
 
                 return null;
@@ -175,7 +181,7 @@ public class DoorsState extends SetCommand {
         private Property<LockState> locksState;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public DoorsState build() {
@@ -204,7 +210,7 @@ public class DoorsState extends SetCommand {
          * @return The builder
          */
         public Builder addInsideLock(Property<Lock> insideLock) {
-            insideLock.setIdentifier(0x02);
+            insideLock.setIdentifier(IDENTIFIER_INSIDE_LOCKS);
             addProperty(insideLock);
             insideLocks.add(insideLock);
             return this;
@@ -232,7 +238,7 @@ public class DoorsState extends SetCommand {
          * @return The builder
          */
         public Builder addLock(Property<Lock> lock) {
-            lock.setIdentifier(0x03);
+            lock.setIdentifier(IDENTIFIER_LOCKS);
             addProperty(lock);
             locks.add(lock);
             return this;
@@ -260,7 +266,7 @@ public class DoorsState extends SetCommand {
          * @return The builder
          */
         public Builder addPosition(Property<DoorPosition> position) {
-            position.setIdentifier(0x04);
+            position.setIdentifier(IDENTIFIER_POSITIONS);
             addProperty(position);
             positions.add(position);
             return this;
@@ -271,7 +277,7 @@ public class DoorsState extends SetCommand {
          * @return The builder
          */
         public Builder setInsideLocksState(Property<LockState> insideLocksState) {
-            this.insideLocksState = insideLocksState.setIdentifier(0x05);
+            this.insideLocksState = insideLocksState.setIdentifier(IDENTIFIER_INSIDE_LOCKS_STATE);
             addProperty(this.insideLocksState);
             return this;
         }
@@ -281,7 +287,7 @@ public class DoorsState extends SetCommand {
          * @return The builder
          */
         public Builder setLocksState(Property<LockState> locksState) {
-            this.locksState = locksState.setIdentifier(0x06);
+            this.locksState = locksState.setIdentifier(IDENTIFIER_LOCKS_STATE);
             addProperty(this.locksState);
             return this;
         }

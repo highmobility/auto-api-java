@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all theft alarm properties.
  */
 public class GetTheftAlarmState extends GetCommand {
-    public static final Identifier identifier = Identifier.THEFT_ALARM;
+    public static final Identifier IDENTIFIER = Identifier.THEFT_ALARM;
 
     public GetTheftAlarmState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetTheftAlarmState(byte[] bytes) {

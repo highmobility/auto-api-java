@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all seats properties.
  */
 public class GetSeatsState extends GetCommand {
-    public static final Identifier identifier = Identifier.SEATS;
+    public static final Identifier IDENTIFIER = Identifier.SEATS;
 
     public GetSeatsState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetSeatsState(byte[] bytes) {

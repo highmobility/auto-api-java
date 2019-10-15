@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all power takeoff properties.
  */
 public class GetPowerTakeoffState extends GetCommand {
-    public static final Identifier identifier = Identifier.POWER_TAKEOFF;
+    public static final Identifier IDENTIFIER = Identifier.POWER_TAKEOFF;
 
     public GetPowerTakeoffState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetPowerTakeoffState(byte[] bytes) {

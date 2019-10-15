@@ -27,9 +27,11 @@ import com.highmobility.autoapi.property.Property;
  * Start stop charging
  */
 public class StartStopCharging extends SetCommand {
-    public static final Identifier identifier = Identifier.CHARGING;
+    public static final Identifier IDENTIFIER = Identifier.CHARGING;
 
-    Property<Status> status = new Property(Status.class, 0x17);
+    public static final byte IDENTIFIER_STATUS = 0x17;
+
+    Property<Status> status = new Property(Status.class, IDENTIFIER_STATUS);
 
     /**
      * @return The status
@@ -44,7 +46,7 @@ public class StartStopCharging extends SetCommand {
      * @param status The status
      */
     public StartStopCharging(Status status) {
-        super(identifier);
+        super(IDENTIFIER);
     
         if (status == Status.CHARGING_COMPLETE ||
             status == Status.INITIALISING ||
@@ -59,7 +61,7 @@ public class StartStopCharging extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x17: return status.update(p);
+                    case IDENTIFIER_STATUS: return status.update(p);
                 }
                 return null;
             });

@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.Property;
  * Display image
  */
 public class DisplayImage extends SetCommand {
-    public static final Identifier identifier = Identifier.GRAPHICS;
+    public static final Identifier IDENTIFIER = Identifier.GRAPHICS;
 
-    Property<String> imageURL = new Property(String.class, 0x01);
+    public static final byte IDENTIFIER_IMAGE_URL = 0x01;
+
+    Property<String> imageURL = new Property(String.class, IDENTIFIER_IMAGE_URL);
 
     /**
      * @return The image url
@@ -43,7 +45,7 @@ public class DisplayImage extends SetCommand {
      * @param imageURL The image URL
      */
     public DisplayImage(String imageURL) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.imageURL.update(imageURL), true);
     }
@@ -53,7 +55,7 @@ public class DisplayImage extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return imageURL.update(p);
+                    case IDENTIFIER_IMAGE_URL: return imageURL.update(p);
                 }
                 return null;
             });

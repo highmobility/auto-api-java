@@ -29,10 +29,13 @@ import javax.annotation.Nullable;
  * Control gas flap
  */
 public class ControlGasFlap extends SetCommand {
-    public static final Identifier identifier = Identifier.FUELING;
+    public static final Identifier IDENTIFIER = Identifier.FUELING;
 
-    @Nullable Property<LockState> gasFlapLock = new Property(LockState.class, 0x02);
-    @Nullable Property<Position> gasFlapPosition = new Property(Position.class, 0x03);
+    public static final byte IDENTIFIER_GAS_FLAP_LOCK = 0x02;
+    public static final byte IDENTIFIER_GAS_FLAP_POSITION = 0x03;
+
+    @Nullable Property<LockState> gasFlapLock = new Property(LockState.class, IDENTIFIER_GAS_FLAP_LOCK);
+    @Nullable Property<Position> gasFlapPosition = new Property(Position.class, IDENTIFIER_GAS_FLAP_POSITION);
 
     /**
      * @return The gas flap lock
@@ -55,7 +58,7 @@ public class ControlGasFlap extends SetCommand {
      * @param gasFlapPosition The gas flap position
      */
     public ControlGasFlap(@Nullable LockState gasFlapLock, @Nullable Position gasFlapPosition) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.gasFlapLock.update(gasFlapLock));
         addProperty(this.gasFlapPosition.update(gasFlapPosition), true);
@@ -67,8 +70,8 @@ public class ControlGasFlap extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x02: return gasFlapLock.update(p);
-                    case 0x03: return gasFlapPosition.update(p);
+                    case IDENTIFIER_GAS_FLAP_LOCK: return gasFlapLock.update(p);
+                    case IDENTIFIER_GAS_FLAP_POSITION: return gasFlapPosition.update(p);
                 }
                 return null;
             });

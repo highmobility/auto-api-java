@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all windows properties.
  */
 public class GetWindows extends GetCommand {
-    public static final Identifier identifier = Identifier.WINDOWS;
+    public static final Identifier IDENTIFIER = Identifier.WINDOWS;
 
     public GetWindows() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetWindows(byte[] bytes) {

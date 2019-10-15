@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all cruise control properties.
  */
 public class GetCruiseControlState extends GetCommand {
-    public static final Identifier identifier = Identifier.CRUISE_CONTROL;
+    public static final Identifier IDENTIFIER = Identifier.CRUISE_CONTROL;
 
     public GetCruiseControlState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetCruiseControlState(byte[] bytes) {

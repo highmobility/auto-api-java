@@ -27,10 +27,13 @@ import javax.annotation.Nullable;
  * Control command
  */
 public class ControlCommand extends SetCommand {
-    public static final Identifier identifier = Identifier.REMOTE_CONTROL;
+    public static final Identifier IDENTIFIER = Identifier.REMOTE_CONTROL;
 
-    @Nullable PropertyInteger angle = new PropertyInteger(0x02, true);
-    @Nullable PropertyInteger speed = new PropertyInteger(0x03, true);
+    public static final byte IDENTIFIER_ANGLE = 0x02;
+    public static final byte IDENTIFIER_SPEED = 0x03;
+
+    @Nullable PropertyInteger angle = new PropertyInteger(IDENTIFIER_ANGLE, true);
+    @Nullable PropertyInteger speed = new PropertyInteger(IDENTIFIER_SPEED, true);
 
     /**
      * @return The angle
@@ -53,7 +56,7 @@ public class ControlCommand extends SetCommand {
      * @param speed Speed in km/h
      */
     public ControlCommand(@Nullable Integer angle, @Nullable Integer speed) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.angle.update(true, 2, angle));
         addProperty(this.speed.update(true, 1, speed), true);
@@ -65,8 +68,8 @@ public class ControlCommand extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x02: return angle.update(p);
-                    case 0x03: return speed.update(p);
+                    case IDENTIFIER_ANGLE: return angle.update(p);
+                    case IDENTIFIER_SPEED: return speed.update(p);
                 }
                 return null;
             });

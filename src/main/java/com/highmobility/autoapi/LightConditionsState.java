@@ -25,10 +25,13 @@ import com.highmobility.autoapi.property.Property;
  * The light conditions state
  */
 public class LightConditionsState extends SetCommand {
-    public static final Identifier identifier = Identifier.LIGHT_CONDITIONS;
+    public static final Identifier IDENTIFIER = Identifier.LIGHT_CONDITIONS;
 
-    Property<Float> outsideLight = new Property(Float.class, 0x01);
-    Property<Float> insideLight = new Property(Float.class, 0x02);
+    public static final byte IDENTIFIER_OUTSIDE_LIGHT = 0x01;
+    public static final byte IDENTIFIER_INSIDE_LIGHT = 0x02;
+
+    Property<Float> outsideLight = new Property(Float.class, IDENTIFIER_OUTSIDE_LIGHT);
+    Property<Float> insideLight = new Property(Float.class, IDENTIFIER_INSIDE_LIGHT);
 
     /**
      * @return Measured outside illuminance in lux
@@ -49,8 +52,8 @@ public class LightConditionsState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return outsideLight.update(p);
-                    case 0x02: return insideLight.update(p);
+                    case IDENTIFIER_OUTSIDE_LIGHT: return outsideLight.update(p);
+                    case IDENTIFIER_INSIDE_LIGHT: return insideLight.update(p);
                 }
 
                 return null;
@@ -74,7 +77,7 @@ public class LightConditionsState extends SetCommand {
         private Property<Float> insideLight;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public LightConditionsState build() {
@@ -86,7 +89,7 @@ public class LightConditionsState extends SetCommand {
          * @return The builder
          */
         public Builder setOutsideLight(Property<Float> outsideLight) {
-            this.outsideLight = outsideLight.setIdentifier(0x01);
+            this.outsideLight = outsideLight.setIdentifier(IDENTIFIER_OUTSIDE_LIGHT);
             addProperty(this.outsideLight);
             return this;
         }
@@ -96,7 +99,7 @@ public class LightConditionsState extends SetCommand {
          * @return The builder
          */
         public Builder setInsideLight(Property<Float> insideLight) {
-            this.insideLight = insideLight.setIdentifier(0x02);
+            this.insideLight = insideLight.setIdentifier(IDENTIFIER_INSIDE_LIGHT);
             addProperty(this.insideLight);
             return this;
         }

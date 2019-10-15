@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The honk horn flash lights state
  */
 public class HonkHornFlashLightsState extends SetCommand {
-    public static final Identifier identifier = Identifier.HONK_HORN_FLASH_LIGHTS;
+    public static final Identifier IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
 
-    Property<Flashers> flashers = new Property(Flashers.class, 0x01);
+    public static final byte IDENTIFIER_FLASHERS = 0x01;
+
+    Property<Flashers> flashers = new Property(Flashers.class, IDENTIFIER_FLASHERS);
 
     /**
      * @return The flashers
@@ -42,7 +44,7 @@ public class HonkHornFlashLightsState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return flashers.update(p);
+                    case IDENTIFIER_FLASHERS: return flashers.update(p);
                 }
 
                 return null;
@@ -64,7 +66,7 @@ public class HonkHornFlashLightsState extends SetCommand {
         private Property<Flashers> flashers;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public HonkHornFlashLightsState build() {
@@ -76,7 +78,7 @@ public class HonkHornFlashLightsState extends SetCommand {
          * @return The builder
          */
         public Builder setFlashers(Property<Flashers> flashers) {
-            this.flashers = flashers.setIdentifier(0x01);
+            this.flashers = flashers.setIdentifier(IDENTIFIER_FLASHERS);
             addProperty(this.flashers);
             return this;
         }

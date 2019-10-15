@@ -30,13 +30,19 @@ import javax.annotation.Nullable;
  * Start parking
  */
 public class StartParking extends SetCommand {
-    public static final Identifier identifier = Identifier.PARKING_TICKET;
+    public static final Identifier IDENTIFIER = Identifier.PARKING_TICKET;
 
-    Property<Status> status = new Property(Status.class, 0x01);
-    @Nullable Property<String> operatorName = new Property(String.class, 0x02);
-    Property<String> operatorTicketID = new Property(String.class, 0x03);
-    Property<Calendar> ticketStartTime = new Property(Calendar.class, 0x04);
-    @Nullable Property<Calendar> ticketEndTime = new Property(Calendar.class, 0x05);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+    public static final byte IDENTIFIER_OPERATOR_NAME = 0x02;
+    public static final byte IDENTIFIER_OPERATOR_TICKET_ID = 0x03;
+    public static final byte IDENTIFIER_TICKET_START_TIME = 0x04;
+    public static final byte IDENTIFIER_TICKET_END_TIME = 0x05;
+
+    Property<Status> status = new Property(Status.class, IDENTIFIER_STATUS);
+    @Nullable Property<String> operatorName = new Property(String.class, IDENTIFIER_OPERATOR_NAME);
+    Property<String> operatorTicketID = new Property(String.class, IDENTIFIER_OPERATOR_TICKET_ID);
+    Property<Calendar> ticketStartTime = new Property(Calendar.class, IDENTIFIER_TICKET_START_TIME);
+    @Nullable Property<Calendar> ticketEndTime = new Property(Calendar.class, IDENTIFIER_TICKET_END_TIME);
 
     /**
      * @return The operator name
@@ -75,7 +81,7 @@ public class StartParking extends SetCommand {
      * @param ticketEndTime Milliseconds since UNIX Epoch time
      */
     public StartParking(@Nullable String operatorName, String operatorTicketID, Calendar ticketStartTime, @Nullable Calendar ticketEndTime) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(status.addValueComponent(new Bytes("01")));
         addProperty(this.operatorName.update(operatorName));
@@ -89,11 +95,11 @@ public class StartParking extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: status.update(p);
-                    case 0x02: return operatorName.update(p);
-                    case 0x03: return operatorTicketID.update(p);
-                    case 0x04: return ticketStartTime.update(p);
-                    case 0x05: return ticketEndTime.update(p);
+                    case IDENTIFIER_STATUS: status.update(p);
+                    case IDENTIFIER_OPERATOR_NAME: return operatorName.update(p);
+                    case IDENTIFIER_OPERATOR_TICKET_ID: return operatorTicketID.update(p);
+                    case IDENTIFIER_TICKET_START_TIME: return ticketStartTime.update(p);
+                    case IDENTIFIER_TICKET_END_TIME: return ticketEndTime.update(p);
                 }
                 return null;
             });

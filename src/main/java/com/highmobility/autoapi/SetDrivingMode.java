@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.DrivingMode;
  * Set driving mode
  */
 public class SetDrivingMode extends SetCommand {
-    public static final Identifier identifier = Identifier.CHASSIS_SETTINGS;
+    public static final Identifier IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
-    Property<DrivingMode> drivingMode = new Property(DrivingMode.class, 0x01);
+    public static final byte IDENTIFIER_DRIVING_MODE = 0x01;
+
+    Property<DrivingMode> drivingMode = new Property(DrivingMode.class, IDENTIFIER_DRIVING_MODE);
 
     /**
      * @return The driving mode
@@ -44,7 +46,7 @@ public class SetDrivingMode extends SetCommand {
      * @param drivingMode The driving mode
      */
     public SetDrivingMode(DrivingMode drivingMode) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.drivingMode.update(drivingMode), true);
     }
@@ -54,7 +56,7 @@ public class SetDrivingMode extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return drivingMode.update(p);
+                    case IDENTIFIER_DRIVING_MODE: return drivingMode.update(p);
                 }
                 return null;
             });

@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific diagnostics properties.
  */
 public class GetDiagnosticsProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.DIAGNOSTICS;
+    public static final Identifier IDENTIFIER = Identifier.DIAGNOSTICS;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetDiagnosticsProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetDiagnosticsProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

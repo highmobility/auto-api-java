@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.ActiveState;
  * Start stop hvac
  */
 public class StartStopHvac extends SetCommand {
-    public static final Identifier identifier = Identifier.CLIMATE;
+    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
 
-    Property<ActiveState> hvacState = new Property(ActiveState.class, 0x05);
+    public static final byte IDENTIFIER_HVAC_STATE = 0x05;
+
+    Property<ActiveState> hvacState = new Property(ActiveState.class, IDENTIFIER_HVAC_STATE);
 
     /**
      * @return The hvac state
@@ -44,7 +46,7 @@ public class StartStopHvac extends SetCommand {
      * @param hvacState The hvac state
      */
     public StartStopHvac(ActiveState hvacState) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.hvacState.update(hvacState), true);
     }
@@ -54,7 +56,7 @@ public class StartStopHvac extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x05: return hvacState.update(p);
+                    case IDENTIFIER_HVAC_STATE: return hvacState.update(p);
                 }
                 return null;
             });

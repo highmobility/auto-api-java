@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all lights properties.
  */
 public class GetLightsState extends GetCommand {
-    public static final Identifier identifier = Identifier.LIGHTS;
+    public static final Identifier IDENTIFIER = Identifier.LIGHTS;
 
     public GetLightsState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetLightsState(byte[] bytes) {

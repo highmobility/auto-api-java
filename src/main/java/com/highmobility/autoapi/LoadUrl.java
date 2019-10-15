@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.Property;
  * Load url
  */
 public class LoadUrl extends SetCommand {
-    public static final Identifier identifier = Identifier.BROWSER;
+    public static final Identifier IDENTIFIER = Identifier.BROWSER;
 
-    Property<String> url = new Property(String.class, 0x01);
+    public static final byte IDENTIFIER_URL = 0x01;
+
+    Property<String> url = new Property(String.class, IDENTIFIER_URL);
 
     /**
      * @return The url
@@ -43,7 +45,7 @@ public class LoadUrl extends SetCommand {
      * @param url The URL
      */
     public LoadUrl(String url) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.url.update(url), true);
     }
@@ -53,7 +55,7 @@ public class LoadUrl extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return url.update(p);
+                    case IDENTIFIER_URL: return url.update(p);
                 }
                 return null;
             });

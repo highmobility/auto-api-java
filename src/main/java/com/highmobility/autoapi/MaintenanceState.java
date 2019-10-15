@@ -31,20 +31,33 @@ import java.util.List;
  * The maintenance state
  */
 public class MaintenanceState extends SetCommand {
-    public static final Identifier identifier = Identifier.MAINTENANCE;
+    public static final Identifier IDENTIFIER = Identifier.MAINTENANCE;
 
-    PropertyInteger daysToNextService = new PropertyInteger(0x01, true);
-    PropertyInteger kilometersToNextService = new PropertyInteger(0x02, false);
-    PropertyInteger cbsReportsCount = new PropertyInteger(0x03, false);
-    PropertyInteger monthsToExhaustInspection = new PropertyInteger(0x04, false);
-    Property<TeleserviceAvailability> teleserviceAvailability = new Property(TeleserviceAvailability.class, 0x05);
-    PropertyInteger serviceDistanceThreshold = new PropertyInteger(0x06, false);
-    PropertyInteger serviceTimeThreshold = new PropertyInteger(0x07, false);
-    Property<Calendar> automaticTeleserviceCallDate = new Property(Calendar.class, 0x08);
-    Property<Calendar> teleserviceBatteryCallDate = new Property(Calendar.class, 0x09);
-    Property<Calendar> nextInspectionDate = new Property(Calendar.class, 0x0A);
+    public static final byte IDENTIFIER_DAYS_TO_NEXT_SERVICE = 0x01;
+    public static final byte IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE = 0x02;
+    public static final byte IDENTIFIER_CBS_REPORTS_COUNT = 0x03;
+    public static final byte IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION = 0x04;
+    public static final byte IDENTIFIER_TELESERVICE_AVAILABILITY = 0x05;
+    public static final byte IDENTIFIER_SERVICE_DISTANCE_THRESHOLD = 0x06;
+    public static final byte IDENTIFIER_SERVICE_TIME_THRESHOLD = 0x07;
+    public static final byte IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE = 0x08;
+    public static final byte IDENTIFIER_TELESERVICE_BATTERY_CALL_DATE = 0x09;
+    public static final byte IDENTIFIER_NEXT_INSPECTION_DATE = 0x0A;
+    public static final byte IDENTIFIER_CONDITION_BASED_SERVICES = 0x0B;
+    public static final byte IDENTIFIER_BRAKE_FLUID_CHANGE_DATE = 0x0C;
+
+    PropertyInteger daysToNextService = new PropertyInteger(IDENTIFIER_DAYS_TO_NEXT_SERVICE, true);
+    PropertyInteger kilometersToNextService = new PropertyInteger(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false);
+    PropertyInteger cbsReportsCount = new PropertyInteger(IDENTIFIER_CBS_REPORTS_COUNT, false);
+    PropertyInteger monthsToExhaustInspection = new PropertyInteger(IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION, false);
+    Property<TeleserviceAvailability> teleserviceAvailability = new Property(TeleserviceAvailability.class, IDENTIFIER_TELESERVICE_AVAILABILITY);
+    PropertyInteger serviceDistanceThreshold = new PropertyInteger(IDENTIFIER_SERVICE_DISTANCE_THRESHOLD, false);
+    PropertyInteger serviceTimeThreshold = new PropertyInteger(IDENTIFIER_SERVICE_TIME_THRESHOLD, false);
+    Property<Calendar> automaticTeleserviceCallDate = new Property(Calendar.class, IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE);
+    Property<Calendar> teleserviceBatteryCallDate = new Property(Calendar.class, IDENTIFIER_TELESERVICE_BATTERY_CALL_DATE);
+    Property<Calendar> nextInspectionDate = new Property(Calendar.class, IDENTIFIER_NEXT_INSPECTION_DATE);
     Property<ConditionBasedService>[] conditionBasedServices;
-    Property<Calendar> brakeFluidChangeDate = new Property(Calendar.class, 0x0C);
+    Property<Calendar> brakeFluidChangeDate = new Property(Calendar.class, IDENTIFIER_BRAKE_FLUID_CHANGE_DATE);
 
     /**
      * @return Number of days until next servicing of the car, whereas negative is overdue
@@ -138,21 +151,21 @@ public class MaintenanceState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return daysToNextService.update(p);
-                    case 0x02: return kilometersToNextService.update(p);
-                    case 0x03: return cbsReportsCount.update(p);
-                    case 0x04: return monthsToExhaustInspection.update(p);
-                    case 0x05: return teleserviceAvailability.update(p);
-                    case 0x06: return serviceDistanceThreshold.update(p);
-                    case 0x07: return serviceTimeThreshold.update(p);
-                    case 0x08: return automaticTeleserviceCallDate.update(p);
-                    case 0x09: return teleserviceBatteryCallDate.update(p);
-                    case 0x0A: return nextInspectionDate.update(p);
-                    case 0x0B:
+                    case IDENTIFIER_DAYS_TO_NEXT_SERVICE: return daysToNextService.update(p);
+                    case IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE: return kilometersToNextService.update(p);
+                    case IDENTIFIER_CBS_REPORTS_COUNT: return cbsReportsCount.update(p);
+                    case IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION: return monthsToExhaustInspection.update(p);
+                    case IDENTIFIER_TELESERVICE_AVAILABILITY: return teleserviceAvailability.update(p);
+                    case IDENTIFIER_SERVICE_DISTANCE_THRESHOLD: return serviceDistanceThreshold.update(p);
+                    case IDENTIFIER_SERVICE_TIME_THRESHOLD: return serviceTimeThreshold.update(p);
+                    case IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE: return automaticTeleserviceCallDate.update(p);
+                    case IDENTIFIER_TELESERVICE_BATTERY_CALL_DATE: return teleserviceBatteryCallDate.update(p);
+                    case IDENTIFIER_NEXT_INSPECTION_DATE: return nextInspectionDate.update(p);
+                    case IDENTIFIER_CONDITION_BASED_SERVICES:
                         Property<ConditionBasedService> conditionBasedService = new Property(ConditionBasedService.class, p);
                         conditionBasedServicesBuilder.add(conditionBasedService);
                         return conditionBasedService;
-                    case 0x0C: return brakeFluidChangeDate.update(p);
+                    case IDENTIFIER_BRAKE_FLUID_CHANGE_DATE: return brakeFluidChangeDate.update(p);
                 }
 
                 return null;
@@ -198,7 +211,7 @@ public class MaintenanceState extends SetCommand {
         private Property<Calendar> brakeFluidChangeDate;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public MaintenanceState build() {
@@ -210,7 +223,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder setDaysToNextService(Property<Integer> daysToNextService) {
-            this.daysToNextService = new PropertyInteger(0x01, true, 2, daysToNextService);
+            this.daysToNextService = new PropertyInteger(IDENTIFIER_DAYS_TO_NEXT_SERVICE, true, 2, daysToNextService);
             addProperty(this.daysToNextService);
             return this;
         }
@@ -220,7 +233,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder setKilometersToNextService(Property<Integer> kilometersToNextService) {
-            this.kilometersToNextService = new PropertyInteger(0x02, false, 4, kilometersToNextService);
+            this.kilometersToNextService = new PropertyInteger(IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE, false, 4, kilometersToNextService);
             addProperty(this.kilometersToNextService);
             return this;
         }
@@ -230,7 +243,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder setCbsReportsCount(Property<Integer> cbsReportsCount) {
-            this.cbsReportsCount = new PropertyInteger(0x03, false, 1, cbsReportsCount);
+            this.cbsReportsCount = new PropertyInteger(IDENTIFIER_CBS_REPORTS_COUNT, false, 1, cbsReportsCount);
             addProperty(this.cbsReportsCount);
             return this;
         }
@@ -240,7 +253,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder setMonthsToExhaustInspection(Property<Integer> monthsToExhaustInspection) {
-            this.monthsToExhaustInspection = new PropertyInteger(0x04, false, 1, monthsToExhaustInspection);
+            this.monthsToExhaustInspection = new PropertyInteger(IDENTIFIER_MONTHS_TO_EXHAUST_INSPECTION, false, 1, monthsToExhaustInspection);
             addProperty(this.monthsToExhaustInspection);
             return this;
         }
@@ -250,7 +263,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder setTeleserviceAvailability(Property<TeleserviceAvailability> teleserviceAvailability) {
-            this.teleserviceAvailability = teleserviceAvailability.setIdentifier(0x05);
+            this.teleserviceAvailability = teleserviceAvailability.setIdentifier(IDENTIFIER_TELESERVICE_AVAILABILITY);
             addProperty(this.teleserviceAvailability);
             return this;
         }
@@ -260,7 +273,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder setServiceDistanceThreshold(Property<Integer> serviceDistanceThreshold) {
-            this.serviceDistanceThreshold = new PropertyInteger(0x06, false, 2, serviceDistanceThreshold);
+            this.serviceDistanceThreshold = new PropertyInteger(IDENTIFIER_SERVICE_DISTANCE_THRESHOLD, false, 2, serviceDistanceThreshold);
             addProperty(this.serviceDistanceThreshold);
             return this;
         }
@@ -270,7 +283,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder setServiceTimeThreshold(Property<Integer> serviceTimeThreshold) {
-            this.serviceTimeThreshold = new PropertyInteger(0x07, false, 1, serviceTimeThreshold);
+            this.serviceTimeThreshold = new PropertyInteger(IDENTIFIER_SERVICE_TIME_THRESHOLD, false, 1, serviceTimeThreshold);
             addProperty(this.serviceTimeThreshold);
             return this;
         }
@@ -280,7 +293,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder setAutomaticTeleserviceCallDate(Property<Calendar> automaticTeleserviceCallDate) {
-            this.automaticTeleserviceCallDate = automaticTeleserviceCallDate.setIdentifier(0x08);
+            this.automaticTeleserviceCallDate = automaticTeleserviceCallDate.setIdentifier(IDENTIFIER_AUTOMATIC_TELESERVICE_CALL_DATE);
             addProperty(this.automaticTeleserviceCallDate);
             return this;
         }
@@ -290,7 +303,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder setTeleserviceBatteryCallDate(Property<Calendar> teleserviceBatteryCallDate) {
-            this.teleserviceBatteryCallDate = teleserviceBatteryCallDate.setIdentifier(0x09);
+            this.teleserviceBatteryCallDate = teleserviceBatteryCallDate.setIdentifier(IDENTIFIER_TELESERVICE_BATTERY_CALL_DATE);
             addProperty(this.teleserviceBatteryCallDate);
             return this;
         }
@@ -300,7 +313,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder setNextInspectionDate(Property<Calendar> nextInspectionDate) {
-            this.nextInspectionDate = nextInspectionDate.setIdentifier(0x0A);
+            this.nextInspectionDate = nextInspectionDate.setIdentifier(IDENTIFIER_NEXT_INSPECTION_DATE);
             addProperty(this.nextInspectionDate);
             return this;
         }
@@ -327,7 +340,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder addConditionBasedService(Property<ConditionBasedService> conditionBasedService) {
-            conditionBasedService.setIdentifier(0x0B);
+            conditionBasedService.setIdentifier(IDENTIFIER_CONDITION_BASED_SERVICES);
             addProperty(conditionBasedService);
             conditionBasedServices.add(conditionBasedService);
             return this;
@@ -338,7 +351,7 @@ public class MaintenanceState extends SetCommand {
          * @return The builder
          */
         public Builder setBrakeFluidChangeDate(Property<Calendar> brakeFluidChangeDate) {
-            this.brakeFluidChangeDate = brakeFluidChangeDate.setIdentifier(0x0C);
+            this.brakeFluidChangeDate = brakeFluidChangeDate.setIdentifier(IDENTIFIER_BRAKE_FLUID_CHANGE_DATE);
             addProperty(this.brakeFluidChangeDate);
             return this;
         }

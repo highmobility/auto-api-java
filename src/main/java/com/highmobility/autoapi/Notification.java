@@ -29,9 +29,12 @@ import javax.annotation.Nullable;
  * Notification
  */
 public class Notification extends SetCommand {
-    public static final Identifier identifier = Identifier.NOTIFICATIONS;
+    public static final Identifier IDENTIFIER = Identifier.NOTIFICATIONS;
 
-    Property<String> text = new Property(String.class, 0x01);
+    public static final byte IDENTIFIER_TEXT = 0x01;
+    public static final byte IDENTIFIER_ACTION_ITEMS = 0x02;
+
+    Property<String> text = new Property(String.class, IDENTIFIER_TEXT);
     @Nullable Property<ActionItem>[] actionItems;
 
     /**
@@ -55,7 +58,7 @@ public class Notification extends SetCommand {
      * @param actionItems The action items
      */
     public Notification(String text, @Nullable ActionItem[] actionItems) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.text.update(text));
         ArrayList<Property> actionItemsBuilder = new ArrayList<>();
@@ -77,8 +80,8 @@ public class Notification extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return text.update(p);
-                    case 0x02: {
+                    case IDENTIFIER_TEXT: return text.update(p);
+                    case IDENTIFIER_ACTION_ITEMS: {
                         Property actionItem = new Property(ActionItem.class, p);
                         actionItemsBuilder.add(actionItem);
                         return actionItem;

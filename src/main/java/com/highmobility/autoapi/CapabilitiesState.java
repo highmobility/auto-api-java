@@ -28,7 +28,9 @@ import java.util.List;
  * The capabilities state
  */
 public class CapabilitiesState extends SetCommand {
-    public static final Identifier identifier = Identifier.CAPABILITIES;
+    public static final Identifier IDENTIFIER = Identifier.CAPABILITIES;
+
+    public static final byte IDENTIFIER_CAPABILITIES = 0x01;
 
     Property<SupportedCapability>[] capabilities;
 
@@ -68,7 +70,7 @@ public class CapabilitiesState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01:
+                    case IDENTIFIER_CAPABILITIES:
                         Property<SupportedCapability> capabilitie = new Property(SupportedCapability.class, p);
                         capabilitiesBuilder.add(capabilitie);
                         return capabilitie;
@@ -95,7 +97,7 @@ public class CapabilitiesState extends SetCommand {
         private List<Property> capabilities = new ArrayList<>();
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public CapabilitiesState build() {
@@ -123,7 +125,7 @@ public class CapabilitiesState extends SetCommand {
          * @return The builder
          */
         public Builder addCapabilitie(Property<SupportedCapability> capabilitie) {
-            capabilitie.setIdentifier(0x01);
+            capabilitie.setIdentifier(IDENTIFIER_CAPABILITIES);
             addProperty(capabilitie);
             capabilities.add(capabilitie);
             return this;

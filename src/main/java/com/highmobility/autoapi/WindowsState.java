@@ -31,7 +31,10 @@ import java.util.List;
  * The windows state
  */
 public class WindowsState extends SetCommand {
-    public static final Identifier identifier = Identifier.WINDOWS;
+    public static final Identifier IDENTIFIER = Identifier.WINDOWS;
+
+    public static final byte IDENTIFIER_OPEN_PERCENTAGES = 0x02;
+    public static final byte IDENTIFIER_POSITIONS = 0x03;
 
     Property<WindowOpenPercentage>[] openPercentages;
     Property<WindowPosition>[] positions;
@@ -83,11 +86,11 @@ public class WindowsState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x02:
+                    case IDENTIFIER_OPEN_PERCENTAGES:
                         Property<WindowOpenPercentage> openPercentage = new Property(WindowOpenPercentage.class, p);
                         openPercentagesBuilder.add(openPercentage);
                         return openPercentage;
-                    case 0x03:
+                    case IDENTIFIER_POSITIONS:
                         Property<WindowPosition> position = new Property(WindowPosition.class, p);
                         positionsBuilder.add(position);
                         return position;
@@ -117,7 +120,7 @@ public class WindowsState extends SetCommand {
         private List<Property> positions = new ArrayList<>();
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public WindowsState build() {
@@ -146,7 +149,7 @@ public class WindowsState extends SetCommand {
          * @return The builder
          */
         public Builder addOpenPercentage(Property<WindowOpenPercentage> openPercentage) {
-            openPercentage.setIdentifier(0x02);
+            openPercentage.setIdentifier(IDENTIFIER_OPEN_PERCENTAGES);
             addProperty(openPercentage);
             openPercentages.add(openPercentage);
             return this;
@@ -173,7 +176,7 @@ public class WindowsState extends SetCommand {
          * @return The builder
          */
         public Builder addPosition(Property<WindowPosition> position) {
-            position.setIdentifier(0x03);
+            position.setIdentifier(IDENTIFIER_POSITIONS);
             addProperty(position);
             positions.add(position);
             return this;

@@ -25,10 +25,13 @@ import com.highmobility.autoapi.property.Property;
  * The messaging state
  */
 public class MessagingState extends SetCommand {
-    public static final Identifier identifier = Identifier.MESSAGING;
+    public static final Identifier IDENTIFIER = Identifier.MESSAGING;
 
-    Property<String> text = new Property(String.class, 0x01);
-    Property<String> handle = new Property(String.class, 0x02);
+    public static final byte IDENTIFIER_TEXT = 0x01;
+    public static final byte IDENTIFIER_HANDLE = 0x02;
+
+    Property<String> text = new Property(String.class, IDENTIFIER_TEXT);
+    Property<String> handle = new Property(String.class, IDENTIFIER_HANDLE);
 
     /**
      * @return The text
@@ -49,8 +52,8 @@ public class MessagingState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return text.update(p);
-                    case 0x02: return handle.update(p);
+                    case IDENTIFIER_TEXT: return text.update(p);
+                    case IDENTIFIER_HANDLE: return handle.update(p);
                 }
 
                 return null;
@@ -74,7 +77,7 @@ public class MessagingState extends SetCommand {
         private Property<String> handle;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public MessagingState build() {
@@ -86,7 +89,7 @@ public class MessagingState extends SetCommand {
          * @return The builder
          */
         public Builder setText(Property<String> text) {
-            this.text = text.setIdentifier(0x01);
+            this.text = text.setIdentifier(IDENTIFIER_TEXT);
             addProperty(this.text);
             return this;
         }
@@ -96,7 +99,7 @@ public class MessagingState extends SetCommand {
          * @return The builder
          */
         public Builder setHandle(Property<String> handle) {
-            this.handle = handle.setIdentifier(0x02);
+            this.handle = handle.setIdentifier(IDENTIFIER_HANDLE);
             addProperty(this.handle);
             return this;
         }

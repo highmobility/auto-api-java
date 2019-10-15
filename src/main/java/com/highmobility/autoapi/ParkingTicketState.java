@@ -27,13 +27,19 @@ import java.util.Calendar;
  * The parking ticket state
  */
 public class ParkingTicketState extends SetCommand {
-    public static final Identifier identifier = Identifier.PARKING_TICKET;
+    public static final Identifier IDENTIFIER = Identifier.PARKING_TICKET;
 
-    Property<Status> status = new Property(Status.class, 0x01);
-    Property<String> operatorName = new Property(String.class, 0x02);
-    Property<String> operatorTicketID = new Property(String.class, 0x03);
-    Property<Calendar> ticketStartTime = new Property(Calendar.class, 0x04);
-    Property<Calendar> ticketEndTime = new Property(Calendar.class, 0x05);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+    public static final byte IDENTIFIER_OPERATOR_NAME = 0x02;
+    public static final byte IDENTIFIER_OPERATOR_TICKET_ID = 0x03;
+    public static final byte IDENTIFIER_TICKET_START_TIME = 0x04;
+    public static final byte IDENTIFIER_TICKET_END_TIME = 0x05;
+
+    Property<Status> status = new Property(Status.class, IDENTIFIER_STATUS);
+    Property<String> operatorName = new Property(String.class, IDENTIFIER_OPERATOR_NAME);
+    Property<String> operatorTicketID = new Property(String.class, IDENTIFIER_OPERATOR_TICKET_ID);
+    Property<Calendar> ticketStartTime = new Property(Calendar.class, IDENTIFIER_TICKET_START_TIME);
+    Property<Calendar> ticketEndTime = new Property(Calendar.class, IDENTIFIER_TICKET_END_TIME);
 
     /**
      * @return The status
@@ -75,11 +81,11 @@ public class ParkingTicketState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return status.update(p);
-                    case 0x02: return operatorName.update(p);
-                    case 0x03: return operatorTicketID.update(p);
-                    case 0x04: return ticketStartTime.update(p);
-                    case 0x05: return ticketEndTime.update(p);
+                    case IDENTIFIER_STATUS: return status.update(p);
+                    case IDENTIFIER_OPERATOR_NAME: return operatorName.update(p);
+                    case IDENTIFIER_OPERATOR_TICKET_ID: return operatorTicketID.update(p);
+                    case IDENTIFIER_TICKET_START_TIME: return ticketStartTime.update(p);
+                    case IDENTIFIER_TICKET_END_TIME: return ticketEndTime.update(p);
                 }
 
                 return null;
@@ -109,7 +115,7 @@ public class ParkingTicketState extends SetCommand {
         private Property<Calendar> ticketEndTime;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public ParkingTicketState build() {
@@ -121,7 +127,7 @@ public class ParkingTicketState extends SetCommand {
          * @return The builder
          */
         public Builder setStatus(Property<Status> status) {
-            this.status = status.setIdentifier(0x01);
+            this.status = status.setIdentifier(IDENTIFIER_STATUS);
             addProperty(this.status);
             return this;
         }
@@ -131,7 +137,7 @@ public class ParkingTicketState extends SetCommand {
          * @return The builder
          */
         public Builder setOperatorName(Property<String> operatorName) {
-            this.operatorName = operatorName.setIdentifier(0x02);
+            this.operatorName = operatorName.setIdentifier(IDENTIFIER_OPERATOR_NAME);
             addProperty(this.operatorName);
             return this;
         }
@@ -141,7 +147,7 @@ public class ParkingTicketState extends SetCommand {
          * @return The builder
          */
         public Builder setOperatorTicketID(Property<String> operatorTicketID) {
-            this.operatorTicketID = operatorTicketID.setIdentifier(0x03);
+            this.operatorTicketID = operatorTicketID.setIdentifier(IDENTIFIER_OPERATOR_TICKET_ID);
             addProperty(this.operatorTicketID);
             return this;
         }
@@ -151,7 +157,7 @@ public class ParkingTicketState extends SetCommand {
          * @return The builder
          */
         public Builder setTicketStartTime(Property<Calendar> ticketStartTime) {
-            this.ticketStartTime = ticketStartTime.setIdentifier(0x04);
+            this.ticketStartTime = ticketStartTime.setIdentifier(IDENTIFIER_TICKET_START_TIME);
             addProperty(this.ticketStartTime);
             return this;
         }
@@ -161,7 +167,7 @@ public class ParkingTicketState extends SetCommand {
          * @return The builder
          */
         public Builder setTicketEndTime(Property<Calendar> ticketEndTime) {
-            this.ticketEndTime = ticketEndTime.setIdentifier(0x05);
+            this.ticketEndTime = ticketEndTime.setIdentifier(IDENTIFIER_TICKET_END_TIME);
             addProperty(this.ticketEndTime);
             return this;
         }

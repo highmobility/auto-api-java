@@ -27,10 +27,13 @@ import com.highmobility.autoapi.value.Position;
  * The trunk state
  */
 public class TrunkState extends SetCommand {
-    public static final Identifier identifier = Identifier.TRUNK;
+    public static final Identifier IDENTIFIER = Identifier.TRUNK;
 
-    Property<LockState> lock = new Property(LockState.class, 0x01);
-    Property<Position> position = new Property(Position.class, 0x02);
+    public static final byte IDENTIFIER_LOCK = 0x01;
+    public static final byte IDENTIFIER_POSITION = 0x02;
+
+    Property<LockState> lock = new Property(LockState.class, IDENTIFIER_LOCK);
+    Property<Position> position = new Property(Position.class, IDENTIFIER_POSITION);
 
     /**
      * @return The lock
@@ -51,8 +54,8 @@ public class TrunkState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return lock.update(p);
-                    case 0x02: return position.update(p);
+                    case IDENTIFIER_LOCK: return lock.update(p);
+                    case IDENTIFIER_POSITION: return position.update(p);
                 }
 
                 return null;
@@ -76,7 +79,7 @@ public class TrunkState extends SetCommand {
         private Property<Position> position;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public TrunkState build() {
@@ -88,7 +91,7 @@ public class TrunkState extends SetCommand {
          * @return The builder
          */
         public Builder setLock(Property<LockState> lock) {
-            this.lock = lock.setIdentifier(0x01);
+            this.lock = lock.setIdentifier(IDENTIFIER_LOCK);
             addProperty(this.lock);
             return this;
         }
@@ -98,7 +101,7 @@ public class TrunkState extends SetCommand {
          * @return The builder
          */
         public Builder setPosition(Property<Position> position) {
-            this.position = position.setIdentifier(0x02);
+            this.position = position.setIdentifier(IDENTIFIER_POSITION);
             addProperty(this.position);
             return this;
         }

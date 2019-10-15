@@ -28,7 +28,9 @@ import java.util.ArrayList;
  * Set price tariffs
  */
 public class SetPriceTariffs extends SetCommand {
-    public static final Identifier identifier = Identifier.HOME_CHARGER;
+    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
+
+    public static final byte IDENTIFIER_PRICE_TARIFFS = 0x12;
 
     Property<PriceTariff>[] priceTariffs;
 
@@ -45,7 +47,7 @@ public class SetPriceTariffs extends SetCommand {
      * @param priceTariffs The price tariffs
      */
     public SetPriceTariffs(PriceTariff[] priceTariffs) {
-        super(identifier);
+        super(IDENTIFIER);
     
         ArrayList<Property> priceTariffsBuilder = new ArrayList<>();
         if (priceTariffs != null) {
@@ -66,7 +68,7 @@ public class SetPriceTariffs extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x12: {
+                    case IDENTIFIER_PRICE_TARIFFS: {
                         Property priceTariff = new Property(PriceTariff.class, p);
                         priceTariffsBuilder.add(priceTariff);
                         return priceTariff;

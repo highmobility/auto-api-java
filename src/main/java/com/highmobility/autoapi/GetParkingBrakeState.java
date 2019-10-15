@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all parking brake properties.
  */
 public class GetParkingBrakeState extends GetCommand {
-    public static final Identifier identifier = Identifier.PARKING_BRAKE;
+    public static final Identifier IDENTIFIER = Identifier.PARKING_BRAKE;
 
     public GetParkingBrakeState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetParkingBrakeState(byte[] bytes) {

@@ -27,10 +27,13 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * The remote control state
  */
 public class RemoteControlState extends SetCommand {
-    public static final Identifier identifier = Identifier.REMOTE_CONTROL;
+    public static final Identifier IDENTIFIER = Identifier.REMOTE_CONTROL;
 
-    Property<ControlMode> controlMode = new Property(ControlMode.class, 0x01);
-    PropertyInteger angle = new PropertyInteger(0x02, true);
+    public static final byte IDENTIFIER_CONTROL_MODE = 0x01;
+    public static final byte IDENTIFIER_ANGLE = 0x02;
+
+    Property<ControlMode> controlMode = new Property(ControlMode.class, IDENTIFIER_CONTROL_MODE);
+    PropertyInteger angle = new PropertyInteger(IDENTIFIER_ANGLE, true);
 
     /**
      * @return The control mode
@@ -51,8 +54,8 @@ public class RemoteControlState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return controlMode.update(p);
-                    case 0x02: return angle.update(p);
+                    case IDENTIFIER_CONTROL_MODE: return controlMode.update(p);
+                    case IDENTIFIER_ANGLE: return angle.update(p);
                 }
 
                 return null;

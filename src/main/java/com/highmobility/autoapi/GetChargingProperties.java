@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific charging properties.
  */
 public class GetChargingProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.CHARGING;
+    public static final Identifier IDENTIFIER = Identifier.CHARGING;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetChargingProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetChargingProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

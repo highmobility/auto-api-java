@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.ActiveState;
  * Activate deactivate solar charging
  */
 public class ActivateDeactivateSolarCharging extends SetCommand {
-    public static final Identifier identifier = Identifier.HOME_CHARGER;
+    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
 
-    Property<ActiveState> solarCharging = new Property(ActiveState.class, 0x05);
+    public static final byte IDENTIFIER_SOLAR_CHARGING = 0x05;
+
+    Property<ActiveState> solarCharging = new Property(ActiveState.class, IDENTIFIER_SOLAR_CHARGING);
 
     /**
      * @return The solar charging
@@ -44,7 +46,7 @@ public class ActivateDeactivateSolarCharging extends SetCommand {
      * @param solarCharging The solar charging
      */
     public ActivateDeactivateSolarCharging(ActiveState solarCharging) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.solarCharging.update(solarCharging), true);
     }
@@ -54,7 +56,7 @@ public class ActivateDeactivateSolarCharging extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x05: return solarCharging.update(p);
+                    case IDENTIFIER_SOLAR_CHARGING: return solarCharging.update(p);
                 }
                 return null;
             });

@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.ActiveState;
  * Start stop ionising
  */
 public class StartStopIonising extends SetCommand {
-    public static final Identifier identifier = Identifier.CLIMATE;
+    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
 
-    Property<ActiveState> ionisingState = new Property(ActiveState.class, 0x08);
+    public static final byte IDENTIFIER_IONISING_STATE = 0x08;
+
+    Property<ActiveState> ionisingState = new Property(ActiveState.class, IDENTIFIER_IONISING_STATE);
 
     /**
      * @return The ionising state
@@ -44,7 +46,7 @@ public class StartStopIonising extends SetCommand {
      * @param ionisingState The ionising state
      */
     public StartStopIonising(ActiveState ionisingState) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.ionisingState.update(ionisingState), true);
     }
@@ -54,7 +56,7 @@ public class StartStopIonising extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x08: return ionisingState.update(p);
+                    case IDENTIFIER_IONISING_STATE: return ionisingState.update(p);
                 }
                 return null;
             });

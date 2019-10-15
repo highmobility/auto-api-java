@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.Position;
  * Open close charging port
  */
 public class OpenCloseChargingPort extends SetCommand {
-    public static final Identifier identifier = Identifier.CHARGING;
+    public static final Identifier IDENTIFIER = Identifier.CHARGING;
 
-    Property<Position> chargePortState = new Property(Position.class, 0x0b);
+    public static final byte IDENTIFIER_CHARGE_PORT_STATE = 0x0b;
+
+    Property<Position> chargePortState = new Property(Position.class, IDENTIFIER_CHARGE_PORT_STATE);
 
     /**
      * @return The charge port state
@@ -44,7 +46,7 @@ public class OpenCloseChargingPort extends SetCommand {
      * @param chargePortState The charge port state
      */
     public OpenCloseChargingPort(Position chargePortState) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.chargePortState.update(chargePortState), true);
     }
@@ -54,7 +56,7 @@ public class OpenCloseChargingPort extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x0b: return chargePortState.update(p);
+                    case IDENTIFIER_CHARGE_PORT_STATE: return chargePortState.update(p);
                 }
                 return null;
             });

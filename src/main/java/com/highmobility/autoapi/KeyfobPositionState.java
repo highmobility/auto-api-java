@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The keyfob position state
  */
 public class KeyfobPositionState extends SetCommand {
-    public static final Identifier identifier = Identifier.KEYFOB_POSITION;
+    public static final Identifier IDENTIFIER = Identifier.KEYFOB_POSITION;
 
-    Property<Location> location = new Property(Location.class, 0x01);
+    public static final byte IDENTIFIER_LOCATION = 0x01;
+
+    Property<Location> location = new Property(Location.class, IDENTIFIER_LOCATION);
 
     /**
      * @return The location
@@ -42,7 +44,7 @@ public class KeyfobPositionState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return location.update(p);
+                    case IDENTIFIER_LOCATION: return location.update(p);
                 }
 
                 return null;

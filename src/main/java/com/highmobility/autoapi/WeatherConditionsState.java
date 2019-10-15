@@ -25,9 +25,11 @@ import com.highmobility.autoapi.property.Property;
  * The weather conditions state
  */
 public class WeatherConditionsState extends SetCommand {
-    public static final Identifier identifier = Identifier.WEATHER_CONDITIONS;
+    public static final Identifier IDENTIFIER = Identifier.WEATHER_CONDITIONS;
 
-    Property<Double> rainIntensity = new Property(Double.class, 0x01);
+    public static final byte IDENTIFIER_RAIN_INTENSITY = 0x01;
+
+    Property<Double> rainIntensity = new Property(Double.class, IDENTIFIER_RAIN_INTENSITY);
 
     /**
      * @return Measured raining intensity percentage, whereas 0% is no rain and 100% is maximum rain
@@ -41,7 +43,7 @@ public class WeatherConditionsState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return rainIntensity.update(p);
+                    case IDENTIFIER_RAIN_INTENSITY: return rainIntensity.update(p);
                 }
 
                 return null;
@@ -63,7 +65,7 @@ public class WeatherConditionsState extends SetCommand {
         private Property<Double> rainIntensity;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public WeatherConditionsState build() {
@@ -75,7 +77,7 @@ public class WeatherConditionsState extends SetCommand {
          * @return The builder
          */
         public Builder setRainIntensity(Property<Double> rainIntensity) {
-            this.rainIntensity = rainIntensity.setIdentifier(0x01);
+            this.rainIntensity = rainIntensity.setIdentifier(IDENTIFIER_RAIN_INTENSITY);
             addProperty(this.rainIntensity);
             return this;
         }

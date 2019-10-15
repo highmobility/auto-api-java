@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all firmware version properties.
  */
 public class GetFirmwareVersion extends GetCommand {
-    public static final Identifier identifier = Identifier.FIRMWARE_VERSION;
+    public static final Identifier IDENTIFIER = Identifier.FIRMWARE_VERSION;
 
     public GetFirmwareVersion() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetFirmwareVersion(byte[] bytes) {

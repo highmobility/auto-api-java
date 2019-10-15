@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all wi fi properties.
  */
 public class GetWiFiState extends GetCommand {
-    public static final Identifier identifier = Identifier.WI_FI;
+    public static final Identifier IDENTIFIER = Identifier.WI_FI;
 
     public GetWiFiState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetWiFiState(byte[] bytes) {

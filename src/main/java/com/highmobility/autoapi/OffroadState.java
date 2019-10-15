@@ -26,10 +26,13 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * The offroad state
  */
 public class OffroadState extends SetCommand {
-    public static final Identifier identifier = Identifier.OFFROAD;
+    public static final Identifier IDENTIFIER = Identifier.OFFROAD;
 
-    PropertyInteger routeIncline = new PropertyInteger(0x01, true);
-    Property<Double> wheelSuspension = new Property(Double.class, 0x02);
+    public static final byte IDENTIFIER_ROUTE_INCLINE = 0x01;
+    public static final byte IDENTIFIER_WHEEL_SUSPENSION = 0x02;
+
+    PropertyInteger routeIncline = new PropertyInteger(IDENTIFIER_ROUTE_INCLINE, true);
+    Property<Double> wheelSuspension = new Property(Double.class, IDENTIFIER_WHEEL_SUSPENSION);
 
     /**
      * @return The route elevation incline in degrees, which is a negative number for decline
@@ -50,8 +53,8 @@ public class OffroadState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return routeIncline.update(p);
-                    case 0x02: return wheelSuspension.update(p);
+                    case IDENTIFIER_ROUTE_INCLINE: return routeIncline.update(p);
+                    case IDENTIFIER_WHEEL_SUSPENSION: return wheelSuspension.update(p);
                 }
 
                 return null;
@@ -75,7 +78,7 @@ public class OffroadState extends SetCommand {
         private Property<Double> wheelSuspension;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public OffroadState build() {
@@ -87,7 +90,7 @@ public class OffroadState extends SetCommand {
          * @return The builder
          */
         public Builder setRouteIncline(Property<Integer> routeIncline) {
-            this.routeIncline = new PropertyInteger(0x01, true, 2, routeIncline);
+            this.routeIncline = new PropertyInteger(IDENTIFIER_ROUTE_INCLINE, true, 2, routeIncline);
             addProperty(this.routeIncline);
             return this;
         }
@@ -97,7 +100,7 @@ public class OffroadState extends SetCommand {
          * @return The builder
          */
         public Builder setWheelSuspension(Property<Double> wheelSuspension) {
-            this.wheelSuspension = wheelSuspension.setIdentifier(0x02);
+            this.wheelSuspension = wheelSuspension.setIdentifier(IDENTIFIER_WHEEL_SUSPENSION);
             addProperty(this.wheelSuspension);
             return this;
         }

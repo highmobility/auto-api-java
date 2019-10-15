@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.ActiveState;
  * Start stop defogging
  */
 public class StartStopDefogging extends SetCommand {
-    public static final Identifier identifier = Identifier.CLIMATE;
+    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
 
-    Property<ActiveState> defoggingState = new Property(ActiveState.class, 0x06);
+    public static final byte IDENTIFIER_DEFOGGING_STATE = 0x06;
+
+    Property<ActiveState> defoggingState = new Property(ActiveState.class, IDENTIFIER_DEFOGGING_STATE);
 
     /**
      * @return The defogging state
@@ -44,7 +46,7 @@ public class StartStopDefogging extends SetCommand {
      * @param defoggingState The defogging state
      */
     public StartStopDefogging(ActiveState defoggingState) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.defoggingState.update(defoggingState), true);
     }
@@ -54,7 +56,7 @@ public class StartStopDefogging extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x06: return defoggingState.update(p);
+                    case IDENTIFIER_DEFOGGING_STATE: return defoggingState.update(p);
                 }
                 return null;
             });

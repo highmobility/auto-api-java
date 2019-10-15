@@ -33,23 +33,39 @@ import java.util.List;
  * The usage state
  */
 public class UsageState extends SetCommand {
-    public static final Identifier identifier = Identifier.USAGE;
+    public static final Identifier IDENTIFIER = Identifier.USAGE;
 
-    PropertyInteger averageWeeklyDistance = new PropertyInteger(0x01, false);
-    PropertyInteger averageWeeklyDistanceLongRun = new PropertyInteger(0x02, false);
-    Property<Double> accelerationEvaluation = new Property(Double.class, 0x03);
-    Property<Double> drivingStyleEvaluation = new Property(Double.class, 0x04);
+    public static final byte IDENTIFIER_AVERAGE_WEEKLY_DISTANCE = 0x01;
+    public static final byte IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_RUN = 0x02;
+    public static final byte IDENTIFIER_ACCELERATION_EVALUATION = 0x03;
+    public static final byte IDENTIFIER_DRIVING_STYLE_EVALUATION = 0x04;
+    public static final byte IDENTIFIER_DRIVING_MODES_ACTIVATION_PERIODS = 0x05;
+    public static final byte IDENTIFIER_DRIVING_MODES_ENERGY_CONSUMPTIONS = 0x06;
+    public static final byte IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION = 0x07;
+    public static final byte IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION = 0x08;
+    public static final byte IDENTIFIER_MILEAGE_AFTER_LAST_TRIP = 0x09;
+    public static final byte IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION = 0x0a;
+    public static final byte IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION = 0x0b;
+    public static final byte IDENTIFIER_LAST_TRIP_BATTERY_REMAINING = 0x0c;
+    public static final byte IDENTIFIER_LAST_TRIP_DATE = 0x0d;
+    public static final byte IDENTIFIER_AVERAGE_FUEL_CONSUMPTION = 0x0e;
+    public static final byte IDENTIFIER_CURRENT_FUEL_CONSUMPTION = 0x0f;
+
+    PropertyInteger averageWeeklyDistance = new PropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE, false);
+    PropertyInteger averageWeeklyDistanceLongRun = new PropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_RUN, false);
+    Property<Double> accelerationEvaluation = new Property(Double.class, IDENTIFIER_ACCELERATION_EVALUATION);
+    Property<Double> drivingStyleEvaluation = new Property(Double.class, IDENTIFIER_DRIVING_STYLE_EVALUATION);
     Property<DrivingModeActivationPeriod>[] drivingModesActivationPeriods;
     Property<DrivingModeEnergyConsumption>[] drivingModesEnergyConsumptions;
-    Property<Float> lastTripEnergyConsumption = new Property(Float.class, 0x07);
-    Property<Float> lastTripFuelConsumption = new Property(Float.class, 0x08);
-    PropertyInteger mileageAfterLastTrip = new PropertyInteger(0x09, false);
-    Property<Double> lastTripElectricPortion = new Property(Double.class, 0x0a);
-    Property<Float> lastTripAverageEnergyRecuperation = new Property(Float.class, 0x0b);
-    Property<Double> lastTripBatteryRemaining = new Property(Double.class, 0x0c);
-    Property<Calendar> lastTripDate = new Property(Calendar.class, 0x0d);
-    Property<Float> averageFuelConsumption = new Property(Float.class, 0x0e);
-    Property<Float> currentFuelConsumption = new Property(Float.class, 0x0f);
+    Property<Float> lastTripEnergyConsumption = new Property(Float.class, IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION);
+    Property<Float> lastTripFuelConsumption = new Property(Float.class, IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION);
+    PropertyInteger mileageAfterLastTrip = new PropertyInteger(IDENTIFIER_MILEAGE_AFTER_LAST_TRIP, false);
+    Property<Double> lastTripElectricPortion = new Property(Double.class, IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION);
+    Property<Float> lastTripAverageEnergyRecuperation = new Property(Float.class, IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION);
+    Property<Double> lastTripBatteryRemaining = new Property(Double.class, IDENTIFIER_LAST_TRIP_BATTERY_REMAINING);
+    Property<Calendar> lastTripDate = new Property(Calendar.class, IDENTIFIER_LAST_TRIP_DATE);
+    Property<Float> averageFuelConsumption = new Property(Float.class, IDENTIFIER_AVERAGE_FUEL_CONSUMPTION);
+    Property<Float> currentFuelConsumption = new Property(Float.class, IDENTIFIER_CURRENT_FUEL_CONSUMPTION);
 
     /**
      * @return Average weekly distance in km
@@ -193,27 +209,27 @@ public class UsageState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return averageWeeklyDistance.update(p);
-                    case 0x02: return averageWeeklyDistanceLongRun.update(p);
-                    case 0x03: return accelerationEvaluation.update(p);
-                    case 0x04: return drivingStyleEvaluation.update(p);
-                    case 0x05:
+                    case IDENTIFIER_AVERAGE_WEEKLY_DISTANCE: return averageWeeklyDistance.update(p);
+                    case IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_RUN: return averageWeeklyDistanceLongRun.update(p);
+                    case IDENTIFIER_ACCELERATION_EVALUATION: return accelerationEvaluation.update(p);
+                    case IDENTIFIER_DRIVING_STYLE_EVALUATION: return drivingStyleEvaluation.update(p);
+                    case IDENTIFIER_DRIVING_MODES_ACTIVATION_PERIODS:
                         Property<DrivingModeActivationPeriod> drivingModesActivationPeriod = new Property(DrivingModeActivationPeriod.class, p);
                         drivingModesActivationPeriodsBuilder.add(drivingModesActivationPeriod);
                         return drivingModesActivationPeriod;
-                    case 0x06:
+                    case IDENTIFIER_DRIVING_MODES_ENERGY_CONSUMPTIONS:
                         Property<DrivingModeEnergyConsumption> drivingModesEnergyConsumption = new Property(DrivingModeEnergyConsumption.class, p);
                         drivingModesEnergyConsumptionsBuilder.add(drivingModesEnergyConsumption);
                         return drivingModesEnergyConsumption;
-                    case 0x07: return lastTripEnergyConsumption.update(p);
-                    case 0x08: return lastTripFuelConsumption.update(p);
-                    case 0x09: return mileageAfterLastTrip.update(p);
-                    case 0x0a: return lastTripElectricPortion.update(p);
-                    case 0x0b: return lastTripAverageEnergyRecuperation.update(p);
-                    case 0x0c: return lastTripBatteryRemaining.update(p);
-                    case 0x0d: return lastTripDate.update(p);
-                    case 0x0e: return averageFuelConsumption.update(p);
-                    case 0x0f: return currentFuelConsumption.update(p);
+                    case IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION: return lastTripEnergyConsumption.update(p);
+                    case IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION: return lastTripFuelConsumption.update(p);
+                    case IDENTIFIER_MILEAGE_AFTER_LAST_TRIP: return mileageAfterLastTrip.update(p);
+                    case IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION: return lastTripElectricPortion.update(p);
+                    case IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION: return lastTripAverageEnergyRecuperation.update(p);
+                    case IDENTIFIER_LAST_TRIP_BATTERY_REMAINING: return lastTripBatteryRemaining.update(p);
+                    case IDENTIFIER_LAST_TRIP_DATE: return lastTripDate.update(p);
+                    case IDENTIFIER_AVERAGE_FUEL_CONSUMPTION: return averageFuelConsumption.update(p);
+                    case IDENTIFIER_CURRENT_FUEL_CONSUMPTION: return currentFuelConsumption.update(p);
                 }
 
                 return null;
@@ -266,7 +282,7 @@ public class UsageState extends SetCommand {
         private Property<Float> currentFuelConsumption;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public UsageState build() {
@@ -278,7 +294,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setAverageWeeklyDistance(Property<Integer> averageWeeklyDistance) {
-            this.averageWeeklyDistance = new PropertyInteger(0x01, false, 2, averageWeeklyDistance);
+            this.averageWeeklyDistance = new PropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE, false, 2, averageWeeklyDistance);
             addProperty(this.averageWeeklyDistance);
             return this;
         }
@@ -288,7 +304,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setAverageWeeklyDistanceLongRun(Property<Integer> averageWeeklyDistanceLongRun) {
-            this.averageWeeklyDistanceLongRun = new PropertyInteger(0x02, false, 2, averageWeeklyDistanceLongRun);
+            this.averageWeeklyDistanceLongRun = new PropertyInteger(IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_RUN, false, 2, averageWeeklyDistanceLongRun);
             addProperty(this.averageWeeklyDistanceLongRun);
             return this;
         }
@@ -298,7 +314,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setAccelerationEvaluation(Property<Double> accelerationEvaluation) {
-            this.accelerationEvaluation = accelerationEvaluation.setIdentifier(0x03);
+            this.accelerationEvaluation = accelerationEvaluation.setIdentifier(IDENTIFIER_ACCELERATION_EVALUATION);
             addProperty(this.accelerationEvaluation);
             return this;
         }
@@ -308,7 +324,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setDrivingStyleEvaluation(Property<Double> drivingStyleEvaluation) {
-            this.drivingStyleEvaluation = drivingStyleEvaluation.setIdentifier(0x04);
+            this.drivingStyleEvaluation = drivingStyleEvaluation.setIdentifier(IDENTIFIER_DRIVING_STYLE_EVALUATION);
             addProperty(this.drivingStyleEvaluation);
             return this;
         }
@@ -335,7 +351,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder addDrivingModesActivationPeriod(Property<DrivingModeActivationPeriod> drivingModesActivationPeriod) {
-            drivingModesActivationPeriod.setIdentifier(0x05);
+            drivingModesActivationPeriod.setIdentifier(IDENTIFIER_DRIVING_MODES_ACTIVATION_PERIODS);
             addProperty(drivingModesActivationPeriod);
             drivingModesActivationPeriods.add(drivingModesActivationPeriod);
             return this;
@@ -363,7 +379,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder addDrivingModesEnergyConsumption(Property<DrivingModeEnergyConsumption> drivingModesEnergyConsumption) {
-            drivingModesEnergyConsumption.setIdentifier(0x06);
+            drivingModesEnergyConsumption.setIdentifier(IDENTIFIER_DRIVING_MODES_ENERGY_CONSUMPTIONS);
             addProperty(drivingModesEnergyConsumption);
             drivingModesEnergyConsumptions.add(drivingModesEnergyConsumption);
             return this;
@@ -374,7 +390,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setLastTripEnergyConsumption(Property<Float> lastTripEnergyConsumption) {
-            this.lastTripEnergyConsumption = lastTripEnergyConsumption.setIdentifier(0x07);
+            this.lastTripEnergyConsumption = lastTripEnergyConsumption.setIdentifier(IDENTIFIER_LAST_TRIP_ENERGY_CONSUMPTION);
             addProperty(this.lastTripEnergyConsumption);
             return this;
         }
@@ -384,7 +400,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setLastTripFuelConsumption(Property<Float> lastTripFuelConsumption) {
-            this.lastTripFuelConsumption = lastTripFuelConsumption.setIdentifier(0x08);
+            this.lastTripFuelConsumption = lastTripFuelConsumption.setIdentifier(IDENTIFIER_LAST_TRIP_FUEL_CONSUMPTION);
             addProperty(this.lastTripFuelConsumption);
             return this;
         }
@@ -394,7 +410,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setMileageAfterLastTrip(Property<Integer> mileageAfterLastTrip) {
-            this.mileageAfterLastTrip = new PropertyInteger(0x09, false, 4, mileageAfterLastTrip);
+            this.mileageAfterLastTrip = new PropertyInteger(IDENTIFIER_MILEAGE_AFTER_LAST_TRIP, false, 4, mileageAfterLastTrip);
             addProperty(this.mileageAfterLastTrip);
             return this;
         }
@@ -404,7 +420,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setLastTripElectricPortion(Property<Double> lastTripElectricPortion) {
-            this.lastTripElectricPortion = lastTripElectricPortion.setIdentifier(0x0a);
+            this.lastTripElectricPortion = lastTripElectricPortion.setIdentifier(IDENTIFIER_LAST_TRIP_ELECTRIC_PORTION);
             addProperty(this.lastTripElectricPortion);
             return this;
         }
@@ -414,7 +430,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setLastTripAverageEnergyRecuperation(Property<Float> lastTripAverageEnergyRecuperation) {
-            this.lastTripAverageEnergyRecuperation = lastTripAverageEnergyRecuperation.setIdentifier(0x0b);
+            this.lastTripAverageEnergyRecuperation = lastTripAverageEnergyRecuperation.setIdentifier(IDENTIFIER_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION);
             addProperty(this.lastTripAverageEnergyRecuperation);
             return this;
         }
@@ -424,7 +440,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setLastTripBatteryRemaining(Property<Double> lastTripBatteryRemaining) {
-            this.lastTripBatteryRemaining = lastTripBatteryRemaining.setIdentifier(0x0c);
+            this.lastTripBatteryRemaining = lastTripBatteryRemaining.setIdentifier(IDENTIFIER_LAST_TRIP_BATTERY_REMAINING);
             addProperty(this.lastTripBatteryRemaining);
             return this;
         }
@@ -434,7 +450,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setLastTripDate(Property<Calendar> lastTripDate) {
-            this.lastTripDate = lastTripDate.setIdentifier(0x0d);
+            this.lastTripDate = lastTripDate.setIdentifier(IDENTIFIER_LAST_TRIP_DATE);
             addProperty(this.lastTripDate);
             return this;
         }
@@ -444,7 +460,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setAverageFuelConsumption(Property<Float> averageFuelConsumption) {
-            this.averageFuelConsumption = averageFuelConsumption.setIdentifier(0x0e);
+            this.averageFuelConsumption = averageFuelConsumption.setIdentifier(IDENTIFIER_AVERAGE_FUEL_CONSUMPTION);
             addProperty(this.averageFuelConsumption);
             return this;
         }
@@ -454,7 +470,7 @@ public class UsageState extends SetCommand {
          * @return The builder
          */
         public Builder setCurrentFuelConsumption(Property<Float> currentFuelConsumption) {
-            this.currentFuelConsumption = currentFuelConsumption.setIdentifier(0x0f);
+            this.currentFuelConsumption = currentFuelConsumption.setIdentifier(IDENTIFIER_CURRENT_FUEL_CONSUMPTION);
             addProperty(this.currentFuelConsumption);
             return this;
         }

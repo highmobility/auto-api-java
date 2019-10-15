@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific ignition properties.
  */
 public class GetIgnitionProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.IGNITION;
+    public static final Identifier IDENTIFIER = Identifier.IGNITION;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetIgnitionProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetIgnitionProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

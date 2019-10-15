@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all charging properties.
  */
 public class GetChargingState extends GetCommand {
-    public static final Identifier identifier = Identifier.CHARGING;
+    public static final Identifier IDENTIFIER = Identifier.CHARGING;
 
     public GetChargingState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetChargingState(byte[] bytes) {

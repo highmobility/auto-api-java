@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all engine start stop properties.
  */
 public class GetEngineStartStopState extends GetCommand {
-    public static final Identifier identifier = Identifier.ENGINE_START_STOP;
+    public static final Identifier IDENTIFIER = Identifier.ENGINE_START_STOP;
 
     public GetEngineStartStopState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetEngineStartStopState(byte[] bytes) {

@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all trunk properties.
  */
 public class GetTrunkState extends GetCommand {
-    public static final Identifier identifier = Identifier.TRUNK;
+    public static final Identifier IDENTIFIER = Identifier.TRUNK;
 
     public GetTrunkState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetTrunkState(byte[] bytes) {

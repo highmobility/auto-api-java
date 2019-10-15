@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific lights properties.
  */
 public class GetLightsProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.LIGHTS;
+    public static final Identifier IDENTIFIER = Identifier.LIGHTS;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetLightsProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetLightsProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

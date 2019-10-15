@@ -28,13 +28,19 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * The cruise control state
  */
 public class CruiseControlState extends SetCommand {
-    public static final Identifier identifier = Identifier.CRUISE_CONTROL;
+    public static final Identifier IDENTIFIER = Identifier.CRUISE_CONTROL;
 
-    Property<ActiveState> cruiseControl = new Property(ActiveState.class, 0x01);
-    Property<Limiter> limiter = new Property(Limiter.class, 0x02);
-    PropertyInteger targetSpeed = new PropertyInteger(0x03, true);
-    Property<ActiveState> adaptiveCruiseControl = new Property(ActiveState.class, 0x04);
-    PropertyInteger accTargetSpeed = new PropertyInteger(0x05, true);
+    public static final byte IDENTIFIER_CRUISE_CONTROL = 0x01;
+    public static final byte IDENTIFIER_LIMITER = 0x02;
+    public static final byte IDENTIFIER_TARGET_SPEED = 0x03;
+    public static final byte IDENTIFIER_ADAPTIVE_CRUISE_CONTROL = 0x04;
+    public static final byte IDENTIFIER_ACC_TARGET_SPEED = 0x05;
+
+    Property<ActiveState> cruiseControl = new Property(ActiveState.class, IDENTIFIER_CRUISE_CONTROL);
+    Property<Limiter> limiter = new Property(Limiter.class, IDENTIFIER_LIMITER);
+    PropertyInteger targetSpeed = new PropertyInteger(IDENTIFIER_TARGET_SPEED, true);
+    Property<ActiveState> adaptiveCruiseControl = new Property(ActiveState.class, IDENTIFIER_ADAPTIVE_CRUISE_CONTROL);
+    PropertyInteger accTargetSpeed = new PropertyInteger(IDENTIFIER_ACC_TARGET_SPEED, true);
 
     /**
      * @return The cruise control
@@ -76,11 +82,11 @@ public class CruiseControlState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return cruiseControl.update(p);
-                    case 0x02: return limiter.update(p);
-                    case 0x03: return targetSpeed.update(p);
-                    case 0x04: return adaptiveCruiseControl.update(p);
-                    case 0x05: return accTargetSpeed.update(p);
+                    case IDENTIFIER_CRUISE_CONTROL: return cruiseControl.update(p);
+                    case IDENTIFIER_LIMITER: return limiter.update(p);
+                    case IDENTIFIER_TARGET_SPEED: return targetSpeed.update(p);
+                    case IDENTIFIER_ADAPTIVE_CRUISE_CONTROL: return adaptiveCruiseControl.update(p);
+                    case IDENTIFIER_ACC_TARGET_SPEED: return accTargetSpeed.update(p);
                 }
 
                 return null;

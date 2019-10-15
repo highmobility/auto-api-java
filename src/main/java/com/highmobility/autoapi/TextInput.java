@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.Property;
  * Text input
  */
 public class TextInput extends SetCommand {
-    public static final Identifier identifier = Identifier.TEXT_INPUT;
+    public static final Identifier IDENTIFIER = Identifier.TEXT_INPUT;
 
-    Property<String> text = new Property(String.class, 0x01);
+    public static final byte IDENTIFIER_TEXT = 0x01;
+
+    Property<String> text = new Property(String.class, IDENTIFIER_TEXT);
 
     /**
      * @return The text
@@ -43,7 +45,7 @@ public class TextInput extends SetCommand {
      * @param text The text
      */
     public TextInput(String text) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.text.update(text), true);
     }
@@ -53,7 +55,7 @@ public class TextInput extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return text.update(p);
+                    case IDENTIFIER_TEXT: return text.update(p);
                 }
                 return null;
             });

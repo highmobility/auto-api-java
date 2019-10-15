@@ -28,7 +28,9 @@ import java.util.ArrayList;
  * Set reduction of charging current times
  */
 public class SetReductionOfChargingCurrentTimes extends SetCommand {
-    public static final Identifier identifier = Identifier.CHARGING;
+    public static final Identifier IDENTIFIER = Identifier.CHARGING;
+
+    public static final byte IDENTIFIER_REDUCTION_TIMES = 0x13;
 
     Property<ReductionTime>[] reductionTimes;
 
@@ -45,7 +47,7 @@ public class SetReductionOfChargingCurrentTimes extends SetCommand {
      * @param reductionTimes The reduction times
      */
     public SetReductionOfChargingCurrentTimes(ReductionTime[] reductionTimes) {
-        super(identifier);
+        super(IDENTIFIER);
     
         ArrayList<Property> reductionTimesBuilder = new ArrayList<>();
         if (reductionTimes != null) {
@@ -66,7 +68,7 @@ public class SetReductionOfChargingCurrentTimes extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x13: {
+                    case IDENTIFIER_REDUCTION_TIMES: {
                         Property reductionTime = new Property(ReductionTime.class, p);
                         reductionTimesBuilder.add(reductionTime);
                         return reductionTime;

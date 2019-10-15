@@ -27,9 +27,11 @@ import com.highmobility.autoapi.value.ActiveState;
  * Activate deactivate emergency flasher
  */
 public class ActivateDeactivateEmergencyFlasher extends SetCommand {
-    public static final Identifier identifier = Identifier.HONK_HORN_FLASH_LIGHTS;
+    public static final Identifier IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
 
-    Property<ActiveState> emergencyFlashersState = new Property(ActiveState.class, 0x04);
+    public static final byte IDENTIFIER_EMERGENCY_FLASHERS_STATE = 0x04;
+
+    Property<ActiveState> emergencyFlashersState = new Property(ActiveState.class, IDENTIFIER_EMERGENCY_FLASHERS_STATE);
 
     /**
      * @return The emergency flashers state
@@ -44,7 +46,7 @@ public class ActivateDeactivateEmergencyFlasher extends SetCommand {
      * @param emergencyFlashersState The emergency flashers state
      */
     public ActivateDeactivateEmergencyFlasher(ActiveState emergencyFlashersState) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.emergencyFlashersState.update(emergencyFlashersState), true);
     }
@@ -54,7 +56,7 @@ public class ActivateDeactivateEmergencyFlasher extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x04: return emergencyFlashersState.update(p);
+                    case IDENTIFIER_EMERGENCY_FLASHERS_STATE: return emergencyFlashersState.update(p);
                 }
                 return null;
             });

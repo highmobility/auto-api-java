@@ -28,10 +28,13 @@ import javax.annotation.Nullable;
  * Set navi destination
  */
 public class SetNaviDestination extends SetCommand {
-    public static final Identifier identifier = Identifier.NAVI_DESTINATION;
+    public static final Identifier IDENTIFIER = Identifier.NAVI_DESTINATION;
 
-    Property<Coordinates> coordinates = new Property(Coordinates.class, 0x01);
-    @Nullable Property<String> destinationName = new Property(String.class, 0x02);
+    public static final byte IDENTIFIER_COORDINATES = 0x01;
+    public static final byte IDENTIFIER_DESTINATION_NAME = 0x02;
+
+    Property<Coordinates> coordinates = new Property(Coordinates.class, IDENTIFIER_COORDINATES);
+    @Nullable Property<String> destinationName = new Property(String.class, IDENTIFIER_DESTINATION_NAME);
 
     /**
      * @return The coordinates
@@ -54,7 +57,7 @@ public class SetNaviDestination extends SetCommand {
      * @param destinationName Destination name
      */
     public SetNaviDestination(Coordinates coordinates, @Nullable String destinationName) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.coordinates.update(coordinates));
         addProperty(this.destinationName.update(destinationName), true);
@@ -65,8 +68,8 @@ public class SetNaviDestination extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return coordinates.update(p);
-                    case 0x02: return destinationName.update(p);
+                    case IDENTIFIER_COORDINATES: return coordinates.update(p);
+                    case IDENTIFIER_DESTINATION_NAME: return destinationName.update(p);
                 }
                 return null;
             });

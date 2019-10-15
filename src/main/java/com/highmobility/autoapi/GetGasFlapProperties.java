@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific fueling properties.
  */
 public class GetGasFlapProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.FUELING;
+    public static final Identifier IDENTIFIER = Identifier.FUELING;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetGasFlapProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetGasFlapProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

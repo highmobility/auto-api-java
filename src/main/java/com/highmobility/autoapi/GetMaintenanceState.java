@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all maintenance properties.
  */
 public class GetMaintenanceState extends GetCommand {
-    public static final Identifier identifier = Identifier.MAINTENANCE;
+    public static final Identifier IDENTIFIER = Identifier.MAINTENANCE;
 
     public GetMaintenanceState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetMaintenanceState(byte[] bytes) {

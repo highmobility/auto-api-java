@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific windscreen properties.
  */
 public class GetWindscreenProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.WINDSCREEN;
+    public static final Identifier IDENTIFIER = Identifier.WINDSCREEN;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetWindscreenProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetWindscreenProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

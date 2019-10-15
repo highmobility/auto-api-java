@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all chassis settings properties.
  */
 public class GetChassisSettings extends GetCommand {
-    public static final Identifier identifier = Identifier.CHASSIS_SETTINGS;
+    public static final Identifier IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
     public GetChassisSettings() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetChassisSettings(byte[] bytes) {

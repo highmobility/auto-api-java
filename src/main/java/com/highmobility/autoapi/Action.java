@@ -26,9 +26,11 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * Action
  */
 public class Action extends SetCommand {
-    public static final Identifier identifier = Identifier.NOTIFICATIONS;
+    public static final Identifier IDENTIFIER = Identifier.NOTIFICATIONS;
 
-    PropertyInteger activatedAction = new PropertyInteger(0x03, false);
+    public static final byte IDENTIFIER_ACTIVATED_ACTION = 0x03;
+
+    PropertyInteger activatedAction = new PropertyInteger(IDENTIFIER_ACTIVATED_ACTION, false);
 
     /**
      * @return The activated action
@@ -43,7 +45,7 @@ public class Action extends SetCommand {
      * @param activatedAction Identifier of the activated action
      */
     public Action(Integer activatedAction) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.activatedAction.update(false, 1, activatedAction), true);
     }
@@ -53,7 +55,7 @@ public class Action extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x03: return activatedAction.update(p);
+                    case IDENTIFIER_ACTIVATED_ACTION: return activatedAction.update(p);
                 }
                 return null;
             });

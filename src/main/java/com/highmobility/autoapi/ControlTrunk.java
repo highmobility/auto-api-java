@@ -29,10 +29,13 @@ import javax.annotation.Nullable;
  * Control trunk
  */
 public class ControlTrunk extends SetCommand {
-    public static final Identifier identifier = Identifier.TRUNK;
+    public static final Identifier IDENTIFIER = Identifier.TRUNK;
 
-    @Nullable Property<LockState> lock = new Property(LockState.class, 0x01);
-    @Nullable Property<Position> position = new Property(Position.class, 0x02);
+    public static final byte IDENTIFIER_LOCK = 0x01;
+    public static final byte IDENTIFIER_POSITION = 0x02;
+
+    @Nullable Property<LockState> lock = new Property(LockState.class, IDENTIFIER_LOCK);
+    @Nullable Property<Position> position = new Property(Position.class, IDENTIFIER_POSITION);
 
     /**
      * @return The lock
@@ -55,7 +58,7 @@ public class ControlTrunk extends SetCommand {
      * @param position The position
      */
     public ControlTrunk(@Nullable LockState lock, @Nullable Position position) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.lock.update(lock));
         addProperty(this.position.update(position), true);
@@ -67,8 +70,8 @@ public class ControlTrunk extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return lock.update(p);
-                    case 0x02: return position.update(p);
+                    case IDENTIFIER_LOCK: return lock.update(p);
+                    case IDENTIFIER_POSITION: return position.update(p);
                 }
                 return null;
             });

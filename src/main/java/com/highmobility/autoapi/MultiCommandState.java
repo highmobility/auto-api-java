@@ -27,7 +27,9 @@ import java.util.List;
  * The multi command state
  */
 public class MultiCommandState extends SetCommand {
-    public static final Identifier identifier = Identifier.MULTI_COMMAND;
+    public static final Identifier IDENTIFIER = Identifier.MULTI_COMMAND;
+
+    public static final byte IDENTIFIER_MULTI_STATES = 0x01;
 
     Property<Command>[] multiStates;
 
@@ -46,7 +48,7 @@ public class MultiCommandState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01:
+                    case IDENTIFIER_MULTI_STATES:
                         Property<Command> multiState = new Property(Command.class, p);
                         multiStatesBuilder.add(multiState);
                         return multiState;
@@ -73,7 +75,7 @@ public class MultiCommandState extends SetCommand {
         private List<Property> multiStates = new ArrayList<>();
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public MultiCommandState build() {
@@ -101,7 +103,7 @@ public class MultiCommandState extends SetCommand {
          * @return The builder
          */
         public Builder addMultiState(Property<Command> multiState) {
-            multiState.setIdentifier(0x01);
+            multiState.setIdentifier(IDENTIFIER_MULTI_STATES);
             addProperty(multiState);
             multiStates.add(multiState);
             return this;

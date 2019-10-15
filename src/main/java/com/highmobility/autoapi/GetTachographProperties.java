@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific tachograph properties.
  */
 public class GetTachographProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.TACHOGRAPH;
+    public static final Identifier IDENTIFIER = Identifier.TACHOGRAPH;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetTachographProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetTachographProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

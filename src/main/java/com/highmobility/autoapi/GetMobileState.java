@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all mobile properties.
  */
 public class GetMobileState extends GetCommand {
-    public static final Identifier identifier = Identifier.MOBILE;
+    public static final Identifier IDENTIFIER = Identifier.MOBILE;
 
     public GetMobileState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetMobileState(byte[] bytes) {

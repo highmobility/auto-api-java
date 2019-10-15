@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific parking ticket properties.
  */
 public class GetParkingTicketProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.PARKING_TICKET;
+    public static final Identifier IDENTIFIER = Identifier.PARKING_TICKET;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetParkingTicketProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetParkingTicketProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

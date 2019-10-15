@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific trunk properties.
  */
 public class GetTrunkProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.TRUNK;
+    public static final Identifier IDENTIFIER = Identifier.TRUNK;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetTrunkProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetTrunkProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

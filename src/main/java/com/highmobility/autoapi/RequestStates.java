@@ -29,11 +29,15 @@ import javax.annotation.Nullable;
  * Request states
  */
 public class RequestStates extends SetCommand {
-    public static final Identifier identifier = Identifier.HISTORICAL;
+    public static final Identifier IDENTIFIER = Identifier.HISTORICAL;
 
-    PropertyInteger capabilityID = new PropertyInteger(0x02, false);
-    @Nullable Property<Calendar> startDate = new Property(Calendar.class, 0x03);
-    @Nullable Property<Calendar> endDate = new Property(Calendar.class, 0x04);
+    public static final byte IDENTIFIER_CAPABILITY_ID = 0x02;
+    public static final byte IDENTIFIER_START_DATE = 0x03;
+    public static final byte IDENTIFIER_END_DATE = 0x04;
+
+    PropertyInteger capabilityID = new PropertyInteger(IDENTIFIER_CAPABILITY_ID, false);
+    @Nullable Property<Calendar> startDate = new Property(Calendar.class, IDENTIFIER_START_DATE);
+    @Nullable Property<Calendar> endDate = new Property(Calendar.class, IDENTIFIER_END_DATE);
 
     /**
      * @return The capability id
@@ -64,7 +68,7 @@ public class RequestStates extends SetCommand {
      * @param endDate Milliseconds since UNIX Epoch time
      */
     public RequestStates(Integer capabilityID, @Nullable Calendar startDate, @Nullable Calendar endDate) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.capabilityID.update(false, 2, capabilityID));
         addProperty(this.startDate.update(startDate));
@@ -76,9 +80,9 @@ public class RequestStates extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x02: return capabilityID.update(p);
-                    case 0x03: return startDate.update(p);
-                    case 0x04: return endDate.update(p);
+                    case IDENTIFIER_CAPABILITY_ID: return capabilityID.update(p);
+                    case IDENTIFIER_START_DATE: return startDate.update(p);
+                    case IDENTIFIER_END_DATE: return endDate.update(p);
                 }
                 return null;
             });

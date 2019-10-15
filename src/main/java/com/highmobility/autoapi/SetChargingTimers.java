@@ -28,7 +28,9 @@ import java.util.ArrayList;
  * Set charging timers
  */
 public class SetChargingTimers extends SetCommand {
-    public static final Identifier identifier = Identifier.CHARGING;
+    public static final Identifier IDENTIFIER = Identifier.CHARGING;
+
+    public static final byte IDENTIFIER_TIMERS = 0x15;
 
     Property<Timer>[] timers;
 
@@ -45,7 +47,7 @@ public class SetChargingTimers extends SetCommand {
      * @param timers The timers
      */
     public SetChargingTimers(Timer[] timers) {
-        super(identifier);
+        super(IDENTIFIER);
     
         ArrayList<Property> timersBuilder = new ArrayList<>();
         if (timers != null) {
@@ -66,7 +68,7 @@ public class SetChargingTimers extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x15: {
+                    case IDENTIFIER_TIMERS: {
                         Property timer = new Property(Timer.class, p);
                         timersBuilder.add(timer);
                         return timer;

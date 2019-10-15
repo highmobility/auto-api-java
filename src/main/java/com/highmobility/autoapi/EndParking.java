@@ -28,15 +28,17 @@ import com.highmobility.value.Bytes;
  * End parking
  */
 public class EndParking extends SetCommand {
-    public static final Identifier identifier = Identifier.PARKING_TICKET;
+    public static final Identifier IDENTIFIER = Identifier.PARKING_TICKET;
 
-    Property<Status> status = new Property(Status.class, 0x01);
+    public static final byte IDENTIFIER_STATUS = 0x01;
+
+    Property<Status> status = new Property(Status.class, IDENTIFIER_STATUS);
 
     /**
      * End parking
      */
     public EndParking() {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(status.addValueComponent(new Bytes("00")), true);
     }
@@ -46,7 +48,7 @@ public class EndParking extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: status.update(p);
+                    case IDENTIFIER_STATUS: status.update(p);
                 }
                 return null;
             });

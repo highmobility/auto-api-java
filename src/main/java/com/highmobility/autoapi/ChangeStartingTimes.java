@@ -28,7 +28,9 @@ import java.util.ArrayList;
  * Change starting times
  */
 public class ChangeStartingTimes extends SetCommand {
-    public static final Identifier identifier = Identifier.CLIMATE;
+    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
+
+    public static final byte IDENTIFIER_HVAC_WEEKDAY_STARTING_TIMES = 0x0b;
 
     Property<HvacWeekdayStartingTime>[] hvacWeekdayStartingTimes;
 
@@ -45,7 +47,7 @@ public class ChangeStartingTimes extends SetCommand {
      * @param hvacWeekdayStartingTimes The hvac weekday starting times
      */
     public ChangeStartingTimes(HvacWeekdayStartingTime[] hvacWeekdayStartingTimes) {
-        super(identifier);
+        super(IDENTIFIER);
     
         ArrayList<Property> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
         if (hvacWeekdayStartingTimes != null) {
@@ -66,7 +68,7 @@ public class ChangeStartingTimes extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x0b: {
+                    case IDENTIFIER_HVAC_WEEKDAY_STARTING_TIMES: {
                         Property hvacWeekdayStartingTime = new Property(HvacWeekdayStartingTime.class, p);
                         hvacWeekdayStartingTimesBuilder.add(hvacWeekdayStartingTime);
                         return hvacWeekdayStartingTime;

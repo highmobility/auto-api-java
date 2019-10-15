@@ -26,9 +26,11 @@ import com.highmobility.autoapi.value.Time;
  * The vehicle time state
  */
 public class VehicleTimeState extends SetCommand {
-    public static final Identifier identifier = Identifier.VEHICLE_TIME;
+    public static final Identifier IDENTIFIER = Identifier.VEHICLE_TIME;
 
-    Property<Time> vehicleTime = new Property(Time.class, 0x01);
+    public static final byte IDENTIFIER_VEHICLE_TIME = 0x01;
+
+    Property<Time> vehicleTime = new Property(Time.class, IDENTIFIER_VEHICLE_TIME);
 
     /**
      * @return Vehicle time in a 24h format
@@ -42,7 +44,7 @@ public class VehicleTimeState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return vehicleTime.update(p);
+                    case IDENTIFIER_VEHICLE_TIME: return vehicleTime.update(p);
                 }
 
                 return null;
@@ -64,7 +66,7 @@ public class VehicleTimeState extends SetCommand {
         private Property<Time> vehicleTime;
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public VehicleTimeState build() {
@@ -76,7 +78,7 @@ public class VehicleTimeState extends SetCommand {
          * @return The builder
          */
         public Builder setVehicleTime(Property<Time> vehicleTime) {
-            this.vehicleTime = vehicleTime.setIdentifier(0x01);
+            this.vehicleTime = vehicleTime.setIdentifier(IDENTIFIER_VEHICLE_TIME);
             addProperty(this.vehicleTime);
             return this;
         }

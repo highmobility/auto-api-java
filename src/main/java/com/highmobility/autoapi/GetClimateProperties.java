@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific climate properties.
  */
 public class GetClimateProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.CLIMATE;
+    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetClimateProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetClimateProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

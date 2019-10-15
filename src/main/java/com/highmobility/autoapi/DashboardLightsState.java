@@ -28,7 +28,9 @@ import java.util.List;
  * The dashboard lights state
  */
 public class DashboardLightsState extends SetCommand {
-    public static final Identifier identifier = Identifier.DASHBOARD_LIGHTS;
+    public static final Identifier IDENTIFIER = Identifier.DASHBOARD_LIGHTS;
+
+    public static final byte IDENTIFIER_DASHBOARD_LIGHTS = 0x01;
 
     Property<DashboardLight>[] dashboardLights;
 
@@ -47,7 +49,7 @@ public class DashboardLightsState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01:
+                    case IDENTIFIER_DASHBOARD_LIGHTS:
                         Property<DashboardLight> dashboardLight = new Property(DashboardLight.class, p);
                         dashboardLightsBuilder.add(dashboardLight);
                         return dashboardLight;
@@ -74,7 +76,7 @@ public class DashboardLightsState extends SetCommand {
         private List<Property> dashboardLights = new ArrayList<>();
 
         public Builder() {
-            super(identifier);
+            super(IDENTIFIER);
         }
 
         public DashboardLightsState build() {
@@ -102,7 +104,7 @@ public class DashboardLightsState extends SetCommand {
          * @return The builder
          */
         public Builder addDashboardLight(Property<DashboardLight> dashboardLight) {
-            dashboardLight.setIdentifier(0x01);
+            dashboardLight.setIdentifier(IDENTIFIER_DASHBOARD_LIGHTS);
             addProperty(dashboardLight);
             dashboardLights.add(dashboardLight);
             return this;

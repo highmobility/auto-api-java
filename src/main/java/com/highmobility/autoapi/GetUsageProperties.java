@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific usage properties.
  */
 public class GetUsageProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.USAGE;
+    public static final Identifier IDENTIFIER = Identifier.USAGE;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetUsageProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetUsageProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

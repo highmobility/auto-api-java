@@ -24,10 +24,10 @@ package com.highmobility.autoapi;
  * Get all offroad properties.
  */
 public class GetOffroadState extends GetCommand {
-    public static final Identifier identifier = Identifier.OFFROAD;
+    public static final Identifier IDENTIFIER = Identifier.OFFROAD;
 
     public GetOffroadState() {
-        super(identifier);
+        super(IDENTIFIER);
     }
 
     GetOffroadState(byte[] bytes) {

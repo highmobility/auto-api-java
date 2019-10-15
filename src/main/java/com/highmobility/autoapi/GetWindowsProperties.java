@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific windows properties.
  */
 public class GetWindowsProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.WINDOWS;
+    public static final Identifier IDENTIFIER = Identifier.WINDOWS;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetWindowsProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetWindowsProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 

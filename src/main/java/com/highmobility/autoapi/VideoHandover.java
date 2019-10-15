@@ -29,11 +29,15 @@ import javax.annotation.Nullable;
  * Video handover
  */
 public class VideoHandover extends SetCommand {
-    public static final Identifier identifier = Identifier.VIDEO_HANDOVER;
+    public static final Identifier IDENTIFIER = Identifier.VIDEO_HANDOVER;
 
-    Property<String> url = new Property(String.class, 0x01);
-    @Nullable PropertyInteger startingSecond = new PropertyInteger(0x02, false);
-    @Nullable Property<Screen> screen = new Property(Screen.class, 0x03);
+    public static final byte IDENTIFIER_URL = 0x01;
+    public static final byte IDENTIFIER_STARTING_SECOND = 0x02;
+    public static final byte IDENTIFIER_SCREEN = 0x03;
+
+    Property<String> url = new Property(String.class, IDENTIFIER_URL);
+    @Nullable PropertyInteger startingSecond = new PropertyInteger(IDENTIFIER_STARTING_SECOND, false);
+    @Nullable Property<Screen> screen = new Property(Screen.class, IDENTIFIER_SCREEN);
 
     /**
      * @return The url
@@ -64,7 +68,7 @@ public class VideoHandover extends SetCommand {
      * @param screen The screen
      */
     public VideoHandover(String url, @Nullable Integer startingSecond, @Nullable Screen screen) {
-        super(identifier);
+        super(IDENTIFIER);
     
         addProperty(this.url.update(url));
         addProperty(this.startingSecond.update(false, 2, startingSecond));
@@ -76,9 +80,9 @@ public class VideoHandover extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case 0x01: return url.update(p);
-                    case 0x02: return startingSecond.update(p);
-                    case 0x03: return screen.update(p);
+                    case IDENTIFIER_URL: return url.update(p);
+                    case IDENTIFIER_STARTING_SECOND: return startingSecond.update(p);
+                    case IDENTIFIER_SCREEN: return screen.update(p);
                 }
                 return null;
             });

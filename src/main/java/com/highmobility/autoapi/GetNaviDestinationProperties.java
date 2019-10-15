@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific navi destination properties.
  */
 public class GetNaviDestinationProperties extends GetCommand {
-    public static final Identifier identifier = Identifier.NAVI_DESTINATION;
+    public static final Identifier IDENTIFIER = Identifier.NAVI_DESTINATION;
 
     Bytes propertyIdentifiers;
 
@@ -40,7 +40,7 @@ public class GetNaviDestinationProperties extends GetCommand {
      * @param propertyIdentifiers The property identifiers
      */
     public GetNaviDestinationProperties(Bytes propertyIdentifiers) {
-        super(identifier, propertyIdentifiers.getByteArray());
+        super(IDENTIFIER, propertyIdentifiers.getByteArray());
         this.propertyIdentifiers = propertyIdentifiers;
     }
 
