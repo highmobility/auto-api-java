@@ -4,6 +4,7 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Location;
 import com.highmobility.autoapi.value.Lock;
 import com.highmobility.autoapi.value.LockState;
+import com.highmobility.autoapi.value.SupportedCapability;
 import com.highmobility.value.Bytes;
 
 public class DevCenterSnippetTest {
@@ -194,14 +195,19 @@ public class DevCenterSnippetTest {
         Identifier id = DoorsState.IDENTIFIER;
         Type type = Type.SET;
 
-
         // error ctor
 
         FailureMessageState firstResponse =
                 new FailureMessageState.Builder()
                         .setFailedMessageType(new Property(Type.SET))
                         .setFailedMessageID(new Property(LockUnlockDoors.IDENTIFIER))
-                        .setFailedPropertyIDs(new Property(new Bytes(LockUnlockDoors.IDENTIFIER_INSIDE_LOCKS_STATE)))
+                        .setFailedPropertyIDs(new Property(new Bytes(new byte[]{LockUnlockDoors.IDENTIFIER_INSIDE_LOCKS_STATE})))
                         .setFailureReason(new Property(FailureMessageState.FailureReason.UNSUPPORTED_CAPABILITY)).build();
+
+        SupportedCapability capability = new SupportedCapability(LockUnlockDoors.IDENTIFIER.asInt(),
+                new Bytes(new byte[]{LockUnlockDoors.IDENTIFIER_INSIDE_LOCKS_STATE}));
+
+        CapabilitiesState capas = new CapabilitiesState.Builder().addCapability(new
+                Property(capability)).build();
     }
 }

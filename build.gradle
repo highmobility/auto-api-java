@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.highmobility:hmkit-utils:1.4.3'
+    implementation 'com.highmobility:hmkit-utils:1.4.4-dev'
     implementation 'org.slf4j:slf4j-api:1.7.25'
 
     implementation('com.google.code.findbugs:jsr305:3.0.2') // for @Nullable

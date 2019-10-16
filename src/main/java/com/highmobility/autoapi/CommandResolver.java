@@ -730,7 +730,8 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new FailureMessageState(bytes);
                         }
-                    }    break;
+                    }
+                    break;
                 }
                 case WINDSCREEN: {
                     if (type == Type.SET) {
@@ -957,17 +958,24 @@ public class CommandResolver {
 
     static RunTime _runtime;
 
-    static RunTime getRuntime() {
+    public static RunTime getRuntime() {
         if (_runtime == null)
             _runtime = (System.getProperty("java.runtime.name") == "Android Runtime") ?
-                RunTime.ANDROID : RunTime.JAVA;
-            return _runtime;
+                    RunTime.ANDROID : RunTime.JAVA;
+        return _runtime;
     }
 
-    enum RunTime {
+    /**
+     * Override the runtime. This could be useful in some cases, like when in Android unit tests the
+     * runtime is set to Java.
+     */
+    public static void setRuntime(RunTime runtime) {
+        _runtime = runtime;
+    }
+
+    public enum RunTime {
         ANDROID, JAVA
     }
-
 
     /**
      * The purpose is to loop the possible setters.
