@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
  * The light conditions state
  */
 public class LightConditionsState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.LIGHT_CONDITIONS;
+    public static final Integer IDENTIFIER = Identifier.LIGHT_CONDITIONS;
 
     public static final byte IDENTIFIER_OUTSIDE_LIGHT = 0x01;
     public static final byte IDENTIFIER_INSIDE_LIGHT = 0x02;

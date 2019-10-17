@@ -30,7 +30,7 @@ import java.util.List;
  * The vehicle status state
  */
 public class VehicleStatusState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.VEHICLE_STATUS;
+    public static final Integer IDENTIFIER = Identifier.VEHICLE_STATUS;
 
     public static final byte IDENTIFIER_VIN = 0x01;
     public static final byte IDENTIFIER_POWERTRAIN = 0x02;

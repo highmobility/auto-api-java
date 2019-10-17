@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific power takeoff properties.
  */
 public class GetPowerTakeoffProperties extends GetCommand {
-    public static final int IDENTIFIER = Identifier.POWER_TAKEOFF;
+    public static final Integer IDENTIFIER = Identifier.POWER_TAKEOFF;
 
     Bytes propertyIdentifiers;
 

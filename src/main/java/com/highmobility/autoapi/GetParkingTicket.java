@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all parking ticket properties.
  */
 public class GetParkingTicket extends GetCommand {
-    public static final int IDENTIFIER = Identifier.PARKING_TICKET;
+    public static final Integer IDENTIFIER = Identifier.PARKING_TICKET;
 
     public GetParkingTicket() {
         super(IDENTIFIER);

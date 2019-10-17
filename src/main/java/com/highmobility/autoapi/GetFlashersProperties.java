@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific honk horn flash lights properties.
  */
 public class GetFlashersProperties extends GetCommand {
-    public static final int IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
+    public static final Integer IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
 
     Bytes propertyIdentifiers;
 

@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
  * The messaging state
  */
 public class MessagingState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.MESSAGING;
+    public static final Integer IDENTIFIER = Identifier.MESSAGING;
 
     public static final byte IDENTIFIER_TEXT = 0x01;
     public static final byte IDENTIFIER_HANDLE = 0x02;

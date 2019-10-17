@@ -27,7 +27,7 @@ import com.highmobility.autoapi.property.Property;
  * Set theft alarm
  */
 public class SetTheftAlarm extends SetCommand {
-    public static final int IDENTIFIER = Identifier.THEFT_ALARM;
+    public static final Integer IDENTIFIER = Identifier.THEFT_ALARM;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
 

@@ -26,7 +26,7 @@ import com.highmobility.autoapi.value.Time;
  * The vehicle time state
  */
 public class VehicleTimeState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.VEHICLE_TIME;
+    public static final Integer IDENTIFIER = Identifier.VEHICLE_TIME;
 
     public static final byte IDENTIFIER_VEHICLE_TIME = 0x01;
 

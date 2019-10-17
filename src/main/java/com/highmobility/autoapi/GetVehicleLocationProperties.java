@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific vehicle location properties.
  */
 public class GetVehicleLocationProperties extends GetCommand {
-    public static final int IDENTIFIER = Identifier.VEHICLE_LOCATION;
+    public static final Integer IDENTIFIER = Identifier.VEHICLE_LOCATION;
 
     Bytes propertyIdentifiers;
 

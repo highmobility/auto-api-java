@@ -28,7 +28,7 @@ import java.util.List;
  * The dashboard lights state
  */
 public class DashboardLightsState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.DASHBOARD_LIGHTS;
+    public static final Integer IDENTIFIER = Identifier.DASHBOARD_LIGHTS;
 
     public static final byte IDENTIFIER_DASHBOARD_LIGHTS = 0x01;
 

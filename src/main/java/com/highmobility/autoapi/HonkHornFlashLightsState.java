@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The honk horn flash lights state
  */
 public class HonkHornFlashLightsState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
+    public static final Integer IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
 
     public static final byte IDENTIFIER_FLASHERS = 0x01;
 

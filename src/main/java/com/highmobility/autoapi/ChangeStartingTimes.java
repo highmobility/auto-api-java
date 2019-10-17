@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * Change starting times
  */
 public class ChangeStartingTimes extends SetCommand {
-    public static final int IDENTIFIER = Identifier.CLIMATE;
+    public static final Integer IDENTIFIER = Identifier.CLIMATE;
 
     public static final byte IDENTIFIER_HVAC_WEEKDAY_STARTING_TIMES = 0x0b;
 

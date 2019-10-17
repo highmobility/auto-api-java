@@ -26,7 +26,7 @@ import com.highmobility.autoapi.value.ActiveState;
  * The valet mode state
  */
 public class ValetModeState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.VALET_MODE;
+    public static final Integer IDENTIFIER = Identifier.VALET_MODE;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
 

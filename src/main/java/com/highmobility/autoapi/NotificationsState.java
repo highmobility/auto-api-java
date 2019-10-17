@@ -30,7 +30,7 @@ import java.util.List;
  * The notifications state
  */
 public class NotificationsState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.NOTIFICATIONS;
+    public static final Integer IDENTIFIER = Identifier.NOTIFICATIONS;
 
     public static final byte IDENTIFIER_TEXT = 0x01;
     public static final byte IDENTIFIER_ACTION_ITEMS = 0x02;

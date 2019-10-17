@@ -28,7 +28,7 @@ import com.highmobility.value.Bytes;
  * Stop control
  */
 public class StopControl extends SetCommand {
-    public static final int IDENTIFIER = Identifier.REMOTE_CONTROL;
+    public static final Integer IDENTIFIER = Identifier.REMOTE_CONTROL;
 
     public static final byte IDENTIFIER_CONTROL_MODE = 0x01;
 

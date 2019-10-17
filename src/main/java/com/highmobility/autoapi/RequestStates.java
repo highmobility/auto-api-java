@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * Request states
  */
 public class RequestStates extends SetCommand {
-    public static final int IDENTIFIER = Identifier.HISTORICAL;
+    public static final Integer IDENTIFIER = Identifier.HISTORICAL;
 
     public static final byte IDENTIFIER_CAPABILITY_ID = 0x02;
     public static final byte IDENTIFIER_START_DATE = 0x03;

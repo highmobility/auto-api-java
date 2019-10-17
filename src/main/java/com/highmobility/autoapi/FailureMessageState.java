@@ -28,7 +28,7 @@ import com.highmobility.value.Bytes;
  * The failure message state
  */
 public class FailureMessageState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.FAILURE_MESSAGE;
+    public static final Integer IDENTIFIER = Identifier.FAILURE_MESSAGE;
 
     public static final byte IDENTIFIER_FAILED_MESSAGE_ID = 0x01;
     public static final byte IDENTIFIER_FAILED_MESSAGE_TYPE = 0x02;
@@ -84,7 +84,7 @@ public class FailureMessageState extends SetCommand {
      * @param propertyIdentifier   The property identifier
      * @return Whether the command failed.
      */
-    public boolean getPropertyFailed(Identifier capabilityIdentifier, byte propertyIdentifier) {
+    public boolean getPropertyFailed(Integer capabilityIdentifier, byte propertyIdentifier) {
         if ((getFailedMessageID().getValue() != null && getFailedPropertyIDs().getValue() != null) &&
                 capabilityIdentifier.equals(getFailedMessageID().getValue())) {
             Bytes failedIds = getFailedPropertyIDs().getValue();
@@ -112,6 +112,7 @@ public class FailureMessageState extends SetCommand {
 
         return false;
     }
+
     FailureMessageState(byte[] bytes) throws CommandParseException {
         super(bytes);
         while (propertyIterator.hasNext()) {

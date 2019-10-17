@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.ActiveState;
  * Activate deactivate emergency flasher
  */
 public class ActivateDeactivateEmergencyFlasher extends SetCommand {
-    public static final int IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
+    public static final Integer IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
 
     public static final byte IDENTIFIER_EMERGENCY_FLASHERS_STATE = 0x04;
 

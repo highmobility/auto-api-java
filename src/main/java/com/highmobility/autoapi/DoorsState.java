@@ -32,7 +32,7 @@ import java.util.List;
  * The doors state
  */
 public class DoorsState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.DOORS;
+    public static final Integer IDENTIFIER = Identifier.DOORS;
 
     public static final byte IDENTIFIER_INSIDE_LOCKS = 0x02;
     public static final byte IDENTIFIER_LOCKS = 0x03;

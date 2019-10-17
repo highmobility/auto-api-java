@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all remote control properties.
  */
 public class GetControlState extends GetCommand {
-    public static final int IDENTIFIER = Identifier.REMOTE_CONTROL;
+    public static final Integer IDENTIFIER = Identifier.REMOTE_CONTROL;
 
     public GetControlState() {
         super(IDENTIFIER);

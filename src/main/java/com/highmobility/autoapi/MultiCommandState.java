@@ -27,7 +27,7 @@ import java.util.List;
  * The multi command state
  */
 public class MultiCommandState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.MULTI_COMMAND;
+    public static final Integer IDENTIFIER = Identifier.MULTI_COMMAND;
 
     public static final byte IDENTIFIER_MULTI_STATES = 0x01;
 

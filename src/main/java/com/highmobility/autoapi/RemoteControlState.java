@@ -27,7 +27,7 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * The remote control state
  */
 public class RemoteControlState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.REMOTE_CONTROL;
+    public static final Integer IDENTIFIER = Identifier.REMOTE_CONTROL;
 
     public static final byte IDENTIFIER_CONTROL_MODE = 0x01;
     public static final byte IDENTIFIER_ANGLE = 0x02;

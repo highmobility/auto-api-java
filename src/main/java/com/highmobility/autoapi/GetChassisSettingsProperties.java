@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific chassis settings properties.
  */
 public class GetChassisSettingsProperties extends GetCommand {
-    public static final int IDENTIFIER = Identifier.CHASSIS_SETTINGS;
+    public static final Integer IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
     Bytes propertyIdentifiers;
 

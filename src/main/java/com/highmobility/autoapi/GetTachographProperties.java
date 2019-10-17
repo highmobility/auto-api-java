@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific tachograph properties.
  */
 public class GetTachographProperties extends GetCommand {
-    public static final int IDENTIFIER = Identifier.TACHOGRAPH;
+    public static final Integer IDENTIFIER = Identifier.TACHOGRAPH;
 
     Bytes propertyIdentifiers;
 

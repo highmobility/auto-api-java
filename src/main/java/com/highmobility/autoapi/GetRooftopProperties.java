@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific rooftop control properties.
  */
 public class GetRooftopProperties extends GetCommand {
-    public static final int IDENTIFIER = Identifier.ROOFTOP_CONTROL;
+    public static final Integer IDENTIFIER = Identifier.ROOFTOP_CONTROL;
 
     Bytes propertyIdentifiers;
 

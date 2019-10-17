@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.ActiveState;
  * Start stop hvac
  */
 public class StartStopHvac extends SetCommand {
-    public static final int IDENTIFIER = Identifier.CLIMATE;
+    public static final Integer IDENTIFIER = Identifier.CLIMATE;
 
     public static final byte IDENTIFIER_HVAC_STATE = 0x05;
 

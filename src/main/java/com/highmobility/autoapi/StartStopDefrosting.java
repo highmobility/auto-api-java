@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.ActiveState;
  * Start stop defrosting
  */
 public class StartStopDefrosting extends SetCommand {
-    public static final int IDENTIFIER = Identifier.CLIMATE;
+    public static final Integer IDENTIFIER = Identifier.CLIMATE;
 
     public static final byte IDENTIFIER_DEFROSTING_STATE = 0x07;
 

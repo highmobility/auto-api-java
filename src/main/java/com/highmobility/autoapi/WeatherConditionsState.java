@@ -25,7 +25,7 @@ import com.highmobility.autoapi.property.Property;
  * The weather conditions state
  */
 public class WeatherConditionsState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.WEATHER_CONDITIONS;
+    public static final Integer IDENTIFIER = Identifier.WEATHER_CONDITIONS;
 
     public static final byte IDENTIFIER_RAIN_INTENSITY = 0x01;
 

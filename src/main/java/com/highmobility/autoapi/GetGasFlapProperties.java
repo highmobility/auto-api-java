@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific fueling properties.
  */
 public class GetGasFlapProperties extends GetCommand {
-    public static final int IDENTIFIER = Identifier.FUELING;
+    public static final Integer IDENTIFIER = Identifier.FUELING;
 
     Bytes propertyIdentifiers;
 

@@ -28,7 +28,7 @@ import com.highmobility.value.Bytes;
  * Wake up
  */
 public class WakeUp extends SetCommand {
-    public static final int IDENTIFIER = Identifier.WAKE_UP;
+    public static final Integer IDENTIFIER = Identifier.WAKE_UP;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
 

@@ -31,7 +31,7 @@ import java.util.List;
  * The chassis settings state
  */
 public class ChassisSettingsState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.CHASSIS_SETTINGS;
+    public static final Integer IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
     public static final byte IDENTIFIER_DRIVING_MODE = 0x01;
     public static final byte IDENTIFIER_SPORT_CHRONO = 0x02;

@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific lights properties.
  */
 public class GetLightsProperties extends GetCommand {
-    public static final int IDENTIFIER = Identifier.LIGHTS;
+    public static final Integer IDENTIFIER = Identifier.LIGHTS;
 
     Bytes propertyIdentifiers;
 

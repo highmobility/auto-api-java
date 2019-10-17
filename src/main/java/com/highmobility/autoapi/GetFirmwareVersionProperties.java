@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific firmware version properties.
  */
 public class GetFirmwareVersionProperties extends GetCommand {
-    public static final int IDENTIFIER = Identifier.FIRMWARE_VERSION;
+    public static final Integer IDENTIFIER = Identifier.FIRMWARE_VERSION;
 
     Bytes propertyIdentifiers;
 

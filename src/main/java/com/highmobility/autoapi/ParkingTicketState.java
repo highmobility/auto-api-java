@@ -27,7 +27,7 @@ import java.util.Calendar;
  * The parking ticket state
  */
 public class ParkingTicketState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.PARKING_TICKET;
+    public static final Integer IDENTIFIER = Identifier.PARKING_TICKET;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
     public static final byte IDENTIFIER_OPERATOR_NAME = 0x02;

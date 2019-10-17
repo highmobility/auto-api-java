@@ -26,7 +26,7 @@ import com.highmobility.autoapi.value.OnOffState;
  * The ignition state
  */
 public class IgnitionState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.IGNITION;
+    public static final Integer IDENTIFIER = Identifier.IGNITION;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
     public static final byte IDENTIFIER_ACCESSORIES_STATUS = 0x02;

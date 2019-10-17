@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The driver fatigue state
  */
 public class DriverFatigueState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.DRIVER_FATIGUE;
+    public static final Integer IDENTIFIER = Identifier.DRIVER_FATIGUE;
 
     public static final byte IDENTIFIER_DETECTED_FATIGUE_LEVEL = 0x01;
 

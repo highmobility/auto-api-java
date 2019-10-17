@@ -33,7 +33,7 @@ import java.util.List;
  * The charging state
  */
 public class ChargingState extends SetCommand {
-    public static final int IDENTIFIER = Identifier.CHARGING;
+    public static final Integer IDENTIFIER = Identifier.CHARGING;
 
     public static final byte IDENTIFIER_ESTIMATED_RANGE = 0x02;
     public static final byte IDENTIFIER_BATTERY_LEVEL = 0x03;

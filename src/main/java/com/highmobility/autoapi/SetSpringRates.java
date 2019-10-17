@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * Set spring rates
  */
 public class SetSpringRates extends SetCommand {
-    public static final int IDENTIFIER = Identifier.CHASSIS_SETTINGS;
+    public static final Integer IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
     public static final byte IDENTIFIER_CURRENT_SPRING_RATES = 0x05;
 

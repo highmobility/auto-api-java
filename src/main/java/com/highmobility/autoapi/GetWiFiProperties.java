@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific wi fi properties.
  */
 public class GetWiFiProperties extends GetCommand {
-    public static final int IDENTIFIER = Identifier.WI_FI;
+    public static final Integer IDENTIFIER = Identifier.WI_FI;
 
     Bytes propertyIdentifiers;
 

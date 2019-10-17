@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * Set charging timers
  */
 public class SetChargingTimers extends SetCommand {
-    public static final int IDENTIFIER = Identifier.CHARGING;
+    public static final Integer IDENTIFIER = Identifier.CHARGING;
 
     public static final byte IDENTIFIER_TIMERS = 0x15;
 
