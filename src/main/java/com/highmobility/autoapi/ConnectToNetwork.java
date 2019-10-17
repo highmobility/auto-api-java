@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * Connect to network
  */
 public class ConnectToNetwork extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.WI_FI;
+    public static final int IDENTIFIER = Identifier.WI_FI;
 
     public static final byte IDENTIFIER_NETWORK_SSID = 0x03;
     public static final byte IDENTIFIER_NETWORK_SECURITY = 0x04;

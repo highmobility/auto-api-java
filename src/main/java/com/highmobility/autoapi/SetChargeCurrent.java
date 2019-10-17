@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Set charge current
  */
 public class SetChargeCurrent extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
+    public static final Integer IDENTIFIER = Identifier.HOME_CHARGER;
 
     public static final byte IDENTIFIER_CHARGE_CURRENT_DC = 0x0e;
 

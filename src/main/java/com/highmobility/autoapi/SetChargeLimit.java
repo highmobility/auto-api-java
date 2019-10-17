@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Set charge limit
  */
 public class SetChargeLimit extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CHARGING;
+    public static final Integer IDENTIFIER = Identifier.CHARGING;
 
     public static final byte IDENTIFIER_CHARGE_LIMIT = 0x08;
 

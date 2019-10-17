@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Display image
  */
 public class DisplayImage extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.GRAPHICS;
+    public static final int IDENTIFIER = Identifier.GRAPHICS;
 
     public static final byte IDENTIFIER_IMAGE_URL = 0x01;
 

@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.ActiveState;
  * Set parking brake
  */
 public class SetParkingBrake extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.PARKING_BRAKE;
+    public static final Integer IDENTIFIER = Identifier.PARKING_BRAKE;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
 

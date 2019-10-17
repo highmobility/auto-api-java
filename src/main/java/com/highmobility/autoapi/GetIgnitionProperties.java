@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific ignition properties.
  */
 public class GetIgnitionProperties extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.IGNITION;
+    public static final Integer IDENTIFIER = Identifier.IGNITION;
 
     Bytes propertyIdentifiers;
 

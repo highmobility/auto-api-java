@@ -46,12 +46,12 @@ public class SeatsTest extends BaseTest {
     @Test public void build() {
         SeatsState.Builder builder = new SeatsState.Builder();
 
-        builder.addPersonsDetecte(new Property(new PersonDetected(SeatLocation.REAR_RIGHT, Detected.DETECTED)));
-        builder.addPersonsDetecte(new Property(new PersonDetected(SeatLocation.REAR_LEFT, Detected.NOT_DETECTED)));
+        builder.addPersonDetected(new Property(new PersonDetected(SeatLocation.REAR_RIGHT, Detected.DETECTED)));
+        builder.addPersonDetected(new Property(new PersonDetected(SeatLocation.REAR_LEFT, Detected.NOT_DETECTED)));
 
-        builder.addSeatbeltsStat(new Property(new SeatbeltState(SeatLocation.REAR_RIGHT,
+        builder.addSeatbeltState(new Property(new SeatbeltState(SeatLocation.REAR_RIGHT,
                 SeatbeltState.FastenedState.FASTENED)));
-        builder.addSeatbeltsStat(new Property(new SeatbeltState(SeatLocation.REAR_LEFT,
+        builder.addSeatbeltState(new Property(new SeatbeltState(SeatLocation.REAR_LEFT,
                 SeatbeltState.FastenedState.NOT_FASTENED)));
 
         SeatsState state = builder.build();

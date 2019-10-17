@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific usage properties.
  */
 public class GetUsageProperties extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.USAGE;
+    public static final int IDENTIFIER = Identifier.USAGE;
 
     Bytes propertyIdentifiers;
 

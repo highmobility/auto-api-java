@@ -27,7 +27,7 @@ import java.util.List;
  * The historical state
  */
 public class HistoricalState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HISTORICAL;
+    public static final int IDENTIFIER = Identifier.HISTORICAL;
 
     public static final byte IDENTIFIER_STATES = 0x01;
 

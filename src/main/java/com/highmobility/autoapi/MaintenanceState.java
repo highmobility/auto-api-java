@@ -31,7 +31,7 @@ import java.util.List;
  * The maintenance state
  */
 public class MaintenanceState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.MAINTENANCE;
+    public static final int IDENTIFIER = Identifier.MAINTENANCE;
 
     public static final byte IDENTIFIER_DAYS_TO_NEXT_SERVICE = 0x01;
     public static final byte IDENTIFIER_KILOMETERS_TO_NEXT_SERVICE = 0x02;

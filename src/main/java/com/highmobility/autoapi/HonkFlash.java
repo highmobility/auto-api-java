@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * Honk flash
  */
 public class HonkFlash extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
+    public static final int IDENTIFIER = Identifier.HONK_HORN_FLASH_LIGHTS;
 
     public static final byte IDENTIFIER_HONK_SECONDS = 0x02;
     public static final byte IDENTIFIER_FLASH_TIMES = 0x03;

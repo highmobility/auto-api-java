@@ -155,8 +155,8 @@ public class DevCenterSnippetTest {
         if (command instanceof FailureMessageState) {
             FailureMessageState failure = (FailureMessageState) command;
 
-            if (failure.getFailedMessageID().getValue() == Identifier.VEHICLE_STATUS.asInt() &&
-                    failure.getFailedMessageType().getValue() == Type.GET.asInt()) {
+            if (failure.getFailedMessageID().getValue() == Identifier.VEHICLE_STATUS &&
+                    failure.getFailedMessageType().getValue() == Type.GET) {
                 // The Get Vehicle Status command failed.
                 if (failure.getFailureReason().getValue() == FailureMessageState.FailureReason.UNAUTHORISED) {
                     // The command failed because the vehicle is not authorized. Try to connect
@@ -192,8 +192,9 @@ public class DevCenterSnippetTest {
         Command response = new DoorsState.Builder().addInsideLock(new Property(new Lock
                 (Location.FRONT_LEFT, LockState.LOCKED))).build();
 
-        Identifier id = DoorsState.IDENTIFIER;
-        Type type = Type.SET;
+        Integer id = DoorsState.IDENTIFIER;
+        // TODO: update bleCommandqueue
+        Integer type = Type.SET;
 
         // error ctor
 
@@ -204,7 +205,7 @@ public class DevCenterSnippetTest {
                         .setFailedPropertyIDs(new Property(new Bytes(new byte[]{LockUnlockDoors.IDENTIFIER_INSIDE_LOCKS_STATE})))
                         .setFailureReason(new Property(FailureMessageState.FailureReason.UNSUPPORTED_CAPABILITY)).build();
 
-        SupportedCapability capability = new SupportedCapability(LockUnlockDoors.IDENTIFIER.asInt(),
+        SupportedCapability capability = new SupportedCapability(LockUnlockDoors.IDENTIFIER,
                 new Bytes(new byte[]{LockUnlockDoors.IDENTIFIER_INSIDE_LOCKS_STATE}));
 
         CapabilitiesState capas = new CapabilitiesState.Builder().addCapability(new

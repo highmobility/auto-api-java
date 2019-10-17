@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * Control rooftop
  */
 public class ControlRooftop extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.ROOFTOP_CONTROL;
+    public static final int IDENTIFIER = Identifier.ROOFTOP_CONTROL;
 
     public static final byte IDENTIFIER_DIMMING = 0x01;
     public static final byte IDENTIFIER_POSITION = 0x02;

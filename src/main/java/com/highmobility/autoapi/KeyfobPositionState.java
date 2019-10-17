@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The keyfob position state
  */
 public class KeyfobPositionState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.KEYFOB_POSITION;
+    public static final int IDENTIFIER = Identifier.KEYFOB_POSITION;
 
     public static final byte IDENTIFIER_LOCATION = 0x01;
 

@@ -84,8 +84,8 @@ public class UsageTest extends BaseTest {
         builder.addDrivingModesActivationPeriod(new Property(new DrivingModeActivationPeriod(DrivingMode.ECO, .6d)));
         builder.addDrivingModesActivationPeriod(new Property(new DrivingModeActivationPeriod(DrivingMode.REGULAR, .4d)));
 
-        builder.addDrivingModesEnergyConsumption(new Property(new DrivingModeEnergyConsumption(DrivingMode.ECO, 33.2f)));
-        builder.addDrivingModesEnergyConsumption(new Property(new DrivingModeEnergyConsumption(DrivingMode.REGULAR, 55.4f)));
+        builder.addDrivingModeEnergyConsumption(new Property(new DrivingModeEnergyConsumption(DrivingMode.ECO, 33.2f)));
+        builder.addDrivingModeEnergyConsumption(new Property(new DrivingModeEnergyConsumption(DrivingMode.REGULAR, 55.4f)));
 
         builder.setLastTripEnergyConsumption(new Property(101.3f));
         builder.setLastTripFuelConsumption(new Property(22.5f));

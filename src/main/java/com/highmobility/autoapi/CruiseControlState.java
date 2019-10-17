@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * The cruise control state
  */
 public class CruiseControlState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CRUISE_CONTROL;
+    public static final Integer IDENTIFIER = Identifier.CRUISE_CONTROL;
 
     public static final byte IDENTIFIER_CRUISE_CONTROL = 0x01;
     public static final byte IDENTIFIER_LIMITER = 0x02;

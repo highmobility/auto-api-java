@@ -27,7 +27,7 @@ import com.highmobility.autoapi.property.Property;
  * Set charge mode
  */
 public class SetChargeMode extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CHARGING;
+    public static final Integer IDENTIFIER = Identifier.CHARGING;
 
     public static final byte IDENTIFIER_CHARGE_MODE = 0x0c;
 

@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * Set reduction of charging current times
  */
 public class SetReductionOfChargingCurrentTimes extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CHARGING;
+    public static final Integer IDENTIFIER = Identifier.CHARGING;
 
     public static final byte IDENTIFIER_REDUCTION_TIMES = 0x13;
 

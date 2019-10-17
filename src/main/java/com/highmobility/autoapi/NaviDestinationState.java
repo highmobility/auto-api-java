@@ -28,7 +28,7 @@ import com.highmobility.autoapi.value.Time;
  * The navi destination state
  */
 public class NaviDestinationState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.NAVI_DESTINATION;
+    public static final int IDENTIFIER = Identifier.NAVI_DESTINATION;
 
     public static final byte IDENTIFIER_COORDINATES = 0x01;
     public static final byte IDENTIFIER_DESTINATION_NAME = 0x02;

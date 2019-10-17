@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all fueling properties.
  */
 public class GetGasFlapState extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.FUELING;
+    public static final Integer IDENTIFIER = Identifier.FUELING;
 
     public GetGasFlapState() {
         super(IDENTIFIER);

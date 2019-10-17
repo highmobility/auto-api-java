@@ -29,7 +29,7 @@ import java.util.List;
  * The climate state
  */
 public class ClimateState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
+    public static final Integer IDENTIFIER = Identifier.CLIMATE;
 
     public static final byte IDENTIFIER_INSIDE_TEMPERATURE = 0x01;
     public static final byte IDENTIFIER_OUTSIDE_TEMPERATURE = 0x02;

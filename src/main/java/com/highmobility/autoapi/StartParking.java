@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * Start parking
  */
 public class StartParking extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.PARKING_TICKET;
+    public static final int IDENTIFIER = Identifier.PARKING_TICKET;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
     public static final byte IDENTIFIER_OPERATOR_NAME = 0x02;

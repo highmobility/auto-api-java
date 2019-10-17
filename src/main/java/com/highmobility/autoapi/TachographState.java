@@ -34,7 +34,7 @@ import java.util.List;
  * The tachograph state
  */
 public class TachographState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.TACHOGRAPH;
+    public static final Integer IDENTIFIER = Identifier.TACHOGRAPH;
 
     public static final byte IDENTIFIER_DRIVERS_WORKING_STATES = 0x01;
     public static final byte IDENTIFIER_DRIVERS_TIME_STATES = 0x02;

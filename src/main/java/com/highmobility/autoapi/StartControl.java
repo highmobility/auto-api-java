@@ -28,7 +28,7 @@ import com.highmobility.value.Bytes;
  * Start control
  */
 public class StartControl extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.REMOTE_CONTROL;
+    public static final int IDENTIFIER = Identifier.REMOTE_CONTROL;
 
     public static final byte IDENTIFIER_CONTROL_MODE = 0x01;
 

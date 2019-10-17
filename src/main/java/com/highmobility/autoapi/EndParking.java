@@ -28,7 +28,7 @@ import com.highmobility.value.Bytes;
  * End parking
  */
 public class EndParking extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.PARKING_TICKET;
+    public static final Integer IDENTIFIER = Identifier.PARKING_TICKET;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
 

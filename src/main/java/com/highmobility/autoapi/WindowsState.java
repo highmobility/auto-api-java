@@ -31,7 +31,7 @@ import java.util.List;
  * The windows state
  */
 public class WindowsState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.WINDOWS;
+    public static final int IDENTIFIER = Identifier.WINDOWS;
 
     public static final byte IDENTIFIER_OPEN_PERCENTAGES = 0x02;
     public static final byte IDENTIFIER_POSITIONS = 0x03;

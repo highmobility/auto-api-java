@@ -27,7 +27,7 @@ import com.highmobility.autoapi.property.Property;
  * Authenticate expire
  */
 public class AuthenticateExpire extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
+    public static final int IDENTIFIER = Identifier.HOME_CHARGER;
 
     public static final byte IDENTIFIER_AUTHENTICATION_STATE = 0x0d;
 

@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * Message received
  */
 public class MessageReceived extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.MESSAGING;
+    public static final Integer IDENTIFIER = Identifier.MESSAGING;
 
     public static final byte IDENTIFIER_TEXT = 0x01;
     public static final byte IDENTIFIER_HANDLE = 0x02;

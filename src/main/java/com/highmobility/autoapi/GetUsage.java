@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all usage properties.
  */
 public class GetUsage extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.USAGE;
+    public static final int IDENTIFIER = Identifier.USAGE;
 
     public GetUsage() {
         super(IDENTIFIER);

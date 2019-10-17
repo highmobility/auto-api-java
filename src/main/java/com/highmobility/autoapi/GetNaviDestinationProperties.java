@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific navi destination properties.
  */
 public class GetNaviDestinationProperties extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.NAVI_DESTINATION;
+    public static final int IDENTIFIER = Identifier.NAVI_DESTINATION;
 
     Bytes propertyIdentifiers;
 

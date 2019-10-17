@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * Multi command
  */
 public class MultiCommand extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.MULTI_COMMAND;
+    public static final Integer IDENTIFIER = Identifier.MULTI_COMMAND;
 
     public static final byte IDENTIFIER_MULTI_COMMANDS = 0x02;
 

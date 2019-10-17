@@ -33,7 +33,7 @@ import java.util.List;
  * The usage state
  */
 public class UsageState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.USAGE;
+    public static final Integer IDENTIFIER = Identifier.USAGE;
 
     public static final byte IDENTIFIER_AVERAGE_WEEKLY_DISTANCE = 0x01;
     public static final byte IDENTIFIER_AVERAGE_WEEKLY_DISTANCE_LONG_RUN = 0x02;

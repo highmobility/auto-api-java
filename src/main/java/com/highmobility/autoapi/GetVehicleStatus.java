@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all vehicle status properties.
  */
 public class GetVehicleStatus extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.VEHICLE_STATUS;
+    public static final Integer IDENTIFIER = Identifier.VEHICLE_STATUS;
 
     public GetVehicleStatus() {
         super(IDENTIFIER);

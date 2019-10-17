@@ -28,7 +28,7 @@ import java.util.List;
  * The capabilities state
  */
 public class CapabilitiesState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CAPABILITIES;
+    public static final Integer IDENTIFIER = Identifier.CAPABILITIES;
 
     public static final byte IDENTIFIER_CAPABILITIES = 0x01;
 
@@ -48,7 +48,7 @@ public class CapabilitiesState extends SetCommand {
      * @param propertyId   The property identifier
      * @return The supported state.
      */
-    public boolean getSupported(Identifier identifier, byte propertyId) {
+    public boolean getSupported(Integer identifier, byte propertyId) {
         for (Property<SupportedCapability> capability : capabilities) {
             if (identifier.equals(capability.getValue().getCapabilityID())) {
                 for (Byte supportedPropertyID : capability.getValue().getSupportedPropertyIDs()) {

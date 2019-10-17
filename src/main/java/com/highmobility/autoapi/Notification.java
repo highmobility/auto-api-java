@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * Notification
  */
 public class Notification extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.NOTIFICATIONS;
+    public static final Integer IDENTIFIER = Identifier.NOTIFICATIONS;
 
     public static final byte IDENTIFIER_TEXT = 0x01;
     public static final byte IDENTIFIER_ACTION_ITEMS = 0x02;

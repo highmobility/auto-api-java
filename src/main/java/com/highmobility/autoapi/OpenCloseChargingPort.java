@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.Position;
  * Open close charging port
  */
 public class OpenCloseChargingPort extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CHARGING;
+    public static final int IDENTIFIER = Identifier.CHARGING;
 
     public static final byte IDENTIFIER_CHARGE_PORT_STATE = 0x0b;
 

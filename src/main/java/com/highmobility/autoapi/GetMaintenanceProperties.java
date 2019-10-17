@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific maintenance properties.
  */
 public class GetMaintenanceProperties extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.MAINTENANCE;
+    public static final int IDENTIFIER = Identifier.MAINTENANCE;
 
     Bytes propertyIdentifiers;
 

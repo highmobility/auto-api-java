@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all weather conditions properties.
  */
 public class GetWeatherConditions extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.WEATHER_CONDITIONS;
+    public static final Integer IDENTIFIER = Identifier.WEATHER_CONDITIONS;
 
     public GetWeatherConditions() {
         super(IDENTIFIER);

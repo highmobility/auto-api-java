@@ -30,7 +30,7 @@ import java.util.List;
  * The vehicle status state
  */
 public class VehicleStatusState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.VEHICLE_STATUS;
+    public static final int IDENTIFIER = Identifier.VEHICLE_STATUS;
 
     public static final byte IDENTIFIER_VIN = 0x01;
     public static final byte IDENTIFIER_POWERTRAIN = 0x02;
@@ -209,7 +209,7 @@ public class VehicleStatusState extends SetCommand {
      * @param identifier The identifier of the command.
      * @return The state for the given Command identifier, if exists.
      */
-    @Nullable public Property<Command> getState(Identifier identifier) {
+    @Nullable public Property<Command> getState(Integer identifier) {
         if (states == null) return null;
         for (int i = 0; i < states.length; i++) {
             Property<Command> command = states[i];

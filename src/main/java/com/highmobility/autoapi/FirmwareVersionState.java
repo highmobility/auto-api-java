@@ -26,7 +26,7 @@ import com.highmobility.autoapi.value.HmkitVersion;
  * The firmware version state
  */
 public class FirmwareVersionState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.FIRMWARE_VERSION;
+    public static final int IDENTIFIER = Identifier.FIRMWARE_VERSION;
 
     public static final byte IDENTIFIER_HMKIT_VERSION = 0x01;
     public static final byte IDENTIFIER_HMKIT_BUILD_NAME = 0x02;

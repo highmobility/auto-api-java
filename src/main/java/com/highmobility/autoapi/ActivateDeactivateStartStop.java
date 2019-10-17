@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.ActiveState;
  * Activate deactivate start stop
  */
 public class ActivateDeactivateStartStop extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.ENGINE_START_STOP;
+    public static final Integer IDENTIFIER = Identifier.ENGINE_START_STOP;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
 

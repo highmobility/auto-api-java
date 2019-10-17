@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all diagnostics properties.
  */
 public class GetDiagnosticsState extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.DIAGNOSTICS;
+    public static final Integer IDENTIFIER = Identifier.DIAGNOSTICS;
 
     public GetDiagnosticsState() {
         super(IDENTIFIER);

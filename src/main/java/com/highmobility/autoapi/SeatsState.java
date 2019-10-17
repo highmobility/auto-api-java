@@ -31,7 +31,7 @@ import java.util.List;
  * The seats state
  */
 public class SeatsState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.SEATS;
+    public static final int IDENTIFIER = Identifier.SEATS;
 
     public static final byte IDENTIFIER_PERSONS_DETECTED = 0x02;
     public static final byte IDENTIFIER_SEATBELTS_STATE = 0x03;

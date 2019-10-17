@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all tachograph properties.
  */
 public class GetTachographState extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.TACHOGRAPH;
+    public static final Integer IDENTIFIER = Identifier.TACHOGRAPH;
 
     public GetTachographState() {
         super(IDENTIFIER);

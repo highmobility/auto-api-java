@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The hood state
  */
 public class HoodState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HOOD;
+    public static final Integer IDENTIFIER = Identifier.HOOD;
 
     public static final byte IDENTIFIER_POSITION = 0x01;
 

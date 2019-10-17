@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * Control windows
  */
 public class ControlWindows extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.WINDOWS;
+    public static final Integer IDENTIFIER = Identifier.WINDOWS;
 
     public static final byte IDENTIFIER_OPEN_PERCENTAGES = 0x02;
     public static final byte IDENTIFIER_POSITIONS = 0x03;

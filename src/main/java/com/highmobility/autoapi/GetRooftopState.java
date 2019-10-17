@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all rooftop control properties.
  */
 public class GetRooftopState extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.ROOFTOP_CONTROL;
+    public static final Integer IDENTIFIER = Identifier.ROOFTOP_CONTROL;
 
     public GetRooftopState() {
         super(IDENTIFIER);

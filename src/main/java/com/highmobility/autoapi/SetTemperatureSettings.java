@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * Set temperature settings
  */
 public class SetTemperatureSettings extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
+    public static final Integer IDENTIFIER = Identifier.CLIMATE;
 
     public static final byte IDENTIFIER_DRIVER_TEMPERATURE_SETTING = 0x03;
     public static final byte IDENTIFIER_PASSENGER_TEMPERATURE_SETTING = 0x04;

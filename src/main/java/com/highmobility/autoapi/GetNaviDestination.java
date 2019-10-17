@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all navi destination properties.
  */
 public class GetNaviDestination extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.NAVI_DESTINATION;
+    public static final Integer IDENTIFIER = Identifier.NAVI_DESTINATION;
 
     public GetNaviDestination() {
         super(IDENTIFIER);

@@ -27,7 +27,7 @@ import com.highmobility.autoapi.property.Property;
  * Start stop charging
  */
 public class StartStopCharging extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CHARGING;
+    public static final Integer IDENTIFIER = Identifier.CHARGING;
 
     public static final byte IDENTIFIER_STATUS = 0x17;
 

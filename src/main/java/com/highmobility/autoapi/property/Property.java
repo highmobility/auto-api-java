@@ -673,12 +673,4 @@ public class Property<T> extends Bytes {
 
         return result;
     }
-
-    public static Identifier getIdentifier(Bytes valueBytes) {
-        return Identifier.fromBytes(valueBytes.getByteArray());
-    }
-
-    public static Bytes identifierToBytes(Identifier value) {
-        return new Bytes(value.getBytes());
-    }
 }

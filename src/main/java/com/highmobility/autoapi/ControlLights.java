@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * Control lights
  */
 public class ControlLights extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.LIGHTS;
+    public static final Integer IDENTIFIER = Identifier.LIGHTS;
 
     public static final byte IDENTIFIER_FRONT_EXTERIOR_LIGHT = 0x01;
     public static final byte IDENTIFIER_REAR_EXTERIOR_LIGHT = 0x02;

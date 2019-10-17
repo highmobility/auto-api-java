@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific trunk properties.
  */
 public class GetTrunkProperties extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.TRUNK;
+    public static final int IDENTIFIER = Identifier.TRUNK;
 
     Bytes propertyIdentifiers;
 

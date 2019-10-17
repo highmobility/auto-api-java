@@ -27,7 +27,7 @@ import com.highmobility.autoapi.property.Property;
  * Set windscreen replacement needed
  */
 public class SetWindscreenReplacementNeeded extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.WINDSCREEN;
+    public static final Integer IDENTIFIER = Identifier.WINDSCREEN;
 
     public static final byte IDENTIFIER_WINDSCREEN_NEEDS_REPLACEMENT = 0x06;
 

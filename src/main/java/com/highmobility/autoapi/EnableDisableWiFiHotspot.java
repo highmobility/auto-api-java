@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.EnabledState;
  * Enable disable wi fi hotspot
  */
 public class EnableDisableWiFiHotspot extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
+    public static final Integer IDENTIFIER = Identifier.HOME_CHARGER;
 
     public static final byte IDENTIFIER_WI_FI_HOTSPOT_ENABLED = 0x08;
 

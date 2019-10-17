@@ -26,7 +26,7 @@ import com.highmobility.autoapi.value.ActiveState;
  * The engine start stop state
  */
 public class EngineStartStopState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.ENGINE_START_STOP;
+    public static final int IDENTIFIER = Identifier.ENGINE_START_STOP;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
 

@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Forget network
  */
 public class ForgetNetwork extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.WI_FI;
+    public static final Integer IDENTIFIER = Identifier.WI_FI;
 
     public static final byte IDENTIFIER_NETWORK_SSID = 0x03;
 

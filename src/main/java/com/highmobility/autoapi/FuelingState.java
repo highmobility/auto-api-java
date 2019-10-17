@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.Position;
  * The fueling state
  */
 public class FuelingState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.FUELING;
+    public static final int IDENTIFIER = Identifier.FUELING;
 
     public static final byte IDENTIFIER_GAS_FLAP_LOCK = 0x02;
     public static final byte IDENTIFIER_GAS_FLAP_POSITION = 0x03;

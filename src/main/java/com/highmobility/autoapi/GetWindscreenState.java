@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all windscreen properties.
  */
 public class GetWindscreenState extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.WINDSCREEN;
+    public static final Integer IDENTIFIER = Identifier.WINDSCREEN;
 
     public GetWindscreenState() {
         super(IDENTIFIER);

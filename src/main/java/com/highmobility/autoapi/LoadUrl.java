@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Load url
  */
 public class LoadUrl extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.BROWSER;
+    public static final Integer IDENTIFIER = Identifier.BROWSER;
 
     public static final byte IDENTIFIER_URL = 0x01;
 

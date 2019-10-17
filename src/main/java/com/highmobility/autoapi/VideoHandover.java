@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * Video handover
  */
 public class VideoHandover extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.VIDEO_HANDOVER;
+    public static final Integer IDENTIFIER = Identifier.VIDEO_HANDOVER;
 
     public static final byte IDENTIFIER_URL = 0x01;
     public static final byte IDENTIFIER_STARTING_SECOND = 0x02;

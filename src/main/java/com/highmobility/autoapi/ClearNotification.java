@@ -28,7 +28,7 @@ import com.highmobility.value.Bytes;
  * Clear notification
  */
 public class ClearNotification extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.NOTIFICATIONS;
+    public static final Integer IDENTIFIER = Identifier.NOTIFICATIONS;
 
     public static final byte IDENTIFIER_CLEAR = 0x04;
 

@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all climate properties.
  */
 public class GetClimateState extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
+    public static final Integer IDENTIFIER = Identifier.CLIMATE;
 
     public GetClimateState() {
         super(IDENTIFIER);

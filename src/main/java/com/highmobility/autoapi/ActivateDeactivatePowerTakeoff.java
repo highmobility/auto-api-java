@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.ActiveState;
  * Activate deactivate power takeoff
  */
 public class ActivateDeactivatePowerTakeoff extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.POWER_TAKEOFF;
+    public static final Integer IDENTIFIER = Identifier.POWER_TAKEOFF;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
 

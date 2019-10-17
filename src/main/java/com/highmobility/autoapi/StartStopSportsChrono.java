@@ -27,7 +27,7 @@ import com.highmobility.autoapi.property.Property;
  * Start stop sports chrono
  */
 public class StartStopSportsChrono extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CHASSIS_SETTINGS;
+    public static final int IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
     public static final byte IDENTIFIER_SPORT_CHRONO = 0x02;
 

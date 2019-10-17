@@ -91,8 +91,6 @@ public class PropertyComponentValue<T> extends PropertyComponent {
             value = (T) Property.getIntegerArray(valueBytes);
         } else if (Command.class.isAssignableFrom(valueClass)) {
             value = (T) CommandResolver.resolve(valueBytes);
-        } else if (Identifier.class.isAssignableFrom(valueClass)) {
-            value = (T) Property.getIdentifier(valueBytes);
         } else if (Bytes.class.isAssignableFrom(valueClass)) {
             value = (T) valueBytes;
         } else if (Byte.class.isAssignableFrom(valueClass)) {
@@ -129,8 +127,6 @@ public class PropertyComponentValue<T> extends PropertyComponent {
             return new Bytes(Property.calendarToBytes((Calendar) value));
         } else if (value instanceof int[]) {
             return Property.integerArrayToBytes((int[]) value);
-        } else if (value instanceof Identifier) {
-            return Property.identifierToBytes((Identifier) value);
         } else if (value instanceof Command) {
             return (Command) value;
         } else if (value instanceof Byte) {

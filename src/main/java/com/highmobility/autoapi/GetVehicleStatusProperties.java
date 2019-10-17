@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific vehicle status properties.
  */
 public class GetVehicleStatusProperties extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.VEHICLE_STATUS;
+    public static final int IDENTIFIER = Identifier.VEHICLE_STATUS;
 
     Bytes propertyIdentifiers;
 

@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.Property;
  * Text input
  */
 public class TextInput extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.TEXT_INPUT;
+    public static final Integer IDENTIFIER = Identifier.TEXT_INPUT;
 
     public static final byte IDENTIFIER_TEXT = 0x01;
 

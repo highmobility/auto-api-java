@@ -32,163 +32,163 @@ public class PermissionLocation {
         return new BitLocation(1, 2);
     }
 
-    public static BitLocation locationFor(Identifier identifier, Type type) {
+    public static BitLocation locationFor(Integer identifier, Type type) {
         switch (identifier) {
-            case CAPABILITIES:
+            case Identifier.CAPABILITIES:
                 if (type == Type.READ) return new BitLocation(2, 0);
                 break;
-            case VEHICLE_STATUS:
+            case Identifier.VEHICLE_STATUS:
                 if (type == Type.READ) return new BitLocation(2, 1);
                 break;
-            case DIAGNOSTICS:
+            case Identifier.DIAGNOSTICS:
                 if (type == Type.READ) return new BitLocation(2, 2);
                 break;
-            case DOORS:
+            case Identifier.DOORS:
                 if (type == Type.READ) return new BitLocation(2, 3);
                 else if (type == Type.WRITE) return new BitLocation(2, 4);
                 break;
-            case IGNITION:
+            case Identifier.IGNITION:
                 if (type == Type.READ) return new BitLocation(2, 5);
                 else if (type == Type.WRITE) return new BitLocation(2, 6);
                 break;
-            case TRUNK:
+            case Identifier.TRUNK:
                 if (type == Type.READ) return new BitLocation(2, 7);
                 else if (type == Type.WRITE) return new BitLocation(3, 0);
                 break;
-            case WAKE_UP:
+            case Identifier.WAKE_UP:
                 if (type == Type.WRITE) return new BitLocation(3, 2);
                 break;
-            case CHARGING:
+            case Identifier.CHARGING:
                 if (type == Type.READ) return new BitLocation(3, 3);
                 else if (type == Type.WRITE) return new BitLocation(3, 4);
                 break;
-            case CLIMATE:
+            case Identifier.CLIMATE:
                 if (type == Type.READ) return new BitLocation(3, 5);
                 else if (type == Type.WRITE) return new BitLocation(3, 6);
                 break;
-            case LIGHTS:
+            case Identifier.LIGHTS:
                 if (type == Type.READ) return new BitLocation(3, 7);
                 else if (type == Type.WRITE) return new BitLocation(4, 0);
                 break;
-            case WINDOWS:
+            case Identifier.WINDOWS:
                 if (type == Type.READ) return new BitLocation(7, 1);
                 else if (type == Type.WRITE) return new BitLocation(4, 1);
                 break;
-            case ROOFTOP_CONTROL:
+            case Identifier.ROOFTOP_CONTROL:
                 if (type == Type.READ) return new BitLocation(4, 2);
                 else if (type == Type.WRITE) return new BitLocation(4, 3);
                 break;
-            case WINDSCREEN:
+            case Identifier.WINDSCREEN:
                 if (type == Type.READ) return new BitLocation(4, 4);
                 else if (type == Type.WRITE) return new BitLocation(4, 5);
                 break;
-            case HONK_HORN_FLASH_LIGHTS:
+            case Identifier.HONK_HORN_FLASH_LIGHTS:
                 if (type == Type.READ) return new BitLocation(7, 2);
                 else if (type == Type.WRITE) return new BitLocation(4, 6);
                 break;
 
             // head unit
 
-            case NOTIFICATIONS:
+            case Identifier.NOTIFICATIONS:
                 if (type == Type.READ) return headUnitReadLocation();
                 else if (type == Type.WRITE) return headUnitWriteLocation();
                 break;
-            case MESSAGING:
+            case Identifier.MESSAGING:
                 if (type == Type.READ) return headUnitReadLocation();
                 else if (type == Type.WRITE) return headUnitWriteLocation();
                 break;
-            case VIDEO_HANDOVER:
-            case BROWSER:
-            case GRAPHICS:
-            case TEXT_INPUT:
+            case Identifier.VIDEO_HANDOVER:
+            case Identifier.BROWSER:
+            case Identifier.GRAPHICS:
+            case Identifier.TEXT_INPUT:
                 // above fall through to here and only have write permission
                 if (type == Type.WRITE) return headUnitWriteLocation();
                 break;
 
-            case REMOTE_CONTROL:
+            case Identifier.REMOTE_CONTROL:
                 if (type == Type.READ) return new BitLocation(5, 0);
                 else if (type == Type.WRITE) return new BitLocation(5, 1);
                 break;
-            case VALET_MODE:
+            case Identifier.VALET_MODE:
                 if (type == Type.READ) return new BitLocation(5, 2);
                 else if (type == Type.WRITE) return new BitLocation(5, 3);
                 else if (type == Type.LIMITED) return new BitLocation(5, 4);
                 break;
-            case FUELING:
+            case Identifier.FUELING:
                 if (type == Type.READ) return new BitLocation(8, 5);
                 else if (type == Type.WRITE) return new BitLocation(5, 5);
                 break;
-            case HEART_RATE:
+            case Identifier.HEART_RATE:
                 if (type == Type.WRITE) return new BitLocation(5, 6);
                 break;
-            case DRIVER_FATIGUE:
+            case Identifier.DRIVER_FATIGUE:
                 if (type == Type.READ) return new BitLocation(5, 7);
                 break;
-            case VEHICLE_LOCATION:
+            case Identifier.VEHICLE_LOCATION:
                 if (type == Type.READ) return new BitLocation(6, 0);
                 break;
-            case NAVI_DESTINATION:
+            case Identifier.NAVI_DESTINATION:
                 if (type == Type.READ) return new BitLocation(7, 3);
                 else if (type == Type.WRITE) return new BitLocation(6, 1);
                 break;
-            case THEFT_ALARM:
+            case Identifier.THEFT_ALARM:
                 if (type == Type.READ) return new BitLocation(6, 2);
                 else return new BitLocation(6, 3);
-            case PARKING_TICKET:
+            case Identifier.PARKING_TICKET:
                 if (type == Type.READ) return new BitLocation(6, 4);
                 else if (type == Type.WRITE) return new BitLocation(6, 5);
                 break;
-            case KEYFOB_POSITION:
+            case Identifier.KEYFOB_POSITION:
                 if (type == Type.READ) return new BitLocation(6, 6);
                 break;
-            case VEHICLE_TIME:
+            case Identifier.VEHICLE_TIME:
                 if (type == Type.READ) return new BitLocation(7, 0);
                 break;
-            case RACE:
+            case Identifier.RACE:
                 if (type == Type.READ) return new BitLocation(7, 4);
                 break;
-            case OFFROAD:
+            case Identifier.OFFROAD:
                 if (type == Type.READ) return new BitLocation(7, 5);
                 break;
-            case CHASSIS_SETTINGS:
+            case Identifier.CHASSIS_SETTINGS:
                 if (type == Type.READ) return new BitLocation(7, 6);
                 else if (type == Type.WRITE) return new BitLocation(7, 7);
                 break;
-            case SEATS:
+            case Identifier.SEATS:
                 if (type == Type.READ) return new BitLocation(8, 0);
                 else if (type == Type.WRITE) return new BitLocation(8, 1);
                 break;
-            case PARKING_BRAKE:
+            case Identifier.PARKING_BRAKE:
                 if (type == Type.READ) return new BitLocation(8, 2);
                 else if (type == Type.WRITE) return new BitLocation(8, 3);
                 break;
-            case LIGHT_CONDITIONS:
-            case WEATHER_CONDITIONS:
+            case Identifier.LIGHT_CONDITIONS:
+            case Identifier.WEATHER_CONDITIONS:
                 if (type == Type.READ) return new BitLocation(8, 4);
                 break;
-            case WI_FI:
+            case Identifier.WI_FI:
                 if (type == Type.READ) return new BitLocation(8, 6);
                 else if (type == Type.WRITE) return new BitLocation(8, 7);
                 break;
-            case HOME_CHARGER:
+            case Identifier.HOME_CHARGER:
                 if (type == Type.READ) return new BitLocation(9, 0);
                 else if (type == Type.WRITE) return new BitLocation(9, 1);
                 break;
-            case DASHBOARD_LIGHTS:
+            case Identifier.DASHBOARD_LIGHTS:
                 if (type == Type.READ) return new BitLocation(9, 2);
                 break;
-            case CRUISE_CONTROL:
+            case Identifier.CRUISE_CONTROL:
                 if (type == Type.READ) return new BitLocation(9, 3);
                 else if (type == Type.WRITE) return new BitLocation(9, 4);
                 break;
-            case ENGINE_START_STOP:
+            case Identifier.ENGINE_START_STOP:
                 if (type == Type.READ) return new BitLocation(9, 5);
                 else if (type == Type.WRITE) return new BitLocation(9, 6);
                 break;
-            case TACHOGRAPH:
+            case Identifier.TACHOGRAPH:
                 if (type == Type.READ) return new BitLocation(9, 7);
                 break;
-            case POWER_TAKEOFF:
+            case Identifier.POWER_TAKEOFF:
                 if (type == Type.READ) return new BitLocation(10, 0);
                 else if (type == Type.WRITE) return new BitLocation(10, 1);
                 break;

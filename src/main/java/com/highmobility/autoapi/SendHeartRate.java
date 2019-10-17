@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * Send heart rate
  */
 public class SendHeartRate extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HEART_RATE;
+    public static final Integer IDENTIFIER = Identifier.HEART_RATE;
 
     public static final byte IDENTIFIER_HEART_RATE = 0x01;
 

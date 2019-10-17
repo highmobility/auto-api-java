@@ -250,10 +250,10 @@ public class DiagnosticsTest extends BaseTest {
         builder.addTireTemperature(new Property(new TireTemperature(Location.REAR_RIGHT, 40f)));
         builder.addTireTemperature(new Property(new TireTemperature(Location.REAR_LEFT, 40f)));
 
-        builder.addWheelRPM(new Property(new WheelRpm(Location.FRONT_LEFT, 746)));
-        builder.addWheelRPM(new Property(new WheelRpm(Location.FRONT_RIGHT, 746)));
-        builder.addWheelRPM(new Property(new WheelRpm(Location.REAR_RIGHT, 746)));
-        builder.addWheelRPM(new Property(new WheelRpm(Location.REAR_LEFT, 746)));
+        builder.addWheelRpm(new Property(new WheelRpm(Location.FRONT_LEFT, 746)));
+        builder.addWheelRpm(new Property(new WheelRpm(Location.FRONT_RIGHT, 746)));
+        builder.addWheelRpm(new Property(new WheelRpm(Location.REAR_RIGHT, 746)));
+        builder.addWheelRpm(new Property(new WheelRpm(Location.REAR_LEFT, 746)));
 
         Property code1 = new Property(new TroubleCode(2, "C1116FA",
                 "RDU_212FR",

@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.EnabledState;
  * Enable disable wi fi
  */
 public class EnableDisableWiFi extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.WI_FI;
+    public static final Integer IDENTIFIER = Identifier.WI_FI;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
 

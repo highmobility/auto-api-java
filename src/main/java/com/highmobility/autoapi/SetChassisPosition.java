@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * Set chassis position
  */
 public class SetChassisPosition extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CHASSIS_SETTINGS;
+    public static final Integer IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
     public static final byte IDENTIFIER_CURRENT_CHASSIS_POSITION = 0x08;
 

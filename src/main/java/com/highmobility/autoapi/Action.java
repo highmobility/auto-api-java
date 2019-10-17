@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * Action
  */
 public class Action extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.NOTIFICATIONS;
+    public static final int IDENTIFIER = Identifier.NOTIFICATIONS;
 
     public static final byte IDENTIFIER_ACTIVATED_ACTION = 0x03;
 

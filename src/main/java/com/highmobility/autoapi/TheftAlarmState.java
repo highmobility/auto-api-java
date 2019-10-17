@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The theft alarm state
  */
 public class TheftAlarmState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.THEFT_ALARM;
+    public static final Integer IDENTIFIER = Identifier.THEFT_ALARM;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
 

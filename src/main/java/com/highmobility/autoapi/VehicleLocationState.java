@@ -26,7 +26,7 @@ import com.highmobility.autoapi.value.Coordinates;
  * The vehicle location state
  */
 public class VehicleLocationState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.VEHICLE_LOCATION;
+    public static final int IDENTIFIER = Identifier.VEHICLE_LOCATION;
 
     public static final byte IDENTIFIER_COORDINATES = 0x04;
     public static final byte IDENTIFIER_HEADING = 0x05;

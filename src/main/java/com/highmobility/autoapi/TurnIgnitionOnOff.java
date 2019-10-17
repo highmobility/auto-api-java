@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.OnOffState;
  * Turn ignition on off
  */
 public class TurnIgnitionOnOff extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.IGNITION;
+    public static final Integer IDENTIFIER = Identifier.IGNITION;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
 

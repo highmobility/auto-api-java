@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.ByteEnum;
  * The rooftop control state
  */
 public class RooftopControlState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.ROOFTOP_CONTROL;
+    public static final Integer IDENTIFIER = Identifier.ROOFTOP_CONTROL;
 
     public static final byte IDENTIFIER_DIMMING = 0x01;
     public static final byte IDENTIFIER_POSITION = 0x02;

@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.LockState;
  * Lock unlock doors
  */
 public class LockUnlockDoors extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.DOORS;
+    public static final Integer IDENTIFIER = Identifier.DOORS;
 
     public static final byte IDENTIFIER_INSIDE_LOCKS_STATE = 0x05;
 

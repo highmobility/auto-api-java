@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all capabilities properties.
  */
 public class GetCapabilities extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CAPABILITIES;
+    public static final Integer IDENTIFIER = Identifier.CAPABILITIES;
 
     public GetCapabilities() {
         super(IDENTIFIER);

@@ -28,7 +28,7 @@ import com.highmobility.autoapi.value.NetworkSecurity;
  * The wi fi state
  */
 public class WiFiState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.WI_FI;
+    public static final Integer IDENTIFIER = Identifier.WI_FI;
 
     public static final byte IDENTIFIER_STATUS = 0x01;
     public static final byte IDENTIFIER_NETWORK_CONNECTED = 0x02;

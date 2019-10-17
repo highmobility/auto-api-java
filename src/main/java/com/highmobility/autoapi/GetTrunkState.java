@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all trunk properties.
  */
 public class GetTrunkState extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.TRUNK;
+    public static final Integer IDENTIFIER = Identifier.TRUNK;
 
     public GetTrunkState() {
         super(IDENTIFIER);

@@ -29,10 +29,10 @@ import java.util.Calendar;
 class SetCommand extends Command {
     ArrayList<Property> propertiesBuilder;
 
-    SetCommand(Identifier identifier) {
+    SetCommand(Integer identifier) {
         super(identifier, 3);
 
-        set(0, identifier.getBytes());
+        set(0, Identifier.toBytes(identifier));
         set(2, (byte) 0x01);
 
         type = Type.SET;
@@ -78,11 +78,11 @@ class SetCommand extends Command {
     }
 
     public static class Builder {
-        private Identifier identifier;
+        private Integer identifier;
 
         protected ArrayList<Property> propertiesBuilder = new ArrayList<>();
 
-        public Builder(Identifier identifier) {
+        public Builder(Integer identifier) {
             this.identifier = identifier;
         }
 

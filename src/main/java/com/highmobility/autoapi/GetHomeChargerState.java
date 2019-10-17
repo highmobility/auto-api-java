@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all home charger properties.
  */
 public class GetHomeChargerState extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
+    public static final Integer IDENTIFIER = Identifier.HOME_CHARGER;
 
     public GetHomeChargerState() {
         super(IDENTIFIER);

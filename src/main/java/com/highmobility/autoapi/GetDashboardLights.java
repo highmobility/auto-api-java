@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all dashboard lights properties.
  */
 public class GetDashboardLights extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.DASHBOARD_LIGHTS;
+    public static final Integer IDENTIFIER = Identifier.DASHBOARD_LIGHTS;
 
     public GetDashboardLights() {
         super(IDENTIFIER);

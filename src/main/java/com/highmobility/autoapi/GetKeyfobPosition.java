@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all keyfob position properties.
  */
 public class GetKeyfobPosition extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.KEYFOB_POSITION;
+    public static final Integer IDENTIFIER = Identifier.KEYFOB_POSITION;
 
     public GetKeyfobPosition() {
         super(IDENTIFIER);

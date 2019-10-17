@@ -34,7 +34,7 @@ import java.util.List;
  * The home charger state
  */
 public class HomeChargerState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
+    public static final Integer IDENTIFIER = Identifier.HOME_CHARGER;
 
     public static final byte IDENTIFIER_CHARGING_STATUS = 0x01;
     public static final byte IDENTIFIER_AUTHENTICATION_MECHANISM = 0x02;

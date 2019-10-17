@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all doors properties.
  */
 public class GetDoorsState extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.DOORS;
+    public static final int IDENTIFIER = Identifier.DOORS;
 
     public GetDoorsState() {
         super(IDENTIFIER);

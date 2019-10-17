@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific light conditions properties.
  */
 public class GetLightConditionsProperties extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.LIGHT_CONDITIONS;
+    public static final int IDENTIFIER = Identifier.LIGHT_CONDITIONS;
 
     Bytes propertyIdentifiers;
 

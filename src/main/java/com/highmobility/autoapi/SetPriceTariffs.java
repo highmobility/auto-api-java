@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * Set price tariffs
  */
 public class SetPriceTariffs extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
+    public static final Integer IDENTIFIER = Identifier.HOME_CHARGER;
 
     public static final byte IDENTIFIER_PRICE_TARIFFS = 0x12;
 

@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific cruise control properties.
  */
 public class GetCruiseControlProperties extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CRUISE_CONTROL;
+    public static final int IDENTIFIER = Identifier.CRUISE_CONTROL;
 
     Bytes propertyIdentifiers;
 

@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * Control command
  */
 public class ControlCommand extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.REMOTE_CONTROL;
+    public static final Integer IDENTIFIER = Identifier.REMOTE_CONTROL;
 
     public static final byte IDENTIFIER_ANGLE = 0x02;
     public static final byte IDENTIFIER_SPEED = 0x03;

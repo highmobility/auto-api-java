@@ -28,7 +28,7 @@ import java.util.Calendar;
  * The windscreen state
  */
 public class WindscreenState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.WINDSCREEN;
+    public static final Integer IDENTIFIER = Identifier.WINDSCREEN;
 
     public static final byte IDENTIFIER_WIPERS = 0x01;
     public static final byte IDENTIFIER_WIPERS_INTENSITY = 0x02;

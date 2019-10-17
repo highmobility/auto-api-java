@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.Position;
  * The trunk state
  */
 public class TrunkState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.TRUNK;
+    public static final Integer IDENTIFIER = Identifier.TRUNK;
 
     public static final byte IDENTIFIER_LOCK = 0x01;
     public static final byte IDENTIFIER_POSITION = 0x02;

@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific race properties.
  */
 public class GetRaceProperties extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.RACE;
+    public static final int IDENTIFIER = Identifier.RACE;
 
     Bytes propertyIdentifiers;
 

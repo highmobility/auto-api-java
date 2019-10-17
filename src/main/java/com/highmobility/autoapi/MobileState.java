@@ -26,7 +26,7 @@ import com.highmobility.autoapi.value.ConnectionState;
  * The mobile state
  */
 public class MobileState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.MOBILE;
+    public static final Integer IDENTIFIER = Identifier.MOBILE;
 
     public static final byte IDENTIFIER_CONNECTION = 0x01;
 

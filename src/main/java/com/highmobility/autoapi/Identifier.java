@@ -22,102 +22,76 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 
-import java.util.Arrays;
+public class Identifier {
+    public static final int FAILURE_MESSAGE = 2;
+    public static final int FIRMWARE_VERSION = 3;
+    public static final int CAPABILITIES = 16;
+    public static final int VEHICLE_STATUS = 17;
+    public static final int HISTORICAL = 18;
+    public static final int MULTI_COMMAND = 19;
+    public static final int DOORS = 32;
+    public static final int TRUNK = 33;
+    public static final int WAKE_UP = 34;
+    public static final int CHARGING = 35;
+    public static final int CLIMATE = 36;
+    public static final int ROOFTOP_CONTROL = 37;
+    public static final int HONK_HORN_FLASH_LIGHTS = 38;
+    public static final int REMOTE_CONTROL = 39;
+    public static final int VALET_MODE = 40;
+    public static final int HEART_RATE = 41;
 
-/**
- * Used for identifying known auto api categories
- */
-public enum Identifier {
-    FAILURE_MESSAGE(new byte[]{0x00, (byte) 0x02}),
-    CAPABILITIES(new byte[]{0x00, (byte) 0x10}),
-    VEHICLE_STATUS(new byte[]{0x00, (byte) 0x11}),
-    HISTORICAL(new byte[]{0x00, (byte) 0x12}),
-    MULTI_COMMAND(new byte[]{0x00, (byte) 0x13}),
-    DOORS(new byte[]{0x00, (byte) 0x20}),
-    TRUNK(new byte[]{0x00, (byte) 0x21}),
-    WAKE_UP(new byte[]{0x00, (byte) 0x22}),
-    CHARGING(new byte[]{0x00, (byte) 0x23}),
-    CLIMATE(new byte[]{0x00, (byte) 0x24}),
-    ROOFTOP_CONTROL(new byte[]{0x00, (byte) 0x25}),
-    HONK_HORN_FLASH_LIGHTS(new byte[]{0x00, (byte) 0x26}),
-    REMOTE_CONTROL(new byte[]{0x00, (byte) 0x27}),
-    VALET_MODE(new byte[]{0x00, (byte) 0x28}),
-    HEART_RATE(new byte[]{0x00, (byte) 0x29}),
-    VEHICLE_LOCATION(new byte[]{0x00, (byte) 0x30}),
-    VEHICLE_TIME(new byte[]{0x00, (byte) 0x50}),
-    NAVI_DESTINATION(new byte[]{0x00, (byte) 0x31}),
-    DIAGNOSTICS(new byte[]{0x00, (byte) 0x33}),
-    MAINTENANCE(new byte[]{0x00, (byte) 0x34}),
-    IGNITION(new byte[]{0x00, (byte) 0x35}),
-    LIGHTS(new byte[]{0x00, (byte) 0x36}),
-    MESSAGING(new byte[]{0x00, (byte) 0x37}),
-    NOTIFICATIONS(new byte[]{0x00, (byte) 0x38}),
-    WINDOWS(new byte[]{0x00, (byte) 0x45}),
-    WINDSCREEN(new byte[]{0x00, (byte) 0x42}),
-    VIDEO_HANDOVER(new byte[]{0x00, (byte) 0x43}),
-    BROWSER(new byte[]{0x00, (byte) 0x49}),
-    GRAPHICS(new byte[]{0x00, (byte) 0x51}),
-    TEXT_INPUT(new byte[]{0x00, (byte) 0x44}),
-    FUELING(new byte[]{0x00, (byte) 0x40}),
-    DRIVER_FATIGUE(new byte[]{0x00, (byte) 0x41}),
-    THEFT_ALARM(new byte[]{0x00, (byte) 0x46}),
-    PARKING_TICKET(new byte[]{0x00, (byte) 0x47}),
-    KEYFOB_POSITION(new byte[]{0x00, (byte) 0x48}),
-    FIRMWARE_VERSION(new byte[]{0x00, (byte) 0x03}),
-    SEATS(new byte[]{0x00, (byte) 0x56}),
-    RACE(new byte[]{0x00, (byte) 0x57}),
-    OFFROAD(new byte[]{0x00, (byte) 0x52}),
-    PARKING_BRAKE(new byte[]{0x00, (byte) 0x58}),
-    LIGHT_CONDITIONS(new byte[]{0x00, (byte) 0x54}),
-    WEATHER_CONDITIONS(new byte[]{0x00, (byte) 0x55}),
-    CHASSIS_SETTINGS(new byte[]{0x00, (byte) 0x53}),
-    WI_FI(new byte[]{0x00, (byte) 0x59}),
-    HOME_CHARGER(new byte[]{0x00, (byte) 0x60}),
-    DASHBOARD_LIGHTS(new byte[]{0x00, (byte) 0x61}),
-    CRUISE_CONTROL(new byte[]{0x00, (byte) 0x62}),
-    ENGINE_START_STOP(new byte[]{0x00, (byte) 0x63}),
-    TACHOGRAPH(new byte[]{0x00, (byte) 0x64}),
-    POWER_TAKEOFF(new byte[]{0x00, (byte) 0x65}),
-    MOBILE(new byte[]{0x00, (byte) 0x66}),
-    HOOD(new byte[]{0x00, (byte) 0x67}),
-    USAGE(new byte[]{0x00, (byte) 0x68});
+    public static final int VEHICLE_LOCATION = 48;
+    public static final int NAVI_DESTINATION = 49;
 
-    public static Identifier fromBytes(byte[] bytes) {
+    public static final int DIAGNOSTICS = 51;
+    public static final int MAINTENANCE = 52;
+    public static final int IGNITION = 53;
+    public static final int LIGHTS = 54;
+    public static final int MESSAGING = 55;
+    public static final int NOTIFICATIONS = 56;
+
+    public static final int FUELING = 64;
+    public static final int DRIVER_FATIGUE = 65;
+    public static final int WINDSCREEN = 66;
+    public static final int VIDEO_HANDOVER = 67;
+    public static final int TEXT_INPUT = 68;
+    public static final int WINDOWS = 69;
+
+    public static final int THEFT_ALARM = 70;
+    public static final int PARKING_TICKET = 71;
+    public static final int KEYFOB_POSITION = 72;
+    public static final int BROWSER = 73;
+
+    public static final int VEHICLE_TIME = 80;
+    public static final int GRAPHICS = 81;
+    public static final int OFFROAD = 82;
+    public static final int CHASSIS_SETTINGS = 83;
+    public static final int LIGHT_CONDITIONS = 84;
+    public static final int WEATHER_CONDITIONS = 85;
+    public static final int SEATS = 86;
+    public static final int RACE = 87;
+    public static final int PARKING_BRAKE = 88;
+    public static final int WI_FI = 89;
+
+    public static final int HOME_CHARGER = 96;
+    public static final int DASHBOARD_LIGHTS = 97;
+    public static final int CRUISE_CONTROL = 98;
+    public static final int ENGINE_START_STOP = 99;
+    public static final int TACHOGRAPH = 100;
+    public static final int POWER_TAKEOFF = 101;
+    public static final int MOBILE = 102;
+    public static final int HOOD = 103;
+    public static final int USAGE = 104;
+
+    public static int fromBytes(byte first, byte second) {
+        return ((first & 0xff) << 8) | (second & 0xff);
+    }
+
+    public static int fromBytes(byte[] bytes) {
         return fromBytes(bytes[0], bytes[1]);
     }
 
-    public static Identifier fromBytes(byte firstByte, byte secondByte) {
-        Identifier[] allValues = Identifier.values();
-
-        for (int i = 0; i < allValues.length; i++) {
-            Identifier identifier = allValues[i];
-            if (is(identifier, firstByte, secondByte)) {
-                return identifier;
-            }
-        }
-
-        return null;
-    }
-
-    Identifier(byte[] identifier) {
-        this.identifier = identifier;
-    }
-
-    private byte[] identifier;
-
-    public byte[] getBytes() {
-        return identifier;
-    }
-
-    public Integer asInt() {
-        return Property.getSignedInt(getBytes());
-    }
-
-    public static boolean is(Identifier feature, byte firstByte, byte secondByte) {
-        return feature.getBytes()[0] == firstByte && feature.getBytes()[1] == secondByte;
-    }
-
-    public boolean equals(Integer intValue) {
-        return Arrays.equals(getBytes(), Property.intToBytes(intValue, 2));
+    public static byte[] toBytes(Integer identifier) {
+        return Property.intToBytes(identifier, 2);
     }
 }

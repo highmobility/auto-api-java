@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific home charger properties.
  */
 public class GetHomeChargerProperties extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
+    public static final int IDENTIFIER = Identifier.HOME_CHARGER;
 
     Bytes propertyIdentifiers;
 

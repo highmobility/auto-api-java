@@ -34,7 +34,7 @@ import java.util.List;
  * The race state
  */
 public class RaceState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.RACE;
+    public static final Integer IDENTIFIER = Identifier.RACE;
 
     public static final byte IDENTIFIER_ACCELERATIONS = 0x01;
     public static final byte IDENTIFIER_UNDERSTEERING = 0x02;

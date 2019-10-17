@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all hood properties.
  */
 public class GetHoodState extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HOOD;
+    public static final Integer IDENTIFIER = Identifier.HOOD;
 
     public GetHoodState() {
         super(IDENTIFIER);

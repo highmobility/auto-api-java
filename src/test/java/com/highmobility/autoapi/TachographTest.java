@@ -52,9 +52,9 @@ public class TachographTest extends BaseTest {
     @Test public void build() {
         TachographState.Builder builder = new TachographState.Builder();
 
-        builder.addDriversWorkingState(new Property(new DriverWorkingState(1,
+        builder.addDriverWorkingState(new Property(new DriverWorkingState(1,
                 DriverWorkingState.WorkingState.WORKING)));
-        builder.addDriversWorkingState(new Property(new DriverWorkingState(2,
+        builder.addDriverWorkingState(new Property(new DriverWorkingState(2,
                 DriverWorkingState.WorkingState.RESTING)));
 
         builder.addDriversTimeState(new Property(new DriverTimeState(1,
@@ -62,9 +62,9 @@ public class TachographTest extends BaseTest {
         builder.addDriversTimeState(new Property(new DriverTimeState(2,
                 DriverTimeState.TimeState.SIXTEEN_REACHED)));
 
-        builder.addDriversCardsPresen(new Property(new DriverCardPresent(1,
+        builder.addDriversCardPresent(new Property(new DriverCardPresent(1,
                 DriverCardPresent.CardPresent.PRESENT)));
-        builder.addDriversCardsPresen(new Property(new DriverCardPresent(2,
+        builder.addDriversCardPresent(new Property(new DriverCardPresent(2,
                 DriverCardPresent.CardPresent.PRESENT)));
 
         builder.setVehicleMotion(new Property(Detected.DETECTED));

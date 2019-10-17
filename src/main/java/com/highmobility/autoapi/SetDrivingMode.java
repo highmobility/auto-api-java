@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.DrivingMode;
  * Set driving mode
  */
 public class SetDrivingMode extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CHASSIS_SETTINGS;
+    public static final Integer IDENTIFIER = Identifier.CHASSIS_SETTINGS;
 
     public static final byte IDENTIFIER_DRIVING_MODE = 0x01;
 

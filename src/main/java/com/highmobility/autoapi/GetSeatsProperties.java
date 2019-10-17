@@ -25,7 +25,7 @@ import com.highmobility.value.Bytes;
  * Get specific seats properties.
  */
 public class GetSeatsProperties extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.SEATS;
+    public static final int IDENTIFIER = Identifier.SEATS;
 
     Bytes propertyIdentifiers;
 

@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * Set navi destination
  */
 public class SetNaviDestination extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.NAVI_DESTINATION;
+    public static final Integer IDENTIFIER = Identifier.NAVI_DESTINATION;
 
     public static final byte IDENTIFIER_COORDINATES = 0x01;
     public static final byte IDENTIFIER_DESTINATION_NAME = 0x02;

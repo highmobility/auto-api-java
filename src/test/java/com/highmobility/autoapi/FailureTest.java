@@ -24,7 +24,7 @@ public class FailureTest extends BaseTest {
     }
 
     private void testState(FailureMessageState state) {
-        assertTrue(state.getFailedMessageType().getValue() == Type.SET.getByte());
+        assertTrue(state.getFailedMessageType().getValue() == Type.SET);
         assertTrue(state.getFailureReason().getValue() == FailureMessageState.FailureReason.UNAUTHORISED);
         assertTrue(state.getFailureDescription().getValue().equals("Try again"));
         assertTrue(state.getFailedPropertyIDs().getValue().equals("01"));
@@ -33,9 +33,9 @@ public class FailureTest extends BaseTest {
 
     @Test public void build() {
         FailureMessageState.Builder builder = new FailureMessageState.Builder();
-        builder.setFailedMessageID(new Property(Identifier.TRUNK.asInt()));
+        builder.setFailedMessageID(new Property(Identifier.TRUNK));
 
-        builder.setFailedMessageType(new Property(Type.SET.asInt()));
+        builder.setFailedMessageType(new Property(Type.SET));
 
         builder.setFailureReason(new Property(FailureMessageState.FailureReason.UNAUTHORISED));
         builder.setFailureDescription(new Property("Try again"));

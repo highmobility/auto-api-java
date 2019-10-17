@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.ActiveState;
  * Start stop ionising
  */
 public class StartStopIonising extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
+    public static final Integer IDENTIFIER = Identifier.CLIMATE;
 
     public static final byte IDENTIFIER_IONISING_STATE = 0x08;
 

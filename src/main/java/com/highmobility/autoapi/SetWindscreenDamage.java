@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * Set windscreen damage
  */
 public class SetWindscreenDamage extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.WINDSCREEN;
+    public static final Integer IDENTIFIER = Identifier.WINDSCREEN;
 
     public static final byte IDENTIFIER_WINDSCREEN_DAMAGE = 0x03;
     public static final byte IDENTIFIER_WINDSCREEN_DAMAGE_ZONE = 0x05;

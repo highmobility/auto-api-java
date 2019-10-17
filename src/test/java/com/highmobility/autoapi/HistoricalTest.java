@@ -64,7 +64,7 @@ public class HistoricalTest extends BaseTest {
         );
 
         Command command = new RequestStates(
-                Identifier.DOORS.asInt(),
+                Identifier.DOORS,
                 TestUtils.getCalendar("2018-01-10T16:32:05"),
                 TestUtils.getCalendar("2018-01-10T18:30:00")
         );

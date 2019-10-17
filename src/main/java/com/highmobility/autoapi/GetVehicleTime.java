@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all vehicle time properties.
  */
 public class GetVehicleTime extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.VEHICLE_TIME;
+    public static final int IDENTIFIER = Identifier.VEHICLE_TIME;
 
     public GetVehicleTime() {
         super(IDENTIFIER);

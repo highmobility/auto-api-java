@@ -24,7 +24,7 @@ package com.highmobility.autoapi;
  * Get all maintenance properties.
  */
 public class GetMaintenanceState extends GetCommand {
-    public static final Identifier IDENTIFIER = Identifier.MAINTENANCE;
+    public static final Integer IDENTIFIER = Identifier.MAINTENANCE;
 
     public GetMaintenanceState() {
         super(IDENTIFIER);

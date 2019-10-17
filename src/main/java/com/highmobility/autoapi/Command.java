@@ -54,15 +54,15 @@ public class Command extends Bytes {
     public static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
     public static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
 
-    Type type;
-    Identifier identifier;
+    Integer type;
+    Integer identifier;
 
     Property[] properties;
     Bytes nonce;
     Bytes signature;
     Calendar timestamp;
 
-    public Command(Identifier identifier, int size) {
+    public Command(Integer identifier, int size) {
         super(size);
         this.identifier = identifier;
     }
@@ -135,17 +135,16 @@ public class Command extends Bytes {
     /**
      * @return The identifier of the command.
      */
-    public Identifier getIdentifier() {
+    public Integer getIdentifier() {
         return identifier;
     }
 
     /**
      * @return The type of the command.
      */
-    public Type getType() {
+    public Integer getType() {
         return type;
     }
-
 
     Command(Bytes bytes) {
         this(bytes.getByteArray());
@@ -176,7 +175,7 @@ public class Command extends Bytes {
         findUniversalProperties(identifier, type, builder.toArray(new Property[0]));
     }
 
-    Command(Identifier identifier, Type type, Property[] properties) {
+    Command(Integer identifier, Integer type, Property[] properties) {
         this.type = type;
         this.identifier = identifier;
         // here there are no timestamps. This constructor is called from setter commands only.
@@ -200,12 +199,12 @@ public class Command extends Bytes {
         }
     }
 
-    protected void findUniversalProperties(Identifier identifier, Type type,
+    protected void findUniversalProperties(Integer identifier, Integer type,
                                            Property[] properties) {
         findUniversalProperties(identifier, type, properties, false);
     }
 
-    protected void findUniversalProperties(Identifier identifier, Type type, Property[] properties,
+    protected void findUniversalProperties(Integer identifier, Integer type, Property[] properties,
                                            boolean createBytes) {
         if (propertiesExpected() && (properties == null || properties.length == 0))
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
@@ -213,8 +212,9 @@ public class Command extends Bytes {
         this.properties = properties;
 
         // if from builder, bytes need to be built
+        byte[] identifierBytes = Identifier.toBytes(identifier);
         if (createBytes) bytes = new byte[]{
-                identifier.getBytes()[0], identifier.getBytes()[1], type.getByte()
+                identifierBytes[0], identifierBytes[1], Type.toByte(type)
         };
 
         for (int i = 0; i < properties.length; i++) {

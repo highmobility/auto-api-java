@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.ActiveState;
  * Start stop defogging
  */
 public class StartStopDefogging extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.CLIMATE;
+    public static final Integer IDENTIFIER = Identifier.CLIMATE;
 
     public static final byte IDENTIFIER_DEFOGGING_STATE = 0x06;
 

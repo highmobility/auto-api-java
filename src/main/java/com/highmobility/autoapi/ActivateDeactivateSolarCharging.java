@@ -27,7 +27,7 @@ import com.highmobility.autoapi.value.ActiveState;
  * Activate deactivate solar charging
  */
 public class ActivateDeactivateSolarCharging extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.HOME_CHARGER;
+    public static final int IDENTIFIER = Identifier.HOME_CHARGER;
 
     public static final byte IDENTIFIER_SOLAR_CHARGING = 0x05;
 

@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * Control gas flap
  */
 public class ControlGasFlap extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.FUELING;
+    public static final Integer IDENTIFIER = Identifier.FUELING;
 
     public static final byte IDENTIFIER_GAS_FLAP_LOCK = 0x02;
     public static final byte IDENTIFIER_GAS_FLAP_POSITION = 0x03;

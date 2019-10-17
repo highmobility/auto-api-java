@@ -35,7 +35,7 @@ import java.util.List;
  * The diagnostics state
  */
 public class DiagnosticsState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.DIAGNOSTICS;
+    public static final Integer IDENTIFIER = Identifier.DIAGNOSTICS;
 
     public static final byte IDENTIFIER_MILEAGE = 0x01;
     public static final byte IDENTIFIER_ENGINE_OIL_TEMPERATURE = 0x02;

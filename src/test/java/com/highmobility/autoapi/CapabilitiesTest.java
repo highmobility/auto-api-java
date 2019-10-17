@@ -52,9 +52,9 @@ public class CapabilitiesTest extends BaseTest {
     @Test public void build() {
         CapabilitiesState.Builder builder = new CapabilitiesState.Builder();
 
-        builder.addCapabilitie(new Property(new SupportedCapability(Identifier.DOORS.asInt(),
+        builder.addCapability(new Property(new SupportedCapability(Identifier.DOORS,
                 new Bytes("0203040506"))));
-        builder.addCapabilitie(new Property(new SupportedCapability(Identifier.CHARGING.asInt(),
+        builder.addCapability(new Property(new SupportedCapability(Identifier.CHARGING,
                 new Bytes("020811"))));
 
         CapabilitiesState state = builder.build();

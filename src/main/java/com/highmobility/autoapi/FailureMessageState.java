@@ -28,7 +28,7 @@ import com.highmobility.value.Bytes;
  * The failure message state
  */
 public class FailureMessageState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.FAILURE_MESSAGE;
+    public static final int IDENTIFIER = Identifier.FAILURE_MESSAGE;
 
     public static final byte IDENTIFIER_FAILED_MESSAGE_ID = 0x01;
     public static final byte IDENTIFIER_FAILED_MESSAGE_TYPE = 0x02;
@@ -104,9 +104,9 @@ public class FailureMessageState extends SetCommand {
      * @param type       The command type
      * @return Whether the command failed.
      */
-    public boolean getCommandFailed(Identifier identifier, Type type) {
-        if (identifier.asInt() == getFailedMessageID().getValue() &&
-                type.asInt() == getFailedMessageType().getValue()) {
+    public boolean getCommandFailed(Integer identifier, Integer type) {
+        if (identifier == getFailedMessageID().getValue() &&
+                type == getFailedMessageType().getValue()) {
             return true;
         }
 

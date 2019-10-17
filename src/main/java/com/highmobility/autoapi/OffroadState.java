@@ -26,7 +26,7 @@ import com.highmobility.autoapi.property.PropertyInteger;
  * The offroad state
  */
 public class OffroadState extends SetCommand {
-    public static final Identifier IDENTIFIER = Identifier.OFFROAD;
+    public static final int IDENTIFIER = Identifier.OFFROAD;
 
     public static final byte IDENTIFIER_ROUTE_INCLINE = 0x01;
     public static final byte IDENTIFIER_WHEEL_SUSPENSION = 0x02;
