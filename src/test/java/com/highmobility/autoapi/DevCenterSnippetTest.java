@@ -193,7 +193,6 @@ public class DevCenterSnippetTest {
                 (Location.FRONT_LEFT, LockState.LOCKED))).build();
 
         Integer id = DoorsState.IDENTIFIER;
-        // TODO: update bleCommandqueue
         Integer type = Type.SET;
 
         // error ctor
