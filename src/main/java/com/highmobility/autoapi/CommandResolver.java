@@ -955,7 +955,19 @@ public class CommandResolver {
             return _runtime;
     }
 
-    enum RunTime {
+    /**
+     * Override the runtime.
+     * <p>
+     * Some commands are disabled in Android/Desktop environments. Use this method to override the runtime.
+     * </p>
+     *
+     * @param runtime The runtime.
+     */
+    public static void setRuntime(RunTime runtime) {
+        _runtime = runtime;
+    }
+
+    public enum RunTime {
         ANDROID, JAVA
     }
 
