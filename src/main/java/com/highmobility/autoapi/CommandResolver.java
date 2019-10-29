@@ -23,7 +23,61 @@ package com.highmobility.autoapi;
 import com.highmobility.utils.Base64;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
-import static com.highmobility.autoapi.Identifier.*;
+
+import static com.highmobility.autoapi.Identifier.BROWSER;
+import static com.highmobility.autoapi.Identifier.CAPABILITIES;
+import static com.highmobility.autoapi.Identifier.CHARGING;
+import static com.highmobility.autoapi.Identifier.CHASSIS_SETTINGS;
+import static com.highmobility.autoapi.Identifier.CLIMATE;
+import static com.highmobility.autoapi.Identifier.CRUISE_CONTROL;
+import static com.highmobility.autoapi.Identifier.DASHBOARD_LIGHTS;
+import static com.highmobility.autoapi.Identifier.DIAGNOSTICS;
+import static com.highmobility.autoapi.Identifier.DOORS;
+import static com.highmobility.autoapi.Identifier.DRIVER_FATIGUE;
+import static com.highmobility.autoapi.Identifier.ENGINE_START_STOP;
+import static com.highmobility.autoapi.Identifier.FAILURE_MESSAGE;
+import static com.highmobility.autoapi.Identifier.FIRMWARE_VERSION;
+import static com.highmobility.autoapi.Identifier.FUELING;
+import static com.highmobility.autoapi.Identifier.GRAPHICS;
+import static com.highmobility.autoapi.Identifier.HEART_RATE;
+import static com.highmobility.autoapi.Identifier.HISTORICAL;
+import static com.highmobility.autoapi.Identifier.HOME_CHARGER;
+import static com.highmobility.autoapi.Identifier.HONK_HORN_FLASH_LIGHTS;
+import static com.highmobility.autoapi.Identifier.HOOD;
+import static com.highmobility.autoapi.Identifier.IGNITION;
+import static com.highmobility.autoapi.Identifier.KEYFOB_POSITION;
+import static com.highmobility.autoapi.Identifier.LIGHTS;
+import static com.highmobility.autoapi.Identifier.LIGHT_CONDITIONS;
+import static com.highmobility.autoapi.Identifier.MAINTENANCE;
+import static com.highmobility.autoapi.Identifier.MESSAGING;
+import static com.highmobility.autoapi.Identifier.MOBILE;
+import static com.highmobility.autoapi.Identifier.MULTI_COMMAND;
+import static com.highmobility.autoapi.Identifier.NAVI_DESTINATION;
+import static com.highmobility.autoapi.Identifier.NOTIFICATIONS;
+import static com.highmobility.autoapi.Identifier.OFFROAD;
+import static com.highmobility.autoapi.Identifier.PARKING_BRAKE;
+import static com.highmobility.autoapi.Identifier.PARKING_TICKET;
+import static com.highmobility.autoapi.Identifier.POWER_TAKEOFF;
+import static com.highmobility.autoapi.Identifier.RACE;
+import static com.highmobility.autoapi.Identifier.REMOTE_CONTROL;
+import static com.highmobility.autoapi.Identifier.ROOFTOP_CONTROL;
+import static com.highmobility.autoapi.Identifier.SEATS;
+import static com.highmobility.autoapi.Identifier.TACHOGRAPH;
+import static com.highmobility.autoapi.Identifier.TEXT_INPUT;
+import static com.highmobility.autoapi.Identifier.THEFT_ALARM;
+import static com.highmobility.autoapi.Identifier.TRUNK;
+import static com.highmobility.autoapi.Identifier.USAGE;
+import static com.highmobility.autoapi.Identifier.VALET_MODE;
+import static com.highmobility.autoapi.Identifier.VEHICLE_LOCATION;
+import static com.highmobility.autoapi.Identifier.VEHICLE_STATUS;
+import static com.highmobility.autoapi.Identifier.VEHICLE_TIME;
+import static com.highmobility.autoapi.Identifier.VIDEO_HANDOVER;
+import static com.highmobility.autoapi.Identifier.WAKE_UP;
+import static com.highmobility.autoapi.Identifier.WEATHER_CONDITIONS;
+import static com.highmobility.autoapi.Identifier.WINDOWS;
+import static com.highmobility.autoapi.Identifier.WINDSCREEN;
+import static com.highmobility.autoapi.Identifier.WI_FI;
+
 public class CommandResolver {
     /**
      * Try to parse the command bytes to a more specific Command subclass. Check the returned
@@ -730,7 +784,8 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new FailureMessageState(bytes);
                         }
-                    }    break;
+                    }
+                    break;
                 }
                 case WINDSCREEN: {
                     if (type == Type.SET) {
@@ -948,18 +1003,23 @@ public class CommandResolver {
 
     static RunTime _runtime;
 
-    static RunTime getRuntime() {
+    /**
+     * Return the runtime. AutoAPI acts differently in Java and Android runtimes.
+     *
+     * @return The runtime.
+     */
+    public static RunTime getRuntime() {
         if (_runtime == null)
             _runtime = (System.getProperty("java.runtime.name") == "Android Runtime") ?
-                RunTime.ANDROID : RunTime.JAVA;
-            return _runtime;
+                    RunTime.ANDROID : RunTime.JAVA;
+        return _runtime;
     }
 
     /**
      * Override the runtime.
      * <p>
-     * Some commands are disabled in Android/Desktop environments. Use this method to override the runtime.
-     * </p>
+     * Runtime is set automatically set according to System property. Use this method to override
+     * the runtime.
      *
      * @param runtime The runtime.
      */
@@ -970,7 +1030,6 @@ public class CommandResolver {
     public enum RunTime {
         ANDROID, JAVA
     }
-
 
     /**
      * The purpose is to loop the possible setters.

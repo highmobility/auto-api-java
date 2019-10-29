@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FailureTest extends BaseTest {
-    // TODO: 25/09/2019
     Bytes bytes = new Bytes("000201" +
             "0100050100020021" +
             "02000401000101" + // set
