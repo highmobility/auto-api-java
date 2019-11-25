@@ -44,8 +44,8 @@ public class GetVehicleStatusProperties extends GetCommand {
         this.propertyIdentifiers = propertyIdentifiers;
     }
 
-    GetVehicleStatusProperties(byte[] bytes) {
+    GetVehicleStatusProperties(byte[] bytes) throws CommandParseException {
         super(bytes);
-        propertyIdentifiers = getRange(3, getLength());
+        propertyIdentifiers = getRange(5, getLength());
     }
 }

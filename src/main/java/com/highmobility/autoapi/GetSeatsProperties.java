@@ -44,8 +44,8 @@ public class GetSeatsProperties extends GetCommand {
         this.propertyIdentifiers = propertyIdentifiers;
     }
 
-    GetSeatsProperties(byte[] bytes) {
+    GetSeatsProperties(byte[] bytes) throws CommandParseException {
         super(bytes);
-        propertyIdentifiers = getRange(3, getLength());
+        propertyIdentifiers = getRange(5, getLength());
     }
 }

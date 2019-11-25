@@ -44,8 +44,8 @@ public class GetNaviDestinationProperties extends GetCommand {
         this.propertyIdentifiers = propertyIdentifiers;
     }
 
-    GetNaviDestinationProperties(byte[] bytes) {
+    GetNaviDestinationProperties(byte[] bytes) throws CommandParseException {
         super(bytes);
-        propertyIdentifiers = getRange(3, getLength());
+        propertyIdentifiers = getRange(5, getLength());
     }
 }

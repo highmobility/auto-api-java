@@ -30,7 +30,7 @@ public class GetDashboardLights extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetDashboardLights(byte[] bytes) {
+    GetDashboardLights(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

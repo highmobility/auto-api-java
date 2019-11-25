@@ -30,7 +30,7 @@ public class GetGasFlapState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetGasFlapState(byte[] bytes) {
+    GetGasFlapState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

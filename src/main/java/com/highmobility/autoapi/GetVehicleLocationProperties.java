@@ -44,8 +44,8 @@ public class GetVehicleLocationProperties extends GetCommand {
         this.propertyIdentifiers = propertyIdentifiers;
     }
 
-    GetVehicleLocationProperties(byte[] bytes) {
+    GetVehicleLocationProperties(byte[] bytes) throws CommandParseException {
         super(bytes);
-        propertyIdentifiers = getRange(3, getLength());
+        propertyIdentifiers = getRange(5, getLength());
     }
 }

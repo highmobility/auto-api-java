@@ -44,8 +44,8 @@ public class GetTachographProperties extends GetCommand {
         this.propertyIdentifiers = propertyIdentifiers;
     }
 
-    GetTachographProperties(byte[] bytes) {
+    GetTachographProperties(byte[] bytes) throws CommandParseException {
         super(bytes);
-        propertyIdentifiers = getRange(3, getLength());
+        propertyIdentifiers = getRange(5, getLength());
     }
 }

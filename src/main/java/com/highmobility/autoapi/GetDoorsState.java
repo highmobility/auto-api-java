@@ -30,7 +30,7 @@ public class GetDoorsState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetDoorsState(byte[] bytes) {
+    GetDoorsState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

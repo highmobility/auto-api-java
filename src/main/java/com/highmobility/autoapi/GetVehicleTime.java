@@ -30,7 +30,7 @@ public class GetVehicleTime extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetVehicleTime(byte[] bytes) {
+    GetVehicleTime(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

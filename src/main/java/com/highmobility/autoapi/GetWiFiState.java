@@ -30,7 +30,7 @@ public class GetWiFiState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetWiFiState(byte[] bytes) {
+    GetWiFiState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

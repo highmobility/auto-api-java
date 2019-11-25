@@ -44,8 +44,8 @@ public class GetLightConditionsProperties extends GetCommand {
         this.propertyIdentifiers = propertyIdentifiers;
     }
 
-    GetLightConditionsProperties(byte[] bytes) {
+    GetLightConditionsProperties(byte[] bytes) throws CommandParseException {
         super(bytes);
-        propertyIdentifiers = getRange(3, getLength());
+        propertyIdentifiers = getRange(5, getLength());
     }
 }

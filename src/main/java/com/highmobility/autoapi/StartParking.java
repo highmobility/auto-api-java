@@ -76,7 +76,7 @@ public class StartParking extends SetCommand {
      * Start parking
      *
      * @param operatorName Operator name
-     * @param operatorTicketID Operator Ticket ID
+     * @param operatorTicketID Operator ticket ID
      * @param ticketStartTime Milliseconds since UNIX Epoch time
      * @param ticketEndTime Milliseconds since UNIX Epoch time
      */

@@ -44,8 +44,8 @@ public class GetFirmwareVersionProperties extends GetCommand {
         this.propertyIdentifiers = propertyIdentifiers;
     }
 
-    GetFirmwareVersionProperties(byte[] bytes) {
+    GetFirmwareVersionProperties(byte[] bytes) throws CommandParseException {
         super(bytes);
-        propertyIdentifiers = getRange(3, getLength());
+        propertyIdentifiers = getRange(5, getLength());
     }
 }

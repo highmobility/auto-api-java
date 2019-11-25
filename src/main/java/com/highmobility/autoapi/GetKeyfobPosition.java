@@ -30,7 +30,7 @@ public class GetKeyfobPosition extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetKeyfobPosition(byte[] bytes) {
+    GetKeyfobPosition(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

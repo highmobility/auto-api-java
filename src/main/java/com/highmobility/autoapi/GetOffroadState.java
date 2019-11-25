@@ -30,7 +30,7 @@ public class GetOffroadState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetOffroadState(byte[] bytes) {
+    GetOffroadState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

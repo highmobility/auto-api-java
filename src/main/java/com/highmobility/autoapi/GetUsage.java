@@ -30,7 +30,7 @@ public class GetUsage extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetUsage(byte[] bytes) {
+    GetUsage(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

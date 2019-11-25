@@ -44,8 +44,8 @@ public class GetPowerTakeoffProperties extends GetCommand {
         this.propertyIdentifiers = propertyIdentifiers;
     }
 
-    GetPowerTakeoffProperties(byte[] bytes) {
+    GetPowerTakeoffProperties(byte[] bytes) throws CommandParseException {
         super(bytes);
-        propertyIdentifiers = getRange(3, getLength());
+        propertyIdentifiers = getRange(5, getLength());
     }
 }

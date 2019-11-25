@@ -30,7 +30,7 @@ public class GetParkingBrakeState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetParkingBrakeState(byte[] bytes) {
+    GetParkingBrakeState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

@@ -30,7 +30,7 @@ public class GetDiagnosticsState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetDiagnosticsState(byte[] bytes) {
+    GetDiagnosticsState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

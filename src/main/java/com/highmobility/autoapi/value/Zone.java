@@ -32,14 +32,14 @@ public class Zone extends PropertyValueObject {
     Integer vertical;
 
     /**
-     * @return The horizontal.
+     * @return Horizontal component of the matrix.
      */
     public Integer getHorizontal() {
         return horizontal;
     }
 
     /**
-     * @return The vertical.
+     * @return Vertical component of the matrix.
      */
     public Integer getVertical() {
         return vertical;

@@ -30,7 +30,7 @@ public class GetControlState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetControlState(byte[] bytes) {
+    GetControlState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

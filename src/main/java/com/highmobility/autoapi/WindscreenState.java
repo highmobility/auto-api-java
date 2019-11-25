@@ -30,7 +30,7 @@ import java.util.Calendar;
 public class WindscreenState extends SetCommand {
     public static final Integer IDENTIFIER = Identifier.WINDSCREEN;
 
-    public static final byte IDENTIFIER_WIPERS = 0x01;
+    public static final byte IDENTIFIER_WIPERS_STATUS = 0x01;
     public static final byte IDENTIFIER_WIPERS_INTENSITY = 0x02;
     public static final byte IDENTIFIER_WINDSCREEN_DAMAGE = 0x03;
     public static final byte IDENTIFIER_WINDSCREEN_ZONE_MATRIX = 0x04;
@@ -39,7 +39,7 @@ public class WindscreenState extends SetCommand {
     public static final byte IDENTIFIER_WINDSCREEN_DAMAGE_CONFIDENCE = 0x07;
     public static final byte IDENTIFIER_WINDSCREEN_DAMAGE_DETECTION_TIME = 0x08;
 
-    Property<Wipers> wipers = new Property(Wipers.class, IDENTIFIER_WIPERS);
+    Property<WipersStatus> wipersStatus = new Property(WipersStatus.class, IDENTIFIER_WIPERS_STATUS);
     Property<WipersIntensity> wipersIntensity = new Property(WipersIntensity.class, IDENTIFIER_WIPERS_INTENSITY);
     Property<WindscreenDamage> windscreenDamage = new Property(WindscreenDamage.class, IDENTIFIER_WINDSCREEN_DAMAGE);
     Property<Zone> windscreenZoneMatrix = new Property(Zone.class, IDENTIFIER_WINDSCREEN_ZONE_MATRIX);
@@ -49,10 +49,10 @@ public class WindscreenState extends SetCommand {
     Property<Calendar> windscreenDamageDetectionTime = new Property(Calendar.class, IDENTIFIER_WINDSCREEN_DAMAGE_DETECTION_TIME);
 
     /**
-     * @return The wipers
+     * @return The wipers status
      */
-    public Property<Wipers> getWipers() {
-        return wipers;
+    public Property<WipersStatus> getWipersStatus() {
+        return wipersStatus;
     }
 
     /**
@@ -109,7 +109,7 @@ public class WindscreenState extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case IDENTIFIER_WIPERS: return wipers.update(p);
+                    case IDENTIFIER_WIPERS_STATUS: return wipersStatus.update(p);
                     case IDENTIFIER_WIPERS_INTENSITY: return wipersIntensity.update(p);
                     case IDENTIFIER_WINDSCREEN_DAMAGE: return windscreenDamage.update(p);
                     case IDENTIFIER_WINDSCREEN_ZONE_MATRIX: return windscreenZoneMatrix.update(p);
@@ -131,7 +131,7 @@ public class WindscreenState extends SetCommand {
     private WindscreenState(Builder builder) {
         super(builder);
 
-        wipers = builder.wipers;
+        wipersStatus = builder.wipersStatus;
         wipersIntensity = builder.wipersIntensity;
         windscreenDamage = builder.windscreenDamage;
         windscreenZoneMatrix = builder.windscreenZoneMatrix;
@@ -142,7 +142,7 @@ public class WindscreenState extends SetCommand {
     }
 
     public static final class Builder extends SetCommand.Builder {
-        private Property<Wipers> wipers;
+        private Property<WipersStatus> wipersStatus;
         private Property<WipersIntensity> wipersIntensity;
         private Property<WindscreenDamage> windscreenDamage;
         private Property<Zone> windscreenZoneMatrix;
@@ -160,12 +160,12 @@ public class WindscreenState extends SetCommand {
         }
 
         /**
-         * @param wipers The wipers
+         * @param wipersStatus The wipers status
          * @return The builder
          */
-        public Builder setWipers(Property<Wipers> wipers) {
-            this.wipers = wipers.setIdentifier(IDENTIFIER_WIPERS);
-            addProperty(this.wipers);
+        public Builder setWipersStatus(Property<WipersStatus> wipersStatus) {
+            this.wipersStatus = wipersStatus.setIdentifier(IDENTIFIER_WIPERS_STATUS);
+            addProperty(this.wipersStatus);
             return this;
         }
         
@@ -240,16 +240,16 @@ public class WindscreenState extends SetCommand {
         }
     }
 
-    public enum Wipers implements ByteEnum {
+    public enum WipersStatus implements ByteEnum {
         INACTIVE((byte) 0x00),
         ACTIVE((byte) 0x01),
         AUTOMATIC((byte) 0x02);
     
-        public static Wipers fromByte(byte byteValue) throws CommandParseException {
-            Wipers[] values = Wipers.values();
+        public static WipersStatus fromByte(byte byteValue) throws CommandParseException {
+            WipersStatus[] values = WipersStatus.values();
     
             for (int i = 0; i < values.length; i++) {
-                Wipers state = values[i];
+                WipersStatus state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
@@ -260,7 +260,7 @@ public class WindscreenState extends SetCommand {
     
         private byte value;
     
-        Wipers(byte value) {
+        WipersStatus(byte value) {
             this.value = value;
         }
     

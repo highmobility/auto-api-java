@@ -30,7 +30,7 @@ public class ActionItem extends PropertyValueObject {
     String name;
 
     /**
-     * @return The id.
+     * @return Action identifier.
      */
     public Integer getId() {
         return id;

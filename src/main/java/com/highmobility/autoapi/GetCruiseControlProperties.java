@@ -44,8 +44,8 @@ public class GetCruiseControlProperties extends GetCommand {
         this.propertyIdentifiers = propertyIdentifiers;
     }
 
-    GetCruiseControlProperties(byte[] bytes) {
+    GetCruiseControlProperties(byte[] bytes) throws CommandParseException {
         super(bytes);
-        propertyIdentifiers = getRange(3, getLength());
+        propertyIdentifiers = getRange(5, getLength());
     }
 }

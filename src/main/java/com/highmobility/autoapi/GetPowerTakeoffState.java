@@ -30,7 +30,7 @@ public class GetPowerTakeoffState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetPowerTakeoffState(byte[] bytes) {
+    GetPowerTakeoffState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

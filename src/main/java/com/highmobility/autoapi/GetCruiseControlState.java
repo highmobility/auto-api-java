@@ -30,7 +30,7 @@ public class GetCruiseControlState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetCruiseControlState(byte[] bytes) {
+    GetCruiseControlState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }
