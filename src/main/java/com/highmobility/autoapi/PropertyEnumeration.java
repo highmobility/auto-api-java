@@ -29,7 +29,7 @@ class PropertyEnumeration implements Enumeration {
     private final byte[] bytes;
 
     public PropertyEnumeration(byte[] bytes) {
-        this(bytes, 3);
+        this(bytes, 5);
     }
 
     public PropertyEnumeration(byte[] bytes, int cursor) {
