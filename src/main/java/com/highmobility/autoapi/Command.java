@@ -167,8 +167,8 @@ public class Command extends Bytes {
     Command(byte[] bytes) {
         super(bytes);
 
-        if (bytes[0] != AUTO_API_IDENTIFIER && bytes[1] != AUTO_API_VERSION)
-            throw new IllegalArgumentException(String.format(INVALID_VERSION_EXCEPTION,
+        if (bytes[0] != AUTO_API_IDENTIFIER || bytes[1] != AUTO_API_VERSION)
+            logger.error(String.format(INVALID_VERSION_EXCEPTION,
                     (int) AUTO_API_VERSION));
 
         setTypeAndBytes(bytes);
