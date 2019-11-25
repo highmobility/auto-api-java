@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class IgnitionTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "003501" +
+            COMMAND_HEADER + "003501" +
                     "01000401000101" +
                     "02000401000101"
     );
@@ -32,13 +32,13 @@ public class IgnitionTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "003500";
+        String waitingForBytes = COMMAND_HEADER + "003500";
         String commandBytes = ByteUtils.hexFromBytes(new GetIgnitionState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void set() {
-        Bytes waitingForBytes = new Bytes("003501" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "003501" +
                 "01000401000101");
         Bytes commandBytes = new TurnIgnitionOnOff(OnOffState.ON);
         assertTrue(waitingForBytes.equals(commandBytes));

@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HomeChargerTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "006001" +
+            COMMAND_HEADER + "006001" +
                     "01000401000102" +
                     "02000401000101" +
                     "03000401000101" +
@@ -104,13 +104,13 @@ public class HomeChargerTest extends BaseTest {
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("006000");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "006000");
         byte[] commandBytes = new GetHomeChargerState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
     }
 
     @Test public void setChargeCurrent() {
-        Bytes waitingForBytes = new Bytes("006001" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006001" +
                         "0E00070100043f000000");
 
         Command commandBytes = new SetChargeCurrent(.5f);
@@ -123,7 +123,7 @@ public class HomeChargerTest extends BaseTest {
 
     @Test public void setPriceTariffs() {
         Bytes bytes = new Bytes(
-                "006001" +
+                COMMAND_HEADER + "006001" +
                         "12000D01000A00409000000003455552" +
                         "12000D01000A023e99999a0003455552");
 
@@ -165,7 +165,7 @@ public class HomeChargerTest extends BaseTest {
     }
 
     @Test public void activateSolarCharging() {
-        Bytes waitingForBytes = new Bytes("006001" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006001" +
                 "05000401000101");
         Command commandBytes = new ActivateDeactivateSolarCharging(ActiveState.ACTIVE);
         assertTrue(bytesTheSame(commandBytes, waitingForBytes));
@@ -177,7 +177,7 @@ public class HomeChargerTest extends BaseTest {
     }
 
     @Test public void enableWifi() {
-        Bytes waitingForBytes = new Bytes("006001" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006001" +
                 "08000401000100");
 
         byte[] commandBytes = new EnableDisableWiFiHotspot(EnabledState.DISABLED).getByteArray();
@@ -190,7 +190,7 @@ public class HomeChargerTest extends BaseTest {
     }
 
     @Test public void authenticate() {
-        Bytes waitingForBytes = new Bytes("006001" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006001" +
                 "0D000401000100");
 
         Bytes commandBytes =

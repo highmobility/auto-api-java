@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RemoteControlTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "002701" +
+            COMMAND_HEADER + "002701" +
                     "01000401000102" +
                     "0200050100020032");
 
@@ -20,14 +20,14 @@ public class RemoteControlTest extends BaseTest {
     }
 
     @Test public void get() {
-        Bytes waitingForBytes = new Bytes("002700");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002700");
         assertTrue(new GetControlState().equals(waitingForBytes));
         Command command = CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof GetControlState);
     }
 
     @Test public void startRemoteControl() {
-        Bytes waitingForBytes = new Bytes("002701" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002701" +
                 "01000401000102");
         StartControl command = new StartControl();
         assertTrue(command.equals(waitingForBytes));
@@ -37,7 +37,7 @@ public class RemoteControlTest extends BaseTest {
     }
 
     @Test public void stopRemoteControl() {
-        Bytes waitingForBytes = new Bytes("002701" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002701" +
                 "01000401000105");
         assertTrue(new StopControl().equals(waitingForBytes));
 
@@ -46,7 +46,7 @@ public class RemoteControlTest extends BaseTest {
     }
 
     @Test public void controlCommand() {
-        Bytes waitingForBytes = new Bytes("002701" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002701" +
                 "0200050100020003" +
                 "03000401000132");
         ControlCommand command = new ControlCommand(3, 50);

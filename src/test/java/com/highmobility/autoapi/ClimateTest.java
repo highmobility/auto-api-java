@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ClimateTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "002401" +
+            COMMAND_HEADER + "002401" +
                     "01000701000441980000" +
                     "02000701000441400000" +
                     "03000701000441AC0000" +
@@ -77,13 +77,13 @@ public class ClimateTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "002400";
+        String waitingForBytes = COMMAND_HEADER + "002400";
         String commandBytes = ByteUtils.hexFromBytes(new GetClimateState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void startStopDefogging() {
-        Bytes waitingForBytes = new Bytes("002401" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002401" +
                 "06000401000101");
         String commandBytes =
                 ByteUtils.hexFromBytes(new StartStopDefogging(ActiveState.ACTIVE).getByteArray());
@@ -95,7 +95,7 @@ public class ClimateTest extends BaseTest {
     }
 
     @Test public void startStopDefrosting() {
-        Bytes waitingForBytes = new Bytes("002401" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002401" +
                 "07000401000101");
         String commandBytes =
                 ByteUtils.hexFromBytes(new StartStopDefrosting(ActiveState.ACTIVE).getByteArray());
@@ -108,7 +108,7 @@ public class ClimateTest extends BaseTest {
     }
 
     @Test public void startStopHvac() {
-        Bytes waitingForBytes = new Bytes("002401" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002401" +
                 "05000401000101");
         String commandBytes =
                 ByteUtils.hexFromBytes(new StartStopHvac(ActiveState.ACTIVE).getByteArray());
@@ -120,7 +120,7 @@ public class ClimateTest extends BaseTest {
     }
 
     @Test public void StartStopIonising() {
-        Bytes waitingForBytes = new Bytes("002401" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002401" +
                 "08000401000100");
         String commandBytes =
                 ByteUtils.hexFromBytes(new StartStopIonising(ActiveState.INACTIVE).getByteArray());
@@ -132,7 +132,7 @@ public class ClimateTest extends BaseTest {
     }
 
     @Test public void setTemperatureSettings() {
-        Bytes bytes = new Bytes("002401" +
+        Bytes bytes = new Bytes(COMMAND_HEADER + "002401" +
                 "03000701000441a40000" +
                 "04000701000441a40000" +
                 "0C000701000441980000");
@@ -148,7 +148,7 @@ public class ClimateTest extends BaseTest {
     }
 
     @Test public void setClimateProfile() {
-        Bytes bytes = new Bytes("002401" +
+        Bytes bytes = new Bytes(COMMAND_HEADER + "002401" +
                 "0b0006010003000800" +
                 "0b000601000302080A");
 
@@ -174,7 +174,7 @@ public class ClimateTest extends BaseTest {
     }
 
     @Test public void setClimateProfile0Properties() {
-        Bytes bytes = new Bytes("002401");
+        Bytes bytes = new Bytes(COMMAND_HEADER + "002401");
         HvacWeekdayStartingTime[] times = new HvacWeekdayStartingTime[0];
         Bytes commandBytes = new ChangeStartingTimes(times);
         assertTrue(TestUtils.bytesTheSame(commandBytes, bytes));

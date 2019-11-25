@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RooftopTest extends BaseTest {
-    Bytes bytes = new Bytes("002501" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "002501" +
             "01000B0100083ff0000000000000" +
             "02000B0100083fe0000000000000" +
             "03000401000101" +
@@ -24,13 +24,13 @@ public class RooftopTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "002500";
+        String waitingForBytes = COMMAND_HEADER + "002500";
         String commandBytes = ByteUtils.hexFromBytes(new GetRooftopState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void controlRooftop() {
-        Bytes waitingForBytes = new Bytes("002501" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002501" +
                 "01000B0100080000000000000000" +
                 "02000B0100080000000000000000" +
                 "03000401000100" +

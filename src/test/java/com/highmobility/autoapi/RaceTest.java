@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class RaceTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "005701" +
+            COMMAND_HEADER + "005701" +
                     "010008010005003F5D2F1B" +
                     "01000801000501BF40C49C" +
                     "02000B0100083FC851EB851EB852" +
@@ -109,7 +109,7 @@ public class RaceTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "005700";
+        String waitingForBytes = COMMAND_HEADER + "005700";
         String commandBytes = ByteUtils.hexFromBytes(new GetRaceState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }

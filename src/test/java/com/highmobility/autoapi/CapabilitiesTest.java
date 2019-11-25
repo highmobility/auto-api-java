@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CapabilitiesTest extends BaseTest {
     Bytes bytes = new Bytes
-            ("001001" +
+            (COMMAND_HEADER + "001001" +
                     "01000C010009002000050203040506" +
                     "01000A01000700230003020811");
 
@@ -42,7 +42,7 @@ public class CapabilitiesTest extends BaseTest {
     }
 
     @Test public void getCapabilities() {
-        byte[] bytes = ByteUtils.bytesFromHex("001000");
+        byte[] bytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "001000");
         byte[] commandBytes = new GetCapabilities().getByteArray();
         assertTrue(Arrays.equals(bytes, commandBytes));
         Command command = CommandResolver.resolve(bytes);
@@ -66,9 +66,9 @@ public class CapabilitiesTest extends BaseTest {
         CapabilitiesState.Builder builder = new CapabilitiesState.Builder();
         CapabilitiesState capabilities = builder.build();
         testEmptyCommand(capabilities);
-        assertTrue(capabilities.getLength() == 3);
+        assertTrue(capabilities.getLength() == 5);
 
-        byte[] bytes = ByteUtils.bytesFromHex("00100100");
+        byte[] bytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "00100100");
         testEmptyCommand((CapabilitiesState) CommandResolver.resolve(bytes));
     }
 

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class UsageTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "006801" +
+            COMMAND_HEADER + "006801" +
                     "010005010002029A" +
                     "020005010002029A" +
                     "03000B0100083FE6666666666666" +
@@ -103,7 +103,7 @@ public class UsageTest extends BaseTest {
     }
 
     @Test public void get() {
-        Bytes waitingForBytes = new Bytes("006800");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006800");
         Bytes commandBytes = new GetUsage();
         assertTrue(waitingForBytes.equals(commandBytes));
     }

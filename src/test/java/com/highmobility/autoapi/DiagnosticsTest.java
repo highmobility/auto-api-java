@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public class DiagnosticsTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "003301" +
+            COMMAND_HEADER + "003301" +
                     "010007010004000249F0" +
                     "0200050100020063" +
                     "030005010002003C" +
@@ -182,7 +182,7 @@ public class DiagnosticsTest extends BaseTest {
     }
 
     @Test public void get() {
-        Bytes waitingForBytes = new Bytes("003300");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "003300");
         String commandBytes = ByteUtils.hexFromBytes(new GetDiagnosticsState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 

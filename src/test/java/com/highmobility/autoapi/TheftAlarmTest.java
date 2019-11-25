@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TheftAlarmTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "00460101000401000101");
+            COMMAND_HEADER + "00460101000401000101");
 
     @Test
     public void state() {
@@ -24,14 +24,14 @@ public class TheftAlarmTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "004600";
+        String waitingForBytes = COMMAND_HEADER + "004600";
         String commandBytes = ByteUtils.hexFromBytes(new GetTheftAlarmState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void setAlarm() {
         Bytes waitingForBytes = new Bytes(
-                "004601" +
+                COMMAND_HEADER + "004601" +
                         "01000401000101");
         SetTheftAlarm command = new SetTheftAlarm(TheftAlarmState.Status.ARMED);
         assertTrue(bytesTheSame(command, waitingForBytes));

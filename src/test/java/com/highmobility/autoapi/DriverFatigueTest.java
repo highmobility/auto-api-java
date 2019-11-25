@@ -11,7 +11,7 @@ public class DriverFatigueTest extends BaseTest {
     @Test
     public void detected() {
         Bytes bytes = new Bytes(
-                "004101" +
+                COMMAND_HEADER + "004101" +
                         "01000401000100");
 
         DriverFatigueState state = (DriverFatigueState) CommandResolver.resolve(bytes);

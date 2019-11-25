@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WindscreenTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "004201" +
+            COMMAND_HEADER + "004201" +
                     "01000401000102" +
                     "02000401000103" +
                     "03000401000101" +
@@ -32,7 +32,7 @@ public class WindscreenTest extends BaseTest {
     }
 
     private void testState(WindscreenState state) {
-        assertTrue(state.getWipers().getValue() == WindscreenState.Wipers.AUTOMATIC);
+        assertTrue(state.getWipersStatus().getValue() == WindscreenState.WipersStatus.AUTOMATIC);
         assertTrue(state.getWipersIntensity().getValue() == WindscreenState.WipersIntensity.LEVEL_3);
         assertTrue(state.getWindscreenDamage().getValue() == WindscreenState.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED);
 
@@ -56,7 +56,7 @@ public class WindscreenTest extends BaseTest {
     @Test public void build() {
         WindscreenState.Builder builder = new WindscreenState.Builder();
 
-        builder.setWipers(new Property(WindscreenState.Wipers.AUTOMATIC));
+        builder.setWipersStatus(new Property(WindscreenState.WipersStatus.AUTOMATIC));
         builder.setWipersIntensity(new Property(WindscreenState.WipersIntensity.LEVEL_3));
         builder.setWindscreenDamage(new Property(WindscreenState.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED));
         Zone matrix = new Zone(4, 3);
@@ -72,13 +72,13 @@ public class WindscreenTest extends BaseTest {
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("004200");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "004200");
         byte[] bytes = new GetWindscreenState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
     @Test public void setNoDamage() {
-        Bytes waitingForBytes = new Bytes("004201" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "004201" +
                 "03000401000101");
 
         Bytes bytes =
@@ -94,7 +94,7 @@ public class WindscreenTest extends BaseTest {
     }
 
     @Test public void setDamage() {
-        Bytes bytes = new Bytes("004201" +
+        Bytes bytes = new Bytes(COMMAND_HEADER + "004201" +
                 "03000401000101" +
                 "0500050100020203");
 
@@ -113,7 +113,7 @@ public class WindscreenTest extends BaseTest {
     }
 
     @Test public void setReplacementNeeded() {
-        Bytes waitingForBytes = new Bytes("004201" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "004201" +
                 "06000401000101");
 
         Bytes bytes = new SetWindscreenReplacementNeeded(WindscreenState.WindscreenNeedsReplacement
@@ -127,19 +127,19 @@ public class WindscreenTest extends BaseTest {
     }
 
     @Test public void controlWipersTest() {
-        Bytes bytes = new Bytes("004201" +
+        Bytes bytes = new Bytes(COMMAND_HEADER + "004201" +
                 "01000401000101" +
                 "02000401000102");
 
-        ControlWipers create = new ControlWipers(WindscreenState.Wipers.ACTIVE,
+        ControlWipers create = new ControlWipers(WindscreenState.WipersStatus.ACTIVE,
                 WindscreenState.WipersIntensity.LEVEL_2);
         assertTrue(create.getWipersIntensity().getValue() == WindscreenState.WipersIntensity.LEVEL_2);
-        assertTrue(create.getWipers().getValue() == WindscreenState.Wipers.ACTIVE);
+        assertTrue(create.getWipersStatus().getValue() == WindscreenState.WipersStatus.ACTIVE);
         assertTrue(bytesTheSame(create, bytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
         ControlWipers resolve = (ControlWipers) CommandResolver.resolve(bytes);
-        assertTrue(resolve.getWipers().getValue() == WindscreenState.Wipers.ACTIVE);
+        assertTrue(resolve.getWipersStatus().getValue() == WindscreenState.WipersStatus.ACTIVE);
         assertTrue(resolve.getWipersIntensity().getValue() == WindscreenState.WipersIntensity.LEVEL_2);
     }
 }

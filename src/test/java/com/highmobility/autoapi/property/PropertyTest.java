@@ -151,8 +151,7 @@ public class PropertyTest extends BaseTest {
             // test if float expected but bytes are with smaller length
             // charging with invalid length chargeCurrentAC. cannot parse to float
             // correct chargeCurrentDC
-            ChargingState command = (ChargingState) CommandResolver.resolve(
-                    "002301" +
+            ChargingState command = (ChargingState) CommandResolver.resolve(COMMAND_HEADER + "002301" +
                             "040006010003BF1999" +
                             "050007010004BF19999A");
             assertTrue(command.getBatteryCurrentAC().getValue() == null);
@@ -166,8 +165,7 @@ public class PropertyTest extends BaseTest {
         // test if invalid failure reason
         // 0x11 is invalid failure reason
         TestUtils.errorLogExpected(() -> {
-            ChargingState command = (ChargingState) CommandResolver.resolve(
-                    "002301" +
+            ChargingState command = (ChargingState) CommandResolver.resolve(COMMAND_HEADER + "002301" +
                             "040016010004BF19999A" + "03000C110A54727920696e20343073" +
                             "050007010004BF19999A");
 

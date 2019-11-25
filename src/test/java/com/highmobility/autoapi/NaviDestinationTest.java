@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class NaviDestinationTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "003101" +
+            COMMAND_HEADER + "003101" +
                     "010013010010404A428F9F44D445402ACF562174C4CE" +
                     "0200090100064265726C696E");
 
@@ -31,12 +31,12 @@ public class NaviDestinationTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "003100";
+        String waitingForBytes = COMMAND_HEADER + "003100";
         assertTrue(new GetNaviDestination().equals(waitingForBytes));
     }
 
     @Test public void set() {
-        Bytes waitingForBytes = new Bytes("003101" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "003101" +
                 "010013010010404A428F9F44D445402ACF562174C4CE" +
                 "0200090100064265726c696e");
 

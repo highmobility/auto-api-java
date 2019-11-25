@@ -13,7 +13,7 @@ public class CommandResolverTest extends BaseTest {
         // It tries to match 3 to commands, but in all of these the property parsing will fail
         TestUtils.errorLogExpected(3, () -> {
             Bytes invalidEndParking = new Bytes(
-                    "004701" +
+                    COMMAND_HEADER + "004701" +
                             "01000401000104"
             );
             Command command = CommandResolver.resolve(invalidEndParking);

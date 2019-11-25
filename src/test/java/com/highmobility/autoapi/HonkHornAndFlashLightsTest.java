@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HonkHornAndFlashLightsTest extends BaseTest {
-    Bytes bytes = new Bytes("002601" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "002601" +
             "01000401000102");
 
     @Test
@@ -26,13 +26,13 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "002600";
+        String waitingForBytes = COMMAND_HEADER + "002600";
         String commandBytes = ByteUtils.hexFromBytes(new GetFlashersState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void honkAndFlash() {
-        String waitingForBytes = "002601" +
+        String waitingForBytes = COMMAND_HEADER + "002601" +
                 "02000401000100" +
                 "03000401000103";
         HonkFlash command = new HonkFlash(0, 3);
@@ -52,7 +52,7 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
     }
 
     @Test public void activateDeactivate() {
-        String waitingForBytes = "002601" +
+        String waitingForBytes = COMMAND_HEADER + "002601" +
                 "04000401000101";
 
         String commandBytes =

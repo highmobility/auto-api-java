@@ -12,8 +12,7 @@ import java.util.Calendar;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ParkingTicketTest extends BaseTest {
-    Bytes bytes = new Bytes(
-            "004701" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "004701" +
                     "01000401000101" +
                     "02001101000E4265726C696E205061726B696E67" +
                     "03000B0100083634383934323333" +
@@ -55,15 +54,14 @@ public class ParkingTicketTest extends BaseTest {
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("004700");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "004700");
         byte[] bytes = new GetParkingTicket().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
     @Test public void startParking() {
         setRuntime(CommandResolver.RunTime.ANDROID);
-        Bytes waitingForBytes = new Bytes(
-                "004701" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "004701" +
                         "01000401000101" +
                         "02001101000E4265726c696e205061726b696e67" +
                         "03000B0100083634383934323333" +
@@ -84,7 +82,7 @@ public class ParkingTicketTest extends BaseTest {
 
     @Test public void endParking() {
         setRuntime(CommandResolver.RunTime.ANDROID);
-        Bytes waitingForBytes = new Bytes("00470101000401000100");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "00470101000401000100");
         Bytes command = new EndParking();
         assertTrue(TestUtils.bytesTheSame(command, waitingForBytes));
 

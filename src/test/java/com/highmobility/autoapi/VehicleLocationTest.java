@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class VehicleLocationTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "003001" +
+            COMMAND_HEADER + "003001" +
                     "040013010010404A428F9F44D445402ACF562174C4CE" +
                     "05000B010008402ABD80C308FEAC" +
                     "06000B0100084060B00000000000"
@@ -36,7 +36,7 @@ public class VehicleLocationTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "003000";
+        String waitingForBytes = COMMAND_HEADER + "003000";
         String commandBytes = ByteUtils.hexFromBytes(new GetVehicleLocation().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }

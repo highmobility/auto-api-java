@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StartStopTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "006301" +
+            COMMAND_HEADER + "006301" +
                     "01000401000101"
     );
 
@@ -32,7 +32,7 @@ public class StartStopTest extends BaseTest {
     }
 
     @Test public void get() {
-        Bytes waitingForBytes = new Bytes("006300");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006300");
         Bytes commandBytes = new GetEngineStartStopState();
 
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -40,7 +40,7 @@ public class StartStopTest extends BaseTest {
     }
 
     @Test public void activateDeactivate() {
-        Bytes waitingForBytes = new Bytes("006301" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006301" +
                 "01000401000100");
 
         Bytes commandBytes = new ActivateDeactivateStartStop(ActiveState.INACTIVE);

@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LightsTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "003601" +
+            COMMAND_HEADER + "003601" +
                     "01000401000102" +
                     "02000401000101" +
                     "040006010003FF0000" +
@@ -91,13 +91,13 @@ public class LightsTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "003600";
+        String waitingForBytes = COMMAND_HEADER + "003600";
         String commandBytes = ByteUtils.hexFromBytes(new GetLightsState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void control() {
-        Bytes waitingForBytes = new Bytes("003601" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "003601" +
                 "01000401000102" +
                 "02000401000100" +
                 "040006010003ff0000" +

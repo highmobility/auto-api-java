@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ParkingBrakeTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "005801" +
+            COMMAND_HEADER + "005801" +
                     "01000401000101");
 
     @Test
@@ -32,13 +32,13 @@ public class ParkingBrakeTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "005800";
+        String waitingForBytes = COMMAND_HEADER + "005800";
         String commandBytes = ByteUtils.hexFromBytes(new GetParkingBrakeState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void setParkingBrake() {
-        Bytes waitingForBytes = new Bytes("005801" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "005801" +
                 "01000401000101");
         Bytes commandBytes = new SetParkingBrake(ActiveState.ACTIVE);
         assertTrue(TestUtils.bytesTheSame(waitingForBytes, commandBytes));

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Created by ttiganik on 15/09/16.
  */
 public class KeyFobPositionTest extends BaseTest {
-    Bytes bytes = new Bytes("004801" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "004801" +
             "01000401000105");
 
     @Test
@@ -23,7 +23,7 @@ public class KeyFobPositionTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "004800";
+        String waitingForBytes = COMMAND_HEADER + "004800";
         String commandBytes = ByteUtils.hexFromBytes(new GetKeyfobPosition().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }

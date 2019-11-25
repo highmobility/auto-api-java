@@ -20,8 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChargingTest extends BaseTest {
-    Bytes bytes = new Bytes(
-            "002301" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "002301" +
                     "02000501000201B0" +
                     "03000B0100083FE0000000000000" +
                     "040007010004BF19999A" +
@@ -130,7 +129,7 @@ public class ChargingTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "002300";
+        String waitingForBytes = COMMAND_HEADER + "002300";
         Bytes get = new GetChargingState();
         String commandBytes = ByteUtils.hexFromBytes(new GetChargingState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -191,7 +190,7 @@ public class ChargingTest extends BaseTest {
     }
 
     @Test public void setChargeLimit() {
-        Bytes expected = new Bytes("002301" +
+        Bytes expected = new Bytes(COMMAND_HEADER + "002301" +
                 "08000B0100083FECCCCCCCCCCCCD");
 
         Bytes commandBytes = new SetChargeLimit(.9d);
@@ -203,7 +202,7 @@ public class ChargingTest extends BaseTest {
     }
 
     @Test public void openCloseChargePort() {
-        Bytes expected = new Bytes("0023010B000401000101");
+        Bytes expected = new Bytes(COMMAND_HEADER + "0023010B000401000101");
 
         Bytes commandBytes = new OpenCloseChargingPort(Position.OPEN);
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
@@ -214,7 +213,7 @@ public class ChargingTest extends BaseTest {
     }
 
     @Test public void startStopCharging() {
-        Bytes waitingForBytes = new Bytes("002301" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002301" +
                 "17000401000101");
         Bytes commandBytes = new StartStopCharging(ChargingState.Status.CHARGING);
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -226,7 +225,7 @@ public class ChargingTest extends BaseTest {
 
     @Test public void setChargeMode() {
         // TODO: 23/09/2019 verify INDUCTIVE > IMMEDIATE correct
-        Bytes waitingForBytes = new Bytes("0023010C000401000100");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "0023010C000401000100");
         Bytes commandBytes = new SetChargeMode(ChargingState.ChargeMode.IMMEDIATE);
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
 
@@ -244,7 +243,7 @@ public class ChargingTest extends BaseTest {
 
     @Test public void SetChargeTimer() throws ParseException {
         Bytes waitingForBytes = new Bytes
-                ("002301" +
+                (COMMAND_HEADER + "002301" +
                         "15000C0100090200000160E0EA1388" +
                         "15000C0100090100000160E1560840");
         Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
@@ -271,7 +270,7 @@ public class ChargingTest extends BaseTest {
     }
 
     @Test public void SetReductionTimes() {
-        Bytes waitingForBytes = new Bytes("002301" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002301" +
                 "130006010003000000" + // reduction times
                 "130006010003011020");
 

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TachographTest extends BaseTest {
     Bytes bytes = new Bytes
-            ("006401" +
+            (COMMAND_HEADER + "006401" +
                     "0100050100020102" +
                     "0100050100020200" +
                     "0200050100020102" +
@@ -77,7 +77,7 @@ public class TachographTest extends BaseTest {
     }
 
     @Test public void get() {
-        Bytes waitingForBytes = new Bytes("006400");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006400");
         byte[] commandBytes = new GetTachographState().getByteArray();
 
         assertTrue(waitingForBytes.equals(commandBytes));

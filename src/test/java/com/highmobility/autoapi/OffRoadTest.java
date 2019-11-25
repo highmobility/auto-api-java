@@ -1,7 +1,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class OffRoadTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "005201" +
+            COMMAND_HEADER + "005201" +
                     "010005010002000A" +
                     "02000B0100083FE0000000000000"
     );
@@ -32,8 +31,8 @@ public class OffRoadTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "005200";
-        String commandBytes = ByteUtils.hexFromBytes(new GetOffroadState().getByteArray());
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "005200");
+        Bytes commandBytes = new GetOffroadState();
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 

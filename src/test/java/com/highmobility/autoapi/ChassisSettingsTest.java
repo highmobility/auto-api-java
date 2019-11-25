@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ChassisSettingsTest extends BaseTest {
     Bytes bytes = new Bytes
-            ("005301" +
+            (COMMAND_HEADER + "005301" +
                     "01000401000101" +
                     "02000401000101" +
                     "0500050100020015" +
@@ -65,13 +65,13 @@ public class ChassisSettingsTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "005300";
+        String waitingForBytes = COMMAND_HEADER + "005300";
         String commandBytes = ByteUtils.hexFromBytes(new GetChassisSettings().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void setDrivingMode() {
-        Bytes waitingForBytes = new Bytes("00530101000401000103");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "00530101000401000103");
         Bytes commandBytes = new SetDrivingMode(DrivingMode.SPORT_PLUS);
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -81,7 +81,7 @@ public class ChassisSettingsTest extends BaseTest {
     }
 
     @Test public void startChrono() {
-        String waitingForBytes = "00530102000401000101";
+        String waitingForBytes = COMMAND_HEADER + "00530102000401000101";
         String commandBytes =
                 ByteUtils.hexFromBytes(new StartStopSportsChrono(ChassisSettingsState.SportChrono.ACTIVE)
                 .getByteArray());
@@ -94,7 +94,7 @@ public class ChassisSettingsTest extends BaseTest {
     }
 
     @Test public void setSpringRate() {
-        Bytes waitingForBytes = new Bytes("005301" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "005301" +
                 "0500050100020119");
 
         SpringRate prop = new SpringRate(Axle.REAR, 25);
@@ -109,7 +109,7 @@ public class ChassisSettingsTest extends BaseTest {
     }
 
     @Test public void setChassisPosition() {
-        String waitingForBytes = "00530108000401000132";
+        String waitingForBytes = COMMAND_HEADER + "00530108000401000132";
         String commandBytes = ByteUtils.hexFromBytes(new SetChassisPosition(50).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -120,7 +120,7 @@ public class ChassisSettingsTest extends BaseTest {
     }
 
     @Test public void setNegativeChassisPosition() {
-        Bytes waitingForBytes = new Bytes("005301" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "005301" +
                 "080004010001E4");
         Command state = new SetChassisPosition(-28);
         assertTrue(TestUtils.bytesTheSame(state, waitingForBytes));

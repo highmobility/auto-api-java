@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WindowsTest extends BaseTest {
-    Bytes bytes = new Bytes("004501" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "004501" +
             "02000C010009023FE1EB851EB851EC" +
             "02000C010009033FC70A3D70A3D70A" +
             "0300050100020201" +
@@ -44,13 +44,13 @@ public class WindowsTest extends BaseTest {
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("004500");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "004500");
         byte[] bytes = new GetWindows().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
     @Test public void control() {
-        Bytes waitingForBytes = new Bytes("004501" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "004501" +
                 "0300050100020001" +
                 "0300050100020101"
         );
