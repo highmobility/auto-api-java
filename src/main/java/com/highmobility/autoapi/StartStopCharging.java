@@ -20,12 +20,15 @@
 
 package com.highmobility.autoapi;
 
+/*
 import com.highmobility.autoapi.ChargingState.Status;
 import com.highmobility.autoapi.property.Property;
 
+*/
 /**
  * Start stop charging
- */
+ *//*
+
 public class StartStopCharging extends SetCommand {
     public static final Integer IDENTIFIER = Identifier.CHARGING;
 
@@ -33,18 +36,22 @@ public class StartStopCharging extends SetCommand {
 
     Property<Status> status = new Property(Status.class, IDENTIFIER_STATUS);
 
-    /**
+    */
+/**
      * @return The status
-     */
+     *//*
+
     public Property<Status> getStatus() {
         return status;
     }
     
-    /**
+    */
+/**
      * Start stop charging
      *
      * @param status The status
-     */
+     *//*
+
     public StartStopCharging(Status status) {
         super(IDENTIFIER);
     
@@ -70,4 +77,4 @@ public class StartStopCharging extends SetCommand {
         if (this.status.getValue() == null) 
             throw new NoPropertiesException();
     }
-}
+}*/

@@ -18,53 +18,53 @@
  * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.highmobility.autoapi;
+//package com.highmobility.autoapi;
+//
+//import com.highmobility.autoapi.ChargingState.ChargeMode;
+//import com.highmobility.autoapi.property.Property;
 
-import com.highmobility.autoapi.ChargingState.ChargeMode;
-import com.highmobility.autoapi.property.Property;
-
-/**
- * Set charge mode
- */
-public class SetChargeMode extends SetCommand {
-    public static final Integer IDENTIFIER = Identifier.CHARGING;
-
-    public static final byte IDENTIFIER_CHARGE_MODE = 0x0c;
-
-    Property<ChargeMode> chargeMode = new Property(ChargeMode.class, IDENTIFIER_CHARGE_MODE);
-
-    /**
-     * @return The charge mode
-     */
-    public Property<ChargeMode> getChargeMode() {
-        return chargeMode;
-    }
-    
-    /**
-     * Set charge mode
-     *
-     * @param chargeMode The charge mode
-     */
-    public SetChargeMode(ChargeMode chargeMode) {
-        super(IDENTIFIER);
-    
-        if (chargeMode == ChargeMode.INDUCTIVE) throw new IllegalArgumentException();
-    
-        addProperty(this.chargeMode.update(chargeMode));
-        createBytes();
-    }
-
-    SetChargeMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
-        super(bytes);
-        while (propertyIterator.hasNext()) {
-            propertyIterator.parseNext(p -> {
-                switch (p.getPropertyIdentifier()) {
-                    case IDENTIFIER_CHARGE_MODE: return chargeMode.update(p);
-                }
-                return null;
-            });
-        }
-        if (this.chargeMode.getValue() == null) 
-            throw new NoPropertiesException();
-    }
-}
+///**
+// * Set charge mode
+// */
+//public class SetChargeMode extends SetCommand {
+//    public static final Integer IDENTIFIER = Identifier.CHARGING;
+//
+//    public static final byte IDENTIFIER_CHARGE_MODE = 0x0c;
+//
+//    Property<ChargeMode> chargeMode = new Property(ChargeMode.class, IDENTIFIER_CHARGE_MODE);
+//
+//    /**
+//     * @return The charge mode
+//     */
+//    public Property<ChargeMode> getChargeMode() {
+//        return chargeMode;
+//    }
+//
+//    /**
+//     * Set charge mode
+//     *
+//     * @param chargeMode The charge mode
+//     */
+//    public SetChargeMode(ChargeMode chargeMode) {
+//        super(IDENTIFIER);
+//
+//        if (chargeMode == ChargeMode.INDUCTIVE) throw new IllegalArgumentException();
+//
+//        addProperty(this.chargeMode.update(chargeMode));
+//        createBytes();
+//    }
+//
+//    SetChargeMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
+//        super(bytes);
+//        while (propertyIterator.hasNext()) {
+//            propertyIterator.parseNext(p -> {
+//                switch (p.getPropertyIdentifier()) {
+//                    case IDENTIFIER_CHARGE_MODE: return chargeMode.update(p);
+//                }
+//                return null;
+//            });
+//        }
+//        if (this.chargeMode.getValue() == null)
+//            throw new NoPropertiesException();
+//    }
+//}

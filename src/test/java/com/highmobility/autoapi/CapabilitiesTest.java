@@ -34,7 +34,7 @@ public class CapabilitiesTest extends BaseTest {
         assertTrue(state.getSupported(Identifier.DOORS, (byte) 0x06));
 
         // trunk
-        assertTrue(state.getSupported(Identifier.CHARGING, (byte) 0x02));
+        assertTrue(state.getSupported(Charging.IDENTIFIER, Charging.PROPERTY_ESTIMATED_RANGE));
         assertTrue(state.getSupported(Identifier.CHARGING, (byte) 0x08));
         assertTrue(state.getSupported(Identifier.CHARGING, (byte) 0x11));
 

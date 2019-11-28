@@ -32,6 +32,7 @@ import java.util.List;
 /**
  * The charging state
  */
+/*
 public class ChargingState extends SetCommand {
     public static final Integer IDENTIFIER = Identifier.CHARGING;
 
@@ -77,142 +78,182 @@ public class ChargingState extends SetCommand {
     Property<PluggedIn> pluggedIn = new Property(PluggedIn.class, IDENTIFIER_PLUGGED_IN);
     Property<Status> status = new Property(Status.class, IDENTIFIER_STATUS);
 
-    /**
+    */
+/**
      * @return Estimated range in km
-     */
+     *//*
+
     public PropertyInteger getEstimatedRange() {
         return estimatedRange;
     }
 
-    /**
+    */
+/**
      * @return Battery level percentage between 0.0-1.0
-     */
+     *//*
+
     public Property<Double> getBatteryLevel() {
         return batteryLevel;
     }
 
-    /**
+    */
+/**
      * @return Battery active current
-     */
+     *//*
+
     public Property<Float> getBatteryCurrentAC() {
         return batteryCurrentAC;
     }
 
-    /**
+    */
+/**
      * @return Battery direct current
-     */
+     *//*
+
     public Property<Float> getBatteryCurrentDC() {
         return batteryCurrentDC;
     }
 
-    /**
+    */
+/**
      * @return Charger voltage
-     */
+     *//*
+
     public Property<Float> getChargerVoltageAC() {
         return chargerVoltageAC;
     }
 
-    /**
+    */
+/**
      * @return Charger voltage
-     */
+     *//*
+
     public Property<Float> getChargerVoltageDC() {
         return chargerVoltageDC;
     }
 
-    /**
+    */
+/**
      * @return Charge limit percentage between 0.0-1.0
-     */
+     *//*
+
     public Property<Double> getChargeLimit() {
         return chargeLimit;
     }
 
-    /**
+    */
+/**
      * @return Time until charging completed in minutes
-     */
+     *//*
+
     public PropertyInteger getTimeToCompleteCharge() {
         return timeToCompleteCharge;
     }
 
-    /**
+    */
+/**
      * @return Charge rate in kW when charging
-     */
+     *//*
+
     public Property<Float> getChargingRateKW() {
         return chargingRateKW;
     }
 
-    /**
+    */
+/**
      * @return The charge port state
-     */
+     *//*
+
     public Property<Position> getChargePortState() {
         return chargePortState;
     }
 
-    /**
+    */
+/**
      * @return The charge mode
-     */
+     *//*
+
     public Property<ChargeMode> getChargeMode() {
         return chargeMode;
     }
 
-    /**
+    */
+/**
      * @return Maximum charging current
-     */
+     *//*
+
     public Property<Float> getMaxChargingCurrent() {
         return maxChargingCurrent;
     }
 
-    /**
+    */
+/**
      * @return The plug type
-     */
+     *//*
+
     public Property<PlugType> getPlugType() {
         return plugType;
     }
 
-    /**
+    */
+/**
      * @return The charging window chosen
-     */
+     *//*
+
     public Property<ChargingWindowChosen> getChargingWindowChosen() {
         return chargingWindowChosen;
     }
 
-    /**
+    */
+/**
      * @return The departure times
-     */
+     *//*
+
     public Property<DepartureTime>[] getDepartureTimes() {
         return departureTimes;
     }
 
-    /**
+    */
+/**
      * @return The reduction times
-     */
+     *//*
+
     public Property<ReductionTime>[] getReductionTimes() {
         return reductionTimes;
     }
 
-    /**
+    */
+/**
      * @return Battery temperature in Celsius
-     */
+     *//*
+
     public Property<Float> getBatteryTemperature() {
         return batteryTemperature;
     }
 
-    /**
+    */
+/**
      * @return The timers
-     */
+     *//*
+
     public Property<Timer>[] getTimers() {
         return timers;
     }
 
-    /**
+    */
+/**
      * @return The plugged in
-     */
+     *//*
+
     public Property<PluggedIn> getPluggedIn() {
         return pluggedIn;
     }
 
-    /**
+    */
+/**
      * @return The status
-     */
+     *//*
+
     public Property<Status> getStatus() {
         return status;
     }
@@ -326,152 +367,182 @@ public class ChargingState extends SetCommand {
             return new ChargingState(this);
         }
 
-        /**
+        */
+/**
          * @param estimatedRange Estimated range in km
          * @return The builder
-         */
+         *//*
+
         public Builder setEstimatedRange(Property<Integer> estimatedRange) {
             this.estimatedRange = new PropertyInteger(IDENTIFIER_ESTIMATED_RANGE, false, 2, estimatedRange);
             addProperty(this.estimatedRange);
             return this;
         }
         
-        /**
+        */
+/**
          * @param batteryLevel Battery level percentage between 0.0-1.0
          * @return The builder
-         */
+         *//*
+
         public Builder setBatteryLevel(Property<Double> batteryLevel) {
             this.batteryLevel = batteryLevel.setIdentifier(IDENTIFIER_BATTERY_LEVEL);
             addProperty(this.batteryLevel);
             return this;
         }
         
-        /**
+        */
+/**
          * @param batteryCurrentAC Battery active current
          * @return The builder
-         */
+         *//*
+
         public Builder setBatteryCurrentAC(Property<Float> batteryCurrentAC) {
             this.batteryCurrentAC = batteryCurrentAC.setIdentifier(IDENTIFIER_BATTERY_CURRENT_AC);
             addProperty(this.batteryCurrentAC);
             return this;
         }
         
-        /**
+        */
+/**
          * @param batteryCurrentDC Battery direct current
          * @return The builder
-         */
+         *//*
+
         public Builder setBatteryCurrentDC(Property<Float> batteryCurrentDC) {
             this.batteryCurrentDC = batteryCurrentDC.setIdentifier(IDENTIFIER_BATTERY_CURRENT_DC);
             addProperty(this.batteryCurrentDC);
             return this;
         }
         
-        /**
+        */
+/**
          * @param chargerVoltageAC Charger voltage
          * @return The builder
-         */
+         *//*
+
         public Builder setChargerVoltageAC(Property<Float> chargerVoltageAC) {
             this.chargerVoltageAC = chargerVoltageAC.setIdentifier(IDENTIFIER_CHARGER_VOLTAGE_AC);
             addProperty(this.chargerVoltageAC);
             return this;
         }
         
-        /**
+        */
+/**
          * @param chargerVoltageDC Charger voltage
          * @return The builder
-         */
+         *//*
+
         public Builder setChargerVoltageDC(Property<Float> chargerVoltageDC) {
             this.chargerVoltageDC = chargerVoltageDC.setIdentifier(IDENTIFIER_CHARGER_VOLTAGE_DC);
             addProperty(this.chargerVoltageDC);
             return this;
         }
         
-        /**
+        */
+/**
          * @param chargeLimit Charge limit percentage between 0.0-1.0
          * @return The builder
-         */
+         *//*
+
         public Builder setChargeLimit(Property<Double> chargeLimit) {
             this.chargeLimit = chargeLimit.setIdentifier(IDENTIFIER_CHARGE_LIMIT);
             addProperty(this.chargeLimit);
             return this;
         }
         
-        /**
+        */
+/**
          * @param timeToCompleteCharge Time until charging completed in minutes
          * @return The builder
-         */
+         *//*
+
         public Builder setTimeToCompleteCharge(Property<Integer> timeToCompleteCharge) {
             this.timeToCompleteCharge = new PropertyInteger(IDENTIFIER_TIME_TO_COMPLETE_CHARGE, false, 1, timeToCompleteCharge);
             addProperty(this.timeToCompleteCharge);
             return this;
         }
         
-        /**
+        */
+/**
          * @param chargingRateKW Charge rate in kW when charging
          * @return The builder
-         */
+         *//*
+
         public Builder setChargingRateKW(Property<Float> chargingRateKW) {
             this.chargingRateKW = chargingRateKW.setIdentifier(IDENTIFIER_CHARGING_RATE_KW);
             addProperty(this.chargingRateKW);
             return this;
         }
         
-        /**
+        */
+/**
          * @param chargePortState The charge port state
          * @return The builder
-         */
+         *//*
+
         public Builder setChargePortState(Property<Position> chargePortState) {
             this.chargePortState = chargePortState.setIdentifier(IDENTIFIER_CHARGE_PORT_STATE);
             addProperty(this.chargePortState);
             return this;
         }
         
-        /**
+        */
+/**
          * @param chargeMode The charge mode
          * @return The builder
-         */
+         *//*
+
         public Builder setChargeMode(Property<ChargeMode> chargeMode) {
             this.chargeMode = chargeMode.setIdentifier(IDENTIFIER_CHARGE_MODE);
             addProperty(this.chargeMode);
             return this;
         }
         
-        /**
+        */
+/**
          * @param maxChargingCurrent Maximum charging current
          * @return The builder
-         */
+         *//*
+
         public Builder setMaxChargingCurrent(Property<Float> maxChargingCurrent) {
             this.maxChargingCurrent = maxChargingCurrent.setIdentifier(IDENTIFIER_MAX_CHARGING_CURRENT);
             addProperty(this.maxChargingCurrent);
             return this;
         }
         
-        /**
+        */
+/**
          * @param plugType The plug type
          * @return The builder
-         */
+         *//*
+
         public Builder setPlugType(Property<PlugType> plugType) {
             this.plugType = plugType.setIdentifier(IDENTIFIER_PLUG_TYPE);
             addProperty(this.plugType);
             return this;
         }
         
-        /**
+        */
+/**
          * @param chargingWindowChosen The charging window chosen
          * @return The builder
-         */
+         *//*
+
         public Builder setChargingWindowChosen(Property<ChargingWindowChosen> chargingWindowChosen) {
             this.chargingWindowChosen = chargingWindowChosen.setIdentifier(IDENTIFIER_CHARGING_WINDOW_CHOSEN);
             addProperty(this.chargingWindowChosen);
             return this;
         }
         
-        /**
+        */
+/**
          * Add an array of departure times.
          * 
          * @param departureTimes The departure times
          * @return The builder
-         */
+         *//*
+
         public Builder setDepartureTimes(Property<DepartureTime>[] departureTimes) {
             this.departureTimes.clear();
             for (int i = 0; i < departureTimes.length; i++) {
@@ -481,12 +552,14 @@ public class ChargingState extends SetCommand {
             return this;
         }
         
-        /**
+        */
+/**
          * Add a single departure time.
          * 
          * @param departureTime The departure time
          * @return The builder
-         */
+         *//*
+
         public Builder addDepartureTime(Property<DepartureTime> departureTime) {
             departureTime.setIdentifier(IDENTIFIER_DEPARTURE_TIMES);
             addProperty(departureTime);
@@ -494,12 +567,14 @@ public class ChargingState extends SetCommand {
             return this;
         }
         
-        /**
+        */
+/**
          * Add an array of reduction times.
          * 
          * @param reductionTimes The reduction times
          * @return The builder
-         */
+         *//*
+
         public Builder setReductionTimes(Property<ReductionTime>[] reductionTimes) {
             this.reductionTimes.clear();
             for (int i = 0; i < reductionTimes.length; i++) {
@@ -509,12 +584,14 @@ public class ChargingState extends SetCommand {
             return this;
         }
         
-        /**
+        */
+/**
          * Add a single reduction time.
          * 
          * @param reductionTime The reduction time
          * @return The builder
-         */
+         *//*
+
         public Builder addReductionTime(Property<ReductionTime> reductionTime) {
             reductionTime.setIdentifier(IDENTIFIER_REDUCTION_TIMES);
             addProperty(reductionTime);
@@ -522,22 +599,26 @@ public class ChargingState extends SetCommand {
             return this;
         }
         
-        /**
+        */
+/**
          * @param batteryTemperature Battery temperature in Celsius
          * @return The builder
-         */
+         *//*
+
         public Builder setBatteryTemperature(Property<Float> batteryTemperature) {
             this.batteryTemperature = batteryTemperature.setIdentifier(IDENTIFIER_BATTERY_TEMPERATURE);
             addProperty(this.batteryTemperature);
             return this;
         }
         
-        /**
+        */
+/**
          * Add an array of timers.
          * 
          * @param timers The timers
          * @return The builder
-         */
+         *//*
+
         public Builder setTimers(Property<Timer>[] timers) {
             this.timers.clear();
             for (int i = 0; i < timers.length; i++) {
@@ -547,12 +628,14 @@ public class ChargingState extends SetCommand {
             return this;
         }
         
-        /**
+        */
+/**
          * Add a single timer.
          * 
          * @param timer The timer
          * @return The builder
-         */
+         *//*
+
         public Builder addTimer(Property<Timer> timer) {
             timer.setIdentifier(IDENTIFIER_TIMERS);
             addProperty(timer);
@@ -560,20 +643,24 @@ public class ChargingState extends SetCommand {
             return this;
         }
         
-        /**
+        */
+/**
          * @param pluggedIn The plugged in
          * @return The builder
-         */
+         *//*
+
         public Builder setPluggedIn(Property<PluggedIn> pluggedIn) {
             this.pluggedIn = pluggedIn.setIdentifier(IDENTIFIER_PLUGGED_IN);
             addProperty(this.pluggedIn);
             return this;
         }
         
-        /**
+        */
+/**
          * @param status The status
          * @return The builder
-         */
+         *//*
+
         public Builder setStatus(Property<Status> status) {
             this.status = status.setIdentifier(IDENTIFIER_STATUS);
             addProperty(this.status);
@@ -727,4 +814,4 @@ public class ChargingState extends SetCommand {
             return value;
         }
     }
-}
+}*/

@@ -1,8 +1,9 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.BaseTest;
-import com.highmobility.autoapi.ChargingState;
-import com.highmobility.autoapi.ChargingState.ChargeMode;
+import com.highmobility.autoapi.Charging;
+import com.highmobility.autoapi.Charging.State;
+import com.highmobility.autoapi.Charging.ChargeMode;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.TestUtils;
@@ -151,7 +152,7 @@ public class PropertyTest extends BaseTest {
             // test if float expected but bytes are with smaller length
             // charging with invalid length chargeCurrentAC. cannot parse to float
             // correct chargeCurrentDC
-            ChargingState command = (ChargingState) CommandResolver.resolve(
+            Charging.State command = (Charging.State) CommandResolver.resolve(
                     "002301" +
                             "040006010003BF1999" +
                             "050007010004BF19999A");
@@ -166,7 +167,7 @@ public class PropertyTest extends BaseTest {
         // test if invalid failure reason
         // 0x11 is invalid failure reason
         TestUtils.errorLogExpected(() -> {
-            ChargingState command = (ChargingState) CommandResolver.resolve(
+            Charging.State command = (Charging.State) CommandResolver.resolve(
                     "002301" +
                             "040016010004BF19999A" + "03000C110A54727920696e20343073" +
                             "050007010004BF19999A");

@@ -24,63 +24,63 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ReductionTime;
 import java.util.ArrayList;
 
-/**
- * Set reduction of charging current times
- */
-public class SetReductionOfChargingCurrentTimes extends SetCommand {
-    public static final Integer IDENTIFIER = Identifier.CHARGING;
-
-    public static final byte IDENTIFIER_REDUCTION_TIMES = 0x13;
-
-    Property<ReductionTime>[] reductionTimes;
-
-    /**
-     * @return The reduction times
-     */
-    public Property<ReductionTime>[] getReductionTimes() {
-        return reductionTimes;
-    }
-    
-    /**
-     * Set reduction of charging current times
-     *
-     * @param reductionTimes The reduction times
-     */
-    public SetReductionOfChargingCurrentTimes(ReductionTime[] reductionTimes) {
-        super(IDENTIFIER);
-    
-        ArrayList<Property> reductionTimesBuilder = new ArrayList<>();
-        if (reductionTimes != null) {
-            for (ReductionTime reductionTime : reductionTimes) {
-                Property prop = new Property(0x13, reductionTime);
-                reductionTimesBuilder.add(prop);
-                addProperty(prop);
-            }
-        }
-        this.reductionTimes = reductionTimesBuilder.toArray(new Property[0]);
-        createBytes();
-    }
-
-    SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException, NoPropertiesException {
-        super(bytes);
-    
-        ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
-    
-        while (propertyIterator.hasNext()) {
-            propertyIterator.parseNext(p -> {
-                switch (p.getPropertyIdentifier()) {
-                    case IDENTIFIER_REDUCTION_TIMES: {
-                        Property reductionTime = new Property(ReductionTime.class, p);
-                        reductionTimesBuilder.add(reductionTime);
-                        return reductionTime;
-                    }
-                }
-                return null;
-            });
-        }
-    
-        reductionTimes = reductionTimesBuilder.toArray(new Property[0]);
-        if (this.reductionTimes.length == 0) 
-            throw new NoPropertiesException();
-    }
-}
+///**
+// * Set reduction of charging current times
+// */
+//public class SetReductionOfChargingCurrentTimes extends SetCommand {
+//    public static final Integer IDENTIFIER = Identifier.CHARGING;
+//
+//    public static final byte IDENTIFIER_REDUCTION_TIMES = 0x13;
+//
+//    Property<ReductionTime>[] reductionTimes;
+//
+//    /**
+//     * @return The reduction times
+//     */
+//    public Property<ReductionTime>[] getReductionTimes() {
+//        return reductionTimes;
+//    }
+//
+//    /**
+//     * Set reduction of charging current times
+//     *
+//     * @param reductionTimes The reduction times
+//     */
+//    public SetReductionOfChargingCurrentTimes(ReductionTime[] reductionTimes) {
+//        super(IDENTIFIER);
+//
+//        ArrayList<Property> reductionTimesBuilder = new ArrayList<>();
+//        if (reductionTimes != null) {
+//            for (ReductionTime reductionTime : reductionTimes) {
+//                Property prop = new Property(0x13, reductionTime);
+//                reductionTimesBuilder.add(prop);
+//                addProperty(prop);
+//            }
+//        }
+//        this.reductionTimes = reductionTimesBuilder.toArray(new Property[0]);
+//        createBytes();
+//    }
+//
+//    SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException, NoPropertiesException {
+//        super(bytes);
+//
+//        ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
+//
+//        while (propertyIterator.hasNext()) {
+//            propertyIterator.parseNext(p -> {
+//                switch (p.getPropertyIdentifier()) {
+//                    case IDENTIFIER_REDUCTION_TIMES: {
+//                        Property reductionTime = new Property(ReductionTime.class, p);
+//                        reductionTimesBuilder.add(reductionTime);
+//                        return reductionTime;
+//                    }
+//                }
+//                return null;
+//            });
+//        }
+//
+//        reductionTimes = reductionTimesBuilder.toArray(new Property[0]);
+//        if (this.reductionTimes.length == 0)
+//            throw new NoPropertiesException();
+//    }
+//}

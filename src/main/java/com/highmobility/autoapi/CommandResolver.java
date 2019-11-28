@@ -386,29 +386,29 @@ public class CommandResolver {
                     }
                     break;
                 }
-                case CHARGING: {
+                case Charging.IDENTIFIER: {
                     if (type == Type.SET) {
                         if (getRuntime() == RunTime.ANDROID) {
-                            command = new ChargingState(bytes);
+                            command = new Charging.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(7);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
                                         case 0:
-                                            return new StartStopCharging(bytes);
+                                            return new Charging.StartStopCharging(bytes);
                                         case 1:
-                                            return new SetChargeLimit(bytes);
+                                            return new Charging.SetChargeLimit(bytes);
                                         case 2:
-                                            return new OpenCloseChargingPort(bytes);
+                                            return new Charging.OpenCloseChargingPort(bytes);
                                         case 3:
-                                            return new SetChargeMode(bytes);
+                                            return new Charging.SetChargeMode(bytes);
                                         case 4:
-                                            return new SetChargingTimers(bytes);
+                                            return new Charging.SetChargingTimers(bytes);
                                         case 5:
-                                            return new SetReductionOfChargingCurrentTimes(bytes);
+                                            return new Charging.SetReductionOfChargingCurrentTimes(bytes);
                                         case 6:
-                                            return new ChargingState(bytes);
+                                            return new Charging.State(bytes);
                                     }
                                     return null;
                                 });
@@ -416,9 +416,9 @@ public class CommandResolver {
                         }
                     } else if (type == Type.GET) {
                         if (bytes.length == 3) {
-                            command = new GetChargingState(bytes);
+                            command = new Charging.GetState(bytes);
                         } else {
-                            command = new GetChargingProperties(bytes);
+                            command = new Charging.GetProperties(bytes);
                         }
                     }
                     break;
