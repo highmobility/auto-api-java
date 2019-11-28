@@ -50,8 +50,8 @@ public class Command extends Bytes {
     public static Logger logger = LoggerFactory.getLogger(Command.class);
     private static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be " +
             "null";
-    private static final String INVALID_VERSION_EXCEPTION = "Invalid AutoAPI version. This package supports level " +
-            "%d."; // TODO: 25.11.2019 test
+    private static final String INVALID_VERSION_EXCEPTION = "Invalid AutoAPI version. This " +
+            "package supports level %d.";
 
     public static final byte NONCE_IDENTIFIER = (byte) 0xA0;
     public static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
@@ -203,20 +203,18 @@ public class Command extends Bytes {
     }
 
     private void setTypeAndBytes(byte[] bytes) {
-        if (bytes == null || bytes.length < 5) {
-            byte firstByte = 0, secondByte = 0, thirdByte = 0;
-            if (bytes != null) {
-                if (bytes.length > 0) firstByte = bytes[2];
-                if (bytes.length > 1) secondByte = bytes[3];
-                if (bytes.length > 2) thirdByte = bytes[4];
-            }
+        byte versionByte = 0, firstByte = 0, secondByte = 0, thirdByte = 0;
 
-            identifier = Identifier.fromBytes(firstByte, secondByte);
-            type = Type.fromByte(thirdByte);
-        } else {
-            identifier = Identifier.fromBytes(bytes[2], bytes[3]);
-            type = Type.fromByte(bytes[4]);
+        if (bytes != null) {
+            if (bytes.length > 1) versionByte = bytes[1];
+            if (bytes.length > 2) firstByte = bytes[2];
+            if (bytes.length > 3) secondByte = bytes[3];
+            if (bytes.length > 4) thirdByte = bytes[4];
         }
+
+        identifier = Identifier.fromBytes(firstByte, secondByte);
+        type = Type.fromByte(thirdByte);
+        autoApiVersion = (int) versionByte;
     }
 
     protected void findUniversalProperties(Integer identifier, Integer type,
