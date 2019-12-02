@@ -47,7 +47,8 @@ public class TextInput extends SetCommand {
     public TextInput(String text) {
         super(IDENTIFIER);
     
-        addProperty(this.text.update(text), true);
+        addProperty(this.text.update(text));
+        createBytes();
     }
 
     TextInput(byte[] bytes) throws CommandParseException, NoPropertiesException {

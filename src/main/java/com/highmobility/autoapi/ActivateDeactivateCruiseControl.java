@@ -61,7 +61,8 @@ public class ActivateDeactivateCruiseControl extends SetCommand {
         super(IDENTIFIER);
     
         addProperty(this.cruiseControl.update(cruiseControl));
-        addProperty(this.targetSpeed.update(true, 2, targetSpeed), true);
+        addProperty(this.targetSpeed.update(true, 2, targetSpeed));
+        createBytes();
     }
 
     ActivateDeactivateCruiseControl(byte[] bytes) throws CommandParseException, NoPropertiesException {

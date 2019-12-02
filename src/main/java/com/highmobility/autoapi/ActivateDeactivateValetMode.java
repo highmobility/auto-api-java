@@ -48,7 +48,8 @@ public class ActivateDeactivateValetMode extends SetCommand {
     public ActivateDeactivateValetMode(ActiveState status) {
         super(IDENTIFIER);
     
-        addProperty(this.status.update(status), true);
+        addProperty(this.status.update(status));
+        createBytes();
     }
 
     ActivateDeactivateValetMode(byte[] bytes) throws CommandParseException, NoPropertiesException {

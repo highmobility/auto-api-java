@@ -48,7 +48,8 @@ public class OpenCloseChargingPort extends SetCommand {
     public OpenCloseChargingPort(Position chargePortState) {
         super(IDENTIFIER);
     
-        addProperty(this.chargePortState.update(chargePortState), true);
+        addProperty(this.chargePortState.update(chargePortState));
+        createBytes();
     }
 
     OpenCloseChargingPort(byte[] bytes) throws CommandParseException, NoPropertiesException {

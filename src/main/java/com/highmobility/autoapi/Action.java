@@ -47,7 +47,8 @@ public class Action extends SetCommand {
     public Action(Integer activatedAction) {
         super(IDENTIFIER);
     
-        addProperty(this.activatedAction.update(false, 1, activatedAction), true);
+        addProperty(this.activatedAction.update(false, 1, activatedAction));
+        createBytes();
     }
 
     Action(byte[] bytes) throws CommandParseException, NoPropertiesException {

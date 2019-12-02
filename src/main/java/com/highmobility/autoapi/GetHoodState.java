@@ -30,7 +30,7 @@ public class GetHoodState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetHoodState(byte[] bytes) {
+    GetHoodState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

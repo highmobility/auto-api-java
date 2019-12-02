@@ -59,8 +59,9 @@ public class ControlCommand extends SetCommand {
         super(IDENTIFIER);
     
         addProperty(this.angle.update(true, 2, angle));
-        addProperty(this.speed.update(true, 1, speed), true);
+        addProperty(this.speed.update(true, 1, speed));
         if (this.angle.getValue() == null && this.speed.getValue() == null) throw new IllegalArgumentException();
+        createBytes();
     }
 
     ControlCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {

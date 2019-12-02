@@ -30,7 +30,7 @@ public class GetTachographState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetTachographState(byte[] bytes) {
+    GetTachographState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

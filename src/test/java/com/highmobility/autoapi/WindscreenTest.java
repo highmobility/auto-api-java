@@ -32,7 +32,7 @@ public class WindscreenTest extends BaseTest {
     }
 
     private void testState(WindscreenState state) {
-        assertTrue(state.getWipers().getValue() == WindscreenState.Wipers.AUTOMATIC);
+        assertTrue(state.getWipersStatus().getValue() == WindscreenState.WipersStatus.AUTOMATIC);
         assertTrue(state.getWipersIntensity().getValue() == WindscreenState.WipersIntensity.LEVEL_3);
         assertTrue(state.getWindscreenDamage().getValue() == WindscreenState.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED);
 
@@ -56,7 +56,7 @@ public class WindscreenTest extends BaseTest {
     @Test public void build() {
         WindscreenState.Builder builder = new WindscreenState.Builder();
 
-        builder.setWipers(new Property(WindscreenState.Wipers.AUTOMATIC));
+        builder.setWipersStatus(new Property(WindscreenState.WipersStatus.AUTOMATIC));
         builder.setWipersIntensity(new Property(WindscreenState.WipersIntensity.LEVEL_3));
         builder.setWindscreenDamage(new Property(WindscreenState.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED));
         Zone matrix = new Zone(4, 3);
@@ -131,15 +131,15 @@ public class WindscreenTest extends BaseTest {
                 "01000401000101" +
                 "02000401000102");
 
-        ControlWipers create = new ControlWipers(WindscreenState.Wipers.ACTIVE,
+        ControlWipers create = new ControlWipers(WindscreenState.WipersStatus.ACTIVE,
                 WindscreenState.WipersIntensity.LEVEL_2);
         assertTrue(create.getWipersIntensity().getValue() == WindscreenState.WipersIntensity.LEVEL_2);
-        assertTrue(create.getWipers().getValue() == WindscreenState.Wipers.ACTIVE);
+        assertTrue(create.getWipersStatus().getValue() == WindscreenState.WipersStatus.ACTIVE);
         assertTrue(bytesTheSame(create, bytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
         ControlWipers resolve = (ControlWipers) CommandResolver.resolve(bytes);
-        assertTrue(resolve.getWipers().getValue() == WindscreenState.Wipers.ACTIVE);
+        assertTrue(resolve.getWipersStatus().getValue() == WindscreenState.WipersStatus.ACTIVE);
         assertTrue(resolve.getWipersIntensity().getValue() == WindscreenState.WipersIntensity.LEVEL_2);
     }
 }

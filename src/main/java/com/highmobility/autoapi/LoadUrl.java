@@ -47,7 +47,8 @@ public class LoadUrl extends SetCommand {
     public LoadUrl(String url) {
         super(IDENTIFIER);
     
-        addProperty(this.url.update(url), true);
+        addProperty(this.url.update(url));
+        createBytes();
     }
 
     LoadUrl(byte[] bytes) throws CommandParseException, NoPropertiesException {

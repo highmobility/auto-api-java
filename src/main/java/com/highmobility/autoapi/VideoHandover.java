@@ -72,7 +72,8 @@ public class VideoHandover extends SetCommand {
     
         addProperty(this.url.update(url));
         addProperty(this.startingSecond.update(false, 2, startingSecond));
-        addProperty(this.screen.update(screen), true);
+        addProperty(this.screen.update(screen));
+        createBytes();
     }
 
     VideoHandover(byte[] bytes) throws CommandParseException, NoPropertiesException {

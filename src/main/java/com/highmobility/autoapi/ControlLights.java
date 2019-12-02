@@ -132,11 +132,12 @@ public class ControlLights extends SetCommand {
             for (Light interiorLight : interiorLights) {
                 Property prop = new Property(0x09, interiorLight);
                 interiorLightsBuilder.add(prop);
-                addProperty(prop, true);
+                addProperty(prop);
             }
         }
         this.interiorLights = interiorLightsBuilder.toArray(new Property[0]);
         if (this.frontExteriorLight.getValue() == null && this.rearExteriorLight.getValue() == null && this.ambientLightColour.getValue() == null && this.fogLights.length == 0 && this.readingLamps.length == 0 && this.interiorLights.length == 0) throw new IllegalArgumentException();
+        createBytes();
     }
 
     ControlLights(byte[] bytes) throws CommandParseException, NoPropertiesException {

@@ -53,10 +53,11 @@ public class MultiCommand extends SetCommand {
             for (Command multiCommand : multiCommands) {
                 Property prop = new Property(0x02, multiCommand);
                 multiCommandsBuilder.add(prop);
-                addProperty(prop, true);
+                addProperty(prop);
             }
         }
         this.multiCommands = multiCommandsBuilder.toArray(new Property[0]);
+        createBytes();
     }
 
     MultiCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {

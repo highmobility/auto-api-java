@@ -71,7 +71,8 @@ public class ConnectToNetwork extends SetCommand {
     
         addProperty(this.networkSSID.update(networkSSID));
         addProperty(this.networkSecurity.update(networkSecurity));
-        addProperty(this.password.update(password), true);
+        addProperty(this.password.update(password));
+        createBytes();
     }
 
     ConnectToNetwork(byte[] bytes) throws CommandParseException, NoPropertiesException {

@@ -40,7 +40,8 @@ public class StartControl extends SetCommand {
     public StartControl() {
         super(IDENTIFIER);
     
-        addProperty(controlMode.addValueComponent(new Bytes("02")), true);
+        addProperty(controlMode.addValueComponent(new Bytes("02")));
+        createBytes();
     }
 
     StartControl(byte[] bytes) throws CommandParseException, NoPropertiesException {

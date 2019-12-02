@@ -30,7 +30,7 @@ public class GetEngineStartStopState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetEngineStartStopState(byte[] bytes) {
+    GetEngineStartStopState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

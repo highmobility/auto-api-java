@@ -30,7 +30,7 @@ public class GetNaviDestination extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetNaviDestination(byte[] bytes) {
+    GetNaviDestination(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

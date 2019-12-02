@@ -48,7 +48,8 @@ public class AuthenticateExpire extends SetCommand {
     public AuthenticateExpire(AuthenticationState authenticationState) {
         super(IDENTIFIER);
     
-        addProperty(this.authenticationState.update(authenticationState), true);
+        addProperty(this.authenticationState.update(authenticationState));
+        createBytes();
     }
 
     AuthenticateExpire(byte[] bytes) throws CommandParseException, NoPropertiesException {

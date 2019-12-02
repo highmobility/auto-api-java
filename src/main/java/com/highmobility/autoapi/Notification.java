@@ -66,10 +66,11 @@ public class Notification extends SetCommand {
             for (ActionItem actionItem : actionItems) {
                 Property prop = new Property(0x02, actionItem);
                 actionItemsBuilder.add(prop);
-                addProperty(prop, true);
+                addProperty(prop);
             }
         }
         this.actionItems = actionItemsBuilder.toArray(new Property[0]);
+        createBytes();
     }
 
     Notification(byte[] bytes) throws CommandParseException, NoPropertiesException {

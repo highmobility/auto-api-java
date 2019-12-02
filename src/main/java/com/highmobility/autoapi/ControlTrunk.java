@@ -61,8 +61,9 @@ public class ControlTrunk extends SetCommand {
         super(IDENTIFIER);
     
         addProperty(this.lock.update(lock));
-        addProperty(this.position.update(position), true);
+        addProperty(this.position.update(position));
         if (this.lock.getValue() == null && this.position.getValue() == null) throw new IllegalArgumentException();
+        createBytes();
     }
 
     ControlTrunk(byte[] bytes) throws CommandParseException, NoPropertiesException {

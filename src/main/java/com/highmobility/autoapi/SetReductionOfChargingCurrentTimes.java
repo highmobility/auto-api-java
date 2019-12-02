@@ -54,10 +54,11 @@ public class SetReductionOfChargingCurrentTimes extends SetCommand {
             for (ReductionTime reductionTime : reductionTimes) {
                 Property prop = new Property(0x13, reductionTime);
                 reductionTimesBuilder.add(prop);
-                addProperty(prop, true);
+                addProperty(prop);
             }
         }
         this.reductionTimes = reductionTimesBuilder.toArray(new Property[0]);
+        createBytes();
     }
 
     SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException, NoPropertiesException {

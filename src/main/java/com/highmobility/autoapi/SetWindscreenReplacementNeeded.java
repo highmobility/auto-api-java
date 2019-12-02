@@ -48,7 +48,8 @@ public class SetWindscreenReplacementNeeded extends SetCommand {
     public SetWindscreenReplacementNeeded(WindscreenNeedsReplacement windscreenNeedsReplacement) {
         super(IDENTIFIER);
     
-        addProperty(this.windscreenNeedsReplacement.update(windscreenNeedsReplacement), true);
+        addProperty(this.windscreenNeedsReplacement.update(windscreenNeedsReplacement));
+        createBytes();
     }
 
     SetWindscreenReplacementNeeded(byte[] bytes) throws CommandParseException, NoPropertiesException {

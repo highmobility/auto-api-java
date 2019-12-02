@@ -30,7 +30,7 @@ public class GetLightConditions extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetLightConditions(byte[] bytes) {
+    GetLightConditions(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

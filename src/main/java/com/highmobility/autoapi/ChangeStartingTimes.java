@@ -54,10 +54,11 @@ public class ChangeStartingTimes extends SetCommand {
             for (HvacWeekdayStartingTime hvacWeekdayStartingTime : hvacWeekdayStartingTimes) {
                 Property prop = new Property(0x0b, hvacWeekdayStartingTime);
                 hvacWeekdayStartingTimesBuilder.add(prop);
-                addProperty(prop, true);
+                addProperty(prop);
             }
         }
         this.hvacWeekdayStartingTimes = hvacWeekdayStartingTimesBuilder.toArray(new Property[0]);
+        createBytes();
     }
 
     ChangeStartingTimes(byte[] bytes) throws CommandParseException, NoPropertiesException {

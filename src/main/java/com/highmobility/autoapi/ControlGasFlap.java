@@ -61,8 +61,9 @@ public class ControlGasFlap extends SetCommand {
         super(IDENTIFIER);
     
         addProperty(this.gasFlapLock.update(gasFlapLock));
-        addProperty(this.gasFlapPosition.update(gasFlapPosition), true);
+        addProperty(this.gasFlapPosition.update(gasFlapPosition));
         if (this.gasFlapLock.getValue() == null && this.gasFlapPosition.getValue() == null) throw new IllegalArgumentException();
+        createBytes();
     }
 
     ControlGasFlap(byte[] bytes) throws CommandParseException, NoPropertiesException {

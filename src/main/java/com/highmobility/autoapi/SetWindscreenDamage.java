@@ -61,7 +61,8 @@ public class SetWindscreenDamage extends SetCommand {
         super(IDENTIFIER);
     
         addProperty(this.windscreenDamage.update(windscreenDamage));
-        addProperty(this.windscreenDamageZone.update(windscreenDamageZone), true);
+        addProperty(this.windscreenDamageZone.update(windscreenDamageZone));
+        createBytes();
     }
 
     SetWindscreenDamage(byte[] bytes) throws CommandParseException, NoPropertiesException {

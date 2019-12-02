@@ -30,7 +30,7 @@ public class GetWeatherConditions extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetWeatherConditions(byte[] bytes) {
+    GetWeatherConditions(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

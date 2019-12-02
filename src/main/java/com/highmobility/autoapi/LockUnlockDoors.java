@@ -48,7 +48,8 @@ public class LockUnlockDoors extends SetCommand {
     public LockUnlockDoors(LockState insideLocksState) {
         super(IDENTIFIER);
     
-        addProperty(this.insideLocksState.update(insideLocksState), true);
+        addProperty(this.insideLocksState.update(insideLocksState));
+        createBytes();
     }
 
     LockUnlockDoors(byte[] bytes) throws CommandParseException, NoPropertiesException {

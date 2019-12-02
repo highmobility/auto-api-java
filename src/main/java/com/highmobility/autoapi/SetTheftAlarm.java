@@ -48,7 +48,8 @@ public class SetTheftAlarm extends SetCommand {
     public SetTheftAlarm(Status status) {
         super(IDENTIFIER);
     
-        addProperty(this.status.update(status), true);
+        addProperty(this.status.update(status));
+        createBytes();
     }
 
     SetTheftAlarm(byte[] bytes) throws CommandParseException, NoPropertiesException {

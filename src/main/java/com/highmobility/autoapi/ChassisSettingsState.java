@@ -94,7 +94,7 @@ public class ChassisSettingsState extends SetCommand {
     }
 
     /**
-     * @return The maximum chassis position
+     * @return The maximum possible value for the chassis position
      */
     public PropertyInteger getMaximumChassisPosition() {
         return maximumChassisPosition;
@@ -295,7 +295,7 @@ public class ChassisSettingsState extends SetCommand {
         }
         
         /**
-         * @param maximumChassisPosition The maximum chassis position
+         * @param maximumChassisPosition The maximum possible value for the chassis position
          * @return The builder
          */
         public Builder setMaximumChassisPosition(Property<Integer> maximumChassisPosition) {

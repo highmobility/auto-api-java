@@ -30,7 +30,7 @@ public class GetLightsState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetLightsState(byte[] bytes) {
+    GetLightsState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

@@ -54,10 +54,11 @@ public class SetPriceTariffs extends SetCommand {
             for (PriceTariff priceTariff : priceTariffs) {
                 Property prop = new Property(0x12, priceTariff);
                 priceTariffsBuilder.add(prop);
-                addProperty(prop, true);
+                addProperty(prop);
             }
         }
         this.priceTariffs = priceTariffsBuilder.toArray(new Property[0]);
+        createBytes();
     }
 
     SetPriceTariffs(byte[] bytes) throws CommandParseException, NoPropertiesException {

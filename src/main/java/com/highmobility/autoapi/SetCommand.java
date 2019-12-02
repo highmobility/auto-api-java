@@ -45,26 +45,15 @@ class SetCommand extends Command {
      * @param property The property.
      */
     protected void addProperty(Property property) {
-        if (property.getValueComponent() == null) return;
+        if (property == null || property.getValueComponent() == null) return;
         if (propertiesBuilder == null) propertiesBuilder = new ArrayList();
         propertiesBuilder.add(property);
     }
 
-    /**
-     * Add a property to the command. It is used in SetCommands, to create the bytes and properties
-     * array.
-     *
-     * @param property    The property.
-     * @param createBytes Whether to create the bytes array.
-     */
-    protected void addProperty(Property property, boolean createBytes) {
-        if (property != null && property.getValueComponent() != null) addProperty(property);
-
-        if (createBytes) {
-            if (propertiesBuilder == null) propertiesBuilder = new ArrayList();
-            findUniversalProperties(identifier, type, propertiesBuilder.toArray(new Property[0]),
-                    true);
-        }
+    protected void createBytes() {
+        if (propertiesBuilder == null) propertiesBuilder = new ArrayList();
+        findUniversalProperties(identifier, type, propertiesBuilder.toArray(new Property[0]),
+                true);
     }
 
     SetCommand(byte[] bytes) throws CommandParseException {

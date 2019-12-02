@@ -40,7 +40,8 @@ public class ClearNotification extends SetCommand {
     public ClearNotification() {
         super(IDENTIFIER);
     
-        addProperty(clear.addValueComponent(new Bytes("00")), true);
+        addProperty(clear.addValueComponent(new Bytes("00")));
+        createBytes();
     }
 
     ClearNotification(byte[] bytes) throws CommandParseException, NoPropertiesException {

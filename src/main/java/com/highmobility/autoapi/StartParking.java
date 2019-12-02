@@ -76,7 +76,7 @@ public class StartParking extends SetCommand {
      * Start parking
      *
      * @param operatorName Operator name
-     * @param operatorTicketID Operator Ticket ID
+     * @param operatorTicketID Operator ticket ID
      * @param ticketStartTime Milliseconds since UNIX Epoch time
      * @param ticketEndTime Milliseconds since UNIX Epoch time
      */
@@ -87,7 +87,8 @@ public class StartParking extends SetCommand {
         addProperty(this.operatorName.update(operatorName));
         addProperty(this.operatorTicketID.update(operatorTicketID));
         addProperty(this.ticketStartTime.update(ticketStartTime));
-        addProperty(this.ticketEndTime.update(ticketEndTime), true);
+        addProperty(this.ticketEndTime.update(ticketEndTime));
+        createBytes();
     }
 
     StartParking(byte[] bytes) throws CommandParseException, NoPropertiesException {

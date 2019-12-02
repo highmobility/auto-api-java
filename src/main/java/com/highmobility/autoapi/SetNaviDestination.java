@@ -60,7 +60,8 @@ public class SetNaviDestination extends SetCommand {
         super(IDENTIFIER);
     
         addProperty(this.coordinates.update(coordinates));
-        addProperty(this.destinationName.update(destinationName), true);
+        addProperty(this.destinationName.update(destinationName));
+        createBytes();
     }
 
     SetNaviDestination(byte[] bytes) throws CommandParseException, NoPropertiesException {

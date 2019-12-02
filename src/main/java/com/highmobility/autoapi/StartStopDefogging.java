@@ -48,7 +48,8 @@ public class StartStopDefogging extends SetCommand {
     public StartStopDefogging(ActiveState defoggingState) {
         super(IDENTIFIER);
     
-        addProperty(this.defoggingState.update(defoggingState), true);
+        addProperty(this.defoggingState.update(defoggingState));
+        createBytes();
     }
 
     StartStopDefogging(byte[] bytes) throws CommandParseException, NoPropertiesException {

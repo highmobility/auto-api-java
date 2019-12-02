@@ -32,7 +32,7 @@ public class WifiTest extends BaseTest {
 
     private void testState(WiFiState state) {
         assertTrue(state.getStatus().getValue() == EnabledState.ENABLED);
-        assertTrue(state.getNetworkConnection().getValue() == ConnectionState.CONNECTED);
+        assertTrue(state.getNetworkConnected().getValue() == ConnectionState.CONNECTED);
         assertTrue(state.getNetworkSSID().getValue().equals("HOME"));
         assertTrue(state.getNetworkSecurity().getValue() == NetworkSecurity.WPA2_PERSONAL);
         assertTrue(bytesTheSame(state, bytes));
@@ -42,7 +42,7 @@ public class WifiTest extends BaseTest {
         WiFiState.Builder builder = new WiFiState.Builder();
 
         builder.setStatus(new Property(EnabledState.ENABLED));
-        builder.setNetworkConnection(new Property(ConnectionState.CONNECTED));
+        builder.setNetworkConnected(new Property(ConnectionState.CONNECTED));
         builder.setNetworkSSID(new Property("HOME"));
         builder.setNetworkSecurity(new Property(NetworkSecurity.WPA2_PERSONAL));
 

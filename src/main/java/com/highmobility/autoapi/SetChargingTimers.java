@@ -54,10 +54,11 @@ public class SetChargingTimers extends SetCommand {
             for (Timer timer : timers) {
                 Property prop = new Property(0x15, timer);
                 timersBuilder.add(prop);
-                addProperty(prop, true);
+                addProperty(prop);
             }
         }
         this.timers = timersBuilder.toArray(new Property[0]);
+        createBytes();
     }
 
     SetChargingTimers(byte[] bytes) throws CommandParseException, NoPropertiesException {

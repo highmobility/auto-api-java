@@ -47,7 +47,8 @@ public class SetChargeLimit extends SetCommand {
     public SetChargeLimit(Double chargeLimit) {
         super(IDENTIFIER);
     
-        addProperty(this.chargeLimit.update(chargeLimit), true);
+        addProperty(this.chargeLimit.update(chargeLimit));
+        createBytes();
     }
 
     SetChargeLimit(byte[] bytes) throws CommandParseException, NoPropertiesException {

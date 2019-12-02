@@ -172,4 +172,27 @@ public class LightsTest extends BaseTest {
             }
         }
     }
+
+    @Test public void someValuesMissing() {
+        Bytes waitingForBytes = new Bytes("003601" +
+                "0700050100020000");
+
+        Light[] fogLights = new Light[1];
+        fogLights[0] = new Light(LocationLongitudinal.FRONT, ActiveState.INACTIVE);
+
+        Bytes bytes = new ControlLights(
+                null,
+                null,
+                null,
+                fogLights,
+                null,
+                null);
+
+        assertTrue(bytesTheSame(bytes, waitingForBytes));
+
+        setRuntime(CommandResolver.RunTime.JAVA);
+        ControlLights command = (ControlLights) CommandResolver.resolve(waitingForBytes);
+
+        assertTrue(command.getFogLights()[0].getValue().getActiveState() == ActiveState.INACTIVE);
+    }
 }

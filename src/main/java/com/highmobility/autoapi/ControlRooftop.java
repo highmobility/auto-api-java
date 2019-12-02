@@ -103,8 +103,9 @@ public class ControlRooftop extends SetCommand {
     
         addProperty(this.convertibleRoofState.update(convertibleRoofState));
         addProperty(this.sunroofTiltState.update(sunroofTiltState));
-        addProperty(this.sunroofState.update(sunroofState), true);
+        addProperty(this.sunroofState.update(sunroofState));
         if (this.dimming.getValue() == null && this.position.getValue() == null && this.convertibleRoofState.getValue() == null && this.sunroofTiltState.getValue() == null && this.sunroofState.getValue() == null) throw new IllegalArgumentException();
+        createBytes();
     }
 
     ControlRooftop(byte[] bytes) throws CommandParseException, NoPropertiesException {

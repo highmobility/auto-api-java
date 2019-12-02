@@ -48,7 +48,8 @@ public class StartStopDefrosting extends SetCommand {
     public StartStopDefrosting(ActiveState defrostingState) {
         super(IDENTIFIER);
     
-        addProperty(this.defrostingState.update(defrostingState), true);
+        addProperty(this.defrostingState.update(defrostingState));
+        createBytes();
     }
 
     StartStopDefrosting(byte[] bytes) throws CommandParseException, NoPropertiesException {

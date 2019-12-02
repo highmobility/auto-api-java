@@ -59,8 +59,9 @@ public class HonkFlash extends SetCommand {
         super(IDENTIFIER);
     
         addProperty(this.honkSeconds.update(false, 1, honkSeconds));
-        addProperty(this.flashTimes.update(false, 1, flashTimes), true);
+        addProperty(this.flashTimes.update(false, 1, flashTimes));
         if (this.honkSeconds.getValue() == null && this.flashTimes.getValue() == null) throw new IllegalArgumentException();
+        createBytes();
     }
 
     HonkFlash(byte[] bytes) throws CommandParseException, NoPropertiesException {

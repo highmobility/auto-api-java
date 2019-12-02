@@ -47,7 +47,8 @@ public class DisplayImage extends SetCommand {
     public DisplayImage(String imageURL) {
         super(IDENTIFIER);
     
-        addProperty(this.imageURL.update(imageURL), true);
+        addProperty(this.imageURL.update(imageURL));
+        createBytes();
     }
 
     DisplayImage(byte[] bytes) throws CommandParseException, NoPropertiesException {

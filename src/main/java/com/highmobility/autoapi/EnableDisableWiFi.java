@@ -48,7 +48,8 @@ public class EnableDisableWiFi extends SetCommand {
     public EnableDisableWiFi(EnabledState status) {
         super(IDENTIFIER);
     
-        addProperty(this.status.update(status), true);
+        addProperty(this.status.update(status));
+        createBytes();
     }
 
     EnableDisableWiFi(byte[] bytes) throws CommandParseException, NoPropertiesException {

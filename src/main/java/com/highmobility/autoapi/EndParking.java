@@ -40,7 +40,8 @@ public class EndParking extends SetCommand {
     public EndParking() {
         super(IDENTIFIER);
     
-        addProperty(status.addValueComponent(new Bytes("00")), true);
+        addProperty(status.addValueComponent(new Bytes("00")));
+        createBytes();
     }
 
     EndParking(byte[] bytes) throws CommandParseException, NoPropertiesException {

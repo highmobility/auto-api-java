@@ -54,10 +54,11 @@ public class SetSpringRates extends SetCommand {
             for (SpringRate currentSpringRate : currentSpringRates) {
                 Property prop = new Property(0x05, currentSpringRate);
                 currentSpringRatesBuilder.add(prop);
-                addProperty(prop, true);
+                addProperty(prop);
             }
         }
         this.currentSpringRates = currentSpringRatesBuilder.toArray(new Property[0]);
+        createBytes();
     }
 
     SetSpringRates(byte[] bytes) throws CommandParseException, NoPropertiesException {

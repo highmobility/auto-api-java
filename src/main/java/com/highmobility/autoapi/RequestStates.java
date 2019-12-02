@@ -72,7 +72,8 @@ public class RequestStates extends SetCommand {
     
         addProperty(this.capabilityID.update(false, 2, capabilityID));
         addProperty(this.startDate.update(startDate));
-        addProperty(this.endDate.update(endDate), true);
+        addProperty(this.endDate.update(endDate));
+        createBytes();
     }
 
     RequestStates(byte[] bytes) throws CommandParseException, NoPropertiesException {

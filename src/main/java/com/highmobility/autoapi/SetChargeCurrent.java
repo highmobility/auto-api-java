@@ -47,7 +47,8 @@ public class SetChargeCurrent extends SetCommand {
     public SetChargeCurrent(Float chargeCurrentDC) {
         super(IDENTIFIER);
     
-        addProperty(this.chargeCurrentDC.update(chargeCurrentDC), true);
+        addProperty(this.chargeCurrentDC.update(chargeCurrentDC));
+        createBytes();
     }
 
     SetChargeCurrent(byte[] bytes) throws CommandParseException, NoPropertiesException {

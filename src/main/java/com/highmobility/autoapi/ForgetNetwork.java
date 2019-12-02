@@ -47,7 +47,8 @@ public class ForgetNetwork extends SetCommand {
     public ForgetNetwork(String networkSSID) {
         super(IDENTIFIER);
     
-        addProperty(this.networkSSID.update(networkSSID), true);
+        addProperty(this.networkSSID.update(networkSSID));
+        createBytes();
     }
 
     ForgetNetwork(byte[] bytes) throws CommandParseException, NoPropertiesException {

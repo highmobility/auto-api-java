@@ -48,7 +48,8 @@ public class ActivateDeactivateSolarCharging extends SetCommand {
     public ActivateDeactivateSolarCharging(ActiveState solarCharging) {
         super(IDENTIFIER);
     
-        addProperty(this.solarCharging.update(solarCharging), true);
+        addProperty(this.solarCharging.update(solarCharging));
+        createBytes();
     }
 
     ActivateDeactivateSolarCharging(byte[] bytes) throws CommandParseException, NoPropertiesException {

@@ -48,7 +48,8 @@ public class ActivateDeactivateStartStop extends SetCommand {
     public ActivateDeactivateStartStop(ActiveState status) {
         super(IDENTIFIER);
     
-        addProperty(this.status.update(status), true);
+        addProperty(this.status.update(status));
+        createBytes();
     }
 
     ActivateDeactivateStartStop(byte[] bytes) throws CommandParseException, NoPropertiesException {

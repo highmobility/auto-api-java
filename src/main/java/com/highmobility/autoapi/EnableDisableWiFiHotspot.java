@@ -48,7 +48,8 @@ public class EnableDisableWiFiHotspot extends SetCommand {
     public EnableDisableWiFiHotspot(EnabledState wifiHotspotEnabled) {
         super(IDENTIFIER);
     
-        addProperty(this.wifiHotspotEnabled.update(wifiHotspotEnabled), true);
+        addProperty(this.wifiHotspotEnabled.update(wifiHotspotEnabled));
+        createBytes();
     }
 
     EnableDisableWiFiHotspot(byte[] bytes) throws CommandParseException, NoPropertiesException {

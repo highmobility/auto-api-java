@@ -48,7 +48,8 @@ public class SetDrivingMode extends SetCommand {
     public SetDrivingMode(DrivingMode drivingMode) {
         super(IDENTIFIER);
     
-        addProperty(this.drivingMode.update(drivingMode), true);
+        addProperty(this.drivingMode.update(drivingMode));
+        createBytes();
     }
 
     SetDrivingMode(byte[] bytes) throws CommandParseException, NoPropertiesException {

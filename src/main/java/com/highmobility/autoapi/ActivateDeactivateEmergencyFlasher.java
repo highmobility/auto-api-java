@@ -48,7 +48,8 @@ public class ActivateDeactivateEmergencyFlasher extends SetCommand {
     public ActivateDeactivateEmergencyFlasher(ActiveState emergencyFlashersState) {
         super(IDENTIFIER);
     
-        addProperty(this.emergencyFlashersState.update(emergencyFlashersState), true);
+        addProperty(this.emergencyFlashersState.update(emergencyFlashersState));
+        createBytes();
     }
 
     ActivateDeactivateEmergencyFlasher(byte[] bytes) throws CommandParseException, NoPropertiesException {

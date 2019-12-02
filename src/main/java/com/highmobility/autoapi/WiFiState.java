@@ -36,7 +36,7 @@ public class WiFiState extends SetCommand {
     public static final byte IDENTIFIER_NETWORK_SECURITY = 0x04;
 
     Property<EnabledState> status = new Property(EnabledState.class, IDENTIFIER_STATUS);
-    Property<ConnectionState> networkConnection = new Property(ConnectionState.class, IDENTIFIER_NETWORK_CONNECTED);
+    Property<ConnectionState> networkConnected = new Property(ConnectionState.class, IDENTIFIER_NETWORK_CONNECTED);
     Property<String> networkSSID = new Property(String.class, IDENTIFIER_NETWORK_SSID);
     Property<NetworkSecurity> networkSecurity = new Property(NetworkSecurity.class, IDENTIFIER_NETWORK_SECURITY);
 
@@ -50,8 +50,8 @@ public class WiFiState extends SetCommand {
     /**
      * @return The network connected
      */
-    public Property<ConnectionState> getNetworkConnection() {
-        return networkConnection;
+    public Property<ConnectionState> getNetworkConnected() {
+        return networkConnected;
     }
 
     /**
@@ -74,7 +74,7 @@ public class WiFiState extends SetCommand {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
                     case IDENTIFIER_STATUS: return status.update(p);
-                    case IDENTIFIER_NETWORK_CONNECTED: return networkConnection.update(p);
+                    case IDENTIFIER_NETWORK_CONNECTED: return networkConnected.update(p);
                     case IDENTIFIER_NETWORK_SSID: return networkSSID.update(p);
                     case IDENTIFIER_NETWORK_SECURITY: return networkSecurity.update(p);
                 }
@@ -92,14 +92,14 @@ public class WiFiState extends SetCommand {
         super(builder);
 
         status = builder.status;
-        networkConnection = builder.networkConnection;
+        networkConnected = builder.networkConnected;
         networkSSID = builder.networkSSID;
         networkSecurity = builder.networkSecurity;
     }
 
     public static final class Builder extends SetCommand.Builder {
         private Property<EnabledState> status;
-        private Property<ConnectionState> networkConnection;
+        private Property<ConnectionState> networkConnected;
         private Property<String> networkSSID;
         private Property<NetworkSecurity> networkSecurity;
 
@@ -122,12 +122,12 @@ public class WiFiState extends SetCommand {
         }
         
         /**
-         * @param networkConnection The network connected
+         * @param networkConnected The network connected
          * @return The builder
          */
-        public Builder setNetworkConnection(Property<ConnectionState> networkConnection) {
-            this.networkConnection = networkConnection.setIdentifier(IDENTIFIER_NETWORK_CONNECTED);
-            addProperty(this.networkConnection);
+        public Builder setNetworkConnected(Property<ConnectionState> networkConnected) {
+            this.networkConnected = networkConnected.setIdentifier(IDENTIFIER_NETWORK_CONNECTED);
+            addProperty(this.networkConnected);
             return this;
         }
         

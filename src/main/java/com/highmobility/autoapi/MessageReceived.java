@@ -59,7 +59,8 @@ public class MessageReceived extends SetCommand {
         super(IDENTIFIER);
     
         addProperty(this.text.update(text));
-        addProperty(this.handle.update(handle), true);
+        addProperty(this.handle.update(handle));
+        createBytes();
     }
 
     MessageReceived(byte[] bytes) throws CommandParseException, NoPropertiesException {

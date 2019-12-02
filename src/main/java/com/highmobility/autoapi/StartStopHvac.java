@@ -48,7 +48,8 @@ public class StartStopHvac extends SetCommand {
     public StartStopHvac(ActiveState hvacState) {
         super(IDENTIFIER);
     
-        addProperty(this.hvacState.update(hvacState), true);
+        addProperty(this.hvacState.update(hvacState));
+        createBytes();
     }
 
     StartStopHvac(byte[] bytes) throws CommandParseException, NoPropertiesException {

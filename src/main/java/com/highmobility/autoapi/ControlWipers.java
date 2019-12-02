@@ -20,8 +20,8 @@
 
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.WindscreenState.Wipers;
 import com.highmobility.autoapi.WindscreenState.WipersIntensity;
+import com.highmobility.autoapi.WindscreenState.WipersStatus;
 import com.highmobility.autoapi.property.Property;
 import javax.annotation.Nullable;
 
@@ -31,17 +31,17 @@ import javax.annotation.Nullable;
 public class ControlWipers extends SetCommand {
     public static final Integer IDENTIFIER = Identifier.WINDSCREEN;
 
-    public static final byte IDENTIFIER_WIPERS = 0x01;
+    public static final byte IDENTIFIER_WIPERS_STATUS = 0x01;
     public static final byte IDENTIFIER_WIPERS_INTENSITY = 0x02;
 
-    Property<Wipers> wipers = new Property(Wipers.class, IDENTIFIER_WIPERS);
+    Property<WipersStatus> wipersStatus = new Property(WipersStatus.class, IDENTIFIER_WIPERS_STATUS);
     @Nullable Property<WipersIntensity> wipersIntensity = new Property(WipersIntensity.class, IDENTIFIER_WIPERS_INTENSITY);
 
     /**
-     * @return The wipers
+     * @return The wipers status
      */
-    public Property<Wipers> getWipers() {
-        return wipers;
+    public Property<WipersStatus> getWipersStatus() {
+        return wipersStatus;
     }
     
     /**
@@ -54,14 +54,15 @@ public class ControlWipers extends SetCommand {
     /**
      * Control wipers
      *
-     * @param wipers The wipers
+     * @param wipersStatus The wipers status
      * @param wipersIntensity The wipers intensity
      */
-    public ControlWipers(Wipers wipers, @Nullable WipersIntensity wipersIntensity) {
+    public ControlWipers(WipersStatus wipersStatus, @Nullable WipersIntensity wipersIntensity) {
         super(IDENTIFIER);
     
-        addProperty(this.wipers.update(wipers));
-        addProperty(this.wipersIntensity.update(wipersIntensity), true);
+        addProperty(this.wipersStatus.update(wipersStatus));
+        addProperty(this.wipersIntensity.update(wipersIntensity));
+        createBytes();
     }
 
     ControlWipers(byte[] bytes) throws CommandParseException, NoPropertiesException {
@@ -69,13 +70,13 @@ public class ControlWipers extends SetCommand {
         while (propertyIterator.hasNext()) {
             propertyIterator.parseNext(p -> {
                 switch (p.getPropertyIdentifier()) {
-                    case IDENTIFIER_WIPERS: return wipers.update(p);
+                    case IDENTIFIER_WIPERS_STATUS: return wipersStatus.update(p);
                     case IDENTIFIER_WIPERS_INTENSITY: return wipersIntensity.update(p);
                 }
                 return null;
             });
         }
-        if (this.wipers.getValue() == null) 
+        if (this.wipersStatus.getValue() == null) 
             throw new NoPropertiesException();
     }
 }

@@ -53,7 +53,8 @@ public class StartStopCharging extends SetCommand {
             status == Status.CHARGING_PAUSED ||
             status == Status.CHARGING_ERROR) throw new IllegalArgumentException();
     
-        addProperty(this.status.update(status), true);
+        addProperty(this.status.update(status));
+        createBytes();
     }
 
     StartStopCharging(byte[] bytes) throws CommandParseException, NoPropertiesException {

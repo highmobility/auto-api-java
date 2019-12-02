@@ -30,7 +30,7 @@ public class GetMobileState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetMobileState(byte[] bytes) {
+    GetMobileState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

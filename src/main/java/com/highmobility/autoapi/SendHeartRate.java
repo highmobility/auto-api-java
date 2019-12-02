@@ -47,7 +47,8 @@ public class SendHeartRate extends SetCommand {
     public SendHeartRate(Integer heartRate) {
         super(IDENTIFIER);
     
-        addProperty(this.heartRate.update(false, 1, heartRate), true);
+        addProperty(this.heartRate.update(false, 1, heartRate));
+        createBytes();
     }
 
     SendHeartRate(byte[] bytes) throws CommandParseException, NoPropertiesException {

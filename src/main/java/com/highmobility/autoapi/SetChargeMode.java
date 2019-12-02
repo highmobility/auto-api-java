@@ -50,7 +50,8 @@ public class SetChargeMode extends SetCommand {
     
         if (chargeMode == ChargeMode.INDUCTIVE) throw new IllegalArgumentException();
     
-        addProperty(this.chargeMode.update(chargeMode), true);
+        addProperty(this.chargeMode.update(chargeMode));
+        createBytes();
     }
 
     SetChargeMode(byte[] bytes) throws CommandParseException, NoPropertiesException {

@@ -30,7 +30,7 @@ public class GetWindows extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetWindows(byte[] bytes) {
+    GetWindows(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

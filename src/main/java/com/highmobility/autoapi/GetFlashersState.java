@@ -30,7 +30,7 @@ public class GetFlashersState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetFlashersState(byte[] bytes) {
+    GetFlashersState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

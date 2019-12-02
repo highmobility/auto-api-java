@@ -47,7 +47,8 @@ public class SetChassisPosition extends SetCommand {
     public SetChassisPosition(Integer currentChassisPosition) {
         super(IDENTIFIER);
     
-        addProperty(this.currentChassisPosition.update(true, 1, currentChassisPosition), true);
+        addProperty(this.currentChassisPosition.update(true, 1, currentChassisPosition));
+        createBytes();
     }
 
     SetChassisPosition(byte[] bytes) throws CommandParseException, NoPropertiesException {

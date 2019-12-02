@@ -48,7 +48,8 @@ public class SetParkingBrake extends SetCommand {
     public SetParkingBrake(ActiveState status) {
         super(IDENTIFIER);
     
-        addProperty(this.status.update(status), true);
+        addProperty(this.status.update(status));
+        createBytes();
     }
 
     SetParkingBrake(byte[] bytes) throws CommandParseException, NoPropertiesException {

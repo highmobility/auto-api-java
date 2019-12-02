@@ -76,11 +76,12 @@ public class ControlWindows extends SetCommand {
             for (WindowPosition position : positions) {
                 Property prop = new Property(0x03, position);
                 positionsBuilder.add(prop);
-                addProperty(prop, true);
+                addProperty(prop);
             }
         }
         this.positions = positionsBuilder.toArray(new Property[0]);
         if (this.openPercentages.length == 0 && this.positions.length == 0) throw new IllegalArgumentException();
+        createBytes();
     }
 
     ControlWindows(byte[] bytes) throws CommandParseException, NoPropertiesException {

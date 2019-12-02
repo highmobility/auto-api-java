@@ -30,7 +30,7 @@ public class GetDriverFatigueState extends GetCommand {
         super(IDENTIFIER);
     }
 
-    GetDriverFatigueState(byte[] bytes) {
+    GetDriverFatigueState(byte[] bytes) throws CommandParseException {
         super(bytes);
     }
 }

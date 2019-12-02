@@ -48,7 +48,8 @@ public class StartStopSportsChrono extends SetCommand {
     public StartStopSportsChrono(SportChrono sportChrono) {
         super(IDENTIFIER);
     
-        addProperty(this.sportChrono.update(sportChrono), true);
+        addProperty(this.sportChrono.update(sportChrono));
+        createBytes();
     }
 
     StartStopSportsChrono(byte[] bytes) throws CommandParseException, NoPropertiesException {

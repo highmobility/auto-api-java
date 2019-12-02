@@ -40,7 +40,8 @@ public class WakeUp extends SetCommand {
     public WakeUp() {
         super(IDENTIFIER);
     
-        addProperty(status.addValueComponent(new Bytes("00")), true);
+        addProperty(status.addValueComponent(new Bytes("00")));
+        createBytes();
     }
 
     WakeUp(byte[] bytes) throws CommandParseException, NoPropertiesException {
@@ -58,7 +59,8 @@ public class WakeUp extends SetCommand {
     }
 
     public enum Status implements ByteEnum {
-        WAKE_UP((byte) 0x00);
+        WAKE_UP((byte) 0x00),
+        SLEEP((byte) 0x01);
     
         public static Status fromByte(byte byteValue) throws CommandParseException {
             Status[] values = Status.values();

@@ -70,8 +70,9 @@ public class SetTemperatureSettings extends SetCommand {
     
         addProperty(this.driverTemperatureSetting.update(driverTemperatureSetting));
         addProperty(this.passengerTemperatureSetting.update(passengerTemperatureSetting));
-        addProperty(this.rearTemperatureSetting.update(rearTemperatureSetting), true);
+        addProperty(this.rearTemperatureSetting.update(rearTemperatureSetting));
         if (this.driverTemperatureSetting.getValue() == null && this.passengerTemperatureSetting.getValue() == null && this.rearTemperatureSetting.getValue() == null) throw new IllegalArgumentException();
+        createBytes();
     }
 
     SetTemperatureSettings(byte[] bytes) throws CommandParseException, NoPropertiesException {

@@ -56,7 +56,7 @@ public class ParkingTicketState extends SetCommand {
     }
 
     /**
-     * @return Operator Ticket ID
+     * @return Operator ticket ID
      */
     public Property<String> getOperatorTicketID() {
         return operatorTicketID;
@@ -143,7 +143,7 @@ public class ParkingTicketState extends SetCommand {
         }
         
         /**
-         * @param operatorTicketID Operator Ticket ID
+         * @param operatorTicketID Operator ticket ID
          * @return The builder
          */
         public Builder setOperatorTicketID(Property<String> operatorTicketID) {

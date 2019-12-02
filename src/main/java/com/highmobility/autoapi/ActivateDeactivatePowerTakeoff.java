@@ -48,7 +48,8 @@ public class ActivateDeactivatePowerTakeoff extends SetCommand {
     public ActivateDeactivatePowerTakeoff(ActiveState status) {
         super(IDENTIFIER);
     
-        addProperty(this.status.update(status), true);
+        addProperty(this.status.update(status));
+        createBytes();
     }
 
     ActivateDeactivatePowerTakeoff(byte[] bytes) throws CommandParseException, NoPropertiesException {

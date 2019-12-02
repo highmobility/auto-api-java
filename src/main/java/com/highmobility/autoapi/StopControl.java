@@ -40,7 +40,8 @@ public class StopControl extends SetCommand {
     public StopControl() {
         super(IDENTIFIER);
     
-        addProperty(controlMode.addValueComponent(new Bytes("05")), true);
+        addProperty(controlMode.addValueComponent(new Bytes("05")));
+        createBytes();
     }
 
     StopControl(byte[] bytes) throws CommandParseException, NoPropertiesException {

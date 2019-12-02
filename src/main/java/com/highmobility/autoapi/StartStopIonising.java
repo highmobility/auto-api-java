@@ -48,7 +48,8 @@ public class StartStopIonising extends SetCommand {
     public StartStopIonising(ActiveState ionisingState) {
         super(IDENTIFIER);
     
-        addProperty(this.ionisingState.update(ionisingState), true);
+        addProperty(this.ionisingState.update(ionisingState));
+        createBytes();
     }
 
     StartStopIonising(byte[] bytes) throws CommandParseException, NoPropertiesException {
