@@ -99,19 +99,6 @@ public class Command extends Bytes {
         return new Bytes(Arrays.copyOfRange(bytes, 0, bytes.length - 64 - 3 - 3));
     }
 
-    /**
-     * States are commands that describe some properties of the vehicle. They are usually returned
-     * after the state changes, as a response for a get command or as a state in {@link
-     * VehicleStatusState#getStates()}.
-     * <p>
-     * States can have 0 or more properties.
-     *
-     * @return True if command is a state.
-     */
-    public boolean isState() {
-        return false;
-    }
-
     protected boolean propertiesExpected() {
         return false;
     }

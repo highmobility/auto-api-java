@@ -309,10 +309,6 @@ public class Charging {
             timers = timersBuilder.toArray(new Property[0]);
         }
 
-        @Override public boolean isState() {
-            return true;
-        }
-
         private State(Builder builder) {
             super(builder);
 
