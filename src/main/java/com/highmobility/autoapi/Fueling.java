@@ -41,25 +41,25 @@ public class Fueling {
         public GetGasFlapState() {
             super(IDENTIFIER);
         }
-
+    
         GetGasFlapState(byte[] bytes) {
             super(bytes);
         }
     }
-
+    
     /**
      * Get specific fueling properties
      */
     public static class GetGasFlapProperties extends GetCommand {
         Bytes propertyIdentifiers;
-
+    
         /**
          * @return The property identifiers.
          */
         public Bytes getPropertyIdentifiers() {
             return propertyIdentifiers;
         }
-
+    
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -67,7 +67,7 @@ public class Fueling {
             super(IDENTIFIER, propertyIdentifiers.getByteArray());
             this.propertyIdentifiers = propertyIdentifiers;
         }
-
+    
         GetGasFlapProperties(byte[] bytes) {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
@@ -80,21 +80,21 @@ public class Fueling {
     public static class State extends SetCommand {
         Property<LockState> gasFlapLock = new Property(LockState.class, PROPERTY_GAS_FLAP_LOCK);
         Property<Position> gasFlapPosition = new Property(Position.class, PROPERTY_GAS_FLAP_POSITION);
-
+    
         /**
          * @return The gas flap lock
          */
         public Property<LockState> getGasFlapLock() {
             return gasFlapLock;
         }
-
+    
         /**
          * @return The gas flap position
          */
         public Property<Position> getGasFlapPosition() {
             return gasFlapPosition;
         }
-
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -103,31 +103,31 @@ public class Fueling {
                         case PROPERTY_GAS_FLAP_LOCK: return gasFlapLock.update(p);
                         case PROPERTY_GAS_FLAP_POSITION: return gasFlapPosition.update(p);
                     }
-
+    
                     return null;
                 });
             }
         }
-
+    
         private State(Builder builder) {
             super(builder);
-
+    
             gasFlapLock = builder.gasFlapLock;
             gasFlapPosition = builder.gasFlapPosition;
         }
-
+    
         public static final class Builder extends SetCommand.Builder {
             private Property<LockState> gasFlapLock;
             private Property<Position> gasFlapPosition;
-
+    
             public Builder() {
                 super(IDENTIFIER);
             }
-
+    
             public State build() {
                 return new State(this);
             }
-
+    
             /**
              * @param gasFlapLock The gas flap lock
              * @return The builder
@@ -137,7 +137,7 @@ public class Fueling {
                 addProperty(this.gasFlapLock);
                 return this;
             }
-
+            
             /**
              * @param gasFlapPosition The gas flap position
              * @return The builder
@@ -156,21 +156,21 @@ public class Fueling {
     public static class ControlGasFlap extends SetCommand {
         Property<LockState> gasFlapLock = new Property(LockState.class, PROPERTY_GAS_FLAP_LOCK);
         Property<Position> gasFlapPosition = new Property(Position.class, PROPERTY_GAS_FLAP_POSITION);
-
+    
         /**
          * @return The gas flap lock
          */
         public Property<LockState> getGasFlapLock() {
             return gasFlapLock;
         }
-
+        
         /**
          * @return The gas flap position
          */
         public Property<Position> getGasFlapPosition() {
             return gasFlapPosition;
         }
-
+        
         /**
          * Control gas flap
          *
@@ -179,13 +179,13 @@ public class Fueling {
          */
         public ControlGasFlap(@Nullable LockState gasFlapLock, @Nullable Position gasFlapPosition) {
             super(IDENTIFIER);
-
+        
             addProperty(this.gasFlapLock.update(gasFlapLock));
             addProperty(this.gasFlapPosition.update(gasFlapPosition));
             if (this.gasFlapLock.getValue() == null && this.gasFlapPosition.getValue() == null) throw new IllegalArgumentException();
             createBytes();
         }
-
+    
         ControlGasFlap(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
             while (propertyIterator.hasNext()) {

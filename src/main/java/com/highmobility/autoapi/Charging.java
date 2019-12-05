@@ -22,8 +22,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.value.DepartureTime;
+import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.value.ReductionTime;
 import com.highmobility.autoapi.value.Timer;
 import com.highmobility.value.Bytes;
@@ -58,31 +58,31 @@ public class Charging {
     public static final byte PROPERTY_STATUS = 0x17;
 
     /**
-     * Get all charging properties.
+     * Get all charging properties
      */
     public static class GetState extends GetCommand {
         public GetState() {
             super(IDENTIFIER);
         }
-
+    
         GetState(byte[] bytes) {
             super(bytes);
         }
     }
-
+    
     /**
-     * Get specific charging properties.
+     * Get specific charging properties
      */
     public static class GetProperties extends GetCommand {
         Bytes propertyIdentifiers;
-
+    
         /**
          * @return The property identifiers.
          */
         public Bytes getPropertyIdentifiers() {
             return propertyIdentifiers;
         }
-
+    
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -90,7 +90,7 @@ public class Charging {
             super(IDENTIFIER, propertyIdentifiers.getByteArray());
             this.propertyIdentifiers = propertyIdentifiers;
         }
-
+    
         GetProperties(byte[] bytes) {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
@@ -121,154 +121,154 @@ public class Charging {
         Property<Timer>[] timers;
         Property<PluggedIn> pluggedIn = new Property(PluggedIn.class, PROPERTY_PLUGGED_IN);
         Property<Status> status = new Property(Status.class, PROPERTY_STATUS);
-
+    
         /**
          * @return Estimated range in km
          */
         public PropertyInteger getEstimatedRange() {
             return estimatedRange;
         }
-
+    
         /**
          * @return Battery level percentage between 0.0-1.0
          */
         public Property<Double> getBatteryLevel() {
             return batteryLevel;
         }
-
+    
         /**
          * @return Battery active current
          */
         public Property<Float> getBatteryCurrentAC() {
             return batteryCurrentAC;
         }
-
+    
         /**
          * @return Battery direct current
          */
         public Property<Float> getBatteryCurrentDC() {
             return batteryCurrentDC;
         }
-
+    
         /**
          * @return Charger voltage
          */
         public Property<Float> getChargerVoltageAC() {
             return chargerVoltageAC;
         }
-
+    
         /**
          * @return Charger voltage
          */
         public Property<Float> getChargerVoltageDC() {
             return chargerVoltageDC;
         }
-
+    
         /**
          * @return Charge limit percentage between 0.0-1.0
          */
         public Property<Double> getChargeLimit() {
             return chargeLimit;
         }
-
+    
         /**
          * @return Time until charging completed in minutes
          */
         public PropertyInteger getTimeToCompleteCharge() {
             return timeToCompleteCharge;
         }
-
+    
         /**
          * @return Charge rate in kW when charging
          */
         public Property<Float> getChargingRateKW() {
             return chargingRateKW;
         }
-
+    
         /**
          * @return The charge port state
          */
         public Property<Position> getChargePortState() {
             return chargePortState;
         }
-
+    
         /**
          * @return The charge mode
          */
         public Property<ChargeMode> getChargeMode() {
             return chargeMode;
         }
-
+    
         /**
          * @return Maximum charging current
          */
         public Property<Float> getMaxChargingCurrent() {
             return maxChargingCurrent;
         }
-
+    
         /**
          * @return The plug type
          */
         public Property<PlugType> getPlugType() {
             return plugType;
         }
-
+    
         /**
          * @return The charging window chosen
          */
         public Property<ChargingWindowChosen> getChargingWindowChosen() {
             return chargingWindowChosen;
         }
-
+    
         /**
          * @return The departure times
          */
         public Property<DepartureTime>[] getDepartureTimes() {
             return departureTimes;
         }
-
+    
         /**
          * @return The reduction times
          */
         public Property<ReductionTime>[] getReductionTimes() {
             return reductionTimes;
         }
-
+    
         /**
          * @return Battery temperature in Celsius
          */
         public Property<Float> getBatteryTemperature() {
             return batteryTemperature;
         }
-
+    
         /**
          * @return The timers
          */
         public Property<Timer>[] getTimers() {
             return timers;
         }
-
+    
         /**
          * @return The plugged in
          */
         public Property<PluggedIn> getPluggedIn() {
             return pluggedIn;
         }
-
+    
         /**
          * @return The status
          */
         public Property<Status> getStatus() {
             return status;
         }
-
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
-
+    
             ArrayList<Property> departureTimesBuilder = new ArrayList<>();
             ArrayList<Property> reductionTimesBuilder = new ArrayList<>();
             ArrayList<Property> timersBuilder = new ArrayList<>();
-
+    
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
@@ -302,19 +302,19 @@ public class Charging {
                         case PROPERTY_PLUGGED_IN: return pluggedIn.update(p);
                         case PROPERTY_STATUS: return status.update(p);
                     }
-
+    
                     return null;
                 });
             }
-
+    
             departureTimes = departureTimesBuilder.toArray(new Property[0]);
             reductionTimes = reductionTimesBuilder.toArray(new Property[0]);
             timers = timersBuilder.toArray(new Property[0]);
         }
-
+    
         private State(Builder builder) {
             super(builder);
-
+    
             estimatedRange = builder.estimatedRange;
             batteryLevel = builder.batteryLevel;
             batteryCurrentAC = builder.batteryCurrentAC;
@@ -336,7 +336,7 @@ public class Charging {
             pluggedIn = builder.pluggedIn;
             status = builder.status;
         }
-
+    
         public static final class Builder extends SetCommand.Builder {
             private PropertyInteger estimatedRange;
             private Property<Double> batteryLevel;
@@ -358,15 +358,15 @@ public class Charging {
             private List<Property> timers = new ArrayList<>();
             private Property<PluggedIn> pluggedIn;
             private Property<Status> status;
-
+    
             public Builder() {
                 super(IDENTIFIER);
             }
-
+    
             public State build() {
                 return new State(this);
             }
-
+    
             /**
              * @param estimatedRange Estimated range in km
              * @return The builder
@@ -376,7 +376,7 @@ public class Charging {
                 addProperty(this.estimatedRange);
                 return this;
             }
-
+            
             /**
              * @param batteryLevel Battery level percentage between 0.0-1.0
              * @return The builder
@@ -386,7 +386,7 @@ public class Charging {
                 addProperty(this.batteryLevel);
                 return this;
             }
-
+            
             /**
              * @param batteryCurrentAC Battery active current
              * @return The builder
@@ -396,7 +396,7 @@ public class Charging {
                 addProperty(this.batteryCurrentAC);
                 return this;
             }
-
+            
             /**
              * @param batteryCurrentDC Battery direct current
              * @return The builder
@@ -406,7 +406,7 @@ public class Charging {
                 addProperty(this.batteryCurrentDC);
                 return this;
             }
-
+            
             /**
              * @param chargerVoltageAC Charger voltage
              * @return The builder
@@ -416,7 +416,7 @@ public class Charging {
                 addProperty(this.chargerVoltageAC);
                 return this;
             }
-
+            
             /**
              * @param chargerVoltageDC Charger voltage
              * @return The builder
@@ -426,7 +426,7 @@ public class Charging {
                 addProperty(this.chargerVoltageDC);
                 return this;
             }
-
+            
             /**
              * @param chargeLimit Charge limit percentage between 0.0-1.0
              * @return The builder
@@ -436,7 +436,7 @@ public class Charging {
                 addProperty(this.chargeLimit);
                 return this;
             }
-
+            
             /**
              * @param timeToCompleteCharge Time until charging completed in minutes
              * @return The builder
@@ -446,7 +446,7 @@ public class Charging {
                 addProperty(this.timeToCompleteCharge);
                 return this;
             }
-
+            
             /**
              * @param chargingRateKW Charge rate in kW when charging
              * @return The builder
@@ -456,7 +456,7 @@ public class Charging {
                 addProperty(this.chargingRateKW);
                 return this;
             }
-
+            
             /**
              * @param chargePortState The charge port state
              * @return The builder
@@ -466,7 +466,7 @@ public class Charging {
                 addProperty(this.chargePortState);
                 return this;
             }
-
+            
             /**
              * @param chargeMode The charge mode
              * @return The builder
@@ -476,7 +476,7 @@ public class Charging {
                 addProperty(this.chargeMode);
                 return this;
             }
-
+            
             /**
              * @param maxChargingCurrent Maximum charging current
              * @return The builder
@@ -486,7 +486,7 @@ public class Charging {
                 addProperty(this.maxChargingCurrent);
                 return this;
             }
-
+            
             /**
              * @param plugType The plug type
              * @return The builder
@@ -496,7 +496,7 @@ public class Charging {
                 addProperty(this.plugType);
                 return this;
             }
-
+            
             /**
              * @param chargingWindowChosen The charging window chosen
              * @return The builder
@@ -506,10 +506,10 @@ public class Charging {
                 addProperty(this.chargingWindowChosen);
                 return this;
             }
-
+            
             /**
              * Add an array of departure times.
-             *
+             * 
              * @param departureTimes The departure times
              * @return The builder
              */
@@ -518,13 +518,13 @@ public class Charging {
                 for (int i = 0; i < departureTimes.length; i++) {
                     addDepartureTime(departureTimes[i]);
                 }
-
+            
                 return this;
             }
-
+            
             /**
              * Add a single departure time.
-             *
+             * 
              * @param departureTime The departure time
              * @return The builder
              */
@@ -534,10 +534,10 @@ public class Charging {
                 departureTimes.add(departureTime);
                 return this;
             }
-
+            
             /**
              * Add an array of reduction times.
-             *
+             * 
              * @param reductionTimes The reduction times
              * @return The builder
              */
@@ -546,13 +546,13 @@ public class Charging {
                 for (int i = 0; i < reductionTimes.length; i++) {
                     addReductionTime(reductionTimes[i]);
                 }
-
+            
                 return this;
             }
-
+            
             /**
              * Add a single reduction time.
-             *
+             * 
              * @param reductionTime The reduction time
              * @return The builder
              */
@@ -562,7 +562,7 @@ public class Charging {
                 reductionTimes.add(reductionTime);
                 return this;
             }
-
+            
             /**
              * @param batteryTemperature Battery temperature in Celsius
              * @return The builder
@@ -572,10 +572,10 @@ public class Charging {
                 addProperty(this.batteryTemperature);
                 return this;
             }
-
+            
             /**
              * Add an array of timers.
-             *
+             * 
              * @param timers The timers
              * @return The builder
              */
@@ -584,13 +584,13 @@ public class Charging {
                 for (int i = 0; i < timers.length; i++) {
                     addTimer(timers[i]);
                 }
-
+            
                 return this;
             }
-
+            
             /**
              * Add a single timer.
-             *
+             * 
              * @param timer The timer
              * @return The builder
              */
@@ -600,7 +600,7 @@ public class Charging {
                 timers.add(timer);
                 return this;
             }
-
+            
             /**
              * @param pluggedIn The plugged in
              * @return The builder
@@ -610,7 +610,7 @@ public class Charging {
                 addProperty(this.pluggedIn);
                 return this;
             }
-
+            
             /**
              * @param status The status
              * @return The builder
@@ -628,14 +628,14 @@ public class Charging {
      */
     public static class StartStopCharging extends SetCommand {
         Property<Status> status = new Property(Status.class, PROPERTY_STATUS);
-
+    
         /**
          * @return The status
          */
         public Property<Status> getStatus() {
             return status;
         }
-
+        
         /**
          * Start stop charging
          *
@@ -643,16 +643,16 @@ public class Charging {
          */
         public StartStopCharging(Status status) {
             super(IDENTIFIER);
-
+        
             if (status == Status.CHARGING_COMPLETE ||
-                    status == Status.INITIALISING ||
-                    status == Status.CHARGING_PAUSED ||
-                    status == Status.CHARGING_ERROR) throw new IllegalArgumentException();
-
+                status == Status.INITIALISING ||
+                status == Status.CHARGING_PAUSED ||
+                status == Status.CHARGING_ERROR) throw new IllegalArgumentException();
+        
             addProperty(this.status.update(status));
             createBytes();
         }
-
+    
         StartStopCharging(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -663,24 +663,24 @@ public class Charging {
                     return null;
                 });
             }
-            if (this.status.getValue() == null)
+            if (this.status.getValue() == null) 
                 throw new NoPropertiesException();
         }
     }
-
+    
     /**
      * Set charge limit
      */
     public static class SetChargeLimit extends SetCommand {
         Property<Double> chargeLimit = new Property(Double.class, PROPERTY_CHARGE_LIMIT);
-
+    
         /**
          * @return The charge limit
          */
         public Property<Double> getChargeLimit() {
             return chargeLimit;
         }
-
+        
         /**
          * Set charge limit
          *
@@ -688,11 +688,11 @@ public class Charging {
          */
         public SetChargeLimit(Double chargeLimit) {
             super(IDENTIFIER);
-
+        
             addProperty(this.chargeLimit.update(chargeLimit));
             createBytes();
         }
-
+    
         SetChargeLimit(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -703,24 +703,24 @@ public class Charging {
                     return null;
                 });
             }
-            if (this.chargeLimit.getValue() == null)
+            if (this.chargeLimit.getValue() == null) 
                 throw new NoPropertiesException();
         }
     }
-
+    
     /**
      * Open close charging port
      */
     public static class OpenCloseChargingPort extends SetCommand {
         Property<Position> chargePortState = new Property(Position.class, PROPERTY_CHARGE_PORT_STATE);
-
+    
         /**
          * @return The charge port state
          */
         public Property<Position> getChargePortState() {
             return chargePortState;
         }
-
+        
         /**
          * Open close charging port
          *
@@ -728,11 +728,11 @@ public class Charging {
          */
         public OpenCloseChargingPort(Position chargePortState) {
             super(IDENTIFIER);
-
+        
             addProperty(this.chargePortState.update(chargePortState));
             createBytes();
         }
-
+    
         OpenCloseChargingPort(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -743,24 +743,24 @@ public class Charging {
                     return null;
                 });
             }
-            if (this.chargePortState.getValue() == null)
+            if (this.chargePortState.getValue() == null) 
                 throw new NoPropertiesException();
         }
     }
-
+    
     /**
      * Set charge mode
      */
     public static class SetChargeMode extends SetCommand {
         Property<ChargeMode> chargeMode = new Property(ChargeMode.class, PROPERTY_CHARGE_MODE);
-
+    
         /**
          * @return The charge mode
          */
         public Property<ChargeMode> getChargeMode() {
             return chargeMode;
         }
-
+        
         /**
          * Set charge mode
          *
@@ -768,13 +768,13 @@ public class Charging {
          */
         public SetChargeMode(ChargeMode chargeMode) {
             super(IDENTIFIER);
-
+        
             if (chargeMode == ChargeMode.INDUCTIVE) throw new IllegalArgumentException();
-
+        
             addProperty(this.chargeMode.update(chargeMode));
             createBytes();
         }
-
+    
         SetChargeMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -785,24 +785,24 @@ public class Charging {
                     return null;
                 });
             }
-            if (this.chargeMode.getValue() == null)
+            if (this.chargeMode.getValue() == null) 
                 throw new NoPropertiesException();
         }
     }
-
+    
     /**
      * Set charging timers
      */
     public static class SetChargingTimers extends SetCommand {
         Property<Timer>[] timers;
-
+    
         /**
          * @return The timers
          */
         public Property<Timer>[] getTimers() {
             return timers;
         }
-
+        
         /**
          * Set charging timers
          *
@@ -810,7 +810,7 @@ public class Charging {
          */
         public SetChargingTimers(Timer[] timers) {
             super(IDENTIFIER);
-
+        
             ArrayList<Property> timersBuilder = new ArrayList<>();
             if (timers != null) {
                 for (Timer timer : timers) {
@@ -822,12 +822,12 @@ public class Charging {
             this.timers = timersBuilder.toArray(new Property[0]);
             createBytes();
         }
-
+    
         SetChargingTimers(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
-
+        
             ArrayList<Property<Timer>> timersBuilder = new ArrayList<>();
-
+        
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
@@ -840,26 +840,26 @@ public class Charging {
                     return null;
                 });
             }
-
+        
             timers = timersBuilder.toArray(new Property[0]);
-            if (this.timers.length == 0)
+            if (this.timers.length == 0) 
                 throw new NoPropertiesException();
         }
     }
-
+    
     /**
      * Set reduction of charging current times
      */
     public static class SetReductionOfChargingCurrentTimes extends SetCommand {
         Property<ReductionTime>[] reductionTimes;
-
+    
         /**
          * @return The reduction times
          */
         public Property<ReductionTime>[] getReductionTimes() {
             return reductionTimes;
         }
-
+        
         /**
          * Set reduction of charging current times
          *
@@ -867,7 +867,7 @@ public class Charging {
          */
         public SetReductionOfChargingCurrentTimes(ReductionTime[] reductionTimes) {
             super(IDENTIFIER);
-
+        
             ArrayList<Property> reductionTimesBuilder = new ArrayList<>();
             if (reductionTimes != null) {
                 for (ReductionTime reductionTime : reductionTimes) {
@@ -879,12 +879,12 @@ public class Charging {
             this.reductionTimes = reductionTimesBuilder.toArray(new Property[0]);
             createBytes();
         }
-
+    
         SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
-
+        
             ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
-
+        
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
@@ -897,9 +897,9 @@ public class Charging {
                     return null;
                 });
             }
-
+        
             reductionTimes = reductionTimesBuilder.toArray(new Property[0]);
-            if (this.reductionTimes.length == 0)
+            if (this.reductionTimes.length == 0) 
                 throw new NoPropertiesException();
         }
     }
@@ -908,117 +908,117 @@ public class Charging {
         IMMEDIATE((byte) 0x00),
         TIMER_BASED((byte) 0x01),
         INDUCTIVE((byte) 0x02);
-
+    
         public static ChargeMode fromByte(byte byteValue) throws CommandParseException {
             ChargeMode[] values = ChargeMode.values();
-
+    
             for (int i = 0; i < values.length; i++) {
                 ChargeMode state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
             }
-
+    
             throw new CommandParseException();
         }
-
+    
         private byte value;
-
+    
         ChargeMode(byte value) {
             this.value = value;
         }
-
+    
         @Override public byte getByte() {
             return value;
         }
     }
-
+    
     public enum PlugType implements ByteEnum {
         TYPE_1((byte) 0x00),
         TYPE_2((byte) 0x01),
         CCS((byte) 0x02),
         CHADEMO((byte) 0x03);
-
+    
         public static PlugType fromByte(byte byteValue) throws CommandParseException {
             PlugType[] values = PlugType.values();
-
+    
             for (int i = 0; i < values.length; i++) {
                 PlugType state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
             }
-
+    
             throw new CommandParseException();
         }
-
+    
         private byte value;
-
+    
         PlugType(byte value) {
             this.value = value;
         }
-
+    
         @Override public byte getByte() {
             return value;
         }
     }
-
+    
     public enum ChargingWindowChosen implements ByteEnum {
         NOT_CHOSEN((byte) 0x00),
         CHOSEN((byte) 0x01);
-
+    
         public static ChargingWindowChosen fromByte(byte byteValue) throws CommandParseException {
             ChargingWindowChosen[] values = ChargingWindowChosen.values();
-
+    
             for (int i = 0; i < values.length; i++) {
                 ChargingWindowChosen state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
             }
-
+    
             throw new CommandParseException();
         }
-
+    
         private byte value;
-
+    
         ChargingWindowChosen(byte value) {
             this.value = value;
         }
-
+    
         @Override public byte getByte() {
             return value;
         }
     }
-
+    
     public enum PluggedIn implements ByteEnum {
         DISCONNECTED((byte) 0x00),
         PLUGGED_IN((byte) 0x01);
-
+    
         public static PluggedIn fromByte(byte byteValue) throws CommandParseException {
             PluggedIn[] values = PluggedIn.values();
-
+    
             for (int i = 0; i < values.length; i++) {
                 PluggedIn state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
             }
-
+    
             throw new CommandParseException();
         }
-
+    
         private byte value;
-
+    
         PluggedIn(byte value) {
             this.value = value;
         }
-
+    
         @Override public byte getByte() {
             return value;
         }
     }
-
+    
     public enum Status implements ByteEnum {
         NOT_CHARGING((byte) 0x00),
         CHARGING((byte) 0x01),
@@ -1026,26 +1026,26 @@ public class Charging {
         INITIALISING((byte) 0x03),
         CHARGING_PAUSED((byte) 0x04),
         CHARGING_ERROR((byte) 0x05);
-
+    
         public static Status fromByte(byte byteValue) throws CommandParseException {
             Status[] values = Status.values();
-
+    
             for (int i = 0; i < values.length; i++) {
                 Status state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
             }
-
+    
             throw new CommandParseException();
         }
-
+    
         private byte value;
-
+    
         Status(byte value) {
             this.value = value;
         }
-
+    
         @Override public byte getByte() {
             return value;
         }

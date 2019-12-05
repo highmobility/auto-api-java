@@ -22,7 +22,6 @@ package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.value.Bytes;
 
