@@ -308,10 +308,6 @@ public class ChargingState extends SetCommand {
         timers = timersBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private ChargingState(Builder builder) {
         super(builder);
 

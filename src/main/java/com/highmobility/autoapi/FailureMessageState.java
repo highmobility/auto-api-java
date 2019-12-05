@@ -130,10 +130,6 @@ public class FailureMessageState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private FailureMessageState(Builder builder) {
         super(builder);
 

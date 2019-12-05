@@ -175,10 +175,6 @@ public class MaintenanceState extends SetCommand {
         conditionBasedServices = conditionBasedServicesBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private MaintenanceState(Builder builder) {
         super(builder);
 

@@ -52,10 +52,6 @@ public class VehicleTimeState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private VehicleTimeState(Builder builder) {
         super(builder);
 

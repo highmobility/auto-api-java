@@ -104,10 +104,6 @@ public class WindowsState extends SetCommand {
         positions = positionsBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private WindowsState(Builder builder) {
         super(builder);
 

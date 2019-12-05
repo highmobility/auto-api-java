@@ -104,10 +104,6 @@ public class NaviDestinationState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private NaviDestinationState(Builder builder) {
         super(builder);
 

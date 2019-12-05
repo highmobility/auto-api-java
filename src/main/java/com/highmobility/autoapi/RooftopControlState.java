@@ -92,10 +92,6 @@ public class RooftopControlState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private RooftopControlState(Builder builder) {
         super(builder);
 

@@ -52,10 +52,6 @@ public class TheftAlarmState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private TheftAlarmState(Builder builder) {
         super(builder);
 

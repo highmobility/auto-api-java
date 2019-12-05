@@ -72,10 +72,6 @@ public class FirmwareVersionState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private FirmwareVersionState(Builder builder) {
         super(builder);
 

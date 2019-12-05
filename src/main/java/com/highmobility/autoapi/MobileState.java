@@ -52,10 +52,6 @@ public class MobileState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private MobileState(Builder builder) {
         super(builder);
 

@@ -52,10 +52,6 @@ public class KeyfobPositionState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     public enum Location implements ByteEnum {
         OUT_OF_RANGE((byte) 0x00),
         OUTSIDE_DRIVER_SIDE((byte) 0x01),

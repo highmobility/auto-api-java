@@ -83,10 +83,6 @@ public class CapabilitiesState extends SetCommand {
         capabilities = capabilitiesBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private CapabilitiesState(Builder builder) {
         super(builder);
 

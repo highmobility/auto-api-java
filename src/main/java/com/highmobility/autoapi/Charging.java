@@ -1,17 +1,38 @@
+/*
+ * HMKit Auto API - Auto API Parser for Java
+ * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
+ *
+ * This file is part of HMKit Auto API.
+ *
+ * HMKit Auto API is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * HMKit Auto API is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.autoapi.value.DepartureTime;
 import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.DepartureTime;
 import com.highmobility.autoapi.value.ReductionTime;
 import com.highmobility.autoapi.value.Timer;
 import com.highmobility.value.Bytes;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Charging capability
+ */
 public class Charging {
     public static final int IDENTIFIER = Identifier.CHARGING;
 
@@ -36,8 +57,11 @@ public class Charging {
     public static final byte PROPERTY_PLUGGED_IN = 0x16;
     public static final byte PROPERTY_STATUS = 0x17;
 
+    /**
+     * Get all charging properties.
+     */
     public static class GetState extends GetCommand {
-        GetState() {
+        public GetState() {
             super(IDENTIFIER);
         }
 
@@ -46,6 +70,9 @@ public class Charging {
         }
     }
 
+    /**
+     * Get specific charging properties.
+     */
     public static class GetProperties extends GetCommand {
         Bytes propertyIdentifiers;
 
@@ -66,7 +93,7 @@ public class Charging {
 
         GetProperties(byte[] bytes) {
             super(bytes);
-            propertyIdentifiers = getRange(5, getLength());
+            propertyIdentifiers = getRange(3, getLength());
         }
     }
 
@@ -81,21 +108,16 @@ public class Charging {
         Property<Float> chargerVoltageAC = new Property(Float.class, PROPERTY_CHARGER_VOLTAGE_AC);
         Property<Float> chargerVoltageDC = new Property(Float.class, PROPERTY_CHARGER_VOLTAGE_DC);
         Property<Double> chargeLimit = new Property(Double.class, PROPERTY_CHARGE_LIMIT);
-        PropertyInteger timeToCompleteCharge =
-                new PropertyInteger(PROPERTY_TIME_TO_COMPLETE_CHARGE, false);
+        PropertyInteger timeToCompleteCharge = new PropertyInteger(PROPERTY_TIME_TO_COMPLETE_CHARGE, false);
         Property<Float> chargingRateKW = new Property(Float.class, PROPERTY_CHARGING_RATE_KW);
-        Property<Position> chargePortState = new Property(Position.class,
-                PROPERTY_CHARGE_PORT_STATE);
+        Property<Position> chargePortState = new Property(Position.class, PROPERTY_CHARGE_PORT_STATE);
         Property<ChargeMode> chargeMode = new Property(ChargeMode.class, PROPERTY_CHARGE_MODE);
-        Property<Float> maxChargingCurrent = new Property(Float.class,
-                PROPERTY_MAX_CHARGING_CURRENT);
+        Property<Float> maxChargingCurrent = new Property(Float.class, PROPERTY_MAX_CHARGING_CURRENT);
         Property<PlugType> plugType = new Property(PlugType.class, PROPERTY_PLUG_TYPE);
-        Property<ChargingWindowChosen> chargingWindowChosen =
-                new Property(ChargingWindowChosen.class, PROPERTY_CHARGING_WINDOW_CHOSEN);
+        Property<ChargingWindowChosen> chargingWindowChosen = new Property(ChargingWindowChosen.class, PROPERTY_CHARGING_WINDOW_CHOSEN);
         Property<DepartureTime>[] departureTimes;
         Property<ReductionTime>[] reductionTimes;
-        Property<Float> batteryTemperature = new Property(Float.class,
-                PROPERTY_BATTERY_TEMPERATURE);
+        Property<Float> batteryTemperature = new Property(Float.class, PROPERTY_BATTERY_TEMPERATURE);
         Property<Timer>[] timers;
         Property<PluggedIn> pluggedIn = new Property(PluggedIn.class, PROPERTY_PLUGGED_IN);
         Property<Status> status = new Property(Status.class, PROPERTY_STATUS);
@@ -250,54 +272,35 @@ public class Charging {
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_ESTIMATED_RANGE:
-                            return estimatedRange.update(p);
-                        case PROPERTY_BATTERY_LEVEL:
-                            return batteryLevel.update(p);
-                        case PROPERTY_BATTERY_CURRENT_AC:
-                            return batteryCurrentAC.update(p);
-                        case PROPERTY_BATTERY_CURRENT_DC:
-                            return batteryCurrentDC.update(p);
-                        case PROPERTY_CHARGER_VOLTAGE_AC:
-                            return chargerVoltageAC.update(p);
-                        case PROPERTY_CHARGER_VOLTAGE_DC:
-                            return chargerVoltageDC.update(p);
-                        case PROPERTY_CHARGE_LIMIT:
-                            return chargeLimit.update(p);
-                        case PROPERTY_TIME_TO_COMPLETE_CHARGE:
-                            return timeToCompleteCharge.update(p);
-                        case PROPERTY_CHARGING_RATE_KW:
-                            return chargingRateKW.update(p);
-                        case PROPERTY_CHARGE_PORT_STATE:
-                            return chargePortState.update(p);
-                        case PROPERTY_CHARGE_MODE:
-                            return chargeMode.update(p);
-                        case PROPERTY_MAX_CHARGING_CURRENT:
-                            return maxChargingCurrent.update(p);
-                        case PROPERTY_PLUG_TYPE:
-                            return plugType.update(p);
-                        case PROPERTY_CHARGING_WINDOW_CHOSEN:
-                            return chargingWindowChosen.update(p);
+                        case PROPERTY_ESTIMATED_RANGE: return estimatedRange.update(p);
+                        case PROPERTY_BATTERY_LEVEL: return batteryLevel.update(p);
+                        case PROPERTY_BATTERY_CURRENT_AC: return batteryCurrentAC.update(p);
+                        case PROPERTY_BATTERY_CURRENT_DC: return batteryCurrentDC.update(p);
+                        case PROPERTY_CHARGER_VOLTAGE_AC: return chargerVoltageAC.update(p);
+                        case PROPERTY_CHARGER_VOLTAGE_DC: return chargerVoltageDC.update(p);
+                        case PROPERTY_CHARGE_LIMIT: return chargeLimit.update(p);
+                        case PROPERTY_TIME_TO_COMPLETE_CHARGE: return timeToCompleteCharge.update(p);
+                        case PROPERTY_CHARGING_RATE_KW: return chargingRateKW.update(p);
+                        case PROPERTY_CHARGE_PORT_STATE: return chargePortState.update(p);
+                        case PROPERTY_CHARGE_MODE: return chargeMode.update(p);
+                        case PROPERTY_MAX_CHARGING_CURRENT: return maxChargingCurrent.update(p);
+                        case PROPERTY_PLUG_TYPE: return plugType.update(p);
+                        case PROPERTY_CHARGING_WINDOW_CHOSEN: return chargingWindowChosen.update(p);
                         case PROPERTY_DEPARTURE_TIMES:
-                            Property<DepartureTime> departureTime =
-                                    new Property(DepartureTime.class, p);
+                            Property<DepartureTime> departureTime = new Property(DepartureTime.class, p);
                             departureTimesBuilder.add(departureTime);
                             return departureTime;
                         case PROPERTY_REDUCTION_TIMES:
-                            Property<ReductionTime> reductionTime =
-                                    new Property(ReductionTime.class, p);
+                            Property<ReductionTime> reductionTime = new Property(ReductionTime.class, p);
                             reductionTimesBuilder.add(reductionTime);
                             return reductionTime;
-                        case PROPERTY_BATTERY_TEMPERATURE:
-                            return batteryTemperature.update(p);
+                        case PROPERTY_BATTERY_TEMPERATURE: return batteryTemperature.update(p);
                         case PROPERTY_TIMERS:
                             Property<Timer> timer = new Property(Timer.class, p);
                             timersBuilder.add(timer);
                             return timer;
-                        case PROPERTY_PLUGGED_IN:
-                            return pluggedIn.update(p);
-                        case PROPERTY_STATUS:
-                            return status.update(p);
+                        case PROPERTY_PLUGGED_IN: return pluggedIn.update(p);
+                        case PROPERTY_STATUS: return status.update(p);
                     }
 
                     return null;
@@ -369,8 +372,7 @@ public class Charging {
              * @return The builder
              */
             public Builder setEstimatedRange(Property<Integer> estimatedRange) {
-                this.estimatedRange = new PropertyInteger(PROPERTY_ESTIMATED_RANGE, false, 2,
-                        estimatedRange);
+                this.estimatedRange = new PropertyInteger(PROPERTY_ESTIMATED_RANGE, false, 2, estimatedRange);
                 addProperty(this.estimatedRange);
                 return this;
             }
@@ -390,8 +392,7 @@ public class Charging {
              * @return The builder
              */
             public Builder setBatteryCurrentAC(Property<Float> batteryCurrentAC) {
-                this.batteryCurrentAC =
-                        batteryCurrentAC.setIdentifier(PROPERTY_BATTERY_CURRENT_AC);
+                this.batteryCurrentAC = batteryCurrentAC.setIdentifier(PROPERTY_BATTERY_CURRENT_AC);
                 addProperty(this.batteryCurrentAC);
                 return this;
             }
@@ -401,8 +402,7 @@ public class Charging {
              * @return The builder
              */
             public Builder setBatteryCurrentDC(Property<Float> batteryCurrentDC) {
-                this.batteryCurrentDC =
-                        batteryCurrentDC.setIdentifier(PROPERTY_BATTERY_CURRENT_DC);
+                this.batteryCurrentDC = batteryCurrentDC.setIdentifier(PROPERTY_BATTERY_CURRENT_DC);
                 addProperty(this.batteryCurrentDC);
                 return this;
             }
@@ -412,8 +412,7 @@ public class Charging {
              * @return The builder
              */
             public Builder setChargerVoltageAC(Property<Float> chargerVoltageAC) {
-                this.chargerVoltageAC =
-                        chargerVoltageAC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_AC);
+                this.chargerVoltageAC = chargerVoltageAC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_AC);
                 addProperty(this.chargerVoltageAC);
                 return this;
             }
@@ -423,8 +422,7 @@ public class Charging {
              * @return The builder
              */
             public Builder setChargerVoltageDC(Property<Float> chargerVoltageDC) {
-                this.chargerVoltageDC =
-                        chargerVoltageDC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_DC);
+                this.chargerVoltageDC = chargerVoltageDC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_DC);
                 addProperty(this.chargerVoltageDC);
                 return this;
             }
@@ -444,9 +442,7 @@ public class Charging {
              * @return The builder
              */
             public Builder setTimeToCompleteCharge(Property<Integer> timeToCompleteCharge) {
-                this.timeToCompleteCharge =
-                        new PropertyInteger(PROPERTY_TIME_TO_COMPLETE_CHARGE, false, 1,
-                                timeToCompleteCharge);
+                this.timeToCompleteCharge = new PropertyInteger(PROPERTY_TIME_TO_COMPLETE_CHARGE, false, 1, timeToCompleteCharge);
                 addProperty(this.timeToCompleteCharge);
                 return this;
             }
@@ -486,8 +482,7 @@ public class Charging {
              * @return The builder
              */
             public Builder setMaxChargingCurrent(Property<Float> maxChargingCurrent) {
-                this.maxChargingCurrent =
-                        maxChargingCurrent.setIdentifier(PROPERTY_MAX_CHARGING_CURRENT);
+                this.maxChargingCurrent = maxChargingCurrent.setIdentifier(PROPERTY_MAX_CHARGING_CURRENT);
                 addProperty(this.maxChargingCurrent);
                 return this;
             }
@@ -507,8 +502,7 @@ public class Charging {
              * @return The builder
              */
             public Builder setChargingWindowChosen(Property<ChargingWindowChosen> chargingWindowChosen) {
-                this.chargingWindowChosen =
-                        chargingWindowChosen.setIdentifier(PROPERTY_CHARGING_WINDOW_CHOSEN);
+                this.chargingWindowChosen = chargingWindowChosen.setIdentifier(PROPERTY_CHARGING_WINDOW_CHOSEN);
                 addProperty(this.chargingWindowChosen);
                 return this;
             }
@@ -574,8 +568,7 @@ public class Charging {
              * @return The builder
              */
             public Builder setBatteryTemperature(Property<Float> batteryTemperature) {
-                this.batteryTemperature =
-                        batteryTemperature.setIdentifier(PROPERTY_BATTERY_TEMPERATURE);
+                this.batteryTemperature = batteryTemperature.setIdentifier(PROPERTY_BATTERY_TEMPERATURE);
                 addProperty(this.batteryTemperature);
                 return this;
             }
@@ -634,8 +627,7 @@ public class Charging {
      * Start stop charging
      */
     public static class StartStopCharging extends SetCommand {
-        Property<Status> status = new Property(Status.class,
-                PROPERTY_STATUS);
+        Property<Status> status = new Property(Status.class, PROPERTY_STATUS);
 
         /**
          * @return The status
@@ -655,8 +647,7 @@ public class Charging {
             if (status == Status.CHARGING_COMPLETE ||
                     status == Status.INITIALISING ||
                     status == Status.CHARGING_PAUSED ||
-                    status == Status.CHARGING_ERROR)
-                throw new IllegalArgumentException();
+                    status == Status.CHARGING_ERROR) throw new IllegalArgumentException();
 
             addProperty(this.status.update(status));
             createBytes();
@@ -667,8 +658,7 @@ public class Charging {
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_STATUS:
-                            return status.update(p);
+                        case PROPERTY_STATUS: return status.update(p);
                     }
                     return null;
                 });
@@ -708,8 +698,7 @@ public class Charging {
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CHARGE_LIMIT:
-                            return chargeLimit.update(p);
+                        case PROPERTY_CHARGE_LIMIT: return chargeLimit.update(p);
                     }
                     return null;
                 });
@@ -723,8 +712,7 @@ public class Charging {
      * Open close charging port
      */
     public static class OpenCloseChargingPort extends SetCommand {
-        Property<Position> chargePortState = new Property(Position.class,
-                PROPERTY_CHARGE_PORT_STATE);
+        Property<Position> chargePortState = new Property(Position.class, PROPERTY_CHARGE_PORT_STATE);
 
         /**
          * @return The charge port state
@@ -750,8 +738,7 @@ public class Charging {
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CHARGE_PORT_STATE:
-                            return chargePortState.update(p);
+                        case PROPERTY_CHARGE_PORT_STATE: return chargePortState.update(p);
                     }
                     return null;
                 });
@@ -917,16 +904,13 @@ public class Charging {
         }
     }
 
-    // Values
-
     public enum ChargeMode implements ByteEnum {
         IMMEDIATE((byte) 0x00),
         TIMER_BASED((byte) 0x01),
         INDUCTIVE((byte) 0x02);
 
         public static ChargeMode fromByte(byte byteValue) throws CommandParseException {
-            ChargeMode[] values =
-                    ChargeMode.values();
+            ChargeMode[] values = ChargeMode.values();
 
             for (int i = 0; i < values.length; i++) {
                 ChargeMode state = values[i];
@@ -984,8 +968,7 @@ public class Charging {
         CHOSEN((byte) 0x01);
 
         public static ChargingWindowChosen fromByte(byte byteValue) throws CommandParseException {
-            ChargingWindowChosen[] values =
-                    ChargingWindowChosen.values();
+            ChargingWindowChosen[] values = ChargingWindowChosen.values();
 
             for (int i = 0; i < values.length; i++) {
                 ChargingWindowChosen state = values[i];

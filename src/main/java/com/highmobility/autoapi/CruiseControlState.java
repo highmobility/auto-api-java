@@ -94,10 +94,6 @@ public class CruiseControlState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     public enum Limiter implements ByteEnum {
         NOT_SET((byte) 0x00),
         HIGHER_SPEED_REQUESTED((byte) 0x01),

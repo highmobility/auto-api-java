@@ -163,10 +163,6 @@ public class ClimateState extends SetCommand {
         hvacWeekdayStartingTimes = hvacWeekdayStartingTimesBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private ClimateState(Builder builder) {
         super(builder);
 

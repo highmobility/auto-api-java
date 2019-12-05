@@ -63,10 +63,6 @@ public class PowerTakeoffState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private PowerTakeoffState(Builder builder) {
         super(builder);
 

@@ -61,10 +61,6 @@ public class LightConditionsState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private LightConditionsState(Builder builder) {
         super(builder);
 

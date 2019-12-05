@@ -52,10 +52,6 @@ public class ParkingBrakeState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private ParkingBrakeState(Builder builder) {
         super(builder);
 

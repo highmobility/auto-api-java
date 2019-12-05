@@ -63,10 +63,6 @@ public class RemoteControlState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     public enum ControlMode implements ByteEnum {
         UNAVAILABLE((byte) 0x00),
         AVAILABLE((byte) 0x01),

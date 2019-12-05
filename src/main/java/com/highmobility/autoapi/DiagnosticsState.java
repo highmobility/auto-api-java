@@ -349,10 +349,6 @@ public class DiagnosticsState extends SetCommand {
         troubleCodes = troubleCodesBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private DiagnosticsState(Builder builder) {
         super(builder);
 

@@ -52,10 +52,6 @@ public class ValetModeState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private ValetModeState(Builder builder) {
         super(builder);
 

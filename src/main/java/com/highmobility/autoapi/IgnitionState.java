@@ -62,10 +62,6 @@ public class IgnitionState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private IgnitionState(Builder builder) {
         super(builder);
 

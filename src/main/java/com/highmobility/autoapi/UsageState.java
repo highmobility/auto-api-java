@@ -240,10 +240,6 @@ public class UsageState extends SetCommand {
         drivingModesEnergyConsumptions = drivingModesEnergyConsumptionsBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private UsageState(Builder builder) {
         super(builder);
 

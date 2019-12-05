@@ -223,10 +223,6 @@ public class HomeChargerState extends SetCommand {
         priceTariffs = priceTariffsBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private HomeChargerState(Builder builder) {
         super(builder);
 

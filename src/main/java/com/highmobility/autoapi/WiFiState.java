@@ -84,10 +84,6 @@ public class WiFiState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private WiFiState(Builder builder) {
         super(builder);
 

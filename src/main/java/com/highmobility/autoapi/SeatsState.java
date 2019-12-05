@@ -108,10 +108,6 @@ public class SeatsState extends SetCommand {
         seatbeltsState = seatbeltsStateBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private SeatsState(Builder builder) {
         super(builder);
 

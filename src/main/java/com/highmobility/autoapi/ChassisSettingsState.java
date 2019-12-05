@@ -145,10 +145,6 @@ public class ChassisSettingsState extends SetCommand {
         minimumSpringRates = minimumSpringRatesBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private ChassisSettingsState(Builder builder) {
         super(builder);
 

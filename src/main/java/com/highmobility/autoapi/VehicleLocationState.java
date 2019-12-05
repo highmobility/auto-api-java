@@ -72,10 +72,6 @@ public class VehicleLocationState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private VehicleLocationState(Builder builder) {
         super(builder);
 

@@ -94,10 +94,6 @@ public class NotificationsState extends SetCommand {
         actionItems = actionItemsBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private NotificationsState(Builder builder) {
         super(builder);
 

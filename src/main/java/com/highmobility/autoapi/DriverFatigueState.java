@@ -52,10 +52,6 @@ public class DriverFatigueState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     public enum DetectedFatigueLevel implements ByteEnum {
         LIGHT((byte) 0x00),
         PAUSE_RECOMMENDED((byte) 0x01),

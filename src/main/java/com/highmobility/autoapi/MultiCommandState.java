@@ -61,10 +61,6 @@ public class MultiCommandState extends SetCommand {
         multiStates = multiStatesBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private MultiCommandState(Builder builder) {
         super(builder);
 

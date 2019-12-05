@@ -52,10 +52,6 @@ public class EngineStartStopState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private EngineStartStopState(Builder builder) {
         super(builder);
 

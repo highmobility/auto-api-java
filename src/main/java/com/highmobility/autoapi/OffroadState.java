@@ -62,10 +62,6 @@ public class OffroadState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private OffroadState(Builder builder) {
         super(builder);
 

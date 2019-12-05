@@ -271,10 +271,6 @@ public class RaceState extends SetCommand {
         brakeTorqueVectorings = brakeTorqueVectoringsBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private RaceState(Builder builder) {
         super(builder);
 

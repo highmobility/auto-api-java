@@ -124,10 +124,6 @@ public class WindscreenState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private WindscreenState(Builder builder) {
         super(builder);
 

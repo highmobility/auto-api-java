@@ -62,10 +62,6 @@ public class DashboardLightsState extends SetCommand {
         dashboardLights = dashboardLightsBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private DashboardLightsState(Builder builder) {
         super(builder);
 

@@ -93,10 +93,6 @@ public class ParkingTicketState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private ParkingTicketState(Builder builder) {
         super(builder);
 

@@ -159,10 +159,6 @@ public class DoorsState extends SetCommand {
         positions = positionsBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private DoorsState(Builder builder) {
         super(builder);
 

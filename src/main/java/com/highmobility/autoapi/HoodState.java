@@ -52,10 +52,6 @@ public class HoodState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private HoodState(Builder builder) {
         super(builder);
 

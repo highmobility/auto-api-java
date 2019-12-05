@@ -61,10 +61,6 @@ public class HistoricalState extends SetCommand {
         states = statesBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private HistoricalState(Builder builder) {
         super(builder);
 

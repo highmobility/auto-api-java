@@ -52,10 +52,6 @@ public class HonkHornFlashLightsState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private HonkHornFlashLightsState(Builder builder) {
         super(builder);
 

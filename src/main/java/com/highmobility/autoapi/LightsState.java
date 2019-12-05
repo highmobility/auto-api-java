@@ -192,10 +192,6 @@ public class LightsState extends SetCommand {
         interiorLights = interiorLightsBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private LightsState(Builder builder) {
         super(builder);
 

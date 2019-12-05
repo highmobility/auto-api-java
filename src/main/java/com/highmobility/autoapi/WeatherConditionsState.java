@@ -51,10 +51,6 @@ public class WeatherConditionsState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private WeatherConditionsState(Builder builder) {
         super(builder);
 

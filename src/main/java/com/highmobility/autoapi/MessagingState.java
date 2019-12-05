@@ -61,10 +61,6 @@ public class MessagingState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private MessagingState(Builder builder) {
         super(builder);
 

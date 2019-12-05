@@ -63,10 +63,6 @@ public class FuelingState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private FuelingState(Builder builder) {
         super(builder);
 

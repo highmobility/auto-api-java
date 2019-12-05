@@ -183,10 +183,6 @@ public class TachographState extends SetCommand {
         driversCardsPresent = driversCardsPresentBuilder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private TachographState(Builder builder) {
         super(builder);
 

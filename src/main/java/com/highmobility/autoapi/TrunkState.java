@@ -63,10 +63,6 @@ public class TrunkState extends SetCommand {
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
     private TrunkState(Builder builder) {
         super(builder);
 
