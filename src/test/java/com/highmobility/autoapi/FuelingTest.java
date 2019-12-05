@@ -21,30 +21,30 @@ public class FuelingTest extends BaseTest {
     @Test
     public void state() {
         Command state = CommandResolver.resolve(bytes);
-        testState((FuelingState) state);
+        testState((Fueling.State) state);
     }
 
-    private void testState(FuelingState state) {
+    private void testState(Fueling.State state) {
         assertTrue(state.getGasFlapLock().getValue() == LockState.LOCKED);
         assertTrue(state.getGasFlapPosition().getValue() == Position.CLOSED);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
-        FuelingState.Builder builder = new FuelingState.Builder();
+        Fueling.State.Builder builder = new Fueling.State.Builder();
 
         builder.setGasFlapLock(new Property(LockState.LOCKED));
         builder.setGasFlapPosition(new Property(Position.CLOSED));
 
-        FuelingState state = builder.build();
+        Fueling.State state = builder.build();
         testState(state);
     }
 
     @Test public void get() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("004000");
-        byte[] bytes = new GetGasFlapState().getByteArray();
+        byte[] bytes = new Fueling.GetGasFlapState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
-        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof GetGasFlapState);
+        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof Fueling.GetGasFlapState);
     }
 
     @Test public void control() {
@@ -52,12 +52,12 @@ public class FuelingTest extends BaseTest {
                 "02000401000100" +
                 "03000401000101");
 
-        byte[] bytes = new ControlGasFlap(LockState.UNLOCKED, Position.OPEN).getByteArray();
+        byte[] bytes = new Fueling.ControlGasFlap(LockState.UNLOCKED, Position.OPEN).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ControlGasFlap openCloseGasFlap =
-                (ControlGasFlap) CommandResolver.resolve(waitingForBytes);
+        Fueling.ControlGasFlap openCloseGasFlap =
+                (Fueling.ControlGasFlap) CommandResolver.resolve(waitingForBytes);
         assertTrue(Arrays.equals(openCloseGasFlap.getByteArray(), waitingForBytes));
     }
 }

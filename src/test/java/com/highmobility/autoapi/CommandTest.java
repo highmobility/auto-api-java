@@ -50,7 +50,7 @@ public class CommandTest extends BaseTest {
             // test that invalid gasflapstate just sets the property to null and keeps the base
             // property
             Bytes bytes = new Bytes("00400102000401000103"); // 3 is invalid gasflap lock state
-            FuelingState state = (FuelingState) CommandResolver.resolve(bytes);
+            Fueling.State state = (Fueling.State) CommandResolver.resolve(bytes);
 
             assertTrue(state.getGasFlapLock().getValue() == null);
             assertTrue(state.getProperty((byte) 0x02) != null);
