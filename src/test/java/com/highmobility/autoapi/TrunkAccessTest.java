@@ -21,19 +21,19 @@ public class TrunkAccessTest extends BaseTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        assertTrue(command.getClass() == TrunkState.class);
-        TrunkState state = (TrunkState) command;
+        assertTrue(command.getClass() == Trunk.State.class);
+        Trunk.State state = (Trunk.State) command;
         testState(state);
     }
 
-    private void testState(TrunkState state) {
+    private void testState(Trunk.State state) {
         assertTrue(state.getLock().getValue() == LockState.UNLOCKED);
         assertTrue(state.getPosition().getValue() == Position.OPEN);
         assertTrue(bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
-        TrunkState.Builder builder = new TrunkState.Builder();
+        Trunk.State.Builder builder = new Trunk.State.Builder();
         builder.setLock(new Property(LockState.UNLOCKED));
         builder.setPosition(new Property(Position.OPEN));
         testState(builder.build());
@@ -41,24 +41,24 @@ public class TrunkAccessTest extends BaseTest {
 
     @Test public void get() {
         Bytes waitingForBytes = new Bytes("002100");
-        Bytes commandBytes = new GetTrunkState();
+        Bytes commandBytes = new Trunk.GetState();
         assertTrue(waitingForBytes.equals(commandBytes));
 
         Command command = CommandResolver.resolve(waitingForBytes);
-        assertTrue(command instanceof GetTrunkState);
+        assertTrue(command instanceof Trunk.GetState);
     }
 
     @Test public void control() {
         Bytes waitingForBytes = new Bytes("002101" +
                 "01000401000100" +
                 "02000401000101");
-        Command commandBytes = new ControlTrunk(LockState.UNLOCKED, Position.OPEN);
+        Command commandBytes = new Trunk.ControlTrunk(LockState.UNLOCKED, Position.OPEN);
         assertTrue(bytesTheSame(commandBytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
         Command command = CommandResolver.resolve(waitingForBytes);
-        assertTrue(command instanceof ControlTrunk);
-        ControlTrunk state = (ControlTrunk) command;
+        assertTrue(command instanceof Trunk.ControlTrunk);
+        Trunk.ControlTrunk state = (Trunk.ControlTrunk) command;
         assertTrue(state.getLock().getValue() == LockState.UNLOCKED);
         assertTrue(state.getPosition().getValue() == Position.OPEN);
     }

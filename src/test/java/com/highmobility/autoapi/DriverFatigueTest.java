@@ -14,7 +14,7 @@ public class DriverFatigueTest extends BaseTest {
                 "004101" +
                         "01000401000100");
 
-        DriverFatigueState state = (DriverFatigueState) CommandResolver.resolve(bytes);
-        assertTrue(state.getDetectedFatigueLevel().getValue() == DriverFatigueState.DetectedFatigueLevel.LIGHT);
+        DriverFatigue.State state = (DriverFatigue.State) CommandResolver.resolve(bytes);
+        assertTrue(state.getDetectedFatigueLevel().getValue() == DriverFatigue.DetectedFatigueLevel.LIGHT);
     }
 }

@@ -45,12 +45,12 @@ public class RaceTest extends BaseTest {
     public void state() {
         Command command = CommandResolver.resolve(bytes);
 
-        assertTrue(command.getClass() == RaceState.class);
-        RaceState state = (RaceState) command;
+        assertTrue(command.getClass() == Race.State.class);
+        Race.State state = (Race.State) command;
         testState(state);
     }
 
-    private void testState(RaceState state) {
+    private void testState(Race.State state) {
         assertTrue(state.getAcceleration(Acceleration.Direction.LONGITUDINAL).getValue().getGForce() == .864f);
         assertTrue(state.getAcceleration(Acceleration.Direction.LATERAL).getValue().getGForce() == -0.753f);
 
@@ -65,7 +65,7 @@ public class RaceTest extends BaseTest {
 
         assertTrue(state.getBrakeTorqueVectoring(Axle.REAR).getValue().getActiveState() == ActiveState.ACTIVE);
         assertTrue(state.getBrakeTorqueVectoring(Axle.FRONT).getValue().getActiveState() == ActiveState.INACTIVE);
-        assertTrue(state.getGearMode().getValue() == RaceState.GearMode.DRIVE);
+        assertTrue(state.getGearMode().getValue() == Race.GearMode.DRIVE);
 
         assertTrue(state.getSelectedGear().getValue() == 4);
         assertTrue(state.getBrakePedalPosition().getValue() == 0d);
@@ -75,12 +75,12 @@ public class RaceTest extends BaseTest {
         assertTrue(state.getAcceleratorPedalIdleSwitch().getValue() == ActiveState.ACTIVE);
         assertTrue(state.getAcceleratorPedalKickdownSwitch().getValue() == ActiveState.ACTIVE);
 
-        assertTrue(state.getVehicleMoving().getValue() == RaceState.VehicleMoving.MOVING);
+        assertTrue(state.getVehicleMoving().getValue() == Race.VehicleMoving.MOVING);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
-        RaceState.Builder builder = new RaceState.Builder();
+        Race.State.Builder builder = new Race.State.Builder();
 
         builder.addAcceleration(new Property(new Acceleration(Acceleration.Direction.LONGITUDINAL, .864f)));
         builder.addAcceleration(new Property(new Acceleration(Acceleration.Direction.LATERAL, -.753f)));
@@ -94,7 +94,7 @@ public class RaceTest extends BaseTest {
         builder.setElectronicStabilityProgram(new Property(ActiveState.ACTIVE));
         builder.addBrakeTorqueVectoring(new Property(new BrakeTorqueVectoring(Axle.REAR, ActiveState.ACTIVE)));
         builder.addBrakeTorqueVectoring(new Property(new BrakeTorqueVectoring(Axle.FRONT, ActiveState.INACTIVE)));
-        builder.setGearMode(new Property(RaceState.GearMode.DRIVE));
+        builder.setGearMode(new Property(Race.GearMode.DRIVE));
         builder.setSelectedGear(new Property(4));
         builder.setBrakePedalPosition(new Property(0d));
 
@@ -102,15 +102,15 @@ public class RaceTest extends BaseTest {
         builder.setClutchPedalSwitch(new Property(ActiveState.ACTIVE));
         builder.setAcceleratorPedalIdleSwitch(new Property(ActiveState.ACTIVE));
         builder.setAcceleratorPedalKickdownSwitch(new Property(ActiveState.ACTIVE));
-        builder.setVehicleMoving(new Property(RaceState.VehicleMoving.MOVING));
+        builder.setVehicleMoving(new Property(Race.VehicleMoving.MOVING));
 
-        RaceState state = builder.build();
+        Race.State state = builder.build();
         testState(state);
     }
 
     @Test public void get() {
         String waitingForBytes = "005700";
-        String commandBytes = ByteUtils.hexFromBytes(new GetRaceState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new Race.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 }

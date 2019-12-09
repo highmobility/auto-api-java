@@ -22,11 +22,11 @@ public class DashboardLightsTest extends BaseTest {
 
     @Test
     public void state() {
-        DashboardLightsState state = (DashboardLightsState) CommandResolver.resolve(bytes);
+        DashboardLights.State state = (DashboardLights.State) CommandResolver.resolve(bytes);
         testState(state);
     }
 
-    private void testState(DashboardLightsState state) {
+    private void testState(DashboardLights.State state) {
         assertTrue(state.getDashboardLights().length == 4);
 
         assertTrue(getDashboardLight(state.getDashboardLights(), DashboardLight.Name.HIGH_BEAM).getState() ==
@@ -51,12 +51,12 @@ public class DashboardLightsTest extends BaseTest {
 
     @Test public void get() {
         String waitingForBytes = "006100";
-        String commandBytes = ByteUtils.hexFromBytes(new GetDashboardLights().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new DashboardLights.GetDashboardLights().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void build() {
-        DashboardLightsState.Builder builder = new DashboardLightsState.Builder();
+        DashboardLights.State.Builder builder = new DashboardLights.State.Builder();
         builder.addDashboardLight(new Property(new DashboardLight(DashboardLight.Name.HIGH_BEAM,
                 DashboardLight.State.INACTIVE)));
         builder.addDashboardLight(new Property(new DashboardLight(DashboardLight.Name.HAZARD_WARNING,
@@ -67,7 +67,7 @@ public class DashboardLightsTest extends BaseTest {
         builder.addDashboardLight(new Property(new DashboardLight(DashboardLight.Name.ENGINE_OIL_LEVEL,
                 DashboardLight
                         .State.YELLOW)));
-        DashboardLightsState state = builder.build();
+        DashboardLights.State state = builder.build();
         assertTrue(state.equals(bytes));
         testState(state);
     }

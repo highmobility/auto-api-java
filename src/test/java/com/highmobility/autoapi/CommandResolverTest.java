@@ -17,7 +17,7 @@ public class CommandResolverTest extends BaseTest {
                             "01000401000104"
             );
             Command command = CommandResolver.resolve(invalidEndParking);
-            assertTrue(command.getClass() == ParkingTicketState.class);
+            assertTrue(command.getClass() == ParkingTicket.State.class);
             assertTrue(command.getProperties().length == 1);
         });
     }

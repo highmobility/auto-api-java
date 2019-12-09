@@ -20,23 +20,23 @@ public class MobileTest extends BaseTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        MobileState state = (MobileState) command;
+        Mobile.State state = (Mobile.State) command;
         testState(state);
     }
 
-    private void testState(MobileState state) {
+    private void testState(Mobile.State state) {
         assertTrue(state.getConnection().getValue() == ConnectionState.CONNECTED);
         assertTrue(bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
         String waitingForBytes = "006600";
-        String commandBytes = ByteUtils.hexFromBytes(new GetMobileState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new Mobile.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void build() {
-        MobileState.Builder builder = new MobileState.Builder();
+        Mobile.State.Builder builder = new Mobile.State.Builder();
         builder.setConnection(new Property(ConnectionState.CONNECTED));
         testState(builder.build());
     }

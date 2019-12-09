@@ -21,11 +21,11 @@ public class OffRoadTest extends BaseTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        OffroadState state = (OffroadState) command;
+        Offroad.State state = (Offroad.State) command;
         testState(state);
     }
 
-    private void testState(OffroadState state) {
+    private void testState(Offroad.State state) {
         assertTrue(state.getRouteIncline().getValue() == 10);
         assertTrue(state.getWheelSuspension().getValue() == .5d);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
@@ -33,15 +33,15 @@ public class OffRoadTest extends BaseTest {
 
     @Test public void get() {
         String waitingForBytes = "005200";
-        String commandBytes = ByteUtils.hexFromBytes(new GetOffroadState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new Offroad.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void build() {
-        OffroadState.Builder builder = new OffroadState.Builder();
+        Offroad.State.Builder builder = new Offroad.State.Builder();
         builder.setRouteIncline(new Property(10));
         builder.setWheelSuspension(new Property(.5d));
-        OffroadState state = builder.build();
+        Offroad.State state = builder.build();
         testState(state);
     }
 }

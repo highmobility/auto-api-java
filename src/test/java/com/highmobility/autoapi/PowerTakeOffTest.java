@@ -18,36 +18,36 @@ public class PowerTakeOffTest extends BaseTest {
 
     @Test
     public void state() {
-        PowerTakeoffState command = (PowerTakeoffState) CommandResolver.resolve(bytes);
+        PowerTakeoff.State command = (PowerTakeoff.State) CommandResolver.resolve(bytes);
         testState(command);
     }
 
-    private void testState(PowerTakeoffState state) {
+    private void testState(PowerTakeoff.State state) {
         assertTrue(state.getStatus().getValue() == ActiveState.ACTIVE);
-        assertTrue(state.getEngaged().getValue() == PowerTakeoffState.Engaged.ENGAGED);
+        assertTrue(state.getEngaged().getValue() == PowerTakeoff.Engaged.ENGAGED);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
-        PowerTakeoffState.Builder builder = new PowerTakeoffState.Builder();
+        PowerTakeoff.State.Builder builder = new PowerTakeoff.State.Builder();
         builder.setStatus(new Property(ActiveState.ACTIVE));
-        builder.setEngaged(new Property(PowerTakeoffState.Engaged.ENGAGED));
+        builder.setEngaged(new Property(PowerTakeoff.Engaged.ENGAGED));
         testState(builder.build());
     }
 
     @Test public void get() {
         String waitingForBytes = "006500";
-        String commandBytes = ByteUtils.hexFromBytes(new GetPowerTakeoffState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new PowerTakeoff.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void activateDeactivate() {
         Bytes waitingForBytes = new Bytes("006501" +
                 "01000401000101");
-        byte[] commandBytes = new ActivateDeactivatePowerTakeoff(ActiveState.ACTIVE).getByteArray();
+        byte[] commandBytes = new PowerTakeoff.ActivateDeactivatePowerTakeoff(ActiveState.ACTIVE).getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));
         setRuntime(CommandResolver.RunTime.JAVA);
-        ActivateDeactivatePowerTakeoff command = (ActivateDeactivatePowerTakeoff) CommandResolver
+        PowerTakeoff.ActivateDeactivatePowerTakeoff command = (PowerTakeoff.ActivateDeactivatePowerTakeoff) CommandResolver
                 .resolve(waitingForBytes);
         assertTrue(command.getStatus().getValue() == ActiveState.ACTIVE);
     }

@@ -23,11 +23,11 @@ public class VehicleLocationTest extends BaseTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        VehicleLocationState state = (VehicleLocationState) command;
+        VehicleLocation.State state = (VehicleLocation.State) command;
         testState(state);
     }
 
-    private void testState(VehicleLocationState state) {
+    private void testState(VehicleLocation.State state) {
         assertTrue(state.getCoordinates().getValue().getLatitude() == 52.520008);
         assertTrue(state.getCoordinates().getValue().getLongitude() == 13.404954);
         assertTrue(state.getHeading().getValue() == 13.370123);
@@ -37,12 +37,12 @@ public class VehicleLocationTest extends BaseTest {
 
     @Test public void get() {
         String waitingForBytes = "003000";
-        String commandBytes = ByteUtils.hexFromBytes(new GetVehicleLocation().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new VehicleLocation.GetVehicleLocation().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void build() {
-        VehicleLocationState.Builder builder = new VehicleLocationState.Builder();
+        VehicleLocation.State.Builder builder = new VehicleLocation.State.Builder();
         Coordinates coordinates = new Coordinates(52.520008, 13.404954);
         builder.setCoordinates(new Property(coordinates));
         builder.setHeading(new Property(13.370123));

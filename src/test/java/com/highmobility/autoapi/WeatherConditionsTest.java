@@ -21,23 +21,23 @@ public class WeatherConditionsTest extends BaseTest {
     public void state() {
         Command command = CommandResolver.resolve(bytes);
 
-        WeatherConditionsState state = (WeatherConditionsState) command;
+        WeatherConditions.State state = (WeatherConditions.State) command;
         testState(state);
     }
 
-    private void testState(WeatherConditionsState state) {
+    private void testState(WeatherConditions.State state) {
         assertTrue(state.getRainIntensity().getValue() == 1d);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
         String waitingForBytes = "005500";
-        String commandBytes = ByteUtils.hexFromBytes(new GetWeatherConditions().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new WeatherConditions.GetWeatherConditions().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void builder() {
-        WeatherConditionsState.Builder builder = new WeatherConditionsState.Builder();
+        WeatherConditions.State.Builder builder = new WeatherConditions.State.Builder();
         builder.setRainIntensity(new Property(1d));
         testState(builder.build());
     }

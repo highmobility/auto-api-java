@@ -41,14 +41,14 @@ public class HomeChargerTest extends BaseTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        HomeChargerState state = (HomeChargerState) command;
+        HomeCharger.State state = (HomeCharger.State) command;
         testState(state);
     }
 
-    private void testState(HomeChargerState state) {
-        assertTrue(state.getChargingStatus().getValue() == HomeChargerState.ChargingStatus.CHARGING);
-        assertTrue(state.getAuthenticationMechanism().getValue() == HomeChargerState.AuthenticationMechanism.APP);
-        assertTrue(state.getPlugType().getValue() == HomeChargerState.PlugType.TYPE_2);
+    private void testState(HomeCharger.State state) {
+        assertTrue(state.getChargingStatus().getValue() == HomeCharger.ChargingStatus.CHARGING);
+        assertTrue(state.getAuthenticationMechanism().getValue() == HomeCharger.AuthenticationMechanism.APP);
+        assertTrue(state.getPlugType().getValue() == HomeCharger.PlugType.TYPE_2);
         assertTrue(state.getChargingPowerKW().getValue() == 11.5f);
         assertTrue(state.getSolarCharging().getValue() == ActiveState.ACTIVE);
 
@@ -57,7 +57,7 @@ public class HomeChargerTest extends BaseTest {
         assertTrue(state.getWiFiHotspotSecurity().getValue() == NetworkSecurity.WPA2_PERSONAL);
         assertTrue(state.getWiFiHotspotPassword().getValue().equals("ZW3vARNUBe"));
 
-        assertTrue(state.getAuthenticationState().getValue() == HomeChargerState.AuthenticationState.AUTHENTICATED);
+        assertTrue(state.getAuthenticationState().getValue() == HomeCharger.AuthenticationState.AUTHENTICATED);
         assertTrue(state.getChargeCurrentDC().getValue() == .5f);
         assertTrue(state.getMaximumChargeCurrent().getValue() == 1f);
         assertTrue(state.getMinimumChargeCurrent().getValue() == 0f);
@@ -76,18 +76,18 @@ public class HomeChargerTest extends BaseTest {
     }
 
     @Test public void build() {
-        HomeChargerState.Builder builder = new HomeChargerState.Builder();
+        HomeCharger.State.Builder builder = new HomeCharger.State.Builder();
 
-        builder.setChargingStatus(new Property(HomeChargerState.ChargingStatus.CHARGING));
-        builder.setAuthenticationMechanism(new Property(HomeChargerState.AuthenticationMechanism.APP));
-        builder.setPlugType(new Property(HomeChargerState.PlugType.TYPE_2));
+        builder.setChargingStatus(new Property(HomeCharger.ChargingStatus.CHARGING));
+        builder.setAuthenticationMechanism(new Property(HomeCharger.AuthenticationMechanism.APP));
+        builder.setPlugType(new Property(HomeCharger.PlugType.TYPE_2));
         builder.setChargingPowerKW(new Property(11.5f));
         builder.setSolarCharging(new Property(ActiveState.ACTIVE));
         builder.setWifiHotspotEnabled(new Property(EnabledState.ENABLED));
         builder.setWifiHotspotSSID(new Property("Charger 7612"));
         builder.setWiFiHotspotSecurity(new Property(NetworkSecurity.WPA2_PERSONAL));
         builder.setWiFiHotspotPassword(new Property("ZW3vARNUBe"));
-        builder.setAuthenticationState(new Property(HomeChargerState.AuthenticationState.AUTHENTICATED));
+        builder.setAuthenticationState(new Property(HomeCharger.AuthenticationState.AUTHENTICATED));
         builder.setChargeCurrentDC(new Property(.5f));
         builder.setMaximumChargeCurrent(new Property(1f));
         builder.setMinimumChargeCurrent(new Property(0f));
@@ -99,13 +99,13 @@ public class HomeChargerTest extends BaseTest {
         builder.addPriceTariff(new Property(new PriceTariff(
                 PriceTariff.PricingType.PER_KWH, .3f, "Ripple")));
 
-        HomeChargerState state = builder.build();
+        HomeCharger.State state = builder.build();
         testState(state);
     }
 
     @Test public void get() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("006000");
-        byte[] commandBytes = new GetHomeChargerState().getByteArray();
+        byte[] commandBytes = new HomeCharger.GetState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
     }
 
@@ -113,11 +113,11 @@ public class HomeChargerTest extends BaseTest {
         Bytes waitingForBytes = new Bytes("006001" +
                         "0E00070100043f000000");
 
-        Command commandBytes = new SetChargeCurrent(.5f);
+        Command commandBytes = new HomeCharger.SetChargeCurrent(.5f);
         assertTrue(bytesTheSame(commandBytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        SetChargeCurrent command = (SetChargeCurrent) CommandResolver.resolve(waitingForBytes);
+        HomeCharger.SetChargeCurrent command = (HomeCharger.SetChargeCurrent) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getChargeCurrentDC().getValue() == .5f);
     }
 
@@ -132,11 +132,11 @@ public class HomeChargerTest extends BaseTest {
         tariffs[0] = new PriceTariff(PriceTariff.PricingType.STARTING_FEE, 4.5f, "EUR");
         tariffs[1] = new PriceTariff(PriceTariff.PricingType.PER_KWH, .3f, "EUR");
 
-        Command cmd = new SetPriceTariffs(tariffs);
+        Command cmd = new HomeCharger.SetPriceTariffs(tariffs);
         assertTrue(bytesTheSame(cmd, bytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        SetPriceTariffs command = (SetPriceTariffs) CommandResolver.resolve(bytes);
+        HomeCharger.SetPriceTariffs command = (HomeCharger.SetPriceTariffs) CommandResolver.resolve(bytes);
         assertTrue(command.getPriceTariffs().length == 2);
 
         assertTrue(command.getPriceTariffs()[0].getValue().getPricingType() == PriceTariff.PricingType.STARTING_FEE);
@@ -167,11 +167,11 @@ public class HomeChargerTest extends BaseTest {
     @Test public void activateSolarCharging() {
         Bytes waitingForBytes = new Bytes("006001" +
                 "05000401000101");
-        Command commandBytes = new ActivateDeactivateSolarCharging(ActiveState.ACTIVE);
+        Command commandBytes = new HomeCharger.ActivateDeactivateSolarCharging(ActiveState.ACTIVE);
         assertTrue(bytesTheSame(commandBytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ActivateDeactivateSolarCharging command = (ActivateDeactivateSolarCharging)
+        HomeCharger.ActivateDeactivateSolarCharging command = (HomeCharger.ActivateDeactivateSolarCharging)
                 CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getSolarCharging().getValue() == ActiveState.ACTIVE);
     }
@@ -180,11 +180,11 @@ public class HomeChargerTest extends BaseTest {
         Bytes waitingForBytes = new Bytes("006001" +
                 "08000401000100");
 
-        byte[] commandBytes = new EnableDisableWiFiHotspot(EnabledState.DISABLED).getByteArray();
+        byte[] commandBytes = new HomeCharger.EnableDisableWiFiHotspot(EnabledState.DISABLED).getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        EnableDisableWiFiHotspot command = (EnableDisableWiFiHotspot) CommandResolver.resolve
+        HomeCharger.EnableDisableWiFiHotspot command = (HomeCharger.EnableDisableWiFiHotspot) CommandResolver.resolve
                 (waitingForBytes);
         assertTrue(command.getWifiHotspotEnabled().getValue() == EnabledState.DISABLED);
     }
@@ -194,11 +194,11 @@ public class HomeChargerTest extends BaseTest {
                 "0D000401000100");
 
         Bytes commandBytes =
-                new AuthenticateExpire(HomeChargerState.AuthenticationState.UNAUTHENTICATED);
+                new HomeCharger.AuthenticateExpire(HomeCharger.AuthenticationState.UNAUTHENTICATED);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        AuthenticateExpire command = (AuthenticateExpire) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getAuthenticationState().getValue() == HomeChargerState.AuthenticationState.UNAUTHENTICATED);
+        HomeCharger.AuthenticateExpire command = (HomeCharger.AuthenticateExpire) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getAuthenticationState().getValue() == HomeCharger.AuthenticationState.UNAUTHENTICATED);
     }
 }

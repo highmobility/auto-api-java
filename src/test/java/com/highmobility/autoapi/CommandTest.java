@@ -31,11 +31,11 @@ public class CommandTest extends BaseTest {
     @Test public void universalTimestamp() throws ParseException {
         Bytes bytes = new Bytes(parkingBrakeCommand + "A2000B01000800000160E0EA1388");
         String expectedDate = "2018-01-10T16:32:05";
-        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
+        ParkingBrake.State command = (ParkingBrake.State) CommandResolver.resolve(bytes);
         assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
 
         Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
-        ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
+        ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
         builder.setStatus(new Property(ActiveState.ACTIVE));
         builder.setTimestamp(calendar);
         command = builder.build();
@@ -91,12 +91,12 @@ public class CommandTest extends BaseTest {
         assertTrue(command.getSignature().equals
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
 
-        ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
+        ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
         builder.setStatus(new Property(ActiveState.ACTIVE));
         builder.setNonce(new Bytes("324244433743483436"));
         builder.setSignature(new Bytes
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
-        ParkingBrakeState state = builder.build();
+        ParkingBrake.State state = builder.build();
         assertTrue(state.equals(command));
     }
 
@@ -122,7 +122,7 @@ public class CommandTest extends BaseTest {
                         "1A000401000135");
 
         Command command = CommandResolver.resolve(bytes);
-        RooftopControlState state = (RooftopControlState) command;
+        RooftopControl.State state = (RooftopControl.State) command;
 
         assertTrue(state.getDimming().getValue() == 1d);
         assertTrue(state.getPosition().getValue() == null);
@@ -157,14 +157,14 @@ public class CommandTest extends BaseTest {
 
     @Test public void getProperties() {
         Bytes waitingForBytes = new Bytes("00470001");
-        GetParkingTicketProperties getter = new GetParkingTicketProperties(new Bytes("01"));
+        ParkingTicket.GetParkingTicketProperties getter = new ParkingTicket.GetParkingTicketProperties(new Bytes("01"));
         assertTrue(bytesTheSame(getter, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        GetParkingTicketProperties resolved = (GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes);
+        ParkingTicket.GetParkingTicketProperties resolved = (ParkingTicket.GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes);
         assertTrue(resolved.getPropertyIdentifiers().equals("01"));
 
-        GetParkingTicketProperties resolved2 = (GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes.concat(new Bytes("02")));
+        ParkingTicket.GetParkingTicketProperties resolved2 = (ParkingTicket.GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes.concat(new Bytes("02")));
         assertTrue(resolved2.getPropertyIdentifiers().equals("0102"));
     }
 }

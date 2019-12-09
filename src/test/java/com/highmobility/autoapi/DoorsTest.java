@@ -29,12 +29,12 @@ public class DoorsTest extends BaseTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        assertTrue(command instanceof DoorsState);
-        testState((DoorsState) command);
+        assertTrue(command instanceof Doors.State);
+        testState((Doors.State) command);
     }
 
     @Test public void build() {
-        DoorsState.Builder builder = new DoorsState.Builder();
+        Doors.State.Builder builder = new Doors.State.Builder();
 
         builder.addInsideLock(new Property(new Lock(Location.FRONT_LEFT, LockState.UNLOCKED)));
         builder.addInsideLock(new Property(new Lock(Location.FRONT_RIGHT, LockState.UNLOCKED)));
@@ -50,12 +50,12 @@ public class DoorsTest extends BaseTest {
                 Position.CLOSED)));
         builder.setLocksState(new Property(LockState.LOCKED));
 
-        DoorsState state = builder.build();
+        Doors.State state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
         testState(state);
     }
 
-    void testState(DoorsState state) {
+    void testState(Doors.State state) {
         assertTrue(state.getPositions().length == 4);
         assertTrue(state.getLocks().length == 2);
         assertTrue(state.getInsideLocks().length == 2);
@@ -77,23 +77,23 @@ public class DoorsTest extends BaseTest {
 
     @Test public void get() {
         Bytes bytes = new Bytes("002000");
-        Bytes commandBytes = new GetDoorsState();
+        Bytes commandBytes = new Doors.GetState();
         assertTrue(bytes.equals(commandBytes));
 
         Command command = CommandResolver.resolve(bytes);
-        assertTrue(command instanceof GetDoorsState);
+        assertTrue(command instanceof Doors.GetState);
     }
 
     @Test public void lock() {
         Bytes waitingForBytes = new Bytes("002001" +
                 "05000401000101");
-        Command commandBytes = new LockUnlockDoors(LockState.LOCKED);
+        Command commandBytes = new Doors.LockUnlockDoors(LockState.LOCKED);
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
         Command command = CommandResolver.resolve(waitingForBytes);
-        assertTrue(command instanceof LockUnlockDoors);
-        LockUnlockDoors state = (LockUnlockDoors) command;
+        assertTrue(command instanceof Doors.LockUnlockDoors);
+        Doors.LockUnlockDoors state = (Doors.LockUnlockDoors) command;
         assertTrue(state.getInsideLocksState().getValue() == LockState.LOCKED);
     }
 
@@ -103,7 +103,7 @@ public class DoorsTest extends BaseTest {
         Bytes bytes = new Bytes(
                 "002001" +
                         "0300050100020501");
-        DoorsState state = (DoorsState) CommandResolver.resolve(bytes);
+        Doors.State state = (Doors.State) CommandResolver.resolve(bytes);
         assertTrue(state.getLocks().length == 1);
         assertTrue(getLock(state.getLocks(), Location.ALL).getLock() == LOCKED);
         assertTrue(state.isLocked());

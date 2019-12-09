@@ -16,18 +16,18 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
 
     @Test
     public void state() {
-        HonkHornFlashLightsState state = (HonkHornFlashLightsState) CommandResolver.resolve(bytes);
+        HonkHornFlashLights.State state = (HonkHornFlashLights.State) CommandResolver.resolve(bytes);
         testState(state);
     }
 
-    private void testState(HonkHornFlashLightsState state) {
-        assertTrue(state.getFlashers().getValue() == HonkHornFlashLightsState.Flashers.LEFT_FLASHER_ACTIVE);
+    private void testState(HonkHornFlashLights.State state) {
+        assertTrue(state.getFlashers().getValue() == HonkHornFlashLights.Flashers.LEFT_FLASHER_ACTIVE);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
         String waitingForBytes = "002600";
-        String commandBytes = ByteUtils.hexFromBytes(new GetFlashersState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new HonkHornFlashLights.GetFlashersState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
@@ -35,11 +35,11 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
         String waitingForBytes = "002601" +
                 "02000401000100" +
                 "03000401000103";
-        HonkFlash command = new HonkFlash(0, 3);
+        HonkHornFlashLights.HonkFlash command = new HonkHornFlashLights.HonkFlash(0, 3);
         assertTrue(command.equals(waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        command = (HonkFlash) CommandResolver.resolveHex(waitingForBytes);
+        command = (HonkHornFlashLights.HonkFlash) CommandResolver.resolveHex(waitingForBytes);
         assertTrue(command.getHonkSeconds().getValue() == 0);
         assertTrue(command.getFlashTimes().getValue() == 3);
     }
@@ -47,7 +47,7 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
     @Test
     public void honkAndFlashNoArguments() throws IllegalArgumentException {
         assertThrows(IllegalArgumentException.class, () -> {
-            new HonkFlash(null, null);
+            new HonkHornFlashLights.HonkFlash(null, null);
         });
     }
 
@@ -56,20 +56,20 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
                 "04000401000101";
 
         String commandBytes =
-                ByteUtils.hexFromBytes(new ActivateDeactivateEmergencyFlasher(ActiveState.ACTIVE)
+                ByteUtils.hexFromBytes(new HonkHornFlashLights.ActivateDeactivateEmergencyFlasher(ActiveState.ACTIVE)
                 .getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ActivateDeactivateEmergencyFlasher command = (ActivateDeactivateEmergencyFlasher)
+        HonkHornFlashLights.ActivateDeactivateEmergencyFlasher command = (HonkHornFlashLights.ActivateDeactivateEmergencyFlasher)
                 CommandResolver.resolveHex(waitingForBytes);
         assertTrue(command.getEmergencyFlashersState().getValue() == ActiveState.ACTIVE);
     }
 
     @Test public void builder() {
-        HonkHornFlashLightsState.Builder builder = new HonkHornFlashLightsState.Builder();
-        builder.setFlashers(new Property(HonkHornFlashLightsState.Flashers.LEFT_FLASHER_ACTIVE));
-        HonkHornFlashLightsState state = builder.build();
+        HonkHornFlashLights.State.Builder builder = new HonkHornFlashLights.State.Builder();
+        builder.setFlashers(new Property(HonkHornFlashLights.Flashers.LEFT_FLASHER_ACTIVE));
+        HonkHornFlashLights.State state = builder.build();
         testState(state);
     }
 }

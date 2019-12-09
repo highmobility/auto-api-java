@@ -27,12 +27,12 @@ public class SeatsTest extends BaseTest {
     public void state() {
         Command command = CommandResolver.resolve(bytes);
 
-        assertTrue(command.getClass() == SeatsState.class);
-        SeatsState state = (SeatsState) command;
+        assertTrue(command.getClass() == Seats.State.class);
+        Seats.State state = (Seats.State) command;
         testState(state);
     }
 
-    private void testState(SeatsState state) {
+    private void testState(Seats.State state) {
         assertTrue(state.getPersonDetection(SeatLocation.REAR_RIGHT).getValue().getDetected() == Detected.DETECTED);
         assertTrue(state.getPersonDetection(SeatLocation.REAR_LEFT).getValue().getDetected() == Detected.NOT_DETECTED);
 
@@ -44,7 +44,7 @@ public class SeatsTest extends BaseTest {
     }
 
     @Test public void build() {
-        SeatsState.Builder builder = new SeatsState.Builder();
+        Seats.State.Builder builder = new Seats.State.Builder();
 
         builder.addPersonDetected(new Property(new PersonDetected(SeatLocation.REAR_RIGHT, Detected.DETECTED)));
         builder.addPersonDetected(new Property(new PersonDetected(SeatLocation.REAR_LEFT, Detected.NOT_DETECTED)));
@@ -54,13 +54,13 @@ public class SeatsTest extends BaseTest {
         builder.addSeatbeltState(new Property(new SeatbeltState(SeatLocation.REAR_LEFT,
                 SeatbeltState.FastenedState.NOT_FASTENED)));
 
-        SeatsState state = builder.build();
+        Seats.State state = builder.build();
         testState(state);
     }
 
     @Test public void get() {
         String waitingForBytes = "005600";
-        String commandBytes = ByteUtils.hexFromBytes(new GetSeatsState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new Seats.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 }

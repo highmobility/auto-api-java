@@ -27,10 +27,10 @@ public class WifiTest extends BaseTest {
 
     @Test
     public void state() {
-        testState((WiFiState) CommandResolver.resolve(bytes));
+        testState((WiFi.State) CommandResolver.resolve(bytes));
     }
 
-    private void testState(WiFiState state) {
+    private void testState(WiFi.State state) {
         assertTrue(state.getStatus().getValue() == EnabledState.ENABLED);
         assertTrue(state.getNetworkConnected().getValue() == ConnectionState.CONNECTED);
         assertTrue(state.getNetworkSSID().getValue().equals("HOME"));
@@ -39,7 +39,7 @@ public class WifiTest extends BaseTest {
     }
 
     @Test public void build() {
-        WiFiState.Builder builder = new WiFiState.Builder();
+        WiFi.State.Builder builder = new WiFi.State.Builder();
 
         builder.setStatus(new Property(EnabledState.ENABLED));
         builder.setNetworkConnected(new Property(ConnectionState.CONNECTED));
@@ -51,7 +51,7 @@ public class WifiTest extends BaseTest {
 
     @Test public void get() {
         String waitingForBytes = "005900";
-        String commandBytes = ByteUtils.hexFromBytes(new GetWiFiState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new WiFi.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
@@ -64,11 +64,11 @@ public class WifiTest extends BaseTest {
 
         byte[] commandBytes = null;
         commandBytes =
-                new ConnectToNetwork("HOME", NetworkSecurity.WPA2_PERSONAL, "ZW3vARNUBe").getByteArray();
+                new WiFi.ConnectToNetwork("HOME", NetworkSecurity.WPA2_PERSONAL, "ZW3vARNUBe").getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ConnectToNetwork command = (ConnectToNetwork) CommandResolver.resolve(waitingForBytes);
+        WiFi.ConnectToNetwork command = (WiFi.ConnectToNetwork) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getNetworkSSID().getValue().equals("HOME"));
         assertTrue(command.getNetworkSecurity().getValue() == NetworkSecurity.WPA2_PERSONAL);
         assertTrue(command.getPassword().getValue().equals("ZW3vARNUBe"));
@@ -77,22 +77,22 @@ public class WifiTest extends BaseTest {
     @Test public void forgetNetwork() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("005901" +
                 "030007010004484f4d45");
-        byte[] commandBytes = new ForgetNetwork("HOME").getByteArray();
+        byte[] commandBytes = new WiFi.ForgetNetwork("HOME").getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ForgetNetwork command = (ForgetNetwork) CommandResolver.resolve(waitingForBytes);
+        WiFi.ForgetNetwork command = (WiFi.ForgetNetwork) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getNetworkSSID().getValue().equals("HOME"));
     }
 
     @Test public void enableDisableWifi() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("005901" +
                 "01000401000101");
-        byte[] commandBytes = new EnableDisableWiFi(EnabledState.ENABLED).getByteArray();
+        byte[] commandBytes = new WiFi.EnableDisableWiFi(EnabledState.ENABLED).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        EnableDisableWiFi command = (EnableDisableWiFi) CommandResolver.resolve(waitingForBytes);
+        WiFi.EnableDisableWiFi command = (WiFi.EnableDisableWiFi) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getStatus().getValue() == EnabledState.ENABLED);
     }
 }

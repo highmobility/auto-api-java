@@ -21,9 +21,9 @@ public class RemoteControlTest extends BaseTest {
 
     @Test public void get() {
         Bytes waitingForBytes = new Bytes("002700");
-        assertTrue(new GetControlState().equals(waitingForBytes));
+        assertTrue(new RemoteControl.GetControlState().equals(waitingForBytes));
         Command command = CommandResolver.resolve(waitingForBytes);
-        assertTrue(command instanceof GetControlState);
+        assertTrue(command instanceof RemoteControl.GetControlState);
     }
 
     @Test public void startRemoteControl() {

@@ -29,11 +29,11 @@ public class TachographTest extends BaseTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        TachographState state = (TachographState) command;
+        Tachograph.State state = (Tachograph.State) command;
         testState(state);
     }
 
-    private void testState(TachographState state) {
+    private void testState(Tachograph.State state) {
         assertTrue(state.getDriverWorkingState(1).getValue().getWorkingState() == DriverWorkingState.WorkingState.WORKING);
         assertTrue(state.getDriverWorkingState(2).getValue().getWorkingState() == DriverWorkingState.WorkingState.RESTING);
         assertTrue(state.getDriverTimeState(1).getValue().getTimeState() == DriverTimeState.TimeState.FOUR_REACHED);
@@ -43,14 +43,14 @@ public class TachographTest extends BaseTest {
         assertTrue(state.getDriverCard(2).getValue().getCardPresent() == DriverCardPresent.CardPresent.PRESENT);
 
         assertTrue(state.getVehicleMotion().getValue() == Detected.DETECTED);
-        assertTrue(state.getVehicleOverspeed().getValue() == TachographState.VehicleOverspeed.NO_OVERSPEED);
-        assertTrue(state.getVehicleDirection().getValue() == TachographState.VehicleDirection.FORWARD);
+        assertTrue(state.getVehicleOverspeed().getValue() == Tachograph.VehicleOverspeed.NO_OVERSPEED);
+        assertTrue(state.getVehicleDirection().getValue() == Tachograph.VehicleDirection.FORWARD);
         assertTrue(state.getVehicleSpeed().getValue() == 80);
         assertTrue(bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
-        TachographState.Builder builder = new TachographState.Builder();
+        Tachograph.State.Builder builder = new Tachograph.State.Builder();
 
         builder.addDriverWorkingState(new Property(new DriverWorkingState(1,
                 DriverWorkingState.WorkingState.WORKING)));
@@ -68,19 +68,19 @@ public class TachographTest extends BaseTest {
                 DriverCardPresent.CardPresent.PRESENT)));
 
         builder.setVehicleMotion(new Property(Detected.DETECTED));
-        builder.setVehicleOverspeed(new Property(TachographState.VehicleOverspeed.NO_OVERSPEED));
-        builder.setVehicleDirection(new Property(TachographState.VehicleDirection.FORWARD));
+        builder.setVehicleOverspeed(new Property(Tachograph.VehicleOverspeed.NO_OVERSPEED));
+        builder.setVehicleDirection(new Property(Tachograph.VehicleDirection.FORWARD));
         builder.setVehicleSpeed(new Property(80));
 
-        TachographState state = builder.build();
+        Tachograph.State state = builder.build();
         testState(state);
     }
 
     @Test public void get() {
         Bytes waitingForBytes = new Bytes("006400");
-        byte[] commandBytes = new GetTachographState().getByteArray();
+        byte[] commandBytes = new Tachograph.GetState().getByteArray();
 
         assertTrue(waitingForBytes.equals(commandBytes));
-        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof GetTachographState);
+        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof Tachograph.GetState);
     }
 }

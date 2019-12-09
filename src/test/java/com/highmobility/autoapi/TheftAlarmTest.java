@@ -14,18 +14,18 @@ public class TheftAlarmTest extends BaseTest {
 
     @Test
     public void state() {
-        TheftAlarmState command = (TheftAlarmState) CommandResolver.resolve(bytes);
+        TheftAlarm.State command = (TheftAlarm.State) CommandResolver.resolve(bytes);
         testState(command);
     }
 
-    private void testState(TheftAlarmState state) {
-        assertTrue(state.getStatus().getValue() == TheftAlarmState.Status.ARMED);
+    private void testState(TheftAlarm.State state) {
+        assertTrue(state.getStatus().getValue() == TheftAlarm.Status.ARMED);
         assertTrue(bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
         String waitingForBytes = "004600";
-        String commandBytes = ByteUtils.hexFromBytes(new GetTheftAlarmState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new TheftAlarm.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
@@ -33,18 +33,18 @@ public class TheftAlarmTest extends BaseTest {
         Bytes waitingForBytes = new Bytes(
                 "004601" +
                         "01000401000101");
-        SetTheftAlarm command = new SetTheftAlarm(TheftAlarmState.Status.ARMED);
+        TheftAlarm.SetTheftAlarm command = new TheftAlarm.SetTheftAlarm(TheftAlarm.Status.ARMED);
         assertTrue(bytesTheSame(command, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        command = (SetTheftAlarm) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getStatus().getValue() == TheftAlarmState.Status.ARMED);
+        command = (TheftAlarm.SetTheftAlarm) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getStatus().getValue() == TheftAlarm.Status.ARMED);
     }
 
     @Test public void build() {
-        TheftAlarmState.Builder builder = new TheftAlarmState.Builder();
-        builder.setStatus(new Property(TheftAlarmState.Status.ARMED));
-        TheftAlarmState state = builder.build();
+        TheftAlarm.State.Builder builder = new TheftAlarm.State.Builder();
+        builder.setStatus(new Property(TheftAlarm.Status.ARMED));
+        TheftAlarm.State state = builder.build();
         testState(state);
     }
 }

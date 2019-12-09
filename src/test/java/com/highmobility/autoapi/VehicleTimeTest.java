@@ -21,12 +21,12 @@ public class VehicleTimeTest extends BaseTest {
     public void state() {
         Command command = CommandResolver.resolve(bytes);
 
-        assertTrue(command.getClass() == VehicleTimeState.class);
-        VehicleTimeState state = (VehicleTimeState) command;
+        assertTrue(command.getClass() == VehicleTime.State.class);
+        VehicleTime.State state = (VehicleTime.State) command;
         testState(state);
     }
 
-    private void testState(VehicleTimeState state) {
+    private void testState(VehicleTime.State state) {
         Time c = state.getVehicleTime().getValue();
         assertTrue(c.getHour() == 22);
         assertTrue(c.getMinute() == 14);
@@ -35,12 +35,12 @@ public class VehicleTimeTest extends BaseTest {
 
     @Test public void get() {
         String waitingForBytes = "005000";
-        String commandBytes = ByteUtils.hexFromBytes(new GetVehicleTime().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new VehicleTime.GetVehicleTime().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void build() {
-        VehicleTimeState.Builder builder = new VehicleTimeState.Builder();
+        VehicleTime.State.Builder builder = new VehicleTime.State.Builder();
         builder.setVehicleTime(new Property(new Time(22, 14)));
         testState(builder.build());
     }

@@ -15,11 +15,13 @@ public class VideoHandoverTest extends BaseTest {
                         "03000401000100"
         );
 
-        VideoHandover state = new VideoHandover("https://www.youtube.com/watch?v=yWVB7U6mX2Y", 90,
+        VideoHandover.VideoHandoverCommand state = new VideoHandover.VideoHandoverCommand("https" +
+                "://www.youtube.com/watch?v=yWVB7U6mX2Y", 90,
                 VideoHandover.Screen.FRONT);
         assertTrue(TestUtils.bytesTheSame(state, waitingForBytes));
 
-        VideoHandover command = (VideoHandover) CommandResolver.resolve(waitingForBytes);
+        VideoHandover.VideoHandoverCommand command =
+                (VideoHandover.VideoHandoverCommand) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getUrl().getValue().equals("https://www.youtube" +
                 ".com/watch?v=yWVB7U6mX2Y"));
         assertTrue(command.getScreen().getValue() == VideoHandover.Screen.FRONT);

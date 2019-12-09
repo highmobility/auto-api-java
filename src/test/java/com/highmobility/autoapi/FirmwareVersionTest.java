@@ -21,11 +21,11 @@ public class FirmwareVersionTest extends BaseTest {
 
     @Test
     public void state() {
-        FirmwareVersionState command = (FirmwareVersionState) CommandResolver.resolve(bytes);
+        FirmwareVersion.State command = (FirmwareVersion.State) CommandResolver.resolve(bytes);
         testState(command);
     }
 
-    void testState(FirmwareVersionState state) {
+    void testState(FirmwareVersion.State state) {
         HmkitVersion version = state.getHmKitVersion().getValue();
 
         assertTrue(version.getMajor() == 1);
@@ -37,18 +37,18 @@ public class FirmwareVersionTest extends BaseTest {
     }
 
     @Test public void build() {
-        FirmwareVersionState.Builder builder = new FirmwareVersionState.Builder();
+        FirmwareVersion.State.Builder builder = new FirmwareVersion.State.Builder();
 
         builder.setHmKitVersion(new Property(new HmkitVersion(1, 15, 33)));
         builder.setHmKitBuildName(new Property("btstack-uart"));
         builder.setApplicationVersion(new Property("v1.5-prod"));
 
-        FirmwareVersionState command = builder.build();
+        FirmwareVersion.State command = builder.build();
         testState(command);
     }
 
     @Test public void get() {
         String waitingForBytes = "000300";
-        assertTrue(new GetFirmwareVersion().equals(waitingForBytes));
+        assertTrue(new FirmwareVersion.GetFirmwareVersion().equals(waitingForBytes));
     }
 }

@@ -32,12 +32,12 @@ public class ChassisSettingsTest extends BaseTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        testState((ChassisSettingsState) command);
+        testState((ChassisSettings.State) command);
     }
 
-    void testState(ChassisSettingsState state) {
+    void testState(ChassisSettings.State state) {
         assertTrue(state.getDrivingMode().getValue() == DrivingMode.ECO);
-        assertTrue(state.getSportChrono().getValue() == ChassisSettingsState.SportChrono.ACTIVE);
+        assertTrue(state.getSportChrono().getValue() == ChassisSettings.SportChrono.ACTIVE);
 
         assertTrue(getSpringRate(state.currentSpringRates, Axle.FRONT).getSpringRate() == 21);
         assertTrue(getSpringRate(state.currentSpringRates, Axle.REAR).getSpringRate() == 23);
@@ -66,31 +66,31 @@ public class ChassisSettingsTest extends BaseTest {
 
     @Test public void get() {
         String waitingForBytes = "005300";
-        String commandBytes = ByteUtils.hexFromBytes(new GetChassisSettings().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new ChassisSettings.GetChassisSettings().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void setDrivingMode() {
         Bytes waitingForBytes = new Bytes("00530101000401000103");
-        Bytes commandBytes = new SetDrivingMode(DrivingMode.SPORT_PLUS);
+        Bytes commandBytes = new ChassisSettings.SetDrivingMode(DrivingMode.SPORT_PLUS);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        SetDrivingMode drivingMode = (SetDrivingMode) CommandResolver.resolve(waitingForBytes);
+        ChassisSettings.SetDrivingMode drivingMode = (ChassisSettings.SetDrivingMode) CommandResolver.resolve(waitingForBytes);
         assertTrue(drivingMode.getDrivingMode().getValue() == DrivingMode.SPORT_PLUS);
     }
 
     @Test public void startChrono() {
         String waitingForBytes = "00530102000401000101";
         String commandBytes =
-                ByteUtils.hexFromBytes(new StartStopSportsChrono(ChassisSettingsState.SportChrono.ACTIVE)
+                ByteUtils.hexFromBytes(new ChassisSettings.StartStopSportsChrono(ChassisSettings.SportChrono.ACTIVE)
                 .getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        StartStopSportsChrono command = (StartStopSportsChrono) CommandResolver.resolve(ByteUtils
+        ChassisSettings.StartStopSportsChrono command = (ChassisSettings.StartStopSportsChrono) CommandResolver.resolve(ByteUtils
                 .bytesFromHex(waitingForBytes));
-        assertTrue(command.getSportChrono().getValue() == ChassisSettingsState.SportChrono.ACTIVE);
+        assertTrue(command.getSportChrono().getValue() == ChassisSettings.SportChrono.ACTIVE);
     }
 
     @Test public void setSpringRate() {
@@ -99,22 +99,22 @@ public class ChassisSettingsTest extends BaseTest {
 
         SpringRate prop = new SpringRate(Axle.REAR, 25);
         SpringRate[] props = new SpringRate[]{prop};
-        Bytes commandBytes = new SetSpringRates(props);
+        Bytes commandBytes = new ChassisSettings.SetSpringRates(props);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        SetSpringRates command = (SetSpringRates) CommandResolver.resolve(waitingForBytes);
+        ChassisSettings.SetSpringRates command = (ChassisSettings.SetSpringRates) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getCurrentSpringRates().length == 1);
         assertTrue(getSpringRate(command.getCurrentSpringRates(), Axle.REAR).getSpringRate() == 25);
     }
 
     @Test public void setChassisPosition() {
         String waitingForBytes = "00530108000401000132";
-        String commandBytes = ByteUtils.hexFromBytes(new SetChassisPosition(50).getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new ChassisSettings.SetChassisPosition(50).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        SetChassisPosition command = (SetChassisPosition) CommandResolver.resolve(ByteUtils
+        ChassisSettings.SetChassisPosition command = (ChassisSettings.SetChassisPosition) CommandResolver.resolve(ByteUtils
                 .bytesFromHex(waitingForBytes));
         assertTrue(command.getCurrentChassisPosition().getValue() == 50);
     }
@@ -122,19 +122,19 @@ public class ChassisSettingsTest extends BaseTest {
     @Test public void setNegativeChassisPosition() {
         Bytes waitingForBytes = new Bytes("005301" +
                 "080004010001E4");
-        Command state = new SetChassisPosition(-28);
+        Command state = new ChassisSettings.SetChassisPosition(-28);
         assertTrue(TestUtils.bytesTheSame(state, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        SetChassisPosition command = (SetChassisPosition) CommandResolver.resolve(waitingForBytes);
+        ChassisSettings.SetChassisPosition command = (ChassisSettings.SetChassisPosition) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getCurrentChassisPosition().getValue() == -28);
     }
 
     @Test public void build() {
-        ChassisSettingsState.Builder builder = new ChassisSettingsState.Builder();
+        ChassisSettings.State.Builder builder = new ChassisSettings.State.Builder();
 
         builder.setDrivingMode(new Property(DrivingMode.ECO));
-        builder.setSportChrono(new Property(ChassisSettingsState.SportChrono.ACTIVE));
+        builder.setSportChrono(new Property(ChassisSettings.SportChrono.ACTIVE));
 
         builder.addCurrentSpringRate(new Property(new SpringRate(Axle.FRONT, 21)));
         builder.addCurrentSpringRate(new Property(new SpringRate(Axle.REAR, 23)));
@@ -149,7 +149,7 @@ public class ChassisSettingsTest extends BaseTest {
         builder.setMaximumChassisPosition(new Property(55));
         builder.setMinimumChassisPosition(new Property(-28));
 
-        ChassisSettingsState state = builder.build();
+        ChassisSettings.State state = builder.build();
         assertTrue(state.equals(bytes));
         testState(state);
     }

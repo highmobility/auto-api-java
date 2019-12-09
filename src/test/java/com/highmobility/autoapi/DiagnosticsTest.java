@@ -65,11 +65,11 @@ public class DiagnosticsTest extends BaseTest {
 
     @Test public void state() {
         setRuntime(CommandResolver.RunTime.ANDROID);
-        DiagnosticsState state = (DiagnosticsState) CommandResolver.resolve(bytes);
+        Diagnostics.State state = (Diagnostics.State) CommandResolver.resolve(bytes);
         testState(state);
     }
 
-    private void testState(DiagnosticsState state) {
+    private void testState(Diagnostics.State state) {
         assertTrue(state.getNonce() == null);
         assertTrue(state.getSignature() == null);
 
@@ -183,12 +183,12 @@ public class DiagnosticsTest extends BaseTest {
 
     @Test public void get() {
         Bytes waitingForBytes = new Bytes("003300");
-        String commandBytes = ByteUtils.hexFromBytes(new GetDiagnosticsState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new Diagnostics.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
         Command command = CommandResolver.resolve(waitingForBytes);
-        assertTrue(command instanceof GetDiagnosticsState);
+        assertTrue(command instanceof Diagnostics.GetState);
     }
 
     @Test public void troubleCodeWithZeroValues() throws CommandParseException {
@@ -200,7 +200,7 @@ public class DiagnosticsTest extends BaseTest {
     }
 
     @Test public void build() {
-        DiagnosticsState.Builder builder = new DiagnosticsState.Builder();
+        Diagnostics.State.Builder builder = new Diagnostics.State.Builder();
 
         builder.setMileage(new Property(150000));
         builder.setEngineOilTemperature(new Property(99));
@@ -265,7 +265,7 @@ public class DiagnosticsTest extends BaseTest {
         builder.addTroubleCode(code2);
         builder.setMileageMeters(new Property(150000));
 
-        DiagnosticsState state = builder.build();
+        Diagnostics.State state = builder.build();
         assertTrue(TestUtils.bytesTheSame(state, bytes));
         testState(state);
     }

@@ -20,10 +20,10 @@ public class CapabilitiesTest extends BaseTest {
     @Test
     public void capabilities() {
         Command command = CommandResolver.resolve(bytes);
-        testState((CapabilitiesState) command);
+        testState((Capabilities.State) command);
     }
 
-    private void testState(CapabilitiesState state) {
+    private void testState(Capabilities.State state) {
         // l11. now capabilities are defined property by property
 
         // doors
@@ -43,36 +43,36 @@ public class CapabilitiesTest extends BaseTest {
 
     @Test public void getCapabilities() {
         byte[] bytes = ByteUtils.bytesFromHex("001000");
-        byte[] commandBytes = new GetCapabilities().getByteArray();
+        byte[] commandBytes = new Capabilities.GetCapabilities().getByteArray();
         assertTrue(Arrays.equals(bytes, commandBytes));
         Command command = CommandResolver.resolve(bytes);
-        assertTrue(command instanceof GetCapabilities);
+        assertTrue(command instanceof Capabilities.GetCapabilities);
     }
 
     @Test public void build() {
-        CapabilitiesState.Builder builder = new CapabilitiesState.Builder();
+        Capabilities.State.Builder builder = new Capabilities.State.Builder();
 
         builder.addCapability(new Property(new SupportedCapability(Identifier.DOORS,
                 new Bytes("0203040506"))));
         builder.addCapability(new Property(new SupportedCapability(Identifier.CHARGING,
                 new Bytes("020811"))));
 
-        CapabilitiesState state = builder.build();
+        Capabilities.State state = builder.build();
         assertTrue(bytesTheSame(state, bytes));
         testState(state);
     }
 
     @Test public void zeroProperties() {
-        CapabilitiesState.Builder builder = new CapabilitiesState.Builder();
-        CapabilitiesState capabilities = builder.build();
+        Capabilities.State.Builder builder = new Capabilities.State.Builder();
+        Capabilities.State capabilities = builder.build();
         testEmptyCommand(capabilities);
         assertTrue(capabilities.getLength() == 3);
 
         byte[] bytes = ByteUtils.bytesFromHex("00100100");
-        testEmptyCommand((CapabilitiesState) CommandResolver.resolve(bytes));
+        testEmptyCommand((Capabilities.State) CommandResolver.resolve(bytes));
     }
 
-    void testEmptyCommand(CapabilitiesState capabilities) {
+    void testEmptyCommand(Capabilities.State capabilities) {
         assertTrue(capabilities.getCapabilities().length == 0);
         assertTrue(capabilities.getSupported(Identifier.DOORS, (byte) 0x01) == false);
     }

@@ -16,15 +16,15 @@ public class KeyFobPositionTest extends BaseTest {
 
     @Test
     public void state() {
-        KeyfobPositionState command = (KeyfobPositionState) CommandResolver.resolve(bytes);
+        KeyfobPosition.State command = (KeyfobPosition.State) CommandResolver.resolve(bytes);
 
-        KeyfobPositionState state = (KeyfobPositionState) command;
-        assertTrue(state.getLocation().getValue() == KeyfobPositionState.Location.INSIDE_CAR);
+        KeyfobPosition.State state = (KeyfobPosition.State) command;
+        assertTrue(state.getLocation().getValue() == KeyfobPosition.Location.INSIDE_CAR);
     }
 
     @Test public void get() {
         String waitingForBytes = "004800";
-        String commandBytes = ByteUtils.hexFromBytes(new GetKeyfobPosition().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new KeyfobPosition.GetKeyfobPosition().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 }

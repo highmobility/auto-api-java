@@ -19,29 +19,29 @@ public class FailureTest extends BaseTest {
     @Test
     public void failure() {
         Command command = CommandResolver.resolve(bytes);
-        testState((FailureMessageState) command);
+        testState((FailureMessage.State) command);
     }
 
-    private void testState(FailureMessageState state) {
+    private void testState(FailureMessage.State state) {
         assertTrue(state.getFailedMessageType().getValue() == Type.SET);
-        assertTrue(state.getFailureReason().getValue() == FailureMessageState.FailureReason.UNAUTHORISED);
+        assertTrue(state.getFailureReason().getValue() == FailureMessage.FailureReason.UNAUTHORISED);
         assertTrue(state.getFailureDescription().getValue().equals("Try again"));
         assertTrue(state.getFailedPropertyIDs().getValue().equals("01"));
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void build() {
-        FailureMessageState.Builder builder = new FailureMessageState.Builder();
+        FailureMessage.State.Builder builder = new FailureMessage.State.Builder();
         builder.setFailedMessageID(new Property(Identifier.TRUNK));
 
         builder.setFailedMessageType(new Property(Type.SET));
 
-        builder.setFailureReason(new Property(FailureMessageState.FailureReason.UNAUTHORISED));
+        builder.setFailureReason(new Property(FailureMessage.FailureReason.UNAUTHORISED));
         builder.setFailureDescription(new Property("Try again"));
 
         builder.setFailedPropertyIDs(new Property(new Bytes("01")));
 
-        FailureMessageState failure = builder.build();
+        FailureMessage.State failure = builder.build();
         testState(failure);
     }
 }

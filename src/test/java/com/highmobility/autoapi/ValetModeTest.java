@@ -20,35 +20,35 @@ public class ValetModeTest extends BaseTest {
 
     @Test
     public void state() {
-        ValetModeState command = (ValetModeState) CommandResolver.resolve(bytes);
+        ValetMode.State command = (ValetMode.State) CommandResolver.resolve(bytes);
         testState(command);
     }
 
-    private void testState(ValetModeState state) {
+    private void testState(ValetMode.State state) {
         assertTrue(state.getStatus().getValue() == ActiveState.ACTIVE);
         assertTrue(bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
         String waitingForBytes = "002800";
-        String commandBytes = ByteUtils.hexFromBytes(new GetValetMode().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new ValetMode.GetValetMode().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void activate() {
         Bytes waitingForBytes = new Bytes("002801" +
                 "01000401000101");
-        Bytes commandBytes = new ActivateDeactivateValetMode(ActiveState.ACTIVE);
+        Bytes commandBytes = new ValetMode.ActivateDeactivateValetMode(ActiveState.ACTIVE);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ActivateDeactivateValetMode command = (ActivateDeactivateValetMode) CommandResolver
+        ValetMode.ActivateDeactivateValetMode command = (ValetMode.ActivateDeactivateValetMode) CommandResolver
                 .resolve(waitingForBytes);
         assertTrue(command.getStatus().getValue() == ActiveState.ACTIVE);
     }
 
     @Test public void builder() {
-        ValetModeState.Builder builder = new ValetModeState.Builder();
+        ValetMode.State.Builder builder = new ValetMode.State.Builder();
         builder.setStatus(new Property(ActiveState.ACTIVE));
         testState(builder.build());
     }

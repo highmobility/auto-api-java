@@ -25,13 +25,13 @@ public class HistoricalTest extends BaseTest {
 
     @Test
     public void state() {
-        HistoricalState states = (HistoricalState) CommandResolver.resolve(bytes);
+        Historical.State states = (Historical.State) CommandResolver.resolve(bytes);
         testState(states);
     }
 
-    private void testState(HistoricalState state) {
+    private void testState(Historical.State state) {
         assertTrue(state.getStates().length == 1);
-        DoorsState lockState = (DoorsState) state.getStates()[0].getValue();
+        Doors.State lockState = (Doors.State) state.getStates()[0].getValue();
 
         assertTrue(lockState.getLocks()[0].getValue().getLocation() == Location.FRONT_LEFT);
         assertTrue(lockState.getLocks()[0].getValue().getLockState() == LockState.UNLOCKED);
@@ -44,15 +44,15 @@ public class HistoricalTest extends BaseTest {
         Lock outsideLock = new Lock(Location.FRONT_LEFT, LockState.UNLOCKED);
         Calendar timestamp = TestUtils.getCalendar("2018-01-10T18:30:00");
 
-        DoorsState.Builder doorsBuilder = new DoorsState.Builder();
+        Doors.State.Builder doorsBuilder = new Doors.State.Builder();
         doorsBuilder.addLock(new Property(outsideLock));
         doorsBuilder.setTimestamp(timestamp);
-        DoorsState doorsS = doorsBuilder.build();
+        Doors.State doorsS = doorsBuilder.build();
 
-        HistoricalState.Builder historicalBuilder = new HistoricalState.Builder();
+        Historical.State.Builder historicalBuilder = new Historical.State.Builder();
         historicalBuilder.addState(new Property(doorsS));
 
-        HistoricalState historicalStates = historicalBuilder.build();
+        Historical.State historicalStates = historicalBuilder.build();
         testState(historicalStates);
     }
 
@@ -63,7 +63,7 @@ public class HistoricalTest extends BaseTest {
                 "04000B01000800000160E1560840"
         );
 
-        Command command = new RequestStates(
+        Command command = new Historical.RequestStates(
                 Identifier.DOORS,
                 TestUtils.getCalendar("2018-01-10T16:32:05"),
                 TestUtils.getCalendar("2018-01-10T18:30:00")

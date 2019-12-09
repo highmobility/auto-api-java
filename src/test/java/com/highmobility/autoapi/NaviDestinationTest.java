@@ -19,11 +19,11 @@ public class NaviDestinationTest extends BaseTest {
 
     @Test
     public void state() {
-        NaviDestinationState command = (NaviDestinationState) CommandResolver.resolve(bytes);
+        NaviDestination.State command = (NaviDestination.State) CommandResolver.resolve(bytes);
         testState(command);
     }
 
-    private void testState(NaviDestinationState state) {
+    private void testState(NaviDestination.State state) {
         assertTrue(state.getDestinationName().getValue().equals("Berlin"));
         assertTrue(state.getCoordinates().getValue().getLatitude() == 52.520008);
         assertTrue(state.getCoordinates().getValue().getLongitude() == 13.404954);
@@ -32,7 +32,7 @@ public class NaviDestinationTest extends BaseTest {
 
     @Test public void get() {
         String waitingForBytes = "003100";
-        assertTrue(new GetNaviDestination().equals(waitingForBytes));
+        assertTrue(new NaviDestination.GetNaviDestination().equals(waitingForBytes));
     }
 
     @Test public void set() {
@@ -40,23 +40,23 @@ public class NaviDestinationTest extends BaseTest {
                 "010013010010404A428F9F44D445402ACF562174C4CE" +
                 "0200090100064265726c696e");
 
-        Bytes commandBytes = new SetNaviDestination(new Coordinates(52.520008, 13.404954),
+        Bytes commandBytes = new NaviDestination.SetNaviDestination(new Coordinates(52.520008, 13.404954),
                 "Berlin");
 
         assertTrue(bytesTheSame(waitingForBytes, commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        SetNaviDestination command = (SetNaviDestination) CommandResolver.resolve(waitingForBytes);
+        NaviDestination.SetNaviDestination command = (NaviDestination.SetNaviDestination) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getDestinationName().getValue().equals("Berlin"));
         assertTrue(command.getCoordinates().getValue().getLatitude() == 52.520008);
         assertTrue(command.getCoordinates().getValue().getLongitude() == 13.404954);
     }
 
     @Test public void build() {
-        NaviDestinationState.Builder builder = new NaviDestinationState.Builder();
+        NaviDestination.State.Builder builder = new NaviDestination.State.Builder();
         builder.setCoordinates(new Property(new Coordinates(52.520008, 13.404954)));
         builder.setDestinationName(new Property("Berlin"));
-        NaviDestinationState state = builder.build();
+        NaviDestination.State state = builder.build();
         testState(state);
     }
 }

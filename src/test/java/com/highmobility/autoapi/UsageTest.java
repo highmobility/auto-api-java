@@ -38,11 +38,11 @@ public class UsageTest extends BaseTest {
 
     @Test public void state() {
         Command command = CommandResolver.resolve(bytes);
-        UsageState state = (UsageState) command;
+        Usage.State state = (Usage.State) command;
         testState(state);
     }
 
-    private void testState(UsageState state) {
+    private void testState(Usage.State state) {
         assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
         assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
         assertTrue(state.getAverageWeeklyDistanceLongRun().getValue() == 666);
@@ -74,7 +74,7 @@ public class UsageTest extends BaseTest {
     }
 
     @Test public void build() {
-        UsageState.Builder builder = new UsageState.Builder();
+        Usage.State.Builder builder = new Usage.State.Builder();
 
         builder.setAverageWeeklyDistance(new Property(666));
         builder.setAverageWeeklyDistanceLongRun(new Property(666));
@@ -98,13 +98,13 @@ public class UsageTest extends BaseTest {
         builder.setAverageFuelConsumption(new Property(6.5f));
         builder.setCurrentFuelConsumption(new Property(7.5f));
 
-        UsageState state = builder.build();
+        Usage.State state = builder.build();
         testState(state);
     }
 
     @Test public void get() {
         Bytes waitingForBytes = new Bytes("006800");
-        Bytes commandBytes = new GetUsage();
+        Bytes commandBytes = new Usage.GetUsage();
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 }

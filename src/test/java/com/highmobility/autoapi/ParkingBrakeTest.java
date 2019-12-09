@@ -21,38 +21,38 @@ public class ParkingBrakeTest extends BaseTest {
     public void state() {
         Command command = CommandResolver.resolve(bytes);
 
-        assertTrue(command.getClass() == ParkingBrakeState.class);
-        ParkingBrakeState state = (ParkingBrakeState) command;
+        assertTrue(command.getClass() == ParkingBrake.State.class);
+        ParkingBrake.State state = (ParkingBrake.State) command;
         testState(state);
     }
 
-    private void testState(ParkingBrakeState state) {
+    private void testState(ParkingBrake.State state) {
         assertTrue(state.getStatus().getValue() == ActiveState.ACTIVE);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
     @Test public void get() {
         String waitingForBytes = "005800";
-        String commandBytes = ByteUtils.hexFromBytes(new GetParkingBrakeState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new ParkingBrake.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void setParkingBrake() {
         Bytes waitingForBytes = new Bytes("005801" +
                 "01000401000101");
-        Bytes commandBytes = new SetParkingBrake(ActiveState.ACTIVE);
+        Bytes commandBytes = new ParkingBrake.SetParkingBrake(ActiveState.ACTIVE);
         assertTrue(TestUtils.bytesTheSame(waitingForBytes, commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        SetParkingBrake command = (SetParkingBrake) CommandResolver.resolve(waitingForBytes);
+        ParkingBrake.SetParkingBrake command = (ParkingBrake.SetParkingBrake) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getStatus().getValue() == ActiveState.ACTIVE);
         assertTrue(command.equals(waitingForBytes));
     }
 
     @Test public void build() {
-        ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
+        ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
         builder.setStatus(new Property(ActiveState.ACTIVE));
-        ParkingBrakeState state = builder.build();
+        ParkingBrake.State state = builder.build();
         testState(state);
     }
 }

@@ -25,11 +25,11 @@ public class WindowsTest extends BaseTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        WindowsState state = (WindowsState) command;
+        Windows.State state = (Windows.State) command;
         testState(state);
     }
 
-    private void testState(WindowsState state) {
+    private void testState(Windows.State state) {
         assertTrue(state.getOpenPercentages().length == 2);
         assertTrue(state.getPositions().length == 2);
 
@@ -45,7 +45,7 @@ public class WindowsTest extends BaseTest {
 
     @Test public void get() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("004500");
-        byte[] bytes = new GetWindows().getByteArray();
+        byte[] bytes = new Windows.GetWindows().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
@@ -61,11 +61,11 @@ public class WindowsTest extends BaseTest {
         windowsPositions[1] = new WindowPosition(WindowLocation.FRONT_RIGHT,
                 WindowPosition.Position.OPEN);
 
-        Bytes bytes = new ControlWindows(null, windowsPositions);
+        Bytes bytes = new Windows.ControlWindows(null, windowsPositions);
         assertTrue(bytesTheSame(bytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ControlWindows command = (ControlWindows) CommandResolver.resolve(waitingForBytes);
+        Windows.ControlWindows command = (Windows.ControlWindows) CommandResolver.resolve(waitingForBytes);
         Property<WindowPosition>[] states = command.getPositions();
         assertTrue(states.length == 2);
     }
@@ -73,12 +73,12 @@ public class WindowsTest extends BaseTest {
     @Test public void noPropertiesThrows() {
         assertThrows(IllegalArgumentException.class, () -> {
             WindowPosition[] windowsStates = new WindowPosition[0];
-            Bytes bytes = new ControlWindows(null, windowsStates);
+            Bytes bytes = new Windows.ControlWindows(null, windowsStates);
         });
     }
 
     @Test public void build() {
-        WindowsState.Builder builder = new WindowsState.Builder();
+        Windows.State.Builder builder = new Windows.State.Builder();
         builder.addOpenPercentage(new Property(new WindowOpenPercentage(WindowLocation.REAR_RIGHT,
                 .56d)));
         builder.addOpenPercentage(new Property(new WindowOpenPercentage(WindowLocation.REAR_LEFT,
@@ -87,7 +87,7 @@ public class WindowsTest extends BaseTest {
                 WindowPosition.Position.OPEN)));
         builder.addPosition(new Property(new WindowPosition(WindowLocation.REAR_LEFT,
                 WindowPosition.Position.CLOSED)));
-        WindowsState state = builder.build();
+        Windows.State state = builder.build();
         testState(state);
     }
 }

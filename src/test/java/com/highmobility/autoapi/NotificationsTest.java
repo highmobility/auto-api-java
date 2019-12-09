@@ -22,7 +22,7 @@ public class NotificationsTest extends BaseTest {
 
     @Test public void incomingNotification() {
         Command command = CommandResolver.resolve(notification);
-        testStateNotification((NotificationsState) command);
+        testStateNotification((Notifications.State) command);
     }
 
     @Test public void outgoingNotification() {
@@ -30,7 +30,7 @@ public class NotificationsTest extends BaseTest {
         action1 = new ActionItem(0, "No");
         action2 = new ActionItem(1, "Yes");
         ActionItem[] actions = new ActionItem[]{action1, action2};
-        Notification state = new Notification("Start navigation?", actions);
+        Notifications.Notification state = new Notifications.Notification("Start navigation?", actions);
 
         // we expect that items are ordered in this test. It should not matter really
         assertTrue(state.getText().getValue().equals("Start navigation?"));
@@ -51,7 +51,7 @@ public class NotificationsTest extends BaseTest {
     }
 
     @Test public void buildNotification() {
-        NotificationsState.Builder builder = new NotificationsState.Builder();
+        Notifications.State.Builder builder = new Notifications.State.Builder();
 
         ActionItem action1, action2 = null;
         action1 = new ActionItem(0, "No");
@@ -65,7 +65,7 @@ public class NotificationsTest extends BaseTest {
         testStateNotification(builder.build());
     }
 
-    private void testStateNotification(NotificationsState state) {
+    private void testStateNotification(Notifications.State state) {
         assertTrue(state.getText().getValue().equals("Start navigation?"));
 
         assertTrue(state.getActionItems()[0] != null);
@@ -83,22 +83,22 @@ public class NotificationsTest extends BaseTest {
 
     @Test public void buildAction() {
         // Action cannot be built from OEM side, it has to be a state.
-        NotificationsState.Builder builder = new NotificationsState.Builder();
+        Notifications.State.Builder builder = new Notifications.State.Builder();
         builder.setActivatedAction(new Property(254));
 
-        NotificationsState state = builder.build();
+        Notifications.State state = builder.build();
         assertTrue(state.getActivatedAction().getValue() == 254);
         assertTrue(bytesTheSame(state, action));
     }
 
     @Test public void action() {
-        testStateAction(new Action(254));
+        testStateAction(new Notifications.Action(254));
         setRuntime(CommandResolver.RunTime.JAVA);
-        Action command = (Action) CommandResolver.resolve(action);
+        Notifications.Action command = (Notifications.Action) CommandResolver.resolve(action);
         testStateAction(command);
     }
 
-    private void testStateAction(Action state) {
+    private void testStateAction(Notifications.Action state) {
         assertTrue(state.getActivatedAction().getValue() == 254);
         assertTrue(bytesTheSame(state, action));
     }
@@ -106,10 +106,10 @@ public class NotificationsTest extends BaseTest {
     @Test public void clear() {
         Bytes clear = new Bytes("00380104000401000100");
 
-        assertTrue(bytesTheSame(new ClearNotification(), clear));
+        assertTrue(bytesTheSame(new Notifications.ClearNotification(), clear));
 
         setRuntime(CommandResolver.RunTime.JAVA);
         Command command = CommandResolver.resolve(clear);
-        assertTrue(command instanceof ClearNotification);
+        assertTrue(command instanceof Notifications.ClearNotification);
     }
 }

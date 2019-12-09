@@ -44,13 +44,13 @@ public class VehicleStatusTest extends BaseTest {
     );
 
     @Test public void state() {
-        testState((VehicleStatusState) CommandResolver.resolve(bytes));
+        testState((VehicleStatus.State) CommandResolver.resolve(bytes));
     }
 
-    private void testState(VehicleStatusState state) {
+    private void testState(VehicleStatus.State state) {
         assertTrue(state.getStates().length == 2);
         assertTrue(state.getVin().getValue().equals("JF2SHBDC7CH451869"));
-        assertTrue(state.getPowertrain().getValue() == VehicleStatusState.Powertrain.ALL_ELECTRIC);
+        assertTrue(state.getPowertrain().getValue() == VehicleStatus.Powertrain.ALL_ELECTRIC);
         assertTrue(state.getModelName().getValue().equals("Type X"));
         assertTrue(state.getName().getValue().equals("My Car"));
         assertTrue(state.getLicensePlate().getValue().equals("ABC123"));
@@ -66,10 +66,10 @@ public class VehicleStatusTest extends BaseTest {
 
         assertTrue(state.getEngineVolume().getValue() == 2.5f);
         assertTrue(state.getEngineMaxTorque().getValue() == 245);
-        assertTrue(state.getGearbox().getValue() == VehicleStatusState.Gearbox.AUTOMATIC);
+        assertTrue(state.getGearbox().getValue() == VehicleStatus.Gearbox.AUTOMATIC);
 
-        assertTrue(state.getDisplayUnit().getValue() == VehicleStatusState.DisplayUnit.KM);
-        assertTrue(state.getDriverSeatLocation().getValue() == VehicleStatusState.DriverSeatLocation.LEFT);
+        assertTrue(state.getDisplayUnit().getValue() == VehicleStatus.DisplayUnit.KM);
+        assertTrue(state.getDriverSeatLocation().getValue() == VehicleStatus.DriverSeatLocation.LEFT);
         assertTrue(state.getEquipments().length == 2);
 
         int count = 0;
@@ -80,32 +80,32 @@ public class VehicleStatusTest extends BaseTest {
         assertTrue(count == 2);
         assertTrue(state.getBrand().getValue().equals("Mercedes"));
 
-        Command command = getState(RemoteControlState.class, state);
-        RemoteControlState controlMode = (RemoteControlState) command;
-        assertTrue(controlMode.getControlMode().getValue() == RemoteControlState.ControlMode.STARTED);
+        Command command = getState(RemoteControl.State.class, state);
+        RemoteControl.State controlMode = (RemoteControl.State) command;
+        assertTrue(controlMode.getControlMode().getValue() == RemoteControl.ControlMode.STARTED);
 
-        command = getState(TrunkState.class, state);
-        TrunkState trunkState = (TrunkState) command;
+        command = getState(Trunk.State.class, state);
+        Trunk.State trunkState = (Trunk.State) command;
         assertTrue(trunkState.getLock().getValue() == LockState.UNLOCKED);
         assertTrue(trunkState.getPosition().getValue() == Position.OPEN);
         assertTrue(bytesTheSame(state, bytes));
     }
 
     @Test public void build() throws CommandParseException {
-        VehicleStatusState status = getVehicleStatusStateBuilderWithoutSignature().build();
+        VehicleStatus.State status = getVehicleStatusStateBuilderWithoutSignature().build();
         testState(status);
     }
 
     @Test public void get() {
         Bytes bytes = new Bytes("001100");
-        Bytes commandBytes = new GetVehicleStatus();
+        Bytes commandBytes = new VehicleStatus.GetVehicleStatus();
         assertTrue(bytes.equals(commandBytes));
 
         Command command = CommandResolver.resolve(bytes);
-        assertTrue(command instanceof GetVehicleStatus);
+        assertTrue(command instanceof VehicleStatus.GetVehicleStatus);
     }
 
-    Command getState(Class forClass, VehicleStatusState command) {
+    Command getState(Class forClass, VehicleStatus.State command) {
         for (int i = 0; i < command.getStates().length; i++) {
             Property<Command> state = command.getStates()[i];
             if (state != null && state.getValue().getClass().equals(forClass))
@@ -115,10 +115,10 @@ public class VehicleStatusTest extends BaseTest {
         return null;
     }
 
-    VehicleStatusState.Builder getVehicleStatusStateBuilderWithoutSignature() throws CommandParseException {
-        VehicleStatusState.Builder builder = new VehicleStatusState.Builder();
+    VehicleStatus.State.Builder getVehicleStatusStateBuilderWithoutSignature() throws CommandParseException {
+        VehicleStatus.State.Builder builder = new VehicleStatus.State.Builder();
         builder.setVin(new Property("JF2SHBDC7CH451869"));
-        builder.setPowertrain(new Property(VehicleStatusState.Powertrain.ALL_ELECTRIC));
+        builder.setPowertrain(new Property(VehicleStatus.Powertrain.ALL_ELECTRIC));
         builder.setModelName(new Property("Type X"));
         builder.setName(new Property("My Car"));
         builder.setLicensePlate(new Property("ABC123"));
@@ -132,20 +132,20 @@ public class VehicleStatusTest extends BaseTest {
         // l7
         builder.setEngineVolume(new Property(2.5f));
         builder.setEngineMaxTorque(new Property(245));
-        builder.setGearbox(new Property(VehicleStatusState.Gearbox.AUTOMATIC));
+        builder.setGearbox(new Property(VehicleStatus.Gearbox.AUTOMATIC));
 
-        TrunkState.Builder trunkState = new TrunkState.Builder();
+        Trunk.State.Builder trunkState = new Trunk.State.Builder();
         trunkState.setLock(new Property(LockState.UNLOCKED));
         trunkState.setPosition(new Property(Position.OPEN));
         builder.addState(new Property(trunkState.build()));
 
-        RemoteControlState controlMode =
-                new RemoteControlState(new Bytes("00270101000401000102").getByteArray());
+        RemoteControl.State controlMode =
+                new RemoteControl.State(new Bytes("00270101000401000102").getByteArray());
         builder.addState(new Property(controlMode));
 
         // l8
-        builder.setDisplayUnit(new Property(VehicleStatusState.DisplayUnit.KM));
-        builder.setDriverSeatLocation(new Property(VehicleStatusState.DriverSeatLocation.LEFT));
+        builder.setDisplayUnit(new Property(VehicleStatus.DisplayUnit.KM));
+        builder.setDriverSeatLocation(new Property(VehicleStatus.DriverSeatLocation.LEFT));
         builder.addEquipment(new Property("Parking sensors"));
         builder.addEquipment(new Property("Automatic wipers"));
 
@@ -156,14 +156,14 @@ public class VehicleStatusTest extends BaseTest {
     }
 
     @Test public void createWithSignature() throws CommandParseException {
-        VehicleStatusState.Builder builder = getVehicleStatusStateBuilderWithoutSignature();
+        VehicleStatus.State.Builder builder = getVehicleStatusStateBuilderWithoutSignature();
         Bytes nonce = new Bytes("324244433743483436");
         builder.setNonce(nonce);
         Bytes signature = new Bytes
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6");
         builder.setSignature(signature);
 
-        VehicleStatusState status = builder.build();
+        VehicleStatus.State status = builder.build();
         byte[] command = status.getByteArray();
         assertTrue(Arrays.equals(command, command));
         assertTrue(status.getNonce().equals(nonce));
@@ -184,17 +184,17 @@ public class VehicleStatusTest extends BaseTest {
                         "99000D01000A00270101000401000102"); // control mode command
         TestUtils.errorLogExpected(3, () -> {
             Command command = CommandResolver.resolve(bytes);
-            VehicleStatusState vs = (VehicleStatusState) command;
+            VehicleStatus.State vs = (VehicleStatus.State) command;
             // one window property will fail to parse
-            WindowsState ws = (WindowsState) vs.getState(Identifier.WINDOWS).getValue();
+            Windows.State ws = (Windows.State) vs.getState(Identifier.WINDOWS).getValue();
             assertTrue(ws.getProperties().length == 5);
             assertTrue(ws.getPositions().length == 3);
         });
     }
 
     @Test public void zeroProperties() {
-        VehicleStatusState.Builder builder = new VehicleStatusState.Builder();
-        VehicleStatusState vs = builder.build();
+        VehicleStatus.State.Builder builder = new VehicleStatus.State.Builder();
+        VehicleStatus.State vs = builder.build();
 
         assertTrue(vs.getStates().length == 0);
         assertTrue(vs.getNumberOfDoors() == null);
@@ -202,7 +202,7 @@ public class VehicleStatusTest extends BaseTest {
         assertTrue(vs.getByteArray().length == 3);
 
         Bytes bytes = new Bytes("00110100");
-        vs = (VehicleStatusState) CommandResolver.resolve(bytes);
+        vs = (VehicleStatus.State) CommandResolver.resolve(bytes);
         assertTrue(vs.getStates().length == 0);
         assertTrue(vs.getNumberOfDoors().getValue() == null);
         assertTrue(vs.getState(Identifier.THEFT_ALARM) == null);
@@ -214,7 +214,7 @@ public class VehicleStatusTest extends BaseTest {
                         "9900140100110021010100040100010002000401000101" +
                         "99000D01000A00270101000401000115"); //invalid control mode
         TestUtils.errorLogExpected(() -> {
-            VehicleStatusState command = (VehicleStatusState) CommandResolver.resolve(bytes);
+            VehicleStatus.State command = (VehicleStatus.State) CommandResolver.resolve(bytes);
             assertTrue(command.getStates().length == 2); // invalid command is added as a base
             // command class
         });

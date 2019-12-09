@@ -22,10 +22,10 @@ public class IgnitionTest extends BaseTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        testState((IgnitionState) command);
+        testState((Ignition.State) command);
     }
 
-    private void testState(IgnitionState state) {
+    private void testState(Ignition.State state) {
         assertTrue(state.getStatus().getValue() == OnOffState.ON);
         assertTrue(state.getAccessoriesStatus().getValue() == OnOffState.ON);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
@@ -33,27 +33,27 @@ public class IgnitionTest extends BaseTest {
 
     @Test public void get() {
         String waitingForBytes = "003500";
-        String commandBytes = ByteUtils.hexFromBytes(new GetIgnitionState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new Ignition.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void set() {
         Bytes waitingForBytes = new Bytes("003501" +
                 "01000401000101");
-        Bytes commandBytes = new TurnIgnitionOnOff(OnOffState.ON);
+        Bytes commandBytes = new Ignition.TurnIgnitionOnOff(OnOffState.ON);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        TurnIgnitionOnOff incoming = (TurnIgnitionOnOff) CommandResolver.resolve(waitingForBytes);
+        Ignition.TurnIgnitionOnOff incoming = (Ignition.TurnIgnitionOnOff) CommandResolver.resolve(waitingForBytes);
         assertTrue(incoming.getStatus().getValue() == OnOffState.ON);
     }
 
     @Test public void build() {
-        IgnitionState.Builder builder = new IgnitionState.Builder();
+        Ignition.State.Builder builder = new Ignition.State.Builder();
         builder.setStatus(new Property(OnOffState.ON));
         builder.setAccessoriesStatus(new Property(OnOffState.ON));
 
-        IgnitionState state = builder.build();
+        Ignition.State state = builder.build();
         testState(state);
     }
 }

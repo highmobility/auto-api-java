@@ -33,18 +33,18 @@ public class MaintenanceTest extends BaseTest {
     @Test
     public void state() {
         Command command = CommandResolver.resolve(bytes);
-        testState((MaintenanceState) command);
+        testState((Maintenance.State) command);
     }
 
-    private void testState(MaintenanceState command) {
-        MaintenanceState state = command;
+    private void testState(Maintenance.State command) {
+        Maintenance.State state = command;
         assertTrue(state.getDaysToNextService().getValue() == 501);
         assertTrue(state.getKilometersToNextService().getValue() == 3681);
 
         // level8
         assertTrue(state.getCbsReportsCount().getValue() == 3);
         assertTrue(state.getMonthsToExhaustInspection().getValue() == 5);
-        assertTrue(state.getTeleserviceAvailability().getValue() == MaintenanceState.TeleserviceAvailability.SUCCESSFUL);
+        assertTrue(state.getTeleserviceAvailability().getValue() == Maintenance.TeleserviceAvailability.SUCCESSFUL);
         assertTrue(state.getServiceDistanceThreshold().getValue() == 500);
         assertTrue(state.getServiceTimeThreshold().getValue() == 4);
 
@@ -94,18 +94,18 @@ public class MaintenanceTest extends BaseTest {
 
     @Test public void get() {
         String waitingForBytes = "003400";
-        String commandBytes = ByteUtils.hexFromBytes(new GetMaintenanceState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new Maintenance.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void build() {
-        MaintenanceState.Builder builder = new MaintenanceState.Builder();
+        Maintenance.State.Builder builder = new Maintenance.State.Builder();
         builder.setDaysToNextService(new Property(501));
         builder.setKilometersToNextService(new Property(3681));
 
         builder.setCbsReportsCount(new Property(3));
         builder.setMonthsToExhaustInspection(new Property(5));
-        builder.setTeleserviceAvailability(new Property(MaintenanceState.TeleserviceAvailability.SUCCESSFUL));
+        builder.setTeleserviceAvailability(new Property(Maintenance.TeleserviceAvailability.SUCCESSFUL));
         builder.setServiceDistanceThreshold(new Property(500));
         builder.setServiceTimeThreshold(new Property(4));
 
@@ -127,7 +127,7 @@ public class MaintenanceTest extends BaseTest {
 
         builder.setBrakeFluidChangeDate(new Property(TestUtils.getCalendar("2018-01-10T18:30:00")));
 
-        MaintenanceState state = builder.build();
+        Maintenance.State state = builder.build();
         testState(state);
     }
 }

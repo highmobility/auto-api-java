@@ -25,13 +25,13 @@ public class ParkingTicketTest extends BaseTest {
     public void state() {
         CommandResolver._runtime = CommandResolver.RunTime.ANDROID;
         Command command = CommandResolver.resolve(bytes);
-        assertTrue(command instanceof ParkingTicketState);
-        ParkingTicketState state = (ParkingTicketState) command;
+        assertTrue(command instanceof ParkingTicket.State);
+        ParkingTicket.State state = (ParkingTicket.State) command;
         testState(state);
     }
 
-    private void testState(ParkingTicketState state) {
-        assertTrue(state.getStatus().getValue() == ParkingTicketState.Status.STARTED);
+    private void testState(ParkingTicket.State state) {
+        assertTrue(state.getStatus().getValue() == ParkingTicket.Status.STARTED);
         assertTrue(state.getOperatorName().getValue().equals("Berlin Parking"));
         assertTrue(state.getOperatorTicketID().getValue().equals("64894233"));
         assertTrue(TestUtils.dateIsSame(state.getTicketStartTime().getValue(), "2018-01-10T16:32" +
@@ -42,21 +42,21 @@ public class ParkingTicketTest extends BaseTest {
     }
 
     @Test public void build() {
-        ParkingTicketState.Builder builder = new ParkingTicketState.Builder();
+        ParkingTicket.State.Builder builder = new ParkingTicket.State.Builder();
 
-        builder.setStatus(new Property(ParkingTicketState.Status.STARTED));
+        builder.setStatus(new Property(ParkingTicket.Status.STARTED));
         builder.setOperatorName(new Property("Berlin Parking"));
         builder.setOperatorTicketID(new Property("64894233"));
         builder.setTicketStartTime(new Property(TestUtils.getCalendar("2018-01-10T16:32:05")));
         builder.setTicketEndTime(new Property(TestUtils.getCalendar("2018-01-10T18:30:00")));
 
-        ParkingTicketState command = builder.build();
+        ParkingTicket.State command = builder.build();
         testState(command);
     }
 
     @Test public void get() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("004700");
-        byte[] bytes = new GetParkingTicket().getByteArray();
+        byte[] bytes = new ParkingTicket.GetParkingTicket().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
@@ -70,11 +70,11 @@ public class ParkingTicketTest extends BaseTest {
                         "04000B01000800000160E1560840");
 
         Calendar expected = TestUtils.getCalendar("2018-01-10T18:30:00");
-        StartParking command = new StartParking("Berlin Parking", "64894233", expected, null);
+        ParkingTicket.StartParking command = new ParkingTicket.StartParking("Berlin Parking", "64894233", expected, null);
         assertTrue(TestUtils.bytesTheSame(command, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        command = (StartParking) CommandResolver.resolve(waitingForBytes);
+        command = (ParkingTicket.StartParking) CommandResolver.resolve(waitingForBytes);
         assertTrue(TestUtils.dateIsSame(command.getTicketStartTime().getValue(), "2018-01-10T18" +
                 ":30:00"));
         assertTrue(command.getTicketEndTime().getValue() == null);
@@ -85,10 +85,10 @@ public class ParkingTicketTest extends BaseTest {
     @Test public void endParking() {
         setRuntime(CommandResolver.RunTime.ANDROID);
         Bytes waitingForBytes = new Bytes("00470101000401000100");
-        Bytes command = new EndParking();
+        Bytes command = new ParkingTicket.EndParking();
         assertTrue(TestUtils.bytesTheSame(command, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof EndParking);
+        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof ParkingTicket.EndParking);
     }
 }

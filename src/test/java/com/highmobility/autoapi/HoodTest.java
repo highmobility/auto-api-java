@@ -13,25 +13,25 @@ public class HoodTest extends BaseTest{
     @Test
     public void state() {
         Command state = CommandResolver.resolve(bytes);
-        testState((HoodState) state);
+        testState((Hood.State) state);
     }
 
-    private void testState(HoodState state) {
-        assertTrue(state.getPosition().getValue() == HoodState.Position.OPEN);
+    private void testState(Hood.State state) {
+        assertTrue(state.getPosition().getValue() == Hood.Position.OPEN);
         assertTrue(state.equals(bytes));
     }
 
     @Test public void build() {
-        HoodState.Builder builder = new HoodState.Builder();
-        builder.setPosition(new Property(HoodState.Position.OPEN));
-        HoodState state = builder.build();
+        Hood.State.Builder builder = new Hood.State.Builder();
+        builder.setPosition(new Property(Hood.Position.OPEN));
+        Hood.State state = builder.build();
         testState(state);
     }
 
     @Test public void get() {
         Bytes waitingForBytes = new Bytes("006700");
-        Bytes bytes = new GetHoodState();
+        Bytes bytes = new Hood.GetState();
         assertTrue(waitingForBytes.equals(bytes));
-        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof GetHoodState);
+        assertTrue(CommandResolver.resolve(waitingForBytes) instanceof Hood.GetState);
     }
 }
