@@ -19,13 +19,13 @@ public class RooftopTest extends BaseTest {
 
     @Test
     public void state() {
-        RooftopControlState command = (RooftopControlState) CommandResolver.resolve(bytes);
+        RooftopControl.State command = (RooftopControl.State) CommandResolver.resolve(bytes);
         testState(command);
     }
 
     @Test public void get() {
         String waitingForBytes = "002500";
-        String commandBytes = ByteUtils.hexFromBytes(new GetRooftopState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new RooftopControl.GetRooftopState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
@@ -37,41 +37,41 @@ public class RooftopTest extends BaseTest {
                 "04000401000102" +
                 "05000401000101");
 
-        Bytes commandBytes = new ControlRooftop(0d, 0d,
-                RooftopControlState.ConvertibleRoofState.CLOSED,
-                RooftopControlState.SunroofTiltState.HALF_TILTED,
-                RooftopControlState.SunroofState.OPEN);
+        Bytes commandBytes = new RooftopControl.ControlRooftop(0d, 0d,
+                RooftopControl.ConvertibleRoofState.CLOSED,
+                RooftopControl.SunroofTiltState.HALF_TILTED,
+                RooftopControl.SunroofState.OPEN);
         assertTrue(bytesTheSame(commandBytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ControlRooftop command = (ControlRooftop) CommandResolver.resolve(waitingForBytes);
+        RooftopControl.ControlRooftop command = (RooftopControl.ControlRooftop) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getDimming().getValue() == 0d);
         assertTrue(command.getPosition().getValue() == 0d);
-        assertTrue(command.getConvertibleRoofState().getValue() == RooftopControlState.ConvertibleRoofState.CLOSED);
-        assertTrue(command.getSunroofTiltState().getValue() == RooftopControlState.SunroofTiltState.HALF_TILTED);
-        assertTrue(command.getSunroofState().getValue() == RooftopControlState.SunroofState.OPEN);
+        assertTrue(command.getConvertibleRoofState().getValue() == RooftopControl.ConvertibleRoofState.CLOSED);
+        assertTrue(command.getSunroofTiltState().getValue() == RooftopControl.SunroofTiltState.HALF_TILTED);
+        assertTrue(command.getSunroofState().getValue() == RooftopControl.SunroofState.OPEN);
     }
 
     @Test public void stateBuilder() {
-        RooftopControlState.Builder builder = new RooftopControlState.Builder();
+        RooftopControl.State.Builder builder = new RooftopControl.State.Builder();
 
         builder.setDimming(new Property(1d));
         builder.setPosition(new Property(.5d));
-        builder.setConvertibleRoofState(new Property(RooftopControlState.ConvertibleRoofState.OPEN));
-        builder.setSunroofTiltState(new Property(RooftopControlState.SunroofTiltState.HALF_TILTED));
-        builder.setSunroofState(new Property(RooftopControlState.SunroofState.OPEN));
+        builder.setConvertibleRoofState(new Property(RooftopControl.ConvertibleRoofState.OPEN));
+        builder.setSunroofTiltState(new Property(RooftopControl.SunroofTiltState.HALF_TILTED));
+        builder.setSunroofState(new Property(RooftopControl.SunroofState.OPEN));
 
-        RooftopControlState state = builder.build();
+        RooftopControl.State state = builder.build();
         testState(state);
     }
 
-    private void testState(RooftopControlState state) {
+    private void testState(RooftopControl.State state) {
         assertTrue(bytesTheSame(state, bytes));
         assertTrue(state.getDimming().getValue() == 1d);
         assertTrue(state.getPosition().getValue() == .5d);
-        assertTrue(state.getConvertibleRoofState().getValue() == RooftopControlState.ConvertibleRoofState.OPEN);
-        assertTrue(state.getSunroofTiltState().getValue() == RooftopControlState.SunroofTiltState.HALF_TILTED);
-        assertTrue(state.getSunroofState().getValue() == RooftopControlState.SunroofState.OPEN);
+        assertTrue(state.getConvertibleRoofState().getValue() == RooftopControl.ConvertibleRoofState.OPEN);
+        assertTrue(state.getSunroofTiltState().getValue() == RooftopControl.SunroofTiltState.HALF_TILTED);
+        assertTrue(state.getSunroofState().getValue() == RooftopControl.SunroofState.OPEN);
         assertTrue(bytesTheSame(state, bytes));
     }
 }

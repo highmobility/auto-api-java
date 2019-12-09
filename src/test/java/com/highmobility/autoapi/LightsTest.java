@@ -32,12 +32,12 @@ public class LightsTest extends BaseTest {
 
     @Test
     public void state() {
-        LightsState command = (LightsState) CommandResolver.resolve(bytes);
+        Lights.State command = (Lights.State) CommandResolver.resolve(bytes);
         testState(command);
     }
 
-    void testState(LightsState state) {
-        assertTrue(state.getFrontExteriorLight().getValue() == LightsState.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM);
+    void testState(Lights.State state) {
+        assertTrue(state.getFrontExteriorLight().getValue() == Lights.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM);
         assertTrue(state.getRearExteriorLight().getValue() == ActiveState.ACTIVE);
 
         assertTrue(state.getAmbientLightColour().getValue().getRed() == 255);
@@ -62,9 +62,9 @@ public class LightsTest extends BaseTest {
     }
 
     @Test public void build() {
-        LightsState.Builder builder = new LightsState.Builder();
+        Lights.State.Builder builder = new Lights.State.Builder();
 
-        builder.setFrontExteriorLight(new Property(LightsState.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM));
+        builder.setFrontExteriorLight(new Property(Lights.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM));
         builder.setRearExteriorLight(new Property(ActiveState.ACTIVE));
 
         RgbColour ambientColor = new RgbColour(255, 0, 0);
@@ -86,13 +86,13 @@ public class LightsTest extends BaseTest {
         builder.addInteriorLight(new Property(new Light(LocationLongitudinal.REAR,
                 ActiveState.INACTIVE)));
 
-        LightsState state = builder.build();
+        Lights.State state = builder.build();
         testState(state);
     }
 
     @Test public void get() {
         String waitingForBytes = "003600";
-        String commandBytes = ByteUtils.hexFromBytes(new GetLightsState().getByteArray());
+        String commandBytes = ByteUtils.hexFromBytes(new Lights.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
@@ -121,8 +121,8 @@ public class LightsTest extends BaseTest {
         interiorLamps[0] = new Light(LocationLongitudinal.FRONT, ActiveState.INACTIVE);
         interiorLamps[1] = new Light(LocationLongitudinal.REAR, ActiveState.INACTIVE);
 
-        Bytes bytes = new ControlLights(
-                LightsState.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM,
+        Bytes bytes = new Lights.ControlLights(
+                Lights.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM,
                 ActiveState.INACTIVE,
                 new RgbColour(255, 0, 0),
                 fogLights,
@@ -132,8 +132,8 @@ public class LightsTest extends BaseTest {
         assertTrue(bytesTheSame(bytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ControlLights command = (ControlLights) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getFrontExteriorLight().getValue() == LightsState.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM);
+        Lights.ControlLights command = (Lights.ControlLights) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getFrontExteriorLight().getValue() == Lights.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM);
 
         assertTrue(command.getRearExteriorLight().getValue() == ActiveState.INACTIVE);
         assertTrue(command.getAmbientLightColour().getValue().getRed() == 255);
@@ -180,7 +180,7 @@ public class LightsTest extends BaseTest {
         Light[] fogLights = new Light[1];
         fogLights[0] = new Light(LocationLongitudinal.FRONT, ActiveState.INACTIVE);
 
-        Bytes bytes = new ControlLights(
+        Bytes bytes = new Lights.ControlLights(
                 null,
                 null,
                 null,
@@ -191,7 +191,7 @@ public class LightsTest extends BaseTest {
         assertTrue(bytesTheSame(bytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ControlLights command = (ControlLights) CommandResolver.resolve(waitingForBytes);
+        Lights.ControlLights command = (Lights.ControlLights) CommandResolver.resolve(waitingForBytes);
 
         assertTrue(command.getFogLights()[0].getValue().getActiveState() == ActiveState.INACTIVE);
     }

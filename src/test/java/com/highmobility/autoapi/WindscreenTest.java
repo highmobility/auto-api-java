@@ -28,13 +28,13 @@ public class WindscreenTest extends BaseTest {
 
     @Test
     public void state() {
-        testState((WindscreenState) CommandResolver.resolve(bytes));
+        testState((Windscreen.State) CommandResolver.resolve(bytes));
     }
 
-    private void testState(WindscreenState state) {
-        assertTrue(state.getWipersStatus().getValue() == WindscreenState.WipersStatus.AUTOMATIC);
-        assertTrue(state.getWipersIntensity().getValue() == WindscreenState.WipersIntensity.LEVEL_3);
-        assertTrue(state.getWindscreenDamage().getValue() == WindscreenState.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED);
+    private void testState(Windscreen.State state) {
+        assertTrue(state.getWipersStatus().getValue() == Windscreen.WipersStatus.AUTOMATIC);
+        assertTrue(state.getWipersIntensity().getValue() == Windscreen.WipersIntensity.LEVEL_3);
+        assertTrue(state.getWindscreenDamage().getValue() == Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED);
 
         Zone matrix = state.getWindscreenZoneMatrix().getValue();
         assertTrue(matrix.getHorizontal() == 4);
@@ -44,7 +44,7 @@ public class WindscreenTest extends BaseTest {
         assertTrue(zone.getHorizontal() == 1);
         assertTrue(zone.getVertical() == 2);
 
-        assertTrue(state.getWindscreenNeedsReplacement().getValue() == WindscreenState.WindscreenNeedsReplacement.REPLACEMENT_NEEDED);
+        assertTrue(state.getWindscreenNeedsReplacement().getValue() == Windscreen.WindscreenNeedsReplacement.REPLACEMENT_NEEDED);
 
         assertTrue(state.getWindscreenDamageConfidence().getValue() == .95d);
 
@@ -54,26 +54,26 @@ public class WindscreenTest extends BaseTest {
     }
 
     @Test public void build() {
-        WindscreenState.Builder builder = new WindscreenState.Builder();
+        Windscreen.State.Builder builder = new Windscreen.State.Builder();
 
-        builder.setWipersStatus(new Property(WindscreenState.WipersStatus.AUTOMATIC));
-        builder.setWipersIntensity(new Property(WindscreenState.WipersIntensity.LEVEL_3));
-        builder.setWindscreenDamage(new Property(WindscreenState.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED));
+        builder.setWipersStatus(new Property(Windscreen.WipersStatus.AUTOMATIC));
+        builder.setWipersIntensity(new Property(Windscreen.WipersIntensity.LEVEL_3));
+        builder.setWindscreenDamage(new Property(Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED));
         Zone matrix = new Zone(4, 3);
         builder.setWindscreenZoneMatrix(new Property(matrix));
         Zone zone = new Zone(1, 2);
         builder.setWindscreenDamageZone(new Property(zone));
-        builder.setWindscreenNeedsReplacement(new Property(WindscreenState.WindscreenNeedsReplacement.REPLACEMENT_NEEDED));
+        builder.setWindscreenNeedsReplacement(new Property(Windscreen.WindscreenNeedsReplacement.REPLACEMENT_NEEDED));
         builder.setWindscreenDamageConfidence(new Property(.95d));
         Calendar date = TestUtils.getCalendar("2017-01-10T16:32:05");
         builder.setWindscreenDamageDetectionTime(new Property(date));
-        WindscreenState command = builder.build();
+        Windscreen.State command = builder.build();
         testState(command);
     }
 
     @Test public void get() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex("004200");
-        byte[] bytes = new GetWindscreenState().getByteArray();
+        byte[] bytes = new Windscreen.GetState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
@@ -82,14 +82,14 @@ public class WindscreenTest extends BaseTest {
                 "03000401000101");
 
         Bytes bytes =
-                new SetWindscreenDamage(WindscreenState.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED,
+                new Windscreen.SetWindscreenDamage(Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED,
                         null);
         assertTrue(bytesTheSame(waitingForBytes, bytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        SetWindscreenDamage command =
-                (SetWindscreenDamage) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getWindscreenDamage().getValue() == WindscreenState.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED);
+        Windscreen.SetWindscreenDamage command =
+                (Windscreen.SetWindscreenDamage) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getWindscreenDamage().getValue() == Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED);
         assertTrue(command.getWindscreenDamageZone().getValue() == null);
     }
 
@@ -98,16 +98,16 @@ public class WindscreenTest extends BaseTest {
                 "03000401000101" +
                 "0500050100020203");
 
-        WindscreenState.WindscreenDamage damage =
-                WindscreenState.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED;
+        Windscreen.WindscreenDamage damage =
+                Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED;
         Zone zone = new Zone(2, 3);
 
-        Bytes createdBytes = new SetWindscreenDamage(damage, zone);
+        Bytes createdBytes = new Windscreen.SetWindscreenDamage(damage, zone);
         assertTrue(bytesTheSame(createdBytes, bytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        SetWindscreenDamage resolvedBytes = (SetWindscreenDamage) CommandResolver.resolve(bytes);
-        assertTrue(resolvedBytes.getWindscreenDamage().getValue() == WindscreenState.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED);
+        Windscreen.SetWindscreenDamage resolvedBytes = (Windscreen.SetWindscreenDamage) CommandResolver.resolve(bytes);
+        assertTrue(resolvedBytes.getWindscreenDamage().getValue() == Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED);
         assertTrue(resolvedBytes.getWindscreenDamageZone().getValue().getHorizontal() == 2);
         assertTrue(resolvedBytes.getWindscreenDamageZone().getValue().getVertical() == 3);
     }
@@ -116,14 +116,14 @@ public class WindscreenTest extends BaseTest {
         Bytes waitingForBytes = new Bytes("004201" +
                 "06000401000101");
 
-        Bytes bytes = new SetWindscreenReplacementNeeded(WindscreenState.WindscreenNeedsReplacement
+        Bytes bytes = new Windscreen.SetWindscreenReplacementNeeded(Windscreen.WindscreenNeedsReplacement
                 .NO_REPLACEMENT_NEEDED);
         assertTrue(bytesTheSame(waitingForBytes, bytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        SetWindscreenReplacementNeeded command =
-                (SetWindscreenReplacementNeeded) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getWindscreenNeedsReplacement().getValue() == WindscreenState.WindscreenNeedsReplacement.NO_REPLACEMENT_NEEDED);
+        Windscreen.SetWindscreenReplacementNeeded command =
+                (Windscreen.SetWindscreenReplacementNeeded) CommandResolver.resolve(waitingForBytes);
+        assertTrue(command.getWindscreenNeedsReplacement().getValue() == Windscreen.WindscreenNeedsReplacement.NO_REPLACEMENT_NEEDED);
     }
 
     @Test public void controlWipersTest() {
@@ -131,15 +131,15 @@ public class WindscreenTest extends BaseTest {
                 "01000401000101" +
                 "02000401000102");
 
-        ControlWipers create = new ControlWipers(WindscreenState.WipersStatus.ACTIVE,
-                WindscreenState.WipersIntensity.LEVEL_2);
-        assertTrue(create.getWipersIntensity().getValue() == WindscreenState.WipersIntensity.LEVEL_2);
-        assertTrue(create.getWipersStatus().getValue() == WindscreenState.WipersStatus.ACTIVE);
+        Windscreen.ControlWipers create = new Windscreen.ControlWipers(Windscreen.WipersStatus.ACTIVE,
+                Windscreen.WipersIntensity.LEVEL_2);
+        assertTrue(create.getWipersIntensity().getValue() == Windscreen.WipersIntensity.LEVEL_2);
+        assertTrue(create.getWipersStatus().getValue() == Windscreen.WipersStatus.ACTIVE);
         assertTrue(bytesTheSame(create, bytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ControlWipers resolve = (ControlWipers) CommandResolver.resolve(bytes);
-        assertTrue(resolve.getWipersStatus().getValue() == WindscreenState.WipersStatus.ACTIVE);
-        assertTrue(resolve.getWipersIntensity().getValue() == WindscreenState.WipersIntensity.LEVEL_2);
+        Windscreen.ControlWipers resolve = (Windscreen.ControlWipers) CommandResolver.resolve(bytes);
+        assertTrue(resolve.getWipersStatus().getValue() == Windscreen.WipersStatus.ACTIVE);
+        assertTrue(resolve.getWipersIntensity().getValue() == Windscreen.WipersIntensity.LEVEL_2);
     }
 }
