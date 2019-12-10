@@ -66,7 +66,7 @@ public class CapabilitiesTest extends BaseTest {
         CapabilitiesState.Builder builder = new CapabilitiesState.Builder();
         CapabilitiesState capabilities = builder.build();
         testEmptyCommand(capabilities);
-        assertTrue(capabilities.getLength() == 5);
+        assertTrue(capabilities.getLength() == Command.HEADER_LENGTH + 3);
 
         byte[] bytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "00100100");
         testEmptyCommand((CapabilitiesState) CommandResolver.resolve(bytes));

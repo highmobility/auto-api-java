@@ -44,11 +44,11 @@ public class CommandResolver {
      * @return The parsed command.
      */
     public static Command resolve(byte[] bytes) {
-        if (bytes == null || bytes.length < 5) return new Command(bytes);
+        if (bytes == null || bytes.length < 3 + Command.HEADER_LENGTH) return new Command(bytes);
 
         Command command = null;
-        Integer identifier = Identifier.fromBytes(bytes[2], bytes[3]);
-        Integer type = Type.fromByte(bytes[4]);
+        Integer identifier = Identifier.fromBytes(bytes[Command.HEADER_LENGTH], bytes[Command.HEADER_LENGTH + 1]);
+        Integer type = Type.fromByte(bytes[Command.HEADER_LENGTH + 2]);
 
         try {
             switch (identifier) {
@@ -58,7 +58,7 @@ public class CommandResolver {
                             command = new VehicleStatusState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetVehicleStatus(bytes);
                         } else {
                             command = new GetVehicleStatusProperties(bytes);
@@ -87,7 +87,7 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetParkingTicket(bytes);
                         } else {
                             command = new GetParkingTicketProperties(bytes);
@@ -107,7 +107,7 @@ public class CommandResolver {
                             command = new ControlWindows(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetWindows(bytes);
                         } else {
                             command = new GetWindowsProperties(bytes);
@@ -121,7 +121,7 @@ public class CommandResolver {
                             command = new VehicleTimeState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetVehicleTime(bytes);
                         }
                     }
@@ -133,7 +133,7 @@ public class CommandResolver {
                             command = new DriverFatigueState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetDriverFatigueState(bytes);
                         }
                     }
@@ -162,7 +162,7 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetControlState(bytes);
                         }
                     }
@@ -176,7 +176,7 @@ public class CommandResolver {
                             command = new ControlGasFlap(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetGasFlapState(bytes);
                         } else {
                             command = new GetGasFlapProperties(bytes);
@@ -192,7 +192,7 @@ public class CommandResolver {
                             command = new SetNaviDestination(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetNaviDestination(bytes);
                         } else {
                             command = new GetNaviDestinationProperties(bytes);
@@ -206,7 +206,7 @@ public class CommandResolver {
                             command = new LightConditionsState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetLightConditions(bytes);
                         } else {
                             command = new GetLightConditionsProperties(bytes);
@@ -220,7 +220,7 @@ public class CommandResolver {
                             command = new OffroadState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetOffroadState(bytes);
                         } else {
                             command = new GetOffroadProperties(bytes);
@@ -236,7 +236,7 @@ public class CommandResolver {
                             command = new ControlTrunk(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetTrunkState(bytes);
                         } else {
                             command = new GetTrunkProperties(bytes);
@@ -252,7 +252,7 @@ public class CommandResolver {
                             command = new LockUnlockDoors(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetDoorsState(bytes);
                         } else {
                             command = new GetDoorsProperties(bytes);
@@ -268,7 +268,7 @@ public class CommandResolver {
                             command = new ActivateDeactivateValetMode(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetValetMode(bytes);
                         }
                     }
@@ -280,7 +280,7 @@ public class CommandResolver {
                             command = new DashboardLightsState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetDashboardLights(bytes);
                         }
                     }
@@ -308,7 +308,7 @@ public class CommandResolver {
                             command = new ControlLights(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetLightsState(bytes);
                         } else {
                             command = new GetLightsProperties(bytes);
@@ -341,7 +341,7 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetChassisSettings(bytes);
                         } else {
                             command = new GetChassisSettingsProperties(bytes);
@@ -380,7 +380,7 @@ public class CommandResolver {
                             command = new HoodState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetHoodState(bytes);
                         }
                     }
@@ -415,7 +415,7 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetChargingState(bytes);
                         } else {
                             command = new GetChargingProperties(bytes);
@@ -429,7 +429,7 @@ public class CommandResolver {
                             command = new MobileState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetMobileState(bytes);
                         }
                     }
@@ -462,7 +462,7 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetHomeChargerState(bytes);
                         } else {
                             command = new GetHomeChargerProperties(bytes);
@@ -476,7 +476,7 @@ public class CommandResolver {
                             command = new DiagnosticsState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetDiagnosticsState(bytes);
                         } else {
                             command = new GetDiagnosticsProperties(bytes);
@@ -490,7 +490,7 @@ public class CommandResolver {
                             command = new UsageState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetUsage(bytes);
                         } else {
                             command = new GetUsageProperties(bytes);
@@ -506,7 +506,7 @@ public class CommandResolver {
                             command = new ActivateDeactivatePowerTakeoff(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetPowerTakeoffState(bytes);
                         } else {
                             command = new GetPowerTakeoffProperties(bytes);
@@ -555,7 +555,7 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetWiFiState(bytes);
                         } else {
                             command = new GetWiFiProperties(bytes);
@@ -569,7 +569,7 @@ public class CommandResolver {
                             command = new VehicleLocationState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetVehicleLocation(bytes);
                         } else {
                             command = new GetVehicleLocationProperties(bytes);
@@ -591,7 +591,7 @@ public class CommandResolver {
                             command = new RaceState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetRaceState(bytes);
                         } else {
                             command = new GetRaceProperties(bytes);
@@ -605,7 +605,7 @@ public class CommandResolver {
                             command = new FirmwareVersionState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetFirmwareVersion(bytes);
                         } else {
                             command = new GetFirmwareVersionProperties(bytes);
@@ -621,7 +621,7 @@ public class CommandResolver {
                             command = new SetTheftAlarm(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetTheftAlarmState(bytes);
                         }
                     }
@@ -633,7 +633,7 @@ public class CommandResolver {
                             command = new SeatsState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetSeatsState(bytes);
                         } else {
                             command = new GetSeatsProperties(bytes);
@@ -649,7 +649,7 @@ public class CommandResolver {
                             command = new ActivateDeactivateStartStop(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetEngineStartStopState(bytes);
                         }
                     }
@@ -661,7 +661,7 @@ public class CommandResolver {
                             command = new TachographState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetTachographState(bytes);
                         } else {
                             command = new GetTachographProperties(bytes);
@@ -677,7 +677,7 @@ public class CommandResolver {
                             command = new SetParkingBrake(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetParkingBrakeState(bytes);
                         }
                     }
@@ -689,7 +689,7 @@ public class CommandResolver {
                             command = new CapabilitiesState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetCapabilities(bytes);
                         }
                     }
@@ -701,7 +701,7 @@ public class CommandResolver {
                             command = new MaintenanceState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetMaintenanceState(bytes);
                         } else {
                             command = new GetMaintenanceProperties(bytes);
@@ -717,7 +717,7 @@ public class CommandResolver {
                             command = new ControlRooftop(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetRooftopState(bytes);
                         } else {
                             command = new GetRooftopProperties(bytes);
@@ -755,7 +755,7 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetWindscreenState(bytes);
                         } else {
                             command = new GetWindscreenProperties(bytes);
@@ -771,7 +771,7 @@ public class CommandResolver {
                             command = new ActivateDeactivateCruiseControl(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetCruiseControlState(bytes);
                         } else {
                             command = new GetCruiseControlProperties(bytes);
@@ -785,7 +785,7 @@ public class CommandResolver {
                             command = new KeyfobPositionState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetKeyfobPosition(bytes);
                         }
                     }
@@ -812,7 +812,7 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetFlashersState(bytes);
                         } else {
                             command = new GetFlashersProperties(bytes);
@@ -826,7 +826,7 @@ public class CommandResolver {
                             command = new WeatherConditionsState(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetWeatherConditions(bytes);
                         }
                     }
@@ -850,7 +850,7 @@ public class CommandResolver {
                             command = new TurnIgnitionOnOff(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetIgnitionState(bytes);
                         } else {
                             command = new GetIgnitionProperties(bytes);
@@ -887,7 +887,7 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == 5) {
+                        if (bytes.length == 4) {
                             command = new GetClimateState(bytes);
                         } else {
                             command = new GetClimateProperties(bytes);

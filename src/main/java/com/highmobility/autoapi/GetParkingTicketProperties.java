@@ -46,6 +46,6 @@ public class GetParkingTicketProperties extends GetCommand {
 
     GetParkingTicketProperties(byte[] bytes) throws CommandParseException {
         super(bytes);
-        propertyIdentifiers = getRange(5, getLength());
+        propertyIdentifiers = getRange(Command.COMMAND_TYPE_POSITION + 1, getLength());
     }
 }

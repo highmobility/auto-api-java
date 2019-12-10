@@ -31,9 +31,9 @@ public class VehicleStatusTest extends BaseTest {
                     "0C000701000440200000" +
                     "0D000501000200F5" +
                     "0E000401000101" +
-                    "990016010013" + COMMAND_HEADER + "0021010100040100010002000401000101" + //
+                    "990015010012" + COMMAND_HEADER + "0021010100040100010002000401000101" + //
                     // Trunk open
-                    "99000F01000C" + COMMAND_HEADER + "00270101000401000102" + // Remote Control
+                    "99000E01000B" + COMMAND_HEADER + "00270101000401000102" + // Remote Control
                     // Started
                     // l8
                     "0F000401000100" + // display unit km
@@ -201,7 +201,7 @@ public class VehicleStatusTest extends BaseTest {
         assertTrue(vs.getStates().length == 0);
         assertTrue(vs.getNumberOfDoors() == null);
         assertTrue(vs.getState(Identifier.THEFT_ALARM) == null);
-        assertTrue(vs.getByteArray().length == 5);
+        assertTrue(vs.getByteArray().length == Command.HEADER_LENGTH + 3);
 
         Bytes bytes = new Bytes(COMMAND_HEADER + "00110100");
         vs = (VehicleStatusState) CommandResolver.resolve(bytes);
@@ -213,8 +213,8 @@ public class VehicleStatusTest extends BaseTest {
     @Test public void testOneInvalidVsStateDoesNotMatter() {
         Bytes bytes = new Bytes
                 (COMMAND_HEADER + "001101" +
-                        "990016010013" + COMMAND_HEADER + "0021010100040100010002000401000101" +
-                        "99000F01000C" + COMMAND_HEADER + "00270101000401000115"); //invalid
+                        "990015010012" + COMMAND_HEADER + "0021010100040100010002000401000101" +
+                        "99000E01000B" + COMMAND_HEADER + "00270101000401000115"); //invalid
         // control mode
         TestUtils.errorLogExpected(() -> {
             VehicleStatusState command = (VehicleStatusState) CommandResolver.resolve(bytes);

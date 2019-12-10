@@ -24,19 +24,19 @@ class GetCommand extends Command {
     // the get state ctor
     GetCommand(Integer identifier) {
         super(identifier, 3);
-        set(4, (byte) 0x00);
+        set(COMMAND_TYPE_POSITION, (byte) 0x00);
         type = Type.GET;
     }
 
     GetCommand(Integer identifier, byte[] propertyIdentifiers) {
         super(identifier, 3 + (propertyIdentifiers != null ? propertyIdentifiers.length : 0));
-        set(4, (byte) 0x00);
-        set(5, propertyIdentifiers);
+        set(COMMAND_TYPE_POSITION, (byte) 0x00);
+        set(COMMAND_TYPE_POSITION + 1, propertyIdentifiers);
         type = Type.GET;
     }
 
     GetCommand(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes[4] != Type.GET) throw new CommandParseException();
+        if (bytes[COMMAND_TYPE_POSITION] != Type.GET) throw new CommandParseException();
     }
 }

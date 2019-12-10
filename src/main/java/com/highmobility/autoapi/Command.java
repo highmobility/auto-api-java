@@ -56,9 +56,9 @@ public class Command extends Bytes {
     public static final byte NONCE_IDENTIFIER = (byte) 0xA0;
     public static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
     public static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
-    static final byte AUTO_API_IDENTIFIER = 0x01;
     static final byte AUTO_API_VERSION = 0x0B;
-    static final int HEADER_LENGTH = 2;
+    static final int HEADER_LENGTH = 1;
+    static final int COMMAND_TYPE_POSITION = HEADER_LENGTH + 2;
 
     Integer type;
     Integer identifier;
@@ -72,11 +72,10 @@ public class Command extends Bytes {
     public Command(Integer identifier, int size) {
         super(HEADER_LENGTH + size);
 
-        set(0, AUTO_API_IDENTIFIER);
-        set(1, AUTO_API_VERSION);
+        set(0, AUTO_API_VERSION);
         this.autoApiVersion = (int) AUTO_API_VERSION;
 
-        set(2, Identifier.toBytes(identifier));
+        set(1, Identifier.toBytes(identifier));
         this.identifier = identifier;
     }
 
@@ -167,13 +166,13 @@ public class Command extends Bytes {
     Command(byte[] bytes) {
         super(bytes);
 
-        if (bytes[0] != AUTO_API_IDENTIFIER || bytes[1] != AUTO_API_VERSION)
+        if (bytes[0] != AUTO_API_VERSION)
             logger.error(String.format(INVALID_VERSION_EXCEPTION,
                     (int) AUTO_API_VERSION));
 
         setTypeAndBytes(bytes);
 
-        if (propertiesExpected() && bytes.length < 9)
+        if (propertiesExpected() && bytes.length < 8)
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
         ArrayList<Property> builder = new ArrayList<>();
@@ -206,10 +205,10 @@ public class Command extends Bytes {
         byte versionByte = 0, firstByte = 0, secondByte = 0, thirdByte = 0;
 
         if (bytes != null) {
-            if (bytes.length > 1) versionByte = bytes[1];
-            if (bytes.length > 2) firstByte = bytes[2];
-            if (bytes.length > 3) secondByte = bytes[3];
-            if (bytes.length > 4) thirdByte = bytes[4];
+            if (bytes.length > 0) versionByte = bytes[0];
+            if (bytes.length > 1) firstByte = bytes[1];
+            if (bytes.length > 2) secondByte = bytes[2];
+            if (bytes.length > 3) thirdByte = bytes[3];
         }
 
         identifier = Identifier.fromBytes(firstByte, secondByte);
@@ -232,7 +231,7 @@ public class Command extends Bytes {
         // if from builder, bytes need to be built
         byte[] identifierBytes = Identifier.toBytes(identifier);
         if (createBytes) bytes = new byte[]{
-                AUTO_API_IDENTIFIER, AUTO_API_VERSION, identifierBytes[0], identifierBytes[1],
+                AUTO_API_VERSION, identifierBytes[0], identifierBytes[1],
                 Type.toByte(type)
         };
 

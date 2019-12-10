@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MultiCommandTest extends BaseTest {
     Bytes commandBytes = new Bytes(
             COMMAND_HEADER + "001301" +
-                    "02000F01000C" + COMMAND_HEADER + "00200105000401000101" +
-                    "02000F01000C" + COMMAND_HEADER + "00460101000401000101");
+                    "02000E01000B" + COMMAND_HEADER + "00200105000401000101" +
+                    "02000E01000B" + COMMAND_HEADER + "00460101000401000101");
 
     Bytes stateBytes = new Bytes(
             COMMAND_HEADER + "001301" +
-                    "01004F01004C" + // door state header
+                    "01004E01004B" + // door state header
                     COMMAND_HEADER + "002001" +// door state
                     "0200050100020000" +
                     "0200050100020100" +
@@ -34,7 +34,7 @@ public class MultiCommandTest extends BaseTest {
                     "0400050100020200" +
                     "0400050100020300" +
                     "06000401000101" +
-                    "01000F01000C" + // trunk state header
+                    "01000E01000B" + // trunk state header
                     COMMAND_HEADER + "00460101000401000101"); // trunk state
 
     @Test

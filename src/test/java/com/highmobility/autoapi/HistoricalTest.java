@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class HistoricalTest extends BaseTest {
     Bytes bytes = new Bytes(COMMAND_HEADER + "001201" +
-            "01001E01001B" + // >> length 19 + 3 + 3
+            "01001D01001A" + // >> length 19 + 3 + 3
             COMMAND_HEADER + "0020010300050100020000" + // 1 outside lock front left unlocked
             "A2000B01000800000160E1560840"
     );
