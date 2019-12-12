@@ -7,7 +7,6 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.TestUtils;
 import com.highmobility.autoapi.value.Acceleration;
-import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
