@@ -507,17 +507,14 @@ public class Property<T> extends Bytes {
     public static int getSignedInt(byte[] bytes) {
         if (bytes.length == 1) return getSignedInt(bytes[0]);
         else if (bytes.length >= 2) {
-            return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getShort();;
+            return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getShort();
         }
 
         throw new IllegalArgumentException();
     }
 
     public static int getSignedInt(byte[] bytes, int at, int length) {
-        if (bytes.length >= 2) {
-            return bytes[at] << 8 | bytes[at + 1];;
-        }
-
+        if (bytes.length >= 2) return bytes[at] << 8 | bytes[at + 1];
         throw new IllegalArgumentException();
     }
 

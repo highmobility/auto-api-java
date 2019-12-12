@@ -50,6 +50,7 @@ public class ActionItem extends PropertyValueObject {
 
     public ActionItem(Property property) throws CommandParseException {
         super();
+        if (property.getValueComponent() == null) throw new CommandParseException();
         update(property.getValueComponent().getValueBytes());
     }
 

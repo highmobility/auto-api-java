@@ -52,6 +52,7 @@ public class ReadingLamp extends PropertyValueObject {
 
     public ReadingLamp(Property property) throws CommandParseException {
         super();
+        if (property.getValueComponent() == null) throw new CommandParseException();
         update(property.getValueComponent().getValueBytes());
     }
 

@@ -60,6 +60,7 @@ public class HmkitVersion extends PropertyValueObject {
 
     public HmkitVersion(Property property) throws CommandParseException {
         super();
+        if (property.getValueComponent() == null) throw new CommandParseException();
         update(property.getValueComponent().getValueBytes());
     }
 

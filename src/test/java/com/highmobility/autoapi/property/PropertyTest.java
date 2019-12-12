@@ -6,12 +6,15 @@ import com.highmobility.autoapi.Charging.ChargeMode;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.TestUtils;
+import com.highmobility.autoapi.value.Acceleration;
+import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PropertyTest extends BaseTest {
@@ -228,6 +231,15 @@ public class PropertyTest extends BaseTest {
     @Test public void emptyValueProperty() {
         Bytes bytes = new Bytes("010000"); // data component with 00 length
         new PropertyComponentValue(bytes);
+    }
+
+    @Test public void typeFromPropertyWithNoValueComponent() {
+        Bytes noComponentBytes = new Bytes("010000");
+        Property prop = new Property(noComponentBytes.getByteArray());
+
+        assertThrows(CommandParseException.class, () -> {
+            new Acceleration(prop);
+        });
     }
 
     @Test public void emptyString() throws CommandParseException {

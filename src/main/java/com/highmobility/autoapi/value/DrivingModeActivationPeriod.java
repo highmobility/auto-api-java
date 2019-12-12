@@ -52,6 +52,7 @@ public class DrivingModeActivationPeriod extends PropertyValueObject {
 
     public DrivingModeActivationPeriod(Property property) throws CommandParseException {
         super();
+        if (property.getValueComponent() == null) throw new CommandParseException();
         update(property.getValueComponent().getValueBytes());
     }
 

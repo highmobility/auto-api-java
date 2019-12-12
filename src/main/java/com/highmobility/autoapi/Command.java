@@ -154,9 +154,6 @@ public class Command extends Bytes {
 
         setTypeAndBytes(bytes);
 
-        if (propertiesExpected() && bytes.length < 8)
-            throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
-
         ArrayList<Property> builder = new ArrayList<>();
         PropertyEnumeration enumeration = new PropertyEnumeration(this.bytes);
 

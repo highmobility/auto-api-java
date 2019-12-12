@@ -53,6 +53,7 @@ public class Acceleration extends PropertyValueObject {
 
     public Acceleration(Property property) throws CommandParseException {
         super();
+        if (property.getValueComponent() == null) throw new CommandParseException();
         update(property.getValueComponent().getValueBytes());
     }
 

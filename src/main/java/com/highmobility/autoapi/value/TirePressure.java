@@ -52,6 +52,7 @@ public class TirePressure extends PropertyValueObject {
 
     public TirePressure(Property property) throws CommandParseException {
         super();
+        if (property.getValueComponent() == null) throw new CommandParseException();
         update(property.getValueComponent().getValueBytes());
     }
 
