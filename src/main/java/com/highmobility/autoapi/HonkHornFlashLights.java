@@ -45,7 +45,7 @@ public class HonkHornFlashLights {
             super(IDENTIFIER);
         }
     
-        GetFlashersState(byte[] bytes) {
+        GetFlashersState(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -71,7 +71,7 @@ public class HonkHornFlashLights {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetFlashersProperties(byte[] bytes) {
+        GetFlashersProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

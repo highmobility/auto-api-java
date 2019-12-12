@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class FirmwareVersionTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "000301" +
+            COMMAND_HEADER + "000301" +
                     "010006010003010F21" +
                     "02000F01000C6274737461636B2D75617274" +
                     "03000C01000976312E352D70726F64"
@@ -48,7 +48,7 @@ public class FirmwareVersionTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "000300";
+        String waitingForBytes = COMMAND_HEADER + "000300";
         assertTrue(new FirmwareVersion.GetFirmwareVersion().equals(waitingForBytes));
     }
 }

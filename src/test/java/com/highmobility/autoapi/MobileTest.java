@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class MobileTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "006601" +
+            COMMAND_HEADER + "006601" +
                     "01000401000101");
 
     @Test
@@ -30,7 +30,7 @@ public class MobileTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "006600";
+        String waitingForBytes = COMMAND_HEADER + "006600";
         String commandBytes = ByteUtils.hexFromBytes(new Mobile.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }

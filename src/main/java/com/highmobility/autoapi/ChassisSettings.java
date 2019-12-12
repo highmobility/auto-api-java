@@ -51,7 +51,7 @@ public class ChassisSettings {
             super(IDENTIFIER);
         }
     
-        GetChassisSettings(byte[] bytes) {
+        GetChassisSettings(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -77,7 +77,7 @@ public class ChassisSettings {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetChassisSettingsProperties(byte[] bytes) {
+        GetChassisSettingsProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

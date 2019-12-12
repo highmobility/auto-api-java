@@ -45,7 +45,7 @@ public class Windows {
             super(IDENTIFIER);
         }
     
-        GetWindows(byte[] bytes) {
+        GetWindows(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -71,7 +71,7 @@ public class Windows {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetWindowsProperties(byte[] bytes) {
+        GetWindowsProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

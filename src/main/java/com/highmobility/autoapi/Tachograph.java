@@ -53,7 +53,7 @@ public class Tachograph {
             super(IDENTIFIER);
         }
     
-        GetState(byte[] bytes) {
+        GetState(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -79,7 +79,7 @@ public class Tachograph {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetProperties(byte[] bytes) {
+        GetProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

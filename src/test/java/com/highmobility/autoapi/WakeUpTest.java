@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class WakeUpTest extends BaseTest{
     @Test public void get() {
-        Bytes waitingForBytes = new Bytes("00220101000401000100");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "00220101000401000100");
         Command commandBytes = new WakeUp.WakeUpCommand();
         assertTrue(bytesTheSame(waitingForBytes, commandBytes));
     }

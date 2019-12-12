@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class TrunkAccessTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "002101" +
+            COMMAND_HEADER + "002101" +
                     "01000401000100" +
                     "02000401000101");
 
@@ -40,7 +40,7 @@ public class TrunkAccessTest extends BaseTest {
     }
 
     @Test public void get() {
-        Bytes waitingForBytes = new Bytes("002100");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002100");
         Bytes commandBytes = new Trunk.GetState();
         assertTrue(waitingForBytes.equals(commandBytes));
 
@@ -49,7 +49,7 @@ public class TrunkAccessTest extends BaseTest {
     }
 
     @Test public void control() {
-        Bytes waitingForBytes = new Bytes("002101" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002101" +
                 "01000401000100" +
                 "02000401000101");
         Command commandBytes = new Trunk.ControlTrunk(LockState.UNLOCKED, Position.OPEN);

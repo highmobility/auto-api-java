@@ -20,31 +20,30 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChargingTest extends BaseTest {
-    Bytes bytes = new Bytes(
-            "002301" +
-                    "02000501000201B0" +
-                    "03000B0100083FE0000000000000" +
-                    "040007010004BF19999A" +
-                    "050007010004BF19999A" +
-                    "06000701000443C80000" +
-                    "070007010004BF19999A" +
-                    "08000B0100083FECCCCCCCCCCCCD" +
-                    "0900040100013C" +
-                    "0A000701000440600000" +
-                    "0B000401000101" +
-                    "0C000401000101" +
-                    "0E000701000441C80000" +
-                    "0F000401000101" +
-                    "10000401000100" +
-                    "110006010003011020" +
-                    "110006010003000B33" +
-                    "130006010003001121" +
-                    "130006010003010C34" +
-                    "1400070100044219999A" +
-                    "15000C0100090000000160E0EA1388" +
-                    "15000C0100090100000160E1560840" +
-                    "16000401000101" +
-                    "17000401000101"
+    Bytes bytes = new Bytes(COMMAND_HEADER + "002301" +
+            "02000501000201B0" +
+            "03000B0100083FE0000000000000" +
+            "040007010004BF19999A" +
+            "050007010004BF19999A" +
+            "06000701000443C80000" +
+            "070007010004BF19999A" +
+            "08000B0100083FECCCCCCCCCCCCD" +
+            "0900040100013C" +
+            "0A000701000440600000" +
+            "0B000401000101" +
+            "0C000401000101" +
+            "0E000701000441C80000" +
+            "0F000401000101" +
+            "10000401000100" +
+            "110006010003011020" +
+            "110006010003000B33" +
+            "130006010003001121" +
+            "130006010003010C34" +
+            "1400070100044219999A" +
+            "15000C0100090000000160E0EA1388" +
+            "15000C0100090100000160E1560840" +
+            "16000401000101" +
+            "17000401000101"
 
     );
 
@@ -130,7 +129,7 @@ public class ChargingTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "002300";
+        String waitingForBytes = COMMAND_HEADER + "002300";
         Bytes get = new Charging.GetState();
         String commandBytes = ByteUtils.hexFromBytes(new Charging.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -191,60 +190,62 @@ public class ChargingTest extends BaseTest {
     }
 
     @Test public void setChargeLimit() {
-        Bytes expected = new Bytes("002301" +
+        Bytes expected = new Bytes(COMMAND_HEADER + "002301" +
                 "08000B0100083FECCCCCCCCCCCCD");
 
         Bytes commandBytes = new Charging.SetChargeLimit(.9d);
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        Charging.SetChargeLimit command = (Charging.SetChargeLimit) CommandResolver.resolve(expected);
+        Charging.SetChargeLimit command =
+                (Charging.SetChargeLimit) CommandResolver.resolve(expected);
         assertTrue(command.getChargeLimit().getValue() == .9d);
     }
 
     @Test public void openCloseChargePort() {
-        Bytes expected = new Bytes("0023010B000401000101");
+        Bytes expected = new Bytes(COMMAND_HEADER + "0023010B000401000101");
 
         Bytes commandBytes = new Charging.OpenCloseChargingPort(Position.OPEN);
         assertTrue(TestUtils.bytesTheSame(commandBytes, expected));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        Charging.OpenCloseChargingPort command = (Charging.OpenCloseChargingPort) CommandResolver.resolve(expected);
+        Charging.OpenCloseChargingPort command =
+                (Charging.OpenCloseChargingPort) CommandResolver.resolve(expected);
         assertTrue(command.getChargePortState().getValue() == Position.OPEN);
     }
 
     @Test public void startStopCharging() {
-        Bytes waitingForBytes = new Bytes("002301" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002301" +
                 "17000401000101");
         Bytes commandBytes = new Charging.StartStopCharging(Charging.Status.CHARGING);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        Charging.StartStopCharging command = (Charging.StartStopCharging) CommandResolver.resolve(waitingForBytes);
+        Charging.StartStopCharging command =
+                (Charging.StartStopCharging) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getStatus().getValue() == Charging.Status.CHARGING);
     }
 
     @Test public void setChargeMode() {
-        // TODO: 23/09/2019 verify INDUCTIVE > IMMEDIATE correct
-        Bytes waitingForBytes = new Bytes("0023010C000401000100");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "0023010C000401000100");
         Bytes commandBytes = new Charging.SetChargeMode(Charging.ChargeMode.IMMEDIATE);
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        Charging.SetChargeMode command = (Charging.SetChargeMode) CommandResolver.resolve(waitingForBytes);
+        Charging.SetChargeMode command =
+                (Charging.SetChargeMode) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getChargeMode().getValue() == Charging.ChargeMode.IMMEDIATE);
     }
 
     @Test public void setChargeModeThrowsOnImmediate() {
         assertThrows(IllegalArgumentException.class, () -> {
-            // TODO: 23/09/2019  verify IMMEDIATE > INDUCTIVE  correct
             new Charging.SetChargeMode(Charging.ChargeMode.INDUCTIVE);
         });
     }
 
     @Test public void SetChargeTimer() throws ParseException {
         Bytes waitingForBytes = new Bytes
-                ("002301" +
+                (COMMAND_HEADER + "002301" +
                         "15000C0100090200000160E0EA1388" +
                         "15000C0100090100000160E1560840");
         Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
@@ -258,7 +259,8 @@ public class ChargingTest extends BaseTest {
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        Charging.SetChargingTimers command = (Charging.SetChargingTimers) CommandResolver.resolve(waitingForBytes);
+        Charging.SetChargingTimers command =
+                (Charging.SetChargingTimers) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getTimers().length == 2);
 
         Calendar departureTime = getTimer(command.timers, Timer.TimerType.DEPARTURE_DATE)
@@ -271,7 +273,7 @@ public class ChargingTest extends BaseTest {
     }
 
     @Test public void SetReductionTimes() {
-        Bytes waitingForBytes = new Bytes("002301" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002301" +
                 "130006010003000000" + // reduction times
                 "130006010003011020");
 
@@ -283,8 +285,9 @@ public class ChargingTest extends BaseTest {
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        Charging.SetReductionOfChargingCurrentTimes command = (Charging.SetReductionOfChargingCurrentTimes)
-                CommandResolver.resolve(waitingForBytes);
+        Charging.SetReductionOfChargingCurrentTimes command =
+                (Charging.SetReductionOfChargingCurrentTimes)
+                        CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getReductionTimes().length == 2);
 
         int times = 0;

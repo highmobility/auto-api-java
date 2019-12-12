@@ -31,10 +31,7 @@ class SetCommand extends Command {
 
     SetCommand(Integer identifier) {
         super(identifier, 3);
-
-        set(0, Identifier.toBytes(identifier));
-        set(2, (byte) 0x01);
-
+        set(COMMAND_TYPE_POSITION, (byte) 0x01);
         type = Type.SET;
     }
 
@@ -58,12 +55,11 @@ class SetCommand extends Command {
 
     SetCommand(byte[] bytes) throws CommandParseException {
         super(bytes);
-        if (bytes[2] != 0x01) throw new CommandParseException();
+        if (bytes[Command.COMMAND_TYPE_POSITION] != Type.SET) throw new CommandParseException();
     }
 
     public SetCommand(Builder builder) {
         super(builder.identifier, Type.SET, builder.propertiesBuilder.toArray(new Property[0]));
-
     }
 
     public static class Builder {

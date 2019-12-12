@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class WeatherConditionsTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "005501" +
+            COMMAND_HEADER + "005501" +
                     "01000B0100083FF0000000000000"
     );
 
@@ -31,7 +31,7 @@ public class WeatherConditionsTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "005500";
+        String waitingForBytes = COMMAND_HEADER + "005500";
         String commandBytes = ByteUtils.hexFromBytes(new WeatherConditions.GetWeatherConditions().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }

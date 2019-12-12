@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class MessagingTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "003701" +
+            COMMAND_HEADER + "003701" +
                     "01001001000D48656c6c6f20796f7520746f6f" +
                     "02001101000E2b31203535352d3535352d353535");
 
@@ -28,7 +28,7 @@ public class MessagingTest extends BaseTest {
     }
 
     @Test public void received() {
-        Bytes waitingForBytes = new Bytes("003701" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "003701" +
                 "01000801000548656c6c6f" +
                 "02001101000E2b31203535352d3535352d353535");
 

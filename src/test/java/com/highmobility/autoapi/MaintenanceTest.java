@@ -13,8 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Created by ttiganik on 15/09/16.
  */
 public class MaintenanceTest extends BaseTest {
-    Bytes bytes = new Bytes(
-            "003401" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "003401" +
                     "01000501000201F5" +
                     "02000701000400000E61" +
                     "03000401000103" +
@@ -93,7 +92,7 @@ public class MaintenanceTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "003400";
+        String waitingForBytes = COMMAND_HEADER + "003400";
         String commandBytes = ByteUtils.hexFromBytes(new Maintenance.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }

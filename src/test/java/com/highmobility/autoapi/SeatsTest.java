@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Created by ttiganik on 15/09/16.
  */
 public class SeatsTest extends BaseTest {
-    Bytes bytes = new Bytes("005601" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "005601" +
             "0200050100020201" +
             "0200050100020300" +
             "0300050100020201" +
@@ -59,7 +59,7 @@ public class SeatsTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "005600";
+        String waitingForBytes = COMMAND_HEADER + "005600";
         String commandBytes = ByteUtils.hexFromBytes(new Seats.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }

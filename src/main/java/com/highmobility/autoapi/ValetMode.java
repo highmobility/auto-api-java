@@ -38,7 +38,7 @@ public class ValetMode {
             super(IDENTIFIER);
         }
     
-        GetValetMode(byte[] bytes) {
+        GetValetMode(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }

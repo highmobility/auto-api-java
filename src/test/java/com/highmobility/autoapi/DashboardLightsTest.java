@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Created by ttiganik on 15/09/16.
  */
 public class DashboardLightsTest extends BaseTest {
-    Bytes bytes = new Bytes("006101" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "006101" +
             "0100050100020000" +
             "0100050100020201" +
             "0100050100020F03" +
@@ -50,8 +50,10 @@ public class DashboardLightsTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "006100";
-        String commandBytes = ByteUtils.hexFromBytes(new DashboardLights.GetDashboardLights().getByteArray());
+
+        String waitingForBytes = COMMAND_HEADER + "006100";
+        String commandBytes =
+                ByteUtils.hexFromBytes(new DashboardLights.GetDashboardLights().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 

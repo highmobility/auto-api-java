@@ -13,7 +13,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FuelingTest extends BaseTest {
-    Bytes bytes = new Bytes("004001" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "004001" +
             "02000401000101" +
             "03000401000100"
     );
@@ -41,14 +41,14 @@ public class FuelingTest extends BaseTest {
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("004000");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "004000");
         byte[] bytes = new Fueling.GetGasFlapState().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
         assertTrue(CommandResolver.resolve(waitingForBytes) instanceof Fueling.GetGasFlapState);
     }
 
     @Test public void control() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("004001" +
+        byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "004001" +
                 "02000401000100" +
                 "03000401000101");
 

@@ -47,7 +47,7 @@ public class NaviDestination {
             super(IDENTIFIER);
         }
     
-        GetNaviDestination(byte[] bytes) {
+        GetNaviDestination(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -73,7 +73,7 @@ public class NaviDestination {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetNaviDestinationProperties(byte[] bytes) {
+        GetNaviDestinationProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

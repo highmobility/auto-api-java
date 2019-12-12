@@ -41,7 +41,7 @@ public class FirmwareVersion {
             super(IDENTIFIER);
         }
     
-        GetFirmwareVersion(byte[] bytes) {
+        GetFirmwareVersion(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -67,7 +67,7 @@ public class FirmwareVersion {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetFirmwareVersionProperties(byte[] bytes) {
+        GetFirmwareVersionProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

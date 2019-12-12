@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class WifiTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "005901" +
+            COMMAND_HEADER + "005901" +
                     "01000401000101" +
                     "02000401000101" +
                     "030007010004484F4D45" +
@@ -50,14 +50,14 @@ public class WifiTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "005900";
+        String waitingForBytes = COMMAND_HEADER + "005900";
         String commandBytes = ByteUtils.hexFromBytes(new WiFi.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void connectToNetwork() {
         Bytes waitingForBytes = new Bytes(
-                "005901" +
+                COMMAND_HEADER + "005901" +
                         "030007010004484f4d45" +
                         "04000401000103" +
                         "05000D01000A5a57337641524e554265");
@@ -75,7 +75,7 @@ public class WifiTest extends BaseTest {
     }
 
     @Test public void forgetNetwork() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("005901" +
+        byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "005901" +
                 "030007010004484f4d45");
         byte[] commandBytes = new WiFi.ForgetNetwork("HOME").getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
@@ -86,7 +86,7 @@ public class WifiTest extends BaseTest {
     }
 
     @Test public void enableDisableWifi() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("005901" +
+        byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "005901" +
                 "01000401000101");
         byte[] commandBytes = new WiFi.EnableDisableWiFi(EnabledState.ENABLED).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));

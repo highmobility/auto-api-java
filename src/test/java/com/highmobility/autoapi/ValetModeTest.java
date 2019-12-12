@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ValetModeTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "002801" +
+            COMMAND_HEADER + "002801" +
                     "01000401000101"
     );
 
@@ -30,13 +30,13 @@ public class ValetModeTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "002800";
+        String waitingForBytes = COMMAND_HEADER + "002800";
         String commandBytes = ByteUtils.hexFromBytes(new ValetMode.GetValetMode().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void activate() {
-        Bytes waitingForBytes = new Bytes("002801" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002801" +
                 "01000401000101");
         Bytes commandBytes = new ValetMode.ActivateDeactivateValetMode(ActiveState.ACTIVE);
         assertTrue(waitingForBytes.equals(commandBytes));

@@ -45,7 +45,7 @@ public class ParkingTicket {
             super(IDENTIFIER);
         }
     
-        GetParkingTicket(byte[] bytes) {
+        GetParkingTicket(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -71,7 +71,7 @@ public class ParkingTicket {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetParkingTicketProperties(byte[] bytes) {
+        GetParkingTicketProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

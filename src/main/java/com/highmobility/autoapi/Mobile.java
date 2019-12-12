@@ -38,7 +38,7 @@ public class Mobile {
             super(IDENTIFIER);
         }
     
-        GetState(byte[] bytes) {
+        GetState(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PowerTakeOffTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "006501" +
+            COMMAND_HEADER + "006501" +
                     "01000401000101" +
                     "02000401000101"
     );
@@ -36,13 +36,13 @@ public class PowerTakeOffTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "006500";
+        String waitingForBytes = COMMAND_HEADER + "006500";
         String commandBytes = ByteUtils.hexFromBytes(new PowerTakeoff.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void activateDeactivate() {
-        Bytes waitingForBytes = new Bytes("006501" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006501" +
                 "01000401000101");
         byte[] commandBytes = new PowerTakeoff.ActivateDeactivatePowerTakeoff(ActiveState.ACTIVE).getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FailureTest extends BaseTest {
-    Bytes bytes = new Bytes("000201" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "000201" +
             "0100050100020021" +
             "02000401000101" + // set
             "03000401000101" + // reason

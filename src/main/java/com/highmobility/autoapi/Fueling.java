@@ -42,7 +42,7 @@ public class Fueling {
             super(IDENTIFIER);
         }
     
-        GetGasFlapState(byte[] bytes) {
+        GetGasFlapState(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -68,7 +68,7 @@ public class Fueling {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetGasFlapProperties(byte[] bytes) {
+        GetGasFlapProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

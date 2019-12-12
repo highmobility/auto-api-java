@@ -43,7 +43,7 @@ public class RemoteControl {
             super(IDENTIFIER);
         }
     
-        GetControlState(byte[] bytes) {
+        GetControlState(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }

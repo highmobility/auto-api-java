@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HoodTest extends BaseTest{
-    Bytes bytes = new Bytes("006701" + "01000401000101");
-    
+public class HoodTest extends BaseTest {
+    Bytes bytes = new Bytes(COMMAND_HEADER + "006701" + "01000401000101");
+
     @Test
     public void state() {
         Command state = CommandResolver.resolve(bytes);
@@ -29,8 +29,9 @@ public class HoodTest extends BaseTest{
     }
 
     @Test public void get() {
-        Bytes waitingForBytes = new Bytes("006700");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006700");
         Bytes bytes = new Hood.GetState();
+
         assertTrue(waitingForBytes.equals(bytes));
         assertTrue(CommandResolver.resolve(waitingForBytes) instanceof Hood.GetState);
     }

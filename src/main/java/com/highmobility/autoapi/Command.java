@@ -50,12 +50,19 @@ public class Command extends Bytes {
     public static Logger logger = LoggerFactory.getLogger(Command.class);
     private static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be " +
             "null";
+    private static final String INVALID_VERSION_EXCEPTION = "Invalid AutoAPI version. This " +
+            "package supports level %d.";
+
     public static final byte NONCE_IDENTIFIER = (byte) 0xA0;
     public static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
     public static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
+    static final byte AUTO_API_VERSION = 0x0B;
+    static final int HEADER_LENGTH = 1;
+    static final int COMMAND_TYPE_POSITION = HEADER_LENGTH + 2;
 
     Integer type;
     Integer identifier;
+    Integer autoApiVersion;
 
     Property[] properties;
     Bytes nonce;
@@ -63,12 +70,35 @@ public class Command extends Bytes {
     Calendar timestamp;
 
     public Command(Integer identifier, int size) {
-        super(size);
+        super(HEADER_LENGTH + size);
+
+        set(0, AUTO_API_VERSION);
+        this.autoApiVersion = (int) AUTO_API_VERSION;
+
+        set(1, Identifier.toBytes(identifier));
         this.identifier = identifier;
     }
 
     protected Command() {
         super();
+    }
+
+    public Integer getAutoApiVersion() {
+        return autoApiVersion;
+    }
+
+    /**
+     * @return The identifier of the command.
+     */
+    public Integer getIdentifier() {
+        return identifier;
+    }
+
+    /**
+     * @return The type of the command.
+     */
+    public Integer getType() {
+        return type;
     }
 
     /**
@@ -119,29 +149,17 @@ public class Command extends Bytes {
         return null;
     }
 
-    /**
-     * @return The identifier of the command.
-     */
-    public Integer getIdentifier() {
-        return identifier;
-    }
-
-    /**
-     * @return The type of the command.
-     */
-    public Integer getType() {
-        return type;
-    }
-
-    Command(Bytes bytes) {
-        this(bytes.getByteArray());
-    }
-
+    // only called from CommandResolver
     Command(byte[] bytes) {
         super(bytes);
+
+        if (bytes[0] != AUTO_API_VERSION)
+            logger.error(String.format(INVALID_VERSION_EXCEPTION,
+                    (int) AUTO_API_VERSION));
+
         setTypeAndBytes(bytes);
 
-        if (propertiesExpected() && bytes.length < 7)
+        if (propertiesExpected() && bytes.length < 8)
             throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
 
         ArrayList<Property> builder = new ArrayList<>();
@@ -163,6 +181,7 @@ public class Command extends Bytes {
     }
 
     Command(Integer identifier, Integer type, Property[] properties) {
+        this.autoApiVersion = (int) AUTO_API_VERSION;
         this.type = type;
         this.identifier = identifier;
         // here there are no timestamps. This constructor is called from setter commands only.
@@ -170,20 +189,18 @@ public class Command extends Bytes {
     }
 
     private void setTypeAndBytes(byte[] bytes) {
-        if (bytes == null || bytes.length < 3) {
-            byte firstByte = 0, secondByte = 0, thirdByte = 0;
-            if (bytes != null) {
-                if (bytes.length > 0) firstByte = bytes[0];
-                if (bytes.length > 1) secondByte = bytes[1];
-                if (bytes.length > 2) thirdByte = bytes[2];
-            }
+        byte versionByte = 0, firstByte = 0, secondByte = 0, thirdByte = 0;
 
-            identifier = Identifier.fromBytes(firstByte, secondByte);
-            type = Type.fromByte(thirdByte);
-        } else {
-            identifier = Identifier.fromBytes(bytes);
-            type = Type.fromByte(bytes[2]);
+        if (bytes != null) {
+            if (bytes.length > 0) versionByte = bytes[0];
+            if (bytes.length > 1) firstByte = bytes[1];
+            if (bytes.length > 2) secondByte = bytes[2];
+            if (bytes.length > 3) thirdByte = bytes[3];
         }
+
+        identifier = Identifier.fromBytes(firstByte, secondByte);
+        type = Type.fromByte(thirdByte);
+        autoApiVersion = (int) versionByte;
     }
 
     protected void findUniversalProperties(Integer identifier, Integer type,
@@ -201,7 +218,8 @@ public class Command extends Bytes {
         // if from builder, bytes need to be built
         byte[] identifierBytes = Identifier.toBytes(identifier);
         if (createBytes) bytes = new byte[]{
-                identifierBytes[0], identifierBytes[1], Type.toByte(type)
+                AUTO_API_VERSION, identifierBytes[0], identifierBytes[1],
+                Type.toByte(type)
         };
 
         for (int i = 0; i < properties.length; i++) {

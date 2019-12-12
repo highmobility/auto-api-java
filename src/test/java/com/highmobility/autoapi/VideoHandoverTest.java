@@ -8,8 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VideoHandoverTest extends BaseTest {
     @Test public void videoHandover() {
-        Bytes waitingForBytes = new Bytes(
-                "004301" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "004301" +
                         "01002E01002b68747470733a2f2f7777772e796f75747562652e636f6d2f77617463683f763d795756423755366d583259" +
                         "020005010002005a" +
                         "03000401000100"

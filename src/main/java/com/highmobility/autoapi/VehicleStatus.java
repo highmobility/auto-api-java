@@ -61,7 +61,7 @@ public class VehicleStatus {
             super(IDENTIFIER);
         }
     
-        GetVehicleStatus(byte[] bytes) {
+        GetVehicleStatus(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -87,7 +87,7 @@ public class VehicleStatus {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetVehicleStatusProperties(byte[] bytes) {
+        GetVehicleStatusProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

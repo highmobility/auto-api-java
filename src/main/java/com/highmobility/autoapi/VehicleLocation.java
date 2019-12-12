@@ -41,7 +41,7 @@ public class VehicleLocation {
             super(IDENTIFIER);
         }
     
-        GetVehicleLocation(byte[] bytes) {
+        GetVehicleLocation(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -67,7 +67,7 @@ public class VehicleLocation {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetVehicleLocationProperties(byte[] bytes) {
+        GetVehicleLocationProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

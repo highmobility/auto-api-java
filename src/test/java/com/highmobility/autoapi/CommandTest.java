@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * For single property for an identifier, can add without checking additional data.
  */
 public class CommandTest extends BaseTest {
-    String parkingBrakeCommand = "00580101000401000101";
+    String parkingBrakeCommand = COMMAND_HEADER + "00580101000401000101";
 
     // MARK: Timestamp
 
@@ -49,7 +49,9 @@ public class CommandTest extends BaseTest {
         TestUtils.errorLogExpected(() -> {
             // test that invalid gasflapstate just sets the property to null and keeps the base
             // property
-            Bytes bytes = new Bytes("00400102000401000103"); // 3 is invalid gasflap lock state
+
+            Bytes bytes = new Bytes(COMMAND_HEADER + "00400102000401000103"); // 3 is invalid
+            // gasflap lock state
             Fueling.State state = (Fueling.State) CommandResolver.resolve(bytes);
 
             assertTrue(state.getGasFlapLock().getValue() == null);
@@ -58,7 +60,7 @@ public class CommandTest extends BaseTest {
     }
 
     @Test public void basePropertiesArrayObjectReplaced() {
-        Bytes bytes = new Bytes("006101" +
+        Bytes bytes = new Bytes(COMMAND_HEADER + "006101" +
                 "0100050100020000" +
                 "0100050100020201" +
                 "0100050100020F03" +
@@ -117,7 +119,7 @@ public class CommandTest extends BaseTest {
 
     @Test public void unknownProperty() {
         Bytes bytes = new Bytes(
-                "002501" +
+                COMMAND_HEADER + "002501" +
                         "01000B0100083FF0000000000000" +
                         "1A000401000135");
 
@@ -156,15 +158,19 @@ public class CommandTest extends BaseTest {
     }
 
     @Test public void getProperties() {
-        Bytes waitingForBytes = new Bytes("00470001");
-        ParkingTicket.GetParkingTicketProperties getter = new ParkingTicket.GetParkingTicketProperties(new Bytes("01"));
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "00470001");
+        ParkingTicket.GetParkingTicketProperties getter =
+                new ParkingTicket.GetParkingTicketProperties(new Bytes("01"));
         assertTrue(bytesTheSame(getter, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ParkingTicket.GetParkingTicketProperties resolved = (ParkingTicket.GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes);
+        ParkingTicket.GetParkingTicketProperties resolved =
+                (ParkingTicket.GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes);
         assertTrue(resolved.getPropertyIdentifiers().equals("01"));
 
-        ParkingTicket.GetParkingTicketProperties resolved2 = (ParkingTicket.GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes.concat(new Bytes("02")));
+        ParkingTicket.GetParkingTicketProperties resolved2 =
+                (ParkingTicket.GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes.concat(new Bytes("02")));
+
         assertTrue(resolved2.getPropertyIdentifiers().equals("0102"));
     }
 }

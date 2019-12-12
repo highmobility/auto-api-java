@@ -11,12 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HonkHornAndFlashLightsTest extends BaseTest {
-    Bytes bytes = new Bytes("002601" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "002601" +
             "01000401000102");
 
     @Test
     public void state() {
-        HonkHornFlashLights.State state = (HonkHornFlashLights.State) CommandResolver.resolve(bytes);
+        HonkHornFlashLights.State state =
+                (HonkHornFlashLights.State) CommandResolver.resolve(bytes);
         testState(state);
     }
 
@@ -26,13 +27,14 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "002600";
-        String commandBytes = ByteUtils.hexFromBytes(new HonkHornFlashLights.GetFlashersState().getByteArray());
+        String waitingForBytes = COMMAND_HEADER + "002600";
+        String commandBytes =
+                ByteUtils.hexFromBytes(new HonkHornFlashLights.GetFlashersState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void honkAndFlash() {
-        String waitingForBytes = "002601" +
+        String waitingForBytes = COMMAND_HEADER + "002601" +
                 "02000401000100" +
                 "03000401000103";
         HonkHornFlashLights.HonkFlash command = new HonkHornFlashLights.HonkFlash(0, 3);
@@ -52,16 +54,17 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
     }
 
     @Test public void activateDeactivate() {
-        String waitingForBytes = "002601" +
+        String waitingForBytes = COMMAND_HEADER + "002601" +
                 "04000401000101";
 
         String commandBytes =
                 ByteUtils.hexFromBytes(new HonkHornFlashLights.ActivateDeactivateEmergencyFlasher(ActiveState.ACTIVE)
-                .getByteArray());
+                        .getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        HonkHornFlashLights.ActivateDeactivateEmergencyFlasher command = (HonkHornFlashLights.ActivateDeactivateEmergencyFlasher)
+        HonkHornFlashLights.ActivateDeactivateEmergencyFlasher command =
+                (HonkHornFlashLights.ActivateDeactivateEmergencyFlasher)
                 CommandResolver.resolveHex(waitingForBytes);
         assertTrue(command.getEmergencyFlashersState().getValue() == ActiveState.ACTIVE);
     }

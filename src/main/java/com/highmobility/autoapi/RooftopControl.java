@@ -44,7 +44,7 @@ public class RooftopControl {
             super(IDENTIFIER);
         }
     
-        GetRooftopState(byte[] bytes) {
+        GetRooftopState(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -70,7 +70,7 @@ public class RooftopControl {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetRooftopProperties(byte[] bytes) {
+        GetRooftopProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

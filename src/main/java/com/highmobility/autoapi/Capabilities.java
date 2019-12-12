@@ -40,7 +40,7 @@ public class Capabilities {
             super(IDENTIFIER);
         }
     
-        GetCapabilities(byte[] bytes) {
+        GetCapabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }

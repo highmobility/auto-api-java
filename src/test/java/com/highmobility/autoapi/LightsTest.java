@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LightsTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "003601" +
+            COMMAND_HEADER + "003601" +
                     "01000401000102" +
                     "02000401000101" +
                     "040006010003FF0000" +
@@ -91,13 +91,13 @@ public class LightsTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "003600";
+        String waitingForBytes = COMMAND_HEADER + "003600";
         String commandBytes = ByteUtils.hexFromBytes(new Lights.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void control() {
-        Bytes waitingForBytes = new Bytes("003601" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "003601" +
                 "01000401000102" +
                 "02000401000100" +
                 "040006010003ff0000" +
@@ -132,7 +132,8 @@ public class LightsTest extends BaseTest {
         assertTrue(bytesTheSame(bytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        Lights.ControlLights command = (Lights.ControlLights) CommandResolver.resolve(waitingForBytes);
+        Lights.ControlLights command =
+                (Lights.ControlLights) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getFrontExteriorLight().getValue() == Lights.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM);
 
         assertTrue(command.getRearExteriorLight().getValue() == ActiveState.INACTIVE);
@@ -191,7 +192,8 @@ public class LightsTest extends BaseTest {
         assertTrue(bytesTheSame(bytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        Lights.ControlLights command = (Lights.ControlLights) CommandResolver.resolve(waitingForBytes);
+        Lights.ControlLights command =
+                (Lights.ControlLights) CommandResolver.resolve(waitingForBytes);
 
         assertTrue(command.getFogLights()[0].getValue().getActiveState() == ActiveState.INACTIVE);
     }

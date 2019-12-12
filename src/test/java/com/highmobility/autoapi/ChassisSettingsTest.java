@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ChassisSettingsTest extends BaseTest {
     Bytes bytes = new Bytes
-            ("005301" +
+            (COMMAND_HEADER + "005301" +
                     "01000401000101" +
                     "02000401000101" +
                     "0500050100020015" +
@@ -65,36 +65,40 @@ public class ChassisSettingsTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "005300";
-        String commandBytes = ByteUtils.hexFromBytes(new ChassisSettings.GetChassisSettings().getByteArray());
+
+        String waitingForBytes = COMMAND_HEADER + "005300";
+        String commandBytes =
+                ByteUtils.hexFromBytes(new ChassisSettings.GetChassisSettings().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void setDrivingMode() {
-        Bytes waitingForBytes = new Bytes("00530101000401000103");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "00530101000401000103");
         Bytes commandBytes = new ChassisSettings.SetDrivingMode(DrivingMode.SPORT_PLUS);
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ChassisSettings.SetDrivingMode drivingMode = (ChassisSettings.SetDrivingMode) CommandResolver.resolve(waitingForBytes);
+        ChassisSettings.SetDrivingMode drivingMode =
+                (ChassisSettings.SetDrivingMode) CommandResolver.resolve(waitingForBytes);
         assertTrue(drivingMode.getDrivingMode().getValue() == DrivingMode.SPORT_PLUS);
     }
 
     @Test public void startChrono() {
-        String waitingForBytes = "00530102000401000101";
+        String waitingForBytes = COMMAND_HEADER + "00530102000401000101";
         String commandBytes =
                 ByteUtils.hexFromBytes(new ChassisSettings.StartStopSportsChrono(ChassisSettings.SportChrono.ACTIVE)
-                .getByteArray());
+                        .getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ChassisSettings.StartStopSportsChrono command = (ChassisSettings.StartStopSportsChrono) CommandResolver.resolve(ByteUtils
-                .bytesFromHex(waitingForBytes));
+        ChassisSettings.StartStopSportsChrono command =
+                (ChassisSettings.StartStopSportsChrono) CommandResolver.resolve(ByteUtils
+                        .bytesFromHex(waitingForBytes));
         assertTrue(command.getSportChrono().getValue() == ChassisSettings.SportChrono.ACTIVE);
     }
 
     @Test public void setSpringRate() {
-        Bytes waitingForBytes = new Bytes("005301" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "005301" +
                 "0500050100020119");
 
         SpringRate prop = new SpringRate(Axle.REAR, 25);
@@ -103,30 +107,34 @@ public class ChassisSettingsTest extends BaseTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ChassisSettings.SetSpringRates command = (ChassisSettings.SetSpringRates) CommandResolver.resolve(waitingForBytes);
+        ChassisSettings.SetSpringRates command =
+                (ChassisSettings.SetSpringRates) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getCurrentSpringRates().length == 1);
         assertTrue(getSpringRate(command.getCurrentSpringRates(), Axle.REAR).getSpringRate() == 25);
     }
 
     @Test public void setChassisPosition() {
-        String waitingForBytes = "00530108000401000132";
-        String commandBytes = ByteUtils.hexFromBytes(new ChassisSettings.SetChassisPosition(50).getByteArray());
+        String waitingForBytes = COMMAND_HEADER + "00530108000401000132";
+        String commandBytes =
+                ByteUtils.hexFromBytes(new ChassisSettings.SetChassisPosition(50).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ChassisSettings.SetChassisPosition command = (ChassisSettings.SetChassisPosition) CommandResolver.resolve(ByteUtils
-                .bytesFromHex(waitingForBytes));
+        ChassisSettings.SetChassisPosition command =
+                (ChassisSettings.SetChassisPosition) CommandResolver.resolve(ByteUtils
+                        .bytesFromHex(waitingForBytes));
         assertTrue(command.getCurrentChassisPosition().getValue() == 50);
     }
 
     @Test public void setNegativeChassisPosition() {
-        Bytes waitingForBytes = new Bytes("005301" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "005301" +
                 "080004010001E4");
         Command state = new ChassisSettings.SetChassisPosition(-28);
         assertTrue(TestUtils.bytesTheSame(state, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ChassisSettings.SetChassisPosition command = (ChassisSettings.SetChassisPosition) CommandResolver.resolve(waitingForBytes);
+        ChassisSettings.SetChassisPosition command =
+                (ChassisSettings.SetChassisPosition) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getCurrentChassisPosition().getValue() == -28);
     }
 

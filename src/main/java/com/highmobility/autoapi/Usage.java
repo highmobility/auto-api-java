@@ -60,7 +60,7 @@ public class Usage {
             super(IDENTIFIER);
         }
     
-        GetUsage(byte[] bytes) {
+        GetUsage(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -86,7 +86,7 @@ public class Usage {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetUsageProperties(byte[] bytes) {
+        GetUsageProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

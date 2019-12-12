@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HomeChargerTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "006001" +
+            COMMAND_HEADER + "006001" +
                     "01000401000102" +
                     "02000401000101" +
                     "03000401000101" +
@@ -104,26 +104,28 @@ public class HomeChargerTest extends BaseTest {
     }
 
     @Test public void get() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("006000");
+        byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "006000");
         byte[] commandBytes = new HomeCharger.GetState().getByteArray();
+
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
     }
 
     @Test public void setChargeCurrent() {
-        Bytes waitingForBytes = new Bytes("006001" +
-                        "0E00070100043f000000");
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006001" +
+                "0E00070100043f000000");
 
         Command commandBytes = new HomeCharger.SetChargeCurrent(.5f);
         assertTrue(bytesTheSame(commandBytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        HomeCharger.SetChargeCurrent command = (HomeCharger.SetChargeCurrent) CommandResolver.resolve(waitingForBytes);
+        HomeCharger.SetChargeCurrent command =
+                (HomeCharger.SetChargeCurrent) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getChargeCurrentDC().getValue() == .5f);
     }
 
     @Test public void setPriceTariffs() {
         Bytes bytes = new Bytes(
-                "006001" +
+                COMMAND_HEADER + "006001" +
                         "12000D01000A00409000000003455552" +
                         "12000D01000A023e99999a0003455552");
 
@@ -136,7 +138,8 @@ public class HomeChargerTest extends BaseTest {
         assertTrue(bytesTheSame(cmd, bytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        HomeCharger.SetPriceTariffs command = (HomeCharger.SetPriceTariffs) CommandResolver.resolve(bytes);
+        HomeCharger.SetPriceTariffs command =
+                (HomeCharger.SetPriceTariffs) CommandResolver.resolve(bytes);
         assertTrue(command.getPriceTariffs().length == 2);
 
         assertTrue(command.getPriceTariffs()[0].getValue().getPricingType() == PriceTariff.PricingType.STARTING_FEE);
@@ -165,32 +168,35 @@ public class HomeChargerTest extends BaseTest {
     }
 
     @Test public void activateSolarCharging() {
-        Bytes waitingForBytes = new Bytes("006001" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006001" +
                 "05000401000101");
         Command commandBytes = new HomeCharger.ActivateDeactivateSolarCharging(ActiveState.ACTIVE);
         assertTrue(bytesTheSame(commandBytes, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        HomeCharger.ActivateDeactivateSolarCharging command = (HomeCharger.ActivateDeactivateSolarCharging)
+        HomeCharger.ActivateDeactivateSolarCharging command =
+                (HomeCharger.ActivateDeactivateSolarCharging)
                 CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getSolarCharging().getValue() == ActiveState.ACTIVE);
     }
 
     @Test public void enableWifi() {
-        Bytes waitingForBytes = new Bytes("006001" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006001" +
                 "08000401000100");
 
-        byte[] commandBytes = new HomeCharger.EnableDisableWiFiHotspot(EnabledState.DISABLED).getByteArray();
+        byte[] commandBytes =
+                new HomeCharger.EnableDisableWiFiHotspot(EnabledState.DISABLED).getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        HomeCharger.EnableDisableWiFiHotspot command = (HomeCharger.EnableDisableWiFiHotspot) CommandResolver.resolve
+        HomeCharger.EnableDisableWiFiHotspot command =
+                (HomeCharger.EnableDisableWiFiHotspot) CommandResolver.resolve
                 (waitingForBytes);
         assertTrue(command.getWifiHotspotEnabled().getValue() == EnabledState.DISABLED);
     }
 
     @Test public void authenticate() {
-        Bytes waitingForBytes = new Bytes("006001" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006001" +
                 "0D000401000100");
 
         Bytes commandBytes =
@@ -198,7 +204,8 @@ public class HomeChargerTest extends BaseTest {
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        HomeCharger.AuthenticateExpire command = (HomeCharger.AuthenticateExpire) CommandResolver.resolve(waitingForBytes);
+        HomeCharger.AuthenticateExpire command =
+                (HomeCharger.AuthenticateExpire) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getAuthenticationState().getValue() == HomeCharger.AuthenticationState.UNAUTHENTICATED);
     }
 }

@@ -39,7 +39,7 @@ public class LightConditions {
             super(IDENTIFIER);
         }
     
-        GetLightConditions(byte[] bytes) {
+        GetLightConditions(byte[] bytes) throws CommandParseException {
             super(bytes);
         }
     }
@@ -65,7 +65,7 @@ public class LightConditions {
             this.propertyIdentifiers = propertyIdentifiers;
         }
     
-        GetLightConditionsProperties(byte[] bytes) {
+        GetLightConditionsProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
             propertyIdentifiers = getRange(3, getLength());
         }

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DoorsTest extends BaseTest {
     Bytes bytes = new Bytes(
-            "002001" +
+            COMMAND_HEADER + "002001" +
                     "0200050100020000" +
                     "0200050100020100" +
                     "0300050100020001" +
@@ -76,7 +76,7 @@ public class DoorsTest extends BaseTest {
     }
 
     @Test public void get() {
-        Bytes bytes = new Bytes("002000");
+        Bytes bytes = new Bytes(COMMAND_HEADER + "002000");
         Bytes commandBytes = new Doors.GetState();
         assertTrue(bytes.equals(commandBytes));
 
@@ -85,7 +85,7 @@ public class DoorsTest extends BaseTest {
     }
 
     @Test public void lock() {
-        Bytes waitingForBytes = new Bytes("002001" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002001" +
                 "05000401000101");
         Command commandBytes = new Doors.LockUnlockDoors(LockState.LOCKED);
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
@@ -101,7 +101,7 @@ public class DoorsTest extends BaseTest {
         // TODO: 24/09/2019 verify when fixe/mikk has answer.
         //  currently have different door locations. one has ALL, the other doesnt
         Bytes bytes = new Bytes(
-                "002001" +
+                HEADER_BYTES + "002001" +
                         "0300050100020501");
         Doors.State state = (Doors.State) CommandResolver.resolve(bytes);
         assertTrue(state.getLocks().length == 1);

@@ -11,7 +11,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CruiseControlTest extends BaseTest {
-    Bytes bytes = new Bytes("006201" +
+    Bytes bytes = new Bytes(COMMAND_HEADER + "006201" +
             "01000401000101" +
             "02000401000101" +
             "030005010002003D" +
@@ -32,24 +32,26 @@ public class CruiseControlTest extends BaseTest {
     }
 
     @Test public void get() {
-        String waitingForBytes = "006200";
+        String waitingForBytes = COMMAND_HEADER + "006200";
         String commandBytes = ByteUtils.hexFromBytes(new CruiseControl.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
     @Test public void activateDeactivate() {
-        byte[] waitingForBytes = ByteUtils.bytesFromHex("006201" +
+        byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "006201" +
                 "01000401000101" +
                 "030005010002003C");
-        byte[] commandBytes = new CruiseControl.ActivateDeactivateCruiseControl(ActiveState.ACTIVE, 60)
+        byte[] commandBytes =
+                new CruiseControl.ActivateDeactivateCruiseControl(ActiveState.ACTIVE, 60)
                 .getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
     }
 
     @Test public void deactivate() {
-        Bytes waitingForBytes = new Bytes("006201" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006201" +
                 "01000401000100");
-        Command commandBytes = new CruiseControl.ActivateDeactivateCruiseControl(ActiveState.INACTIVE, null);
+        Command commandBytes =
+                new CruiseControl.ActivateDeactivateCruiseControl(ActiveState.INACTIVE, null);
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
     }
 }
