@@ -69,7 +69,7 @@ public class PowerTakeoff {
     
         GetProperties(byte[] bytes) throws CommandParseException {
             super(bytes);
-            propertyIdentifiers = getRange(3, getLength());
+            propertyIdentifiers = getRange(COMMAND_TYPE_POSITION + 1, getLength());
         }
     }
 

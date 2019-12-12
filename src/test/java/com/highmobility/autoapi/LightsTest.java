@@ -175,7 +175,7 @@ public class LightsTest extends BaseTest {
     }
 
     @Test public void someValuesMissing() {
-        Bytes waitingForBytes = new Bytes("003601" +
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "003601" +
                 "0700050100020000");
 
         Light[] fogLights = new Light[1];
