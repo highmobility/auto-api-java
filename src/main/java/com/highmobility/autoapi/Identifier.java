@@ -82,6 +82,7 @@ public class Identifier {
     public static final int MOBILE = 102;
     public static final int HOOD = 103;
     public static final int USAGE = 104;
+    public static final int ENGINE = 105;
 
     public static int fromBytes(byte first, byte second) {
         return ((first & 0xff) << 8) | (second & 0xff);

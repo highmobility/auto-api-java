@@ -821,6 +821,20 @@ public class CommandResolver {
                     }
                     break;
                 }
+                case ENGINE: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Engine.State(bytes);
+                        } else {
+                            command = new Engine.TurnEngineOnOff(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Engine.GetState(bytes);
+                        }
+                    }
+                    break;
+                }
                 case WEATHER_CONDITIONS: {
                     if (type == Type.SET) {
                         if (getRuntime() == RunTime.ANDROID) {
