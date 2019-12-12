@@ -35,8 +35,7 @@ public class MaintenanceTest extends BaseTest {
         testState((Maintenance.State) command);
     }
 
-    private void testState(Maintenance.State command) {
-        Maintenance.State state = command;
+    private void testState(Maintenance.State state) {
         assertTrue(state.getDaysToNextService().getValue() == 501);
         assertTrue(state.getKilometersToNextService().getValue() == 3681);
 

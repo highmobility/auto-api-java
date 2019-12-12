@@ -965,7 +965,7 @@ public class CommandResolver {
 
     static RunTime getRuntime() {
         if (_runtime == null)
-            _runtime = (System.getProperty("java.runtime.name") == "Android Runtime") ?
+            _runtime = (System.getProperty("java.runtime.name").equals("Android Runtime")) ?
                 RunTime.ANDROID : RunTime.JAVA;
             return _runtime;
     }
@@ -1003,8 +1003,7 @@ public class CommandResolver {
         }
 
         public boolean hasNext() {
-            boolean hasNext = currentIndex < currentSize && theParsedCommand == null;
-            return hasNext;
+            return currentIndex < currentSize && theParsedCommand == null;
         }
 
         public Command parseNext(PropertyIteration next) throws CommandParseException {

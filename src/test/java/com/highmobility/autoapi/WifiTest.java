@@ -62,7 +62,7 @@ public class WifiTest extends BaseTest {
                         "04000401000103" +
                         "05000D01000A5a57337641524e554265");
 
-        byte[] commandBytes = null;
+        byte[] commandBytes;
         commandBytes =
                 new WiFi.ConnectToNetwork("HOME", NetworkSecurity.WPA2_PERSONAL, "ZW3vARNUBe").getByteArray();
         assertTrue(waitingForBytes.equals(commandBytes));

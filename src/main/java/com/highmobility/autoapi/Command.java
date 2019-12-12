@@ -129,10 +129,6 @@ public class Command extends Bytes {
         return new Bytes(Arrays.copyOfRange(bytes, 0, bytes.length - 64 - 3 - 3));
     }
 
-    protected boolean propertiesExpected() {
-        return false;
-    }
-
     /**
      * @return All of the properties with raw values
      */
@@ -154,8 +150,7 @@ public class Command extends Bytes {
         super(bytes);
 
         if (bytes[0] != AUTO_API_VERSION)
-            logger.error(String.format(INVALID_VERSION_EXCEPTION,
-                    (int) AUTO_API_VERSION));
+            logger.error(String.format(INVALID_VERSION_EXCEPTION, (int) AUTO_API_VERSION));
 
         setTypeAndBytes(bytes);
 
@@ -210,9 +205,6 @@ public class Command extends Bytes {
 
     protected void findUniversalProperties(Integer identifier, Integer type, Property[] properties,
                                            boolean createBytes) {
-        if (propertiesExpected() && (properties == null || properties.length == 0))
-            throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
-
         this.properties = properties;
 
         // if from builder, bytes need to be built
@@ -262,15 +254,7 @@ public class Command extends Bytes {
 
         @Override
         public boolean hasNext() {
-            boolean hasNext = currentIndex < currentSize && properties[currentIndex] != null;
-
-            /*if (hasNext == false && propertiesExpected() && propertiesReplaced == 0) {
-                // throw if propertiesExpected but returned 0 properties (child command
-                // didn't find its property)
-                throw new NoPropertiesException();
-            }*/
-
-            return hasNext;
+            return currentIndex < currentSize && properties[currentIndex] != null;
         }
 
         @Override

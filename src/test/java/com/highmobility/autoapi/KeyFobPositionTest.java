@@ -17,9 +17,7 @@ public class KeyFobPositionTest extends BaseTest {
     @Test
     public void state() {
         KeyfobPosition.State command = (KeyfobPosition.State) CommandResolver.resolve(bytes);
-
-        KeyfobPosition.State state = (KeyfobPosition.State) command;
-        assertTrue(state.getLocation().getValue() == KeyfobPosition.Location.INSIDE_CAR);
+        assertTrue(command.getLocation().getValue() == KeyfobPosition.Location.INSIDE_CAR);
     }
 
     @Test public void get() {

@@ -53,7 +53,7 @@ public class NotificationsTest extends BaseTest {
     @Test public void buildNotification() {
         Notifications.State.Builder builder = new Notifications.State.Builder();
 
-        ActionItem action1, action2 = null;
+        ActionItem action1, action2;
         action1 = new ActionItem(0, "No");
         action2 = new ActionItem(1, "Yes");
         Property[] actions = new Property[]{new Property(action1), new Property(action2)};

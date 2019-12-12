@@ -481,16 +481,13 @@ public class Property<T> extends Bytes {
             IllegalArgumentException {
         if (bytes.length >= at + length) {
             if (length == 4) {
-                int result = ((0xFF & bytes[at]) << 24) | ((0xFF & bytes[at + 1]) << 16) |
+                return ((0xFF & bytes[at]) << 24) | ((0xFF & bytes[at + 1]) << 16) |
                         ((0xFF & bytes[at + 2]) << 8) | (0xFF & bytes[at + 3]);
-                return result;
             } else if (length == 3) {
-                int result = (bytes[at] & 0xff) << 16 | (bytes[at + 1] & 0xff) << 8 | (bytes[at + 2]
+                return (bytes[at] & 0xff) << 16 | (bytes[at + 1] & 0xff) << 8 | (bytes[at + 2]
                         & 0xff);
-                return result;
             } else if (length == 2) {
-                int result = ((bytes[at] & 0xff) << 8) | (bytes[at + 1] & 0xff);
-                return result;
+                return ((bytes[at] & 0xff) << 8) | (bytes[at + 1] & 0xff);
             } else if (length == 1) {
                 return bytes[at] & 0xFF;
             }
@@ -510,8 +507,7 @@ public class Property<T> extends Bytes {
     public static int getSignedInt(byte[] bytes) {
         if (bytes.length == 1) return getSignedInt(bytes[0]);
         else if (bytes.length >= 2) {
-            short result = ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getShort();
-            return result;
+            return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getShort();;
         }
 
         throw new IllegalArgumentException();
@@ -519,8 +515,7 @@ public class Property<T> extends Bytes {
 
     public static int getSignedInt(byte[] bytes, int at, int length) {
         if (bytes.length >= 2) {
-            int result = bytes[at] << 8 | bytes[at + 1];
-            return result;
+            return bytes[at] << 8 | bytes[at + 1];;
         }
 
         throw new IllegalArgumentException();

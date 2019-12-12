@@ -110,7 +110,7 @@ artifacts {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    
 }
 
 // artifactory

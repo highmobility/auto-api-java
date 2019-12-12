@@ -48,9 +48,7 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
 
     @Test
     public void honkAndFlashNoArguments() throws IllegalArgumentException {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new HonkHornFlashLights.HonkFlash(null, null);
-        });
+        assertThrows(IllegalArgumentException.class, () -> new HonkHornFlashLights.HonkFlash(null, null));
     }
 
     @Test public void activateDeactivate() {

@@ -48,7 +48,7 @@ public class ChargingTest extends BaseTest {
     );
 
     @Test
-    public void state() throws ParseException {
+    public void state() {
         Command command = CommandResolver.resolve(bytes);
         assertTrue(command instanceof Charging.State);
         Charging.State state = (Charging.State) command;
@@ -229,9 +229,7 @@ public class ChargingTest extends BaseTest {
     }
 
     @Test public void setChargeModeThrowsOnImmediate() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Charging.SetChargeMode(Charging.ChargeMode.INDUCTIVE);
-        });
+        assertThrows(IllegalArgumentException.class, () -> new Charging.SetChargeMode(Charging.ChargeMode.INDUCTIVE));
     }
 
     @Test public void SetChargeTimer() throws ParseException {
