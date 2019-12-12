@@ -135,16 +135,7 @@ public class ChargingTest extends BaseTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    /*@Test public void failSameTimers() throws ParseException {
-        Calendar c = TestUtils.getUTCCalendar("2018-01-10T16:32:05");
-        Timer[] timers = new Timer[2];
-        timers[0] = new Timer(Timer.TimerType.DEPARTURE_DATE, c);
-        timers[1] = new Timer(Timer.TimerType.DEPARTURE_DATE, c);
-        assertThrows(IllegalArgumentException.class, () -> new Charging.SetChargingTimers(timers));
-        // TODO: this is not defined in yaml
-    }*/
-
-    @Test public void build() throws ParseException {
+    @Test public void build() {
         Charging.State.Builder builder = new Charging.State.Builder();
 
         builder.setEstimatedRange(new Property(432));

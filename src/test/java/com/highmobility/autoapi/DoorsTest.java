@@ -96,16 +96,4 @@ public class DoorsTest extends BaseTest {
         Doors.LockUnlockDoors state = (Doors.LockUnlockDoors) command;
         assertTrue(state.getInsideLocksState().getValue() == LockState.LOCKED);
     }
-
-    /*@Test public void allLocksValue() {
-        // TODO: 24/09/2019 verify when fixe/mikk has answer.
-        //  currently have different door locations. one has ALL, the other doesnt
-        Bytes bytes = new Bytes(
-                HEADER_BYTES + "002001" +
-                        "0300050100020501");
-        Doors.State state = (Doors.State) CommandResolver.resolve(bytes);
-        assertTrue(state.getLocks().length == 1);
-        assertTrue(getLock(state.getLocks(), Location.ALL).getLock() == LOCKED);
-        assertTrue(state.isLocked());
-    }*/
 }
