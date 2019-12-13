@@ -19,6 +19,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.PropertyInteger;
 
 /**
@@ -28,6 +29,8 @@ public class HeartRate {
     public static final int IDENTIFIER = Identifier.HEART_RATE;
 
     public static final byte PROPERTY_HEART_RATE = 0x01;
+
+    public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.WEB };
 
     /**
      * Send heart rate

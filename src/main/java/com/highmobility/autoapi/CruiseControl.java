@@ -19,6 +19,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
@@ -37,6 +38,8 @@ public class CruiseControl {
     public static final byte PROPERTY_TARGET_SPEED = 0x03;
     public static final byte PROPERTY_ADAPTIVE_CRUISE_CONTROL = 0x04;
     public static final byte PROPERTY_ACC_TARGET_SPEED = 0x05;
+
+    public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.WEB };
 
     /**
      * Get all cruise control properties

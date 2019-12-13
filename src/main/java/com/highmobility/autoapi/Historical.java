@@ -19,6 +19,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ public class Historical {
     public static final byte PROPERTY_CAPABILITY_ID = 0x02;
     public static final byte PROPERTY_START_DATE = 0x03;
     public static final byte PROPERTY_END_DATE = 0x04;
+
+    public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.BLE };
 
     /**
      * The historical state

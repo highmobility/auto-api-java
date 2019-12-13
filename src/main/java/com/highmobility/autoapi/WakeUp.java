@@ -19,6 +19,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.value.Bytes;
@@ -30,6 +31,8 @@ public class WakeUp {
     public static final int IDENTIFIER = Identifier.WAKE_UP;
 
     public static final byte PROPERTY_STATUS = 0x01;
+
+    public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.BLE };
 
     /**
      * Wake up command

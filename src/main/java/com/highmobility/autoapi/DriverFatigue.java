@@ -19,6 +19,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 
@@ -29,6 +30,8 @@ public class DriverFatigue {
     public static final int IDENTIFIER = Identifier.DRIVER_FATIGUE;
 
     public static final byte PROPERTY_DETECTED_FATIGUE_LEVEL = 0x01;
+
+    public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.WEB };
 
     /**
      * Get all driver fatigue properties

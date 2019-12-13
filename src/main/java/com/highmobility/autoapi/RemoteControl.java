@@ -19,6 +19,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
@@ -34,6 +35,8 @@ public class RemoteControl {
     public static final byte PROPERTY_CONTROL_MODE = 0x01;
     public static final byte PROPERTY_ANGLE = 0x02;
     public static final byte PROPERTY_SPEED = 0x03;
+
+    public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.WEB };
 
     /**
      * Get control state
