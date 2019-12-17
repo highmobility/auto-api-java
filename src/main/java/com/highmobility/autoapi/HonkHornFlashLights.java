@@ -82,9 +82,6 @@ public class HonkHornFlashLights {
      */
     public static class State extends SetCommand {
         Property<Flashers> flashers = new Property(Flashers.class, PROPERTY_FLASHERS);
-        PropertyInteger honkSeconds = new PropertyInteger(PROPERTY_HONK_SECONDS, false);
-        PropertyInteger flashTimes = new PropertyInteger(PROPERTY_FLASH_TIMES, false);
-        Property<ActiveState> emergencyFlashersState = new Property(ActiveState.class, PROPERTY_EMERGENCY_FLASHERS_STATE);
     
         /**
          * @return The flashers
@@ -93,36 +90,12 @@ public class HonkHornFlashLights {
             return flashers;
         }
     
-        /**
-         * @return Number of seconds to honk the horn
-         */
-        public PropertyInteger getHonkSeconds() {
-            return honkSeconds;
-        }
-    
-        /**
-         * @return Number of times to flash the lights
-         */
-        public PropertyInteger getFlashTimes() {
-            return flashTimes;
-        }
-    
-        /**
-         * @return The emergency flashers state
-         */
-        public Property<ActiveState> getEmergencyFlashersState() {
-            return emergencyFlashersState;
-        }
-    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_FLASHERS: return flashers.update(p);
-                        case PROPERTY_HONK_SECONDS: return honkSeconds.update(p);
-                        case PROPERTY_FLASH_TIMES: return flashTimes.update(p);
-                        case PROPERTY_EMERGENCY_FLASHERS_STATE: return emergencyFlashersState.update(p);
                     }
     
                     return null;
@@ -134,16 +107,10 @@ public class HonkHornFlashLights {
             super(builder);
     
             flashers = builder.flashers;
-            honkSeconds = builder.honkSeconds;
-            flashTimes = builder.flashTimes;
-            emergencyFlashersState = builder.emergencyFlashersState;
         }
     
         public static final class Builder extends SetCommand.Builder {
             private Property<Flashers> flashers;
-            private PropertyInteger honkSeconds;
-            private PropertyInteger flashTimes;
-            private Property<ActiveState> emergencyFlashersState;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -160,36 +127,6 @@ public class HonkHornFlashLights {
             public Builder setFlashers(Property<Flashers> flashers) {
                 this.flashers = flashers.setIdentifier(PROPERTY_FLASHERS);
                 addProperty(this.flashers);
-                return this;
-            }
-            
-            /**
-             * @param honkSeconds Number of seconds to honk the horn
-             * @return The builder
-             */
-            public Builder setHonkSeconds(Property<Integer> honkSeconds) {
-                this.honkSeconds = new PropertyInteger(PROPERTY_HONK_SECONDS, false, 1, honkSeconds);
-                addProperty(this.honkSeconds);
-                return this;
-            }
-            
-            /**
-             * @param flashTimes Number of times to flash the lights
-             * @return The builder
-             */
-            public Builder setFlashTimes(Property<Integer> flashTimes) {
-                this.flashTimes = new PropertyInteger(PROPERTY_FLASH_TIMES, false, 1, flashTimes);
-                addProperty(this.flashTimes);
-                return this;
-            }
-            
-            /**
-             * @param emergencyFlashersState The emergency flashers state
-             * @return The builder
-             */
-            public Builder setEmergencyFlashersState(Property<ActiveState> emergencyFlashersState) {
-                this.emergencyFlashersState = emergencyFlashersState.setIdentifier(PROPERTY_EMERGENCY_FLASHERS_STATE);
-                addProperty(this.emergencyFlashersState);
                 return this;
             }
         }

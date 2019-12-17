@@ -57,7 +57,6 @@ public class RemoteControl {
     public static class State extends SetCommand {
         Property<ControlMode> controlMode = new Property(ControlMode.class, PROPERTY_CONTROL_MODE);
         PropertyInteger angle = new PropertyInteger(PROPERTY_ANGLE, true);
-        PropertyInteger speed = new PropertyInteger(PROPERTY_SPEED, true);
     
         /**
          * @return The control mode
@@ -73,13 +72,6 @@ public class RemoteControl {
             return angle;
         }
     
-        /**
-         * @return Speed in km/h
-         */
-        public PropertyInteger getSpeed() {
-            return speed;
-        }
-    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -87,7 +79,6 @@ public class RemoteControl {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_CONTROL_MODE: return controlMode.update(p);
                         case PROPERTY_ANGLE: return angle.update(p);
-                        case PROPERTY_SPEED: return speed.update(p);
                     }
     
                     return null;

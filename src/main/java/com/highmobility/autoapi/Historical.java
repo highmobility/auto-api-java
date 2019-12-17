@@ -45,36 +45,12 @@ public class Historical {
      */
     public static class State extends SetCommand {
         Property<Command>[] states;
-        PropertyInteger capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false);
-        Property<Calendar> startDate = new Property(Calendar.class, PROPERTY_START_DATE);
-        Property<Calendar> endDate = new Property(Calendar.class, PROPERTY_END_DATE);
     
         /**
          * @return The states
          */
         public Property<Command>[] getStates() {
             return states;
-        }
-    
-        /**
-         * @return The identifier of the Capability
-         */
-        public PropertyInteger getCapabilityID() {
-            return capabilityID;
-        }
-    
-        /**
-         * @return Milliseconds since UNIX Epoch time
-         */
-        public Property<Calendar> getStartDate() {
-            return startDate;
-        }
-    
-        /**
-         * @return Milliseconds since UNIX Epoch time
-         */
-        public Property<Calendar> getEndDate() {
-            return endDate;
         }
     
         State(byte[] bytes) throws CommandParseException {
@@ -89,9 +65,6 @@ public class Historical {
                             Property<Command> state = new Property(Command.class, p);
                             statesBuilder.add(state);
                             return state;
-                        case PROPERTY_CAPABILITY_ID: return capabilityID.update(p);
-                        case PROPERTY_START_DATE: return startDate.update(p);
-                        case PROPERTY_END_DATE: return endDate.update(p);
                     }
     
                     return null;
@@ -105,16 +78,10 @@ public class Historical {
             super(builder);
     
             states = builder.states.toArray(new Property[0]);
-            capabilityID = builder.capabilityID;
-            startDate = builder.startDate;
-            endDate = builder.endDate;
         }
     
         public static final class Builder extends SetCommand.Builder {
             private List<Property> states = new ArrayList<>();
-            private PropertyInteger capabilityID;
-            private Property<Calendar> startDate;
-            private Property<Calendar> endDate;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -138,7 +105,6 @@ public class Historical {
             
                 return this;
             }
-            
             /**
              * Add a single state.
              * 
@@ -149,36 +115,6 @@ public class Historical {
                 state.setIdentifier(PROPERTY_STATES);
                 addProperty(state);
                 states.add(state);
-                return this;
-            }
-            
-            /**
-             * @param capabilityID The identifier of the Capability
-             * @return The builder
-             */
-            public Builder setCapabilityID(Property<Integer> capabilityID) {
-                this.capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false, 2, capabilityID);
-                addProperty(this.capabilityID);
-                return this;
-            }
-            
-            /**
-             * @param startDate Milliseconds since UNIX Epoch time
-             * @return The builder
-             */
-            public Builder setStartDate(Property<Calendar> startDate) {
-                this.startDate = startDate.setIdentifier(PROPERTY_START_DATE);
-                addProperty(this.startDate);
-                return this;
-            }
-            
-            /**
-             * @param endDate Milliseconds since UNIX Epoch time
-             * @return The builder
-             */
-            public Builder setEndDate(Property<Calendar> endDate) {
-                this.endDate = endDate.setIdentifier(PROPERTY_END_DATE);
-                addProperty(this.endDate);
                 return this;
             }
         }

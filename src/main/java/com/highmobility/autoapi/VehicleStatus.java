@@ -237,7 +237,7 @@ public class VehicleStatus {
         }
     
         /**
-         * @return The car brand bytes
+         * @return The car brand
          */
         public Property<String> getBrand() {
             return brand;
@@ -551,7 +551,7 @@ public class VehicleStatus {
             }
             
             /**
-             * @param brand The car brand bytes
+             * @param brand The car brand
              * @return The builder
              */
             public Builder setBrand(Property<String> brand) {

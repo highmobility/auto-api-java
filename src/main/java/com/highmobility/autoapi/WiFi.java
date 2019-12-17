@@ -86,7 +86,6 @@ public class WiFi {
         Property<ConnectionState> networkConnected = new Property(ConnectionState.class, PROPERTY_NETWORK_CONNECTED);
         Property<String> networkSSID = new Property(String.class, PROPERTY_NETWORK_SSID);
         Property<NetworkSecurity> networkSecurity = new Property(NetworkSecurity.class, PROPERTY_NETWORK_SECURITY);
-        Property<String> password = new Property(String.class, PROPERTY_PASSWORD);
     
         /**
          * @return The status
@@ -116,13 +115,6 @@ public class WiFi {
             return networkSecurity;
         }
     
-        /**
-         * @return The network password
-         */
-        public Property<String> getPassword() {
-            return password;
-        }
-    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -132,7 +124,6 @@ public class WiFi {
                         case PROPERTY_NETWORK_CONNECTED: return networkConnected.update(p);
                         case PROPERTY_NETWORK_SSID: return networkSSID.update(p);
                         case PROPERTY_NETWORK_SECURITY: return networkSecurity.update(p);
-                        case PROPERTY_PASSWORD: return password.update(p);
                     }
     
                     return null;
@@ -147,7 +138,6 @@ public class WiFi {
             networkConnected = builder.networkConnected;
             networkSSID = builder.networkSSID;
             networkSecurity = builder.networkSecurity;
-            password = builder.password;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -155,7 +145,6 @@ public class WiFi {
             private Property<ConnectionState> networkConnected;
             private Property<String> networkSSID;
             private Property<NetworkSecurity> networkSecurity;
-            private Property<String> password;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -202,16 +191,6 @@ public class WiFi {
             public Builder setNetworkSecurity(Property<NetworkSecurity> networkSecurity) {
                 this.networkSecurity = networkSecurity.setIdentifier(PROPERTY_NETWORK_SECURITY);
                 addProperty(this.networkSecurity);
-                return this;
-            }
-            
-            /**
-             * @param password The network password
-             * @return The builder
-             */
-            public Builder setPassword(Property<String> password) {
-                this.password = password.setIdentifier(PROPERTY_PASSWORD);
-                addProperty(this.password);
                 return this;
             }
         }

@@ -37,27 +37,18 @@ public class MultiCommand {
      */
     public static class State extends SetCommand {
         Property<Command>[] multiStates;
-        Property<Command>[] multiCommands;
     
         /**
-         * @return The bytes of incoming capabilities (states)
+         * @return The incoming capabilities (states)
          */
         public Property<Command>[] getMultiStates() {
             return multiStates;
-        }
-    
-        /**
-         * @return The bytes of outgoing capabilities (commands)
-         */
-        public Property<Command>[] getMultiCommands() {
-            return multiCommands;
         }
     
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
             ArrayList<Property> multiStatesBuilder = new ArrayList<>();
-            ArrayList<Property> multiCommandsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -66,10 +57,6 @@ public class MultiCommand {
                             Property<Command> multiState = new Property(Command.class, p);
                             multiStatesBuilder.add(multiState);
                             return multiState;
-                        case PROPERTY_MULTI_COMMANDS:
-                            Property<Command> multiCommand = new Property(Command.class, p);
-                            multiCommandsBuilder.add(multiCommand);
-                            return multiCommand;
                     }
     
                     return null;
@@ -77,19 +64,16 @@ public class MultiCommand {
             }
     
             multiStates = multiStatesBuilder.toArray(new Property[0]);
-            multiCommands = multiCommandsBuilder.toArray(new Property[0]);
         }
     
         private State(Builder builder) {
             super(builder);
     
             multiStates = builder.multiStates.toArray(new Property[0]);
-            multiCommands = builder.multiCommands.toArray(new Property[0]);
         }
     
         public static final class Builder extends SetCommand.Builder {
             private List<Property> multiStates = new ArrayList<>();
-            private List<Property> multiCommands = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);
@@ -102,7 +86,7 @@ public class MultiCommand {
             /**
              * Add an array of multi states.
              * 
-             * @param multiStates The multi states. The bytes of incoming capabilities (states)
+             * @param multiStates The multi states. The incoming capabilities (states)
              * @return The builder
              */
             public Builder setMultiStates(Property<Command>[] multiStates) {
@@ -113,44 +97,16 @@ public class MultiCommand {
             
                 return this;
             }
-            
             /**
              * Add a single multi state.
              * 
-             * @param multiState The multi state. The bytes of incoming capabilities (states)
+             * @param multiState The multi state. The incoming capabilities (states)
              * @return The builder
              */
             public Builder addMultiState(Property<Command> multiState) {
                 multiState.setIdentifier(PROPERTY_MULTI_STATES);
                 addProperty(multiState);
                 multiStates.add(multiState);
-                return this;
-            }
-            
-            /**
-             * Add an array of multi commands.
-             * 
-             * @param multiCommands The multi commands. The bytes of outgoing capabilities (commands)
-             * @return The builder
-             */
-            public Builder setMultiCommands(Property<Command>[] multiCommands) {
-                this.multiCommands.clear();
-                for (int i = 0; i < multiCommands.length; i++) {
-                    addMultiCommand(multiCommands[i]);
-                }
-            
-                return this;
-            }
-            /**
-             * Add a single multi command.
-             * 
-             * @param multiCommand The multi command. The bytes of outgoing capabilities (commands)
-             * @return The builder
-             */
-            public Builder addMultiCommand(Property<Command> multiCommand) {
-                multiCommand.setIdentifier(PROPERTY_MULTI_COMMANDS);
-                addProperty(multiCommand);
-                multiCommands.add(multiCommand);
                 return this;
             }
         }
@@ -172,7 +128,7 @@ public class MultiCommand {
         /**
          * Multi command command
          *
-         * @param multiCommands The bytes of outgoing capabilities (commands)
+         * @param multiCommands The outgoing capabilities (commands)
          */
         public MultiCommandCommand(Command[] multiCommands) {
             super(IDENTIFIER);
