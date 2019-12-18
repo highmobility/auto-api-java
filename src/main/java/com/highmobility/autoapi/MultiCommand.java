@@ -39,7 +39,7 @@ public class MultiCommand {
         Property<Command>[] multiStates;
     
         /**
-         * @return The incoming capabilities (states)
+         * @return The incoming states
          */
         public Property<Command>[] getMultiStates() {
             return multiStates;
@@ -86,7 +86,7 @@ public class MultiCommand {
             /**
              * Add an array of multi states.
              * 
-             * @param multiStates The multi states. The incoming capabilities (states)
+             * @param multiStates The multi states. The incoming states
              * @return The builder
              */
             public Builder setMultiStates(Property<Command>[] multiStates) {
@@ -100,7 +100,7 @@ public class MultiCommand {
             /**
              * Add a single multi state.
              * 
-             * @param multiState The multi state. The incoming capabilities (states)
+             * @param multiState The multi state. The incoming states
              * @return The builder
              */
             public Builder addMultiState(Property<Command> multiState) {
@@ -128,7 +128,7 @@ public class MultiCommand {
         /**
          * Multi command command
          *
-         * @param multiCommands The outgoing capabilities (commands)
+         * @param multiCommands The outgoing commands
          */
         public MultiCommandCommand(Command[] multiCommands) {
             super(IDENTIFIER);
