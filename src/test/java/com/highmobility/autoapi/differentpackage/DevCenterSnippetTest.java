@@ -1,9 +1,22 @@
-package com.highmobility.autoapi;
+package com.highmobility.autoapi.differentpackage;
 
+import com.highmobility.autoapi.Capabilities;
+import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandResolver;
+import com.highmobility.autoapi.Doors;
+import com.highmobility.autoapi.FailureMessage;
+import com.highmobility.autoapi.Fueling;
+import com.highmobility.autoapi.HonkHornFlashLights;
+import com.highmobility.autoapi.Identifier;
+import com.highmobility.autoapi.Trunk;
+import com.highmobility.autoapi.Type;
+import com.highmobility.autoapi.VehicleLocation;
+import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Location;
 import com.highmobility.autoapi.value.Lock;
 import com.highmobility.autoapi.value.LockState;
+import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.value.SupportedCapability;
 import com.highmobility.value.Bytes;
 
@@ -42,10 +55,9 @@ public class DevCenterSnippetTest {
     // auto-api tutorial
 
     void getCommands() {
-        new GetVehicleStatus();
-        new GetCapabilities();
-        new GetVehicleLocation();
-        new LockUnlockDoors(LockState.UNLOCKED);
+        new VehicleStatus.GetVehicleStatus();
+        new Capabilities.GetCapabilities();
+        new VehicleLocation.GetVehicleLocation();
     }
 
     void vehicleStatus() {
@@ -53,22 +65,22 @@ public class DevCenterSnippetTest {
 
         Command command = CommandResolver.resolve(bytes);
 
-        if (command instanceof VehicleStatusState) {
-            VehicleStatusState vehicleStatus = (VehicleStatusState) command;
+        if (command instanceof VehicleStatus.State) {
+            VehicleStatus.State vehicleStatus = (VehicleStatus.State) command;
             // Now you can inspect the Vehicle Status testState, for example
 
             // Get the VIN number
             vehicleStatus.getVin().getValue();
 
             // Check the power train type
-            if (vehicleStatus.getPowertrain().getValue() == VehicleStatusState.Powertrain.ALL_ELECTRIC) {
+            if (vehicleStatus.getPowertrain().getValue() == VehicleStatus.Powertrain.ALL_ELECTRIC) {
                 // vehicle has all electric power train
             }
 
             // Check the trunk state, if exists
             Command subState = vehicleStatus.getState(Identifier.TRUNK).getValue();
             if (subState != null) {
-                TrunkState trunkState = (TrunkState) subState;
+                Trunk.State trunkState = (Trunk.State) subState;
                 if (trunkState.getLock().getValue() == LockState.UNLOCKED) {
                     // Trunk is unlocked
                 }
@@ -80,18 +92,18 @@ public class DevCenterSnippetTest {
         // tabs/resources/documentation/mobile-sdks/android/auto-api.html
         Command command = CommandResolver.resolve(bytes);
 
-        if (command instanceof CapabilitiesState) {
-            CapabilitiesState capabilities = (CapabilitiesState) command;
+        if (command instanceof Capabilities.State) {
+            Capabilities.State capabilities = (Capabilities.State) command;
             // you can now inspect which capabilities are supported, for example:
 
-            if (capabilities.getSupported(LockUnlockDoors.IDENTIFIER,
-                    LockUnlockDoors.IDENTIFIER_INSIDE_LOCKS_STATE)) {
+            if (capabilities.getSupported(Doors.IDENTIFIER,
+                    Doors.PROPERTY_LOCKS_STATE)) {
                 // Vehicle supports the doors inside locks property. You can query/set the inside
                 // locks state with LockUnlockDoors.
             }
 
-            if (capabilities.getSupported(ControlTrunk.IDENTIFIER,
-                    ControlTrunk.IDENTIFIER_LOCK)) {
+            if (capabilities.getSupported(Trunk.IDENTIFIER,
+                    Trunk.PROPERTY_LOCK)) {
                 // Vehicle supports the trunk position property. You can query/set the trunk
                 // position with the ControlTrunk command.
             }
@@ -102,8 +114,8 @@ public class DevCenterSnippetTest {
         // tabs/resources/documentation/mobile-sdks/android/auto-api.html
         Command command = CommandResolver.resolve(bytes);
 
-        if (command instanceof VehicleLocationState) {
-            VehicleLocationState location = (VehicleLocationState) command;
+        if (command instanceof VehicleLocation.State) {
+            VehicleLocation.State location = (VehicleLocation.State) command;
             // vehicle location testState can now be accessed:
 
             // coordinates
@@ -120,8 +132,8 @@ public class DevCenterSnippetTest {
 
         Command command = CommandResolver.resolve(bytes);
 
-        if (command instanceof DoorsState) {
-            DoorsState state = (DoorsState) command;
+        if (command instanceof Doors.State) {
+            Doors.State state = (Doors.State) command;
             // vehicle lock state testState can now be accessed:
 
             // lock state for a specific door
@@ -153,13 +165,12 @@ public class DevCenterSnippetTest {
         // tabs/resources/documentation/mobile-sdks/android/auto-api.html
         Command command = CommandResolver.resolve(bytes);
 
-        if (command instanceof FailureMessageState) {
-            FailureMessageState failure = (FailureMessageState) command;
-
+        if (command instanceof FailureMessage.State) {
+            FailureMessage.State failure = (FailureMessage.State) command;
             if (failure.getFailedMessageID().getValue() == Identifier.VEHICLE_STATUS &&
                     failure.getFailedMessageType().getValue() == Type.GET) {
                 // The Get Vehicle Status command failed.
-                if (failure.getFailureReason().getValue() == FailureMessageState.FailureReason.UNAUTHORISED) {
+                if (failure.getFailureReason().getValue() == FailureMessage.FailureReason.UNAUTHORISED) {
                     // The command failed because the vehicle is not authorized. Try to connect
                     // to vehicle again
                 }
@@ -180,35 +191,43 @@ public class DevCenterSnippetTest {
                 LockState.UNLOCKED
         );
 
-        DoorsState hmLockState = new DoorsState.Builder()
+        Doors.State hmLockState = new Doors.State.Builder()
                 .addLock(new Property(frontLeftState))
                 .addLock(new Property(frontRightState))
                 .build();
     }
 
-    // BleCommandQueue in sandBoxUi
-
+    // CommandQueuetest and README
     void bleCommandQueue() {
-        Command command = new LockUnlockDoors(LockState.LOCKED);
-        Command response = new DoorsState.Builder().addInsideLock(new Property(new Lock
+// readme
+        new VehicleStatus.GetVehicleStatus();
+        Class cls = VehicleStatus.State.class;
+        // send OpenGasFlap and only wait for the ack, not the GasFlapState response.
+        new Fueling.ControlGasFlap(LockState.LOCKED, Position.CLOSED);
+        // send HonkAndFlash straight after the OpenGasFlap ack.
+        new HonkHornFlashLights.HonkFlash(3, 3);
+
+// test
+        Command command = new Doors.LockUnlockDoors(LockState.LOCKED);
+        Command response = new Doors.State.Builder().addInsideLock(new Property(new Lock
                 (Location.FRONT_LEFT, LockState.LOCKED))).build();
 
-        Integer id = DoorsState.IDENTIFIER;
+        Integer id = Doors.IDENTIFIER;
         Integer type = Type.SET;
 
         // error ctor
 
-        FailureMessageState firstResponse =
-                new FailureMessageState.Builder()
+        FailureMessage.State firstResponse =
+                new FailureMessage.State.Builder()
                         .setFailedMessageType(new Property(Type.SET))
-                        .setFailedMessageID(new Property(LockUnlockDoors.IDENTIFIER))
-                        .setFailedPropertyIDs(new Property(new Bytes(new byte[]{LockUnlockDoors.IDENTIFIER_INSIDE_LOCKS_STATE})))
-                        .setFailureReason(new Property(FailureMessageState.FailureReason.UNSUPPORTED_CAPABILITY)).build();
+                        .setFailedMessageID(new Property(Doors.IDENTIFIER))
+                        .setFailedPropertyIDs(new Property(new Bytes(new byte[]{Doors.PROPERTY_LOCKS_STATE})))
+                        .setFailureReason(new Property(FailureMessage.FailureReason.UNSUPPORTED_CAPABILITY)).build();
 
-        SupportedCapability capability = new SupportedCapability(LockUnlockDoors.IDENTIFIER,
-                new Bytes(new byte[]{LockUnlockDoors.IDENTIFIER_INSIDE_LOCKS_STATE}));
+        SupportedCapability capability = new SupportedCapability(Doors.IDENTIFIER,
+                new Bytes(new byte[]{Doors.PROPERTY_LOCKS_STATE}));
 
-        CapabilitiesState capas = new CapabilitiesState.Builder().addCapability(new
+        Capabilities.State capas = new Capabilities.State.Builder().addCapability(new
                 Property(capability)).build();
     }
 }

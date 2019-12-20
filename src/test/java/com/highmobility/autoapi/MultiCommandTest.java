@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MultiCommandTest extends BaseTest {
     Bytes commandBytes = new Bytes(
             COMMAND_HEADER + "001301" +
-                    "02000E01000B" + COMMAND_HEADER + "00200105000401000101" +
+                    "02000E01000B" + COMMAND_HEADER + "00200106000401000101" +
                     "02000E01000B" + COMMAND_HEADER + "00460101000401000101");
 
     Bytes stateBytes = new Bytes(
@@ -47,7 +47,7 @@ public class MultiCommandTest extends BaseTest {
         int testCount = 0;
         for (Property<Command> multiCommand : state.getMultiCommands()) {
             if (multiCommand.getValue() instanceof Doors.LockUnlockDoors) {
-                assertTrue(((Doors.LockUnlockDoors) multiCommand.getValue()).getInsideLocksState().getValue() == LockState.LOCKED);
+                assertTrue(((Doors.LockUnlockDoors) multiCommand.getValue()).getLocksState().getValue() == LockState.LOCKED);
                 testCount++;
             }
 

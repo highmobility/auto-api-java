@@ -60,9 +60,9 @@ public class Command extends Bytes {
     static final int HEADER_LENGTH = 1;
     static final int COMMAND_TYPE_POSITION = HEADER_LENGTH + 2;
 
-    Integer type;
-    Integer identifier;
-    Integer autoApiVersion;
+    int type;
+    int identifier;
+    int autoApiVersion;
 
     Property[] properties;
     Bytes nonce;
@@ -83,21 +83,21 @@ public class Command extends Bytes {
         super();
     }
 
-    public Integer getAutoApiVersion() {
+    public int getAutoApiVersion() {
         return autoApiVersion;
     }
 
     /**
      * @return The identifier of the command.
      */
-    public Integer getIdentifier() {
+    public int getIdentifier() {
         return identifier;
     }
 
     /**
      * @return The type of the command.
      */
-    public Integer getType() {
+    public int getType() {
         return type;
     }
 
