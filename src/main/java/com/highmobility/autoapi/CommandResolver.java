@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
 
 import com.highmobility.utils.Base64;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 import static com.highmobility.autoapi.Identifier.*;
+
 public class CommandResolver {
     private static final int GET_STATE_LENGTH = Command.HEADER_LENGTH + 3;
     /**
