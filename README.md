@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-  implementation('com.highmobility:hmkit-auto-api:1.10.0')
+  implementation('com.highmobility:hmkit-auto-api:3.0.0')
 }
 ```
 
@@ -90,7 +90,7 @@ if (command instanceof Failure) {
 
 ### Builders for bigger commands(states)
 
-Builder pattern is used to build commands with more properties, for instance Vehicle status:
+Builder pattern is used to build commands with more properties, for example Vehicle status:
 
 ```java
 // create the builder
@@ -137,9 +137,9 @@ builder.setSignature(sig);
 Bytes command = builder.build();
 ```
 
-
 ### Adding a new Capability
-* Add the Type in Identifier.java
-* If there is a getState and State, Add the type in to Type.java's stateCommands.  
-* Create Get/State commands. Copy these from previous ones like GetGasflapState and GasflapState
+
+* Add the Identifier in Identifier.java
+* Follow, for instance, Fueling.java to add the capability-s skeleton commands.   
 * Create the tests. Copy this from previous FuelingTest.
+* Implement the new Capability commands.
