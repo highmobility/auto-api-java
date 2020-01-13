@@ -8,7 +8,7 @@ buildscript {
     }
 }
 
-apply plugin: "java"
+apply plugin: "java-library"
 apply plugin: "maven"
 apply plugin: "com.jfrog.artifactory"
 apply plugin: 'com.jfrog.bintray'
@@ -23,18 +23,26 @@ artifact.load(new FileInputStream("$projectDir/deploy.settings"))
 group = artifact.groupId
 version = artifact.version
 
-sourceCompatibility = 1.8
+// these are not release numbers. release numbers are in deploy.settings files.
+ext.ver = [
+        utils: "1.4.4"
+]
+
+ext.deps = [
+        "utils"   : "com.highmobility:hmkit-utils:${ver.utils}",
+        "findBugs": 'com.google.code.findbugs:jsr305:3.0.2'
+]
 
 dependencies {
     if (project.hasProperty('releaseType') == true && project.releaseType == 0) {
         implementation project(':hmkit-utils')
     } else {
-        implementation 'com.highmobility:hmkit-utils:1.4.4'
+        api deps.utils
     }
 
     implementation 'org.slf4j:slf4j-api:1.7.25'
 
-    implementation('com.google.code.findbugs:jsr305:3.0.2') // for @Nullable
+    implementation deps.findBugs // for @Nullable
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
     testImplementation 'org.slf4j:slf4j-simple:1.7.25'
