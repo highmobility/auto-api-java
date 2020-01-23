@@ -1,5 +1,5 @@
-siteUrl = https://github.com/highmobility/hm-java-auto-api
-gitUrl = https://github.com/highmobility/hm-java-auto-api
+siteUrl = https://github.com/highmobility/auto-api-java
+gitUrl = https://github.com/highmobility/auto-api-java
 version = 2.10.2
 groupId = com.highmobility
 licenses = ['GPL-3.0']
