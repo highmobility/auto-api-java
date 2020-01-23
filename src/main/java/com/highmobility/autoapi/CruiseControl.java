@@ -1,0 +1,231 @@
+/*
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.highmobility.autoapi;
+
+import com.highmobility.autoapi.capability.DisabledIn;
+import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.value.Bytes;
+import javax.annotation.Nullable;
+
+/**
+ * The Cruise Control capability
+ */
+public class CruiseControl {
+    public static final int IDENTIFIER = Identifier.CRUISE_CONTROL;
+
+    public static final byte PROPERTY_CRUISE_CONTROL = 0x01;
+    public static final byte PROPERTY_LIMITER = 0x02;
+    public static final byte PROPERTY_TARGET_SPEED = 0x03;
+    public static final byte PROPERTY_ADAPTIVE_CRUISE_CONTROL = 0x04;
+    public static final byte PROPERTY_ACC_TARGET_SPEED = 0x05;
+
+    public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.WEB };
+
+    /**
+     * Get all cruise control properties
+     */
+    public static class GetState extends GetCommand {
+        public GetState() {
+            super(IDENTIFIER);
+        }
+    
+        GetState(byte[] bytes) throws CommandParseException {
+            super(bytes);
+        }
+    }
+    
+    /**
+     * Get specific cruise control properties
+     */
+    public static class GetProperties extends GetCommand {
+        Bytes propertyIdentifiers;
+    
+        /**
+         * @return The property identifiers.
+         */
+        public Bytes getPropertyIdentifiers() {
+            return propertyIdentifiers;
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetProperties(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers.getByteArray());
+            this.propertyIdentifiers = propertyIdentifiers;
+        }
+    
+        GetProperties(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            propertyIdentifiers = getRange(COMMAND_TYPE_POSITION + 1, getLength());
+        }
+    }
+
+    /**
+     * The cruise control state
+     */
+    public static class State extends SetCommand {
+        Property<ActiveState> cruiseControl = new Property(ActiveState.class, PROPERTY_CRUISE_CONTROL);
+        Property<Limiter> limiter = new Property(Limiter.class, PROPERTY_LIMITER);
+        PropertyInteger targetSpeed = new PropertyInteger(PROPERTY_TARGET_SPEED, true);
+        Property<ActiveState> adaptiveCruiseControl = new Property(ActiveState.class, PROPERTY_ADAPTIVE_CRUISE_CONTROL);
+        PropertyInteger accTargetSpeed = new PropertyInteger(PROPERTY_ACC_TARGET_SPEED, true);
+    
+        /**
+         * @return The cruise control
+         */
+        public Property<ActiveState> getCruiseControl() {
+            return cruiseControl;
+        }
+    
+        /**
+         * @return The limiter
+         */
+        public Property<Limiter> getLimiter() {
+            return limiter;
+        }
+    
+        /**
+         * @return The target speed in km/h
+         */
+        public PropertyInteger getTargetSpeed() {
+            return targetSpeed;
+        }
+    
+        /**
+         * @return The adaptive cruise control
+         */
+        public Property<ActiveState> getAdaptiveCruiseControl() {
+            return adaptiveCruiseControl;
+        }
+    
+        /**
+         * @return The target speed in km/h of the Adaptive Cruise Control
+         */
+        public PropertyInteger getAccTargetSpeed() {
+            return accTargetSpeed;
+        }
+    
+        State(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_CRUISE_CONTROL: return cruiseControl.update(p);
+                        case PROPERTY_LIMITER: return limiter.update(p);
+                        case PROPERTY_TARGET_SPEED: return targetSpeed.update(p);
+                        case PROPERTY_ADAPTIVE_CRUISE_CONTROL: return adaptiveCruiseControl.update(p);
+                        case PROPERTY_ACC_TARGET_SPEED: return accTargetSpeed.update(p);
+                    }
+    
+                    return null;
+                });
+            }
+        }
+    }
+
+    /**
+     * Activate deactivate cruise control
+     */
+    public static class ActivateDeactivateCruiseControl extends SetCommand {
+        Property<ActiveState> cruiseControl = new Property(ActiveState.class, PROPERTY_CRUISE_CONTROL);
+        PropertyInteger targetSpeed = new PropertyInteger(PROPERTY_TARGET_SPEED, true);
+    
+        /**
+         * @return The cruise control
+         */
+        public Property<ActiveState> getCruiseControl() {
+            return cruiseControl;
+        }
+        
+        /**
+         * @return The target speed
+         */
+        public PropertyInteger getTargetSpeed() {
+            return targetSpeed;
+        }
+        
+        /**
+         * Activate deactivate cruise control
+         *
+         * @param cruiseControl The cruise control
+         * @param targetSpeed The target speed in km/h
+         */
+        public ActivateDeactivateCruiseControl(ActiveState cruiseControl, @Nullable Integer targetSpeed) {
+            super(IDENTIFIER);
+        
+            addProperty(this.cruiseControl.update(cruiseControl));
+            addProperty(this.targetSpeed.update(true, 2, targetSpeed));
+            createBytes();
+        }
+    
+        ActivateDeactivateCruiseControl(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_CRUISE_CONTROL: return cruiseControl.update(p);
+                        case PROPERTY_TARGET_SPEED: return targetSpeed.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.cruiseControl.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    public enum Limiter implements ByteEnum {
+        NOT_SET((byte) 0x00),
+        HIGHER_SPEED_REQUESTED((byte) 0x01),
+        LOWER_SPEED_REQUESTED((byte) 0x02),
+        SPEED_FIXED((byte) 0x03);
+    
+        public static Limiter fromByte(byte byteValue) throws CommandParseException {
+            Limiter[] values = Limiter.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                Limiter state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        Limiter(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+}

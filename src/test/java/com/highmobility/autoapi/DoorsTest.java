@@ -1,0 +1,122 @@
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.highmobility.autoapi;
+
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.DoorPosition;
+import com.highmobility.autoapi.value.Location;
+import com.highmobility.autoapi.value.Lock;
+import com.highmobility.autoapi.value.LockState;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.value.Bytes;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class DoorsTest extends BaseTest {
+    Bytes bytes = new Bytes(
+            COMMAND_HEADER + "002001" +
+                    "0200050100020000" +
+                    "0200050100020100" +
+                    "0300050100020001" +
+                    "0300050100020101" +
+                    "0400050100020001" +
+                    "0400050100020100" +
+                    "0400050100020200" +
+                    "0400050100020300" +
+                    "06000401000101"
+    );
+
+    @Test
+    public void state() {
+        Command command = CommandResolver.resolve(bytes);
+        assertTrue(command instanceof Doors.State);
+        testState((Doors.State) command);
+    }
+
+    @Test public void build() {
+        Doors.State.Builder builder = new Doors.State.Builder();
+
+        builder.addInsideLock(new Property(new Lock(Location.FRONT_LEFT, LockState.UNLOCKED)));
+        builder.addInsideLock(new Property(new Lock(Location.FRONT_RIGHT, LockState.UNLOCKED)));
+        builder.addLock(new Property(new Lock(Location.FRONT_LEFT, LockState.LOCKED)));
+        builder.addLock(new Property(new Lock(Location.FRONT_RIGHT, LockState.LOCKED)));
+        builder.addPosition(new Property(new DoorPosition(DoorPosition.Location.FRONT_LEFT,
+                Position.OPEN)));
+        builder.addPosition(new Property(new DoorPosition(DoorPosition.Location.FRONT_RIGHT,
+                Position.CLOSED)));
+        builder.addPosition(new Property(new DoorPosition(DoorPosition.Location.REAR_RIGHT,
+                Position.CLOSED)));
+        builder.addPosition(new Property(new DoorPosition(DoorPosition.Location.REAR_LEFT,
+                Position.CLOSED)));
+        builder.setLocksState(new Property(LockState.LOCKED));
+
+        Doors.State state = builder.build();
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
+        testState(state);
+    }
+
+    void testState(Doors.State state) {
+        assertTrue(state.getPositions().length == 4);
+        assertTrue(state.getLocks().length == 2);
+        assertTrue(state.getInsideLocks().length == 2);
+
+        assertTrue(state.getInsideLock(Location.FRONT_LEFT).getValue().getLockState() == LockState.UNLOCKED);
+        assertTrue(state.getInsideLock(Location.FRONT_RIGHT).getValue().getLockState() == LockState.UNLOCKED);
+
+        assertTrue(state.getLock(Location.FRONT_LEFT).getValue().getLockState() == LockState.LOCKED);
+        assertTrue(state.getLock(Location.FRONT_RIGHT).getValue().getLockState() == LockState.LOCKED);
+        assertTrue(state.getLocksState().getValue() == LockState.LOCKED);
+
+        assertTrue(state.getPosition(DoorPosition.Location.FRONT_LEFT).getValue().getPosition() == Position.OPEN);
+        assertTrue(state.getPosition(DoorPosition.Location.FRONT_RIGHT).getValue().getPosition() == Position.CLOSED);
+        assertTrue(state.getPosition(DoorPosition.Location.REAR_RIGHT).getValue().getPosition() == Position.CLOSED);
+        assertTrue(state.getPosition(DoorPosition.Location.REAR_LEFT).getValue().getPosition() == Position.CLOSED);
+
+        assertTrue(TestUtils.bytesTheSame(state, bytes));
+    }
+
+    @Test public void get() {
+        Bytes bytes = new Bytes(COMMAND_HEADER + "002000");
+        Bytes commandBytes = new Doors.GetState();
+        assertTrue(bytes.equals(commandBytes));
+
+        Command command = CommandResolver.resolve(bytes);
+        assertTrue(command instanceof Doors.GetState);
+    }
+
+    @Test public void lock() {
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002001" +
+                "06000401000101");
+        Command commandBytes = new Doors.LockUnlockDoors(LockState.LOCKED);
+        assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
+
+        setRuntime(CommandResolver.RunTime.JAVA);
+        Command command = CommandResolver.resolve(waitingForBytes);
+        assertTrue(command instanceof Doors.LockUnlockDoors);
+        Doors.LockUnlockDoors state = (Doors.LockUnlockDoors) command;
+        assertTrue(state.getLocksState().getValue() == LockState.LOCKED);
+    }
+}

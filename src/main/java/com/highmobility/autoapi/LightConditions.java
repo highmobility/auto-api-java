@@ -1,110 +1,153 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.value.Bytes;
 
 /**
- * This command is sent when a Get Light Conditions is received by the car.
+ * The Light Conditions capability
  */
-public class LightConditions extends Command {
-    public static final Type TYPE = new Type(Identifier.LIGHT_CONDITIONS, 0x01);
-    private static final byte IDENTIFIER_OUTSIDE_LIGHT = 0x01;
-    private static final byte IDENTIFIER_INSIDE_LIGHT = 0x02;
-    Property<Float> outsideLight = new Property(Float.class, IDENTIFIER_OUTSIDE_LIGHT);
-    Property<Float> insideLight = new Property(Float.class, IDENTIFIER_INSIDE_LIGHT);
+public class LightConditions {
+    public static final int IDENTIFIER = Identifier.LIGHT_CONDITIONS;
+
+    public static final byte PROPERTY_OUTSIDE_LIGHT = 0x01;
+    public static final byte PROPERTY_INSIDE_LIGHT = 0x02;
 
     /**
-     * @return The measured outside illuminance in lux.
+     * Get light conditions
      */
-    public Property<Float> getOutsideLight() {
-        return outsideLight;
+    public static class GetLightConditions extends GetCommand {
+        public GetLightConditions() {
+            super(IDENTIFIER);
+        }
+    
+        GetLightConditions(byte[] bytes) throws CommandParseException {
+            super(bytes);
+        }
+    }
+    
+    /**
+     * Get specific light conditions properties
+     */
+    public static class GetLightConditionsProperties extends GetCommand {
+        Bytes propertyIdentifiers;
+    
+        /**
+         * @return The property identifiers.
+         */
+        public Bytes getPropertyIdentifiers() {
+            return propertyIdentifiers;
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetLightConditionsProperties(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers.getByteArray());
+            this.propertyIdentifiers = propertyIdentifiers;
+        }
+    
+        GetLightConditionsProperties(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            propertyIdentifiers = getRange(COMMAND_TYPE_POSITION + 1, getLength());
+        }
     }
 
     /**
-     * @return The measured inside illuminance in lux.
+     * The light conditions state
      */
-    public Property<Float> getInsideLight() {
-        return insideLight;
-    }
-
-    LightConditions(byte[] bytes) {
-        super(bytes);
-
-        while (propertyIterator.hasNext()) {
-            propertyIterator.parseNext(p -> {
-                switch (p.getPropertyIdentifier()) {
-                    case IDENTIFIER_OUTSIDE_LIGHT:
-                        return outsideLight.update(p);
-                    case IDENTIFIER_INSIDE_LIGHT:
-                        return insideLight.update(p);
-                }
-
-                return null;
-            });
-        }
-    }
-
-    @Override public boolean isState() {
-        return true;
-    }
-
-    private LightConditions(Builder builder) {
-        super(builder);
-        insideLight = builder.insideLight;
-        outsideLight = builder.outsideLight;
-    }
-
-    public static final class Builder extends Command.Builder {
-        private Property<Float> outsideLight;
-        private Property<Float> insideLight;
-
-        public Builder() {
-            super(TYPE);
-        }
-
+    public static class State extends SetCommand {
+        Property<Float> outsideLight = new Property(Float.class, PROPERTY_OUTSIDE_LIGHT);
+        Property<Float> insideLight = new Property(Float.class, PROPERTY_INSIDE_LIGHT);
+    
         /**
-         * @param outsideLight The measured outside illuminance in lux.
-         * @return The builder.
+         * @return Measured outside illuminance in lux
          */
-        public Builder setOutsideLight(Property<Float> outsideLight) {
-            this.outsideLight = outsideLight;
-            outsideLight.setIdentifier(IDENTIFIER_OUTSIDE_LIGHT);
-            addProperty(outsideLight);
-            return this;
+        public Property<Float> getOutsideLight() {
+            return outsideLight;
         }
-
+    
         /**
-         * @param insideLight The measured inside illuminance in lux.
-         * @return The builder.
+         * @return Measured inside illuminance in lux
          */
-        public Builder setInsideLight(Property<Float> insideLight) {
-            this.insideLight = insideLight;
-            insideLight.setIdentifier(IDENTIFIER_INSIDE_LIGHT);
-            addProperty(insideLight);
-            return this;
+        public Property<Float> getInsideLight() {
+            return insideLight;
         }
-
-        public LightConditions build() {
-            return new LightConditions(this);
+    
+        State(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_OUTSIDE_LIGHT: return outsideLight.update(p);
+                        case PROPERTY_INSIDE_LIGHT: return insideLight.update(p);
+                    }
+    
+                    return null;
+                });
+            }
+        }
+    
+        private State(Builder builder) {
+            super(builder);
+    
+            outsideLight = builder.outsideLight;
+            insideLight = builder.insideLight;
+        }
+    
+        public static final class Builder extends SetCommand.Builder {
+            private Property<Float> outsideLight;
+            private Property<Float> insideLight;
+    
+            public Builder() {
+                super(IDENTIFIER);
+            }
+    
+            public State build() {
+                return new State(this);
+            }
+    
+            /**
+             * @param outsideLight Measured outside illuminance in lux
+             * @return The builder
+             */
+            public Builder setOutsideLight(Property<Float> outsideLight) {
+                this.outsideLight = outsideLight.setIdentifier(PROPERTY_OUTSIDE_LIGHT);
+                addProperty(this.outsideLight);
+                return this;
+            }
+            
+            /**
+             * @param insideLight Measured inside illuminance in lux
+             * @return The builder
+             */
+            public Builder setInsideLight(Property<Float> insideLight) {
+                this.insideLight = insideLight.setIdentifier(PROPERTY_INSIDE_LIGHT);
+                addProperty(this.insideLight);
+                return this;
+            }
         }
     }
 }

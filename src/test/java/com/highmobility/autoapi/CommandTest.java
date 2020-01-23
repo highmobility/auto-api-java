@@ -1,8 +1,31 @@
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.DashboardLight;
-import com.highmobility.autoapitest.TestUtils;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -13,7 +36,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /*
  * Timestamp + failure properties:
@@ -24,20 +46,20 @@ import static org.junit.jupiter.api.Assertions.fail;
  * For multiple properties with same identifier, timestamps only added if additional data same.
  * For single property for an identifier, can add without checking additional data.
  */
-public class CommandTest {
-    String parkingBrakeCommand = "00580101000401000101";
+public class CommandTest extends BaseTest {
+    String parkingBrakeCommand = COMMAND_HEADER + "00580101000401000101";
 
     // MARK: Timestamp
 
     @Test public void universalTimestamp() throws ParseException {
         Bytes bytes = new Bytes(parkingBrakeCommand + "A2000B01000800000160E0EA1388");
         String expectedDate = "2018-01-10T16:32:05";
-        ParkingBrakeState command = (ParkingBrakeState) CommandResolver.resolve(bytes);
+        ParkingBrake.State command = (ParkingBrake.State) CommandResolver.resolve(bytes);
         assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
 
         Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
-        ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
-        builder.setIsActive(new Property(true));
+        ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
+        builder.setStatus(new Property(ActiveState.ACTIVE));
         builder.setTimestamp(calendar);
         command = builder.build();
         assertTrue(command.equals(bytes));
@@ -50,21 +72,23 @@ public class CommandTest {
         TestUtils.errorLogExpected(() -> {
             // test that invalid gasflapstate just sets the property to null and keeps the base
             // property
-            Bytes bytes = new Bytes("00400102000401000103"); // 3 is invalid gasflap lock state
-            GasFlapState state = (GasFlapState) CommandResolver.resolve(bytes);
 
-            assertTrue(state.getLock().getValue() == null);
+            Bytes bytes = new Bytes(COMMAND_HEADER + "00400102000401000103"); // 3 is invalid
+            // gasflap lock state
+            Fueling.State state = (Fueling.State) CommandResolver.resolve(bytes);
+
+            assertTrue(state.getGasFlapLock().getValue() == null);
             assertTrue(state.getProperty((byte) 0x02) != null);
         });
     }
 
     @Test public void basePropertiesArrayObjectReplaced() {
-        Bytes bytes = new Bytes("006101" +
+        Bytes bytes = new Bytes(COMMAND_HEADER + "006101" +
                 "0100050100020000" +
                 "0100050100020201" +
                 "0100050100020F03" +
                 "0100050100021500");
-        Command command = (Command) CommandResolver.resolve(bytes);
+        Command command = CommandResolver.resolve(bytes);
 
         boolean found = false;
         for (Property property : command.getProperties()) {
@@ -73,6 +97,7 @@ public class CommandTest {
                     found = true;
                 }
             }
+
             break;
         }
 
@@ -91,12 +116,12 @@ public class CommandTest {
         assertTrue(command.getSignature().equals
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
 
-        ParkingBrakeState.Builder builder = new ParkingBrakeState.Builder();
-        builder.setIsActive(new Property(true));
+        ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
+        builder.setStatus(new Property(ActiveState.ACTIVE));
         builder.setNonce(new Bytes("324244433743483436"));
         builder.setSignature(new Bytes
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
-        ParkingBrakeState state = builder.build();
+        ParkingBrake.State state = builder.build();
         assertTrue(state.equals(command));
     }
 
@@ -112,35 +137,20 @@ public class CommandTest {
                 (parkingBrakeCommand +
                         "A0000C010009324244433743483436" +
                         "A100430100404D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6");
-        try {
-            Command command = CommandResolver.resolve(bytes);
-
-            if (command instanceof Command) {
-                return (Command) command;
-            }
-
-            throw new CommandParseException();
-        } catch (CommandParseException e) {
-            fail();
-            return null;
-        }
+        return CommandResolver.resolve(bytes);
     }
 
     @Test public void unknownProperty() {
         Bytes bytes = new Bytes(
-                "002501" +
+                COMMAND_HEADER + "002501" +
                         "01000B0100083FF0000000000000" +
                         "1A000401000135");
 
         Command command = CommandResolver.resolve(bytes);
+        RooftopControl.State state = (RooftopControl.State) command;
 
-        assertTrue(command.is(RooftopState.TYPE));
-
-        assertTrue(command.getClass() == RooftopState.class);
-        RooftopState state = (RooftopState) command;
-
-        assertTrue(state.getDimmingPercentage().getValue() == 1d);
-        assertTrue(state.getOpenPercentage().getValue() == null);
+        assertTrue(state.getDimming().getValue() == 1d);
+        assertTrue(state.getPosition().getValue() == null);
 
         assertTrue(state.getProperties().length == 2);
 
@@ -170,23 +180,20 @@ public class CommandTest {
         assertTrue(foundUnknownProperty == true);
     }
 
-    @Test public void parserFailsIfPropertiesExpected() {
-        TestUtils.errorLogExpected(() -> {
-            Bytes waitingForBytes = new Bytes("002317");
-            Command command = CommandResolver.resolve(waitingForBytes);
-            assertTrue(command.getClass() == Command.class);
-            assertTrue(command.getProperties().length == 0);
-        });
-    }
+    @Test public void getProperties() {
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "00470001");
+        ParkingTicket.GetParkingTicketProperties getter =
+                new ParkingTicket.GetParkingTicketProperties(new Bytes("01"));
+        assertTrue(bytesTheSame(getter, waitingForBytes));
 
-    @Test public void returnBaseClassIfRequiredPropertyDoesNotExist() {
-        // if child class didnt find a property but it expects that at least one exists, return
-        // base command
-        TestUtils.errorLogExpected(() -> {
-            Bytes expected = new Bytes("002313" + // SetChargeLimit
-                    "DD000B0100083FECCCCCCCCCCCCD"); // invalid property identifier
-            Command command = CommandResolver.resolve(expected);
-            assertTrue(command.getClass() == Command.class);
-        });
+        setRuntime(CommandResolver.RunTime.JAVA);
+        ParkingTicket.GetParkingTicketProperties resolved =
+                (ParkingTicket.GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes);
+        assertTrue(resolved.getPropertyIdentifiers().equals("01"));
+
+        ParkingTicket.GetParkingTicketProperties resolved2 =
+                (ParkingTicket.GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes.concat(new Bytes("02")));
+
+        assertTrue(resolved2.getPropertyIdentifiers().equals("0102"));
     }
 }

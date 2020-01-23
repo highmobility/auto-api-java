@@ -1,28 +1,30 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
+ * The MIT License
  *
- * This file is part of HMKit Auto API.
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
  *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.Identifier;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.value.Bytes;
 
@@ -30,6 +32,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -178,7 +181,7 @@ public class Property<T> extends Bytes {
                 switch (componentIdentifier) {
                     case 0x01:
                         // value component
-                        value = new PropertyComponentValue(componentBytes);
+                        value = new PropertyComponentValue(componentBytes, valueClass);
                         builder.add(value);
                         break;
                     case 0x02:
@@ -214,9 +217,8 @@ public class Property<T> extends Bytes {
             try {
                 this.value.setClass(valueClass);
             } catch (Exception e) {
-                Command.logger.warn("Property value in invalid format: {} > {}",
-                        p.value.valueBytes, valueClass.getSimpleName(), e);
-
+                Command.logger.warn("Invalid bytes {} for property: {}", p,
+                        valueClass.getSimpleName(), e);
             }
         }
 
@@ -241,8 +243,16 @@ public class Property<T> extends Bytes {
 
     // MARK: internal ctor
 
+    public Property(int identifier, T value) {
+        this((byte) identifier, value);
+    }
+
     public Property(byte identifier, T value) {
         update(identifier, value, null, null);
+    }
+
+    public Property(Class<T> valueClass, int identifier) {
+        this(valueClass, ((byte) identifier));
     }
 
     public Property(Class<T> valueClass, byte identifier) {
@@ -260,6 +270,21 @@ public class Property<T> extends Bytes {
 
     public Property update(T value) {
         return update(bytes[0], value, null, null);
+    }
+
+    public Property addValueComponent(Bytes valueComponentValue) {
+        try {
+            byte[] valueLength = Property.intToBytes(valueComponentValue.getLength(), 2);
+            Bytes value = new Bytes(3 + valueComponentValue.getLength());
+            value.set(0, (byte) 0x01);
+            value.set(1, valueLength);
+            value.set(3, valueComponentValue);
+            this.value = new PropertyComponentValue(value, valueClass);
+        } catch (CommandParseException e) {
+            throw new IllegalArgumentException();
+        }
+        createBytesFromComponents(getPropertyIdentifier());
+        return this;
     }
 
     private Property update(byte identifier,
@@ -313,6 +338,11 @@ public class Property<T> extends Bytes {
      */
     public Property setIdentifier(byte identifier) {
         bytes[0] = identifier;
+        return this;
+    }
+
+    public Property setIdentifier(int identifier) {
+        setIdentifier((byte) identifier);
         return this;
     }
 
@@ -454,16 +484,13 @@ public class Property<T> extends Bytes {
             IllegalArgumentException {
         if (bytes.length >= at + length) {
             if (length == 4) {
-                int result = ((0xFF & bytes[at]) << 24) | ((0xFF & bytes[at + 1]) << 16) |
+                return ((0xFF & bytes[at]) << 24) | ((0xFF & bytes[at + 1]) << 16) |
                         ((0xFF & bytes[at + 2]) << 8) | (0xFF & bytes[at + 3]);
-                return result;
             } else if (length == 3) {
-                int result = (bytes[at] & 0xff) << 16 | (bytes[at + 1] & 0xff) << 8 | (bytes[at + 2]
+                return (bytes[at] & 0xff) << 16 | (bytes[at + 1] & 0xff) << 8 | (bytes[at + 2]
                         & 0xff);
-                return result;
             } else if (length == 2) {
-                int result = ((bytes[at] & 0xff) << 8) | (bytes[at + 1] & 0xff);
-                return result;
+                return ((bytes[at] & 0xff) << 8) | (bytes[at + 1] & 0xff);
             } else if (length == 1) {
                 return bytes[at] & 0xFF;
             }
@@ -473,20 +500,24 @@ public class Property<T> extends Bytes {
     }
 
     public static int getSignedInt(byte value) {
-        return (int) value;
+        return value;
     }
 
-    public static int getSignedInt(Bytes bytes) throws IllegalArgumentException {
+    public static int getSignedInt(Bytes bytes) {
         return getSignedInt(bytes.getByteArray());
     }
 
-    public static int getSignedInt(byte[] bytes) throws IllegalArgumentException {
+    public static int getSignedInt(byte[] bytes) {
         if (bytes.length == 1) return getSignedInt(bytes[0]);
         else if (bytes.length >= 2) {
-            int result = bytes[0] << 8 | bytes[1];
-            return result;
+            return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getShort();
         }
 
+        throw new IllegalArgumentException();
+    }
+
+    public static int getSignedInt(byte[] bytes, int at, int length) {
+        if (bytes.length >= 2) return bytes[at] << 8 | bytes[at + 1];
         throw new IllegalArgumentException();
     }
 
@@ -635,13 +666,5 @@ public class Property<T> extends Bytes {
         }
 
         return result;
-    }
-
-    public static Identifier getIdentifier(Bytes valueBytes) {
-        return Identifier.fromBytes(valueBytes.getByteArray());
-    }
-
-    public static Bytes identifierToBytes(Identifier value) {
-        return new Bytes(value.getBytes());
     }
 }

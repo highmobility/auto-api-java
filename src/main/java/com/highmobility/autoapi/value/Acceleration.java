@@ -1,104 +1,127 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
 public class Acceleration extends PropertyValueObject {
+    public static final int SIZE = 5;
 
-    AccelerationType accelerationType;
-    float acceleration;
+    Direction direction;
+    Float gForce;
 
     /**
-     * @return The acceleration type
+     * @return The direction.
      */
-    public AccelerationType getAccelerationType() {
-        return accelerationType;
+    public Direction getDirection() {
+        return direction;
     }
 
     /**
-     * @return The acceleration in g-force
+     * @return The accelaration in g-force.
      */
-    public float getAcceleration() {
-        return acceleration;
+    public Float getGForce() {
+        return gForce;
     }
 
-    public Acceleration(AccelerationType type, float acceleration) {
-        super(2);
-        update(type, acceleration);
+    public Acceleration(Direction direction, Float gForce) {
+        super(5);
+        update(direction, gForce);
+    }
+
+    public Acceleration(Property property) throws CommandParseException {
+        super();
+        if (property.getValueComponent() == null) throw new CommandParseException();
+        update(property.getValueComponent().getValueBytes());
     }
 
     public Acceleration() {
         super();
     } // needed for generic ctor
 
-    @Override public void update(Bytes bytes) throws CommandParseException {
-        super.update(bytes);
-        if (getLength() < 5) throw new CommandParseException();
-        accelerationType = AccelerationType.fromByte(get(0));
-        acceleration = Property.getFloat(this, 1);
+    @Override public void update(Bytes value) throws CommandParseException {
+        super.update(value);
+        if (bytes.length < 5) throw new CommandParseException();
+
+        int bytePosition = 0;
+        direction = Direction.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        gForce = Property.getFloat(bytes, bytePosition);
     }
 
-    public void update(AccelerationType type, float acceleration) {
-        this.accelerationType = type;
-        this.acceleration = acceleration;
-        bytes = new byte[5];
+    public void update(Direction direction, Float gForce) {
+        this.direction = direction;
+        this.gForce = gForce;
 
-        set(0, accelerationType.getByte());
-        set(1, Property.floatToBytes(acceleration));
+        bytes = new byte[getLength()];
+
+        int bytePosition = 0;
+        set(bytePosition, direction.getByte());
+        bytePosition += 1;
+
+        set(bytePosition, Property.floatToBytes(gForce));
     }
 
     public void update(Acceleration value) {
-        update(value.accelerationType, value.acceleration);
+        update(value.direction, value.gForce);
     }
 
-    public enum AccelerationType {
+    @Override public int getLength() {
+        return 1 + 4;
+    }
+
+    public enum Direction implements ByteEnum {
         LONGITUDINAL((byte) 0x00),
         LATERAL((byte) 0x01),
         FRONT_LATERAL((byte) 0x02),
         REAR_LATERAL((byte) 0x03);
-
-        static AccelerationType fromByte(byte byteValue) throws CommandParseException {
-            AccelerationType[] values = AccelerationType.values();
-
+    
+        public static Direction fromByte(byte byteValue) throws CommandParseException {
+            Direction[] values = Direction.values();
+    
             for (int i = 0; i < values.length; i++) {
-                AccelerationType state = values[i];
+                Direction state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
             }
-
+    
             throw new CommandParseException();
         }
-
+    
         private byte value;
-
-        AccelerationType(byte value) {
+    
+        Direction(byte value) {
             this.value = value;
         }
-
-        public byte getByte() {
+    
+        @Override public byte getByte() {
             return value;
         }
     }

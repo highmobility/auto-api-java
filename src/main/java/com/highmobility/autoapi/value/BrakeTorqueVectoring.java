@@ -1,23 +1,26 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
@@ -26,8 +29,10 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
 public class BrakeTorqueVectoring extends PropertyValueObject {
+    public static final int SIZE = 2;
+
     Axle axle;
-    boolean active;
+    ActiveState activeState;
 
     /**
      * @return The axle.
@@ -37,15 +42,21 @@ public class BrakeTorqueVectoring extends PropertyValueObject {
     }
 
     /**
-     * @return Whether brake torque vectoring is active or not.
+     * @return The active state.
      */
-    public boolean isActive() {
-        return active;
+    public ActiveState getActiveState() {
+        return activeState;
     }
-    
-    public BrakeTorqueVectoring(Axle axle, boolean active) {
+
+    public BrakeTorqueVectoring(Axle axle, ActiveState activeState) {
         super(2);
-        update(axle, active);
+        update(axle, activeState);
+    }
+
+    public BrakeTorqueVectoring(Property property) throws CommandParseException {
+        super();
+        if (property.getValueComponent() == null) throw new CommandParseException();
+        update(property.getValueComponent().getValueBytes());
     }
 
     public BrakeTorqueVectoring() {
@@ -55,20 +66,32 @@ public class BrakeTorqueVectoring extends PropertyValueObject {
     @Override public void update(Bytes value) throws CommandParseException {
         super.update(value);
         if (bytes.length < 2) throw new CommandParseException();
-        axle = Axle.fromByte(get(0));
-        active = Property.getBool(get(1));
+
+        int bytePosition = 0;
+        axle = Axle.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        activeState = ActiveState.fromByte(get(bytePosition));
     }
 
-    public void update(Axle axle, boolean active) {
+    public void update(Axle axle, ActiveState activeState) {
         this.axle = axle;
-        this.active = active;
-        bytes = new byte[2];
+        this.activeState = activeState;
 
-        set(0, axle.getByte());
-        set(1, Property.boolToByte(active));
+        bytes = new byte[getLength()];
+
+        int bytePosition = 0;
+        set(bytePosition, axle.getByte());
+        bytePosition += 1;
+
+        set(bytePosition, activeState.getByte());
     }
 
     public void update(BrakeTorqueVectoring value) {
-        update(value.axle, value.active);
+        update(value.axle, value.activeState);
+    }
+
+    @Override public int getLength() {
+        return 1 + 1;
     }
 }

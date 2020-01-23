@@ -1,118 +1,130 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.autoapi.value.ScreenLocation;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Nullable;
 
 /**
- * Hand over a video from smart device to car headunit to be shown in the car display. The emulator
- * supports HTML5 video player formats .mp4 and .webm.
+ * The Video Handover capability
  */
-public class VideoHandover extends Command {
-    public static final Type TYPE = new Type(Identifier.VIDEO_HANDOVER, 0x00);
+public class VideoHandover {
+    public static final int IDENTIFIER = Identifier.VIDEO_HANDOVER;
 
-    public static final byte IDENTIFIER_URL = 0x01;
-    public static final byte STARTING_SECOND_IDENTIFIER = 0x02;
-    public static final byte IDENTIFIER_SCREEN_LOCATION = 0x03;
-
-    private Property<String> url = new Property(String.class, IDENTIFIER_URL);
-    private PropertyInteger startingSecond =
-            new PropertyInteger(STARTING_SECOND_IDENTIFIER, false);
-    private Property<ScreenLocation> location = new Property(ScreenLocation.class,
-            IDENTIFIER_SCREEN_LOCATION);
+    public static final byte PROPERTY_URL = 0x01;
+    public static final byte PROPERTY_STARTING_SECOND = 0x02;
+    public static final byte PROPERTY_SCREEN = 0x03;
 
     /**
-     * @return The video url.
+     * Video handover command
      */
-    public Property<String> getUrl() {
-        return url;
-    }
-
-    /**
-     * @return The starting second.
-     */
-    public Property<Integer> getStartingSecond() {
-        return startingSecond;
-    }
-
-    /**
-     * @return The screen location.
-     */
-    public Property<ScreenLocation> getLocation() {
-        return location;
-    }
-
-    /**
-     * @param url            The video url.
-     * @param location       The screen location.
-     * @param startingSecond The starting second of the video.
-     */
-    public VideoHandover(String url, @Nullable Integer startingSecond,
-                         @Nullable ScreenLocation location) {
-        super(TYPE);
-
-        List<Property> properties = new ArrayList<>();
-
-        this.url.update(url);
-        properties.add(this.url);
-
-        if (startingSecond != null) {
-            this.startingSecond.update(false, 2, startingSecond);
-            properties.add(this.startingSecond);
+    public static class VideoHandoverCommand extends SetCommand {
+        Property<String> url = new Property(String.class, PROPERTY_URL);
+        PropertyInteger startingSecond = new PropertyInteger(PROPERTY_STARTING_SECOND, false);
+        Property<Screen> screen = new Property(Screen.class, PROPERTY_SCREEN);
+    
+        /**
+         * @return The url
+         */
+        public Property<String> getUrl() {
+            return url;
         }
-
-        if (location != null) {
-            this.location.update(location);
-            properties.add(this.location);
+        
+        /**
+         * @return The starting second
+         */
+        public PropertyInteger getStartingSecond() {
+            return startingSecond;
         }
-
-        createBytes(properties);
+        
+        /**
+         * @return The screen
+         */
+        public Property<Screen> getScreen() {
+            return screen;
+        }
+        
+        /**
+         * Video handover command
+         *
+         * @param url URL string
+         * @param startingSecond The starting second
+         * @param screen The screen
+         */
+        public VideoHandoverCommand(String url, @Nullable Integer startingSecond, @Nullable Screen screen) {
+            super(IDENTIFIER);
+        
+            addProperty(this.url.update(url));
+            addProperty(this.startingSecond.update(false, 2, startingSecond));
+            addProperty(this.screen.update(screen));
+            createBytes();
+        }
+    
+        VideoHandoverCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_URL: return url.update(p);
+                        case PROPERTY_STARTING_SECOND: return startingSecond.update(p);
+                        case PROPERTY_SCREEN: return screen.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.url.getValue() == null) 
+                throw new NoPropertiesException();
+        }
     }
 
-    VideoHandover(byte[] bytes) {
-        super(bytes);
-
-        while (propertyIterator.hasNext()) {
-            propertyIterator.parseNext(p -> {
-                switch (p.getPropertyIdentifier()) {
-                    case IDENTIFIER_URL:
-                        return url.update(p);
-                    case STARTING_SECOND_IDENTIFIER:
-                        return startingSecond.update(p);
-                    case IDENTIFIER_SCREEN_LOCATION:
-                        return location.update(p);
+    public enum Screen implements ByteEnum {
+        FRONT((byte) 0x00),
+        REAR((byte) 0x01);
+    
+        public static Screen fromByte(byte byteValue) throws CommandParseException {
+            Screen[] values = Screen.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                Screen state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
                 }
-                return null;
-            });
+            }
+    
+            throw new CommandParseException();
         }
-    }
-
-    @Override protected boolean propertiesExpected() {
-        return true;
+    
+        private byte value;
+    
+        Screen(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
     }
 }

@@ -1,31 +1,35 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
 
 import com.highmobility.utils.Base64;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
+import static com.highmobility.autoapi.Identifier.*;
 
 public class CommandResolver {
-
+    private static final int GET_STATE_LENGTH = Command.HEADER_LENGTH + 3;
     /**
      * Try to parse the command bytes to a more specific Command subclass. Check the returned
      * object's instance type (instanceOf) to understand which command was received.
@@ -45,399 +49,871 @@ public class CommandResolver {
      * @return The parsed command.
      */
     public static Command resolve(byte[] bytes) {
-        if (bytes == null || bytes.length < 3) return new Command(bytes);
+        if (bytes == null || bytes.length < 3 + Command.HEADER_LENGTH) return new Command(bytes);
 
         Command command = null;
+        Integer identifier = Identifier.fromBytes(bytes[Command.HEADER_LENGTH], bytes[Command.HEADER_LENGTH + 1]);
+        Integer type = Type.fromByte(bytes[Command.HEADER_LENGTH + 2]);
 
         try {
-            if (bytesAreForType(bytes, Failure.TYPE)) {
-                command = new Failure(bytes);
-            } else if (bytesAreForIdentifier(bytes, Identifier.DIAGNOSTICS)) {
-                if (bytesAreForType(bytes, GetDiagnosticsState.TYPE)) {
-                    command = new GetDiagnosticsState(bytes);
-                } else if (bytesAreForType(bytes, DiagnosticsState.TYPE)) {
-                    command = new DiagnosticsState(bytes);
+            switch (identifier) {
+                case VEHICLE_STATUS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new VehicleStatus.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new VehicleStatus.GetVehicleStatus(bytes);
+                        } else {
+                            command = new VehicleStatus.GetVehicleStatusProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.VEHICLE_STATUS)) {
-                if (bytesAreForType(bytes, GetVehicleStatus.TYPE)) {
-                    command = new GetVehicleStatus(bytes);
-                } else if (bytesAreForType(bytes, VehicleStatus.TYPE)) {
-                    command = new VehicleStatus(bytes);
+                case PARKING_TICKET: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new ParkingTicket.State(bytes);
+                        } else {
+                            SetterIterator iterator = new SetterIterator(3);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new ParkingTicket.StartParking(bytes);
+                                        case 1:
+                                            return new ParkingTicket.EndParking(bytes);
+                                        case 2:
+                                            return new ParkingTicket.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new ParkingTicket.GetParkingTicket(bytes);
+                        } else {
+                            command = new ParkingTicket.GetParkingTicketProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.HISTORICAL)) {
-                if (bytesAreForType(bytes, GetHistoricalStates.TYPE)) {
-                    command = new GetHistoricalStates(bytes);
-                } else if (bytesAreForType(bytes, HistoricalStates.TYPE)) {
-                    command = new HistoricalStates(bytes);
+                case BROWSER: {
+                    command = new Browser.LoadUrl(bytes);
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.MULTI_COMMAND)) {
-                if (bytesAreForType(bytes, MultiCommand.TYPE)) {
-                    command = new MultiCommand(bytes);
-                } else if (bytesAreForType(bytes, MultiState.TYPE)) {
-                    command = new MultiState(bytes);
+                case WINDOWS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Windows.State(bytes);
+                        } else {
+                            command = new Windows.ControlWindows(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Windows.GetWindows(bytes);
+                        } else {
+                            command = new Windows.GetWindowsProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.DOOR_LOCKS)) {
-                if (bytesAreForType(bytes, GetLockState.TYPE)) {
-                    command = new GetLockState(bytes);
-                } else if (bytesAreForType(bytes, LockState.TYPE)) {
-                    command = new LockState(bytes);
-                } else if (bytesAreForType(bytes, LockUnlockDoors.TYPE)) {
-                    command = new LockUnlockDoors(bytes);
+                case VEHICLE_TIME: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new VehicleTime.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new VehicleTime.GetVehicleTime(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.THEFT_ALARM)) {
-                if (bytesAreForType(bytes, GetTheftAlarmState.TYPE)) {
-                    command = new GetTheftAlarmState(bytes);
-                } else if (bytesAreForType(bytes, TheftAlarmState.TYPE)) {
-                    command = new TheftAlarmState(bytes);
-                } else if (bytesAreForType(bytes, SetTheftAlarm.TYPE)) {
-                    command = new SetTheftAlarm(bytes);
+                case DRIVER_FATIGUE: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new DriverFatigue.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new DriverFatigue.GetState(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.CAPABILITIES)) {
-                if (bytesAreForType(bytes, GetCapabilities.TYPE)) {
-                    command = new GetCapabilities(bytes);
-                } else if (bytesAreForType(bytes, Capabilities.TYPE)) {
-                    command = new Capabilities(bytes);
-                } else if (bytesAreForType(bytes, GetCapability.TYPE)) {
-                    command = new GetCapability(bytes);
+                case REMOTE_CONTROL: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new RemoteControl.State(bytes);
+                        } else {
+                            SetterIterator iterator = new SetterIterator(4);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new RemoteControl.ControlCommand(bytes);
+                                        case 1:
+                                            return new RemoteControl.StartControl(bytes);
+                                        case 2:
+                                            return new RemoteControl.StopControl(bytes);
+                                        case 3:
+                                            return new RemoteControl.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new RemoteControl.GetControlState(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.TRUNK_ACCESS)) {
-                if (bytesAreForType(bytes, TrunkState.TYPE)) {
-                    command = new TrunkState(bytes);
-                } else if (bytesAreForType(bytes, GetTrunkState.TYPE)) {
-                    command = new GetTrunkState(bytes);
-                } else if (bytesAreForType(bytes, ControlTrunk.TYPE)) {
-                    command = new ControlTrunk(bytes);
+                case FUELING: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Fueling.State(bytes);
+                        } else {
+                            command = new Fueling.ControlGasFlap(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Fueling.GetGasFlapState(bytes);
+                        } else {
+                            command = new Fueling.GetGasFlapProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.CHARGING)) {
-                if (bytesAreForType(bytes, GetChargeState.TYPE)) {
-                    command = new GetChargeState(bytes);
-                } else if (bytesAreForType(bytes, ChargeState.TYPE)) {
-                    command = new ChargeState(bytes);
-                } else if (bytesAreForType(bytes, StartStopCharging.TYPE)) {
-                    command = new StartStopCharging(bytes);
-                } else if (bytesAreForType(bytes, SetChargeLimit.TYPE)) {
-                    command = new SetChargeLimit(bytes);
-                } else if (bytesAreForType(bytes, OpenCloseChargePort.TYPE)) {
-                    command = new OpenCloseChargePort(bytes);
-                } else if (bytesAreForType(bytes, SetChargeMode.TYPE)) {
-                    command = new SetChargeMode(bytes);
-                } else if (bytesAreForType(bytes, SetChargeTimer.TYPE)) {
-                    command = new SetChargeTimer(bytes);
-                } else if (bytesAreForType(bytes, SetReductionOfChargingCurrentTimes.TYPE)) {
-                    command = new SetReductionOfChargingCurrentTimes(bytes);
+                case NAVI_DESTINATION: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new NaviDestination.State(bytes);
+                        } else {
+                            command = new NaviDestination.SetNaviDestination(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new NaviDestination.GetNaviDestination(bytes);
+                        } else {
+                            command = new NaviDestination.GetNaviDestinationProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.CLIMATE)) {
-                if (bytesAreForType(bytes, GetClimateState.TYPE)) {
-                    command = new GetClimateState(bytes);
-                } else if (bytesAreForType(bytes, ClimateState.TYPE)) {
-                    command = new ClimateState(bytes);
-                } else if (bytesAreForType(bytes, StartStopIonising.TYPE)) {
-                    command = new StartStopIonising(bytes);
-                } else if (bytesAreForType(bytes, StartStopHvac.TYPE)) {
-                    command = new StartStopHvac(bytes);
-                } else if (bytesAreForType(bytes, StartStopDefrosting.TYPE)) {
-                    command = new StartStopDefrosting(bytes);
-                } else if (bytesAreForType(bytes, StartStopDefogging.TYPE)) {
-                    command = new StartStopDefogging(bytes);
-                } else if (bytesAreForType(bytes, SetHvacStartingTimes.TYPE)) {
-                    command = new SetHvacStartingTimes(bytes);
-                } else if (bytesAreForType(bytes, SetTemperatureSettings.TYPE)) {
-                    command = new SetTemperatureSettings(bytes);
+                case LIGHT_CONDITIONS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new LightConditions.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new LightConditions.GetLightConditions(bytes);
+                        } else {
+                            command = new LightConditions.GetLightConditionsProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.ROOFTOP)) {
-                if (bytesAreForType(bytes, GetRooftopState.TYPE)) {
-                    command = new GetRooftopState(bytes);
-                } else if (bytesAreForType(bytes, RooftopState.TYPE)) {
-                    command = new RooftopState(bytes);
-                } else if (bytesAreForType(bytes, ControlRooftop.TYPE)) {
-                    command = new ControlRooftop(bytes);
+                case OFFROAD: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Offroad.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Offroad.GetState(bytes);
+                        } else {
+                            command = new Offroad.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.HONK_FLASH)) {
-                if (bytesAreForType(bytes, GetFlashersState.TYPE)) {
-                    command = new GetFlashersState(bytes);
-                } else if (bytesAreForType(bytes, FlashersState.TYPE)) {
-                    command = new FlashersState(bytes);
-                } else if (bytesAreForType(bytes, HonkAndFlash.TYPE)) {
-                    command = new HonkAndFlash(bytes);
-                } else if (bytesAreForType(bytes, ActivateDeactivateEmergencyFlasher.TYPE)) {
-                    command = new ActivateDeactivateEmergencyFlasher(bytes);
+                case TRUNK: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Trunk.State(bytes);
+                        } else {
+                            command = new Trunk.ControlTrunk(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Trunk.GetState(bytes);
+                        } else {
+                            command = new Trunk.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.REMOTE_CONTROL)) {
-                if (bytesAreForType(bytes, ControlCommand.TYPE)) {
-                    command = new ControlCommand(bytes);
-                } else if (bytesAreForType(bytes, ControlMode.TYPE)) {
-                    command = new ControlMode(bytes);
-                } else if (bytesAreForType(bytes, GetControlMode.TYPE)) {
-                    command = new GetControlMode(bytes);
-                } else if (bytesAreForType(bytes, StartControlMode.TYPE)) {
-                    command = new StartControlMode(bytes);
+                case DOORS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Doors.State(bytes);
+                        } else {
+                            command = new Doors.LockUnlockDoors(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Doors.GetState(bytes);
+                        } else {
+                            command = new Doors.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.VALET_MODE)) {
-                if (bytesAreForType(bytes, ValetMode.TYPE)) {
-                    command = new ValetMode(bytes);
-                } else if (bytesAreForType(bytes, GetValetMode.TYPE)) {
-                    command = new GetValetMode(bytes);
-                } else if (bytesAreForType(bytes, ActivateDeactivateValetMode.TYPE)) {
-                    command = new ActivateDeactivateValetMode(bytes);
+                case VALET_MODE: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new ValetMode.State(bytes);
+                        } else {
+                            command = new ValetMode.ActivateDeactivateValetMode(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new ValetMode.GetValetMode(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.VEHICLE_LOCATION)) {
-                if (bytesAreForType(bytes, VehicleLocation.TYPE)) {
-                    command = new VehicleLocation(bytes);
-                } else if (bytesAreForType(bytes, GetVehicleLocation.TYPE)) {
-                    command = new GetVehicleLocation(bytes);
+                case DASHBOARD_LIGHTS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new DashboardLights.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new DashboardLights.GetDashboardLights(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.VEHICLE_TIME)) {
-                if (bytesAreForType(bytes, VehicleTime.TYPE)) {
-                    command = new VehicleTime(bytes);
-                } else if (bytesAreForType(bytes, GetVehicleTime.TYPE)) {
-                    command = new GetVehicleTime(bytes);
+                case MULTI_COMMAND: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new MultiCommand.State(bytes);
+                        } else {
+                            command = new MultiCommand.MultiCommandCommand(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.NAVI_DESTINATION)) {
-                if (bytesAreForType(bytes, NaviDestination.TYPE)) {
-                    command = new NaviDestination(bytes);
-                } else if (bytesAreForType(bytes, GetNaviDestination.TYPE)) {
-                    command = new GetNaviDestination(bytes);
-                } else if (bytesAreForType(bytes, SetNaviDestination.TYPE)) {
-                    command = new SetNaviDestination(bytes);
+                case TEXT_INPUT: {
+                    command = new TextInput.TextInputCommand(bytes);
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.MAINTENANCE)) {
-                if (bytesAreForType(bytes, MaintenanceState.TYPE)) {
-                    command = new MaintenanceState(bytes);
-                } else if (bytesAreForType(bytes, GetMaintenanceState.TYPE)) {
-                    command = new GetMaintenanceState(bytes);
+                case LIGHTS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Lights.State(bytes);
+                        } else {
+                            command = new Lights.ControlLights(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Lights.GetState(bytes);
+                        } else {
+                            command = new Lights.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.HEART_RATE)) {
-                if (bytesAreForType(bytes, SendHeartRate.TYPE)) {
-                    command = new SendHeartRate(bytes);
+                case CHASSIS_SETTINGS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new ChassisSettings.State(bytes);
+                        } else {
+                            SetterIterator iterator = new SetterIterator(5);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new ChassisSettings.SetDrivingMode(bytes);
+                                        case 1:
+                                            return new ChassisSettings.StartStopSportsChrono(bytes);
+                                        case 2:
+                                            return new ChassisSettings.SetSpringRates(bytes);
+                                        case 3:
+                                            return new ChassisSettings.SetChassisPosition(bytes);
+                                        case 4:
+                                            return new ChassisSettings.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new ChassisSettings.GetChassisSettings(bytes);
+                        } else {
+                            command = new ChassisSettings.GetChassisSettingsProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.ENGINE)) {
-                if (bytesAreForType(bytes, IgnitionState.TYPE)) {
-                    command = new IgnitionState(bytes);
-                } else if (bytesAreForType(bytes, GetIgnitionState.TYPE)) {
-                    command = new GetIgnitionState(bytes);
-                } else if (bytesAreForType(bytes, TurnIgnitionOnOff.TYPE)) {
-                    command = new TurnIgnitionOnOff(bytes);
+                case NOTIFICATIONS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Notifications.State(bytes);
+                        } else {
+                            SetterIterator iterator = new SetterIterator(4);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new Notifications.Notification(bytes);
+                                        case 1:
+                                            return new Notifications.Action(bytes);
+                                        case 2:
+                                            return new Notifications.ClearNotification(bytes);
+                                        case 3:
+                                            return new Notifications.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.LIGHTS)) {
-                if (bytesAreForType(bytes, LightsState.TYPE)) {
-                    command = new LightsState(bytes);
-                } else if (bytesAreForType(bytes, GetLightsState.TYPE)) {
-                    command = new GetLightsState(bytes);
-                } else if (bytesAreForType(bytes, ControlLights.TYPE)) {
-                    command = new ControlLights(bytes);
+                case HOOD: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Hood.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Hood.GetState(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.MESSAGING)) {
-                if (bytesAreForType(bytes, SendMessage.TYPE)) {
-                    command = new SendMessage(bytes);
-                } else if (bytesAreForType(bytes, MessageReceived.TYPE)) {
-                    command = new MessageReceived(bytes);
+                case CHARGING: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Charging.State(bytes);
+                        } else {
+                            SetterIterator iterator = new SetterIterator(7);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new Charging.StartStopCharging(bytes);
+                                        case 1:
+                                            return new Charging.SetChargeLimit(bytes);
+                                        case 2:
+                                            return new Charging.OpenCloseChargingPort(bytes);
+                                        case 3:
+                                            return new Charging.SetChargeMode(bytes);
+                                        case 4:
+                                            return new Charging.SetChargingTimers(bytes);
+                                        case 5:
+                                            return new Charging.SetReductionOfChargingCurrentTimes(bytes);
+                                        case 6:
+                                            return new Charging.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Charging.GetState(bytes);
+                        } else {
+                            command = new Charging.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.NOTIFICATIONS)) {
-                if (bytesAreForType(bytes, Notification.TYPE)) {
-                    command = new Notification(bytes);
-                } else if (bytesAreForType(bytes, NotificationAction.TYPE)) {
-                    command = new NotificationAction(bytes);
-                } else if (bytesAreForType(bytes, ClearNotification.TYPE)) {
-                    command = new ClearNotification(bytes);
+                case MOBILE: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Mobile.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Mobile.GetState(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.WINDOWS)) {
-                if (bytesAreForType(bytes, GetWindowsState.TYPE)) {
-                    command = new GetWindowsState(bytes);
-                } else if (bytesAreForType(bytes, WindowsState.TYPE)) {
-                    command = new WindowsState(bytes);
-                } else if (bytesAreForType(bytes, ControlWindows.TYPE)) {
-                    command = new ControlWindows(bytes);
+                case HOME_CHARGER: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new HomeCharger.State(bytes);
+                        } else {
+                            SetterIterator iterator = new SetterIterator(6);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new HomeCharger.SetChargeCurrent(bytes);
+                                        case 1:
+                                            return new HomeCharger.SetPriceTariffs(bytes);
+                                        case 2:
+                                            return new HomeCharger.ActivateDeactivateSolarCharging(bytes);
+                                        case 3:
+                                            return new HomeCharger.EnableDisableWiFiHotspot(bytes);
+                                        case 4:
+                                            return new HomeCharger.AuthenticateExpire(bytes);
+                                        case 5:
+                                            return new HomeCharger.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new HomeCharger.GetState(bytes);
+                        } else {
+                            command = new HomeCharger.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.WINDSCREEN)) {
-                if (bytesAreForType(bytes, GetWindscreenState.TYPE)) {
-                    command = new GetWindscreenState(bytes);
-                } else if (bytesAreForType(bytes, WindscreenState.TYPE)) {
-                    command = new WindscreenState(bytes);
-                } else if (bytesAreForType(bytes, SetWindscreenDamage.TYPE)) {
-                    command = new SetWindscreenDamage(bytes);
-                } else if (bytesAreForType(bytes, SetWindscreenReplacementNeeded.TYPE)) {
-                    command = new SetWindscreenReplacementNeeded(bytes);
-                } else if (bytesAreForType(bytes, ControlWipers.TYPE)) {
-                    command = new ControlWipers(bytes);
+                case DIAGNOSTICS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Diagnostics.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Diagnostics.GetState(bytes);
+                        } else {
+                            command = new Diagnostics.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.FUELING)) {
-                if (bytesAreForType(bytes, GetGasFlapState.TYPE)) {
-                    command = new GetGasFlapState(bytes);
-                } else if (bytesAreForType(bytes, GasFlapState.TYPE)) {
-                    command = new GasFlapState(bytes);
-                } else if (bytesAreForType(bytes, ControlGasFlap.TYPE)) {
-                    command = new ControlGasFlap(bytes);
+                case USAGE: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Usage.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Usage.GetUsage(bytes);
+                        } else {
+                            command = new Usage.GetUsageProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.PARKING_TICKET)) {
-                if (bytesAreForType(bytes, GetParkingTicket.TYPE)) {
-                    command = new GetParkingTicket(bytes);
-                } else if (bytesAreForType(bytes, ParkingTicket.TYPE)) {
-                    command = new ParkingTicket(bytes);
-                } else if (bytesAreForType(bytes, StartParking.TYPE)) {
-                    command = new StartParking(bytes);
-                } else if (bytesAreForType(bytes, EndParking.TYPE)) {
-                    command = new EndParking(bytes);
+                case POWER_TAKEOFF: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new PowerTakeoff.State(bytes);
+                        } else {
+                            command = new PowerTakeoff.ActivateDeactivatePowerTakeoff(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new PowerTakeoff.GetState(bytes);
+                        } else {
+                            command = new PowerTakeoff.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.KEYFOB_POSITION)) {
-                if (bytesAreForType(bytes, KeyFobPosition.TYPE)) {
-                    command = new KeyFobPosition(bytes);
-                } else if (bytesAreForType(bytes, GetKeyFobPosition.TYPE)) {
-                    command = new GetKeyFobPosition(bytes);
+                case WAKE_UP: {
+                    command = new WakeUp.WakeUpCommand(bytes);
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.FIRMWARE_VERSION)) {
-                if (bytesAreForType(bytes, FirmwareVersion.TYPE)) {
-                    command = new FirmwareVersion(bytes);
-                } else if (bytesAreForType(bytes, GetFirmwareVersion.TYPE)) {
-                    command = new GetFirmwareVersion(bytes);
+                case VIDEO_HANDOVER: {
+                    command = new VideoHandover.VideoHandoverCommand(bytes);
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.RACE)) {
-                if (bytesAreForType(bytes, RaceState.TYPE)) {
-                    command = new RaceState(bytes);
-                } else if (bytesAreForType(bytes, GetRaceState.TYPE)) {
-                    command = new GetRaceState(bytes);
+                case HISTORICAL: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Historical.State(bytes);
+                        } else {
+                            command = new Historical.RequestStates(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.OFF_ROAD)) {
-                if (bytesAreForType(bytes, OffroadState.TYPE)) {
-                    command = new OffroadState(bytes);
-                } else if (bytesAreForType(bytes, GetOffroadState.TYPE)) {
-                    command = new GetOffroadState(bytes);
+                case WI_FI: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new WiFi.State(bytes);
+                        } else {
+                            SetterIterator iterator = new SetterIterator(4);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new WiFi.ConnectToNetwork(bytes);
+                                        case 1:
+                                            return new WiFi.ForgetNetwork(bytes);
+                                        case 2:
+                                            return new WiFi.EnableDisableWiFi(bytes);
+                                        case 3:
+                                            return new WiFi.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new WiFi.GetState(bytes);
+                        } else {
+                            command = new WiFi.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.CHASSIS_SETTINGS)) {
-                if (bytesAreForType(bytes, ChassisSettings.TYPE)) {
-                    command = new ChassisSettings(bytes);
-                } else if (bytesAreForType(bytes, GetChassisSettings.TYPE)) {
-                    command = new GetChassisSettings(bytes);
-                } else if (bytesAreForType(bytes, SetChassisPosition.TYPE)) {
-                    command = new SetChassisPosition(bytes);
-                } else if (bytesAreForType(bytes, SetDrivingMode.TYPE)) {
-                    command = new SetDrivingMode(bytes);
-                } else if (bytesAreForType(bytes, SetSpringRate.TYPE)) {
-                    command = new SetSpringRate(bytes);
-                } else if (bytesAreForType(bytes, StartStopSportChrono.TYPE)) {
-                    command = new StartStopSportChrono(bytes);
+                case VEHICLE_LOCATION: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new VehicleLocation.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new VehicleLocation.GetVehicleLocation(bytes);
+                        } else {
+                            command = new VehicleLocation.GetVehicleLocationProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.SEATS)) {
-                if (bytesAreForType(bytes, SeatsState.TYPE)) {
-                    command = new SeatsState(bytes);
-                } else if (bytesAreForType(bytes, GetSeatsState.TYPE)) {
-                    command = new GetSeatsState(bytes);
+                case HEART_RATE: {
+                    command = new HeartRate.SendHeartRate(bytes);
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.PARKING_BRAKE)) {
-                if (bytesAreForType(bytes, ParkingBrakeState.TYPE)) {
-                    command = new ParkingBrakeState(bytes);
-                } else if (bytesAreForType(bytes, GetParkingBrakeState.TYPE)) {
-                    command = new GetParkingBrakeState(bytes);
-                } else if (bytesAreForType(bytes, SetParkingBrake.TYPE)) {
-                    command = new SetParkingBrake(bytes);
+                case GRAPHICS: {
+                    command = new Graphics.DisplayImage(bytes);
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.LIGHT_CONDITIONS)) {
-                if (bytesAreForType(bytes, LightConditions.TYPE)) {
-                    command = new LightConditions(bytes);
-                } else if (bytesAreForType(bytes, GetLightConditions.TYPE)) {
-                    command = new GetLightConditions(bytes);
+                case RACE: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Race.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Race.GetState(bytes);
+                        } else {
+                            command = new Race.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.WEATHER_CONDITIONS)) {
-                if (bytesAreForType(bytes, WeatherConditions.TYPE)) {
-                    command = new WeatherConditions(bytes);
-                } else if (bytesAreForType(bytes, GetWeatherConditions.TYPE)) {
-                    command = new GetWeatherConditions(bytes);
+                case FIRMWARE_VERSION: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new FirmwareVersion.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new FirmwareVersion.GetFirmwareVersion(bytes);
+                        } else {
+                            command = new FirmwareVersion.GetFirmwareVersionProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.WIFI)) {
-                if (bytesAreForType(bytes, WifiState.TYPE)) {
-                    command = new WifiState(bytes);
-                } else if (bytesAreForType(bytes, GetWifiState.TYPE)) {
-                    command = new GetWifiState(bytes);
-                } else if (bytesAreForType(bytes, ConnectToNetwork.TYPE)) {
-                    command = new ConnectToNetwork(bytes);
-                } else if (bytesAreForType(bytes, ForgetNetwork.TYPE)) {
-                    command = new ForgetNetwork(bytes);
-                } else if (bytesAreForType(bytes, EnableDisableWifi.TYPE)) {
-                    command = new EnableDisableWifi(bytes);
+                case THEFT_ALARM: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new TheftAlarm.State(bytes);
+                        } else {
+                            command = new TheftAlarm.SetTheftAlarm(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new TheftAlarm.GetState(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.HOME_CHARGER)) {
-                if (bytesAreForType(bytes, GetHomeChargerState.TYPE)) {
-                    command = new GetHomeChargerState(bytes);
-                } else if (bytesAreForType(bytes, HomeChargerState.TYPE)) {
-                    command = new HomeChargerState(bytes);
-                } else if (bytesAreForType(bytes, ActivateDeactivateSolarCharging.TYPE)) {
-                    command = new ActivateDeactivateSolarCharging(bytes);
-                } else if (bytesAreForType(bytes, EnableDisableWifiHotspot.TYPE)) {
-                    command = new EnableDisableWifiHotspot(bytes);
-                } else if (bytesAreForType(bytes, SetChargeCurrent.TYPE)) {
-                    command = new SetChargeCurrent(bytes);
-                } else if (bytesAreForType(bytes, SetPriceTariffs.TYPE)) {
-                    command = new SetPriceTariffs(bytes);
-                } else if (bytesAreForType(bytes, AuthenticateHomeCharger.TYPE)) {
-                    command = new AuthenticateHomeCharger(bytes);
+                case SEATS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Seats.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Seats.GetState(bytes);
+                        } else {
+                            command = new Seats.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.DASHBOARD_LIGHTS)) {
-                if (bytesAreForType(bytes, DashboardLights.TYPE)) {
-                    command = new DashboardLights(bytes);
-                } else if (bytesAreForType(bytes, GetDashboardLights.TYPE)) {
-                    command = new GetDashboardLights(bytes);
+                case ENGINE_START_STOP: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new EngineStartStop.State(bytes);
+                        } else {
+                            command = new EngineStartStop.ActivateDeactivateStartStop(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new EngineStartStop.GetState(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.START_STOP)) {
-                if (bytesAreForType(bytes, GetStartStopState.TYPE)) {
-                    command = new GetStartStopState(bytes);
-                } else if (bytesAreForType(bytes, StartStopState.TYPE)) {
-                    command = new StartStopState(bytes);
-                } else if (bytesAreForType(bytes, ActivateDeactivateStartStop.TYPE)) {
-                    command = new ActivateDeactivateStartStop(bytes);
+                case TACHOGRAPH: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Tachograph.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Tachograph.GetState(bytes);
+                        } else {
+                            command = new Tachograph.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.CRUISE_CONTROL)) {
-                if (bytesAreForType(bytes, GetCruiseControlState.TYPE)) {
-                    command = new GetCruiseControlState(bytes);
-                } else if (bytesAreForType(bytes, CruiseControlState.TYPE)) {
-                    command = new CruiseControlState(bytes);
-                } else if (bytesAreForType(bytes, ActivateDeactivateCruiseControl.TYPE)) {
-                    command = new ActivateDeactivateCruiseControl(bytes);
+                case PARKING_BRAKE: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new ParkingBrake.State(bytes);
+                        } else {
+                            command = new ParkingBrake.SetParkingBrake(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new ParkingBrake.GetState(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.POWER_TAKE_OFF)) {
-                if (bytesAreForType(bytes, GetPowerTakeOffState.TYPE)) {
-                    command = new GetPowerTakeOffState(bytes);
-                } else if (bytesAreForType(bytes, PowerTakeOffState.TYPE)) {
-                    command = new PowerTakeOffState(bytes);
-                } else if (bytesAreForType(bytes, ActivateDeactivatePowerTakeoff.TYPE)) {
-                    command = new ActivateDeactivatePowerTakeoff(bytes);
+                case CAPABILITIES: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Capabilities.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Capabilities.GetCapabilities(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.TACHOGRAPH)) {
-                if (bytesAreForType(bytes, TachographState.TYPE)) {
-                    command = new TachographState(bytes);
-                } else if (bytesAreForType(bytes, GetTachographState.TYPE)) {
-                    command = new GetTachographState(bytes);
+                case MAINTENANCE: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Maintenance.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Maintenance.GetState(bytes);
+                        } else {
+                            command = new Maintenance.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForType(bytes, LoadUrl.TYPE)) {
-                command = new LoadUrl(bytes);
-            } else if (bytesAreForType(bytes, VideoHandover.TYPE)) {
-                command = new VideoHandover(bytes);
-            } else if (bytesAreForType(bytes, DriverFatigueDetected.TYPE)) {
-                command = new DriverFatigueDetected(bytes);
-            } else if (bytesAreForType(bytes, WakeUp.TYPE)) {
-                command = new WakeUp(bytes);
-            } else if (bytesAreForType(bytes, DisplayImage.TYPE)) {
-                command = new DisplayImage(bytes);
-            } else if (bytesAreForType(bytes, TextInput.TYPE)) {
-                command = new TextInput(bytes);
-            } else if (bytesAreForIdentifier(bytes, Identifier.USAGE)) {
-                if (bytesAreForType(bytes, GetUsage.TYPE)) {
-                    command = new GetUsage(bytes);
-                } else if (bytesAreForType(bytes, Usage.TYPE)) {
-                    command = new Usage(bytes);
+                case ROOFTOP_CONTROL: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new RooftopControl.State(bytes);
+                        } else {
+                            command = new RooftopControl.ControlRooftop(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new RooftopControl.GetRooftopState(bytes);
+                        } else {
+                            command = new RooftopControl.GetRooftopProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.MOBILE)) {
-                if (bytesAreForType(bytes, GetMobileState.TYPE)) {
-                    command = new GetMobileState(bytes);
-                } else if (bytesAreForType(bytes, MobileState.TYPE)) {
-                    command = new MobileState(bytes);
+                case FAILURE_MESSAGE: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new FailureMessage.State(bytes);
+                        }
+                    }    break;
                 }
-            } else if (bytesAreForIdentifier(bytes, Identifier.HOOD)) {
-                if (bytesAreForType(bytes, GetHoodState.TYPE)) {
-                    command = new GetHoodState(bytes);
-                } else if (bytesAreForType(bytes, HoodState.TYPE)) {
-                    command = new HoodState(bytes);
+                case WINDSCREEN: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Windscreen.State(bytes);
+                        } else {
+                            SetterIterator iterator = new SetterIterator(4);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new Windscreen.SetWindscreenDamage(bytes);
+                                        case 1:
+                                            return new Windscreen.SetWindscreenReplacementNeeded(bytes);
+                                        case 2:
+                                            return new Windscreen.ControlWipers(bytes);
+                                        case 3:
+                                            return new Windscreen.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Windscreen.GetState(bytes);
+                        } else {
+                            command = new Windscreen.GetProperties(bytes);
+                        }
+                    }
+                    break;
                 }
-            } else {
-                Command.logger.info("Unknown command " + commandToString(bytes) + ".. ");
+                case CRUISE_CONTROL: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new CruiseControl.State(bytes);
+                        } else {
+                            command = new CruiseControl.ActivateDeactivateCruiseControl(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new CruiseControl.GetState(bytes);
+                        } else {
+                            command = new CruiseControl.GetProperties(bytes);
+                        }
+                    }
+                    break;
+                }
+                case KEYFOB_POSITION: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new KeyfobPosition.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new KeyfobPosition.GetKeyfobPosition(bytes);
+                        }
+                    }
+                    break;
+                }
+                case HONK_HORN_FLASH_LIGHTS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new HonkHornFlashLights.State(bytes);
+                        } else {
+                            SetterIterator iterator = new SetterIterator(3);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new HonkHornFlashLights.HonkFlash(bytes);
+                                        case 1:
+                                            return new HonkHornFlashLights.ActivateDeactivateEmergencyFlasher(bytes);
+                                        case 2:
+                                            return new HonkHornFlashLights.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new HonkHornFlashLights.GetFlashersState(bytes);
+                        } else {
+                            command = new HonkHornFlashLights.GetFlashersProperties(bytes);
+                        }
+                    }
+                    break;
+                }
+                case ENGINE: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Engine.State(bytes);
+                        } else {
+                            command = new Engine.TurnEngineOnOff(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Engine.GetState(bytes);
+                        }
+                    }
+                    break;
+                }
+                case WEATHER_CONDITIONS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new WeatherConditions.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new WeatherConditions.GetWeatherConditions(bytes);
+                        }
+                    }
+                    break;
+                }
+                case MESSAGING: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Messaging.State(bytes);
+                        } else {
+                            command = new Messaging.MessageReceived(bytes);
+                        }
+                    }
+                    break;
+                }
+                case IGNITION: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Ignition.State(bytes);
+                        } else {
+                            command = new Ignition.TurnIgnitionOnOff(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Ignition.GetState(bytes);
+                        } else {
+                            command = new Ignition.GetProperties(bytes);
+                        }
+                    }
+                    break;
+                }
+                case CLIMATE: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Climate.State(bytes);
+                        } else {
+                            SetterIterator iterator = new SetterIterator(7);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new Climate.ChangeStartingTimes(bytes);
+                                        case 1:
+                                            return new Climate.StartStopHvac(bytes);
+                                        case 2:
+                                            return new Climate.StartStopDefogging(bytes);
+                                        case 3:
+                                            return new Climate.StartStopDefrosting(bytes);
+                                        case 4:
+                                            return new Climate.StartStopIonising(bytes);
+                                        case 5:
+                                            return new Climate.SetTemperatureSettings(bytes);
+                                        case 6:
+                                            return new Climate.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new Climate.GetState(bytes);
+                        } else {
+                            command = new Climate.GetProperties(bytes);
+                        }
+                    }
+                    break;
+                }
             }
         } catch (Exception e) {
             // the identifier is known but the command's parser class threw an exception.
@@ -484,20 +960,68 @@ public class CommandResolver {
         return resolve(new Bytes(value));
     }
 
-    private static boolean bytesAreForIdentifier(byte[] bytes, Identifier identifier) {
-        return bytes[0] == identifier.getBytes()[0]
-                && bytes[1] == identifier.getBytes()[1];
-    }
-
-    private static boolean bytesAreForType(byte[] bytes, Type type) {
-        byte[] identifierAndType = type.getIdentifierAndType();
-        return bytes[0] == identifierAndType[0]
-                && bytes[1] == identifierAndType[1]
-                && bytes[2] == identifierAndType[2];
-    }
-
     private static String commandToString(byte[] bytes) {
         return ByteUtils.hexFromBytes(ByteUtils
                 .trimmedBytes(bytes, bytes.length >= 3 ? 3 : bytes.length));
+    }
+
+    static RunTime _runtime;
+
+    static RunTime getRuntime() {
+        if (_runtime == null)
+            _runtime = (System.getProperty("java.runtime.name").equals("Android Runtime")) ?
+                RunTime.ANDROID : RunTime.JAVA;
+            return _runtime;
+    }
+
+    /**
+     * Override the runtime.
+     * <p>
+     * Some commands are disabled in Android/Desktop environments. Use this method to override the runtime.
+     * </p>
+     *
+     * @param runtime The runtime.
+     */
+    public static void setRuntime(RunTime runtime) {
+        _runtime = runtime;
+    }
+
+    public enum RunTime {
+        ANDROID, JAVA
+    }
+
+
+    /**
+     * The purpose is to loop the possible setters.
+     * <p>
+     * NoPropertiesException is ok when parsing Setters because we are in the process of trying to
+     * find correct setter.
+     */
+    protected static class SetterIterator {
+        private int currentSize;
+        private int currentIndex = 0;
+        public Command theParsedCommand;
+
+        SetterIterator(int count) {
+            this.currentSize = count;
+        }
+
+        public boolean hasNext() {
+            return currentIndex < currentSize && theParsedCommand == null;
+        }
+
+        public Command parseNext(PropertyIteration next) throws CommandParseException {
+            try {
+                theParsedCommand = next.iterate(currentIndex);
+            } catch (NoPropertiesException e) {
+                // its ok, we are trying to find the command
+            }
+            currentIndex++;
+            return theParsedCommand;
+        }
+
+        public interface PropertyIteration {
+            Command iterate(int number) throws NoPropertiesException, CommandParseException;
+        }
     }
 }

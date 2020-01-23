@@ -1,92 +1,144 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-
-import javax.annotation.Nullable;
+import com.highmobility.autoapi.value.ActiveState;
 
 /**
- * Command sent from the car every time the valet mode changes or when a Get Valet Mode command is
- * received.
+ * The Valet Mode capability
  */
-public class ValetMode extends Command {
-    public static final Type TYPE = new Type(Identifier.VALET_MODE, 0x01);
+public class ValetMode {
+    public static final int IDENTIFIER = Identifier.VALET_MODE;
 
-    private static final byte ACTIVE_IDENTIFIER = 0x01;
-
-    Property<Boolean> active;
+    public static final byte PROPERTY_STATUS = 0x01;
 
     /**
-     * @return The valet mode state.
+     * Get valet mode
      */
-    public Property<Boolean> isActive() {
-        return active;
-    }
-
-    ValetMode(byte[] bytes) {
-        super(bytes);
-
-        while (propertyIterator.hasNext()) {
-            propertyIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == ACTIVE_IDENTIFIER) {
-                    active = new Property(Boolean.class, p);
-                    return active;
-                }
-
-                return null;
-            });
+    public static class GetValetMode extends GetCommand {
+        public GetValetMode() {
+            super(IDENTIFIER);
         }
-
-    }
-
-    @Override public boolean isState() {
-        return true;
-    }
-
-    private ValetMode(Builder builder) {
-        super(builder);
-        active = builder.active;
-    }
-
-    public static final class Builder extends Command.Builder {
-        private Property<Boolean> active;
-
-        public Builder() {
-            super(TYPE);
+    
+        GetValetMode(byte[] bytes) throws CommandParseException {
+            super(bytes);
         }
+    }
 
+    /**
+     * The valet mode state
+     */
+    public static class State extends SetCommand {
+        Property<ActiveState> status = new Property(ActiveState.class, PROPERTY_STATUS);
+    
         /**
-         * @param active The valet mode state.
-         * @return The builder.
+         * @return The status
          */
-        public Builder setActive(Property<Boolean> active) {
-            this.active = active;
-            active.setIdentifier(ACTIVE_IDENTIFIER);
-            addProperty(active);
-            return this;
+        public Property<ActiveState> getStatus() {
+            return status;
         }
+    
+        State(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_STATUS: return status.update(p);
+                    }
+    
+                    return null;
+                });
+            }
+        }
+    
+        private State(Builder builder) {
+            super(builder);
+    
+            status = builder.status;
+        }
+    
+        public static final class Builder extends SetCommand.Builder {
+            private Property<ActiveState> status;
+    
+            public Builder() {
+                super(IDENTIFIER);
+            }
+    
+            public State build() {
+                return new State(this);
+            }
+    
+            /**
+             * @param status The status
+             * @return The builder
+             */
+            public Builder setStatus(Property<ActiveState> status) {
+                this.status = status.setIdentifier(PROPERTY_STATUS);
+                addProperty(this.status);
+                return this;
+            }
+        }
+    }
 
-        public ValetMode build() {
-            return new ValetMode(this);
+    /**
+     * Activate deactivate valet mode
+     */
+    public static class ActivateDeactivateValetMode extends SetCommand {
+        Property<ActiveState> status = new Property(ActiveState.class, PROPERTY_STATUS);
+    
+        /**
+         * @return The status
+         */
+        public Property<ActiveState> getStatus() {
+            return status;
+        }
+        
+        /**
+         * Activate deactivate valet mode
+         *
+         * @param status The status
+         */
+        public ActivateDeactivateValetMode(ActiveState status) {
+            super(IDENTIFIER);
+        
+            addProperty(this.status.update(status));
+            createBytes();
+        }
+    
+        ActivateDeactivateValetMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_STATUS: return status.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.status.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 }

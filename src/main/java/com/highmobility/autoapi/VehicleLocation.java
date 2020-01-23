@@ -1,138 +1,176 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Coordinates;
+import com.highmobility.value.Bytes;
 
 /**
- * This command is sent when a Get Vehicle Location message is received by the car.
+ * The Vehicle Location capability
  */
-public class VehicleLocation extends Command {
-    public static final Type TYPE = new Type(Identifier.VEHICLE_LOCATION, 0x01);
+public class VehicleLocation {
+    public static final int IDENTIFIER = Identifier.VEHICLE_LOCATION;
 
-    private static final byte IDENTIFIER_COORDINATES = 0x04;
-    private static final byte IDENTIFIER_HEADING = 0x05;
-    private static final byte IDENTIFIER_ALTITUDE = 0x06;
-
-    private Property<Coordinates> coordinates = new Property(Coordinates.class,
-            IDENTIFIER_COORDINATES);
-    private Property<Double> heading = new Property(Double.class, IDENTIFIER_HEADING);
-    private Property<Double> altitude = new Property(Double.class, IDENTIFIER_ALTITUDE);
+    public static final byte PROPERTY_COORDINATES = 0x04;
+    public static final byte PROPERTY_HEADING = 0x05;
+    public static final byte PROPERTY_ALTITUDE = 0x06;
 
     /**
-     * @return The vehicle coordinates.
+     * Get vehicle location
      */
-    public Property<Coordinates> getCoordinates() {
-        return coordinates;
+    public static class GetVehicleLocation extends GetCommand {
+        public GetVehicleLocation() {
+            super(IDENTIFIER);
+        }
+    
+        GetVehicleLocation(byte[] bytes) throws CommandParseException {
+            super(bytes);
+        }
+    }
+    
+    /**
+     * Get specific vehicle location properties
+     */
+    public static class GetVehicleLocationProperties extends GetCommand {
+        Bytes propertyIdentifiers;
+    
+        /**
+         * @return The property identifiers.
+         */
+        public Bytes getPropertyIdentifiers() {
+            return propertyIdentifiers;
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetVehicleLocationProperties(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers.getByteArray());
+            this.propertyIdentifiers = propertyIdentifiers;
+        }
+    
+        GetVehicleLocationProperties(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            propertyIdentifiers = getRange(COMMAND_TYPE_POSITION + 1, getLength());
+        }
     }
 
     /**
-     * @return The heading.
+     * The vehicle location state
      */
-    public Property<Double> getHeading() {
-        return heading;
-    }
-
-    /**
-     * @return The altitude in meters above the WGS 84 reference ellipsoid.
-     */
-    public Property<Double> getAltitude() {
-        return altitude;
-    }
-
-    VehicleLocation(byte[] bytes) {
-        super(bytes);
-
-        while (propertyIterator.hasNext()) {
-            propertyIterator.parseNext(p -> {
-                switch (p.getPropertyIdentifier()) {
-                    case IDENTIFIER_COORDINATES:
-                        return coordinates.update(p);
-                    case IDENTIFIER_HEADING:
-                        return heading.update(p);
-                    case IDENTIFIER_ALTITUDE:
-                        return altitude.update(p);
-                }
-
-                return null;
-            });
-        }
-    }
-
-    @Override public boolean isState() {
-        return true;
-    }
-
-    private VehicleLocation(Builder builder) {
-        super(builder);
-        heading = builder.heading;
-        coordinates = builder.coordinates;
-        altitude = builder.altitude;
-    }
-
-    public static final class Builder extends Command.Builder {
-        private Property<Coordinates> coordinates;
-        private Property<Double> heading;
-        private Property<Double> altitude;
-
-        public Builder() {
-            super(TYPE);
-        }
-
+    public static class State extends SetCommand {
+        Property<Coordinates> coordinates = new Property(Coordinates.class, PROPERTY_COORDINATES);
+        Property<Double> heading = new Property(Double.class, PROPERTY_HEADING);
+        Property<Double> altitude = new Property(Double.class, PROPERTY_ALTITUDE);
+    
         /**
-         * @param heading The heading.
-         * @return The builder.
+         * @return The coordinates
          */
-        public Builder setHeading(Property<Double> heading) {
-            this.heading = heading;
-            heading.setIdentifier(IDENTIFIER_HEADING);
-            addProperty(heading);
-            return this;
+        public Property<Coordinates> getCoordinates() {
+            return coordinates;
         }
-
+    
         /**
-         * @param coordinates The vehicle coordinates.
-         * @return The builder.
+         * @return Heading in degrees
          */
-        public Builder setCoordinates(Property<Coordinates> coordinates) {
-            this.coordinates = coordinates;
-            coordinates.setIdentifier(IDENTIFIER_COORDINATES);
-            addProperty(coordinates);
-            return this;
+        public Property<Double> getHeading() {
+            return heading;
         }
-
+    
         /**
-         * @param altitude The altitude in meters above the WGS 84 reference ellipsoid
-         * @return The builder.
+         * @return Altitude in meters above the WGS 84 reference ellipsoid
          */
-        public Builder setAltitude(Property<Double> altitude) {
-            this.altitude = altitude;
-            altitude.setIdentifier(IDENTIFIER_ALTITUDE);
-            addProperty(altitude);
-            return this;
+        public Property<Double> getAltitude() {
+            return altitude;
         }
-
-        public VehicleLocation build() {
-            return new VehicleLocation(this);
+    
+        State(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_COORDINATES: return coordinates.update(p);
+                        case PROPERTY_HEADING: return heading.update(p);
+                        case PROPERTY_ALTITUDE: return altitude.update(p);
+                    }
+    
+                    return null;
+                });
+            }
+        }
+    
+        private State(Builder builder) {
+            super(builder);
+    
+            coordinates = builder.coordinates;
+            heading = builder.heading;
+            altitude = builder.altitude;
+        }
+    
+        public static final class Builder extends SetCommand.Builder {
+            private Property<Coordinates> coordinates;
+            private Property<Double> heading;
+            private Property<Double> altitude;
+    
+            public Builder() {
+                super(IDENTIFIER);
+            }
+    
+            public State build() {
+                return new State(this);
+            }
+    
+            /**
+             * @param coordinates The coordinates
+             * @return The builder
+             */
+            public Builder setCoordinates(Property<Coordinates> coordinates) {
+                this.coordinates = coordinates.setIdentifier(PROPERTY_COORDINATES);
+                addProperty(this.coordinates);
+                return this;
+            }
+            
+            /**
+             * @param heading Heading in degrees
+             * @return The builder
+             */
+            public Builder setHeading(Property<Double> heading) {
+                this.heading = heading.setIdentifier(PROPERTY_HEADING);
+                addProperty(this.heading);
+                return this;
+            }
+            
+            /**
+             * @param altitude Altitude in meters above the WGS 84 reference ellipsoid
+             * @return The builder
+             */
+            public Builder setAltitude(Property<Double> altitude) {
+                this.altitude = altitude.setIdentifier(PROPERTY_ALTITUDE);
+                addProperty(this.altitude);
+                return this;
+            }
         }
     }
 }

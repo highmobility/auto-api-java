@@ -1,23 +1,26 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
@@ -26,16 +29,16 @@ import com.highmobility.autoapi.property.ByteEnum;
 public enum NetworkSecurity implements ByteEnum {
     NONE((byte) 0x00),
     WEP((byte) 0x01),
-    WPA_WPA2_PERSONAL((byte) 0x02),
+    WPA((byte) 0x02),
     WPA2_PERSONAL((byte) 0x03);
 
-    public static NetworkSecurity fromByte(byte value) throws CommandParseException {
+    public static NetworkSecurity fromByte(byte byteValue) throws CommandParseException {
         NetworkSecurity[] values = NetworkSecurity.values();
 
         for (int i = 0; i < values.length; i++) {
-            NetworkSecurity type = values[i];
-            if (type.getByte() == value) {
-                return type;
+            NetworkSecurity state = values[i];
+            if (state.getByte() == byteValue) {
+                return state;
             }
         }
 
@@ -44,11 +47,11 @@ public enum NetworkSecurity implements ByteEnum {
 
     private byte value;
 
-    public byte getByte() {
-        return value;
-    }
-
     NetworkSecurity(byte value) {
         this.value = value;
+    }
+
+    @Override public byte getByte() {
+        return value;
     }
 }

@@ -1,88 +1,104 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-
-import java.util.Calendar;
+import com.highmobility.autoapi.value.Time;
 
 /**
- * This command is sent when a Get Vehicle Time message is received by the car. The local time of
- * the car is returned, hence the UTC timezone offset is included as well.
+ * The Vehicle Time capability
  */
-public class VehicleTime extends Command {
-    public static final Type TYPE = new Type(Identifier.VEHICLE_TIME, 0x01);
+public class VehicleTime {
+    public static final int IDENTIFIER = Identifier.VEHICLE_TIME;
 
-    private static final byte IDENTIFIER = 0x01;
-
-    Property<Calendar> vehicleTime = new Property(Calendar.class, IDENTIFIER);
+    public static final byte PROPERTY_VEHICLE_TIME = 0x01;
 
     /**
-     * @return The vehicle time.
+     * Get vehicle time
      */
-    public Property<Calendar> getVehicleTime() {
-        return vehicleTime;
-    }
-
-    VehicleTime(byte[] bytes) {
-        super(bytes);
-        while (propertyIterator.hasNext()) {
-            propertyIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == IDENTIFIER) {
-                    return vehicleTime.update(p);
-                }
-                return null;
-            });
+    public static class GetVehicleTime extends GetCommand {
+        public GetVehicleTime() {
+            super(IDENTIFIER);
+        }
+    
+        GetVehicleTime(byte[] bytes) throws CommandParseException {
+            super(bytes);
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
-    private VehicleTime(Builder builder) {
-        super(builder);
-        vehicleTime = builder.vehicleTime;
-    }
-
-    public static final class Builder extends Command.Builder {
-        Property<Calendar> vehicleTime;
-
-        public Builder() {
-            super(TYPE);
-        }
-
+    /**
+     * The vehicle time state
+     */
+    public static class State extends SetCommand {
+        Property<Time> vehicleTime = new Property(Time.class, PROPERTY_VEHICLE_TIME);
+    
         /**
-         * @param vehicleTime The vehicle time.
-         * @return The builder.
+         * @return Vehicle time in a 24h format
          */
-        public Builder setVehicleTime(Property<Calendar> vehicleTime) {
-            this.vehicleTime = vehicleTime;
-            vehicleTime.setIdentifier(IDENTIFIER);
-            addProperty(vehicleTime);
-            return this;
+        public Property<Time> getVehicleTime() {
+            return vehicleTime;
         }
-
-        public VehicleTime build() {
-            return new VehicleTime(this);
+    
+        State(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_VEHICLE_TIME: return vehicleTime.update(p);
+                    }
+    
+                    return null;
+                });
+            }
+        }
+    
+        private State(Builder builder) {
+            super(builder);
+    
+            vehicleTime = builder.vehicleTime;
+        }
+    
+        public static final class Builder extends SetCommand.Builder {
+            private Property<Time> vehicleTime;
+    
+            public Builder() {
+                super(IDENTIFIER);
+            }
+    
+            public State build() {
+                return new State(this);
+            }
+    
+            /**
+             * @param vehicleTime Vehicle time in a 24h format
+             * @return The builder
+             */
+            public Builder setVehicleTime(Property<Time> vehicleTime) {
+                this.vehicleTime = vehicleTime.setIdentifier(PROPERTY_VEHICLE_TIME);
+                addProperty(this.vehicleTime);
+                return this;
+            }
         }
     }
 }

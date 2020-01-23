@@ -1,134 +1,176 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.HmkitVersion;
+import com.highmobility.value.Bytes;
 
 /**
- * Command sent when a Get Firmware Version is received by the car.
+ * The Firmware Version capability
  */
-public class FirmwareVersion extends Command {
-    public static final Type TYPE = new Type(Identifier.FIRMWARE_VERSION, 0x01);
+public class FirmwareVersion {
+    public static final int IDENTIFIER = Identifier.FIRMWARE_VERSION;
 
-    private static final byte IDENTIFIER_SDK_VERSION = 0x01;
-    private static final byte IDENTIFIER_SDK_BUILD = 0x02;
-    private static final byte IDENTIFIER_APP_VERSION = 0x03;
-
-    Property<int[]> carSDKVersion = new Property(int[].class, IDENTIFIER_SDK_VERSION);
-    Property<String> carSDKBuild = new Property(String.class, IDENTIFIER_SDK_BUILD);
-    Property<String> applicationVersion = new Property(String.class, IDENTIFIER_APP_VERSION);
+    public static final byte PROPERTY_HMKIT_VERSION = 0x01;
+    public static final byte PROPERTY_HMKIT_BUILD_NAME = 0x02;
+    public static final byte PROPERTY_APPLICATION_VERSION = 0x03;
 
     /**
-     * @return The car SDK version.
+     * Get firmware version
      */
-    public Property<int[]> getCarSDKVersion() {
-        return carSDKVersion;
+    public static class GetFirmwareVersion extends GetCommand {
+        public GetFirmwareVersion() {
+            super(IDENTIFIER);
+        }
+    
+        GetFirmwareVersion(byte[] bytes) throws CommandParseException {
+            super(bytes);
+        }
+    }
+    
+    /**
+     * Get specific firmware version properties
+     */
+    public static class GetFirmwareVersionProperties extends GetCommand {
+        Bytes propertyIdentifiers;
+    
+        /**
+         * @return The property identifiers.
+         */
+        public Bytes getPropertyIdentifiers() {
+            return propertyIdentifiers;
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetFirmwareVersionProperties(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers.getByteArray());
+            this.propertyIdentifiers = propertyIdentifiers;
+        }
+    
+        GetFirmwareVersionProperties(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            propertyIdentifiers = getRange(COMMAND_TYPE_POSITION + 1, getLength());
+        }
     }
 
     /**
-     * @return The car SDK build.
+     * The firmware version state
      */
-    public Property<String> getCarSDKBuild() {
-        return carSDKBuild;
-    }
-
-    /**
-     * @return The application version.
-     */
-    public Property<String> getApplicationVersion() {
-        return applicationVersion;
-    }
-
-    FirmwareVersion(byte[] bytes) {
-        super(bytes);
-
-        while (propertyIterator.hasNext()) {
-            propertyIterator.parseNext(p -> {
-                switch (p.getPropertyIdentifier()) {
-                    case IDENTIFIER_SDK_VERSION:
-                        return carSDKVersion.update(p);
-                    case IDENTIFIER_SDK_BUILD:
-                        return carSDKBuild.update(p);
-                    case IDENTIFIER_APP_VERSION:
-                        return applicationVersion.update(p);
-                }
-
-                return null;
-            });
-        }
-    }
-
-    @Override public boolean isState() {
-        return true;
-    }
-
-    private FirmwareVersion(Builder builder) {
-        super(builder);
-        carSDKVersion = builder.carSdkVersion;
-        carSDKBuild = builder.carSDKBuild;
-        applicationVersion = builder.applicationVersion;
-    }
-
-    public static final class Builder extends Command.Builder {
-        private Property<int[]> carSdkVersion;
-        private Property<String> carSDKBuild;
-        private Property<String> applicationVersion;
-
-        public Builder() {
-            super(TYPE);
-        }
-
+    public static class State extends SetCommand {
+        Property<HmkitVersion> hmKitVersion = new Property(HmkitVersion.class, PROPERTY_HMKIT_VERSION);
+        Property<String> hmKitBuildName = new Property(String.class, PROPERTY_HMKIT_BUILD_NAME);
+        Property<String> applicationVersion = new Property(String.class, PROPERTY_APPLICATION_VERSION);
+    
         /**
-         * @param carSdkVersion The Car SDK version. Version is in format: [major, minor, patch]
-         * @return The builder.
+         * @return HMKit version
          */
-        public Builder setCarSdkVersion(Property<int[]> carSdkVersion) throws IllegalArgumentException {
-            if (carSdkVersion.getValue().length != 3) throw new IllegalArgumentException();
-            this.carSdkVersion = carSdkVersion;
-            addProperty(carSdkVersion.setIdentifier(IDENTIFIER_SDK_VERSION));
-            return this;
+        public Property<HmkitVersion> getHmKitVersion() {
+            return hmKitVersion;
         }
-
+    
         /**
-         * @param carSDKBuild The Car SDK build.
-         * @return The builder.
+         * @return HMKit version build name
          */
-        public Builder setCarSDKBuild(Property<String> carSDKBuild) {
-            this.carSDKBuild = carSDKBuild;
-            addProperty(carSDKBuild.setIdentifier(IDENTIFIER_SDK_BUILD));
-            return this;
+        public Property<String> getHmKitBuildName() {
+            return hmKitBuildName;
         }
-
+    
         /**
-         * @param applicationVersion The application version.
-         * @return The builder.
+         * @return Application version
          */
-        public Builder setApplicationVersion(Property<String> applicationVersion) {
-            this.applicationVersion = applicationVersion;
-            addProperty(applicationVersion.setIdentifier(IDENTIFIER_APP_VERSION));
-            return this;
+        public Property<String> getApplicationVersion() {
+            return applicationVersion;
         }
-
-        public FirmwareVersion build() {
-            return new FirmwareVersion(this);
+    
+        State(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_HMKIT_VERSION: return hmKitVersion.update(p);
+                        case PROPERTY_HMKIT_BUILD_NAME: return hmKitBuildName.update(p);
+                        case PROPERTY_APPLICATION_VERSION: return applicationVersion.update(p);
+                    }
+    
+                    return null;
+                });
+            }
+        }
+    
+        private State(Builder builder) {
+            super(builder);
+    
+            hmKitVersion = builder.hmKitVersion;
+            hmKitBuildName = builder.hmKitBuildName;
+            applicationVersion = builder.applicationVersion;
+        }
+    
+        public static final class Builder extends SetCommand.Builder {
+            private Property<HmkitVersion> hmKitVersion;
+            private Property<String> hmKitBuildName;
+            private Property<String> applicationVersion;
+    
+            public Builder() {
+                super(IDENTIFIER);
+            }
+    
+            public State build() {
+                return new State(this);
+            }
+    
+            /**
+             * @param hmKitVersion HMKit version
+             * @return The builder
+             */
+            public Builder setHmKitVersion(Property<HmkitVersion> hmKitVersion) {
+                this.hmKitVersion = hmKitVersion.setIdentifier(PROPERTY_HMKIT_VERSION);
+                addProperty(this.hmKitVersion);
+                return this;
+            }
+            
+            /**
+             * @param hmKitBuildName HMKit version build name
+             * @return The builder
+             */
+            public Builder setHmKitBuildName(Property<String> hmKitBuildName) {
+                this.hmKitBuildName = hmKitBuildName.setIdentifier(PROPERTY_HMKIT_BUILD_NAME);
+                addProperty(this.hmKitBuildName);
+                return this;
+            }
+            
+            /**
+             * @param applicationVersion Application version
+             * @return The builder
+             */
+            public Builder setApplicationVersion(Property<String> applicationVersion) {
+                this.applicationVersion = applicationVersion.setIdentifier(PROPERTY_APPLICATION_VERSION);
+                addProperty(this.applicationVersion);
+                return this;
+            }
         }
     }
 }

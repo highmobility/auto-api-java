@@ -1,23 +1,26 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
+ * The MIT License
  *
- * This file is part of HMKit Auto API.
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
  *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
@@ -31,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -51,15 +53,56 @@ public class Command extends Bytes {
     public static Logger logger = LoggerFactory.getLogger(Command.class);
     private static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be " +
             "null";
+    private static final String INVALID_VERSION_EXCEPTION = "Invalid AutoAPI version. This " +
+            "package supports level %d.";
+
     public static final byte NONCE_IDENTIFIER = (byte) 0xA0;
     public static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
     public static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
+    static final byte AUTO_API_VERSION = 0x0B;
+    static final int HEADER_LENGTH = 1;
+    static final int COMMAND_TYPE_POSITION = HEADER_LENGTH + 2;
 
-    Type type;
+    int type;
+    int identifier;
+    int autoApiVersion;
+
     Property[] properties;
     Bytes nonce;
     Bytes signature;
     Calendar timestamp;
+
+    public Command(Integer identifier, int size) {
+        super(HEADER_LENGTH + size);
+
+        set(0, AUTO_API_VERSION);
+        this.autoApiVersion = (int) AUTO_API_VERSION;
+
+        set(1, Identifier.toBytes(identifier));
+        this.identifier = identifier;
+    }
+
+    protected Command() {
+        super();
+    }
+
+    public int getAutoApiVersion() {
+        return autoApiVersion;
+    }
+
+    /**
+     * @return The identifier of the command.
+     */
+    public int getIdentifier() {
+        return identifier;
+    }
+
+    /**
+     * @return The type of the command.
+     */
+    public int getType() {
+        return type;
+    }
 
     /**
      * @return The nonce for the signature.
@@ -90,23 +133,6 @@ public class Command extends Bytes {
     }
 
     /**
-     * States are commands that describe some properties of the vehicle. They are usually returned
-     * after the state changes, as a response for a get command or as a state in {@link
-     * VehicleStatus#getStates()}.
-     * <p>
-     * States can have 0 or more properties.
-     *
-     * @return True if command is a state.
-     */
-    public boolean isState() {
-        return false;
-    }
-
-    protected boolean propertiesExpected() {
-        return false;
-    }
-
-    /**
      * @return All of the properties with raw values
      */
     public Property[] getProperties() {
@@ -122,24 +148,14 @@ public class Command extends Bytes {
         return null;
     }
 
-    public Type getType() {
-        return type;
-    }
-
-    /**
-     * @param type The command value to compare this command with.
-     * @return True if the command has the given commandType.
-     */
-    public boolean is(Type type) {
-        return type.equals(this.type);
-    }
-
+    // only called from CommandResolver
     Command(byte[] bytes) {
         super(bytes);
-        setTypeAndBytes(bytes);
 
-        if (propertiesExpected() && bytes.length < 7)
-            throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
+        if (bytes[0] != AUTO_API_VERSION)
+            logger.error(String.format(INVALID_VERSION_EXCEPTION, (int) AUTO_API_VERSION));
+
+        setTypeAndBytes(bytes);
 
         ArrayList<Property> builder = new ArrayList<>();
         PropertyEnumeration enumeration = new PropertyEnumeration(this.bytes);
@@ -156,47 +172,47 @@ public class Command extends Bytes {
         }
 
         // find universal properties
-        findUniversalProperties(builder.toArray(new Property[0]), false);
+        findUniversalProperties(identifier, type, builder.toArray(new Property[0]));
     }
 
-    Command(Type type, Property[] properties) {
-        this(type.getIdentifierAndType());
+    Command(Integer identifier, Integer type, Property[] properties) {
+        this.autoApiVersion = (int) AUTO_API_VERSION;
         this.type = type;
+        this.identifier = identifier;
         // here there are no timestamps. This constructor is called from setter commands only.
-        findUniversalProperties(properties, true);
-    }
-
-    Command(Type type) {
-        super(type.getIdentifierAndType());
-        this.type = type;
-    }
-
-    Command(Type type, List<Property> properties) {
-        this(type, properties.toArray(new Property[0]));
+        findUniversalProperties(identifier, type, properties, true);
     }
 
     private void setTypeAndBytes(byte[] bytes) {
-        if (bytes == null || bytes.length < 3) {
-            byte firstByte = 0, secondByte = 0, thirdByte = 0;
-            if (bytes != null) {
-                if (bytes.length > 0) firstByte = bytes[0];
-                if (bytes.length > 1) secondByte = bytes[1];
-                if (bytes.length > 2) thirdByte = bytes[2];
-            }
-            type = new Type(firstByte, secondByte, thirdByte);
-        } else {
-            type = new Type(bytes[0], bytes[1], bytes[2]);
+        byte versionByte = 0, firstByte = 0, secondByte = 0, thirdByte = 0;
+
+        if (bytes != null) {
+            if (bytes.length > 0) versionByte = bytes[0];
+            if (bytes.length > 1) firstByte = bytes[1];
+            if (bytes.length > 2) secondByte = bytes[2];
+            if (bytes.length > 3) thirdByte = bytes[3];
         }
+
+        identifier = Identifier.fromBytes(firstByte, secondByte);
+        type = Type.fromByte(thirdByte);
+        autoApiVersion = (int) versionByte;
     }
 
-    private void findUniversalProperties(Property[] properties, boolean createBytes) {
-        if (propertiesExpected() && (properties == null || properties.length == 0))
-            throw new IllegalArgumentException(ALL_ARGUMENTS_NULL_EXCEPTION);
+    protected void findUniversalProperties(Integer identifier, Integer type,
+                                           Property[] properties) {
+        findUniversalProperties(identifier, type, properties, false);
+    }
 
+    protected void findUniversalProperties(Integer identifier, Integer type, Property[] properties,
+                                           boolean createBytes) {
         this.properties = properties;
 
         // if from builder, bytes need to be built
-        if (createBytes) bytes = type.getIdentifierAndType();
+        byte[] identifierBytes = Identifier.toBytes(identifier);
+        if (createBytes) bytes = new byte[]{
+                AUTO_API_VERSION, identifierBytes[0], identifierBytes[1],
+                Type.toByte(type)
+        };
 
         for (int i = 0; i < properties.length; i++) {
             try {
@@ -223,85 +239,6 @@ public class Command extends Bytes {
         propertyIterator = new PropertyIterator();
     }
 
-    protected void createBytes(List<Property> properties) {
-        Bytes builder = new Bytes(3);
-        builder.set(0, type.getIdentifierAndType());
-
-        if (propertiesExpected() && properties.size() == 0) throw new IllegalArgumentException();
-
-        for (int i = 0; i < properties.size(); i++) {
-            builder = builder.concat(properties.get(i));
-        }
-
-        bytes = builder.getByteArray();
-    }
-
-    protected void createBytes(Property property) {
-        bytes = type.getIdentifierAndType();
-        bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
-    }
-
-    Command(Builder builder) throws IllegalArgumentException {
-        this(builder.type);
-        findUniversalProperties(builder.getProperties(), true);
-    }
-
-    public static class Builder {
-        private Type type;
-        private Bytes nonce;
-        private Bytes signature;
-        private Calendar timestamp;
-        protected ArrayList<Property> propertiesBuilder = new ArrayList<>();
-
-        public Builder(Type type) {
-            this.type = type;
-        }
-
-        public Builder addProperty(Property property) {
-            propertiesBuilder.add(property);
-            return this;
-        }
-
-        /**
-         * @param nonce The nonce used for the signature.
-         * @return The nonce.
-         */
-        public Builder setNonce(Bytes nonce) {
-            this.nonce = nonce;
-            addProperty(new Property(NONCE_IDENTIFIER, nonce));
-            return this;
-        }
-
-        /**
-         * @param signature The signature for the signed bytes(the whole command except the
-         *                  signature property)
-         * @return The builder.
-         */
-        public Builder setSignature(Bytes signature) {
-            this.signature = signature;
-            addProperty(new Property(SIGNATURE_IDENTIFIER, signature));
-            return this;
-        }
-
-        /**
-         * @param timestamp The timestamp of when the data was transmitted from the car.
-         * @return The builder.
-         */
-        public Builder setTimestamp(Calendar timestamp) {
-            this.timestamp = timestamp;
-            addProperty(new Property(TIMESTAMP_IDENTIFIER, timestamp));
-            return this;
-        }
-
-        public Command build() {
-            return new Command(this);
-        }
-
-        protected Property[] getProperties() {
-            return propertiesBuilder.toArray(new Property[0]);
-        }
-    }
-
     // Used to catch the property parsing exception, managing parsed properties in this class.
     protected PropertyIterator propertyIterator;
 
@@ -317,15 +254,7 @@ public class Command extends Bytes {
 
         @Override
         public boolean hasNext() {
-            boolean hasNext = currentIndex < currentSize && properties[currentIndex] != null;
-
-            if (hasNext == false && propertiesExpected() && propertiesReplaced == 0) {
-                // throw if propertiesExpected but returned 0 properties (child command
-                // didn't find its property)
-                throw new IllegalArgumentException();
-            }
-
-            return hasNext;
+            return currentIndex < currentSize && properties[currentIndex] != null;
         }
 
         @Override

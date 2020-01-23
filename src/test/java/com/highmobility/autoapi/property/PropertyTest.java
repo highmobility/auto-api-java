@@ -1,21 +1,45 @@
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.ChargeState;
-import com.highmobility.autoapi.ClimateState;
+import com.highmobility.autoapi.BaseTest;
+import com.highmobility.autoapi.Charging;
+import com.highmobility.autoapi.Charging.ChargeMode;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.value.Capability;
-import com.highmobility.autoapi.value.charging.ChargeMode;
-import com.highmobility.autoapitest.TestUtils;
+import com.highmobility.autoapi.TestUtils;
+import com.highmobility.autoapi.value.Acceleration;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PropertyTest {
+public class PropertyTest extends BaseTest {
     // bytes: 00000160E0EA1388
     Calendar timestamp = TestUtils.getCalendar("2018-01-10T16:32:05+0000");
 
@@ -152,8 +176,8 @@ public class PropertyTest {
             // test if float expected but bytes are with smaller length
             // charging with invalid length chargeCurrentAC. cannot parse to float
             // correct chargeCurrentDC
-            ChargeState command = (ChargeState) CommandResolver.resolve(
-                    "002301" +
+            Charging.State command = (Charging.State) CommandResolver.resolve(
+                    COMMAND_HEADER + "002301" +
                             "040006010003BF1999" +
                             "050007010004BF19999A");
             assertTrue(command.getBatteryCurrentAC().getValue() == null);
@@ -167,8 +191,8 @@ public class PropertyTest {
         // test if invalid failure reason
         // 0x11 is invalid failure reason
         TestUtils.errorLogExpected(() -> {
-            ChargeState command = (ChargeState) CommandResolver.resolve(
-                    "002301" +
+            Charging.State command = (Charging.State) CommandResolver.resolve(
+                    COMMAND_HEADER + "002301" +
                             "040016010004BF19999A" + "03000C110A54727920696e20343073" +
                             "050007010004BF19999A");
 
@@ -231,6 +255,15 @@ public class PropertyTest {
         new PropertyComponentValue(bytes);
     }
 
+    @Test public void typeFromPropertyWithNoValueComponent() {
+        Bytes noComponentBytes = new Bytes("010000");
+        Property prop = new Property(noComponentBytes.getByteArray());
+
+        assertThrows(CommandParseException.class, () -> {
+            new Acceleration(prop);
+        });
+    }
+
     @Test public void emptyString() throws CommandParseException {
         // representing null/"" string
         // null = no value component
@@ -278,17 +311,5 @@ public class PropertyTest {
         checked.update(integerProperty);
         // assert that the bytes are correct to create 253 int
         assertTrue(checked.getValue() == 253);
-    }
-
-    @Test public void string() {
-        Bytes bytes = new Bytes("01001401001131484D3345303733314837373936393543");
-        String s = Property.getString(bytes.getByteArray());
-    }
-
-    @Test public void capability() throws CommandParseException {
-        Bytes bytes = new Bytes("00240001121314151617");
-        Capability capabilityProperty = new Capability();
-        capabilityProperty.update(bytes);
-        assertTrue(capabilityProperty.isSupported(ClimateState.TYPE));
     }
 }

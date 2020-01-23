@@ -1,91 +1,103 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
-
-
 
 import com.highmobility.autoapi.property.Property;
 
-import javax.annotation.Nullable;
-
 /**
- * Command sent when a Get Weather Conditions is received by the car.
+ * The Weather Conditions capability
  */
-public class WeatherConditions extends Command {
-    public static final Type TYPE = new Type(Identifier.WEATHER_CONDITIONS, 0x01);
+public class WeatherConditions {
+    public static final int IDENTIFIER = Identifier.WEATHER_CONDITIONS;
 
-    private static final byte IDENTIFIER_RAIN = 0x01;
-    Property<Double> rainIntensity = new Property(Double.class, IDENTIFIER_RAIN);
+    public static final byte PROPERTY_RAIN_INTENSITY = 0x01;
 
     /**
-     * @return The rain intensity.
+     * Get weather conditions
      */
-
-    public Property<Double> getRainIntensity() {
-        return rainIntensity;
-    }
-
-    WeatherConditions(byte[] bytes) {
-        super(bytes);
-
-        while (propertyIterator.hasNext()) {
-            propertyIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == IDENTIFIER_RAIN) {
-                    return rainIntensity.update(p);
-                }
-
-                return null;
-            });
+    public static class GetWeatherConditions extends GetCommand {
+        public GetWeatherConditions() {
+            super(IDENTIFIER);
+        }
+    
+        GetWeatherConditions(byte[] bytes) throws CommandParseException {
+            super(bytes);
         }
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
-    private WeatherConditions(Builder builder) {
-        super(builder);
-        rainIntensity = builder.rainIntensity;
-    }
-
-    public static final class Builder extends Command.Builder {
-        private Property<Double> rainIntensity;
-
-        public Builder() {
-            super(TYPE);
-        }
-
+    /**
+     * The weather conditions state
+     */
+    public static class State extends SetCommand {
+        Property<Double> rainIntensity = new Property(Double.class, PROPERTY_RAIN_INTENSITY);
+    
         /**
-         * @param rainIntensity The rain intensity percentage.
-         * @return The builder.
+         * @return Measured raining intensity percentage, whereas 0% is no rain and 100% is maximum rain
          */
-        public Builder setRainIntensity(Property<Double> rainIntensity) {
-            this.rainIntensity = rainIntensity;
-            rainIntensity.setIdentifier(IDENTIFIER_RAIN);
-            addProperty(rainIntensity);
-            return this;
+        public Property<Double> getRainIntensity() {
+            return rainIntensity;
         }
-
-        public WeatherConditions build() {
-            return new WeatherConditions(this);
+    
+        State(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_RAIN_INTENSITY: return rainIntensity.update(p);
+                    }
+    
+                    return null;
+                });
+            }
+        }
+    
+        private State(Builder builder) {
+            super(builder);
+    
+            rainIntensity = builder.rainIntensity;
+        }
+    
+        public static final class Builder extends SetCommand.Builder {
+            private Property<Double> rainIntensity;
+    
+            public Builder() {
+                super(IDENTIFIER);
+            }
+    
+            public State build() {
+                return new State(this);
+            }
+    
+            /**
+             * @param rainIntensity Measured raining intensity percentage, whereas 0% is no rain and 100% is maximum rain
+             * @return The builder
+             */
+            public Builder setRainIntensity(Property<Double> rainIntensity) {
+                this.rainIntensity = rainIntensity.setIdentifier(PROPERTY_RAIN_INTENSITY);
+                addProperty(this.rainIntensity);
+                return this;
+            }
         }
     }
 }

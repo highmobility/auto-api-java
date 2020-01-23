@@ -1,128 +1,131 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.value.DashboardLight;
 import com.highmobility.autoapi.property.Property;
-
+import com.highmobility.autoapi.value.DashboardLight;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 /**
- * This message is sent when a Get Dashboard Lights message is received by the car. The new state is
- * included in the message payload and may be the result of user, device or car triggered action.
+ * The Dashboard Lights capability
  */
-public class DashboardLights extends Command {
-    public static final Type TYPE = new Type(Identifier.DASHBOARD_LIGHTS, 0x01);
-    public static final byte IDENTIFIER_DASHBOARD_LIGHT = 0x01;
+public class DashboardLights {
+    public static final int IDENTIFIER = Identifier.DASHBOARD_LIGHTS;
 
-    Property<DashboardLight>[] lights;
-
-    /**
-     * @return All of the available dashboard lights.
-     */
-    public Property<DashboardLight>[] getLights() {
-        return lights;
-    }
+    public static final byte PROPERTY_DASHBOARD_LIGHTS = 0x01;
 
     /**
-     * Get a dashboard light for the given light type.
-     *
-     * @param type The dashboard light type.
-     * @return The Dashboard light, if exists.
+     * Get dashboard lights
      */
-    @Nullable public Property<DashboardLight> getLight(DashboardLight.Type type) {
-        for (int i = 0; i < lights.length; i++) {
-            Property<DashboardLight> light = lights[i];
-            if (light.getValue() != null && light.getValue().getType() == type) return light;
+    public static class GetDashboardLights extends GetCommand {
+        public GetDashboardLights() {
+            super(IDENTIFIER);
         }
-
-        return null;
-    }
-
-    DashboardLights(byte[] bytes) {
-        super(bytes);
-
-        List<Property<DashboardLight>> builder = new ArrayList<>();
-
-        while (propertyIterator.hasNext()) {
-            propertyIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == IDENTIFIER_DASHBOARD_LIGHT) {
-                    Property<DashboardLight> light =
-                            new Property(DashboardLight.class, p);
-                    builder.add(light);
-                    return light;
-                }
-                return null;
-            });
+    
+        GetDashboardLights(byte[] bytes) throws CommandParseException {
+            super(bytes);
         }
-
-        lights = builder.toArray(new Property[0]);
     }
 
-    @Override public boolean isState() {
-        return true;
-    }
-
-    private DashboardLights(Builder builder) {
-        super(builder);
-        lights = builder.lights.toArray(new Property[0]);
-    }
-
-    public static final class Builder extends Command.Builder {
-        List<Property<DashboardLight>> lights = new ArrayList<>();
-
+    /**
+     * The dashboard lights state
+     */
+    public static class State extends SetCommand {
+        Property<DashboardLight>[] dashboardLights;
+    
         /**
-         * @param lights The dashboard lights.
-         * @return The builder.
+         * @return The dashboard lights
          */
-        public Builder setLights(Property<DashboardLight>[] lights) {
-            this.lights = Arrays.asList(lights);
-            for (int i = 0; i < lights.length; i++) {
-                addProperty(lights[i]);
+        public Property<DashboardLight>[] getDashboardLights() {
+            return dashboardLights;
+        }
+    
+        State(byte[] bytes) throws CommandParseException {
+            super(bytes);
+    
+            ArrayList<Property> dashboardLightsBuilder = new ArrayList<>();
+    
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_DASHBOARD_LIGHTS:
+                            Property<DashboardLight> dashboardLight = new Property(DashboardLight.class, p);
+                            dashboardLightsBuilder.add(dashboardLight);
+                            return dashboardLight;
+                    }
+    
+                    return null;
+                });
             }
-            return this;
+    
+            dashboardLights = dashboardLightsBuilder.toArray(new Property[0]);
         }
-
-        /**
-         * Add a single dashboard light.
-         *
-         * @param light The Dashboard light.
-         * @return The builder.
-         */
-        public Builder addLight(Property<DashboardLight> light) {
-            this.lights.add(light);
-            addProperty(light.setIdentifier(IDENTIFIER_DASHBOARD_LIGHT));
-            return this;
+    
+        private State(Builder builder) {
+            super(builder);
+    
+            dashboardLights = builder.dashboardLights.toArray(new Property[0]);
         }
-
-        public Builder() {
-            super(TYPE);
-        }
-
-        public DashboardLights build() {
-            return new DashboardLights(this);
+    
+        public static final class Builder extends SetCommand.Builder {
+            private List<Property> dashboardLights = new ArrayList<>();
+    
+            public Builder() {
+                super(IDENTIFIER);
+            }
+    
+            public State build() {
+                return new State(this);
+            }
+    
+            /**
+             * Add an array of dashboard lights.
+             * 
+             * @param dashboardLights The dashboard lights
+             * @return The builder
+             */
+            public Builder setDashboardLights(Property<DashboardLight>[] dashboardLights) {
+                this.dashboardLights.clear();
+                for (int i = 0; i < dashboardLights.length; i++) {
+                    addDashboardLight(dashboardLights[i]);
+                }
+            
+                return this;
+            }
+            /**
+             * Add a single dashboard light.
+             * 
+             * @param dashboardLight The dashboard light
+             * @return The builder
+             */
+            public Builder addDashboardLight(Property<DashboardLight> dashboardLight) {
+                dashboardLight.setIdentifier(PROPERTY_DASHBOARD_LIGHTS);
+                addProperty(dashboardLight);
+                dashboardLights.add(dashboardLight);
+                return this;
+            }
         }
     }
 }

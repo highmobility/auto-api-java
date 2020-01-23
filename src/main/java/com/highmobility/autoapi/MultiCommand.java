@@ -1,98 +1,175 @@
 /*
- * HMKit Auto API - Auto API Parser for Java
- * Copyright (C) 2018 High-Mobility <licensing@high-mobility.com>
- *
- * This file is part of HMKit Auto API.
- *
- * HMKit Auto API is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * HMKit Auto API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with HMKit Auto API.  If not, see <http://www.gnu.org/licenses/>.
+ * The MIT License
+ * 
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 /**
- * Send multiple commands to the car. The car will respond with the Multi State message that
- * includes the new states of every affected capability.
+ * The Multi Command capability
  */
-public class MultiCommand extends Command {
-    public static final Type TYPE = new Type(Identifier.MULTI_COMMAND, 0x02);
+public class MultiCommand {
+    public static final int IDENTIFIER = Identifier.MULTI_COMMAND;
 
-    private static final byte PROP_IDENTIFIER = 0x01;
-
-    Property<Command>[] commands;
-
-    /**
-     * @return All of the commands.
-     */
-    public Property<Command>[] getCommands() {
-        return commands;
-    }
+    public static final byte PROPERTY_MULTI_STATES = 0x01;
+    public static final byte PROPERTY_MULTI_COMMANDS = 0x02;
 
     /**
-     * Get a command with a type.
-     *
-     * @param type The command type.
-     * @return The command.
+     * The multi command state
      */
-    @Nullable public Property<Command> getCommand(Type type) {
-        for (Property<Command> command : commands) {
-            if (command.getValue() != null && command.getValue().is(type)) return command;
+    public static class State extends SetCommand {
+        Property<Command>[] multiStates;
+    
+        /**
+         * @return The incoming states
+         */
+        public Property<Command>[] getMultiStates() {
+            return multiStates;
         }
-
-        return null;
-    }
-
-    /**
-     * @param commands The commands.
-     */
-    public MultiCommand(Command[] commands) {
-        super(TYPE);
-        List<Property> builder = new ArrayList<>();
-
-        for (Command command : commands) {
-            Property prop = new Property(PROP_IDENTIFIER, command);
-            builder.add(prop);
+    
+        State(byte[] bytes) throws CommandParseException {
+            super(bytes);
+    
+            ArrayList<Property> multiStatesBuilder = new ArrayList<>();
+    
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_MULTI_STATES:
+                            Property<Command> multiState = new Property(Command.class, p);
+                            multiStatesBuilder.add(multiState);
+                            return multiState;
+                    }
+    
+                    return null;
+                });
+            }
+    
+            multiStates = multiStatesBuilder.toArray(new Property[0]);
         }
-
-        this.commands = builder.toArray(new Property[0]);
-        createBytes(builder);
-    }
-
-    MultiCommand(byte[] bytes) {
-        super(bytes);
-
-        ArrayList<Property<Command>> builder = new ArrayList<>();
-
-        while (propertyIterator.hasNext()) {
-            propertyIterator.parseNext(p -> {
-                if (p.getPropertyIdentifier() == PROP_IDENTIFIER) {
-                    Property c = new Property(Command.class, p);
-                    builder.add(c);
-                    return c;
-
+    
+        private State(Builder builder) {
+            super(builder);
+    
+            multiStates = builder.multiStates.toArray(new Property[0]);
+        }
+    
+        public static final class Builder extends SetCommand.Builder {
+            private List<Property> multiStates = new ArrayList<>();
+    
+            public Builder() {
+                super(IDENTIFIER);
+            }
+    
+            public State build() {
+                return new State(this);
+            }
+    
+            /**
+             * Add an array of multi states.
+             * 
+             * @param multiStates The multi states. The incoming states
+             * @return The builder
+             */
+            public Builder setMultiStates(Property<Command>[] multiStates) {
+                this.multiStates.clear();
+                for (int i = 0; i < multiStates.length; i++) {
+                    addMultiState(multiStates[i]);
                 }
-
-                return null;
-            });
+            
+                return this;
+            }
+            /**
+             * Add a single multi state.
+             * 
+             * @param multiState The multi state. The incoming states
+             * @return The builder
+             */
+            public Builder addMultiState(Property<Command> multiState) {
+                multiState.setIdentifier(PROPERTY_MULTI_STATES);
+                addProperty(multiState);
+                multiStates.add(multiState);
+                return this;
+            }
         }
+    }
 
-        commands = builder.toArray(new Property[0]);
+    /**
+     * Multi command command
+     */
+    public static class MultiCommandCommand extends SetCommand {
+        Property<Command>[] multiCommands;
+    
+        /**
+         * @return The multi commands
+         */
+        public Property<Command>[] getMultiCommands() {
+            return multiCommands;
+        }
+        
+        /**
+         * Multi command command
+         *
+         * @param multiCommands The outgoing commands
+         */
+        public MultiCommandCommand(Command[] multiCommands) {
+            super(IDENTIFIER);
+        
+            ArrayList<Property> multiCommandsBuilder = new ArrayList<>();
+            if (multiCommands != null) {
+                for (Command multiCommand : multiCommands) {
+                    Property prop = new Property(0x02, multiCommand);
+                    multiCommandsBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.multiCommands = multiCommandsBuilder.toArray(new Property[0]);
+            createBytes();
+        }
+    
+        MultiCommandCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+        
+            ArrayList<Property<Command>> multiCommandsBuilder = new ArrayList<>();
+        
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_MULTI_COMMANDS: {
+                            Property multiCommand = new Property(Command.class, p);
+                            multiCommandsBuilder.add(multiCommand);
+                            return multiCommand;
+                        }
+                    }
+                    return null;
+                });
+            }
+        
+            multiCommands = multiCommandsBuilder.toArray(new Property[0]);
+            if (this.multiCommands.length == 0) 
+                throw new NoPropertiesException();
+        }
     }
 }
