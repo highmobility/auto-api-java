@@ -99,6 +99,7 @@ public class Command extends Bytes {
 
     /**
      * @return The type of the command.
+     * @see Type
      */
     public int getType() {
         return type;
