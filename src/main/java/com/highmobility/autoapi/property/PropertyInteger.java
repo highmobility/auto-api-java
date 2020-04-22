@@ -42,7 +42,9 @@ public class PropertyInteger extends Property<Integer> {
         super(Integer.class, identifier);
         this.failure = value.failure;
         this.timestamp = value.timestamp;
-        update(signed, length, value.value.value);
+        Integer intValue = null;
+        if (value.value != null) intValue = value.value.value;
+        update(signed, length, intValue);
     }
 
     public PropertyInteger(int identifier, boolean signed, int length, Property<Integer> value) {
@@ -63,7 +65,9 @@ public class PropertyInteger extends Property<Integer> {
         // this copies the components and creates bytes
         super.update(p);
 
-        if (p.getValueComponent().getValueBytes().getLength() >= 1) {
+        if (p.getValueComponent() != null &&
+                value != null &&
+                p.getValueComponent().getValueBytes().getLength() >= 1) {
             if (signed) value.value = getSignedInt(p.getValueComponent().getValueBytes());
             else value.value = getUnsignedInt(p.getValueComponent().getValueBytes());
         }

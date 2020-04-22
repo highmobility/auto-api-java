@@ -231,10 +231,11 @@ public class Property<T> extends Bytes {
 
     // MARK: builder ctor
 
-    public Property(@Nullable T value,
+    public Property(byte identifier,
+                    @Nullable T value,
                     @Nullable Calendar timestamp,
                     @Nullable PropertyComponentFailure failure) {
-        update((byte) 0, value, timestamp, failure);
+        update(identifier, value, timestamp, failure);
     }
 
     public Property(@Nullable T value) {

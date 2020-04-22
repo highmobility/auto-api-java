@@ -131,7 +131,7 @@ public class PropertyTest extends BaseTest {
 
     @Test public void buildValueWithTimestamp() {
         // test bytes correct and components exist
-        Property property = new Property(
+        Property property = new Property((byte) 0x12,
                 ChargeMode.IMMEDIATE,
                 timestamp,
                 null);
@@ -139,7 +139,7 @@ public class PropertyTest extends BaseTest {
         testValueComponent(property, 1, ChargeMode.IMMEDIATE);
         testTimestampComponent(property);
 
-        Bytes completeBytes = new Bytes("00000F" +
+        Bytes completeBytes = new Bytes("12000F" +
                 "01000100" + // value
                 "02000800000160E0EA1388"); // timestamp
         assertTrue(property.equals(completeBytes));
@@ -204,7 +204,7 @@ public class PropertyTest extends BaseTest {
 
     @Test public void buildFailure() {
         // test bytes correct
-        Property property = new Property(
+        Property property = new Property((byte) 0x11,
                 null,
                 null,
                 new PropertyComponentFailure(PropertyComponentFailure.Reason.RATE_LIMIT,
@@ -212,7 +212,7 @@ public class PropertyTest extends BaseTest {
 
         assertTrue(property.getTimestampComponent() == null);
         assertTrue(property.getValueComponent() == null);
-        Bytes completeBytes = new Bytes("00000F" +
+        Bytes completeBytes = new Bytes("11000F" +
                 "" + // value
                 "" + // timestamp
                 "03000C000A54727920696e20343073"); //failure
@@ -220,7 +220,7 @@ public class PropertyTest extends BaseTest {
     }
 
     @Test public void buildFailureIgnoreValue() {
-        Property property = new Property(
+        Property property = new Property((byte) 0x02,
                 ChargeMode.IMMEDIATE,
                 timestamp,
                 new PropertyComponentFailure(PropertyComponentFailure.Reason.RATE_LIMIT, "Try in " +
@@ -228,7 +228,7 @@ public class PropertyTest extends BaseTest {
 
         assertTrue(property.getTimestampComponent() != null);
         assertTrue(property.getValueComponent() == null);
-        Bytes completeBytes = new Bytes("00001A" +
+        Bytes completeBytes = new Bytes("02001A" +
                 "" + // value
                 "02000800000160E0EA1388" + // timestamp
                 "03000C000A54727920696e20343073"); //failure
@@ -311,5 +311,12 @@ public class PropertyTest extends BaseTest {
         checked.update(integerProperty);
         // assert that the bytes are correct to create 253 int
         assertTrue(checked.getValue() == 253);
+    }
+
+    @Test public void integerPropertyUpdateWithoutValue() {
+        PropertyComponentFailure failure = new PropertyComponentFailure(PropertyComponentFailure.Reason.UNAUTHORISED, "Permissions not granted");
+        Property<Integer> property = new Property<Integer>((byte) 0x02, null, null, failure);
+        PropertyInteger intProperty = new PropertyInteger(0x02, true, 2, property);
+
     }
 }
