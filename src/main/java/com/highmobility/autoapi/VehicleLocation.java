@@ -42,11 +42,11 @@ public class VehicleLocation {
      */
     public static class GetVehicleLocation extends GetCommand {
         public GetVehicleLocation() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetVehicleLocation(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
     
@@ -54,26 +54,22 @@ public class VehicleLocation {
      * Get specific vehicle location properties
      */
     public static class GetVehicleLocationProperties extends GetCommand {
-        Bytes propertyIdentifiers;
-    
         /**
-         * @return The property identifiers.
+         * @param propertyIdentifiers The property identifiers
          */
-        public Bytes getPropertyIdentifiers() {
-            return propertyIdentifiers;
+        public GetVehicleLocationProperties(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
         }
     
         /**
          * @param propertyIdentifiers The property identifiers
          */
-        public GetVehicleLocationProperties(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers.getByteArray());
-            this.propertyIdentifiers = propertyIdentifiers;
+        public GetVehicleLocationProperties(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
         }
     
-        GetVehicleLocationProperties(byte[] bytes) throws CommandParseException {
-            super(bytes);
-            propertyIdentifiers = getRange(COMMAND_TYPE_POSITION + 1, getLength());
+        GetVehicleLocationProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
         }
     }
 

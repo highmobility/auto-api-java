@@ -52,11 +52,11 @@ public class ChassisSettings {
      */
     public static class GetChassisSettings extends GetCommand {
         public GetChassisSettings() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetChassisSettings(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
     
@@ -64,26 +64,22 @@ public class ChassisSettings {
      * Get specific chassis settings properties
      */
     public static class GetChassisSettingsProperties extends GetCommand {
-        Bytes propertyIdentifiers;
-    
         /**
-         * @return The property identifiers.
+         * @param propertyIdentifiers The property identifiers
          */
-        public Bytes getPropertyIdentifiers() {
-            return propertyIdentifiers;
+        public GetChassisSettingsProperties(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
         }
     
         /**
          * @param propertyIdentifiers The property identifiers
          */
-        public GetChassisSettingsProperties(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers.getByteArray());
-            this.propertyIdentifiers = propertyIdentifiers;
+        public GetChassisSettingsProperties(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
         }
     
-        GetChassisSettingsProperties(byte[] bytes) throws CommandParseException {
-            super(bytes);
-            propertyIdentifiers = getRange(COMMAND_TYPE_POSITION + 1, getLength());
+        GetChassisSettingsProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
         }
     }
 

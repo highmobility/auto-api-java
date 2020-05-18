@@ -41,11 +41,11 @@ public class DashboardLights {
      */
     public static class GetDashboardLights extends GetCommand {
         public GetDashboardLights() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetDashboardLights(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
 

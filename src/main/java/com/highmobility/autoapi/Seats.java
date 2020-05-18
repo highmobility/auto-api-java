@@ -46,11 +46,11 @@ public class Seats {
      */
     public static class GetState extends GetCommand {
         public GetState() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetState(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
     
@@ -58,26 +58,22 @@ public class Seats {
      * Get specific seats properties
      */
     public static class GetProperties extends GetCommand {
-        Bytes propertyIdentifiers;
-    
         /**
-         * @return The property identifiers.
+         * @param propertyIdentifiers The property identifiers
          */
-        public Bytes getPropertyIdentifiers() {
-            return propertyIdentifiers;
+        public GetProperties(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
         }
     
         /**
          * @param propertyIdentifiers The property identifiers
          */
-        public GetProperties(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers.getByteArray());
-            this.propertyIdentifiers = propertyIdentifiers;
+        public GetProperties(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
         }
     
-        GetProperties(byte[] bytes) throws CommandParseException {
-            super(bytes);
-            propertyIdentifiers = getRange(COMMAND_TYPE_POSITION + 1, getLength());
+        GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
         }
     }
 

@@ -61,11 +61,11 @@ public class Usage {
      */
     public static class GetUsage extends GetCommand {
         public GetUsage() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetUsage(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
     
@@ -73,26 +73,22 @@ public class Usage {
      * Get specific usage properties
      */
     public static class GetUsageProperties extends GetCommand {
-        Bytes propertyIdentifiers;
-    
         /**
-         * @return The property identifiers.
+         * @param propertyIdentifiers The property identifiers
          */
-        public Bytes getPropertyIdentifiers() {
-            return propertyIdentifiers;
+        public GetUsageProperties(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
         }
     
         /**
          * @param propertyIdentifiers The property identifiers
          */
-        public GetUsageProperties(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers.getByteArray());
-            this.propertyIdentifiers = propertyIdentifiers;
+        public GetUsageProperties(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
         }
     
-        GetUsageProperties(byte[] bytes) throws CommandParseException {
-            super(bytes);
-            propertyIdentifiers = getRange(COMMAND_TYPE_POSITION + 1, getLength());
+        GetUsageProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
         }
     }
 

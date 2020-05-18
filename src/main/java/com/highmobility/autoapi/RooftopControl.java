@@ -45,11 +45,11 @@ public class RooftopControl {
      */
     public static class GetRooftopState extends GetCommand {
         public GetRooftopState() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetRooftopState(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
     
@@ -57,26 +57,22 @@ public class RooftopControl {
      * Get specific rooftop control properties
      */
     public static class GetRooftopProperties extends GetCommand {
-        Bytes propertyIdentifiers;
-    
         /**
-         * @return The property identifiers.
+         * @param propertyIdentifiers The property identifiers
          */
-        public Bytes getPropertyIdentifiers() {
-            return propertyIdentifiers;
+        public GetRooftopProperties(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
         }
     
         /**
          * @param propertyIdentifiers The property identifiers
          */
-        public GetRooftopProperties(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers.getByteArray());
-            this.propertyIdentifiers = propertyIdentifiers;
+        public GetRooftopProperties(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
         }
     
-        GetRooftopProperties(byte[] bytes) throws CommandParseException {
-            super(bytes);
-            propertyIdentifiers = getRange(COMMAND_TYPE_POSITION + 1, getLength());
+        GetRooftopProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
         }
     }
 

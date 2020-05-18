@@ -42,11 +42,11 @@ public class DriverFatigue {
      */
     public static class GetState extends GetCommand {
         public GetState() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetState(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
 

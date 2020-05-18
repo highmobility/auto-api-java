@@ -23,23 +23,51 @@
  */
 package com.highmobility.autoapi;
 
-class GetCommand extends Command {
-    // the get state ctor
-    GetCommand(Integer identifier) {
-        super(identifier, 3);
-        set(COMMAND_TYPE_POSITION, (byte) 0x00);
-        type = Type.GET;
+import com.highmobility.value.Bytes;
+
+/**
+ * @param <T> response class
+ */
+public abstract class GetCommand<T extends Command> extends Command {
+    Bytes propertyIdentifiers;
+    final Class<T> responseClass;
+
+    /**
+     * @return The queried property identifiers.
+     */
+    public Bytes getPropertyIdentifiers() {
+        return propertyIdentifiers;
     }
 
-    GetCommand(Integer identifier, byte[] propertyIdentifiers) {
-        super(identifier, 3 + (propertyIdentifiers != null ? propertyIdentifiers.length : 0));
+    /**
+     * @return The response class.
+     */
+    public Class<T> getResponseClass() {
+        return responseClass;
+    }
+
+    // the get state ctor
+    GetCommand(Class<T> responseClass, Integer identifier) {
+        super(identifier, 3);
+        this.responseClass = responseClass;
+        set(COMMAND_TYPE_POSITION, (byte) 0x00);
+        type = Type.GET;
+        propertyIdentifiers = new Bytes();
+    }
+
+    GetCommand(Class<T> responseClass, Integer identifier, Bytes propertyIdentifiers) {
+        super(identifier, 3 + (propertyIdentifiers != null ? propertyIdentifiers.getLength() : 0));
+        this.responseClass = responseClass;
         set(COMMAND_TYPE_POSITION, (byte) 0x00);
         set(COMMAND_TYPE_POSITION + 1, propertyIdentifiers);
         type = Type.GET;
+        this.propertyIdentifiers = propertyIdentifiers;
     }
 
-    GetCommand(byte[] bytes) throws CommandParseException {
+    GetCommand(Class<T> responseClass, byte[] bytes) throws CommandParseException {
         super(bytes);
+        this.responseClass = responseClass;
         if (bytes[COMMAND_TYPE_POSITION] != Type.GET) throw new CommandParseException();
+        propertyIdentifiers = getRange(COMMAND_TYPE_POSITION + 1, getLength());
     }
 }

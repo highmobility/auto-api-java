@@ -47,11 +47,11 @@ public class RemoteControl {
      */
     public static class GetControlState extends GetCommand {
         public GetControlState() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetControlState(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
 

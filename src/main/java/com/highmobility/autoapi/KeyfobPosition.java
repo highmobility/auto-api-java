@@ -42,11 +42,11 @@ public class KeyfobPosition {
      */
     public static class GetKeyfobPosition extends GetCommand {
         public GetKeyfobPosition() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetKeyfobPosition(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
 

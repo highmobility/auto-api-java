@@ -38,11 +38,11 @@ public class WeatherConditions {
      */
     public static class GetWeatherConditions extends GetCommand {
         public GetWeatherConditions() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetWeatherConditions(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
 

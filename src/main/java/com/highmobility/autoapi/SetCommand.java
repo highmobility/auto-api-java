@@ -29,7 +29,7 @@ import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-class SetCommand extends Command {
+public class SetCommand extends Command {
     ArrayList<Property> propertiesBuilder;
 
     SetCommand(Integer identifier) {

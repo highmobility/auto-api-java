@@ -39,11 +39,11 @@ public class VehicleTime {
      */
     public static class GetVehicleTime extends GetCommand {
         public GetVehicleTime() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetVehicleTime(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
 

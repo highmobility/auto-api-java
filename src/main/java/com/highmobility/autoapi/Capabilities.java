@@ -41,11 +41,11 @@ public class Capabilities {
      */
     public static class GetCapabilities extends GetCommand {
         public GetCapabilities() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetCapabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
 

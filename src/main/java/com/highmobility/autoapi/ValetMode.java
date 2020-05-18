@@ -39,11 +39,11 @@ public class ValetMode {
      */
     public static class GetValetMode extends GetCommand {
         public GetValetMode() {
-            super(IDENTIFIER);
+            super(State.class, IDENTIFIER);
         }
     
         GetValetMode(byte[] bytes) throws CommandParseException {
-            super(bytes);
+            super(State.class, bytes);
         }
     }
 

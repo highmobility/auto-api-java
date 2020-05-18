@@ -66,7 +66,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new VehicleStatus.GetVehicleStatus(bytes);
                         } else {
-                            command = new VehicleStatus.GetVehicleStatusProperties(bytes);
+                            command = new VehicleStatus.GetVehicleStatusProperties(bytes, true);
                         }
                     }
                     break;
@@ -95,7 +95,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new ParkingTicket.GetParkingTicket(bytes);
                         } else {
-                            command = new ParkingTicket.GetParkingTicketProperties(bytes);
+                            command = new ParkingTicket.GetParkingTicketProperties(bytes, true);
                         }
                     }
                     break;
@@ -115,7 +115,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Windows.GetWindows(bytes);
                         } else {
-                            command = new Windows.GetWindowsProperties(bytes);
+                            command = new Windows.GetWindowsProperties(bytes, true);
                         }
                     }
                     break;
@@ -184,7 +184,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Fueling.GetGasFlapState(bytes);
                         } else {
-                            command = new Fueling.GetGasFlapProperties(bytes);
+                            command = new Fueling.GetGasFlapProperties(bytes, true);
                         }
                     }
                     break;
@@ -200,7 +200,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new NaviDestination.GetNaviDestination(bytes);
                         } else {
-                            command = new NaviDestination.GetNaviDestinationProperties(bytes);
+                            command = new NaviDestination.GetNaviDestinationProperties(bytes, true);
                         }
                     }
                     break;
@@ -214,7 +214,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new LightConditions.GetLightConditions(bytes);
                         } else {
-                            command = new LightConditions.GetLightConditionsProperties(bytes);
+                            command = new LightConditions.GetLightConditionsProperties(bytes, true);
                         }
                     }
                     break;
@@ -228,7 +228,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Offroad.GetState(bytes);
                         } else {
-                            command = new Offroad.GetProperties(bytes);
+                            command = new Offroad.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -244,7 +244,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Trunk.GetState(bytes);
                         } else {
-                            command = new Trunk.GetProperties(bytes);
+                            command = new Trunk.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -260,7 +260,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Doors.GetState(bytes);
                         } else {
-                            command = new Doors.GetProperties(bytes);
+                            command = new Doors.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -316,7 +316,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Lights.GetState(bytes);
                         } else {
-                            command = new Lights.GetProperties(bytes);
+                            command = new Lights.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -349,7 +349,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new ChassisSettings.GetChassisSettings(bytes);
                         } else {
-                            command = new ChassisSettings.GetChassisSettingsProperties(bytes);
+                            command = new ChassisSettings.GetChassisSettingsProperties(bytes, true);
                         }
                     }
                     break;
@@ -423,7 +423,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Charging.GetState(bytes);
                         } else {
-                            command = new Charging.GetProperties(bytes);
+                            command = new Charging.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -470,7 +470,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new HomeCharger.GetState(bytes);
                         } else {
-                            command = new HomeCharger.GetProperties(bytes);
+                            command = new HomeCharger.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -484,7 +484,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Diagnostics.GetState(bytes);
                         } else {
-                            command = new Diagnostics.GetProperties(bytes);
+                            command = new Diagnostics.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -498,7 +498,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Usage.GetUsage(bytes);
                         } else {
-                            command = new Usage.GetUsageProperties(bytes);
+                            command = new Usage.GetUsageProperties(bytes, true);
                         }
                     }
                     break;
@@ -514,7 +514,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new PowerTakeoff.GetState(bytes);
                         } else {
-                            command = new PowerTakeoff.GetProperties(bytes);
+                            command = new PowerTakeoff.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -563,7 +563,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new WiFi.GetState(bytes);
                         } else {
-                            command = new WiFi.GetProperties(bytes);
+                            command = new WiFi.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -577,7 +577,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new VehicleLocation.GetVehicleLocation(bytes);
                         } else {
-                            command = new VehicleLocation.GetVehicleLocationProperties(bytes);
+                            command = new VehicleLocation.GetVehicleLocationProperties(bytes, true);
                         }
                     }
                     break;
@@ -599,7 +599,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Race.GetState(bytes);
                         } else {
-                            command = new Race.GetProperties(bytes);
+                            command = new Race.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -613,7 +613,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new FirmwareVersion.GetFirmwareVersion(bytes);
                         } else {
-                            command = new FirmwareVersion.GetFirmwareVersionProperties(bytes);
+                            command = new FirmwareVersion.GetFirmwareVersionProperties(bytes, true);
                         }
                     }
                     break;
@@ -641,7 +641,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Seats.GetState(bytes);
                         } else {
-                            command = new Seats.GetProperties(bytes);
+                            command = new Seats.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -669,7 +669,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Tachograph.GetState(bytes);
                         } else {
-                            command = new Tachograph.GetProperties(bytes);
+                            command = new Tachograph.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -709,7 +709,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Maintenance.GetState(bytes);
                         } else {
-                            command = new Maintenance.GetProperties(bytes);
+                            command = new Maintenance.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -725,7 +725,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new RooftopControl.GetRooftopState(bytes);
                         } else {
-                            command = new RooftopControl.GetRooftopProperties(bytes);
+                            command = new RooftopControl.GetRooftopProperties(bytes, true);
                         }
                     }
                     break;
@@ -763,7 +763,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Windscreen.GetState(bytes);
                         } else {
-                            command = new Windscreen.GetProperties(bytes);
+                            command = new Windscreen.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -779,7 +779,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new CruiseControl.GetState(bytes);
                         } else {
-                            command = new CruiseControl.GetProperties(bytes);
+                            command = new CruiseControl.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -820,7 +820,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new HonkHornFlashLights.GetFlashersState(bytes);
                         } else {
-                            command = new HonkHornFlashLights.GetFlashersProperties(bytes);
+                            command = new HonkHornFlashLights.GetFlashersProperties(bytes, true);
                         }
                     }
                     break;
@@ -872,7 +872,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Ignition.GetState(bytes);
                         } else {
-                            command = new Ignition.GetProperties(bytes);
+                            command = new Ignition.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -909,7 +909,7 @@ public class CommandResolver {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Climate.GetState(bytes);
                         } else {
-                            command = new Climate.GetProperties(bytes);
+                            command = new Climate.GetProperties(bytes, true);
                         }
                     }
                     break;
