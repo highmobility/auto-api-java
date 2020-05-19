@@ -50,85 +50,83 @@ dependencies {
 
 // deploy
 //
+if (project.hasProperty("hmArtifactoryUrl")) {
+    // add the sources and doc artifacts
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.java.srcDirs
+        classifier = 'sources'
+    }
 
-// add the sources and doc artifacts
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        from javadoc.destinationDir
+        classifier = 'javadoc'
+    }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
+    artifacts {
+        archives javadocJar
+        archives sourcesJar
+    }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    from javadoc.destinationDir
-    classifier = 'javadoc'
-}
+    // artifactory
+    artifactory {
+        contextUrl = hmArtifactoryUrl
 
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
+        publish {
+            repository {
+                repoKey = project.hasProperty("repo") ? project.property("repo") : artifact.repo
+                username = hmArtifactoryPublishUser
+                password = hmArtifactoryPublishPassword
+            }
 
-// artifactory
-
-artifactory {
-    contextUrl = hmArtifactoryUrl
-
-    publish {
-        repository {
-            repoKey = project.hasProperty("repo") ? project.property("repo") : artifact.repo
-            username = hmArtifactoryPublishUser
-            password = hmArtifactoryPublishPassword
-        }
-
-        defaults {
-            publishConfigs('archives', 'published')
-            publishIvy = false
+            defaults {
+                publishConfigs('archives', 'published')
+                publishIvy = false
+            }
         }
     }
-}
 
-// bintray
-
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            packaging 'jar'
-            groupId artifact.groupId
-            artifactId artifact.id
-            version artifact.version
-            name artifact.id // pom.project.name must be same as bintray.pkg.name
-            url artifact.siteUrl
-            inceptionYear '2018'
-            licenses {
-                license { // HARDCODED
-                    name 'MIT'
-                    url 'https://opensource.org/licenses/MIT'
-                    distribution 'repo'
+    // bintray
+    install {
+        repositories.mavenInstaller {
+            pom.project {
+                packaging 'jar'
+                groupId artifact.groupId
+                artifactId artifact.id
+                version artifact.version
+                name artifact.id // pom.project.name must be same as bintray.pkg.name
+                url artifact.siteUrl
+                inceptionYear '2018'
+                licenses {
+                    license { // HARDCODED
+                        name 'MIT'
+                        url 'https://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+                scm {
+                    connection artifact.gitUrl
+                    developerConnection artifact.gitUrl
+                    url artifact.siteUrl
                 }
             }
-            scm {
-                connection artifact.gitUrl
-                developerConnection artifact.gitUrl
-                url artifact.siteUrl
-            }
         }
     }
-}
 
-bintray {
-    user = hmBintrayUser
-    key = hmBintrayApikey
+    bintray {
+        user = hmBintrayUser
+        key = hmBintrayApikey
 
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = artifact.id
-        websiteUrl = artifact.siteUrl
-        vcsUrl = artifact.gitUrl
-        licenses = artifact.licenses
+        configurations = ['archives']
+        pkg {
+            repo = "maven"
+            name = artifact.id
+            websiteUrl = artifact.siteUrl
+            vcsUrl = artifact.gitUrl
+            licenses = artifact.licenses
 
-        version {
-            name = artifact.version
+            version {
+                name = artifact.version
+            }
         }
     }
 }
