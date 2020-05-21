@@ -14,11 +14,11 @@ repositories {
     jcenter()
 }
 
-def artifact = new Properties()
-artifact.load(new FileInputStream("$projectDir/deploy.settings"))
+def deploy = new Properties()
+deploy.load(new FileInputStream("$projectDir/deploy.settings"))
 
-group = artifact.groupId
-version = artifact.version
+group = deploy.groupId
+version = deploy.version
 
 // these are not release numbers. release numbers are in deploy.settings files.
 ext.ver = [
@@ -46,4 +46,4 @@ dependencies {
 }
 
 // deploy script
-apply from: "https://bitbucket.org/tonisives/tools/raw/master/scripts/deploy-java.gradle"
+apply from: "https://raw.githubusercontent.com/tonisives/tools/master/scripts/deploy-java.gradle"
