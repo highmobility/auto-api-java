@@ -31,7 +31,7 @@ ext.deps = [
 ]
 
 dependencies {
-    if (project.hasProperty('releaseType') == true && project.releaseType == 0) {
+    if (project.hasProperty('depLocation') == true && project.depLocation == 0) {
         implementation project(':hmkit-utils')
     } else {
         api deps.utils
