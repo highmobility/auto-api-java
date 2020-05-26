@@ -113,8 +113,8 @@ public class FailureMessage {
          * @return Whether the command failed.
          */
         public boolean getCommandFailed(Integer identifier, Integer type) {
-            if (identifier == getFailedMessageID().getValue() &&
-                    type == getFailedMessageType().getValue()) {
+            if (identifier.equals(getFailedMessageID().getValue()) &&
+                    type.equals(getFailedMessageType().getValue())) {
                 return true;
             }
     
