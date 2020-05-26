@@ -168,6 +168,7 @@ public class PropertyTest extends BaseTest {
         assertTrue(failureComponent.identifier == 0x03);
         assertTrue(failureComponent.getFailureDescription().equals("Try in 40s"));
         assertTrue(failureComponent.getFailureReason() == PropertyComponentFailure.Reason.RATE_LIMIT);
+        assertTrue(failureComponent.valueBytes.equals("000A54727920696e20343073"));
         assertTrue(property.equals(expectedBytes));
     }
 
@@ -216,6 +217,7 @@ public class PropertyTest extends BaseTest {
                 "" + // value
                 "" + // timestamp
                 "03000C000A54727920696e20343073"); //failure
+
         testFailureComponent(property, completeBytes);
     }
 
@@ -314,7 +316,9 @@ public class PropertyTest extends BaseTest {
     }
 
     @Test public void integerPropertyUpdateWithoutValue() {
-        PropertyComponentFailure failure = new PropertyComponentFailure(PropertyComponentFailure.Reason.UNAUTHORISED, "Permissions not granted");
+        PropertyComponentFailure failure =
+                new PropertyComponentFailure(PropertyComponentFailure.Reason.UNAUTHORISED,
+                        "Permissions not granted");
         Property<Integer> property = new Property<Integer>((byte) 0x02, null, null, failure);
         PropertyInteger intProperty = new PropertyInteger(0x02, true, 2, property);
 

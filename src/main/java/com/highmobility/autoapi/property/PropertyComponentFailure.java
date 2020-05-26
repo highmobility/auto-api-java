@@ -70,6 +70,7 @@ public class PropertyComponentFailure extends PropertyComponent {
             ByteUtils.setBytes(bytes, description.getBytes(), 5);
         }
 
+        this.valueBytes = getRange(3, size());
         this.failureReason = failureReason;
         this.description = description;
     }
