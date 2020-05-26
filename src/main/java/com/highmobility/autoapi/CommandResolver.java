@@ -962,7 +962,7 @@ public class CommandResolver {
 
     private static String commandToString(byte[] bytes) {
         return ByteUtils.hexFromBytes(ByteUtils
-                .trimmedBytes(bytes, bytes.length >= 3 ? 3 : bytes.length));
+                .trimmedBytes(bytes, Math.min(bytes.length, 3)));
     }
 
     static RunTime _runtime;

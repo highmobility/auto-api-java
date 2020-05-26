@@ -43,6 +43,7 @@ import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.value.SupportedCapability;
 import com.highmobility.value.Bytes;
 
+@SuppressWarnings({"UnusedAssignment", "StatementWithEmptyBody", "ResultOfMethodCallIgnored"})
 public class DevCenterSnippetTest {
 
     // 3 files have snippets:

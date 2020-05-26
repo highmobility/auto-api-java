@@ -76,7 +76,7 @@ public class Command extends Bytes {
         super(HEADER_LENGTH + size);
 
         set(0, AUTO_API_VERSION);
-        this.autoApiVersion = (int) AUTO_API_VERSION;
+        this.autoApiVersion = AUTO_API_VERSION;
 
         set(1, Identifier.toBytes(identifier));
         this.identifier = identifier;
@@ -177,7 +177,7 @@ public class Command extends Bytes {
     }
 
     Command(Integer identifier, Integer type, Property[] properties) {
-        this.autoApiVersion = (int) AUTO_API_VERSION;
+        this.autoApiVersion = AUTO_API_VERSION;
         this.type = type;
         this.identifier = identifier;
         // here there are no timestamps. This constructor is called from setter commands only.
@@ -196,7 +196,7 @@ public class Command extends Bytes {
 
         identifier = Identifier.fromBytes(firstByte, secondByte);
         type = Type.fromByte(thirdByte);
-        autoApiVersion = (int) versionByte;
+        autoApiVersion = versionByte;
     }
 
     protected void findUniversalProperties(Integer identifier, Integer type,

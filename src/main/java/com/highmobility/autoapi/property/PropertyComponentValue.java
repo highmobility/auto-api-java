@@ -28,6 +28,7 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.value.Bytes;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
@@ -59,7 +60,7 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         if (valueClass != null) setClass(valueClass);
     }
 
-    PropertyComponentValue(T value) {
+    PropertyComponentValue(@Nullable T value) {
         super(IDENTIFIER, getBytes(value));
         valueClass = (Class<T>) value.getClass();
         this.value = value;
@@ -69,10 +70,10 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         // map bytes to the type
         if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
             try {
-                T parsedValue = valueClass.newInstance();
+                T parsedValue = valueClass.getDeclaredConstructor().newInstance();
                 ((PropertyValueObject) parsedValue).update(valueBytes);
                 this.value = parsedValue;
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();
                 throw new IllegalArgumentException("Cannot instantiate value: " + valueClass +
                         "\n" + e.getMessage());
