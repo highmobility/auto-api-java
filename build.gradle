@@ -14,11 +14,7 @@ repositories {
     jcenter()
 }
 
-compileJava {
-    // we build for android so we need java8 compatibility
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-}
+sourceCompatibility = '1.8'
 
 def deploy = new Properties()
 deploy.load(new FileInputStream("$projectDir/deploy.settings"))
