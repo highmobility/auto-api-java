@@ -131,8 +131,6 @@ public class PropertyComponentValue<T> extends PropertyComponent {
             return Property.integerArrayToBytes((int[]) value);
         } else if (value instanceof Command) {
             return (Command) value;
-        } else if (value instanceof Byte) {
-            return new Bytes(new byte[]{(Byte) value});
         } else if (value instanceof Bytes) {
             return (Bytes) value;
         } else {
