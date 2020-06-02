@@ -40,31 +40,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class VehicleStatusTest extends BaseTest {
     Bytes bytes = new Bytes(
             COMMAND_HEADER + "001101" +
-                    "0100140100114a46325348424443374348343531383639" +
-                    "02000401000101" +
-                    "030009010006547970652058" +
-                    "0400090100064d7920436172" +
-                    "050009010006414243313233" +
-                    "06000B0100085061636B6167652B" +
-                    "07000501000207E1" +
-                    "08000F01000C4573746f72696c20426c6175" +
-                    "09000501000200DC" +
-                    "0A000401000105" +
-                    "0B000401000105" +
-                    "0C000701000440200000" +
-                    "0D000501000200F5" +
-                    "0E000401000101" +
                     "990015010012" + COMMAND_HEADER + "0021010100040100010002000401000101" + //
                     // Trunk open
-                    "99000E01000B" + COMMAND_HEADER + "00270101000401000102" + // Remote Control
-                    // Started
-                    // l8
-                    "0F000401000100" + // display unit km
-                    "10000401000100" + // driver seat left
-                    "11001201000F5061726B696E672073656E736F7273" + // Parking sensors
-                    "1100130100104175746F6D6174696320776970657273" + // Automatic wipers
-                    // l9
-                    "12000B0100084D65726365646573"
+                    "99000E01000B" + COMMAND_HEADER + "00270101000401000102" // Remote Control
+            // Started
     );
 
     @Test public void state() {
@@ -73,36 +52,8 @@ public class VehicleStatusTest extends BaseTest {
 
     private void testState(VehicleStatus.State state) {
         assertTrue(state.getStates().length == 2);
-        assertTrue(state.getVin().getValue().equals("JF2SHBDC7CH451869"));
-        assertTrue(state.getPowertrain().getValue() == VehicleStatus.Powertrain.ALL_ELECTRIC);
-        assertTrue(state.getModelName().getValue().equals("Type X"));
-        assertTrue(state.getName().getValue().equals("My Car"));
-        assertTrue(state.getLicensePlate().getValue().equals("ABC123"));
-
-        assertTrue(state.getSalesDesignation().getValue().equals("Package+"));
-        assertTrue(state.getModelYear().getValue() == 2017);
-        assertTrue(state.getColourName().getValue().equals("Estoril Blau"));
-        assertTrue(state.getPowerInKW().getValue() == 220);
-        assertTrue(state.getNumberOfDoors().getValue() == 5);
-        assertTrue(state.getNumberOfSeats().getValue() == 5);
 
         assertTrue(state.getState(Identifier.TRUNK).getValue() != null);
-
-        assertTrue(state.getEngineVolume().getValue() == 2.5f);
-        assertTrue(state.getEngineMaxTorque().getValue() == 245);
-        assertTrue(state.getGearbox().getValue() == VehicleStatus.Gearbox.AUTOMATIC);
-
-        assertTrue(state.getDisplayUnit().getValue() == VehicleStatus.DisplayUnit.KM);
-        assertTrue(state.getDriverSeatLocation().getValue() == VehicleStatus.DriverSeatLocation.LEFT);
-        assertTrue(state.getEquipments().length == 2);
-
-        int count = 0;
-        for (Property<String> s : state.getEquipments()) {
-            if (s.getValue().equals("Parking sensors") || s.getValue().equals("Automatic wipers"))
-                count++;
-        }
-        assertTrue(count == 2);
-        assertTrue(state.getBrand().getValue().equals("Mercedes"));
 
         Command command = getState(RemoteControl.State.class, state);
         RemoteControl.State controlMode = (RemoteControl.State) command;
@@ -141,22 +92,6 @@ public class VehicleStatusTest extends BaseTest {
 
     VehicleStatus.State.Builder getVehicleStatusStateBuilderWithoutSignature() throws CommandParseException {
         VehicleStatus.State.Builder builder = new VehicleStatus.State.Builder();
-        builder.setVin(new Property("JF2SHBDC7CH451869"));
-        builder.setPowertrain(new Property(VehicleStatus.Powertrain.ALL_ELECTRIC));
-        builder.setModelName(new Property("Type X"));
-        builder.setName(new Property("My Car"));
-        builder.setLicensePlate(new Property("ABC123"));
-        builder.setSalesDesignation(new Property("Package+"));
-        builder.setModelYear(new Property(2017));
-
-        builder.setColourName(new Property("Estoril Blau"));
-        builder.setPowerInKW(new Property(220));
-        builder.setNumberOfDoors(new Property(5)).setNumberOfSeats(new Property(5));
-
-        // l7
-        builder.setEngineVolume(new Property(2.5f));
-        builder.setEngineMaxTorque(new Property(245));
-        builder.setGearbox(new Property(VehicleStatus.Gearbox.AUTOMATIC));
 
         Trunk.State.Builder trunkState = new Trunk.State.Builder();
         trunkState.setLock(new Property(LockState.UNLOCKED));
@@ -166,15 +101,6 @@ public class VehicleStatusTest extends BaseTest {
         RemoteControl.State controlMode =
                 new RemoteControl.State(new Bytes(COMMAND_HEADER + "00270101000401000102").getByteArray());
         builder.addState(new Property(controlMode));
-
-        // l8
-        builder.setDisplayUnit(new Property(VehicleStatus.DisplayUnit.KM));
-        builder.setDriverSeatLocation(new Property(VehicleStatus.DriverSeatLocation.LEFT));
-        builder.addEquipment(new Property("Parking sensors"));
-        builder.addEquipment(new Property("Automatic wipers"));
-
-        // l9
-        builder.setBrand(new Property("Mercedes"));
 
         return builder;
     }
@@ -222,7 +148,6 @@ public class VehicleStatusTest extends BaseTest {
         VehicleStatus.State vs = builder.build();
 
         assertTrue(vs.getStates().length == 0);
-        assertTrue(vs.getNumberOfDoors() == null);
         assertTrue(vs.getState(Identifier.THEFT_ALARM) == null);
         assertTrue(vs.getByteArray().length == Command.HEADER_LENGTH + 3);
 
@@ -230,7 +155,6 @@ public class VehicleStatusTest extends BaseTest {
         vs = (VehicleStatus.State) CommandResolver.resolve(bytes);
 
         assertTrue(vs.getStates().length == 0);
-        assertTrue(vs.getNumberOfDoors().getValue() == null);
         assertTrue(vs.getState(Identifier.THEFT_ALARM) == null);
     }
 
