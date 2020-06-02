@@ -53,7 +53,8 @@ public class PropertyComponentFailure extends PropertyComponent {
      * @return The failure description.
      */
 
-    @Nullable public String getFailureDescription() {
+    @Nullable
+    public String getFailureDescription() {
         return description;
     }
 
@@ -76,12 +77,34 @@ public class PropertyComponentFailure extends PropertyComponent {
     }
 
     public enum Reason {
-        RATE_LIMIT((byte) 0x00),        // Property rate limit has been exceeded
-        EXECUTION_TIMEOUT((byte) 0x01), // Failed to retrieve property in time
-        FORMAT_ERROR((byte) 0x02),      // Could not interpret property
-        UNAUTHORISED((byte) 0x03),      // Insufficient permissions to get the property
-        UNKNOWN((byte) 0x04),           // Property failed for unknown reason
-        PENDING((byte) 0x05);           // Property is being refreshed
+        /**
+         * Property rate limit has been exceeded
+         */
+        RATE_LIMIT((byte) 0x00),
+        /**
+         * Failed to retrieve property in time
+         */
+        EXECUTION_TIMEOUT((byte) 0x01),
+        /**
+         * Could not interpret property
+         */
+        FORMAT_ERROR((byte) 0x02),
+        /**
+         * Insufficient permissions to get the property
+         */
+        UNAUTHORISED((byte) 0x03),
+        /**
+         * Property failed for unknown reason
+         */
+        UNKNOWN((byte) 0x04),
+        /**
+         * Property is being refreshed
+         */
+        PENDING((byte) 0x05),
+        /**
+         * Internal OEM error
+         */
+        INTERNAL_OEM_ERROR((byte) 0x06);
 
         public static Reason fromByte(byte value) throws CommandParseException {
             Reason[] values = Reason.values();
