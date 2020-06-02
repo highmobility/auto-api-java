@@ -24,6 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.OnOffState;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -75,5 +76,18 @@ public class EngineTest extends BaseTest {
         builder.setStatus(new Property(OnOffState.OFF));
         Engine.State state = builder.build();
         testState(state);
+    }
+
+    @Test public void activateDeactivate() {
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006901" +
+                "01000401000100");
+
+        Bytes commandBytes = new Engine.ActivateDeactivateStartStop(ActiveState.INACTIVE);
+        assertTrue(bytesTheSame(waitingForBytes, commandBytes));
+
+        setRuntime(CommandResolver.RunTime.JAVA);
+        Engine.ActivateDeactivateStartStop command = (Engine.ActivateDeactivateStartStop) CommandResolver
+                .resolve(waitingForBytes);
+        assertTrue(command.getStartStopState().getValue() == ActiveState.INACTIVE);
     }
 }
