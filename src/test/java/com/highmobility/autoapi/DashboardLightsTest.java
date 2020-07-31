@@ -24,6 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.DashboardLight;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -53,13 +54,18 @@ public class DashboardLightsTest extends BaseTest {
         assertTrue(state.getDashboardLights().length == 4);
 
         assertTrue(getDashboardLight(state.getDashboardLights(), DashboardLight.Name.HIGH_BEAM).getState() ==
-                DashboardLight.State.INACTIVE);
+                ActiveState.INACTIVE);
+
         assertTrue(getDashboardLight(state.getDashboardLights(),
-                DashboardLight.Name.HAZARD_WARNING).getState() == DashboardLight.State.INFO);
+                DashboardLight.Name.HAZARD_WARNING).getState() == ActiveState.ACTIVE);
         assertTrue(getDashboardLight(state.getDashboardLights(),
-                DashboardLight.Name.TRANSMISSION_FLUID_TEMPERATURE).getState() == DashboardLight.State.RED);
+                DashboardLight.Name.HAZARD_WARNING).getColour() == DashboardLight.Colour.INFO);
+
         assertTrue(getDashboardLight(state.getDashboardLights(),
-                DashboardLight.Name.ENGINE_OIL_LEVEL).getState() == DashboardLight.State.YELLOW);
+                DashboardLight.Name.TRANSMISSION_FLUID_TEMPERATURE).getState() == ActiveState.ACTIVE);
+
+        assertTrue(getDashboardLight(state.getDashboardLights(),
+                DashboardLight.Name.ENGINE_OIL_LEVEL).getState() == ActiveState.ACTIVE);
 
         assertTrue(TestUtils.bytesTheSame(bytes, state));
     }
@@ -72,7 +78,8 @@ public class DashboardLightsTest extends BaseTest {
         return null;
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
 
         String waitingForBytes = COMMAND_HEADER + "006100";
         String commandBytes =
@@ -80,18 +87,30 @@ public class DashboardLightsTest extends BaseTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void build() {
+    @Test
+    public void build() {
         DashboardLights.State.Builder builder = new DashboardLights.State.Builder();
-        builder.addDashboardLight(new Property(new DashboardLight(DashboardLight.Name.HIGH_BEAM,
-                DashboardLight.State.INACTIVE)));
-        builder.addDashboardLight(new Property(new DashboardLight(DashboardLight.Name.HAZARD_WARNING,
-                DashboardLight
-                        .State.INFO)));
-        builder.addDashboardLight(new Property(new DashboardLight(DashboardLight.Name.TRANSMISSION_FLUID_TEMPERATURE,
-                DashboardLight.State.RED)));
-        builder.addDashboardLight(new Property(new DashboardLight(DashboardLight.Name.ENGINE_OIL_LEVEL,
-                DashboardLight
-                        .State.YELLOW)));
+
+        builder.addDashboardLight(new Property(new DashboardLight(
+                DashboardLight.Name.HIGH_BEAM,
+                ActiveState.ACTIVE,
+                DashboardLight.Colour.INFO)));
+
+        builder.addDashboardLight(new Property(new DashboardLight(
+                DashboardLight.Name.HAZARD_WARNING,
+                ActiveState.ACTIVE,
+                DashboardLight.Colour.INFO)));
+
+        builder.addDashboardLight(new Property(new DashboardLight(
+                DashboardLight.Name.TRANSMISSION_FLUID_TEMPERATURE,
+                ActiveState.ACTIVE,
+                DashboardLight.Colour.INFO)));
+
+        builder.addDashboardLight(new Property(new DashboardLight(
+                DashboardLight.Name.ENGINE_OIL_LEVEL,
+                ActiveState.ACTIVE,
+                DashboardLight.Colour.INFO)));
+        
         DashboardLights.State state = builder.build();
         assertTrue(state.equals(bytes));
         testState(state);

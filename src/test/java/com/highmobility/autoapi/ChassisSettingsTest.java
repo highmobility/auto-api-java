@@ -27,6 +27,8 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Axle;
 import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.value.SpringRate;
+import com.highmobility.autoapi.value.measurement.Length;
+import com.highmobility.autoapi.value.measurement.Torque;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -62,18 +64,18 @@ public class ChassisSettingsTest extends BaseTest {
         assertTrue(state.getDrivingMode().getValue() == DrivingMode.ECO);
         assertTrue(state.getSportChrono().getValue() == ChassisSettings.SportChrono.ACTIVE);
 
-        assertTrue(getSpringRate(state.currentSpringRates, Axle.FRONT).getSpringRate() == 21);
-        assertTrue(getSpringRate(state.currentSpringRates, Axle.REAR).getSpringRate() == 23);
+        assertTrue(getSpringRate(state.currentSpringRates, Axle.FRONT).getSpringRate().getValue() == 21);
+        assertTrue(getSpringRate(state.currentSpringRates, Axle.REAR).getSpringRate().getValue() == 23);
 
-        assertTrue(getSpringRate(state.maximumSpringRates, Axle.FRONT).getSpringRate() == 37);
-        assertTrue(getSpringRate(state.maximumSpringRates, Axle.REAR).getSpringRate() == 39);
+        assertTrue(getSpringRate(state.maximumSpringRates, Axle.FRONT).getSpringRate().getValue() == 37);
+        assertTrue(getSpringRate(state.maximumSpringRates, Axle.REAR).getSpringRate().getValue() == 39);
 
-        assertTrue(getSpringRate(state.minimumSpringRates, Axle.FRONT).getSpringRate() == 16);
-        assertTrue(getSpringRate(state.minimumSpringRates, Axle.REAR).getSpringRate() == 18);
+        assertTrue(getSpringRate(state.minimumSpringRates, Axle.FRONT).getSpringRate().getValue() == 16);
+        assertTrue(getSpringRate(state.minimumSpringRates, Axle.REAR).getSpringRate().getValue() == 18);
 
-        assertTrue(state.getCurrentChassisPosition().getValue() == 25);
-        assertTrue(state.getMaximumChassisPosition().getValue() == 55);
-        assertTrue(state.getMinimumChassisPosition().getValue() == -28);
+        assertTrue(state.getCurrentChassisPosition().getValue().getValue() == 25);
+        assertTrue(state.getMaximumChassisPosition().getValue().getValue() == 55);
+        assertTrue(state.getMinimumChassisPosition().getValue().getValue() == -28);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
@@ -87,7 +89,8 @@ public class ChassisSettingsTest extends BaseTest {
         return null;
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
 
         String waitingForBytes = COMMAND_HEADER + "005300";
         String commandBytes =
@@ -95,7 +98,8 @@ public class ChassisSettingsTest extends BaseTest {
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void setDrivingMode() {
+    @Test
+    public void setDrivingMode() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "00530101000401000103");
         Bytes commandBytes = new ChassisSettings.SetDrivingMode(DrivingMode.SPORT_PLUS);
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -106,7 +110,8 @@ public class ChassisSettingsTest extends BaseTest {
         assertTrue(drivingMode.getDrivingMode().getValue() == DrivingMode.SPORT_PLUS);
     }
 
-    @Test public void startChrono() {
+    @Test
+    public void startChrono() {
         String waitingForBytes = COMMAND_HEADER + "00530102000401000101";
         String commandBytes =
                 ByteUtils.hexFromBytes(new ChassisSettings.StartStopSportsChrono(ChassisSettings.SportChrono.ACTIVE)
@@ -120,11 +125,12 @@ public class ChassisSettingsTest extends BaseTest {
         assertTrue(command.getSportChrono().getValue() == ChassisSettings.SportChrono.ACTIVE);
     }
 
-    @Test public void setSpringRate() {
+    @Test
+    public void setSpringRate() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "005301" +
                 "0500050100020119");
 
-        SpringRate prop = new SpringRate(Axle.REAR, 25);
+        SpringRate prop = new SpringRate(Axle.REAR, new Torque(25d, Torque.Unit.NEWTON_MILLIMETERS));
         SpringRate[] props = new SpringRate[]{prop};
         Bytes commandBytes = new ChassisSettings.SetSpringRates(props);
         assertTrue(waitingForBytes.equals(commandBytes));
@@ -133,52 +139,55 @@ public class ChassisSettingsTest extends BaseTest {
         ChassisSettings.SetSpringRates command =
                 (ChassisSettings.SetSpringRates) CommandResolver.resolve(waitingForBytes);
         assertTrue(command.getCurrentSpringRates().length == 1);
-        assertTrue(getSpringRate(command.getCurrentSpringRates(), Axle.REAR).getSpringRate() == 25);
+        assertTrue(getSpringRate(command.getCurrentSpringRates(), Axle.REAR).getSpringRate().getValue() == 25d);
     }
 
-    @Test public void setChassisPosition() {
+    @Test
+    public void setChassisPosition() throws CommandParseException, NoPropertiesException {
         String waitingForBytes = COMMAND_HEADER + "00530108000401000132";
         String commandBytes =
-                ByteUtils.hexFromBytes(new ChassisSettings.SetChassisPosition(50).getByteArray());
+                ByteUtils.hexFromBytes(new ChassisSettings.SetChassisPosition(new Length(50d, Length.Unit.MILLIMETERS)).getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
         ChassisSettings.SetChassisPosition command =
                 (ChassisSettings.SetChassisPosition) CommandResolver.resolve(ByteUtils
                         .bytesFromHex(waitingForBytes));
-        assertTrue(command.getCurrentChassisPosition().getValue() == 50);
+        assertTrue(command.getCurrentChassisPosition().getValue().getValue() == 50d);
     }
 
-    @Test public void setNegativeChassisPosition() {
+    @Test
+    public void setNegativeChassisPosition() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "005301" +
                 "080004010001E4");
-        Command state = new ChassisSettings.SetChassisPosition(-28);
+        Command state = new ChassisSettings.SetChassisPosition(new Length(-28d, Length.Unit.MILLIMETERS));
         assertTrue(TestUtils.bytesTheSame(state, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
         ChassisSettings.SetChassisPosition command =
                 (ChassisSettings.SetChassisPosition) CommandResolver.resolve(waitingForBytes);
-        assertTrue(command.getCurrentChassisPosition().getValue() == -28);
+        assertTrue(command.getCurrentChassisPosition().getValue().getValue() == -28d);
     }
 
-    @Test public void build() {
+    @Test
+    public void build() {
         ChassisSettings.State.Builder builder = new ChassisSettings.State.Builder();
 
         builder.setDrivingMode(new Property(DrivingMode.ECO));
         builder.setSportChrono(new Property(ChassisSettings.SportChrono.ACTIVE));
 
-        builder.addCurrentSpringRate(new Property(new SpringRate(Axle.FRONT, 21)));
-        builder.addCurrentSpringRate(new Property(new SpringRate(Axle.REAR, 23)));
+        builder.addCurrentSpringRate(new Property(new SpringRate(Axle.FRONT, new Torque(21d, Torque.Unit.NEWTON_MILLIMETERS))));
+        builder.addCurrentSpringRate(new Property(new SpringRate(Axle.REAR, new Torque(23d, Torque.Unit.NEWTON_MILLIMETERS))));
 
-        builder.addMaximumSpringRate(new Property(new SpringRate(Axle.FRONT, 37)));
-        builder.addMaximumSpringRate(new Property(new SpringRate(Axle.REAR, 39)));
+        builder.addMaximumSpringRate(new Property(new SpringRate(Axle.FRONT, new Torque(37d, Torque.Unit.NEWTON_MILLIMETERS))));
+        builder.addMaximumSpringRate(new Property(new SpringRate(Axle.REAR, new Torque(39d, Torque.Unit.NEWTON_MILLIMETERS))));
 
-        builder.addMinimumSpringRate(new Property(new SpringRate(Axle.FRONT, 16)));
-        builder.addMinimumSpringRate(new Property(new SpringRate(Axle.REAR, 18)));
+        builder.addMinimumSpringRate(new Property(new SpringRate(Axle.FRONT, new Torque(16d, Torque.Unit.NEWTON_MILLIMETERS))));
+        builder.addMinimumSpringRate(new Property(new SpringRate(Axle.REAR, new Torque(18d, Torque.Unit.NEWTON_MILLIMETERS))));
 
-        builder.setCurrentChassisPosition(new Property(25));
-        builder.setMaximumChassisPosition(new Property(55));
-        builder.setMinimumChassisPosition(new Property(-28));
+        builder.setCurrentChassisPosition(new Property(new Length(25, Length.Unit.MILLIMETERS)));
+        builder.setMaximumChassisPosition(new Property(new Length(55, Length.Unit.MILLIMETERS)));
+        builder.setMinimumChassisPosition(new Property(new Length(-28, Length.Unit.MILLIMETERS)));
 
         ChassisSettings.State state = builder.build();
         assertTrue(state.equals(bytes));

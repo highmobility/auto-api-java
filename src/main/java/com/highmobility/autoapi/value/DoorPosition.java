@@ -24,7 +24,6 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
@@ -50,32 +49,8 @@ public class DoorPosition extends PropertyValueObject {
     }
 
     public DoorPosition(Location location, Position position) {
-        super(2);
-        update(location, position);
-    }
+        super(0);
 
-    public DoorPosition(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public DoorPosition() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        location = Location.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        position = Position.fromByte(get(bytePosition));
-    }
-
-    public void update(Location location, Position position) {
         this.location = location;
         this.position = position;
 
@@ -88,8 +63,16 @@ public class DoorPosition extends PropertyValueObject {
         set(bytePosition, position.getByte());
     }
 
-    public void update(DoorPosition value) {
-        update(value.location, value.position);
+    public DoorPosition(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        location = Location.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        position = Position.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {

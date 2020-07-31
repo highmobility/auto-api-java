@@ -26,7 +26,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.Coordinates;
-import com.highmobility.autoapi.value.Time;
+import com.highmobility.autoapi.value.measurement.Duration;
+import com.highmobility.autoapi.value.measurement.Length;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 
@@ -87,8 +88,8 @@ public class NaviDestination {
         Property<String> destinationName = new Property(String.class, PROPERTY_DESTINATION_NAME);
         PropertyInteger dataSlotsFree = new PropertyInteger(PROPERTY_DATA_SLOTS_FREE, false);
         PropertyInteger dataSlotsMax = new PropertyInteger(PROPERTY_DATA_SLOTS_MAX, false);
-        Property<Time> arrivalDuration = new Property(Time.class, PROPERTY_ARRIVAL_DURATION);
-        PropertyInteger distanceToDestination = new PropertyInteger(PROPERTY_DISTANCE_TO_DESTINATION, false);
+        Property<Duration> arrivalDuration = new Property(Duration.class, PROPERTY_ARRIVAL_DURATION);
+        Property<Length> distanceToDestination = new Property(Length.class, PROPERTY_DISTANCE_TO_DESTINATION);
     
         /**
          * @return The coordinates
@@ -121,14 +122,14 @@ public class NaviDestination {
         /**
          * @return Remaining time until reaching the destination.
          */
-        public Property<Time> getArrivalDuration() {
+        public Property<Duration> getArrivalDuration() {
             return arrivalDuration;
         }
     
         /**
          * @return Remaining distance to reach the destination.
          */
-        public PropertyInteger getDistanceToDestination() {
+        public Property<Length> getDistanceToDestination() {
             return distanceToDestination;
         }
     
@@ -166,8 +167,8 @@ public class NaviDestination {
             private Property<String> destinationName;
             private PropertyInteger dataSlotsFree;
             private PropertyInteger dataSlotsMax;
-            private Property<Time> arrivalDuration;
-            private PropertyInteger distanceToDestination;
+            private Property<Duration> arrivalDuration;
+            private Property<Length> distanceToDestination;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -221,7 +222,7 @@ public class NaviDestination {
              * @param arrivalDuration Remaining time until reaching the destination.
              * @return The builder
              */
-            public Builder setArrivalDuration(Property<Time> arrivalDuration) {
+            public Builder setArrivalDuration(Property<Duration> arrivalDuration) {
                 this.arrivalDuration = arrivalDuration.setIdentifier(PROPERTY_ARRIVAL_DURATION);
                 addProperty(this.arrivalDuration);
                 return this;
@@ -231,8 +232,8 @@ public class NaviDestination {
              * @param distanceToDestination Remaining distance to reach the destination.
              * @return The builder
              */
-            public Builder setDistanceToDestination(Property<Integer> distanceToDestination) {
-                this.distanceToDestination = new PropertyInteger(PROPERTY_DISTANCE_TO_DESTINATION, false, 2, distanceToDestination);
+            public Builder setDistanceToDestination(Property<Length> distanceToDestination) {
+                this.distanceToDestination = distanceToDestination.setIdentifier(PROPERTY_DISTANCE_TO_DESTINATION);
                 addProperty(this.distanceToDestination);
                 return this;
             }

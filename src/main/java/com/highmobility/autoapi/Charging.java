@@ -25,11 +25,18 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.DepartureTime;
+import com.highmobility.autoapi.value.EnabledState;
 import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.value.ReductionTime;
 import com.highmobility.autoapi.value.Timer;
+import com.highmobility.autoapi.value.measurement.Duration;
+import com.highmobility.autoapi.value.measurement.ElectricCurrent;
+import com.highmobility.autoapi.value.measurement.ElectricPotentialDifference;
+import com.highmobility.autoapi.value.measurement.Length;
+import com.highmobility.autoapi.value.measurement.Power;
+import com.highmobility.autoapi.value.measurement.Temperature;
 import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +67,18 @@ public class Charging {
     public static final byte PROPERTY_TIMERS = 0x15;
     public static final byte PROPERTY_PLUGGED_IN = 0x16;
     public static final byte PROPERTY_STATUS = 0x17;
+    public static final byte PROPERTY_CHARGING_RATE = 0x18;
+    public static final byte PROPERTY_BATTERY_CURRENT = 0x19;
+    public static final byte PROPERTY_CHARGER_VOLTAGE = 0x1a;
+    public static final byte PROPERTY_CURRENT_TYPE = 0x1b;
+    public static final byte PROPERTY_MAX_RANGE = 0x1c;
+    public static final byte PROPERTY_STARTER_BATTERY_STATE = 0x1d;
+    public static final byte PROPERTY_SMART_CHARGING_STATUS = 0x1e;
+    public static final byte PROPERTY_BATTERY_LEVEL_AT_DEPARTURE = 0x1f;
+    public static final byte PROPERTY_PRECONDITIONING_DEPARTURE_STATUS = 0x20;
+    public static final byte PROPERTY_PRECONDITIONING_IMMEDIATE_STATUS = 0x21;
+    public static final byte PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED = 0x22;
+    public static final byte PROPERTY_PRECONDITIONING_ERROR = 0x23;
 
     /**
      * Get all charging properties
@@ -101,31 +120,43 @@ public class Charging {
      * The charging state
      */
     public static class State extends SetCommand {
-        PropertyInteger estimatedRange = new PropertyInteger(PROPERTY_ESTIMATED_RANGE, false);
+        Property<Length> estimatedRange = new Property(Length.class, PROPERTY_ESTIMATED_RANGE);
         Property<Double> batteryLevel = new Property(Double.class, PROPERTY_BATTERY_LEVEL);
-        Property<Float> batteryCurrentAC = new Property(Float.class, PROPERTY_BATTERY_CURRENT_AC);
-        Property<Float> batteryCurrentDC = new Property(Float.class, PROPERTY_BATTERY_CURRENT_DC);
-        Property<Float> chargerVoltageAC = new Property(Float.class, PROPERTY_CHARGER_VOLTAGE_AC);
-        Property<Float> chargerVoltageDC = new Property(Float.class, PROPERTY_CHARGER_VOLTAGE_DC);
+        Property<ElectricCurrent> batteryCurrentAC = new Property(ElectricCurrent.class, PROPERTY_BATTERY_CURRENT_AC);
+        Property<ElectricCurrent> batteryCurrentDC = new Property(ElectricCurrent.class, PROPERTY_BATTERY_CURRENT_DC);
+        Property<ElectricPotentialDifference> chargerVoltageAC = new Property(ElectricPotentialDifference.class, PROPERTY_CHARGER_VOLTAGE_AC);
+        Property<ElectricPotentialDifference> chargerVoltageDC = new Property(ElectricPotentialDifference.class, PROPERTY_CHARGER_VOLTAGE_DC);
         Property<Double> chargeLimit = new Property(Double.class, PROPERTY_CHARGE_LIMIT);
-        PropertyInteger timeToCompleteCharge = new PropertyInteger(PROPERTY_TIME_TO_COMPLETE_CHARGE, false);
-        Property<Float> chargingRateKW = new Property(Float.class, PROPERTY_CHARGING_RATE_KW);
+        Property<Duration> timeToCompleteCharge = new Property(Duration.class, PROPERTY_TIME_TO_COMPLETE_CHARGE);
+        Property<Power> chargingRateKW = new Property(Power.class, PROPERTY_CHARGING_RATE_KW);
         Property<Position> chargePortState = new Property(Position.class, PROPERTY_CHARGE_PORT_STATE);
         Property<ChargeMode> chargeMode = new Property(ChargeMode.class, PROPERTY_CHARGE_MODE);
-        Property<Float> maxChargingCurrent = new Property(Float.class, PROPERTY_MAX_CHARGING_CURRENT);
+        Property<ElectricCurrent> maxChargingCurrent = new Property(ElectricCurrent.class, PROPERTY_MAX_CHARGING_CURRENT);
         Property<PlugType> plugType = new Property(PlugType.class, PROPERTY_PLUG_TYPE);
         Property<ChargingWindowChosen> chargingWindowChosen = new Property(ChargingWindowChosen.class, PROPERTY_CHARGING_WINDOW_CHOSEN);
         Property<DepartureTime>[] departureTimes;
         Property<ReductionTime>[] reductionTimes;
-        Property<Float> batteryTemperature = new Property(Float.class, PROPERTY_BATTERY_TEMPERATURE);
+        Property<Temperature> batteryTemperature = new Property(Temperature.class, PROPERTY_BATTERY_TEMPERATURE);
         Property<Timer>[] timers;
         Property<PluggedIn> pluggedIn = new Property(PluggedIn.class, PROPERTY_PLUGGED_IN);
         Property<Status> status = new Property(Status.class, PROPERTY_STATUS);
+        Property<Power> chargingRate = new Property(Power.class, PROPERTY_CHARGING_RATE);
+        Property<ElectricCurrent> batteryCurrent = new Property(ElectricCurrent.class, PROPERTY_BATTERY_CURRENT);
+        Property<ElectricPotentialDifference> chargerVoltage = new Property(ElectricPotentialDifference.class, PROPERTY_CHARGER_VOLTAGE);
+        Property<CurrentType> currentType = new Property(CurrentType.class, PROPERTY_CURRENT_TYPE);
+        Property<Length> maxRange = new Property(Length.class, PROPERTY_MAX_RANGE);
+        Property<StarterBatteryState> starterBatteryState = new Property(StarterBatteryState.class, PROPERTY_STARTER_BATTERY_STATE);
+        Property<SmartChargingStatus> smartChargingStatus = new Property(SmartChargingStatus.class, PROPERTY_SMART_CHARGING_STATUS);
+        Property<Double> batteryLevelAtDeparture = new Property(Double.class, PROPERTY_BATTERY_LEVEL_AT_DEPARTURE);
+        Property<ActiveState> preconditioningDepartureStatus = new Property(ActiveState.class, PROPERTY_PRECONDITIONING_DEPARTURE_STATUS);
+        Property<ActiveState> preconditioningImmediateStatus = new Property(ActiveState.class, PROPERTY_PRECONDITIONING_IMMEDIATE_STATUS);
+        Property<EnabledState> preconditioningDepartureEnabled = new Property(EnabledState.class, PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED);
+        Property<PreconditioningError> preconditioningError = new Property(PreconditioningError.class, PROPERTY_PRECONDITIONING_ERROR);
     
         /**
-         * @return Estimated range in km
+         * @return Estimated range
          */
-        public PropertyInteger getEstimatedRange() {
+        public Property<Length> getEstimatedRange() {
             return estimatedRange;
         }
     
@@ -137,30 +168,30 @@ public class Charging {
         }
     
         /**
-         * @return Battery active current
+         * @return Battery alternating current
          */
-        public Property<Float> getBatteryCurrentAC() {
+        public Property<ElectricCurrent> getBatteryCurrentAC() {
             return batteryCurrentAC;
         }
     
         /**
          * @return Battery direct current
          */
-        public Property<Float> getBatteryCurrentDC() {
+        public Property<ElectricCurrent> getBatteryCurrentDC() {
             return batteryCurrentDC;
         }
     
         /**
-         * @return Charger voltage
+         * @return Charger voltage for alternating current
          */
-        public Property<Float> getChargerVoltageAC() {
+        public Property<ElectricPotentialDifference> getChargerVoltageAC() {
             return chargerVoltageAC;
         }
     
         /**
-         * @return Charger voltage
+         * @return Charger voltage for direct current
          */
-        public Property<Float> getChargerVoltageDC() {
+        public Property<ElectricPotentialDifference> getChargerVoltageDC() {
             return chargerVoltageDC;
         }
     
@@ -172,16 +203,16 @@ public class Charging {
         }
     
         /**
-         * @return Time until charging completed in minutes
+         * @return Time until charging completed
          */
-        public PropertyInteger getTimeToCompleteCharge() {
+        public Property<Duration> getTimeToCompleteCharge() {
             return timeToCompleteCharge;
         }
     
         /**
-         * @return Charge rate in kW when charging
+         * @return Charging rate
          */
-        public Property<Float> getChargingRateKW() {
+        public Property<Power> getChargingRateKW() {
             return chargingRateKW;
         }
     
@@ -202,7 +233,7 @@ public class Charging {
         /**
          * @return Maximum charging current
          */
-        public Property<Float> getMaxChargingCurrent() {
+        public Property<ElectricCurrent> getMaxChargingCurrent() {
             return maxChargingCurrent;
         }
     
@@ -235,9 +266,9 @@ public class Charging {
         }
     
         /**
-         * @return Battery temperature in Celsius
+         * @return Battery temperature
          */
-        public Property<Float> getBatteryTemperature() {
+        public Property<Temperature> getBatteryTemperature() {
             return batteryTemperature;
         }
     
@@ -260,6 +291,90 @@ public class Charging {
          */
         public Property<Status> getStatus() {
             return status;
+        }
+    
+        /**
+         * @return Charge rate when charging
+         */
+        public Property<Power> getChargingRate() {
+            return chargingRate;
+        }
+    
+        /**
+         * @return Battery current
+         */
+        public Property<ElectricCurrent> getBatteryCurrent() {
+            return batteryCurrent;
+        }
+    
+        /**
+         * @return Charger voltage
+         */
+        public Property<ElectricPotentialDifference> getChargerVoltage() {
+            return chargerVoltage;
+        }
+    
+        /**
+         * @return Type of current in use
+         */
+        public Property<CurrentType> getCurrentType() {
+            return currentType;
+        }
+    
+        /**
+         * @return Maximum electric range with 100% of battery
+         */
+        public Property<Length> getMaxRange() {
+            return maxRange;
+        }
+    
+        /**
+         * @return State of the starter battery
+         */
+        public Property<StarterBatteryState> getStarterBatteryState() {
+            return starterBatteryState;
+        }
+    
+        /**
+         * @return Status of optimized/intelligent charging
+         */
+        public Property<SmartChargingStatus> getSmartChargingStatus() {
+            return smartChargingStatus;
+        }
+    
+        /**
+         * @return Battery charge level expected at time of departure
+         */
+        public Property<Double> getBatteryLevelAtDeparture() {
+            return batteryLevelAtDeparture;
+        }
+    
+        /**
+         * @return Status of preconditioning at departure time
+         */
+        public Property<ActiveState> getPreconditioningDepartureStatus() {
+            return preconditioningDepartureStatus;
+        }
+    
+        /**
+         * @return Status of immediate preconditioning
+         */
+        public Property<ActiveState> getPreconditioningImmediateStatus() {
+            return preconditioningImmediateStatus;
+        }
+    
+        /**
+         * @return Preconditioning activation status at departure
+         */
+        public Property<EnabledState> getPreconditioningDepartureEnabled() {
+            return preconditioningDepartureEnabled;
+        }
+    
+        /**
+         * @return Preconditioning error if one is encountered
+         */
+        public Property<PreconditioningError> getPreconditioningError() {
+            return preconditioningError;
         }
     
         State(byte[] bytes) throws CommandParseException {
@@ -301,6 +416,18 @@ public class Charging {
                             return timer;
                         case PROPERTY_PLUGGED_IN: return pluggedIn.update(p);
                         case PROPERTY_STATUS: return status.update(p);
+                        case PROPERTY_CHARGING_RATE: return chargingRate.update(p);
+                        case PROPERTY_BATTERY_CURRENT: return batteryCurrent.update(p);
+                        case PROPERTY_CHARGER_VOLTAGE: return chargerVoltage.update(p);
+                        case PROPERTY_CURRENT_TYPE: return currentType.update(p);
+                        case PROPERTY_MAX_RANGE: return maxRange.update(p);
+                        case PROPERTY_STARTER_BATTERY_STATE: return starterBatteryState.update(p);
+                        case PROPERTY_SMART_CHARGING_STATUS: return smartChargingStatus.update(p);
+                        case PROPERTY_BATTERY_LEVEL_AT_DEPARTURE: return batteryLevelAtDeparture.update(p);
+                        case PROPERTY_PRECONDITIONING_DEPARTURE_STATUS: return preconditioningDepartureStatus.update(p);
+                        case PROPERTY_PRECONDITIONING_IMMEDIATE_STATUS: return preconditioningImmediateStatus.update(p);
+                        case PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED: return preconditioningDepartureEnabled.update(p);
+                        case PROPERTY_PRECONDITIONING_ERROR: return preconditioningError.update(p);
                     }
     
                     return null;
@@ -335,29 +462,53 @@ public class Charging {
             timers = builder.timers.toArray(new Property[0]);
             pluggedIn = builder.pluggedIn;
             status = builder.status;
+            chargingRate = builder.chargingRate;
+            batteryCurrent = builder.batteryCurrent;
+            chargerVoltage = builder.chargerVoltage;
+            currentType = builder.currentType;
+            maxRange = builder.maxRange;
+            starterBatteryState = builder.starterBatteryState;
+            smartChargingStatus = builder.smartChargingStatus;
+            batteryLevelAtDeparture = builder.batteryLevelAtDeparture;
+            preconditioningDepartureStatus = builder.preconditioningDepartureStatus;
+            preconditioningImmediateStatus = builder.preconditioningImmediateStatus;
+            preconditioningDepartureEnabled = builder.preconditioningDepartureEnabled;
+            preconditioningError = builder.preconditioningError;
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private PropertyInteger estimatedRange;
+            private Property<Length> estimatedRange;
             private Property<Double> batteryLevel;
-            private Property<Float> batteryCurrentAC;
-            private Property<Float> batteryCurrentDC;
-            private Property<Float> chargerVoltageAC;
-            private Property<Float> chargerVoltageDC;
+            private Property<ElectricCurrent> batteryCurrentAC;
+            private Property<ElectricCurrent> batteryCurrentDC;
+            private Property<ElectricPotentialDifference> chargerVoltageAC;
+            private Property<ElectricPotentialDifference> chargerVoltageDC;
             private Property<Double> chargeLimit;
-            private PropertyInteger timeToCompleteCharge;
-            private Property<Float> chargingRateKW;
+            private Property<Duration> timeToCompleteCharge;
+            private Property<Power> chargingRateKW;
             private Property<Position> chargePortState;
             private Property<ChargeMode> chargeMode;
-            private Property<Float> maxChargingCurrent;
+            private Property<ElectricCurrent> maxChargingCurrent;
             private Property<PlugType> plugType;
             private Property<ChargingWindowChosen> chargingWindowChosen;
             private List<Property> departureTimes = new ArrayList<>();
             private List<Property> reductionTimes = new ArrayList<>();
-            private Property<Float> batteryTemperature;
+            private Property<Temperature> batteryTemperature;
             private List<Property> timers = new ArrayList<>();
             private Property<PluggedIn> pluggedIn;
             private Property<Status> status;
+            private Property<Power> chargingRate;
+            private Property<ElectricCurrent> batteryCurrent;
+            private Property<ElectricPotentialDifference> chargerVoltage;
+            private Property<CurrentType> currentType;
+            private Property<Length> maxRange;
+            private Property<StarterBatteryState> starterBatteryState;
+            private Property<SmartChargingStatus> smartChargingStatus;
+            private Property<Double> batteryLevelAtDeparture;
+            private Property<ActiveState> preconditioningDepartureStatus;
+            private Property<ActiveState> preconditioningImmediateStatus;
+            private Property<EnabledState> preconditioningDepartureEnabled;
+            private Property<PreconditioningError> preconditioningError;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -368,11 +519,11 @@ public class Charging {
             }
     
             /**
-             * @param estimatedRange Estimated range in km
+             * @param estimatedRange Estimated range
              * @return The builder
              */
-            public Builder setEstimatedRange(Property<Integer> estimatedRange) {
-                this.estimatedRange = new PropertyInteger(PROPERTY_ESTIMATED_RANGE, false, 2, estimatedRange);
+            public Builder setEstimatedRange(Property<Length> estimatedRange) {
+                this.estimatedRange = estimatedRange.setIdentifier(PROPERTY_ESTIMATED_RANGE);
                 addProperty(this.estimatedRange);
                 return this;
             }
@@ -388,10 +539,10 @@ public class Charging {
             }
             
             /**
-             * @param batteryCurrentAC Battery active current
+             * @param batteryCurrentAC Battery alternating current
              * @return The builder
              */
-            public Builder setBatteryCurrentAC(Property<Float> batteryCurrentAC) {
+            public Builder setBatteryCurrentAC(Property<ElectricCurrent> batteryCurrentAC) {
                 this.batteryCurrentAC = batteryCurrentAC.setIdentifier(PROPERTY_BATTERY_CURRENT_AC);
                 addProperty(this.batteryCurrentAC);
                 return this;
@@ -401,27 +552,27 @@ public class Charging {
              * @param batteryCurrentDC Battery direct current
              * @return The builder
              */
-            public Builder setBatteryCurrentDC(Property<Float> batteryCurrentDC) {
+            public Builder setBatteryCurrentDC(Property<ElectricCurrent> batteryCurrentDC) {
                 this.batteryCurrentDC = batteryCurrentDC.setIdentifier(PROPERTY_BATTERY_CURRENT_DC);
                 addProperty(this.batteryCurrentDC);
                 return this;
             }
             
             /**
-             * @param chargerVoltageAC Charger voltage
+             * @param chargerVoltageAC Charger voltage for alternating current
              * @return The builder
              */
-            public Builder setChargerVoltageAC(Property<Float> chargerVoltageAC) {
+            public Builder setChargerVoltageAC(Property<ElectricPotentialDifference> chargerVoltageAC) {
                 this.chargerVoltageAC = chargerVoltageAC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_AC);
                 addProperty(this.chargerVoltageAC);
                 return this;
             }
             
             /**
-             * @param chargerVoltageDC Charger voltage
+             * @param chargerVoltageDC Charger voltage for direct current
              * @return The builder
              */
-            public Builder setChargerVoltageDC(Property<Float> chargerVoltageDC) {
+            public Builder setChargerVoltageDC(Property<ElectricPotentialDifference> chargerVoltageDC) {
                 this.chargerVoltageDC = chargerVoltageDC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_DC);
                 addProperty(this.chargerVoltageDC);
                 return this;
@@ -438,20 +589,20 @@ public class Charging {
             }
             
             /**
-             * @param timeToCompleteCharge Time until charging completed in minutes
+             * @param timeToCompleteCharge Time until charging completed
              * @return The builder
              */
-            public Builder setTimeToCompleteCharge(Property<Integer> timeToCompleteCharge) {
-                this.timeToCompleteCharge = new PropertyInteger(PROPERTY_TIME_TO_COMPLETE_CHARGE, false, 1, timeToCompleteCharge);
+            public Builder setTimeToCompleteCharge(Property<Duration> timeToCompleteCharge) {
+                this.timeToCompleteCharge = timeToCompleteCharge.setIdentifier(PROPERTY_TIME_TO_COMPLETE_CHARGE);
                 addProperty(this.timeToCompleteCharge);
                 return this;
             }
             
             /**
-             * @param chargingRateKW Charge rate in kW when charging
+             * @param chargingRateKW Charging rate
              * @return The builder
              */
-            public Builder setChargingRateKW(Property<Float> chargingRateKW) {
+            public Builder setChargingRateKW(Property<Power> chargingRateKW) {
                 this.chargingRateKW = chargingRateKW.setIdentifier(PROPERTY_CHARGING_RATE_KW);
                 addProperty(this.chargingRateKW);
                 return this;
@@ -481,7 +632,7 @@ public class Charging {
              * @param maxChargingCurrent Maximum charging current
              * @return The builder
              */
-            public Builder setMaxChargingCurrent(Property<Float> maxChargingCurrent) {
+            public Builder setMaxChargingCurrent(Property<ElectricCurrent> maxChargingCurrent) {
                 this.maxChargingCurrent = maxChargingCurrent.setIdentifier(PROPERTY_MAX_CHARGING_CURRENT);
                 addProperty(this.maxChargingCurrent);
                 return this;
@@ -564,10 +715,10 @@ public class Charging {
             }
             
             /**
-             * @param batteryTemperature Battery temperature in Celsius
+             * @param batteryTemperature Battery temperature
              * @return The builder
              */
-            public Builder setBatteryTemperature(Property<Float> batteryTemperature) {
+            public Builder setBatteryTemperature(Property<Temperature> batteryTemperature) {
                 this.batteryTemperature = batteryTemperature.setIdentifier(PROPERTY_BATTERY_TEMPERATURE);
                 addProperty(this.batteryTemperature);
                 return this;
@@ -620,6 +771,126 @@ public class Charging {
                 addProperty(this.status);
                 return this;
             }
+            
+            /**
+             * @param chargingRate Charge rate when charging
+             * @return The builder
+             */
+            public Builder setChargingRate(Property<Power> chargingRate) {
+                this.chargingRate = chargingRate.setIdentifier(PROPERTY_CHARGING_RATE);
+                addProperty(this.chargingRate);
+                return this;
+            }
+            
+            /**
+             * @param batteryCurrent Battery current
+             * @return The builder
+             */
+            public Builder setBatteryCurrent(Property<ElectricCurrent> batteryCurrent) {
+                this.batteryCurrent = batteryCurrent.setIdentifier(PROPERTY_BATTERY_CURRENT);
+                addProperty(this.batteryCurrent);
+                return this;
+            }
+            
+            /**
+             * @param chargerVoltage Charger voltage
+             * @return The builder
+             */
+            public Builder setChargerVoltage(Property<ElectricPotentialDifference> chargerVoltage) {
+                this.chargerVoltage = chargerVoltage.setIdentifier(PROPERTY_CHARGER_VOLTAGE);
+                addProperty(this.chargerVoltage);
+                return this;
+            }
+            
+            /**
+             * @param currentType Type of current in use
+             * @return The builder
+             */
+            public Builder setCurrentType(Property<CurrentType> currentType) {
+                this.currentType = currentType.setIdentifier(PROPERTY_CURRENT_TYPE);
+                addProperty(this.currentType);
+                return this;
+            }
+            
+            /**
+             * @param maxRange Maximum electric range with 100% of battery
+             * @return The builder
+             */
+            public Builder setMaxRange(Property<Length> maxRange) {
+                this.maxRange = maxRange.setIdentifier(PROPERTY_MAX_RANGE);
+                addProperty(this.maxRange);
+                return this;
+            }
+            
+            /**
+             * @param starterBatteryState State of the starter battery
+             * @return The builder
+             */
+            public Builder setStarterBatteryState(Property<StarterBatteryState> starterBatteryState) {
+                this.starterBatteryState = starterBatteryState.setIdentifier(PROPERTY_STARTER_BATTERY_STATE);
+                addProperty(this.starterBatteryState);
+                return this;
+            }
+            
+            /**
+             * @param smartChargingStatus Status of optimized/intelligent charging
+             * @return The builder
+             */
+            public Builder setSmartChargingStatus(Property<SmartChargingStatus> smartChargingStatus) {
+                this.smartChargingStatus = smartChargingStatus.setIdentifier(PROPERTY_SMART_CHARGING_STATUS);
+                addProperty(this.smartChargingStatus);
+                return this;
+            }
+            
+            /**
+             * @param batteryLevelAtDeparture Battery charge level expected at time of departure
+             * @return The builder
+             */
+            public Builder setBatteryLevelAtDeparture(Property<Double> batteryLevelAtDeparture) {
+                this.batteryLevelAtDeparture = batteryLevelAtDeparture.setIdentifier(PROPERTY_BATTERY_LEVEL_AT_DEPARTURE);
+                addProperty(this.batteryLevelAtDeparture);
+                return this;
+            }
+            
+            /**
+             * @param preconditioningDepartureStatus Status of preconditioning at departure time
+             * @return The builder
+             */
+            public Builder setPreconditioningDepartureStatus(Property<ActiveState> preconditioningDepartureStatus) {
+                this.preconditioningDepartureStatus = preconditioningDepartureStatus.setIdentifier(PROPERTY_PRECONDITIONING_DEPARTURE_STATUS);
+                addProperty(this.preconditioningDepartureStatus);
+                return this;
+            }
+            
+            /**
+             * @param preconditioningImmediateStatus Status of immediate preconditioning
+             * @return The builder
+             */
+            public Builder setPreconditioningImmediateStatus(Property<ActiveState> preconditioningImmediateStatus) {
+                this.preconditioningImmediateStatus = preconditioningImmediateStatus.setIdentifier(PROPERTY_PRECONDITIONING_IMMEDIATE_STATUS);
+                addProperty(this.preconditioningImmediateStatus);
+                return this;
+            }
+            
+            /**
+             * @param preconditioningDepartureEnabled Preconditioning activation status at departure
+             * @return The builder
+             */
+            public Builder setPreconditioningDepartureEnabled(Property<EnabledState> preconditioningDepartureEnabled) {
+                this.preconditioningDepartureEnabled = preconditioningDepartureEnabled.setIdentifier(PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED);
+                addProperty(this.preconditioningDepartureEnabled);
+                return this;
+            }
+            
+            /**
+             * @param preconditioningError Preconditioning error if one is encountered
+             * @return The builder
+             */
+            public Builder setPreconditioningError(Property<PreconditioningError> preconditioningError) {
+                this.preconditioningError = preconditioningError.setIdentifier(PROPERTY_PRECONDITIONING_ERROR);
+                addProperty(this.preconditioningError);
+                return this;
+            }
         }
     }
 
@@ -647,7 +918,12 @@ public class Charging {
             if (status == Status.CHARGING_COMPLETE ||
                 status == Status.INITIALISING ||
                 status == Status.CHARGING_PAUSED ||
-                status == Status.CHARGING_ERROR) throw new IllegalArgumentException();
+                status == Status.CHARGING_ERROR ||
+                status == Status.CABLE_UNPLUGGED ||
+                status == Status.SLOW_CHARGING ||
+                status == Status.FAST_CHARGING ||
+                status == Status.DISCHARGING ||
+                status == Status.FOREIGN_OBJECT_DETECTED) throw new IllegalArgumentException();
         
             addProperty(this.status.update(status));
             createBytes();
@@ -931,9 +1207,7 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum PlugType implements ByteEnum {
+    }    public enum PlugType implements ByteEnum {
         TYPE_1((byte) 0x00),
         TYPE_2((byte) 0x01),
         CCS((byte) 0x02),
@@ -961,9 +1235,7 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum ChargingWindowChosen implements ByteEnum {
+    }    public enum ChargingWindowChosen implements ByteEnum {
         NOT_CHOSEN((byte) 0x00),
         CHOSEN((byte) 0x01);
     
@@ -989,9 +1261,7 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum PluggedIn implements ByteEnum {
+    }    public enum PluggedIn implements ByteEnum {
         DISCONNECTED((byte) 0x00),
         PLUGGED_IN((byte) 0x01);
     
@@ -1017,15 +1287,18 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum Status implements ByteEnum {
+    }    public enum Status implements ByteEnum {
         NOT_CHARGING((byte) 0x00),
         CHARGING((byte) 0x01),
         CHARGING_COMPLETE((byte) 0x02),
         INITIALISING((byte) 0x03),
         CHARGING_PAUSED((byte) 0x04),
-        CHARGING_ERROR((byte) 0x05);
+        CHARGING_ERROR((byte) 0x05),
+        CABLE_UNPLUGGED((byte) 0x06),
+        SLOW_CHARGING((byte) 0x07),
+        FAST_CHARGING((byte) 0x08),
+        DISCHARGING((byte) 0x09),
+        FOREIGN_OBJECT_DETECTED((byte) 0x0a);
     
         public static Status fromByte(byte byteValue) throws CommandParseException {
             Status[] values = Status.values();
@@ -1043,6 +1316,133 @@ public class Charging {
         private byte value;
     
         Status(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }    public enum CurrentType implements ByteEnum {
+        ALTERNATING_CURRENT((byte) 0x00),
+        DIRECT_CURRENT((byte) 0x01);
+    
+        public static CurrentType fromByte(byte byteValue) throws CommandParseException {
+            CurrentType[] values = CurrentType.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                CurrentType state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        CurrentType(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }    public enum StarterBatteryState implements ByteEnum {
+        /**
+         * Battery charge is greater than 0%
+         */
+        RED((byte) 0x00),
+        /**
+         * Battery charge is greater than 40%
+         */
+        YELLOW((byte) 0x01),
+        /**
+         * Battery charge is greater than 70%
+         */
+        GREEN((byte) 0x02);
+    
+        public static StarterBatteryState fromByte(byte byteValue) throws CommandParseException {
+            StarterBatteryState[] values = StarterBatteryState.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                StarterBatteryState state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        StarterBatteryState(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }    public enum SmartChargingStatus implements ByteEnum {
+        WALLBOX_IS_ACTIVE((byte) 0x00),
+        /**
+         * Smart Charge Communication is active
+         */
+        SCC_IS_ACTIVE((byte) 0x01),
+        INACTIVE((byte) 0x02);
+    
+        public static SmartChargingStatus fromByte(byte byteValue) throws CommandParseException {
+            SmartChargingStatus[] values = SmartChargingStatus.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                SmartChargingStatus state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        SmartChargingStatus(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }    public enum PreconditioningError implements ByteEnum {
+        NO_CHANGE((byte) 0x00),
+        /**
+         * Preconditioning not possible because battery or fuel is low
+         */
+        NOT_POSSIBLE_LOW((byte) 0x01),
+        /**
+         * Preconditioning not possible because charging is not finished
+         */
+        NOT_POSSIBLE_FINISHED((byte) 0x02),
+        AVAILABLE_AFTER_ENGINE_RESTART((byte) 0x03),
+        GENERAL_ERROR((byte) 0x04);
+    
+        public static PreconditioningError fromByte(byte byteValue) throws CommandParseException {
+            PreconditioningError[] values = PreconditioningError.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                PreconditioningError state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        PreconditioningError(byte value) {
             this.value = value;
         }
     

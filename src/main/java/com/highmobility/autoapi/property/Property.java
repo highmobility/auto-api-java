@@ -42,10 +42,12 @@ import java.util.GregorianCalendar;
 import javax.annotation.Nullable;
 
 /**
- * Property is a representation of some AutoAPI data. It consists of 3 optional components: data,
+ * Property is a representation of some AutoAPI data. It consists of 4 optional components: data, unit
  * timestamp, failure
+ *
+ * @param <V> The value type. Eg Integer, CheckControlMessage, Duration
  */
-public class Property<T> extends Bytes {
+public class Property<V> extends Bytes {
     /*
     Property is created/updated in 3 places:
 
@@ -83,13 +85,16 @@ public class Property<T> extends Bytes {
 
     protected static final byte[] unknownBytes = new byte[]{0x00, 0x00, 0x00};
 
-    @Nullable protected PropertyComponentValue<T> value;
-    @Nullable protected PropertyComponentTimestamp timestamp;
-    @Nullable protected PropertyComponentFailure failure;
+    @Nullable
+    protected PropertyComponentValue<V> value;
+    @Nullable
+    protected PropertyComponentTimestamp timestamp;
+    @Nullable
+    protected PropertyComponentFailure failure;
 
     protected PropertyComponent[] components;
 
-    private Class<T> valueClass = null;
+    private Class<V> valueClass = null;
 
     public byte getPropertyIdentifier() {
         return bytes[0];
@@ -98,7 +103,8 @@ public class Property<T> extends Bytes {
     /**
      * @return The property value.
      */
-    @Nullable public T getValue() {
+    @Nullable
+    public V getValue() {
         return value != null ? value.getValue() : null;
     }
 
@@ -113,7 +119,8 @@ public class Property<T> extends Bytes {
      * @param identifier The component identifier.
      * @return The component with the given identifier.
      */
-    @Nullable public PropertyComponent getComponent(byte identifier) {
+    @Nullable
+    public PropertyComponent getComponent(byte identifier) {
         for (int i = 0; i < components.length; i++) {
             PropertyComponent component = components[i];
             if (component.getIdentifier() == identifier) return component;
@@ -124,30 +131,35 @@ public class Property<T> extends Bytes {
     /**
      * @return The value component.
      */
-    @Nullable public PropertyComponentValue getValueComponent() {
+    @Nullable
+    public PropertyComponentValue getValueComponent() {
         return value;
     }
 
     /**
      * @return The timestamp of the property.
      */
-    @Nullable public Calendar getTimestamp() {
+    @Nullable
+    public Calendar getTimestamp() {
         if (timestamp == null) return null;
         return timestamp.getCalendar();
     }
 
-    @Nullable PropertyComponentTimestamp getTimestampComponent() {
+    @Nullable
+    PropertyComponentTimestamp getTimestampComponent() {
         return timestamp;
     }
 
     /**
      * @return The failure of the property.
      */
-    @Nullable public PropertyComponentFailure getFailureComponent() {
+    @Nullable
+    public PropertyComponentFailure getFailureComponent() {
         return failure;
     }
 
-    @Nullable Class<T> getValueClass() {
+    @Nullable
+    Class<V> getValueClass() {
         return valueClass;
     }
 
@@ -206,6 +218,10 @@ public class Property<T> extends Bytes {
         components = builder.toArray(new PropertyComponent[0]);
     }
 
+    public Property(@Nullable V value) {
+        update((byte) 0, value, null, null);
+    }
+
     public Property update(Property p) throws CommandParseException {
         if (valueClass == null)
             throw new IllegalArgumentException("Initialise with a class to update.");
@@ -232,36 +248,32 @@ public class Property<T> extends Bytes {
     // MARK: builder ctor
 
     public Property(byte identifier,
-                    @Nullable T value,
+                    @Nullable V value,
                     @Nullable Calendar timestamp,
                     @Nullable PropertyComponentFailure failure) {
         update(identifier, value, timestamp, failure);
     }
 
-    public Property(@Nullable T value) {
-        update((byte) 0, value, null, null);
-    }
-
     // MARK: internal ctor
 
-    public Property(int identifier, T value) {
+    public Property(int identifier, V value) {
         this((byte) identifier, value);
     }
 
-    public Property(byte identifier, T value) {
+    public Property(byte identifier, V value) {
         update(identifier, value, null, null);
     }
 
-    public Property(Class<T> valueClass, int identifier) {
+    public Property(Class<V> valueClass, int identifier) {
         this(valueClass, ((byte) identifier));
     }
 
-    public Property(Class<T> valueClass, byte identifier) {
+    public Property(Class<V> valueClass, byte identifier) {
         this.bytes = new byte[]{identifier, 0, 0};
         this.valueClass = valueClass;
     }
 
-    public Property(Class<T> valueClass, Property property) throws CommandParseException {
+    public Property(Class<V> valueClass, Property property) throws CommandParseException {
         this.valueClass = valueClass;
         if (property == null || property.getLength() == 0) this.bytes = unknownBytes;
         if (property.getLength() < 3) this.bytes = Arrays.copyOf(property.getByteArray(), 3);
@@ -269,7 +281,7 @@ public class Property<T> extends Bytes {
         update(property);
     }
 
-    public Property update(T value) {
+    public Property update(V value) {
         return update(bytes[0], value, null, null);
     }
 
@@ -289,7 +301,7 @@ public class Property<T> extends Bytes {
     }
 
     private Property update(byte identifier,
-                            @Nullable T value,
+                            @Nullable V value,
                             @Nullable Calendar timestamp,
                             @Nullable PropertyComponentFailure failure) {
 
@@ -365,13 +377,13 @@ public class Property<T> extends Bytes {
 
     // MARK: Helpers
 
-    public static <T> T[] propertiesToValues(Property<T>[] properties, Class<T> tClass) {
-        ArrayList<T> values = new ArrayList<>();
+    public static <V, U> V[] propertiesToValues(Property<V>[] properties, Class<V> tClass) {
+        ArrayList<V> values = new ArrayList<>();
         for (int i = 0; i < properties.length; i++) {
             values.add(properties[i].getValue());
         }
 
-        return values.toArray((T[]) Array.newInstance(tClass, 0));
+        return values.toArray((V[]) Array.newInstance(tClass, 0));
     }
 
     // MARK: ctor helpers

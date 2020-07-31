@@ -68,7 +68,7 @@ public class TachographTest extends BaseTest {
         assertTrue(state.getVehicleMotion().getValue() == Detected.DETECTED);
         assertTrue(state.getVehicleOverspeed().getValue() == Tachograph.VehicleOverspeed.NO_OVERSPEED);
         assertTrue(state.getVehicleDirection().getValue() == Tachograph.VehicleDirection.FORWARD);
-        assertTrue(state.getVehicleSpeed().getValue() == 80);
+        assertTrue(state.getVehicleSpeed().getValue().getValue() == 80);
         assertTrue(bytesTheSame(state, bytes));
     }
 

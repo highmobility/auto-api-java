@@ -23,6 +23,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.OnOffState;
 import com.highmobility.value.Bytes;
@@ -35,6 +36,7 @@ public class Ignition {
 
     public static final byte PROPERTY_STATUS = 0x01;
     public static final byte PROPERTY_ACCESSORIES_STATUS = 0x02;
+    public static final byte PROPERTY_STATE = 0x03;
 
     /**
      * Get all ignition properties
@@ -78,6 +80,7 @@ public class Ignition {
     public static class State extends SetCommand {
         Property<OnOffState> status = new Property(OnOffState.class, PROPERTY_STATUS);
         Property<OnOffState> accessoriesStatus = new Property(OnOffState.class, PROPERTY_ACCESSORIES_STATUS);
+        Property<IgnitionState> state = new Property(IgnitionState.class, PROPERTY_STATE);
     
         /**
          * @return The status
@@ -93,6 +96,13 @@ public class Ignition {
             return accessoriesStatus;
         }
     
+        /**
+         * @return The state
+         */
+        public Property<IgnitionState> getState() {
+            return state;
+        }
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -100,6 +110,7 @@ public class Ignition {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
                         case PROPERTY_ACCESSORIES_STATUS: return accessoriesStatus.update(p);
+                        case PROPERTY_STATE: return state.update(p);
                     }
     
                     return null;
@@ -112,11 +123,13 @@ public class Ignition {
     
             status = builder.status;
             accessoriesStatus = builder.accessoriesStatus;
+            state = builder.state;
         }
     
         public static final class Builder extends SetCommand.Builder {
             private Property<OnOffState> status;
             private Property<OnOffState> accessoriesStatus;
+            private Property<IgnitionState> state;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -143,6 +156,16 @@ public class Ignition {
             public Builder setAccessoriesStatus(Property<OnOffState> accessoriesStatus) {
                 this.accessoriesStatus = accessoriesStatus.setIdentifier(PROPERTY_ACCESSORIES_STATUS);
                 addProperty(this.accessoriesStatus);
+                return this;
+            }
+            
+            /**
+             * @param state The state
+             * @return The builder
+             */
+            public Builder setState(Property<IgnitionState> state) {
+                this.state = state.setIdentifier(PROPERTY_STATE);
+                addProperty(this.state);
                 return this;
             }
         }
@@ -185,6 +208,37 @@ public class Ignition {
             }
             if (this.status.getValue() == null) 
                 throw new NoPropertiesException();
+        }
+    }
+
+    public enum IgnitionState implements ByteEnum {
+        LOCK((byte) 0x00),
+        OFF((byte) 0x01),
+        ACCESSORY((byte) 0x02),
+        ON((byte) 0x03),
+        START((byte) 0x04);
+    
+        public static IgnitionState fromByte(byte byteValue) throws CommandParseException {
+            IgnitionState[] values = IgnitionState.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                IgnitionState state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        IgnitionState(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
         }
     }
 }

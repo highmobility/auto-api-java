@@ -25,9 +25,9 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.value.SpringRate;
+import com.highmobility.autoapi.value.measurement.Length;
 import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,9 +92,9 @@ public class ChassisSettings {
         Property<SpringRate>[] currentSpringRates;
         Property<SpringRate>[] maximumSpringRates;
         Property<SpringRate>[] minimumSpringRates;
-        PropertyInteger currentChassisPosition = new PropertyInteger(PROPERTY_CURRENT_CHASSIS_POSITION, true);
-        PropertyInteger maximumChassisPosition = new PropertyInteger(PROPERTY_MAXIMUM_CHASSIS_POSITION, true);
-        PropertyInteger minimumChassisPosition = new PropertyInteger(PROPERTY_MINIMUM_CHASSIS_POSITION, true);
+        Property<Length> currentChassisPosition = new Property(Length.class, PROPERTY_CURRENT_CHASSIS_POSITION);
+        Property<Length> maximumChassisPosition = new Property(Length.class, PROPERTY_MAXIMUM_CHASSIS_POSITION);
+        Property<Length> minimumChassisPosition = new Property(Length.class, PROPERTY_MINIMUM_CHASSIS_POSITION);
     
         /**
          * @return The driving mode
@@ -132,23 +132,23 @@ public class ChassisSettings {
         }
     
         /**
-         * @return The chassis position in mm calculated from the lowest point
+         * @return The chassis position calculated from the lowest point
          */
-        public PropertyInteger getCurrentChassisPosition() {
+        public Property<Length> getCurrentChassisPosition() {
             return currentChassisPosition;
         }
     
         /**
          * @return The maximum possible value for the chassis position
          */
-        public PropertyInteger getMaximumChassisPosition() {
+        public Property<Length> getMaximumChassisPosition() {
             return maximumChassisPosition;
         }
     
         /**
          * @return The minimum possible value for the chassis position
          */
-        public PropertyInteger getMinimumChassisPosition() {
+        public Property<Length> getMinimumChassisPosition() {
             return minimumChassisPosition;
         }
     
@@ -209,9 +209,9 @@ public class ChassisSettings {
             private List<Property> currentSpringRates = new ArrayList<>();
             private List<Property> maximumSpringRates = new ArrayList<>();
             private List<Property> minimumSpringRates = new ArrayList<>();
-            private PropertyInteger currentChassisPosition;
-            private PropertyInteger maximumChassisPosition;
-            private PropertyInteger minimumChassisPosition;
+            private Property<Length> currentChassisPosition;
+            private Property<Length> maximumChassisPosition;
+            private Property<Length> minimumChassisPosition;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -326,11 +326,11 @@ public class ChassisSettings {
             }
             
             /**
-             * @param currentChassisPosition The chassis position in mm calculated from the lowest point
+             * @param currentChassisPosition The chassis position calculated from the lowest point
              * @return The builder
              */
-            public Builder setCurrentChassisPosition(Property<Integer> currentChassisPosition) {
-                this.currentChassisPosition = new PropertyInteger(PROPERTY_CURRENT_CHASSIS_POSITION, true, 1, currentChassisPosition);
+            public Builder setCurrentChassisPosition(Property<Length> currentChassisPosition) {
+                this.currentChassisPosition = currentChassisPosition.setIdentifier(PROPERTY_CURRENT_CHASSIS_POSITION);
                 addProperty(this.currentChassisPosition);
                 return this;
             }
@@ -339,8 +339,8 @@ public class ChassisSettings {
              * @param maximumChassisPosition The maximum possible value for the chassis position
              * @return The builder
              */
-            public Builder setMaximumChassisPosition(Property<Integer> maximumChassisPosition) {
-                this.maximumChassisPosition = new PropertyInteger(PROPERTY_MAXIMUM_CHASSIS_POSITION, true, 1, maximumChassisPosition);
+            public Builder setMaximumChassisPosition(Property<Length> maximumChassisPosition) {
+                this.maximumChassisPosition = maximumChassisPosition.setIdentifier(PROPERTY_MAXIMUM_CHASSIS_POSITION);
                 addProperty(this.maximumChassisPosition);
                 return this;
             }
@@ -349,8 +349,8 @@ public class ChassisSettings {
              * @param minimumChassisPosition The minimum possible value for the chassis position
              * @return The builder
              */
-            public Builder setMinimumChassisPosition(Property<Integer> minimumChassisPosition) {
-                this.minimumChassisPosition = new PropertyInteger(PROPERTY_MINIMUM_CHASSIS_POSITION, true, 1, minimumChassisPosition);
+            public Builder setMinimumChassisPosition(Property<Length> minimumChassisPosition) {
+                this.minimumChassisPosition = minimumChassisPosition.setIdentifier(PROPERTY_MINIMUM_CHASSIS_POSITION);
                 addProperty(this.minimumChassisPosition);
                 return this;
             }
@@ -498,24 +498,24 @@ public class ChassisSettings {
      * Set chassis position
      */
     public static class SetChassisPosition extends SetCommand {
-        PropertyInteger currentChassisPosition = new PropertyInteger(PROPERTY_CURRENT_CHASSIS_POSITION, true);
+        Property<Length> currentChassisPosition = new Property(Length.class, PROPERTY_CURRENT_CHASSIS_POSITION);
     
         /**
          * @return The current chassis position
          */
-        public PropertyInteger getCurrentChassisPosition() {
+        public Property<Length> getCurrentChassisPosition() {
             return currentChassisPosition;
         }
         
         /**
          * Set chassis position
          *
-         * @param currentChassisPosition The chassis position in mm calculated from the lowest point
+         * @param currentChassisPosition The chassis position calculated from the lowest point
          */
-        public SetChassisPosition(Integer currentChassisPosition) {
+        public SetChassisPosition(Length currentChassisPosition) {
             super(IDENTIFIER);
         
-            addProperty(this.currentChassisPosition.update(true, 1, currentChassisPosition));
+            addProperty(this.currentChassisPosition.update(currentChassisPosition));
             createBytes();
         }
     

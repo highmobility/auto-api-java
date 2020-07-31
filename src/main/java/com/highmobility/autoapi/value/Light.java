@@ -24,71 +24,54 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
 public class Light extends PropertyValueObject {
     public static final int SIZE = 2;
 
-    LocationLongitudinal locationLongitudinal;
-    ActiveState activeState;
+    LocationLongitudinal location;
+    ActiveState state;
 
     /**
-     * @return The location longitudinal.
+     * @return The location.
      */
-    public LocationLongitudinal getLocationLongitudinal() {
-        return locationLongitudinal;
+    public LocationLongitudinal getLocation() {
+        return location;
     }
 
     /**
-     * @return The active state.
+     * @return The state.
      */
-    public ActiveState getActiveState() {
-        return activeState;
+    public ActiveState getState() {
+        return state;
     }
 
-    public Light(LocationLongitudinal locationLongitudinal, ActiveState activeState) {
-        super(2);
-        update(locationLongitudinal, activeState);
-    }
+    public Light(LocationLongitudinal location, ActiveState state) {
+        super(0);
 
-    public Light(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public Light() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        locationLongitudinal = LocationLongitudinal.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        activeState = ActiveState.fromByte(get(bytePosition));
-    }
-
-    public void update(LocationLongitudinal locationLongitudinal, ActiveState activeState) {
-        this.locationLongitudinal = locationLongitudinal;
-        this.activeState = activeState;
+        this.location = location;
+        this.state = state;
 
         bytes = new byte[getLength()];
 
         int bytePosition = 0;
-        set(bytePosition, locationLongitudinal.getByte());
+        set(bytePosition, location.getByte());
         bytePosition += 1;
 
-        set(bytePosition, activeState.getByte());
+        set(bytePosition, state.getByte());
     }
 
-    public void update(Light value) {
-        update(value.locationLongitudinal, value.activeState);
+    public Light(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        location = LocationLongitudinal.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        state = ActiveState.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {

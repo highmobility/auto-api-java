@@ -105,7 +105,7 @@ public class Seats {
         @Nullable public Property<PersonDetected> getPersonDetection(SeatLocation location) {
             for (int i = 0; i < personsDetected.length; i++) {
                 Property<PersonDetected> property = personsDetected[i];
-                if (property.getValue() != null && property.getValue().getSeatLocation() == location)
+                if (property.getValue() != null && property.getValue().getLocation() == location)
                     return property;
             }
     
@@ -119,7 +119,7 @@ public class Seats {
         @Nullable public Property<SeatbeltState> getSeatBeltFastened(SeatLocation location) {
             for (int i = 0; i < seatbeltsState.length; i++) {
                 Property<SeatbeltState> property = seatbeltsState[i];
-                if (property.getValue() != null && property.getValue().getSeatLocation() == location)
+                if (property.getValue() != null && property.getValue().getLocation() == location)
                     return property;
             }
     

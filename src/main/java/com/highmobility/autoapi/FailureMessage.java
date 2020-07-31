@@ -113,8 +113,8 @@ public class FailureMessage {
          * @return Whether the command failed.
          */
         public boolean getCommandFailed(Integer identifier, Integer type) {
-            if (identifier.equals(getFailedMessageID().getValue()) &&
-                    type.equals(getFailedMessageType().getValue())) {
+            if (identifier == getFailedMessageID().getValue() &&
+                    type == getFailedMessageType().getValue()) {
                 return true;
             }
     
@@ -216,14 +216,42 @@ public class FailureMessage {
     }
 
     public enum FailureReason implements ByteEnum {
+        /**
+         * Vehicle has not the capability to perform the command
+         */
         UNSUPPORTED_CAPABILITY((byte) 0x00),
+        /**
+         * User has not been authenticated or lacks permissions
+         */
         UNAUTHORISED((byte) 0x01),
+        /**
+         * Command can not be executed in the current vehicle state
+         */
         INCORRECT_STATE((byte) 0x02),
+        /**
+         * Command failed to execute in time for an unknown reason
+         */
         EXECUTION_TIMEOUT((byte) 0x03),
+        /**
+         * Vehicle has to be waken up before the command can be used. If this is for a virtual vehicle, the emulator has to be loaded
+         */
         VEHICLE_ASLEEP((byte) 0x04),
+        /**
+         * Command not recognised
+         */
         INVALID_COMMAND((byte) 0x05),
+        /**
+         * Capability is being refreshed
+         */
         PENDING((byte) 0x06),
-        RATE_LIMIT((byte) 0x07);
+        /**
+         * Capability rate limit has been exceeded
+         */
+        RATE_LIMIT((byte) 0x07),
+        /**
+         * API call to OEM returned an error
+         */
+        INTERNAL_OEM_ERROR((byte) 0x08);
     
         public static FailureReason fromByte(byte byteValue) throws CommandParseException {
             FailureReason[] values = FailureReason.values();

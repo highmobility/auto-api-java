@@ -24,7 +24,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.capability.DisabledIn;
-import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.measurement.Frequency;
 
 /**
  * The Heart Rate capability
@@ -40,12 +41,12 @@ public class HeartRate {
      * Send heart rate
      */
     public static class SendHeartRate extends SetCommand {
-        PropertyInteger heartRate = new PropertyInteger(PROPERTY_HEART_RATE, false);
+        Property<Frequency> heartRate = new Property(Frequency.class, PROPERTY_HEART_RATE);
     
         /**
          * @return The heart rate
          */
-        public PropertyInteger getHeartRate() {
+        public Property<Frequency> getHeartRate() {
             return heartRate;
         }
         
@@ -54,10 +55,10 @@ public class HeartRate {
          *
          * @param heartRate The heart rate
          */
-        public SendHeartRate(Integer heartRate) {
+        public SendHeartRate(Frequency heartRate) {
             super(IDENTIFIER);
         
-            addProperty(this.heartRate.update(false, 1, heartRate));
+            addProperty(this.heartRate.update(heartRate));
             createBytes();
         }
     

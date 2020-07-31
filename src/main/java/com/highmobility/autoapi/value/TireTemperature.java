@@ -24,57 +24,33 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.autoapi.value.measurement.Temperature;
 import com.highmobility.value.Bytes;
 
 public class TireTemperature extends PropertyValueObject {
-    public static final int SIZE = 5;
+    public static final int SIZE = 11;
 
-    Location location;
-    Float temperature;
+    LocationWheel location;
+    Temperature temperature;
 
     /**
      * @return The location.
      */
-    public Location getLocation() {
+    public LocationWheel getLocation() {
         return location;
     }
 
     /**
-     * @return Tire temperature in Celsius.
+     * @return Tire temperature.
      */
-    public Float getTemperature() {
+    public Temperature getTemperature() {
         return temperature;
     }
 
-    public TireTemperature(Location location, Float temperature) {
-        super(5);
-        update(location, temperature);
-    }
+    public TireTemperature(LocationWheel location, Temperature temperature) {
+        super(0);
 
-    public TireTemperature(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public TireTemperature() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 5) throw new CommandParseException();
-
-        int bytePosition = 0;
-        location = Location.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        temperature = Property.getFloat(bytes, bytePosition);
-    }
-
-    public void update(Location location, Float temperature) {
         this.location = location;
         this.temperature = temperature;
 
@@ -84,14 +60,23 @@ public class TireTemperature extends PropertyValueObject {
         set(bytePosition, location.getByte());
         bytePosition += 1;
 
-        set(bytePosition, Property.floatToBytes(temperature));
+        set(bytePosition, temperature);
     }
 
-    public void update(TireTemperature value) {
-        update(value.location, value.temperature);
+    public TireTemperature(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 11) throw new CommandParseException();
+
+        int bytePosition = 0;
+        location = LocationWheel.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        int temperatureSize = Temperature.SIZE;
+        temperature = new Temperature(getRange(bytePosition, bytePosition + temperatureSize));
     }
 
     @Override public int getLength() {
-        return 1 + 4;
+        return 1 + 10;
     }
 }

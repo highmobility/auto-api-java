@@ -67,7 +67,6 @@ public class ChargingTest extends BaseTest {
             "15000C0100090100000160E1560840" +
             "16000401000101" +
             "17000401000101"
-
     );
 
     @Test
@@ -80,19 +79,19 @@ public class ChargingTest extends BaseTest {
 
     private void testState(Charging.State state) {
         assertTrue(TestUtils.bytesTheSame(state, bytes));
-        assertTrue(state.getEstimatedRange().getValue() == 432);
+        assertTrue(state.getEstimatedRange().getValue().getValue() == 432);
         assertTrue(state.getBatteryLevel().getValue() == .5d);
-        assertTrue(state.getBatteryCurrentAC().getValue() == -.6f);
-        assertTrue(state.getBatteryCurrentDC().getValue() == -.6f);
-        assertTrue(state.getChargerVoltageAC().getValue() == 400f);
-        assertTrue(state.getChargerVoltageDC().getValue() == -.6f);
-        assertTrue(state.getTimeToCompleteCharge().getValue() == 60);
+        assertTrue(state.getBatteryCurrentAC().getValue().getValue() == -.6d);
+        assertTrue(state.getBatteryCurrentDC().getValue().getValue() == -.6d);
+        assertTrue(state.getChargerVoltageAC().getValue().getValue() == 400d);
+        assertTrue(state.getChargerVoltageDC().getValue().getValue() == -.6d);
+        assertTrue(state.getTimeToCompleteCharge().getValue().getValue() == 60d);
         assertTrue(state.getChargeLimit().getValue() == .9d);
-        assertTrue(state.getChargingRateKW().getValue() == 3.5f);
+        assertTrue(state.getChargingRateKW().getValue().getValue() == 3.5d);
         assertTrue(state.getChargePortState().getValue() == Position.OPEN);
         assertTrue(state.getChargeMode().getValue() == Charging.ChargeMode.TIMER_BASED);
 
-        assertTrue(state.getMaxChargingCurrent().getValue() == 25f);
+        assertTrue(state.getMaxChargingCurrent().getValue().getValue() == 25d);
         assertTrue(state.getPlugType().getValue() == Charging.PlugType.TYPE_2);
         assertTrue(state.getChargingWindowChosen().getValue() == Charging.ChargingWindowChosen.NOT_CHOSEN);
 
@@ -100,12 +99,12 @@ public class ChargingTest extends BaseTest {
         int timeExists = 0;
         for (Property<DepartureTime> time : state.getDepartureTimes()) {
             if (time.getValue().getTime().getHour() == 16 && time.getValue().getTime().getMinute() == 32 && time
-                    .getValue().getActiveState() == ActiveState.ACTIVE) {
+                    .getValue().getState() == ActiveState.ACTIVE) {
                 timeExists++;
             }
 
             if (time.getValue().getTime().getHour() == 11 && time.getValue().getTime().getMinute() == 51 && time.getValue()
-                    .getActiveState() != ActiveState.ACTIVE) {
+                    .getState() != ActiveState.ACTIVE) {
                 timeExists++;
             }
         }
@@ -126,9 +125,7 @@ public class ChargingTest extends BaseTest {
         }
 
         assertTrue(timeExists == 2);
-
-        assertTrue(state.getBatteryTemperature().getValue() == 38.4f);
-
+        assertTrue(state.getBatteryTemperature().getValue().getValue() == 38.4d);
         assertTrue(state.getTimers().length == 2);
 
         Calendar departureDate =

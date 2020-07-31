@@ -39,6 +39,7 @@ public class RooftopControl {
     public static final byte PROPERTY_CONVERTIBLE_ROOF_STATE = 0x03;
     public static final byte PROPERTY_SUNROOF_TILT_STATE = 0x04;
     public static final byte PROPERTY_SUNROOF_STATE = 0x05;
+    public static final byte PROPERTY_SUNROOF_RAIN_EVENT = 0x06;
 
     /**
      * Get rooftop state
@@ -85,6 +86,7 @@ public class RooftopControl {
         Property<ConvertibleRoofState> convertibleRoofState = new Property(ConvertibleRoofState.class, PROPERTY_CONVERTIBLE_ROOF_STATE);
         Property<SunroofTiltState> sunroofTiltState = new Property(SunroofTiltState.class, PROPERTY_SUNROOF_TILT_STATE);
         Property<SunroofState> sunroofState = new Property(SunroofState.class, PROPERTY_SUNROOF_STATE);
+        Property<SunroofRainEvent> sunroofRainEvent = new Property(SunroofRainEvent.class, PROPERTY_SUNROOF_RAIN_EVENT);
     
         /**
          * @return 1.0 (100%) is opaque, 0.0 (0%) is transparent
@@ -121,6 +123,13 @@ public class RooftopControl {
             return sunroofState;
         }
     
+        /**
+         * @return Sunroof event happened in case of rain
+         */
+        public Property<SunroofRainEvent> getSunroofRainEvent() {
+            return sunroofRainEvent;
+        }
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -131,6 +140,7 @@ public class RooftopControl {
                         case PROPERTY_CONVERTIBLE_ROOF_STATE: return convertibleRoofState.update(p);
                         case PROPERTY_SUNROOF_TILT_STATE: return sunroofTiltState.update(p);
                         case PROPERTY_SUNROOF_STATE: return sunroofState.update(p);
+                        case PROPERTY_SUNROOF_RAIN_EVENT: return sunroofRainEvent.update(p);
                     }
     
                     return null;
@@ -146,6 +156,7 @@ public class RooftopControl {
             convertibleRoofState = builder.convertibleRoofState;
             sunroofTiltState = builder.sunroofTiltState;
             sunroofState = builder.sunroofState;
+            sunroofRainEvent = builder.sunroofRainEvent;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -154,6 +165,7 @@ public class RooftopControl {
             private Property<ConvertibleRoofState> convertibleRoofState;
             private Property<SunroofTiltState> sunroofTiltState;
             private Property<SunroofState> sunroofState;
+            private Property<SunroofRainEvent> sunroofRainEvent;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -210,6 +222,16 @@ public class RooftopControl {
             public Builder setSunroofState(Property<SunroofState> sunroofState) {
                 this.sunroofState = sunroofState.setIdentifier(PROPERTY_SUNROOF_STATE);
                 addProperty(this.sunroofState);
+                return this;
+            }
+            
+            /**
+             * @param sunroofRainEvent Sunroof event happened in case of rain
+             * @return The builder
+             */
+            public Builder setSunroofRainEvent(Property<SunroofRainEvent> sunroofRainEvent) {
+                this.sunroofRainEvent = sunroofRainEvent.setIdentifier(PROPERTY_SUNROOF_RAIN_EVENT);
+                addProperty(this.sunroofRainEvent);
                 return this;
             }
         }
@@ -340,9 +362,7 @@ public class RooftopControl {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum SunroofTiltState implements ByteEnum {
+    }    public enum SunroofTiltState implements ByteEnum {
         CLOSED((byte) 0x00),
         TILTED((byte) 0x01),
         HALF_TILTED((byte) 0x02);
@@ -369,9 +389,7 @@ public class RooftopControl {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum SunroofState implements ByteEnum {
+    }    public enum SunroofState implements ByteEnum {
         CLOSED((byte) 0x00),
         OPEN((byte) 0x01),
         INTERMEDIATE((byte) 0x02);
@@ -392,6 +410,33 @@ public class RooftopControl {
         private byte value;
     
         SunroofState(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }    public enum SunroofRainEvent implements ByteEnum {
+        NO_EVENT((byte) 0x00),
+        IN_STROKE_POSITION_BECAUSE_OF_RAIN((byte) 0x01),
+        AUTOMATICALLY_IN_STROKE_POSITION((byte) 0x02);
+    
+        public static SunroofRainEvent fromByte(byte byteValue) throws CommandParseException {
+            SunroofRainEvent[] values = SunroofRainEvent.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                SunroofRainEvent state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        SunroofRainEvent(byte value) {
             this.value = value;
         }
     

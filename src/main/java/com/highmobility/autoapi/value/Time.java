@@ -49,32 +49,8 @@ public class Time extends PropertyValueObject {
     }
 
     public Time(Integer hour, Integer minute) {
-        super(2);
-        update(hour, minute);
-    }
+        super(0);
 
-    public Time(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public Time() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        hour = Property.getUnsignedInt(bytes, bytePosition, 1);
-        bytePosition += 1;
-
-        minute = Property.getUnsignedInt(bytes, bytePosition, 1);
-    }
-
-    public void update(Integer hour, Integer minute) {
         this.hour = hour;
         this.minute = minute;
 
@@ -87,8 +63,16 @@ public class Time extends PropertyValueObject {
         set(bytePosition, Property.intToBytes(minute, 1));
     }
 
-    public void update(Time value) {
-        update(value.hour, value.minute);
+    public Time(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        hour = Property.getUnsignedInt(bytes, bytePosition, 1);
+        bytePosition += 1;
+
+        minute = Property.getUnsignedInt(bytes, bytePosition, 1);
     }
 
     @Override public int getLength() {

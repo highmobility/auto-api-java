@@ -23,24 +23,14 @@
  */
 package com.highmobility.autoapi.differentpackage;
 
-import com.highmobility.autoapi.Capabilities;
-import com.highmobility.autoapi.Command;
-import com.highmobility.autoapi.CommandResolver;
-import com.highmobility.autoapi.Doors;
-import com.highmobility.autoapi.FailureMessage;
-import com.highmobility.autoapi.Fueling;
-import com.highmobility.autoapi.HonkHornFlashLights;
-import com.highmobility.autoapi.Identifier;
-import com.highmobility.autoapi.Trunk;
-import com.highmobility.autoapi.Type;
-import com.highmobility.autoapi.VehicleLocation;
-import com.highmobility.autoapi.VehicleStatus;
+import com.highmobility.autoapi.*;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Location;
 import com.highmobility.autoapi.value.Lock;
 import com.highmobility.autoapi.value.LockState;
 import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.value.SupportedCapability;
+import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.value.Bytes;
 
 @SuppressWarnings({"UnusedAssignment", "StatementWithEmptyBody", "ResultOfMethodCallIgnored"})
@@ -89,25 +79,16 @@ public class DevCenterSnippetTest {
 
         Command command = CommandResolver.resolve(bytes);
 
-        if (command instanceof VehicleStatus.State) {
-            VehicleStatus.State vehicleStatus = (VehicleStatus.State) command;
-            // Now you can inspect the Vehicle Status testState, for example
+        if (command instanceof VehicleInformation.State) {
+            VehicleInformation.State vehicleInfo = (VehicleInformation.State) command;
+            // Now you can inspect the Vehicle Information, for example
 
             // Get the VIN number
-            vehicleStatus.getVin().getValue();
+            vehicleInfo.getPower().getValue().getValue();
 
             // Check the power train type
-            if (vehicleStatus.getPowertrain().getValue() == VehicleStatus.Powertrain.ALL_ELECTRIC) {
+            if (vehicleInfo.getPowertrain().getValue() == VehicleInformation.Powertrain.ALL_ELECTRIC) {
                 // vehicle has all electric power train
-            }
-
-            // Check the trunk state, if exists
-            Command subState = vehicleStatus.getState(Identifier.TRUNK).getValue();
-            if (subState != null) {
-                Trunk.State trunkState = (Trunk.State) subState;
-                if (trunkState.getLock().getValue() == LockState.UNLOCKED) {
-                    // Trunk is unlocked
-                }
             }
         }
     }
@@ -229,7 +210,7 @@ public class DevCenterSnippetTest {
         // send OpenGasFlap and only wait for the ack, not the GasFlapState response.
         new Fueling.ControlGasFlap(LockState.LOCKED, Position.CLOSED);
         // send HonkAndFlash straight after the OpenGasFlap ack.
-        new HonkHornFlashLights.HonkFlash(3, 3);
+        new HonkHornFlashLights.HonkFlash(3, new Duration(3d, Duration.Unit.SECONDS));
 
 // test
         Command command = new Doors.LockUnlockDoors(LockState.LOCKED);

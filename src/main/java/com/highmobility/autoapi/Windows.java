@@ -104,7 +104,7 @@ public class Windows {
          */
         @Nullable public Property<WindowPosition> getPosition(WindowLocation location) {
             for (Property<WindowPosition> windowPosition : positions) {
-                if (windowPosition.getValue() != null && windowPosition.getValue().getWindowLocation() == location)
+                if (windowPosition.getValue() != null && windowPosition.getValue().getLocation() == location)
                     return windowPosition;
             }
             return null;
@@ -116,7 +116,7 @@ public class Windows {
          */
         @Nullable public Property<WindowOpenPercentage> getOpenPercentage(WindowLocation location) {
             for (Property<WindowOpenPercentage> windowOpenPercentage : openPercentages) {
-                if (windowOpenPercentage.getValue() != null && windowOpenPercentage.getValue().getWindowLocation() == location)
+                if (windowOpenPercentage.getValue() != null && windowOpenPercentage.getValue().getLocation() == location)
                     return windowOpenPercentage;
             }
             return null;

@@ -452,9 +452,7 @@ public class Windscreen {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum WipersIntensity implements ByteEnum {
+    }    public enum WipersIntensity implements ByteEnum {
         LEVEL_0((byte) 0x00),
         LEVEL_1((byte) 0x01),
         LEVEL_2((byte) 0x02),
@@ -482,9 +480,7 @@ public class Windscreen {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum WindscreenDamage implements ByteEnum {
+    }    public enum WindscreenDamage implements ByteEnum {
         NO_IMPACT_DETECTED((byte) 0x00),
         IMPACT_BUT_NO_DAMAGE_DETECTED((byte) 0x01),
         DAMAGE_SMALLER_THAN_1_INCH((byte) 0x02),
@@ -512,9 +508,7 @@ public class Windscreen {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum WindscreenNeedsReplacement implements ByteEnum {
+    }    public enum WindscreenNeedsReplacement implements ByteEnum {
         UNKNOWN((byte) 0x00),
         NO_REPLACEMENT_NEEDED((byte) 0x01),
         REPLACEMENT_NEEDED((byte) 0x02);

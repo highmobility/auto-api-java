@@ -24,15 +24,15 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.autoapi.value.measurement.Torque;
 import com.highmobility.value.Bytes;
 
 public class SpringRate extends PropertyValueObject {
-    public static final int SIZE = 2;
+    public static final int SIZE = 11;
 
     Axle axle;
-    Integer springRate;
+    Torque springRate;
 
     /**
      * @return The axle.
@@ -42,39 +42,15 @@ public class SpringRate extends PropertyValueObject {
     }
 
     /**
-     * @return The suspension spring rate in N/mm.
+     * @return The suspension spring rate.
      */
-    public Integer getSpringRate() {
+    public Torque getSpringRate() {
         return springRate;
     }
 
-    public SpringRate(Axle axle, Integer springRate) {
-        super(2);
-        update(axle, springRate);
-    }
+    public SpringRate(Axle axle, Torque springRate) {
+        super(0);
 
-    public SpringRate(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public SpringRate() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        axle = Axle.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        springRate = Property.getUnsignedInt(bytes, bytePosition, 1);
-    }
-
-    public void update(Axle axle, Integer springRate) {
         this.axle = axle;
         this.springRate = springRate;
 
@@ -84,14 +60,23 @@ public class SpringRate extends PropertyValueObject {
         set(bytePosition, axle.getByte());
         bytePosition += 1;
 
-        set(bytePosition, Property.intToBytes(springRate, 1));
+        set(bytePosition, springRate);
     }
 
-    public void update(SpringRate value) {
-        update(value.axle, value.springRate);
+    public SpringRate(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 11) throw new CommandParseException();
+
+        int bytePosition = 0;
+        axle = Axle.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        int springRateSize = Torque.SIZE;
+        springRate = new Torque(getRange(bytePosition, bytePosition + springRateSize));
     }
 
     @Override public int getLength() {
-        return 1 + 1;
+        return 1 + 10;
     }
 }

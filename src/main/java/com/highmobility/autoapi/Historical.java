@@ -26,6 +26,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -157,8 +158,8 @@ public class Historical {
          * Request states
          *
          * @param capabilityID The identifier of the Capability
-         * @param startDate Milliseconds since UNIX Epoch time
-         * @param endDate Milliseconds since UNIX Epoch time
+         * @param startDate Start date for historical data query
+         * @param endDate End date for historical data query
          */
         public RequestStates(Integer capabilityID, @Nullable Calendar startDate, @Nullable Calendar endDate) {
             super(IDENTIFIER);
@@ -182,6 +183,60 @@ public class Historical {
                 });
             }
             if (this.capabilityID.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+    
+    /**
+     * Get trips
+     */
+    public static class GetTrips extends SetCommand {
+        PropertyInteger capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false);
+        Property<Calendar> startDate = new Property(Calendar.class, PROPERTY_START_DATE);
+        Property<Calendar> endDate = new Property(Calendar.class, PROPERTY_END_DATE);
+    
+        /**
+         * @return The start date
+         */
+        public Property<Calendar> getStartDate() {
+            return startDate;
+        }
+        
+        /**
+         * @return The end date
+         */
+        public Property<Calendar> getEndDate() {
+            return endDate;
+        }
+        
+        /**
+         * Get trips
+         *
+         * @param startDate Start date for historical data query
+         * @param endDate End date for historical data query
+         */
+        public GetTrips(@Nullable Calendar startDate, @Nullable Calendar endDate) {
+            super(IDENTIFIER);
+        
+            addProperty(capabilityID.addValueComponent(new Bytes("006a")));
+            addProperty(this.startDate.update(startDate));
+            addProperty(this.endDate.update(endDate));
+            createBytes();
+        }
+    
+        GetTrips(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_CAPABILITY_ID: capabilityID.update(p);
+                        case PROPERTY_START_DATE: return startDate.update(p);
+                        case PROPERTY_END_DATE: return endDate.update(p);
+                    }
+                    return null;
+                });
+            }
+            if ((capabilityID.getValue() == null || capabilityID.getValueComponent().getValueBytes().equals(new Bytes("006a")) == false)) 
                 throw new NoPropertiesException();
         }
     }

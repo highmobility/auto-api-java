@@ -50,6 +50,7 @@ public class Lights {
     public static final byte PROPERTY_FOG_LIGHTS = 0x07;
     public static final byte PROPERTY_READING_LAMPS = 0x08;
     public static final byte PROPERTY_INTERIOR_LIGHTS = 0x09;
+    public static final byte PROPERTY_SWITCH_POSITION = 0x0a;
 
     /**
      * Get all lights properties
@@ -99,6 +100,7 @@ public class Lights {
         Property<Light>[] fogLights;
         Property<ReadingLamp>[] readingLamps;
         Property<Light>[] interiorLights;
+        Property<SwitchPosition> switchPosition = new Property(SwitchPosition.class, PROPERTY_SWITCH_POSITION);
     
         /**
          * @return The front exterior light
@@ -157,6 +159,13 @@ public class Lights {
         }
     
         /**
+         * @return Position of the rotary light switch
+         */
+        public Property<SwitchPosition> getSwitchPosition() {
+            return switchPosition;
+        }
+    
+        /**
          * Get the interior light at a location.
          *
          * @param location The light location.
@@ -164,7 +173,7 @@ public class Lights {
          */
         @Nullable public Property<Light> getInteriorLight(LocationLongitudinal location) {
             for (Property<Light> interiorLight : interiorLights) {
-                if (interiorLight.getValue() != null && interiorLight.getValue().getLocationLongitudinal() == location)
+                if (interiorLight.getValue() != null && interiorLight.getValue().getLocation() == location)
                     return interiorLight;
             }
             return null;
@@ -192,7 +201,7 @@ public class Lights {
          */
         @Nullable public Property<Light> getFogLight(LocationLongitudinal location) {
             for (Property<Light> fogLight : fogLights) {
-                if (fogLight.getValue() != null && fogLight.getValue().getLocationLongitudinal() == location)
+                if (fogLight.getValue() != null && fogLight.getValue().getLocation() == location)
                     return fogLight;
             }
     
@@ -226,6 +235,7 @@ public class Lights {
                             Property<Light> interiorLight = new Property(Light.class, p);
                             interiorLightsBuilder.add(interiorLight);
                             return interiorLight;
+                        case PROPERTY_SWITCH_POSITION: return switchPosition.update(p);
                     }
     
                     return null;
@@ -248,6 +258,7 @@ public class Lights {
             fogLights = builder.fogLights.toArray(new Property[0]);
             readingLamps = builder.readingLamps.toArray(new Property[0]);
             interiorLights = builder.interiorLights.toArray(new Property[0]);
+            switchPosition = builder.switchPosition;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -259,6 +270,7 @@ public class Lights {
             private List<Property> fogLights = new ArrayList<>();
             private List<Property> readingLamps = new ArrayList<>();
             private List<Property> interiorLights = new ArrayList<>();
+            private Property<SwitchPosition> switchPosition;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -388,6 +400,7 @@ public class Lights {
             
                 return this;
             }
+            
             /**
              * Add a single interior light.
              * 
@@ -398,6 +411,16 @@ public class Lights {
                 interiorLight.setIdentifier(PROPERTY_INTERIOR_LIGHTS);
                 addProperty(interiorLight);
                 interiorLights.add(interiorLight);
+                return this;
+            }
+            
+            /**
+             * @param switchPosition Position of the rotary light switch
+             * @return The builder
+             */
+            public Builder setSwitchPosition(Property<SwitchPosition> switchPosition) {
+                this.switchPosition = switchPosition.setIdentifier(PROPERTY_SWITCH_POSITION);
+                addProperty(this.switchPosition);
                 return this;
             }
         }
@@ -549,7 +572,7 @@ public class Lights {
         INACTIVE((byte) 0x00),
         ACTIVE((byte) 0x01),
         ACTIVE_WITH_FULL_BEAM((byte) 0x02),
-        DLR((byte) 0x03),
+        DRL((byte) 0x03),
         AUTOMATIC((byte) 0x04);
     
         public static FrontExteriorLight fromByte(byte byteValue) throws CommandParseException {
@@ -568,6 +591,35 @@ public class Lights {
         private byte value;
     
         FrontExteriorLight(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }    public enum SwitchPosition implements ByteEnum {
+        AUTOMATIC((byte) 0x00),
+        DIPPED_HEADLIGHTS((byte) 0x01),
+        PARKING_LIGHT_RIGHT((byte) 0x02),
+        PARKING_LIGHT_LEFT((byte) 0x03),
+        SIDELIGHTS((byte) 0x04);
+    
+        public static SwitchPosition fromByte(byte byteValue) throws CommandParseException {
+            SwitchPosition[] values = SwitchPosition.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                SwitchPosition state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        SwitchPosition(byte value) {
             this.value = value;
         }
     

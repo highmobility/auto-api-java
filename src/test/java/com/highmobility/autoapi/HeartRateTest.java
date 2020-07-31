@@ -23,6 +23,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.value.measurement.Frequency;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HeartRateTest extends BaseTest {
     @Test public void send() {
-        Command actual = new HeartRate.SendHeartRate(70);
+        Command actual = new HeartRate.SendHeartRate(new Frequency(70d, Frequency.Unit.BEATS_PER_MINUTE));
         assertTrue(bytesTheSame(actual, new Bytes(COMMAND_HEADER + "002901" +
                 "01000401000146")));
     }

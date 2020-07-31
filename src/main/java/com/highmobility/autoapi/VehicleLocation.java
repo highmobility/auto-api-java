@@ -25,6 +25,8 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Coordinates;
+import com.highmobility.autoapi.value.measurement.Angle;
+import com.highmobility.autoapi.value.measurement.Length;
 import com.highmobility.value.Bytes;
 
 /**
@@ -36,6 +38,7 @@ public class VehicleLocation {
     public static final byte PROPERTY_COORDINATES = 0x04;
     public static final byte PROPERTY_HEADING = 0x05;
     public static final byte PROPERTY_ALTITUDE = 0x06;
+    public static final byte PROPERTY_PRECISION = 0x07;
 
     /**
      * Get vehicle location
@@ -78,8 +81,9 @@ public class VehicleLocation {
      */
     public static class State extends SetCommand {
         Property<Coordinates> coordinates = new Property(Coordinates.class, PROPERTY_COORDINATES);
-        Property<Double> heading = new Property(Double.class, PROPERTY_HEADING);
-        Property<Double> altitude = new Property(Double.class, PROPERTY_ALTITUDE);
+        Property<Angle> heading = new Property(Angle.class, PROPERTY_HEADING);
+        Property<Length> altitude = new Property(Length.class, PROPERTY_ALTITUDE);
+        Property<Length> precision = new Property(Length.class, PROPERTY_PRECISION);
     
         /**
          * @return The coordinates
@@ -89,17 +93,24 @@ public class VehicleLocation {
         }
     
         /**
-         * @return Heading in degrees
+         * @return Heading angle
          */
-        public Property<Double> getHeading() {
+        public Property<Angle> getHeading() {
             return heading;
         }
     
         /**
-         * @return Altitude in meters above the WGS 84 reference ellipsoid
+         * @return Altitude above the WGS 84 reference ellipsoid
          */
-        public Property<Double> getAltitude() {
+        public Property<Length> getAltitude() {
             return altitude;
+        }
+    
+        /**
+         * @return The precision
+         */
+        public Property<Length> getPrecision() {
+            return precision;
         }
     
         State(byte[] bytes) throws CommandParseException {
@@ -110,6 +121,7 @@ public class VehicleLocation {
                         case PROPERTY_COORDINATES: return coordinates.update(p);
                         case PROPERTY_HEADING: return heading.update(p);
                         case PROPERTY_ALTITUDE: return altitude.update(p);
+                        case PROPERTY_PRECISION: return precision.update(p);
                     }
     
                     return null;
@@ -123,12 +135,14 @@ public class VehicleLocation {
             coordinates = builder.coordinates;
             heading = builder.heading;
             altitude = builder.altitude;
+            precision = builder.precision;
         }
     
         public static final class Builder extends SetCommand.Builder {
             private Property<Coordinates> coordinates;
-            private Property<Double> heading;
-            private Property<Double> altitude;
+            private Property<Angle> heading;
+            private Property<Length> altitude;
+            private Property<Length> precision;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -149,22 +163,32 @@ public class VehicleLocation {
             }
             
             /**
-             * @param heading Heading in degrees
+             * @param heading Heading angle
              * @return The builder
              */
-            public Builder setHeading(Property<Double> heading) {
+            public Builder setHeading(Property<Angle> heading) {
                 this.heading = heading.setIdentifier(PROPERTY_HEADING);
                 addProperty(this.heading);
                 return this;
             }
             
             /**
-             * @param altitude Altitude in meters above the WGS 84 reference ellipsoid
+             * @param altitude Altitude above the WGS 84 reference ellipsoid
              * @return The builder
              */
-            public Builder setAltitude(Property<Double> altitude) {
+            public Builder setAltitude(Property<Length> altitude) {
                 this.altitude = altitude.setIdentifier(PROPERTY_ALTITUDE);
                 addProperty(this.altitude);
+                return this;
+            }
+            
+            /**
+             * @param precision The precision
+             * @return The builder
+             */
+            public Builder setPrecision(Property<Length> precision) {
+                this.precision = precision.setIdentifier(PROPERTY_PRECISION);
+                addProperty(this.precision);
                 return this;
             }
         }

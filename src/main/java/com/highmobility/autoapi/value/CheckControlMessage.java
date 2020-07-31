@@ -26,11 +26,12 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.value.Bytes;
 
 public class CheckControlMessage extends PropertyValueObject {
     Integer ID;
-    Integer remainingMinutes;
+    Duration remainingTime;
     String text;
     String status;
 
@@ -42,10 +43,10 @@ public class CheckControlMessage extends PropertyValueObject {
     }
 
     /**
-     * @return Remaining time of the message in minutes.
+     * @return Remaining time of the message.
      */
-    public Integer getRemainingMinutes() {
-        return remainingMinutes;
+    public Duration getRemainingTime() {
+        return remainingTime;
     }
 
     /**
@@ -62,45 +63,11 @@ public class CheckControlMessage extends PropertyValueObject {
         return status;
     }
 
-    public CheckControlMessage(Integer ID, Integer remainingMinutes, String text, String status) {
+    public CheckControlMessage(Integer ID, Duration remainingTime, String text, String status) {
         super(0);
-        update(ID, remainingMinutes, text, status);
-    }
 
-    public CheckControlMessage(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public CheckControlMessage() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 10) throw new CommandParseException();
-
-        int bytePosition = 0;
-        ID = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-
-        remainingMinutes = Property.getUnsignedInt(bytes, bytePosition, 4);
-        bytePosition += 4;
-
-        int textSize = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-        text = Property.getString(value, bytePosition, textSize);
-        bytePosition += textSize;
-
-        int statusSize = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-        status = Property.getString(value, bytePosition, statusSize);
-    }
-
-    public void update(Integer ID, Integer remainingMinutes, String text, String status) {
         this.ID = ID;
-        this.remainingMinutes = remainingMinutes;
+        this.remainingTime = remainingTime;
         this.text = text;
         this.status = status;
 
@@ -110,8 +77,8 @@ public class CheckControlMessage extends PropertyValueObject {
         set(bytePosition, Property.intToBytes(ID, 2));
         bytePosition += 2;
 
-        set(bytePosition, Property.intToBytes(remainingMinutes, 4));
-        bytePosition += 4;
+        set(bytePosition, remainingTime);
+        bytePosition += remainingTime.getLength();
 
         set(bytePosition, Property.intToBytes(text.length(), 2));
         bytePosition += 2;
@@ -123,11 +90,30 @@ public class CheckControlMessage extends PropertyValueObject {
         set(bytePosition, Property.stringToBytes(status));
     }
 
-    public void update(CheckControlMessage value) {
-        update(value.ID, value.remainingMinutes, value.text, value.status);
+    public CheckControlMessage(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 16) throw new CommandParseException();
+
+        int bytePosition = 0;
+        ID = Property.getUnsignedInt(bytes, bytePosition, 2);
+        bytePosition += 2;
+
+        int remainingTimeSize = Duration.SIZE;
+        remainingTime = new Duration(getRange(bytePosition, bytePosition + remainingTimeSize));
+        bytePosition += remainingTimeSize;
+
+        int textSize = getItemSize(bytePosition);
+        bytePosition += 2;
+        text = Property.getString(bytes, bytePosition, textSize);
+        bytePosition += textSize;
+
+        int statusSize = getItemSize(bytePosition);
+        bytePosition += 2;
+        status = Property.getString(bytes, bytePosition, statusSize);
     }
 
     @Override public int getLength() {
-        return 2 + 4 + text.length() + 2 + status.length() + 2;
+        return 2 + 10 + text.length() + 2 + status.length() + 2;
     }
 }

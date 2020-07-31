@@ -30,6 +30,9 @@ import com.highmobility.autoapi.value.Acceleration;
 import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.Axle;
 import com.highmobility.autoapi.value.BrakeTorqueVectoring;
+import com.highmobility.autoapi.value.measurement.Angle;
+import com.highmobility.autoapi.value.measurement.AngularVelocity;
+import com.highmobility.autoapi.value.measurement.Pressure;
 import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,10 +107,10 @@ public class Race {
         Property<Double> understeering = new Property(Double.class, PROPERTY_UNDERSTEERING);
         Property<Double> oversteering = new Property(Double.class, PROPERTY_OVERSTEERING);
         Property<Double> gasPedalPosition = new Property(Double.class, PROPERTY_GAS_PEDAL_POSITION);
-        PropertyInteger steeringAngle = new PropertyInteger(PROPERTY_STEERING_ANGLE, true);
-        Property<Float> brakePressure = new Property(Float.class, PROPERTY_BRAKE_PRESSURE);
-        Property<Float> yawRate = new Property(Float.class, PROPERTY_YAW_RATE);
-        PropertyInteger rearSuspensionSteering = new PropertyInteger(PROPERTY_REAR_SUSPENSION_STEERING, true);
+        Property<Angle> steeringAngle = new Property(Angle.class, PROPERTY_STEERING_ANGLE);
+        Property<Pressure> brakePressure = new Property(Pressure.class, PROPERTY_BRAKE_PRESSURE);
+        Property<AngularVelocity> yawRate = new Property(AngularVelocity.class, PROPERTY_YAW_RATE);
+        Property<Angle> rearSuspensionSteering = new Property(Angle.class, PROPERTY_REAR_SUSPENSION_STEERING);
         Property<ActiveState> electronicStabilityProgram = new Property(ActiveState.class, PROPERTY_ELECTRONIC_STABILITY_PROGRAM);
         Property<BrakeTorqueVectoring>[] brakeTorqueVectorings;
         Property<GearMode> gearMode = new Property(GearMode.class, PROPERTY_GEAR_MODE);
@@ -148,30 +151,30 @@ public class Race {
         }
     
         /**
-         * @return The steering angle in degrees, whereas 0° is straight ahead, positive number to the right and negative number to the left
+         * @return The steering angle, whereas 0.0 is straight ahead, positive number to the right and negative number to the left
          */
-        public PropertyInteger getSteeringAngle() {
+        public Property<Angle> getSteeringAngle() {
             return steeringAngle;
         }
     
         /**
-         * @return Brake pressure in bar, whereas 100 bar is max value, full brake
+         * @return Brake pressure
          */
-        public Property<Float> getBrakePressure() {
+        public Property<Pressure> getBrakePressure() {
             return brakePressure;
         }
     
         /**
-         * @return Yaw rate in degrees per second [°/s]
+         * @return Yaw turning rate
          */
-        public Property<Float> getYawRate() {
+        public Property<AngularVelocity> getYawRate() {
             return yawRate;
         }
     
         /**
-         * @return Rear suspension steering in degrees
+         * @return Rear suspension steering
          */
-        public PropertyInteger getRearSuspensionSteering() {
+        public Property<Angle> getRearSuspensionSteering() {
             return rearSuspensionSteering;
         }
     
@@ -344,10 +347,10 @@ public class Race {
             private Property<Double> understeering;
             private Property<Double> oversteering;
             private Property<Double> gasPedalPosition;
-            private PropertyInteger steeringAngle;
-            private Property<Float> brakePressure;
-            private Property<Float> yawRate;
-            private PropertyInteger rearSuspensionSteering;
+            private Property<Angle> steeringAngle;
+            private Property<Pressure> brakePressure;
+            private Property<AngularVelocity> yawRate;
+            private Property<Angle> rearSuspensionSteering;
             private Property<ActiveState> electronicStabilityProgram;
             private List<Property> brakeTorqueVectorings = new ArrayList<>();
             private Property<GearMode> gearMode;
@@ -426,41 +429,41 @@ public class Race {
             }
             
             /**
-             * @param steeringAngle The steering angle in degrees, whereas 0° is straight ahead, positive number to the right and negative number to the left
+             * @param steeringAngle The steering angle, whereas 0.0 is straight ahead, positive number to the right and negative number to the left
              * @return The builder
              */
-            public Builder setSteeringAngle(Property<Integer> steeringAngle) {
-                this.steeringAngle = new PropertyInteger(PROPERTY_STEERING_ANGLE, true, 1, steeringAngle);
+            public Builder setSteeringAngle(Property<Angle> steeringAngle) {
+                this.steeringAngle = steeringAngle.setIdentifier(PROPERTY_STEERING_ANGLE);
                 addProperty(this.steeringAngle);
                 return this;
             }
             
             /**
-             * @param brakePressure Brake pressure in bar, whereas 100 bar is max value, full brake
+             * @param brakePressure Brake pressure
              * @return The builder
              */
-            public Builder setBrakePressure(Property<Float> brakePressure) {
+            public Builder setBrakePressure(Property<Pressure> brakePressure) {
                 this.brakePressure = brakePressure.setIdentifier(PROPERTY_BRAKE_PRESSURE);
                 addProperty(this.brakePressure);
                 return this;
             }
             
             /**
-             * @param yawRate Yaw rate in degrees per second [°/s]
+             * @param yawRate Yaw turning rate
              * @return The builder
              */
-            public Builder setYawRate(Property<Float> yawRate) {
+            public Builder setYawRate(Property<AngularVelocity> yawRate) {
                 this.yawRate = yawRate.setIdentifier(PROPERTY_YAW_RATE);
                 addProperty(this.yawRate);
                 return this;
             }
             
             /**
-             * @param rearSuspensionSteering Rear suspension steering in degrees
+             * @param rearSuspensionSteering Rear suspension steering
              * @return The builder
              */
-            public Builder setRearSuspensionSteering(Property<Integer> rearSuspensionSteering) {
-                this.rearSuspensionSteering = new PropertyInteger(PROPERTY_REAR_SUSPENSION_STEERING, true, 1, rearSuspensionSteering);
+            public Builder setRearSuspensionSteering(Property<Angle> rearSuspensionSteering) {
+                this.rearSuspensionSteering = rearSuspensionSteering.setIdentifier(PROPERTY_REAR_SUSPENSION_STEERING);
                 addProperty(this.rearSuspensionSteering);
                 return this;
             }
@@ -616,9 +619,7 @@ public class Race {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum VehicleMoving implements ByteEnum {
+    }    public enum VehicleMoving implements ByteEnum {
         NOT_MOVING((byte) 0x00),
         MOVING((byte) 0x01);
     

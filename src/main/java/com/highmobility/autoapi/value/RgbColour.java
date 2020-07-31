@@ -57,35 +57,8 @@ public class RgbColour extends PropertyValueObject {
     }
 
     public RgbColour(Integer red, Integer green, Integer blue) {
-        super(3);
-        update(red, green, blue);
-    }
+        super(0);
 
-    public RgbColour(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public RgbColour() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 3) throw new CommandParseException();
-
-        int bytePosition = 0;
-        red = Property.getUnsignedInt(bytes, bytePosition, 1);
-        bytePosition += 1;
-
-        green = Property.getUnsignedInt(bytes, bytePosition, 1);
-        bytePosition += 1;
-
-        blue = Property.getUnsignedInt(bytes, bytePosition, 1);
-    }
-
-    public void update(Integer red, Integer green, Integer blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;
@@ -102,8 +75,19 @@ public class RgbColour extends PropertyValueObject {
         set(bytePosition, Property.intToBytes(blue, 1));
     }
 
-    public void update(RgbColour value) {
-        update(value.red, value.green, value.blue);
+    public RgbColour(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 3) throw new CommandParseException();
+
+        int bytePosition = 0;
+        red = Property.getUnsignedInt(bytes, bytePosition, 1);
+        bytePosition += 1;
+
+        green = Property.getUnsignedInt(bytes, bytePosition, 1);
+        bytePosition += 1;
+
+        blue = Property.getUnsignedInt(bytes, bytePosition, 1);
     }
 
     @Override public int getLength() {

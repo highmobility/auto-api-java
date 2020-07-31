@@ -113,14 +113,14 @@ public class Doors {
         }
     
         /**
-         * @return Inside locks state for the whole car (combines all specific lock states if available)
+         * @return Inside locks state for the whole vehicle (combines all specific lock states if available)
          */
         public Property<LockState> getInsideLocksState() {
             return insideLocksState;
         }
     
         /**
-         * @return Locks state for the whole car (combines all specific lock states if available)
+         * @return Locks state for the whole vehicle (combines all specific lock states if available)
          */
         public Property<LockState> getLocksState() {
             return locksState;
@@ -314,7 +314,7 @@ public class Doors {
             }
             
             /**
-             * @param insideLocksState Inside locks state for the whole car (combines all specific lock states if available)
+             * @param insideLocksState Inside locks state for the whole vehicle (combines all specific lock states if available)
              * @return The builder
              */
             public Builder setInsideLocksState(Property<LockState> insideLocksState) {
@@ -324,7 +324,7 @@ public class Doors {
             }
             
             /**
-             * @param locksState Locks state for the whole car (combines all specific lock states if available)
+             * @param locksState Locks state for the whole vehicle (combines all specific lock states if available)
              * @return The builder
              */
             public Builder setLocksState(Property<LockState> locksState) {
@@ -351,7 +351,7 @@ public class Doors {
         /**
          * Lock unlock doors
          *
-         * @param locksState Locks state for the whole car (combines all specific lock states if available)
+         * @param locksState Locks state for the whole vehicle (combines all specific lock states if available)
          */
         public LockUnlockDoors(LockState locksState) {
             super(IDENTIFIER);

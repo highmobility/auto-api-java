@@ -49,32 +49,8 @@ public class Zone extends PropertyValueObject {
     }
 
     public Zone(Integer horizontal, Integer vertical) {
-        super(2);
-        update(horizontal, vertical);
-    }
+        super(0);
 
-    public Zone(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public Zone() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        horizontal = Property.getUnsignedInt(bytes, bytePosition, 1);
-        bytePosition += 1;
-
-        vertical = Property.getUnsignedInt(bytes, bytePosition, 1);
-    }
-
-    public void update(Integer horizontal, Integer vertical) {
         this.horizontal = horizontal;
         this.vertical = vertical;
 
@@ -87,8 +63,16 @@ public class Zone extends PropertyValueObject {
         set(bytePosition, Property.intToBytes(vertical, 1));
     }
 
-    public void update(Zone value) {
-        update(value.horizontal, value.vertical);
+    public Zone(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        horizontal = Property.getUnsignedInt(bytes, bytePosition, 1);
+        bytePosition += 1;
+
+        vertical = Property.getUnsignedInt(bytes, bytePosition, 1);
     }
 
     @Override public int getLength() {

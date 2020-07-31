@@ -23,6 +23,8 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.value.Time;
+import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -30,16 +32,17 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VideoHandoverTest extends BaseTest {
-    @Test public void videoHandover() {
+    @Test
+    public void videoHandover() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "004301" +
-                        "01002E01002b68747470733a2f2f7777772e796f75747562652e636f6d2f77617463683f763d795756423755366d583259" +
-                        "020005010002005a" +
-                        "03000401000100"
+                "01002E01002b68747470733a2f2f7777772e796f75747562652e636f6d2f77617463683f763d795756423755366d583259" +
+                "020005010002005a" +
+                "03000401000100"
         );
 
         VideoHandover.VideoHandoverCommand state = new VideoHandover.VideoHandoverCommand("https" +
-                "://www.youtube.com/watch?v=yWVB7U6mX2Y", 90,
-                VideoHandover.Screen.FRONT);
+                "://www.youtube.com/watch?v=yWVB7U6mX2Y",
+                VideoHandover.Screen.FRONT, new Duration(30d, Duration.Unit.SECONDS));
         assertTrue(TestUtils.bytesTheSame(state, waitingForBytes));
 
         VideoHandover.VideoHandoverCommand command =
@@ -47,6 +50,6 @@ public class VideoHandoverTest extends BaseTest {
         assertTrue(command.getUrl().getValue().equals("https://www.youtube" +
                 ".com/watch?v=yWVB7U6mX2Y"));
         assertTrue(command.getScreen().getValue() == VideoHandover.Screen.FRONT);
-        assertTrue(command.getStartingSecond().getValue() == 90);
+        assertTrue(command.getStartingTime().getValue().getValue() == 90d);
     }
 }

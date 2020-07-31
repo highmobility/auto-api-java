@@ -68,7 +68,6 @@ public class VehicleInformationTest extends BaseTest {
     }
 
     private void testState(VehicleInformation.State state) {
-        assertTrue(state.getVin().getValue().equals("JF2SHBDC7CH451869"));
         assertTrue(state.getPowertrain().getValue() == VehicleInformation.Powertrain.ALL_ELECTRIC);
         assertTrue(state.getModelName().getValue().equals("Type X"));
         assertTrue(state.getName().getValue().equals("My Car"));
@@ -77,12 +76,12 @@ public class VehicleInformationTest extends BaseTest {
         assertTrue(state.getSalesDesignation().getValue().equals("Package+"));
         assertTrue(state.getModelYear().getValue() == 2017);
         assertTrue(state.getColourName().getValue().equals("Estoril Blau"));
-        assertTrue(state.getPowerInKW().getValue() == 220);
+        assertTrue(state.getPowerInKW().getValue().getValue() == 220d);
         assertTrue(state.getNumberOfDoors().getValue() == 5);
         assertTrue(state.getNumberOfSeats().getValue() == 5);
 
-        assertTrue(state.getEngineVolume().getValue() == 2.5f);
-        assertTrue(state.getEngineMaxTorque().getValue() == 245);
+        assertTrue(state.getEngineVolume().getValue().getValue() == 2.5d);
+        assertTrue(state.getEngineMaxTorque().getValue().getValue() == 245d);
         assertTrue(state.getGearbox().getValue() == VehicleInformation.Gearbox.AUTOMATIC);
 
         assertTrue(state.getDisplayUnit().getValue() == VehicleInformation.DisplayUnit.KM);
@@ -95,7 +94,6 @@ public class VehicleInformationTest extends BaseTest {
                 count++;
         }
         assertTrue(count == 2);
-        assertTrue(state.getBrand().getValue().equals("Mercedes"));
 
         assertTrue(bytesTheSame(state, bytes));
     }
@@ -116,7 +114,6 @@ public class VehicleInformationTest extends BaseTest {
 
     VehicleInformation.State.Builder getVehicleStatusStateBuilderWithoutSignature() throws CommandParseException {
         VehicleInformation.State.Builder builder = new VehicleInformation.State.Builder();
-        builder.setVin(new Property("JF2SHBDC7CH451869"));
         builder.setPowertrain(new Property(VehicleInformation.Powertrain.ALL_ELECTRIC));
         builder.setModelName(new Property("Type X"));
         builder.setName(new Property("My Car"));
@@ -138,9 +135,6 @@ public class VehicleInformationTest extends BaseTest {
         builder.setDriverSeatLocation(new Property(VehicleInformation.DriverSeatLocation.LEFT));
         builder.addEquipment(new Property("Parking sensors"));
         builder.addEquipment(new Property("Automatic wipers"));
-
-        // l9
-        builder.setBrand(new Property("Mercedes"));
 
         return builder;
     }

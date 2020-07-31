@@ -81,47 +81,7 @@ public class ConditionBasedService extends PropertyValueObject {
 
     public ConditionBasedService(Integer year, Integer month, Integer id, DueStatus dueStatus, String text, String description) {
         super(0);
-        update(year, month, id, dueStatus, text, description);
-    }
 
-    public ConditionBasedService(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public ConditionBasedService() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 10) throw new CommandParseException();
-
-        int bytePosition = 0;
-        year = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-
-        month = Property.getUnsignedInt(bytes, bytePosition, 1);
-        bytePosition += 1;
-
-        id = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-
-        dueStatus = DueStatus.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        int textSize = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-        text = Property.getString(value, bytePosition, textSize);
-        bytePosition += textSize;
-
-        int descriptionSize = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-        description = Property.getString(value, bytePosition, descriptionSize);
-    }
-
-    public void update(Integer year, Integer month, Integer id, DueStatus dueStatus, String text, String description) {
         this.year = year;
         this.month = month;
         this.id = id;
@@ -154,8 +114,32 @@ public class ConditionBasedService extends PropertyValueObject {
         set(bytePosition, Property.stringToBytes(description));
     }
 
-    public void update(ConditionBasedService value) {
-        update(value.year, value.month, value.id, value.dueStatus, value.text, value.description);
+    public ConditionBasedService(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 10) throw new CommandParseException();
+
+        int bytePosition = 0;
+        year = Property.getUnsignedInt(bytes, bytePosition, 2);
+        bytePosition += 2;
+
+        month = Property.getUnsignedInt(bytes, bytePosition, 1);
+        bytePosition += 1;
+
+        id = Property.getUnsignedInt(bytes, bytePosition, 2);
+        bytePosition += 2;
+
+        dueStatus = DueStatus.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        int textSize = getItemSize(bytePosition);
+        bytePosition += 2;
+        text = Property.getString(bytes, bytePosition, textSize);
+        bytePosition += textSize;
+
+        int descriptionSize = getItemSize(bytePosition);
+        bytePosition += 2;
+        description = Property.getString(bytes, bytePosition, descriptionSize);
     }
 
     @Override public int getLength() {

@@ -24,21 +24,20 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
 public class PersonDetected extends PropertyValueObject {
     public static final int SIZE = 2;
 
-    SeatLocation seatLocation;
+    SeatLocation location;
     Detected detected;
 
     /**
-     * @return The seat location.
+     * @return The location.
      */
-    public SeatLocation getSeatLocation() {
-        return seatLocation;
+    public SeatLocation getLocation() {
+        return location;
     }
 
     /**
@@ -48,47 +47,31 @@ public class PersonDetected extends PropertyValueObject {
         return detected;
     }
 
-    public PersonDetected(SeatLocation seatLocation, Detected detected) {
-        super(2);
-        update(seatLocation, detected);
-    }
+    public PersonDetected(SeatLocation location, Detected detected) {
+        super(0);
 
-    public PersonDetected(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public PersonDetected() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        seatLocation = SeatLocation.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        detected = Detected.fromByte(get(bytePosition));
-    }
-
-    public void update(SeatLocation seatLocation, Detected detected) {
-        this.seatLocation = seatLocation;
+        this.location = location;
         this.detected = detected;
 
         bytes = new byte[getLength()];
 
         int bytePosition = 0;
-        set(bytePosition, seatLocation.getByte());
+        set(bytePosition, location.getByte());
         bytePosition += 1;
 
         set(bytePosition, detected.getByte());
     }
 
-    public void update(PersonDetected value) {
-        update(value.seatLocation, value.detected);
+    public PersonDetected(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        location = SeatLocation.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        detected = Detected.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {

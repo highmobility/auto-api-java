@@ -8,6 +8,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "org.jetbrains.kotlin.jvm"
+}
+
 apply plugin: "java-library"
 
 repositories {
@@ -39,6 +43,7 @@ dependencies {
         api deps.utils
     }
 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation 'org.slf4j:slf4j-api:1.7.25'
 
     implementation deps.findBugs // for @Nullable

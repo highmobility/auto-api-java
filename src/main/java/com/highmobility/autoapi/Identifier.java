@@ -28,10 +28,13 @@ import com.highmobility.autoapi.property.Property;
 public class Identifier {
     public static final int FAILURE_MESSAGE = 2;
     public static final int FIRMWARE_VERSION = 3;
+
     public static final int CAPABILITIES = 16;
     public static final int VEHICLE_STATUS = 17;
     public static final int HISTORICAL = 18;
     public static final int MULTI_COMMAND = 19;
+    public static final int VEHICLE_INFORMATION = 20;
+
     public static final int DOORS = 32;
     public static final int TRUNK = 33;
     public static final int WAKE_UP = 34;
@@ -86,6 +89,7 @@ public class Identifier {
     public static final int HOOD = 103;
     public static final int USAGE = 104;
     public static final int ENGINE = 105;
+    public static final int TRIPS = 106;
 
     public static int fromBytes(byte first, byte second) {
         return ((first & 0xff) << 8) | (second & 0xff);

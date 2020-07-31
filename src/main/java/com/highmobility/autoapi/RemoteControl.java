@@ -26,7 +26,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.measurement.Angle;
+import com.highmobility.autoapi.value.measurement.Speed;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 
@@ -60,7 +61,7 @@ public class RemoteControl {
      */
     public static class State extends SetCommand {
         Property<ControlMode> controlMode = new Property(ControlMode.class, PROPERTY_CONTROL_MODE);
-        PropertyInteger angle = new PropertyInteger(PROPERTY_ANGLE, true);
+        Property<Angle> angle = new Property(Angle.class, PROPERTY_ANGLE);
     
         /**
          * @return The control mode
@@ -70,9 +71,9 @@ public class RemoteControl {
         }
     
         /**
-         * @return Wheel base angle in degrees
+         * @return Wheel base angle
          */
-        public PropertyInteger getAngle() {
+        public Property<Angle> getAngle() {
             return angle;
         }
     
@@ -95,34 +96,34 @@ public class RemoteControl {
      * Control command
      */
     public static class ControlCommand extends SetCommand {
-        PropertyInteger angle = new PropertyInteger(PROPERTY_ANGLE, true);
-        PropertyInteger speed = new PropertyInteger(PROPERTY_SPEED, true);
+        Property<Angle> angle = new Property(Angle.class, PROPERTY_ANGLE);
+        Property<Speed> speed = new Property(Speed.class, PROPERTY_SPEED);
     
         /**
          * @return The angle
          */
-        public PropertyInteger getAngle() {
+        public Property<Angle> getAngle() {
             return angle;
         }
         
         /**
          * @return The speed
          */
-        public PropertyInteger getSpeed() {
+        public Property<Speed> getSpeed() {
             return speed;
         }
         
         /**
          * Control command
          *
-         * @param angle Wheel base angle in degrees
-         * @param speed Speed in km/h
+         * @param angle Wheel base angle
+         * @param speed Target speed
          */
-        public ControlCommand(@Nullable Integer angle, @Nullable Integer speed) {
+        public ControlCommand(@Nullable Angle angle, @Nullable Speed speed) {
             super(IDENTIFIER);
         
-            addProperty(this.angle.update(true, 2, angle));
-            addProperty(this.speed.update(true, 1, speed));
+            addProperty(this.angle.update(angle));
+            addProperty(this.speed.update(speed));
             if (this.angle.getValue() == null && this.speed.getValue() == null) throw new IllegalArgumentException();
             createBytes();
         }

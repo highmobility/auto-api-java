@@ -31,7 +31,7 @@ import com.highmobility.value.Bytes;
 
 public class PriceTariff extends PropertyValueObject {
     PricingType pricingType;
-    Float price;
+    Double price;
     String currency;
 
     /**
@@ -44,7 +44,7 @@ public class PriceTariff extends PropertyValueObject {
     /**
      * @return The price.
      */
-    public Float getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -55,38 +55,9 @@ public class PriceTariff extends PropertyValueObject {
         return currency;
     }
 
-    public PriceTariff(PricingType pricingType, Float price, String currency) {
+    public PriceTariff(PricingType pricingType, Double price, String currency) {
         super(0);
-        update(pricingType, price, currency);
-    }
 
-    public PriceTariff(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public PriceTariff() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 7) throw new CommandParseException();
-
-        int bytePosition = 0;
-        pricingType = PricingType.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        price = Property.getFloat(bytes, bytePosition);
-        bytePosition += 4;
-
-        int currencySize = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-        currency = Property.getString(value, bytePosition, currencySize);
-    }
-
-    public void update(PricingType pricingType, Float price, String currency) {
         this.pricingType = pricingType;
         this.price = price;
         this.currency = currency;
@@ -97,20 +68,33 @@ public class PriceTariff extends PropertyValueObject {
         set(bytePosition, pricingType.getByte());
         bytePosition += 1;
 
-        set(bytePosition, Property.floatToBytes(price));
-        bytePosition += 4;
+        set(bytePosition, Property.doubleToBytes(price));
+        bytePosition += 8;
 
         set(bytePosition, Property.intToBytes(currency.length(), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(currency));
     }
 
-    public void update(PriceTariff value) {
-        update(value.pricingType, value.price, value.currency);
+    public PriceTariff(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 11) throw new CommandParseException();
+
+        int bytePosition = 0;
+        pricingType = PricingType.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        price = Property.getDouble(bytes, bytePosition);
+        bytePosition += 8;
+
+        int currencySize = getItemSize(bytePosition);
+        bytePosition += 2;
+        currency = Property.getString(bytes, bytePosition, currencySize);
     }
 
     @Override public int getLength() {
-        return 1 + 4 + currency.length() + 2;
+        return 1 + 8 + currency.length() + 2;
     }
 
     public enum PricingType implements ByteEnum {

@@ -28,6 +28,7 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.value.Bytes;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 
@@ -37,13 +38,16 @@ public class PropertyComponentValue<T> extends PropertyComponent {
     static final byte IDENTIFIER = 0x01;
 
     Class<T> valueClass = null;
-    @Nullable protected T value;
+    @Nullable
+    protected T value;
 
-    @Nullable public T getValue() {
+    @Nullable
+    public T getValue() {
         return value;
     }
 
-    @Nullable public Byte getValueByte() {
+    @Nullable
+    public Byte getValueByte() {
         return valueBytes != null && valueBytes.getLength() > 0 ? valueBytes.get(0) : null;
     }
 
@@ -70,8 +74,8 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         // map bytes to the type
         if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
             try {
-                T parsedValue = valueClass.getDeclaredConstructor().newInstance();
-                ((PropertyValueObject) parsedValue).update(valueBytes);
+                Constructor<?> constructor = valueClass.getConstructor(new Class[]{Bytes.class});
+                T parsedValue = (T) constructor.newInstance(new Object[]{ valueBytes });
                 this.value = parsedValue;
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();

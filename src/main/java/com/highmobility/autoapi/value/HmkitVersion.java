@@ -57,35 +57,8 @@ public class HmkitVersion extends PropertyValueObject {
     }
 
     public HmkitVersion(Integer major, Integer minor, Integer patch) {
-        super(3);
-        update(major, minor, patch);
-    }
+        super(0);
 
-    public HmkitVersion(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public HmkitVersion() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 3) throw new CommandParseException();
-
-        int bytePosition = 0;
-        major = Property.getUnsignedInt(bytes, bytePosition, 1);
-        bytePosition += 1;
-
-        minor = Property.getUnsignedInt(bytes, bytePosition, 1);
-        bytePosition += 1;
-
-        patch = Property.getUnsignedInt(bytes, bytePosition, 1);
-    }
-
-    public void update(Integer major, Integer minor, Integer patch) {
         this.major = major;
         this.minor = minor;
         this.patch = patch;
@@ -102,8 +75,19 @@ public class HmkitVersion extends PropertyValueObject {
         set(bytePosition, Property.intToBytes(patch, 1));
     }
 
-    public void update(HmkitVersion value) {
-        update(value.major, value.minor, value.patch);
+    public HmkitVersion(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 3) throw new CommandParseException();
+
+        int bytePosition = 0;
+        major = Property.getUnsignedInt(bytes, bytePosition, 1);
+        bytePosition += 1;
+
+        minor = Property.getUnsignedInt(bytes, bytePosition, 1);
+        bytePosition += 1;
+
+        patch = Property.getUnsignedInt(bytes, bytePosition, 1);
     }
 
     @Override public int getLength() {

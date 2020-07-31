@@ -48,33 +48,7 @@ public class ActionItem extends PropertyValueObject {
 
     public ActionItem(Integer id, String name) {
         super(0);
-        update(id, name);
-    }
 
-    public ActionItem(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public ActionItem() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 3) throw new CommandParseException();
-
-        int bytePosition = 0;
-        id = Property.getUnsignedInt(bytes, bytePosition, 1);
-        bytePosition += 1;
-
-        int nameSize = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-        name = Property.getString(value, bytePosition, nameSize);
-    }
-
-    public void update(Integer id, String name) {
         this.id = id;
         this.name = name;
 
@@ -89,8 +63,18 @@ public class ActionItem extends PropertyValueObject {
         set(bytePosition, Property.stringToBytes(name));
     }
 
-    public void update(ActionItem value) {
-        update(value.id, value.name);
+    public ActionItem(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 3) throw new CommandParseException();
+
+        int bytePosition = 0;
+        id = Property.getUnsignedInt(bytes, bytePosition, 1);
+        bytePosition += 1;
+
+        int nameSize = getItemSize(bytePosition);
+        bytePosition += 2;
+        name = Property.getString(bytes, bytePosition, nameSize);
     }
 
     @Override public int getLength() {

@@ -56,9 +56,9 @@ public class WindowsTest extends BaseTest {
         assertTrue(state.getOpenPercentages().length == 2);
         assertTrue(state.getPositions().length == 2);
 
-        assertTrue(state.getOpenPercentage(WindowLocation.REAR_RIGHT).getValue().getPercentage()
+        assertTrue(state.getOpenPercentage(WindowLocation.REAR_RIGHT).getValue().getOpenPercentage()
                 == .56d);
-        assertTrue(state.getOpenPercentage(WindowLocation.REAR_LEFT).getValue().getPercentage() ==
+        assertTrue(state.getOpenPercentage(WindowLocation.REAR_LEFT).getValue().getOpenPercentage() ==
                 .18d);
 
         assertTrue(state.getPosition(WindowLocation.REAR_RIGHT).getValue().getPosition() == WindowPosition.Position.OPEN);
@@ -66,13 +66,15 @@ public class WindowsTest extends BaseTest {
         assertTrue(bytesTheSame(state, bytes));
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "004500");
         byte[] bytes = new Windows.GetWindows().getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, bytes));
     }
 
-    @Test public void control() {
+    @Test
+    public void control() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "004501" +
                 "0300050100020001" +
                 "0300050100020101"
@@ -93,14 +95,16 @@ public class WindowsTest extends BaseTest {
         assertTrue(states.length == 2);
     }
 
-    @Test public void noPropertiesThrows() {
+    @Test
+    public void noPropertiesThrows() {
         assertThrows(IllegalArgumentException.class, () -> {
             WindowPosition[] windowsStates = new WindowPosition[0];
             Bytes bytes = new Windows.ControlWindows(null, windowsStates);
         });
     }
 
-    @Test public void build() {
+    @Test
+    public void build() {
         Windows.State.Builder builder = new Windows.State.Builder();
         builder.addOpenPercentage(new Property(new WindowOpenPercentage(WindowLocation.REAR_RIGHT,
                 .56d)));

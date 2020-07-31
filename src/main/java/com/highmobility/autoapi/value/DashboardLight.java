@@ -24,16 +24,16 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
 public class DashboardLight extends PropertyValueObject {
-    public static final int SIZE = 2;
+    public static final int SIZE = 3;
 
     Name name;
-    State state;
+    ActiveState state;
+    Colour colour;
 
     /**
      * @return The name.
@@ -45,39 +45,23 @@ public class DashboardLight extends PropertyValueObject {
     /**
      * @return The state.
      */
-    public State getState() {
+    public ActiveState getState() {
         return state;
     }
 
-    public DashboardLight(Name name, State state) {
-        super(2);
-        update(name, state);
+    /**
+     * @return The colour.
+     */
+    public Colour getColour() {
+        return colour;
     }
 
-    public DashboardLight(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
+    public DashboardLight(Name name, ActiveState state, Colour colour) {
+        super(0);
 
-    public DashboardLight() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        name = Name.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        state = State.fromByte(get(bytePosition));
-    }
-
-    public void update(Name name, State state) {
         this.name = name;
         this.state = state;
+        this.colour = colour;
 
         bytes = new byte[getLength()];
 
@@ -86,14 +70,28 @@ public class DashboardLight extends PropertyValueObject {
         bytePosition += 1;
 
         set(bytePosition, state.getByte());
+        bytePosition += 1;
+
+        set(bytePosition, colour.getByte());
     }
 
-    public void update(DashboardLight value) {
-        update(value.name, value.state);
+    public DashboardLight(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 3) throw new CommandParseException();
+
+        int bytePosition = 0;
+        name = Name.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        state = ActiveState.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        colour = Colour.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {
-        return 1 + 1;
+        return 1 + 1 + 1;
     }
 
     public enum Name implements ByteEnum {
@@ -131,7 +129,65 @@ public class DashboardLight extends PropertyValueObject {
         TRAILER_CONNECTED((byte) 0x1f),
         AIRBAG((byte) 0x20),
         ESC_SWITCHED_OFF((byte) 0x21),
-        LANE_DEPARTURE_WARNING_OFF((byte) 0x22);
+        LANE_DEPARTURE_WARNING_OFF((byte) 0x22),
+        AIR_FILTER_MINDER((byte) 0x23),
+        AIR_SUSPENSION_RIDE_CONTROL_FAULT((byte) 0x24),
+        ALL_WHEEL_DRIVE_DISABLED((byte) 0x25),
+        ANTI_THEFT((byte) 0x26),
+        BLIND_SPOT_DETECTION((byte) 0x27),
+        CHARGE_SYSTEM_FAULT((byte) 0x28),
+        CHECK_FUEL_CAP((byte) 0x29),
+        CHECK_FUEL_FILL_INLET((byte) 0x2a),
+        CHECK_FUEL_FILTER((byte) 0x2b),
+        DC_TEMP_WARNING((byte) 0x2c),
+        DC_WARNING_STATUS((byte) 0x2d),
+        DIESEL_ENGINE_IDLE_SHUTDOWN((byte) 0x2e),
+        DIESEL_ENGINE_WARNING((byte) 0x2f),
+        DIESEL_EXHAUST_FLUID_SYSTEM_FAULT((byte) 0x30),
+        DIESEL_EXHAUST_OVER_TEMP((byte) 0x31),
+        DIESEL_EXHAUST_FLUID_QUALITY((byte) 0x32),
+        DIESEL_FILTER_REGENERATION((byte) 0x33),
+        DIESEL_PARTICULATE_FILTER((byte) 0x34),
+        DIESEL_PRE_HEAT((byte) 0x35),
+        ELECTRIC_TRAILER_BRAKE_CONNECTION((byte) 0x36),
+        EV_BATTERY_CELL_MAX_VOLT_WARNING((byte) 0x37),
+        EV_BATTERY_CELL_MIN_VOLT_WARNING((byte) 0x38),
+        EV_BATTERY_CHARGE_ENERGY_STORAGE_WARNING((byte) 0x39),
+        EV_BATTERY_HIGH_LEVEL_WARNING((byte) 0x3a),
+        EV_BATTERY_HIGH_TEMPERATURE_WARNING((byte) 0x3b),
+        EV_BATTERY_INSULATION_RESIST_WARNING((byte) 0x3c),
+        EV_BATTERY_JUMP_LEVEL_WARNING((byte) 0x3d),
+        EV_BATTERY_LOW_LEVEL_WARNING((byte) 0x3e),
+        EV_BATTERY_MAX_VOLT_VEH_ENERGY_WARNING((byte) 0x3f),
+        EV_BATTERY_MIN_VOLT_VEH_ENERGY_WARNING((byte) 0x40),
+        EV_BATTERY_OVER_CHARGE_WARNING((byte) 0x41),
+        EV_BATTERY_POOR_CELL_WARNING((byte) 0x42),
+        EV_BATTERY_TEMP_DIFF_WARNING((byte) 0x43),
+        FORWARD_COLLISION_WARNING((byte) 0x44),
+        FUEL_DOOR_OPEN((byte) 0x45),
+        HILL_DESCENT_CONTROL_FAULT((byte) 0x46),
+        HILL_START_ASSIST_WARNING((byte) 0x47),
+        HV_INTERLOCKING_STATUS_WARNING((byte) 0x48),
+        LIGHTING_SYSTEM_FAILURE((byte) 0x49),
+        MALFUNCTION_INDICATOR((byte) 0x4a),
+        MOTOR_CONTROLLER_TEMP_WARNING((byte) 0x4b),
+        PARK_AID_MALFUNCTION((byte) 0x4c),
+        PASSIVE_ENTRY_PASSIVE_START((byte) 0x4d),
+        POWERTRAIN_MALFUNCTION((byte) 0x4e),
+        RESTRAINTS_INDICATOR_WARNING((byte) 0x4f),
+        START_STOP_ENGINE_WARNING((byte) 0x50),
+        TRACTION_CONTROL_DISABLED((byte) 0x51),
+        TRACTION_CONTROL_ACTIVE((byte) 0x52),
+        TRACTION_MOTOR_TEMP_WARNING((byte) 0x53),
+        TIRE_PRESSURE_MONITOR_SYSTEM_WARNING((byte) 0x54),
+        WATER_IN_FUEL((byte) 0x55),
+        TIRE_WARNING_FRONT_RIGHT((byte) 0x56),
+        TIRE_WARNING_FRONT_LEFT((byte) 0x57),
+        TIRE_WARNING_REAR_RIGHT((byte) 0x58),
+        TIRE_WARNING_REAR_LEFT((byte) 0x59),
+        TIRE_WARNING_SYSTEM_ERROR((byte) 0x5a),
+        BATTERY_LOW_WARNING((byte) 0x5b),
+        BRAKE_FLUID_WARNING((byte) 0x5c);
     
         public static Name fromByte(byte byteValue) throws CommandParseException {
             Name[] values = Name.values();
@@ -157,17 +213,16 @@ public class DashboardLight extends PropertyValueObject {
         }
     }
 
-    public enum State implements ByteEnum {
-        INACTIVE((byte) 0x00),
-        INFO((byte) 0x01),
-        YELLOW((byte) 0x02),
-        RED((byte) 0x03);
+    public enum Colour implements ByteEnum {
+        INFO((byte) 0x00),
+        YELLOW((byte) 0x01),
+        RED((byte) 0x02);
     
-        public static State fromByte(byte byteValue) throws CommandParseException {
-            State[] values = State.values();
+        public static Colour fromByte(byte byteValue) throws CommandParseException {
+            Colour[] values = Colour.values();
     
             for (int i = 0; i < values.length; i++) {
-                State state = values[i];
+                Colour state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
@@ -178,7 +233,7 @@ public class DashboardLight extends PropertyValueObject {
     
         private byte value;
     
-        State(byte value) {
+        Colour(byte value) {
             this.value = value;
         }
     

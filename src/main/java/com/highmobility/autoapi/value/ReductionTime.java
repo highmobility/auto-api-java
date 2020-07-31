@@ -24,7 +24,6 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
@@ -49,34 +48,8 @@ public class ReductionTime extends PropertyValueObject {
     }
 
     public ReductionTime(StartStop startStop, Time time) {
-        super(3);
-        update(startStop, time);
-    }
+        super(0);
 
-    public ReductionTime(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public ReductionTime() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 3) throw new CommandParseException();
-
-        int bytePosition = 0;
-        startStop = StartStop.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        int timeSize = Time.SIZE;
-        time = new Time();
-        time.update(getRange(bytePosition, bytePosition + timeSize));
-    }
-
-    public void update(StartStop startStop, Time time) {
         this.startStop = startStop;
         this.time = time;
 
@@ -89,8 +62,17 @@ public class ReductionTime extends PropertyValueObject {
         set(bytePosition, time);
     }
 
-    public void update(ReductionTime value) {
-        update(value.startStop, value.time);
+    public ReductionTime(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 3) throw new CommandParseException();
+
+        int bytePosition = 0;
+        startStop = StartStop.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        int timeSize = Time.SIZE;
+        time = new Time(getRange(bytePosition, bytePosition + timeSize));
     }
 
     @Override public int getLength() {

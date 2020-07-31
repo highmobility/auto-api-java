@@ -32,7 +32,7 @@ public class DrivingModeActivationPeriod extends PropertyValueObject {
     public static final int SIZE = 9;
 
     DrivingMode drivingMode;
-    Double percentage;
+    Double period;
 
     /**
      * @return The driving mode.
@@ -42,41 +42,17 @@ public class DrivingModeActivationPeriod extends PropertyValueObject {
     }
 
     /**
-     * @return Percentage value between 0.0 - 1.0 (0% - 100%).
+     * @return Percentage of the period used for a driving mode.
      */
-    public Double getPercentage() {
-        return percentage;
+    public Double getPeriod() {
+        return period;
     }
 
-    public DrivingModeActivationPeriod(DrivingMode drivingMode, Double percentage) {
-        super(9);
-        update(drivingMode, percentage);
-    }
+    public DrivingModeActivationPeriod(DrivingMode drivingMode, Double period) {
+        super(0);
 
-    public DrivingModeActivationPeriod(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public DrivingModeActivationPeriod() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 9) throw new CommandParseException();
-
-        int bytePosition = 0;
-        drivingMode = DrivingMode.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        percentage = Property.getDouble(bytes, bytePosition);
-    }
-
-    public void update(DrivingMode drivingMode, Double percentage) {
         this.drivingMode = drivingMode;
-        this.percentage = percentage;
+        this.period = period;
 
         bytes = new byte[getLength()];
 
@@ -84,11 +60,19 @@ public class DrivingModeActivationPeriod extends PropertyValueObject {
         set(bytePosition, drivingMode.getByte());
         bytePosition += 1;
 
-        set(bytePosition, Property.doubleToBytes(percentage));
+        set(bytePosition, Property.doubleToBytes(period));
     }
 
-    public void update(DrivingModeActivationPeriod value) {
-        update(value.drivingMode, value.percentage);
+    public DrivingModeActivationPeriod(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 9) throw new CommandParseException();
+
+        int bytePosition = 0;
+        drivingMode = DrivingMode.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        period = Property.getDouble(bytes, bytePosition);
     }
 
     @Override public int getLength() {

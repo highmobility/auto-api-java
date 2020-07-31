@@ -31,7 +31,7 @@ public class PropertyValueObject extends Bytes {
         update(value);
     }
 
-    public PropertyValueObject() {
+    protected PropertyValueObject() {
 
     }
 
@@ -39,7 +39,15 @@ public class PropertyValueObject extends Bytes {
         super(bytesLength);
     }
 
-    public void update(Bytes value) throws CommandParseException {
-        this.bytes = value.getByteArray();
+    /**
+     * @param bytes The value bytes.
+     * @throws CommandParseException when value could not be parsed.
+     */
+    protected void update(Bytes bytes) throws CommandParseException {
+        this.bytes = bytes.getByteArray();
+    }
+
+    protected int getItemSize(int atPosition) {
+        return Property.getUnsignedInt(bytes, atPosition, 2);
     }
 }

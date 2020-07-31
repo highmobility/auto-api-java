@@ -25,11 +25,11 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.Detected;
 import com.highmobility.autoapi.value.DriverCardPresent;
 import com.highmobility.autoapi.value.DriverTimeState;
 import com.highmobility.autoapi.value.DriverWorkingState;
+import com.highmobility.autoapi.value.measurement.Speed;
 import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +95,7 @@ public class Tachograph {
         Property<Detected> vehicleMotion = new Property(Detected.class, PROPERTY_VEHICLE_MOTION);
         Property<VehicleOverspeed> vehicleOverspeed = new Property(VehicleOverspeed.class, PROPERTY_VEHICLE_OVERSPEED);
         Property<VehicleDirection> vehicleDirection = new Property(VehicleDirection.class, PROPERTY_VEHICLE_DIRECTION);
-        PropertyInteger vehicleSpeed = new PropertyInteger(PROPERTY_VEHICLE_SPEED, true);
+        Property<Speed> vehicleSpeed = new Property(Speed.class, PROPERTY_VEHICLE_SPEED);
     
         /**
          * @return The drivers working states
@@ -140,9 +140,9 @@ public class Tachograph {
         }
     
         /**
-         * @return The tachograph vehicle speed in km/h
+         * @return The tachograph vehicle speed
          */
-        public PropertyInteger getVehicleSpeed() {
+        public Property<Speed> getVehicleSpeed() {
             return vehicleSpeed;
         }
     
@@ -247,7 +247,7 @@ public class Tachograph {
             private Property<Detected> vehicleMotion;
             private Property<VehicleOverspeed> vehicleOverspeed;
             private Property<VehicleDirection> vehicleDirection;
-            private PropertyInteger vehicleSpeed;
+            private Property<Speed> vehicleSpeed;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -372,11 +372,11 @@ public class Tachograph {
             }
             
             /**
-             * @param vehicleSpeed The tachograph vehicle speed in km/h
+             * @param vehicleSpeed The tachograph vehicle speed
              * @return The builder
              */
-            public Builder setVehicleSpeed(Property<Integer> vehicleSpeed) {
-                this.vehicleSpeed = new PropertyInteger(PROPERTY_VEHICLE_SPEED, true, 2, vehicleSpeed);
+            public Builder setVehicleSpeed(Property<Speed> vehicleSpeed) {
+                this.vehicleSpeed = vehicleSpeed.setIdentifier(PROPERTY_VEHICLE_SPEED);
                 addProperty(this.vehicleSpeed);
                 return this;
             }
@@ -409,9 +409,7 @@ public class Tachograph {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum VehicleDirection implements ByteEnum {
+    }    public enum VehicleDirection implements ByteEnum {
         FORWARD((byte) 0x00),
         REVERSE((byte) 0x01);
     

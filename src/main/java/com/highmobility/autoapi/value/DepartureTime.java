@@ -24,21 +24,20 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
 public class DepartureTime extends PropertyValueObject {
     public static final int SIZE = 3;
 
-    ActiveState activeState;
+    ActiveState state;
     Time time;
 
     /**
-     * @return The active state.
+     * @return The state.
      */
-    public ActiveState getActiveState() {
-        return activeState;
+    public ActiveState getState() {
+        return state;
     }
 
     /**
@@ -48,49 +47,32 @@ public class DepartureTime extends PropertyValueObject {
         return time;
     }
 
-    public DepartureTime(ActiveState activeState, Time time) {
-        super(3);
-        update(activeState, time);
-    }
+    public DepartureTime(ActiveState state, Time time) {
+        super(0);
 
-    public DepartureTime(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public DepartureTime() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 3) throw new CommandParseException();
-
-        int bytePosition = 0;
-        activeState = ActiveState.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        int timeSize = Time.SIZE;
-        time = new Time();
-        time.update(getRange(bytePosition, bytePosition + timeSize));
-    }
-
-    public void update(ActiveState activeState, Time time) {
-        this.activeState = activeState;
+        this.state = state;
         this.time = time;
 
         bytes = new byte[getLength()];
 
         int bytePosition = 0;
-        set(bytePosition, activeState.getByte());
+        set(bytePosition, state.getByte());
         bytePosition += 1;
 
         set(bytePosition, time);
     }
 
-    public void update(DepartureTime value) {
-        update(value.activeState, value.time);
+    public DepartureTime(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 3) throw new CommandParseException();
+
+        int bytePosition = 0;
+        state = ActiveState.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        int timeSize = Time.SIZE;
+        time = new Time(getRange(bytePosition, bytePosition + timeSize));
     }
 
     @Override public int getLength() {

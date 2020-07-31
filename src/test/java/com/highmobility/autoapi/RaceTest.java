@@ -28,6 +28,7 @@ import com.highmobility.autoapi.value.Acceleration;
 import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.Axle;
 import com.highmobility.autoapi.value.BrakeTorqueVectoring;
+import com.highmobility.autoapi.value.measurement.AccelerationUnit;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -74,20 +75,22 @@ public class RaceTest extends BaseTest {
     }
 
     private void testState(Race.State state) {
-        assertTrue(state.getAcceleration(Acceleration.Direction.LONGITUDINAL).getValue().getGForce() == .864f);
-        assertTrue(state.getAcceleration(Acceleration.Direction.LATERAL).getValue().getGForce() == -0.753f);
+        assertTrue(state.getAcceleration(Acceleration.Direction.LONGITUDINAL).getValue().
+                getAcceleration().getValue() == .864d);
+        assertTrue(state.getAcceleration(Acceleration.Direction.LATERAL).getValue().
+                getAcceleration().getValue() == -0.753d);
 
         assertTrue(state.getUndersteering().getValue() == .19d);
         assertTrue(state.getOversteering().getValue() == 0f);
         assertTrue(state.getGasPedalPosition().getValue() == .98d);
-        assertTrue(state.getSteeringAngle().getValue() == 10);
-        assertTrue(state.getBrakePressure().getValue() == 20f);
-        assertTrue(state.getYawRate().getValue() == 6.66f);
-        assertTrue(state.getRearSuspensionSteering().getValue() == 3);
+        assertTrue(state.getSteeringAngle().getValue().getValue() == 10d);
+        assertTrue(state.getBrakePressure().getValue().getValue() == 20d);
+        assertTrue(state.getYawRate().getValue().getValue() == 6.66d);
+        assertTrue(state.getRearSuspensionSteering().getValue().getValue() == 3d);
         assertTrue(state.getElectronicStabilityProgram().getValue() == ActiveState.ACTIVE);
 
-        assertTrue(state.getBrakeTorqueVectoring(Axle.REAR).getValue().getActiveState() == ActiveState.ACTIVE);
-        assertTrue(state.getBrakeTorqueVectoring(Axle.FRONT).getValue().getActiveState() == ActiveState.INACTIVE);
+        assertTrue(state.getBrakeTorqueVectoring(Axle.REAR).getValue().getState() == ActiveState.ACTIVE);
+        assertTrue(state.getBrakeTorqueVectoring(Axle.FRONT).getValue().getState() == ActiveState.INACTIVE);
         assertTrue(state.getGearMode().getValue() == Race.GearMode.DRIVE);
 
         assertTrue(state.getSelectedGear().getValue() == 4);
@@ -102,11 +105,16 @@ public class RaceTest extends BaseTest {
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
-    @Test public void build() {
+    @Test
+    public void build() {
         Race.State.Builder builder = new Race.State.Builder();
 
-        builder.addAcceleration(new Property(new Acceleration(Acceleration.Direction.LONGITUDINAL, .864f)));
-        builder.addAcceleration(new Property(new Acceleration(Acceleration.Direction.LATERAL, -.753f)));
+        builder.addAcceleration(new Property(new Acceleration(Acceleration.Direction.LONGITUDINAL,
+                new AccelerationUnit(.864d, AccelerationUnit.Unit.METERS_PER_SECOND_SQUARED))));
+
+        builder.addAcceleration(new Property(new Acceleration(Acceleration.Direction.LATERAL,
+                new AccelerationUnit(-.753d, AccelerationUnit.Unit.METERS_PER_SECOND_SQUARED))));
+
         builder.setUndersteering(new Property(.19d));
         builder.setOversteering(new Property(0d));
         builder.setGasPedalPosition(new Property(.98d));
@@ -131,7 +139,8 @@ public class RaceTest extends BaseTest {
         testState(state);
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
         String waitingForBytes = COMMAND_HEADER + "005700";
         String commandBytes = ByteUtils.hexFromBytes(new Race.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));

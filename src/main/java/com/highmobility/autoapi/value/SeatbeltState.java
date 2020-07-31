@@ -24,7 +24,6 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
@@ -32,14 +31,14 @@ import com.highmobility.value.Bytes;
 public class SeatbeltState extends PropertyValueObject {
     public static final int SIZE = 2;
 
-    SeatLocation seatLocation;
+    SeatLocation location;
     FastenedState fastenedState;
 
     /**
-     * @return The seat location.
+     * @return The location.
      */
-    public SeatLocation getSeatLocation() {
-        return seatLocation;
+    public SeatLocation getLocation() {
+        return location;
     }
 
     /**
@@ -49,47 +48,31 @@ public class SeatbeltState extends PropertyValueObject {
         return fastenedState;
     }
 
-    public SeatbeltState(SeatLocation seatLocation, FastenedState fastenedState) {
-        super(2);
-        update(seatLocation, fastenedState);
-    }
+    public SeatbeltState(SeatLocation location, FastenedState fastenedState) {
+        super(0);
 
-    public SeatbeltState(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public SeatbeltState() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        seatLocation = SeatLocation.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        fastenedState = FastenedState.fromByte(get(bytePosition));
-    }
-
-    public void update(SeatLocation seatLocation, FastenedState fastenedState) {
-        this.seatLocation = seatLocation;
+        this.location = location;
         this.fastenedState = fastenedState;
 
         bytes = new byte[getLength()];
 
         int bytePosition = 0;
-        set(bytePosition, seatLocation.getByte());
+        set(bytePosition, location.getByte());
         bytePosition += 1;
 
         set(bytePosition, fastenedState.getByte());
     }
 
-    public void update(SeatbeltState value) {
-        update(value.seatLocation, value.fastenedState);
+    public SeatbeltState(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        location = SeatLocation.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        fastenedState = FastenedState.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {

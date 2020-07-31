@@ -65,8 +65,6 @@ public class CommandResolver {
                     } else if (type == Type.GET) {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new VehicleStatus.GetVehicleStatus(bytes);
-                        } else {
-                            command = new VehicleStatus.GetVehicleStatusProperties(bytes, true);
                         }
                     }
                     break;
@@ -503,6 +501,20 @@ public class CommandResolver {
                     }
                     break;
                 }
+                case VEHICLE_INFORMATION: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new VehicleInformation.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        if (bytes.length == GET_STATE_LENGTH) {
+                            command = new VehicleInformation.GetVehicleInformation(bytes);
+                        } else {
+                            command = new VehicleInformation.GetVehicleInformationProperties(bytes, true);
+                        }
+                    }
+                    break;
+                }
                 case POWER_TAKEOFF: {
                     if (type == Type.SET) {
                         if (getRuntime() == RunTime.ANDROID) {
@@ -532,7 +544,20 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new Historical.State(bytes);
                         } else {
-                            command = new Historical.RequestStates(bytes);
+                            SetterIterator iterator = new SetterIterator(3);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new Historical.RequestStates(bytes);
+                                        case 1:
+                                            return new Historical.GetTrips(bytes);
+                                        case 2:
+                                            return new Historical.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
                         }
                     }
                     break;
@@ -628,6 +653,8 @@ public class CommandResolver {
                     } else if (type == Type.GET) {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new TheftAlarm.GetState(bytes);
+                        } else {
+                            command = new TheftAlarm.GetProperties(bytes, true);
                         }
                     }
                     break;
@@ -642,20 +669,6 @@ public class CommandResolver {
                             command = new Seats.GetState(bytes);
                         } else {
                             command = new Seats.GetProperties(bytes, true);
-                        }
-                    }
-                    break;
-                }
-                case ENGINE_START_STOP: {
-                    if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
-                            command = new EngineStartStop.State(bytes);
-                        } else {
-                            command = new EngineStartStop.ActivateDeactivateStartStop(bytes);
-                        }
-                    } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new EngineStartStop.GetState(bytes);
                         }
                     }
                     break;
@@ -696,6 +709,8 @@ public class CommandResolver {
                     } else if (type == Type.GET) {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Capabilities.GetCapabilities(bytes);
+                        } else {
+                            command = new Capabilities.GetCapabilitiesProperties(bytes, true);
                         }
                     }
                     break;
@@ -784,6 +799,13 @@ public class CommandResolver {
                     }
                     break;
                 }
+                case TRIPS: {
+                    if (type == Type.SET) {
+                        if (getRuntime() == RunTime.ANDROID) {
+                            command = new Trips.State(bytes);
+                        }
+                    }    break;
+                }
                 case KEYFOB_POSITION: {
                     if (type == Type.SET) {
                         if (getRuntime() == RunTime.ANDROID) {
@@ -830,11 +852,26 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new Engine.State(bytes);
                         } else {
-                            command = new Engine.TurnEngineOnOff(bytes);
+                            SetterIterator iterator = new SetterIterator(3);
+                            while (iterator.hasNext()) {
+                                command = iterator.parseNext(index -> {
+                                    switch (index) {
+                                        case 0:
+                                            return new Engine.TurnEngineOnOff(bytes);
+                                        case 1:
+                                            return new Engine.ActivateDeactivateStartStop(bytes);
+                                        case 2:
+                                            return new Engine.State(bytes);
+                                    }
+                                    return null;
+                                });
+                            }
                         }
                     } else if (type == Type.GET) {
                         if (bytes.length == GET_STATE_LENGTH) {
                             command = new Engine.GetState(bytes);
+                        } else {
+                            command = new Engine.GetProperties(bytes, true);
                         }
                     }
                     break;

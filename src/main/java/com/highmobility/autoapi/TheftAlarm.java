@@ -25,6 +25,9 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.ActiveSelectedState;
+import com.highmobility.value.Bytes;
+import java.util.Calendar;
 
 /**
  * The Theft Alarm capability
@@ -33,6 +36,12 @@ public class TheftAlarm {
     public static final int IDENTIFIER = Identifier.THEFT_ALARM;
 
     public static final byte PROPERTY_STATUS = 0x01;
+    public static final byte PROPERTY_INTERIOR_PROTECTION_STATUS = 0x02;
+    public static final byte PROPERTY_TOW_PROTECTION_STATUS = 0x03;
+    public static final byte PROPERTY_LAST_WARNING_REASON = 0x04;
+    public static final byte PROPERTY_LAST_EVENT = 0x05;
+    public static final byte PROPERTY_LAST_EVENT_LEVEL = 0x06;
+    public static final byte PROPERTY_EVENT_TYPE = 0x07;
 
     /**
      * Get all theft alarm properties
@@ -46,12 +55,41 @@ public class TheftAlarm {
             super(State.class, bytes);
         }
     }
+    
+    /**
+     * Get specific theft alarm properties
+     */
+    public static class GetProperties extends GetCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetProperties(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetProperties(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
 
     /**
      * The theft alarm state
      */
     public static class State extends SetCommand {
         Property<Status> status = new Property(Status.class, PROPERTY_STATUS);
+        Property<ActiveSelectedState> interiorProtectionStatus = new Property(ActiveSelectedState.class, PROPERTY_INTERIOR_PROTECTION_STATUS);
+        Property<ActiveSelectedState> towProtectionStatus = new Property(ActiveSelectedState.class, PROPERTY_TOW_PROTECTION_STATUS);
+        Property<LastWarningReason> lastWarningReason = new Property(LastWarningReason.class, PROPERTY_LAST_WARNING_REASON);
+        Property<Calendar> lastEvent = new Property(Calendar.class, PROPERTY_LAST_EVENT);
+        Property<LastEventLevel> lastEventLevel = new Property(LastEventLevel.class, PROPERTY_LAST_EVENT_LEVEL);
+        Property<EventType> eventType = new Property(EventType.class, PROPERTY_EVENT_TYPE);
     
         /**
          * @return The status
@@ -60,12 +98,60 @@ public class TheftAlarm {
             return status;
         }
     
+        /**
+         * @return Interior protection sensor status
+         */
+        public Property<ActiveSelectedState> getInteriorProtectionStatus() {
+            return interiorProtectionStatus;
+        }
+    
+        /**
+         * @return Tow protection sensor status
+         */
+        public Property<ActiveSelectedState> getTowProtectionStatus() {
+            return towProtectionStatus;
+        }
+    
+        /**
+         * @return The last warning reason
+         */
+        public Property<LastWarningReason> getLastWarningReason() {
+            return lastWarningReason;
+        }
+    
+        /**
+         * @return Last event happening date
+         */
+        public Property<Calendar> getLastEvent() {
+            return lastEvent;
+        }
+    
+        /**
+         * @return Level of impact for the last event
+         */
+        public Property<LastEventLevel> getLastEventLevel() {
+            return lastEventLevel;
+        }
+    
+        /**
+         * @return Position of the last even relative to the vehicle
+         */
+        public Property<EventType> getEventType() {
+            return eventType;
+        }
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
+                        case PROPERTY_INTERIOR_PROTECTION_STATUS: return interiorProtectionStatus.update(p);
+                        case PROPERTY_TOW_PROTECTION_STATUS: return towProtectionStatus.update(p);
+                        case PROPERTY_LAST_WARNING_REASON: return lastWarningReason.update(p);
+                        case PROPERTY_LAST_EVENT: return lastEvent.update(p);
+                        case PROPERTY_LAST_EVENT_LEVEL: return lastEventLevel.update(p);
+                        case PROPERTY_EVENT_TYPE: return eventType.update(p);
                     }
     
                     return null;
@@ -77,10 +163,22 @@ public class TheftAlarm {
             super(builder);
     
             status = builder.status;
+            interiorProtectionStatus = builder.interiorProtectionStatus;
+            towProtectionStatus = builder.towProtectionStatus;
+            lastWarningReason = builder.lastWarningReason;
+            lastEvent = builder.lastEvent;
+            lastEventLevel = builder.lastEventLevel;
+            eventType = builder.eventType;
         }
     
         public static final class Builder extends SetCommand.Builder {
             private Property<Status> status;
+            private Property<ActiveSelectedState> interiorProtectionStatus;
+            private Property<ActiveSelectedState> towProtectionStatus;
+            private Property<LastWarningReason> lastWarningReason;
+            private Property<Calendar> lastEvent;
+            private Property<LastEventLevel> lastEventLevel;
+            private Property<EventType> eventType;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -97,6 +195,66 @@ public class TheftAlarm {
             public Builder setStatus(Property<Status> status) {
                 this.status = status.setIdentifier(PROPERTY_STATUS);
                 addProperty(this.status);
+                return this;
+            }
+            
+            /**
+             * @param interiorProtectionStatus Interior protection sensor status
+             * @return The builder
+             */
+            public Builder setInteriorProtectionStatus(Property<ActiveSelectedState> interiorProtectionStatus) {
+                this.interiorProtectionStatus = interiorProtectionStatus.setIdentifier(PROPERTY_INTERIOR_PROTECTION_STATUS);
+                addProperty(this.interiorProtectionStatus);
+                return this;
+            }
+            
+            /**
+             * @param towProtectionStatus Tow protection sensor status
+             * @return The builder
+             */
+            public Builder setTowProtectionStatus(Property<ActiveSelectedState> towProtectionStatus) {
+                this.towProtectionStatus = towProtectionStatus.setIdentifier(PROPERTY_TOW_PROTECTION_STATUS);
+                addProperty(this.towProtectionStatus);
+                return this;
+            }
+            
+            /**
+             * @param lastWarningReason The last warning reason
+             * @return The builder
+             */
+            public Builder setLastWarningReason(Property<LastWarningReason> lastWarningReason) {
+                this.lastWarningReason = lastWarningReason.setIdentifier(PROPERTY_LAST_WARNING_REASON);
+                addProperty(this.lastWarningReason);
+                return this;
+            }
+            
+            /**
+             * @param lastEvent Last event happening date
+             * @return The builder
+             */
+            public Builder setLastEvent(Property<Calendar> lastEvent) {
+                this.lastEvent = lastEvent.setIdentifier(PROPERTY_LAST_EVENT);
+                addProperty(this.lastEvent);
+                return this;
+            }
+            
+            /**
+             * @param lastEventLevel Level of impact for the last event
+             * @return The builder
+             */
+            public Builder setLastEventLevel(Property<LastEventLevel> lastEventLevel) {
+                this.lastEventLevel = lastEventLevel.setIdentifier(PROPERTY_LAST_EVENT_LEVEL);
+                addProperty(this.lastEventLevel);
+                return this;
+            }
+            
+            /**
+             * @param eventType Position of the last even relative to the vehicle
+             * @return The builder
+             */
+            public Builder setEventType(Property<EventType> eventType) {
+                this.eventType = eventType.setIdentifier(PROPERTY_EVENT_TYPE);
+                addProperty(this.eventType);
                 return this;
             }
         }
@@ -163,6 +321,112 @@ public class TheftAlarm {
         private byte value;
     
         Status(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }    public enum LastWarningReason implements ByteEnum {
+        NO_ALARM((byte) 0x00),
+        BASIS_ALARM((byte) 0x01),
+        DOOR_FRONT_LEFT((byte) 0x02),
+        DOOR_FRONT_RIGHT((byte) 0x03),
+        DOOR_REAR_LEFT((byte) 0x04),
+        DOOR_REAR_RIGHT((byte) 0x05),
+        HOOD((byte) 0x06),
+        TRUNK((byte) 0x07),
+        COMMON_ALM_IN((byte) 0x08),
+        PANIC((byte) 0x09),
+        GLOVEBOX((byte) 0x0a),
+        CENTER_BOX((byte) 0x0b),
+        REAR_BOX((byte) 0x0c),
+        SENSOR_VTA((byte) 0x0d),
+        ITS((byte) 0x0e),
+        ITS_SLV((byte) 0x0f),
+        TPS((byte) 0x10),
+        HORN((byte) 0x11),
+        HOLD_COM((byte) 0x12),
+        REMOTE((byte) 0x13),
+        UNKNOWN((byte) 0x14);
+    
+        public static LastWarningReason fromByte(byte byteValue) throws CommandParseException {
+            LastWarningReason[] values = LastWarningReason.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                LastWarningReason state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        LastWarningReason(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }    public enum LastEventLevel implements ByteEnum {
+        LOW((byte) 0x00),
+        MEDIUM((byte) 0x01),
+        HIGH((byte) 0x02);
+    
+        public static LastEventLevel fromByte(byte byteValue) throws CommandParseException {
+            LastEventLevel[] values = LastEventLevel.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                LastEventLevel state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        LastEventLevel(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }    public enum EventType implements ByteEnum {
+        IDLE((byte) 0x00),
+        FRONT_LEFT((byte) 0x01),
+        FRONT_MIDDLE((byte) 0x02),
+        FRONT_RIGHT((byte) 0x03),
+        RIGHT((byte) 0x04),
+        REAR_RIGHT((byte) 0x05),
+        REAR_MIDDLE((byte) 0x06),
+        REAR_LEFT((byte) 0x07),
+        LEFT((byte) 0x08),
+        UNKNOWN((byte) 0x09);
+    
+        public static EventType fromByte(byte byteValue) throws CommandParseException {
+            EventType[] values = EventType.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                EventType state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        EventType(byte value) {
             this.value = value;
         }
     

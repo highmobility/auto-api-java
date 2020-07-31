@@ -27,6 +27,7 @@ import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 
@@ -40,6 +41,7 @@ public class HonkHornFlashLights {
     public static final byte PROPERTY_HONK_SECONDS = 0x02;
     public static final byte PROPERTY_FLASH_TIMES = 0x03;
     public static final byte PROPERTY_EMERGENCY_FLASHERS_STATE = 0x04;
+    public static final byte PROPERTY_HONK_TIME = 0x05;
 
     /**
      * Get flashers state
@@ -136,16 +138,9 @@ public class HonkHornFlashLights {
      * Honk flash
      */
     public static class HonkFlash extends SetCommand {
-        PropertyInteger honkSeconds = new PropertyInteger(PROPERTY_HONK_SECONDS, false);
         PropertyInteger flashTimes = new PropertyInteger(PROPERTY_FLASH_TIMES, false);
+        Property<Duration> honkTime = new Property(Duration.class, PROPERTY_HONK_TIME);
     
-        /**
-         * @return The honk seconds
-         */
-        public PropertyInteger getHonkSeconds() {
-            return honkSeconds;
-        }
-        
         /**
          * @return The flash times
          */
@@ -154,17 +149,24 @@ public class HonkHornFlashLights {
         }
         
         /**
+         * @return The honk time
+         */
+        public Property<Duration> getHonkTime() {
+            return honkTime;
+        }
+        
+        /**
          * Honk flash
          *
-         * @param honkSeconds Number of seconds to honk the horn
          * @param flashTimes Number of times to flash the lights
+         * @param honkTime Time to honk the horn
          */
-        public HonkFlash(@Nullable Integer honkSeconds, @Nullable Integer flashTimes) {
+        public HonkFlash(@Nullable Integer flashTimes, @Nullable Duration honkTime) {
             super(IDENTIFIER);
         
-            addProperty(this.honkSeconds.update(false, 1, honkSeconds));
             addProperty(this.flashTimes.update(false, 1, flashTimes));
-            if (this.honkSeconds.getValue() == null && this.flashTimes.getValue() == null) throw new IllegalArgumentException();
+            addProperty(this.honkTime.update(honkTime));
+            if (this.flashTimes.getValue() == null && this.honkTime.getValue() == null) throw new IllegalArgumentException();
             createBytes();
         }
     
@@ -173,13 +175,13 @@ public class HonkHornFlashLights {
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_HONK_SECONDS: return honkSeconds.update(p);
                         case PROPERTY_FLASH_TIMES: return flashTimes.update(p);
+                        case PROPERTY_HONK_TIME: return honkTime.update(p);
                     }
                     return null;
                 });
             }
-            if (this.honkSeconds.getValue() == null && this.flashTimes.getValue() == null) throw new NoPropertiesException();
+            if (this.flashTimes.getValue() == null && this.honkTime.getValue() == null) throw new NoPropertiesException();
         }
     }
     

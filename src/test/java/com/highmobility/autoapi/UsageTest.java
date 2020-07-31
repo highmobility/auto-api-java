@@ -27,6 +27,7 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.value.DrivingModeActivationPeriod;
 import com.highmobility.autoapi.value.DrivingModeEnergyConsumption;
+import com.highmobility.autoapi.value.measurement.Energy;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -59,44 +60,44 @@ public class UsageTest extends BaseTest {
 
     );
 
-    @Test public void state() {
+    @Test
+    public void state() {
         Command command = CommandResolver.resolve(bytes);
         Usage.State state = (Usage.State) command;
         testState(state);
     }
 
     private void testState(Usage.State state) {
-        assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
-        assertTrue(state.getAverageWeeklyDistance().getValue() == 666);
-        assertTrue(state.getAverageWeeklyDistanceLongRun().getValue() == 666);
+        assertTrue(state.getAverageWeeklyDistance().getValue().getValue() == 666);
+        assertTrue(state.getAverageWeeklyDistance().getValue().getValue() == 666);
+        assertTrue(state.getAverageWeeklyDistanceLongRun().getValue().getValue() == 666);
         assertTrue(state.getAccelerationEvaluation().getValue() == .7d);
         assertTrue(state.getDrivingStyleEvaluation().getValue() == .7d);
         assertTrue(state.getDrivingStyleEvaluation().getValue() == .7d);
 
         assertTrue(state.getDrivingModesActivationPeriods().length == 2);
-        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.ECO).getValue().getPercentage() == .6d);
-        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.REGULAR).getValue().getPercentage() ==
+        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.ECO).getValue().getPeriod() == .6d);
+        assertTrue(state.getDrivingModeActivationPeriod(DrivingMode.REGULAR).getValue().getPeriod() ==
                 .4d);
 
         assertTrue(state.getDrivingModesEnergyConsumptions().length == 2);
-        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.ECO).getValue().getConsumption()
-                == 33.2f);
-        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.REGULAR).getValue()
-                .getConsumption() == 55.4f);
+        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.ECO).getValue().getConsumption().getValue() == 33.2d);
+        assertTrue(state.getDrivingModeEnergyConsumption(DrivingMode.REGULAR).getValue().getConsumption().getValue() == 55.4f);
 
-        assertTrue(state.getLastTripEnergyConsumption().getValue() == 101.3f);
-        assertTrue(state.getLastTripFuelConsumption().getValue() == 22.5f);
-        assertTrue(state.getMileageAfterLastTrip().getValue() == 1203423322);
+        assertTrue(state.getLastTripEnergyConsumption().getValue().getValue() == 101.3f);
+        assertTrue(state.getLastTripFuelConsumption().getValue().getValue() == 22.5f);
+        assertTrue(state.getMileageAfterLastTrip().getValue().getValue() == 1203423322);
         assertTrue(state.getLastTripElectricPortion().getValue() == .7d);
-        assertTrue(state.getLastTripAverageEnergyRecuperation().getValue() == 5.68f);
+        assertTrue(state.getLastTripAverageEnergyRecuperation().getValue().getValue() == 5.68f);
         assertTrue(state.getLastTripBatteryRemaining().getValue() == .5d);
         assertTrue(TestUtils.dateIsSame(state.getLastTripDate().getValue(), "2018-10-17T12:34:58"));
-        assertTrue(state.getAverageFuelConsumption().getValue() == 6.5f);
-        assertTrue(state.getCurrentFuelConsumption().getValue() == 7.5f);
+        assertTrue(state.getAverageFuelConsumption().getValue().getValue() == 6.5f);
+        assertTrue(state.getCurrentFuelConsumption().getValue().getValue() == 7.5f);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
-    @Test public void build() {
+    @Test
+    public void build() {
         Usage.State.Builder builder = new Usage.State.Builder();
 
         builder.setAverageWeeklyDistance(new Property(666));
@@ -107,8 +108,10 @@ public class UsageTest extends BaseTest {
         builder.addDrivingModesActivationPeriod(new Property(new DrivingModeActivationPeriod(DrivingMode.ECO, .6d)));
         builder.addDrivingModesActivationPeriod(new Property(new DrivingModeActivationPeriod(DrivingMode.REGULAR, .4d)));
 
-        builder.addDrivingModeEnergyConsumption(new Property(new DrivingModeEnergyConsumption(DrivingMode.ECO, 33.2f)));
-        builder.addDrivingModeEnergyConsumption(new Property(new DrivingModeEnergyConsumption(DrivingMode.REGULAR, 55.4f)));
+        builder.addDrivingModeEnergyConsumption(new Property(
+                new DrivingModeEnergyConsumption(DrivingMode.ECO, new Energy(33.2d, Energy.Unit.KILOWATT_HOURS))));
+        builder.addDrivingModeEnergyConsumption(new Property(
+                new DrivingModeEnergyConsumption(DrivingMode.REGULAR, new Energy(55.4d, Energy.Unit.KILOWATT_HOURS))));
 
         builder.setLastTripEnergyConsumption(new Property(101.3f));
         builder.setLastTripFuelConsumption(new Property(22.5f));
@@ -125,7 +128,8 @@ public class UsageTest extends BaseTest {
         testState(state);
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006800");
         Bytes commandBytes = new Usage.GetUsage();
         assertTrue(waitingForBytes.equals(commandBytes));

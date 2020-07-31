@@ -24,7 +24,6 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
@@ -32,7 +31,7 @@ public class BrakeTorqueVectoring extends PropertyValueObject {
     public static final int SIZE = 2;
 
     Axle axle;
-    ActiveState activeState;
+    ActiveState state;
 
     /**
      * @return The axle.
@@ -42,41 +41,17 @@ public class BrakeTorqueVectoring extends PropertyValueObject {
     }
 
     /**
-     * @return The active state.
+     * @return The state.
      */
-    public ActiveState getActiveState() {
-        return activeState;
+    public ActiveState getState() {
+        return state;
     }
 
-    public BrakeTorqueVectoring(Axle axle, ActiveState activeState) {
-        super(2);
-        update(axle, activeState);
-    }
+    public BrakeTorqueVectoring(Axle axle, ActiveState state) {
+        super(0);
 
-    public BrakeTorqueVectoring(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public BrakeTorqueVectoring() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        axle = Axle.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        activeState = ActiveState.fromByte(get(bytePosition));
-    }
-
-    public void update(Axle axle, ActiveState activeState) {
         this.axle = axle;
-        this.activeState = activeState;
+        this.state = state;
 
         bytes = new byte[getLength()];
 
@@ -84,11 +59,19 @@ public class BrakeTorqueVectoring extends PropertyValueObject {
         set(bytePosition, axle.getByte());
         bytePosition += 1;
 
-        set(bytePosition, activeState.getByte());
+        set(bytePosition, state.getByte());
     }
 
-    public void update(BrakeTorqueVectoring value) {
-        update(value.axle, value.activeState);
+    public BrakeTorqueVectoring(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        axle = Axle.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        state = ActiveState.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {

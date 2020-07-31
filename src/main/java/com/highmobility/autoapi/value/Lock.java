@@ -24,7 +24,6 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
@@ -35,46 +34,22 @@ public class Lock extends PropertyValueObject {
     LockState lockState;
 
     /**
-     * @return The location.
+     * @return Door location.
      */
     public Location getLocation() {
         return location;
     }
 
     /**
-     * @return The lock state.
+     * @return Lock state for the door.
      */
     public LockState getLockState() {
         return lockState;
     }
 
     public Lock(Location location, LockState lockState) {
-        super(2);
-        update(location, lockState);
-    }
+        super(0);
 
-    public Lock(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public Lock() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        location = Location.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        lockState = LockState.fromByte(get(bytePosition));
-    }
-
-    public void update(Location location, LockState lockState) {
         this.location = location;
         this.lockState = lockState;
 
@@ -87,8 +62,16 @@ public class Lock extends PropertyValueObject {
         set(bytePosition, lockState.getByte());
     }
 
-    public void update(Lock value) {
-        update(value.location, value.lockState);
+    public Lock(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        location = Location.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        lockState = LockState.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {

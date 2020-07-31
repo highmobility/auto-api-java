@@ -48,33 +48,7 @@ public class SupportedCapability extends PropertyValueObject {
 
     public SupportedCapability(Integer capabilityID, Bytes supportedPropertyIDs) {
         super(0);
-        update(capabilityID, supportedPropertyIDs);
-    }
 
-    public SupportedCapability(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public SupportedCapability() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        capabilityID = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-
-        int supportedPropertyIDsSize = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-        supportedPropertyIDs = getRange(bytePosition, bytePosition + supportedPropertyIDsSize);
-    }
-
-    public void update(Integer capabilityID, Bytes supportedPropertyIDs) {
         this.capabilityID = capabilityID;
         this.supportedPropertyIDs = supportedPropertyIDs;
 
@@ -89,8 +63,18 @@ public class SupportedCapability extends PropertyValueObject {
         set(bytePosition, supportedPropertyIDs);
     }
 
-    public void update(SupportedCapability value) {
-        update(value.capabilityID, value.supportedPropertyIDs);
+    public SupportedCapability(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        capabilityID = Property.getUnsignedInt(bytes, bytePosition, 2);
+        bytePosition += 2;
+
+        int supportedPropertyIDsSize = getItemSize(bytePosition);
+        bytePosition += 2;
+        supportedPropertyIDs = getRange(bytePosition, bytePosition + supportedPropertyIDsSize);
     }
 
     @Override public int getLength() {

@@ -71,20 +71,21 @@ public class LightsTest extends BaseTest {
         assertTrue(state.getEmergencyBrakeLight().getValue() == ActiveState.INACTIVE);
 
         assertTrue(state.getFogLights().length == 2);
-        assertTrue(state.getFogLight(LocationLongitudinal.FRONT).getValue().getActiveState() == ActiveState.INACTIVE);
-        assertTrue(state.getFogLight(LocationLongitudinal.REAR).getValue().getActiveState() == ActiveState.ACTIVE);
+        assertTrue(state.getFogLight(LocationLongitudinal.FRONT).getValue().getState() == ActiveState.INACTIVE);
+        assertTrue(state.getFogLight(LocationLongitudinal.REAR).getValue().getState() == ActiveState.ACTIVE);
 
         assertTrue(state.getReadingLamps().length == 2);
-        assertTrue(state.getReadingLamp(Location.FRONT_LEFT).getValue().getActiveState() == ActiveState.INACTIVE);
-        assertTrue(state.getReadingLamp(Location.FRONT_RIGHT).getValue().getActiveState() == ActiveState.ACTIVE);
+        assertTrue(state.getReadingLamp(Location.FRONT_LEFT).getValue().getState() == ActiveState.INACTIVE);
+        assertTrue(state.getReadingLamp(Location.FRONT_RIGHT).getValue().getState() == ActiveState.ACTIVE);
 
         assertTrue(state.getInteriorLights().length == 2);
-        assertTrue(state.getInteriorLight(LocationLongitudinal.FRONT).getValue().getActiveState() == ActiveState.INACTIVE);
-        assertTrue(state.getInteriorLight(LocationLongitudinal.REAR).getValue().getActiveState() == ActiveState.INACTIVE);
+        assertTrue(state.getInteriorLight(LocationLongitudinal.FRONT).getValue().getState() == ActiveState.INACTIVE);
+        assertTrue(state.getInteriorLight(LocationLongitudinal.REAR).getValue().getState() == ActiveState.INACTIVE);
         assertTrue(bytesTheSame(state, bytes));
     }
 
-    @Test public void build() {
+    @Test
+    public void build() {
         Lights.State.Builder builder = new Lights.State.Builder();
 
         builder.setFrontExteriorLight(new Property(Lights.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM));
@@ -95,31 +96,28 @@ public class LightsTest extends BaseTest {
         builder.setReverseLight(new Property(ActiveState.INACTIVE));
         builder.setEmergencyBrakeLight(new Property(ActiveState.INACTIVE));
 
-        builder.addFogLight(new Property(new Light(LocationLongitudinal.FRONT,
-                ActiveState.INACTIVE)));
+        builder.addFogLight(new Property(new Light(LocationLongitudinal.FRONT, ActiveState.INACTIVE)));
         builder.addFogLight(new Property(new Light(LocationLongitudinal.REAR, ActiveState.ACTIVE)));
 
-        builder.addReadingLamp(new Property(new ReadingLamp(Location.FRONT_LEFT,
-                ActiveState.INACTIVE)));
-        builder.addReadingLamp(new Property(new ReadingLamp(Location.FRONT_RIGHT,
-                ActiveState.ACTIVE)));
+        builder.addReadingLamp(new Property(new ReadingLamp(Location.FRONT_LEFT, ActiveState.INACTIVE)));
+        builder.addReadingLamp(new Property(new ReadingLamp(Location.FRONT_RIGHT, ActiveState.ACTIVE)));
 
-        builder.addInteriorLight(new Property(new Light(LocationLongitudinal.FRONT,
-                ActiveState.INACTIVE)));
-        builder.addInteriorLight(new Property(new Light(LocationLongitudinal.REAR,
-                ActiveState.INACTIVE)));
+        builder.addInteriorLight(new Property(new Light(LocationLongitudinal.FRONT, ActiveState.INACTIVE)));
+        builder.addInteriorLight(new Property(new Light(LocationLongitudinal.REAR, ActiveState.INACTIVE)));
 
         Lights.State state = builder.build();
         testState(state);
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
         String waitingForBytes = COMMAND_HEADER + "003600";
         String commandBytes = ByteUtils.hexFromBytes(new Lights.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void control() {
+    @Test
+    public void control() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "003601" +
                 "01000401000102" +
                 "02000401000100" +
@@ -166,11 +164,11 @@ public class LightsTest extends BaseTest {
 
         assertTrue(command.getFogLights().length == 2);
         for (Property<Light> fogLight : command.getFogLights()) {
-            if (fogLight.getValue().getLocationLongitudinal() == LocationLongitudinal.FRONT) {
-                assertTrue(fogLight.getValue().getActiveState() == ActiveState.INACTIVE);
+            if (fogLight.getValue().getLocation() == LocationLongitudinal.FRONT) {
+                assertTrue(fogLight.getValue().getState() == ActiveState.INACTIVE);
             }
-            if (fogLight.getValue().getLocationLongitudinal() == LocationLongitudinal.REAR) {
-                assertTrue(fogLight.getValue().getActiveState() == ActiveState.ACTIVE);
+            if (fogLight.getValue().getLocation() == LocationLongitudinal.REAR) {
+                assertTrue(fogLight.getValue().getState() == ActiveState.ACTIVE);
             }
         }
 
@@ -178,26 +176,27 @@ public class LightsTest extends BaseTest {
 
         for (Property<ReadingLamp> readingLamp : command.getReadingLamps()) {
             if (readingLamp.getValue().getLocation() == Location.FRONT_LEFT) {
-                assertTrue(readingLamp.getValue().getActiveState() == ActiveState.INACTIVE);
+                assertTrue(readingLamp.getValue().getState() == ActiveState.INACTIVE);
             }
             if (readingLamp.getValue().getLocation() == Location.FRONT_RIGHT) {
-                assertTrue(readingLamp.getValue().getActiveState() == ActiveState.ACTIVE);
+                assertTrue(readingLamp.getValue().getState() == ActiveState.ACTIVE);
             }
         }
 
         assertTrue(command.getInteriorLights().length == 2);
 
         for (Property<Light> interiorLight : command.getInteriorLights()) {
-            if (interiorLight.getValue().getLocationLongitudinal() == LocationLongitudinal.FRONT) {
-                assertTrue(interiorLight.getValue().getActiveState() == ActiveState.INACTIVE);
+            if (interiorLight.getValue().getLocation() == LocationLongitudinal.FRONT) {
+                assertTrue(interiorLight.getValue().getState() == ActiveState.INACTIVE);
             }
-            if (interiorLight.getValue().getLocationLongitudinal() == LocationLongitudinal.REAR) {
-                assertTrue(interiorLight.getValue().getActiveState() == ActiveState.INACTIVE);
+            if (interiorLight.getValue().getLocation() == LocationLongitudinal.REAR) {
+                assertTrue(interiorLight.getValue().getState() == ActiveState.INACTIVE);
             }
         }
     }
 
-    @Test public void someValuesMissing() {
+    @Test
+    public void someValuesMissing() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "003601" +
                 "0700050100020000");
 
@@ -218,6 +217,6 @@ public class LightsTest extends BaseTest {
         Lights.ControlLights command =
                 (Lights.ControlLights) CommandResolver.resolve(waitingForBytes);
 
-        assertTrue(command.getFogLights()[0].getValue().getActiveState() == ActiveState.INACTIVE);
+        assertTrue(command.getFogLights()[0].getValue().getState() == ActiveState.INACTIVE);
     }
 }

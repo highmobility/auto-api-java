@@ -49,32 +49,8 @@ public class Coordinates extends PropertyValueObject {
     }
 
     public Coordinates(Double latitude, Double longitude) {
-        super(16);
-        update(latitude, longitude);
-    }
+        super(0);
 
-    public Coordinates(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public Coordinates() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 16) throw new CommandParseException();
-
-        int bytePosition = 0;
-        latitude = Property.getDouble(bytes, bytePosition);
-        bytePosition += 8;
-
-        longitude = Property.getDouble(bytes, bytePosition);
-    }
-
-    public void update(Double latitude, Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
 
@@ -87,8 +63,16 @@ public class Coordinates extends PropertyValueObject {
         set(bytePosition, Property.doubleToBytes(longitude));
     }
 
-    public void update(Coordinates value) {
-        update(value.latitude, value.longitude);
+    public Coordinates(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 16) throw new CommandParseException();
+
+        int bytePosition = 0;
+        latitude = Property.getDouble(bytes, bytePosition);
+        bytePosition += 8;
+
+        longitude = Property.getDouble(bytes, bytePosition);
     }
 
     @Override public int getLength() {

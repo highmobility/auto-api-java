@@ -24,16 +24,16 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.value.measurement.AccelerationUnit;
 import com.highmobility.value.Bytes;
 
 public class Acceleration extends PropertyValueObject {
-    public static final int SIZE = 5;
+    public static final int SIZE = 11;
 
     Direction direction;
-    Float gForce;
+    AccelerationUnit acceleration;
 
     /**
      * @return The direction.
@@ -43,41 +43,17 @@ public class Acceleration extends PropertyValueObject {
     }
 
     /**
-     * @return The accelaration in g-force.
+     * @return The accelaration.
      */
-    public Float getGForce() {
-        return gForce;
+    public AccelerationUnit getAcceleration() {
+        return acceleration;
     }
 
-    public Acceleration(Direction direction, Float gForce) {
-        super(5);
-        update(direction, gForce);
-    }
+    public Acceleration(Direction direction, AccelerationUnit acceleration) {
+        super(0);
 
-    public Acceleration(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public Acceleration() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 5) throw new CommandParseException();
-
-        int bytePosition = 0;
-        direction = Direction.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        gForce = Property.getFloat(bytes, bytePosition);
-    }
-
-    public void update(Direction direction, Float gForce) {
         this.direction = direction;
-        this.gForce = gForce;
+        this.acceleration = acceleration;
 
         bytes = new byte[getLength()];
 
@@ -85,15 +61,24 @@ public class Acceleration extends PropertyValueObject {
         set(bytePosition, direction.getByte());
         bytePosition += 1;
 
-        set(bytePosition, Property.floatToBytes(gForce));
+        set(bytePosition, acceleration);
     }
 
-    public void update(Acceleration value) {
-        update(value.direction, value.gForce);
+    public Acceleration(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 11) throw new CommandParseException();
+
+        int bytePosition = 0;
+        direction = Direction.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        int accelerationSize = AccelerationUnit.SIZE;
+        acceleration = new AccelerationUnit(getRange(bytePosition, bytePosition + accelerationSize));
     }
 
     @Override public int getLength() {
-        return 1 + 4;
+        return 1 + 10;
     }
 
     public enum Direction implements ByteEnum {

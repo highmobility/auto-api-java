@@ -25,6 +25,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -49,23 +50,25 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
         String waitingForBytes = COMMAND_HEADER + "002600";
         String commandBytes =
                 ByteUtils.hexFromBytes(new HonkHornFlashLights.GetFlashersState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void honkAndFlash() {
+    @Test
+    public void honkAndFlash() {
         String waitingForBytes = COMMAND_HEADER + "002601" +
                 "02000401000100" +
                 "03000401000103";
-        HonkHornFlashLights.HonkFlash command = new HonkHornFlashLights.HonkFlash(0, 3);
+        HonkHornFlashLights.HonkFlash command = new HonkHornFlashLights.HonkFlash(0, new Duration(3d, Duration.Unit.SECONDS));
         assertTrue(command.equals(waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
         command = (HonkHornFlashLights.HonkFlash) CommandResolver.resolveHex(waitingForBytes);
-        assertTrue(command.getHonkSeconds().getValue() == 0);
+        assertTrue(command.getHonkTime().getValue().getValue() == 0);
         assertTrue(command.getFlashTimes().getValue() == 3);
     }
 
@@ -74,7 +77,8 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
         assertThrows(IllegalArgumentException.class, () -> new HonkHornFlashLights.HonkFlash(null, null));
     }
 
-    @Test public void activateDeactivate() {
+    @Test
+    public void activateDeactivate() {
         String waitingForBytes = COMMAND_HEADER + "002601" +
                 "04000401000101";
 
@@ -86,11 +90,12 @@ public class HonkHornAndFlashLightsTest extends BaseTest {
         setRuntime(CommandResolver.RunTime.JAVA);
         HonkHornFlashLights.ActivateDeactivateEmergencyFlasher command =
                 (HonkHornFlashLights.ActivateDeactivateEmergencyFlasher)
-                CommandResolver.resolveHex(waitingForBytes);
+                        CommandResolver.resolveHex(waitingForBytes);
         assertTrue(command.getEmergencyFlashersState().getValue() == ActiveState.ACTIVE);
     }
 
-    @Test public void builder() {
+    @Test
+    public void builder() {
         HonkHornFlashLights.State.Builder builder = new HonkHornFlashLights.State.Builder();
         builder.setFlashers(new Property(HonkHornFlashLights.Flashers.LEFT_FLASHER_ACTIVE));
         HonkHornFlashLights.State state = builder.build();

@@ -24,6 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.measurement.Angle;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -48,22 +49,39 @@ public class OffRoadTest extends BaseTest {
     }
 
     private void testState(Offroad.State state) {
-        assertTrue(state.getRouteIncline().getValue() == 10);
+        assertTrue(state.getRouteIncline().getValue().getValue() == 10d);
         assertTrue(state.getWheelSuspension().getValue() == .5d);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
         String waitingForBytes = COMMAND_HEADER + "005200";
         String commandBytes = new Offroad.GetState().getHex();
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void build() {
+    @Test
+    public void build() {
         Offroad.State.Builder builder = new Offroad.State.Builder();
-        builder.setRouteIncline(new Property(10));
-        builder.setWheelSuspension(new Property(.5d));
+        // TODO: should be new Angle(10d, Angle.Unit.DEGREES))
+        builder.setRouteIncline(new Property<>(new Angle(10d, Angle.Unit.DEGREES)));
+        builder.setWheelSuspension(new Property<>(.5d));
         Offroad.State state = builder.build();
         testState(state);
+
+
+        TestValue t = new TestValue(1d);
+        setValue(t); // no compiler error, but setValue expects generic <Exception>
     }
+
+    class TestValue<T> {
+        TestValue(T value) { }
+    }
+
+    public void setValue(TestValue<Exception> value){
+
+    }
+
+
 }

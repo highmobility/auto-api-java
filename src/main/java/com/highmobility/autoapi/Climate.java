@@ -26,6 +26,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.HvacWeekdayStartingTime;
+import com.highmobility.autoapi.value.measurement.Temperature;
 import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,43 +90,43 @@ public class Climate {
      * The climate state
      */
     public static class State extends SetCommand {
-        Property<Float> insideTemperature = new Property(Float.class, PROPERTY_INSIDE_TEMPERATURE);
-        Property<Float> outsideTemperature = new Property(Float.class, PROPERTY_OUTSIDE_TEMPERATURE);
-        Property<Float> driverTemperatureSetting = new Property(Float.class, PROPERTY_DRIVER_TEMPERATURE_SETTING);
-        Property<Float> passengerTemperatureSetting = new Property(Float.class, PROPERTY_PASSENGER_TEMPERATURE_SETTING);
+        Property<Temperature> insideTemperature = new Property(Temperature.class, PROPERTY_INSIDE_TEMPERATURE);
+        Property<Temperature> outsideTemperature = new Property(Temperature.class, PROPERTY_OUTSIDE_TEMPERATURE);
+        Property<Temperature> driverTemperatureSetting = new Property(Temperature.class, PROPERTY_DRIVER_TEMPERATURE_SETTING);
+        Property<Temperature> passengerTemperatureSetting = new Property(Temperature.class, PROPERTY_PASSENGER_TEMPERATURE_SETTING);
         Property<ActiveState> hvacState = new Property(ActiveState.class, PROPERTY_HVAC_STATE);
         Property<ActiveState> defoggingState = new Property(ActiveState.class, PROPERTY_DEFOGGING_STATE);
         Property<ActiveState> defrostingState = new Property(ActiveState.class, PROPERTY_DEFROSTING_STATE);
         Property<ActiveState> ionisingState = new Property(ActiveState.class, PROPERTY_IONISING_STATE);
-        Property<Float> defrostingTemperatureSetting = new Property(Float.class, PROPERTY_DEFROSTING_TEMPERATURE_SETTING);
+        Property<Temperature> defrostingTemperatureSetting = new Property(Temperature.class, PROPERTY_DEFROSTING_TEMPERATURE_SETTING);
         Property<HvacWeekdayStartingTime>[] hvacWeekdayStartingTimes;
-        Property<Float> rearTemperatureSetting = new Property(Float.class, PROPERTY_REAR_TEMPERATURE_SETTING);
+        Property<Temperature> rearTemperatureSetting = new Property(Temperature.class, PROPERTY_REAR_TEMPERATURE_SETTING);
     
         /**
-         * @return The inside temperature in celsius
+         * @return The inside temperature
          */
-        public Property<Float> getInsideTemperature() {
+        public Property<Temperature> getInsideTemperature() {
             return insideTemperature;
         }
     
         /**
-         * @return The outside temperature in celsius
+         * @return The outside temperature
          */
-        public Property<Float> getOutsideTemperature() {
+        public Property<Temperature> getOutsideTemperature() {
             return outsideTemperature;
         }
     
         /**
-         * @return The driver temperature setting in celsius
+         * @return The driver temperature setting
          */
-        public Property<Float> getDriverTemperatureSetting() {
+        public Property<Temperature> getDriverTemperatureSetting() {
             return driverTemperatureSetting;
         }
     
         /**
-         * @return The passenger temperature setting in celsius
+         * @return The passenger temperature setting
          */
-        public Property<Float> getPassengerTemperatureSetting() {
+        public Property<Temperature> getPassengerTemperatureSetting() {
             return passengerTemperatureSetting;
         }
     
@@ -158,9 +159,9 @@ public class Climate {
         }
     
         /**
-         * @return The defrosting temperature setting in celsius
+         * @return The defrosting temperature setting
          */
-        public Property<Float> getDefrostingTemperatureSetting() {
+        public Property<Temperature> getDefrostingTemperatureSetting() {
             return defrostingTemperatureSetting;
         }
     
@@ -172,9 +173,9 @@ public class Climate {
         }
     
         /**
-         * @return The rear temperature in celsius
+         * @return The rear temperature
          */
-        public Property<Float> getRearTemperatureSetting() {
+        public Property<Temperature> getRearTemperatureSetting() {
             return rearTemperatureSetting;
         }
     
@@ -226,17 +227,17 @@ public class Climate {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private Property<Float> insideTemperature;
-            private Property<Float> outsideTemperature;
-            private Property<Float> driverTemperatureSetting;
-            private Property<Float> passengerTemperatureSetting;
+            private Property<Temperature> insideTemperature;
+            private Property<Temperature> outsideTemperature;
+            private Property<Temperature> driverTemperatureSetting;
+            private Property<Temperature> passengerTemperatureSetting;
             private Property<ActiveState> hvacState;
             private Property<ActiveState> defoggingState;
             private Property<ActiveState> defrostingState;
             private Property<ActiveState> ionisingState;
-            private Property<Float> defrostingTemperatureSetting;
+            private Property<Temperature> defrostingTemperatureSetting;
             private List<Property> hvacWeekdayStartingTimes = new ArrayList<>();
-            private Property<Float> rearTemperatureSetting;
+            private Property<Temperature> rearTemperatureSetting;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -247,40 +248,40 @@ public class Climate {
             }
     
             /**
-             * @param insideTemperature The inside temperature in celsius
+             * @param insideTemperature The inside temperature
              * @return The builder
              */
-            public Builder setInsideTemperature(Property<Float> insideTemperature) {
+            public Builder setInsideTemperature(Property<Temperature> insideTemperature) {
                 this.insideTemperature = insideTemperature.setIdentifier(PROPERTY_INSIDE_TEMPERATURE);
                 addProperty(this.insideTemperature);
                 return this;
             }
             
             /**
-             * @param outsideTemperature The outside temperature in celsius
+             * @param outsideTemperature The outside temperature
              * @return The builder
              */
-            public Builder setOutsideTemperature(Property<Float> outsideTemperature) {
+            public Builder setOutsideTemperature(Property<Temperature> outsideTemperature) {
                 this.outsideTemperature = outsideTemperature.setIdentifier(PROPERTY_OUTSIDE_TEMPERATURE);
                 addProperty(this.outsideTemperature);
                 return this;
             }
             
             /**
-             * @param driverTemperatureSetting The driver temperature setting in celsius
+             * @param driverTemperatureSetting The driver temperature setting
              * @return The builder
              */
-            public Builder setDriverTemperatureSetting(Property<Float> driverTemperatureSetting) {
+            public Builder setDriverTemperatureSetting(Property<Temperature> driverTemperatureSetting) {
                 this.driverTemperatureSetting = driverTemperatureSetting.setIdentifier(PROPERTY_DRIVER_TEMPERATURE_SETTING);
                 addProperty(this.driverTemperatureSetting);
                 return this;
             }
             
             /**
-             * @param passengerTemperatureSetting The passenger temperature setting in celsius
+             * @param passengerTemperatureSetting The passenger temperature setting
              * @return The builder
              */
-            public Builder setPassengerTemperatureSetting(Property<Float> passengerTemperatureSetting) {
+            public Builder setPassengerTemperatureSetting(Property<Temperature> passengerTemperatureSetting) {
                 this.passengerTemperatureSetting = passengerTemperatureSetting.setIdentifier(PROPERTY_PASSENGER_TEMPERATURE_SETTING);
                 addProperty(this.passengerTemperatureSetting);
                 return this;
@@ -327,10 +328,10 @@ public class Climate {
             }
             
             /**
-             * @param defrostingTemperatureSetting The defrosting temperature setting in celsius
+             * @param defrostingTemperatureSetting The defrosting temperature setting
              * @return The builder
              */
-            public Builder setDefrostingTemperatureSetting(Property<Float> defrostingTemperatureSetting) {
+            public Builder setDefrostingTemperatureSetting(Property<Temperature> defrostingTemperatureSetting) {
                 this.defrostingTemperatureSetting = defrostingTemperatureSetting.setIdentifier(PROPERTY_DEFROSTING_TEMPERATURE_SETTING);
                 addProperty(this.defrostingTemperatureSetting);
                 return this;
@@ -365,10 +366,10 @@ public class Climate {
             }
             
             /**
-             * @param rearTemperatureSetting The rear temperature in celsius
+             * @param rearTemperatureSetting The rear temperature
              * @return The builder
              */
-            public Builder setRearTemperatureSetting(Property<Float> rearTemperatureSetting) {
+            public Builder setRearTemperatureSetting(Property<Temperature> rearTemperatureSetting) {
                 this.rearTemperatureSetting = rearTemperatureSetting.setIdentifier(PROPERTY_REAR_TEMPERATURE_SETTING);
                 addProperty(this.rearTemperatureSetting);
                 return this;
@@ -597,39 +598,39 @@ public class Climate {
      * Set temperature settings
      */
     public static class SetTemperatureSettings extends SetCommand {
-        Property<Float> driverTemperatureSetting = new Property(Float.class, PROPERTY_DRIVER_TEMPERATURE_SETTING);
-        Property<Float> passengerTemperatureSetting = new Property(Float.class, PROPERTY_PASSENGER_TEMPERATURE_SETTING);
-        Property<Float> rearTemperatureSetting = new Property(Float.class, PROPERTY_REAR_TEMPERATURE_SETTING);
+        Property<Temperature> driverTemperatureSetting = new Property(Temperature.class, PROPERTY_DRIVER_TEMPERATURE_SETTING);
+        Property<Temperature> passengerTemperatureSetting = new Property(Temperature.class, PROPERTY_PASSENGER_TEMPERATURE_SETTING);
+        Property<Temperature> rearTemperatureSetting = new Property(Temperature.class, PROPERTY_REAR_TEMPERATURE_SETTING);
     
         /**
          * @return The driver temperature setting
          */
-        public Property<Float> getDriverTemperatureSetting() {
+        public Property<Temperature> getDriverTemperatureSetting() {
             return driverTemperatureSetting;
         }
         
         /**
          * @return The passenger temperature setting
          */
-        public Property<Float> getPassengerTemperatureSetting() {
+        public Property<Temperature> getPassengerTemperatureSetting() {
             return passengerTemperatureSetting;
         }
         
         /**
          * @return The rear temperature setting
          */
-        public Property<Float> getRearTemperatureSetting() {
+        public Property<Temperature> getRearTemperatureSetting() {
             return rearTemperatureSetting;
         }
         
         /**
          * Set temperature settings
          *
-         * @param driverTemperatureSetting The driver temperature setting in celsius
-         * @param passengerTemperatureSetting The passenger temperature setting in celsius
-         * @param rearTemperatureSetting The rear temperature in celsius
+         * @param driverTemperatureSetting The driver temperature setting
+         * @param passengerTemperatureSetting The passenger temperature setting
+         * @param rearTemperatureSetting The rear temperature
          */
-        public SetTemperatureSettings(@Nullable Float driverTemperatureSetting, @Nullable Float passengerTemperatureSetting, @Nullable Float rearTemperatureSetting) {
+        public SetTemperatureSettings(@Nullable Temperature driverTemperatureSetting, @Nullable Temperature passengerTemperatureSetting, @Nullable Temperature rearTemperatureSetting) {
             super(IDENTIFIER);
         
             addProperty(this.driverTemperatureSetting.update(driverTemperatureSetting));

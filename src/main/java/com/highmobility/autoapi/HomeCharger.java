@@ -30,6 +30,8 @@ import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.value.EnabledState;
 import com.highmobility.autoapi.value.NetworkSecurity;
 import com.highmobility.autoapi.value.PriceTariff;
+import com.highmobility.autoapi.value.measurement.ElectricPotentialDifference;
+import com.highmobility.autoapi.value.measurement.Power;
 import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,7 @@ public class HomeCharger {
     public static final byte PROPERTY_MINIMUM_CHARGE_CURRENT = 0x10;
     public static final byte PROPERTY_COORDINATES = 0x11;
     public static final byte PROPERTY_PRICE_TARIFFS = 0x12;
+    public static final byte PROPERTY_CHARGING_POWER = 0x13;
 
     /**
      * Get all home charger properties
@@ -100,18 +103,19 @@ public class HomeCharger {
         Property<ChargingStatus> chargingStatus = new Property(ChargingStatus.class, PROPERTY_CHARGING_STATUS);
         Property<AuthenticationMechanism> authenticationMechanism = new Property(AuthenticationMechanism.class, PROPERTY_AUTHENTICATION_MECHANISM);
         Property<PlugType> plugType = new Property(PlugType.class, PROPERTY_PLUG_TYPE);
-        Property<Float> chargingPowerKW = new Property(Float.class, PROPERTY_CHARGING_POWER_KW);
+        Property<Power> chargingPowerKW = new Property(Power.class, PROPERTY_CHARGING_POWER_KW);
         Property<ActiveState> solarCharging = new Property(ActiveState.class, PROPERTY_SOLAR_CHARGING);
         Property<EnabledState> wifiHotspotEnabled = new Property(EnabledState.class, PROPERTY_WI_FI_HOTSPOT_ENABLED);
         Property<String> wifiHotspotSSID = new Property(String.class, PROPERTY_WI_FI_HOTSPOT_SSID);
         Property<NetworkSecurity> wiFiHotspotSecurity = new Property(NetworkSecurity.class, PROPERTY_WI_FI_HOTSPOT_SECURITY);
         Property<String> wiFiHotspotPassword = new Property(String.class, PROPERTY_WI_FI_HOTSPOT_PASSWORD);
         Property<AuthenticationState> authenticationState = new Property(AuthenticationState.class, PROPERTY_AUTHENTICATION_STATE);
-        Property<Float> chargeCurrentDC = new Property(Float.class, PROPERTY_CHARGE_CURRENT_DC);
-        Property<Float> maximumChargeCurrent = new Property(Float.class, PROPERTY_MAXIMUM_CHARGE_CURRENT);
-        Property<Float> minimumChargeCurrent = new Property(Float.class, PROPERTY_MINIMUM_CHARGE_CURRENT);
+        Property<ElectricPotentialDifference> chargeCurrentDC = new Property(ElectricPotentialDifference.class, PROPERTY_CHARGE_CURRENT_DC);
+        Property<ElectricPotentialDifference> maximumChargeCurrent = new Property(ElectricPotentialDifference.class, PROPERTY_MAXIMUM_CHARGE_CURRENT);
+        Property<ElectricPotentialDifference> minimumChargeCurrent = new Property(ElectricPotentialDifference.class, PROPERTY_MINIMUM_CHARGE_CURRENT);
         Property<Coordinates> coordinates = new Property(Coordinates.class, PROPERTY_COORDINATES);
         Property<PriceTariff>[] priceTariffs;
+        Property<Power> chargingPower = new Property(Power.class, PROPERTY_CHARGING_POWER);
     
         /**
          * @return The charging status
@@ -135,9 +139,9 @@ public class HomeCharger {
         }
     
         /**
-         * @return Charging power in kW
+         * @return Charging power
          */
-        public Property<Float> getChargingPowerKW() {
+        public Property<Power> getChargingPowerKW() {
             return chargingPowerKW;
         }
     
@@ -186,21 +190,21 @@ public class HomeCharger {
         /**
          * @return The charge direct current
          */
-        public Property<Float> getChargeCurrentDC() {
+        public Property<ElectricPotentialDifference> getChargeCurrentDC() {
             return chargeCurrentDC;
         }
     
         /**
          * @return The maximum possible charge current
          */
-        public Property<Float> getMaximumChargeCurrent() {
+        public Property<ElectricPotentialDifference> getMaximumChargeCurrent() {
             return maximumChargeCurrent;
         }
     
         /**
          * @return The minimal possible charge current
          */
-        public Property<Float> getMinimumChargeCurrent() {
+        public Property<ElectricPotentialDifference> getMinimumChargeCurrent() {
             return minimumChargeCurrent;
         }
     
@@ -216,6 +220,13 @@ public class HomeCharger {
          */
         public Property<PriceTariff>[] getPriceTariffs() {
             return priceTariffs;
+        }
+    
+        /**
+         * @return Charging power output from the charger
+         */
+        public Property<Power> getChargingPower() {
+            return chargingPower;
         }
     
         /**
@@ -259,6 +270,7 @@ public class HomeCharger {
                             Property<PriceTariff> priceTariff = new Property(PriceTariff.class, p);
                             priceTariffsBuilder.add(priceTariff);
                             return priceTariff;
+                        case PROPERTY_CHARGING_POWER: return chargingPower.update(p);
                     }
     
                     return null;
@@ -286,24 +298,26 @@ public class HomeCharger {
             minimumChargeCurrent = builder.minimumChargeCurrent;
             coordinates = builder.coordinates;
             priceTariffs = builder.priceTariffs.toArray(new Property[0]);
+            chargingPower = builder.chargingPower;
         }
     
         public static final class Builder extends SetCommand.Builder {
             private Property<ChargingStatus> chargingStatus;
             private Property<AuthenticationMechanism> authenticationMechanism;
             private Property<PlugType> plugType;
-            private Property<Float> chargingPowerKW;
+            private Property<Power> chargingPowerKW;
             private Property<ActiveState> solarCharging;
             private Property<EnabledState> wifiHotspotEnabled;
             private Property<String> wifiHotspotSSID;
             private Property<NetworkSecurity> wiFiHotspotSecurity;
             private Property<String> wiFiHotspotPassword;
             private Property<AuthenticationState> authenticationState;
-            private Property<Float> chargeCurrentDC;
-            private Property<Float> maximumChargeCurrent;
-            private Property<Float> minimumChargeCurrent;
+            private Property<ElectricPotentialDifference> chargeCurrentDC;
+            private Property<ElectricPotentialDifference> maximumChargeCurrent;
+            private Property<ElectricPotentialDifference> minimumChargeCurrent;
             private Property<Coordinates> coordinates;
             private List<Property> priceTariffs = new ArrayList<>();
+            private Property<Power> chargingPower;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -344,10 +358,10 @@ public class HomeCharger {
             }
             
             /**
-             * @param chargingPowerKW Charging power in kW
+             * @param chargingPowerKW Charging power
              * @return The builder
              */
-            public Builder setChargingPowerKW(Property<Float> chargingPowerKW) {
+            public Builder setChargingPowerKW(Property<Power> chargingPowerKW) {
                 this.chargingPowerKW = chargingPowerKW.setIdentifier(PROPERTY_CHARGING_POWER_KW);
                 addProperty(this.chargingPowerKW);
                 return this;
@@ -417,7 +431,7 @@ public class HomeCharger {
              * @param chargeCurrentDC The charge direct current
              * @return The builder
              */
-            public Builder setChargeCurrentDC(Property<Float> chargeCurrentDC) {
+            public Builder setChargeCurrentDC(Property<ElectricPotentialDifference> chargeCurrentDC) {
                 this.chargeCurrentDC = chargeCurrentDC.setIdentifier(PROPERTY_CHARGE_CURRENT_DC);
                 addProperty(this.chargeCurrentDC);
                 return this;
@@ -427,7 +441,7 @@ public class HomeCharger {
              * @param maximumChargeCurrent The maximum possible charge current
              * @return The builder
              */
-            public Builder setMaximumChargeCurrent(Property<Float> maximumChargeCurrent) {
+            public Builder setMaximumChargeCurrent(Property<ElectricPotentialDifference> maximumChargeCurrent) {
                 this.maximumChargeCurrent = maximumChargeCurrent.setIdentifier(PROPERTY_MAXIMUM_CHARGE_CURRENT);
                 addProperty(this.maximumChargeCurrent);
                 return this;
@@ -437,7 +451,7 @@ public class HomeCharger {
              * @param minimumChargeCurrent The minimal possible charge current
              * @return The builder
              */
-            public Builder setMinimumChargeCurrent(Property<Float> minimumChargeCurrent) {
+            public Builder setMinimumChargeCurrent(Property<ElectricPotentialDifference> minimumChargeCurrent) {
                 this.minimumChargeCurrent = minimumChargeCurrent.setIdentifier(PROPERTY_MINIMUM_CHARGE_CURRENT);
                 addProperty(this.minimumChargeCurrent);
                 return this;
@@ -467,6 +481,7 @@ public class HomeCharger {
             
                 return this;
             }
+            
             /**
              * Add a single price tariff.
              * 
@@ -479,6 +494,16 @@ public class HomeCharger {
                 priceTariffs.add(priceTariff);
                 return this;
             }
+            
+            /**
+             * @param chargingPower Charging power output from the charger
+             * @return The builder
+             */
+            public Builder setChargingPower(Property<Power> chargingPower) {
+                this.chargingPower = chargingPower.setIdentifier(PROPERTY_CHARGING_POWER);
+                addProperty(this.chargingPower);
+                return this;
+            }
         }
     }
 
@@ -486,12 +511,12 @@ public class HomeCharger {
      * Set charge current
      */
     public static class SetChargeCurrent extends SetCommand {
-        Property<Float> chargeCurrentDC = new Property(Float.class, PROPERTY_CHARGE_CURRENT_DC);
+        Property<ElectricPotentialDifference> chargeCurrentDC = new Property(ElectricPotentialDifference.class, PROPERTY_CHARGE_CURRENT_DC);
     
         /**
          * @return The charge current dc
          */
-        public Property<Float> getChargeCurrentDC() {
+        public Property<ElectricPotentialDifference> getChargeCurrentDC() {
             return chargeCurrentDC;
         }
         
@@ -500,7 +525,7 @@ public class HomeCharger {
          *
          * @param chargeCurrentDC The charge direct current
          */
-        public SetChargeCurrent(Float chargeCurrentDC) {
+        public SetChargeCurrent(ElectricPotentialDifference chargeCurrentDC) {
             super(IDENTIFIER);
         
             addProperty(this.chargeCurrentDC.update(chargeCurrentDC));
@@ -726,9 +751,7 @@ public class HomeCharger {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum AuthenticationMechanism implements ByteEnum {
+    }    public enum AuthenticationMechanism implements ByteEnum {
         PIN((byte) 0x00),
         APP((byte) 0x01);
     
@@ -754,9 +777,7 @@ public class HomeCharger {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum PlugType implements ByteEnum {
+    }    public enum PlugType implements ByteEnum {
         TYPE_1((byte) 0x00),
         TYPE_2((byte) 0x01),
         CCS((byte) 0x02),
@@ -784,9 +805,7 @@ public class HomeCharger {
         @Override public byte getByte() {
             return value;
         }
-    }
-    
-    public enum AuthenticationState implements ByteEnum {
+    }    public enum AuthenticationState implements ByteEnum {
         UNAUTHENTICATED((byte) 0x00),
         AUTHENTICATED((byte) 0x01);
     

@@ -24,6 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.measurement.Illuminance;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -37,8 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class LightConditionsTest extends BaseTest {
     Bytes bytes = new Bytes(
             COMMAND_HEADER + "005401" +
-                    "01000701000447D8CC00" +
-                    "0200070100043E800000"
+                    "01000D01000A110040fb198000000000" +
+                    "02000D01000A11003fd0000000000000"
     );
 
     @Test
@@ -51,20 +52,22 @@ public class LightConditionsTest extends BaseTest {
     }
 
     private void testState(LightConditions.State state) {
-        assertTrue(state.getOutsideLight().getValue() == 111000f);
-        assertTrue(state.getInsideLight().getValue() == .25f);
+        assertTrue(state.getOutsideLight().getValue().getValue() == 111000d);
+        assertTrue(state.getInsideLight().getValue().getValue() == .25d);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
-    @Test public void build() {
+    @Test
+    public void build() {
         LightConditions.State.Builder builder = new LightConditions.State.Builder();
-        builder.setOutsideLight(new Property(111000f));
-        builder.setInsideLight(new Property(.25f));
+        builder.setOutsideLight(new Property<>(new Illuminance(111000d, Illuminance.Unit.LUX)));
+        builder.setInsideLight(new Property<>(new Illuminance(.25d, Illuminance.Unit.LUX)));
         LightConditions.State command = builder.build();
         testState(command);
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
         String waitingForBytes = COMMAND_HEADER + "005400";
         String commandBytes =
                 ByteUtils.hexFromBytes(new LightConditions.GetLightConditions().getByteArray());

@@ -24,7 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.measurement.Angle;
 import com.highmobility.value.Bytes;
 
 /**
@@ -76,13 +76,13 @@ public class Offroad {
      * The offroad state
      */
     public static class State extends SetCommand {
-        PropertyInteger routeIncline = new PropertyInteger(PROPERTY_ROUTE_INCLINE, true);
+        Property<Angle> routeIncline = new Property(Angle.class, PROPERTY_ROUTE_INCLINE);
         Property<Double> wheelSuspension = new Property(Double.class, PROPERTY_WHEEL_SUSPENSION);
     
         /**
-         * @return The route elevation incline in degrees, which is a negative number for decline
+         * @return The route elevation incline
          */
-        public PropertyInteger getRouteIncline() {
+        public Property<Angle> getRouteIncline() {
             return routeIncline;
         }
     
@@ -115,7 +115,7 @@ public class Offroad {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private PropertyInteger routeIncline;
+            private Property<Angle> routeIncline;
             private Property<Double> wheelSuspension;
     
             public Builder() {
@@ -127,11 +127,11 @@ public class Offroad {
             }
     
             /**
-             * @param routeIncline The route elevation incline in degrees, which is a negative number for decline
+             * @param routeIncline The route elevation incline
              * @return The builder
              */
-            public Builder setRouteIncline(Property<Integer> routeIncline) {
-                this.routeIncline = new PropertyInteger(PROPERTY_ROUTE_INCLINE, true, 2, routeIncline);
+            public Builder setRouteIncline(Property<Angle> routeIncline) {
+                this.routeIncline = routeIncline.setIdentifier(PROPERTY_ROUTE_INCLINE);
                 addProperty(this.routeIncline);
                 return this;
             }

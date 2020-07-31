@@ -59,15 +59,15 @@ public class MaintenanceTest extends BaseTest {
     }
 
     private void testState(Maintenance.State state) {
-        assertTrue(state.getDaysToNextService().getValue() == 501);
-        assertTrue(state.getKilometersToNextService().getValue() == 3681);
+        assertTrue(state.getDaysToNextService().getValue().getValue() == 501);
+        assertTrue(state.getKilometersToNextService().getValue().getValue() == 3681);
 
         // level8
         assertTrue(state.getCbsReportsCount().getValue() == 3);
-        assertTrue(state.getMonthsToExhaustInspection().getValue() == 5);
+        assertTrue(state.getMonthsToExhaustInspection().getValue().getValue() == 5);
         assertTrue(state.getTeleserviceAvailability().getValue() == Maintenance.TeleserviceAvailability.SUCCESSFUL);
-        assertTrue(state.getServiceDistanceThreshold().getValue() == 500);
-        assertTrue(state.getServiceTimeThreshold().getValue() == 4);
+        assertTrue(state.getServiceDistanceThreshold().getValue().getValue() == 500);
+        assertTrue(state.getServiceTimeThreshold().getValue().getValue() == 4);
 
         assertTrue(TestUtils.dateIsSame(state.getAutomaticTeleserviceCallDate().getValue(),
                 "2018-01-10T16:32:05"));

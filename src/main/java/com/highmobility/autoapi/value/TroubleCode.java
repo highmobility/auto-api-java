@@ -26,19 +26,21 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
 public class TroubleCode extends PropertyValueObject {
-    Integer occurences;
+    Integer occurrences;
     String ID;
     String ecuID;
     String status;
+    System system;
 
     /**
-     * @return Number of occurences.
+     * @return Number of occurrences.
      */
-    public Integer getOccurences() {
-        return occurences;
+    public Integer getOccurrences() {
+        return occurrences;
     }
 
     /**
@@ -62,54 +64,26 @@ public class TroubleCode extends PropertyValueObject {
         return status;
     }
 
-    public TroubleCode(Integer occurences, String ID, String ecuID, String status) {
+    /**
+     * @return The system.
+     */
+    public System getSystem() {
+        return system;
+    }
+
+    public TroubleCode(Integer occurrences, String ID, String ecuID, String status, System system) {
         super(0);
-        update(occurences, ID, ecuID, status);
-    }
 
-    public TroubleCode(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public TroubleCode() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 7) throw new CommandParseException();
-
-        int bytePosition = 0;
-        occurences = Property.getUnsignedInt(bytes, bytePosition, 1);
-        bytePosition += 1;
-
-        int IDSize = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-        ID = Property.getString(value, bytePosition, IDSize);
-        bytePosition += IDSize;
-
-        int ecuIDSize = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-        ecuID = Property.getString(value, bytePosition, ecuIDSize);
-        bytePosition += ecuIDSize;
-
-        int statusSize = Property.getUnsignedInt(bytes, bytePosition, 2);
-        bytePosition += 2;
-        status = Property.getString(value, bytePosition, statusSize);
-    }
-
-    public void update(Integer occurences, String ID, String ecuID, String status) {
-        this.occurences = occurences;
+        this.occurrences = occurrences;
         this.ID = ID;
         this.ecuID = ecuID;
         this.status = status;
+        this.system = system;
 
         bytes = new byte[getLength()];
 
         int bytePosition = 0;
-        set(bytePosition, Property.intToBytes(occurences, 1));
+        set(bytePosition, Property.intToBytes(occurrences, 1));
         bytePosition += 1;
 
         set(bytePosition, Property.intToBytes(ID.length(), 2));
@@ -125,13 +99,70 @@ public class TroubleCode extends PropertyValueObject {
         set(bytePosition, Property.intToBytes(status.length(), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(status));
+        bytePosition += status.length();
+
+        set(bytePosition, system.getByte());
     }
 
-    public void update(TroubleCode value) {
-        update(value.occurences, value.ID, value.ecuID, value.status);
+    public TroubleCode(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 8) throw new CommandParseException();
+
+        int bytePosition = 0;
+        occurrences = Property.getUnsignedInt(bytes, bytePosition, 1);
+        bytePosition += 1;
+
+        int IDSize = getItemSize(bytePosition);
+        bytePosition += 2;
+        ID = Property.getString(bytes, bytePosition, IDSize);
+        bytePosition += IDSize;
+
+        int ecuIDSize = getItemSize(bytePosition);
+        bytePosition += 2;
+        ecuID = Property.getString(bytes, bytePosition, ecuIDSize);
+        bytePosition += ecuIDSize;
+
+        int statusSize = getItemSize(bytePosition);
+        bytePosition += 2;
+        status = Property.getString(bytes, bytePosition, statusSize);
+        bytePosition += statusSize;
+
+        system = System.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {
-        return 1 + ID.length() + 2 + ecuID.length() + 2 + status.length() + 2;
+        return 1 + ID.length() + 2 + ecuID.length() + 2 + status.length() + 2 + 1;
+    }
+
+    public enum System implements ByteEnum {
+        UNKNOWN((byte) 0x00),
+        BODY((byte) 0x01),
+        CHASSIS((byte) 0x02),
+        POWERTRAIN((byte) 0x03),
+        NETWORK((byte) 0x04);
+    
+        public static System fromByte(byte byteValue) throws CommandParseException {
+            System[] values = System.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                System state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException();
+        }
+    
+        private byte value;
+    
+        System(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
     }
 }

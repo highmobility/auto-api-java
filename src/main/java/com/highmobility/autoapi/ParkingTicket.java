@@ -109,14 +109,14 @@ public class ParkingTicket {
         }
     
         /**
-         * @return Milliseconds since UNIX Epoch time
+         * @return Parking ticket start time
          */
         public Property<Calendar> getTicketStartTime() {
             return ticketStartTime;
         }
     
         /**
-         * @return Milliseconds since UNIX Epoch time
+         * @return Parking ticket end time
          */
         public Property<Calendar> getTicketEndTime() {
             return ticketEndTime;
@@ -195,7 +195,7 @@ public class ParkingTicket {
             }
             
             /**
-             * @param ticketStartTime Milliseconds since UNIX Epoch time
+             * @param ticketStartTime Parking ticket start time
              * @return The builder
              */
             public Builder setTicketStartTime(Property<Calendar> ticketStartTime) {
@@ -205,7 +205,7 @@ public class ParkingTicket {
             }
             
             /**
-             * @param ticketEndTime Milliseconds since UNIX Epoch time
+             * @param ticketEndTime Parking ticket end time
              * @return The builder
              */
             public Builder setTicketEndTime(Property<Calendar> ticketEndTime) {
@@ -259,8 +259,8 @@ public class ParkingTicket {
          *
          * @param operatorName Operator name
          * @param operatorTicketID Operator ticket ID
-         * @param ticketStartTime Milliseconds since UNIX Epoch time
-         * @param ticketEndTime Milliseconds since UNIX Epoch time
+         * @param ticketStartTime Parking ticket start time
+         * @param ticketEndTime Parking ticket end time
          */
         public StartParking(@Nullable String operatorName, String operatorTicketID, Calendar ticketStartTime, @Nullable Calendar ticketEndTime) {
             super(IDENTIFIER);

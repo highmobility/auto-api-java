@@ -52,32 +52,8 @@ public class Timer extends PropertyValueObject {
     }
 
     public Timer(TimerType timerType, Calendar date) {
-        super(9);
-        update(timerType, date);
-    }
+        super(0);
 
-    public Timer(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public Timer() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 9) throw new CommandParseException();
-
-        int bytePosition = 0;
-        timerType = TimerType.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        date = Property.getCalendar(bytes, bytePosition);
-    }
-
-    public void update(TimerType timerType, Calendar date) {
         this.timerType = timerType;
         this.date = date;
 
@@ -90,8 +66,16 @@ public class Timer extends PropertyValueObject {
         set(bytePosition, Property.calendarToBytes(date));
     }
 
-    public void update(Timer value) {
-        update(value.timerType, value.date);
+    public Timer(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 9) throw new CommandParseException();
+
+        int bytePosition = 0;
+        timerType = TimerType.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        date = Property.getCalendar(bytes, bytePosition);
     }
 
     @Override public int getLength() {

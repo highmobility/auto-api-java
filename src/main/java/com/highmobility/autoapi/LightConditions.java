@@ -24,6 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.measurement.Illuminance;
 import com.highmobility.value.Bytes;
 
 /**
@@ -75,20 +76,20 @@ public class LightConditions {
      * The light conditions state
      */
     public static class State extends SetCommand {
-        Property<Float> outsideLight = new Property(Float.class, PROPERTY_OUTSIDE_LIGHT);
-        Property<Float> insideLight = new Property(Float.class, PROPERTY_INSIDE_LIGHT);
+        Property<Illuminance> outsideLight = new Property(Illuminance.class, PROPERTY_OUTSIDE_LIGHT);
+        Property<Illuminance> insideLight = new Property(Illuminance.class, PROPERTY_INSIDE_LIGHT);
     
         /**
-         * @return Measured outside illuminance in lux
+         * @return Measured outside illuminance
          */
-        public Property<Float> getOutsideLight() {
+        public Property<Illuminance> getOutsideLight() {
             return outsideLight;
         }
     
         /**
-         * @return Measured inside illuminance in lux
+         * @return Measured inside illuminance
          */
-        public Property<Float> getInsideLight() {
+        public Property<Illuminance> getInsideLight() {
             return insideLight;
         }
     
@@ -114,8 +115,8 @@ public class LightConditions {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private Property<Float> outsideLight;
-            private Property<Float> insideLight;
+            private Property<Illuminance> outsideLight;
+            private Property<Illuminance> insideLight;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -126,20 +127,20 @@ public class LightConditions {
             }
     
             /**
-             * @param outsideLight Measured outside illuminance in lux
+             * @param outsideLight Measured outside illuminance
              * @return The builder
              */
-            public Builder setOutsideLight(Property<Float> outsideLight) {
+            public Builder setOutsideLight(Property<Illuminance> outsideLight) {
                 this.outsideLight = outsideLight.setIdentifier(PROPERTY_OUTSIDE_LIGHT);
                 addProperty(this.outsideLight);
                 return this;
             }
             
             /**
-             * @param insideLight Measured inside illuminance in lux
+             * @param insideLight Measured inside illuminance
              * @return The builder
              */
-            public Builder setInsideLight(Property<Float> insideLight) {
+            public Builder setInsideLight(Property<Illuminance> insideLight) {
                 this.insideLight = insideLight.setIdentifier(PROPERTY_INSIDE_LIGHT);
                 addProperty(this.insideLight);
                 return this;

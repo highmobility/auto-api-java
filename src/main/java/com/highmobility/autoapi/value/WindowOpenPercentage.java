@@ -31,64 +31,48 @@ import com.highmobility.value.Bytes;
 public class WindowOpenPercentage extends PropertyValueObject {
     public static final int SIZE = 9;
 
-    WindowLocation windowLocation;
-    Double percentage;
+    WindowLocation location;
+    Double openPercentage;
 
     /**
-     * @return The window location.
+     * @return The location.
      */
-    public WindowLocation getWindowLocation() {
-        return windowLocation;
+    public WindowLocation getLocation() {
+        return location;
     }
 
     /**
-     * @return Percentage value between 0.0 - 1.0 (0% - 100%).
+     * @return The open percentage.
      */
-    public Double getPercentage() {
-        return percentage;
+    public Double getOpenPercentage() {
+        return openPercentage;
     }
 
-    public WindowOpenPercentage(WindowLocation windowLocation, Double percentage) {
-        super(9);
-        update(windowLocation, percentage);
-    }
+    public WindowOpenPercentage(WindowLocation location, Double openPercentage) {
+        super(0);
 
-    public WindowOpenPercentage(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public WindowOpenPercentage() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 9) throw new CommandParseException();
-
-        int bytePosition = 0;
-        windowLocation = WindowLocation.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        percentage = Property.getDouble(bytes, bytePosition);
-    }
-
-    public void update(WindowLocation windowLocation, Double percentage) {
-        this.windowLocation = windowLocation;
-        this.percentage = percentage;
+        this.location = location;
+        this.openPercentage = openPercentage;
 
         bytes = new byte[getLength()];
 
         int bytePosition = 0;
-        set(bytePosition, windowLocation.getByte());
+        set(bytePosition, location.getByte());
         bytePosition += 1;
 
-        set(bytePosition, Property.doubleToBytes(percentage));
+        set(bytePosition, Property.doubleToBytes(openPercentage));
     }
 
-    public void update(WindowOpenPercentage value) {
-        update(value.windowLocation, value.percentage);
+    public WindowOpenPercentage(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 9) throw new CommandParseException();
+
+        int bytePosition = 0;
+        location = WindowLocation.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        openPercentage = Property.getDouble(bytes, bytePosition);
     }
 
     @Override public int getLength() {

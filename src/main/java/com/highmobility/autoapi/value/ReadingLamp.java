@@ -24,7 +24,6 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
@@ -32,7 +31,7 @@ public class ReadingLamp extends PropertyValueObject {
     public static final int SIZE = 2;
 
     Location location;
-    ActiveState activeState;
+    ActiveState state;
 
     /**
      * @return The location.
@@ -42,41 +41,17 @@ public class ReadingLamp extends PropertyValueObject {
     }
 
     /**
-     * @return The active state.
+     * @return The state.
      */
-    public ActiveState getActiveState() {
-        return activeState;
+    public ActiveState getState() {
+        return state;
     }
 
-    public ReadingLamp(Location location, ActiveState activeState) {
-        super(2);
-        update(location, activeState);
-    }
+    public ReadingLamp(Location location, ActiveState state) {
+        super(0);
 
-    public ReadingLamp(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public ReadingLamp() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        location = Location.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        activeState = ActiveState.fromByte(get(bytePosition));
-    }
-
-    public void update(Location location, ActiveState activeState) {
         this.location = location;
-        this.activeState = activeState;
+        this.state = state;
 
         bytes = new byte[getLength()];
 
@@ -84,11 +59,19 @@ public class ReadingLamp extends PropertyValueObject {
         set(bytePosition, location.getByte());
         bytePosition += 1;
 
-        set(bytePosition, activeState.getByte());
+        set(bytePosition, state.getByte());
     }
 
-    public void update(ReadingLamp value) {
-        update(value.location, value.activeState);
+    public ReadingLamp(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        location = Location.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        state = ActiveState.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {

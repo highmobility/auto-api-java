@@ -53,8 +53,8 @@ public class VehicleLocationTest extends BaseTest {
     private void testState(VehicleLocation.State state) {
         assertTrue(state.getCoordinates().getValue().getLatitude() == 52.520008);
         assertTrue(state.getCoordinates().getValue().getLongitude() == 13.404954);
-        assertTrue(state.getHeading().getValue() == 13.370123);
-        assertTrue(state.getAltitude().getValue() == 133.5);
+        assertTrue(state.getHeading().getValue().getValue() == 13.370123);
+        assertTrue(state.getAltitude().getValue().getValue() == 133.5);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 

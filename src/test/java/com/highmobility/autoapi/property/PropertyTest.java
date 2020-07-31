@@ -258,12 +258,13 @@ public class PropertyTest extends BaseTest {
     }
 
     @Test public void typeFromPropertyWithNoValueComponent() {
-        Bytes noComponentBytes = new Bytes("010000");
-        Property prop = new Property(noComponentBytes.getByteArray());
-
-        assertThrows(CommandParseException.class, () -> {
-            new Acceleration(prop);
-        });
+        // TODO: 3/7/20 : this test no longer necessary because Acceleration expects a non null Bytes value
+//        Bytes noComponentBytes = new Bytes("010000");
+//        Property prop = new Property(noComponentBytes.getByteArray());
+//
+//        assertThrows(CommandParseException.class, () -> {
+//            new Acceleration(prop);
+//        });
     }
 
     @Test public void emptyString() throws CommandParseException {
@@ -301,6 +302,8 @@ public class PropertyTest extends BaseTest {
         assertTrue(timestamp.isUniversalProperty());
         assertTrue(nonce.isUniversalProperty());
         assertTrue(sig.isUniversalProperty());
+
+        // TODO: 31/7/20 add VIN and brand
     }
 
     @Test public void integerPropertySignChecked() throws CommandParseException {

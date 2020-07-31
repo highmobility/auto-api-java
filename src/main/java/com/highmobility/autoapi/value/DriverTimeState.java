@@ -50,32 +50,8 @@ public class DriverTimeState extends PropertyValueObject {
     }
 
     public DriverTimeState(Integer driverNumber, TimeState timeState) {
-        super(2);
-        update(driverNumber, timeState);
-    }
+        super(0);
 
-    public DriverTimeState(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public DriverTimeState() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        driverNumber = Property.getUnsignedInt(bytes, bytePosition, 1);
-        bytePosition += 1;
-
-        timeState = TimeState.fromByte(get(bytePosition));
-    }
-
-    public void update(Integer driverNumber, TimeState timeState) {
         this.driverNumber = driverNumber;
         this.timeState = timeState;
 
@@ -88,8 +64,16 @@ public class DriverTimeState extends PropertyValueObject {
         set(bytePosition, timeState.getByte());
     }
 
-    public void update(DriverTimeState value) {
-        update(value.driverNumber, value.timeState);
+    public DriverTimeState(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        driverNumber = Property.getUnsignedInt(bytes, bytePosition, 1);
+        bytePosition += 1;
+
+        timeState = TimeState.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {

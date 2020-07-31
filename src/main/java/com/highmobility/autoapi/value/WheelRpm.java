@@ -24,57 +24,33 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.autoapi.value.measurement.AngularVelocity;
 import com.highmobility.value.Bytes;
 
 public class WheelRpm extends PropertyValueObject {
-    public static final int SIZE = 3;
+    public static final int SIZE = 11;
 
-    Location location;
-    Integer RPM;
+    LocationWheel location;
+    AngularVelocity RPM;
 
     /**
-     * @return The location.
+     * @return Wheel location.
      */
-    public Location getLocation() {
+    public LocationWheel getLocation() {
         return location;
     }
 
     /**
      * @return The RPM measured at this wheel.
      */
-    public Integer getRPM() {
+    public AngularVelocity getRPM() {
         return RPM;
     }
 
-    public WheelRpm(Location location, Integer RPM) {
-        super(3);
-        update(location, RPM);
-    }
+    public WheelRpm(LocationWheel location, AngularVelocity RPM) {
+        super(0);
 
-    public WheelRpm(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public WheelRpm() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 3) throw new CommandParseException();
-
-        int bytePosition = 0;
-        location = Location.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        RPM = Property.getUnsignedInt(bytes, bytePosition, 2);
-    }
-
-    public void update(Location location, Integer RPM) {
         this.location = location;
         this.RPM = RPM;
 
@@ -84,14 +60,23 @@ public class WheelRpm extends PropertyValueObject {
         set(bytePosition, location.getByte());
         bytePosition += 1;
 
-        set(bytePosition, Property.intToBytes(RPM, 2));
+        set(bytePosition, RPM);
     }
 
-    public void update(WheelRpm value) {
-        update(value.location, value.RPM);
+    public WheelRpm(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 11) throw new CommandParseException();
+
+        int bytePosition = 0;
+        location = LocationWheel.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        int RPMSize = AngularVelocity.SIZE;
+        RPM = new AngularVelocity(getRange(bytePosition, bytePosition + RPMSize));
     }
 
     @Override public int getLength() {
-        return 1 + 2;
+        return 1 + 10;
     }
 }

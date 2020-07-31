@@ -24,6 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.value.measurement.Speed;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -49,28 +50,32 @@ public class CruiseControlTest extends BaseTest {
         assertTrue(state.getCruiseControl().getValue() == ActiveState.ACTIVE);
         assertTrue(state.getLimiter().getValue() == CruiseControl.Limiter.HIGHER_SPEED_REQUESTED);
 
-        assertTrue(state.getTargetSpeed().getValue() == 61);
+        assertTrue(state.getTargetSpeed().getValue().getValue() == 61);
         assertTrue(state.getAdaptiveCruiseControl().getValue() == ActiveState.INACTIVE);
-        assertTrue(state.getAccTargetSpeed().getValue() == 60);
+        assertTrue(state.getAccTargetSpeed().getValue().getValue() == 60);
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
         String waitingForBytes = COMMAND_HEADER + "006200";
         String commandBytes = ByteUtils.hexFromBytes(new CruiseControl.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void activateDeactivate() {
+    @Test
+    public void activateDeactivate() {
         byte[] waitingForBytes = ByteUtils.bytesFromHex(COMMAND_HEADER + "006201" +
                 "01000401000101" +
                 "030005010002003C");
         byte[] commandBytes =
-                new CruiseControl.ActivateDeactivateCruiseControl(ActiveState.ACTIVE, 60)
-                .getByteArray();
+                new CruiseControl.ActivateDeactivateCruiseControl(
+                        ActiveState.ACTIVE,
+                        new Speed(60d, Speed.Unit.KILOMETERS_PER_HOUR)).getByteArray();
         assertTrue(Arrays.equals(waitingForBytes, commandBytes));
     }
 
-    @Test public void deactivate() {
+    @Test
+    public void deactivate() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "006201" +
                 "01000401000100");
         Command commandBytes =

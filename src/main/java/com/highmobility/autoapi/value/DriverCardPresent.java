@@ -50,32 +50,8 @@ public class DriverCardPresent extends PropertyValueObject {
     }
 
     public DriverCardPresent(Integer driverNumber, CardPresent cardPresent) {
-        super(2);
-        update(driverNumber, cardPresent);
-    }
+        super(0);
 
-    public DriverCardPresent(Property property) throws CommandParseException {
-        super();
-        if (property.getValueComponent() == null) throw new CommandParseException();
-        update(property.getValueComponent().getValueBytes());
-    }
-
-    public DriverCardPresent() {
-        super();
-    } // needed for generic ctor
-
-    @Override public void update(Bytes value) throws CommandParseException {
-        super.update(value);
-        if (bytes.length < 2) throw new CommandParseException();
-
-        int bytePosition = 0;
-        driverNumber = Property.getUnsignedInt(bytes, bytePosition, 1);
-        bytePosition += 1;
-
-        cardPresent = CardPresent.fromByte(get(bytePosition));
-    }
-
-    public void update(Integer driverNumber, CardPresent cardPresent) {
         this.driverNumber = driverNumber;
         this.cardPresent = cardPresent;
 
@@ -88,8 +64,16 @@ public class DriverCardPresent extends PropertyValueObject {
         set(bytePosition, cardPresent.getByte());
     }
 
-    public void update(DriverCardPresent value) {
-        update(value.driverNumber, value.cardPresent);
+    public DriverCardPresent(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 2) throw new CommandParseException();
+
+        int bytePosition = 0;
+        driverNumber = Property.getUnsignedInt(bytes, bytePosition, 1);
+        bytePosition += 1;
+
+        cardPresent = CardPresent.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {

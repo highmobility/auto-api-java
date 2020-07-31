@@ -26,8 +26,8 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.value.measurement.Speed;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 
@@ -87,9 +87,9 @@ public class CruiseControl {
     public static class State extends SetCommand {
         Property<ActiveState> cruiseControl = new Property(ActiveState.class, PROPERTY_CRUISE_CONTROL);
         Property<Limiter> limiter = new Property(Limiter.class, PROPERTY_LIMITER);
-        PropertyInteger targetSpeed = new PropertyInteger(PROPERTY_TARGET_SPEED, true);
+        Property<Speed> targetSpeed = new Property(Speed.class, PROPERTY_TARGET_SPEED);
         Property<ActiveState> adaptiveCruiseControl = new Property(ActiveState.class, PROPERTY_ADAPTIVE_CRUISE_CONTROL);
-        PropertyInteger accTargetSpeed = new PropertyInteger(PROPERTY_ACC_TARGET_SPEED, true);
+        Property<Speed> accTargetSpeed = new Property(Speed.class, PROPERTY_ACC_TARGET_SPEED);
     
         /**
          * @return The cruise control
@@ -106,9 +106,9 @@ public class CruiseControl {
         }
     
         /**
-         * @return The target speed in km/h
+         * @return The target speed
          */
-        public PropertyInteger getTargetSpeed() {
+        public Property<Speed> getTargetSpeed() {
             return targetSpeed;
         }
     
@@ -120,9 +120,9 @@ public class CruiseControl {
         }
     
         /**
-         * @return The target speed in km/h of the Adaptive Cruise Control
+         * @return The target speed of the Adaptive Cruise Control
          */
-        public PropertyInteger getAccTargetSpeed() {
+        public Property<Speed> getAccTargetSpeed() {
             return accTargetSpeed;
         }
     
@@ -149,7 +149,7 @@ public class CruiseControl {
      */
     public static class ActivateDeactivateCruiseControl extends SetCommand {
         Property<ActiveState> cruiseControl = new Property(ActiveState.class, PROPERTY_CRUISE_CONTROL);
-        PropertyInteger targetSpeed = new PropertyInteger(PROPERTY_TARGET_SPEED, true);
+        Property<Speed> targetSpeed = new Property(Speed.class, PROPERTY_TARGET_SPEED);
     
         /**
          * @return The cruise control
@@ -161,7 +161,7 @@ public class CruiseControl {
         /**
          * @return The target speed
          */
-        public PropertyInteger getTargetSpeed() {
+        public Property<Speed> getTargetSpeed() {
             return targetSpeed;
         }
         
@@ -169,13 +169,13 @@ public class CruiseControl {
          * Activate deactivate cruise control
          *
          * @param cruiseControl The cruise control
-         * @param targetSpeed The target speed in km/h
+         * @param targetSpeed The target speed
          */
-        public ActivateDeactivateCruiseControl(ActiveState cruiseControl, @Nullable Integer targetSpeed) {
+        public ActivateDeactivateCruiseControl(ActiveState cruiseControl, @Nullable Speed targetSpeed) {
             super(IDENTIFIER);
         
             addProperty(this.cruiseControl.update(cruiseControl));
-            addProperty(this.targetSpeed.update(true, 2, targetSpeed));
+            addProperty(this.targetSpeed.update(targetSpeed));
             createBytes();
         }
     
