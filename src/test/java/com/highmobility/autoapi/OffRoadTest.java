@@ -37,8 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class OffRoadTest extends BaseTest {
     Bytes bytes = new Bytes(
             COMMAND_HEADER + "005201" +
-                    "010005010002000A" +
-                    "02000B0100083FE0000000000000"
+                    "01000D01000A02004024333333333333" + // 10 degrees
+                    "02000B0100083FE0000000000000" // 50%
     );
 
     @Test
@@ -49,7 +49,7 @@ public class OffRoadTest extends BaseTest {
     }
 
     private void testState(Offroad.State state) {
-        assertTrue(state.getRouteIncline().getValue().getValue() == 10d);
+        assertTrue(state.getRouteIncline().getValue().getValue() == 10.1d);
         assertTrue(state.getWheelSuspension().getValue() == .5d);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
@@ -64,24 +64,9 @@ public class OffRoadTest extends BaseTest {
     @Test
     public void build() {
         Offroad.State.Builder builder = new Offroad.State.Builder();
-        // TODO: should be new Angle(10d, Angle.Unit.DEGREES))
-        builder.setRouteIncline(new Property<>(new Angle(10d, Angle.Unit.DEGREES)));
+        builder.setRouteIncline(new Property<>(new Angle(10.1d, Angle.Unit.DEGREES)));
         builder.setWheelSuspension(new Property<>(.5d));
         Offroad.State state = builder.build();
         testState(state);
-
-
-        TestValue t = new TestValue(1d);
-        setValue(t); // no compiler error, but setValue expects generic <Exception>
     }
-
-    class TestValue<T> {
-        TestValue(T value) { }
-    }
-
-    public void setValue(TestValue<Exception> value){
-
-    }
-
-
 }

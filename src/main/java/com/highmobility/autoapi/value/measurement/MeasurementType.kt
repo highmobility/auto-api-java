@@ -10,7 +10,7 @@ open class MeasurementType : PropertyValueObject {
     constructor(valueBytes: Bytes) : super(valueBytes) {
         if (valueBytes.length != length ||
             valueBytes[0] != getMeasurementId()
-        ) throw CommandParseException()
+        ) throw CommandParseException("Measurement type bytes length should be $SIZE")
     }
 
     protected open fun getMeasurementId(): Byte {

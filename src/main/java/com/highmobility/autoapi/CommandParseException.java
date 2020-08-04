@@ -43,4 +43,9 @@ public class CommandParseException extends Exception{
     public CommandParseException(CommandExceptionCode code) {
         this.code = code;
     }
+
+    public CommandParseException(String error) {
+        super(error);
+        this.code = CommandExceptionCode.PARSE_ERROR;
+    }
 }
