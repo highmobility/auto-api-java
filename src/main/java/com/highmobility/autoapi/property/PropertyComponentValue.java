@@ -78,10 +78,18 @@ public class PropertyComponentValue<T> extends PropertyComponent {
                 Constructor constructor = valueClass.getConstructor(new Class[]{Bytes.class});
                 T parsedValue = (T) constructor.newInstance(new Object[]{valueBytes});
                 this.value = parsedValue;
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
                 e.printStackTrace();
                 throw new IllegalArgumentException("Cannot instantiate value: " + valueClass +
                         "\n" + e.getMessage());
+            } catch (InvocationTargetException e) {
+                // throw error that is from auto api value parsing
+                if (e.getCause() instanceof CommandParseException) {
+                    throw (CommandParseException) e.getCause();
+                } else {
+                    e.printStackTrace();
+                    throw new CommandParseException("Value initialisation error");
+                }
             }
         } else if (ByteEnum.class.isAssignableFrom(valueClass)) {
             value = valueClass.getEnumConstants()[valueBytes.get(0)];
