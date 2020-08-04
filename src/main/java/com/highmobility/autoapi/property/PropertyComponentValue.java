@@ -74,8 +74,9 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         // map bytes to the type
         if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
             try {
-                Constructor<?> constructor = valueClass.getConstructor(new Class[]{Bytes.class});
-                T parsedValue = (T) constructor.newInstance(new Object[]{ valueBytes });
+                // constructing PropertyValueObject subclasses can throw CommandParseException.
+                Constructor constructor = valueClass.getConstructor(new Class[]{Bytes.class});
+                T parsedValue = (T) constructor.newInstance(new Object[]{valueBytes});
                 this.value = parsedValue;
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();

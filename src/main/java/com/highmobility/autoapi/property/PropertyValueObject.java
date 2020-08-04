@@ -23,12 +23,11 @@
  */
 package com.highmobility.autoapi.property;
 
-import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.value.Bytes;
 
 public class PropertyValueObject extends Bytes {
-    public PropertyValueObject(Bytes value) throws CommandParseException {
-        update(value);
+    public PropertyValueObject(Bytes value) {
+        this.bytes = value.getByteArray();
     }
 
     protected PropertyValueObject() {
@@ -37,14 +36,6 @@ public class PropertyValueObject extends Bytes {
 
     public PropertyValueObject(int bytesLength) {
         super(bytesLength);
-    }
-
-    /**
-     * @param bytes The value bytes.
-     * @throws CommandParseException when value could not be parsed.
-     */
-    protected void update(Bytes bytes) throws CommandParseException {
-        this.bytes = bytes.getByteArray();
     }
 
     protected int getItemSize(int atPosition) {

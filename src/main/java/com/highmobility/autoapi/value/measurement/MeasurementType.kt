@@ -7,12 +7,10 @@ import com.highmobility.value.Bytes
 open class MeasurementType : PropertyValueObject {
     constructor() : super(SIZE)
 
-    constructor(valueBytes: Bytes) {
+    constructor(valueBytes: Bytes) : super(valueBytes) {
         if (valueBytes.length != length ||
             valueBytes[0] != getMeasurementId()
         ) throw CommandParseException()
-
-        update(valueBytes)
     }
 
     protected open fun getMeasurementId(): Byte {
