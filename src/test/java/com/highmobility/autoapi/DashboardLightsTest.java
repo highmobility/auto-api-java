@@ -33,15 +33,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Created by ttiganik on 15/09/16.
- */
 public class DashboardLightsTest extends BaseTest {
     Bytes bytes = new Bytes(COMMAND_HEADER + "006101" +
-            "0100050100020000" +
-            "0100050100020201" +
-            "0100050100020F03" +
-            "0100050100021502"
+            "010006010003000000" + // High beam is inactive
+            "010006010003020100" + // Info light active for hazard warning
+            "0100060100030f0102" + // Red light active for transmission fluid temperature
+            "010006010003150101" // Yellow light active for engine oil temperature
     );
 
     @Test
@@ -63,9 +60,13 @@ public class DashboardLightsTest extends BaseTest {
 
         assertTrue(getDashboardLight(state.getDashboardLights(),
                 DashboardLight.Name.TRANSMISSION_FLUID_TEMPERATURE).getState() == ActiveState.ACTIVE);
+        assertTrue(getDashboardLight(state.getDashboardLights(),
+                DashboardLight.Name.TRANSMISSION_FLUID_TEMPERATURE).getColour() == DashboardLight.Colour.RED);
 
         assertTrue(getDashboardLight(state.getDashboardLights(),
                 DashboardLight.Name.ENGINE_OIL_LEVEL).getState() == ActiveState.ACTIVE);
+        assertTrue(getDashboardLight(state.getDashboardLights(),
+                DashboardLight.Name.ENGINE_OIL_LEVEL).getColour() == DashboardLight.Colour.YELLOW);
 
         assertTrue(TestUtils.bytesTheSame(bytes, state));
     }
@@ -80,7 +81,6 @@ public class DashboardLightsTest extends BaseTest {
 
     @Test
     public void get() {
-
         String waitingForBytes = COMMAND_HEADER + "006100";
         String commandBytes =
                 ByteUtils.hexFromBytes(new DashboardLights.GetDashboardLights().getByteArray());
@@ -93,7 +93,7 @@ public class DashboardLightsTest extends BaseTest {
 
         builder.addDashboardLight(new Property(new DashboardLight(
                 DashboardLight.Name.HIGH_BEAM,
-                ActiveState.ACTIVE,
+                ActiveState.INACTIVE,
                 DashboardLight.Colour.INFO)));
 
         builder.addDashboardLight(new Property(new DashboardLight(
@@ -104,13 +104,13 @@ public class DashboardLightsTest extends BaseTest {
         builder.addDashboardLight(new Property(new DashboardLight(
                 DashboardLight.Name.TRANSMISSION_FLUID_TEMPERATURE,
                 ActiveState.ACTIVE,
-                DashboardLight.Colour.INFO)));
+                DashboardLight.Colour.RED)));
 
         builder.addDashboardLight(new Property(new DashboardLight(
                 DashboardLight.Name.ENGINE_OIL_LEVEL,
                 ActiveState.ACTIVE,
-                DashboardLight.Colour.INFO)));
-        
+                DashboardLight.Colour.YELLOW)));
+
         DashboardLights.State state = builder.build();
         assertTrue(state.equals(bytes));
         testState(state);

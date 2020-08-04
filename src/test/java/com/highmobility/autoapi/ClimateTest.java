@@ -40,18 +40,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ClimateTest extends BaseTest {
     Bytes bytes = new Bytes(
             COMMAND_HEADER + "002401" +
-                    "01000701000441980000" +
-                    "02000701000441400000" +
-                    "03000701000441AC0000" +
-                    "04000701000441AC0000" +
+                    "01000D01000A1701403319999999999a" + // Inside temperature is 19.1°C
+                    "02000D01000A17014028666666666666" + // Outside temperature is 12.2°C
+                    "03000D01000A17014035800000000000" + // Driver temperature setting is 21.5°C
+                    "04000D01000A17014035b33333333333" + // Passenger temperature setting is 21.7°C
                     "05000401000101" +
                     "06000401000100" +
                     "07000401000100" +
                     "08000401000100" +
-                    "09000701000441AC0000" +
+                    "09000D01000A17014035333333333333" + // Defrosting temperature setting is 21.2°C
                     "0B000601000305121E" +
                     "0B000601000306121E" +
-                    "0C000701000441AC0000"
+                    "0C000D01000A1701403599999999999a" // Rear temperature setting is 21.6°C
     );
 
     @Test
@@ -61,16 +61,16 @@ public class ClimateTest extends BaseTest {
     }
 
     private void testState(Climate.State state) {
-        assertTrue(state.getInsideTemperature().getValue().getValue() == 19d);
-        assertTrue(state.getOutsideTemperature().getValue().getValue() == 12d);
+        assertTrue(state.getInsideTemperature().getValue().getValue() == 19.1d);
+        assertTrue(state.getOutsideTemperature().getValue().getValue() == 12.2d);
         assertTrue(state.getDriverTemperatureSetting().getValue().getValue() == 21.5d);
-        assertTrue(state.getPassengerTemperatureSetting().getValue().getValue() == 21.5d);
+        assertTrue(state.getPassengerTemperatureSetting().getValue().getValue() == 21.7d);
 
         assertTrue(state.getHvacState().getValue() == ActiveState.ACTIVE);
         assertTrue(state.getDefoggingState().getValue() == ActiveState.INACTIVE);
         assertTrue(state.getDefrostingState().getValue() == ActiveState.INACTIVE);
         assertTrue(state.getIonisingState().getValue() == ActiveState.INACTIVE);
-        assertTrue(state.getDefrostingTemperatureSetting().getValue().getValue() == 21.5d);
+        assertTrue(state.getDefrostingTemperatureSetting().getValue().getValue() == 21.2d);
 
         assertTrue(getHvacWeekdayStartingTime(state.getHvacWeekdayStartingTimes(), MONDAY) == null);
 
@@ -84,12 +84,11 @@ public class ClimateTest extends BaseTest {
         assertTrue(time2.getTime().getHour() == 18);
         assertTrue(time2.getTime().getMinute() == 30);
 
-        assertTrue(state.getRearTemperatureSetting().getValue().getValue() == 21.5d);
+        assertTrue(state.getRearTemperatureSetting().getValue().getValue() == 21.6d);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
-    HvacWeekdayStartingTime getHvacWeekdayStartingTime(Property<HvacWeekdayStartingTime>[] times,
-                                                       Weekday weekday) {
+    HvacWeekdayStartingTime getHvacWeekdayStartingTime(Property<HvacWeekdayStartingTime>[] times, Weekday weekday) {
         for (Property<HvacWeekdayStartingTime> time : times) {
             if (time.getValue().getWeekday() == weekday) {
                 return time.getValue();
@@ -166,23 +165,23 @@ public class ClimateTest extends BaseTest {
     @Test
     public void setTemperatureSettings() {
         Bytes bytes = new Bytes(COMMAND_HEADER + "002401" +
-                "03000701000441a40000" +
-                "04000701000441a40000" +
-                "0C000701000441980000");
+                "03000D01000A17014035800000000000" +
+                "04000D01000A17014035b33333333333" +
+                "0C000D01000A1701403599999999999a");
 
         Climate.SetTemperatureSettings cmd = new Climate.SetTemperatureSettings(
-                new Temperature(20.5d, Temperature.Unit.CELSIUS),
-                new Temperature(20.5d, Temperature.Unit.CELSIUS),
-                new Temperature(19d, Temperature.Unit.CELSIUS));
+                new Temperature(21.5d, Temperature.Unit.CELSIUS),
+                new Temperature(21.7d, Temperature.Unit.CELSIUS),
+                new Temperature(21.6d, Temperature.Unit.CELSIUS));
 
         assertTrue(TestUtils.bytesTheSame(cmd, bytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
         Climate.SetTemperatureSettings settings =
                 (Climate.SetTemperatureSettings) CommandResolver.resolve(bytes);
-        assertTrue(settings.getDriverTemperatureSetting().getValue().getValue() == 20.5d);
-        assertTrue(settings.getPassengerTemperatureSetting().getValue().getValue() == 20.5d);
-        assertTrue(settings.getRearTemperatureSetting().getValue().getValue() == 19d);
+        assertTrue(settings.getDriverTemperatureSetting().getValue().getValue() == 21.5d);
+        assertTrue(settings.getPassengerTemperatureSetting().getValue().getValue() == 21.7d);
+        assertTrue(settings.getRearTemperatureSetting().getValue().getValue() == 21.6d);
     }
 
     @Test
@@ -225,24 +224,25 @@ public class ClimateTest extends BaseTest {
     public void build() {
         Climate.State.Builder builder = new Climate.State.Builder();
 
-        builder.setInsideTemperature(new Property(19d));
+        builder.setInsideTemperature(new Property(new Temperature(19.1d, Temperature.Unit.CELSIUS)));
 
-        builder.setOutsideTemperature(new Property(12d));
-        builder.setDriverTemperatureSetting(new Property(21.5d));
-        builder.setPassengerTemperatureSetting(new Property(21.5d));
+        builder.setOutsideTemperature(new Property(new Temperature(12.2d, Temperature.Unit.CELSIUS)));
+        builder.setDriverTemperatureSetting(new Property(new Temperature(21.5d, Temperature.Unit.CELSIUS)));
+        builder.setPassengerTemperatureSetting(new Property(new Temperature(21.7d, Temperature.Unit.CELSIUS)));
 
         builder.setHvacState(new Property(ActiveState.ACTIVE));
         builder.setDefoggingState(new Property(ActiveState.INACTIVE));
         builder.setDefrostingState(new Property(ActiveState.INACTIVE));
         builder.setIonisingState(new Property(ActiveState.INACTIVE));
-        builder.setDefrostingTemperatureSetting(new Property(21.5d));
+        builder.setDefrostingTemperatureSetting(new Property(new Temperature(21.2d, Temperature.Unit.CELSIUS)));
 
         builder.addHvacWeekdayStartingTime(new Property(new HvacWeekdayStartingTime(Weekday.SATURDAY,
                 new Time(18, 30))));
         builder.addHvacWeekdayStartingTime(new Property(new HvacWeekdayStartingTime(Weekday.SUNDAY, new Time(18
                 , 30))));
 
-        builder.setRearTemperatureSetting(new Property(21.5d));
+        builder.setRearTemperatureSetting(new Property(new Temperature(21.6d, Temperature.Unit.CELSIUS)));
+
         Climate.State command = builder.build();
         testState(command);
     }
