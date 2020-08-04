@@ -25,6 +25,8 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ConditionBasedService;
+import com.highmobility.autoapi.value.measurement.Duration;
+import com.highmobility.autoapi.value.measurement.Length;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -37,19 +39,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class MaintenanceTest extends BaseTest {
     Bytes bytes = new Bytes(COMMAND_HEADER + "003401" +
-                    "01000501000201F5" +
-                    "02000701000400000E61" +
-                    "03000401000103" +
-                    "04000401000105" +
-                    "05000401000102" +
-                    "06000501000201F4" +
-                    "07000401000104" +
-                    "08000B01000800000160E0EA1388" +
-                    "09000B01000800000160E1560840" +
-                    "0A000B01000800000160E0EA1388" +
-                    "0B004401004107E305000300000B4272616B6520666C756964002C4E657874206368616E676520617420737065636966696564206461746520617420746865206C61746573742E" +
-                    "0B005301005007E303002001001256656869636C6520696E7370656374696F6E00344E657874206D616E6461746F72792076656869636C6520696E7370656374696F6E206F6E2073706563696669656420646174652E" +
-                    "0C000B01000800000160E1560840"
+//                    "01000D01000A0703407f500000000000" + // 501.0 days until next service
+//                    "02000D01000A120440acc20000000000" + // 3'681km until next service
+            "03000401000103" +
+//                    "04000D01000A07054014000000000000" + // 5 months until exhaust inspection
+            "05000401000102" +
+            "06000D01000A120440b3880000000000" + // Service distance threshold is 5000.0km
+            "07000D01000A07044010000000000000" + // Service time threshold is 4 weeks
+            "08000B01000800000160E0EA1388" +
+            "09000B01000800000160E1560840" +
+            "0A000B01000800000160E0EA1388" +
+            "0B004401004107E305000300000B4272616B6520666C756964002C4E657874206368616E676520617420737065636966696564206461746520617420746865206C61746573742E" +
+            "0B005301005007E303002001001256656869636C6520696E7370656374696F6E00344E657874206D616E6461746F72792076656869636C6520696E7370656374696F6E206F6E2073706563696669656420646174652E" +
+            "0C000B01000800000160E1560840" +
+            "0D000D01000A0703407f500000000000" + // 501.0 days until next service
+            "0E000D01000A120440acc20000000000" + // 3'681km until next service
+            "0F000D01000A07054014000000000000" // 5 months until exhaust inspection
     );
 
     @Test
@@ -59,15 +64,11 @@ public class MaintenanceTest extends BaseTest {
     }
 
     private void testState(Maintenance.State state) {
-        assertTrue(state.getDaysToNextService().getValue().getValue() == 501);
-        assertTrue(state.getKilometersToNextService().getValue().getValue() == 3681);
-
         // level8
         assertTrue(state.getCbsReportsCount().getValue() == 3);
-        assertTrue(state.getMonthsToExhaustInspection().getValue().getValue() == 5);
         assertTrue(state.getTeleserviceAvailability().getValue() == Maintenance.TeleserviceAvailability.SUCCESSFUL);
-        assertTrue(state.getServiceDistanceThreshold().getValue().getValue() == 500);
-        assertTrue(state.getServiceTimeThreshold().getValue().getValue() == 4);
+        assertTrue(state.getServiceDistanceThreshold().getValue().getValue() == 5000d);
+        assertTrue(state.getServiceTimeThreshold().getValue().getValue() == 4d);
 
         assertTrue(TestUtils.dateIsSame(state.getAutomaticTeleserviceCallDate().getValue(),
                 "2018-01-10T16:32:05"));
@@ -110,25 +111,29 @@ public class MaintenanceTest extends BaseTest {
         assertTrue(TestUtils.dateIsSame(state.getBrakeFluidChangeDate().getValue(),
                 "2018-01-10T18:30:00"));
 
+        assertTrue(state.getTimeToNextService().getValue().getValue() == 501d);
+        assertTrue(state.getDistanceToNextService().getValue().getValue() == 3681d);
+        assertTrue(state.getTimeToExhaustInspection().getValue().getValue() == 5d);
+
         assertTrue(bytesTheSame(state, bytes));
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
         String waitingForBytes = COMMAND_HEADER + "003400";
         String commandBytes = ByteUtils.hexFromBytes(new Maintenance.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void build() {
+    @Test
+    public void build() {
         Maintenance.State.Builder builder = new Maintenance.State.Builder();
-        builder.setDaysToNextService(new Property(501));
-        builder.setKilometersToNextService(new Property(3681));
 
         builder.setCbsReportsCount(new Property(3));
-        builder.setMonthsToExhaustInspection(new Property(5));
         builder.setTeleserviceAvailability(new Property(Maintenance.TeleserviceAvailability.SUCCESSFUL));
-        builder.setServiceDistanceThreshold(new Property(500));
-        builder.setServiceTimeThreshold(new Property(4));
+
+        builder.setServiceDistanceThreshold(new Property(new Length(5000d, Length.Unit.KILOMETERS)));
+        builder.setServiceTimeThreshold(new Property(new Duration(4d, Duration.Unit.WEEKS)));
 
         builder.setAutomaticTeleserviceCallDate(new Property(TestUtils.getCalendar("2018-01-10T16" +
                 ":32:05")));
@@ -147,6 +152,10 @@ public class MaintenanceTest extends BaseTest {
         builder.addConditionBasedService(new Property(service2));
 
         builder.setBrakeFluidChangeDate(new Property(TestUtils.getCalendar("2018-01-10T18:30:00")));
+
+        builder.setTimeToNextService(new Property(new Duration(501d, Duration.Unit.DAYS)));
+        builder.setDistanceToNextService(new Property(new Length(3681d, Length.Unit.KILOMETERS)));
+        builder.setTimeToExhaustInspection(new Property(new Duration(5d, Duration.Unit.MONTHS)));
 
         Maintenance.State state = builder.build();
         testState(state);
