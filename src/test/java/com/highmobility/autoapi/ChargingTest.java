@@ -24,13 +24,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.ActiveState;
-import com.highmobility.autoapi.value.DepartureTime;
-import com.highmobility.autoapi.value.Position;
-import com.highmobility.autoapi.value.ReductionTime;
-import com.highmobility.autoapi.value.StartStop;
-import com.highmobility.autoapi.value.Time;
-import com.highmobility.autoapi.value.Timer;
+import com.highmobility.autoapi.value.*;
+import com.highmobility.autoapi.value.measurement.*;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -44,29 +39,36 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChargingTest extends BaseTest {
     Bytes bytes = new Bytes(COMMAND_HEADER + "002301" +
-            "02000501000201B0" +
+            "02000D01000A1204407b01999999999a" + // 432.1km estimated range
             "03000B0100083FE0000000000000" +
-            "040007010004BF19999A" +
-            "050007010004BF19999A" +
-            "06000701000443C80000" +
-            "070007010004BF19999A" +
             "08000B0100083FECCCCCCCCCCCCD" +
-            "0900040100013C" +
-            "0A000701000440600000" +
+            "09000D01000A0701404e000000000000" + // Time to complete charge is 60.0 minutes
             "0B000401000101" +
             "0C000401000101" +
-            "0E000701000441C80000" +
+            "0E000D01000A09004039000000000000" + // Maximum charging current is 25.0A
             "0F000401000101" +
             "10000401000100" +
             "110006010003011020" +
             "110006010003000B33" +
             "130006010003001121" +
             "130006010003010C34" +
-            "1400070100044219999A" +
+            "14000D01000A17014043333333333333" + // The battery temperature is 38.4°C
             "15000C0100090000000160E0EA1388" +
             "15000C0100090100000160E1560840" +
             "16000401000101" +
-            "17000401000101"
+            "17000401000101" +
+            "18000D01000A14024062c00000000000" + // Charging rate is 150.0kW
+            "19000D01000A0900bfe3333333333333" + // Battery current is -0.6A
+            "1A000D01000A0a004079000000000000" + // Charger voltage is 400.0V
+            "1B000401000100" + // Alternating current is used
+            "1C000D01000A12044081580000000000" + // Maximum electric range is 555.0km
+            "1D000401000102" + // Starter battery status is green
+            "1E000401000101" + // Smart Charge Communication is active
+            "1F000B0100083feccccccccccccd" + // Battery level is expected to be 90% at time of departure
+            "20000401000101" + // Preconditioning is active for departure time
+            "21000401000101" + // Immediate preconditioning is active
+            "22000401000101" + // Preconditioning is enabled for departure
+            "23000401000101" // Preconditioning not possible because battery or fuel is low
     );
 
     @Test
@@ -79,15 +81,10 @@ public class ChargingTest extends BaseTest {
 
     private void testState(Charging.State state) {
         assertTrue(TestUtils.bytesTheSame(state, bytes));
-        assertTrue(state.getEstimatedRange().getValue().getValue() == 432);
+        assertTrue(state.getEstimatedRange().getValue().getValue() == 432.1);
         assertTrue(state.getBatteryLevel().getValue() == .5d);
-        assertTrue(state.getBatteryCurrentAC().getValue().getValue() == -.6d);
-        assertTrue(state.getBatteryCurrentDC().getValue().getValue() == -.6d);
-        assertTrue(state.getChargerVoltageAC().getValue().getValue() == 400d);
-        assertTrue(state.getChargerVoltageDC().getValue().getValue() == -.6d);
         assertTrue(state.getTimeToCompleteCharge().getValue().getValue() == 60d);
         assertTrue(state.getChargeLimit().getValue() == .9d);
-        assertTrue(state.getChargingRateKW().getValue().getValue() == 3.5d);
         assertTrue(state.getChargePortState().getValue() == Position.OPEN);
         assertTrue(state.getChargeMode().getValue() == Charging.ChargeMode.TIMER_BASED);
 
@@ -138,6 +135,19 @@ public class ChargingTest extends BaseTest {
 
         assertTrue(state.getPluggedIn().getValue() == Charging.PluggedIn.PLUGGED_IN);
         assertTrue(state.getStatus().getValue() == Charging.Status.CHARGING);
+
+        assertTrue(state.getChargingRate().getValue().getValue() == 150d);
+        assertTrue(state.getBatteryCurrent().getValue().getValue() == -.6d);
+        assertTrue(state.getChargerVoltage().getValue().getValue() == 400d);
+        assertTrue(state.getCurrentType().getValue() == Charging.CurrentType.ALTERNATING_CURRENT);
+        assertTrue(state.getMaxRange().getValue().getValue() == 555d);
+        assertTrue(state.getStarterBatteryState().getValue() == Charging.StarterBatteryState.GREEN);
+        assertTrue(state.getSmartChargingStatus().getValue() == Charging.SmartChargingStatus.SCC_IS_ACTIVE);
+        assertTrue(state.getBatteryLevelAtDeparture().getValue() == .9d);
+        assertTrue(state.getPreconditioningDepartureStatus().getValue() == ActiveState.ACTIVE);
+        assertTrue(state.getPreconditioningImmediateStatus().getValue() == ActiveState.ACTIVE);
+        assertTrue(state.getPreconditioningDepartureEnabled().getValue() == EnabledState.ENABLED);
+        assertTrue(state.getPreconditioningError().getValue() == Charging.PreconditioningError.NOT_POSSIBLE_LOW);
     }
 
     Timer getTimer(Property<Timer>[] timers, Timer.TimerType timerType) {
@@ -148,29 +158,26 @@ public class ChargingTest extends BaseTest {
         return null;
     }
 
-    @Test public void get() {
+    @Test
+    public void get() {
         String waitingForBytes = COMMAND_HEADER + "002300";
         Bytes get = new Charging.GetState();
         String commandBytes = ByteUtils.hexFromBytes(new Charging.GetState().getByteArray());
         assertTrue(waitingForBytes.equals(commandBytes));
     }
 
-    @Test public void build() {
+    @Test
+    public void build() {
         Charging.State.Builder builder = new Charging.State.Builder();
 
-        builder.setEstimatedRange(new Property(432));
+        builder.setEstimatedRange(new Property(new Length(432.1, Length.Unit.KILOMETERS)));
         builder.setBatteryLevel(new Property(.5d));
-        builder.setBatteryCurrentAC(new Property(-.6f));
-        builder.setBatteryCurrentDC(new Property(-.6f));
-        builder.setChargerVoltageAC(new Property(400f));
-        builder.setChargerVoltageDC(new Property(-.6f));
         builder.setChargeLimit(new Property(.9d));
-        builder.setTimeToCompleteCharge(new Property(60));
-        builder.setChargingRateKW(new Property(3.5f));
+        builder.setTimeToCompleteCharge(new Property(new Duration(60, Duration.Unit.MINUTES)));
         builder.setChargePortState(new Property(Position.OPEN));
         builder.setChargeMode(new Property(Charging.ChargeMode.TIMER_BASED));
 
-        builder.setMaxChargingCurrent(new Property(25f));
+        builder.setMaxChargingCurrent(new Property(new ElectricCurrent(25d, ElectricCurrent.Unit.AMPERES)));
         builder.setPlugType(new Property(Charging.PlugType.TYPE_2));
         builder.setChargingWindowChosen(new Property(Charging.ChargingWindowChosen.NOT_CHOSEN));
 
@@ -182,8 +189,7 @@ public class ChargingTest extends BaseTest {
         builder.addReductionTime(new Property(new ReductionTime(StartStop.START,
                 new Time(17, 33))));
         builder.addReductionTime(new Property(new ReductionTime(StartStop.STOP, new Time(12, 52))));
-
-        builder.setBatteryTemperature(new Property(38.4f));
+        builder.setBatteryTemperature(new Property(new Temperature(38.4d, Temperature.Unit.CELSIUS)));
 
         Calendar departureDate = TestUtils.getCalendar("2018-01-10T16:32:05");
         Calendar preferredEndTime = TestUtils.getCalendar("2018-01-10T18:30:00");
@@ -196,11 +202,25 @@ public class ChargingTest extends BaseTest {
         builder.setPluggedIn(new Property(Charging.PluggedIn.PLUGGED_IN));
         builder.setStatus(new Property(Charging.Status.CHARGING));
 
+        builder.setChargingRate(new Property(new Power(150d, Power.Unit.KILOWATTS)));
+        builder.setBatteryCurrent(new Property(new ElectricCurrent(-.6d, ElectricCurrent.Unit.AMPERES)));
+        builder.setChargerVoltage(new Property(new ElectricPotentialDifference(400d, ElectricPotentialDifference.Unit.VOLTS)));
+        builder.setCurrentType(new Property(Charging.CurrentType.ALTERNATING_CURRENT));
+        builder.setMaxRange(new Property(new Length(555d, Length.Unit.KILOMETERS)));
+        builder.setStarterBatteryState(new Property(Charging.StarterBatteryState.GREEN));
+        builder.setSmartChargingStatus(new Property(Charging.SmartChargingStatus.SCC_IS_ACTIVE));
+        builder.setBatteryLevelAtDeparture(new Property(.9d));
+        builder.setPreconditioningDepartureStatus(new Property(ActiveState.ACTIVE));
+        builder.setPreconditioningImmediateStatus(new Property(ActiveState.ACTIVE));
+        builder.setPreconditioningDepartureEnabled(new Property(EnabledState.ENABLED));
+        builder.setPreconditioningError(new Property(Charging.PreconditioningError.NOT_POSSIBLE_LOW));
+
         Charging.State state = builder.build();
         testState(state);
     }
 
-    @Test public void setChargeLimit() {
+    @Test
+    public void setChargeLimit() {
         Bytes expected = new Bytes(COMMAND_HEADER + "002301" +
                 "08000B0100083FECCCCCCCCCCCCD");
 
@@ -213,7 +233,8 @@ public class ChargingTest extends BaseTest {
         assertTrue(command.getChargeLimit().getValue() == .9d);
     }
 
-    @Test public void openCloseChargePort() {
+    @Test
+    public void openCloseChargePort() {
         Bytes expected = new Bytes(COMMAND_HEADER + "0023010B000401000101");
 
         Bytes commandBytes = new Charging.OpenCloseChargingPort(Position.OPEN);
@@ -225,7 +246,8 @@ public class ChargingTest extends BaseTest {
         assertTrue(command.getChargePortState().getValue() == Position.OPEN);
     }
 
-    @Test public void startStopCharging() {
+    @Test
+    public void startStopCharging() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002301" +
                 "17000401000101");
         Bytes commandBytes = new Charging.StartStopCharging(Charging.Status.CHARGING);
@@ -237,7 +259,8 @@ public class ChargingTest extends BaseTest {
         assertTrue(command.getStatus().getValue() == Charging.Status.CHARGING);
     }
 
-    @Test public void setChargeMode() {
+    @Test
+    public void setChargeMode() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "0023010C000401000100");
         Bytes commandBytes = new Charging.SetChargeMode(Charging.ChargeMode.IMMEDIATE);
         assertTrue(TestUtils.bytesTheSame(commandBytes, waitingForBytes));
@@ -248,11 +271,13 @@ public class ChargingTest extends BaseTest {
         assertTrue(command.getChargeMode().getValue() == Charging.ChargeMode.IMMEDIATE);
     }
 
-    @Test public void setChargeModeThrowsOnImmediate() {
+    @Test
+    public void setChargeModeThrowsOnImmediate() {
         assertThrows(IllegalArgumentException.class, () -> new Charging.SetChargeMode(Charging.ChargeMode.INDUCTIVE));
     }
 
-    @Test public void SetChargeTimer() throws ParseException {
+    @Test
+    public void SetChargeTimer() throws ParseException {
         Bytes waitingForBytes = new Bytes
                 (COMMAND_HEADER + "002301" +
                         "15000C0100090200000160E0EA1388" +
@@ -281,7 +306,8 @@ public class ChargingTest extends BaseTest {
         assertTrue(TestUtils.dateIsSame(preferredEndTime, "2018-01-10T18:30:00"));
     }
 
-    @Test public void SetReductionTimes() {
+    @Test
+    public void SetReductionTimes() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002301" +
                 "130006010003000000" + // reduction times
                 "130006010003011020");

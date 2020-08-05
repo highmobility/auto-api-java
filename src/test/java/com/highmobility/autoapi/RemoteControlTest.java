@@ -35,7 +35,7 @@ public class RemoteControlTest extends BaseTest {
     Bytes bytes = new Bytes(
             COMMAND_HEADER + "002701" +
                     "01000401000102" +
-                    "0200050100020032");
+                    "02000D01000A02004049000000000000"); // Angle is 50.0°
 
     @Test
     public void controlMode() {
@@ -76,18 +76,19 @@ public class RemoteControlTest extends BaseTest {
     @Test
     public void controlCommand() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "002701" +
-                "0200050100020003" +
-                "03000401000132");
+                "02000D01000A02004049000000000000" +
+                "03000D01000A16014014000000000000"); // Speed is 5.0km/h
+
         RemoteControl.ControlCommand command = new RemoteControl.ControlCommand(
-                new Angle(3d, Angle.Unit.DEGREES),
-                new Speed(50d, Speed.Unit.KILOMETERS_PER_HOUR));
+                new Angle(50d, Angle.Unit.DEGREES),
+                new Speed(5d, Speed.Unit.KILOMETERS_PER_HOUR));
 
         assertTrue(TestUtils.bytesTheSame(command, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
         command = (RemoteControl.ControlCommand) CommandResolver.resolve(waitingForBytes);
         assertTrue(command instanceof RemoteControl.ControlCommand);
-        assertTrue(command.getAngle().getValue().getValue() == 3);
-        assertTrue(command.getSpeed().getValue().getValue() == 50);
+        assertTrue(command.getAngle().getValue().getValue() == 50d);
+        assertTrue(command.getSpeed().getValue().getValue() == 5d);
     }
 }
