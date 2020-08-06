@@ -28,6 +28,7 @@ import com.highmobility.autoapi.value.Detected;
 import com.highmobility.autoapi.value.DriverCardPresent;
 import com.highmobility.autoapi.value.DriverTimeState;
 import com.highmobility.autoapi.value.DriverWorkingState;
+import com.highmobility.autoapi.value.measurement.Speed;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ public class TachographTest extends BaseTest {
                     "04000401000101" +
                     "05000401000100" +
                     "06000401000100" +
-                    "0700050100020050"
+                    "07000D01000A16014054000000000000" // Vehicle speed is 80.0km/h
             );
 
     @Test
@@ -68,7 +69,7 @@ public class TachographTest extends BaseTest {
         assertTrue(state.getVehicleMotion().getValue() == Detected.DETECTED);
         assertTrue(state.getVehicleOverspeed().getValue() == Tachograph.VehicleOverspeed.NO_OVERSPEED);
         assertTrue(state.getVehicleDirection().getValue() == Tachograph.VehicleDirection.FORWARD);
-        assertTrue(state.getVehicleSpeed().getValue().getValue() == 80);
+        assertTrue(state.getVehicleSpeed().getValue().getValue() == 80d);
         assertTrue(bytesTheSame(state, bytes));
     }
 
@@ -93,7 +94,7 @@ public class TachographTest extends BaseTest {
         builder.setVehicleMotion(new Property(Detected.DETECTED));
         builder.setVehicleOverspeed(new Property(Tachograph.VehicleOverspeed.NO_OVERSPEED));
         builder.setVehicleDirection(new Property(Tachograph.VehicleDirection.FORWARD));
-        builder.setVehicleSpeed(new Property(80));
+        builder.setVehicleSpeed(new Property(new Speed(80d, Speed.Unit.KILOMETERS_PER_HOUR)));
 
         Tachograph.State state = builder.build();
         testState(state);

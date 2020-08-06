@@ -25,6 +25,8 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Coordinates;
+import com.highmobility.autoapi.value.measurement.Angle;
+import com.highmobility.autoapi.value.measurement.Length;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -39,8 +41,9 @@ public class VehicleLocationTest extends BaseTest {
     Bytes bytes = new Bytes(
             COMMAND_HEADER + "003001" +
                     "040013010010404A428F9F44D445402ACF562174C4CE" +
-                    "05000B010008402ABD80C308FEAC" +
-                    "06000B0100084060B00000000000"
+                    "05000D01000A0200402abd80c308feac" + // Heading direction is 13.370123°
+                    "06000D01000A12004060b00000000000" + // Vehicle altitude is 133.5m
+                    "07000D01000A1200407f400000000000" // Precision is 500m
     );
 
     @Test
@@ -51,10 +54,11 @@ public class VehicleLocationTest extends BaseTest {
     }
 
     private void testState(VehicleLocation.State state) {
-        assertTrue(state.getCoordinates().getValue().getLatitude() == 52.520008);
-        assertTrue(state.getCoordinates().getValue().getLongitude() == 13.404954);
-        assertTrue(state.getHeading().getValue().getValue() == 13.370123);
-        assertTrue(state.getAltitude().getValue().getValue() == 133.5);
+        assertTrue(state.getCoordinates().getValue().getLatitude() == 52.520008d);
+        assertTrue(state.getCoordinates().getValue().getLongitude() == 13.404954d);
+        assertTrue(state.getHeading().getValue().getValue() == 13.370123d);
+        assertTrue(state.getAltitude().getValue().getValue() == 133.5d);
+        assertTrue(state.getPrecision().getValue().getValue() == 500d);
         assertTrue(TestUtils.bytesTheSame(state, bytes));
     }
 
@@ -66,10 +70,11 @@ public class VehicleLocationTest extends BaseTest {
 
     @Test public void build() {
         VehicleLocation.State.Builder builder = new VehicleLocation.State.Builder();
-        Coordinates coordinates = new Coordinates(52.520008, 13.404954);
+        Coordinates coordinates = new Coordinates(52.520008d, 13.404954d);
         builder.setCoordinates(new Property(coordinates));
-        builder.setHeading(new Property(13.370123));
-        builder.setAltitude(new Property(133.5));
+        builder.setHeading(new Property(new Angle(13.370123d, Angle.Unit.DEGREES)));
+        builder.setAltitude(new Property(new Length(133.5d, Length.Unit.METERS)));
+        builder.setPrecision(new Property(new Length(500d, Length.Unit.METERS)));
         testState(builder.build());
     }
 }
