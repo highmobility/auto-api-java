@@ -23,15 +23,15 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.DoorPosition;
+import javax.annotation.Nullable;
 import com.highmobility.autoapi.value.Location;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Lock;
+import com.highmobility.autoapi.value.DoorPosition;
 import com.highmobility.autoapi.value.LockState;
-import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import com.highmobility.value.Bytes;
 
 /**
  * The Doors capability

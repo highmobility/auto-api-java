@@ -29,6 +29,8 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public class ConditionBasedService extends PropertyValueObject {
     Integer year;
     Integer month;
@@ -104,12 +106,12 @@ public class ConditionBasedService extends PropertyValueObject {
         set(bytePosition, dueStatus.getByte());
         bytePosition += 1;
 
-        set(bytePosition, Property.intToBytes(text.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(text), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(text));
-        bytePosition += text.length();
+        bytePosition += Property.getUtf8Length(text);
 
-        set(bytePosition, Property.intToBytes(description.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(description), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(description));
     }
@@ -143,7 +145,7 @@ public class ConditionBasedService extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return 2 + 1 + 2 + 1 + text.length() + 2 + description.length() + 2;
+        return 2 + 1 + 2 + 1 + Property.getUtf8Length(text) + 2 + Property.getUtf8Length(description) + 2;
     }
 
     public enum DueStatus implements ByteEnum {
@@ -161,7 +163,7 @@ public class ConditionBasedService extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum DueStatus does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

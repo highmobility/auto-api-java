@@ -26,6 +26,8 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.ByteEnum;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public enum StartStop implements ByteEnum {
     START((byte) 0x00),
     STOP((byte) 0x01);
@@ -40,7 +42,7 @@ public enum StartStop implements ByteEnum {
             }
         }
 
-        throw new CommandParseException();
+        throw new CommandParseException("Enum StartStop does not contain " + hexFromByte(byteValue));
     }
 
     private byte value;

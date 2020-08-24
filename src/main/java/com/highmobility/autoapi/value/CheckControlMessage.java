@@ -80,12 +80,12 @@ public class CheckControlMessage extends PropertyValueObject {
         set(bytePosition, remainingTime);
         bytePosition += remainingTime.getLength();
 
-        set(bytePosition, Property.intToBytes(text.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(text), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(text));
-        bytePosition += text.length();
+        bytePosition += Property.getUtf8Length(text);
 
-        set(bytePosition, Property.intToBytes(status.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(status), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(status));
     }
@@ -114,6 +114,6 @@ public class CheckControlMessage extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return 2 + 10 + text.length() + 2 + status.length() + 2;
+        return 2 + 10 + Property.getUtf8Length(text) + 2 + Property.getUtf8Length(status) + 2;
     }
 }

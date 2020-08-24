@@ -26,6 +26,8 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.ByteEnum;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public enum Axle implements ByteEnum {
     FRONT((byte) 0x00),
     REAR((byte) 0x01);
@@ -40,7 +42,7 @@ public enum Axle implements ByteEnum {
             }
         }
 
-        throw new CommandParseException();
+        throw new CommandParseException("Enum Axle does not contain " + hexFromByte(byteValue));
     }
 
     private byte value;

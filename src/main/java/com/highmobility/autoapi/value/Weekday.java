@@ -26,6 +26,8 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.ByteEnum;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public enum Weekday implements ByteEnum {
     MONDAY((byte) 0x00),
     TUESDAY((byte) 0x01),
@@ -46,7 +48,7 @@ public enum Weekday implements ByteEnum {
             }
         }
 
-        throw new CommandParseException();
+        throw new CommandParseException("Enum Weekday does not contain " + hexFromByte(byteValue));
     }
 
     private byte value;

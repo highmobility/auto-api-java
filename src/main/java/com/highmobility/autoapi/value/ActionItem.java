@@ -58,7 +58,7 @@ public class ActionItem extends PropertyValueObject {
         set(bytePosition, Property.intToBytes(id, 1));
         bytePosition += 1;
 
-        set(bytePosition, Property.intToBytes(name.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(name), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(name));
     }
@@ -78,6 +78,6 @@ public class ActionItem extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return 1 + name.length() + 2;
+        return 1 + Property.getUtf8Length(name) + 2;
     }
 }

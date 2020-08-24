@@ -23,15 +23,17 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.measurement.Power;
-import com.highmobility.autoapi.value.measurement.Torque;
 import com.highmobility.autoapi.value.measurement.Volume;
-import com.highmobility.value.Bytes;
+import com.highmobility.autoapi.value.measurement.Torque;
 import java.util.ArrayList;
 import java.util.List;
+import com.highmobility.value.Bytes;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Vehicle Information capability
@@ -572,7 +574,7 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Powertrain does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -599,7 +601,7 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Gearbox does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -625,7 +627,7 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum DisplayUnit does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -652,7 +654,7 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum DriverSeatLocation does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -678,7 +680,7 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Timeformat does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

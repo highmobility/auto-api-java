@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test
 import java.lang.Exception
 import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
+import kotlin.math.roundToInt
 
 class PropertyComponentUnitTest : BaseTest() {
 
@@ -119,8 +120,12 @@ class PropertyComponentUnitTest : BaseTest() {
             Temperature.Unit.FAHRENHEIT
         )
 
-        assertTrue(temp.inCelsius() == -15.3);
-        // TODO: 6/7/20 also test bytes ctor
+        val inCelsius = String.format("%.02f", temp.inCelsius())
+        assertTrue(inCelsius == "-15.28")
+
+        val generated = Temperature(Bytes("170140440ccccccccccd"))
+        assertTrue(generated.unit == Temperature.Unit.CELSIUS)
+        assertTrue(generated.value == 40.1)
     }
 
     @Test
@@ -165,10 +170,9 @@ class PropertyComponentUnitTest : BaseTest() {
                    set(2, Property.doubleToBytes(value))
                 }
                 """.trimIndent()
-            .trimIndent()
+                .trimIndent()
 
         println("")
-
 
 
     }

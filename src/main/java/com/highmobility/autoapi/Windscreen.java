@@ -23,12 +23,14 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.value.Zone;
-import com.highmobility.value.Bytes;
 import java.util.Calendar;
+import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Windscreen capability
@@ -440,7 +442,7 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum WipersStatus does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -468,7 +470,7 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum WipersIntensity does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -496,7 +498,7 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum WindscreenDamage does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -523,7 +525,7 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum WindscreenNeedsReplacement does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

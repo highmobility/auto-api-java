@@ -23,17 +23,19 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
+import javax.annotation.Nullable;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.Detected;
-import com.highmobility.autoapi.value.DriverCardPresent;
-import com.highmobility.autoapi.value.DriverTimeState;
 import com.highmobility.autoapi.value.DriverWorkingState;
+import com.highmobility.autoapi.value.DriverTimeState;
+import com.highmobility.autoapi.value.DriverCardPresent;
+import com.highmobility.autoapi.value.Detected;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.value.measurement.Speed;
-import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import com.highmobility.value.Bytes;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Tachograph capability
@@ -397,7 +399,7 @@ public class Tachograph {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum VehicleOverspeed does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -423,7 +425,7 @@ public class Tachograph {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum VehicleDirection does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

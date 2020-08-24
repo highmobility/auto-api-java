@@ -26,6 +26,8 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.ByteEnum;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public enum NetworkSecurity implements ByteEnum {
     NONE((byte) 0x00),
     WEP((byte) 0x01),
@@ -42,7 +44,7 @@ public enum NetworkSecurity implements ByteEnum {
             }
         }
 
-        throw new CommandParseException();
+        throw new CommandParseException("Enum NetworkSecurity does not contain " + hexFromByte(byteValue));
     }
 
     private byte value;

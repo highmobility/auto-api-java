@@ -78,6 +78,6 @@ public class SupportedCapability extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return 2 + 2 + supportedPropertyIDs.getLength();
+        return 2 + supportedPropertyIDs.getLength() + 2;
     }
 }

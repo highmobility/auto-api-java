@@ -26,6 +26,8 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.ByteEnum;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public enum EnabledState implements ByteEnum {
     DISABLED((byte) 0x00),
     ENABLED((byte) 0x01);
@@ -40,7 +42,7 @@ public enum EnabledState implements ByteEnum {
             }
         }
 
-        throw new CommandParseException();
+        throw new CommandParseException("Enum EnabledState does not contain " + hexFromByte(byteValue));
     }
 
     private byte value;

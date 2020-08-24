@@ -29,6 +29,8 @@ import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.value.measurement.Frequency;
 import com.highmobility.value.Bytes;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public class Availability extends PropertyValueObject {
     public static final int SIZE = 12;
 
@@ -136,7 +138,7 @@ public class Availability extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum UpdateRate does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -164,7 +166,7 @@ public class Availability extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum AppliesPer does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

@@ -23,10 +23,12 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Failure Message capability
@@ -263,7 +265,7 @@ public class FailureMessage {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum FailureReason does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

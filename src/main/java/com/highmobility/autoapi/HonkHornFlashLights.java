@@ -23,13 +23,15 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.ActiveState;
-import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Honk Horn &amp; Flash Lights capability
@@ -241,7 +243,7 @@ public class HonkHornFlashLights {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Flashers does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

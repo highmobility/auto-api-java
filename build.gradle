@@ -28,7 +28,7 @@ version = deploy.version
 
 // these are not release numbers. release numbers are in deploy.settings files.
 ext.ver = [
-        utils: "1.4.4"
+        utils: "1.4.5-dev"
 ]
 
 ext.deps = [

@@ -23,13 +23,15 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.capability.DisabledIn;
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.value.measurement.Angle;
 import com.highmobility.autoapi.value.measurement.Speed;
-import com.highmobility.value.Bytes;
+import com.highmobility.autoapi.capability.DisabledIn;
 import javax.annotation.Nullable;
+import com.highmobility.value.Bytes;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Remote Control capability
@@ -223,7 +225,7 @@ public class RemoteControl {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum ControlMode does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

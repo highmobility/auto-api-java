@@ -23,17 +23,26 @@
  */
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.value.AddressComponent;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ValueTest {
-    @Test public void testUnsignedIntOverflow() {
+    @Test
+    public void testUnsignedIntOverflow() {
         // test if there is overflow eg > 128
         int value = 130;
         byte byteValue = Property.intToBytes(value, 1)[0];
-        assertTrue(byteValue == (byte)0x82);
+        assertTrue(byteValue == (byte) 0x82);
         int parsedValue = Property.getUnsignedInt(byteValue);
         assertTrue(value == parsedValue);
     }
+
+    @Test
+    public void utf8StringLengthUsed() {
+        AddressComponent component = new AddressComponent(AddressComponent.Type.STREET, "ß"); // ß length is 2 in utf-8
+        assertTrue(component.getLength() == 5);
+    }
 }
+

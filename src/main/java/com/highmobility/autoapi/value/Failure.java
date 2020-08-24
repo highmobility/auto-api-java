@@ -29,6 +29,8 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public class Failure extends PropertyValueObject {
     Reason reason;
     String description;
@@ -59,7 +61,7 @@ public class Failure extends PropertyValueObject {
         set(bytePosition, reason.getByte());
         bytePosition += 1;
 
-        set(bytePosition, Property.intToBytes(description.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(description), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(description));
     }
@@ -79,7 +81,7 @@ public class Failure extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return 1 + description.length() + 2;
+        return 1 + Property.getUtf8Length(description) + 2;
     }
 
     public enum Reason implements ByteEnum {
@@ -101,7 +103,7 @@ public class Failure extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Reason does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

@@ -23,20 +23,22 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.autoapi.value.Acceleration;
-import com.highmobility.autoapi.value.ActiveState;
+import javax.annotation.Nullable;
 import com.highmobility.autoapi.value.Axle;
-import com.highmobility.autoapi.value.BrakeTorqueVectoring;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Acceleration;
 import com.highmobility.autoapi.value.measurement.Angle;
-import com.highmobility.autoapi.value.measurement.AngularVelocity;
 import com.highmobility.autoapi.value.measurement.Pressure;
-import com.highmobility.value.Bytes;
+import com.highmobility.autoapi.value.measurement.AngularVelocity;
+import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.value.BrakeTorqueVectoring;
+import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.property.PropertyInteger;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import com.highmobility.value.Bytes;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Race capability
@@ -607,7 +609,7 @@ public class Race {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum GearMode does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -633,7 +635,7 @@ public class Race {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum VehicleMoving does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

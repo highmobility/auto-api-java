@@ -23,10 +23,12 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Rooftop Control capability
@@ -350,7 +352,7 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum ConvertibleRoofState does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -377,7 +379,7 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum SunroofTiltState does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -404,7 +406,7 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum SunroofState does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -431,7 +433,7 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum SunroofRainEvent does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

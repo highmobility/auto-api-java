@@ -28,6 +28,8 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public class Webhook extends PropertyValueObject {
     public static final int SIZE = 2;
 
@@ -93,7 +95,7 @@ public class Webhook extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Available does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -143,7 +145,7 @@ public class Webhook extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Event does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

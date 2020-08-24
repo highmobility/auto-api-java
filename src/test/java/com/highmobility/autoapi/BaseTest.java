@@ -28,6 +28,8 @@ import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.BeforeEach;
 
+import java.util.Calendar;
+
 import static com.highmobility.autoapi.Command.AUTO_API_VERSION;
 
 public class BaseTest {
@@ -45,5 +47,13 @@ public class BaseTest {
 
     static boolean bytesTheSame(Bytes state, Bytes bytes) {
         return TestUtils.bytesTheSame(state, bytes);
+    }
+
+    static boolean dateIsSame(Calendar date, String dateString) {
+        return TestUtils.dateIsSame(date, dateString);
+    }
+
+    static Calendar getCalendar(String dateString) {
+        return TestUtils.getExampleCalendar(dateString);
     }
 }

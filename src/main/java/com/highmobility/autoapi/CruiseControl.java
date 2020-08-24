@@ -23,13 +23,15 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.capability.DisabledIn;
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.value.measurement.Speed;
+import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Cruise Control capability
@@ -211,7 +213,7 @@ public class CruiseControl {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Limiter does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

@@ -24,8 +24,8 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.ConnectionState;
 import com.highmobility.autoapi.value.EnabledState;
+import com.highmobility.autoapi.value.ConnectionState;
 import com.highmobility.autoapi.value.NetworkSecurity;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;

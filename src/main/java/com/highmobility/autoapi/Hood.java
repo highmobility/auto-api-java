@@ -23,8 +23,10 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ByteEnum;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Hood capability
@@ -117,7 +119,7 @@ public class Hood {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Position does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

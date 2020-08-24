@@ -55,12 +55,12 @@ public class KeyValue extends PropertyValueObject {
         bytes = new byte[getLength()];
 
         int bytePosition = 0;
-        set(bytePosition, Property.intToBytes(key.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(key), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(key));
-        bytePosition += key.length();
+        bytePosition += Property.getUtf8Length(key);
 
-        set(bytePosition, Property.intToBytes(value.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(value), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(value));
     }
@@ -82,6 +82,6 @@ public class KeyValue extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return key.length() + 2 + value.length() + 2;
+        return Property.getUtf8Length(key) + 2 + Property.getUtf8Length(value) + 2;
     }
 }

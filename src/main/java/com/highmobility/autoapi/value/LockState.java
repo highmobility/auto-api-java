@@ -26,6 +26,8 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.ByteEnum;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public enum LockState implements ByteEnum {
     UNLOCKED((byte) 0x00),
     LOCKED((byte) 0x01);
@@ -40,7 +42,7 @@ public enum LockState implements ByteEnum {
             }
         }
 
-        throw new CommandParseException();
+        throw new CommandParseException("Enum LockState does not contain " + hexFromByte(byteValue));
     }
 
     private byte value;

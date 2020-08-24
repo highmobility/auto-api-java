@@ -23,10 +23,12 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.measurement.Duration;
+import com.highmobility.autoapi.property.ByteEnum;
 import javax.annotation.Nullable;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Video Handover capability
@@ -115,7 +117,7 @@ public class VideoHandover {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Screen does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

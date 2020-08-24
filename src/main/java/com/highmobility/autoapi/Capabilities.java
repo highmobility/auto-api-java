@@ -26,9 +26,9 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.SupportedCapability;
 import com.highmobility.autoapi.value.Webhook;
-import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
+import com.highmobility.value.Bytes;
 
 /**
  * The Capabilities capability

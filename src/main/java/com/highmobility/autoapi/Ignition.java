@@ -23,10 +23,12 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.OnOffState;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Ignition capability
@@ -228,7 +230,7 @@ public class Ignition {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum IgnitionState does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

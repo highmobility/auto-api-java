@@ -23,19 +23,21 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
+import javax.annotation.Nullable;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.value.measurement.Power;
 import com.highmobility.autoapi.value.ActiveState;
-import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.value.EnabledState;
 import com.highmobility.autoapi.value.NetworkSecurity;
-import com.highmobility.autoapi.value.PriceTariff;
 import com.highmobility.autoapi.value.measurement.ElectricCurrent;
-import com.highmobility.autoapi.value.measurement.Power;
-import com.highmobility.value.Bytes;
+import com.highmobility.autoapi.value.Coordinates;
+import com.highmobility.autoapi.value.PriceTariff;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import com.highmobility.value.Bytes;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Home Charger capability
@@ -739,7 +741,7 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum ChargingStatus does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -765,7 +767,7 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum AuthenticationMechanism does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -793,7 +795,7 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum PlugType does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -819,7 +821,7 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum AuthenticationState does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

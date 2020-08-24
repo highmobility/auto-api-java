@@ -24,12 +24,12 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.measurement.Temperature;
 import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.HvacWeekdayStartingTime;
-import com.highmobility.autoapi.value.measurement.Temperature;
-import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
+import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 
 /**

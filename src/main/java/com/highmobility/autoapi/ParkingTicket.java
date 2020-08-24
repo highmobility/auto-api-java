@@ -23,11 +23,13 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.value.Bytes;
+import com.highmobility.autoapi.property.ByteEnum;
 import java.util.Calendar;
+import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Parking Ticket capability
@@ -339,7 +341,7 @@ public class ParkingTicket {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Status does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

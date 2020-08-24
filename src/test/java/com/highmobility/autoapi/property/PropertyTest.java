@@ -43,7 +43,8 @@ public class PropertyTest extends BaseTest {
     // bytes: 00000160E0EA1388
     Calendar timestamp = TestUtils.getCalendar("2018-01-10T16:32:05+0000");
 
-    @Test public void parseValue() throws CommandParseException {
+    @Test
+    public void parseValue() throws CommandParseException {
         // assert that bytes are parsed to the value component
         Bytes completeBytes = new Bytes("000004" +
                 "01000100"); // value
@@ -54,7 +55,8 @@ public class PropertyTest extends BaseTest {
         testValueComponent(property, 1, ChargeMode.IMMEDIATE);
     }
 
-    @Test public void parseValueWithTimestamp() throws CommandParseException {
+    @Test
+    public void parseValueWithTimestamp() throws CommandParseException {
         // assert that bytes are parsed to the value/timestamp component
 
         Bytes completeBytes = new Bytes("00000F" +
@@ -79,7 +81,8 @@ public class PropertyTest extends BaseTest {
         testTimestampComponent(property);
     }
 
-    @Test public void parseValueWithTimestampLessThanEightBytesLong() throws CommandParseException {
+    @Test
+    public void parseValueWithTimestampLessThanEightBytesLong() throws CommandParseException {
         // assert that bytes are parsed to the value/timestamp component
 
         Bytes completeBytes = new Bytes("00000F" +
@@ -91,7 +94,8 @@ public class PropertyTest extends BaseTest {
         testTimestampComponent(property);
     }
 
-    @Test public void parseFailure() throws CommandParseException {
+    @Test
+    public void parseFailure() throws CommandParseException {
         // test bytes correct and components exist
         Bytes completeBytes = new Bytes("00001A" +
                 "" + // value
@@ -117,7 +121,8 @@ public class PropertyTest extends BaseTest {
         testFailureComponent(property, completeBytes);
     }
 
-    @Test public void buildValue() {
+    @Test
+    public void buildValue() {
         Property property = new Property(ChargeMode.IMMEDIATE);
 
         int propertyLength = Property.getUnsignedInt(property.getRange(1, 3));
@@ -129,7 +134,8 @@ public class PropertyTest extends BaseTest {
         assertTrue(property.equals(completeBytes));
     }
 
-    @Test public void buildValueWithTimestamp() {
+    @Test
+    public void buildValueWithTimestamp() {
         // test bytes correct and components exist
         Property property = new Property((byte) 0x12,
                 ChargeMode.IMMEDIATE,
@@ -172,7 +178,8 @@ public class PropertyTest extends BaseTest {
         assertTrue(property.equals(expectedBytes));
     }
 
-    @Test public void testValueComponentFailedParsing() {
+    @Test
+    public void testValueComponentFailedParsing() {
         TestUtils.errorLogExpected(() -> {
             // test if float expected but bytes are with smaller length
             // charging with invalid length chargeCurrentAC. cannot parse to float
@@ -188,8 +195,10 @@ public class PropertyTest extends BaseTest {
         });
     }
 
-    @Test public void testFailureComponentFailedParsing() {
-        // test if invalid failure reason
+    @Test
+    public void testFailureComponentFailedParsing() {
+        // test if invalid failure reason, then error logged and failure component not populated, and put to generic
+        // component array
         // 0x11 is invalid failure reason
         TestUtils.errorLogExpected(() -> {
             Charging.State command = (Charging.State) CommandResolver.resolve(
@@ -203,7 +212,8 @@ public class PropertyTest extends BaseTest {
         });
     }
 
-    @Test public void buildFailure() {
+    @Test
+    public void buildFailure() {
         // test bytes correct
         Property property = new Property((byte) 0x11,
                 null,
@@ -221,7 +231,8 @@ public class PropertyTest extends BaseTest {
         testFailureComponent(property, completeBytes);
     }
 
-    @Test public void buildFailureIgnoreValue() {
+    @Test
+    public void buildFailureIgnoreValue() {
         Property property = new Property((byte) 0x02,
                 ChargeMode.IMMEDIATE,
                 timestamp,
@@ -238,7 +249,8 @@ public class PropertyTest extends BaseTest {
         testTimestampComponent(property);
     }
 
-    @Test public void propertyLength() {
+    @Test
+    public void propertyLength() {
         PropertyInteger property = new PropertyInteger((byte) 0x01, false, 2, new Property(2));
         assertTrue(property.equals("0100050100020002"));
 
@@ -252,12 +264,14 @@ public class PropertyTest extends BaseTest {
         assertTrue(stringProperty.getByteArray()[5] == 0x4A);
     }
 
-    @Test public void emptyValueProperty() {
+    @Test
+    public void emptyValueProperty() {
         Bytes bytes = new Bytes("010000"); // data component with 00 length
         new PropertyComponentValue(bytes);
     }
 
-    @Test public void typeFromPropertyWithNoValueComponent() {
+    @Test
+    public void typeFromPropertyWithNoValueComponent() {
         // TODO: 3/7/20 : this test no longer necessary because Acceleration expects a non null Bytes value
 //        Bytes noComponentBytes = new Bytes("010000");
 //        Property prop = new Property(noComponentBytes.getByteArray());
@@ -267,7 +281,8 @@ public class PropertyTest extends BaseTest {
 //        });
     }
 
-    @Test public void emptyString() throws CommandParseException {
+    @Test
+    public void emptyString() throws CommandParseException {
         // representing null/"" string
         // null = no value component
         // "" = value component with 0 length
@@ -294,7 +309,8 @@ public class PropertyTest extends BaseTest {
         assertTrue(emptyStringProperty.getValueComponent().getValue().equals(""));
     }
 
-    @Test public void universalProperty() {
+    @Test
+    public void universalProperty() {
         Property timestamp = new Property((byte) 0xA2, new Bytes("41D6F1C07F800000"));
         Property nonce = new Property((byte) 0xA0, new Bytes("324244433743483436"));
         Property sig = new Property((byte) 0xA1, new Bytes(
@@ -306,7 +322,8 @@ public class PropertyTest extends BaseTest {
         // TODO: 31/7/20 add VIN and brand
     }
 
-    @Test public void integerPropertySignChecked() throws CommandParseException {
+    @Test
+    public void integerPropertySignChecked() throws CommandParseException {
         PropertyInteger integerProperty = new PropertyInteger(253);
         integerProperty.update(false, 1, 253);
 
@@ -318,7 +335,8 @@ public class PropertyTest extends BaseTest {
         assertTrue(checked.getValue() == 253);
     }
 
-    @Test public void integerPropertyUpdateWithoutValue() {
+    @Test
+    public void integerPropertyUpdateWithoutValue() {
         PropertyComponentFailure failure =
                 new PropertyComponentFailure(PropertyComponentFailure.Reason.UNAUTHORISED,
                         "Permissions not granted");

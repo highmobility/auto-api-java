@@ -23,14 +23,14 @@
  */
 package com.highmobility.autoapi;
 
+import javax.annotation.Nullable;
+import com.highmobility.autoapi.value.SeatLocation;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.PersonDetected;
-import com.highmobility.autoapi.value.SeatLocation;
 import com.highmobility.autoapi.value.SeatbeltState;
-import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import com.highmobility.value.Bytes;
 
 /**
  * The Seats capability

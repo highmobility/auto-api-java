@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -143,14 +144,11 @@ public class TestUtils {
         return format;
     }
 
-    public static Calendar getUTCCalendar(String dateString, int timeZoneMinuteOffset) throws
-            ParseException {
+    public static Calendar getUTCCalendar(String dateString, int timeZoneMinuteOffset) throws ParseException {
         Date date = getUTCFormat().parse(dateString);
         Calendar c = new GregorianCalendar();
         c.setTime(date);
-        c.setTimeZone(TimeZone.getTimeZone(TimeZone.getAvailableIDs(timeZoneMinuteOffset * 60 *
-                1000)[0]));
-
+        c.setTimeZone(TimeZone.getTimeZone(TimeZone.getAvailableIDs(timeZoneMinuteOffset * 60 * 1000)[0]));
         return c;
     }
 
@@ -158,9 +156,15 @@ public class TestUtils {
         return getUTCCalendar(dateString, 0);
     }
 
+    public static Calendar getExampleCalendar(String dateString) {
+        OffsetDateTime parsed = OffsetDateTime.parse(dateString);
+        return GregorianCalendar.from(parsed.toZonedDateTime());
+    }
+
     public static Calendar getCalendar(String dateString) {
         DateFormat format = getFormat(dateString);
         Date date = null;
+
         try {
             date = format.parse(dateString);
         } catch (ParseException e) {

@@ -23,10 +23,12 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Power Take-Off capability
@@ -203,7 +205,7 @@ public class PowerTakeoff {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Engaged does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

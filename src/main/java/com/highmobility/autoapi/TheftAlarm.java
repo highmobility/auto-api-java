@@ -23,11 +23,13 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.value.ActiveSelectedState;
-import com.highmobility.value.Bytes;
 import java.util.Calendar;
+import com.highmobility.value.Bytes;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Theft Alarm capability
@@ -315,7 +317,7 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Status does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -360,7 +362,7 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum LastWarningReason does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -387,7 +389,7 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum LastEventLevel does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -421,7 +423,7 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum EventType does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

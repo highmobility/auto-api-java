@@ -23,14 +23,14 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.value.Bytes;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
+import com.highmobility.autoapi.capability.DisabledIn;
 import javax.annotation.Nullable;
+import com.highmobility.value.Bytes;
 
 /**
  * The Historical capability

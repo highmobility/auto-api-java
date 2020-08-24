@@ -29,6 +29,8 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public class TroubleCode extends PropertyValueObject {
     Integer occurrences;
     String ID;
@@ -86,20 +88,20 @@ public class TroubleCode extends PropertyValueObject {
         set(bytePosition, Property.intToBytes(occurrences, 1));
         bytePosition += 1;
 
-        set(bytePosition, Property.intToBytes(ID.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(ID), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(ID));
-        bytePosition += ID.length();
+        bytePosition += Property.getUtf8Length(ID);
 
-        set(bytePosition, Property.intToBytes(ecuID.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(ecuID), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(ecuID));
-        bytePosition += ecuID.length();
+        bytePosition += Property.getUtf8Length(ecuID);
 
-        set(bytePosition, Property.intToBytes(status.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(status), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(status));
-        bytePosition += status.length();
+        bytePosition += Property.getUtf8Length(status);
 
         set(bytePosition, system.getByte());
     }
@@ -132,7 +134,7 @@ public class TroubleCode extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return 1 + ID.length() + 2 + ecuID.length() + 2 + status.length() + 2 + 1;
+        return 1 + Property.getUtf8Length(ID) + 2 + Property.getUtf8Length(ecuID) + 2 + Property.getUtf8Length(status) + 2 + 1;
     }
 
     public enum System implements ByteEnum {
@@ -152,7 +154,7 @@ public class TroubleCode extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum System does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

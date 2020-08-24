@@ -29,6 +29,8 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public class PriceTariff extends PropertyValueObject {
     PricingType pricingType;
     Double price;
@@ -71,7 +73,7 @@ public class PriceTariff extends PropertyValueObject {
         set(bytePosition, Property.doubleToBytes(price));
         bytePosition += 8;
 
-        set(bytePosition, Property.intToBytes(currency.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(currency), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(currency));
     }
@@ -94,7 +96,7 @@ public class PriceTariff extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return 1 + 8 + currency.length() + 2;
+        return 1 + 8 + Property.getUtf8Length(currency) + 2;
     }
 
     public enum PricingType implements ByteEnum {
@@ -112,7 +114,7 @@ public class PriceTariff extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum PricingType does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

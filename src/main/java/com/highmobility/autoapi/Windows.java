@@ -23,14 +23,14 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
+import javax.annotation.Nullable;
 import com.highmobility.autoapi.value.WindowLocation;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.WindowOpenPercentage;
 import com.highmobility.autoapi.value.WindowPosition;
-import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import com.highmobility.value.Bytes;
 
 /**
  * The Windows capability

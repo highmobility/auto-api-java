@@ -29,6 +29,8 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public class AddressComponent extends PropertyValueObject {
     Type type;
     String value;
@@ -59,7 +61,7 @@ public class AddressComponent extends PropertyValueObject {
         set(bytePosition, type.getByte());
         bytePosition += 1;
 
-        set(bytePosition, Property.intToBytes(value.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(value), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(value));
     }
@@ -79,7 +81,7 @@ public class AddressComponent extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return 1 + value.length() + 2;
+        return 1 + Property.getUtf8Length(value) + 2;
     }
 
     public enum Type implements ByteEnum {
@@ -102,7 +104,7 @@ public class AddressComponent extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Type does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

@@ -55,11 +55,13 @@ public class OemTroubleCodeValue extends PropertyValueObject {
         bytes = new byte[getLength()];
 
         int bytePosition = 0;
-        set(bytePosition, Property.intToBytes(ID.length(), 2));
+        set(bytePosition, Property.intToBytes(Property.getUtf8Length(ID), 2));
         bytePosition += 2;
         set(bytePosition, Property.stringToBytes(ID));
-        bytePosition += ID.length();
+        bytePosition += Property.getUtf8Length(ID);
 
+        set(bytePosition, Property.intToBytes(keyValue.getLength(), 2));
+        bytePosition += 2;
         set(bytePosition, keyValue);
     }
 
@@ -80,6 +82,6 @@ public class OemTroubleCodeValue extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return ID.length() + 2 + 0;
+        return Property.getUtf8Length(ID) + 2 + keyValue.getLength() + 2;
     }
 }

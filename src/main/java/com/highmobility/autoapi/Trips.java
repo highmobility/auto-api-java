@@ -23,15 +23,17 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.AddressComponent;
-import com.highmobility.autoapi.value.Coordinates;
-import com.highmobility.autoapi.value.measurement.FuelEfficiency;
-import com.highmobility.autoapi.value.measurement.Length;
-import java.util.ArrayList;
+import com.highmobility.autoapi.property.ByteEnum;
 import java.util.Calendar;
+import com.highmobility.autoapi.value.Coordinates;
+import com.highmobility.autoapi.value.measurement.Length;
+import com.highmobility.autoapi.value.measurement.FuelEfficiency;
+import com.highmobility.autoapi.value.AddressComponent;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Trips capability
@@ -466,7 +468,7 @@ public class Trips {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Type does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

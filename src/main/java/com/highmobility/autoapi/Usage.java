@@ -23,24 +23,24 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.DistanceOverTime;
+import javax.annotation.Nullable;
 import com.highmobility.autoapi.value.DrivingMode;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.measurement.Length;
 import com.highmobility.autoapi.value.DrivingModeActivationPeriod;
 import com.highmobility.autoapi.value.DrivingModeEnergyConsumption;
-import com.highmobility.autoapi.value.Grade;
-import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.autoapi.value.measurement.Energy;
-import com.highmobility.autoapi.value.measurement.EnergyEfficiency;
-import com.highmobility.autoapi.value.measurement.FuelEfficiency;
-import com.highmobility.autoapi.value.measurement.Length;
-import com.highmobility.autoapi.value.measurement.Speed;
 import com.highmobility.autoapi.value.measurement.Volume;
-import com.highmobility.value.Bytes;
-import java.util.ArrayList;
+import com.highmobility.autoapi.value.measurement.EnergyEfficiency;
 import java.util.Calendar;
+import com.highmobility.autoapi.value.measurement.FuelEfficiency;
+import com.highmobility.autoapi.value.Grade;
+import com.highmobility.autoapi.value.DistanceOverTime;
+import com.highmobility.autoapi.value.measurement.Duration;
+import com.highmobility.autoapi.value.measurement.Speed;
+import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import com.highmobility.value.Bytes;
 
 /**
  * The Usage capability

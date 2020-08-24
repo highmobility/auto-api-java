@@ -23,14 +23,16 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.ActionItem;
-import com.highmobility.value.Bytes;
+import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.property.ByteEnum;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
+import com.highmobility.value.Bytes;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Notifications capability
@@ -339,7 +341,7 @@ public class Notifications {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Clear does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

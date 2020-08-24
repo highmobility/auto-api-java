@@ -26,6 +26,8 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.ByteEnum;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public enum Grade implements ByteEnum {
     EXCELLENT((byte) 0x00),
     NORMAL((byte) 0x01),
@@ -41,7 +43,7 @@ public enum Grade implements ByteEnum {
             }
         }
 
-        throw new CommandParseException();
+        throw new CommandParseException("Enum Grade does not contain " + hexFromByte(byteValue));
     }
 
     private byte value;

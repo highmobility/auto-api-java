@@ -28,6 +28,8 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public class DashboardLight extends PropertyValueObject {
     public static final int SIZE = 3;
 
@@ -199,7 +201,7 @@ public class DashboardLight extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Name does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -228,7 +230,7 @@ public class DashboardLight extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum Colour does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

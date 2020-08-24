@@ -23,9 +23,9 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.measurement.Frequency;
+import com.highmobility.autoapi.capability.DisabledIn;
 
 /**
  * The Heart Rate capability

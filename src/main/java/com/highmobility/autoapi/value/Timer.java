@@ -31,6 +31,8 @@ import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public class Timer extends PropertyValueObject {
     public static final int SIZE = 9;
 
@@ -97,7 +99,7 @@ public class Timer extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum TimerType does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

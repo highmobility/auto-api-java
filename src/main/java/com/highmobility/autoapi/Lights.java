@@ -23,18 +23,20 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.ActiveState;
-import com.highmobility.autoapi.value.Light;
+import javax.annotation.Nullable;
 import com.highmobility.autoapi.value.Location;
 import com.highmobility.autoapi.value.LocationLongitudinal;
-import com.highmobility.autoapi.value.ReadingLamp;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.RgbColour;
-import com.highmobility.value.Bytes;
+import com.highmobility.autoapi.value.Light;
+import com.highmobility.autoapi.value.ReadingLamp;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import com.highmobility.value.Bytes;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Lights capability
@@ -585,7 +587,7 @@ public class Lights {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum FrontExteriorLight does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;
@@ -614,7 +616,7 @@ public class Lights {
                 }
             }
     
-            throw new CommandParseException();
+            throw new CommandParseException("Enum SwitchPosition does not contain " + hexFromByte(byteValue));
         }
     
         private byte value;

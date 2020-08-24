@@ -24,6 +24,7 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.value.Bytes;
 
@@ -76,6 +77,6 @@ public class ReductionTime extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return 1 + 2;
+        return 1 + time.getLength();
     }
 }
