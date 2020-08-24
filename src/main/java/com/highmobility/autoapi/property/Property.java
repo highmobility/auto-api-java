@@ -596,6 +596,7 @@ public class Property<V> extends Bytes {
         return getString(Arrays.copyOfRange(bytes, at, at + length));
     }
 
+
     public static byte[] stringToBytes(String string) {
         try {
             return string.getBytes(PropertyComponentValue.CHARSET);
@@ -604,6 +605,25 @@ public class Property<V> extends Bytes {
             throw new ParseException();
         }
     }
+
+    public static int getUtf8Length(CharSequence sequence) {
+        int count = 0;
+        for (int i = 0, len = sequence.length(); i < len; i++) {
+            char ch = sequence.charAt(i);
+            if (ch <= 0x7F) {
+                count++;
+            } else if (ch <= 0x7FF) {
+                count += 2;
+            } else if (Character.isHighSurrogate(ch)) {
+                count += 4;
+                ++i;
+            } else {
+                count += 3;
+            }
+        }
+        return count;
+    }
+
 
     // 5 allBytes eg yy mm dd mm ss. year is from 2000
     public static Date getDate(byte[] bytes) throws IllegalArgumentException {

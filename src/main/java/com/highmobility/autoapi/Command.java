@@ -59,7 +59,7 @@ public class Command extends Bytes {
     public static final byte NONCE_IDENTIFIER = (byte) 0xA0;
     public static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
     public static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
-    static final byte AUTO_API_VERSION = 0x0B;
+    static final byte AUTO_API_VERSION = 0x0C;
     static final int HEADER_LENGTH = 1;
     static final int COMMAND_TYPE_POSITION = HEADER_LENGTH + 2;
 
