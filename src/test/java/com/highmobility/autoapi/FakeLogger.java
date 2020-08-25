@@ -28,6 +28,7 @@ import org.slf4j.Marker;
 
 class FakeLogger implements Logger {
     int logCount;
+    int errorLogCount;
 
     @Override public String getName() {
         return null;
@@ -230,46 +231,46 @@ class FakeLogger implements Logger {
     }
 
     @Override public void error(String msg) {
-        logCount++;
+        errorLogCount++;
     }
 
     @Override public void error(String format, Object arg) {
-        logCount++;
+        errorLogCount++;
     }
 
     @Override public void error(String format, Object arg1, Object arg2) {
-        logCount++;
+        errorLogCount++;
     }
 
     @Override public void error(String format, Object... arguments) {
-        logCount++;
+        errorLogCount++;
     }
 
     @Override public void error(String msg, Throwable t) {
-        logCount++;
+        errorLogCount++;
     }
 
     @Override public boolean isErrorEnabled(Marker marker) {
-        return false;
+        return true;
     }
 
     @Override public void error(Marker marker, String msg) {
-        logCount++;
+        errorLogCount++;
     }
 
     @Override public void error(Marker marker, String format, Object arg) {
-        logCount++;
+        errorLogCount++;
     }
 
     @Override public void error(Marker marker, String format, Object arg1, Object arg2) {
-        logCount++;
+        errorLogCount++;
     }
 
     @Override public void error(Marker marker, String format, Object... arguments) {
-        logCount++;
+        errorLogCount++;
     }
 
     @Override public void error(Marker marker, String msg, Throwable t) {
-        logCount++;
+        errorLogCount++;
     }
 }

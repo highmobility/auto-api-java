@@ -203,11 +203,11 @@ public class PropertyTest extends BaseTest {
         TestUtils.errorLogExpected(() -> {
             Charging.State command = (Charging.State) CommandResolver.resolve(
                     COMMAND_HEADER + "002301" +
-                            "040016010004BF19999A" + "03000C110A54727920696e20343073" +
-                            "050007010004BF19999A");
+                            "19001C01000A0900bfe3333333333333" + "03000C110A54727920696e20343073" +
+                            "05000D01000A0900bfe3333333333333");
 
-            assertTrue(command.getBatteryCurrentAC().getFailureComponent() == null);
-            assertTrue(command.getBatteryCurrentAC().getComponent((byte) 0x03).equals(
+            assertTrue(command.getBatteryCurrent().getFailureComponent() == null);
+            assertTrue(command.getBatteryCurrent().getComponent((byte) 0x03).equals(
                     "03000C110A54727920696e20343073"));
         });
     }

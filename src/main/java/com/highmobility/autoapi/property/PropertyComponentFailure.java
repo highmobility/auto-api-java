@@ -29,6 +29,8 @@ import com.highmobility.value.Bytes;
 
 import javax.annotation.Nullable;
 
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public class PropertyComponentFailure extends PropertyComponent {
     private static final byte IDENTIFIER = 0x03;
 
@@ -106,17 +108,17 @@ public class PropertyComponentFailure extends PropertyComponent {
          */
         INTERNAL_OEM_ERROR((byte) 0x06);
 
-        public static Reason fromByte(byte value) throws CommandParseException {
+        public static Reason fromByte(byte byteValue) throws CommandParseException {
             Reason[] values = Reason.values();
 
             for (int i = 0; i < values.length; i++) {
                 Reason value1 = values[i];
-                if (value1.getByte() == value) {
+                if (value1.getByte() == byteValue) {
                     return value1;
                 }
             }
 
-            throw new CommandParseException();
+            throw new CommandParseException("Failure.Reason does not contain " + hexFromByte(byteValue));
         }
 
         private byte value;

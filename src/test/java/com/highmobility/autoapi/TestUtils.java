@@ -50,12 +50,15 @@ public class TestUtils {
     public static void errorLogExpected(int count, Runnable runnable) {
         // could add a log count to logger, and if it exceeds the param count, write an error
         Logger previousLogger = Command.logger;
-        int logsBefore = fakeLogger.logCount;
+        int logsBefore = fakeLogger.errorLogCount;
         Command.logger = fakeLogger;
         runnable.run();
         Command.logger = previousLogger;
         // if this fails, don't use fake logger and check what error message should not be present
-        assertTrue(logsBefore + count == fakeLogger.logCount);
+        assertTrue(logsBefore + count == fakeLogger.errorLogCount);
+        if (logsBefore + count != fakeLogger.errorLogCount) {
+            Command.logger.error(String.format("Error count %d is not the expected %d", logsBefore + count, fakeLogger.errorLogCount));
+        }
     }
 
     public static boolean dateIsSame(Calendar c, String dateString) {
