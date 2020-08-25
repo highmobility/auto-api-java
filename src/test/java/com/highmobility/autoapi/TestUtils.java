@@ -39,6 +39,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestUtils {
     static FakeLogger fakeLogger = new FakeLogger();
@@ -55,9 +56,29 @@ public class TestUtils {
         runnable.run();
         Command.logger = previousLogger;
         // if this fails, don't use fake logger and check what error message should not be present
-        assertTrue(logsBefore + count == fakeLogger.errorLogCount);
         if (logsBefore + count != fakeLogger.errorLogCount) {
-            Command.logger.error(String.format("Error count %d is not the expected %d", logsBefore + count, fakeLogger.errorLogCount));
+            String error = String.format("Error count %d is not the expected %d", fakeLogger.errorLogCount, logsBefore + count);
+            Command.logger.error(error);
+            fail(error);
+        }
+    }
+
+    public static void warningLogExpected(Runnable runnable) {
+        warningLogExpected(1, runnable);
+    }
+
+    public static void warningLogExpected(int count, Runnable runnable) {
+        // could add a log count to logger, and if it exceeds the param count, write an error
+        Logger previousLogger = Command.logger;
+        int logsBefore = fakeLogger.warningLogCount;
+        Command.logger = fakeLogger;
+        runnable.run();
+        Command.logger = previousLogger;
+        // if this fails, don't use fake logger and check what error message should not be present
+        if (logsBefore + count != fakeLogger.warningLogCount) {
+            String error = String.format("Error count %d is not the expected %d", fakeLogger.warningLogCount, logsBefore + count);
+            Command.logger.error(error);
+            fail(error);
         }
     }
 

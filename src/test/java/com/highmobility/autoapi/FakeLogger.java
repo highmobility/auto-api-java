@@ -29,6 +29,7 @@ import org.slf4j.Marker;
 class FakeLogger implements Logger {
     int logCount;
     int errorLogCount;
+    int warningLogCount;
 
     @Override public String getName() {
         return null;
@@ -187,43 +188,43 @@ class FakeLogger implements Logger {
     }
 
     @Override public void warn(String format, Object arg) {
-        logCount++;
+        warningLogCount++;
     }
 
     @Override public void warn(String format, Object... arguments) {
-        logCount++;
+        warningLogCount++;
     }
 
     @Override public void warn(String format, Object arg1, Object arg2) {
-        logCount++;
+        warningLogCount++;
     }
 
     @Override public void warn(String msg, Throwable t) {
-        logCount++;
+        warningLogCount++;
     }
 
     @Override public boolean isWarnEnabled(Marker marker) {
-        return false;
+        return true;
     }
 
     @Override public void warn(Marker marker, String msg) {
-        logCount++;
+        warningLogCount++;
     }
 
     @Override public void warn(Marker marker, String format, Object arg) {
-        logCount++;
+        warningLogCount++;
     }
 
     @Override public void warn(Marker marker, String format, Object arg1, Object arg2) {
-        logCount++;
+        warningLogCount++;
     }
 
     @Override public void warn(Marker marker, String format, Object... arguments) {
-        logCount++;
+        warningLogCount++;
     }
 
     @Override public void warn(Marker marker, String msg, Throwable t) {
-        logCount++;
+        warningLogCount++;
     }
 
     @Override public boolean isErrorEnabled() {

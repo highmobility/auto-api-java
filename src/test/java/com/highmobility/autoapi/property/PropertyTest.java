@@ -180,18 +180,19 @@ public class PropertyTest extends BaseTest {
 
     @Test
     public void testValueComponentFailedParsing() {
-        TestUtils.errorLogExpected(() -> {
+        TestUtils.warningLogExpected(() -> {
             // test if float expected but bytes are with smaller length
             // charging with invalid length chargeCurrentAC. cannot parse to float
             // correct chargeCurrentDC
             Charging.State command = (Charging.State) CommandResolver.resolve(
                     COMMAND_HEADER + "002301" +
-                            "040006010003BF1999" +
-                            "050007010004BF19999A");
-            assertTrue(command.getBatteryCurrentAC().getValue() == null);
-            assertTrue(command.getBatteryCurrentAC().getComponent((byte) 0x01).equals(
-                    "010003BF1999"));
-            assertTrue(command.getBatteryCurrentDC().getValue() != null);
+                            // 19000D01000A0900bfe3333333333333 correct
+                            "19000C0100090900bfe33333333333" + // double value length should be 8
+                            "0b000401000101");
+            assertTrue(command.getBatteryCurrent().getValue() == null);
+            assertTrue(command.getBatteryCurrent().getComponent((byte) 0x01).equals(
+                    "0100090900bfe33333333333"));
+            assertTrue(command.getChargePortState().getValue() != null);
         });
     }
 
@@ -204,7 +205,7 @@ public class PropertyTest extends BaseTest {
             Charging.State command = (Charging.State) CommandResolver.resolve(
                     COMMAND_HEADER + "002301" +
                             "19001C01000A0900bfe3333333333333" + "03000C110A54727920696e20343073" +
-                            "05000D01000A0900bfe3333333333333");
+                            "0b000401000101");
 
             assertTrue(command.getBatteryCurrent().getFailureComponent() == null);
             assertTrue(command.getBatteryCurrent().getComponent((byte) 0x03).equals(
