@@ -599,7 +599,9 @@ public class Lights {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum SwitchPosition implements ByteEnum {
+    }
+
+    public enum SwitchPosition implements ByteEnum {
         AUTOMATIC((byte) 0x00),
         DIPPED_HEADLIGHTS((byte) 0x01),
         PARKING_LIGHT_RIGHT((byte) 0x02),

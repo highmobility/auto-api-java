@@ -621,7 +621,9 @@ public class Race {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum VehicleMoving implements ByteEnum {
+    }
+
+    public enum VehicleMoving implements ByteEnum {
         NOT_MOVING((byte) 0x00),
         MOVING((byte) 0x01);
     

@@ -411,7 +411,9 @@ public class Tachograph {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum VehicleDirection implements ByteEnum {
+    }
+
+    public enum VehicleDirection implements ByteEnum {
         FORWARD((byte) 0x00),
         REVERSE((byte) 0x01);
     

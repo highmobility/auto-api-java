@@ -753,7 +753,9 @@ public class HomeCharger {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum AuthenticationMechanism implements ByteEnum {
+    }
+
+    public enum AuthenticationMechanism implements ByteEnum {
         PIN((byte) 0x00),
         APP((byte) 0x01);
     
@@ -779,7 +781,9 @@ public class HomeCharger {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum PlugType implements ByteEnum {
+    }
+
+    public enum PlugType implements ByteEnum {
         TYPE_1((byte) 0x00),
         TYPE_2((byte) 0x01),
         CCS((byte) 0x02),
@@ -807,7 +811,9 @@ public class HomeCharger {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum AuthenticationState implements ByteEnum {
+    }
+
+    public enum AuthenticationState implements ByteEnum {
         UNAUTHENTICATED((byte) 0x00),
         AUTHENTICATED((byte) 0x01);
     

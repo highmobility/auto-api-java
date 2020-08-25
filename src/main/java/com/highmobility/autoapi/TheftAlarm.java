@@ -329,7 +329,9 @@ public class TheftAlarm {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum LastWarningReason implements ByteEnum {
+    }
+
+    public enum LastWarningReason implements ByteEnum {
         NO_ALARM((byte) 0x00),
         BASIS_ALARM((byte) 0x01),
         DOOR_FRONT_LEFT((byte) 0x02),
@@ -374,7 +376,9 @@ public class TheftAlarm {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum LastEventLevel implements ByteEnum {
+    }
+
+    public enum LastEventLevel implements ByteEnum {
         LOW((byte) 0x00),
         MEDIUM((byte) 0x01),
         HIGH((byte) 0x02);
@@ -401,7 +405,9 @@ public class TheftAlarm {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum EventType implements ByteEnum {
+    }
+
+    public enum EventType implements ByteEnum {
         IDLE((byte) 0x00),
         FRONT_LEFT((byte) 0x01),
         FRONT_MIDDLE((byte) 0x02),

@@ -1209,7 +1209,9 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum PlugType implements ByteEnum {
+    }
+
+    public enum PlugType implements ByteEnum {
         TYPE_1((byte) 0x00),
         TYPE_2((byte) 0x01),
         CCS((byte) 0x02),
@@ -1237,7 +1239,9 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum ChargingWindowChosen implements ByteEnum {
+    }
+
+    public enum ChargingWindowChosen implements ByteEnum {
         NOT_CHOSEN((byte) 0x00),
         CHOSEN((byte) 0x01);
     
@@ -1263,7 +1267,9 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum PluggedIn implements ByteEnum {
+    }
+
+    public enum PluggedIn implements ByteEnum {
         DISCONNECTED((byte) 0x00),
         PLUGGED_IN((byte) 0x01);
     
@@ -1289,7 +1295,9 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum Status implements ByteEnum {
+    }
+
+    public enum Status implements ByteEnum {
         NOT_CHARGING((byte) 0x00),
         CHARGING((byte) 0x01),
         CHARGING_COMPLETE((byte) 0x02),
@@ -1324,7 +1332,9 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum CurrentType implements ByteEnum {
+    }
+
+    public enum CurrentType implements ByteEnum {
         ALTERNATING_CURRENT((byte) 0x00),
         DIRECT_CURRENT((byte) 0x01);
     
@@ -1350,7 +1360,9 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum StarterBatteryState implements ByteEnum {
+    }
+
+    public enum StarterBatteryState implements ByteEnum {
         /**
          * Battery charge is greater than 0%
          */
@@ -1386,7 +1398,9 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum SmartChargingStatus implements ByteEnum {
+    }
+
+    public enum SmartChargingStatus implements ByteEnum {
         WALLBOX_IS_ACTIVE((byte) 0x00),
         /**
          * Smart Charge Communication is active
@@ -1416,7 +1430,9 @@ public class Charging {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum PreconditioningError implements ByteEnum {
+    }
+
+    public enum PreconditioningError implements ByteEnum {
         NO_CHANGE((byte) 0x00),
         /**
          * Preconditioning not possible because battery or fuel is low

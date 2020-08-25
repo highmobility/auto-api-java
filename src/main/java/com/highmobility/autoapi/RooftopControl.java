@@ -364,7 +364,9 @@ public class RooftopControl {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum SunroofTiltState implements ByteEnum {
+    }
+
+    public enum SunroofTiltState implements ByteEnum {
         CLOSED((byte) 0x00),
         TILTED((byte) 0x01),
         HALF_TILTED((byte) 0x02);
@@ -391,7 +393,9 @@ public class RooftopControl {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum SunroofState implements ByteEnum {
+    }
+
+    public enum SunroofState implements ByteEnum {
         CLOSED((byte) 0x00),
         OPEN((byte) 0x01),
         INTERMEDIATE((byte) 0x02);
@@ -418,7 +422,9 @@ public class RooftopControl {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum SunroofRainEvent implements ByteEnum {
+    }
+
+    public enum SunroofRainEvent implements ByteEnum {
         NO_EVENT((byte) 0x00),
         IN_STROKE_POSITION_BECAUSE_OF_RAIN((byte) 0x01),
         AUTOMATICALLY_IN_STROKE_POSITION((byte) 0x02);

@@ -586,7 +586,9 @@ public class VehicleInformation {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum Gearbox implements ByteEnum {
+    }
+
+    public enum Gearbox implements ByteEnum {
         MANUAL((byte) 0x00),
         AUTOMATIC((byte) 0x01),
         SEMI_AUTOMATIC((byte) 0x02);
@@ -613,7 +615,9 @@ public class VehicleInformation {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum DisplayUnit implements ByteEnum {
+    }
+
+    public enum DisplayUnit implements ByteEnum {
         KM((byte) 0x00),
         MILES((byte) 0x01);
     
@@ -639,7 +643,9 @@ public class VehicleInformation {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum DriverSeatLocation implements ByteEnum {
+    }
+
+    public enum DriverSeatLocation implements ByteEnum {
         LEFT((byte) 0x00),
         RIGHT((byte) 0x01),
         CENTER((byte) 0x02);
@@ -666,7 +672,9 @@ public class VehicleInformation {
         @Override public byte getByte() {
             return value;
         }
-    }    public enum Timeformat implements ByteEnum {
+    }
+
+    public enum Timeformat implements ByteEnum {
         TWELVE_H((byte) 0x00),
         TWENTY_FOUR_H((byte) 0x01);
     
