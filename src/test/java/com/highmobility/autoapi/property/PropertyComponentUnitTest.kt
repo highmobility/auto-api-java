@@ -33,10 +33,7 @@ import com.highmobility.autoapi.value.measurement.Temperature
 import com.highmobility.value.Bytes
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.lang.Exception
 import java.lang.reflect.Constructor
-import java.lang.reflect.InvocationTargetException
-import kotlin.math.roundToInt
 
 class PropertyComponentUnitTest : BaseTest() {
 
