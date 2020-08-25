@@ -59,7 +59,9 @@ class Angle : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x02
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         DEGREES(0x00),
         RADIANS(0x03),
         REVOLUTIONS(0x05);
@@ -69,6 +71,4 @@ class Angle : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

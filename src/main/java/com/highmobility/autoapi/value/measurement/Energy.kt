@@ -59,7 +59,9 @@ class Energy : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x0c
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         JOULES(0x00),
         KILOJOULES(0x01),
         KILOWATT_HOURS(0x04);
@@ -69,6 +71,4 @@ class Energy : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

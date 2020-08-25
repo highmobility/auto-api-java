@@ -92,7 +92,9 @@ class Volume : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x19
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         LITERS(0x02),
         MILLILITERS(0x03),
         CENTILITERS(0x04),
@@ -113,6 +115,4 @@ class Volume : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

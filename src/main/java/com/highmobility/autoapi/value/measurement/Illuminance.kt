@@ -53,7 +53,9 @@ class Illuminance : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x11
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         LUX(0x00);
     
         companion object {
@@ -61,6 +63,4 @@ class Illuminance : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

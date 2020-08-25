@@ -71,7 +71,9 @@ class Pressure : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x15
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         NEWTONS_PER_METERS_SQUARED(0x00),
         KILOPASCALS(0x03),
         INCHES_OF_MERCURY(0x05),
@@ -85,6 +87,4 @@ class Pressure : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

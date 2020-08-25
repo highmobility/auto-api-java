@@ -47,16 +47,18 @@ class EnergyEfficiency : MeasurementType {
 
     fun inKwhPer100Kilometers(): Double {
         return when (unit) {
-            Unit.KWH_PER_100_KILOMETERS -> value / 1.0
-            Unit.MILES_PER_KWH -> value / 62.137119223733397
+            Unit.KWH_PER_100_KILOMETERS -> value
+            Unit.MILES_PER_KWH -> 62.137119223733397 / value
         }
     }
     
-    fun inMilesPerKwh() = inKwhPer100Kilometers() * 62.137119223733397
+    fun inMilesPerKwh() = 62.137119223733397 / inKwhPer100Kilometers()
     
     override fun getMeasurementId(): Byte {
         return 0x0d
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         KWH_PER_100_KILOMETERS(0x00),
         MILES_PER_KWH(0x01);
     
@@ -65,6 +67,4 @@ class EnergyEfficiency : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

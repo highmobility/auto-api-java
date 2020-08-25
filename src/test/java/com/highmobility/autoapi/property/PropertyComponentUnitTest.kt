@@ -26,113 +26,106 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.BaseTest
 import com.highmobility.autoapi.HonkHornFlashLights
 import com.highmobility.autoapi.value.Light
-import com.highmobility.autoapi.value.measurement.AccelerationUnit
-import com.highmobility.autoapi.value.measurement.Angle
-import com.highmobility.autoapi.value.measurement.Duration
-import com.highmobility.autoapi.value.measurement.Temperature
+import com.highmobility.autoapi.value.measurement.*
 import com.highmobility.value.Bytes
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.lang.String.format
 import java.lang.reflect.Constructor
 
 class PropertyComponentUnitTest : BaseTest() {
 
     @Test
-    fun fromBytes() {
-        // Acceleration.gravity
-        /*PropertyComponentUnit value = new PropertyComponentUnit(unitBytes, AccelerationType.class);
-        assertTrue(value.getUnitTypeClass() == AccelerationType.class);
-        assertTrue(value.getUnitType() == AccelerationType.GRAVITY);
+    fun parsing() {
+        // unit parsing/building:
 
-        // race acceleration 0x01 with gravity measurement type
-        Property prop = new Property("01000D" + "010005003F5D2F1B" + unitBytes);
-        assertTrue(prop.getUnitComponent().getUnitTypeClass() == AccelerationType.class);
-        assertTrue(prop.getUnitComponent().getUnitType() == AccelerationType.GRAVITY);*/
-
-
-        // property parsing/building:
         // 1: from incoming bytes
-        // degrees .864d = 3FEBA5E353F7CED9
-        val angleProp = Property<Angle>(Bytes("01000D" + "01000A02003FEBA5E353F7CED9").byteArray);
-        assertTrue(angleProp.getValue()?.inRadians() == Math.toRadians(.864));
+        val angleProp = Property(Angle::class.java, 0)
+        val updateProperty = Property<Angle>(Bytes("01000D" + "01000A02003FEBA5E353F7CED9").byteArray)
+        angleProp.update(updateProperty)
+
+        val angleInRadians = angleProp.getValue()?.inRadians()
+        val mathToRadians = Math.toRadians(.864)
+        assertTrue(format("%.02f", angleInRadians) == format("%.02f", mathToRadians))
         assertTrue(angleProp.getValue()?.unit == Angle.Unit.DEGREES);
 
         // property without unit is the same
-        // Property<FluidLevel> fluidLevelProp = new Property(new Bytes("01000D" + "01000101").getByteArray());
 
         // 2) builder
-        val builtAngle = Property<Angle>(
-            Angle(0.864, Angle.Unit.DEGREES)
-        )
-
-        assertTrue(builtAngle.toString().equals("01000D010005003F5D2F1B0400020200"));
+        val builtAngle = Property<Angle>(Angle(0.864, Angle.Unit.DEGREES))
+        assertTrue(builtAngle.toString() == "00000D01000A02003FEBA5E353F7CED9");
 
         // 3: in control commands
         // HonkHornFlashLights.HonkFlash command = new HonkHornFlashLights.HonkFlash(0, 3d);
-        val command = HonkHornFlashLights.HonkFlash(
-            null,
-            Duration(
-                0.864,
-                Duration.Unit.SECONDS
-            )
-        );
+        val command = HonkHornFlashLights.HonkFlash(null, Duration(0.864, Duration.Unit.SECONDS))
 
         assertTrue(command.honkTime.getValue()?.value == 0.864);
         assertTrue(command.honkTime.getValue()?.unit == Duration.Unit.SECONDS);
 
-        /*
-          - id: 0x03
-            name: flash_times
-            name_cased: flashTimes
-            name_pretty: Flash times
-            type: uinteger
-            size: 1
-            description: Number of times to flash the lights
-            examples:
-              - data_component: '05'
-                value: 5
-                description: Flash the lights 5 times
-          - id: 0x05
-            name: honk_time
-            name_cased: honkTime
-            name_pretty: Honk time
-            type: unit.duration
-            size: 10
-            description: Time to honk the horn
-            examples:
-              - data_component: '07004000000000000000'
-                value:
-                  seconds: 2.0
-                description: Honk the horn for 2.0s
-         */
-
-        val bytes = Bytes(COMMAND_HEADER + "002601" + "05000A07004000000000000000");
+        val bytes = Bytes(COMMAND_HEADER + "002601" + "05000D01000A07003FEBA5E353F7CED9");
         assertTrue(command == bytes);
     }
 
     @Test
-    fun testTemp() {
-        val temp = Temperature(
-            4.5,
-            Temperature.Unit.FAHRENHEIT
-        )
+    fun testConversionLinearWithConstant() {
+        val bytes = Bytes("17024012000000000000")
+        val temp = Temperature(4.5, Temperature.Unit.FAHRENHEIT)
+        assertTrue(format("%.02f", temp.inCelsius()) == "-15.28")
+        assertTrue(temp == bytes)
 
-        val inCelsius = String.format("%.02f", temp.inCelsius())
-        assertTrue(inCelsius == "-15.28")
+        val generated = Temperature(bytes)
+        assertTrue(generated.unit == Temperature.Unit.FAHRENHEIT)
+        assertTrue(generated.value == 4.5)
 
-        val generated = Temperature(Bytes("170140440ccccccccccd"))
-        assertTrue(generated.unit == Temperature.Unit.CELSIUS)
-        assertTrue(generated.value == 40.1)
+        val celsiusTemp = Temperature(-15.28, Temperature.Unit.CELSIUS)
+        val fahrenheit = format("%.01f", celsiusTemp.inFahrenheit())
+        assertTrue(fahrenheit == "4.5")
     }
 
     @Test
-    fun testAcceleration() {
+    fun testConversionLinear() {
+        /*- data_component: '0001013feba5e353f7ced9'
+        values:
+          direction: 'longitudinal'
+          acceleration:
+            gravity: 0.864*/
+
         val bytes = Bytes("01013feba5e353f7ced9")
-        // gravity, 0.864
+        val acceleration = AccelerationUnit(0.864, AccelerationUnit.Unit.GRAVITY)
+        assertTrue(format("%.02f", acceleration.inMetersPerSecondSquared()) == "8.48")
+        assertTrue(acceleration == bytes)
+
         val unit = AccelerationUnit(bytes)
+        assertTrue(unit.unit == AccelerationUnit.Unit.GRAVITY)
+        assertTrue(unit.value == 0.864)
 
+        val accelerationMs2 = AccelerationUnit(8.48, AccelerationUnit.Unit.METERS_PER_SECOND_SQUARED)
+        assertTrue(format("%.02f", accelerationMs2.inGravity()) == "0.86")
+    }
 
-        // TODO: 3/7/20 test similarly other 2 types of units
+    @Test
+    fun testConversionInverse() {
+        /*
+    examples:
+      - data_component: '0f00401a000000000000'
+        value:
+          liters_per_100_kilometers: 6.5
+        description: Average fuel consumption is 6.5L per 100km
+         */
+        val bytes = Bytes("0f00401a000000000000")
+        val fuelEfficiency = FuelEfficiency(6.5, FuelEfficiency.Unit.LITERS_PER_100_KILOMETERS)
+
+        val mpg = String.format("%.02f", fuelEfficiency.inMilesPerGallon())
+        assertTrue(mpg == "36.19")
+        assertTrue(fuelEfficiency == bytes)
+
+        val unit = FuelEfficiency(bytes)
+        assertTrue(unit.unit == FuelEfficiency.Unit.LITERS_PER_100_KILOMETERS)
+        assertTrue(unit.value == 6.5)
+
+        val fuelEfficiencyMpg = FuelEfficiency(36.19, FuelEfficiency.Unit.MILES_PER_GALLON)
+        val mpgToLp100 = format("%.01f", fuelEfficiencyMpg.inLitersPer100Kilometers())
+        assertTrue(mpgToLp100 == "6.5")
     }
 
     @Test
@@ -144,33 +137,5 @@ class PropertyComponentUnitTest : BaseTest() {
         val parsedValue: T = constructor.newInstance(valueBytes) as T
         val light = parsedValue as Light
         println("${light.state}")
-    }
-
-    @Test
-    fun aa() {
-        val t = "    "
-
-        val valuesCtor =
-            """
-                constructor(value: Double, unit: Unit) : super() {\n
-                    aa()
-                """.trimIndent()
-        val vCtor =
-            """
-                constructor(value: Double, unit: Unit) : super() {
-                   this.value = value
-                   this.unit = unit
-                
-                   bytes = ByteArray(length)
-                   bytes[0] = MEASUREMENT_TYPE_ID
-                   bytes[1] = unit.id
-                   set(2, Property.doubleToBytes(value))
-                }
-                """.trimIndent()
-                .trimIndent()
-
-        println("")
-
-
     }
 }

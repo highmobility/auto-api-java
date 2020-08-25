@@ -59,7 +59,9 @@ class ElectricPotentialDifference : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x0a
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         VOLTS(0x00),
         MILLIVOLTS(0x01),
         KILOVOLTS(0x02);
@@ -69,6 +71,4 @@ class ElectricPotentialDifference : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

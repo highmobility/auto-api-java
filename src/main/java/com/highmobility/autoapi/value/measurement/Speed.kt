@@ -62,7 +62,9 @@ class Speed : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x16
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         METERS_PER_SECOND(0x00),
         KILOMETERS_PER_HOUR(0x01),
         MILES_PER_HOUR(0x02),
@@ -73,6 +75,4 @@ class Speed : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

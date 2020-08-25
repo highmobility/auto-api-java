@@ -56,7 +56,9 @@ class AccelerationUnit : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x01
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         METERS_PER_SECOND_SQUARED(0x00),
         GRAVITY(0x01);
     
@@ -65,6 +67,4 @@ class AccelerationUnit : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

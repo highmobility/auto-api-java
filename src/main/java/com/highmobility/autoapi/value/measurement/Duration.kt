@@ -68,7 +68,9 @@ class Duration : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x07
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         SECONDS(0x00),
         MINUTES(0x01),
         HOURS(0x02),
@@ -81,6 +83,4 @@ class Duration : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

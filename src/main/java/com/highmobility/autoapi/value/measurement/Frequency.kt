@@ -68,7 +68,9 @@ class Frequency : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x0e
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         HERTZ(0x00),
         MILLIHERTZ(0x01),
         KILOHERTZ(0x03),
@@ -81,6 +83,4 @@ class Frequency : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

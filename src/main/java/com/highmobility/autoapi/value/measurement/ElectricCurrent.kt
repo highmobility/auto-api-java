@@ -59,7 +59,9 @@ class ElectricCurrent : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x09
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         AMPERES(0x00),
         MILLIAMPERES(0x01),
         KILOAMPERES(0x02);
@@ -69,6 +71,4 @@ class ElectricCurrent : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

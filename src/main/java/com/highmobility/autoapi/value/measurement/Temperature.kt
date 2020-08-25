@@ -59,7 +59,9 @@ class Temperature : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x17
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         KELVIN(0x00),
         CELSIUS(0x01),
         FAHRENHEIT(0x02);
@@ -69,6 +71,4 @@ class Temperature : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

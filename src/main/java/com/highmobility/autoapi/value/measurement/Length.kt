@@ -86,7 +86,9 @@ class Length : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x12
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         METERS(0x00),
         MILLIMETERS(0x01),
         CENTIMETERS(0x02),
@@ -105,6 +107,4 @@ class Length : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

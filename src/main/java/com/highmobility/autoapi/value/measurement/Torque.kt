@@ -59,7 +59,9 @@ class Torque : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x18
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         NEWTON_METERS(0x00),
         NEWTON_MILLIMETERS(0x01),
         POUND_FEET(0x02);
@@ -69,6 +71,4 @@ class Torque : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

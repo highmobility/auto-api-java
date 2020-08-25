@@ -47,19 +47,21 @@ class FuelEfficiency : MeasurementType {
 
     fun inLitersPer100Kilometers(): Double {
         return when (unit) {
-            Unit.LITERS_PER_100_KILOMETERS -> value / 1.0
-            Unit.MILES_PER_IMPERIAL_GALLON -> value / 282.4809363
-            Unit.MILES_PER_GALLON -> value / 235.2145833
+            Unit.LITERS_PER_100_KILOMETERS -> value
+            Unit.MILES_PER_IMPERIAL_GALLON -> 282.4809363 / value
+            Unit.MILES_PER_GALLON -> 235.2145833 / value
         }
     }
     
-    fun inMilesPerImperialGallon() = inLitersPer100Kilometers() * 282.4809363
+    fun inMilesPerImperialGallon() = 282.4809363 / inLitersPer100Kilometers()
     
-    fun inMilesPerGallon() = inLitersPer100Kilometers() * 235.2145833
+    fun inMilesPerGallon() = 235.2145833 / inLitersPer100Kilometers()
     
     override fun getMeasurementId(): Byte {
         return 0x0f
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         LITERS_PER_100_KILOMETERS(0x00),
         MILES_PER_IMPERIAL_GALLON(0x01),
         MILES_PER_GALLON(0x02);
@@ -69,6 +71,4 @@ class FuelEfficiency : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }

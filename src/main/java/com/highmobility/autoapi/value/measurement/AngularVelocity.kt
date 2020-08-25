@@ -59,7 +59,9 @@ class AngularVelocity : MeasurementType {
     
     override fun getMeasurementId(): Byte {
         return 0x03
-    }    enum class Unit(val id: Byte) {
+    }    
+    
+    enum class Unit(val id: Byte) {
         REVOLUTIONS_PER_MINUTE(0x00),
         DEGREES_PER_SECOND(0x01),
         RADIANS_PER_SECOND(0x02);
@@ -69,6 +71,4 @@ class AngularVelocity : MeasurementType {
             fun fromInt(type: Byte) = map[type] ?: throw CommandParseException()
         }
     }
-    
-
 }
