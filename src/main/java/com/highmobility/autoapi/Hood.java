@@ -39,7 +39,7 @@ public class Hood {
     /**
      * Get all hood properties
      */
-    public static class GetState extends GetCommand {
+    public static class GetState extends GetCommand<State> {
         public GetState() {
             super(State.class, IDENTIFIER);
         }
@@ -53,7 +53,7 @@ public class Hood {
      * The hood state
      */
     public static class State extends SetCommand {
-        Property position = new Property<>(Position.class, PROPERTY_POSITION);
+        Property<Position> position = new Property<>(Position.class, PROPERTY_POSITION);
     
         /**
          * @return The position

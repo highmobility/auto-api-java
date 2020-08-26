@@ -91,7 +91,7 @@ public class Usage {
     /**
      * Get usage
      */
-    public static class GetUsage extends GetCommand {
+    public static class GetUsage extends GetCommand<State> {
         public GetUsage() {
             super(State.class, IDENTIFIER);
         }
@@ -104,7 +104,7 @@ public class Usage {
     /**
      * Get specific usage properties
      */
-    public static class GetUsageProperties extends GetCommand {
+    public static class GetUsageProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -128,45 +128,45 @@ public class Usage {
      * The usage state
      */
     public static class State extends SetCommand {
-        Property averageWeeklyDistance = new Property<>(Length.class, PROPERTY_AVERAGE_WEEKLY_DISTANCE);
-        Property averageWeeklyDistanceLongRun = new Property<>(Length.class, PROPERTY_AVERAGE_WEEKLY_DISTANCE_LONG_RUN);
-        Property accelerationEvaluation = new Property<>(Double.class, PROPERTY_ACCELERATION_EVALUATION);
-        Property drivingStyleEvaluation = new Property<>(Double.class, PROPERTY_DRIVING_STYLE_EVALUATION);
-        Property<DrivingModeActivationPeriod>[] drivingModesActivationPeriods;
-        Property<DrivingModeEnergyConsumption>[] drivingModesEnergyConsumptions;
-        Property lastTripEnergyConsumption = new Property<>(Energy.class, PROPERTY_LAST_TRIP_ENERGY_CONSUMPTION);
-        Property lastTripFuelConsumption = new Property<>(Volume.class, PROPERTY_LAST_TRIP_FUEL_CONSUMPTION);
-        Property mileageAfterLastTrip = new Property<>(Length.class, PROPERTY_MILEAGE_AFTER_LAST_TRIP);
-        Property lastTripElectricPortion = new Property<>(Double.class, PROPERTY_LAST_TRIP_ELECTRIC_PORTION);
-        Property lastTripAverageEnergyRecuperation = new Property<>(EnergyEfficiency.class, PROPERTY_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION);
-        Property lastTripBatteryRemaining = new Property<>(Double.class, PROPERTY_LAST_TRIP_BATTERY_REMAINING);
-        Property lastTripDate = new Property<>(Calendar.class, PROPERTY_LAST_TRIP_DATE);
-        Property averageFuelConsumption = new Property<>(FuelEfficiency.class, PROPERTY_AVERAGE_FUEL_CONSUMPTION);
-        Property currentFuelConsumption = new Property<>(FuelEfficiency.class, PROPERTY_CURRENT_FUEL_CONSUMPTION);
-        Property odometerAfterLastTrip = new Property<>(Length.class, PROPERTY_ODOMETER_AFTER_LAST_TRIP);
-        Property safetyDrivingScore = new Property<>(Double.class, PROPERTY_SAFETY_DRIVING_SCORE);
-        Property rapidAccelerationGrade = new Property<>(Grade.class, PROPERTY_RAPID_ACCELERATION_GRADE);
-        Property rapidDecelerationGrade = new Property<>(Grade.class, PROPERTY_RAPID_DECELERATION_GRADE);
-        Property lateNightGrade = new Property<>(Grade.class, PROPERTY_LATE_NIGHT_GRADE);
-        Property distanceOverTime = new Property<>(DistanceOverTime.class, PROPERTY_DISTANCE_OVER_TIME);
-        Property electricConsumptionRateSinceStart = new Property<>(EnergyEfficiency.class, PROPERTY_ELECTRIC_CONSUMPTION_RATE_SINCE_START);
-        Property electricConsumptionRateSinceReset = new Property<>(EnergyEfficiency.class, PROPERTY_ELECTRIC_CONSUMPTION_RATE_SINCE_RESET);
-        Property electricDistanceLastTrip = new Property<>(Length.class, PROPERTY_ELECTRIC_DISTANCE_LAST_TRIP);
-        Property electricDistanceSinceReset = new Property<>(Length.class, PROPERTY_ELECTRIC_DISTANCE_SINCE_RESET);
-        Property electricDurationLastTrip = new Property<>(Duration.class, PROPERTY_ELECTRIC_DURATION_LAST_TRIP);
-        Property electricDurationSinceReset = new Property<>(Duration.class, PROPERTY_ELECTRIC_DURATION_SINCE_RESET);
-        Property fuelConsumptionRateLastTrip = new Property<>(FuelEfficiency.class, PROPERTY_FUEL_CONSUMPTION_RATE_LAST_TRIP);
-        Property fuelConsumptionRateSinceReset = new Property<>(FuelEfficiency.class, PROPERTY_FUEL_CONSUMPTION_RATE_SINCE_RESET);
-        Property averageSpeedLastTrip = new Property<>(Speed.class, PROPERTY_AVERAGE_SPEED_LAST_TRIP);
-        Property averageSpeedSinceReset = new Property<>(Speed.class, PROPERTY_AVERAGE_SPEED_SINCE_RESET);
-        Property fuelDistanceLastTrip = new Property<>(Length.class, PROPERTY_FUEL_DISTANCE_LAST_TRIP);
-        Property fuelDistanceSinceReset = new Property<>(Length.class, PROPERTY_FUEL_DISTANCE_SINCE_RESET);
-        Property drivingDurationLastTrip = new Property<>(Duration.class, PROPERTY_DRIVING_DURATION_LAST_TRIP);
-        Property drivingDurationSinceReset = new Property<>(Duration.class, PROPERTY_DRIVING_DURATION_SINCE_RESET);
-        Property ecoScoreTotal = new Property<>(Double.class, PROPERTY_ECO_SCORE_TOTAL);
-        Property ecoScoreFreeWheel = new Property<>(Double.class, PROPERTY_ECO_SCORE_FREE_WHEEL);
-        Property ecoScoreConstant = new Property<>(Double.class, PROPERTY_ECO_SCORE_CONSTANT);
-        Property ecoScoreBonusRange = new Property<>(Length.class, PROPERTY_ECO_SCORE_BONUS_RANGE);
+        Property<Length> averageWeeklyDistance = new Property<>(Length.class, PROPERTY_AVERAGE_WEEKLY_DISTANCE);
+        Property<Length> averageWeeklyDistanceLongRun = new Property<>(Length.class, PROPERTY_AVERAGE_WEEKLY_DISTANCE_LONG_RUN);
+        Property<Double> accelerationEvaluation = new Property<>(Double.class, PROPERTY_ACCELERATION_EVALUATION);
+        Property<Double> drivingStyleEvaluation = new Property<>(Double.class, PROPERTY_DRIVING_STYLE_EVALUATION);
+        List<Property<DrivingModeActivationPeriod>> drivingModesActivationPeriods;
+        List<Property<DrivingModeEnergyConsumption>> drivingModesEnergyConsumptions;
+        Property<Energy> lastTripEnergyConsumption = new Property<>(Energy.class, PROPERTY_LAST_TRIP_ENERGY_CONSUMPTION);
+        Property<Volume> lastTripFuelConsumption = new Property<>(Volume.class, PROPERTY_LAST_TRIP_FUEL_CONSUMPTION);
+        Property<Length> mileageAfterLastTrip = new Property<>(Length.class, PROPERTY_MILEAGE_AFTER_LAST_TRIP);
+        Property<Double> lastTripElectricPortion = new Property<>(Double.class, PROPERTY_LAST_TRIP_ELECTRIC_PORTION);
+        Property<EnergyEfficiency> lastTripAverageEnergyRecuperation = new Property<>(EnergyEfficiency.class, PROPERTY_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION);
+        Property<Double> lastTripBatteryRemaining = new Property<>(Double.class, PROPERTY_LAST_TRIP_BATTERY_REMAINING);
+        Property<Calendar> lastTripDate = new Property<>(Calendar.class, PROPERTY_LAST_TRIP_DATE);
+        Property<FuelEfficiency> averageFuelConsumption = new Property<>(FuelEfficiency.class, PROPERTY_AVERAGE_FUEL_CONSUMPTION);
+        Property<FuelEfficiency> currentFuelConsumption = new Property<>(FuelEfficiency.class, PROPERTY_CURRENT_FUEL_CONSUMPTION);
+        Property<Length> odometerAfterLastTrip = new Property<>(Length.class, PROPERTY_ODOMETER_AFTER_LAST_TRIP);
+        Property<Double> safetyDrivingScore = new Property<>(Double.class, PROPERTY_SAFETY_DRIVING_SCORE);
+        Property<Grade> rapidAccelerationGrade = new Property<>(Grade.class, PROPERTY_RAPID_ACCELERATION_GRADE);
+        Property<Grade> rapidDecelerationGrade = new Property<>(Grade.class, PROPERTY_RAPID_DECELERATION_GRADE);
+        Property<Grade> lateNightGrade = new Property<>(Grade.class, PROPERTY_LATE_NIGHT_GRADE);
+        Property<DistanceOverTime> distanceOverTime = new Property<>(DistanceOverTime.class, PROPERTY_DISTANCE_OVER_TIME);
+        Property<EnergyEfficiency> electricConsumptionRateSinceStart = new Property<>(EnergyEfficiency.class, PROPERTY_ELECTRIC_CONSUMPTION_RATE_SINCE_START);
+        Property<EnergyEfficiency> electricConsumptionRateSinceReset = new Property<>(EnergyEfficiency.class, PROPERTY_ELECTRIC_CONSUMPTION_RATE_SINCE_RESET);
+        Property<Length> electricDistanceLastTrip = new Property<>(Length.class, PROPERTY_ELECTRIC_DISTANCE_LAST_TRIP);
+        Property<Length> electricDistanceSinceReset = new Property<>(Length.class, PROPERTY_ELECTRIC_DISTANCE_SINCE_RESET);
+        Property<Duration> electricDurationLastTrip = new Property<>(Duration.class, PROPERTY_ELECTRIC_DURATION_LAST_TRIP);
+        Property<Duration> electricDurationSinceReset = new Property<>(Duration.class, PROPERTY_ELECTRIC_DURATION_SINCE_RESET);
+        Property<FuelEfficiency> fuelConsumptionRateLastTrip = new Property<>(FuelEfficiency.class, PROPERTY_FUEL_CONSUMPTION_RATE_LAST_TRIP);
+        Property<FuelEfficiency> fuelConsumptionRateSinceReset = new Property<>(FuelEfficiency.class, PROPERTY_FUEL_CONSUMPTION_RATE_SINCE_RESET);
+        Property<Speed> averageSpeedLastTrip = new Property<>(Speed.class, PROPERTY_AVERAGE_SPEED_LAST_TRIP);
+        Property<Speed> averageSpeedSinceReset = new Property<>(Speed.class, PROPERTY_AVERAGE_SPEED_SINCE_RESET);
+        Property<Length> fuelDistanceLastTrip = new Property<>(Length.class, PROPERTY_FUEL_DISTANCE_LAST_TRIP);
+        Property<Length> fuelDistanceSinceReset = new Property<>(Length.class, PROPERTY_FUEL_DISTANCE_SINCE_RESET);
+        Property<Duration> drivingDurationLastTrip = new Property<>(Duration.class, PROPERTY_DRIVING_DURATION_LAST_TRIP);
+        Property<Duration> drivingDurationSinceReset = new Property<>(Duration.class, PROPERTY_DRIVING_DURATION_SINCE_RESET);
+        Property<Double> ecoScoreTotal = new Property<>(Double.class, PROPERTY_ECO_SCORE_TOTAL);
+        Property<Double> ecoScoreFreeWheel = new Property<>(Double.class, PROPERTY_ECO_SCORE_FREE_WHEEL);
+        Property<Double> ecoScoreConstant = new Property<>(Double.class, PROPERTY_ECO_SCORE_CONSTANT);
+        Property<Length> ecoScoreBonusRange = new Property<>(Length.class, PROPERTY_ECO_SCORE_BONUS_RANGE);
     
         /**
          * @return Average weekly distance
@@ -199,14 +199,14 @@ public class Usage {
         /**
          * @return The driving modes activation periods
          */
-        public Property<DrivingModeActivationPeriod>[] getDrivingModesActivationPeriods() {
+        public List<Property<DrivingModeActivationPeriod>> getDrivingModesActivationPeriods() {
             return drivingModesActivationPeriods;
         }
     
         /**
          * @return The driving modes energy consumptions
          */
-        public Property<DrivingModeEnergyConsumption>[] getDrivingModesEnergyConsumptions() {
+        public List<Property<DrivingModeEnergyConsumption>> getDrivingModesEnergyConsumptions() {
             return drivingModesEnergyConsumptions;
         }
     
@@ -472,8 +472,8 @@ public class Usage {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> drivingModesActivationPeriodsBuilder = new ArrayList<>();
-            final ArrayList<Property> drivingModesEnergyConsumptionsBuilder = new ArrayList<>();
+            final ArrayList<Property<DrivingModeActivationPeriod>> drivingModesActivationPeriodsBuilder = new ArrayList<>();
+            final ArrayList<Property<DrivingModeEnergyConsumption>> drivingModesEnergyConsumptionsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -483,11 +483,11 @@ public class Usage {
                         case PROPERTY_ACCELERATION_EVALUATION: return accelerationEvaluation.update(p);
                         case PROPERTY_DRIVING_STYLE_EVALUATION: return drivingStyleEvaluation.update(p);
                         case PROPERTY_DRIVING_MODES_ACTIVATION_PERIODS:
-                            Property drivingModesActivationPeriod = new Property<>(DrivingModeActivationPeriod.class, p);
+                            Property<DrivingModeActivationPeriod> drivingModesActivationPeriod = new Property<>(DrivingModeActivationPeriod.class, p);
                             drivingModesActivationPeriodsBuilder.add(drivingModesActivationPeriod);
                             return drivingModesActivationPeriod;
                         case PROPERTY_DRIVING_MODES_ENERGY_CONSUMPTIONS:
-                            Property drivingModeEnergyConsumption = new Property<>(DrivingModeEnergyConsumption.class, p);
+                            Property<DrivingModeEnergyConsumption> drivingModeEnergyConsumption = new Property<>(DrivingModeEnergyConsumption.class, p);
                             drivingModesEnergyConsumptionsBuilder.add(drivingModeEnergyConsumption);
                             return drivingModeEnergyConsumption;
                         case PROPERTY_LAST_TRIP_ENERGY_CONSUMPTION: return lastTripEnergyConsumption.update(p);
@@ -529,8 +529,8 @@ public class Usage {
                 });
             }
     
-            drivingModesActivationPeriods = drivingModesActivationPeriodsBuilder.toArray(new Property[0]);
-            drivingModesEnergyConsumptions = drivingModesEnergyConsumptionsBuilder.toArray(new Property[0]);
+            drivingModesActivationPeriods = drivingModesActivationPeriodsBuilder;
+            drivingModesEnergyConsumptions = drivingModesEnergyConsumptionsBuilder;
         }
     
         private State(Builder builder) {
@@ -540,8 +540,8 @@ public class Usage {
             averageWeeklyDistanceLongRun = builder.averageWeeklyDistanceLongRun;
             accelerationEvaluation = builder.accelerationEvaluation;
             drivingStyleEvaluation = builder.drivingStyleEvaluation;
-            drivingModesActivationPeriods = builder.drivingModesActivationPeriods.toArray(new Property[0]);
-            drivingModesEnergyConsumptions = builder.drivingModesEnergyConsumptions.toArray(new Property[0]);
+            drivingModesActivationPeriods = builder.drivingModesActivationPeriods;
+            drivingModesEnergyConsumptions = builder.drivingModesEnergyConsumptions;
             lastTripEnergyConsumption = builder.lastTripEnergyConsumption;
             lastTripFuelConsumption = builder.lastTripFuelConsumption;
             mileageAfterLastTrip = builder.mileageAfterLastTrip;
@@ -582,8 +582,8 @@ public class Usage {
             private Property<Length> averageWeeklyDistanceLongRun;
             private Property<Double> accelerationEvaluation;
             private Property<Double> drivingStyleEvaluation;
-            private final List<Property> drivingModesActivationPeriods = new ArrayList<>();
-            private final List<Property> drivingModesEnergyConsumptions = new ArrayList<>();
+            private final List<Property<DrivingModeActivationPeriod>> drivingModesActivationPeriods = new ArrayList<>();
+            private final List<Property<DrivingModeEnergyConsumption>> drivingModesEnergyConsumptions = new ArrayList<>();
             private Property<Energy> lastTripEnergyConsumption;
             private Property<Volume> lastTripFuelConsumption;
             private Property<Length> mileageAfterLastTrip;

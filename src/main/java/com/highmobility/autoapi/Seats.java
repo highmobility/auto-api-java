@@ -44,7 +44,7 @@ public class Seats {
     /**
      * Get all seats properties
      */
-    public static class GetState extends GetCommand {
+    public static class GetState extends GetCommand<State> {
         public GetState() {
             super(State.class, IDENTIFIER);
         }
@@ -57,7 +57,7 @@ public class Seats {
     /**
      * Get specific seats properties
      */
-    public static class GetProperties extends GetCommand {
+    public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -81,20 +81,20 @@ public class Seats {
      * The seats state
      */
     public static class State extends SetCommand {
-        Property<PersonDetected>[] personsDetected;
-        Property<SeatbeltState>[] seatbeltsState;
+        List<Property<PersonDetected>> personsDetected;
+        List<Property<SeatbeltState>> seatbeltsState;
     
         /**
          * @return The persons detected
          */
-        public Property<PersonDetected>[] getPersonsDetected() {
+        public List<Property<PersonDetected>> getPersonsDetected() {
             return personsDetected;
         }
     
         /**
          * @return The seatbelts state
          */
-        public Property<SeatbeltState>[] getSeatbeltsState() {
+        public List<Property<SeatbeltState>> getSeatbeltsState() {
             return seatbeltsState;
         }
     
@@ -103,8 +103,8 @@ public class Seats {
          * @return A person detection on a seat.
          */
         @Nullable public Property<PersonDetected> getPersonDetection(SeatLocation location) {
-            for (int i = 0; i < personsDetected.length; i++) {
-                Property<PersonDetected> property = personsDetected[i];
+            for (int i = 0; i < personsDetected.size(); i++) {
+                Property<PersonDetected> property = personsDetected.get(i);
                 if (property.getValue() != null && property.getValue().getLocation() == location)
                     return property;
             }
@@ -117,8 +117,8 @@ public class Seats {
          * @return The seat belt state.
          */
         @Nullable public Property<SeatbeltState> getSeatBeltFastened(SeatLocation location) {
-            for (int i = 0; i < seatbeltsState.length; i++) {
-                Property<SeatbeltState> property = seatbeltsState[i];
+            for (int i = 0; i < seatbeltsState.size(); i++) {
+                Property<SeatbeltState> property = seatbeltsState.get(i);
                 if (property.getValue() != null && property.getValue().getLocation() == location)
                     return property;
             }
@@ -129,18 +129,18 @@ public class Seats {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> personsDetectedBuilder = new ArrayList<>();
-            final ArrayList<Property> seatbeltsStateBuilder = new ArrayList<>();
+            final ArrayList<Property<PersonDetected>> personsDetectedBuilder = new ArrayList<>();
+            final ArrayList<Property<SeatbeltState>> seatbeltsStateBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_PERSONS_DETECTED:
-                            Property personDetected = new Property<>(PersonDetected.class, p);
+                            Property<PersonDetected> personDetected = new Property<>(PersonDetected.class, p);
                             personsDetectedBuilder.add(personDetected);
                             return personDetected;
                         case PROPERTY_SEATBELTS_STATE:
-                            Property seatbeltState = new Property<>(SeatbeltState.class, p);
+                            Property<SeatbeltState> seatbeltState = new Property<>(SeatbeltState.class, p);
                             seatbeltsStateBuilder.add(seatbeltState);
                             return seatbeltState;
                     }
@@ -149,20 +149,20 @@ public class Seats {
                 });
             }
     
-            personsDetected = personsDetectedBuilder.toArray(new Property[0]);
-            seatbeltsState = seatbeltsStateBuilder.toArray(new Property[0]);
+            personsDetected = personsDetectedBuilder;
+            seatbeltsState = seatbeltsStateBuilder;
         }
     
         private State(Builder builder) {
             super(builder);
     
-            personsDetected = builder.personsDetected.toArray(new Property[0]);
-            seatbeltsState = builder.seatbeltsState.toArray(new Property[0]);
+            personsDetected = builder.personsDetected;
+            seatbeltsState = builder.seatbeltsState;
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private final List<Property> personsDetected = new ArrayList<>();
-            private final List<Property> seatbeltsState = new ArrayList<>();
+            private final List<Property<PersonDetected>> personsDetected = new ArrayList<>();
+            private final List<Property<SeatbeltState>> seatbeltsState = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);

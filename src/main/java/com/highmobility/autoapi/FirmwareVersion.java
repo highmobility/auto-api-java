@@ -40,7 +40,7 @@ public class FirmwareVersion {
     /**
      * Get firmware version
      */
-    public static class GetFirmwareVersion extends GetCommand {
+    public static class GetFirmwareVersion extends GetCommand<State> {
         public GetFirmwareVersion() {
             super(State.class, IDENTIFIER);
         }
@@ -53,7 +53,7 @@ public class FirmwareVersion {
     /**
      * Get specific firmware version properties
      */
-    public static class GetFirmwareVersionProperties extends GetCommand {
+    public static class GetFirmwareVersionProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -77,9 +77,9 @@ public class FirmwareVersion {
      * The firmware version state
      */
     public static class State extends SetCommand {
-        Property hmKitVersion = new Property<>(HmkitVersion.class, PROPERTY_HMKIT_VERSION);
-        Property hmKitBuildName = new Property<>(String.class, PROPERTY_HMKIT_BUILD_NAME);
-        Property applicationVersion = new Property<>(String.class, PROPERTY_APPLICATION_VERSION);
+        Property<HmkitVersion> hmKitVersion = new Property<>(HmkitVersion.class, PROPERTY_HMKIT_VERSION);
+        Property<String> hmKitBuildName = new Property<>(String.class, PROPERTY_HMKIT_BUILD_NAME);
+        Property<String> applicationVersion = new Property<>(String.class, PROPERTY_APPLICATION_VERSION);
     
         /**
          * @return HMKit version

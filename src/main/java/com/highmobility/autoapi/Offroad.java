@@ -39,7 +39,7 @@ public class Offroad {
     /**
      * Get all offroad properties
      */
-    public static class GetState extends GetCommand {
+    public static class GetState extends GetCommand<State> {
         public GetState() {
             super(State.class, IDENTIFIER);
         }
@@ -52,7 +52,7 @@ public class Offroad {
     /**
      * Get specific offroad properties
      */
-    public static class GetProperties extends GetCommand {
+    public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -76,8 +76,8 @@ public class Offroad {
      * The offroad state
      */
     public static class State extends SetCommand {
-        Property routeIncline = new Property<>(Angle.class, PROPERTY_ROUTE_INCLINE);
-        Property wheelSuspension = new Property<>(Double.class, PROPERTY_WHEEL_SUSPENSION);
+        Property<Angle> routeIncline = new Property<>(Angle.class, PROPERTY_ROUTE_INCLINE);
+        Property<Double> wheelSuspension = new Property<>(Double.class, PROPERTY_WHEEL_SUSPENSION);
     
         /**
          * @return The route elevation incline

@@ -41,7 +41,7 @@ public class Fueling {
     /**
      * Get gas flap state
      */
-    public static class GetGasFlapState extends GetCommand {
+    public static class GetGasFlapState extends GetCommand<State> {
         public GetGasFlapState() {
             super(State.class, IDENTIFIER);
         }
@@ -54,7 +54,7 @@ public class Fueling {
     /**
      * Get specific fueling properties
      */
-    public static class GetGasFlapProperties extends GetCommand {
+    public static class GetGasFlapProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -78,8 +78,8 @@ public class Fueling {
      * The fueling state
      */
     public static class State extends SetCommand {
-        Property gasFlapLock = new Property<>(LockState.class, PROPERTY_GAS_FLAP_LOCK);
-        Property gasFlapPosition = new Property<>(Position.class, PROPERTY_GAS_FLAP_POSITION);
+        Property<LockState> gasFlapLock = new Property<>(LockState.class, PROPERTY_GAS_FLAP_LOCK);
+        Property<Position> gasFlapPosition = new Property<>(Position.class, PROPERTY_GAS_FLAP_POSITION);
     
         /**
          * @return The gas flap lock
@@ -154,8 +154,8 @@ public class Fueling {
      * Control gas flap
      */
     public static class ControlGasFlap extends SetCommand {
-        Property gasFlapLock = new Property<>(LockState.class, PROPERTY_GAS_FLAP_LOCK);
-        Property gasFlapPosition = new Property<>(Position.class, PROPERTY_GAS_FLAP_POSITION);
+        Property<LockState> gasFlapLock = new Property<>(LockState.class, PROPERTY_GAS_FLAP_LOCK);
+        Property<Position> gasFlapPosition = new Property<>(Position.class, PROPERTY_GAS_FLAP_POSITION);
     
         /**
          * @return The gas flap lock

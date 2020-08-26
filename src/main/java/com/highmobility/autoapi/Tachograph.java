@@ -54,7 +54,7 @@ public class Tachograph {
     /**
      * Get all tachograph properties
      */
-    public static class GetState extends GetCommand {
+    public static class GetState extends GetCommand<State> {
         public GetState() {
             super(State.class, IDENTIFIER);
         }
@@ -67,7 +67,7 @@ public class Tachograph {
     /**
      * Get specific tachograph properties
      */
-    public static class GetProperties extends GetCommand {
+    public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -91,32 +91,32 @@ public class Tachograph {
      * The tachograph state
      */
     public static class State extends SetCommand {
-        Property<DriverWorkingState>[] driversWorkingStates;
-        Property<DriverTimeState>[] driversTimeStates;
-        Property<DriverCardPresent>[] driversCardsPresent;
-        Property vehicleMotion = new Property<>(Detected.class, PROPERTY_VEHICLE_MOTION);
-        Property vehicleOverspeed = new Property<>(VehicleOverspeed.class, PROPERTY_VEHICLE_OVERSPEED);
-        Property vehicleDirection = new Property<>(VehicleDirection.class, PROPERTY_VEHICLE_DIRECTION);
-        Property vehicleSpeed = new Property<>(Speed.class, PROPERTY_VEHICLE_SPEED);
+        List<Property<DriverWorkingState>> driversWorkingStates;
+        List<Property<DriverTimeState>> driversTimeStates;
+        List<Property<DriverCardPresent>> driversCardsPresent;
+        Property<Detected> vehicleMotion = new Property<>(Detected.class, PROPERTY_VEHICLE_MOTION);
+        Property<VehicleOverspeed> vehicleOverspeed = new Property<>(VehicleOverspeed.class, PROPERTY_VEHICLE_OVERSPEED);
+        Property<VehicleDirection> vehicleDirection = new Property<>(VehicleDirection.class, PROPERTY_VEHICLE_DIRECTION);
+        Property<Speed> vehicleSpeed = new Property<>(Speed.class, PROPERTY_VEHICLE_SPEED);
     
         /**
          * @return The drivers working states
          */
-        public Property<DriverWorkingState>[] getDriversWorkingStates() {
+        public List<Property<DriverWorkingState>> getDriversWorkingStates() {
             return driversWorkingStates;
         }
     
         /**
          * @return The drivers time states
          */
-        public Property<DriverTimeState>[] getDriversTimeStates() {
+        public List<Property<DriverTimeState>> getDriversTimeStates() {
             return driversTimeStates;
         }
     
         /**
          * @return The drivers cards present
          */
-        public Property<DriverCardPresent>[] getDriversCardsPresent() {
+        public List<Property<DriverCardPresent>> getDriversCardsPresent() {
             return driversCardsPresent;
         }
     
@@ -155,8 +155,8 @@ public class Tachograph {
          * @return The driver working state.
          */
         @Nullable public Property<DriverWorkingState> getDriverWorkingState(int driverNumber) {
-            for (int i = 0; i < driversWorkingStates.length; i++) {
-                Property<DriverWorkingState> state = driversWorkingStates[i];
+            for (int i = 0; i < driversWorkingStates.size(); i++) {
+                Property<DriverWorkingState> state = driversWorkingStates.get(i);
                 if (state.getValue() != null && state.getValue().getDriverNumber() == driverNumber)
                     return state;
             }
@@ -170,8 +170,8 @@ public class Tachograph {
          * @return The driver time state.
          */
         @Nullable public Property<DriverTimeState> getDriverTimeState(int driverNumber) {
-            for (int i = 0; i < driversTimeStates.length; i++) {
-                Property<DriverTimeState> state = driversTimeStates[i];
+            for (int i = 0; i < driversTimeStates.size(); i++) {
+                Property<DriverTimeState> state = driversTimeStates.get(i);
                 if (state.getValue() != null && state.getValue().getDriverNumber() == driverNumber)
                     return state;
             }
@@ -185,8 +185,8 @@ public class Tachograph {
          * @return The driver card.
          */
         @Nullable public Property<DriverCardPresent> getDriverCard(int driverNumber) {
-            for (int i = 0; i < driversCardsPresent.length; i++) {
-                Property<DriverCardPresent> state = driversCardsPresent[i];
+            for (int i = 0; i < driversCardsPresent.size(); i++) {
+                Property<DriverCardPresent> state = driversCardsPresent.get(i);
                 if (state.getValue() != null && state.getValue().getDriverNumber() == driverNumber)
                     return state;
             }
@@ -196,23 +196,23 @@ public class Tachograph {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> driversWorkingStatesBuilder = new ArrayList<>();
-            final ArrayList<Property> driversTimeStatesBuilder = new ArrayList<>();
-            final ArrayList<Property> driversCardsPresentBuilder = new ArrayList<>();
+            final ArrayList<Property<DriverWorkingState>> driversWorkingStatesBuilder = new ArrayList<>();
+            final ArrayList<Property<DriverTimeState>> driversTimeStatesBuilder = new ArrayList<>();
+            final ArrayList<Property<DriverCardPresent>> driversCardsPresentBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_DRIVERS_WORKING_STATES:
-                            Property driverWorkingState = new Property<>(DriverWorkingState.class, p);
+                            Property<DriverWorkingState> driverWorkingState = new Property<>(DriverWorkingState.class, p);
                             driversWorkingStatesBuilder.add(driverWorkingState);
                             return driverWorkingState;
                         case PROPERTY_DRIVERS_TIME_STATES:
-                            Property driversTimeState = new Property<>(DriverTimeState.class, p);
+                            Property<DriverTimeState> driversTimeState = new Property<>(DriverTimeState.class, p);
                             driversTimeStatesBuilder.add(driversTimeState);
                             return driversTimeState;
                         case PROPERTY_DRIVERS_CARDS_PRESENT:
-                            Property driversCardPresent = new Property<>(DriverCardPresent.class, p);
+                            Property<DriverCardPresent> driversCardPresent = new Property<>(DriverCardPresent.class, p);
                             driversCardsPresentBuilder.add(driversCardPresent);
                             return driversCardPresent;
                         case PROPERTY_VEHICLE_MOTION: return vehicleMotion.update(p);
@@ -225,17 +225,17 @@ public class Tachograph {
                 });
             }
     
-            driversWorkingStates = driversWorkingStatesBuilder.toArray(new Property[0]);
-            driversTimeStates = driversTimeStatesBuilder.toArray(new Property[0]);
-            driversCardsPresent = driversCardsPresentBuilder.toArray(new Property[0]);
+            driversWorkingStates = driversWorkingStatesBuilder;
+            driversTimeStates = driversTimeStatesBuilder;
+            driversCardsPresent = driversCardsPresentBuilder;
         }
     
         private State(Builder builder) {
             super(builder);
     
-            driversWorkingStates = builder.driversWorkingStates.toArray(new Property[0]);
-            driversTimeStates = builder.driversTimeStates.toArray(new Property[0]);
-            driversCardsPresent = builder.driversCardsPresent.toArray(new Property[0]);
+            driversWorkingStates = builder.driversWorkingStates;
+            driversTimeStates = builder.driversTimeStates;
+            driversCardsPresent = builder.driversCardsPresent;
             vehicleMotion = builder.vehicleMotion;
             vehicleOverspeed = builder.vehicleOverspeed;
             vehicleDirection = builder.vehicleDirection;
@@ -243,9 +243,9 @@ public class Tachograph {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private final List<Property> driversWorkingStates = new ArrayList<>();
-            private final List<Property> driversTimeStates = new ArrayList<>();
-            private final List<Property> driversCardsPresent = new ArrayList<>();
+            private final List<Property<DriverWorkingState>> driversWorkingStates = new ArrayList<>();
+            private final List<Property<DriverTimeState>> driversTimeStates = new ArrayList<>();
+            private final List<Property<DriverCardPresent>> driversCardsPresent = new ArrayList<>();
             private Property<Detected> vehicleMotion;
             private Property<VehicleOverspeed> vehicleOverspeed;
             private Property<VehicleDirection> vehicleDirection;

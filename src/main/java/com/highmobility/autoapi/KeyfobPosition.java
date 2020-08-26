@@ -42,7 +42,7 @@ public class KeyfobPosition {
     /**
      * Get keyfob position
      */
-    public static class GetKeyfobPosition extends GetCommand {
+    public static class GetKeyfobPosition extends GetCommand<State> {
         public GetKeyfobPosition() {
             super(State.class, IDENTIFIER);
         }
@@ -56,7 +56,7 @@ public class KeyfobPosition {
      * The keyfob position state
      */
     public static class State extends SetCommand {
-        Property location = new Property<>(Location.class, PROPERTY_LOCATION);
+        Property<Location> location = new Property<>(Location.class, PROPERTY_LOCATION);
     
         /**
          * @return The location

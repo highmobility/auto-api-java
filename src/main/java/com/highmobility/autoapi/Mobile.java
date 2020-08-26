@@ -37,7 +37,7 @@ public class Mobile {
     /**
      * Get all mobile properties
      */
-    public static class GetState extends GetCommand {
+    public static class GetState extends GetCommand<State> {
         public GetState() {
             super(State.class, IDENTIFIER);
         }
@@ -51,7 +51,7 @@ public class Mobile {
      * The mobile state
      */
     public static class State extends SetCommand {
-        Property connection = new Property<>(ConnectionState.class, PROPERTY_CONNECTION);
+        Property<ConnectionState> connection = new Property<>(ConnectionState.class, PROPERTY_CONNECTION);
     
         /**
          * @return The connection

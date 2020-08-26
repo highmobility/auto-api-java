@@ -42,7 +42,7 @@ public class PowerTakeoff {
     /**
      * Get all power takeoff properties
      */
-    public static class GetState extends GetCommand {
+    public static class GetState extends GetCommand<State> {
         public GetState() {
             super(State.class, IDENTIFIER);
         }
@@ -55,7 +55,7 @@ public class PowerTakeoff {
     /**
      * Get specific power takeoff properties
      */
-    public static class GetProperties extends GetCommand {
+    public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -79,8 +79,8 @@ public class PowerTakeoff {
      * The power takeoff state
      */
     public static class State extends SetCommand {
-        Property status = new Property<>(ActiveState.class, PROPERTY_STATUS);
-        Property engaged = new Property<>(Engaged.class, PROPERTY_ENGAGED);
+        Property<ActiveState> status = new Property<>(ActiveState.class, PROPERTY_STATUS);
+        Property<Engaged> engaged = new Property<>(Engaged.class, PROPERTY_ENGAGED);
     
         /**
          * @return The status
@@ -155,7 +155,7 @@ public class PowerTakeoff {
      * Activate deactivate power takeoff
      */
     public static class ActivateDeactivatePowerTakeoff extends SetCommand {
-        Property status = new Property<>(ActiveState.class, PROPERTY_STATUS);
+        Property<ActiveState> status = new Property<>(ActiveState.class, PROPERTY_STATUS);
     
         /**
          * @return The status

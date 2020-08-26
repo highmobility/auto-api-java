@@ -42,7 +42,7 @@ public class Capabilities {
     /**
      * Get capabilities
      */
-    public static class GetCapabilities extends GetCommand {
+    public static class GetCapabilities extends GetCommand<State> {
         public GetCapabilities() {
             super(State.class, IDENTIFIER);
         }
@@ -55,7 +55,7 @@ public class Capabilities {
     /**
      * Get specific capabilities properties
      */
-    public static class GetCapabilitiesProperties extends GetCommand {
+    public static class GetCapabilitiesProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -79,20 +79,20 @@ public class Capabilities {
      * The capabilities state
      */
     public static class State extends SetCommand {
-        Property<SupportedCapability>[] capabilities;
-        Property<Webhook>[] webhooks;
+        List<Property<SupportedCapability>> capabilities;
+        List<Property<Webhook>> webhooks;
     
         /**
          * @return The capabilities
          */
-        public Property<SupportedCapability>[] getCapabilities() {
+        public List<Property<SupportedCapability>> getCapabilities() {
             return capabilities;
         }
     
         /**
          * @return The webhooks
          */
-        public Property<Webhook>[] getWebhooks() {
+        public List<Property<Webhook>> getWebhooks() {
             return webhooks;
         }
     
@@ -120,18 +120,18 @@ public class Capabilities {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> capabilitiesBuilder = new ArrayList<>();
-            final ArrayList<Property> webhooksBuilder = new ArrayList<>();
+            final ArrayList<Property<SupportedCapability>> capabilitiesBuilder = new ArrayList<>();
+            final ArrayList<Property<Webhook>> webhooksBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_CAPABILITIES:
-                            Property capability = new Property<>(SupportedCapability.class, p);
+                            Property<SupportedCapability> capability = new Property<>(SupportedCapability.class, p);
                             capabilitiesBuilder.add(capability);
                             return capability;
                         case PROPERTY_WEBHOOKS:
-                            Property webhook = new Property<>(Webhook.class, p);
+                            Property<Webhook> webhook = new Property<>(Webhook.class, p);
                             webhooksBuilder.add(webhook);
                             return webhook;
                     }
@@ -140,20 +140,20 @@ public class Capabilities {
                 });
             }
     
-            capabilities = capabilitiesBuilder.toArray(new Property[0]);
-            webhooks = webhooksBuilder.toArray(new Property[0]);
+            capabilities = capabilitiesBuilder;
+            webhooks = webhooksBuilder;
         }
     
         private State(Builder builder) {
             super(builder);
     
-            capabilities = builder.capabilities.toArray(new Property[0]);
-            webhooks = builder.webhooks.toArray(new Property[0]);
+            capabilities = builder.capabilities;
+            webhooks = builder.webhooks;
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private final List<Property> capabilities = new ArrayList<>();
-            private final List<Property> webhooks = new ArrayList<>();
+            private final List<Property<SupportedCapability>> capabilities = new ArrayList<>();
+            private final List<Property<Webhook>> webhooks = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);

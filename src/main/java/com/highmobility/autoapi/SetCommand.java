@@ -66,7 +66,7 @@ public class SetCommand extends Command {
     }
 
     public static class Builder {
-        private Integer identifier;
+        private final Integer identifier;
 
         protected ArrayList<Property> propertiesBuilder = new ArrayList<>();
 

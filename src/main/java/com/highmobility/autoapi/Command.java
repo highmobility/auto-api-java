@@ -244,7 +244,7 @@ public class Command extends Bytes {
     protected PropertyIterator propertyIterator;
 
     protected class PropertyIterator implements Iterator<Property> {
-        private int currentSize;
+        private final int currentSize;
         private int propertiesReplaced = 0;
 
         PropertyIterator() {

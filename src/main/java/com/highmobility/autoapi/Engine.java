@@ -40,7 +40,7 @@ public class Engine {
     /**
      * Get all engine properties
      */
-    public static class GetState extends GetCommand {
+    public static class GetState extends GetCommand<State> {
         public GetState() {
             super(State.class, IDENTIFIER);
         }
@@ -53,7 +53,7 @@ public class Engine {
     /**
      * Get specific engine properties
      */
-    public static class GetProperties extends GetCommand {
+    public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -77,8 +77,8 @@ public class Engine {
      * The engine state
      */
     public static class State extends SetCommand {
-        Property status = new Property<>(OnOffState.class, PROPERTY_STATUS);
-        Property startStopState = new Property<>(ActiveState.class, PROPERTY_START_STOP_STATE);
+        Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
+        Property<ActiveState> startStopState = new Property<>(ActiveState.class, PROPERTY_START_STOP_STATE);
     
         /**
          * @return The status
@@ -153,7 +153,7 @@ public class Engine {
      * Turn engine on off
      */
     public static class TurnEngineOnOff extends SetCommand {
-        Property status = new Property<>(OnOffState.class, PROPERTY_STATUS);
+        Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
     
         /**
          * @return The status
@@ -193,7 +193,7 @@ public class Engine {
      * Activate deactivate start stop
      */
     public static class ActivateDeactivateStartStop extends SetCommand {
-        Property startStopState = new Property<>(ActiveState.class, PROPERTY_START_STOP_STATE);
+        Property<ActiveState> startStopState = new Property<>(ActiveState.class, PROPERTY_START_STOP_STATE);
     
         /**
          * @return The start stop state

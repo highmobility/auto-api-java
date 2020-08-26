@@ -45,7 +45,7 @@ public class WiFi {
     /**
      * Get all wi fi properties
      */
-    public static class GetState extends GetCommand {
+    public static class GetState extends GetCommand<State> {
         public GetState() {
             super(State.class, IDENTIFIER);
         }
@@ -58,7 +58,7 @@ public class WiFi {
     /**
      * Get specific wi fi properties
      */
-    public static class GetProperties extends GetCommand {
+    public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -82,10 +82,10 @@ public class WiFi {
      * The wi fi state
      */
     public static class State extends SetCommand {
-        Property status = new Property<>(EnabledState.class, PROPERTY_STATUS);
-        Property networkConnected = new Property<>(ConnectionState.class, PROPERTY_NETWORK_CONNECTED);
-        Property networkSSID = new Property<>(String.class, PROPERTY_NETWORK_SSID);
-        Property networkSecurity = new Property<>(NetworkSecurity.class, PROPERTY_NETWORK_SECURITY);
+        Property<EnabledState> status = new Property<>(EnabledState.class, PROPERTY_STATUS);
+        Property<ConnectionState> networkConnected = new Property<>(ConnectionState.class, PROPERTY_NETWORK_CONNECTED);
+        Property<String> networkSSID = new Property<>(String.class, PROPERTY_NETWORK_SSID);
+        Property<NetworkSecurity> networkSecurity = new Property<>(NetworkSecurity.class, PROPERTY_NETWORK_SECURITY);
     
         /**
          * @return The status
@@ -200,9 +200,9 @@ public class WiFi {
      * Connect to network
      */
     public static class ConnectToNetwork extends SetCommand {
-        Property networkSSID = new Property<>(String.class, PROPERTY_NETWORK_SSID);
-        Property networkSecurity = new Property<>(NetworkSecurity.class, PROPERTY_NETWORK_SECURITY);
-        Property password = new Property<>(String.class, PROPERTY_PASSWORD);
+        Property<String> networkSSID = new Property<>(String.class, PROPERTY_NETWORK_SSID);
+        Property<NetworkSecurity> networkSecurity = new Property<>(NetworkSecurity.class, PROPERTY_NETWORK_SECURITY);
+        Property<String> password = new Property<>(String.class, PROPERTY_PASSWORD);
     
         /**
          * @return The network ssid
@@ -263,7 +263,7 @@ public class WiFi {
      * Forget network
      */
     public static class ForgetNetwork extends SetCommand {
-        Property networkSSID = new Property<>(String.class, PROPERTY_NETWORK_SSID);
+        Property<String> networkSSID = new Property<>(String.class, PROPERTY_NETWORK_SSID);
     
         /**
          * @return The network ssid
@@ -303,7 +303,7 @@ public class WiFi {
      * Enable disable wi fi
      */
     public static class EnableDisableWiFi extends SetCommand {
-        Property status = new Property<>(EnabledState.class, PROPERTY_STATUS);
+        Property<EnabledState> status = new Property<>(EnabledState.class, PROPERTY_STATUS);
     
         /**
          * @return The status

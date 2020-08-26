@@ -61,21 +61,21 @@ public class Trips {
      * The trips state
      */
     public static class State extends SetCommand {
-        Property type = new Property<>(Type.class, PROPERTY_TYPE);
-        Property driverName = new Property<>(String.class, PROPERTY_DRIVER_NAME);
-        Property description = new Property<>(String.class, PROPERTY_DESCRIPTION);
-        Property startTime = new Property<>(Calendar.class, PROPERTY_START_TIME);
-        Property endTime = new Property<>(Calendar.class, PROPERTY_END_TIME);
-        Property startAddress = new Property<>(String.class, PROPERTY_START_ADDRESS);
-        Property endAddress = new Property<>(String.class, PROPERTY_END_ADDRESS);
-        Property startCoordinates = new Property<>(Coordinates.class, PROPERTY_START_COORDINATES);
-        Property endCoordinates = new Property<>(Coordinates.class, PROPERTY_END_COORDINATES);
-        Property startOdometer = new Property<>(Length.class, PROPERTY_START_ODOMETER);
-        Property endOdometer = new Property<>(Length.class, PROPERTY_END_ODOMETER);
-        Property averageFuelConsumption = new Property<>(FuelEfficiency.class, PROPERTY_AVERAGE_FUEL_CONSUMPTION);
-        Property distance = new Property<>(Length.class, PROPERTY_DISTANCE);
-        Property<AddressComponent>[] startAddressComponents;
-        Property<AddressComponent>[] endAddressComponents;
+        Property<Type> type = new Property<>(Type.class, PROPERTY_TYPE);
+        Property<String> driverName = new Property<>(String.class, PROPERTY_DRIVER_NAME);
+        Property<String> description = new Property<>(String.class, PROPERTY_DESCRIPTION);
+        Property<Calendar> startTime = new Property<>(Calendar.class, PROPERTY_START_TIME);
+        Property<Calendar> endTime = new Property<>(Calendar.class, PROPERTY_END_TIME);
+        Property<String> startAddress = new Property<>(String.class, PROPERTY_START_ADDRESS);
+        Property<String> endAddress = new Property<>(String.class, PROPERTY_END_ADDRESS);
+        Property<Coordinates> startCoordinates = new Property<>(Coordinates.class, PROPERTY_START_COORDINATES);
+        Property<Coordinates> endCoordinates = new Property<>(Coordinates.class, PROPERTY_END_COORDINATES);
+        Property<Length> startOdometer = new Property<>(Length.class, PROPERTY_START_ODOMETER);
+        Property<Length> endOdometer = new Property<>(Length.class, PROPERTY_END_ODOMETER);
+        Property<FuelEfficiency> averageFuelConsumption = new Property<>(FuelEfficiency.class, PROPERTY_AVERAGE_FUEL_CONSUMPTION);
+        Property<Length> distance = new Property<>(Length.class, PROPERTY_DISTANCE);
+        List<Property<AddressComponent>> startAddressComponents;
+        List<Property<AddressComponent>> endAddressComponents;
     
         /**
          * @return Type of the trip
@@ -171,22 +171,22 @@ public class Trips {
         /**
          * @return Start address components
          */
-        public Property<AddressComponent>[] getStartAddressComponents() {
+        public List<Property<AddressComponent>> getStartAddressComponents() {
             return startAddressComponents;
         }
     
         /**
          * @return End address components
          */
-        public Property<AddressComponent>[] getEndAddressComponents() {
+        public List<Property<AddressComponent>> getEndAddressComponents() {
             return endAddressComponents;
         }
     
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> startAddressComponentsBuilder = new ArrayList<>();
-            final ArrayList<Property> endAddressComponentsBuilder = new ArrayList<>();
+            final ArrayList<Property<AddressComponent>> startAddressComponentsBuilder = new ArrayList<>();
+            final ArrayList<Property<AddressComponent>> endAddressComponentsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -205,11 +205,11 @@ public class Trips {
                         case PROPERTY_AVERAGE_FUEL_CONSUMPTION: return averageFuelConsumption.update(p);
                         case PROPERTY_DISTANCE: return distance.update(p);
                         case PROPERTY_START_ADDRESS_COMPONENTS:
-                            Property startAddressComponent = new Property<>(AddressComponent.class, p);
+                            Property<AddressComponent> startAddressComponent = new Property<>(AddressComponent.class, p);
                             startAddressComponentsBuilder.add(startAddressComponent);
                             return startAddressComponent;
                         case PROPERTY_END_ADDRESS_COMPONENTS:
-                            Property endAddressComponent = new Property<>(AddressComponent.class, p);
+                            Property<AddressComponent> endAddressComponent = new Property<>(AddressComponent.class, p);
                             endAddressComponentsBuilder.add(endAddressComponent);
                             return endAddressComponent;
                     }
@@ -218,8 +218,8 @@ public class Trips {
                 });
             }
     
-            startAddressComponents = startAddressComponentsBuilder.toArray(new Property[0]);
-            endAddressComponents = endAddressComponentsBuilder.toArray(new Property[0]);
+            startAddressComponents = startAddressComponentsBuilder;
+            endAddressComponents = endAddressComponentsBuilder;
         }
     
         private State(Builder builder) {
@@ -238,8 +238,8 @@ public class Trips {
             endOdometer = builder.endOdometer;
             averageFuelConsumption = builder.averageFuelConsumption;
             distance = builder.distance;
-            startAddressComponents = builder.startAddressComponents.toArray(new Property[0]);
-            endAddressComponents = builder.endAddressComponents.toArray(new Property[0]);
+            startAddressComponents = builder.startAddressComponents;
+            endAddressComponents = builder.endAddressComponents;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -256,8 +256,8 @@ public class Trips {
             private Property<Length> endOdometer;
             private Property<FuelEfficiency> averageFuelConsumption;
             private Property<Length> distance;
-            private final List<Property> startAddressComponents = new ArrayList<>();
-            private final List<Property> endAddressComponents = new ArrayList<>();
+            private final List<Property<AddressComponent>> startAddressComponents = new ArrayList<>();
+            private final List<Property<AddressComponent>> endAddressComponents = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);

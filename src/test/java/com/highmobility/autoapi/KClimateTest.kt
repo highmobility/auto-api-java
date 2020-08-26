@@ -153,7 +153,7 @@ class KClimateTest : BaseTest() {
             "0b000601000306131f" +
             "0b0006010003071000")
     
-        val constructed = Climate.ChangeStartingTimes(arrayOf(
+        val constructed = Climate.ChangeStartingTimes(arrayListOf(
             HvacWeekdayStartingTime(Weekday.MONDAY, Time(16, 0)), 
             HvacWeekdayStartingTime(Weekday.TUESDAY, Time(16, 0)), 
             HvacWeekdayStartingTime(Weekday.WEDNESDAY, Time(16, 0)), 

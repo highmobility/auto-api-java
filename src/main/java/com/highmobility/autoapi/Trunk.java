@@ -41,7 +41,7 @@ public class Trunk {
     /**
      * Get all trunk properties
      */
-    public static class GetState extends GetCommand {
+    public static class GetState extends GetCommand<State> {
         public GetState() {
             super(State.class, IDENTIFIER);
         }
@@ -54,7 +54,7 @@ public class Trunk {
     /**
      * Get specific trunk properties
      */
-    public static class GetProperties extends GetCommand {
+    public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -78,8 +78,8 @@ public class Trunk {
      * The trunk state
      */
     public static class State extends SetCommand {
-        Property lock = new Property<>(LockState.class, PROPERTY_LOCK);
-        Property position = new Property<>(Position.class, PROPERTY_POSITION);
+        Property<LockState> lock = new Property<>(LockState.class, PROPERTY_LOCK);
+        Property<Position> position = new Property<>(Position.class, PROPERTY_POSITION);
     
         /**
          * @return The lock
@@ -154,8 +154,8 @@ public class Trunk {
      * Control trunk
      */
     public static class ControlTrunk extends SetCommand {
-        Property lock = new Property<>(LockState.class, PROPERTY_LOCK);
-        Property position = new Property<>(Position.class, PROPERTY_POSITION);
+        Property<LockState> lock = new Property<>(LockState.class, PROPERTY_LOCK);
+        Property<Position> position = new Property<>(Position.class, PROPERTY_POSITION);
     
         /**
          * @return The lock

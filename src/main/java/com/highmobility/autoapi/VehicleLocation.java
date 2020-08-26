@@ -43,7 +43,7 @@ public class VehicleLocation {
     /**
      * Get vehicle location
      */
-    public static class GetVehicleLocation extends GetCommand {
+    public static class GetVehicleLocation extends GetCommand<State> {
         public GetVehicleLocation() {
             super(State.class, IDENTIFIER);
         }
@@ -56,7 +56,7 @@ public class VehicleLocation {
     /**
      * Get specific vehicle location properties
      */
-    public static class GetVehicleLocationProperties extends GetCommand {
+    public static class GetVehicleLocationProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -80,10 +80,10 @@ public class VehicleLocation {
      * The vehicle location state
      */
     public static class State extends SetCommand {
-        Property coordinates = new Property<>(Coordinates.class, PROPERTY_COORDINATES);
-        Property heading = new Property<>(Angle.class, PROPERTY_HEADING);
-        Property altitude = new Property<>(Length.class, PROPERTY_ALTITUDE);
-        Property precision = new Property<>(Length.class, PROPERTY_PRECISION);
+        Property<Coordinates> coordinates = new Property<>(Coordinates.class, PROPERTY_COORDINATES);
+        Property<Angle> heading = new Property<>(Angle.class, PROPERTY_HEADING);
+        Property<Length> altitude = new Property<>(Length.class, PROPERTY_ALTITUDE);
+        Property<Length> precision = new Property<>(Length.class, PROPERTY_PRECISION);
     
         /**
          * @return The coordinates

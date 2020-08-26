@@ -121,7 +121,7 @@ public class PropertyComponentFailure extends PropertyComponent {
             throw new CommandParseException("Failure.Reason does not contain " + hexFromByte(byteValue));
         }
 
-        private byte value;
+        private final byte value;
 
         Reason(byte value) {
             this.value = value;

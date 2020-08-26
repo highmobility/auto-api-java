@@ -85,7 +85,7 @@ public class Charging {
     /**
      * Get all charging properties
      */
-    public static class GetState extends GetCommand {
+    public static class GetState extends GetCommand<State> {
         public GetState() {
             super(State.class, IDENTIFIER);
         }
@@ -98,7 +98,7 @@ public class Charging {
     /**
      * Get specific charging properties
      */
-    public static class GetProperties extends GetCommand {
+    public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -122,38 +122,38 @@ public class Charging {
      * The charging state
      */
     public static class State extends SetCommand {
-        Property estimatedRange = new Property<>(Length.class, PROPERTY_ESTIMATED_RANGE);
-        Property batteryLevel = new Property<>(Double.class, PROPERTY_BATTERY_LEVEL);
-        Property batteryCurrentAC = new Property<>(ElectricCurrent.class, PROPERTY_BATTERY_CURRENT_AC);
-        Property batteryCurrentDC = new Property<>(ElectricCurrent.class, PROPERTY_BATTERY_CURRENT_DC);
-        Property chargerVoltageAC = new Property<>(ElectricPotentialDifference.class, PROPERTY_CHARGER_VOLTAGE_AC);
-        Property chargerVoltageDC = new Property<>(ElectricPotentialDifference.class, PROPERTY_CHARGER_VOLTAGE_DC);
-        Property chargeLimit = new Property<>(Double.class, PROPERTY_CHARGE_LIMIT);
-        Property timeToCompleteCharge = new Property<>(Duration.class, PROPERTY_TIME_TO_COMPLETE_CHARGE);
-        Property chargingRateKW = new Property<>(Power.class, PROPERTY_CHARGING_RATE_KW);
-        Property chargePortState = new Property<>(Position.class, PROPERTY_CHARGE_PORT_STATE);
-        Property chargeMode = new Property<>(ChargeMode.class, PROPERTY_CHARGE_MODE);
-        Property maxChargingCurrent = new Property<>(ElectricCurrent.class, PROPERTY_MAX_CHARGING_CURRENT);
-        Property plugType = new Property<>(PlugType.class, PROPERTY_PLUG_TYPE);
-        Property chargingWindowChosen = new Property<>(ChargingWindowChosen.class, PROPERTY_CHARGING_WINDOW_CHOSEN);
-        Property<DepartureTime>[] departureTimes;
-        Property<ReductionTime>[] reductionTimes;
-        Property batteryTemperature = new Property<>(Temperature.class, PROPERTY_BATTERY_TEMPERATURE);
-        Property<Timer>[] timers;
-        Property pluggedIn = new Property<>(PluggedIn.class, PROPERTY_PLUGGED_IN);
-        Property status = new Property<>(Status.class, PROPERTY_STATUS);
-        Property chargingRate = new Property<>(Power.class, PROPERTY_CHARGING_RATE);
-        Property batteryCurrent = new Property<>(ElectricCurrent.class, PROPERTY_BATTERY_CURRENT);
-        Property chargerVoltage = new Property<>(ElectricPotentialDifference.class, PROPERTY_CHARGER_VOLTAGE);
-        Property currentType = new Property<>(CurrentType.class, PROPERTY_CURRENT_TYPE);
-        Property maxRange = new Property<>(Length.class, PROPERTY_MAX_RANGE);
-        Property starterBatteryState = new Property<>(StarterBatteryState.class, PROPERTY_STARTER_BATTERY_STATE);
-        Property smartChargingStatus = new Property<>(SmartChargingStatus.class, PROPERTY_SMART_CHARGING_STATUS);
-        Property batteryLevelAtDeparture = new Property<>(Double.class, PROPERTY_BATTERY_LEVEL_AT_DEPARTURE);
-        Property preconditioningDepartureStatus = new Property<>(ActiveState.class, PROPERTY_PRECONDITIONING_DEPARTURE_STATUS);
-        Property preconditioningImmediateStatus = new Property<>(ActiveState.class, PROPERTY_PRECONDITIONING_IMMEDIATE_STATUS);
-        Property preconditioningDepartureEnabled = new Property<>(EnabledState.class, PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED);
-        Property preconditioningError = new Property<>(PreconditioningError.class, PROPERTY_PRECONDITIONING_ERROR);
+        Property<Length> estimatedRange = new Property<>(Length.class, PROPERTY_ESTIMATED_RANGE);
+        Property<Double> batteryLevel = new Property<>(Double.class, PROPERTY_BATTERY_LEVEL);
+        Property<ElectricCurrent> batteryCurrentAC = new Property<>(ElectricCurrent.class, PROPERTY_BATTERY_CURRENT_AC);
+        Property<ElectricCurrent> batteryCurrentDC = new Property<>(ElectricCurrent.class, PROPERTY_BATTERY_CURRENT_DC);
+        Property<ElectricPotentialDifference> chargerVoltageAC = new Property<>(ElectricPotentialDifference.class, PROPERTY_CHARGER_VOLTAGE_AC);
+        Property<ElectricPotentialDifference> chargerVoltageDC = new Property<>(ElectricPotentialDifference.class, PROPERTY_CHARGER_VOLTAGE_DC);
+        Property<Double> chargeLimit = new Property<>(Double.class, PROPERTY_CHARGE_LIMIT);
+        Property<Duration> timeToCompleteCharge = new Property<>(Duration.class, PROPERTY_TIME_TO_COMPLETE_CHARGE);
+        Property<Power> chargingRateKW = new Property<>(Power.class, PROPERTY_CHARGING_RATE_KW);
+        Property<Position> chargePortState = new Property<>(Position.class, PROPERTY_CHARGE_PORT_STATE);
+        Property<ChargeMode> chargeMode = new Property<>(ChargeMode.class, PROPERTY_CHARGE_MODE);
+        Property<ElectricCurrent> maxChargingCurrent = new Property<>(ElectricCurrent.class, PROPERTY_MAX_CHARGING_CURRENT);
+        Property<PlugType> plugType = new Property<>(PlugType.class, PROPERTY_PLUG_TYPE);
+        Property<ChargingWindowChosen> chargingWindowChosen = new Property<>(ChargingWindowChosen.class, PROPERTY_CHARGING_WINDOW_CHOSEN);
+        List<Property<DepartureTime>> departureTimes;
+        List<Property<ReductionTime>> reductionTimes;
+        Property<Temperature> batteryTemperature = new Property<>(Temperature.class, PROPERTY_BATTERY_TEMPERATURE);
+        List<Property<Timer>> timers;
+        Property<PluggedIn> pluggedIn = new Property<>(PluggedIn.class, PROPERTY_PLUGGED_IN);
+        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
+        Property<Power> chargingRate = new Property<>(Power.class, PROPERTY_CHARGING_RATE);
+        Property<ElectricCurrent> batteryCurrent = new Property<>(ElectricCurrent.class, PROPERTY_BATTERY_CURRENT);
+        Property<ElectricPotentialDifference> chargerVoltage = new Property<>(ElectricPotentialDifference.class, PROPERTY_CHARGER_VOLTAGE);
+        Property<CurrentType> currentType = new Property<>(CurrentType.class, PROPERTY_CURRENT_TYPE);
+        Property<Length> maxRange = new Property<>(Length.class, PROPERTY_MAX_RANGE);
+        Property<StarterBatteryState> starterBatteryState = new Property<>(StarterBatteryState.class, PROPERTY_STARTER_BATTERY_STATE);
+        Property<SmartChargingStatus> smartChargingStatus = new Property<>(SmartChargingStatus.class, PROPERTY_SMART_CHARGING_STATUS);
+        Property<Double> batteryLevelAtDeparture = new Property<>(Double.class, PROPERTY_BATTERY_LEVEL_AT_DEPARTURE);
+        Property<ActiveState> preconditioningDepartureStatus = new Property<>(ActiveState.class, PROPERTY_PRECONDITIONING_DEPARTURE_STATUS);
+        Property<ActiveState> preconditioningImmediateStatus = new Property<>(ActiveState.class, PROPERTY_PRECONDITIONING_IMMEDIATE_STATUS);
+        Property<EnabledState> preconditioningDepartureEnabled = new Property<>(EnabledState.class, PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED);
+        Property<PreconditioningError> preconditioningError = new Property<>(PreconditioningError.class, PROPERTY_PRECONDITIONING_ERROR);
     
         /**
          * @return Estimated range
@@ -256,14 +256,14 @@ public class Charging {
         /**
          * @return The departure times
          */
-        public Property<DepartureTime>[] getDepartureTimes() {
+        public List<Property<DepartureTime>> getDepartureTimes() {
             return departureTimes;
         }
     
         /**
          * @return The reduction times
          */
-        public Property<ReductionTime>[] getReductionTimes() {
+        public List<Property<ReductionTime>> getReductionTimes() {
             return reductionTimes;
         }
     
@@ -277,7 +277,7 @@ public class Charging {
         /**
          * @return The timers
          */
-        public Property<Timer>[] getTimers() {
+        public List<Property<Timer>> getTimers() {
             return timers;
         }
     
@@ -382,9 +382,9 @@ public class Charging {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> departureTimesBuilder = new ArrayList<>();
-            final ArrayList<Property> reductionTimesBuilder = new ArrayList<>();
-            final ArrayList<Property> timersBuilder = new ArrayList<>();
+            final ArrayList<Property<DepartureTime>> departureTimesBuilder = new ArrayList<>();
+            final ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
+            final ArrayList<Property<Timer>> timersBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -404,16 +404,16 @@ public class Charging {
                         case PROPERTY_PLUG_TYPE: return plugType.update(p);
                         case PROPERTY_CHARGING_WINDOW_CHOSEN: return chargingWindowChosen.update(p);
                         case PROPERTY_DEPARTURE_TIMES:
-                            Property departureTime = new Property<>(DepartureTime.class, p);
+                            Property<DepartureTime> departureTime = new Property<>(DepartureTime.class, p);
                             departureTimesBuilder.add(departureTime);
                             return departureTime;
                         case PROPERTY_REDUCTION_TIMES:
-                            Property reductionTime = new Property<>(ReductionTime.class, p);
+                            Property<ReductionTime> reductionTime = new Property<>(ReductionTime.class, p);
                             reductionTimesBuilder.add(reductionTime);
                             return reductionTime;
                         case PROPERTY_BATTERY_TEMPERATURE: return batteryTemperature.update(p);
                         case PROPERTY_TIMERS:
-                            Property timer = new Property<>(Timer.class, p);
+                            Property<Timer> timer = new Property<>(Timer.class, p);
                             timersBuilder.add(timer);
                             return timer;
                         case PROPERTY_PLUGGED_IN: return pluggedIn.update(p);
@@ -436,9 +436,9 @@ public class Charging {
                 });
             }
     
-            departureTimes = departureTimesBuilder.toArray(new Property[0]);
-            reductionTimes = reductionTimesBuilder.toArray(new Property[0]);
-            timers = timersBuilder.toArray(new Property[0]);
+            departureTimes = departureTimesBuilder;
+            reductionTimes = reductionTimesBuilder;
+            timers = timersBuilder;
         }
     
         private State(Builder builder) {
@@ -458,10 +458,10 @@ public class Charging {
             maxChargingCurrent = builder.maxChargingCurrent;
             plugType = builder.plugType;
             chargingWindowChosen = builder.chargingWindowChosen;
-            departureTimes = builder.departureTimes.toArray(new Property[0]);
-            reductionTimes = builder.reductionTimes.toArray(new Property[0]);
+            departureTimes = builder.departureTimes;
+            reductionTimes = builder.reductionTimes;
             batteryTemperature = builder.batteryTemperature;
-            timers = builder.timers.toArray(new Property[0]);
+            timers = builder.timers;
             pluggedIn = builder.pluggedIn;
             status = builder.status;
             chargingRate = builder.chargingRate;
@@ -493,10 +493,10 @@ public class Charging {
             private Property<ElectricCurrent> maxChargingCurrent;
             private Property<PlugType> plugType;
             private Property<ChargingWindowChosen> chargingWindowChosen;
-            private final List<Property> departureTimes = new ArrayList<>();
-            private final List<Property> reductionTimes = new ArrayList<>();
+            private final List<Property<DepartureTime>> departureTimes = new ArrayList<>();
+            private final List<Property<ReductionTime>> reductionTimes = new ArrayList<>();
             private Property<Temperature> batteryTemperature;
-            private final List<Property> timers = new ArrayList<>();
+            private final List<Property<Timer>> timers = new ArrayList<>();
             private Property<PluggedIn> pluggedIn;
             private Property<Status> status;
             private Property<Power> chargingRate;
@@ -900,7 +900,7 @@ public class Charging {
      * Start stop charging
      */
     public static class StartStopCharging extends SetCommand {
-        Property status = new Property<>(Status.class, PROPERTY_STATUS);
+        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
     
         /**
          * @return The status
@@ -950,7 +950,7 @@ public class Charging {
      * Set charge limit
      */
     public static class SetChargeLimit extends SetCommand {
-        Property chargeLimit = new Property<>(Double.class, PROPERTY_CHARGE_LIMIT);
+        Property<Double> chargeLimit = new Property<>(Double.class, PROPERTY_CHARGE_LIMIT);
     
         /**
          * @return The charge limit
@@ -990,7 +990,7 @@ public class Charging {
      * Open close charging port
      */
     public static class OpenCloseChargingPort extends SetCommand {
-        Property chargePortState = new Property<>(Position.class, PROPERTY_CHARGE_PORT_STATE);
+        Property<Position> chargePortState = new Property<>(Position.class, PROPERTY_CHARGE_PORT_STATE);
     
         /**
          * @return The charge port state
@@ -1030,7 +1030,7 @@ public class Charging {
      * Set charge mode
      */
     public static class SetChargeMode extends SetCommand {
-        Property chargeMode = new Property<>(ChargeMode.class, PROPERTY_CHARGE_MODE);
+        Property<ChargeMode> chargeMode = new Property<>(ChargeMode.class, PROPERTY_CHARGE_MODE);
     
         /**
          * @return The charge mode
@@ -1072,12 +1072,12 @@ public class Charging {
      * Set charging timers
      */
     public static class SetChargingTimers extends SetCommand {
-        Property<Timer>[] timers;
+        List<Property<Timer>> timers;
     
         /**
          * @return The timers
          */
-        public Property<Timer>[] getTimers() {
+        public List<Property<Timer>> getTimers() {
             return timers;
         }
         
@@ -1086,10 +1086,10 @@ public class Charging {
          *
          * @param timers The timers
          */
-        public SetChargingTimers(Timer[] timers) {
+        public SetChargingTimers(List<Timer> timers) {
             super(IDENTIFIER);
         
-            final ArrayList<Property> timersBuilder = new ArrayList<>();
+            final ArrayList<Property<Timer>> timersBuilder = new ArrayList<>();
             if (timers != null) {
                 for (Timer timer : timers) {
                     Property prop = new Property(0x15, timer);
@@ -1097,7 +1097,7 @@ public class Charging {
                     addProperty(prop);
                 }
             }
-            this.timers = timersBuilder.toArray(new Property[0]);
+            this.timers = timersBuilder;
             createBytes();
         }
     
@@ -1110,7 +1110,7 @@ public class Charging {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_TIMERS: {
-                            Property timer = new Property<>(Timer.class, p);
+                            Property<Timer> timer = new Property<>(Timer.class, p);
                             timersBuilder.add(timer);
                             return timer;
                         }
@@ -1119,8 +1119,8 @@ public class Charging {
                 });
             }
         
-            timers = timersBuilder.toArray(new Property[0]);
-            if (this.timers.length == 0) 
+            timers = timersBuilder;
+            if (this.timers.size() == 0) 
                 throw new NoPropertiesException();
         }
     }
@@ -1129,12 +1129,12 @@ public class Charging {
      * Set reduction of charging current times
      */
     public static class SetReductionOfChargingCurrentTimes extends SetCommand {
-        Property<ReductionTime>[] reductionTimes;
+        List<Property<ReductionTime>> reductionTimes;
     
         /**
          * @return The reduction times
          */
-        public Property<ReductionTime>[] getReductionTimes() {
+        public List<Property<ReductionTime>> getReductionTimes() {
             return reductionTimes;
         }
         
@@ -1143,10 +1143,10 @@ public class Charging {
          *
          * @param reductionTimes The reduction times
          */
-        public SetReductionOfChargingCurrentTimes(ReductionTime[] reductionTimes) {
+        public SetReductionOfChargingCurrentTimes(List<ReductionTime> reductionTimes) {
             super(IDENTIFIER);
         
-            final ArrayList<Property> reductionTimesBuilder = new ArrayList<>();
+            final ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
             if (reductionTimes != null) {
                 for (ReductionTime reductionTime : reductionTimes) {
                     Property prop = new Property(0x13, reductionTime);
@@ -1154,7 +1154,7 @@ public class Charging {
                     addProperty(prop);
                 }
             }
-            this.reductionTimes = reductionTimesBuilder.toArray(new Property[0]);
+            this.reductionTimes = reductionTimesBuilder;
             createBytes();
         }
     
@@ -1167,7 +1167,7 @@ public class Charging {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_REDUCTION_TIMES: {
-                            Property reductionTime = new Property<>(ReductionTime.class, p);
+                            Property<ReductionTime> reductionTime = new Property<>(ReductionTime.class, p);
                             reductionTimesBuilder.add(reductionTime);
                             return reductionTime;
                         }
@@ -1176,8 +1176,8 @@ public class Charging {
                 });
             }
         
-            reductionTimes = reductionTimesBuilder.toArray(new Property[0]);
-            if (this.reductionTimes.length == 0) 
+            reductionTimes = reductionTimesBuilder;
+            if (this.reductionTimes.size() == 0) 
                 throw new NoPropertiesException();
         }
     }

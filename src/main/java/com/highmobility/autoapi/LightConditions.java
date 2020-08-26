@@ -39,7 +39,7 @@ public class LightConditions {
     /**
      * Get light conditions
      */
-    public static class GetLightConditions extends GetCommand {
+    public static class GetLightConditions extends GetCommand<State> {
         public GetLightConditions() {
             super(State.class, IDENTIFIER);
         }
@@ -52,7 +52,7 @@ public class LightConditions {
     /**
      * Get specific light conditions properties
      */
-    public static class GetLightConditionsProperties extends GetCommand {
+    public static class GetLightConditionsProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -76,8 +76,8 @@ public class LightConditions {
      * The light conditions state
      */
     public static class State extends SetCommand {
-        Property outsideLight = new Property<>(Illuminance.class, PROPERTY_OUTSIDE_LIGHT);
-        Property insideLight = new Property<>(Illuminance.class, PROPERTY_INSIDE_LIGHT);
+        Property<Illuminance> outsideLight = new Property<>(Illuminance.class, PROPERTY_OUTSIDE_LIGHT);
+        Property<Illuminance> insideLight = new Property<>(Illuminance.class, PROPERTY_INSIDE_LIGHT);
     
         /**
          * @return Measured outside illuminance

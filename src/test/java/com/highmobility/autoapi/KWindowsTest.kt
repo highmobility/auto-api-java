@@ -118,13 +118,13 @@ class KWindowsTest : BaseTest() {
             "0300050100020301" +
             "0300050100020401")
     
-        val constructed = Windows.ControlWindows(arrayOf(
+        val constructed = Windows.ControlWindows(arrayListOf(
             WindowOpenPercentage(WindowLocation.FRONT_LEFT, 0.2), 
             WindowOpenPercentage(WindowLocation.FRONT_RIGHT, 0.5), 
             WindowOpenPercentage(WindowLocation.REAR_RIGHT, 0.5), 
             WindowOpenPercentage(WindowLocation.REAR_LEFT, 0.1), 
             WindowOpenPercentage(WindowLocation.HATCH, 0.18)), 
-            arrayOf(
+            arrayListOf(
             WindowPosition(WindowLocation.FRONT_LEFT, WindowPosition.Position.OPEN), 
             WindowPosition(WindowLocation.FRONT_RIGHT, WindowPosition.Position.OPEN), 
             WindowPosition(WindowLocation.REAR_RIGHT, WindowPosition.Position.CLOSED), 

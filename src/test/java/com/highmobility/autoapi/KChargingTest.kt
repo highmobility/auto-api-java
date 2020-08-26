@@ -264,7 +264,7 @@ class KChargingTest : BaseTest() {
             "15000C0100090100000159893c9108" +
             "15000C0100090200000159893c9108")
     
-        val constructed = Charging.SetChargingTimers(arrayOf(
+        val constructed = Charging.SetChargingTimers(arrayListOf(
             Timer(Timer.TimerType.PREFERRED_START_TIME, getCalendar("2017-01-10T16:32:05.000Z")), 
             Timer(Timer.TimerType.PREFERRED_END_TIME, getCalendar("2017-01-10T16:36:05.000Z")), 
             Timer(Timer.TimerType.DEPARTURE_DATE, getCalendar("2017-01-10T16:36:05.000Z"))))
@@ -288,7 +288,7 @@ class KChargingTest : BaseTest() {
             "130006010003001121" +
             "130006010003010c34")
     
-        val constructed = Charging.SetReductionOfChargingCurrentTimes(arrayOf(
+        val constructed = Charging.SetReductionOfChargingCurrentTimes(arrayListOf(
             ReductionTime(StartStop.START, Time(17, 33)), 
             ReductionTime(StartStop.STOP, Time(12, 52))))
         assertTrue(bytesTheSame(constructed, bytes))

@@ -64,7 +64,7 @@ public class VehicleInformation {
     /**
      * Get vehicle information
      */
-    public static class GetVehicleInformation extends GetCommand {
+    public static class GetVehicleInformation extends GetCommand<State> {
         public GetVehicleInformation() {
             super(State.class, IDENTIFIER);
         }
@@ -77,7 +77,7 @@ public class VehicleInformation {
     /**
      * Get specific vehicle information properties
      */
-    public static class GetVehicleInformationProperties extends GetCommand {
+    public static class GetVehicleInformationProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -101,25 +101,25 @@ public class VehicleInformation {
      * The vehicle information state
      */
     public static class State extends SetCommand {
-        Property powertrain = new Property<>(Powertrain.class, PROPERTY_POWERTRAIN);
-        Property modelName = new Property<>(String.class, PROPERTY_MODEL_NAME);
-        Property name = new Property<>(String.class, PROPERTY_NAME);
-        Property licensePlate = new Property<>(String.class, PROPERTY_LICENSE_PLATE);
-        Property salesDesignation = new Property<>(String.class, PROPERTY_SALES_DESIGNATION);
+        Property<Powertrain> powertrain = new Property<>(Powertrain.class, PROPERTY_POWERTRAIN);
+        Property<String> modelName = new Property<>(String.class, PROPERTY_MODEL_NAME);
+        Property<String> name = new Property<>(String.class, PROPERTY_NAME);
+        Property<String> licensePlate = new Property<>(String.class, PROPERTY_LICENSE_PLATE);
+        Property<String> salesDesignation = new Property<>(String.class, PROPERTY_SALES_DESIGNATION);
         PropertyInteger modelYear = new PropertyInteger(PROPERTY_MODEL_YEAR, false);
-        Property colourName = new Property<>(String.class, PROPERTY_COLOUR_NAME);
-        Property powerInKW = new Property<>(Power.class, PROPERTY_POWER_IN_KW);
+        Property<String> colourName = new Property<>(String.class, PROPERTY_COLOUR_NAME);
+        Property<Power> powerInKW = new Property<>(Power.class, PROPERTY_POWER_IN_KW);
         PropertyInteger numberOfDoors = new PropertyInteger(PROPERTY_NUMBER_OF_DOORS, false);
         PropertyInteger numberOfSeats = new PropertyInteger(PROPERTY_NUMBER_OF_SEATS, false);
-        Property engineVolume = new Property<>(Volume.class, PROPERTY_ENGINE_VOLUME);
-        Property engineMaxTorque = new Property<>(Torque.class, PROPERTY_ENGINE_MAX_TORQUE);
-        Property gearbox = new Property<>(Gearbox.class, PROPERTY_GEARBOX);
-        Property displayUnit = new Property<>(DisplayUnit.class, PROPERTY_DISPLAY_UNIT);
-        Property driverSeatLocation = new Property<>(DriverSeatLocation.class, PROPERTY_DRIVER_SEAT_LOCATION);
-        Property<String>[] equipments;
-        Property power = new Property<>(Power.class, PROPERTY_POWER);
-        Property language = new Property<>(String.class, PROPERTY_LANGUAGE);
-        Property timeformat = new Property<>(Timeformat.class, PROPERTY_TIMEFORMAT);
+        Property<Volume> engineVolume = new Property<>(Volume.class, PROPERTY_ENGINE_VOLUME);
+        Property<Torque> engineMaxTorque = new Property<>(Torque.class, PROPERTY_ENGINE_MAX_TORQUE);
+        Property<Gearbox> gearbox = new Property<>(Gearbox.class, PROPERTY_GEARBOX);
+        Property<DisplayUnit> displayUnit = new Property<>(DisplayUnit.class, PROPERTY_DISPLAY_UNIT);
+        Property<DriverSeatLocation> driverSeatLocation = new Property<>(DriverSeatLocation.class, PROPERTY_DRIVER_SEAT_LOCATION);
+        List<Property<String>> equipments;
+        Property<Power> power = new Property<>(Power.class, PROPERTY_POWER);
+        Property<String> language = new Property<>(String.class, PROPERTY_LANGUAGE);
+        Property<Timeformat> timeformat = new Property<>(Timeformat.class, PROPERTY_TIMEFORMAT);
     
         /**
          * @return The powertrain
@@ -229,7 +229,7 @@ public class VehicleInformation {
         /**
          * @return Names of equipment the vehicle is equipped with
          */
-        public Property<String>[] getEquipments() {
+        public List<Property<String>> getEquipments() {
             return equipments;
         }
     
@@ -257,7 +257,7 @@ public class VehicleInformation {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> equipmentsBuilder = new ArrayList<>();
+            final ArrayList<Property<String>> equipmentsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -278,7 +278,7 @@ public class VehicleInformation {
                         case PROPERTY_DISPLAY_UNIT: return displayUnit.update(p);
                         case PROPERTY_DRIVER_SEAT_LOCATION: return driverSeatLocation.update(p);
                         case PROPERTY_EQUIPMENTS:
-                            Property equipment = new Property<>(String.class, p);
+                            Property<String> equipment = new Property<>(String.class, p);
                             equipmentsBuilder.add(equipment);
                             return equipment;
                         case PROPERTY_POWER: return power.update(p);
@@ -290,7 +290,7 @@ public class VehicleInformation {
                 });
             }
     
-            equipments = equipmentsBuilder.toArray(new Property[0]);
+            equipments = equipmentsBuilder;
         }
     
         private State(Builder builder) {
@@ -311,7 +311,7 @@ public class VehicleInformation {
             gearbox = builder.gearbox;
             displayUnit = builder.displayUnit;
             driverSeatLocation = builder.driverSeatLocation;
-            equipments = builder.equipments.toArray(new Property[0]);
+            equipments = builder.equipments;
             power = builder.power;
             language = builder.language;
             timeformat = builder.timeformat;
@@ -333,7 +333,7 @@ public class VehicleInformation {
             private Property<Gearbox> gearbox;
             private Property<DisplayUnit> displayUnit;
             private Property<DriverSeatLocation> driverSeatLocation;
-            private final List<Property> equipments = new ArrayList<>();
+            private final List<Property<String>> equipments = new ArrayList<>();
             private Property<Power> power;
             private Property<String> language;
             private Property<Timeformat> timeformat;

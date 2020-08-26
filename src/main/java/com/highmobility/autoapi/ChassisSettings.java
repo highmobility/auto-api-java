@@ -52,7 +52,7 @@ public class ChassisSettings {
     /**
      * Get chassis settings
      */
-    public static class GetChassisSettings extends GetCommand {
+    public static class GetChassisSettings extends GetCommand<State> {
         public GetChassisSettings() {
             super(State.class, IDENTIFIER);
         }
@@ -65,7 +65,7 @@ public class ChassisSettings {
     /**
      * Get specific chassis settings properties
      */
-    public static class GetChassisSettingsProperties extends GetCommand {
+    public static class GetChassisSettingsProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -89,14 +89,14 @@ public class ChassisSettings {
      * The chassis settings state
      */
     public static class State extends SetCommand {
-        Property drivingMode = new Property<>(DrivingMode.class, PROPERTY_DRIVING_MODE);
-        Property sportChrono = new Property<>(SportChrono.class, PROPERTY_SPORT_CHRONO);
-        Property<SpringRate>[] currentSpringRates;
-        Property<SpringRate>[] maximumSpringRates;
-        Property<SpringRate>[] minimumSpringRates;
-        Property currentChassisPosition = new Property<>(Length.class, PROPERTY_CURRENT_CHASSIS_POSITION);
-        Property maximumChassisPosition = new Property<>(Length.class, PROPERTY_MAXIMUM_CHASSIS_POSITION);
-        Property minimumChassisPosition = new Property<>(Length.class, PROPERTY_MINIMUM_CHASSIS_POSITION);
+        Property<DrivingMode> drivingMode = new Property<>(DrivingMode.class, PROPERTY_DRIVING_MODE);
+        Property<SportChrono> sportChrono = new Property<>(SportChrono.class, PROPERTY_SPORT_CHRONO);
+        List<Property<SpringRate>> currentSpringRates;
+        List<Property<SpringRate>> maximumSpringRates;
+        List<Property<SpringRate>> minimumSpringRates;
+        Property<Length> currentChassisPosition = new Property<>(Length.class, PROPERTY_CURRENT_CHASSIS_POSITION);
+        Property<Length> maximumChassisPosition = new Property<>(Length.class, PROPERTY_MAXIMUM_CHASSIS_POSITION);
+        Property<Length> minimumChassisPosition = new Property<>(Length.class, PROPERTY_MINIMUM_CHASSIS_POSITION);
     
         /**
          * @return The driving mode
@@ -115,21 +115,21 @@ public class ChassisSettings {
         /**
          * @return The current values for the spring rates
          */
-        public Property<SpringRate>[] getCurrentSpringRates() {
+        public List<Property<SpringRate>> getCurrentSpringRates() {
             return currentSpringRates;
         }
     
         /**
          * @return The maximum possible values for the spring rates
          */
-        public Property<SpringRate>[] getMaximumSpringRates() {
+        public List<Property<SpringRate>> getMaximumSpringRates() {
             return maximumSpringRates;
         }
     
         /**
          * @return The minimum possible values for the spring rates
          */
-        public Property<SpringRate>[] getMinimumSpringRates() {
+        public List<Property<SpringRate>> getMinimumSpringRates() {
             return minimumSpringRates;
         }
     
@@ -157,9 +157,9 @@ public class ChassisSettings {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> currentSpringRatesBuilder = new ArrayList<>();
-            final ArrayList<Property> maximumSpringRatesBuilder = new ArrayList<>();
-            final ArrayList<Property> minimumSpringRatesBuilder = new ArrayList<>();
+            final ArrayList<Property<SpringRate>> currentSpringRatesBuilder = new ArrayList<>();
+            final ArrayList<Property<SpringRate>> maximumSpringRatesBuilder = new ArrayList<>();
+            final ArrayList<Property<SpringRate>> minimumSpringRatesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -167,15 +167,15 @@ public class ChassisSettings {
                         case PROPERTY_DRIVING_MODE: return drivingMode.update(p);
                         case PROPERTY_SPORT_CHRONO: return sportChrono.update(p);
                         case PROPERTY_CURRENT_SPRING_RATES:
-                            Property currentSpringRate = new Property<>(SpringRate.class, p);
+                            Property<SpringRate> currentSpringRate = new Property<>(SpringRate.class, p);
                             currentSpringRatesBuilder.add(currentSpringRate);
                             return currentSpringRate;
                         case PROPERTY_MAXIMUM_SPRING_RATES:
-                            Property maximumSpringRate = new Property<>(SpringRate.class, p);
+                            Property<SpringRate> maximumSpringRate = new Property<>(SpringRate.class, p);
                             maximumSpringRatesBuilder.add(maximumSpringRate);
                             return maximumSpringRate;
                         case PROPERTY_MINIMUM_SPRING_RATES:
-                            Property minimumSpringRate = new Property<>(SpringRate.class, p);
+                            Property<SpringRate> minimumSpringRate = new Property<>(SpringRate.class, p);
                             minimumSpringRatesBuilder.add(minimumSpringRate);
                             return minimumSpringRate;
                         case PROPERTY_CURRENT_CHASSIS_POSITION: return currentChassisPosition.update(p);
@@ -187,9 +187,9 @@ public class ChassisSettings {
                 });
             }
     
-            currentSpringRates = currentSpringRatesBuilder.toArray(new Property[0]);
-            maximumSpringRates = maximumSpringRatesBuilder.toArray(new Property[0]);
-            minimumSpringRates = minimumSpringRatesBuilder.toArray(new Property[0]);
+            currentSpringRates = currentSpringRatesBuilder;
+            maximumSpringRates = maximumSpringRatesBuilder;
+            minimumSpringRates = minimumSpringRatesBuilder;
         }
     
         private State(Builder builder) {
@@ -197,9 +197,9 @@ public class ChassisSettings {
     
             drivingMode = builder.drivingMode;
             sportChrono = builder.sportChrono;
-            currentSpringRates = builder.currentSpringRates.toArray(new Property[0]);
-            maximumSpringRates = builder.maximumSpringRates.toArray(new Property[0]);
-            minimumSpringRates = builder.minimumSpringRates.toArray(new Property[0]);
+            currentSpringRates = builder.currentSpringRates;
+            maximumSpringRates = builder.maximumSpringRates;
+            minimumSpringRates = builder.minimumSpringRates;
             currentChassisPosition = builder.currentChassisPosition;
             maximumChassisPosition = builder.maximumChassisPosition;
             minimumChassisPosition = builder.minimumChassisPosition;
@@ -208,9 +208,9 @@ public class ChassisSettings {
         public static final class Builder extends SetCommand.Builder {
             private Property<DrivingMode> drivingMode;
             private Property<SportChrono> sportChrono;
-            private final List<Property> currentSpringRates = new ArrayList<>();
-            private final List<Property> maximumSpringRates = new ArrayList<>();
-            private final List<Property> minimumSpringRates = new ArrayList<>();
+            private final List<Property<SpringRate>> currentSpringRates = new ArrayList<>();
+            private final List<Property<SpringRate>> maximumSpringRates = new ArrayList<>();
+            private final List<Property<SpringRate>> minimumSpringRates = new ArrayList<>();
             private Property<Length> currentChassisPosition;
             private Property<Length> maximumChassisPosition;
             private Property<Length> minimumChassisPosition;
@@ -363,7 +363,7 @@ public class ChassisSettings {
      * Set driving mode
      */
     public static class SetDrivingMode extends SetCommand {
-        Property drivingMode = new Property<>(DrivingMode.class, PROPERTY_DRIVING_MODE);
+        Property<DrivingMode> drivingMode = new Property<>(DrivingMode.class, PROPERTY_DRIVING_MODE);
     
         /**
          * @return The driving mode
@@ -403,7 +403,7 @@ public class ChassisSettings {
      * Start stop sports chrono
      */
     public static class StartStopSportsChrono extends SetCommand {
-        Property sportChrono = new Property<>(SportChrono.class, PROPERTY_SPORT_CHRONO);
+        Property<SportChrono> sportChrono = new Property<>(SportChrono.class, PROPERTY_SPORT_CHRONO);
     
         /**
          * @return The sport chrono
@@ -443,12 +443,12 @@ public class ChassisSettings {
      * Set spring rates
      */
     public static class SetSpringRates extends SetCommand {
-        Property<SpringRate>[] currentSpringRates;
+        List<Property<SpringRate>> currentSpringRates;
     
         /**
          * @return The current spring rates
          */
-        public Property<SpringRate>[] getCurrentSpringRates() {
+        public List<Property<SpringRate>> getCurrentSpringRates() {
             return currentSpringRates;
         }
         
@@ -457,10 +457,10 @@ public class ChassisSettings {
          *
          * @param currentSpringRates The current values for the spring rates
          */
-        public SetSpringRates(SpringRate[] currentSpringRates) {
+        public SetSpringRates(List<SpringRate> currentSpringRates) {
             super(IDENTIFIER);
         
-            final ArrayList<Property> currentSpringRatesBuilder = new ArrayList<>();
+            final ArrayList<Property<SpringRate>> currentSpringRatesBuilder = new ArrayList<>();
             if (currentSpringRates != null) {
                 for (SpringRate currentSpringRate : currentSpringRates) {
                     Property prop = new Property(0x05, currentSpringRate);
@@ -468,7 +468,7 @@ public class ChassisSettings {
                     addProperty(prop);
                 }
             }
-            this.currentSpringRates = currentSpringRatesBuilder.toArray(new Property[0]);
+            this.currentSpringRates = currentSpringRatesBuilder;
             createBytes();
         }
     
@@ -481,7 +481,7 @@ public class ChassisSettings {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_CURRENT_SPRING_RATES: {
-                            Property currentSpringRate = new Property<>(SpringRate.class, p);
+                            Property<SpringRate> currentSpringRate = new Property<>(SpringRate.class, p);
                             currentSpringRatesBuilder.add(currentSpringRate);
                             return currentSpringRate;
                         }
@@ -490,8 +490,8 @@ public class ChassisSettings {
                 });
             }
         
-            currentSpringRates = currentSpringRatesBuilder.toArray(new Property[0]);
-            if (this.currentSpringRates.length == 0) 
+            currentSpringRates = currentSpringRatesBuilder;
+            if (this.currentSpringRates.size() == 0) 
                 throw new NoPropertiesException();
         }
     }
@@ -500,7 +500,7 @@ public class ChassisSettings {
      * Set chassis position
      */
     public static class SetChassisPosition extends SetCommand {
-        Property currentChassisPosition = new Property<>(Length.class, PROPERTY_CURRENT_CHASSIS_POSITION);
+        Property<Length> currentChassisPosition = new Property<>(Length.class, PROPERTY_CURRENT_CHASSIS_POSITION);
     
         /**
          * @return The current chassis position

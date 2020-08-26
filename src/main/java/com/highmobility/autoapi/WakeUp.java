@@ -44,7 +44,7 @@ public class WakeUp {
      * Wake up command
      */
     public static class WakeUpCommand extends SetCommand {
-        Property status = new Property<>(Status.class, PROPERTY_STATUS);
+        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
     
         /**
          * Wake up command

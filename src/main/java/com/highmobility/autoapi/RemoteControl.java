@@ -48,7 +48,7 @@ public class RemoteControl {
     /**
      * Get control state
      */
-    public static class GetControlState extends GetCommand {
+    public static class GetControlState extends GetCommand<State> {
         public GetControlState() {
             super(State.class, IDENTIFIER);
         }
@@ -62,8 +62,8 @@ public class RemoteControl {
      * The remote control state
      */
     public static class State extends SetCommand {
-        Property controlMode = new Property<>(ControlMode.class, PROPERTY_CONTROL_MODE);
-        Property angle = new Property<>(Angle.class, PROPERTY_ANGLE);
+        Property<ControlMode> controlMode = new Property<>(ControlMode.class, PROPERTY_CONTROL_MODE);
+        Property<Angle> angle = new Property<>(Angle.class, PROPERTY_ANGLE);
     
         /**
          * @return The control mode
@@ -98,8 +98,8 @@ public class RemoteControl {
      * Control command
      */
     public static class ControlCommand extends SetCommand {
-        Property angle = new Property<>(Angle.class, PROPERTY_ANGLE);
-        Property speed = new Property<>(Speed.class, PROPERTY_SPEED);
+        Property<Angle> angle = new Property<>(Angle.class, PROPERTY_ANGLE);
+        Property<Speed> speed = new Property<>(Speed.class, PROPERTY_SPEED);
     
         /**
          * @return The angle
@@ -149,7 +149,7 @@ public class RemoteControl {
      * Start control
      */
     public static class StartControl extends SetCommand {
-        Property controlMode = new Property<>(ControlMode.class, PROPERTY_CONTROL_MODE);
+        Property<ControlMode> controlMode = new Property<>(ControlMode.class, PROPERTY_CONTROL_MODE);
     
         /**
          * Start control
@@ -180,7 +180,7 @@ public class RemoteControl {
      * Stop control
      */
     public static class StopControl extends SetCommand {
-        Property controlMode = new Property<>(ControlMode.class, PROPERTY_CONTROL_MODE);
+        Property<ControlMode> controlMode = new Property<>(ControlMode.class, PROPERTY_CONTROL_MODE);
     
         /**
          * Stop control

@@ -39,7 +39,7 @@ public class VehicleStatus {
     /**
      * Get vehicle status
      */
-    public static class GetVehicleStatus extends GetCommand {
+    public static class GetVehicleStatus extends GetCommand<State> {
         public GetVehicleStatus() {
             super(State.class, IDENTIFIER);
         }
@@ -53,12 +53,12 @@ public class VehicleStatus {
      * The vehicle status state
      */
     public static class State extends SetCommand {
-        Property<Command>[] states;
+        List<Property<Command>> states;
     
         /**
          * @return The states
          */
-        public Property<Command>[] getStates() {
+        public List<Property<Command>> getStates() {
             return states;
         }
     
@@ -68,8 +68,8 @@ public class VehicleStatus {
          */
         @Nullable public Property<Command> getState(Integer identifier) {
             if (states == null) return null;
-            for (int i = 0; i < states.length; i++) {
-                Property<Command> command = states[i];
+            for (int i = 0; i < states.size(); i++) {
+                Property<Command> command = states.get(i);
                 if (command.getValue() != null && command.getValue().getIdentifier() == identifier)
                     return command;
             }
@@ -80,13 +80,13 @@ public class VehicleStatus {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> statesBuilder = new ArrayList<>();
+            final ArrayList<Property<Command>> statesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATES:
-                            Property state = new Property<>(Command.class, p);
+                            Property<Command> state = new Property<>(Command.class, p);
                             statesBuilder.add(state);
                             return state;
                     }
@@ -95,17 +95,17 @@ public class VehicleStatus {
                 });
             }
     
-            states = statesBuilder.toArray(new Property[0]);
+            states = statesBuilder;
         }
     
         private State(Builder builder) {
             super(builder);
     
-            states = builder.states.toArray(new Property[0]);
+            states = builder.states;
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private final List<Property> states = new ArrayList<>();
+            private final List<Property<Command>> states = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);

@@ -45,9 +45,9 @@ public class VideoHandover {
      * Video handover command
      */
     public static class VideoHandoverCommand extends SetCommand {
-        Property url = new Property<>(String.class, PROPERTY_URL);
-        Property screen = new Property<>(Screen.class, PROPERTY_SCREEN);
-        Property startingTime = new Property<>(Duration.class, PROPERTY_STARTING_TIME);
+        Property<String> url = new Property<>(String.class, PROPERTY_URL);
+        Property<Screen> screen = new Property<>(Screen.class, PROPERTY_SCREEN);
+        Property<Duration> startingTime = new Property<>(Duration.class, PROPERTY_STARTING_TIME);
     
         /**
          * @return The url

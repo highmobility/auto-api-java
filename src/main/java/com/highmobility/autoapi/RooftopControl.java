@@ -46,7 +46,7 @@ public class RooftopControl {
     /**
      * Get rooftop state
      */
-    public static class GetRooftopState extends GetCommand {
+    public static class GetRooftopState extends GetCommand<State> {
         public GetRooftopState() {
             super(State.class, IDENTIFIER);
         }
@@ -59,7 +59,7 @@ public class RooftopControl {
     /**
      * Get specific rooftop control properties
      */
-    public static class GetRooftopProperties extends GetCommand {
+    public static class GetRooftopProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -83,12 +83,12 @@ public class RooftopControl {
      * The rooftop control state
      */
     public static class State extends SetCommand {
-        Property dimming = new Property<>(Double.class, PROPERTY_DIMMING);
-        Property position = new Property<>(Double.class, PROPERTY_POSITION);
-        Property convertibleRoofState = new Property<>(ConvertibleRoofState.class, PROPERTY_CONVERTIBLE_ROOF_STATE);
-        Property sunroofTiltState = new Property<>(SunroofTiltState.class, PROPERTY_SUNROOF_TILT_STATE);
-        Property sunroofState = new Property<>(SunroofState.class, PROPERTY_SUNROOF_STATE);
-        Property sunroofRainEvent = new Property<>(SunroofRainEvent.class, PROPERTY_SUNROOF_RAIN_EVENT);
+        Property<Double> dimming = new Property<>(Double.class, PROPERTY_DIMMING);
+        Property<Double> position = new Property<>(Double.class, PROPERTY_POSITION);
+        Property<ConvertibleRoofState> convertibleRoofState = new Property<>(ConvertibleRoofState.class, PROPERTY_CONVERTIBLE_ROOF_STATE);
+        Property<SunroofTiltState> sunroofTiltState = new Property<>(SunroofTiltState.class, PROPERTY_SUNROOF_TILT_STATE);
+        Property<SunroofState> sunroofState = new Property<>(SunroofState.class, PROPERTY_SUNROOF_STATE);
+        Property<SunroofRainEvent> sunroofRainEvent = new Property<>(SunroofRainEvent.class, PROPERTY_SUNROOF_RAIN_EVENT);
     
         /**
          * @return 1.0 (100%) is opaque, 0.0 (0%) is transparent
@@ -243,11 +243,11 @@ public class RooftopControl {
      * Control rooftop
      */
     public static class ControlRooftop extends SetCommand {
-        Property dimming = new Property<>(Double.class, PROPERTY_DIMMING);
-        Property position = new Property<>(Double.class, PROPERTY_POSITION);
-        Property convertibleRoofState = new Property<>(ConvertibleRoofState.class, PROPERTY_CONVERTIBLE_ROOF_STATE);
-        Property sunroofTiltState = new Property<>(SunroofTiltState.class, PROPERTY_SUNROOF_TILT_STATE);
-        Property sunroofState = new Property<>(SunroofState.class, PROPERTY_SUNROOF_STATE);
+        Property<Double> dimming = new Property<>(Double.class, PROPERTY_DIMMING);
+        Property<Double> position = new Property<>(Double.class, PROPERTY_POSITION);
+        Property<ConvertibleRoofState> convertibleRoofState = new Property<>(ConvertibleRoofState.class, PROPERTY_CONVERTIBLE_ROOF_STATE);
+        Property<SunroofTiltState> sunroofTiltState = new Property<>(SunroofTiltState.class, PROPERTY_SUNROOF_TILT_STATE);
+        Property<SunroofState> sunroofState = new Property<>(SunroofState.class, PROPERTY_SUNROOF_STATE);
     
         /**
          * @return The dimming

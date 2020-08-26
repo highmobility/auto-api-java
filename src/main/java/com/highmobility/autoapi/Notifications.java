@@ -49,10 +49,10 @@ public class Notifications {
      * The notifications state
      */
     public static class State extends SetCommand {
-        Property text = new Property<>(String.class, PROPERTY_TEXT);
-        Property<ActionItem>[] actionItems;
+        Property<String> text = new Property<>(String.class, PROPERTY_TEXT);
+        List<Property<ActionItem>> actionItems;
         PropertyInteger activatedAction = new PropertyInteger(PROPERTY_ACTIVATED_ACTION, false);
-        Property clear = new Property<>(Clear.class, PROPERTY_CLEAR);
+        Property<Clear> clear = new Property<>(Clear.class, PROPERTY_CLEAR);
     
         /**
          * @return Text for the notification
@@ -64,7 +64,7 @@ public class Notifications {
         /**
          * @return The action items
          */
-        public Property<ActionItem>[] getActionItems() {
+        public List<Property<ActionItem>> getActionItems() {
             return actionItems;
         }
     
@@ -85,14 +85,14 @@ public class Notifications {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> actionItemsBuilder = new ArrayList<>();
+            final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_TEXT: return text.update(p);
                         case PROPERTY_ACTION_ITEMS:
-                            Property actionItem = new Property<>(ActionItem.class, p);
+                            Property<ActionItem> actionItem = new Property<>(ActionItem.class, p);
                             actionItemsBuilder.add(actionItem);
                             return actionItem;
                         case PROPERTY_ACTIVATED_ACTION: return activatedAction.update(p);
@@ -103,21 +103,21 @@ public class Notifications {
                 });
             }
     
-            actionItems = actionItemsBuilder.toArray(new Property[0]);
+            actionItems = actionItemsBuilder;
         }
     
         private State(Builder builder) {
             super(builder);
     
             text = builder.text;
-            actionItems = builder.actionItems.toArray(new Property[0]);
+            actionItems = builder.actionItems;
             activatedAction = builder.activatedAction;
             clear = builder.clear;
         }
     
         public static final class Builder extends SetCommand.Builder {
             private Property<String> text;
-            private final List<Property> actionItems = new ArrayList<>();
+            private final List<Property<ActionItem>> actionItems = new ArrayList<>();
             private PropertyInteger activatedAction;
             private Property<Clear> clear;
     
@@ -193,8 +193,8 @@ public class Notifications {
      * Notification
      */
     public static class Notification extends SetCommand {
-        Property text = new Property<>(String.class, PROPERTY_TEXT);
-        Property<ActionItem>[] actionItems;
+        Property<String> text = new Property<>(String.class, PROPERTY_TEXT);
+        List<Property<ActionItem>> actionItems;
     
         /**
          * @return The text
@@ -206,7 +206,7 @@ public class Notifications {
         /**
          * @return The action items
          */
-        public Property<ActionItem>[] getActionItems() {
+        public List<Property<ActionItem>> getActionItems() {
             return actionItems;
         }
         
@@ -216,11 +216,11 @@ public class Notifications {
          * @param text Text for the notification
          * @param actionItems The action items
          */
-        public Notification(String text, @Nullable ActionItem[] actionItems) {
+        public Notification(String text, @Nullable List<ActionItem> actionItems) {
             super(IDENTIFIER);
         
             addProperty(this.text.update(text));
-            final ArrayList<Property> actionItemsBuilder = new ArrayList<>();
+            final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
             if (actionItems != null) {
                 for (ActionItem actionItem : actionItems) {
                     Property prop = new Property(0x02, actionItem);
@@ -228,7 +228,7 @@ public class Notifications {
                     addProperty(prop);
                 }
             }
-            this.actionItems = actionItemsBuilder.toArray(new Property[0]);
+            this.actionItems = actionItemsBuilder;
             createBytes();
         }
     
@@ -242,7 +242,7 @@ public class Notifications {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_TEXT: return text.update(p);
                         case PROPERTY_ACTION_ITEMS: {
-                            Property actionItem = new Property<>(ActionItem.class, p);
+                            Property<ActionItem> actionItem = new Property<>(ActionItem.class, p);
                             actionItemsBuilder.add(actionItem);
                             return actionItem;
                         }
@@ -251,7 +251,7 @@ public class Notifications {
                 });
             }
         
-            actionItems = actionItemsBuilder.toArray(new Property[0]);
+            actionItems = actionItemsBuilder;
             if (this.text.getValue() == null) 
                 throw new NoPropertiesException();
         }
@@ -301,7 +301,7 @@ public class Notifications {
      * Clear notification
      */
     public static class ClearNotification extends SetCommand {
-        Property clear = new Property<>(Clear.class, PROPERTY_CLEAR);
+        Property<Clear> clear = new Property<>(Clear.class, PROPERTY_CLEAR);
     
         /**
          * Clear notification

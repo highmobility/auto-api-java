@@ -48,7 +48,7 @@ public class HonkHornFlashLights {
     /**
      * Get flashers state
      */
-    public static class GetFlashersState extends GetCommand {
+    public static class GetFlashersState extends GetCommand<State> {
         public GetFlashersState() {
             super(State.class, IDENTIFIER);
         }
@@ -61,7 +61,7 @@ public class HonkHornFlashLights {
     /**
      * Get specific honk horn flash lights properties
      */
-    public static class GetFlashersProperties extends GetCommand {
+    public static class GetFlashersProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -85,7 +85,7 @@ public class HonkHornFlashLights {
      * The honk horn flash lights state
      */
     public static class State extends SetCommand {
-        Property flashers = new Property<>(Flashers.class, PROPERTY_FLASHERS);
+        Property<Flashers> flashers = new Property<>(Flashers.class, PROPERTY_FLASHERS);
     
         /**
          * @return The flashers
@@ -141,7 +141,7 @@ public class HonkHornFlashLights {
      */
     public static class HonkFlash extends SetCommand {
         PropertyInteger flashTimes = new PropertyInteger(PROPERTY_FLASH_TIMES, false);
-        Property honkTime = new Property<>(Duration.class, PROPERTY_HONK_TIME);
+        Property<Duration> honkTime = new Property<>(Duration.class, PROPERTY_HONK_TIME);
     
         /**
          * @return The flash times
@@ -191,7 +191,7 @@ public class HonkHornFlashLights {
      * Activate deactivate emergency flasher
      */
     public static class ActivateDeactivateEmergencyFlasher extends SetCommand {
-        Property emergencyFlashersState = new Property<>(ActiveState.class, PROPERTY_EMERGENCY_FLASHERS_STATE);
+        Property<ActiveState> emergencyFlashersState = new Property<>(ActiveState.class, PROPERTY_EMERGENCY_FLASHERS_STATE);
     
         /**
          * @return The emergency flashers state

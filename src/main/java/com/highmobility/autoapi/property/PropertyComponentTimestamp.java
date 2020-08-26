@@ -29,7 +29,7 @@ import java.util.Calendar;
 
 public class PropertyComponentTimestamp extends PropertyComponent {
     private static final byte IDENTIFIER = 0x02;
-    private Calendar timestamp;
+    private final Calendar timestamp;
 
     /**
      * @return The timestamp calendar.

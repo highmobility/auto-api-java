@@ -154,7 +154,7 @@ class KHomeChargerTest : BaseTest() {
             "12001101000E013fd33333333333330003455552" +
             "120014010011023fd33333333333330006526970706c65")
     
-        val constructed = HomeCharger.SetPriceTariffs(arrayOf(
+        val constructed = HomeCharger.SetPriceTariffs(arrayListOf(
             PriceTariff(PriceTariff.PricingType.STARTING_FEE, 4.5, "EUR"), 
             PriceTariff(PriceTariff.PricingType.PER_MINUTE, 0.3, "EUR"), 
             PriceTariff(PriceTariff.PricingType.PER_KWH, 0.3, "Ripple")))

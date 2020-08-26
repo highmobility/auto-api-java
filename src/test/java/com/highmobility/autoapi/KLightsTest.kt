@@ -132,15 +132,15 @@ class KLightsTest : BaseTest() {
             "0900050100020101")
     
         val constructed = Lights.ControlLights(Lights.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM, ActiveState.ACTIVE, RgbColour(255, 0, 0), 
-            arrayOf(
+            arrayListOf(
             Light(LocationLongitudinal.FRONT, ActiveState.INACTIVE), 
             Light(LocationLongitudinal.REAR, ActiveState.ACTIVE)), 
-            arrayOf(
+            arrayListOf(
             ReadingLamp(Location.FRONT_LEFT, ActiveState.ACTIVE), 
             ReadingLamp(Location.FRONT_RIGHT, ActiveState.ACTIVE), 
             ReadingLamp(Location.REAR_RIGHT, ActiveState.INACTIVE), 
             ReadingLamp(Location.REAR_LEFT, ActiveState.INACTIVE)), 
-            arrayOf(
+            arrayListOf(
             Light(LocationLongitudinal.FRONT, ActiveState.INACTIVE), 
             Light(LocationLongitudinal.REAR, ActiveState.ACTIVE)))
         assertTrue(bytesTheSame(constructed, bytes))

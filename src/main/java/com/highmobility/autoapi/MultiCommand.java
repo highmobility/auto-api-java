@@ -40,25 +40,25 @@ public class MultiCommand {
      * The multi command state
      */
     public static class State extends SetCommand {
-        Property<Command>[] multiStates;
+        List<Property<Command>> multiStates;
     
         /**
          * @return The incoming states
          */
-        public Property<Command>[] getMultiStates() {
+        public List<Property<Command>> getMultiStates() {
             return multiStates;
         }
     
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> multiStatesBuilder = new ArrayList<>();
+            final ArrayList<Property<Command>> multiStatesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_MULTI_STATES:
-                            Property multiState = new Property<>(Command.class, p);
+                            Property<Command> multiState = new Property<>(Command.class, p);
                             multiStatesBuilder.add(multiState);
                             return multiState;
                     }
@@ -67,17 +67,17 @@ public class MultiCommand {
                 });
             }
     
-            multiStates = multiStatesBuilder.toArray(new Property[0]);
+            multiStates = multiStatesBuilder;
         }
     
         private State(Builder builder) {
             super(builder);
     
-            multiStates = builder.multiStates.toArray(new Property[0]);
+            multiStates = builder.multiStates;
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private final List<Property> multiStates = new ArrayList<>();
+            private final List<Property<Command>> multiStates = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);
@@ -120,12 +120,12 @@ public class MultiCommand {
      * Multi command command
      */
     public static class MultiCommandCommand extends SetCommand {
-        Property<Command>[] multiCommands;
+        List<Property<Command>> multiCommands;
     
         /**
          * @return The multi commands
          */
-        public Property<Command>[] getMultiCommands() {
+        public List<Property<Command>> getMultiCommands() {
             return multiCommands;
         }
         
@@ -134,10 +134,10 @@ public class MultiCommand {
          *
          * @param multiCommands The outgoing commands
          */
-        public MultiCommandCommand(Command[] multiCommands) {
+        public MultiCommandCommand(List<Command> multiCommands) {
             super(IDENTIFIER);
         
-            final ArrayList<Property> multiCommandsBuilder = new ArrayList<>();
+            final ArrayList<Property<Command>> multiCommandsBuilder = new ArrayList<>();
             if (multiCommands != null) {
                 for (Command multiCommand : multiCommands) {
                     Property prop = new Property(0x02, multiCommand);
@@ -145,7 +145,7 @@ public class MultiCommand {
                     addProperty(prop);
                 }
             }
-            this.multiCommands = multiCommandsBuilder.toArray(new Property[0]);
+            this.multiCommands = multiCommandsBuilder;
             createBytes();
         }
     
@@ -158,7 +158,7 @@ public class MultiCommand {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_MULTI_COMMANDS: {
-                            Property multiCommand = new Property<>(Command.class, p);
+                            Property<Command> multiCommand = new Property<>(Command.class, p);
                             multiCommandsBuilder.add(multiCommand);
                             return multiCommand;
                         }
@@ -167,8 +167,8 @@ public class MultiCommand {
                 });
             }
         
-            multiCommands = multiCommandsBuilder.toArray(new Property[0]);
-            if (this.multiCommands.length == 0) 
+            multiCommands = multiCommandsBuilder;
+            if (this.multiCommands.size() == 0) 
                 throw new NoPropertiesException();
         }
     }

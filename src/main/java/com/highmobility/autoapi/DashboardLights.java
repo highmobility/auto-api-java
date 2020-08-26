@@ -39,7 +39,7 @@ public class DashboardLights {
     /**
      * Get dashboard lights
      */
-    public static class GetDashboardLights extends GetCommand {
+    public static class GetDashboardLights extends GetCommand<State> {
         public GetDashboardLights() {
             super(State.class, IDENTIFIER);
         }
@@ -53,25 +53,25 @@ public class DashboardLights {
      * The dashboard lights state
      */
     public static class State extends SetCommand {
-        Property<DashboardLight>[] dashboardLights;
+        List<Property<DashboardLight>> dashboardLights;
     
         /**
          * @return The dashboard lights
          */
-        public Property<DashboardLight>[] getDashboardLights() {
+        public List<Property<DashboardLight>> getDashboardLights() {
             return dashboardLights;
         }
     
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> dashboardLightsBuilder = new ArrayList<>();
+            final ArrayList<Property<DashboardLight>> dashboardLightsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_DASHBOARD_LIGHTS:
-                            Property dashboardLight = new Property<>(DashboardLight.class, p);
+                            Property<DashboardLight> dashboardLight = new Property<>(DashboardLight.class, p);
                             dashboardLightsBuilder.add(dashboardLight);
                             return dashboardLight;
                     }
@@ -80,17 +80,17 @@ public class DashboardLights {
                 });
             }
     
-            dashboardLights = dashboardLightsBuilder.toArray(new Property[0]);
+            dashboardLights = dashboardLightsBuilder;
         }
     
         private State(Builder builder) {
             super(builder);
     
-            dashboardLights = builder.dashboardLights.toArray(new Property[0]);
+            dashboardLights = builder.dashboardLights;
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private final List<Property> dashboardLights = new ArrayList<>();
+            private final List<Property<DashboardLight>> dashboardLights = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);

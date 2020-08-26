@@ -43,7 +43,7 @@ public class Ignition {
     /**
      * Get all ignition properties
      */
-    public static class GetState extends GetCommand {
+    public static class GetState extends GetCommand<State> {
         public GetState() {
             super(State.class, IDENTIFIER);
         }
@@ -56,7 +56,7 @@ public class Ignition {
     /**
      * Get specific ignition properties
      */
-    public static class GetProperties extends GetCommand {
+    public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -80,9 +80,9 @@ public class Ignition {
      * The ignition state
      */
     public static class State extends SetCommand {
-        Property status = new Property<>(OnOffState.class, PROPERTY_STATUS);
-        Property accessoriesStatus = new Property<>(OnOffState.class, PROPERTY_ACCESSORIES_STATUS);
-        Property state = new Property<>(IgnitionState.class, PROPERTY_STATE);
+        Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
+        Property<OnOffState> accessoriesStatus = new Property<>(OnOffState.class, PROPERTY_ACCESSORIES_STATUS);
+        Property<IgnitionState> state = new Property<>(IgnitionState.class, PROPERTY_STATE);
     
         /**
          * @return The status
@@ -177,7 +177,7 @@ public class Ignition {
      * Turn ignition on off
      */
     public static class TurnIgnitionOnOff extends SetCommand {
-        Property status = new Property<>(OnOffState.class, PROPERTY_STATUS);
+        Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
     
         /**
          * @return The status

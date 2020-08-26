@@ -49,25 +49,25 @@ public class Historical {
      * The historical state
      */
     public static class State extends SetCommand {
-        Property<Command>[] states;
+        List<Property<Command>> states;
     
         /**
          * @return The states
          */
-        public Property<Command>[] getStates() {
+        public List<Property<Command>> getStates() {
             return states;
         }
     
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            final ArrayList<Property> statesBuilder = new ArrayList<>();
+            final ArrayList<Property<Command>> statesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATES:
-                            Property state = new Property<>(Command.class, p);
+                            Property<Command> state = new Property<>(Command.class, p);
                             statesBuilder.add(state);
                             return state;
                     }
@@ -76,17 +76,17 @@ public class Historical {
                 });
             }
     
-            states = statesBuilder.toArray(new Property[0]);
+            states = statesBuilder;
         }
     
         private State(Builder builder) {
             super(builder);
     
-            states = builder.states.toArray(new Property[0]);
+            states = builder.states;
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private final List<Property> states = new ArrayList<>();
+            private final List<Property<Command>> states = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);
@@ -130,8 +130,8 @@ public class Historical {
      */
     public static class RequestStates extends SetCommand {
         PropertyInteger capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false);
-        Property startDate = new Property<>(Calendar.class, PROPERTY_START_DATE);
-        Property endDate = new Property<>(Calendar.class, PROPERTY_END_DATE);
+        Property<Calendar> startDate = new Property<>(Calendar.class, PROPERTY_START_DATE);
+        Property<Calendar> endDate = new Property<>(Calendar.class, PROPERTY_END_DATE);
     
         /**
          * @return The capability id
@@ -192,8 +192,8 @@ public class Historical {
      */
     public static class GetTrips extends SetCommand {
         PropertyInteger capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false);
-        Property startDate = new Property<>(Calendar.class, PROPERTY_START_DATE);
-        Property endDate = new Property<>(Calendar.class, PROPERTY_END_DATE);
+        Property<Calendar> startDate = new Property<>(Calendar.class, PROPERTY_START_DATE);
+        Property<Calendar> endDate = new Property<>(Calendar.class, PROPERTY_END_DATE);
     
         /**
          * @return The start date

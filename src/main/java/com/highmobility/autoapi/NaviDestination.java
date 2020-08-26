@@ -47,7 +47,7 @@ public class NaviDestination {
     /**
      * Get navi destination
      */
-    public static class GetNaviDestination extends GetCommand {
+    public static class GetNaviDestination extends GetCommand<State> {
         public GetNaviDestination() {
             super(State.class, IDENTIFIER);
         }
@@ -60,7 +60,7 @@ public class NaviDestination {
     /**
      * Get specific navi destination properties
      */
-    public static class GetNaviDestinationProperties extends GetCommand {
+    public static class GetNaviDestinationProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
          */
@@ -84,12 +84,12 @@ public class NaviDestination {
      * The navi destination state
      */
     public static class State extends SetCommand {
-        Property coordinates = new Property<>(Coordinates.class, PROPERTY_COORDINATES);
-        Property destinationName = new Property<>(String.class, PROPERTY_DESTINATION_NAME);
+        Property<Coordinates> coordinates = new Property<>(Coordinates.class, PROPERTY_COORDINATES);
+        Property<String> destinationName = new Property<>(String.class, PROPERTY_DESTINATION_NAME);
         PropertyInteger dataSlotsFree = new PropertyInteger(PROPERTY_DATA_SLOTS_FREE, false);
         PropertyInteger dataSlotsMax = new PropertyInteger(PROPERTY_DATA_SLOTS_MAX, false);
-        Property arrivalDuration = new Property<>(Duration.class, PROPERTY_ARRIVAL_DURATION);
-        Property distanceToDestination = new Property<>(Length.class, PROPERTY_DISTANCE_TO_DESTINATION);
+        Property<Duration> arrivalDuration = new Property<>(Duration.class, PROPERTY_ARRIVAL_DURATION);
+        Property<Length> distanceToDestination = new Property<>(Length.class, PROPERTY_DISTANCE_TO_DESTINATION);
     
         /**
          * @return The coordinates
@@ -244,8 +244,8 @@ public class NaviDestination {
      * Set navi destination
      */
     public static class SetNaviDestination extends SetCommand {
-        Property coordinates = new Property<>(Coordinates.class, PROPERTY_COORDINATES);
-        Property destinationName = new Property<>(String.class, PROPERTY_DESTINATION_NAME);
+        Property<Coordinates> coordinates = new Property<>(Coordinates.class, PROPERTY_COORDINATES);
+        Property<String> destinationName = new Property<>(String.class, PROPERTY_DESTINATION_NAME);
     
         /**
          * @return The coordinates

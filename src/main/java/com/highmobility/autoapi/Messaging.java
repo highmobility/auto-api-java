@@ -39,8 +39,8 @@ public class Messaging {
      * The messaging state
      */
     public static class State extends SetCommand {
-        Property text = new Property<>(String.class, PROPERTY_TEXT);
-        Property handle = new Property<>(String.class, PROPERTY_HANDLE);
+        Property<String> text = new Property<>(String.class, PROPERTY_TEXT);
+        Property<String> handle = new Property<>(String.class, PROPERTY_HANDLE);
     
         /**
          * @return The text
@@ -115,8 +115,8 @@ public class Messaging {
      * Message received
      */
     public static class MessageReceived extends SetCommand {
-        Property text = new Property<>(String.class, PROPERTY_TEXT);
-        Property handle = new Property<>(String.class, PROPERTY_HANDLE);
+        Property<String> text = new Property<>(String.class, PROPERTY_TEXT);
+        Property<String> handle = new Property<>(String.class, PROPERTY_HANDLE);
     
         /**
          * @return The text
