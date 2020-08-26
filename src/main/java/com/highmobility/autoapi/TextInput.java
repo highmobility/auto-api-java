@@ -37,7 +37,7 @@ public class TextInput {
      * Text input command
      */
     public static class TextInputCommand extends SetCommand {
-        Property<String> text = new Property(String.class, PROPERTY_TEXT);
+        Property text = new Property<>(String.class, PROPERTY_TEXT);
     
         /**
          * @return The text

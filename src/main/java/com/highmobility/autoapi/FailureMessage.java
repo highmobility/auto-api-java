@@ -48,9 +48,9 @@ public class FailureMessage {
     public static class State extends SetCommand {
         PropertyInteger failedMessageID = new PropertyInteger(PROPERTY_FAILED_MESSAGE_ID, false);
         PropertyInteger failedMessageType = new PropertyInteger(PROPERTY_FAILED_MESSAGE_TYPE, false);
-        Property<FailureReason> failureReason = new Property(FailureReason.class, PROPERTY_FAILURE_REASON);
-        Property<String> failureDescription = new Property(String.class, PROPERTY_FAILURE_DESCRIPTION);
-        Property<Bytes> failedPropertyIDs = new Property(Bytes.class, PROPERTY_FAILED_PROPERTY_IDS);
+        Property failureReason = new Property<>(FailureReason.class, PROPERTY_FAILURE_REASON);
+        Property failureDescription = new Property<>(String.class, PROPERTY_FAILURE_DESCRIPTION);
+        Property failedPropertyIDs = new Property<>(Bytes.class, PROPERTY_FAILED_PROPERTY_IDS);
     
         /**
          * @return Capability identifier of the failed message

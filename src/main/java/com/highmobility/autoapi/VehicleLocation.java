@@ -80,10 +80,10 @@ public class VehicleLocation {
      * The vehicle location state
      */
     public static class State extends SetCommand {
-        Property<Coordinates> coordinates = new Property(Coordinates.class, PROPERTY_COORDINATES);
-        Property<Angle> heading = new Property(Angle.class, PROPERTY_HEADING);
-        Property<Length> altitude = new Property(Length.class, PROPERTY_ALTITUDE);
-        Property<Length> precision = new Property(Length.class, PROPERTY_PRECISION);
+        Property coordinates = new Property<>(Coordinates.class, PROPERTY_COORDINATES);
+        Property heading = new Property<>(Angle.class, PROPERTY_HEADING);
+        Property altitude = new Property<>(Length.class, PROPERTY_ALTITUDE);
+        Property precision = new Property<>(Length.class, PROPERTY_PRECISION);
     
         /**
          * @return The coordinates

@@ -78,8 +78,8 @@ public class Trunk {
      * The trunk state
      */
     public static class State extends SetCommand {
-        Property<LockState> lock = new Property(LockState.class, PROPERTY_LOCK);
-        Property<Position> position = new Property(Position.class, PROPERTY_POSITION);
+        Property lock = new Property<>(LockState.class, PROPERTY_LOCK);
+        Property position = new Property<>(Position.class, PROPERTY_POSITION);
     
         /**
          * @return The lock
@@ -154,8 +154,8 @@ public class Trunk {
      * Control trunk
      */
     public static class ControlTrunk extends SetCommand {
-        Property<LockState> lock = new Property(LockState.class, PROPERTY_LOCK);
-        Property<Position> position = new Property(Position.class, PROPERTY_POSITION);
+        Property lock = new Property<>(LockState.class, PROPERTY_LOCK);
+        Property position = new Property<>(Position.class, PROPERTY_POSITION);
     
         /**
          * @return The lock

@@ -50,7 +50,7 @@ public class WeatherConditions {
      * The weather conditions state
      */
     public static class State extends SetCommand {
-        Property<Double> rainIntensity = new Property(Double.class, PROPERTY_RAIN_INTENSITY);
+        Property rainIntensity = new Property<>(Double.class, PROPERTY_RAIN_INTENSITY);
     
         /**
          * @return Measured raining intensity percentage, whereas 0% is no rain and 100% is maximum rain

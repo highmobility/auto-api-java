@@ -76,8 +76,8 @@ public class LightConditions {
      * The light conditions state
      */
     public static class State extends SetCommand {
-        Property<Illuminance> outsideLight = new Property(Illuminance.class, PROPERTY_OUTSIDE_LIGHT);
-        Property<Illuminance> insideLight = new Property(Illuminance.class, PROPERTY_INSIDE_LIGHT);
+        Property outsideLight = new Property<>(Illuminance.class, PROPERTY_OUTSIDE_LIGHT);
+        Property insideLight = new Property<>(Illuminance.class, PROPERTY_INSIDE_LIGHT);
     
         /**
          * @return Measured outside illuminance

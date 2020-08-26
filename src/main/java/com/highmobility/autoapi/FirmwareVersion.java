@@ -77,9 +77,9 @@ public class FirmwareVersion {
      * The firmware version state
      */
     public static class State extends SetCommand {
-        Property<HmkitVersion> hmKitVersion = new Property(HmkitVersion.class, PROPERTY_HMKIT_VERSION);
-        Property<String> hmKitBuildName = new Property(String.class, PROPERTY_HMKIT_BUILD_NAME);
-        Property<String> applicationVersion = new Property(String.class, PROPERTY_APPLICATION_VERSION);
+        Property hmKitVersion = new Property<>(HmkitVersion.class, PROPERTY_HMKIT_VERSION);
+        Property hmKitBuildName = new Property<>(String.class, PROPERTY_HMKIT_BUILD_NAME);
+        Property applicationVersion = new Property<>(String.class, PROPERTY_APPLICATION_VERSION);
     
         /**
          * @return HMKit version

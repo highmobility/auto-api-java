@@ -56,7 +56,7 @@ public class DriverFatigue {
      * The driver fatigue state
      */
     public static class State extends SetCommand {
-        Property<DetectedFatigueLevel> detectedFatigueLevel = new Property(DetectedFatigueLevel.class, PROPERTY_DETECTED_FATIGUE_LEVEL);
+        Property detectedFatigueLevel = new Property<>(DetectedFatigueLevel.class, PROPERTY_DETECTED_FATIGUE_LEVEL);
     
         /**
          * @return The detected fatigue level

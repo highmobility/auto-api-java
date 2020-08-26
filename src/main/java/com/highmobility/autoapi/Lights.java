@@ -94,15 +94,15 @@ public class Lights {
      * The lights state
      */
     public static class State extends SetCommand {
-        Property<FrontExteriorLight> frontExteriorLight = new Property(FrontExteriorLight.class, PROPERTY_FRONT_EXTERIOR_LIGHT);
-        Property<ActiveState> rearExteriorLight = new Property(ActiveState.class, PROPERTY_REAR_EXTERIOR_LIGHT);
-        Property<RgbColour> ambientLightColour = new Property(RgbColour.class, PROPERTY_AMBIENT_LIGHT_COLOUR);
-        Property<ActiveState> reverseLight = new Property(ActiveState.class, PROPERTY_REVERSE_LIGHT);
-        Property<ActiveState> emergencyBrakeLight = new Property(ActiveState.class, PROPERTY_EMERGENCY_BRAKE_LIGHT);
+        Property frontExteriorLight = new Property<>(FrontExteriorLight.class, PROPERTY_FRONT_EXTERIOR_LIGHT);
+        Property rearExteriorLight = new Property<>(ActiveState.class, PROPERTY_REAR_EXTERIOR_LIGHT);
+        Property ambientLightColour = new Property<>(RgbColour.class, PROPERTY_AMBIENT_LIGHT_COLOUR);
+        Property reverseLight = new Property<>(ActiveState.class, PROPERTY_REVERSE_LIGHT);
+        Property emergencyBrakeLight = new Property<>(ActiveState.class, PROPERTY_EMERGENCY_BRAKE_LIGHT);
         Property<Light>[] fogLights;
         Property<ReadingLamp>[] readingLamps;
         Property<Light>[] interiorLights;
-        Property<SwitchPosition> switchPosition = new Property(SwitchPosition.class, PROPERTY_SWITCH_POSITION);
+        Property switchPosition = new Property<>(SwitchPosition.class, PROPERTY_SWITCH_POSITION);
     
         /**
          * @return The front exterior light
@@ -213,9 +213,9 @@ public class Lights {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> fogLightsBuilder = new ArrayList<>();
-            ArrayList<Property> readingLampsBuilder = new ArrayList<>();
-            ArrayList<Property> interiorLightsBuilder = new ArrayList<>();
+            final ArrayList<Property> fogLightsBuilder = new ArrayList<>();
+            final ArrayList<Property> readingLampsBuilder = new ArrayList<>();
+            final ArrayList<Property> interiorLightsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -226,15 +226,15 @@ public class Lights {
                         case PROPERTY_REVERSE_LIGHT: return reverseLight.update(p);
                         case PROPERTY_EMERGENCY_BRAKE_LIGHT: return emergencyBrakeLight.update(p);
                         case PROPERTY_FOG_LIGHTS:
-                            Property<Light> fogLight = new Property(Light.class, p);
+                            Property fogLight = new Property<>(Light.class, p);
                             fogLightsBuilder.add(fogLight);
                             return fogLight;
                         case PROPERTY_READING_LAMPS:
-                            Property<ReadingLamp> readingLamp = new Property(ReadingLamp.class, p);
+                            Property readingLamp = new Property<>(ReadingLamp.class, p);
                             readingLampsBuilder.add(readingLamp);
                             return readingLamp;
                         case PROPERTY_INTERIOR_LIGHTS:
-                            Property<Light> interiorLight = new Property(Light.class, p);
+                            Property interiorLight = new Property<>(Light.class, p);
                             interiorLightsBuilder.add(interiorLight);
                             return interiorLight;
                         case PROPERTY_SWITCH_POSITION: return switchPosition.update(p);
@@ -269,9 +269,9 @@ public class Lights {
             private Property<RgbColour> ambientLightColour;
             private Property<ActiveState> reverseLight;
             private Property<ActiveState> emergencyBrakeLight;
-            private List<Property> fogLights = new ArrayList<>();
-            private List<Property> readingLamps = new ArrayList<>();
-            private List<Property> interiorLights = new ArrayList<>();
+            private final List<Property> fogLights = new ArrayList<>();
+            private final List<Property> readingLamps = new ArrayList<>();
+            private final List<Property> interiorLights = new ArrayList<>();
             private Property<SwitchPosition> switchPosition;
     
             public Builder() {
@@ -432,9 +432,9 @@ public class Lights {
      * Control lights
      */
     public static class ControlLights extends SetCommand {
-        Property<FrontExteriorLight> frontExteriorLight = new Property(FrontExteriorLight.class, PROPERTY_FRONT_EXTERIOR_LIGHT);
-        Property<ActiveState> rearExteriorLight = new Property(ActiveState.class, PROPERTY_REAR_EXTERIOR_LIGHT);
-        Property<RgbColour> ambientLightColour = new Property(RgbColour.class, PROPERTY_AMBIENT_LIGHT_COLOUR);
+        Property frontExteriorLight = new Property<>(FrontExteriorLight.class, PROPERTY_FRONT_EXTERIOR_LIGHT);
+        Property rearExteriorLight = new Property<>(ActiveState.class, PROPERTY_REAR_EXTERIOR_LIGHT);
+        Property ambientLightColour = new Property<>(RgbColour.class, PROPERTY_AMBIENT_LIGHT_COLOUR);
         Property<Light>[] fogLights;
         Property<ReadingLamp>[] readingLamps;
         Property<Light>[] interiorLights;
@@ -497,7 +497,7 @@ public class Lights {
             addProperty(this.frontExteriorLight.update(frontExteriorLight));
             addProperty(this.rearExteriorLight.update(rearExteriorLight));
             addProperty(this.ambientLightColour.update(ambientLightColour));
-            ArrayList<Property> fogLightsBuilder = new ArrayList<>();
+            final ArrayList<Property> fogLightsBuilder = new ArrayList<>();
             if (fogLights != null) {
                 for (Light fogLight : fogLights) {
                     Property prop = new Property(0x07, fogLight);
@@ -507,7 +507,7 @@ public class Lights {
             }
             this.fogLights = fogLightsBuilder.toArray(new Property[0]);
             
-            ArrayList<Property> readingLampsBuilder = new ArrayList<>();
+            final ArrayList<Property> readingLampsBuilder = new ArrayList<>();
             if (readingLamps != null) {
                 for (ReadingLamp readingLamp : readingLamps) {
                     Property prop = new Property(0x08, readingLamp);
@@ -517,7 +517,7 @@ public class Lights {
             }
             this.readingLamps = readingLampsBuilder.toArray(new Property[0]);
             
-            ArrayList<Property> interiorLightsBuilder = new ArrayList<>();
+            final ArrayList<Property> interiorLightsBuilder = new ArrayList<>();
             if (interiorLights != null) {
                 for (Light interiorLight : interiorLights) {
                     Property prop = new Property(0x09, interiorLight);
@@ -533,9 +533,9 @@ public class Lights {
         ControlLights(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
         
-            ArrayList<Property<Light>> fogLightsBuilder = new ArrayList<>();
-            ArrayList<Property<ReadingLamp>> readingLampsBuilder = new ArrayList<>();
-            ArrayList<Property<Light>> interiorLightsBuilder = new ArrayList<>();
+            final ArrayList<Property<Light>> fogLightsBuilder = new ArrayList<>();
+            final ArrayList<Property<ReadingLamp>> readingLampsBuilder = new ArrayList<>();
+            final ArrayList<Property<Light>> interiorLightsBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -544,17 +544,17 @@ public class Lights {
                         case PROPERTY_REAR_EXTERIOR_LIGHT: return rearExteriorLight.update(p);
                         case PROPERTY_AMBIENT_LIGHT_COLOUR: return ambientLightColour.update(p);
                         case PROPERTY_FOG_LIGHTS: {
-                            Property fogLight = new Property(Light.class, p);
+                            Property fogLight = new Property<>(Light.class, p);
                             fogLightsBuilder.add(fogLight);
                             return fogLight;
                         }
                         case PROPERTY_READING_LAMPS: {
-                            Property readingLamp = new Property(ReadingLamp.class, p);
+                            Property readingLamp = new Property<>(ReadingLamp.class, p);
                             readingLampsBuilder.add(readingLamp);
                             return readingLamp;
                         }
                         case PROPERTY_INTERIOR_LIGHTS: {
-                            Property interiorLight = new Property(Light.class, p);
+                            Property interiorLight = new Property<>(Light.class, p);
                             interiorLightsBuilder.add(interiorLight);
                             return interiorLight;
                         }

@@ -52,13 +52,13 @@ public class MultiCommand {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> multiStatesBuilder = new ArrayList<>();
+            final ArrayList<Property> multiStatesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_MULTI_STATES:
-                            Property<Command> multiState = new Property(Command.class, p);
+                            Property multiState = new Property<>(Command.class, p);
                             multiStatesBuilder.add(multiState);
                             return multiState;
                     }
@@ -77,7 +77,7 @@ public class MultiCommand {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private List<Property> multiStates = new ArrayList<>();
+            private final List<Property> multiStates = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);
@@ -137,7 +137,7 @@ public class MultiCommand {
         public MultiCommandCommand(Command[] multiCommands) {
             super(IDENTIFIER);
         
-            ArrayList<Property> multiCommandsBuilder = new ArrayList<>();
+            final ArrayList<Property> multiCommandsBuilder = new ArrayList<>();
             if (multiCommands != null) {
                 for (Command multiCommand : multiCommands) {
                     Property prop = new Property(0x02, multiCommand);
@@ -152,13 +152,13 @@ public class MultiCommand {
         MultiCommandCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
         
-            ArrayList<Property<Command>> multiCommandsBuilder = new ArrayList<>();
+            final ArrayList<Property<Command>> multiCommandsBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_MULTI_COMMANDS: {
-                            Property multiCommand = new Property(Command.class, p);
+                            Property multiCommand = new Property<>(Command.class, p);
                             multiCommandsBuilder.add(multiCommand);
                             return multiCommand;
                         }

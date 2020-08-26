@@ -51,7 +51,7 @@ public class ValetMode {
      * The valet mode state
      */
     public static class State extends SetCommand {
-        Property<ActiveState> status = new Property(ActiveState.class, PROPERTY_STATUS);
+        Property status = new Property<>(ActiveState.class, PROPERTY_STATUS);
     
         /**
          * @return The status
@@ -106,7 +106,7 @@ public class ValetMode {
      * Activate deactivate valet mode
      */
     public static class ActivateDeactivateValetMode extends SetCommand {
-        Property<ActiveState> status = new Property(ActiveState.class, PROPERTY_STATUS);
+        Property status = new Property<>(ActiveState.class, PROPERTY_STATUS);
     
         /**
          * @return The status

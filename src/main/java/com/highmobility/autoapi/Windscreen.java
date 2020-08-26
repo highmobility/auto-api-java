@@ -87,14 +87,14 @@ public class Windscreen {
      * The windscreen state
      */
     public static class State extends SetCommand {
-        Property<WipersStatus> wipersStatus = new Property(WipersStatus.class, PROPERTY_WIPERS_STATUS);
-        Property<WipersIntensity> wipersIntensity = new Property(WipersIntensity.class, PROPERTY_WIPERS_INTENSITY);
-        Property<WindscreenDamage> windscreenDamage = new Property(WindscreenDamage.class, PROPERTY_WINDSCREEN_DAMAGE);
-        Property<Zone> windscreenZoneMatrix = new Property(Zone.class, PROPERTY_WINDSCREEN_ZONE_MATRIX);
-        Property<Zone> windscreenDamageZone = new Property(Zone.class, PROPERTY_WINDSCREEN_DAMAGE_ZONE);
-        Property<WindscreenNeedsReplacement> windscreenNeedsReplacement = new Property(WindscreenNeedsReplacement.class, PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT);
-        Property<Double> windscreenDamageConfidence = new Property(Double.class, PROPERTY_WINDSCREEN_DAMAGE_CONFIDENCE);
-        Property<Calendar> windscreenDamageDetectionTime = new Property(Calendar.class, PROPERTY_WINDSCREEN_DAMAGE_DETECTION_TIME);
+        Property wipersStatus = new Property<>(WipersStatus.class, PROPERTY_WIPERS_STATUS);
+        Property wipersIntensity = new Property<>(WipersIntensity.class, PROPERTY_WIPERS_INTENSITY);
+        Property windscreenDamage = new Property<>(WindscreenDamage.class, PROPERTY_WINDSCREEN_DAMAGE);
+        Property windscreenZoneMatrix = new Property<>(Zone.class, PROPERTY_WINDSCREEN_ZONE_MATRIX);
+        Property windscreenDamageZone = new Property<>(Zone.class, PROPERTY_WINDSCREEN_DAMAGE_ZONE);
+        Property windscreenNeedsReplacement = new Property<>(WindscreenNeedsReplacement.class, PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT);
+        Property windscreenDamageConfidence = new Property<>(Double.class, PROPERTY_WINDSCREEN_DAMAGE_CONFIDENCE);
+        Property windscreenDamageDetectionTime = new Property<>(Calendar.class, PROPERTY_WINDSCREEN_DAMAGE_DETECTION_TIME);
     
         /**
          * @return The wipers status
@@ -289,8 +289,8 @@ public class Windscreen {
      * Set windscreen damage
      */
     public static class SetWindscreenDamage extends SetCommand {
-        Property<WindscreenDamage> windscreenDamage = new Property(WindscreenDamage.class, PROPERTY_WINDSCREEN_DAMAGE);
-        Property<Zone> windscreenDamageZone = new Property(Zone.class, PROPERTY_WINDSCREEN_DAMAGE_ZONE);
+        Property windscreenDamage = new Property<>(WindscreenDamage.class, PROPERTY_WINDSCREEN_DAMAGE);
+        Property windscreenDamageZone = new Property<>(Zone.class, PROPERTY_WINDSCREEN_DAMAGE_ZONE);
     
         /**
          * @return The windscreen damage
@@ -340,7 +340,7 @@ public class Windscreen {
      * Set windscreen replacement needed
      */
     public static class SetWindscreenReplacementNeeded extends SetCommand {
-        Property<WindscreenNeedsReplacement> windscreenNeedsReplacement = new Property(WindscreenNeedsReplacement.class, PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT);
+        Property windscreenNeedsReplacement = new Property<>(WindscreenNeedsReplacement.class, PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT);
     
         /**
          * @return The windscreen needs replacement
@@ -380,8 +380,8 @@ public class Windscreen {
      * Control wipers
      */
     public static class ControlWipers extends SetCommand {
-        Property<WipersStatus> wipersStatus = new Property(WipersStatus.class, PROPERTY_WIPERS_STATUS);
-        Property<WipersIntensity> wipersIntensity = new Property(WipersIntensity.class, PROPERTY_WIPERS_INTENSITY);
+        Property wipersStatus = new Property<>(WipersStatus.class, PROPERTY_WIPERS_STATUS);
+        Property wipersIntensity = new Property<>(WipersIntensity.class, PROPERTY_WIPERS_INTENSITY);
     
         /**
          * @return The wipers status

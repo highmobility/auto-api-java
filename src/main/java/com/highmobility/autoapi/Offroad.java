@@ -76,8 +76,8 @@ public class Offroad {
      * The offroad state
      */
     public static class State extends SetCommand {
-        Property<Angle> routeIncline = new Property(Angle.class, PROPERTY_ROUTE_INCLINE);
-        Property<Double> wheelSuspension = new Property(Double.class, PROPERTY_WHEEL_SUSPENSION);
+        Property routeIncline = new Property<>(Angle.class, PROPERTY_ROUTE_INCLINE);
+        Property wheelSuspension = new Property<>(Double.class, PROPERTY_WHEEL_SUSPENSION);
     
         /**
          * @return The route elevation incline

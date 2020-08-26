@@ -51,7 +51,7 @@ public class VehicleTime {
      * The vehicle time state
      */
     public static class State extends SetCommand {
-        Property<Time> vehicleTime = new Property(Time.class, PROPERTY_VEHICLE_TIME);
+        Property vehicleTime = new Property<>(Time.class, PROPERTY_VEHICLE_TIME);
     
         /**
          * @return Vehicle time in a 24h format

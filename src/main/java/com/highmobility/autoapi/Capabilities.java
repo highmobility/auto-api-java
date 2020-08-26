@@ -120,18 +120,18 @@ public class Capabilities {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> capabilitiesBuilder = new ArrayList<>();
-            ArrayList<Property> webhooksBuilder = new ArrayList<>();
+            final ArrayList<Property> capabilitiesBuilder = new ArrayList<>();
+            final ArrayList<Property> webhooksBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_CAPABILITIES:
-                            Property<SupportedCapability> capability = new Property(SupportedCapability.class, p);
+                            Property capability = new Property<>(SupportedCapability.class, p);
                             capabilitiesBuilder.add(capability);
                             return capability;
                         case PROPERTY_WEBHOOKS:
-                            Property<Webhook> webhook = new Property(Webhook.class, p);
+                            Property webhook = new Property<>(Webhook.class, p);
                             webhooksBuilder.add(webhook);
                             return webhook;
                     }
@@ -152,8 +152,8 @@ public class Capabilities {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private List<Property> capabilities = new ArrayList<>();
-            private List<Property> webhooks = new ArrayList<>();
+            private final List<Property> capabilities = new ArrayList<>();
+            private final List<Property> webhooks = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);

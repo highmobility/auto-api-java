@@ -126,41 +126,41 @@ public class Diagnostics {
      * The diagnostics state
      */
     public static class State extends SetCommand {
-        Property<Length> mileage = new Property(Length.class, PROPERTY_MILEAGE);
-        Property<Temperature> engineOilTemperature = new Property(Temperature.class, PROPERTY_ENGINE_OIL_TEMPERATURE);
-        Property<Speed> speed = new Property(Speed.class, PROPERTY_SPEED);
-        Property<AngularVelocity> engineRPM = new Property(AngularVelocity.class, PROPERTY_ENGINE_RPM);
-        Property<Double> fuelLevel = new Property(Double.class, PROPERTY_FUEL_LEVEL);
-        Property<Length> estimatedRange = new Property(Length.class, PROPERTY_ESTIMATED_RANGE);
-        Property<FluidLevel> washerFluidLevel = new Property(FluidLevel.class, PROPERTY_WASHER_FLUID_LEVEL);
-        Property<ElectricPotentialDifference> batteryVoltage = new Property(ElectricPotentialDifference.class, PROPERTY_BATTERY_VOLTAGE);
-        Property<Volume> adBlueLevel = new Property(Volume.class, PROPERTY_ADBLUE_LEVEL);
-        Property<Length> distanceSinceReset = new Property(Length.class, PROPERTY_DISTANCE_SINCE_RESET);
-        Property<Length> distanceSinceStart = new Property(Length.class, PROPERTY_DISTANCE_SINCE_START);
-        Property<Volume> fuelVolume = new Property(Volume.class, PROPERTY_FUEL_VOLUME);
-        Property<ActiveState> antiLockBraking = new Property(ActiveState.class, PROPERTY_ANTI_LOCK_BRAKING);
-        Property<Temperature> engineCoolantTemperature = new Property(Temperature.class, PROPERTY_ENGINE_COOLANT_TEMPERATURE);
-        Property<Duration> engineTotalOperatingHours = new Property(Duration.class, PROPERTY_ENGINE_TOTAL_OPERATING_HOURS);
-        Property<Volume> engineTotalFuelConsumption = new Property(Volume.class, PROPERTY_ENGINE_TOTAL_FUEL_CONSUMPTION);
-        Property<FluidLevel> brakeFluidLevel = new Property(FluidLevel.class, PROPERTY_BRAKE_FLUID_LEVEL);
-        Property<Double> engineTorque = new Property(Double.class, PROPERTY_ENGINE_TORQUE);
-        Property<Double> engineLoad = new Property(Double.class, PROPERTY_ENGINE_LOAD);
-        Property<Speed> wheelBasedSpeed = new Property(Speed.class, PROPERTY_WHEEL_BASED_SPEED);
-        Property<Double> batteryLevel = new Property(Double.class, PROPERTY_BATTERY_LEVEL);
+        Property mileage = new Property<>(Length.class, PROPERTY_MILEAGE);
+        Property engineOilTemperature = new Property<>(Temperature.class, PROPERTY_ENGINE_OIL_TEMPERATURE);
+        Property speed = new Property<>(Speed.class, PROPERTY_SPEED);
+        Property engineRPM = new Property<>(AngularVelocity.class, PROPERTY_ENGINE_RPM);
+        Property fuelLevel = new Property<>(Double.class, PROPERTY_FUEL_LEVEL);
+        Property estimatedRange = new Property<>(Length.class, PROPERTY_ESTIMATED_RANGE);
+        Property washerFluidLevel = new Property<>(FluidLevel.class, PROPERTY_WASHER_FLUID_LEVEL);
+        Property batteryVoltage = new Property<>(ElectricPotentialDifference.class, PROPERTY_BATTERY_VOLTAGE);
+        Property adBlueLevel = new Property<>(Volume.class, PROPERTY_ADBLUE_LEVEL);
+        Property distanceSinceReset = new Property<>(Length.class, PROPERTY_DISTANCE_SINCE_RESET);
+        Property distanceSinceStart = new Property<>(Length.class, PROPERTY_DISTANCE_SINCE_START);
+        Property fuelVolume = new Property<>(Volume.class, PROPERTY_FUEL_VOLUME);
+        Property antiLockBraking = new Property<>(ActiveState.class, PROPERTY_ANTI_LOCK_BRAKING);
+        Property engineCoolantTemperature = new Property<>(Temperature.class, PROPERTY_ENGINE_COOLANT_TEMPERATURE);
+        Property engineTotalOperatingHours = new Property<>(Duration.class, PROPERTY_ENGINE_TOTAL_OPERATING_HOURS);
+        Property engineTotalFuelConsumption = new Property<>(Volume.class, PROPERTY_ENGINE_TOTAL_FUEL_CONSUMPTION);
+        Property brakeFluidLevel = new Property<>(FluidLevel.class, PROPERTY_BRAKE_FLUID_LEVEL);
+        Property engineTorque = new Property<>(Double.class, PROPERTY_ENGINE_TORQUE);
+        Property engineLoad = new Property<>(Double.class, PROPERTY_ENGINE_LOAD);
+        Property wheelBasedSpeed = new Property<>(Speed.class, PROPERTY_WHEEL_BASED_SPEED);
+        Property batteryLevel = new Property<>(Double.class, PROPERTY_BATTERY_LEVEL);
         Property<CheckControlMessage>[] checkControlMessages;
         Property<TirePressure>[] tirePressures;
         Property<TireTemperature>[] tireTemperatures;
         Property<WheelRpm>[] wheelRPMs;
         Property<TroubleCode>[] troubleCodes;
-        Property<Length> mileageMeters = new Property(Length.class, PROPERTY_MILEAGE_METERS);
-        Property<Length> odometer = new Property(Length.class, PROPERTY_ODOMETER);
-        Property<Duration> engineTotalOperatingTime = new Property(Duration.class, PROPERTY_ENGINE_TOTAL_OPERATING_TIME);
+        Property mileageMeters = new Property<>(Length.class, PROPERTY_MILEAGE_METERS);
+        Property odometer = new Property<>(Length.class, PROPERTY_ODOMETER);
+        Property engineTotalOperatingTime = new Property<>(Duration.class, PROPERTY_ENGINE_TOTAL_OPERATING_TIME);
         Property<TirePressureStatus>[] tirePressureStatuses;
-        Property<ActiveState> brakeLiningWearPreWarning = new Property(ActiveState.class, PROPERTY_BRAKE_LINING_WEAR_PRE_WARNING);
-        Property<Double> engineOilLifeRemaining = new Property(Double.class, PROPERTY_ENGINE_OIL_LIFE_REMAINING);
+        Property brakeLiningWearPreWarning = new Property<>(ActiveState.class, PROPERTY_BRAKE_LINING_WEAR_PRE_WARNING);
+        Property engineOilLifeRemaining = new Property<>(Double.class, PROPERTY_ENGINE_OIL_LIFE_REMAINING);
         Property<OemTroubleCodeValue>[] oemTroubleCodeValues;
-        Property<Length> dieselExhaustFluidRange = new Property(Length.class, PROPERTY_DIESEL_EXHAUST_FLUID_RANGE);
-        Property<Double> dieselParticulateFilterSootLevel = new Property(Double.class, PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL);
+        Property dieselExhaustFluidRange = new Property<>(Length.class, PROPERTY_DIESEL_EXHAUST_FLUID_RANGE);
+        Property dieselParticulateFilterSootLevel = new Property<>(Double.class, PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL);
     
         /**
          * @return The vehicle mileage (odometer)
@@ -410,13 +410,13 @@ public class Diagnostics {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> checkControlMessagesBuilder = new ArrayList<>();
-            ArrayList<Property> tirePressuresBuilder = new ArrayList<>();
-            ArrayList<Property> tireTemperaturesBuilder = new ArrayList<>();
-            ArrayList<Property> wheelRPMsBuilder = new ArrayList<>();
-            ArrayList<Property> troubleCodesBuilder = new ArrayList<>();
-            ArrayList<Property> tirePressureStatusesBuilder = new ArrayList<>();
-            ArrayList<Property> oemTroubleCodeValuesBuilder = new ArrayList<>();
+            final ArrayList<Property> checkControlMessagesBuilder = new ArrayList<>();
+            final ArrayList<Property> tirePressuresBuilder = new ArrayList<>();
+            final ArrayList<Property> tireTemperaturesBuilder = new ArrayList<>();
+            final ArrayList<Property> wheelRPMsBuilder = new ArrayList<>();
+            final ArrayList<Property> troubleCodesBuilder = new ArrayList<>();
+            final ArrayList<Property> tirePressureStatusesBuilder = new ArrayList<>();
+            final ArrayList<Property> oemTroubleCodeValuesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -443,36 +443,36 @@ public class Diagnostics {
                         case PROPERTY_WHEEL_BASED_SPEED: return wheelBasedSpeed.update(p);
                         case PROPERTY_BATTERY_LEVEL: return batteryLevel.update(p);
                         case PROPERTY_CHECK_CONTROL_MESSAGES:
-                            Property<CheckControlMessage> checkControlMessage = new Property(CheckControlMessage.class, p);
+                            Property checkControlMessage = new Property<>(CheckControlMessage.class, p);
                             checkControlMessagesBuilder.add(checkControlMessage);
                             return checkControlMessage;
                         case PROPERTY_TIRE_PRESSURES:
-                            Property<TirePressure> tirePressure = new Property(TirePressure.class, p);
+                            Property tirePressure = new Property<>(TirePressure.class, p);
                             tirePressuresBuilder.add(tirePressure);
                             return tirePressure;
                         case PROPERTY_TIRE_TEMPERATURES:
-                            Property<TireTemperature> tireTemperature = new Property(TireTemperature.class, p);
+                            Property tireTemperature = new Property<>(TireTemperature.class, p);
                             tireTemperaturesBuilder.add(tireTemperature);
                             return tireTemperature;
                         case PROPERTY_WHEEL_RPMS:
-                            Property<WheelRpm> wheelRpm = new Property(WheelRpm.class, p);
+                            Property wheelRpm = new Property<>(WheelRpm.class, p);
                             wheelRPMsBuilder.add(wheelRpm);
                             return wheelRpm;
                         case PROPERTY_TROUBLE_CODES:
-                            Property<TroubleCode> troubleCode = new Property(TroubleCode.class, p);
+                            Property troubleCode = new Property<>(TroubleCode.class, p);
                             troubleCodesBuilder.add(troubleCode);
                             return troubleCode;
                         case PROPERTY_MILEAGE_METERS: return mileageMeters.update(p);
                         case PROPERTY_ODOMETER: return odometer.update(p);
                         case PROPERTY_ENGINE_TOTAL_OPERATING_TIME: return engineTotalOperatingTime.update(p);
                         case PROPERTY_TIRE_PRESSURE_STATUSES:
-                            Property<TirePressureStatus> tirePressureStatus = new Property(TirePressureStatus.class, p);
+                            Property tirePressureStatus = new Property<>(TirePressureStatus.class, p);
                             tirePressureStatusesBuilder.add(tirePressureStatus);
                             return tirePressureStatus;
                         case PROPERTY_BRAKE_LINING_WEAR_PRE_WARNING: return brakeLiningWearPreWarning.update(p);
                         case PROPERTY_ENGINE_OIL_LIFE_REMAINING: return engineOilLifeRemaining.update(p);
                         case PROPERTY_OEM_TROUBLE_CODE_VALUES:
-                            Property<OemTroubleCodeValue> oemTroubleCodeValue = new Property(OemTroubleCodeValue.class, p);
+                            Property oemTroubleCodeValue = new Property<>(OemTroubleCodeValue.class, p);
                             oemTroubleCodeValuesBuilder.add(oemTroubleCodeValue);
                             return oemTroubleCodeValue;
                         case PROPERTY_DIESEL_EXHAUST_FLUID_RANGE: return dieselExhaustFluidRange.update(p);
@@ -554,18 +554,18 @@ public class Diagnostics {
             private Property<Double> engineLoad;
             private Property<Speed> wheelBasedSpeed;
             private Property<Double> batteryLevel;
-            private List<Property> checkControlMessages = new ArrayList<>();
-            private List<Property> tirePressures = new ArrayList<>();
-            private List<Property> tireTemperatures = new ArrayList<>();
-            private List<Property> wheelRPMs = new ArrayList<>();
-            private List<Property> troubleCodes = new ArrayList<>();
+            private final List<Property> checkControlMessages = new ArrayList<>();
+            private final List<Property> tirePressures = new ArrayList<>();
+            private final List<Property> tireTemperatures = new ArrayList<>();
+            private final List<Property> wheelRPMs = new ArrayList<>();
+            private final List<Property> troubleCodes = new ArrayList<>();
             private Property<Length> mileageMeters;
             private Property<Length> odometer;
             private Property<Duration> engineTotalOperatingTime;
-            private List<Property> tirePressureStatuses = new ArrayList<>();
+            private final List<Property> tirePressureStatuses = new ArrayList<>();
             private Property<ActiveState> brakeLiningWearPreWarning;
             private Property<Double> engineOilLifeRemaining;
-            private List<Property> oemTroubleCodeValues = new ArrayList<>();
+            private final List<Property> oemTroubleCodeValues = new ArrayList<>();
             private Property<Length> dieselExhaustFluidRange;
             private Property<Double> dieselParticulateFilterSootLevel;
     

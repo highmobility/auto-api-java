@@ -61,13 +61,13 @@ public class Historical {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> statesBuilder = new ArrayList<>();
+            final ArrayList<Property> statesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATES:
-                            Property<Command> state = new Property(Command.class, p);
+                            Property state = new Property<>(Command.class, p);
                             statesBuilder.add(state);
                             return state;
                     }
@@ -86,7 +86,7 @@ public class Historical {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private List<Property> states = new ArrayList<>();
+            private final List<Property> states = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);
@@ -130,8 +130,8 @@ public class Historical {
      */
     public static class RequestStates extends SetCommand {
         PropertyInteger capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false);
-        Property<Calendar> startDate = new Property(Calendar.class, PROPERTY_START_DATE);
-        Property<Calendar> endDate = new Property(Calendar.class, PROPERTY_END_DATE);
+        Property startDate = new Property<>(Calendar.class, PROPERTY_START_DATE);
+        Property endDate = new Property<>(Calendar.class, PROPERTY_END_DATE);
     
         /**
          * @return The capability id
@@ -192,8 +192,8 @@ public class Historical {
      */
     public static class GetTrips extends SetCommand {
         PropertyInteger capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false);
-        Property<Calendar> startDate = new Property(Calendar.class, PROPERTY_START_DATE);
-        Property<Calendar> endDate = new Property(Calendar.class, PROPERTY_END_DATE);
+        Property startDate = new Property<>(Calendar.class, PROPERTY_START_DATE);
+        Property endDate = new Property<>(Calendar.class, PROPERTY_END_DATE);
     
         /**
          * @return The start date

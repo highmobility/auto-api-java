@@ -37,7 +37,7 @@ public class Browser {
      * Load url
      */
     public static class LoadUrl extends SetCommand {
-        Property<String> url = new Property(String.class, PROPERTY_URL);
+        Property url = new Property<>(String.class, PROPERTY_URL);
     
         /**
          * @return The url

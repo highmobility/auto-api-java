@@ -56,7 +56,7 @@ public class KeyfobPosition {
      * The keyfob position state
      */
     public static class State extends SetCommand {
-        Property<Location> location = new Property(Location.class, PROPERTY_LOCATION);
+        Property location = new Property<>(Location.class, PROPERTY_LOCATION);
     
         /**
          * @return The location

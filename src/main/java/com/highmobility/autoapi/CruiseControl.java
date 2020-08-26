@@ -87,11 +87,11 @@ public class CruiseControl {
      * The cruise control state
      */
     public static class State extends SetCommand {
-        Property<ActiveState> cruiseControl = new Property(ActiveState.class, PROPERTY_CRUISE_CONTROL);
-        Property<Limiter> limiter = new Property(Limiter.class, PROPERTY_LIMITER);
-        Property<Speed> targetSpeed = new Property(Speed.class, PROPERTY_TARGET_SPEED);
-        Property<ActiveState> adaptiveCruiseControl = new Property(ActiveState.class, PROPERTY_ADAPTIVE_CRUISE_CONTROL);
-        Property<Speed> accTargetSpeed = new Property(Speed.class, PROPERTY_ACC_TARGET_SPEED);
+        Property cruiseControl = new Property<>(ActiveState.class, PROPERTY_CRUISE_CONTROL);
+        Property limiter = new Property<>(Limiter.class, PROPERTY_LIMITER);
+        Property targetSpeed = new Property<>(Speed.class, PROPERTY_TARGET_SPEED);
+        Property adaptiveCruiseControl = new Property<>(ActiveState.class, PROPERTY_ADAPTIVE_CRUISE_CONTROL);
+        Property accTargetSpeed = new Property<>(Speed.class, PROPERTY_ACC_TARGET_SPEED);
     
         /**
          * @return The cruise control
@@ -150,8 +150,8 @@ public class CruiseControl {
      * Activate deactivate cruise control
      */
     public static class ActivateDeactivateCruiseControl extends SetCommand {
-        Property<ActiveState> cruiseControl = new Property(ActiveState.class, PROPERTY_CRUISE_CONTROL);
-        Property<Speed> targetSpeed = new Property(Speed.class, PROPERTY_TARGET_SPEED);
+        Property cruiseControl = new Property<>(ActiveState.class, PROPERTY_CRUISE_CONTROL);
+        Property targetSpeed = new Property<>(Speed.class, PROPERTY_TARGET_SPEED);
     
         /**
          * @return The cruise control

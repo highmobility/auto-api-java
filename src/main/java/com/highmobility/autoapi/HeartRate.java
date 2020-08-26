@@ -41,7 +41,7 @@ public class HeartRate {
      * Send heart rate
      */
     public static class SendHeartRate extends SetCommand {
-        Property<Frequency> heartRate = new Property(Frequency.class, PROPERTY_HEART_RATE);
+        Property heartRate = new Property<>(Frequency.class, PROPERTY_HEART_RATE);
     
         /**
          * @return The heart rate

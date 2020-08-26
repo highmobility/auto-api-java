@@ -102,22 +102,22 @@ public class HomeCharger {
      * The home charger state
      */
     public static class State extends SetCommand {
-        Property<ChargingStatus> chargingStatus = new Property(ChargingStatus.class, PROPERTY_CHARGING_STATUS);
-        Property<AuthenticationMechanism> authenticationMechanism = new Property(AuthenticationMechanism.class, PROPERTY_AUTHENTICATION_MECHANISM);
-        Property<PlugType> plugType = new Property(PlugType.class, PROPERTY_PLUG_TYPE);
-        Property<Power> chargingPowerKW = new Property(Power.class, PROPERTY_CHARGING_POWER_KW);
-        Property<ActiveState> solarCharging = new Property(ActiveState.class, PROPERTY_SOLAR_CHARGING);
-        Property<EnabledState> wifiHotspotEnabled = new Property(EnabledState.class, PROPERTY_WI_FI_HOTSPOT_ENABLED);
-        Property<String> wifiHotspotSSID = new Property(String.class, PROPERTY_WI_FI_HOTSPOT_SSID);
-        Property<NetworkSecurity> wiFiHotspotSecurity = new Property(NetworkSecurity.class, PROPERTY_WI_FI_HOTSPOT_SECURITY);
-        Property<String> wiFiHotspotPassword = new Property(String.class, PROPERTY_WI_FI_HOTSPOT_PASSWORD);
-        Property<AuthenticationState> authenticationState = new Property(AuthenticationState.class, PROPERTY_AUTHENTICATION_STATE);
-        Property<ElectricCurrent> chargeCurrent = new Property(ElectricCurrent.class, PROPERTY_CHARGE_CURRENT);
-        Property<ElectricCurrent> maximumChargeCurrent = new Property(ElectricCurrent.class, PROPERTY_MAXIMUM_CHARGE_CURRENT);
-        Property<ElectricCurrent> minimumChargeCurrent = new Property(ElectricCurrent.class, PROPERTY_MINIMUM_CHARGE_CURRENT);
-        Property<Coordinates> coordinates = new Property(Coordinates.class, PROPERTY_COORDINATES);
+        Property chargingStatus = new Property<>(ChargingStatus.class, PROPERTY_CHARGING_STATUS);
+        Property authenticationMechanism = new Property<>(AuthenticationMechanism.class, PROPERTY_AUTHENTICATION_MECHANISM);
+        Property plugType = new Property<>(PlugType.class, PROPERTY_PLUG_TYPE);
+        Property chargingPowerKW = new Property<>(Power.class, PROPERTY_CHARGING_POWER_KW);
+        Property solarCharging = new Property<>(ActiveState.class, PROPERTY_SOLAR_CHARGING);
+        Property wifiHotspotEnabled = new Property<>(EnabledState.class, PROPERTY_WI_FI_HOTSPOT_ENABLED);
+        Property wifiHotspotSSID = new Property<>(String.class, PROPERTY_WI_FI_HOTSPOT_SSID);
+        Property wiFiHotspotSecurity = new Property<>(NetworkSecurity.class, PROPERTY_WI_FI_HOTSPOT_SECURITY);
+        Property wiFiHotspotPassword = new Property<>(String.class, PROPERTY_WI_FI_HOTSPOT_PASSWORD);
+        Property authenticationState = new Property<>(AuthenticationState.class, PROPERTY_AUTHENTICATION_STATE);
+        Property chargeCurrent = new Property<>(ElectricCurrent.class, PROPERTY_CHARGE_CURRENT);
+        Property maximumChargeCurrent = new Property<>(ElectricCurrent.class, PROPERTY_MAXIMUM_CHARGE_CURRENT);
+        Property minimumChargeCurrent = new Property<>(ElectricCurrent.class, PROPERTY_MINIMUM_CHARGE_CURRENT);
+        Property coordinates = new Property<>(Coordinates.class, PROPERTY_COORDINATES);
         Property<PriceTariff>[] priceTariffs;
-        Property<Power> chargingPower = new Property(Power.class, PROPERTY_CHARGING_POWER);
+        Property chargingPower = new Property<>(Power.class, PROPERTY_CHARGING_POWER);
     
         /**
          * @return The charging status
@@ -249,7 +249,7 @@ public class HomeCharger {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> priceTariffsBuilder = new ArrayList<>();
+            final ArrayList<Property> priceTariffsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -269,7 +269,7 @@ public class HomeCharger {
                         case PROPERTY_MINIMUM_CHARGE_CURRENT: return minimumChargeCurrent.update(p);
                         case PROPERTY_COORDINATES: return coordinates.update(p);
                         case PROPERTY_PRICE_TARIFFS:
-                            Property<PriceTariff> priceTariff = new Property(PriceTariff.class, p);
+                            Property priceTariff = new Property<>(PriceTariff.class, p);
                             priceTariffsBuilder.add(priceTariff);
                             return priceTariff;
                         case PROPERTY_CHARGING_POWER: return chargingPower.update(p);
@@ -318,7 +318,7 @@ public class HomeCharger {
             private Property<ElectricCurrent> maximumChargeCurrent;
             private Property<ElectricCurrent> minimumChargeCurrent;
             private Property<Coordinates> coordinates;
-            private List<Property> priceTariffs = new ArrayList<>();
+            private final List<Property> priceTariffs = new ArrayList<>();
             private Property<Power> chargingPower;
     
             public Builder() {
@@ -513,7 +513,7 @@ public class HomeCharger {
      * Set charge current
      */
     public static class SetChargeCurrent extends SetCommand {
-        Property<ElectricCurrent> chargeCurrent = new Property(ElectricCurrent.class, PROPERTY_CHARGE_CURRENT);
+        Property chargeCurrent = new Property<>(ElectricCurrent.class, PROPERTY_CHARGE_CURRENT);
     
         /**
          * @return The charge current
@@ -570,7 +570,7 @@ public class HomeCharger {
         public SetPriceTariffs(PriceTariff[] priceTariffs) {
             super(IDENTIFIER);
         
-            ArrayList<Property> priceTariffsBuilder = new ArrayList<>();
+            final ArrayList<Property> priceTariffsBuilder = new ArrayList<>();
             if (priceTariffs != null) {
                 for (PriceTariff priceTariff : priceTariffs) {
                     Property prop = new Property(0x12, priceTariff);
@@ -585,13 +585,13 @@ public class HomeCharger {
         SetPriceTariffs(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
         
-            ArrayList<Property<PriceTariff>> priceTariffsBuilder = new ArrayList<>();
+            final ArrayList<Property<PriceTariff>> priceTariffsBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_PRICE_TARIFFS: {
-                            Property priceTariff = new Property(PriceTariff.class, p);
+                            Property priceTariff = new Property<>(PriceTariff.class, p);
                             priceTariffsBuilder.add(priceTariff);
                             return priceTariff;
                         }
@@ -610,7 +610,7 @@ public class HomeCharger {
      * Activate deactivate solar charging
      */
     public static class ActivateDeactivateSolarCharging extends SetCommand {
-        Property<ActiveState> solarCharging = new Property(ActiveState.class, PROPERTY_SOLAR_CHARGING);
+        Property solarCharging = new Property<>(ActiveState.class, PROPERTY_SOLAR_CHARGING);
     
         /**
          * @return The solar charging
@@ -650,7 +650,7 @@ public class HomeCharger {
      * Enable disable wi fi hotspot
      */
     public static class EnableDisableWiFiHotspot extends SetCommand {
-        Property<EnabledState> wifiHotspotEnabled = new Property(EnabledState.class, PROPERTY_WI_FI_HOTSPOT_ENABLED);
+        Property wifiHotspotEnabled = new Property<>(EnabledState.class, PROPERTY_WI_FI_HOTSPOT_ENABLED);
     
         /**
          * @return The wi fi hotspot enabled
@@ -690,7 +690,7 @@ public class HomeCharger {
      * Authenticate expire
      */
     public static class AuthenticateExpire extends SetCommand {
-        Property<AuthenticationState> authenticationState = new Property(AuthenticationState.class, PROPERTY_AUTHENTICATION_STATE);
+        Property authenticationState = new Property<>(AuthenticationState.class, PROPERTY_AUTHENTICATION_STATE);
     
         /**
          * @return The authentication state

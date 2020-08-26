@@ -83,11 +83,11 @@ public class ParkingTicket {
      * The parking ticket state
      */
     public static class State extends SetCommand {
-        Property<Status> status = new Property(Status.class, PROPERTY_STATUS);
-        Property<String> operatorName = new Property(String.class, PROPERTY_OPERATOR_NAME);
-        Property<String> operatorTicketID = new Property(String.class, PROPERTY_OPERATOR_TICKET_ID);
-        Property<Calendar> ticketStartTime = new Property(Calendar.class, PROPERTY_TICKET_START_TIME);
-        Property<Calendar> ticketEndTime = new Property(Calendar.class, PROPERTY_TICKET_END_TIME);
+        Property status = new Property<>(Status.class, PROPERTY_STATUS);
+        Property operatorName = new Property<>(String.class, PROPERTY_OPERATOR_NAME);
+        Property operatorTicketID = new Property<>(String.class, PROPERTY_OPERATOR_TICKET_ID);
+        Property ticketStartTime = new Property<>(Calendar.class, PROPERTY_TICKET_START_TIME);
+        Property ticketEndTime = new Property<>(Calendar.class, PROPERTY_TICKET_END_TIME);
     
         /**
          * @return The status
@@ -222,11 +222,11 @@ public class ParkingTicket {
      * Start parking
      */
     public static class StartParking extends SetCommand {
-        Property<Status> status = new Property(Status.class, PROPERTY_STATUS);
-        Property<String> operatorName = new Property(String.class, PROPERTY_OPERATOR_NAME);
-        Property<String> operatorTicketID = new Property(String.class, PROPERTY_OPERATOR_TICKET_ID);
-        Property<Calendar> ticketStartTime = new Property(Calendar.class, PROPERTY_TICKET_START_TIME);
-        Property<Calendar> ticketEndTime = new Property(Calendar.class, PROPERTY_TICKET_END_TIME);
+        Property status = new Property<>(Status.class, PROPERTY_STATUS);
+        Property operatorName = new Property<>(String.class, PROPERTY_OPERATOR_NAME);
+        Property operatorTicketID = new Property<>(String.class, PROPERTY_OPERATOR_TICKET_ID);
+        Property ticketStartTime = new Property<>(Calendar.class, PROPERTY_TICKET_START_TIME);
+        Property ticketEndTime = new Property<>(Calendar.class, PROPERTY_TICKET_END_TIME);
     
         /**
          * @return The operator name
@@ -300,7 +300,7 @@ public class ParkingTicket {
      * End parking
      */
     public static class EndParking extends SetCommand {
-        Property<Status> status = new Property(Status.class, PROPERTY_STATUS);
+        Property status = new Property<>(Status.class, PROPERTY_STATUS);
     
         /**
          * End parking

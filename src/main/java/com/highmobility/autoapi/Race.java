@@ -106,23 +106,23 @@ public class Race {
      */
     public static class State extends SetCommand {
         Property<Acceleration>[] accelerations;
-        Property<Double> understeering = new Property(Double.class, PROPERTY_UNDERSTEERING);
-        Property<Double> oversteering = new Property(Double.class, PROPERTY_OVERSTEERING);
-        Property<Double> gasPedalPosition = new Property(Double.class, PROPERTY_GAS_PEDAL_POSITION);
-        Property<Angle> steeringAngle = new Property(Angle.class, PROPERTY_STEERING_ANGLE);
-        Property<Pressure> brakePressure = new Property(Pressure.class, PROPERTY_BRAKE_PRESSURE);
-        Property<AngularVelocity> yawRate = new Property(AngularVelocity.class, PROPERTY_YAW_RATE);
-        Property<Angle> rearSuspensionSteering = new Property(Angle.class, PROPERTY_REAR_SUSPENSION_STEERING);
-        Property<ActiveState> electronicStabilityProgram = new Property(ActiveState.class, PROPERTY_ELECTRONIC_STABILITY_PROGRAM);
+        Property understeering = new Property<>(Double.class, PROPERTY_UNDERSTEERING);
+        Property oversteering = new Property<>(Double.class, PROPERTY_OVERSTEERING);
+        Property gasPedalPosition = new Property<>(Double.class, PROPERTY_GAS_PEDAL_POSITION);
+        Property steeringAngle = new Property<>(Angle.class, PROPERTY_STEERING_ANGLE);
+        Property brakePressure = new Property<>(Pressure.class, PROPERTY_BRAKE_PRESSURE);
+        Property yawRate = new Property<>(AngularVelocity.class, PROPERTY_YAW_RATE);
+        Property rearSuspensionSteering = new Property<>(Angle.class, PROPERTY_REAR_SUSPENSION_STEERING);
+        Property electronicStabilityProgram = new Property<>(ActiveState.class, PROPERTY_ELECTRONIC_STABILITY_PROGRAM);
         Property<BrakeTorqueVectoring>[] brakeTorqueVectorings;
-        Property<GearMode> gearMode = new Property(GearMode.class, PROPERTY_GEAR_MODE);
+        Property gearMode = new Property<>(GearMode.class, PROPERTY_GEAR_MODE);
         PropertyInteger selectedGear = new PropertyInteger(PROPERTY_SELECTED_GEAR, true);
-        Property<Double> brakePedalPosition = new Property(Double.class, PROPERTY_BRAKE_PEDAL_POSITION);
-        Property<ActiveState> brakePedalSwitch = new Property(ActiveState.class, PROPERTY_BRAKE_PEDAL_SWITCH);
-        Property<ActiveState> clutchPedalSwitch = new Property(ActiveState.class, PROPERTY_CLUTCH_PEDAL_SWITCH);
-        Property<ActiveState> acceleratorPedalIdleSwitch = new Property(ActiveState.class, PROPERTY_ACCELERATOR_PEDAL_IDLE_SWITCH);
-        Property<ActiveState> acceleratorPedalKickdownSwitch = new Property(ActiveState.class, PROPERTY_ACCELERATOR_PEDAL_KICKDOWN_SWITCH);
-        Property<VehicleMoving> vehicleMoving = new Property(VehicleMoving.class, PROPERTY_VEHICLE_MOVING);
+        Property brakePedalPosition = new Property<>(Double.class, PROPERTY_BRAKE_PEDAL_POSITION);
+        Property brakePedalSwitch = new Property<>(ActiveState.class, PROPERTY_BRAKE_PEDAL_SWITCH);
+        Property clutchPedalSwitch = new Property<>(ActiveState.class, PROPERTY_CLUTCH_PEDAL_SWITCH);
+        Property acceleratorPedalIdleSwitch = new Property<>(ActiveState.class, PROPERTY_ACCELERATOR_PEDAL_IDLE_SWITCH);
+        Property acceleratorPedalKickdownSwitch = new Property<>(ActiveState.class, PROPERTY_ACCELERATOR_PEDAL_KICKDOWN_SWITCH);
+        Property vehicleMoving = new Property<>(VehicleMoving.class, PROPERTY_VEHICLE_MOVING);
     
         /**
          * @return The accelerations
@@ -281,14 +281,14 @@ public class Race {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> accelerationsBuilder = new ArrayList<>();
-            ArrayList<Property> brakeTorqueVectoringsBuilder = new ArrayList<>();
+            final ArrayList<Property> accelerationsBuilder = new ArrayList<>();
+            final ArrayList<Property> brakeTorqueVectoringsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_ACCELERATIONS:
-                            Property<Acceleration> acceleration = new Property(Acceleration.class, p);
+                            Property acceleration = new Property<>(Acceleration.class, p);
                             accelerationsBuilder.add(acceleration);
                             return acceleration;
                         case PROPERTY_UNDERSTEERING: return understeering.update(p);
@@ -300,7 +300,7 @@ public class Race {
                         case PROPERTY_REAR_SUSPENSION_STEERING: return rearSuspensionSteering.update(p);
                         case PROPERTY_ELECTRONIC_STABILITY_PROGRAM: return electronicStabilityProgram.update(p);
                         case PROPERTY_BRAKE_TORQUE_VECTORINGS:
-                            Property<BrakeTorqueVectoring> brakeTorqueVectoring = new Property(BrakeTorqueVectoring.class, p);
+                            Property brakeTorqueVectoring = new Property<>(BrakeTorqueVectoring.class, p);
                             brakeTorqueVectoringsBuilder.add(brakeTorqueVectoring);
                             return brakeTorqueVectoring;
                         case PROPERTY_GEAR_MODE: return gearMode.update(p);
@@ -345,7 +345,7 @@ public class Race {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private List<Property> accelerations = new ArrayList<>();
+            private final List<Property> accelerations = new ArrayList<>();
             private Property<Double> understeering;
             private Property<Double> oversteering;
             private Property<Double> gasPedalPosition;
@@ -354,7 +354,7 @@ public class Race {
             private Property<AngularVelocity> yawRate;
             private Property<Angle> rearSuspensionSteering;
             private Property<ActiveState> electronicStabilityProgram;
-            private List<Property> brakeTorqueVectorings = new ArrayList<>();
+            private final List<Property> brakeTorqueVectorings = new ArrayList<>();
             private Property<GearMode> gearMode;
             private PropertyInteger selectedGear;
             private Property<Double> brakePedalPosition;

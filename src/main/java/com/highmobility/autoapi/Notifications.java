@@ -49,10 +49,10 @@ public class Notifications {
      * The notifications state
      */
     public static class State extends SetCommand {
-        Property<String> text = new Property(String.class, PROPERTY_TEXT);
+        Property text = new Property<>(String.class, PROPERTY_TEXT);
         Property<ActionItem>[] actionItems;
         PropertyInteger activatedAction = new PropertyInteger(PROPERTY_ACTIVATED_ACTION, false);
-        Property<Clear> clear = new Property(Clear.class, PROPERTY_CLEAR);
+        Property clear = new Property<>(Clear.class, PROPERTY_CLEAR);
     
         /**
          * @return Text for the notification
@@ -85,14 +85,14 @@ public class Notifications {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> actionItemsBuilder = new ArrayList<>();
+            final ArrayList<Property> actionItemsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_TEXT: return text.update(p);
                         case PROPERTY_ACTION_ITEMS:
-                            Property<ActionItem> actionItem = new Property(ActionItem.class, p);
+                            Property actionItem = new Property<>(ActionItem.class, p);
                             actionItemsBuilder.add(actionItem);
                             return actionItem;
                         case PROPERTY_ACTIVATED_ACTION: return activatedAction.update(p);
@@ -117,7 +117,7 @@ public class Notifications {
     
         public static final class Builder extends SetCommand.Builder {
             private Property<String> text;
-            private List<Property> actionItems = new ArrayList<>();
+            private final List<Property> actionItems = new ArrayList<>();
             private PropertyInteger activatedAction;
             private Property<Clear> clear;
     
@@ -193,7 +193,7 @@ public class Notifications {
      * Notification
      */
     public static class Notification extends SetCommand {
-        Property<String> text = new Property(String.class, PROPERTY_TEXT);
+        Property text = new Property<>(String.class, PROPERTY_TEXT);
         Property<ActionItem>[] actionItems;
     
         /**
@@ -220,7 +220,7 @@ public class Notifications {
             super(IDENTIFIER);
         
             addProperty(this.text.update(text));
-            ArrayList<Property> actionItemsBuilder = new ArrayList<>();
+            final ArrayList<Property> actionItemsBuilder = new ArrayList<>();
             if (actionItems != null) {
                 for (ActionItem actionItem : actionItems) {
                     Property prop = new Property(0x02, actionItem);
@@ -235,14 +235,14 @@ public class Notifications {
         Notification(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
         
-            ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
+            final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_TEXT: return text.update(p);
                         case PROPERTY_ACTION_ITEMS: {
-                            Property actionItem = new Property(ActionItem.class, p);
+                            Property actionItem = new Property<>(ActionItem.class, p);
                             actionItemsBuilder.add(actionItem);
                             return actionItem;
                         }
@@ -301,7 +301,7 @@ public class Notifications {
      * Clear notification
      */
     public static class ClearNotification extends SetCommand {
-        Property<Clear> clear = new Property(Clear.class, PROPERTY_CLEAR);
+        Property clear = new Property<>(Clear.class, PROPERTY_CLEAR);
     
         /**
          * Clear notification

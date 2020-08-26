@@ -51,7 +51,7 @@ public class Mobile {
      * The mobile state
      */
     public static class State extends SetCommand {
-        Property<ConnectionState> connection = new Property(ConnectionState.class, PROPERTY_CONNECTION);
+        Property connection = new Property<>(ConnectionState.class, PROPERTY_CONNECTION);
     
         /**
          * @return The connection

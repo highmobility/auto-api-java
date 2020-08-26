@@ -125,18 +125,18 @@ public class Windows {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> openPercentagesBuilder = new ArrayList<>();
-            ArrayList<Property> positionsBuilder = new ArrayList<>();
+            final ArrayList<Property> openPercentagesBuilder = new ArrayList<>();
+            final ArrayList<Property> positionsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_OPEN_PERCENTAGES:
-                            Property<WindowOpenPercentage> openPercentage = new Property(WindowOpenPercentage.class, p);
+                            Property openPercentage = new Property<>(WindowOpenPercentage.class, p);
                             openPercentagesBuilder.add(openPercentage);
                             return openPercentage;
                         case PROPERTY_POSITIONS:
-                            Property<WindowPosition> position = new Property(WindowPosition.class, p);
+                            Property position = new Property<>(WindowPosition.class, p);
                             positionsBuilder.add(position);
                             return position;
                     }
@@ -157,8 +157,8 @@ public class Windows {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private List<Property> openPercentages = new ArrayList<>();
-            private List<Property> positions = new ArrayList<>();
+            private final List<Property> openPercentages = new ArrayList<>();
+            private final List<Property> positions = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);
@@ -255,7 +255,7 @@ public class Windows {
         public ControlWindows(@Nullable WindowOpenPercentage[] openPercentages, @Nullable WindowPosition[] positions) {
             super(IDENTIFIER);
         
-            ArrayList<Property> openPercentagesBuilder = new ArrayList<>();
+            final ArrayList<Property> openPercentagesBuilder = new ArrayList<>();
             if (openPercentages != null) {
                 for (WindowOpenPercentage openPercentage : openPercentages) {
                     Property prop = new Property(0x02, openPercentage);
@@ -265,7 +265,7 @@ public class Windows {
             }
             this.openPercentages = openPercentagesBuilder.toArray(new Property[0]);
             
-            ArrayList<Property> positionsBuilder = new ArrayList<>();
+            final ArrayList<Property> positionsBuilder = new ArrayList<>();
             if (positions != null) {
                 for (WindowPosition position : positions) {
                     Property prop = new Property(0x03, position);
@@ -281,19 +281,19 @@ public class Windows {
         ControlWindows(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
         
-            ArrayList<Property<WindowOpenPercentage>> openPercentagesBuilder = new ArrayList<>();
-            ArrayList<Property<WindowPosition>> positionsBuilder = new ArrayList<>();
+            final ArrayList<Property<WindowOpenPercentage>> openPercentagesBuilder = new ArrayList<>();
+            final ArrayList<Property<WindowPosition>> positionsBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_OPEN_PERCENTAGES: {
-                            Property openPercentage = new Property(WindowOpenPercentage.class, p);
+                            Property openPercentage = new Property<>(WindowOpenPercentage.class, p);
                             openPercentagesBuilder.add(openPercentage);
                             return openPercentage;
                         }
                         case PROPERTY_POSITIONS: {
-                            Property position = new Property(WindowPosition.class, p);
+                            Property position = new Property<>(WindowPosition.class, p);
                             positionsBuilder.add(position);
                             return position;
                         }

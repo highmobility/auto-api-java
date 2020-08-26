@@ -53,7 +53,7 @@ public class Hood {
      * The hood state
      */
     public static class State extends SetCommand {
-        Property<Position> position = new Property(Position.class, PROPERTY_POSITION);
+        Property position = new Property<>(Position.class, PROPERTY_POSITION);
     
         /**
          * @return The position

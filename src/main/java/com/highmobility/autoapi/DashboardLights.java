@@ -65,13 +65,13 @@ public class DashboardLights {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> dashboardLightsBuilder = new ArrayList<>();
+            final ArrayList<Property> dashboardLightsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_DASHBOARD_LIGHTS:
-                            Property<DashboardLight> dashboardLight = new Property(DashboardLight.class, p);
+                            Property dashboardLight = new Property<>(DashboardLight.class, p);
                             dashboardLightsBuilder.add(dashboardLight);
                             return dashboardLight;
                     }
@@ -90,7 +90,7 @@ public class DashboardLights {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private List<Property> dashboardLights = new ArrayList<>();
+            private final List<Property> dashboardLights = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);

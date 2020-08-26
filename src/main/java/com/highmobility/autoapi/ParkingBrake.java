@@ -51,7 +51,7 @@ public class ParkingBrake {
      * The parking brake state
      */
     public static class State extends SetCommand {
-        Property<ActiveState> status = new Property(ActiveState.class, PROPERTY_STATUS);
+        Property status = new Property<>(ActiveState.class, PROPERTY_STATUS);
     
         /**
          * @return The status
@@ -106,7 +106,7 @@ public class ParkingBrake {
      * Set parking brake
      */
     public static class SetParkingBrake extends SetCommand {
-        Property<ActiveState> status = new Property(ActiveState.class, PROPERTY_STATUS);
+        Property status = new Property<>(ActiveState.class, PROPERTY_STATUS);
     
         /**
          * @return The status

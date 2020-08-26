@@ -99,22 +99,22 @@ public class Maintenance {
      * The maintenance state
      */
     public static class State extends SetCommand {
-        Property<Duration> daysToNextService = new Property(Duration.class, PROPERTY_DAYS_TO_NEXT_SERVICE);
-        Property<Length> kilometersToNextService = new Property(Length.class, PROPERTY_KILOMETERS_TO_NEXT_SERVICE);
+        Property daysToNextService = new Property<>(Duration.class, PROPERTY_DAYS_TO_NEXT_SERVICE);
+        Property kilometersToNextService = new Property<>(Length.class, PROPERTY_KILOMETERS_TO_NEXT_SERVICE);
         PropertyInteger cbsReportsCount = new PropertyInteger(PROPERTY_CBS_REPORTS_COUNT, false);
-        Property<Duration> monthsToExhaustInspection = new Property(Duration.class, PROPERTY_MONTHS_TO_EXHAUST_INSPECTION);
-        Property<TeleserviceAvailability> teleserviceAvailability = new Property(TeleserviceAvailability.class, PROPERTY_TELESERVICE_AVAILABILITY);
-        Property<Length> serviceDistanceThreshold = new Property(Length.class, PROPERTY_SERVICE_DISTANCE_THRESHOLD);
-        Property<Duration> serviceTimeThreshold = new Property(Duration.class, PROPERTY_SERVICE_TIME_THRESHOLD);
-        Property<Calendar> automaticTeleserviceCallDate = new Property(Calendar.class, PROPERTY_AUTOMATIC_TELESERVICE_CALL_DATE);
-        Property<Calendar> teleserviceBatteryCallDate = new Property(Calendar.class, PROPERTY_TELESERVICE_BATTERY_CALL_DATE);
-        Property<Calendar> nextInspectionDate = new Property(Calendar.class, PROPERTY_NEXT_INSPECTION_DATE);
+        Property monthsToExhaustInspection = new Property<>(Duration.class, PROPERTY_MONTHS_TO_EXHAUST_INSPECTION);
+        Property teleserviceAvailability = new Property<>(TeleserviceAvailability.class, PROPERTY_TELESERVICE_AVAILABILITY);
+        Property serviceDistanceThreshold = new Property<>(Length.class, PROPERTY_SERVICE_DISTANCE_THRESHOLD);
+        Property serviceTimeThreshold = new Property<>(Duration.class, PROPERTY_SERVICE_TIME_THRESHOLD);
+        Property automaticTeleserviceCallDate = new Property<>(Calendar.class, PROPERTY_AUTOMATIC_TELESERVICE_CALL_DATE);
+        Property teleserviceBatteryCallDate = new Property<>(Calendar.class, PROPERTY_TELESERVICE_BATTERY_CALL_DATE);
+        Property nextInspectionDate = new Property<>(Calendar.class, PROPERTY_NEXT_INSPECTION_DATE);
         Property<ConditionBasedService>[] conditionBasedServices;
-        Property<Calendar> brakeFluidChangeDate = new Property(Calendar.class, PROPERTY_BRAKE_FLUID_CHANGE_DATE);
-        Property<Duration> timeToNextService = new Property(Duration.class, PROPERTY_TIME_TO_NEXT_SERVICE);
-        Property<Length> distanceToNextService = new Property(Length.class, PROPERTY_DISTANCE_TO_NEXT_SERVICE);
-        Property<Duration> timeToExhaustInspection = new Property(Duration.class, PROPERTY_TIME_TO_EXHAUST_INSPECTION);
-        Property<Calendar> lastECall = new Property(Calendar.class, PROPERTY_LAST_ECALL);
+        Property brakeFluidChangeDate = new Property<>(Calendar.class, PROPERTY_BRAKE_FLUID_CHANGE_DATE);
+        Property timeToNextService = new Property<>(Duration.class, PROPERTY_TIME_TO_NEXT_SERVICE);
+        Property distanceToNextService = new Property<>(Length.class, PROPERTY_DISTANCE_TO_NEXT_SERVICE);
+        Property timeToExhaustInspection = new Property<>(Duration.class, PROPERTY_TIME_TO_EXHAUST_INSPECTION);
+        Property lastECall = new Property<>(Calendar.class, PROPERTY_LAST_ECALL);
     
         /**
          * @return Time until next servicing of the car
@@ -231,7 +231,7 @@ public class Maintenance {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> conditionBasedServicesBuilder = new ArrayList<>();
+            final ArrayList<Property> conditionBasedServicesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -247,7 +247,7 @@ public class Maintenance {
                         case PROPERTY_TELESERVICE_BATTERY_CALL_DATE: return teleserviceBatteryCallDate.update(p);
                         case PROPERTY_NEXT_INSPECTION_DATE: return nextInspectionDate.update(p);
                         case PROPERTY_CONDITION_BASED_SERVICES:
-                            Property<ConditionBasedService> conditionBasedService = new Property(ConditionBasedService.class, p);
+                            Property conditionBasedService = new Property<>(ConditionBasedService.class, p);
                             conditionBasedServicesBuilder.add(conditionBasedService);
                             return conditionBasedService;
                         case PROPERTY_BRAKE_FLUID_CHANGE_DATE: return brakeFluidChangeDate.update(p);
@@ -296,7 +296,7 @@ public class Maintenance {
             private Property<Calendar> automaticTeleserviceCallDate;
             private Property<Calendar> teleserviceBatteryCallDate;
             private Property<Calendar> nextInspectionDate;
-            private List<Property> conditionBasedServices = new ArrayList<>();
+            private final List<Property> conditionBasedServices = new ArrayList<>();
             private Property<Calendar> brakeFluidChangeDate;
             private Property<Duration> timeToNextService;
             private Property<Length> distanceToNextService;

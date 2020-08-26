@@ -85,13 +85,13 @@ public class TheftAlarm {
      * The theft alarm state
      */
     public static class State extends SetCommand {
-        Property<Status> status = new Property(Status.class, PROPERTY_STATUS);
-        Property<ActiveSelectedState> interiorProtectionStatus = new Property(ActiveSelectedState.class, PROPERTY_INTERIOR_PROTECTION_STATUS);
-        Property<ActiveSelectedState> towProtectionStatus = new Property(ActiveSelectedState.class, PROPERTY_TOW_PROTECTION_STATUS);
-        Property<LastWarningReason> lastWarningReason = new Property(LastWarningReason.class, PROPERTY_LAST_WARNING_REASON);
-        Property<Calendar> lastEvent = new Property(Calendar.class, PROPERTY_LAST_EVENT);
-        Property<LastEventLevel> lastEventLevel = new Property(LastEventLevel.class, PROPERTY_LAST_EVENT_LEVEL);
-        Property<EventType> eventType = new Property(EventType.class, PROPERTY_EVENT_TYPE);
+        Property status = new Property<>(Status.class, PROPERTY_STATUS);
+        Property interiorProtectionStatus = new Property<>(ActiveSelectedState.class, PROPERTY_INTERIOR_PROTECTION_STATUS);
+        Property towProtectionStatus = new Property<>(ActiveSelectedState.class, PROPERTY_TOW_PROTECTION_STATUS);
+        Property lastWarningReason = new Property<>(LastWarningReason.class, PROPERTY_LAST_WARNING_REASON);
+        Property lastEvent = new Property<>(Calendar.class, PROPERTY_LAST_EVENT);
+        Property lastEventLevel = new Property<>(LastEventLevel.class, PROPERTY_LAST_EVENT_LEVEL);
+        Property eventType = new Property<>(EventType.class, PROPERTY_EVENT_TYPE);
     
         /**
          * @return The status
@@ -266,7 +266,7 @@ public class TheftAlarm {
      * Set theft alarm
      */
     public static class SetTheftAlarm extends SetCommand {
-        Property<Status> status = new Property(Status.class, PROPERTY_STATUS);
+        Property status = new Property<>(Status.class, PROPERTY_STATUS);
     
         /**
          * @return The status

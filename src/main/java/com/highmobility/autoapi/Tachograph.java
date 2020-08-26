@@ -94,10 +94,10 @@ public class Tachograph {
         Property<DriverWorkingState>[] driversWorkingStates;
         Property<DriverTimeState>[] driversTimeStates;
         Property<DriverCardPresent>[] driversCardsPresent;
-        Property<Detected> vehicleMotion = new Property(Detected.class, PROPERTY_VEHICLE_MOTION);
-        Property<VehicleOverspeed> vehicleOverspeed = new Property(VehicleOverspeed.class, PROPERTY_VEHICLE_OVERSPEED);
-        Property<VehicleDirection> vehicleDirection = new Property(VehicleDirection.class, PROPERTY_VEHICLE_DIRECTION);
-        Property<Speed> vehicleSpeed = new Property(Speed.class, PROPERTY_VEHICLE_SPEED);
+        Property vehicleMotion = new Property<>(Detected.class, PROPERTY_VEHICLE_MOTION);
+        Property vehicleOverspeed = new Property<>(VehicleOverspeed.class, PROPERTY_VEHICLE_OVERSPEED);
+        Property vehicleDirection = new Property<>(VehicleDirection.class, PROPERTY_VEHICLE_DIRECTION);
+        Property vehicleSpeed = new Property<>(Speed.class, PROPERTY_VEHICLE_SPEED);
     
         /**
          * @return The drivers working states
@@ -196,23 +196,23 @@ public class Tachograph {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> driversWorkingStatesBuilder = new ArrayList<>();
-            ArrayList<Property> driversTimeStatesBuilder = new ArrayList<>();
-            ArrayList<Property> driversCardsPresentBuilder = new ArrayList<>();
+            final ArrayList<Property> driversWorkingStatesBuilder = new ArrayList<>();
+            final ArrayList<Property> driversTimeStatesBuilder = new ArrayList<>();
+            final ArrayList<Property> driversCardsPresentBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_DRIVERS_WORKING_STATES:
-                            Property<DriverWorkingState> driverWorkingState = new Property(DriverWorkingState.class, p);
+                            Property driverWorkingState = new Property<>(DriverWorkingState.class, p);
                             driversWorkingStatesBuilder.add(driverWorkingState);
                             return driverWorkingState;
                         case PROPERTY_DRIVERS_TIME_STATES:
-                            Property<DriverTimeState> driversTimeState = new Property(DriverTimeState.class, p);
+                            Property driversTimeState = new Property<>(DriverTimeState.class, p);
                             driversTimeStatesBuilder.add(driversTimeState);
                             return driversTimeState;
                         case PROPERTY_DRIVERS_CARDS_PRESENT:
-                            Property<DriverCardPresent> driversCardPresent = new Property(DriverCardPresent.class, p);
+                            Property driversCardPresent = new Property<>(DriverCardPresent.class, p);
                             driversCardsPresentBuilder.add(driversCardPresent);
                             return driversCardPresent;
                         case PROPERTY_VEHICLE_MOTION: return vehicleMotion.update(p);
@@ -243,9 +243,9 @@ public class Tachograph {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private List<Property> driversWorkingStates = new ArrayList<>();
-            private List<Property> driversTimeStates = new ArrayList<>();
-            private List<Property> driversCardsPresent = new ArrayList<>();
+            private final List<Property> driversWorkingStates = new ArrayList<>();
+            private final List<Property> driversTimeStates = new ArrayList<>();
+            private final List<Property> driversCardsPresent = new ArrayList<>();
             private Property<Detected> vehicleMotion;
             private Property<VehicleOverspeed> vehicleOverspeed;
             private Property<VehicleDirection> vehicleDirection;

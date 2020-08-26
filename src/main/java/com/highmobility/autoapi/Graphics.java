@@ -37,7 +37,7 @@ public class Graphics {
      * Display image
      */
     public static class DisplayImage extends SetCommand {
-        Property<String> imageURL = new Property(String.class, PROPERTY_IMAGE_URL);
+        Property imageURL = new Property<>(String.class, PROPERTY_IMAGE_URL);
     
         /**
          * @return The image url

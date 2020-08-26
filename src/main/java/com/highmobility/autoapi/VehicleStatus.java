@@ -80,13 +80,13 @@ public class VehicleStatus {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> statesBuilder = new ArrayList<>();
+            final ArrayList<Property> statesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATES:
-                            Property<Command> state = new Property(Command.class, p);
+                            Property state = new Property<>(Command.class, p);
                             statesBuilder.add(state);
                             return state;
                     }
@@ -105,7 +105,7 @@ public class VehicleStatus {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private List<Property> states = new ArrayList<>();
+            private final List<Property> states = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);

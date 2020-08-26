@@ -129,18 +129,18 @@ public class Seats {
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
-            ArrayList<Property> personsDetectedBuilder = new ArrayList<>();
-            ArrayList<Property> seatbeltsStateBuilder = new ArrayList<>();
+            final ArrayList<Property> personsDetectedBuilder = new ArrayList<>();
+            final ArrayList<Property> seatbeltsStateBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_PERSONS_DETECTED:
-                            Property<PersonDetected> personDetected = new Property(PersonDetected.class, p);
+                            Property personDetected = new Property<>(PersonDetected.class, p);
                             personsDetectedBuilder.add(personDetected);
                             return personDetected;
                         case PROPERTY_SEATBELTS_STATE:
-                            Property<SeatbeltState> seatbeltState = new Property(SeatbeltState.class, p);
+                            Property seatbeltState = new Property<>(SeatbeltState.class, p);
                             seatbeltsStateBuilder.add(seatbeltState);
                             return seatbeltState;
                     }
@@ -161,8 +161,8 @@ public class Seats {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private List<Property> personsDetected = new ArrayList<>();
-            private List<Property> seatbeltsState = new ArrayList<>();
+            private final List<Property> personsDetected = new ArrayList<>();
+            private final List<Property> seatbeltsState = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);
