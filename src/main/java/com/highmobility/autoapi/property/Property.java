@@ -349,12 +349,12 @@ public class Property<V> extends Bytes {
      * @param identifier The identifier.
      * @return Self.
      */
-    public Property setIdentifier(byte identifier) {
+    public Property<V> setIdentifier(byte identifier) {
         bytes[0] = identifier;
         return this;
     }
 
-    public Property setIdentifier(int identifier) {
+    public Property<V> setIdentifier(int identifier) {
         setIdentifier((byte) identifier);
         return this;
     }

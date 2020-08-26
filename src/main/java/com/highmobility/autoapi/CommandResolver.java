@@ -1035,7 +1035,7 @@ public class CommandResolver {
      * find correct setter.
      */
     protected static class SetterIterator {
-        private int currentSize;
+        private final int currentSize;
         private int currentIndex = 0;
         public Command theParsedCommand;
 
