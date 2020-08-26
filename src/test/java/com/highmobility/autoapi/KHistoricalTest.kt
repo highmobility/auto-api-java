@@ -84,12 +84,5 @@ class KHistoricalTest : BaseTest() {
     
         val constructed = Historical.GetTrips(getCalendar("2019-10-07T13:04:32.000Z"), getCalendar("2019-09-27T08:42:30.000Z"))
         assertTrue(bytesTheSame(constructed, bytes))
-    
-        setRuntime(CommandResolver.RunTime.JAVA)
-    
-        val resolved = CommandResolver.resolve(bytes) as Historical.GetTrips
-        assertTrue(dateIsSame(resolved.getStartDate().value, "2019-10-07T13:04:32.000Z"))
-        assertTrue(dateIsSame(resolved.getEndDate().value, "2019-09-27T08:42:30.000Z"))
-        assertTrue(resolved == bytes)
     }
 }
