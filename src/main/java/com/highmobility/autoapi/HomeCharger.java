@@ -744,7 +744,7 @@ public class HomeCharger {
             throw new CommandParseException("Enum ChargingStatus does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         ChargingStatus(byte value) {
             this.value = value;
@@ -772,7 +772,7 @@ public class HomeCharger {
             throw new CommandParseException("Enum AuthenticationMechanism does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         AuthenticationMechanism(byte value) {
             this.value = value;
@@ -802,7 +802,7 @@ public class HomeCharger {
             throw new CommandParseException("Enum PlugType does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         PlugType(byte value) {
             this.value = value;
@@ -830,7 +830,7 @@ public class HomeCharger {
             throw new CommandParseException("Enum AuthenticationState does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         AuthenticationState(byte value) {
             this.value = value;

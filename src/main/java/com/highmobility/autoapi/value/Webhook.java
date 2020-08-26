@@ -98,7 +98,7 @@ public class Webhook extends PropertyValueObject {
             throw new CommandParseException("Enum Available does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Available(byte value) {
             this.value = value;
@@ -148,7 +148,7 @@ public class Webhook extends PropertyValueObject {
             throw new CommandParseException("Enum Event does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Event(byte value) {
             this.value = value;

@@ -216,7 +216,7 @@ public class CruiseControl {
             throw new CommandParseException("Enum Limiter does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Limiter(byte value) {
             this.value = value;

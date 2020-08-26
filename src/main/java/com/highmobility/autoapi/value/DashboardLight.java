@@ -204,7 +204,7 @@ public class DashboardLight extends PropertyValueObject {
             throw new CommandParseException("Enum Name does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Name(byte value) {
             this.value = value;
@@ -233,7 +233,7 @@ public class DashboardLight extends PropertyValueObject {
             throw new CommandParseException("Enum Colour does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Colour(byte value) {
             this.value = value;

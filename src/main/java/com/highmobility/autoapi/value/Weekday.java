@@ -51,7 +51,7 @@ public enum Weekday implements ByteEnum {
         throw new CommandParseException("Enum Weekday does not contain " + hexFromByte(byteValue));
     }
 
-    private byte value;
+    private final byte value;
 
     Weekday(byte value) {
         this.value = value;

@@ -1200,7 +1200,7 @@ public class Charging {
             throw new CommandParseException("Enum ChargeMode does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         ChargeMode(byte value) {
             this.value = value;
@@ -1230,7 +1230,7 @@ public class Charging {
             throw new CommandParseException("Enum PlugType does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         PlugType(byte value) {
             this.value = value;
@@ -1258,7 +1258,7 @@ public class Charging {
             throw new CommandParseException("Enum ChargingWindowChosen does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         ChargingWindowChosen(byte value) {
             this.value = value;
@@ -1286,7 +1286,7 @@ public class Charging {
             throw new CommandParseException("Enum PluggedIn does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         PluggedIn(byte value) {
             this.value = value;
@@ -1323,7 +1323,7 @@ public class Charging {
             throw new CommandParseException("Enum Status does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Status(byte value) {
             this.value = value;
@@ -1351,7 +1351,7 @@ public class Charging {
             throw new CommandParseException("Enum CurrentType does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         CurrentType(byte value) {
             this.value = value;
@@ -1389,7 +1389,7 @@ public class Charging {
             throw new CommandParseException("Enum StarterBatteryState does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         StarterBatteryState(byte value) {
             this.value = value;
@@ -1421,7 +1421,7 @@ public class Charging {
             throw new CommandParseException("Enum SmartChargingStatus does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         SmartChargingStatus(byte value) {
             this.value = value;
@@ -1458,7 +1458,7 @@ public class Charging {
             throw new CommandParseException("Enum PreconditioningError does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         PreconditioningError(byte value) {
             this.value = value;

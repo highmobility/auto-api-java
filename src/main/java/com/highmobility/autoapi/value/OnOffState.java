@@ -45,7 +45,7 @@ public enum OnOffState implements ByteEnum {
         throw new CommandParseException("Enum OnOffState does not contain " + hexFromByte(byteValue));
     }
 
-    private byte value;
+    private final byte value;
 
     OnOffState(byte value) {
         this.value = value;

@@ -101,7 +101,7 @@ public class DriverWorkingState extends PropertyValueObject {
             throw new CommandParseException("Enum WorkingState does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         WorkingState(byte value) {
             this.value = value;

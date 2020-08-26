@@ -104,7 +104,7 @@ public class DriverTimeState extends PropertyValueObject {
             throw new CommandParseException("Enum TimeState does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         TimeState(byte value) {
             this.value = value;

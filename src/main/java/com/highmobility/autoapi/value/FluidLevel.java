@@ -45,7 +45,7 @@ public enum FluidLevel implements ByteEnum {
         throw new CommandParseException("Enum FluidLevel does not contain " + hexFromByte(byteValue));
     }
 
-    private byte value;
+    private final byte value;
 
     FluidLevel(byte value) {
         this.value = value;

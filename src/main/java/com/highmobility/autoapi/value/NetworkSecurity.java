@@ -47,7 +47,7 @@ public enum NetworkSecurity implements ByteEnum {
         throw new CommandParseException("Enum NetworkSecurity does not contain " + hexFromByte(byteValue));
     }
 
-    private byte value;
+    private final byte value;
 
     NetworkSecurity(byte value) {
         this.value = value;

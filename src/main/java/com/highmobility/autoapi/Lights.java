@@ -590,7 +590,7 @@ public class Lights {
             throw new CommandParseException("Enum FrontExteriorLight does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         FrontExteriorLight(byte value) {
             this.value = value;
@@ -621,7 +621,7 @@ public class Lights {
             throw new CommandParseException("Enum SwitchPosition does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         SwitchPosition(byte value) {
             this.value = value;

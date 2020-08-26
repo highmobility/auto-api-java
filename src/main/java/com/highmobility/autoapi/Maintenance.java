@@ -510,7 +510,7 @@ public class Maintenance {
             throw new CommandParseException("Enum TeleserviceAvailability does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         TeleserviceAvailability(byte value) {
             this.value = value;

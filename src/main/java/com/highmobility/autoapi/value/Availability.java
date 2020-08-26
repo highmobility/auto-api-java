@@ -141,7 +141,7 @@ public class Availability extends PropertyValueObject {
             throw new CommandParseException("Enum UpdateRate does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         UpdateRate(byte value) {
             this.value = value;
@@ -169,7 +169,7 @@ public class Availability extends PropertyValueObject {
             throw new CommandParseException("Enum AppliesPer does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         AppliesPer(byte value) {
             this.value = value;

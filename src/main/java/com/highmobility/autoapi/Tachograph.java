@@ -402,7 +402,7 @@ public class Tachograph {
             throw new CommandParseException("Enum VehicleOverspeed does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         VehicleOverspeed(byte value) {
             this.value = value;
@@ -430,7 +430,7 @@ public class Tachograph {
             throw new CommandParseException("Enum VehicleDirection does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         VehicleDirection(byte value) {
             this.value = value;

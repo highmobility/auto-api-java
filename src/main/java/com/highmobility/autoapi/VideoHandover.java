@@ -120,7 +120,7 @@ public class VideoHandover {
             throw new CommandParseException("Enum Screen does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Screen(byte value) {
             this.value = value;

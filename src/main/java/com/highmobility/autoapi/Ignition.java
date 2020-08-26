@@ -233,7 +233,7 @@ public class Ignition {
             throw new CommandParseException("Enum IgnitionState does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         IgnitionState(byte value) {
             this.value = value;

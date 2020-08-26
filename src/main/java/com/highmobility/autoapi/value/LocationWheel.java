@@ -49,7 +49,7 @@ public enum LocationWheel implements ByteEnum {
         throw new CommandParseException("Enum LocationWheel does not contain " + hexFromByte(byteValue));
     }
 
-    private byte value;
+    private final byte value;
 
     LocationWheel(byte value) {
         this.value = value;

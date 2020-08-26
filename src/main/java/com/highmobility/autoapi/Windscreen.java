@@ -445,7 +445,7 @@ public class Windscreen {
             throw new CommandParseException("Enum WipersStatus does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         WipersStatus(byte value) {
             this.value = value;
@@ -475,7 +475,7 @@ public class Windscreen {
             throw new CommandParseException("Enum WipersIntensity does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         WipersIntensity(byte value) {
             this.value = value;
@@ -505,7 +505,7 @@ public class Windscreen {
             throw new CommandParseException("Enum WindscreenDamage does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         WindscreenDamage(byte value) {
             this.value = value;
@@ -534,7 +534,7 @@ public class Windscreen {
             throw new CommandParseException("Enum WindscreenNeedsReplacement does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         WindscreenNeedsReplacement(byte value) {
             this.value = value;

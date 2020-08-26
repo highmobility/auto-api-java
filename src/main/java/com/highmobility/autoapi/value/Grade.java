@@ -46,7 +46,7 @@ public enum Grade implements ByteEnum {
         throw new CommandParseException("Enum Grade does not contain " + hexFromByte(byteValue));
     }
 
-    private byte value;
+    private final byte value;
 
     Grade(byte value) {
         this.value = value;

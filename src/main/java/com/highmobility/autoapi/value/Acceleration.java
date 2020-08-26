@@ -102,7 +102,7 @@ public class Acceleration extends PropertyValueObject {
             throw new CommandParseException("Enum Direction does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Direction(byte value) {
             this.value = value;

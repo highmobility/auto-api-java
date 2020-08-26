@@ -45,7 +45,7 @@ public enum StartStop implements ByteEnum {
         throw new CommandParseException("Enum StartStop does not contain " + hexFromByte(byteValue));
     }
 
-    private byte value;
+    private final byte value;
 
     StartStop(byte value) {
         this.value = value;

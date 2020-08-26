@@ -100,7 +100,7 @@ public class KeyfobPosition {
             throw new CommandParseException("Enum Location does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Location(byte value) {
             this.value = value;

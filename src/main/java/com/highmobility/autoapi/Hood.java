@@ -122,7 +122,7 @@ public class Hood {
             throw new CommandParseException("Enum Position does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Position(byte value) {
             this.value = value;

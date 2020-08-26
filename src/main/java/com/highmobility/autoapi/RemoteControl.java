@@ -228,7 +228,7 @@ public class RemoteControl {
             throw new CommandParseException("Enum ControlMode does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         ControlMode(byte value) {
             this.value = value;

@@ -355,7 +355,7 @@ public class RooftopControl {
             throw new CommandParseException("Enum ConvertibleRoofState does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         ConvertibleRoofState(byte value) {
             this.value = value;
@@ -384,7 +384,7 @@ public class RooftopControl {
             throw new CommandParseException("Enum SunroofTiltState does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         SunroofTiltState(byte value) {
             this.value = value;
@@ -413,7 +413,7 @@ public class RooftopControl {
             throw new CommandParseException("Enum SunroofState does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         SunroofState(byte value) {
             this.value = value;
@@ -442,7 +442,7 @@ public class RooftopControl {
             throw new CommandParseException("Enum SunroofRainEvent does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         SunroofRainEvent(byte value) {
             this.value = value;

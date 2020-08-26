@@ -320,7 +320,7 @@ public class TheftAlarm {
             throw new CommandParseException("Enum Status does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Status(byte value) {
             this.value = value;
@@ -367,7 +367,7 @@ public class TheftAlarm {
             throw new CommandParseException("Enum LastWarningReason does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         LastWarningReason(byte value) {
             this.value = value;
@@ -396,7 +396,7 @@ public class TheftAlarm {
             throw new CommandParseException("Enum LastEventLevel does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         LastEventLevel(byte value) {
             this.value = value;
@@ -432,7 +432,7 @@ public class TheftAlarm {
             throw new CommandParseException("Enum EventType does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         EventType(byte value) {
             this.value = value;

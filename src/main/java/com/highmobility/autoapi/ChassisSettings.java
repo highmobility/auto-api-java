@@ -554,7 +554,7 @@ public class ChassisSettings {
             throw new CommandParseException("Enum SportChrono does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         SportChrono(byte value) {
             this.value = value;

@@ -344,7 +344,7 @@ public class Notifications {
             throw new CommandParseException("Enum Clear does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Clear(byte value) {
             this.value = value;

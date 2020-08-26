@@ -49,7 +49,7 @@ public enum DrivingMode implements ByteEnum {
         throw new CommandParseException("Enum DrivingMode does not contain " + hexFromByte(byteValue));
     }
 
-    private byte value;
+    private final byte value;
 
     DrivingMode(byte value) {
         this.value = value;

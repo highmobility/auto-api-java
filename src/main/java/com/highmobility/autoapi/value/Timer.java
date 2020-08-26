@@ -102,7 +102,7 @@ public class Timer extends PropertyValueObject {
             throw new CommandParseException("Enum TimerType does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         TimerType(byte value) {
             this.value = value;

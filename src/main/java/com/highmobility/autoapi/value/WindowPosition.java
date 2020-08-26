@@ -99,7 +99,7 @@ public class WindowPosition extends PropertyValueObject {
             throw new CommandParseException("Enum Position does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Position(byte value) {
             this.value = value;

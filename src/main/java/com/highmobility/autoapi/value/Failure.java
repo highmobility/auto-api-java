@@ -106,7 +106,7 @@ public class Failure extends PropertyValueObject {
             throw new CommandParseException("Enum Reason does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Reason(byte value) {
             this.value = value;

@@ -246,7 +246,7 @@ public class HonkHornFlashLights {
             throw new CommandParseException("Enum Flashers does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Flashers(byte value) {
             this.value = value;

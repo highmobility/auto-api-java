@@ -45,7 +45,7 @@ public enum ActiveState implements ByteEnum {
         throw new CommandParseException("Enum ActiveState does not contain " + hexFromByte(byteValue));
     }
 
-    private byte value;
+    private final byte value;
 
     ActiveState(byte value) {
         this.value = value;

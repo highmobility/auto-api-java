@@ -23,9 +23,13 @@
  */
 package com.highmobility.autoapi.property;
 
+import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.value.Acceleration;
 import com.highmobility.autoapi.value.AddressComponent;
+import com.highmobility.value.Bytes;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ValueTest {
@@ -43,6 +47,15 @@ public class ValueTest {
     public void utf8StringLengthUsed() {
         AddressComponent component = new AddressComponent(AddressComponent.Type.STREET, "ß"); // ß length is 2 in utf-8
         assertTrue(component.getLength() == 5);
+    }
+
+    @Test
+    public void lessBytesThrows() {
+        Bytes tooLittleBytes = new Bytes("010000");
+
+        assertThrows(CommandParseException.class, () -> {
+            new Acceleration(tooLittleBytes);
+        });
     }
 }
 

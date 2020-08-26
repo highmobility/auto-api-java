@@ -344,7 +344,7 @@ public class ParkingTicket {
             throw new CommandParseException("Enum Status does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Status(byte value) {
             this.value = value;

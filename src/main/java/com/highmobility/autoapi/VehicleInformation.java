@@ -577,7 +577,7 @@ public class VehicleInformation {
             throw new CommandParseException("Enum Powertrain does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Powertrain(byte value) {
             this.value = value;
@@ -606,7 +606,7 @@ public class VehicleInformation {
             throw new CommandParseException("Enum Gearbox does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Gearbox(byte value) {
             this.value = value;
@@ -634,7 +634,7 @@ public class VehicleInformation {
             throw new CommandParseException("Enum DisplayUnit does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         DisplayUnit(byte value) {
             this.value = value;
@@ -663,7 +663,7 @@ public class VehicleInformation {
             throw new CommandParseException("Enum DriverSeatLocation does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         DriverSeatLocation(byte value) {
             this.value = value;
@@ -691,7 +691,7 @@ public class VehicleInformation {
             throw new CommandParseException("Enum Timeformat does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Timeformat(byte value) {
             this.value = value;

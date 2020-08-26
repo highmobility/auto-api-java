@@ -45,7 +45,7 @@ public enum Detected implements ByteEnum {
         throw new CommandParseException("Enum Detected does not contain " + hexFromByte(byteValue));
     }
 
-    private byte value;
+    private final byte value;
 
     Detected(byte value) {
         this.value = value;

@@ -99,7 +99,7 @@ public class DriverCardPresent extends PropertyValueObject {
             throw new CommandParseException("Enum CardPresent does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         CardPresent(byte value) {
             this.value = value;

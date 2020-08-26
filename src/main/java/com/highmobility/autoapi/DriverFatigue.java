@@ -98,7 +98,7 @@ public class DriverFatigue {
             throw new CommandParseException("Enum DetectedFatigueLevel does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         DetectedFatigueLevel(byte value) {
             this.value = value;

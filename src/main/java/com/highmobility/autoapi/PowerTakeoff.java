@@ -208,7 +208,7 @@ public class PowerTakeoff {
             throw new CommandParseException("Enum Engaged does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         Engaged(byte value) {
             this.value = value;

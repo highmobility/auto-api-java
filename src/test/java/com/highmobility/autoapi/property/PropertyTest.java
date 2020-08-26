@@ -272,17 +272,6 @@ public class PropertyTest extends BaseTest {
     }
 
     @Test
-    public void typeFromPropertyWithNoValueComponent() {
-        // TODO: 3/7/20 : this test no longer necessary because Acceleration expects a non null Bytes value
-//        Bytes noComponentBytes = new Bytes("010000");
-//        Property prop = new Property(noComponentBytes.getByteArray());
-//
-//        assertThrows(CommandParseException.class, () -> {
-//            new Acceleration(prop);
-//        });
-    }
-
-    @Test
     public void emptyString() throws CommandParseException {
         // representing null/"" string
         // null = no value component

@@ -45,7 +45,7 @@ public enum LockState implements ByteEnum {
         throw new CommandParseException("Enum LockState does not contain " + hexFromByte(byteValue));
     }
 
-    private byte value;
+    private final byte value;
 
     LockState(byte value) {
         this.value = value;

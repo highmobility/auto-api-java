@@ -268,7 +268,7 @@ public class FailureMessage {
             throw new CommandParseException("Enum FailureReason does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         FailureReason(byte value) {
             this.value = value;

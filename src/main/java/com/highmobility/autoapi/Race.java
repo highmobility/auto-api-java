@@ -612,7 +612,7 @@ public class Race {
             throw new CommandParseException("Enum GearMode does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         GearMode(byte value) {
             this.value = value;
@@ -640,7 +640,7 @@ public class Race {
             throw new CommandParseException("Enum VehicleMoving does not contain " + hexFromByte(byteValue));
         }
     
-        private byte value;
+        private final byte value;
     
         VehicleMoving(byte value) {
             this.value = value;
