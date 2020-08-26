@@ -223,7 +223,7 @@ public class Notifications {
             final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
             if (actionItems != null) {
                 for (ActionItem actionItem : actionItems) {
-                    Property prop = new Property(0x02, actionItem);
+                    Property<ActionItem> prop = new Property<>(0x02, actionItem);
                     actionItemsBuilder.add(prop);
                     addProperty(prop);
                 }

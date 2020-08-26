@@ -463,7 +463,7 @@ public class ChassisSettings {
             final ArrayList<Property<SpringRate>> currentSpringRatesBuilder = new ArrayList<>();
             if (currentSpringRates != null) {
                 for (SpringRate currentSpringRate : currentSpringRates) {
-                    Property prop = new Property(0x05, currentSpringRate);
+                    Property<SpringRate> prop = new Property<>(0x05, currentSpringRate);
                     currentSpringRatesBuilder.add(prop);
                     addProperty(prop);
                 }

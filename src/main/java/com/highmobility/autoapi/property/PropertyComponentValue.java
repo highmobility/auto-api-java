@@ -34,15 +34,15 @@ import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-public class PropertyComponentValue<T> extends PropertyComponent {
+public class PropertyComponentValue<V> extends PropertyComponent {
     static final byte IDENTIFIER = 0x01;
 
-    Class<T> valueClass = null;
+    Class<V> valueClass = null;
     @Nullable
-    protected T value;
+    protected V value;
 
     @Nullable
-    public T getValue() {
+    public V getValue() {
         return value;
     }
 
@@ -51,7 +51,7 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         return valueBytes != null && valueBytes.getLength() > 0 ? valueBytes.get(0) : null;
     }
 
-    public Class<T> getValueClass() {
+    public Class<V> getValueClass() {
         return valueClass;
     }
 
@@ -59,24 +59,24 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         super(identifier, valueSize);
     }
 
-    PropertyComponentValue(Bytes value, Class<T> valueClass) throws CommandParseException {
+    PropertyComponentValue(Bytes value, Class<V> valueClass) throws CommandParseException {
         super(value);
         if (valueClass != null) setClass(valueClass);
     }
 
-    PropertyComponentValue(@Nullable T value) {
+    PropertyComponentValue(@Nullable V value) {
         super(IDENTIFIER, getBytes(value));
-        valueClass = (Class<T>) value.getClass();
+        valueClass = (Class<V>) value.getClass();
         this.value = value;
     }
 
-    public void setClass(Class<T> valueClass) throws CommandParseException {
+    public void setClass(Class<V> valueClass) throws CommandParseException {
         // map bytes to the type
         if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
             try {
                 // constructing PropertyValueObject subclasses can throw CommandParseException.
                 Constructor constructor = valueClass.getConstructor(new Class[]{Bytes.class});
-                T parsedValue = (T) constructor.newInstance(new Object[]{valueBytes});
+                V parsedValue = (V) constructor.newInstance(new Object[]{valueBytes});
                 this.value = parsedValue;
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
                 e.printStackTrace();
@@ -94,23 +94,23 @@ public class PropertyComponentValue<T> extends PropertyComponent {
         } else if (ByteEnum.class.isAssignableFrom(valueClass)) {
             value = valueClass.getEnumConstants()[valueBytes.get(0)];
         } else if (Boolean.class.isAssignableFrom(valueClass)) {
-            value = (T) Property.getBool(valueBytes.get(0));
+            value = (V) Property.getBool(valueBytes.get(0));
         } else if (Float.class.isAssignableFrom(valueClass)) {
-            value = (T) (Float) Property.getFloat(valueBytes);
+            value = (V) (Float) Property.getFloat(valueBytes);
         } else if (Double.class.isAssignableFrom(valueClass)) {
-            value = (T) (Double) Property.getDouble(valueBytes);
+            value = (V) (Double) Property.getDouble(valueBytes);
         } else if (Calendar.class.isAssignableFrom(valueClass)) {
-            value = (T) Property.getCalendar(valueBytes);
+            value = (V) Property.getCalendar(valueBytes);
         } else if (String.class.isAssignableFrom(valueClass)) {
-            value = (T) Property.getString(valueBytes);
+            value = (V) Property.getString(valueBytes);
         } else if (int[].class.isAssignableFrom(valueClass)) {
-            value = (T) Property.getIntegerArray(valueBytes);
+            value = (V) Property.getIntegerArray(valueBytes);
         } else if (Command.class.isAssignableFrom(valueClass)) {
-            value = (T) CommandResolver.resolve(valueBytes);
+            value = (V) CommandResolver.resolve(valueBytes);
         } else if (Bytes.class.isAssignableFrom(valueClass)) {
-            value = (T) valueBytes;
+            value = (V) valueBytes;
         } else if (Byte.class.isAssignableFrom(valueClass)) {
-            value = (T) valueBytes.get(0);
+            value = (V) valueBytes.get(0);
         }
 
         this.valueClass = valueClass;

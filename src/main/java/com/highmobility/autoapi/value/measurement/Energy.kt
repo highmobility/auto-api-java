@@ -35,12 +35,12 @@ class Energy : MeasurementType {
         this.value = value
         this.unit = unit
     
-        bytes[0] = getMeasurementId()
+        bytes[0] = 0x0c
         bytes[1] = unit.id
         set(2, Property.doubleToBytes(value))
     }
 
-    constructor(valueBytes: Bytes) : super(valueBytes) {
+    constructor(valueBytes: Bytes) : super(valueBytes, 0x0c) {
         unit = Unit.fromInt(valueBytes[1])
         value = Property.getDouble(valueBytes, 2)
     }
@@ -57,9 +57,7 @@ class Energy : MeasurementType {
     
     fun inKilowattHours() = inJoules() / 3600000.0
     
-    override fun getMeasurementId(): Byte {
-        return 0x0c
-    }    
+    
     
     enum class Unit(val id: Byte) {
         JOULES(0x00),

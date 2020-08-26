@@ -258,7 +258,7 @@ public class Windows {
             final ArrayList<Property<WindowOpenPercentage>> openPercentagesBuilder = new ArrayList<>();
             if (openPercentages != null) {
                 for (WindowOpenPercentage openPercentage : openPercentages) {
-                    Property prop = new Property(0x02, openPercentage);
+                    Property<WindowOpenPercentage> prop = new Property<>(0x02, openPercentage);
                     openPercentagesBuilder.add(prop);
                     addProperty(prop);
                 }
@@ -268,7 +268,7 @@ public class Windows {
             final ArrayList<Property<WindowPosition>> positionsBuilder = new ArrayList<>();
             if (positions != null) {
                 for (WindowPosition position : positions) {
-                    Property prop = new Property(0x03, position);
+                    Property<WindowPosition> prop = new Property<>(0x03, position);
                     positionsBuilder.add(prop);
                     addProperty(prop);
                 }

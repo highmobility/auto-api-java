@@ -2,24 +2,20 @@ package com.highmobility.autoapi.value.measurement
 
 import com.highmobility.autoapi.CommandParseException
 import com.highmobility.autoapi.property.PropertyValueObject
-import com.highmobility.utils.ByteUtils
+import com.highmobility.utils.ByteUtils.hexFromByte
 import com.highmobility.value.Bytes
 
 open class MeasurementType : PropertyValueObject {
     constructor() : super(SIZE)
 
-    constructor(valueBytes: Bytes) : super(valueBytes) {
+    constructor(valueBytes: Bytes, measurementId: Byte) : super(valueBytes) {
         if (valueBytes.length != length) {
             throw CommandParseException("$valueBytes: Measurement type bytes length should be $SIZE")
-        } else if (valueBytes[0] != getMeasurementId()) {
+        } else if (valueBytes[0] != measurementId) {
             throw CommandParseException(
-                "$valueBytes: Measurement type id is not ${ByteUtils.hexFromBytes(byteArrayOf(getMeasurementId()))}"
+                "$valueBytes: Measurement type id is not ${hexFromByte(measurementId)}"
             )
         }
-    }
-
-    protected open fun getMeasurementId(): Byte {
-        return 0xAA.toByte()
     }
 
     override fun getLength(): Int {

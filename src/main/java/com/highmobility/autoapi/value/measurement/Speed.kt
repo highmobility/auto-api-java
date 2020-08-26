@@ -35,12 +35,12 @@ class Speed : MeasurementType {
         this.value = value
         this.unit = unit
     
-        bytes[0] = getMeasurementId()
+        bytes[0] = 0x16
         bytes[1] = unit.id
         set(2, Property.doubleToBytes(value))
     }
 
-    constructor(valueBytes: Bytes) : super(valueBytes) {
+    constructor(valueBytes: Bytes) : super(valueBytes, 0x16) {
         unit = Unit.fromInt(valueBytes[1])
         value = Property.getDouble(valueBytes, 2)
     }
@@ -60,9 +60,7 @@ class Speed : MeasurementType {
     
     fun inKnots() = inMetersPerSecond() / 0.51444444444
     
-    override fun getMeasurementId(): Byte {
-        return 0x16
-    }    
+    
     
     enum class Unit(val id: Byte) {
         METERS_PER_SECOND(0x00),

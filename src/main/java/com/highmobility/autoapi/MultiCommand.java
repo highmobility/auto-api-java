@@ -140,7 +140,7 @@ public class MultiCommand {
             final ArrayList<Property<Command>> multiCommandsBuilder = new ArrayList<>();
             if (multiCommands != null) {
                 for (Command multiCommand : multiCommands) {
-                    Property prop = new Property(0x02, multiCommand);
+                    Property<Command> prop = new Property<>(0x02, multiCommand);
                     multiCommandsBuilder.add(prop);
                     addProperty(prop);
                 }

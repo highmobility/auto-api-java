@@ -500,7 +500,7 @@ public class Lights {
             final ArrayList<Property<Light>> fogLightsBuilder = new ArrayList<>();
             if (fogLights != null) {
                 for (Light fogLight : fogLights) {
-                    Property prop = new Property(0x07, fogLight);
+                    Property<Light> prop = new Property<>(0x07, fogLight);
                     fogLightsBuilder.add(prop);
                     addProperty(prop);
                 }
@@ -510,7 +510,7 @@ public class Lights {
             final ArrayList<Property<ReadingLamp>> readingLampsBuilder = new ArrayList<>();
             if (readingLamps != null) {
                 for (ReadingLamp readingLamp : readingLamps) {
-                    Property prop = new Property(0x08, readingLamp);
+                    Property<ReadingLamp> prop = new Property<>(0x08, readingLamp);
                     readingLampsBuilder.add(prop);
                     addProperty(prop);
                 }
@@ -520,7 +520,7 @@ public class Lights {
             final ArrayList<Property<Light>> interiorLightsBuilder = new ArrayList<>();
             if (interiorLights != null) {
                 for (Light interiorLight : interiorLights) {
-                    Property prop = new Property(0x09, interiorLight);
+                    Property<Light> prop = new Property<>(0x09, interiorLight);
                     interiorLightsBuilder.add(prop);
                     addProperty(prop);
                 }

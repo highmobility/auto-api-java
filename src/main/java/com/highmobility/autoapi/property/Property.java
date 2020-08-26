@@ -28,18 +28,12 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.value.Bytes;
 
+import javax.annotation.Nullable;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * Property is a representation of some AutoAPI data. It consists of 4 optional components: data, unit
@@ -193,7 +187,7 @@ public class Property<V> extends Bytes {
                 switch (componentIdentifier) {
                     case 0x01:
                         // value component
-                        value = new PropertyComponentValue(componentBytes, valueClass);
+                        value = new PropertyComponentValue<>(componentBytes, valueClass);
                         builder.add(value);
                         break;
                     case 0x02:
@@ -227,8 +221,8 @@ public class Property<V> extends Bytes {
             throw new IllegalArgumentException("Initialise with a class to update.");
 
         this.bytes = p.getByteArray();
-
         this.value = p.value;
+
         if (this.value != null) {
             try {
                 this.value.setClass(valueClass);
@@ -292,7 +286,7 @@ public class Property<V> extends Bytes {
             value.set(0, (byte) 0x01);
             value.set(1, valueLength);
             value.set(3, valueComponentValue);
-            this.value = new PropertyComponentValue(value, valueClass);
+            this.value = new PropertyComponentValue<>(value, valueClass);
         } catch (CommandParseException e) {
             throw new IllegalArgumentException();
         }
@@ -305,7 +299,7 @@ public class Property<V> extends Bytes {
                             @Nullable Calendar timestamp,
                             @Nullable PropertyComponentFailure failure) {
 
-        if (value != null && failure == null) this.value = new PropertyComponentValue(value);
+        if (value != null && failure == null) this.value = new PropertyComponentValue<>(value);
         if (timestamp != null) this.timestamp = new PropertyComponentTimestamp(timestamp);
         if (failure != null) this.failure = failure;
 
@@ -373,17 +367,6 @@ public class Property<V> extends Bytes {
                 (" | " + e.getClass().getSimpleName() + ": " + e.getMessage()) : "");
 
         Command.logger.error("Failed to parse property: " + toString() + componentString + exceptionString, e);
-    }
-
-    // MARK: Helpers
-
-    public static <V, U> V[] propertiesToValues(Property<V>[] properties, Class<V> tClass) {
-        ArrayList<V> values = new ArrayList<>();
-        for (int i = 0; i < properties.length; i++) {
-            values.add(properties[i].getValue());
-        }
-
-        return values.toArray((V[]) Array.newInstance(tClass, 0));
     }
 
     // MARK: ctor helpers

@@ -46,12 +46,12 @@ public class SetCommand extends Command {
      */
     protected void addProperty(Property property) {
         if (property == null || property.getValueComponent() == null) return;
-        if (propertiesBuilder == null) propertiesBuilder = new ArrayList();
+        if (propertiesBuilder == null) propertiesBuilder = new ArrayList<>();
         propertiesBuilder.add(property);
     }
 
     protected void createBytes() {
-        if (propertiesBuilder == null) propertiesBuilder = new ArrayList();
+        if (propertiesBuilder == null) propertiesBuilder = new ArrayList<>();
         findUniversalProperties(identifier, type, propertiesBuilder.toArray(new Property[0]),
                 true);
     }
@@ -84,7 +84,7 @@ public class SetCommand extends Command {
          * @return The nonce.
          */
         public Builder setNonce(Bytes nonce) {
-            addProperty(new Property(NONCE_IDENTIFIER, nonce));
+            addProperty(new Property<>(NONCE_IDENTIFIER, nonce));
             return this;
         }
 
@@ -94,7 +94,7 @@ public class SetCommand extends Command {
          * @return The builder.
          */
         public Builder setSignature(Bytes signature) {
-            addProperty(new Property(SIGNATURE_IDENTIFIER, signature));
+            addProperty(new Property<>(SIGNATURE_IDENTIFIER, signature));
             return this;
         }
 
@@ -103,7 +103,7 @@ public class SetCommand extends Command {
          * @return The builder.
          */
         public Builder setTimestamp(Calendar timestamp) {
-            addProperty(new Property(TIMESTAMP_IDENTIFIER, timestamp));
+            addProperty(new Property<>(TIMESTAMP_IDENTIFIER, timestamp));
             return this;
         }
 

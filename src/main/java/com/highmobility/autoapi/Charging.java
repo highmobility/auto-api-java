@@ -1092,7 +1092,7 @@ public class Charging {
             final ArrayList<Property<Timer>> timersBuilder = new ArrayList<>();
             if (timers != null) {
                 for (Timer timer : timers) {
-                    Property prop = new Property(0x15, timer);
+                    Property<Timer> prop = new Property<>(0x15, timer);
                     timersBuilder.add(prop);
                     addProperty(prop);
                 }
@@ -1149,7 +1149,7 @@ public class Charging {
             final ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
             if (reductionTimes != null) {
                 for (ReductionTime reductionTime : reductionTimes) {
-                    Property prop = new Property(0x13, reductionTime);
+                    Property<ReductionTime> prop = new Property<>(0x13, reductionTime);
                     reductionTimesBuilder.add(prop);
                     addProperty(prop);
                 }

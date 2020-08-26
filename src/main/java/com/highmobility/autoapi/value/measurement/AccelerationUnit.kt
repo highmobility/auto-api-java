@@ -35,12 +35,12 @@ class AccelerationUnit : MeasurementType {
         this.value = value
         this.unit = unit
     
-        bytes[0] = getMeasurementId()
+        bytes[0] = 0x01
         bytes[1] = unit.id
         set(2, Property.doubleToBytes(value))
     }
 
-    constructor(valueBytes: Bytes) : super(valueBytes) {
+    constructor(valueBytes: Bytes) : super(valueBytes, 0x01) {
         unit = Unit.fromInt(valueBytes[1])
         value = Property.getDouble(valueBytes, 2)
     }
@@ -54,9 +54,7 @@ class AccelerationUnit : MeasurementType {
     
     fun inGravity() = inMetersPerSecondSquared() / 9.81
     
-    override fun getMeasurementId(): Byte {
-        return 0x01
-    }    
+    
     
     enum class Unit(val id: Byte) {
         METERS_PER_SECOND_SQUARED(0x00),

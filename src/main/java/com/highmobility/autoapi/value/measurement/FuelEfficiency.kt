@@ -35,12 +35,12 @@ class FuelEfficiency : MeasurementType {
         this.value = value
         this.unit = unit
     
-        bytes[0] = getMeasurementId()
+        bytes[0] = 0x0f
         bytes[1] = unit.id
         set(2, Property.doubleToBytes(value))
     }
 
-    constructor(valueBytes: Bytes) : super(valueBytes) {
+    constructor(valueBytes: Bytes) : super(valueBytes, 0x0f) {
         unit = Unit.fromInt(valueBytes[1])
         value = Property.getDouble(valueBytes, 2)
     }
@@ -57,9 +57,7 @@ class FuelEfficiency : MeasurementType {
     
     fun inMilesPerGallon() = 235.2145833 / inLitersPer100Kilometers()
     
-    override fun getMeasurementId(): Byte {
-        return 0x0f
-    }    
+    
     
     enum class Unit(val id: Byte) {
         LITERS_PER_100_KILOMETERS(0x00),

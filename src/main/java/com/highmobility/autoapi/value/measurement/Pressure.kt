@@ -35,12 +35,12 @@ class Pressure : MeasurementType {
         this.value = value
         this.unit = unit
     
-        bytes[0] = getMeasurementId()
+        bytes[0] = 0x15
         bytes[1] = unit.id
         set(2, Property.doubleToBytes(value))
     }
 
-    constructor(valueBytes: Bytes) : super(valueBytes) {
+    constructor(valueBytes: Bytes) : super(valueBytes, 0x15) {
         unit = Unit.fromInt(valueBytes[1])
         value = Property.getDouble(valueBytes, 2)
     }
@@ -69,9 +69,7 @@ class Pressure : MeasurementType {
     
     fun inPoundsForcePerSquareInch() = inNewtonsPerMetersSquared() / 6894.76
     
-    override fun getMeasurementId(): Byte {
-        return 0x15
-    }    
+    
     
     enum class Unit(val id: Byte) {
         NEWTONS_PER_METERS_SQUARED(0x00),

@@ -573,7 +573,7 @@ public class HomeCharger {
             final ArrayList<Property<PriceTariff>> priceTariffsBuilder = new ArrayList<>();
             if (priceTariffs != null) {
                 for (PriceTariff priceTariff : priceTariffs) {
-                    Property prop = new Property(0x12, priceTariff);
+                    Property<PriceTariff> prop = new Property<>(0x12, priceTariff);
                     priceTariffsBuilder.add(prop);
                     addProperty(prop);
                 }

@@ -35,12 +35,12 @@ class EnergyEfficiency : MeasurementType {
         this.value = value
         this.unit = unit
     
-        bytes[0] = getMeasurementId()
+        bytes[0] = 0x0d
         bytes[1] = unit.id
         set(2, Property.doubleToBytes(value))
     }
 
-    constructor(valueBytes: Bytes) : super(valueBytes) {
+    constructor(valueBytes: Bytes) : super(valueBytes, 0x0d) {
         unit = Unit.fromInt(valueBytes[1])
         value = Property.getDouble(valueBytes, 2)
     }
@@ -54,9 +54,7 @@ class EnergyEfficiency : MeasurementType {
     
     fun inMilesPerKwh() = 62.137119223733397 / inKwhPer100Kilometers()
     
-    override fun getMeasurementId(): Byte {
-        return 0x0d
-    }    
+    
     
     enum class Unit(val id: Byte) {
         KWH_PER_100_KILOMETERS(0x00),

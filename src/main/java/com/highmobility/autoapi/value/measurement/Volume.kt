@@ -35,12 +35,12 @@ class Volume : MeasurementType {
         this.value = value
         this.unit = unit
     
-        bytes[0] = getMeasurementId()
+        bytes[0] = 0x19
         bytes[1] = unit.id
         set(2, Property.doubleToBytes(value))
     }
 
-    constructor(valueBytes: Bytes) : super(valueBytes) {
+    constructor(valueBytes: Bytes) : super(valueBytes, 0x19) {
         unit = Unit.fromInt(valueBytes[1])
         value = Property.getDouble(valueBytes, 2)
     }
@@ -90,9 +90,7 @@ class Volume : MeasurementType {
     
     fun inImperialGallons() = inLiters() / 4.54609
     
-    override fun getMeasurementId(): Byte {
-        return 0x19
-    }    
+    
     
     enum class Unit(val id: Byte) {
         LITERS(0x02),

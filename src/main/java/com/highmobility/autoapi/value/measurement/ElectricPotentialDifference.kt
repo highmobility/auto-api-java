@@ -35,12 +35,12 @@ class ElectricPotentialDifference : MeasurementType {
         this.value = value
         this.unit = unit
     
-        bytes[0] = getMeasurementId()
+        bytes[0] = 0x0a
         bytes[1] = unit.id
         set(2, Property.doubleToBytes(value))
     }
 
-    constructor(valueBytes: Bytes) : super(valueBytes) {
+    constructor(valueBytes: Bytes) : super(valueBytes, 0x0a) {
         unit = Unit.fromInt(valueBytes[1])
         value = Property.getDouble(valueBytes, 2)
     }
@@ -57,9 +57,7 @@ class ElectricPotentialDifference : MeasurementType {
     
     fun inKilovolts() = inVolts() / 1000.0
     
-    override fun getMeasurementId(): Byte {
-        return 0x0a
-    }    
+    
     
     enum class Unit(val id: Byte) {
         VOLTS(0x00),

@@ -35,12 +35,12 @@ class Power : MeasurementType {
         this.value = value
         this.unit = unit
     
-        bytes[0] = getMeasurementId()
+        bytes[0] = 0x14
         bytes[1] = unit.id
         set(2, Property.doubleToBytes(value))
     }
 
-    constructor(valueBytes: Bytes) : super(valueBytes) {
+    constructor(valueBytes: Bytes) : super(valueBytes, 0x14) {
         unit = Unit.fromInt(valueBytes[1])
         value = Property.getDouble(valueBytes, 2)
     }
@@ -63,9 +63,7 @@ class Power : MeasurementType {
     
     fun inHorsepower() = inWatts() / 745.7
     
-    override fun getMeasurementId(): Byte {
-        return 0x14
-    }    
+    
     
     enum class Unit(val id: Byte) {
         WATTS(0x00),

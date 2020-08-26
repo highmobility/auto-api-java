@@ -35,12 +35,12 @@ class AngularVelocity : MeasurementType {
         this.value = value
         this.unit = unit
     
-        bytes[0] = getMeasurementId()
+        bytes[0] = 0x03
         bytes[1] = unit.id
         set(2, Property.doubleToBytes(value))
     }
 
-    constructor(valueBytes: Bytes) : super(valueBytes) {
+    constructor(valueBytes: Bytes) : super(valueBytes, 0x03) {
         unit = Unit.fromInt(valueBytes[1])
         value = Property.getDouble(valueBytes, 2)
     }
@@ -57,9 +57,7 @@ class AngularVelocity : MeasurementType {
     
     fun inRadiansPerSecond() = inRevolutionsPerMinute() / 9.549296585514
     
-    override fun getMeasurementId(): Byte {
-        return 0x03
-    }    
+    
     
     enum class Unit(val id: Byte) {
         REVOLUTIONS_PER_MINUTE(0x00),

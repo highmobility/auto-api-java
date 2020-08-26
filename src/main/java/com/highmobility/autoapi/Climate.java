@@ -401,7 +401,7 @@ public class Climate {
             final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
             if (hvacWeekdayStartingTimes != null) {
                 for (HvacWeekdayStartingTime hvacWeekdayStartingTime : hvacWeekdayStartingTimes) {
-                    Property prop = new Property(0x0b, hvacWeekdayStartingTime);
+                    Property<HvacWeekdayStartingTime> prop = new Property<>(0x0b, hvacWeekdayStartingTime);
                     hvacWeekdayStartingTimesBuilder.add(prop);
                     addProperty(prop);
                 }
