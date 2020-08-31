@@ -89,8 +89,8 @@ class KDiagnosticsTest : BaseTest() {
             "24002D01002A0004314233430022000f696d706f7274616e745f6572726f72000f73797374656d206661756c74203332" +  // Trouble code '1B3C' has a value 'system fault 32' for a key 'important_error'
             "25000D01000A120440a1720000000000" +  // Diesel exhaust fluid is empty in 2233.0km
             "26000B0100083fc47ae147ae147b" +  // Diesel exhaust particulate filter soot level is 16%
-            "2700140100113830314331303136434153414354495645" +  // Confirmed trouble code '801C10' with ECU address '16' and variante name "CAS" is 'ACTIVE'
-            "2700140100114435324334343438434153414354495645" // Confirmed trouble code 'D52C44' with ECU address '48' and variante name "CAS" is 'ACTIVE'
+            "27001C01001900063830314331300002313600034341530006414354495645" +  // Confirmed trouble code '801C10' with ECU address '16' and variante name "CAS" is 'ACTIVE'
+            "27001C01001900064435324334340002343800034341530006414354495645" // Confirmed trouble code 'D52C44' with ECU address '48' and variante name "CAS" is 'ACTIVE'
     )
     
     @Test
