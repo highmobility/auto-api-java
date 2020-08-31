@@ -114,7 +114,7 @@ public class PriceTariff extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum PricingType does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("PriceTariff.PricingType does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

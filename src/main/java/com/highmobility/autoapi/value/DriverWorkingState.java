@@ -98,7 +98,7 @@ public class DriverWorkingState extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum WorkingState does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("DriverWorkingState.WorkingState does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

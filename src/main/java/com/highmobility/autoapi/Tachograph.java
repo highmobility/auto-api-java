@@ -399,7 +399,7 @@ public class Tachograph {
                 }
             }
     
-            throw new CommandParseException("Enum VehicleOverspeed does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Tachograph.VehicleOverspeed does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -427,7 +427,7 @@ public class Tachograph {
                 }
             }
     
-            throw new CommandParseException("Enum VehicleDirection does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Tachograph.VehicleDirection does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

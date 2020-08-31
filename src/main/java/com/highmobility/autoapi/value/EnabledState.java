@@ -42,7 +42,7 @@ public enum EnabledState implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum EnabledState does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("EnabledState does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

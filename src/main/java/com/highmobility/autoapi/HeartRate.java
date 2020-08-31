@@ -66,9 +66,7 @@ public class HeartRate {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_HEART_RATE: return heartRate.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_HEART_RATE) return heartRate.update(p);
                     return null;
                 });
             }

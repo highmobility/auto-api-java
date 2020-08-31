@@ -45,7 +45,7 @@ public enum WindowLocation implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum WindowLocation does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("WindowLocation does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

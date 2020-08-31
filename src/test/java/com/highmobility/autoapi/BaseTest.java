@@ -56,4 +56,20 @@ public class BaseTest {
     static Calendar getCalendar(String dateString) {
         return TestUtils.getExampleCalendar(dateString);
     }
+
+    static void errorLogExpected(Runnable runnable) {
+        TestUtils.errorLogExpected(1, runnable);
+    }
+
+    static void errorLogExpected(int count, Runnable runnable) {
+        TestUtils.errorLogExpected(count, runnable);
+    }
+
+    static void warningLogExpected(Runnable runnable) {
+        TestUtils.warningLogExpected(1, runnable);
+    }
+
+    static void warningLogExpected(int count, Runnable runnable) {
+        TestUtils.warningLogExpected(count, runnable);
+    }
 }

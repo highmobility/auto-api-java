@@ -538,9 +538,7 @@ public class HomeCharger {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CHARGE_CURRENT: return chargeCurrent.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_CURRENT) return chargeCurrent.update(p);
                     return null;
                 });
             }
@@ -589,12 +587,10 @@ public class HomeCharger {
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_PRICE_TARIFFS: {
-                            Property<PriceTariff> priceTariff = new Property<>(PriceTariff.class, p);
-                            priceTariffsBuilder.add(priceTariff);
-                            return priceTariff;
-                        }
+                    if (p.getPropertyIdentifier() == PROPERTY_PRICE_TARIFFS) {
+                        Property<PriceTariff> priceTariff = new Property<>(PriceTariff.class, p);
+                        priceTariffsBuilder.add(priceTariff);
+                        return priceTariff;
                     }
                     return null;
                 });
@@ -635,9 +631,7 @@ public class HomeCharger {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_SOLAR_CHARGING: return solarCharging.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_SOLAR_CHARGING) return solarCharging.update(p);
                     return null;
                 });
             }
@@ -675,9 +669,7 @@ public class HomeCharger {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_WI_FI_HOTSPOT_ENABLED: return wifiHotspotEnabled.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_WI_FI_HOTSPOT_ENABLED) return wifiHotspotEnabled.update(p);
                     return null;
                 });
             }
@@ -715,9 +707,7 @@ public class HomeCharger {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_AUTHENTICATION_STATE: return authenticationState.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_AUTHENTICATION_STATE) return authenticationState.update(p);
                     return null;
                 });
             }
@@ -741,7 +731,7 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException("Enum ChargingStatus does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("HomeCharger.ChargingStatus does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -769,7 +759,7 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException("Enum AuthenticationMechanism does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("HomeCharger.AuthenticationMechanism does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -799,7 +789,7 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException("Enum PlugType does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("HomeCharger.PlugType does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -827,7 +817,7 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException("Enum AuthenticationState does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("HomeCharger.AuthenticationState does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

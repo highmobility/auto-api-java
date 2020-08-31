@@ -44,7 +44,7 @@ public enum Location implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum Location does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("Location does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

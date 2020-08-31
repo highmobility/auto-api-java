@@ -62,9 +62,7 @@ public class Graphics {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_IMAGE_URL: return imageURL.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_IMAGE_URL) return imageURL.update(p);
                     return null;
                 });
             }

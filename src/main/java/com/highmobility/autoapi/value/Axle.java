@@ -42,7 +42,7 @@ public enum Axle implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum Axle does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("Axle does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

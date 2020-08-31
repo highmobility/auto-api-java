@@ -935,9 +935,7 @@ public class Charging {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_STATUS: return status.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     return null;
                 });
             }
@@ -975,9 +973,7 @@ public class Charging {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CHARGE_LIMIT: return chargeLimit.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_LIMIT) return chargeLimit.update(p);
                     return null;
                 });
             }
@@ -1015,9 +1011,7 @@ public class Charging {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CHARGE_PORT_STATE: return chargePortState.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_PORT_STATE) return chargePortState.update(p);
                     return null;
                 });
             }
@@ -1057,9 +1051,7 @@ public class Charging {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CHARGE_MODE: return chargeMode.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_MODE) return chargeMode.update(p);
                     return null;
                 });
             }
@@ -1108,12 +1100,10 @@ public class Charging {
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_TIMERS: {
-                            Property<Timer> timer = new Property<>(Timer.class, p);
-                            timersBuilder.add(timer);
-                            return timer;
-                        }
+                    if (p.getPropertyIdentifier() == PROPERTY_TIMERS) {
+                        Property<Timer> timer = new Property<>(Timer.class, p);
+                        timersBuilder.add(timer);
+                        return timer;
                     }
                     return null;
                 });
@@ -1165,12 +1155,10 @@ public class Charging {
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_REDUCTION_TIMES: {
-                            Property<ReductionTime> reductionTime = new Property<>(ReductionTime.class, p);
-                            reductionTimesBuilder.add(reductionTime);
-                            return reductionTime;
-                        }
+                    if (p.getPropertyIdentifier() == PROPERTY_REDUCTION_TIMES) {
+                        Property<ReductionTime> reductionTime = new Property<>(ReductionTime.class, p);
+                        reductionTimesBuilder.add(reductionTime);
+                        return reductionTime;
                     }
                     return null;
                 });
@@ -1197,7 +1185,7 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Enum ChargeMode does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Charging.ChargeMode does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -1227,7 +1215,7 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Enum PlugType does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Charging.PlugType does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -1255,7 +1243,7 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Enum ChargingWindowChosen does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Charging.ChargingWindowChosen does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -1283,7 +1271,7 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Enum PluggedIn does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Charging.PluggedIn does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -1320,7 +1308,7 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Enum Status does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Charging.Status does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -1348,7 +1336,7 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Enum CurrentType does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Charging.CurrentType does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -1386,7 +1374,7 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Enum StarterBatteryState does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Charging.StarterBatteryState does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -1418,7 +1406,7 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Enum SmartChargingStatus does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Charging.SmartChargingStatus does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -1455,7 +1443,7 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Enum PreconditioningError does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Charging.PreconditioningError does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

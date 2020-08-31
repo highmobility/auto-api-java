@@ -33,14 +33,14 @@ public class CommandResolverTest extends BaseTest {
     @Test public void logsInvalidProperties() {
         setRuntime(CommandResolver.RunTime.JAVA);
 
-        // It tries to match 3 to commands, but in all of these the property parsing will fail
-        TestUtils.warningLogExpected(3, () -> {
+        // It tries to match 2 to commands, but for both the property parsing fails
+        TestUtils.warningLogExpected(2, () -> {
             Bytes invalidEndParking = new Bytes(
                     COMMAND_HEADER + "004701" +
                             "01000401000104"
             );
             Command command = CommandResolver.resolve(invalidEndParking);
-            assertTrue(command.getClass() == ParkingTicket.State.class);
+            assertTrue(command.getClass() == Command.class);
             assertTrue(command.getProperties().length == 1);
         });
     }

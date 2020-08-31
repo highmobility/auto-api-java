@@ -119,7 +119,7 @@ public class Hood {
                 }
             }
     
-            throw new CommandParseException("Enum Position does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Hood.Position does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

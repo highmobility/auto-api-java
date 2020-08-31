@@ -68,9 +68,8 @@ class KHonkHornFlashLightsTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testHonkFlash() {
-        val bytes = Bytes(COMMAND_HEADER + "002601" + 
+    @Test fun honkFlash() {
+        val bytes = Bytes(COMMAND_HEADER + "002601" +
             "03000401000105" +
             "05000D01000A07004000000000000000")
     
@@ -86,9 +85,8 @@ class KHonkHornFlashLightsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testActivateDeactivateEmergencyFlasher() {
-        val bytes = Bytes(COMMAND_HEADER + "002601" + 
+    @Test fun activateDeactivateEmergencyFlasher() {
+        val bytes = Bytes(COMMAND_HEADER + "002601" +
             "04000401000101")
     
         val constructed = HonkHornFlashLights.ActivateDeactivateEmergencyFlasher(ActiveState.ACTIVE)

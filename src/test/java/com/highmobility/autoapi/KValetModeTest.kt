@@ -60,9 +60,8 @@ class KValetModeTest : BaseTest() {
         assertTrue(ValetMode.GetValetMode() == bytes)
     }
     
-    @Test
-    fun testActivateDeactivateValetMode() {
-        val bytes = Bytes(COMMAND_HEADER + "002801" + 
+    @Test fun activateDeactivateValetMode() {
+        val bytes = Bytes(COMMAND_HEADER + "002801" +
             "01000401000101")
     
         val constructed = ValetMode.ActivateDeactivateValetMode(ActiveState.ACTIVE)

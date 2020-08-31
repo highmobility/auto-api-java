@@ -60,9 +60,8 @@ class KParkingBrakeTest : BaseTest() {
         assertTrue(ParkingBrake.GetState() == bytes)
     }
     
-    @Test
-    fun testSetParkingBrake() {
-        val bytes = Bytes(COMMAND_HEADER + "005801" + 
+    @Test fun setParkingBrake() {
+        val bytes = Bytes(COMMAND_HEADER + "005801" +
             "01000401000101")
     
         val constructed = ParkingBrake.SetParkingBrake(ActiveState.ACTIVE)

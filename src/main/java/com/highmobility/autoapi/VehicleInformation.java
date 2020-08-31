@@ -574,7 +574,7 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException("Enum Powertrain does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("VehicleInformation.Powertrain does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -603,7 +603,7 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException("Enum Gearbox does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("VehicleInformation.Gearbox does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -631,7 +631,7 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException("Enum DisplayUnit does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("VehicleInformation.DisplayUnit does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -660,7 +660,7 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException("Enum DriverSeatLocation does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("VehicleInformation.DriverSeatLocation does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -688,7 +688,7 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException("Enum Timeformat does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("VehicleInformation.Timeformat does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

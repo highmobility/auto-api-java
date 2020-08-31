@@ -104,7 +104,7 @@ public class AddressComponent extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum Type does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("AddressComponent.Type does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

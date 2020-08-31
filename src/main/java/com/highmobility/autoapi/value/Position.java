@@ -42,7 +42,7 @@ public enum Position implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum Position does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("Position does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

@@ -156,12 +156,10 @@ public class MultiCommand {
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_MULTI_COMMANDS: {
-                            Property<Command> multiCommand = new Property<>(Command.class, p);
-                            multiCommandsBuilder.add(multiCommand);
-                            return multiCommand;
-                        }
+                    if (p.getPropertyIdentifier() == PROPERTY_MULTI_COMMANDS) {
+                        Property<Command> multiCommand = new Property<>(Command.class, p);
+                        multiCommandsBuilder.add(multiCommand);
+                        return multiCommand;
                     }
                     return null;
                 });

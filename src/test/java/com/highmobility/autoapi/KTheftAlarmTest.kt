@@ -85,9 +85,8 @@ class KTheftAlarmTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testSetTheftAlarm() {
-        val bytes = Bytes(COMMAND_HEADER + "004601" + 
+    @Test fun setTheftAlarm() {
+        val bytes = Bytes(COMMAND_HEADER + "004601" +
             "01000401000101")
     
         val constructed = TheftAlarm.SetTheftAlarm(TheftAlarm.Status.ARMED)

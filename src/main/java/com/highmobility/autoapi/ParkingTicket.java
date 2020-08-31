@@ -289,7 +289,7 @@ public class ParkingTicket {
                     return null;
                 });
             }
-            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals(new Bytes("01")) == false) ||
+            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("01") == false) ||
                 this.operatorTicketID.getValue() == null ||
                 this.ticketStartTime.getValue() == null) 
                 throw new NoPropertiesException();
@@ -316,13 +316,11 @@ public class ParkingTicket {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_STATUS: status.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     return null;
                 });
             }
-            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals(new Bytes("00")) == false)) 
+            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("00") == false)) 
                 throw new NoPropertiesException();
         }
     }
@@ -341,7 +339,7 @@ public class ParkingTicket {
                 }
             }
     
-            throw new CommandParseException("Enum Status does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("ParkingTicket.Status does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

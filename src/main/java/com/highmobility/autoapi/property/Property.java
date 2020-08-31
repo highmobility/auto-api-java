@@ -29,6 +29,7 @@ import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.value.Bytes;
 
 import javax.annotation.Nullable;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
@@ -227,8 +228,7 @@ public class Property<V> extends Bytes {
             try {
                 this.value.setClass(valueClass);
             } catch (Exception e) {
-                Command.logger.warn("Invalid bytes {} for property: {}", p,
-                        valueClass.getSimpleName(), e);
+                Command.logger.warn("Invalid bytes %s for property: %s\n%s", p, valueClass.getSimpleName(), e);
             }
         }
 

@@ -417,12 +417,10 @@ public class Climate {
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_HVAC_WEEKDAY_STARTING_TIMES: {
-                            Property<HvacWeekdayStartingTime> hvacWeekdayStartingTime = new Property<>(HvacWeekdayStartingTime.class, p);
-                            hvacWeekdayStartingTimesBuilder.add(hvacWeekdayStartingTime);
-                            return hvacWeekdayStartingTime;
-                        }
+                    if (p.getPropertyIdentifier() == PROPERTY_HVAC_WEEKDAY_STARTING_TIMES) {
+                        Property<HvacWeekdayStartingTime> hvacWeekdayStartingTime = new Property<>(HvacWeekdayStartingTime.class, p);
+                        hvacWeekdayStartingTimesBuilder.add(hvacWeekdayStartingTime);
+                        return hvacWeekdayStartingTime;
                     }
                     return null;
                 });
@@ -463,9 +461,7 @@ public class Climate {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_HVAC_STATE: return hvacState.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_HVAC_STATE) return hvacState.update(p);
                     return null;
                 });
             }
@@ -503,9 +499,7 @@ public class Climate {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_DEFOGGING_STATE: return defoggingState.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_DEFOGGING_STATE) return defoggingState.update(p);
                     return null;
                 });
             }
@@ -543,9 +537,7 @@ public class Climate {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_DEFROSTING_STATE: return defrostingState.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_DEFROSTING_STATE) return defrostingState.update(p);
                     return null;
                 });
             }
@@ -583,9 +575,7 @@ public class Climate {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_IONISING_STATE: return ionisingState.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_IONISING_STATE) return ionisingState.update(p);
                     return null;
                 });
             }

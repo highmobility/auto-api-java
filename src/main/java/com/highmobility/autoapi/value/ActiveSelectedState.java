@@ -43,7 +43,7 @@ public enum ActiveSelectedState implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum ActiveSelectedState does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("ActiveSelectedState does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

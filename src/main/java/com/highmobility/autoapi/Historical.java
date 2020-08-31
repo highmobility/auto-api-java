@@ -236,7 +236,7 @@ public class Historical {
                     return null;
                 });
             }
-            if ((capabilityID.getValue() == null || capabilityID.getValueComponent().getValueBytes().equals(new Bytes("006a")) == false)) 
+            if ((capabilityID.getValue() == null || capabilityID.getValueComponent().getValueBytes().equals("006a") == false)) 
                 throw new NoPropertiesException();
         }
     }

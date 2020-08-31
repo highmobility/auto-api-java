@@ -154,7 +154,7 @@ public class TroubleCode extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum System does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("TroubleCode.System does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

@@ -45,7 +45,7 @@ public enum SeatLocation implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum SeatLocation does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("SeatLocation does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

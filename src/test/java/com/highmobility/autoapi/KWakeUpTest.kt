@@ -32,9 +32,8 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 class KWakeUpTest : BaseTest() {
     
-    @Test
-    fun testWakeUpCommand() {
-        val bytes = Bytes(COMMAND_HEADER + "002201" + 
+    @Test fun wakeUpCommand() {
+        val bytes = Bytes(COMMAND_HEADER + "002201" +
             "01000401000100")
     
         val constructed = WakeUp.WakeUpCommand()
@@ -44,5 +43,17 @@ class KWakeUpTest : BaseTest() {
     
         val resolved = CommandResolver.resolve(bytes) as WakeUp.WakeUpCommand
         assertTrue(resolved == bytes)
+    }
+    
+    @Test fun invalidWakeUpCommandStatusThrows() {
+        val bytes = Bytes(COMMAND_HEADER + "002201" +
+            "010004010001CD")
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        warningLogExpected { 
+            val resolved = CommandResolver.resolve(bytes)
+            assertTrue(resolved is Command)
+        }
     }
 }

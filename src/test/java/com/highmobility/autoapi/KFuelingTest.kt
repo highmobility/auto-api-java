@@ -70,9 +70,8 @@ class KFuelingTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testControlGasFlap() {
-        val bytes = Bytes(COMMAND_HEADER + "004001" + 
+    @Test fun controlGasFlap() {
+        val bytes = Bytes(COMMAND_HEADER + "004001" +
             "02000401000101" +
             "03000401000100")
     

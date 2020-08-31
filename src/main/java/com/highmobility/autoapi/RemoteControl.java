@@ -165,13 +165,11 @@ public class RemoteControl {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CONTROL_MODE: controlMode.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_CONTROL_MODE) return controlMode.update(p);
                     return null;
                 });
             }
-            if ((controlMode.getValue() == null || controlMode.getValueComponent().getValueBytes().equals(new Bytes("02")) == false)) 
+            if ((controlMode.getValue() == null || controlMode.getValueComponent().getValueBytes().equals("02") == false)) 
                 throw new NoPropertiesException();
         }
     }
@@ -196,13 +194,11 @@ public class RemoteControl {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CONTROL_MODE: controlMode.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_CONTROL_MODE) return controlMode.update(p);
                     return null;
                 });
             }
-            if ((controlMode.getValue() == null || controlMode.getValueComponent().getValueBytes().equals(new Bytes("05")) == false)) 
+            if ((controlMode.getValue() == null || controlMode.getValueComponent().getValueBytes().equals("05") == false)) 
                 throw new NoPropertiesException();
         }
     }
@@ -225,7 +221,7 @@ public class RemoteControl {
                 }
             }
     
-            throw new CommandParseException("Enum ControlMode does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("RemoteControl.ControlMode does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

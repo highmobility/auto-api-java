@@ -388,9 +388,7 @@ public class ChassisSettings {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_DRIVING_MODE: return drivingMode.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_DRIVING_MODE) return drivingMode.update(p);
                     return null;
                 });
             }
@@ -428,9 +426,7 @@ public class ChassisSettings {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_SPORT_CHRONO: return sportChrono.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_SPORT_CHRONO) return sportChrono.update(p);
                     return null;
                 });
             }
@@ -479,12 +475,10 @@ public class ChassisSettings {
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CURRENT_SPRING_RATES: {
-                            Property<SpringRate> currentSpringRate = new Property<>(SpringRate.class, p);
-                            currentSpringRatesBuilder.add(currentSpringRate);
-                            return currentSpringRate;
-                        }
+                    if (p.getPropertyIdentifier() == PROPERTY_CURRENT_SPRING_RATES) {
+                        Property<SpringRate> currentSpringRate = new Property<>(SpringRate.class, p);
+                        currentSpringRatesBuilder.add(currentSpringRate);
+                        return currentSpringRate;
                     }
                     return null;
                 });
@@ -525,9 +519,7 @@ public class ChassisSettings {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CURRENT_CHASSIS_POSITION: return currentChassisPosition.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_CURRENT_CHASSIS_POSITION) return currentChassisPosition.update(p);
                     return null;
                 });
             }
@@ -551,7 +543,7 @@ public class ChassisSettings {
                 }
             }
     
-            throw new CommandParseException("Enum SportChrono does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("ChassisSettings.SportChrono does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

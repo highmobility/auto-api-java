@@ -71,9 +71,8 @@ class KCruiseControlTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testActivateDeactivateCruiseControl() {
-        val bytes = Bytes(COMMAND_HEADER + "006201" + 
+    @Test fun activateDeactivateCruiseControl() {
+        val bytes = Bytes(COMMAND_HEADER + "006201" +
             "01000401000101" +
             "03000D01000A1601404e800000000000")
     

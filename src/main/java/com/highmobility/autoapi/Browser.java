@@ -62,9 +62,7 @@ public class Browser {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_URL: return url.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_URL) return url.update(p);
                     return null;
                 });
             }

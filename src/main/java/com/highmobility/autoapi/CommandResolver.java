@@ -74,7 +74,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new ParkingTicket.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(3);
+                            SetterIterator iterator = new SetterIterator(2);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -82,8 +82,6 @@ public class CommandResolver {
                                             return new ParkingTicket.StartParking(bytes);
                                         case 1:
                                             return new ParkingTicket.EndParking(bytes);
-                                        case 2:
-                                            return new ParkingTicket.State(bytes);
                                     }
                                     return null;
                                 });
@@ -147,7 +145,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new RemoteControl.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(4);
+                            SetterIterator iterator = new SetterIterator(3);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -157,8 +155,6 @@ public class CommandResolver {
                                             return new RemoteControl.StartControl(bytes);
                                         case 2:
                                             return new RemoteControl.StopControl(bytes);
-                                        case 3:
-                                            return new RemoteControl.State(bytes);
                                     }
                                     return null;
                                 });
@@ -324,7 +320,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new ChassisSettings.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(5);
+                            SetterIterator iterator = new SetterIterator(4);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -336,8 +332,6 @@ public class CommandResolver {
                                             return new ChassisSettings.SetSpringRates(bytes);
                                         case 3:
                                             return new ChassisSettings.SetChassisPosition(bytes);
-                                        case 4:
-                                            return new ChassisSettings.State(bytes);
                                     }
                                     return null;
                                 });
@@ -357,7 +351,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new Notifications.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(4);
+                            SetterIterator iterator = new SetterIterator(3);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -367,8 +361,6 @@ public class CommandResolver {
                                             return new Notifications.Action(bytes);
                                         case 2:
                                             return new Notifications.ClearNotification(bytes);
-                                        case 3:
-                                            return new Notifications.State(bytes);
                                     }
                                     return null;
                                 });
@@ -394,7 +386,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new Charging.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(7);
+                            SetterIterator iterator = new SetterIterator(6);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -410,8 +402,6 @@ public class CommandResolver {
                                             return new Charging.SetChargingTimers(bytes);
                                         case 5:
                                             return new Charging.SetReductionOfChargingCurrentTimes(bytes);
-                                        case 6:
-                                            return new Charging.State(bytes);
                                     }
                                     return null;
                                 });
@@ -443,7 +433,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new HomeCharger.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(6);
+                            SetterIterator iterator = new SetterIterator(5);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -457,8 +447,6 @@ public class CommandResolver {
                                             return new HomeCharger.EnableDisableWiFiHotspot(bytes);
                                         case 4:
                                             return new HomeCharger.AuthenticateExpire(bytes);
-                                        case 5:
-                                            return new HomeCharger.State(bytes);
                                     }
                                     return null;
                                 });
@@ -544,7 +532,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new Historical.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(3);
+                            SetterIterator iterator = new SetterIterator(2);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -552,8 +540,6 @@ public class CommandResolver {
                                             return new Historical.RequestStates(bytes);
                                         case 1:
                                             return new Historical.GetTrips(bytes);
-                                        case 2:
-                                            return new Historical.State(bytes);
                                     }
                                     return null;
                                 });
@@ -567,7 +553,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new WiFi.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(4);
+                            SetterIterator iterator = new SetterIterator(3);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -577,8 +563,6 @@ public class CommandResolver {
                                             return new WiFi.ForgetNetwork(bytes);
                                         case 2:
                                             return new WiFi.EnableDisableWiFi(bytes);
-                                        case 3:
-                                            return new WiFi.State(bytes);
                                     }
                                     return null;
                                 });
@@ -757,7 +741,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new Windscreen.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(4);
+                            SetterIterator iterator = new SetterIterator(3);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -767,8 +751,6 @@ public class CommandResolver {
                                             return new Windscreen.SetWindscreenReplacementNeeded(bytes);
                                         case 2:
                                             return new Windscreen.ControlWipers(bytes);
-                                        case 3:
-                                            return new Windscreen.State(bytes);
                                     }
                                     return null;
                                 });
@@ -823,7 +805,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new HonkHornFlashLights.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(3);
+                            SetterIterator iterator = new SetterIterator(2);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -831,8 +813,6 @@ public class CommandResolver {
                                             return new HonkHornFlashLights.HonkFlash(bytes);
                                         case 1:
                                             return new HonkHornFlashLights.ActivateDeactivateEmergencyFlasher(bytes);
-                                        case 2:
-                                            return new HonkHornFlashLights.State(bytes);
                                     }
                                     return null;
                                 });
@@ -852,7 +832,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new Engine.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(3);
+                            SetterIterator iterator = new SetterIterator(2);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -860,8 +840,6 @@ public class CommandResolver {
                                             return new Engine.TurnEngineOnOff(bytes);
                                         case 1:
                                             return new Engine.ActivateDeactivateStartStop(bytes);
-                                        case 2:
-                                            return new Engine.State(bytes);
                                     }
                                     return null;
                                 });
@@ -919,7 +897,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new Climate.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(7);
+                            SetterIterator iterator = new SetterIterator(6);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -935,8 +913,6 @@ public class CommandResolver {
                                             return new Climate.StartStopIonising(bytes);
                                         case 5:
                                             return new Climate.SetTemperatureSettings(bytes);
-                                        case 6:
-                                            return new Climate.State(bytes);
                                     }
                                     return null;
                                 });
@@ -1027,7 +1003,6 @@ public class CommandResolver {
         ANDROID, JAVA
     }
 
-
     /**
      * The purpose is to loop the possible setters.
      * <p>
@@ -1047,7 +1022,7 @@ public class CommandResolver {
             return currentIndex < currentSize && theParsedCommand == null;
         }
 
-        public Command parseNext(PropertyIteration next) throws CommandParseException {
+        public Command parseNext(SetterIteration next) throws CommandParseException {
             try {
                 theParsedCommand = next.iterate(currentIndex);
             } catch (NoPropertiesException e) {
@@ -1057,7 +1032,7 @@ public class CommandResolver {
             return theParsedCommand;
         }
 
-        public interface PropertyIteration {
+        public interface SetterIteration {
             Command iterate(int number) throws NoPropertiesException, CommandParseException;
         }
     }

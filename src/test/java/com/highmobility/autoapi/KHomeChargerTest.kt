@@ -131,9 +131,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testSetChargeCurrent() {
-        val bytes = Bytes(COMMAND_HEADER + "006001" + 
+    @Test fun setChargeCurrent() {
+        val bytes = Bytes(COMMAND_HEADER + "006001" +
             "0e000D01000A09003fe0000000000000")
     
         val constructed = HomeCharger.SetChargeCurrent(ElectricCurrent(0.5, ElectricCurrent.Unit.AMPERES))
@@ -147,9 +146,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testSetPriceTariffs() {
-        val bytes = Bytes(COMMAND_HEADER + "006001" + 
+    @Test fun setPriceTariffs() {
+        val bytes = Bytes(COMMAND_HEADER + "006001" +
             "12001101000E0040120000000000000003455552" +
             "12001101000E013fd33333333333330003455552" +
             "120014010011023fd33333333333330006526970706c65")
@@ -175,9 +173,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testActivateDeactivateSolarCharging() {
-        val bytes = Bytes(COMMAND_HEADER + "006001" + 
+    @Test fun activateDeactivateSolarCharging() {
+        val bytes = Bytes(COMMAND_HEADER + "006001" +
             "05000401000101")
     
         val constructed = HomeCharger.ActivateDeactivateSolarCharging(ActiveState.ACTIVE)
@@ -190,9 +187,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testEnableDisableWiFiHotspot() {
-        val bytes = Bytes(COMMAND_HEADER + "006001" + 
+    @Test fun enableDisableWiFiHotspot() {
+        val bytes = Bytes(COMMAND_HEADER + "006001" +
             "08000401000101")
     
         val constructed = HomeCharger.EnableDisableWiFiHotspot(EnabledState.ENABLED)
@@ -205,9 +201,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testAuthenticateExpire() {
-        val bytes = Bytes(COMMAND_HEADER + "006001" + 
+    @Test fun authenticateExpire() {
+        val bytes = Bytes(COMMAND_HEADER + "006001" +
             "0d000401000101")
     
         val constructed = HomeCharger.AuthenticateExpire(HomeCharger.AuthenticationState.AUTHENTICATED)

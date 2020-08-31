@@ -51,13 +51,13 @@ public class TestUtils {
     public static void errorLogExpected(int count, Runnable runnable) {
         // could add a log count to logger, and if it exceeds the param count, write an error
         Logger previousLogger = Command.logger;
-        int logsBefore = fakeLogger.errorLogCount;
+        fakeLogger.errorLogCount = 0;
         Command.logger = fakeLogger;
         runnable.run();
         Command.logger = previousLogger;
         // if this fails, don't use fake logger and check what error message should not be present
-        if (logsBefore + count != fakeLogger.errorLogCount) {
-            String error = String.format("Error count %d is not the expected %d", fakeLogger.errorLogCount, logsBefore + count);
+        if (count != fakeLogger.errorLogCount) {
+            String error = String.format("Error count %d is not the expected %d", fakeLogger.errorLogCount, count);
             Command.logger.error(error);
             fail(error);
         }
@@ -70,13 +70,13 @@ public class TestUtils {
     public static void warningLogExpected(int count, Runnable runnable) {
         // could add a log count to logger, and if it exceeds the param count, write an error
         Logger previousLogger = Command.logger;
-        int logsBefore = fakeLogger.warningLogCount;
+        fakeLogger.warningLogCount = 0;
         Command.logger = fakeLogger;
         runnable.run();
         Command.logger = previousLogger;
         // if this fails, don't use fake logger and check what error message should not be present
-        if (logsBefore + count != fakeLogger.warningLogCount) {
-            String error = String.format("Error count %d is not the expected %d", fakeLogger.warningLogCount, logsBefore + count);
+        if (count != fakeLogger.warningLogCount) {
+            String error = String.format("Warning count %d is not the expected %d", fakeLogger.warningLogCount, count);
             Command.logger.error(error);
             fail(error);
         }

@@ -286,9 +286,7 @@ public class Notifications {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_ACTIVATED_ACTION: return activatedAction.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_ACTIVATED_ACTION) return activatedAction.update(p);
                     return null;
                 });
             }
@@ -317,13 +315,11 @@ public class Notifications {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CLEAR: clear.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_CLEAR) return clear.update(p);
                     return null;
                 });
             }
-            if ((clear.getValue() == null || clear.getValueComponent().getValueBytes().equals(new Bytes("00")) == false)) 
+            if ((clear.getValue() == null || clear.getValueComponent().getValueBytes().equals("00") == false)) 
                 throw new NoPropertiesException();
         }
     }
@@ -341,7 +337,7 @@ public class Notifications {
                 }
             }
     
-            throw new CommandParseException("Enum Clear does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Notifications.Clear does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

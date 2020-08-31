@@ -99,7 +99,7 @@ public class Timer extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum TimerType does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Timer.TimerType does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

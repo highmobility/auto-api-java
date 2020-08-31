@@ -42,7 +42,7 @@ public enum Detected implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum Detected does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("Detected does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

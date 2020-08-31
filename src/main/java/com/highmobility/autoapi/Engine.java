@@ -178,9 +178,7 @@ public class Engine {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_STATUS: return status.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     return null;
                 });
             }
@@ -218,9 +216,7 @@ public class Engine {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_START_STOP_STATE: return startStopState.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_START_STOP_STATE) return startStopState.update(p);
                     return null;
                 });
             }

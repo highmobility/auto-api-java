@@ -291,9 +291,7 @@ public class TheftAlarm {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_STATUS: return status.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     return null;
                 });
             }
@@ -317,7 +315,7 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException("Enum Status does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("TheftAlarm.Status does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -364,7 +362,7 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException("Enum LastWarningReason does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("TheftAlarm.LastWarningReason does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -393,7 +391,7 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException("Enum LastEventLevel does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("TheftAlarm.LastEventLevel does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -429,7 +427,7 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException("Enum EventType does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("TheftAlarm.EventType does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

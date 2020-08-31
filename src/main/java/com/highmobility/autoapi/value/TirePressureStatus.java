@@ -96,7 +96,7 @@ public class TirePressureStatus extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum Status does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("TirePressureStatus.Status does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

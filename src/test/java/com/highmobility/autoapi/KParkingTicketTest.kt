@@ -78,9 +78,8 @@ class KParkingTicketTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testStartParking() {
-        val bytes = Bytes(COMMAND_HEADER + "004701" + 
+    @Test fun startParking() {
+        val bytes = Bytes(COMMAND_HEADER + "004701" +
             "01000401000101" +
             "02001101000E4265726c696e205061726b696e67" +
             "03000B0100083634383934323333" +
@@ -100,9 +99,24 @@ class KParkingTicketTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testEndParking() {
-        val bytes = Bytes(COMMAND_HEADER + "004701" + 
+    @Test fun invalidStartParkingStatusThrows() {
+        val bytes = Bytes(COMMAND_HEADER + "004701" +
+            "010004010001CD" +
+            "02001101000E4265726c696e205061726b696e67" +
+            "03000B0100083634383934323333" +
+            "04000B0100080000015989dfca30" +
+            "05000B0100080000016dab1a8528")
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        warningLogExpected(2) { 
+            val resolved = CommandResolver.resolve(bytes)
+            assertTrue(resolved is Command)
+        }
+    }
+    
+    @Test fun endParking() {
+        val bytes = Bytes(COMMAND_HEADER + "004701" +
             "01000401000100")
     
         val constructed = ParkingTicket.EndParking()
@@ -112,5 +126,17 @@ class KParkingTicketTest : BaseTest() {
     
         val resolved = CommandResolver.resolve(bytes) as ParkingTicket.EndParking
         assertTrue(resolved == bytes)
+    }
+    
+    @Test fun invalidEndParkingStatusThrows() {
+        val bytes = Bytes(COMMAND_HEADER + "004701" +
+            "010004010001CD")
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        warningLogExpected(2) { 
+            val resolved = CommandResolver.resolve(bytes)
+            assertTrue(resolved is Command)
+        }
     }
 }

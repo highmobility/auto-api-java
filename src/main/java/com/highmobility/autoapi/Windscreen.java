@@ -365,9 +365,7 @@ public class Windscreen {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT: return windscreenNeedsReplacement.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT) return windscreenNeedsReplacement.update(p);
                     return null;
                 });
             }
@@ -442,7 +440,7 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException("Enum WipersStatus does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Windscreen.WipersStatus does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -472,7 +470,7 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException("Enum WipersIntensity does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Windscreen.WipersIntensity does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -502,7 +500,7 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException("Enum WindscreenDamage does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Windscreen.WindscreenDamage does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -531,7 +529,7 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException("Enum WindscreenNeedsReplacement does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Windscreen.WindscreenNeedsReplacement does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

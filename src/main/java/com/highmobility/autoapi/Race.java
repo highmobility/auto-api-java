@@ -609,7 +609,7 @@ public class Race {
                 }
             }
     
-            throw new CommandParseException("Enum GearMode does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Race.GearMode does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -637,7 +637,7 @@ public class Race {
                 }
             }
     
-            throw new CommandParseException("Enum VehicleMoving does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Race.VehicleMoving does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

@@ -116,9 +116,8 @@ class KLightsTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testControlLights() {
-        val bytes = Bytes(COMMAND_HEADER + "003601" + 
+    @Test fun controlLights() {
+        val bytes = Bytes(COMMAND_HEADER + "003601" +
             "01000401000102" +
             "02000401000101" +
             "040006010003ff0000" +

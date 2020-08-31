@@ -587,7 +587,7 @@ public class Lights {
                 }
             }
     
-            throw new CommandParseException("Enum FrontExteriorLight does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Lights.FrontExteriorLight does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -618,7 +618,7 @@ public class Lights {
                 }
             }
     
-            throw new CommandParseException("Enum SwitchPosition does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Lights.SwitchPosition does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

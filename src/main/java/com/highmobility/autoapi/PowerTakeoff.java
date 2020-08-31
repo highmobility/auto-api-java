@@ -180,9 +180,7 @@ public class PowerTakeoff {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_STATUS: return status.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     return null;
                 });
             }
@@ -205,7 +203,7 @@ public class PowerTakeoff {
                 }
             }
     
-            throw new CommandParseException("Enum Engaged does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("PowerTakeoff.Engaged does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

@@ -96,7 +96,7 @@ public class WindowPosition extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum Position does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("WindowPosition.Position does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

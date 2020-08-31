@@ -104,9 +104,8 @@ class KWindowsTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testControlWindows() {
-        val bytes = Bytes(COMMAND_HEADER + "004501" + 
+    @Test fun controlWindows() {
+        val bytes = Bytes(COMMAND_HEADER + "004501" +
             "02000C010009003fc999999999999a" +
             "02000C010009013fe0000000000000" +
             "02000C010009023fe0000000000000" +

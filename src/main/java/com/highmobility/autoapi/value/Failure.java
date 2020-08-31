@@ -103,7 +103,7 @@ public class Failure extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum Reason does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Failure.Reason does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

@@ -56,9 +56,8 @@ class KRemoteControlTest : BaseTest() {
         assertTrue(RemoteControl.GetControlState() == bytes)
     }
     
-    @Test
-    fun testControlCommand() {
-        val bytes = Bytes(COMMAND_HEADER + "002701" + 
+    @Test fun controlCommand() {
+        val bytes = Bytes(COMMAND_HEADER + "002701" +
             "02000D01000A02004049000000000000" +
             "03000D01000A16014014000000000000")
     
@@ -75,9 +74,8 @@ class KRemoteControlTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testStartControl() {
-        val bytes = Bytes(COMMAND_HEADER + "002701" + 
+    @Test fun startControl() {
+        val bytes = Bytes(COMMAND_HEADER + "002701" +
             "01000401000102")
     
         val constructed = RemoteControl.StartControl()
@@ -89,9 +87,20 @@ class KRemoteControlTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testStopControl() {
-        val bytes = Bytes(COMMAND_HEADER + "002701" + 
+    @Test fun invalidStartControlControlModeThrows() {
+        val bytes = Bytes(COMMAND_HEADER + "002701" +
+            "010004010001CD")
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        warningLogExpected(2) { 
+            val resolved = CommandResolver.resolve(bytes)
+            assertTrue(resolved is Command)
+        }
+    }
+    
+    @Test fun stopControl() {
+        val bytes = Bytes(COMMAND_HEADER + "002701" +
             "01000401000105")
     
         val constructed = RemoteControl.StopControl()
@@ -101,5 +110,17 @@ class KRemoteControlTest : BaseTest() {
     
         val resolved = CommandResolver.resolve(bytes) as RemoteControl.StopControl
         assertTrue(resolved == bytes)
+    }
+    
+    @Test fun invalidStopControlControlModeThrows() {
+        val bytes = Bytes(COMMAND_HEADER + "002701" +
+            "010004010001CD")
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        warningLogExpected(2) { 
+            val resolved = CommandResolver.resolve(bytes)
+            assertTrue(resolved is Command)
+        }
     }
 }

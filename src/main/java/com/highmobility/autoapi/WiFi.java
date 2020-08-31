@@ -288,9 +288,7 @@ public class WiFi {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_NETWORK_SSID: return networkSSID.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_NETWORK_SSID) return networkSSID.update(p);
                     return null;
                 });
             }
@@ -328,9 +326,7 @@ public class WiFi {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_STATUS: return status.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     return null;
                 });
             }

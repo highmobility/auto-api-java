@@ -30,6 +30,7 @@ class FakeLogger implements Logger {
     int logCount;
     int errorLogCount;
     int warningLogCount;
+    boolean showLogs = false;
 
     @Override public String getName() {
         return null;
@@ -41,22 +42,27 @@ class FakeLogger implements Logger {
 
     @Override public void trace(String msg) {
         logCount++;
+        log(msg);
     }
 
     @Override public void trace(String format, Object arg) {
         logCount++;
+        log(String.format(format, arg));
     }
 
     @Override public void trace(String format, Object arg1, Object arg2) {
         logCount++;
+        log(String.format(format, arg1));
     }
 
     @Override public void trace(String format, Object... arguments) {
         logCount++;
+        log(String.format(format, arguments));
     }
 
     @Override public void trace(String msg, Throwable t) {
         logCount++;
+        log(msg);
     }
 
     @Override public boolean isTraceEnabled(Marker marker) {
@@ -65,22 +71,27 @@ class FakeLogger implements Logger {
 
     @Override public void trace(Marker marker, String msg) {
         logCount++;
+        log(msg);
     }
 
     @Override public void trace(Marker marker, String format, Object arg) {
         logCount++;
+        log(String.format(format, arg));
     }
 
     @Override public void trace(Marker marker, String format, Object arg1, Object arg2) {
         logCount++;
+        log(String.format(format, arg1));
     }
 
     @Override public void trace(Marker marker, String format, Object... argArray) {
         logCount++;
+        log(String.format(format, argArray));
     }
 
     @Override public void trace(Marker marker, String msg, Throwable t) {
         logCount++;
+        log(msg);
     }
 
     @Override public boolean isDebugEnabled() {
@@ -89,22 +100,27 @@ class FakeLogger implements Logger {
 
     @Override public void debug(String msg) {
         logCount++;
+        log(msg);
     }
 
     @Override public void debug(String format, Object arg) {
         logCount++;
+        log(String.format(format, arg));
     }
 
     @Override public void debug(String format, Object arg1, Object arg2) {
         logCount++;
+        log(String.format(format, arg1));
     }
 
     @Override public void debug(String format, Object... arguments) {
         logCount++;
+        log(String.format(format, arguments));
     }
 
     @Override public void debug(String msg, Throwable t) {
         logCount++;
+        log(msg);
     }
 
     @Override public boolean isDebugEnabled(Marker marker) {
@@ -113,22 +129,27 @@ class FakeLogger implements Logger {
 
     @Override public void debug(Marker marker, String msg) {
         logCount++;
+        log(msg);
     }
 
     @Override public void debug(Marker marker, String format, Object arg) {
         logCount++;
+        log(String.format(format, arg));
     }
 
     @Override public void debug(Marker marker, String format, Object arg1, Object arg2) {
         logCount++;
+        log(String.format(format, arg1));
     }
 
     @Override public void debug(Marker marker, String format, Object... arguments) {
         logCount++;
+        log(String.format(format, arguments));
     }
 
     @Override public void debug(Marker marker, String msg, Throwable t) {
         logCount++;
+        log(msg);
     }
 
     @Override public boolean isInfoEnabled() {
@@ -137,22 +158,27 @@ class FakeLogger implements Logger {
 
     @Override public void info(String msg) {
         logCount++;
+        log(msg);
     }
 
     @Override public void info(String format, Object arg) {
         logCount++;
+        log(String.format(format, arg));
     }
 
     @Override public void info(String format, Object arg1, Object arg2) {
         logCount++;
+        log(String.format(format, arg1));
     }
 
     @Override public void info(String format, Object... arguments) {
         logCount++;
+        log(String.format(format, arguments));
     }
 
     @Override public void info(String msg, Throwable t) {
         logCount++;
+        log(msg);
     }
 
     @Override public boolean isInfoEnabled(Marker marker) {
@@ -161,22 +187,27 @@ class FakeLogger implements Logger {
 
     @Override public void info(Marker marker, String msg) {
         logCount++;
+        log(msg);
     }
 
     @Override public void info(Marker marker, String format, Object arg) {
         logCount++;
+        log(String.format(format, arg));
     }
 
     @Override public void info(Marker marker, String format, Object arg1, Object arg2) {
         logCount++;
+        log(String.format(format, arg1));
     }
 
     @Override public void info(Marker marker, String format, Object... arguments) {
         logCount++;
+        log(String.format(format, arguments));
     }
 
     @Override public void info(Marker marker, String msg, Throwable t) {
         logCount++;
+        log(msg);
     }
 
     @Override public boolean isWarnEnabled() {
@@ -185,22 +216,27 @@ class FakeLogger implements Logger {
 
     @Override public void warn(String msg) {
         logCount++;
+        log(msg);
     }
 
     @Override public void warn(String format, Object arg) {
         warningLogCount++;
+        log(String.format(format, arg));
     }
 
     @Override public void warn(String format, Object... arguments) {
         warningLogCount++;
+        log(String.format(format, arguments));
     }
 
     @Override public void warn(String format, Object arg1, Object arg2) {
         warningLogCount++;
+        log(String.format(format, arg1));
     }
 
     @Override public void warn(String msg, Throwable t) {
         warningLogCount++;
+        log(msg);
     }
 
     @Override public boolean isWarnEnabled(Marker marker) {
@@ -209,22 +245,27 @@ class FakeLogger implements Logger {
 
     @Override public void warn(Marker marker, String msg) {
         warningLogCount++;
+        log(msg);
     }
 
     @Override public void warn(Marker marker, String format, Object arg) {
         warningLogCount++;
+        log(String.format(format, arg));
     }
 
     @Override public void warn(Marker marker, String format, Object arg1, Object arg2) {
         warningLogCount++;
+        log(String.format(format, arg1));
     }
 
     @Override public void warn(Marker marker, String format, Object... arguments) {
         warningLogCount++;
+        log(String.format(format, arguments));
     }
 
     @Override public void warn(Marker marker, String msg, Throwable t) {
         warningLogCount++;
+        log(msg);
     }
 
     @Override public boolean isErrorEnabled() {
@@ -233,22 +274,27 @@ class FakeLogger implements Logger {
 
     @Override public void error(String msg) {
         errorLogCount++;
+        log(msg);
     }
 
     @Override public void error(String format, Object arg) {
         errorLogCount++;
+        log(String.format(format, arg));
     }
 
     @Override public void error(String format, Object arg1, Object arg2) {
         errorLogCount++;
+        log(String.format(format, arg1));
     }
 
     @Override public void error(String format, Object... arguments) {
         errorLogCount++;
+        log(String.format(format, arguments));
     }
 
     @Override public void error(String msg, Throwable t) {
         errorLogCount++;
+        log(msg);
     }
 
     @Override public boolean isErrorEnabled(Marker marker) {
@@ -257,21 +303,30 @@ class FakeLogger implements Logger {
 
     @Override public void error(Marker marker, String msg) {
         errorLogCount++;
+        log(msg);
     }
 
     @Override public void error(Marker marker, String format, Object arg) {
         errorLogCount++;
+        log(String.format(format, arg));
     }
 
     @Override public void error(Marker marker, String format, Object arg1, Object arg2) {
         errorLogCount++;
+        log(String.format(format, arg1));
     }
 
     @Override public void error(Marker marker, String format, Object... arguments) {
         errorLogCount++;
+        log(String.format(format, arguments));
     }
 
     @Override public void error(Marker marker, String msg, Throwable t) {
         errorLogCount++;
+        log(msg);
+    }
+
+    private void log(String msg) {
+        if (showLogs) System.out.println(msg);
     }
 }

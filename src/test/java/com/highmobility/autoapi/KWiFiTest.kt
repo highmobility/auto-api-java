@@ -76,9 +76,8 @@ class KWiFiTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testConnectToNetwork() {
-        val bytes = Bytes(COMMAND_HEADER + "005901" + 
+    @Test fun connectToNetwork() {
+        val bytes = Bytes(COMMAND_HEADER + "005901" +
             "030007010004484f4d45" +
             "04000401000103" +
             "05001101000E67726561745f7365637265743132")
@@ -95,9 +94,8 @@ class KWiFiTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testForgetNetwork() {
-        val bytes = Bytes(COMMAND_HEADER + "005901" + 
+    @Test fun forgetNetwork() {
+        val bytes = Bytes(COMMAND_HEADER + "005901" +
             "030007010004484f4d45")
     
         val constructed = WiFi.ForgetNetwork("HOME")
@@ -110,9 +108,8 @@ class KWiFiTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testEnableDisableWiFi() {
-        val bytes = Bytes(COMMAND_HEADER + "005901" + 
+    @Test fun enableDisableWiFi() {
+        val bytes = Bytes(COMMAND_HEADER + "005901" +
             "01000401000101")
     
         val constructed = WiFi.EnableDisableWiFi(EnabledState.ENABLED)

@@ -81,9 +81,8 @@ class KRooftopControlTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testControlRooftop() {
-        val bytes = Bytes(COMMAND_HEADER + "002501" + 
+    @Test fun controlRooftop() {
+        val bytes = Bytes(COMMAND_HEADER + "002501" +
             "01000B0100083ff0000000000000" +
             "02000B0100083fe0000000000000" +
             "03000401000101" +

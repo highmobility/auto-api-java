@@ -117,7 +117,7 @@ public class VideoHandover {
                 }
             }
     
-            throw new CommandParseException("Enum Screen does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("VideoHandover.Screen does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

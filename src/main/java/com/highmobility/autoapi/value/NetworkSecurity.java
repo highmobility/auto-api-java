@@ -44,7 +44,7 @@ public enum NetworkSecurity implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum NetworkSecurity does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("NetworkSecurity does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

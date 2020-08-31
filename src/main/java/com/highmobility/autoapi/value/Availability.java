@@ -138,7 +138,7 @@ public class Availability extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum UpdateRate does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Availability.UpdateRate does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -166,7 +166,7 @@ public class Availability extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum AppliesPer does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Availability.AppliesPer does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

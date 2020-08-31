@@ -68,9 +68,8 @@ class KNotificationsTest : BaseTest() {
         assertTrue(state.getClear().value == Notifications.Clear.CLEAR)
     }
     
-    @Test
-    fun testNotification() {
-        val bytes = Bytes(COMMAND_HEADER + "003801" + 
+    @Test fun notification() {
+        val bytes = Bytes(COMMAND_HEADER + "003801" +
             "01000E01000B4f70656e20476172616765" +
             "02000A0100071b00044f70656e" +
             "02000C0100091c000643616e63656c")
@@ -92,9 +91,8 @@ class KNotificationsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testAction() {
-        val bytes = Bytes(COMMAND_HEADER + "003801" + 
+    @Test fun action() {
+        val bytes = Bytes(COMMAND_HEADER + "003801" +
             "0300040100011b")
     
         val constructed = Notifications.Action(27)
@@ -107,9 +105,8 @@ class KNotificationsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testClearNotification() {
-        val bytes = Bytes(COMMAND_HEADER + "003801" + 
+    @Test fun clearNotification() {
+        val bytes = Bytes(COMMAND_HEADER + "003801" +
             "04000401000100")
     
         val constructed = Notifications.ClearNotification()
@@ -119,5 +116,17 @@ class KNotificationsTest : BaseTest() {
     
         val resolved = CommandResolver.resolve(bytes) as Notifications.ClearNotification
         assertTrue(resolved == bytes)
+    }
+    
+    @Test fun invalidClearNotificationClearThrows() {
+        val bytes = Bytes(COMMAND_HEADER + "003801" +
+            "040004010001CD")
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        warningLogExpected { 
+            val resolved = CommandResolver.resolve(bytes)
+            assertTrue(resolved is Command)
+        }
     }
 }

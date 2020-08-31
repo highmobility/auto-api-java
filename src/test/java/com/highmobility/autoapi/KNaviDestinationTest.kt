@@ -86,9 +86,8 @@ class KNaviDestinationTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testSetNaviDestination() {
-        val bytes = Bytes(COMMAND_HEADER + "003101" + 
+    @Test fun setNaviDestination() {
+        val bytes = Bytes(COMMAND_HEADER + "003101" +
             "010013010010404a428f9f44d445402acf562174c4ce" +
             "0200090100064265726c696e")
     

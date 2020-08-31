@@ -42,7 +42,7 @@ public enum ConnectionState implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum ConnectionState does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("ConnectionState does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

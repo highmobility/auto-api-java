@@ -98,7 +98,7 @@ public class DoorPosition extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum Location does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("DoorPosition.Location does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

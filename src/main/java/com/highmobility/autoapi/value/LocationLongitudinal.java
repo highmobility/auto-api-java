@@ -42,7 +42,7 @@ public enum LocationLongitudinal implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum LocationLongitudinal does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("LocationLongitudinal does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

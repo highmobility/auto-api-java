@@ -468,7 +468,7 @@ public class Trips {
                 }
             }
     
-            throw new CommandParseException("Enum Type does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Trips.Type does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

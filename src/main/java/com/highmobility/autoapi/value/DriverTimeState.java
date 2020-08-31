@@ -101,7 +101,7 @@ public class DriverTimeState extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum TimeState does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("DriverTimeState.TimeState does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

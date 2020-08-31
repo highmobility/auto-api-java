@@ -90,9 +90,8 @@ class KWindscreenTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testSetWindscreenDamage() {
-        val bytes = Bytes(COMMAND_HEADER + "004201" + 
+    @Test fun setWindscreenDamage() {
+        val bytes = Bytes(COMMAND_HEADER + "004201" +
             "03000401000101" +
             "0500050100020102")
     
@@ -108,9 +107,8 @@ class KWindscreenTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testSetWindscreenReplacementNeeded() {
-        val bytes = Bytes(COMMAND_HEADER + "004201" + 
+    @Test fun setWindscreenReplacementNeeded() {
+        val bytes = Bytes(COMMAND_HEADER + "004201" +
             "06000401000101")
     
         val constructed = Windscreen.SetWindscreenReplacementNeeded(Windscreen.WindscreenNeedsReplacement.NO_REPLACEMENT_NEEDED)
@@ -123,9 +121,8 @@ class KWindscreenTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testControlWipers() {
-        val bytes = Bytes(COMMAND_HEADER + "004201" + 
+    @Test fun controlWipers() {
+        val bytes = Bytes(COMMAND_HEADER + "004201" +
             "01000401000102" +
             "02000401000103")
     

@@ -62,9 +62,7 @@ public class TextInput {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_TEXT: return text.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_TEXT) return text.update(p);
                     return null;
                 });
             }

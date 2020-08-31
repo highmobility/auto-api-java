@@ -163,7 +163,7 @@ public class ConditionBasedService extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum DueStatus does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("ConditionBasedService.DueStatus does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

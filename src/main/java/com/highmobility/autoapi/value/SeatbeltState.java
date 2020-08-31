@@ -95,7 +95,7 @@ public class SeatbeltState extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum FastenedState does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("SeatbeltState.FastenedState does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

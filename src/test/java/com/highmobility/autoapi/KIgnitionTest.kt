@@ -73,9 +73,8 @@ class KIgnitionTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testTurnIgnitionOnOff() {
-        val bytes = Bytes(COMMAND_HEADER + "003501" + 
+    @Test fun turnIgnitionOnOff() {
+        val bytes = Bytes(COMMAND_HEADER + "003501" +
             "01000401000100")
     
         val constructed = Ignition.TurnIgnitionOnOff(OnOffState.OFF)

@@ -352,7 +352,7 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException("Enum ConvertibleRoofState does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("RooftopControl.ConvertibleRoofState does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -381,7 +381,7 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException("Enum SunroofTiltState does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("RooftopControl.SunroofTiltState does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -410,7 +410,7 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException("Enum SunroofState does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("RooftopControl.SunroofState does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
@@ -439,7 +439,7 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException("Enum SunroofRainEvent does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("RooftopControl.SunroofRainEvent does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

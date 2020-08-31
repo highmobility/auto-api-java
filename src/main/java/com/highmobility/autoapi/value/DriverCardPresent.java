@@ -96,7 +96,7 @@ public class DriverCardPresent extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Enum CardPresent does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("DriverCardPresent.CardPresent does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

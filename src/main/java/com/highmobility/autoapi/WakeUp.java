@@ -60,13 +60,11 @@ public class WakeUp {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_STATUS: status.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     return null;
                 });
             }
-            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals(new Bytes("00")) == false)) 
+            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("00") == false)) 
                 throw new NoPropertiesException();
         }
     }
@@ -85,7 +83,7 @@ public class WakeUp {
                 }
             }
     
-            throw new CommandParseException("Enum Status does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("WakeUp.Status does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

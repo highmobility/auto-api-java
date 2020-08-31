@@ -30,6 +30,7 @@ import com.highmobility.value.Bytes;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
@@ -73,26 +74,9 @@ public class PropertyComponentValue<V> extends PropertyComponent {
     public void setClass(Class<V> valueClass) throws CommandParseException {
         // map bytes to the type
         if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
-            try {
-                // constructing PropertyValueObject subclasses can throw CommandParseException.
-                Constructor constructor = valueClass.getConstructor(new Class[]{Bytes.class});
-                V parsedValue = (V) constructor.newInstance(new Object[]{valueBytes});
-                this.value = parsedValue;
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException("Cannot instantiate value: " + valueClass +
-                        "\n" + e.getMessage());
-            } catch (InvocationTargetException e) {
-                // throw error that is from auto api value parsing
-                if (e.getCause() instanceof CommandParseException) {
-                    throw (CommandParseException) e.getCause();
-                } else {
-                    e.printStackTrace();
-                    throw new CommandParseException("Value initialisation error");
-                }
-            }
+            value = getValueWithReflection(valueClass, valueBytes);
         } else if (ByteEnum.class.isAssignableFrom(valueClass)) {
-            value = valueClass.getEnumConstants()[valueBytes.get(0)];
+            value = getValueWithReflection(valueClass, valueBytes);
         } else if (Boolean.class.isAssignableFrom(valueClass)) {
             value = (V) Property.getBool(valueBytes.get(0));
         } else if (Float.class.isAssignableFrom(valueClass)) {
@@ -114,6 +98,31 @@ public class PropertyComponentValue<V> extends PropertyComponent {
         }
 
         this.valueClass = valueClass;
+    }
+
+    private V getValueWithReflection(Class<V> valueClass, Bytes valueBytes) throws CommandParseException {
+        try {
+            // we use reflection with ValueObject and Enum
+            if (PropertyValueObject.class.isAssignableFrom(valueClass)) {
+                Constructor constructor = valueClass.getConstructor(new Class[]{Bytes.class});
+                return (V) constructor.newInstance(new Object[]{valueBytes});
+            } else {
+                Method method = valueClass.getMethod("fromByte", byte.class);
+                return (V) method.invoke(null, valueBytes.get(0));
+            }
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Cannot instantiate value: " + valueClass +
+                    "\n" + e.getMessage());
+        } catch (InvocationTargetException e) {
+            // throw error that is from auto api value parsing
+            if (e.getCause() instanceof CommandParseException) {
+                throw (CommandParseException) e.getCause();
+            } else {
+                e.printStackTrace();
+                throw new CommandParseException("Value initialisation error");
+            }
+        }
     }
 
     public static Bytes getBytes(Object value) {

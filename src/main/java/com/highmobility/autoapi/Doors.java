@@ -364,9 +364,7 @@ public class Doors {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_LOCKS_STATE: return locksState.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_LOCKS_STATE) return locksState.update(p);
                     return null;
                 });
             }

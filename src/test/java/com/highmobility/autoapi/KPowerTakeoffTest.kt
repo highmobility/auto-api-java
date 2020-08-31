@@ -70,9 +70,8 @@ class KPowerTakeoffTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testActivateDeactivatePowerTakeoff() {
-        val bytes = Bytes(COMMAND_HEADER + "006501" + 
+    @Test fun activateDeactivatePowerTakeoff() {
+        val bytes = Bytes(COMMAND_HEADER + "006501" +
             "01000401000101")
     
         val constructed = PowerTakeoff.ActivateDeactivatePowerTakeoff(ActiveState.ACTIVE)

@@ -43,7 +43,7 @@ public enum Grade implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("Enum Grade does not contain " + hexFromByte(byteValue));
+        throw new CommandParseException("Grade does not contain: " + hexFromByte(byteValue));
     }
 
     private final byte value;

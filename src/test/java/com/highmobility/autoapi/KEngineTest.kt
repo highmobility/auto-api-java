@@ -70,9 +70,8 @@ class KEngineTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testTurnEngineOnOff() {
-        val bytes = Bytes(COMMAND_HEADER + "006901" + 
+    @Test fun turnEngineOnOff() {
+        val bytes = Bytes(COMMAND_HEADER + "006901" +
             "01000401000100")
     
         val constructed = Engine.TurnEngineOnOff(OnOffState.OFF)
@@ -85,9 +84,8 @@ class KEngineTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test
-    fun testActivateDeactivateStartStop() {
-        val bytes = Bytes(COMMAND_HEADER + "006901" + 
+    @Test fun activateDeactivateStartStop() {
+        val bytes = Bytes(COMMAND_HEADER + "006901" +
             "02000401000101")
     
         val constructed = Engine.ActivateDeactivateStartStop(ActiveState.ACTIVE)

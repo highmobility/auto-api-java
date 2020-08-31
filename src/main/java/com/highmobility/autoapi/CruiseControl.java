@@ -213,7 +213,7 @@ public class CruiseControl {
                 }
             }
     
-            throw new CommandParseException("Enum Limiter does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("CruiseControl.Limiter does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

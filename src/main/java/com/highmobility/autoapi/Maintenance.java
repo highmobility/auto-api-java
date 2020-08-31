@@ -507,7 +507,7 @@ public class Maintenance {
                 }
             }
     
-            throw new CommandParseException("Enum TeleserviceAvailability does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Maintenance.TeleserviceAvailability does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

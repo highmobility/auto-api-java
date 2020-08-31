@@ -95,7 +95,7 @@ public class DriverFatigue {
                 }
             }
     
-            throw new CommandParseException("Enum DetectedFatigueLevel does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("DriverFatigue.DetectedFatigueLevel does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

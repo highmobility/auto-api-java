@@ -122,9 +122,8 @@ class KDoorsTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testLockUnlockDoors() {
-        val bytes = Bytes(COMMAND_HEADER + "002001" + 
+    @Test fun lockUnlockDoors() {
+        val bytes = Bytes(COMMAND_HEADER + "002001" +
             "06000401000100")
     
         val constructed = Doors.LockUnlockDoors(LockState.UNLOCKED)

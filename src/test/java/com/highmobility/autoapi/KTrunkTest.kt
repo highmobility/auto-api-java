@@ -70,9 +70,8 @@ class KTrunkTest : BaseTest() {
         assertTrue(getter == bytes)
     }
     
-    @Test
-    fun testControlTrunk() {
-        val bytes = Bytes(COMMAND_HEADER + "002101" + 
+    @Test fun controlTrunk() {
+        val bytes = Bytes(COMMAND_HEADER + "002101" +
             "01000401000100" +
             "02000401000101")
     

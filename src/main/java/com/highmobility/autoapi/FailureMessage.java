@@ -265,7 +265,7 @@ public class FailureMessage {
                 }
             }
     
-            throw new CommandParseException("Enum FailureReason does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("FailureMessage.FailureReason does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

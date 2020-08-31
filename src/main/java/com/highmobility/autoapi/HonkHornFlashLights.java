@@ -216,9 +216,7 @@ public class HonkHornFlashLights {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_EMERGENCY_FLASHERS_STATE: return emergencyFlashersState.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_EMERGENCY_FLASHERS_STATE) return emergencyFlashersState.update(p);
                     return null;
                 });
             }
@@ -243,7 +241,7 @@ public class HonkHornFlashLights {
                 }
             }
     
-            throw new CommandParseException("Enum Flashers does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("HonkHornFlashLights.Flashers does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;

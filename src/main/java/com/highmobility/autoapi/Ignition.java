@@ -202,9 +202,7 @@ public class Ignition {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_STATUS: return status.update(p);
-                    }
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     return null;
                 });
             }
@@ -230,7 +228,7 @@ public class Ignition {
                 }
             }
     
-            throw new CommandParseException("Enum IgnitionState does not contain " + hexFromByte(byteValue));
+            throw new CommandParseException("Ignition.IgnitionState does not contain: " + hexFromByte(byteValue));
         }
     
         private final byte value;
