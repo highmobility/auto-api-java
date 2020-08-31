@@ -54,8 +54,6 @@ class AccelerationUnit : MeasurementType {
     
     fun inGravity() = inMetersPerSecondSquared() / 9.81
     
-    
-    
     enum class Unit(val id: Byte) {
         METERS_PER_SECOND_SQUARED(0x00),
         GRAVITY(0x01);

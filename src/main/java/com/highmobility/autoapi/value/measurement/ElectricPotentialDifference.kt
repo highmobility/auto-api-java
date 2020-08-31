@@ -57,8 +57,6 @@ class ElectricPotentialDifference : MeasurementType {
     
     fun inKilovolts() = inVolts() / 1000.0
     
-    
-    
     enum class Unit(val id: Byte) {
         VOLTS(0x00),
         MILLIVOLTS(0x01),

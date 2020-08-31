@@ -57,8 +57,6 @@ class ElectricCurrent : MeasurementType {
     
     fun inKiloamperes() = inAmperes() / 1000.0
     
-    
-    
     enum class Unit(val id: Byte) {
         AMPERES(0x00),
         MILLIAMPERES(0x01),

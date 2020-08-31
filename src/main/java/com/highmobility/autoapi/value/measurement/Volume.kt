@@ -90,8 +90,6 @@ class Volume : MeasurementType {
     
     fun inImperialGallons() = inLiters() / 4.54609
     
-    
-    
     enum class Unit(val id: Byte) {
         LITERS(0x02),
         MILLILITERS(0x03),

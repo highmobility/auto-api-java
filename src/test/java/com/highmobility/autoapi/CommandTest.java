@@ -25,6 +25,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.value.Brand;
 import com.highmobility.autoapi.value.DashboardLight;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
@@ -48,25 +49,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class CommandTest extends BaseTest {
     String parkingBrakeCommand = COMMAND_HEADER + "00580101000401000101";
-
-    // MARK: Timestamp
-
-    @Test public void universalTimestamp() throws ParseException {
-        Bytes bytes = new Bytes(parkingBrakeCommand + "A2000B01000800000160E0EA1388");
-        String expectedDate = "2018-01-10T16:32:05";
-        ParkingBrake.State command = (ParkingBrake.State) CommandResolver.resolve(bytes);
-        assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
-
-        Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
-        ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
-        builder.setStatus(new Property(ActiveState.ACTIVE));
-        builder.setTimestamp(calendar);
-        command = builder.build();
-        assertTrue(command.equals(bytes));
-        assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
-    }
-
-    // MARK: Universal Properties
 
     @Test public void invalidProperty() {
         TestUtils.debugLogExpected(() -> {
@@ -105,6 +87,24 @@ public class CommandTest extends BaseTest {
         assertTrue(found);
     }
 
+    // MARK: Universal Properties
+    // MARK: Timestamp
+
+    @Test public void universalTimestamp() throws ParseException {
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A2000B01000800000160E0EA1388");
+        String expectedDate = "2018-01-10T16:32:05";
+        ParkingBrake.State command = (ParkingBrake.State) CommandResolver.resolve(bytes);
+        assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
+
+        Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
+        ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
+        builder.setStatus(new Property(ActiveState.ACTIVE));
+        builder.setTimestamp(calendar);
+        command = builder.build();
+        assertTrue(command.equals(bytes));
+        assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
+    }
+
     @Test public void nonce() {
         Command command = getCommandWithSignature();
         Bytes nonce = command.getNonce();
@@ -124,6 +124,32 @@ public class CommandTest extends BaseTest {
                 ("4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
         ParkingBrake.State state = builder.build();
         assertTrue(state.equals(command));
+    }
+
+    @Test public void vin() {
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A300140100114a46325348424443374348343531383639");
+        ParkingBrake.State command = (ParkingBrake.State) CommandResolver.resolve(bytes);
+        assertTrue(command.getVin().equals("JF2SHBDC7CH451869"));
+
+        ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
+        builder.setStatus(new Property(ActiveState.ACTIVE));
+        builder.setVin("JF2SHBDC7CH451869");
+        command = builder.build();
+        assertTrue(command.equals(bytes));
+        assertTrue(command.getVin().equals("AF2SHBDC7CH451869"));
+    }
+
+    @Test public void brand() {
+        Bytes bytes = new Bytes(parkingBrakeCommand + "A4000401000105");
+        ParkingBrake.State command = (ParkingBrake.State) CommandResolver.resolve(bytes);
+        assertTrue(command.getBrand() == Brand.BMW);
+
+        ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
+        builder.setStatus(new Property(ActiveState.ACTIVE));
+        builder.setBrand(Brand.BMW);
+        command = builder.build();
+        assertTrue(command.equals(bytes));
+        assertTrue(command.getBrand().equals(Brand.BMW));
     }
 
     @Test public void signedBytes() {

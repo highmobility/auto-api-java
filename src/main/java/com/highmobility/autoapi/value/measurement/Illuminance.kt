@@ -51,8 +51,6 @@ class Illuminance : MeasurementType {
         }
     }
     
-    
-    
     enum class Unit(val id: Byte) {
         LUX(0x00);
     

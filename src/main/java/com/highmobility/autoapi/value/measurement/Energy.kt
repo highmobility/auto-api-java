@@ -57,8 +57,6 @@ class Energy : MeasurementType {
     
     fun inKilowattHours() = inJoules() / 3600000.0
     
-    
-    
     enum class Unit(val id: Byte) {
         JOULES(0x00),
         KILOJOULES(0x01),

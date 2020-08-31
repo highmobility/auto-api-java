@@ -57,8 +57,6 @@ class AngularVelocity : MeasurementType {
     
     fun inRadiansPerSecond() = inRevolutionsPerMinute() / 9.549296585514
     
-    
-    
     enum class Unit(val id: Byte) {
         REVOLUTIONS_PER_MINUTE(0x00),
         DEGREES_PER_SECOND(0x01),

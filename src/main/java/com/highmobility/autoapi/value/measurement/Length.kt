@@ -84,8 +84,6 @@ class Length : MeasurementType {
     
     fun inNauticalMiles() = inMeters() / 1852.0
     
-    
-    
     enum class Unit(val id: Byte) {
         METERS(0x00),
         MILLIMETERS(0x01),

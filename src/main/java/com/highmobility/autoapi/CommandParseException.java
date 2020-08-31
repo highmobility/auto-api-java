@@ -23,17 +23,13 @@
  */
 package com.highmobility.autoapi;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by ttiganik on 07/06/16.
  */
-public class CommandParseException extends Exception{
-    public enum CommandExceptionCode {
-        // the command bytes could not be parsed
-        PARSE_ERROR,
-        // A property value was expected to be of a certain type that it wasn't
-        UNSUPPORTED_VALUE_TYPE
-    }
-
+public class CommandParseException extends Exception {
     public CommandExceptionCode code;
 
     public CommandParseException() {
@@ -47,5 +43,16 @@ public class CommandParseException extends Exception{
     public CommandParseException(String error) {
         super(error);
         this.code = CommandExceptionCode.PARSE_ERROR;
+    }
+
+    public CommandParseException(@NotNull String format, @Nullable Object... args) {
+        new CommandParseException(String.format(format, args));
+    }
+
+    public enum CommandExceptionCode {
+        // the command bytes could not be parsed
+        PARSE_ERROR,
+        // A property value was expected to be of a certain type that it wasn't
+        UNSUPPORTED_VALUE_TYPE
     }
 }

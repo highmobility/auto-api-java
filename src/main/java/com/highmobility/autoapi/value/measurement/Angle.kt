@@ -57,8 +57,6 @@ class Angle : MeasurementType {
     
     fun inRevolutions() = inDegrees() / 360.000000
     
-    
-    
     enum class Unit(val id: Byte) {
         DEGREES(0x00),
         RADIANS(0x03),

@@ -57,8 +57,6 @@ class FuelEfficiency : MeasurementType {
     
     fun inMilesPerGallon() = 235.2145833 / inLitersPer100Kilometers()
     
-    
-    
     enum class Unit(val id: Byte) {
         LITERS_PER_100_KILOMETERS(0x00),
         MILES_PER_IMPERIAL_GALLON(0x01),

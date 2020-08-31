@@ -357,7 +357,9 @@ public class Property<V> extends Bytes {
         byte propertyIdentifier = getPropertyIdentifier();
         return propertyIdentifier == Command.SIGNATURE_IDENTIFIER ||
                 propertyIdentifier == Command.NONCE_IDENTIFIER ||
-                propertyIdentifier == Command.TIMESTAMP_IDENTIFIER;
+                propertyIdentifier == Command.TIMESTAMP_IDENTIFIER ||
+                propertyIdentifier == Command.VIN_IDENTIFIER ||
+                propertyIdentifier == Command.BRAND_IDENTIFIER;
     }
 
     public void printFailedToParse(Exception e, Bytes component) {

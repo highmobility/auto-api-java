@@ -66,8 +66,6 @@ class Frequency : MeasurementType {
     
     fun inBeatsPerMinute() = inHertz() / 60.0
     
-    
-    
     enum class Unit(val id: Byte) {
         HERTZ(0x00),
         MILLIHERTZ(0x01),

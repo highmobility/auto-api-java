@@ -63,8 +63,6 @@ class Power : MeasurementType {
     
     fun inHorsepower() = inWatts() / 745.7
     
-    
-    
     enum class Unit(val id: Byte) {
         WATTS(0x00),
         MILLIWATTS(0x01),

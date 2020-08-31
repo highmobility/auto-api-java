@@ -24,6 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Brand;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -59,6 +60,9 @@ public class Command extends Bytes {
     public static final byte NONCE_IDENTIFIER = (byte) 0xA0;
     public static final byte SIGNATURE_IDENTIFIER = (byte) 0xA1;
     public static final byte TIMESTAMP_IDENTIFIER = (byte) 0xA2;
+    public static final byte VIN_IDENTIFIER = (byte) 0xA3;
+    public static final byte BRAND_IDENTIFIER = (byte) 0xA4;
+
     static final byte AUTO_API_VERSION = 0x0C;
     static final int HEADER_LENGTH = 1;
     static final int COMMAND_TYPE_POSITION = HEADER_LENGTH + 2;
@@ -71,6 +75,8 @@ public class Command extends Bytes {
     Bytes nonce;
     Bytes signature;
     Calendar timestamp;
+    String vin;
+    Brand brand;
 
     public Command(Integer identifier, int size) {
         super(HEADER_LENGTH + size);
@@ -124,6 +130,20 @@ public class Command extends Bytes {
      */
     @Nullable public Calendar getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * @return The unique Vehicle Identification Number
+     */
+    @Nullable public String getVin() {
+        return vin;
+    }
+
+    /**
+     * @return The vehicle brand
+     */
+    @Nullable public Brand getBrand() {
+        return brand;
     }
 
     /**
@@ -220,16 +240,26 @@ public class Command extends Bytes {
                 Property property = properties[i];
                 if (createBytes) bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
 
-                if (property.getPropertyIdentifier() == NONCE_IDENTIFIER) {
-                    if (property.getValueComponent().getValueBytes().getLength() != 9)
-                        continue; // invalid nonce length, just ignore
-                    nonce = property.getValueComponent().getValueBytes();
-                } else if (property.getPropertyIdentifier() == SIGNATURE_IDENTIFIER) {
-                    if (property.getValueComponent().getValueBytes().getLength() != 64)
-                        continue; // ignore invalid length
-                    signature = property.getValueComponent().getValueBytes();
-                } else if (property.getPropertyIdentifier() == TIMESTAMP_IDENTIFIER) {
-                    timestamp = Property.getCalendar(property.getValueComponent().getValueBytes());
+                switch (property.getPropertyIdentifier()) {
+                    case NONCE_IDENTIFIER: {
+                        if (property.getValueComponent().getValueBytes().getLength() != 9)
+                            continue; // invalid nonce length, just ignore
+                        nonce = property.getValueComponent().getValueBytes();
+                    }
+                    case SIGNATURE_IDENTIFIER: {
+                        if (property.getValueComponent().getValueBytes().getLength() != 64)
+                            continue; // ignore invalid length
+                        signature = property.getValueComponent().getValueBytes();
+                    }
+                    case TIMESTAMP_IDENTIFIER: {
+                        timestamp = Property.getCalendar(property.getValueComponent().getValueBytes());
+                    }
+                    case VIN_IDENTIFIER: {
+                        vin = Property.getString(property.getValueComponent().getValueBytes());
+                    }
+                    case BRAND_IDENTIFIER: {
+                        brand = Brand.Companion.fromInt(property.getValueComponent().getValueByte());
+                    }
                 }
             } catch (Exception e) {
                 // ignore if some universal property had invalid data. just keep the base one.

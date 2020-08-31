@@ -57,8 +57,6 @@ class Temperature : MeasurementType {
     
     fun inFahrenheit() = (inKelvin() - 255.372222) / 0.555556
     
-    
-    
     enum class Unit(val id: Byte) {
         KELVIN(0x00),
         CELSIUS(0x01),

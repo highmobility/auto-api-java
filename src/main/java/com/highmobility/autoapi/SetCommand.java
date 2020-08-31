@@ -24,6 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Brand;
 import com.highmobility.value.Bytes;
 
 import java.util.ArrayList;
@@ -104,6 +105,24 @@ public class SetCommand extends Command {
          */
         public Builder setTimestamp(Calendar timestamp) {
             addProperty(new Property<>(TIMESTAMP_IDENTIFIER, timestamp));
+            return this;
+        }
+
+        /**
+         * @param vin The car vin.
+         * @return The builder.
+         */
+        public Builder setVin(String vin) {
+            addProperty(new Property<>(VIN_IDENTIFIER, vin));
+            return this;
+        }
+
+        /**
+         * @param brand The car brand.
+         * @return The builder.
+         */
+        public Builder setBrand(Brand brand) {
+            addProperty(new Property<>(BRAND_IDENTIFIER, brand));
             return this;
         }
 

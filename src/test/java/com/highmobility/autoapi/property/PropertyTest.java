@@ -30,6 +30,7 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.TestUtils;
 import com.highmobility.autoapi.value.Acceleration;
+import com.highmobility.autoapi.value.Brand;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -300,16 +301,22 @@ public class PropertyTest extends BaseTest {
     }
 
     @Test
-    public void universalProperty() {
-        Property timestamp = new Property((byte) 0xA2, new Bytes("41D6F1C07F800000"));
-        Property nonce = new Property((byte) 0xA0, new Bytes("324244433743483436"));
-        Property sig = new Property((byte) 0xA1, new Bytes(
+    public void isUniversalProperty() {
+        // isUniversalProperty() is an convenience method in property. Not used internally
+        Property<Calendar> timestamp = new Property((byte) 0xA2, new Bytes("41D6F1C07F800000"));
+        Property<Bytes> nonce = new Property((byte) 0xA0, new Bytes("324244433743483436"));
+        Property<Bytes> sig = new Property((byte) 0xA1, new Bytes(
                 "4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
+
+
+        Property<String> vin = new Property((byte) 0xA3, new Bytes("4a46325348424443374348343531383639")); // JF2SHBDC7CH451869
+        Property<Brand> brand = new Property((byte) 0xA4, new Bytes("01"));
+
         assertTrue(timestamp.isUniversalProperty());
         assertTrue(nonce.isUniversalProperty());
         assertTrue(sig.isUniversalProperty());
-
-        // TODO: 31/7/20 add VIN and brand
+        assertTrue(vin.isUniversalProperty());
+        assertTrue(brand.isUniversalProperty());
     }
 
     @Test

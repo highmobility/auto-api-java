@@ -69,8 +69,6 @@ class Pressure : MeasurementType {
     
     fun inPoundsForcePerSquareInch() = inNewtonsPerMetersSquared() / 6894.76
     
-    
-    
     enum class Unit(val id: Byte) {
         NEWTONS_PER_METERS_SQUARED(0x00),
         KILOPASCALS(0x03),

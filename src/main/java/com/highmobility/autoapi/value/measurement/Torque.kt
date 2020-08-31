@@ -57,8 +57,6 @@ class Torque : MeasurementType {
     
     fun inPoundFeet() = inNewtonMeters() / 0.73756214927727
     
-    
-    
     enum class Unit(val id: Byte) {
         NEWTON_METERS(0x00),
         NEWTON_MILLIMETERS(0x01),

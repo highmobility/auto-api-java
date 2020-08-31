@@ -54,8 +54,6 @@ class EnergyEfficiency : MeasurementType {
     
     fun inMilesPerKwh() = 62.137119223733397 / inKwhPer100Kilometers()
     
-    
-    
     enum class Unit(val id: Byte) {
         KWH_PER_100_KILOMETERS(0x00),
         MILES_PER_KWH(0x01);

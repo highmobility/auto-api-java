@@ -66,8 +66,6 @@ class Duration : MeasurementType {
     
     fun inMonths() = inSeconds() / 2629800.0
     
-    
-    
     enum class Unit(val id: Byte) {
         SECONDS(0x00),
         MINUTES(0x01),

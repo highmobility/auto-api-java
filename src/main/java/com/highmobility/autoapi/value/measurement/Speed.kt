@@ -60,8 +60,6 @@ class Speed : MeasurementType {
     
     fun inKnots() = inMetersPerSecond() / 0.51444444444
     
-    
-    
     enum class Unit(val id: Byte) {
         METERS_PER_SECOND(0x00),
         KILOMETERS_PER_HOUR(0x01),
