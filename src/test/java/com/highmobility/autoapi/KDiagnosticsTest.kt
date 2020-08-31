@@ -88,7 +88,9 @@ class KDiagnosticsTest : BaseTest() {
             "240024010021000531323349440018000a736f6d655f6572726f72000a736f6d655f76616c7565" +  // Trouble code '123ID' has a value 'some_value' for a key 'some_error'
             "24002D01002A0004314233430022000f696d706f7274616e745f6572726f72000f73797374656d206661756c74203332" +  // Trouble code '1B3C' has a value 'system fault 32' for a key 'important_error'
             "25000D01000A120440a1720000000000" +  // Diesel exhaust fluid is empty in 2233.0km
-            "26000B0100083fc47ae147ae147b" // Diesel exhaust particulate filter soot level is 16%
+            "26000B0100083fc47ae147ae147b" +  // Diesel exhaust particulate filter soot level is 16%
+            "270015010012383031433130 3136 434153 414354495645" +  // Confirmed trouble code '801C10' with ECU address '16' and variante name "CAS" is 'ACTIVE'
+            "270015010012443532433434 3438 434153 414354495645" // Confirmed trouble code 'D52C44' with ECU address '48' and variante name "CAS" is 'ACTIVE'
     )
     
     @Test
@@ -155,6 +157,8 @@ class KDiagnosticsTest : BaseTest() {
         builder.addOemTroubleCodeValue(Property(OemTroubleCodeValue("1B3C", KeyValue("important_error", "system fault 32"))))
         builder.setDieselExhaustFluidRange(Property(Length(2233.0, Length.Unit.KILOMETERS)))
         builder.setDieselParticulateFilterSootLevel(Property(0.16))
+        builder.addConfirmedTroubleCode(Property(ConfirmedTroubleCode("801C10", "16", "CAS", "ACTIVE")))
+        builder.addConfirmedTroubleCode(Property(ConfirmedTroubleCode("D52C44", "48", "CAS", "ACTIVE")))
         testState(builder.build())
     }
     
@@ -289,6 +293,14 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(state.getDieselExhaustFluidRange().value?.value == 2233.0)
         assertTrue(state.getDieselExhaustFluidRange().value?.unit == Length.Unit.KILOMETERS)
         assertTrue(state.getDieselParticulateFilterSootLevel().value == 0.16)
+        assertTrue(state.getConfirmedTroubleCodes()[0].value?.id == "801C10")
+        assertTrue(state.getConfirmedTroubleCodes()[0].value?.ecuAddress == "16")
+        assertTrue(state.getConfirmedTroubleCodes()[0].value?.ecuVariantName == "CAS")
+        assertTrue(state.getConfirmedTroubleCodes()[0].value?.status == "ACTIVE")
+        assertTrue(state.getConfirmedTroubleCodes()[1].value?.id == "D52C44")
+        assertTrue(state.getConfirmedTroubleCodes()[1].value?.ecuAddress == "48")
+        assertTrue(state.getConfirmedTroubleCodes()[1].value?.ecuVariantName == "CAS")
+        assertTrue(state.getConfirmedTroubleCodes()[1].value?.status == "ACTIVE")
     }
     
     @Test
@@ -299,8 +311,8 @@ class KDiagnosticsTest : BaseTest() {
     
     @Test
     fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "003300010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f20212223242526")
-        val getter = Diagnostics.GetProperties(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26)
+        val bytes = Bytes(COMMAND_HEADER + "003300010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
+        val getter = Diagnostics.GetProperties(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27)
         assertTrue(getter == bytes)
     }
 }

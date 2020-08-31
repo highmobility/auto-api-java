@@ -40,6 +40,7 @@ import com.highmobility.autoapi.value.WheelRpm;
 import com.highmobility.autoapi.value.TroubleCode;
 import com.highmobility.autoapi.value.TirePressureStatus;
 import com.highmobility.autoapi.value.OemTroubleCodeValue;
+import com.highmobility.autoapi.value.ConfirmedTroubleCode;
 import java.util.ArrayList;
 import java.util.List;
 import com.highmobility.value.Bytes;
@@ -85,6 +86,7 @@ public class Diagnostics {
     public static final byte PROPERTY_OEM_TROUBLE_CODE_VALUES = 0x24;
     public static final byte PROPERTY_DIESEL_EXHAUST_FLUID_RANGE = 0x25;
     public static final byte PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL = 0x26;
+    public static final byte PROPERTY_CONFIRMED_TROUBLE_CODES = 0x27;
 
     /**
      * Get all diagnostics properties
@@ -161,6 +163,7 @@ public class Diagnostics {
         List<Property<OemTroubleCodeValue>> oemTroubleCodeValues;
         Property<Length> dieselExhaustFluidRange = new Property<>(Length.class, PROPERTY_DIESEL_EXHAUST_FLUID_RANGE);
         Property<Double> dieselParticulateFilterSootLevel = new Property<>(Double.class, PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL);
+        List<Property<ConfirmedTroubleCode>> confirmedTroubleCodes;
     
         /**
          * @return The vehicle mileage (odometer)
@@ -407,6 +410,13 @@ public class Diagnostics {
             return dieselParticulateFilterSootLevel;
         }
     
+        /**
+         * @return The confirmed trouble codes
+         */
+        public List<Property<ConfirmedTroubleCode>> getConfirmedTroubleCodes() {
+            return confirmedTroubleCodes;
+        }
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
@@ -417,6 +427,7 @@ public class Diagnostics {
             final ArrayList<Property<TroubleCode>> troubleCodesBuilder = new ArrayList<>();
             final ArrayList<Property<TirePressureStatus>> tirePressureStatusesBuilder = new ArrayList<>();
             final ArrayList<Property<OemTroubleCodeValue>> oemTroubleCodeValuesBuilder = new ArrayList<>();
+            final ArrayList<Property<ConfirmedTroubleCode>> confirmedTroubleCodesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -477,6 +488,10 @@ public class Diagnostics {
                             return oemTroubleCodeValue;
                         case PROPERTY_DIESEL_EXHAUST_FLUID_RANGE: return dieselExhaustFluidRange.update(p);
                         case PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL: return dieselParticulateFilterSootLevel.update(p);
+                        case PROPERTY_CONFIRMED_TROUBLE_CODES:
+                            Property<ConfirmedTroubleCode> confirmedTroubleCode = new Property<>(ConfirmedTroubleCode.class, p);
+                            confirmedTroubleCodesBuilder.add(confirmedTroubleCode);
+                            return confirmedTroubleCode;
                     }
     
                     return null;
@@ -490,6 +505,7 @@ public class Diagnostics {
             troubleCodes = troubleCodesBuilder;
             tirePressureStatuses = tirePressureStatusesBuilder;
             oemTroubleCodeValues = oemTroubleCodeValuesBuilder;
+            confirmedTroubleCodes = confirmedTroubleCodesBuilder;
         }
     
         private State(Builder builder) {
@@ -530,6 +546,7 @@ public class Diagnostics {
             oemTroubleCodeValues = builder.oemTroubleCodeValues;
             dieselExhaustFluidRange = builder.dieselExhaustFluidRange;
             dieselParticulateFilterSootLevel = builder.dieselParticulateFilterSootLevel;
+            confirmedTroubleCodes = builder.confirmedTroubleCodes;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -568,6 +585,7 @@ public class Diagnostics {
             private final List<Property<OemTroubleCodeValue>> oemTroubleCodeValues = new ArrayList<>();
             private Property<Length> dieselExhaustFluidRange;
             private Property<Double> dieselParticulateFilterSootLevel;
+            private final List<Property<ConfirmedTroubleCode>> confirmedTroubleCodes = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);
@@ -1050,6 +1068,33 @@ public class Diagnostics {
             public Builder setDieselParticulateFilterSootLevel(Property<Double> dieselParticulateFilterSootLevel) {
                 this.dieselParticulateFilterSootLevel = dieselParticulateFilterSootLevel.setIdentifier(PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL);
                 addProperty(this.dieselParticulateFilterSootLevel);
+                return this;
+            }
+            
+            /**
+             * Add an array of confirmed trouble codes.
+             * 
+             * @param confirmedTroubleCodes The confirmed trouble codes
+             * @return The builder
+             */
+            public Builder setConfirmedTroubleCodes(Property<ConfirmedTroubleCode>[] confirmedTroubleCodes) {
+                this.confirmedTroubleCodes.clear();
+                for (int i = 0; i < confirmedTroubleCodes.length; i++) {
+                    addConfirmedTroubleCode(confirmedTroubleCodes[i]);
+                }
+            
+                return this;
+            }
+            /**
+             * Add a single confirmed trouble code.
+             * 
+             * @param confirmedTroubleCode The confirmed trouble code
+             * @return The builder
+             */
+            public Builder addConfirmedTroubleCode(Property<ConfirmedTroubleCode> confirmedTroubleCode) {
+                confirmedTroubleCode.setIdentifier(PROPERTY_CONFIRMED_TROUBLE_CODES);
+                addProperty(confirmedTroubleCode);
+                confirmedTroubleCodes.add(confirmedTroubleCode);
                 return this;
             }
         }

@@ -40,7 +40,7 @@ public class OemTroubleCodeValue extends PropertyValueObject {
     }
 
     /**
-     * @return Key-value pair for the trouble codde.
+     * @return Key-value pair for the trouble code.
      */
     public KeyValue getKeyValue() {
         return keyValue;
