@@ -228,7 +228,7 @@ public class Property<V> extends Bytes {
             try {
                 this.value.setClass(valueClass);
             } catch (Exception e) {
-                Command.logger.warn("Invalid bytes %s for property: %s\n%s", p, valueClass.getSimpleName(), e);
+                Command.logger.debug("Invalid bytes %s for property: %s\n%s", p, valueClass.getSimpleName(), e);
             }
         }
 

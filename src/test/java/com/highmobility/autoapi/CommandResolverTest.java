@@ -34,7 +34,7 @@ public class CommandResolverTest extends BaseTest {
         setRuntime(CommandResolver.RunTime.JAVA);
 
         // It tries to match 2 to commands, but for both the property parsing fails
-        TestUtils.warningLogExpected(2, () -> {
+        TestUtils.debugLogExpected(2, () -> {
             Bytes invalidEndParking = new Bytes(
                     COMMAND_HEADER + "004701" +
                             "01000401000104"

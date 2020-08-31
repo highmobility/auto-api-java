@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.Marker;
 
 class FakeLogger implements Logger {
-    int logCount;
+    int debugLogCount;
     int errorLogCount;
     int warningLogCount;
     boolean showLogs = false;
@@ -41,27 +41,27 @@ class FakeLogger implements Logger {
     }
 
     @Override public void trace(String msg) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
     @Override public void trace(String format, Object arg) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg));
     }
 
     @Override public void trace(String format, Object arg1, Object arg2) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg1));
     }
 
     @Override public void trace(String format, Object... arguments) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arguments));
     }
 
     @Override public void trace(String msg, Throwable t) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
@@ -70,27 +70,27 @@ class FakeLogger implements Logger {
     }
 
     @Override public void trace(Marker marker, String msg) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
     @Override public void trace(Marker marker, String format, Object arg) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg));
     }
 
     @Override public void trace(Marker marker, String format, Object arg1, Object arg2) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg1));
     }
 
     @Override public void trace(Marker marker, String format, Object... argArray) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, argArray));
     }
 
     @Override public void trace(Marker marker, String msg, Throwable t) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
@@ -99,27 +99,27 @@ class FakeLogger implements Logger {
     }
 
     @Override public void debug(String msg) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
     @Override public void debug(String format, Object arg) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg));
     }
 
     @Override public void debug(String format, Object arg1, Object arg2) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg1));
     }
 
     @Override public void debug(String format, Object... arguments) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arguments));
     }
 
     @Override public void debug(String msg, Throwable t) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
@@ -128,27 +128,27 @@ class FakeLogger implements Logger {
     }
 
     @Override public void debug(Marker marker, String msg) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
     @Override public void debug(Marker marker, String format, Object arg) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg));
     }
 
     @Override public void debug(Marker marker, String format, Object arg1, Object arg2) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg1));
     }
 
     @Override public void debug(Marker marker, String format, Object... arguments) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arguments));
     }
 
     @Override public void debug(Marker marker, String msg, Throwable t) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
@@ -157,27 +157,27 @@ class FakeLogger implements Logger {
     }
 
     @Override public void info(String msg) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
     @Override public void info(String format, Object arg) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg));
     }
 
     @Override public void info(String format, Object arg1, Object arg2) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg1));
     }
 
     @Override public void info(String format, Object... arguments) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arguments));
     }
 
     @Override public void info(String msg, Throwable t) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
@@ -186,27 +186,27 @@ class FakeLogger implements Logger {
     }
 
     @Override public void info(Marker marker, String msg) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
     @Override public void info(Marker marker, String format, Object arg) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg));
     }
 
     @Override public void info(Marker marker, String format, Object arg1, Object arg2) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arg1));
     }
 
     @Override public void info(Marker marker, String format, Object... arguments) {
-        logCount++;
+        debugLogCount++;
         log(String.format(format, arguments));
     }
 
     @Override public void info(Marker marker, String msg, Throwable t) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 
@@ -215,7 +215,7 @@ class FakeLogger implements Logger {
     }
 
     @Override public void warn(String msg) {
-        logCount++;
+        debugLogCount++;
         log(msg);
     }
 

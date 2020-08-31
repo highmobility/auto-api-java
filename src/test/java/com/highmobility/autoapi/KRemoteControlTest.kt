@@ -93,7 +93,7 @@ class KRemoteControlTest : BaseTest() {
     
         setRuntime(CommandResolver.RunTime.JAVA)
     
-        warningLogExpected(2) { 
+        debugLogExpected(2) { 
             val resolved = CommandResolver.resolve(bytes)
             assertTrue(resolved is Command)
         }
@@ -118,7 +118,7 @@ class KRemoteControlTest : BaseTest() {
     
         setRuntime(CommandResolver.RunTime.JAVA)
     
-        warningLogExpected(2) { 
+        debugLogExpected(2) { 
             val resolved = CommandResolver.resolve(bytes)
             assertTrue(resolved is Command)
         }

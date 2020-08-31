@@ -72,4 +72,12 @@ public class BaseTest {
     static void warningLogExpected(int count, Runnable runnable) {
         TestUtils.warningLogExpected(count, runnable);
     }
+
+    static void debugLogExpected(Runnable runnable) {
+        TestUtils.debugLogExpected(1, runnable);
+    }
+
+    static void debugLogExpected(int count, Runnable runnable) {
+        TestUtils.debugLogExpected(count, runnable);
+    }
 }

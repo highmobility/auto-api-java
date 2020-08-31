@@ -109,7 +109,7 @@ class KParkingTicketTest : BaseTest() {
     
         setRuntime(CommandResolver.RunTime.JAVA)
     
-        warningLogExpected(2) { 
+        debugLogExpected(2) { 
             val resolved = CommandResolver.resolve(bytes)
             assertTrue(resolved is Command)
         }
@@ -134,7 +134,7 @@ class KParkingTicketTest : BaseTest() {
     
         setRuntime(CommandResolver.RunTime.JAVA)
     
-        warningLogExpected(2) { 
+        debugLogExpected(2) { 
             val resolved = CommandResolver.resolve(bytes)
             assertTrue(resolved is Command)
         }

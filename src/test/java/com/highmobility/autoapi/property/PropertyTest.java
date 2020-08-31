@@ -180,7 +180,7 @@ public class PropertyTest extends BaseTest {
 
     @Test
     public void testValueComponentFailedParsing() {
-        TestUtils.warningLogExpected(() -> {
+        TestUtils.debugLogExpected(() -> {
             // test if float expected but bytes are with smaller length
             // charging with invalid length chargeCurrentAC. cannot parse to float
             // correct chargeCurrentDC

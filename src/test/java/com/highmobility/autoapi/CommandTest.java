@@ -69,7 +69,7 @@ public class CommandTest extends BaseTest {
     // MARK: Universal Properties
 
     @Test public void invalidProperty() {
-        TestUtils.warningLogExpected(() -> {
+        TestUtils.debugLogExpected(() -> {
             // test that invalid gasflapstate just sets the property to null and keeps the base
             // property
 

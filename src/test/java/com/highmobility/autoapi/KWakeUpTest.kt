@@ -51,7 +51,7 @@ class KWakeUpTest : BaseTest() {
     
         setRuntime(CommandResolver.RunTime.JAVA)
     
-        warningLogExpected { 
+        debugLogExpected { 
             val resolved = CommandResolver.resolve(bytes)
             assertTrue(resolved is Command)
         }

@@ -82,6 +82,25 @@ public class TestUtils {
         }
     }
 
+    public static void debugLogExpected(Runnable runnable) {
+        debugLogExpected(1, runnable);
+    }
+
+    public static void debugLogExpected(int count, Runnable runnable) {
+        // could add a log count to logger, and if it exceeds the param count, write an error
+        Logger previousLogger = Command.logger;
+        fakeLogger.debugLogCount = 0;
+        Command.logger = fakeLogger;
+        runnable.run();
+        Command.logger = previousLogger;
+        // if this fails, don't use fake logger and check what error message should not be present
+        if (count != fakeLogger.debugLogCount) {
+            String error = String.format("Debug count %d is not the expected %d", fakeLogger.debugLogCount, count);
+            Command.logger.error(error);
+            fail(error);
+        }
+    }
+
     public static boolean dateIsSame(Calendar c, String dateString) {
         return dateIsSameIgnoreTimezone(c, dateString); // currently ignoring time zone.
         /*DateFormat format = getFormat(dateString);
