@@ -171,28 +171,36 @@ public class Charging {
     
         /**
          * @return Battery alternating current
+         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
          */
+        @Deprecated
         public Property<ElectricCurrent> getBatteryCurrentAC() {
             return batteryCurrentAC;
         }
     
         /**
          * @return Battery direct current
+         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
          */
+        @Deprecated
         public Property<ElectricCurrent> getBatteryCurrentDC() {
             return batteryCurrentDC;
         }
     
         /**
          * @return Charger voltage for alternating current
+         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
          */
+        @Deprecated
         public Property<ElectricPotentialDifference> getChargerVoltageAC() {
             return chargerVoltageAC;
         }
     
         /**
          * @return Charger voltage for direct current
+         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
          */
+        @Deprecated
         public Property<ElectricPotentialDifference> getChargerVoltageDC() {
             return chargerVoltageDC;
         }
@@ -213,7 +221,9 @@ public class Charging {
     
         /**
          * @return Charging rate
+         * @deprecated removed the unit from the name. Replaced by {@link #getChargingRate()}
          */
+        @Deprecated
         public Property<Power> getChargingRateKW() {
             return chargingRateKW;
         }
@@ -543,7 +553,9 @@ public class Charging {
             /**
              * @param batteryCurrentAC Battery alternating current
              * @return The builder
+             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
              */
+            @Deprecated
             public Builder setBatteryCurrentAC(Property<ElectricCurrent> batteryCurrentAC) {
                 this.batteryCurrentAC = batteryCurrentAC.setIdentifier(PROPERTY_BATTERY_CURRENT_AC);
                 addProperty(this.batteryCurrentAC);
@@ -553,7 +565,9 @@ public class Charging {
             /**
              * @param batteryCurrentDC Battery direct current
              * @return The builder
+             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
              */
+            @Deprecated
             public Builder setBatteryCurrentDC(Property<ElectricCurrent> batteryCurrentDC) {
                 this.batteryCurrentDC = batteryCurrentDC.setIdentifier(PROPERTY_BATTERY_CURRENT_DC);
                 addProperty(this.batteryCurrentDC);
@@ -563,7 +577,9 @@ public class Charging {
             /**
              * @param chargerVoltageAC Charger voltage for alternating current
              * @return The builder
+             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
              */
+            @Deprecated
             public Builder setChargerVoltageAC(Property<ElectricPotentialDifference> chargerVoltageAC) {
                 this.chargerVoltageAC = chargerVoltageAC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_AC);
                 addProperty(this.chargerVoltageAC);
@@ -573,7 +589,9 @@ public class Charging {
             /**
              * @param chargerVoltageDC Charger voltage for direct current
              * @return The builder
+             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
              */
+            @Deprecated
             public Builder setChargerVoltageDC(Property<ElectricPotentialDifference> chargerVoltageDC) {
                 this.chargerVoltageDC = chargerVoltageDC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_DC);
                 addProperty(this.chargerVoltageDC);
@@ -603,7 +621,9 @@ public class Charging {
             /**
              * @param chargingRateKW Charging rate
              * @return The builder
+             * @deprecated removed the unit from the name. Replaced by {@link #getChargingRate()}
              */
+            @Deprecated
             public Builder setChargingRateKW(Property<Power> chargingRateKW) {
                 this.chargingRateKW = chargingRateKW.setIdentifier(PROPERTY_CHARGING_RATE_KW);
                 addProperty(this.chargingRateKW);

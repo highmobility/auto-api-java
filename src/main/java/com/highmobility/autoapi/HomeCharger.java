@@ -142,7 +142,9 @@ public class HomeCharger {
     
         /**
          * @return Charging power
+         * @deprecated removed the unit from the name. Replaced by {@link #getChargingPower()}
          */
+        @Deprecated
         public Property<Power> getChargingPowerKW() {
             return chargingPowerKW;
         }
@@ -362,7 +364,9 @@ public class HomeCharger {
             /**
              * @param chargingPowerKW Charging power
              * @return The builder
+             * @deprecated removed the unit from the name. Replaced by {@link #getChargingPower()}
              */
+            @Deprecated
             public Builder setChargingPowerKW(Property<Power> chargingPowerKW) {
                 this.chargingPowerKW = chargingPowerKW.setIdentifier(PROPERTY_CHARGING_POWER_KW);
                 addProperty(this.chargingPowerKW);

@@ -118,14 +118,18 @@ public class Maintenance {
     
         /**
          * @return Time until next servicing of the car
+         * @deprecated removed the unit from the name. Replaced by {@link #getTimeToNextService()}
          */
+        @Deprecated
         public Property<Duration> getDaysToNextService() {
             return daysToNextService;
         }
     
         /**
          * @return The distance until next servicing of the vehicle
+         * @deprecated removed the unit from the name. Replaced by {@link #getDistanceToNextService()}
          */
+        @Deprecated
         public Property<Length> getKilometersToNextService() {
             return kilometersToNextService;
         }
@@ -139,7 +143,9 @@ public class Maintenance {
     
         /**
          * @return Time until exhaust inspection
+         * @deprecated removed the unit from the name. Replaced by {@link #getTimeToExhaustInspection()}
          */
+        @Deprecated
         public Property<Duration> getMonthsToExhaustInspection() {
             return monthsToExhaustInspection;
         }
@@ -314,7 +320,9 @@ public class Maintenance {
             /**
              * @param daysToNextService Time until next servicing of the car
              * @return The builder
+             * @deprecated removed the unit from the name. Replaced by {@link #getTimeToNextService()}
              */
+            @Deprecated
             public Builder setDaysToNextService(Property<Duration> daysToNextService) {
                 this.daysToNextService = daysToNextService.setIdentifier(PROPERTY_DAYS_TO_NEXT_SERVICE);
                 addProperty(this.daysToNextService);
@@ -324,7 +332,9 @@ public class Maintenance {
             /**
              * @param kilometersToNextService The distance until next servicing of the vehicle
              * @return The builder
+             * @deprecated removed the unit from the name. Replaced by {@link #getDistanceToNextService()}
              */
+            @Deprecated
             public Builder setKilometersToNextService(Property<Length> kilometersToNextService) {
                 this.kilometersToNextService = kilometersToNextService.setIdentifier(PROPERTY_KILOMETERS_TO_NEXT_SERVICE);
                 addProperty(this.kilometersToNextService);
@@ -344,7 +354,9 @@ public class Maintenance {
             /**
              * @param monthsToExhaustInspection Time until exhaust inspection
              * @return The builder
+             * @deprecated removed the unit from the name. Replaced by {@link #getTimeToExhaustInspection()}
              */
+            @Deprecated
             public Builder setMonthsToExhaustInspection(Property<Duration> monthsToExhaustInspection) {
                 this.monthsToExhaustInspection = monthsToExhaustInspection.setIdentifier(PROPERTY_MONTHS_TO_EXHAUST_INSPECTION);
                 addProperty(this.monthsToExhaustInspection);

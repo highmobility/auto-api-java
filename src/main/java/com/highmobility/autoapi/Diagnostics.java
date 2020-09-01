@@ -167,7 +167,9 @@ public class Diagnostics {
     
         /**
          * @return The vehicle mileage (odometer)
+         * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
          */
+        @Deprecated
         public Property<Length> getMileage() {
             return mileage;
         }
@@ -265,7 +267,9 @@ public class Diagnostics {
     
         /**
          * @return The accumulated time of engine operation
+         * @deprecated removed the unit from the name. Replaced by {@link #getEngineTotalOperatingTime()}
          */
+        @Deprecated
         public Property<Duration> getEngineTotalOperatingHours() {
             return engineTotalOperatingHours;
         }
@@ -349,7 +353,9 @@ public class Diagnostics {
     
         /**
          * @return The vehicle mileage (odometer) in meters
+         * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
          */
+        @Deprecated
         public Property<Length> getMileageMeters() {
             return mileageMeters;
         }
@@ -598,7 +604,9 @@ public class Diagnostics {
             /**
              * @param mileage The vehicle mileage (odometer)
              * @return The builder
+             * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
              */
+            @Deprecated
             public Builder setMileage(Property<Length> mileage) {
                 this.mileage = mileage.setIdentifier(PROPERTY_MILEAGE);
                 addProperty(this.mileage);
@@ -738,7 +746,9 @@ public class Diagnostics {
             /**
              * @param engineTotalOperatingHours The accumulated time of engine operation
              * @return The builder
+             * @deprecated removed the unit from the name. Replaced by {@link #getEngineTotalOperatingTime()}
              */
+            @Deprecated
             public Builder setEngineTotalOperatingHours(Property<Duration> engineTotalOperatingHours) {
                 this.engineTotalOperatingHours = engineTotalOperatingHours.setIdentifier(PROPERTY_ENGINE_TOTAL_OPERATING_HOURS);
                 addProperty(this.engineTotalOperatingHours);
@@ -948,7 +958,9 @@ public class Diagnostics {
             /**
              * @param mileageMeters The vehicle mileage (odometer) in meters
              * @return The builder
+             * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
              */
+            @Deprecated
             public Builder setMileageMeters(Property<Length> mileageMeters) {
                 this.mileageMeters = mileageMeters.setIdentifier(PROPERTY_MILEAGE_METERS);
                 addProperty(this.mileageMeters);
