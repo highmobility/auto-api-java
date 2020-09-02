@@ -135,7 +135,6 @@ class PropertyComponentUnitTest : BaseTest() {
 
         val constructor: Constructor<*> = valueClass.getConstructor(Bytes::class.java)
         val parsedValue: T = constructor.newInstance(valueBytes) as T
-        val light = parsedValue as Light
-        println("${light.state}")
+        parsedValue as Light
     }
 }

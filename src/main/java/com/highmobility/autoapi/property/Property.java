@@ -26,6 +26,7 @@ package com.highmobility.autoapi.property;
 import com.highmobility.autoapi.Command;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.exception.ParseException;
+import com.highmobility.autoapi.value.Availability;
 import com.highmobility.value.Bytes;
 
 import javax.annotation.Nullable;
@@ -86,8 +87,10 @@ public class Property<V> extends Bytes {
     protected PropertyComponentTimestamp timestamp;
     @Nullable
     protected PropertyComponentFailure failure;
+    @Nullable
+    protected PropertyComponentAvailability availability;
 
-    protected PropertyComponent[] components;
+    protected List<PropertyComponent> components;
 
     private Class<V> valueClass = null;
 
@@ -106,7 +109,7 @@ public class Property<V> extends Bytes {
     /**
      * @return All of the components.
      */
-    public PropertyComponent[] getComponents() {
+    public List<PropertyComponent> getComponents() {
         return components;
     }
 
@@ -116,8 +119,8 @@ public class Property<V> extends Bytes {
      */
     @Nullable
     public PropertyComponent getComponent(byte identifier) {
-        for (int i = 0; i < components.length; i++) {
-            PropertyComponent component = components[i];
+        for (int i = 0; i < components.size(); i++) {
+            PropertyComponent component = components.get(i);
             if (component.getIdentifier() == identifier) return component;
         }
         return null;
@@ -143,6 +146,19 @@ public class Property<V> extends Bytes {
     @Nullable
     PropertyComponentTimestamp getTimestampComponent() {
         return timestamp;
+    }
+
+    /**
+     * @return The availability of the property.
+     */
+    @Nullable
+    public Availability getAvailability() {
+        return availability.getAvailability();
+    }
+
+    @Nullable
+    PropertyComponentAvailability getAvailabilityComponent() {
+        return availability;
     }
 
     /**
@@ -187,19 +203,20 @@ public class Property<V> extends Bytes {
             try {
                 switch (componentIdentifier) {
                     case 0x01:
-                        // value component
                         value = new PropertyComponentValue<>(componentBytes, valueClass);
                         builder.add(value);
                         break;
                     case 0x02:
-                        // timestamp component
                         timestamp = new PropertyComponentTimestamp(componentBytes);
                         builder.add(timestamp);
                         break;
                     case 0x03:
-                        // failure component
                         failure = new PropertyComponentFailure(componentBytes);
                         builder.add(failure);
+                        break;
+                    case 0x05:
+                        availability = new PropertyComponentAvailability(componentBytes);
+                        builder.add(availability);
                         break;
                 }
             } catch (Exception e) {
@@ -210,11 +227,11 @@ public class Property<V> extends Bytes {
             i += size + 2;
         }
 
-        components = builder.toArray(new PropertyComponent[0]);
+        components = builder;
     }
 
     public Property(@Nullable V value) {
-        update((byte) 0, value, null, null);
+        update((byte) 0, value, null, null, null);
     }
 
     public Property update(Property p) throws CommandParseException {
@@ -232,9 +249,10 @@ public class Property<V> extends Bytes {
             }
         }
 
+        this.components = p.components;
         this.timestamp = p.timestamp;
         this.failure = p.failure;
-        this.components = p.components;
+        this.availability = p.availability;
 
         return this;
     }
@@ -244,8 +262,9 @@ public class Property<V> extends Bytes {
     public Property(byte identifier,
                     @Nullable V value,
                     @Nullable Calendar timestamp,
-                    @Nullable PropertyComponentFailure failure) {
-        update(identifier, value, timestamp, failure);
+                    @Nullable PropertyComponentFailure failure,
+                    @Nullable PropertyComponentAvailability availability) {
+        update(identifier, value, timestamp, failure, availability);
     }
 
     // MARK: internal ctor
@@ -255,7 +274,7 @@ public class Property<V> extends Bytes {
     }
 
     public Property(byte identifier, V value) {
-        update(identifier, value, null, null);
+        update(identifier, value, null, null, null);
     }
 
     public Property(Class<V> valueClass, int identifier) {
@@ -276,7 +295,7 @@ public class Property<V> extends Bytes {
     }
 
     public Property update(V value) {
-        return update(bytes[0], value, null, null);
+        return update(bytes[0], value, null, null, null);
     }
 
     public Property addValueComponent(Bytes valueComponentValue) {
@@ -297,11 +316,12 @@ public class Property<V> extends Bytes {
     private Property update(byte identifier,
                             @Nullable V value,
                             @Nullable Calendar timestamp,
-                            @Nullable PropertyComponentFailure failure) {
-
+                            @Nullable PropertyComponentFailure failure,
+                            @Nullable PropertyComponentAvailability availability) {
         if (value != null && failure == null) this.value = new PropertyComponentValue<>(value);
         if (timestamp != null) this.timestamp = new PropertyComponentTimestamp(timestamp);
         if (failure != null) this.failure = failure;
+        if (availability != null) this.availability = availability;
 
         createBytesFromComponents(identifier);
 
@@ -309,32 +329,62 @@ public class Property<V> extends Bytes {
     }
 
     protected void createBytesFromComponents(byte propertyIdentifier) {
-        int componentsLength = (value != null ? value.getLength() : 0) +
-                (timestamp != null ? timestamp.getLength() : 0) +
-                (failure != null ? failure.getLength() : 0);
+        int componentBytesLength = 0;
+        int componentsSize = 0;
 
-        Bytes builder = new Bytes(3 + componentsLength);
+        if (value != null) {
+            componentBytesLength += value.getLength();
+            componentsSize++;
+        }
+
+        if (timestamp != null) {
+            componentBytesLength += timestamp.getLength();
+            componentsSize++;
+        }
+
+        if (failure != null) {
+            componentBytesLength += failure.getLength();
+            componentsSize++;
+        }
+
+        if (availability != null) {
+            componentBytesLength += availability.getLength();
+            componentsSize++;
+        }
+
+        ArrayList<PropertyComponent> componentsBuilder = new ArrayList<>(componentsSize);
+        Bytes builder = new Bytes(3 + componentBytesLength);
 
         builder.set(0, propertyIdentifier);
-        builder.set(1, Property.intToBytes(componentsLength, 2));
+        builder.set(1, Property.intToBytes(componentBytesLength, 2));
 
         int pointer = 3;
 
         if (value != null) {
             builder.set(pointer, value);
             pointer += value.getLength();
+            componentsBuilder.add(value);
         }
 
         if (timestamp != null) {
             builder.set(pointer, timestamp);
             pointer += timestamp.getLength();
+            componentsBuilder.add(timestamp);
         }
 
         if (failure != null) {
             builder.set(pointer, failure);
+            pointer += failure.getLength();
+            componentsBuilder.add(failure);
+        }
+
+        if (availability != null) {
+            builder.set(pointer, availability);
+            componentsBuilder.add(availability);
         }
 
         bytes = builder.getByteArray();
+        components = componentsBuilder;
     }
 
     /**

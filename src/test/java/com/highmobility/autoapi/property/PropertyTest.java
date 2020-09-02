@@ -30,6 +30,7 @@ import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.CommandResolver;
 import com.highmobility.autoapi.TestUtils;
 import com.highmobility.autoapi.value.Acceleration;
+import com.highmobility.autoapi.value.Availability;
 import com.highmobility.autoapi.value.Brand;
 import com.highmobility.value.Bytes;
 
@@ -39,6 +40,7 @@ import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class PropertyTest extends BaseTest {
     // bytes: 00000160E0EA1388
@@ -141,6 +143,7 @@ public class PropertyTest extends BaseTest {
         Property property = new Property((byte) 0x12,
                 ChargeMode.IMMEDIATE,
                 timestamp,
+                null,
                 null);
 
         testValueComponent(property, 1, ChargeMode.IMMEDIATE);
@@ -216,12 +219,13 @@ public class PropertyTest extends BaseTest {
 
     @Test
     public void buildFailure() {
+        PropertyComponentFailure failure = new PropertyComponentFailure(PropertyComponentFailure.Reason.RATE_LIMIT, "Try in 40s");
         // test bytes correct
         Property property = new Property((byte) 0x11,
                 null,
                 null,
-                new PropertyComponentFailure(PropertyComponentFailure.Reason.RATE_LIMIT,
-                        "Try in 40s"));
+                failure,
+                null);
 
         assertTrue(property.getTimestampComponent() == null);
         assertTrue(property.getValueComponent() == null);
@@ -235,11 +239,12 @@ public class PropertyTest extends BaseTest {
 
     @Test
     public void buildFailureIgnoreValue() {
+        PropertyComponentFailure failure = new PropertyComponentFailure(PropertyComponentFailure.Reason.RATE_LIMIT, "Try in 40s");
         Property property = new Property((byte) 0x02,
                 ChargeMode.IMMEDIATE,
                 timestamp,
-                new PropertyComponentFailure(PropertyComponentFailure.Reason.RATE_LIMIT, "Try in " +
-                        "40s"));
+                failure,
+                null);
 
         assertTrue(property.getTimestampComponent() != null);
         assertTrue(property.getValueComponent() == null);
@@ -308,7 +313,6 @@ public class PropertyTest extends BaseTest {
         Property<Bytes> sig = new Property((byte) 0xA1, new Bytes(
                 "4D2C6ADCEF2DC5631E63A178BF5C9FDD8F5375FB6A5BC05432877D6A00A18F6C749B1D3C3C85B6524563AC3AB9D832AFF0DB20828C1C8AB8C7F7D79A322099E6"));
 
-
         Property<String> vin = new Property((byte) 0xA3, new Bytes("4a46325348424443374348343531383639")); // JF2SHBDC7CH451869
         Property<Brand> brand = new Property((byte) 0xA4, new Bytes("01"));
 
@@ -337,8 +341,38 @@ public class PropertyTest extends BaseTest {
         PropertyComponentFailure failure =
                 new PropertyComponentFailure(PropertyComponentFailure.Reason.UNAUTHORISED,
                         "Permissions not granted");
-        Property<Integer> property = new Property<Integer>((byte) 0x02, null, null, failure);
-        PropertyInteger intProperty = new PropertyInteger(0x02, true, 2, property);
+        Property<Integer> property = new Property<>((byte) 0x02, null, null, failure, null);
+        new PropertyInteger(0x02, true, 2, property);
+    }
 
+    // MARK: availability component
+
+    @Test
+    public void availabilityComponentParsedToIvar() throws CommandParseException {
+        // assert that bytes are parsed to the value component
+        Bytes completeBytes = new Bytes("010010" +
+                "01000100" + // ChargeMode immediate
+                "05000C000e003fe999999999999a01");
+        Property<ChargeMode> property = new Property(ChargeMode.class, (byte) 0);
+        property.update(new Property(completeBytes.getByteArray()));
+
+        assertTrue(property.getAvailabilityComponent().equals("05000C000e003fe999999999999a01"));
+        assertTrue(property.getValueComponent().equals("01000100"));
+        assertTrue(property.getComponents().size() == 2);
+    }
+
+    @Test
+    public void buildAvailability() {
+        PropertyComponentAvailability availability = new PropertyComponentAvailability(new Bytes("05000C000e003fe999999999999a01"));
+        Property property = new Property((byte) 0x01, ChargeMode.IMMEDIATE, null, null, availability);
+
+        int propertyLength = Property.getUnsignedInt(property.getRange(1, 3));
+        assertTrue(propertyLength == 4 + 15); // value + availability
+        assertTrue(property.getPropertyLength() == 4 + 15);
+
+        assertTrue(property.getAvailabilityComponent().equals("05000C000e003fe999999999999a01"));
+        // values tested in Availability test
+        assertTrue(property.getValueComponent().equals("01000100"));
+        assertTrue(property.getComponents().size() == 2);
     }
 }
