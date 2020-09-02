@@ -136,7 +136,7 @@ public class CommandTest extends BaseTest {
         builder.setVin("JF2SHBDC7CH451869");
         command = builder.build();
         assertTrue(command.equals(bytes));
-        assertTrue(command.getVin().equals("AF2SHBDC7CH451869"));
+        assertTrue(command.getVin().equals("JF2SHBDC7CH451869"));
     }
 
     @Test public void brand() {

@@ -41,43 +41,47 @@ public class BaseTest {
         setRuntime(CommandResolver.RunTime.ANDROID);
     }
 
-    void setRuntime(CommandResolver.RunTime runtime) {
+    public void setRuntime(CommandResolver.RunTime runtime) {
         CommandResolver._runtime = runtime;
     }
 
-    static boolean bytesTheSame(Bytes state, Bytes bytes) {
+    public boolean bytesTheSame(Bytes state, Bytes bytes) {
         return TestUtils.bytesTheSame(state, bytes);
     }
 
-    static boolean dateIsSame(Calendar date, String dateString) {
+    public boolean dateIsSame(Calendar date, Calendar calendar) {
+        return TestUtils.dateIsSame(date, calendar);
+    }
+
+    public boolean dateIsSame(Calendar date, String dateString) {
         return TestUtils.dateIsSame(date, dateString);
     }
 
-    static Calendar getCalendar(String dateString) {
+    public Calendar getCalendar(String dateString) {
         return TestUtils.getExampleCalendar(dateString);
     }
 
-    static void errorLogExpected(Runnable runnable) {
+    public void errorLogExpected(Runnable runnable) {
         TestUtils.errorLogExpected(1, runnable);
     }
 
-    static void errorLogExpected(int count, Runnable runnable) {
+    public void errorLogExpected(int count, Runnable runnable) {
         TestUtils.errorLogExpected(count, runnable);
     }
 
-    static void warningLogExpected(Runnable runnable) {
+    public void warningLogExpected(Runnable runnable) {
         TestUtils.warningLogExpected(1, runnable);
     }
 
-    static void warningLogExpected(int count, Runnable runnable) {
+    public void warningLogExpected(int count, Runnable runnable) {
         TestUtils.warningLogExpected(count, runnable);
     }
 
-    static void debugLogExpected(Runnable runnable) {
+    public void debugLogExpected(Runnable runnable) {
         TestUtils.debugLogExpected(1, runnable);
     }
 
-    static void debugLogExpected(int count, Runnable runnable) {
+    public void debugLogExpected(int count, Runnable runnable) {
         TestUtils.debugLogExpected(count, runnable);
     }
 }
