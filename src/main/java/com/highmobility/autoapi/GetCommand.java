@@ -48,17 +48,14 @@ public abstract class GetCommand<T extends Command> extends Command {
 
     // the get state ctor
     GetCommand(Class<T> responseClass, Integer identifier) {
-        super(identifier, 3);
+        super(identifier, Type.GET, 0);
         this.responseClass = responseClass;
-        set(COMMAND_TYPE_POSITION, (byte) 0x00);
-        type = Type.GET;
         propertyIdentifiers = new Bytes();
     }
 
     GetCommand(Class<T> responseClass, Integer identifier, Bytes propertyIdentifiers) {
-        super(identifier, 3 + (propertyIdentifiers != null ? propertyIdentifiers.getLength() : 0));
+        super(identifier, Type.GET, (propertyIdentifiers != null ? propertyIdentifiers.getLength() : 0));
         this.responseClass = responseClass;
-        set(COMMAND_TYPE_POSITION, (byte) 0x00);
         set(COMMAND_TYPE_POSITION + 1, propertyIdentifiers);
         type = Type.GET;
         this.propertyIdentifiers = propertyIdentifiers;

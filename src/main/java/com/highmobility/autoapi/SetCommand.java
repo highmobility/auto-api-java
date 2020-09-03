@@ -34,9 +34,9 @@ public class SetCommand extends Command {
     ArrayList<Property> propertiesBuilder;
 
     SetCommand(Integer identifier) {
-        super(identifier, 3);
-        set(COMMAND_TYPE_POSITION, (byte) 0x01);
+        this.identifier = identifier;
         type = Type.SET;
+        // bytes are created later with createBytes()
     }
 
     /**

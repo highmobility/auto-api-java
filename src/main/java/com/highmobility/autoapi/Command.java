@@ -90,8 +90,12 @@ public class Command extends Bytes {
 
     protected Command() {
         super();
+        this.autoApiVersion = AUTO_API_VERSION;
     }
 
+    /**
+     * @return The Auto API version of the command.
+     */
     public int getAutoApiVersion() {
         return autoApiVersion;
     }
@@ -192,7 +196,6 @@ public class Command extends Bytes {
             }
         }
 
-        // find universal properties
         findUniversalProperties(identifier, type, builder.toArray(new Property[0]));
     }
 
@@ -202,6 +205,16 @@ public class Command extends Bytes {
         this.identifier = identifier;
         // here there are no timestamps. This constructor is called from setter commands only.
         findUniversalProperties(identifier, type, properties, true);
+    }
+
+    /**
+     * @param sizeAfterType The command size after the header and command type.
+     */
+    Command(Integer identifier, int type, int sizeAfterType) {
+        this.autoApiVersion = AUTO_API_VERSION;
+        this.type = type;
+        this.identifier = identifier;
+        createBytes(sizeAfterType);
     }
 
     private void setTypeAndBytes(byte[] bytes) {
@@ -219,8 +232,7 @@ public class Command extends Bytes {
         autoApiVersion = versionByte;
     }
 
-    protected void findUniversalProperties(Integer identifier, Integer type,
-                                           Property[] properties) {
+    protected void findUniversalProperties(Integer identifier, Integer type, Property[] properties) {
         findUniversalProperties(identifier, type, properties, false);
     }
 
@@ -229,16 +241,17 @@ public class Command extends Bytes {
         this.properties = properties;
 
         // if from builder, bytes need to be built
-        byte[] identifierBytes = Identifier.toBytes(identifier);
-        if (createBytes) bytes = new byte[]{
-                AUTO_API_VERSION, identifierBytes[0], identifierBytes[1],
-                Type.toByte(type)
-        };
+        int propertyPosition = COMMAND_TYPE_POSITION + 1;
+        if (createBytes) createBytes(getPropertiesSize(properties));
 
         for (int i = 0; i < properties.length; i++) {
             try {
                 Property property = properties[i];
-                if (createBytes) bytes = ByteUtils.concatBytes(bytes, property.getByteArray());
+
+                if (createBytes) {
+                    set(propertyPosition, property);
+                    propertyPosition += property.size();
+                }
 
                 switch (property.getPropertyIdentifier()) {
                     case NONCE_IDENTIFIER: {
@@ -268,6 +281,20 @@ public class Command extends Bytes {
 
         // iterator is used by subclass
         propertyIterator = new PropertyIterator();
+    }
+
+
+    private void createBytes(int sizeAfterType) {
+        bytes = new byte[4 + sizeAfterType];
+        set(0, AUTO_API_VERSION);
+        set(1, Identifier.toBytes(identifier));
+        set(3, Type.toByte(type));
+    }
+
+    private int getPropertiesSize(Property[] properties) {
+        int size = 0;
+        for (int i = 0; i < properties.length; i++) size += properties[i].size();
+        return size;
     }
 
     // Used to catch the property parsing exception, managing parsed properties in this class.
