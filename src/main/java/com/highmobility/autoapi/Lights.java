@@ -66,7 +66,7 @@ public class Lights {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific lights properties
      */
@@ -87,6 +87,148 @@ public class Lights {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Control lights
+     */
+    public static class ControlLights extends SetCommand {
+        Property<FrontExteriorLight> frontExteriorLight = new Property<>(FrontExteriorLight.class, PROPERTY_FRONT_EXTERIOR_LIGHT);
+        Property<ActiveState> rearExteriorLight = new Property<>(ActiveState.class, PROPERTY_REAR_EXTERIOR_LIGHT);
+        Property<RgbColour> ambientLightColour = new Property<>(RgbColour.class, PROPERTY_AMBIENT_LIGHT_COLOUR);
+        List<Property<Light>> fogLights;
+        List<Property<ReadingLamp>> readingLamps;
+        List<Property<Light>> interiorLights;
+    
+        /**
+         * @return The front exterior light
+         */
+        public Property<FrontExteriorLight> getFrontExteriorLight() {
+            return frontExteriorLight;
+        }
+        
+        /**
+         * @return The rear exterior light
+         */
+        public Property<ActiveState> getRearExteriorLight() {
+            return rearExteriorLight;
+        }
+        
+        /**
+         * @return The ambient light colour
+         */
+        public Property<RgbColour> getAmbientLightColour() {
+            return ambientLightColour;
+        }
+        
+        /**
+         * @return The fog lights
+         */
+        public List<Property<Light>> getFogLights() {
+            return fogLights;
+        }
+        
+        /**
+         * @return The reading lamps
+         */
+        public List<Property<ReadingLamp>> getReadingLamps() {
+            return readingLamps;
+        }
+        
+        /**
+         * @return The interior lights
+         */
+        public List<Property<Light>> getInteriorLights() {
+            return interiorLights;
+        }
+        
+        /**
+         * Control lights
+         *
+         * @param frontExteriorLight The front exterior light
+         * @param rearExteriorLight The rear exterior light
+         * @param ambientLightColour The ambient light colour
+         * @param fogLights The fog lights
+         * @param readingLamps The reading lamps
+         * @param interiorLights The interior lights
+         */
+        public ControlLights(@Nullable FrontExteriorLight frontExteriorLight, @Nullable ActiveState rearExteriorLight, @Nullable RgbColour ambientLightColour, @Nullable List<Light> fogLights, @Nullable List<ReadingLamp> readingLamps, @Nullable List<Light> interiorLights) {
+            super(IDENTIFIER);
+        
+            addProperty(this.frontExteriorLight.update(frontExteriorLight));
+            addProperty(this.rearExteriorLight.update(rearExteriorLight));
+            addProperty(this.ambientLightColour.update(ambientLightColour));
+            final ArrayList<Property<Light>> fogLightsBuilder = new ArrayList<>();
+            if (fogLights != null) {
+                for (Light fogLight : fogLights) {
+                    Property<Light> prop = new Property<>(0x07, fogLight);
+                    fogLightsBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.fogLights = fogLightsBuilder;
+            
+            final ArrayList<Property<ReadingLamp>> readingLampsBuilder = new ArrayList<>();
+            if (readingLamps != null) {
+                for (ReadingLamp readingLamp : readingLamps) {
+                    Property<ReadingLamp> prop = new Property<>(0x08, readingLamp);
+                    readingLampsBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.readingLamps = readingLampsBuilder;
+            
+            final ArrayList<Property<Light>> interiorLightsBuilder = new ArrayList<>();
+            if (interiorLights != null) {
+                for (Light interiorLight : interiorLights) {
+                    Property<Light> prop = new Property<>(0x09, interiorLight);
+                    interiorLightsBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.interiorLights = interiorLightsBuilder;
+            if (this.frontExteriorLight.getValue() == null && this.rearExteriorLight.getValue() == null && this.ambientLightColour.getValue() == null && this.fogLights.size() == 0 && this.readingLamps.size() == 0 && this.interiorLights.size() == 0) throw new IllegalArgumentException();
+            createBytes();
+        }
+    
+        ControlLights(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+        
+            final ArrayList<Property<Light>> fogLightsBuilder = new ArrayList<>();
+            final ArrayList<Property<ReadingLamp>> readingLampsBuilder = new ArrayList<>();
+            final ArrayList<Property<Light>> interiorLightsBuilder = new ArrayList<>();
+        
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_FRONT_EXTERIOR_LIGHT: return frontExteriorLight.update(p);
+                        case PROPERTY_REAR_EXTERIOR_LIGHT: return rearExteriorLight.update(p);
+                        case PROPERTY_AMBIENT_LIGHT_COLOUR: return ambientLightColour.update(p);
+                        case PROPERTY_FOG_LIGHTS: {
+                            Property<Light> fogLight = new Property<>(Light.class, p);
+                            fogLightsBuilder.add(fogLight);
+                            return fogLight;
+                        }
+                        case PROPERTY_READING_LAMPS: {
+                            Property<ReadingLamp> readingLamp = new Property<>(ReadingLamp.class, p);
+                            readingLampsBuilder.add(readingLamp);
+                            return readingLamp;
+                        }
+                        case PROPERTY_INTERIOR_LIGHTS: {
+                            Property<Light> interiorLight = new Property<>(Light.class, p);
+                            interiorLightsBuilder.add(interiorLight);
+                            return interiorLight;
+                        }
+                    }
+                    return null;
+                });
+            }
+        
+            fogLights = fogLightsBuilder;
+            readingLamps = readingLampsBuilder;
+            interiorLights = interiorLightsBuilder;
+            if (this.frontExteriorLight.getValue() == null && this.rearExteriorLight.getValue() == null && this.ambientLightColour.getValue() == null && this.fogLights.size() == 0 && this.readingLamps.size() == 0 && this.interiorLights.size() == 0) throw new NoPropertiesException();
         }
     }
 
@@ -429,144 +571,38 @@ public class Lights {
     }
 
     /**
-     * Control lights
+     * Get all lights property availabilities
      */
-    public static class ControlLights extends SetCommand {
-        Property<FrontExteriorLight> frontExteriorLight = new Property<>(FrontExteriorLight.class, PROPERTY_FRONT_EXTERIOR_LIGHT);
-        Property<ActiveState> rearExteriorLight = new Property<>(ActiveState.class, PROPERTY_REAR_EXTERIOR_LIGHT);
-        Property<RgbColour> ambientLightColour = new Property<>(RgbColour.class, PROPERTY_AMBIENT_LIGHT_COLOUR);
-        List<Property<Light>> fogLights;
-        List<Property<ReadingLamp>> readingLamps;
-        List<Property<Light>> interiorLights;
-    
-        /**
-         * @return The front exterior light
-         */
-        public Property<FrontExteriorLight> getFrontExteriorLight() {
-            return frontExteriorLight;
-        }
-        
-        /**
-         * @return The rear exterior light
-         */
-        public Property<ActiveState> getRearExteriorLight() {
-            return rearExteriorLight;
-        }
-        
-        /**
-         * @return The ambient light colour
-         */
-        public Property<RgbColour> getAmbientLightColour() {
-            return ambientLightColour;
-        }
-        
-        /**
-         * @return The fog lights
-         */
-        public List<Property<Light>> getFogLights() {
-            return fogLights;
-        }
-        
-        /**
-         * @return The reading lamps
-         */
-        public List<Property<ReadingLamp>> getReadingLamps() {
-            return readingLamps;
-        }
-        
-        /**
-         * @return The interior lights
-         */
-        public List<Property<Light>> getInteriorLights() {
-            return interiorLights;
-        }
-        
-        /**
-         * Control lights
-         *
-         * @param frontExteriorLight The front exterior light
-         * @param rearExteriorLight The rear exterior light
-         * @param ambientLightColour The ambient light colour
-         * @param fogLights The fog lights
-         * @param readingLamps The reading lamps
-         * @param interiorLights The interior lights
-         */
-        public ControlLights(@Nullable FrontExteriorLight frontExteriorLight, @Nullable ActiveState rearExteriorLight, @Nullable RgbColour ambientLightColour, @Nullable List<Light> fogLights, @Nullable List<ReadingLamp> readingLamps, @Nullable List<Light> interiorLights) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.frontExteriorLight.update(frontExteriorLight));
-            addProperty(this.rearExteriorLight.update(rearExteriorLight));
-            addProperty(this.ambientLightColour.update(ambientLightColour));
-            final ArrayList<Property<Light>> fogLightsBuilder = new ArrayList<>();
-            if (fogLights != null) {
-                for (Light fogLight : fogLights) {
-                    Property<Light> prop = new Property<>(0x07, fogLight);
-                    fogLightsBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.fogLights = fogLightsBuilder;
-            
-            final ArrayList<Property<ReadingLamp>> readingLampsBuilder = new ArrayList<>();
-            if (readingLamps != null) {
-                for (ReadingLamp readingLamp : readingLamps) {
-                    Property<ReadingLamp> prop = new Property<>(0x08, readingLamp);
-                    readingLampsBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.readingLamps = readingLampsBuilder;
-            
-            final ArrayList<Property<Light>> interiorLightsBuilder = new ArrayList<>();
-            if (interiorLights != null) {
-                for (Light interiorLight : interiorLights) {
-                    Property<Light> prop = new Property<>(0x09, interiorLight);
-                    interiorLightsBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.interiorLights = interiorLightsBuilder;
-            if (this.frontExteriorLight.getValue() == null && this.rearExteriorLight.getValue() == null && this.ambientLightColour.getValue() == null && this.fogLights.size() == 0 && this.readingLamps.size() == 0 && this.interiorLights.size() == 0) throw new IllegalArgumentException();
-            createBytes();
         }
     
-        ControlLights(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-        
-            final ArrayList<Property<Light>> fogLightsBuilder = new ArrayList<>();
-            final ArrayList<Property<ReadingLamp>> readingLampsBuilder = new ArrayList<>();
-            final ArrayList<Property<Light>> interiorLightsBuilder = new ArrayList<>();
-        
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_FRONT_EXTERIOR_LIGHT: return frontExteriorLight.update(p);
-                        case PROPERTY_REAR_EXTERIOR_LIGHT: return rearExteriorLight.update(p);
-                        case PROPERTY_AMBIENT_LIGHT_COLOUR: return ambientLightColour.update(p);
-                        case PROPERTY_FOG_LIGHTS: {
-                            Property<Light> fogLight = new Property<>(Light.class, p);
-                            fogLightsBuilder.add(fogLight);
-                            return fogLight;
-                        }
-                        case PROPERTY_READING_LAMPS: {
-                            Property<ReadingLamp> readingLamp = new Property<>(ReadingLamp.class, p);
-                            readingLampsBuilder.add(readingLamp);
-                            return readingLamp;
-                        }
-                        case PROPERTY_INTERIOR_LIGHTS: {
-                            Property<Light> interiorLight = new Property<>(Light.class, p);
-                            interiorLightsBuilder.add(interiorLight);
-                            return interiorLight;
-                        }
-                    }
-                    return null;
-                });
-            }
-        
-            fogLights = fogLightsBuilder;
-            readingLamps = readingLampsBuilder;
-            interiorLights = interiorLightsBuilder;
-            if (this.frontExteriorLight.getValue() == null && this.rearExteriorLight.getValue() == null && this.ambientLightColour.getValue() == null && this.fogLights.size() == 0 && this.readingLamps.size() == 0 && this.interiorLights.size() == 0) throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific lights property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 

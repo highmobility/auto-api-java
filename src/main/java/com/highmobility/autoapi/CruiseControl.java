@@ -59,7 +59,7 @@ public class CruiseControl {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific cruise control properties
      */
@@ -80,6 +80,57 @@ public class CruiseControl {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Activate deactivate cruise control
+     */
+    public static class ActivateDeactivateCruiseControl extends SetCommand {
+        Property<ActiveState> cruiseControl = new Property<>(ActiveState.class, PROPERTY_CRUISE_CONTROL);
+        Property<Speed> targetSpeed = new Property<>(Speed.class, PROPERTY_TARGET_SPEED);
+    
+        /**
+         * @return The cruise control
+         */
+        public Property<ActiveState> getCruiseControl() {
+            return cruiseControl;
+        }
+        
+        /**
+         * @return The target speed
+         */
+        public Property<Speed> getTargetSpeed() {
+            return targetSpeed;
+        }
+        
+        /**
+         * Activate deactivate cruise control
+         *
+         * @param cruiseControl The cruise control
+         * @param targetSpeed The target speed
+         */
+        public ActivateDeactivateCruiseControl(ActiveState cruiseControl, @Nullable Speed targetSpeed) {
+            super(IDENTIFIER);
+        
+            addProperty(this.cruiseControl.update(cruiseControl));
+            addProperty(this.targetSpeed.update(targetSpeed));
+            createBytes();
+        }
+    
+        ActivateDeactivateCruiseControl(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_CRUISE_CONTROL: return cruiseControl.update(p);
+                        case PROPERTY_TARGET_SPEED: return targetSpeed.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.cruiseControl.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -147,53 +198,38 @@ public class CruiseControl {
     }
 
     /**
-     * Activate deactivate cruise control
+     * Get all cruise control property availabilities
      */
-    public static class ActivateDeactivateCruiseControl extends SetCommand {
-        Property<ActiveState> cruiseControl = new Property<>(ActiveState.class, PROPERTY_CRUISE_CONTROL);
-        Property<Speed> targetSpeed = new Property<>(Speed.class, PROPERTY_TARGET_SPEED);
-    
-        /**
-         * @return The cruise control
-         */
-        public Property<ActiveState> getCruiseControl() {
-            return cruiseControl;
-        }
-        
-        /**
-         * @return The target speed
-         */
-        public Property<Speed> getTargetSpeed() {
-            return targetSpeed;
-        }
-        
-        /**
-         * Activate deactivate cruise control
-         *
-         * @param cruiseControl The cruise control
-         * @param targetSpeed The target speed
-         */
-        public ActivateDeactivateCruiseControl(ActiveState cruiseControl, @Nullable Speed targetSpeed) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.cruiseControl.update(cruiseControl));
-            addProperty(this.targetSpeed.update(targetSpeed));
-            createBytes();
         }
     
-        ActivateDeactivateCruiseControl(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CRUISE_CONTROL: return cruiseControl.update(p);
-                        case PROPERTY_TARGET_SPEED: return targetSpeed.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.cruiseControl.getValue() == null) 
-                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific cruise control property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 

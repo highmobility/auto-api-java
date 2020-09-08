@@ -36,6 +36,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /*
@@ -222,5 +223,12 @@ public class CommandTest extends BaseTest {
                 (ParkingTicket.GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes.concat(new Bytes("02")));
 
         assertTrue(resolved2.getPropertyIdentifiers().equals("0102"));
+    }
+
+    @Test public void invalidAvailabilityThrows() {
+        assertThrows(CommandParseException.class, () -> {
+            // invalid type
+            new GetAvailabilityCommand((new Bytes(COMMAND_HEADER + "0023AA")).getByteArray());
+        });
     }
 }

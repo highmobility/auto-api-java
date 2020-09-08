@@ -32,6 +32,7 @@ import com.highmobility.autoapi.value.measurement.FuelEfficiency;
 import com.highmobility.autoapi.value.AddressComponent;
 import java.util.ArrayList;
 import java.util.List;
+import com.highmobility.value.Bytes;
 
 import static com.highmobility.utils.ByteUtils.hexFromByte;
 
@@ -451,6 +452,42 @@ public class Trips {
                 endAddressComponents.add(endAddressComponent);
                 return this;
             }
+        }
+    }
+
+    /**
+     * Get all trips property availabilities
+     */
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
+            super(IDENTIFIER);
+        }
+    
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
+            super(bytes);
+        }
+    }
+
+    /**
+     * Get specific trips property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 

@@ -61,7 +61,7 @@ public class ChassisSettings {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific chassis settings properties
      */
@@ -82,6 +82,175 @@ public class ChassisSettings {
     
         GetChassisSettingsProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Set driving mode
+     */
+    public static class SetDrivingMode extends SetCommand {
+        Property<DrivingMode> drivingMode = new Property<>(DrivingMode.class, PROPERTY_DRIVING_MODE);
+    
+        /**
+         * @return The driving mode
+         */
+        public Property<DrivingMode> getDrivingMode() {
+            return drivingMode;
+        }
+        
+        /**
+         * Set driving mode
+         *
+         * @param drivingMode The driving mode
+         */
+        public SetDrivingMode(DrivingMode drivingMode) {
+            super(IDENTIFIER);
+        
+            addProperty(this.drivingMode.update(drivingMode));
+            createBytes();
+        }
+    
+        SetDrivingMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_DRIVING_MODE) return drivingMode.update(p);
+                    return null;
+                });
+            }
+            if (this.drivingMode.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Start stop sports chrono
+     */
+    public static class StartStopSportsChrono extends SetCommand {
+        Property<SportChrono> sportChrono = new Property<>(SportChrono.class, PROPERTY_SPORT_CHRONO);
+    
+        /**
+         * @return The sport chrono
+         */
+        public Property<SportChrono> getSportChrono() {
+            return sportChrono;
+        }
+        
+        /**
+         * Start stop sports chrono
+         *
+         * @param sportChrono The sport chrono
+         */
+        public StartStopSportsChrono(SportChrono sportChrono) {
+            super(IDENTIFIER);
+        
+            addProperty(this.sportChrono.update(sportChrono));
+            createBytes();
+        }
+    
+        StartStopSportsChrono(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_SPORT_CHRONO) return sportChrono.update(p);
+                    return null;
+                });
+            }
+            if (this.sportChrono.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Set spring rates
+     */
+    public static class SetSpringRates extends SetCommand {
+        List<Property<SpringRate>> currentSpringRates;
+    
+        /**
+         * @return The current spring rates
+         */
+        public List<Property<SpringRate>> getCurrentSpringRates() {
+            return currentSpringRates;
+        }
+        
+        /**
+         * Set spring rates
+         *
+         * @param currentSpringRates The current values for the spring rates
+         */
+        public SetSpringRates(List<SpringRate> currentSpringRates) {
+            super(IDENTIFIER);
+        
+            final ArrayList<Property<SpringRate>> currentSpringRatesBuilder = new ArrayList<>();
+            if (currentSpringRates != null) {
+                for (SpringRate currentSpringRate : currentSpringRates) {
+                    Property<SpringRate> prop = new Property<>(0x05, currentSpringRate);
+                    currentSpringRatesBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.currentSpringRates = currentSpringRatesBuilder;
+            createBytes();
+        }
+    
+        SetSpringRates(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+        
+            final ArrayList<Property<SpringRate>> currentSpringRatesBuilder = new ArrayList<>();
+        
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_CURRENT_SPRING_RATES) {
+                        Property<SpringRate> currentSpringRate = new Property<>(SpringRate.class, p);
+                        currentSpringRatesBuilder.add(currentSpringRate);
+                        return currentSpringRate;
+                    }
+                    return null;
+                });
+            }
+        
+            currentSpringRates = currentSpringRatesBuilder;
+            if (this.currentSpringRates.size() == 0) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Set chassis position
+     */
+    public static class SetChassisPosition extends SetCommand {
+        Property<Length> currentChassisPosition = new Property<>(Length.class, PROPERTY_CURRENT_CHASSIS_POSITION);
+    
+        /**
+         * @return The current chassis position
+         */
+        public Property<Length> getCurrentChassisPosition() {
+            return currentChassisPosition;
+        }
+        
+        /**
+         * Set chassis position
+         *
+         * @param currentChassisPosition The chassis position calculated from the lowest point
+         */
+        public SetChassisPosition(Length currentChassisPosition) {
+            super(IDENTIFIER);
+        
+            addProperty(this.currentChassisPosition.update(currentChassisPosition));
+            createBytes();
+        }
+    
+        SetChassisPosition(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_CURRENT_CHASSIS_POSITION) return currentChassisPosition.update(p);
+                    return null;
+                });
+            }
+            if (this.currentChassisPosition.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -360,171 +529,38 @@ public class ChassisSettings {
     }
 
     /**
-     * Set driving mode
+     * Get all chassis settings property availabilities
      */
-    public static class SetDrivingMode extends SetCommand {
-        Property<DrivingMode> drivingMode = new Property<>(DrivingMode.class, PROPERTY_DRIVING_MODE);
-    
-        /**
-         * @return The driving mode
-         */
-        public Property<DrivingMode> getDrivingMode() {
-            return drivingMode;
-        }
-        
-        /**
-         * Set driving mode
-         *
-         * @param drivingMode The driving mode
-         */
-        public SetDrivingMode(DrivingMode drivingMode) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.drivingMode.update(drivingMode));
-            createBytes();
         }
     
-        SetDrivingMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_DRIVING_MODE) return drivingMode.update(p);
-                    return null;
-                });
-            }
-            if (this.drivingMode.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
-    
+
     /**
-     * Start stop sports chrono
+     * Get specific chassis settings property availabilities.
      */
-    public static class StartStopSportsChrono extends SetCommand {
-        Property<SportChrono> sportChrono = new Property<>(SportChrono.class, PROPERTY_SPORT_CHRONO);
-    
+    public static class GetAvailabilities extends GetAvailabilityCommand {
         /**
-         * @return The sport chrono
+         * @param propertyIdentifiers The property identifiers
          */
-        public Property<SportChrono> getSportChrono() {
-            return sportChrono;
-        }
-        
-        /**
-         * Start stop sports chrono
-         *
-         * @param sportChrono The sport chrono
-         */
-        public StartStopSportsChrono(SportChrono sportChrono) {
-            super(IDENTIFIER);
-        
-            addProperty(this.sportChrono.update(sportChrono));
-            createBytes();
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
         }
     
-        StartStopSportsChrono(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_SPORT_CHRONO) return sportChrono.update(p);
-                    return null;
-                });
-            }
-            if (this.sportChrono.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Set spring rates
-     */
-    public static class SetSpringRates extends SetCommand {
-        List<Property<SpringRate>> currentSpringRates;
-    
-        /**
-         * @return The current spring rates
-         */
-        public List<Property<SpringRate>> getCurrentSpringRates() {
-            return currentSpringRates;
-        }
-        
-        /**
-         * Set spring rates
-         *
-         * @param currentSpringRates The current values for the spring rates
-         */
-        public SetSpringRates(List<SpringRate> currentSpringRates) {
-            super(IDENTIFIER);
-        
-            final ArrayList<Property<SpringRate>> currentSpringRatesBuilder = new ArrayList<>();
-            if (currentSpringRates != null) {
-                for (SpringRate currentSpringRate : currentSpringRates) {
-                    Property<SpringRate> prop = new Property<>(0x05, currentSpringRate);
-                    currentSpringRatesBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.currentSpringRates = currentSpringRatesBuilder;
-            createBytes();
-        }
-    
-        SetSpringRates(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-        
-            final ArrayList<Property<SpringRate>> currentSpringRatesBuilder = new ArrayList<>();
-        
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_CURRENT_SPRING_RATES) {
-                        Property<SpringRate> currentSpringRate = new Property<>(SpringRate.class, p);
-                        currentSpringRatesBuilder.add(currentSpringRate);
-                        return currentSpringRate;
-                    }
-                    return null;
-                });
-            }
-        
-            currentSpringRates = currentSpringRatesBuilder;
-            if (this.currentSpringRates.size() == 0) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Set chassis position
-     */
-    public static class SetChassisPosition extends SetCommand {
-        Property<Length> currentChassisPosition = new Property<>(Length.class, PROPERTY_CURRENT_CHASSIS_POSITION);
-    
-        /**
-         * @return The current chassis position
-         */
-        public Property<Length> getCurrentChassisPosition() {
-            return currentChassisPosition;
-        }
-        
-        /**
-         * Set chassis position
-         *
-         * @param currentChassisPosition The chassis position calculated from the lowest point
-         */
-        public SetChassisPosition(Length currentChassisPosition) {
-            super(IDENTIFIER);
-        
-            addProperty(this.currentChassisPosition.update(currentChassisPosition));
-            createBytes();
-        }
-    
-        SetChassisPosition(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_CURRENT_CHASSIS_POSITION) return currentChassisPosition.update(p);
-                    return null;
-                });
-            }
-            if (this.currentChassisPosition.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
 

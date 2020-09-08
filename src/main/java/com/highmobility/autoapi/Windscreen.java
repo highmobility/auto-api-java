@@ -59,7 +59,7 @@ public class Windscreen {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific windscreen properties
      */
@@ -80,6 +80,146 @@ public class Windscreen {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Set windscreen damage
+     */
+    public static class SetWindscreenDamage extends SetCommand {
+        Property<WindscreenDamage> windscreenDamage = new Property<>(WindscreenDamage.class, PROPERTY_WINDSCREEN_DAMAGE);
+        Property<Zone> windscreenDamageZone = new Property<>(Zone.class, PROPERTY_WINDSCREEN_DAMAGE_ZONE);
+    
+        /**
+         * @return The windscreen damage
+         */
+        public Property<WindscreenDamage> getWindscreenDamage() {
+            return windscreenDamage;
+        }
+        
+        /**
+         * @return The windscreen damage zone
+         */
+        public Property<Zone> getWindscreenDamageZone() {
+            return windscreenDamageZone;
+        }
+        
+        /**
+         * Set windscreen damage
+         *
+         * @param windscreenDamage The windscreen damage
+         * @param windscreenDamageZone Representing the position in the zone, seen from the inside of the vehicle (1-based index)
+         */
+        public SetWindscreenDamage(WindscreenDamage windscreenDamage, @Nullable Zone windscreenDamageZone) {
+            super(IDENTIFIER);
+        
+            addProperty(this.windscreenDamage.update(windscreenDamage));
+            addProperty(this.windscreenDamageZone.update(windscreenDamageZone));
+            createBytes();
+        }
+    
+        SetWindscreenDamage(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_WINDSCREEN_DAMAGE: return windscreenDamage.update(p);
+                        case PROPERTY_WINDSCREEN_DAMAGE_ZONE: return windscreenDamageZone.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.windscreenDamage.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Set windscreen replacement needed
+     */
+    public static class SetWindscreenReplacementNeeded extends SetCommand {
+        Property<WindscreenNeedsReplacement> windscreenNeedsReplacement = new Property<>(WindscreenNeedsReplacement.class, PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT);
+    
+        /**
+         * @return The windscreen needs replacement
+         */
+        public Property<WindscreenNeedsReplacement> getWindscreenNeedsReplacement() {
+            return windscreenNeedsReplacement;
+        }
+        
+        /**
+         * Set windscreen replacement needed
+         *
+         * @param windscreenNeedsReplacement The windscreen needs replacement
+         */
+        public SetWindscreenReplacementNeeded(WindscreenNeedsReplacement windscreenNeedsReplacement) {
+            super(IDENTIFIER);
+        
+            addProperty(this.windscreenNeedsReplacement.update(windscreenNeedsReplacement));
+            createBytes();
+        }
+    
+        SetWindscreenReplacementNeeded(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT) return windscreenNeedsReplacement.update(p);
+                    return null;
+                });
+            }
+            if (this.windscreenNeedsReplacement.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Control wipers
+     */
+    public static class ControlWipers extends SetCommand {
+        Property<WipersStatus> wipersStatus = new Property<>(WipersStatus.class, PROPERTY_WIPERS_STATUS);
+        Property<WipersIntensity> wipersIntensity = new Property<>(WipersIntensity.class, PROPERTY_WIPERS_INTENSITY);
+    
+        /**
+         * @return The wipers status
+         */
+        public Property<WipersStatus> getWipersStatus() {
+            return wipersStatus;
+        }
+        
+        /**
+         * @return The wipers intensity
+         */
+        public Property<WipersIntensity> getWipersIntensity() {
+            return wipersIntensity;
+        }
+        
+        /**
+         * Control wipers
+         *
+         * @param wipersStatus The wipers status
+         * @param wipersIntensity The wipers intensity
+         */
+        public ControlWipers(WipersStatus wipersStatus, @Nullable WipersIntensity wipersIntensity) {
+            super(IDENTIFIER);
+        
+            addProperty(this.wipersStatus.update(wipersStatus));
+            addProperty(this.wipersIntensity.update(wipersIntensity));
+            createBytes();
+        }
+    
+        ControlWipers(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_WIPERS_STATUS: return wipersStatus.update(p);
+                        case PROPERTY_WIPERS_INTENSITY: return wipersIntensity.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.wipersStatus.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -286,142 +426,38 @@ public class Windscreen {
     }
 
     /**
-     * Set windscreen damage
+     * Get all windscreen property availabilities
      */
-    public static class SetWindscreenDamage extends SetCommand {
-        Property<WindscreenDamage> windscreenDamage = new Property<>(WindscreenDamage.class, PROPERTY_WINDSCREEN_DAMAGE);
-        Property<Zone> windscreenDamageZone = new Property<>(Zone.class, PROPERTY_WINDSCREEN_DAMAGE_ZONE);
-    
-        /**
-         * @return The windscreen damage
-         */
-        public Property<WindscreenDamage> getWindscreenDamage() {
-            return windscreenDamage;
-        }
-        
-        /**
-         * @return The windscreen damage zone
-         */
-        public Property<Zone> getWindscreenDamageZone() {
-            return windscreenDamageZone;
-        }
-        
-        /**
-         * Set windscreen damage
-         *
-         * @param windscreenDamage The windscreen damage
-         * @param windscreenDamageZone Representing the position in the zone, seen from the inside of the vehicle (1-based index)
-         */
-        public SetWindscreenDamage(WindscreenDamage windscreenDamage, @Nullable Zone windscreenDamageZone) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.windscreenDamage.update(windscreenDamage));
-            addProperty(this.windscreenDamageZone.update(windscreenDamageZone));
-            createBytes();
         }
     
-        SetWindscreenDamage(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_WINDSCREEN_DAMAGE: return windscreenDamage.update(p);
-                        case PROPERTY_WINDSCREEN_DAMAGE_ZONE: return windscreenDamageZone.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.windscreenDamage.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
-    
+
     /**
-     * Set windscreen replacement needed
+     * Get specific windscreen property availabilities.
      */
-    public static class SetWindscreenReplacementNeeded extends SetCommand {
-        Property<WindscreenNeedsReplacement> windscreenNeedsReplacement = new Property<>(WindscreenNeedsReplacement.class, PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT);
-    
+    public static class GetAvailabilities extends GetAvailabilityCommand {
         /**
-         * @return The windscreen needs replacement
+         * @param propertyIdentifiers The property identifiers
          */
-        public Property<WindscreenNeedsReplacement> getWindscreenNeedsReplacement() {
-            return windscreenNeedsReplacement;
-        }
-        
-        /**
-         * Set windscreen replacement needed
-         *
-         * @param windscreenNeedsReplacement The windscreen needs replacement
-         */
-        public SetWindscreenReplacementNeeded(WindscreenNeedsReplacement windscreenNeedsReplacement) {
-            super(IDENTIFIER);
-        
-            addProperty(this.windscreenNeedsReplacement.update(windscreenNeedsReplacement));
-            createBytes();
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
         }
     
-        SetWindscreenReplacementNeeded(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT) return windscreenNeedsReplacement.update(p);
-                    return null;
-                });
-            }
-            if (this.windscreenNeedsReplacement.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Control wipers
-     */
-    public static class ControlWipers extends SetCommand {
-        Property<WipersStatus> wipersStatus = new Property<>(WipersStatus.class, PROPERTY_WIPERS_STATUS);
-        Property<WipersIntensity> wipersIntensity = new Property<>(WipersIntensity.class, PROPERTY_WIPERS_INTENSITY);
-    
-        /**
-         * @return The wipers status
-         */
-        public Property<WipersStatus> getWipersStatus() {
-            return wipersStatus;
-        }
-        
-        /**
-         * @return The wipers intensity
-         */
-        public Property<WipersIntensity> getWipersIntensity() {
-            return wipersIntensity;
-        }
-        
-        /**
-         * Control wipers
-         *
-         * @param wipersStatus The wipers status
-         * @param wipersIntensity The wipers intensity
-         */
-        public ControlWipers(WipersStatus wipersStatus, @Nullable WipersIntensity wipersIntensity) {
-            super(IDENTIFIER);
-        
-            addProperty(this.wipersStatus.update(wipersStatus));
-            addProperty(this.wipersIntensity.update(wipersIntensity));
-            createBytes();
-        }
-    
-        ControlWipers(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_WIPERS_STATUS: return wipersStatus.update(p);
-                        case PROPERTY_WIPERS_INTENSITY: return wipersIntensity.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.wipersStatus.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
 

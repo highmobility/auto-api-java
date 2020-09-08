@@ -25,7 +25,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Brand;
-import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.slf4j.Logger;
@@ -52,8 +51,7 @@ public class Command extends Bytes {
       with itself.
      */
     public static Logger logger = LoggerFactory.getLogger(Command.class);
-    private static final String ALL_ARGUMENTS_NULL_EXCEPTION = "One of the arguments must not be " +
-            "null";
+
     private static final String INVALID_VERSION_EXCEPTION = "Invalid AutoAPI version. This " +
             "package supports level %d.";
 
@@ -77,21 +75,6 @@ public class Command extends Bytes {
     Calendar timestamp;
     String vin;
     Brand brand;
-
-    public Command(Integer identifier, int size) {
-        super(HEADER_LENGTH + size);
-
-        set(0, AUTO_API_VERSION);
-        this.autoApiVersion = AUTO_API_VERSION;
-
-        set(1, Identifier.toBytes(identifier));
-        this.identifier = identifier;
-    }
-
-    protected Command() {
-        super();
-        this.autoApiVersion = AUTO_API_VERSION;
-    }
 
     /**
      * @return The Auto API version of the command.
@@ -171,6 +154,11 @@ public class Command extends Bytes {
         }
 
         return null;
+    }
+
+    protected Command() {
+        super();
+        this.autoApiVersion = AUTO_API_VERSION;
     }
 
     // only called from CommandResolver

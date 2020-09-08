@@ -51,7 +51,7 @@ public class PowerTakeoff {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific power takeoff properties
      */
@@ -72,6 +72,44 @@ public class PowerTakeoff {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Activate deactivate power takeoff
+     */
+    public static class ActivateDeactivatePowerTakeoff extends SetCommand {
+        Property<ActiveState> status = new Property<>(ActiveState.class, PROPERTY_STATUS);
+    
+        /**
+         * @return The status
+         */
+        public Property<ActiveState> getStatus() {
+            return status;
+        }
+        
+        /**
+         * Activate deactivate power takeoff
+         *
+         * @param status The status
+         */
+        public ActivateDeactivatePowerTakeoff(ActiveState status) {
+            super(IDENTIFIER);
+        
+            addProperty(this.status.update(status));
+            createBytes();
+        }
+    
+        ActivateDeactivatePowerTakeoff(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    return null;
+                });
+            }
+            if (this.status.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -152,40 +190,38 @@ public class PowerTakeoff {
     }
 
     /**
-     * Activate deactivate power takeoff
+     * Get all power takeoff property availabilities
      */
-    public static class ActivateDeactivatePowerTakeoff extends SetCommand {
-        Property<ActiveState> status = new Property<>(ActiveState.class, PROPERTY_STATUS);
-    
-        /**
-         * @return The status
-         */
-        public Property<ActiveState> getStatus() {
-            return status;
-        }
-        
-        /**
-         * Activate deactivate power takeoff
-         *
-         * @param status The status
-         */
-        public ActivateDeactivatePowerTakeoff(ActiveState status) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.status.update(status));
-            createBytes();
         }
     
-        ActivateDeactivatePowerTakeoff(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
-                    return null;
-                });
-            }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific power takeoff property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 

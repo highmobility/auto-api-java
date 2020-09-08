@@ -62,7 +62,7 @@ public class Climate {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific climate properties
      */
@@ -83,6 +83,275 @@ public class Climate {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Change starting times
+     */
+    public static class ChangeStartingTimes extends SetCommand {
+        List<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimes;
+    
+        /**
+         * @return The hvac weekday starting times
+         */
+        public List<Property<HvacWeekdayStartingTime>> getHvacWeekdayStartingTimes() {
+            return hvacWeekdayStartingTimes;
+        }
+        
+        /**
+         * Change starting times
+         *
+         * @param hvacWeekdayStartingTimes The hvac weekday starting times
+         */
+        public ChangeStartingTimes(List<HvacWeekdayStartingTime> hvacWeekdayStartingTimes) {
+            super(IDENTIFIER);
+        
+            final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
+            if (hvacWeekdayStartingTimes != null) {
+                for (HvacWeekdayStartingTime hvacWeekdayStartingTime : hvacWeekdayStartingTimes) {
+                    Property<HvacWeekdayStartingTime> prop = new Property<>(0x0b, hvacWeekdayStartingTime);
+                    hvacWeekdayStartingTimesBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.hvacWeekdayStartingTimes = hvacWeekdayStartingTimesBuilder;
+            createBytes();
+        }
+    
+        ChangeStartingTimes(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+        
+            final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
+        
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_HVAC_WEEKDAY_STARTING_TIMES) {
+                        Property<HvacWeekdayStartingTime> hvacWeekdayStartingTime = new Property<>(HvacWeekdayStartingTime.class, p);
+                        hvacWeekdayStartingTimesBuilder.add(hvacWeekdayStartingTime);
+                        return hvacWeekdayStartingTime;
+                    }
+                    return null;
+                });
+            }
+        
+            hvacWeekdayStartingTimes = hvacWeekdayStartingTimesBuilder;
+            if (this.hvacWeekdayStartingTimes.size() == 0) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Start stop hvac
+     */
+    public static class StartStopHvac extends SetCommand {
+        Property<ActiveState> hvacState = new Property<>(ActiveState.class, PROPERTY_HVAC_STATE);
+    
+        /**
+         * @return The hvac state
+         */
+        public Property<ActiveState> getHvacState() {
+            return hvacState;
+        }
+        
+        /**
+         * Start stop hvac
+         *
+         * @param hvacState The hvac state
+         */
+        public StartStopHvac(ActiveState hvacState) {
+            super(IDENTIFIER);
+        
+            addProperty(this.hvacState.update(hvacState));
+            createBytes();
+        }
+    
+        StartStopHvac(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_HVAC_STATE) return hvacState.update(p);
+                    return null;
+                });
+            }
+            if (this.hvacState.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Start stop defogging
+     */
+    public static class StartStopDefogging extends SetCommand {
+        Property<ActiveState> defoggingState = new Property<>(ActiveState.class, PROPERTY_DEFOGGING_STATE);
+    
+        /**
+         * @return The defogging state
+         */
+        public Property<ActiveState> getDefoggingState() {
+            return defoggingState;
+        }
+        
+        /**
+         * Start stop defogging
+         *
+         * @param defoggingState The defogging state
+         */
+        public StartStopDefogging(ActiveState defoggingState) {
+            super(IDENTIFIER);
+        
+            addProperty(this.defoggingState.update(defoggingState));
+            createBytes();
+        }
+    
+        StartStopDefogging(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_DEFOGGING_STATE) return defoggingState.update(p);
+                    return null;
+                });
+            }
+            if (this.defoggingState.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Start stop defrosting
+     */
+    public static class StartStopDefrosting extends SetCommand {
+        Property<ActiveState> defrostingState = new Property<>(ActiveState.class, PROPERTY_DEFROSTING_STATE);
+    
+        /**
+         * @return The defrosting state
+         */
+        public Property<ActiveState> getDefrostingState() {
+            return defrostingState;
+        }
+        
+        /**
+         * Start stop defrosting
+         *
+         * @param defrostingState The defrosting state
+         */
+        public StartStopDefrosting(ActiveState defrostingState) {
+            super(IDENTIFIER);
+        
+            addProperty(this.defrostingState.update(defrostingState));
+            createBytes();
+        }
+    
+        StartStopDefrosting(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_DEFROSTING_STATE) return defrostingState.update(p);
+                    return null;
+                });
+            }
+            if (this.defrostingState.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Start stop ionising
+     */
+    public static class StartStopIonising extends SetCommand {
+        Property<ActiveState> ionisingState = new Property<>(ActiveState.class, PROPERTY_IONISING_STATE);
+    
+        /**
+         * @return The ionising state
+         */
+        public Property<ActiveState> getIonisingState() {
+            return ionisingState;
+        }
+        
+        /**
+         * Start stop ionising
+         *
+         * @param ionisingState The ionising state
+         */
+        public StartStopIonising(ActiveState ionisingState) {
+            super(IDENTIFIER);
+        
+            addProperty(this.ionisingState.update(ionisingState));
+            createBytes();
+        }
+    
+        StartStopIonising(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_IONISING_STATE) return ionisingState.update(p);
+                    return null;
+                });
+            }
+            if (this.ionisingState.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Set temperature settings
+     */
+    public static class SetTemperatureSettings extends SetCommand {
+        Property<Temperature> driverTemperatureSetting = new Property<>(Temperature.class, PROPERTY_DRIVER_TEMPERATURE_SETTING);
+        Property<Temperature> passengerTemperatureSetting = new Property<>(Temperature.class, PROPERTY_PASSENGER_TEMPERATURE_SETTING);
+        Property<Temperature> rearTemperatureSetting = new Property<>(Temperature.class, PROPERTY_REAR_TEMPERATURE_SETTING);
+    
+        /**
+         * @return The driver temperature setting
+         */
+        public Property<Temperature> getDriverTemperatureSetting() {
+            return driverTemperatureSetting;
+        }
+        
+        /**
+         * @return The passenger temperature setting
+         */
+        public Property<Temperature> getPassengerTemperatureSetting() {
+            return passengerTemperatureSetting;
+        }
+        
+        /**
+         * @return The rear temperature setting
+         */
+        public Property<Temperature> getRearTemperatureSetting() {
+            return rearTemperatureSetting;
+        }
+        
+        /**
+         * Set temperature settings
+         *
+         * @param driverTemperatureSetting The driver temperature setting
+         * @param passengerTemperatureSetting The passenger temperature setting
+         * @param rearTemperatureSetting The rear temperature
+         */
+        public SetTemperatureSettings(@Nullable Temperature driverTemperatureSetting, @Nullable Temperature passengerTemperatureSetting, @Nullable Temperature rearTemperatureSetting) {
+            super(IDENTIFIER);
+        
+            addProperty(this.driverTemperatureSetting.update(driverTemperatureSetting));
+            addProperty(this.passengerTemperatureSetting.update(passengerTemperatureSetting));
+            addProperty(this.rearTemperatureSetting.update(rearTemperatureSetting));
+            if (this.driverTemperatureSetting.getValue() == null && this.passengerTemperatureSetting.getValue() == null && this.rearTemperatureSetting.getValue() == null) throw new IllegalArgumentException();
+            createBytes();
+        }
+    
+        SetTemperatureSettings(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_DRIVER_TEMPERATURE_SETTING: return driverTemperatureSetting.update(p);
+                        case PROPERTY_PASSENGER_TEMPERATURE_SETTING: return passengerTemperatureSetting.update(p);
+                        case PROPERTY_REAR_TEMPERATURE_SETTING: return rearTemperatureSetting.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.driverTemperatureSetting.getValue() == null && this.passengerTemperatureSetting.getValue() == null && this.rearTemperatureSetting.getValue() == null) throw new NoPropertiesException();
         }
     }
 
@@ -378,271 +647,38 @@ public class Climate {
     }
 
     /**
-     * Change starting times
+     * Get all climate property availabilities
      */
-    public static class ChangeStartingTimes extends SetCommand {
-        List<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimes;
-    
-        /**
-         * @return The hvac weekday starting times
-         */
-        public List<Property<HvacWeekdayStartingTime>> getHvacWeekdayStartingTimes() {
-            return hvacWeekdayStartingTimes;
-        }
-        
-        /**
-         * Change starting times
-         *
-         * @param hvacWeekdayStartingTimes The hvac weekday starting times
-         */
-        public ChangeStartingTimes(List<HvacWeekdayStartingTime> hvacWeekdayStartingTimes) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
-            if (hvacWeekdayStartingTimes != null) {
-                for (HvacWeekdayStartingTime hvacWeekdayStartingTime : hvacWeekdayStartingTimes) {
-                    Property<HvacWeekdayStartingTime> prop = new Property<>(0x0b, hvacWeekdayStartingTime);
-                    hvacWeekdayStartingTimesBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.hvacWeekdayStartingTimes = hvacWeekdayStartingTimesBuilder;
-            createBytes();
         }
     
-        ChangeStartingTimes(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-        
-            final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
-        
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_HVAC_WEEKDAY_STARTING_TIMES) {
-                        Property<HvacWeekdayStartingTime> hvacWeekdayStartingTime = new Property<>(HvacWeekdayStartingTime.class, p);
-                        hvacWeekdayStartingTimesBuilder.add(hvacWeekdayStartingTime);
-                        return hvacWeekdayStartingTime;
-                    }
-                    return null;
-                });
-            }
-        
-            hvacWeekdayStartingTimes = hvacWeekdayStartingTimesBuilder;
-            if (this.hvacWeekdayStartingTimes.size() == 0) 
-                throw new NoPropertiesException();
         }
     }
-    
+
     /**
-     * Start stop hvac
+     * Get specific climate property availabilities.
      */
-    public static class StartStopHvac extends SetCommand {
-        Property<ActiveState> hvacState = new Property<>(ActiveState.class, PROPERTY_HVAC_STATE);
-    
+    public static class GetAvailabilities extends GetAvailabilityCommand {
         /**
-         * @return The hvac state
+         * @param propertyIdentifiers The property identifiers
          */
-        public Property<ActiveState> getHvacState() {
-            return hvacState;
-        }
-        
-        /**
-         * Start stop hvac
-         *
-         * @param hvacState The hvac state
-         */
-        public StartStopHvac(ActiveState hvacState) {
-            super(IDENTIFIER);
-        
-            addProperty(this.hvacState.update(hvacState));
-            createBytes();
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
         }
     
-        StartStopHvac(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_HVAC_STATE) return hvacState.update(p);
-                    return null;
-                });
-            }
-            if (this.hvacState.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Start stop defogging
-     */
-    public static class StartStopDefogging extends SetCommand {
-        Property<ActiveState> defoggingState = new Property<>(ActiveState.class, PROPERTY_DEFOGGING_STATE);
-    
-        /**
-         * @return The defogging state
-         */
-        public Property<ActiveState> getDefoggingState() {
-            return defoggingState;
-        }
-        
-        /**
-         * Start stop defogging
-         *
-         * @param defoggingState The defogging state
-         */
-        public StartStopDefogging(ActiveState defoggingState) {
-            super(IDENTIFIER);
-        
-            addProperty(this.defoggingState.update(defoggingState));
-            createBytes();
-        }
-    
-        StartStopDefogging(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_DEFOGGING_STATE) return defoggingState.update(p);
-                    return null;
-                });
-            }
-            if (this.defoggingState.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Start stop defrosting
-     */
-    public static class StartStopDefrosting extends SetCommand {
-        Property<ActiveState> defrostingState = new Property<>(ActiveState.class, PROPERTY_DEFROSTING_STATE);
-    
-        /**
-         * @return The defrosting state
-         */
-        public Property<ActiveState> getDefrostingState() {
-            return defrostingState;
-        }
-        
-        /**
-         * Start stop defrosting
-         *
-         * @param defrostingState The defrosting state
-         */
-        public StartStopDefrosting(ActiveState defrostingState) {
-            super(IDENTIFIER);
-        
-            addProperty(this.defrostingState.update(defrostingState));
-            createBytes();
-        }
-    
-        StartStopDefrosting(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_DEFROSTING_STATE) return defrostingState.update(p);
-                    return null;
-                });
-            }
-            if (this.defrostingState.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Start stop ionising
-     */
-    public static class StartStopIonising extends SetCommand {
-        Property<ActiveState> ionisingState = new Property<>(ActiveState.class, PROPERTY_IONISING_STATE);
-    
-        /**
-         * @return The ionising state
-         */
-        public Property<ActiveState> getIonisingState() {
-            return ionisingState;
-        }
-        
-        /**
-         * Start stop ionising
-         *
-         * @param ionisingState The ionising state
-         */
-        public StartStopIonising(ActiveState ionisingState) {
-            super(IDENTIFIER);
-        
-            addProperty(this.ionisingState.update(ionisingState));
-            createBytes();
-        }
-    
-        StartStopIonising(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_IONISING_STATE) return ionisingState.update(p);
-                    return null;
-                });
-            }
-            if (this.ionisingState.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Set temperature settings
-     */
-    public static class SetTemperatureSettings extends SetCommand {
-        Property<Temperature> driverTemperatureSetting = new Property<>(Temperature.class, PROPERTY_DRIVER_TEMPERATURE_SETTING);
-        Property<Temperature> passengerTemperatureSetting = new Property<>(Temperature.class, PROPERTY_PASSENGER_TEMPERATURE_SETTING);
-        Property<Temperature> rearTemperatureSetting = new Property<>(Temperature.class, PROPERTY_REAR_TEMPERATURE_SETTING);
-    
-        /**
-         * @return The driver temperature setting
-         */
-        public Property<Temperature> getDriverTemperatureSetting() {
-            return driverTemperatureSetting;
-        }
-        
-        /**
-         * @return The passenger temperature setting
-         */
-        public Property<Temperature> getPassengerTemperatureSetting() {
-            return passengerTemperatureSetting;
-        }
-        
-        /**
-         * @return The rear temperature setting
-         */
-        public Property<Temperature> getRearTemperatureSetting() {
-            return rearTemperatureSetting;
-        }
-        
-        /**
-         * Set temperature settings
-         *
-         * @param driverTemperatureSetting The driver temperature setting
-         * @param passengerTemperatureSetting The passenger temperature setting
-         * @param rearTemperatureSetting The rear temperature
-         */
-        public SetTemperatureSettings(@Nullable Temperature driverTemperatureSetting, @Nullable Temperature passengerTemperatureSetting, @Nullable Temperature rearTemperatureSetting) {
-            super(IDENTIFIER);
-        
-            addProperty(this.driverTemperatureSetting.update(driverTemperatureSetting));
-            addProperty(this.passengerTemperatureSetting.update(passengerTemperatureSetting));
-            addProperty(this.rearTemperatureSetting.update(rearTemperatureSetting));
-            if (this.driverTemperatureSetting.getValue() == null && this.passengerTemperatureSetting.getValue() == null && this.rearTemperatureSetting.getValue() == null) throw new IllegalArgumentException();
-            createBytes();
-        }
-    
-        SetTemperatureSettings(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_DRIVER_TEMPERATURE_SETTING: return driverTemperatureSetting.update(p);
-                        case PROPERTY_PASSENGER_TEMPERATURE_SETTING: return passengerTemperatureSetting.update(p);
-                        case PROPERTY_REAR_TEMPERATURE_SETTING: return rearTemperatureSetting.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.driverTemperatureSetting.getValue() == null && this.passengerTemperatureSetting.getValue() == null && this.rearTemperatureSetting.getValue() == null) throw new NoPropertiesException();
         }
     }
 }

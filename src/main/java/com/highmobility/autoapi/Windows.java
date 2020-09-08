@@ -53,7 +53,7 @@ public class Windows {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific windows properties
      */
@@ -74,6 +74,89 @@ public class Windows {
     
         GetWindowsProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Control windows
+     */
+    public static class ControlWindows extends SetCommand {
+        List<Property<WindowOpenPercentage>> openPercentages;
+        List<Property<WindowPosition>> positions;
+    
+        /**
+         * @return The open percentages
+         */
+        public List<Property<WindowOpenPercentage>> getOpenPercentages() {
+            return openPercentages;
+        }
+        
+        /**
+         * @return The positions
+         */
+        public List<Property<WindowPosition>> getPositions() {
+            return positions;
+        }
+        
+        /**
+         * Control windows
+         *
+         * @param openPercentages The open percentages
+         * @param positions The positions
+         */
+        public ControlWindows(@Nullable List<WindowOpenPercentage> openPercentages, @Nullable List<WindowPosition> positions) {
+            super(IDENTIFIER);
+        
+            final ArrayList<Property<WindowOpenPercentage>> openPercentagesBuilder = new ArrayList<>();
+            if (openPercentages != null) {
+                for (WindowOpenPercentage openPercentage : openPercentages) {
+                    Property<WindowOpenPercentage> prop = new Property<>(0x02, openPercentage);
+                    openPercentagesBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.openPercentages = openPercentagesBuilder;
+            
+            final ArrayList<Property<WindowPosition>> positionsBuilder = new ArrayList<>();
+            if (positions != null) {
+                for (WindowPosition position : positions) {
+                    Property<WindowPosition> prop = new Property<>(0x03, position);
+                    positionsBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.positions = positionsBuilder;
+            if (this.openPercentages.size() == 0 && this.positions.size() == 0) throw new IllegalArgumentException();
+            createBytes();
+        }
+    
+        ControlWindows(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+        
+            final ArrayList<Property<WindowOpenPercentage>> openPercentagesBuilder = new ArrayList<>();
+            final ArrayList<Property<WindowPosition>> positionsBuilder = new ArrayList<>();
+        
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_OPEN_PERCENTAGES: {
+                            Property<WindowOpenPercentage> openPercentage = new Property<>(WindowOpenPercentage.class, p);
+                            openPercentagesBuilder.add(openPercentage);
+                            return openPercentage;
+                        }
+                        case PROPERTY_POSITIONS: {
+                            Property<WindowPosition> position = new Property<>(WindowPosition.class, p);
+                            positionsBuilder.add(position);
+                            return position;
+                        }
+                    }
+                    return null;
+                });
+            }
+        
+            openPercentages = openPercentagesBuilder;
+            positions = positionsBuilder;
+            if (this.openPercentages.size() == 0 && this.positions.size() == 0) throw new NoPropertiesException();
         }
     }
 
@@ -226,85 +309,38 @@ public class Windows {
     }
 
     /**
-     * Control windows
+     * Get all windows property availabilities
      */
-    public static class ControlWindows extends SetCommand {
-        List<Property<WindowOpenPercentage>> openPercentages;
-        List<Property<WindowPosition>> positions;
-    
-        /**
-         * @return The open percentages
-         */
-        public List<Property<WindowOpenPercentage>> getOpenPercentages() {
-            return openPercentages;
-        }
-        
-        /**
-         * @return The positions
-         */
-        public List<Property<WindowPosition>> getPositions() {
-            return positions;
-        }
-        
-        /**
-         * Control windows
-         *
-         * @param openPercentages The open percentages
-         * @param positions The positions
-         */
-        public ControlWindows(@Nullable List<WindowOpenPercentage> openPercentages, @Nullable List<WindowPosition> positions) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            final ArrayList<Property<WindowOpenPercentage>> openPercentagesBuilder = new ArrayList<>();
-            if (openPercentages != null) {
-                for (WindowOpenPercentage openPercentage : openPercentages) {
-                    Property<WindowOpenPercentage> prop = new Property<>(0x02, openPercentage);
-                    openPercentagesBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.openPercentages = openPercentagesBuilder;
-            
-            final ArrayList<Property<WindowPosition>> positionsBuilder = new ArrayList<>();
-            if (positions != null) {
-                for (WindowPosition position : positions) {
-                    Property<WindowPosition> prop = new Property<>(0x03, position);
-                    positionsBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.positions = positionsBuilder;
-            if (this.openPercentages.size() == 0 && this.positions.size() == 0) throw new IllegalArgumentException();
-            createBytes();
         }
     
-        ControlWindows(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-        
-            final ArrayList<Property<WindowOpenPercentage>> openPercentagesBuilder = new ArrayList<>();
-            final ArrayList<Property<WindowPosition>> positionsBuilder = new ArrayList<>();
-        
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_OPEN_PERCENTAGES: {
-                            Property<WindowOpenPercentage> openPercentage = new Property<>(WindowOpenPercentage.class, p);
-                            openPercentagesBuilder.add(openPercentage);
-                            return openPercentage;
-                        }
-                        case PROPERTY_POSITIONS: {
-                            Property<WindowPosition> position = new Property<>(WindowPosition.class, p);
-                            positionsBuilder.add(position);
-                            return position;
-                        }
-                    }
-                    return null;
-                });
-            }
-        
-            openPercentages = openPercentagesBuilder;
-            positions = positionsBuilder;
-            if (this.openPercentages.size() == 0 && this.positions.size() == 0) throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific windows property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 }

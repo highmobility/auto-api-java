@@ -94,7 +94,7 @@ public class Charging {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific charging properties
      */
@@ -115,6 +115,280 @@ public class Charging {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Start stop charging
+     */
+    public static class StartStopCharging extends SetCommand {
+        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
+    
+        /**
+         * @return The status
+         */
+        public Property<Status> getStatus() {
+            return status;
+        }
+        
+        /**
+         * Start stop charging
+         *
+         * @param status The status
+         */
+        public StartStopCharging(Status status) {
+            super(IDENTIFIER);
+        
+            if (status == Status.CHARGING_COMPLETE ||
+                status == Status.INITIALISING ||
+                status == Status.CHARGING_PAUSED ||
+                status == Status.CHARGING_ERROR ||
+                status == Status.CABLE_UNPLUGGED ||
+                status == Status.SLOW_CHARGING ||
+                status == Status.FAST_CHARGING ||
+                status == Status.DISCHARGING ||
+                status == Status.FOREIGN_OBJECT_DETECTED) throw new IllegalArgumentException();
+        
+            addProperty(this.status.update(status));
+            createBytes();
+        }
+    
+        StartStopCharging(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    return null;
+                });
+            }
+            if (this.status.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Set charge limit
+     */
+    public static class SetChargeLimit extends SetCommand {
+        Property<Double> chargeLimit = new Property<>(Double.class, PROPERTY_CHARGE_LIMIT);
+    
+        /**
+         * @return The charge limit
+         */
+        public Property<Double> getChargeLimit() {
+            return chargeLimit;
+        }
+        
+        /**
+         * Set charge limit
+         *
+         * @param chargeLimit Charge limit percentage between 0.0-1.0
+         */
+        public SetChargeLimit(Double chargeLimit) {
+            super(IDENTIFIER);
+        
+            addProperty(this.chargeLimit.update(chargeLimit));
+            createBytes();
+        }
+    
+        SetChargeLimit(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_LIMIT) return chargeLimit.update(p);
+                    return null;
+                });
+            }
+            if (this.chargeLimit.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Open close charging port
+     */
+    public static class OpenCloseChargingPort extends SetCommand {
+        Property<Position> chargePortState = new Property<>(Position.class, PROPERTY_CHARGE_PORT_STATE);
+    
+        /**
+         * @return The charge port state
+         */
+        public Property<Position> getChargePortState() {
+            return chargePortState;
+        }
+        
+        /**
+         * Open close charging port
+         *
+         * @param chargePortState The charge port state
+         */
+        public OpenCloseChargingPort(Position chargePortState) {
+            super(IDENTIFIER);
+        
+            addProperty(this.chargePortState.update(chargePortState));
+            createBytes();
+        }
+    
+        OpenCloseChargingPort(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_PORT_STATE) return chargePortState.update(p);
+                    return null;
+                });
+            }
+            if (this.chargePortState.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Set charge mode
+     */
+    public static class SetChargeMode extends SetCommand {
+        Property<ChargeMode> chargeMode = new Property<>(ChargeMode.class, PROPERTY_CHARGE_MODE);
+    
+        /**
+         * @return The charge mode
+         */
+        public Property<ChargeMode> getChargeMode() {
+            return chargeMode;
+        }
+        
+        /**
+         * Set charge mode
+         *
+         * @param chargeMode The charge mode
+         */
+        public SetChargeMode(ChargeMode chargeMode) {
+            super(IDENTIFIER);
+        
+            if (chargeMode == ChargeMode.INDUCTIVE) throw new IllegalArgumentException();
+        
+            addProperty(this.chargeMode.update(chargeMode));
+            createBytes();
+        }
+    
+        SetChargeMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_MODE) return chargeMode.update(p);
+                    return null;
+                });
+            }
+            if (this.chargeMode.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Set charging timers
+     */
+    public static class SetChargingTimers extends SetCommand {
+        List<Property<Timer>> timers;
+    
+        /**
+         * @return The timers
+         */
+        public List<Property<Timer>> getTimers() {
+            return timers;
+        }
+        
+        /**
+         * Set charging timers
+         *
+         * @param timers The timers
+         */
+        public SetChargingTimers(List<Timer> timers) {
+            super(IDENTIFIER);
+        
+            final ArrayList<Property<Timer>> timersBuilder = new ArrayList<>();
+            if (timers != null) {
+                for (Timer timer : timers) {
+                    Property<Timer> prop = new Property<>(0x15, timer);
+                    timersBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.timers = timersBuilder;
+            createBytes();
+        }
+    
+        SetChargingTimers(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+        
+            final ArrayList<Property<Timer>> timersBuilder = new ArrayList<>();
+        
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_TIMERS) {
+                        Property<Timer> timer = new Property<>(Timer.class, p);
+                        timersBuilder.add(timer);
+                        return timer;
+                    }
+                    return null;
+                });
+            }
+        
+            timers = timersBuilder;
+            if (this.timers.size() == 0) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Set reduction of charging current times
+     */
+    public static class SetReductionOfChargingCurrentTimes extends SetCommand {
+        List<Property<ReductionTime>> reductionTimes;
+    
+        /**
+         * @return The reduction times
+         */
+        public List<Property<ReductionTime>> getReductionTimes() {
+            return reductionTimes;
+        }
+        
+        /**
+         * Set reduction of charging current times
+         *
+         * @param reductionTimes The reduction times
+         */
+        public SetReductionOfChargingCurrentTimes(List<ReductionTime> reductionTimes) {
+            super(IDENTIFIER);
+        
+            final ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
+            if (reductionTimes != null) {
+                for (ReductionTime reductionTime : reductionTimes) {
+                    Property<ReductionTime> prop = new Property<>(0x13, reductionTime);
+                    reductionTimesBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.reductionTimes = reductionTimesBuilder;
+            createBytes();
+        }
+    
+        SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+        
+            final ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
+        
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_REDUCTION_TIMES) {
+                        Property<ReductionTime> reductionTime = new Property<>(ReductionTime.class, p);
+                        reductionTimesBuilder.add(reductionTime);
+                        return reductionTime;
+                    }
+                    return null;
+                });
+            }
+        
+            reductionTimes = reductionTimesBuilder;
+            if (this.reductionTimes.size() == 0) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -917,276 +1191,38 @@ public class Charging {
     }
 
     /**
-     * Start stop charging
+     * Get all charging property availabilities
      */
-    public static class StartStopCharging extends SetCommand {
-        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
-    
-        /**
-         * @return The status
-         */
-        public Property<Status> getStatus() {
-            return status;
-        }
-        
-        /**
-         * Start stop charging
-         *
-         * @param status The status
-         */
-        public StartStopCharging(Status status) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            if (status == Status.CHARGING_COMPLETE ||
-                status == Status.INITIALISING ||
-                status == Status.CHARGING_PAUSED ||
-                status == Status.CHARGING_ERROR ||
-                status == Status.CABLE_UNPLUGGED ||
-                status == Status.SLOW_CHARGING ||
-                status == Status.FAST_CHARGING ||
-                status == Status.DISCHARGING ||
-                status == Status.FOREIGN_OBJECT_DETECTED) throw new IllegalArgumentException();
-        
-            addProperty(this.status.update(status));
-            createBytes();
         }
     
-        StartStopCharging(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
-                    return null;
-                });
-            }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
-    
+
     /**
-     * Set charge limit
+     * Get specific charging property availabilities.
      */
-    public static class SetChargeLimit extends SetCommand {
-        Property<Double> chargeLimit = new Property<>(Double.class, PROPERTY_CHARGE_LIMIT);
-    
+    public static class GetAvailabilities extends GetAvailabilityCommand {
         /**
-         * @return The charge limit
+         * @param propertyIdentifiers The property identifiers
          */
-        public Property<Double> getChargeLimit() {
-            return chargeLimit;
-        }
-        
-        /**
-         * Set charge limit
-         *
-         * @param chargeLimit Charge limit percentage between 0.0-1.0
-         */
-        public SetChargeLimit(Double chargeLimit) {
-            super(IDENTIFIER);
-        
-            addProperty(this.chargeLimit.update(chargeLimit));
-            createBytes();
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
         }
     
-        SetChargeLimit(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_LIMIT) return chargeLimit.update(p);
-                    return null;
-                });
-            }
-            if (this.chargeLimit.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Open close charging port
-     */
-    public static class OpenCloseChargingPort extends SetCommand {
-        Property<Position> chargePortState = new Property<>(Position.class, PROPERTY_CHARGE_PORT_STATE);
-    
-        /**
-         * @return The charge port state
-         */
-        public Property<Position> getChargePortState() {
-            return chargePortState;
-        }
-        
-        /**
-         * Open close charging port
-         *
-         * @param chargePortState The charge port state
-         */
-        public OpenCloseChargingPort(Position chargePortState) {
-            super(IDENTIFIER);
-        
-            addProperty(this.chargePortState.update(chargePortState));
-            createBytes();
-        }
-    
-        OpenCloseChargingPort(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_PORT_STATE) return chargePortState.update(p);
-                    return null;
-                });
-            }
-            if (this.chargePortState.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Set charge mode
-     */
-    public static class SetChargeMode extends SetCommand {
-        Property<ChargeMode> chargeMode = new Property<>(ChargeMode.class, PROPERTY_CHARGE_MODE);
-    
-        /**
-         * @return The charge mode
-         */
-        public Property<ChargeMode> getChargeMode() {
-            return chargeMode;
-        }
-        
-        /**
-         * Set charge mode
-         *
-         * @param chargeMode The charge mode
-         */
-        public SetChargeMode(ChargeMode chargeMode) {
-            super(IDENTIFIER);
-        
-            if (chargeMode == ChargeMode.INDUCTIVE) throw new IllegalArgumentException();
-        
-            addProperty(this.chargeMode.update(chargeMode));
-            createBytes();
-        }
-    
-        SetChargeMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_MODE) return chargeMode.update(p);
-                    return null;
-                });
-            }
-            if (this.chargeMode.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Set charging timers
-     */
-    public static class SetChargingTimers extends SetCommand {
-        List<Property<Timer>> timers;
-    
-        /**
-         * @return The timers
-         */
-        public List<Property<Timer>> getTimers() {
-            return timers;
-        }
-        
-        /**
-         * Set charging timers
-         *
-         * @param timers The timers
-         */
-        public SetChargingTimers(List<Timer> timers) {
-            super(IDENTIFIER);
-        
-            final ArrayList<Property<Timer>> timersBuilder = new ArrayList<>();
-            if (timers != null) {
-                for (Timer timer : timers) {
-                    Property<Timer> prop = new Property<>(0x15, timer);
-                    timersBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.timers = timersBuilder;
-            createBytes();
-        }
-    
-        SetChargingTimers(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-        
-            final ArrayList<Property<Timer>> timersBuilder = new ArrayList<>();
-        
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_TIMERS) {
-                        Property<Timer> timer = new Property<>(Timer.class, p);
-                        timersBuilder.add(timer);
-                        return timer;
-                    }
-                    return null;
-                });
-            }
-        
-            timers = timersBuilder;
-            if (this.timers.size() == 0) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Set reduction of charging current times
-     */
-    public static class SetReductionOfChargingCurrentTimes extends SetCommand {
-        List<Property<ReductionTime>> reductionTimes;
-    
-        /**
-         * @return The reduction times
-         */
-        public List<Property<ReductionTime>> getReductionTimes() {
-            return reductionTimes;
-        }
-        
-        /**
-         * Set reduction of charging current times
-         *
-         * @param reductionTimes The reduction times
-         */
-        public SetReductionOfChargingCurrentTimes(List<ReductionTime> reductionTimes) {
-            super(IDENTIFIER);
-        
-            final ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
-            if (reductionTimes != null) {
-                for (ReductionTime reductionTime : reductionTimes) {
-                    Property<ReductionTime> prop = new Property<>(0x13, reductionTime);
-                    reductionTimesBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.reductionTimes = reductionTimesBuilder;
-            createBytes();
-        }
-    
-        SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-        
-            final ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
-        
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_REDUCTION_TIMES) {
-                        Property<ReductionTime> reductionTime = new Property<>(ReductionTime.class, p);
-                        reductionTimesBuilder.add(reductionTime);
-                        return reductionTime;
-                    }
-                    return null;
-                });
-            }
-        
-            reductionTimes = reductionTimesBuilder;
-            if (this.reductionTimes.size() == 0) 
-                throw new NoPropertiesException();
         }
     }
 

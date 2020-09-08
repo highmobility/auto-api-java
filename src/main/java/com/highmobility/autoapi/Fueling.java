@@ -50,7 +50,7 @@ public class Fueling {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific fueling properties
      */
@@ -71,6 +71,57 @@ public class Fueling {
     
         GetGasFlapProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Control gas flap
+     */
+    public static class ControlGasFlap extends SetCommand {
+        Property<LockState> gasFlapLock = new Property<>(LockState.class, PROPERTY_GAS_FLAP_LOCK);
+        Property<Position> gasFlapPosition = new Property<>(Position.class, PROPERTY_GAS_FLAP_POSITION);
+    
+        /**
+         * @return The gas flap lock
+         */
+        public Property<LockState> getGasFlapLock() {
+            return gasFlapLock;
+        }
+        
+        /**
+         * @return The gas flap position
+         */
+        public Property<Position> getGasFlapPosition() {
+            return gasFlapPosition;
+        }
+        
+        /**
+         * Control gas flap
+         *
+         * @param gasFlapLock The gas flap lock
+         * @param gasFlapPosition The gas flap position
+         */
+        public ControlGasFlap(@Nullable LockState gasFlapLock, @Nullable Position gasFlapPosition) {
+            super(IDENTIFIER);
+        
+            addProperty(this.gasFlapLock.update(gasFlapLock));
+            addProperty(this.gasFlapPosition.update(gasFlapPosition));
+            if (this.gasFlapLock.getValue() == null && this.gasFlapPosition.getValue() == null) throw new IllegalArgumentException();
+            createBytes();
+        }
+    
+        ControlGasFlap(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_GAS_FLAP_LOCK: return gasFlapLock.update(p);
+                        case PROPERTY_GAS_FLAP_POSITION: return gasFlapPosition.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.gasFlapLock.getValue() == null && this.gasFlapPosition.getValue() == null) throw new NoPropertiesException();
         }
     }
 
@@ -151,53 +202,38 @@ public class Fueling {
     }
 
     /**
-     * Control gas flap
+     * Get all fueling property availabilities
      */
-    public static class ControlGasFlap extends SetCommand {
-        Property<LockState> gasFlapLock = new Property<>(LockState.class, PROPERTY_GAS_FLAP_LOCK);
-        Property<Position> gasFlapPosition = new Property<>(Position.class, PROPERTY_GAS_FLAP_POSITION);
-    
-        /**
-         * @return The gas flap lock
-         */
-        public Property<LockState> getGasFlapLock() {
-            return gasFlapLock;
-        }
-        
-        /**
-         * @return The gas flap position
-         */
-        public Property<Position> getGasFlapPosition() {
-            return gasFlapPosition;
-        }
-        
-        /**
-         * Control gas flap
-         *
-         * @param gasFlapLock The gas flap lock
-         * @param gasFlapPosition The gas flap position
-         */
-        public ControlGasFlap(@Nullable LockState gasFlapLock, @Nullable Position gasFlapPosition) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.gasFlapLock.update(gasFlapLock));
-            addProperty(this.gasFlapPosition.update(gasFlapPosition));
-            if (this.gasFlapLock.getValue() == null && this.gasFlapPosition.getValue() == null) throw new IllegalArgumentException();
-            createBytes();
         }
     
-        ControlGasFlap(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_GAS_FLAP_LOCK: return gasFlapLock.update(p);
-                        case PROPERTY_GAS_FLAP_POSITION: return gasFlapPosition.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.gasFlapLock.getValue() == null && this.gasFlapPosition.getValue() == null) throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific fueling property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 }

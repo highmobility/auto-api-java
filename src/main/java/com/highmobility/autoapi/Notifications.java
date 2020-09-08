@@ -29,8 +29,8 @@ import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.property.ByteEnum;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
 import com.highmobility.value.Bytes;
+import javax.annotation.Nullable;
 
 import static com.highmobility.utils.ByteUtils.hexFromByte;
 
@@ -44,6 +44,141 @@ public class Notifications {
     public static final byte PROPERTY_ACTION_ITEMS = 0x02;
     public static final byte PROPERTY_ACTIVATED_ACTION = 0x03;
     public static final byte PROPERTY_CLEAR = 0x04;
+
+    /**
+     * Notification
+     */
+    public static class Notification extends SetCommand {
+        Property<String> text = new Property<>(String.class, PROPERTY_TEXT);
+        List<Property<ActionItem>> actionItems;
+    
+        /**
+         * @return The text
+         */
+        public Property<String> getText() {
+            return text;
+        }
+        
+        /**
+         * @return The action items
+         */
+        public List<Property<ActionItem>> getActionItems() {
+            return actionItems;
+        }
+        
+        /**
+         * Notification
+         *
+         * @param text Text for the notification
+         * @param actionItems The action items
+         */
+        public Notification(String text, @Nullable List<ActionItem> actionItems) {
+            super(IDENTIFIER);
+        
+            addProperty(this.text.update(text));
+            final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
+            if (actionItems != null) {
+                for (ActionItem actionItem : actionItems) {
+                    Property<ActionItem> prop = new Property<>(0x02, actionItem);
+                    actionItemsBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.actionItems = actionItemsBuilder;
+            createBytes();
+        }
+    
+        Notification(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+        
+            final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
+        
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_TEXT: return text.update(p);
+                        case PROPERTY_ACTION_ITEMS: {
+                            Property<ActionItem> actionItem = new Property<>(ActionItem.class, p);
+                            actionItemsBuilder.add(actionItem);
+                            return actionItem;
+                        }
+                    }
+                    return null;
+                });
+            }
+        
+            actionItems = actionItemsBuilder;
+            if (this.text.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Action
+     */
+    public static class Action extends SetCommand {
+        PropertyInteger activatedAction = new PropertyInteger(PROPERTY_ACTIVATED_ACTION, false);
+    
+        /**
+         * @return The activated action
+         */
+        public PropertyInteger getActivatedAction() {
+            return activatedAction;
+        }
+        
+        /**
+         * Action
+         *
+         * @param activatedAction Identifier of the activated action
+         */
+        public Action(Integer activatedAction) {
+            super(IDENTIFIER);
+        
+            addProperty(this.activatedAction.update(false, 1, activatedAction));
+            createBytes();
+        }
+    
+        Action(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_ACTIVATED_ACTION) return activatedAction.update(p);
+                    return null;
+                });
+            }
+            if (this.activatedAction.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Clear notification
+     */
+    public static class ClearNotification extends SetCommand {
+        Property<Clear> clear = new Property<>(Clear.class, PROPERTY_CLEAR);
+    
+        /**
+         * Clear notification
+         */
+        public ClearNotification() {
+            super(IDENTIFIER);
+        
+            addProperty(clear.addValueComponent(new Bytes("00")));
+            createBytes();
+        }
+    
+        ClearNotification(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_CLEAR) return clear.update(p);
+                    return null;
+                });
+            }
+            if ((clear.getValue() == null || clear.getValueComponent().getValueBytes().equals("00") == false)) 
+                throw new NoPropertiesException();
+        }
+    }
 
     /**
      * The notifications state
@@ -190,137 +325,38 @@ public class Notifications {
     }
 
     /**
-     * Notification
+     * Get all notifications property availabilities
      */
-    public static class Notification extends SetCommand {
-        Property<String> text = new Property<>(String.class, PROPERTY_TEXT);
-        List<Property<ActionItem>> actionItems;
-    
-        /**
-         * @return The text
-         */
-        public Property<String> getText() {
-            return text;
-        }
-        
-        /**
-         * @return The action items
-         */
-        public List<Property<ActionItem>> getActionItems() {
-            return actionItems;
-        }
-        
-        /**
-         * Notification
-         *
-         * @param text Text for the notification
-         * @param actionItems The action items
-         */
-        public Notification(String text, @Nullable List<ActionItem> actionItems) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.text.update(text));
-            final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
-            if (actionItems != null) {
-                for (ActionItem actionItem : actionItems) {
-                    Property<ActionItem> prop = new Property<>(0x02, actionItem);
-                    actionItemsBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.actionItems = actionItemsBuilder;
-            createBytes();
         }
     
-        Notification(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-        
-            final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
-        
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_TEXT: return text.update(p);
-                        case PROPERTY_ACTION_ITEMS: {
-                            Property<ActionItem> actionItem = new Property<>(ActionItem.class, p);
-                            actionItemsBuilder.add(actionItem);
-                            return actionItem;
-                        }
-                    }
-                    return null;
-                });
-            }
-        
-            actionItems = actionItemsBuilder;
-            if (this.text.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
-    
+
     /**
-     * Action
+     * Get specific notifications property availabilities.
      */
-    public static class Action extends SetCommand {
-        PropertyInteger activatedAction = new PropertyInteger(PROPERTY_ACTIVATED_ACTION, false);
-    
+    public static class GetAvailabilities extends GetAvailabilityCommand {
         /**
-         * @return The activated action
+         * @param propertyIdentifiers The property identifiers
          */
-        public PropertyInteger getActivatedAction() {
-            return activatedAction;
-        }
-        
-        /**
-         * Action
-         *
-         * @param activatedAction Identifier of the activated action
-         */
-        public Action(Integer activatedAction) {
-            super(IDENTIFIER);
-        
-            addProperty(this.activatedAction.update(false, 1, activatedAction));
-            createBytes();
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
         }
     
-        Action(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_ACTIVATED_ACTION) return activatedAction.update(p);
-                    return null;
-                });
-            }
-            if (this.activatedAction.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Clear notification
-     */
-    public static class ClearNotification extends SetCommand {
-        Property<Clear> clear = new Property<>(Clear.class, PROPERTY_CLEAR);
-    
-        /**
-         * Clear notification
-         */
-        public ClearNotification() {
-            super(IDENTIFIER);
-        
-            addProperty(clear.addValueComponent(new Bytes("00")));
-            createBytes();
-        }
-    
-        ClearNotification(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_CLEAR) return clear.update(p);
-                    return null;
-                });
-            }
-            if ((clear.getValue() == null || clear.getValueComponent().getValueBytes().equals("00") == false)) 
-                throw new NoPropertiesException();
         }
     }
 

@@ -57,7 +57,7 @@ public class TheftAlarm {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific theft alarm properties
      */
@@ -78,6 +78,44 @@ public class TheftAlarm {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Set theft alarm
+     */
+    public static class SetTheftAlarm extends SetCommand {
+        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
+    
+        /**
+         * @return The status
+         */
+        public Property<Status> getStatus() {
+            return status;
+        }
+        
+        /**
+         * Set theft alarm
+         *
+         * @param status The status
+         */
+        public SetTheftAlarm(Status status) {
+            super(IDENTIFIER);
+        
+            addProperty(this.status.update(status));
+            createBytes();
+        }
+    
+        SetTheftAlarm(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    return null;
+                });
+            }
+            if (this.status.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -263,40 +301,38 @@ public class TheftAlarm {
     }
 
     /**
-     * Set theft alarm
+     * Get all theft alarm property availabilities
      */
-    public static class SetTheftAlarm extends SetCommand {
-        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
-    
-        /**
-         * @return The status
-         */
-        public Property<Status> getStatus() {
-            return status;
-        }
-        
-        /**
-         * Set theft alarm
-         *
-         * @param status The status
-         */
-        public SetTheftAlarm(Status status) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.status.update(status));
-            createBytes();
         }
     
-        SetTheftAlarm(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
-                    return null;
-                });
-            }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific theft alarm property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 

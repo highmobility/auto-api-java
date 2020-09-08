@@ -31,6 +31,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public class CommandParseException extends Exception {
     public CommandExceptionCode code;
+    public static final String PARSE_ERROR_DESCRIPTION = "Unexpected bytes in the command";
+    private String message = PARSE_ERROR_DESCRIPTION;
 
     public CommandParseException() {
         this.code = CommandExceptionCode.PARSE_ERROR;
@@ -41,12 +43,20 @@ public class CommandParseException extends Exception {
     }
 
     public CommandParseException(String error) {
-        super(error);
         this.code = CommandExceptionCode.PARSE_ERROR;
+        message = error;
     }
 
     public CommandParseException(@NotNull String format, @Nullable Object... args) {
         new CommandParseException(String.format(format, args));
+    }
+
+    @Override public String getMessage() {
+        return message;
+    }
+
+    @Override public String getLocalizedMessage() {
+        return message;
     }
 
     public enum CommandExceptionCode {

@@ -57,7 +57,7 @@ public class HonkHornFlashLights {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific honk horn flash lights properties
      */
@@ -78,6 +78,95 @@ public class HonkHornFlashLights {
     
         GetFlashersProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Honk flash
+     */
+    public static class HonkFlash extends SetCommand {
+        PropertyInteger flashTimes = new PropertyInteger(PROPERTY_FLASH_TIMES, false);
+        Property<Duration> honkTime = new Property<>(Duration.class, PROPERTY_HONK_TIME);
+    
+        /**
+         * @return The flash times
+         */
+        public PropertyInteger getFlashTimes() {
+            return flashTimes;
+        }
+        
+        /**
+         * @return The honk time
+         */
+        public Property<Duration> getHonkTime() {
+            return honkTime;
+        }
+        
+        /**
+         * Honk flash
+         *
+         * @param flashTimes Number of times to flash the lights
+         * @param honkTime Time to honk the horn
+         */
+        public HonkFlash(@Nullable Integer flashTimes, @Nullable Duration honkTime) {
+            super(IDENTIFIER);
+        
+            addProperty(this.flashTimes.update(false, 1, flashTimes));
+            addProperty(this.honkTime.update(honkTime));
+            if (this.flashTimes.getValue() == null && this.honkTime.getValue() == null) throw new IllegalArgumentException();
+            createBytes();
+        }
+    
+        HonkFlash(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_FLASH_TIMES: return flashTimes.update(p);
+                        case PROPERTY_HONK_TIME: return honkTime.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.flashTimes.getValue() == null && this.honkTime.getValue() == null) throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Activate deactivate emergency flasher
+     */
+    public static class ActivateDeactivateEmergencyFlasher extends SetCommand {
+        Property<ActiveState> emergencyFlashersState = new Property<>(ActiveState.class, PROPERTY_EMERGENCY_FLASHERS_STATE);
+    
+        /**
+         * @return The emergency flashers state
+         */
+        public Property<ActiveState> getEmergencyFlashersState() {
+            return emergencyFlashersState;
+        }
+        
+        /**
+         * Activate deactivate emergency flasher
+         *
+         * @param emergencyFlashersState The emergency flashers state
+         */
+        public ActivateDeactivateEmergencyFlasher(ActiveState emergencyFlashersState) {
+            super(IDENTIFIER);
+        
+            addProperty(this.emergencyFlashersState.update(emergencyFlashersState));
+            createBytes();
+        }
+    
+        ActivateDeactivateEmergencyFlasher(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_EMERGENCY_FLASHERS_STATE) return emergencyFlashersState.update(p);
+                    return null;
+                });
+            }
+            if (this.emergencyFlashersState.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -137,91 +226,38 @@ public class HonkHornFlashLights {
     }
 
     /**
-     * Honk flash
+     * Get all honk horn flash lights property availabilities
      */
-    public static class HonkFlash extends SetCommand {
-        PropertyInteger flashTimes = new PropertyInteger(PROPERTY_FLASH_TIMES, false);
-        Property<Duration> honkTime = new Property<>(Duration.class, PROPERTY_HONK_TIME);
-    
-        /**
-         * @return The flash times
-         */
-        public PropertyInteger getFlashTimes() {
-            return flashTimes;
-        }
-        
-        /**
-         * @return The honk time
-         */
-        public Property<Duration> getHonkTime() {
-            return honkTime;
-        }
-        
-        /**
-         * Honk flash
-         *
-         * @param flashTimes Number of times to flash the lights
-         * @param honkTime Time to honk the horn
-         */
-        public HonkFlash(@Nullable Integer flashTimes, @Nullable Duration honkTime) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.flashTimes.update(false, 1, flashTimes));
-            addProperty(this.honkTime.update(honkTime));
-            if (this.flashTimes.getValue() == null && this.honkTime.getValue() == null) throw new IllegalArgumentException();
-            createBytes();
         }
     
-        HonkFlash(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_FLASH_TIMES: return flashTimes.update(p);
-                        case PROPERTY_HONK_TIME: return honkTime.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.flashTimes.getValue() == null && this.honkTime.getValue() == null) throw new NoPropertiesException();
         }
     }
-    
+
     /**
-     * Activate deactivate emergency flasher
+     * Get specific honk horn flash lights property availabilities.
      */
-    public static class ActivateDeactivateEmergencyFlasher extends SetCommand {
-        Property<ActiveState> emergencyFlashersState = new Property<>(ActiveState.class, PROPERTY_EMERGENCY_FLASHERS_STATE);
-    
+    public static class GetAvailabilities extends GetAvailabilityCommand {
         /**
-         * @return The emergency flashers state
+         * @param propertyIdentifiers The property identifiers
          */
-        public Property<ActiveState> getEmergencyFlashersState() {
-            return emergencyFlashersState;
-        }
-        
-        /**
-         * Activate deactivate emergency flasher
-         *
-         * @param emergencyFlashersState The emergency flashers state
-         */
-        public ActivateDeactivateEmergencyFlasher(ActiveState emergencyFlashersState) {
-            super(IDENTIFIER);
-        
-            addProperty(this.emergencyFlashersState.update(emergencyFlashersState));
-            createBytes();
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
         }
     
-        ActivateDeactivateEmergencyFlasher(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_EMERGENCY_FLASHERS_STATE) return emergencyFlashersState.update(p);
-                    return null;
-                });
-            }
-            if (this.emergencyFlashersState.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
 

@@ -25,6 +25,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.value.Bytes;
 
 /**
  * The Parking Brake capability
@@ -44,6 +45,44 @@ public class ParkingBrake {
     
         GetState(byte[] bytes) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Set parking brake
+     */
+    public static class SetParkingBrake extends SetCommand {
+        Property<ActiveState> status = new Property<>(ActiveState.class, PROPERTY_STATUS);
+    
+        /**
+         * @return The status
+         */
+        public Property<ActiveState> getStatus() {
+            return status;
+        }
+        
+        /**
+         * Set parking brake
+         *
+         * @param status The status
+         */
+        public SetParkingBrake(ActiveState status) {
+            super(IDENTIFIER);
+        
+            addProperty(this.status.update(status));
+            createBytes();
+        }
+    
+        SetParkingBrake(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    return null;
+                });
+            }
+            if (this.status.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -103,40 +142,38 @@ public class ParkingBrake {
     }
 
     /**
-     * Set parking brake
+     * Get all parking brake property availabilities
      */
-    public static class SetParkingBrake extends SetCommand {
-        Property<ActiveState> status = new Property<>(ActiveState.class, PROPERTY_STATUS);
-    
-        /**
-         * @return The status
-         */
-        public Property<ActiveState> getStatus() {
-            return status;
-        }
-        
-        /**
-         * Set parking brake
-         *
-         * @param status The status
-         */
-        public SetParkingBrake(ActiveState status) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.status.update(status));
-            createBytes();
         }
     
-        SetParkingBrake(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
-                    return null;
-                });
-            }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific parking brake property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 }

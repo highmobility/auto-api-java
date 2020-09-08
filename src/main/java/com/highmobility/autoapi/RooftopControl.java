@@ -55,7 +55,7 @@ public class RooftopControl {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific rooftop control properties
      */
@@ -76,6 +76,98 @@ public class RooftopControl {
     
         GetRooftopProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Control rooftop
+     */
+    public static class ControlRooftop extends SetCommand {
+        Property<Double> dimming = new Property<>(Double.class, PROPERTY_DIMMING);
+        Property<Double> position = new Property<>(Double.class, PROPERTY_POSITION);
+        Property<ConvertibleRoofState> convertibleRoofState = new Property<>(ConvertibleRoofState.class, PROPERTY_CONVERTIBLE_ROOF_STATE);
+        Property<SunroofTiltState> sunroofTiltState = new Property<>(SunroofTiltState.class, PROPERTY_SUNROOF_TILT_STATE);
+        Property<SunroofState> sunroofState = new Property<>(SunroofState.class, PROPERTY_SUNROOF_STATE);
+    
+        /**
+         * @return The dimming
+         */
+        public Property<Double> getDimming() {
+            return dimming;
+        }
+        
+        /**
+         * @return The position
+         */
+        public Property<Double> getPosition() {
+            return position;
+        }
+        
+        /**
+         * @return The convertible roof state
+         */
+        public Property<ConvertibleRoofState> getConvertibleRoofState() {
+            return convertibleRoofState;
+        }
+        
+        /**
+         * @return The sunroof tilt state
+         */
+        public Property<SunroofTiltState> getSunroofTiltState() {
+            return sunroofTiltState;
+        }
+        
+        /**
+         * @return The sunroof state
+         */
+        public Property<SunroofState> getSunroofState() {
+            return sunroofState;
+        }
+        
+        /**
+         * Control rooftop
+         *
+         * @param dimming 1.0 (100%) is opaque, 0.0 (0%) is transparent
+         * @param position 1.0 (100%) is fully open, 0.0 (0%) is closed
+         * @param convertibleRoofState The convertible roof state
+         * @param sunroofTiltState The sunroof tilt state
+         * @param sunroofState The sunroof state
+         */
+        public ControlRooftop(@Nullable Double dimming, @Nullable Double position, @Nullable ConvertibleRoofState convertibleRoofState, @Nullable SunroofTiltState sunroofTiltState, @Nullable SunroofState sunroofState) {
+            super(IDENTIFIER);
+        
+            addProperty(this.dimming.update(dimming));
+            addProperty(this.position.update(position));
+            if (convertibleRoofState == ConvertibleRoofState.EMERGENCY_LOCKED ||
+                convertibleRoofState == ConvertibleRoofState.CLOSED_SECURED ||
+                convertibleRoofState == ConvertibleRoofState.OPEN_SECURED ||
+                convertibleRoofState == ConvertibleRoofState.HARD_TOP_MOUNTED ||
+                convertibleRoofState == ConvertibleRoofState.INTERMEDIATE_POSITION ||
+                convertibleRoofState == ConvertibleRoofState.LOADING_POSITION ||
+                convertibleRoofState == ConvertibleRoofState.LOADING_POSITION_IMMEDIATE) throw new IllegalArgumentException();
+        
+            addProperty(this.convertibleRoofState.update(convertibleRoofState));
+            addProperty(this.sunroofTiltState.update(sunroofTiltState));
+            addProperty(this.sunroofState.update(sunroofState));
+            if (this.dimming.getValue() == null && this.position.getValue() == null && this.convertibleRoofState.getValue() == null && this.sunroofTiltState.getValue() == null && this.sunroofState.getValue() == null) throw new IllegalArgumentException();
+            createBytes();
+        }
+    
+        ControlRooftop(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_DIMMING: return dimming.update(p);
+                        case PROPERTY_POSITION: return position.update(p);
+                        case PROPERTY_CONVERTIBLE_ROOF_STATE: return convertibleRoofState.update(p);
+                        case PROPERTY_SUNROOF_TILT_STATE: return sunroofTiltState.update(p);
+                        case PROPERTY_SUNROOF_STATE: return sunroofState.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.dimming.getValue() == null && this.position.getValue() == null && this.convertibleRoofState.getValue() == null && this.sunroofTiltState.getValue() == null && this.sunroofState.getValue() == null) throw new NoPropertiesException();
         }
     }
 
@@ -240,94 +332,38 @@ public class RooftopControl {
     }
 
     /**
-     * Control rooftop
+     * Get all rooftop control property availabilities
      */
-    public static class ControlRooftop extends SetCommand {
-        Property<Double> dimming = new Property<>(Double.class, PROPERTY_DIMMING);
-        Property<Double> position = new Property<>(Double.class, PROPERTY_POSITION);
-        Property<ConvertibleRoofState> convertibleRoofState = new Property<>(ConvertibleRoofState.class, PROPERTY_CONVERTIBLE_ROOF_STATE);
-        Property<SunroofTiltState> sunroofTiltState = new Property<>(SunroofTiltState.class, PROPERTY_SUNROOF_TILT_STATE);
-        Property<SunroofState> sunroofState = new Property<>(SunroofState.class, PROPERTY_SUNROOF_STATE);
-    
-        /**
-         * @return The dimming
-         */
-        public Property<Double> getDimming() {
-            return dimming;
-        }
-        
-        /**
-         * @return The position
-         */
-        public Property<Double> getPosition() {
-            return position;
-        }
-        
-        /**
-         * @return The convertible roof state
-         */
-        public Property<ConvertibleRoofState> getConvertibleRoofState() {
-            return convertibleRoofState;
-        }
-        
-        /**
-         * @return The sunroof tilt state
-         */
-        public Property<SunroofTiltState> getSunroofTiltState() {
-            return sunroofTiltState;
-        }
-        
-        /**
-         * @return The sunroof state
-         */
-        public Property<SunroofState> getSunroofState() {
-            return sunroofState;
-        }
-        
-        /**
-         * Control rooftop
-         *
-         * @param dimming 1.0 (100%) is opaque, 0.0 (0%) is transparent
-         * @param position 1.0 (100%) is fully open, 0.0 (0%) is closed
-         * @param convertibleRoofState The convertible roof state
-         * @param sunroofTiltState The sunroof tilt state
-         * @param sunroofState The sunroof state
-         */
-        public ControlRooftop(@Nullable Double dimming, @Nullable Double position, @Nullable ConvertibleRoofState convertibleRoofState, @Nullable SunroofTiltState sunroofTiltState, @Nullable SunroofState sunroofState) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.dimming.update(dimming));
-            addProperty(this.position.update(position));
-            if (convertibleRoofState == ConvertibleRoofState.EMERGENCY_LOCKED ||
-                convertibleRoofState == ConvertibleRoofState.CLOSED_SECURED ||
-                convertibleRoofState == ConvertibleRoofState.OPEN_SECURED ||
-                convertibleRoofState == ConvertibleRoofState.HARD_TOP_MOUNTED ||
-                convertibleRoofState == ConvertibleRoofState.INTERMEDIATE_POSITION ||
-                convertibleRoofState == ConvertibleRoofState.LOADING_POSITION ||
-                convertibleRoofState == ConvertibleRoofState.LOADING_POSITION_IMMEDIATE) throw new IllegalArgumentException();
-        
-            addProperty(this.convertibleRoofState.update(convertibleRoofState));
-            addProperty(this.sunroofTiltState.update(sunroofTiltState));
-            addProperty(this.sunroofState.update(sunroofState));
-            if (this.dimming.getValue() == null && this.position.getValue() == null && this.convertibleRoofState.getValue() == null && this.sunroofTiltState.getValue() == null && this.sunroofState.getValue() == null) throw new IllegalArgumentException();
-            createBytes();
         }
     
-        ControlRooftop(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_DIMMING: return dimming.update(p);
-                        case PROPERTY_POSITION: return position.update(p);
-                        case PROPERTY_CONVERTIBLE_ROOF_STATE: return convertibleRoofState.update(p);
-                        case PROPERTY_SUNROOF_TILT_STATE: return sunroofTiltState.update(p);
-                        case PROPERTY_SUNROOF_STATE: return sunroofState.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.dimming.getValue() == null && this.position.getValue() == null && this.convertibleRoofState.getValue() == null && this.sunroofTiltState.getValue() == null && this.sunroofState.getValue() == null) throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific rooftop control property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 

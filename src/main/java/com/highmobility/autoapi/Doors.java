@@ -57,7 +57,7 @@ public class Doors {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific doors properties
      */
@@ -78,6 +78,44 @@ public class Doors {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Lock unlock doors
+     */
+    public static class LockUnlockDoors extends SetCommand {
+        Property<LockState> locksState = new Property<>(LockState.class, PROPERTY_LOCKS_STATE);
+    
+        /**
+         * @return The locks state
+         */
+        public Property<LockState> getLocksState() {
+            return locksState;
+        }
+        
+        /**
+         * Lock unlock doors
+         *
+         * @param locksState Locks state for the whole vehicle (combines all specific lock states if available)
+         */
+        public LockUnlockDoors(LockState locksState) {
+            super(IDENTIFIER);
+        
+            addProperty(this.locksState.update(locksState));
+            createBytes();
+        }
+    
+        LockUnlockDoors(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_LOCKS_STATE) return locksState.update(p);
+                    return null;
+                });
+            }
+            if (this.locksState.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -336,40 +374,38 @@ public class Doors {
     }
 
     /**
-     * Lock unlock doors
+     * Get all doors property availabilities
      */
-    public static class LockUnlockDoors extends SetCommand {
-        Property<LockState> locksState = new Property<>(LockState.class, PROPERTY_LOCKS_STATE);
-    
-        /**
-         * @return The locks state
-         */
-        public Property<LockState> getLocksState() {
-            return locksState;
-        }
-        
-        /**
-         * Lock unlock doors
-         *
-         * @param locksState Locks state for the whole vehicle (combines all specific lock states if available)
-         */
-        public LockUnlockDoors(LockState locksState) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.locksState.update(locksState));
-            createBytes();
         }
     
-        LockUnlockDoors(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_LOCKS_STATE) return locksState.update(p);
-                    return null;
-                });
-            }
-            if (this.locksState.getValue() == null) 
-                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific doors property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 }

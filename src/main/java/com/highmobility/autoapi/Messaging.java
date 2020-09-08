@@ -24,6 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 
 /**
@@ -34,6 +35,57 @@ public class Messaging {
 
     public static final byte PROPERTY_TEXT = 0x01;
     public static final byte PROPERTY_HANDLE = 0x02;
+
+    /**
+     * Message received
+     */
+    public static class MessageReceived extends SetCommand {
+        Property<String> text = new Property<>(String.class, PROPERTY_TEXT);
+        Property<String> handle = new Property<>(String.class, PROPERTY_HANDLE);
+    
+        /**
+         * @return The text
+         */
+        public Property<String> getText() {
+            return text;
+        }
+        
+        /**
+         * @return The handle
+         */
+        public Property<String> getHandle() {
+            return handle;
+        }
+        
+        /**
+         * Message received
+         *
+         * @param text The text
+         * @param handle The optional handle of message
+         */
+        public MessageReceived(String text, @Nullable String handle) {
+            super(IDENTIFIER);
+        
+            addProperty(this.text.update(text));
+            addProperty(this.handle.update(handle));
+            createBytes();
+        }
+    
+        MessageReceived(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_TEXT: return text.update(p);
+                        case PROPERTY_HANDLE: return handle.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.text.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
 
     /**
      * The messaging state
@@ -112,53 +164,38 @@ public class Messaging {
     }
 
     /**
-     * Message received
+     * Get all messaging property availabilities
      */
-    public static class MessageReceived extends SetCommand {
-        Property<String> text = new Property<>(String.class, PROPERTY_TEXT);
-        Property<String> handle = new Property<>(String.class, PROPERTY_HANDLE);
-    
-        /**
-         * @return The text
-         */
-        public Property<String> getText() {
-            return text;
-        }
-        
-        /**
-         * @return The handle
-         */
-        public Property<String> getHandle() {
-            return handle;
-        }
-        
-        /**
-         * Message received
-         *
-         * @param text The text
-         * @param handle The optional handle of message
-         */
-        public MessageReceived(String text, @Nullable String handle) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.text.update(text));
-            addProperty(this.handle.update(handle));
-            createBytes();
         }
     
-        MessageReceived(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_TEXT: return text.update(p);
-                        case PROPERTY_HANDLE: return handle.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.text.getValue() == null) 
-                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific messaging property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 }

@@ -50,7 +50,7 @@ public class Trunk {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific trunk properties
      */
@@ -71,6 +71,57 @@ public class Trunk {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Control trunk
+     */
+    public static class ControlTrunk extends SetCommand {
+        Property<LockState> lock = new Property<>(LockState.class, PROPERTY_LOCK);
+        Property<Position> position = new Property<>(Position.class, PROPERTY_POSITION);
+    
+        /**
+         * @return The lock
+         */
+        public Property<LockState> getLock() {
+            return lock;
+        }
+        
+        /**
+         * @return The position
+         */
+        public Property<Position> getPosition() {
+            return position;
+        }
+        
+        /**
+         * Control trunk
+         *
+         * @param lock The lock
+         * @param position The position
+         */
+        public ControlTrunk(@Nullable LockState lock, @Nullable Position position) {
+            super(IDENTIFIER);
+        
+            addProperty(this.lock.update(lock));
+            addProperty(this.position.update(position));
+            if (this.lock.getValue() == null && this.position.getValue() == null) throw new IllegalArgumentException();
+            createBytes();
+        }
+    
+        ControlTrunk(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_LOCK: return lock.update(p);
+                        case PROPERTY_POSITION: return position.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.lock.getValue() == null && this.position.getValue() == null) throw new NoPropertiesException();
         }
     }
 
@@ -151,53 +202,38 @@ public class Trunk {
     }
 
     /**
-     * Control trunk
+     * Get all trunk property availabilities
      */
-    public static class ControlTrunk extends SetCommand {
-        Property<LockState> lock = new Property<>(LockState.class, PROPERTY_LOCK);
-        Property<Position> position = new Property<>(Position.class, PROPERTY_POSITION);
-    
-        /**
-         * @return The lock
-         */
-        public Property<LockState> getLock() {
-            return lock;
-        }
-        
-        /**
-         * @return The position
-         */
-        public Property<Position> getPosition() {
-            return position;
-        }
-        
-        /**
-         * Control trunk
-         *
-         * @param lock The lock
-         * @param position The position
-         */
-        public ControlTrunk(@Nullable LockState lock, @Nullable Position position) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.lock.update(lock));
-            addProperty(this.position.update(position));
-            if (this.lock.getValue() == null && this.position.getValue() == null) throw new IllegalArgumentException();
-            createBytes();
         }
     
-        ControlTrunk(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_LOCK: return lock.update(p);
-                        case PROPERTY_POSITION: return position.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.lock.getValue() == null && this.position.getValue() == null) throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific trunk property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 }

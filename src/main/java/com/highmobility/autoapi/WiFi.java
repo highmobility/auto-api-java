@@ -54,7 +54,7 @@ public class WiFi {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific wi fi properties
      */
@@ -75,6 +75,145 @@ public class WiFi {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Connect to network
+     */
+    public static class ConnectToNetwork extends SetCommand {
+        Property<String> networkSSID = new Property<>(String.class, PROPERTY_NETWORK_SSID);
+        Property<NetworkSecurity> networkSecurity = new Property<>(NetworkSecurity.class, PROPERTY_NETWORK_SECURITY);
+        Property<String> password = new Property<>(String.class, PROPERTY_PASSWORD);
+    
+        /**
+         * @return The network ssid
+         */
+        public Property<String> getNetworkSSID() {
+            return networkSSID;
+        }
+        
+        /**
+         * @return The network security
+         */
+        public Property<NetworkSecurity> getNetworkSecurity() {
+            return networkSecurity;
+        }
+        
+        /**
+         * @return The password
+         */
+        public Property<String> getPassword() {
+            return password;
+        }
+        
+        /**
+         * Connect to network
+         *
+         * @param networkSSID The network SSID
+         * @param networkSecurity The network security
+         * @param password The network password
+         */
+        public ConnectToNetwork(String networkSSID, NetworkSecurity networkSecurity, @Nullable String password) {
+            super(IDENTIFIER);
+        
+            addProperty(this.networkSSID.update(networkSSID));
+            addProperty(this.networkSecurity.update(networkSecurity));
+            addProperty(this.password.update(password));
+            createBytes();
+        }
+    
+        ConnectToNetwork(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_NETWORK_SSID: return networkSSID.update(p);
+                        case PROPERTY_NETWORK_SECURITY: return networkSecurity.update(p);
+                        case PROPERTY_PASSWORD: return password.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.networkSSID.getValue() == null ||
+                this.networkSecurity.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Forget network
+     */
+    public static class ForgetNetwork extends SetCommand {
+        Property<String> networkSSID = new Property<>(String.class, PROPERTY_NETWORK_SSID);
+    
+        /**
+         * @return The network ssid
+         */
+        public Property<String> getNetworkSSID() {
+            return networkSSID;
+        }
+        
+        /**
+         * Forget network
+         *
+         * @param networkSSID The network SSID
+         */
+        public ForgetNetwork(String networkSSID) {
+            super(IDENTIFIER);
+        
+            addProperty(this.networkSSID.update(networkSSID));
+            createBytes();
+        }
+    
+        ForgetNetwork(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_NETWORK_SSID) return networkSSID.update(p);
+                    return null;
+                });
+            }
+            if (this.networkSSID.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Enable disable wi fi
+     */
+    public static class EnableDisableWiFi extends SetCommand {
+        Property<EnabledState> status = new Property<>(EnabledState.class, PROPERTY_STATUS);
+    
+        /**
+         * @return The status
+         */
+        public Property<EnabledState> getStatus() {
+            return status;
+        }
+        
+        /**
+         * Enable disable wi fi
+         *
+         * @param status The status
+         */
+        public EnableDisableWiFi(EnabledState status) {
+            super(IDENTIFIER);
+        
+            addProperty(this.status.update(status));
+            createBytes();
+        }
+    
+        EnableDisableWiFi(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    return null;
+                });
+            }
+            if (this.status.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -197,141 +336,38 @@ public class WiFi {
     }
 
     /**
-     * Connect to network
+     * Get all wi fi property availabilities
      */
-    public static class ConnectToNetwork extends SetCommand {
-        Property<String> networkSSID = new Property<>(String.class, PROPERTY_NETWORK_SSID);
-        Property<NetworkSecurity> networkSecurity = new Property<>(NetworkSecurity.class, PROPERTY_NETWORK_SECURITY);
-        Property<String> password = new Property<>(String.class, PROPERTY_PASSWORD);
-    
-        /**
-         * @return The network ssid
-         */
-        public Property<String> getNetworkSSID() {
-            return networkSSID;
-        }
-        
-        /**
-         * @return The network security
-         */
-        public Property<NetworkSecurity> getNetworkSecurity() {
-            return networkSecurity;
-        }
-        
-        /**
-         * @return The password
-         */
-        public Property<String> getPassword() {
-            return password;
-        }
-        
-        /**
-         * Connect to network
-         *
-         * @param networkSSID The network SSID
-         * @param networkSecurity The network security
-         * @param password The network password
-         */
-        public ConnectToNetwork(String networkSSID, NetworkSecurity networkSecurity, @Nullable String password) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.networkSSID.update(networkSSID));
-            addProperty(this.networkSecurity.update(networkSecurity));
-            addProperty(this.password.update(password));
-            createBytes();
         }
     
-        ConnectToNetwork(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_NETWORK_SSID: return networkSSID.update(p);
-                        case PROPERTY_NETWORK_SECURITY: return networkSecurity.update(p);
-                        case PROPERTY_PASSWORD: return password.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.networkSSID.getValue() == null ||
-                this.networkSecurity.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
-    
+
     /**
-     * Forget network
+     * Get specific wi fi property availabilities.
      */
-    public static class ForgetNetwork extends SetCommand {
-        Property<String> networkSSID = new Property<>(String.class, PROPERTY_NETWORK_SSID);
-    
+    public static class GetAvailabilities extends GetAvailabilityCommand {
         /**
-         * @return The network ssid
+         * @param propertyIdentifiers The property identifiers
          */
-        public Property<String> getNetworkSSID() {
-            return networkSSID;
-        }
-        
-        /**
-         * Forget network
-         *
-         * @param networkSSID The network SSID
-         */
-        public ForgetNetwork(String networkSSID) {
-            super(IDENTIFIER);
-        
-            addProperty(this.networkSSID.update(networkSSID));
-            createBytes();
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
         }
     
-        ForgetNetwork(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_NETWORK_SSID) return networkSSID.update(p);
-                    return null;
-                });
-            }
-            if (this.networkSSID.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Enable disable wi fi
-     */
-    public static class EnableDisableWiFi extends SetCommand {
-        Property<EnabledState> status = new Property<>(EnabledState.class, PROPERTY_STATUS);
-    
-        /**
-         * @return The status
-         */
-        public Property<EnabledState> getStatus() {
-            return status;
-        }
-        
-        /**
-         * Enable disable wi fi
-         *
-         * @param status The status
-         */
-        public EnableDisableWiFi(EnabledState status) {
-            super(IDENTIFIER);
-        
-            addProperty(this.status.update(status));
-            createBytes();
-        }
-    
-        EnableDisableWiFi(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
-                    return null;
-                });
-            }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
 }

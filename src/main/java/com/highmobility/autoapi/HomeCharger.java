@@ -74,7 +74,7 @@ public class HomeCharger {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific home charger properties
      */
@@ -95,6 +95,213 @@ public class HomeCharger {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Set charge current
+     */
+    public static class SetChargeCurrent extends SetCommand {
+        Property<ElectricCurrent> chargeCurrent = new Property<>(ElectricCurrent.class, PROPERTY_CHARGE_CURRENT);
+    
+        /**
+         * @return The charge current
+         */
+        public Property<ElectricCurrent> getChargeCurrent() {
+            return chargeCurrent;
+        }
+        
+        /**
+         * Set charge current
+         *
+         * @param chargeCurrent The charge current
+         */
+        public SetChargeCurrent(ElectricCurrent chargeCurrent) {
+            super(IDENTIFIER);
+        
+            addProperty(this.chargeCurrent.update(chargeCurrent));
+            createBytes();
+        }
+    
+        SetChargeCurrent(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_CURRENT) return chargeCurrent.update(p);
+                    return null;
+                });
+            }
+            if (this.chargeCurrent.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Set price tariffs
+     */
+    public static class SetPriceTariffs extends SetCommand {
+        List<Property<PriceTariff>> priceTariffs;
+    
+        /**
+         * @return The price tariffs
+         */
+        public List<Property<PriceTariff>> getPriceTariffs() {
+            return priceTariffs;
+        }
+        
+        /**
+         * Set price tariffs
+         *
+         * @param priceTariffs The price tariffs
+         */
+        public SetPriceTariffs(List<PriceTariff> priceTariffs) {
+            super(IDENTIFIER);
+        
+            final ArrayList<Property<PriceTariff>> priceTariffsBuilder = new ArrayList<>();
+            if (priceTariffs != null) {
+                for (PriceTariff priceTariff : priceTariffs) {
+                    Property<PriceTariff> prop = new Property<>(0x12, priceTariff);
+                    priceTariffsBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.priceTariffs = priceTariffsBuilder;
+            createBytes();
+        }
+    
+        SetPriceTariffs(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+        
+            final ArrayList<Property<PriceTariff>> priceTariffsBuilder = new ArrayList<>();
+        
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_PRICE_TARIFFS) {
+                        Property<PriceTariff> priceTariff = new Property<>(PriceTariff.class, p);
+                        priceTariffsBuilder.add(priceTariff);
+                        return priceTariff;
+                    }
+                    return null;
+                });
+            }
+        
+            priceTariffs = priceTariffsBuilder;
+            if (this.priceTariffs.size() == 0) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Activate deactivate solar charging
+     */
+    public static class ActivateDeactivateSolarCharging extends SetCommand {
+        Property<ActiveState> solarCharging = new Property<>(ActiveState.class, PROPERTY_SOLAR_CHARGING);
+    
+        /**
+         * @return The solar charging
+         */
+        public Property<ActiveState> getSolarCharging() {
+            return solarCharging;
+        }
+        
+        /**
+         * Activate deactivate solar charging
+         *
+         * @param solarCharging The solar charging
+         */
+        public ActivateDeactivateSolarCharging(ActiveState solarCharging) {
+            super(IDENTIFIER);
+        
+            addProperty(this.solarCharging.update(solarCharging));
+            createBytes();
+        }
+    
+        ActivateDeactivateSolarCharging(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_SOLAR_CHARGING) return solarCharging.update(p);
+                    return null;
+                });
+            }
+            if (this.solarCharging.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Enable disable wi fi hotspot
+     */
+    public static class EnableDisableWiFiHotspot extends SetCommand {
+        Property<EnabledState> wifiHotspotEnabled = new Property<>(EnabledState.class, PROPERTY_WI_FI_HOTSPOT_ENABLED);
+    
+        /**
+         * @return The wi fi hotspot enabled
+         */
+        public Property<EnabledState> getWifiHotspotEnabled() {
+            return wifiHotspotEnabled;
+        }
+        
+        /**
+         * Enable disable wi fi hotspot
+         *
+         * @param wifiHotspotEnabled The wi fi hotspot enabled
+         */
+        public EnableDisableWiFiHotspot(EnabledState wifiHotspotEnabled) {
+            super(IDENTIFIER);
+        
+            addProperty(this.wifiHotspotEnabled.update(wifiHotspotEnabled));
+            createBytes();
+        }
+    
+        EnableDisableWiFiHotspot(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_WI_FI_HOTSPOT_ENABLED) return wifiHotspotEnabled.update(p);
+                    return null;
+                });
+            }
+            if (this.wifiHotspotEnabled.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Authenticate expire
+     */
+    public static class AuthenticateExpire extends SetCommand {
+        Property<AuthenticationState> authenticationState = new Property<>(AuthenticationState.class, PROPERTY_AUTHENTICATION_STATE);
+    
+        /**
+         * @return The authentication state
+         */
+        public Property<AuthenticationState> getAuthenticationState() {
+            return authenticationState;
+        }
+        
+        /**
+         * Authenticate expire
+         *
+         * @param authenticationState The authentication state
+         */
+        public AuthenticateExpire(AuthenticationState authenticationState) {
+            super(IDENTIFIER);
+        
+            addProperty(this.authenticationState.update(authenticationState));
+            createBytes();
+        }
+    
+        AuthenticateExpire(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_AUTHENTICATION_STATE) return authenticationState.update(p);
+                    return null;
+                });
+            }
+            if (this.authenticationState.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -514,209 +721,38 @@ public class HomeCharger {
     }
 
     /**
-     * Set charge current
+     * Get all home charger property availabilities
      */
-    public static class SetChargeCurrent extends SetCommand {
-        Property<ElectricCurrent> chargeCurrent = new Property<>(ElectricCurrent.class, PROPERTY_CHARGE_CURRENT);
-    
-        /**
-         * @return The charge current
-         */
-        public Property<ElectricCurrent> getChargeCurrent() {
-            return chargeCurrent;
-        }
-        
-        /**
-         * Set charge current
-         *
-         * @param chargeCurrent The charge current
-         */
-        public SetChargeCurrent(ElectricCurrent chargeCurrent) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.chargeCurrent.update(chargeCurrent));
-            createBytes();
         }
     
-        SetChargeCurrent(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_CHARGE_CURRENT) return chargeCurrent.update(p);
-                    return null;
-                });
-            }
-            if (this.chargeCurrent.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
-    
+
     /**
-     * Set price tariffs
+     * Get specific home charger property availabilities.
      */
-    public static class SetPriceTariffs extends SetCommand {
-        List<Property<PriceTariff>> priceTariffs;
-    
+    public static class GetAvailabilities extends GetAvailabilityCommand {
         /**
-         * @return The price tariffs
+         * @param propertyIdentifiers The property identifiers
          */
-        public List<Property<PriceTariff>> getPriceTariffs() {
-            return priceTariffs;
-        }
-        
-        /**
-         * Set price tariffs
-         *
-         * @param priceTariffs The price tariffs
-         */
-        public SetPriceTariffs(List<PriceTariff> priceTariffs) {
-            super(IDENTIFIER);
-        
-            final ArrayList<Property<PriceTariff>> priceTariffsBuilder = new ArrayList<>();
-            if (priceTariffs != null) {
-                for (PriceTariff priceTariff : priceTariffs) {
-                    Property<PriceTariff> prop = new Property<>(0x12, priceTariff);
-                    priceTariffsBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.priceTariffs = priceTariffsBuilder;
-            createBytes();
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
         }
     
-        SetPriceTariffs(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(bytes);
-        
-            final ArrayList<Property<PriceTariff>> priceTariffsBuilder = new ArrayList<>();
-        
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_PRICE_TARIFFS) {
-                        Property<PriceTariff> priceTariff = new Property<>(PriceTariff.class, p);
-                        priceTariffsBuilder.add(priceTariff);
-                        return priceTariff;
-                    }
-                    return null;
-                });
-            }
-        
-            priceTariffs = priceTariffsBuilder;
-            if (this.priceTariffs.size() == 0) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Activate deactivate solar charging
-     */
-    public static class ActivateDeactivateSolarCharging extends SetCommand {
-        Property<ActiveState> solarCharging = new Property<>(ActiveState.class, PROPERTY_SOLAR_CHARGING);
-    
-        /**
-         * @return The solar charging
-         */
-        public Property<ActiveState> getSolarCharging() {
-            return solarCharging;
-        }
-        
-        /**
-         * Activate deactivate solar charging
-         *
-         * @param solarCharging The solar charging
-         */
-        public ActivateDeactivateSolarCharging(ActiveState solarCharging) {
-            super(IDENTIFIER);
-        
-            addProperty(this.solarCharging.update(solarCharging));
-            createBytes();
-        }
-    
-        ActivateDeactivateSolarCharging(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_SOLAR_CHARGING) return solarCharging.update(p);
-                    return null;
-                });
-            }
-            if (this.solarCharging.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Enable disable wi fi hotspot
-     */
-    public static class EnableDisableWiFiHotspot extends SetCommand {
-        Property<EnabledState> wifiHotspotEnabled = new Property<>(EnabledState.class, PROPERTY_WI_FI_HOTSPOT_ENABLED);
-    
-        /**
-         * @return The wi fi hotspot enabled
-         */
-        public Property<EnabledState> getWifiHotspotEnabled() {
-            return wifiHotspotEnabled;
-        }
-        
-        /**
-         * Enable disable wi fi hotspot
-         *
-         * @param wifiHotspotEnabled The wi fi hotspot enabled
-         */
-        public EnableDisableWiFiHotspot(EnabledState wifiHotspotEnabled) {
-            super(IDENTIFIER);
-        
-            addProperty(this.wifiHotspotEnabled.update(wifiHotspotEnabled));
-            createBytes();
-        }
-    
-        EnableDisableWiFiHotspot(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_WI_FI_HOTSPOT_ENABLED) return wifiHotspotEnabled.update(p);
-                    return null;
-                });
-            }
-            if (this.wifiHotspotEnabled.getValue() == null) 
-                throw new NoPropertiesException();
-        }
-    }
-    
-    /**
-     * Authenticate expire
-     */
-    public static class AuthenticateExpire extends SetCommand {
-        Property<AuthenticationState> authenticationState = new Property<>(AuthenticationState.class, PROPERTY_AUTHENTICATION_STATE);
-    
-        /**
-         * @return The authentication state
-         */
-        public Property<AuthenticationState> getAuthenticationState() {
-            return authenticationState;
-        }
-        
-        /**
-         * Authenticate expire
-         *
-         * @param authenticationState The authentication state
-         */
-        public AuthenticateExpire(AuthenticationState authenticationState) {
-            super(IDENTIFIER);
-        
-            addProperty(this.authenticationState.update(authenticationState));
-            createBytes();
-        }
-    
-        AuthenticateExpire(byte[] bytes) throws CommandParseException, NoPropertiesException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_AUTHENTICATION_STATE) return authenticationState.update(p);
-                    return null;
-                });
-            }
-            if (this.authenticationState.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
 

@@ -26,11 +26,11 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 import java.util.Calendar;
+import com.highmobility.autoapi.capability.DisabledIn;
 import java.util.ArrayList;
 import java.util.List;
-import com.highmobility.autoapi.capability.DisabledIn;
-import javax.annotation.Nullable;
 import com.highmobility.value.Bytes;
+import javax.annotation.Nullable;
 
 /**
  * The Historical capability
@@ -44,6 +44,122 @@ public class Historical {
     public static final byte PROPERTY_END_DATE = 0x04;
 
     public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.BLE };
+
+    /**
+     * Request states
+     */
+    public static class RequestStates extends SetCommand {
+        PropertyInteger capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false);
+        Property<Calendar> startDate = new Property<>(Calendar.class, PROPERTY_START_DATE);
+        Property<Calendar> endDate = new Property<>(Calendar.class, PROPERTY_END_DATE);
+    
+        /**
+         * @return The capability id
+         */
+        public PropertyInteger getCapabilityID() {
+            return capabilityID;
+        }
+        
+        /**
+         * @return The start date
+         */
+        public Property<Calendar> getStartDate() {
+            return startDate;
+        }
+        
+        /**
+         * @return The end date
+         */
+        public Property<Calendar> getEndDate() {
+            return endDate;
+        }
+        
+        /**
+         * Request states
+         *
+         * @param capabilityID The identifier of the Capability
+         * @param startDate Start date for historical data query
+         * @param endDate End date for historical data query
+         */
+        public RequestStates(Integer capabilityID, @Nullable Calendar startDate, @Nullable Calendar endDate) {
+            super(IDENTIFIER);
+        
+            addProperty(this.capabilityID.update(false, 2, capabilityID));
+            addProperty(this.startDate.update(startDate));
+            addProperty(this.endDate.update(endDate));
+            createBytes();
+        }
+    
+        RequestStates(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_CAPABILITY_ID: return capabilityID.update(p);
+                        case PROPERTY_START_DATE: return startDate.update(p);
+                        case PROPERTY_END_DATE: return endDate.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.capabilityID.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get trips
+     */
+    public static class GetTrips extends SetCommand {
+        PropertyInteger capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false);
+        Property<Calendar> startDate = new Property<>(Calendar.class, PROPERTY_START_DATE);
+        Property<Calendar> endDate = new Property<>(Calendar.class, PROPERTY_END_DATE);
+    
+        /**
+         * @return The start date
+         */
+        public Property<Calendar> getStartDate() {
+            return startDate;
+        }
+        
+        /**
+         * @return The end date
+         */
+        public Property<Calendar> getEndDate() {
+            return endDate;
+        }
+        
+        /**
+         * Get trips
+         *
+         * @param startDate Start date for historical data query
+         * @param endDate End date for historical data query
+         */
+        public GetTrips(@Nullable Calendar startDate, @Nullable Calendar endDate) {
+            super(IDENTIFIER);
+        
+            addProperty(capabilityID.addValueComponent(new Bytes("006a")));
+            addProperty(this.startDate.update(startDate));
+            addProperty(this.endDate.update(endDate));
+            createBytes();
+        }
+    
+        GetTrips(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_CAPABILITY_ID: capabilityID.update(p);
+                        case PROPERTY_START_DATE: return startDate.update(p);
+                        case PROPERTY_END_DATE: return endDate.update(p);
+                    }
+                    return null;
+                });
+            }
+            if ((capabilityID.getValue() == null || capabilityID.getValueComponent().getValueBytes().equals("006a") == false)) 
+                throw new NoPropertiesException();
+        }
+    }
 
     /**
      * The historical state
@@ -126,118 +242,38 @@ public class Historical {
     }
 
     /**
-     * Request states
+     * Get all historical property availabilities
      */
-    public static class RequestStates extends SetCommand {
-        PropertyInteger capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false);
-        Property<Calendar> startDate = new Property<>(Calendar.class, PROPERTY_START_DATE);
-        Property<Calendar> endDate = new Property<>(Calendar.class, PROPERTY_END_DATE);
-    
-        /**
-         * @return The capability id
-         */
-        public PropertyInteger getCapabilityID() {
-            return capabilityID;
-        }
-        
-        /**
-         * @return The start date
-         */
-        public Property<Calendar> getStartDate() {
-            return startDate;
-        }
-        
-        /**
-         * @return The end date
-         */
-        public Property<Calendar> getEndDate() {
-            return endDate;
-        }
-        
-        /**
-         * Request states
-         *
-         * @param capabilityID The identifier of the Capability
-         * @param startDate Start date for historical data query
-         * @param endDate End date for historical data query
-         */
-        public RequestStates(Integer capabilityID, @Nullable Calendar startDate, @Nullable Calendar endDate) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.capabilityID.update(false, 2, capabilityID));
-            addProperty(this.startDate.update(startDate));
-            addProperty(this.endDate.update(endDate));
-            createBytes();
         }
     
-        RequestStates(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CAPABILITY_ID: return capabilityID.update(p);
-                        case PROPERTY_START_DATE: return startDate.update(p);
-                        case PROPERTY_END_DATE: return endDate.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.capabilityID.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
-    
+
     /**
-     * Get trips
+     * Get specific historical property availabilities.
      */
-    public static class GetTrips extends SetCommand {
-        PropertyInteger capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false);
-        Property<Calendar> startDate = new Property<>(Calendar.class, PROPERTY_START_DATE);
-        Property<Calendar> endDate = new Property<>(Calendar.class, PROPERTY_END_DATE);
-    
+    public static class GetAvailabilities extends GetAvailabilityCommand {
         /**
-         * @return The start date
+         * @param propertyIdentifiers The property identifiers
          */
-        public Property<Calendar> getStartDate() {
-            return startDate;
-        }
-        
-        /**
-         * @return The end date
-         */
-        public Property<Calendar> getEndDate() {
-            return endDate;
-        }
-        
-        /**
-         * Get trips
-         *
-         * @param startDate Start date for historical data query
-         * @param endDate End date for historical data query
-         */
-        public GetTrips(@Nullable Calendar startDate, @Nullable Calendar endDate) {
-            super(IDENTIFIER);
-        
-            addProperty(capabilityID.addValueComponent(new Bytes("006a")));
-            addProperty(this.startDate.update(startDate));
-            addProperty(this.endDate.update(endDate));
-            createBytes();
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
         }
     
-        GetTrips(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CAPABILITY_ID: capabilityID.update(p);
-                        case PROPERTY_START_DATE: return startDate.update(p);
-                        case PROPERTY_END_DATE: return endDate.update(p);
-                    }
-                    return null;
-                });
-            }
-            if ((capabilityID.getValue() == null || capabilityID.getValueComponent().getValueBytes().equals("006a") == false)) 
-                throw new NoPropertiesException();
         }
     }
 }

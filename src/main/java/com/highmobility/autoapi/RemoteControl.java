@@ -28,8 +28,8 @@ import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.value.measurement.Angle;
 import com.highmobility.autoapi.value.measurement.Speed;
 import com.highmobility.autoapi.capability.DisabledIn;
-import javax.annotation.Nullable;
 import com.highmobility.value.Bytes;
+import javax.annotation.Nullable;
 
 import static com.highmobility.utils.ByteUtils.hexFromByte;
 
@@ -55,42 +55,6 @@ public class RemoteControl {
     
         GetControlState(byte[] bytes) throws CommandParseException {
             super(State.class, bytes);
-        }
-    }
-
-    /**
-     * The remote control state
-     */
-    public static class State extends SetCommand {
-        Property<ControlMode> controlMode = new Property<>(ControlMode.class, PROPERTY_CONTROL_MODE);
-        Property<Angle> angle = new Property<>(Angle.class, PROPERTY_ANGLE);
-    
-        /**
-         * @return The control mode
-         */
-        public Property<ControlMode> getControlMode() {
-            return controlMode;
-        }
-    
-        /**
-         * @return Wheel base angle
-         */
-        public Property<Angle> getAngle() {
-            return angle;
-        }
-    
-        State(byte[] bytes) throws CommandParseException {
-            super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_CONTROL_MODE: return controlMode.update(p);
-                        case PROPERTY_ANGLE: return angle.update(p);
-                    }
-    
-                    return null;
-                });
-            }
         }
     }
 
@@ -144,7 +108,7 @@ public class RemoteControl {
             if (this.angle.getValue() == null && this.speed.getValue() == null) throw new NoPropertiesException();
         }
     }
-    
+
     /**
      * Start control
      */
@@ -173,7 +137,7 @@ public class RemoteControl {
                 throw new NoPropertiesException();
         }
     }
-    
+
     /**
      * Stop control
      */
@@ -200,6 +164,78 @@ public class RemoteControl {
             }
             if ((controlMode.getValue() == null || controlMode.getValueComponent().getValueBytes().equals("05") == false)) 
                 throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * The remote control state
+     */
+    public static class State extends SetCommand {
+        Property<ControlMode> controlMode = new Property<>(ControlMode.class, PROPERTY_CONTROL_MODE);
+        Property<Angle> angle = new Property<>(Angle.class, PROPERTY_ANGLE);
+    
+        /**
+         * @return The control mode
+         */
+        public Property<ControlMode> getControlMode() {
+            return controlMode;
+        }
+    
+        /**
+         * @return Wheel base angle
+         */
+        public Property<Angle> getAngle() {
+            return angle;
+        }
+    
+        State(byte[] bytes) throws CommandParseException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_CONTROL_MODE: return controlMode.update(p);
+                        case PROPERTY_ANGLE: return angle.update(p);
+                    }
+    
+                    return null;
+                });
+            }
+        }
+    }
+
+    /**
+     * Get all remote control property availabilities
+     */
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
+            super(IDENTIFIER);
+        }
+    
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
+            super(bytes);
+        }
+    }
+
+    /**
+     * Get specific remote control property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 

@@ -25,6 +25,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.value.Bytes;
 
 /**
  * The Valet Mode capability
@@ -44,6 +45,44 @@ public class ValetMode {
     
         GetValetMode(byte[] bytes) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Activate deactivate valet mode
+     */
+    public static class ActivateDeactivateValetMode extends SetCommand {
+        Property<ActiveState> status = new Property<>(ActiveState.class, PROPERTY_STATUS);
+    
+        /**
+         * @return The status
+         */
+        public Property<ActiveState> getStatus() {
+            return status;
+        }
+        
+        /**
+         * Activate deactivate valet mode
+         *
+         * @param status The status
+         */
+        public ActivateDeactivateValetMode(ActiveState status) {
+            super(IDENTIFIER);
+        
+            addProperty(this.status.update(status));
+            createBytes();
+        }
+    
+        ActivateDeactivateValetMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    return null;
+                });
+            }
+            if (this.status.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -103,40 +142,38 @@ public class ValetMode {
     }
 
     /**
-     * Activate deactivate valet mode
+     * Get all valet mode property availabilities
      */
-    public static class ActivateDeactivateValetMode extends SetCommand {
-        Property<ActiveState> status = new Property<>(ActiveState.class, PROPERTY_STATUS);
-    
-        /**
-         * @return The status
-         */
-        public Property<ActiveState> getStatus() {
-            return status;
-        }
-        
-        /**
-         * Activate deactivate valet mode
-         *
-         * @param status The status
-         */
-        public ActivateDeactivateValetMode(ActiveState status) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.status.update(status));
-            createBytes();
         }
     
-        ActivateDeactivateValetMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
-                    return null;
-                });
-            }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific valet mode property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 }

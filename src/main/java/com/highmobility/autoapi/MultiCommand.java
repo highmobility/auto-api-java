@@ -26,6 +26,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.Property;
 import java.util.ArrayList;
 import java.util.List;
+import com.highmobility.value.Bytes;
 
 /**
  * The Multi Command capability
@@ -35,6 +36,61 @@ public class MultiCommand {
 
     public static final byte PROPERTY_MULTI_STATES = 0x01;
     public static final byte PROPERTY_MULTI_COMMANDS = 0x02;
+
+    /**
+     * Multi command command
+     */
+    public static class MultiCommandCommand extends SetCommand {
+        List<Property<Command>> multiCommands;
+    
+        /**
+         * @return The multi commands
+         */
+        public List<Property<Command>> getMultiCommands() {
+            return multiCommands;
+        }
+        
+        /**
+         * Multi command command
+         *
+         * @param multiCommands The outgoing commands
+         */
+        public MultiCommandCommand(List<Command> multiCommands) {
+            super(IDENTIFIER);
+        
+            final ArrayList<Property<Command>> multiCommandsBuilder = new ArrayList<>();
+            if (multiCommands != null) {
+                for (Command multiCommand : multiCommands) {
+                    Property<Command> prop = new Property<>(0x02, multiCommand);
+                    multiCommandsBuilder.add(prop);
+                    addProperty(prop);
+                }
+            }
+            this.multiCommands = multiCommandsBuilder;
+            createBytes();
+        }
+    
+        MultiCommandCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+        
+            final ArrayList<Property<Command>> multiCommandsBuilder = new ArrayList<>();
+        
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_MULTI_COMMANDS) {
+                        Property<Command> multiCommand = new Property<>(Command.class, p);
+                        multiCommandsBuilder.add(multiCommand);
+                        return multiCommand;
+                    }
+                    return null;
+                });
+            }
+        
+            multiCommands = multiCommandsBuilder;
+            if (this.multiCommands.size() == 0) 
+                throw new NoPropertiesException();
+        }
+    }
 
     /**
      * The multi command state
@@ -117,57 +173,38 @@ public class MultiCommand {
     }
 
     /**
-     * Multi command command
+     * Get all multi command property availabilities
      */
-    public static class MultiCommandCommand extends SetCommand {
-        List<Property<Command>> multiCommands;
-    
-        /**
-         * @return The multi commands
-         */
-        public List<Property<Command>> getMultiCommands() {
-            return multiCommands;
-        }
-        
-        /**
-         * Multi command command
-         *
-         * @param multiCommands The outgoing commands
-         */
-        public MultiCommandCommand(List<Command> multiCommands) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            final ArrayList<Property<Command>> multiCommandsBuilder = new ArrayList<>();
-            if (multiCommands != null) {
-                for (Command multiCommand : multiCommands) {
-                    Property<Command> prop = new Property<>(0x02, multiCommand);
-                    multiCommandsBuilder.add(prop);
-                    addProperty(prop);
-                }
-            }
-            this.multiCommands = multiCommandsBuilder;
-            createBytes();
         }
     
-        MultiCommandCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-        
-            final ArrayList<Property<Command>> multiCommandsBuilder = new ArrayList<>();
-        
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_MULTI_COMMANDS) {
-                        Property<Command> multiCommand = new Property<>(Command.class, p);
-                        multiCommandsBuilder.add(multiCommand);
-                        return multiCommand;
-                    }
-                    return null;
-                });
-            }
-        
-            multiCommands = multiCommandsBuilder;
-            if (this.multiCommands.size() == 0) 
-                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific multi command property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 }

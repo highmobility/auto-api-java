@@ -49,7 +49,7 @@ public class Engine {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific engine properties
      */
@@ -70,6 +70,82 @@ public class Engine {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Turn engine on off
+     */
+    public static class TurnEngineOnOff extends SetCommand {
+        Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
+    
+        /**
+         * @return The status
+         */
+        public Property<OnOffState> getStatus() {
+            return status;
+        }
+        
+        /**
+         * Turn engine on off
+         *
+         * @param status The status
+         */
+        public TurnEngineOnOff(OnOffState status) {
+            super(IDENTIFIER);
+        
+            addProperty(this.status.update(status));
+            createBytes();
+        }
+    
+        TurnEngineOnOff(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    return null;
+                });
+            }
+            if (this.status.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Activate deactivate start stop
+     */
+    public static class ActivateDeactivateStartStop extends SetCommand {
+        Property<ActiveState> startStopState = new Property<>(ActiveState.class, PROPERTY_START_STOP_STATE);
+    
+        /**
+         * @return The start stop state
+         */
+        public Property<ActiveState> getStartStopState() {
+            return startStopState;
+        }
+        
+        /**
+         * Activate deactivate start stop
+         *
+         * @param startStopState The start stop state
+         */
+        public ActivateDeactivateStartStop(ActiveState startStopState) {
+            super(IDENTIFIER);
+        
+            addProperty(this.startStopState.update(startStopState));
+            createBytes();
+        }
+    
+        ActivateDeactivateStartStop(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_START_STOP_STATE) return startStopState.update(p);
+                    return null;
+                });
+            }
+            if (this.startStopState.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -150,78 +226,38 @@ public class Engine {
     }
 
     /**
-     * Turn engine on off
+     * Get all engine property availabilities
      */
-    public static class TurnEngineOnOff extends SetCommand {
-        Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
-    
-        /**
-         * @return The status
-         */
-        public Property<OnOffState> getStatus() {
-            return status;
-        }
-        
-        /**
-         * Turn engine on off
-         *
-         * @param status The status
-         */
-        public TurnEngineOnOff(OnOffState status) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.status.update(status));
-            createBytes();
         }
     
-        TurnEngineOnOff(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
-                    return null;
-                });
-            }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
-    
+
     /**
-     * Activate deactivate start stop
+     * Get specific engine property availabilities.
      */
-    public static class ActivateDeactivateStartStop extends SetCommand {
-        Property<ActiveState> startStopState = new Property<>(ActiveState.class, PROPERTY_START_STOP_STATE);
-    
+    public static class GetAvailabilities extends GetAvailabilityCommand {
         /**
-         * @return The start stop state
+         * @param propertyIdentifiers The property identifiers
          */
-        public Property<ActiveState> getStartStopState() {
-            return startStopState;
-        }
-        
-        /**
-         * Activate deactivate start stop
-         *
-         * @param startStopState The start stop state
-         */
-        public ActivateDeactivateStartStop(ActiveState startStopState) {
-            super(IDENTIFIER);
-        
-            addProperty(this.startStopState.update(startStopState));
-            createBytes();
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
         }
     
-        ActivateDeactivateStartStop(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_START_STOP_STATE) return startStopState.update(p);
-                    return null;
-                });
-            }
-            if (this.startStopState.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
 }

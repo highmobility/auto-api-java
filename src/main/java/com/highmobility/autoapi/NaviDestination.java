@@ -56,7 +56,7 @@ public class NaviDestination {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific navi destination properties
      */
@@ -77,6 +77,57 @@ public class NaviDestination {
     
         GetNaviDestinationProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Set navi destination
+     */
+    public static class SetNaviDestination extends SetCommand {
+        Property<Coordinates> coordinates = new Property<>(Coordinates.class, PROPERTY_COORDINATES);
+        Property<String> destinationName = new Property<>(String.class, PROPERTY_DESTINATION_NAME);
+    
+        /**
+         * @return The coordinates
+         */
+        public Property<Coordinates> getCoordinates() {
+            return coordinates;
+        }
+        
+        /**
+         * @return The destination name
+         */
+        public Property<String> getDestinationName() {
+            return destinationName;
+        }
+        
+        /**
+         * Set navi destination
+         *
+         * @param coordinates The coordinates
+         * @param destinationName Destination name
+         */
+        public SetNaviDestination(Coordinates coordinates, @Nullable String destinationName) {
+            super(IDENTIFIER);
+        
+            addProperty(this.coordinates.update(coordinates));
+            addProperty(this.destinationName.update(destinationName));
+            createBytes();
+        }
+    
+        SetNaviDestination(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_COORDINATES: return coordinates.update(p);
+                        case PROPERTY_DESTINATION_NAME: return destinationName.update(p);
+                    }
+                    return null;
+                });
+            }
+            if (this.coordinates.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -241,53 +292,38 @@ public class NaviDestination {
     }
 
     /**
-     * Set navi destination
+     * Get all navi destination property availabilities
      */
-    public static class SetNaviDestination extends SetCommand {
-        Property<Coordinates> coordinates = new Property<>(Coordinates.class, PROPERTY_COORDINATES);
-        Property<String> destinationName = new Property<>(String.class, PROPERTY_DESTINATION_NAME);
-    
-        /**
-         * @return The coordinates
-         */
-        public Property<Coordinates> getCoordinates() {
-            return coordinates;
-        }
-        
-        /**
-         * @return The destination name
-         */
-        public Property<String> getDestinationName() {
-            return destinationName;
-        }
-        
-        /**
-         * Set navi destination
-         *
-         * @param coordinates The coordinates
-         * @param destinationName Destination name
-         */
-        public SetNaviDestination(Coordinates coordinates, @Nullable String destinationName) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.coordinates.update(coordinates));
-            addProperty(this.destinationName.update(destinationName));
-            createBytes();
         }
     
-        SetNaviDestination(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_COORDINATES: return coordinates.update(p);
-                        case PROPERTY_DESTINATION_NAME: return destinationName.update(p);
-                    }
-                    return null;
-                });
-            }
-            if (this.coordinates.getValue() == null) 
-                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific navi destination property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 }

@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import com.highmobility.autoapi.property.Property;
 import java.util.ArrayList;
 import java.util.List;
+import com.highmobility.value.Bytes;
 
 /**
  * The Vehicle Status capability
@@ -141,6 +142,42 @@ public class VehicleStatus {
                 states.add(state);
                 return this;
             }
+        }
+    }
+
+    /**
+     * Get all vehicle status property availabilities
+     */
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
+            super(IDENTIFIER);
+        }
+    
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
+            super(bytes);
+        }
+    }
+
+    /**
+     * Get specific vehicle status property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 }

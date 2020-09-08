@@ -52,7 +52,7 @@ public class Ignition {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific ignition properties
      */
@@ -73,6 +73,44 @@ public class Ignition {
     
         GetProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Turn ignition on off
+     */
+    public static class TurnIgnitionOnOff extends SetCommand {
+        Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
+    
+        /**
+         * @return The status
+         */
+        public Property<OnOffState> getStatus() {
+            return status;
+        }
+        
+        /**
+         * Turn ignition on off
+         *
+         * @param status The status
+         */
+        public TurnIgnitionOnOff(OnOffState status) {
+            super(IDENTIFIER);
+        
+            addProperty(this.status.update(status));
+            createBytes();
+        }
+    
+        TurnIgnitionOnOff(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    return null;
+                });
+            }
+            if (this.status.getValue() == null) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -174,40 +212,38 @@ public class Ignition {
     }
 
     /**
-     * Turn ignition on off
+     * Get all ignition property availabilities
      */
-    public static class TurnIgnitionOnOff extends SetCommand {
-        Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
-    
-        /**
-         * @return The status
-         */
-        public Property<OnOffState> getStatus() {
-            return status;
-        }
-        
-        /**
-         * Turn ignition on off
-         *
-         * @param status The status
-         */
-        public TurnIgnitionOnOff(OnOffState status) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(this.status.update(status));
-            createBytes();
         }
     
-        TurnIgnitionOnOff(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
-                    return null;
-                });
-            }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * Get specific ignition property availabilities.
+     */
+    public static class GetAvailabilities extends GetAvailabilityCommand {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 

@@ -26,8 +26,9 @@ package com.highmobility.autoapi;
 public class Type {
     public static final int GET = 0;
     public static final int SET = 1;
+    public static final int GET_AVAILABILITY = 2;
 
-    public static Integer fromByte(byte value)  {
+    public static Integer fromByte(byte value) {
         return (int)value;
     }
 

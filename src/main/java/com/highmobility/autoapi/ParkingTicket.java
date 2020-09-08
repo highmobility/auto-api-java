@@ -55,7 +55,7 @@ public class ParkingTicket {
             super(State.class, bytes);
         }
     }
-    
+
     /**
      * Get specific parking ticket properties
      */
@@ -76,6 +76,113 @@ public class ParkingTicket {
     
         GetParkingTicketProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
+        }
+    }
+
+    /**
+     * Start parking
+     */
+    public static class StartParking extends SetCommand {
+        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
+        Property<String> operatorName = new Property<>(String.class, PROPERTY_OPERATOR_NAME);
+        Property<String> operatorTicketID = new Property<>(String.class, PROPERTY_OPERATOR_TICKET_ID);
+        Property<Calendar> ticketStartTime = new Property<>(Calendar.class, PROPERTY_TICKET_START_TIME);
+        Property<Calendar> ticketEndTime = new Property<>(Calendar.class, PROPERTY_TICKET_END_TIME);
+    
+        /**
+         * @return The operator name
+         */
+        public Property<String> getOperatorName() {
+            return operatorName;
+        }
+        
+        /**
+         * @return The operator ticket id
+         */
+        public Property<String> getOperatorTicketID() {
+            return operatorTicketID;
+        }
+        
+        /**
+         * @return The ticket start time
+         */
+        public Property<Calendar> getTicketStartTime() {
+            return ticketStartTime;
+        }
+        
+        /**
+         * @return The ticket end time
+         */
+        public Property<Calendar> getTicketEndTime() {
+            return ticketEndTime;
+        }
+        
+        /**
+         * Start parking
+         *
+         * @param operatorName Operator name
+         * @param operatorTicketID Operator ticket ID
+         * @param ticketStartTime Parking ticket start time
+         * @param ticketEndTime Parking ticket end time
+         */
+        public StartParking(@Nullable String operatorName, String operatorTicketID, Calendar ticketStartTime, @Nullable Calendar ticketEndTime) {
+            super(IDENTIFIER);
+        
+            addProperty(status.addValueComponent(new Bytes("01")));
+            addProperty(this.operatorName.update(operatorName));
+            addProperty(this.operatorTicketID.update(operatorTicketID));
+            addProperty(this.ticketStartTime.update(ticketStartTime));
+            addProperty(this.ticketEndTime.update(ticketEndTime));
+            createBytes();
+        }
+    
+        StartParking(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_STATUS: status.update(p);
+                        case PROPERTY_OPERATOR_NAME: return operatorName.update(p);
+                        case PROPERTY_OPERATOR_TICKET_ID: return operatorTicketID.update(p);
+                        case PROPERTY_TICKET_START_TIME: return ticketStartTime.update(p);
+                        case PROPERTY_TICKET_END_TIME: return ticketEndTime.update(p);
+                    }
+                    return null;
+                });
+            }
+            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("01") == false) ||
+                this.operatorTicketID.getValue() == null ||
+                this.ticketStartTime.getValue() == null) 
+                throw new NoPropertiesException();
+        }
+    }
+
+    /**
+     * End parking
+     */
+    public static class EndParking extends SetCommand {
+        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
+    
+        /**
+         * End parking
+         */
+        public EndParking() {
+            super(IDENTIFIER);
+        
+            addProperty(status.addValueComponent(new Bytes("00")));
+            createBytes();
+        }
+    
+        EndParking(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    return null;
+                });
+            }
+            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("00") == false)) 
+                throw new NoPropertiesException();
         }
     }
 
@@ -219,109 +326,38 @@ public class ParkingTicket {
     }
 
     /**
-     * Start parking
+     * Get all parking ticket property availabilities
      */
-    public static class StartParking extends SetCommand {
-        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
-        Property<String> operatorName = new Property<>(String.class, PROPERTY_OPERATOR_NAME);
-        Property<String> operatorTicketID = new Property<>(String.class, PROPERTY_OPERATOR_TICKET_ID);
-        Property<Calendar> ticketStartTime = new Property<>(Calendar.class, PROPERTY_TICKET_START_TIME);
-        Property<Calendar> ticketEndTime = new Property<>(Calendar.class, PROPERTY_TICKET_END_TIME);
-    
-        /**
-         * @return The operator name
-         */
-        public Property<String> getOperatorName() {
-            return operatorName;
-        }
-        
-        /**
-         * @return The operator ticket id
-         */
-        public Property<String> getOperatorTicketID() {
-            return operatorTicketID;
-        }
-        
-        /**
-         * @return The ticket start time
-         */
-        public Property<Calendar> getTicketStartTime() {
-            return ticketStartTime;
-        }
-        
-        /**
-         * @return The ticket end time
-         */
-        public Property<Calendar> getTicketEndTime() {
-            return ticketEndTime;
-        }
-        
-        /**
-         * Start parking
-         *
-         * @param operatorName Operator name
-         * @param operatorTicketID Operator ticket ID
-         * @param ticketStartTime Parking ticket start time
-         * @param ticketEndTime Parking ticket end time
-         */
-        public StartParking(@Nullable String operatorName, String operatorTicketID, Calendar ticketStartTime, @Nullable Calendar ticketEndTime) {
+    public static class GetAllAvailabilities extends GetAvailabilityCommand {
+        public GetAllAvailabilities() {
             super(IDENTIFIER);
-        
-            addProperty(status.addValueComponent(new Bytes("01")));
-            addProperty(this.operatorName.update(operatorName));
-            addProperty(this.operatorTicketID.update(operatorTicketID));
-            addProperty(this.ticketStartTime.update(ticketStartTime));
-            addProperty(this.ticketEndTime.update(ticketEndTime));
-            createBytes();
         }
     
-        StartParking(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    switch (p.getPropertyIdentifier()) {
-                        case PROPERTY_STATUS: status.update(p);
-                        case PROPERTY_OPERATOR_NAME: return operatorName.update(p);
-                        case PROPERTY_OPERATOR_TICKET_ID: return operatorTicketID.update(p);
-                        case PROPERTY_TICKET_START_TIME: return ticketStartTime.update(p);
-                        case PROPERTY_TICKET_END_TIME: return ticketEndTime.update(p);
-                    }
-                    return null;
-                });
-            }
-            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("01") == false) ||
-                this.operatorTicketID.getValue() == null ||
-                this.ticketStartTime.getValue() == null) 
-                throw new NoPropertiesException();
         }
     }
-    
+
     /**
-     * End parking
+     * Get specific parking ticket property availabilities.
      */
-    public static class EndParking extends SetCommand {
-        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
-    
+    public static class GetAvailabilities extends GetAvailabilityCommand {
         /**
-         * End parking
+         * @param propertyIdentifiers The property identifiers
          */
-        public EndParking() {
-            super(IDENTIFIER);
-        
-            addProperty(status.addValueComponent(new Bytes("00")));
-            createBytes();
+        public GetAvailabilities(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
         }
     
-        EndParking(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        /**
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetAvailabilities(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(bytes);
-            while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
-                    return null;
-                });
-            }
-            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("00") == false)) 
-                throw new NoPropertiesException();
         }
     }
 
