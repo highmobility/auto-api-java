@@ -303,7 +303,8 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(state.getConfirmedTroubleCodes()[1].value?.status == "ACTIVE")
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "003300")
         val defaultGetter = Diagnostics.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -315,7 +316,8 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "003302")
         val created = Diagnostics.GetStateAvailability()
         assertTrue(created.identifier == Identifier.DIAGNOSTICS)
@@ -332,7 +334,8 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
         val allBytes = Bytes(COMMAND_HEADER + "003302" + identifierBytes)
         val constructed = Diagnostics.GetStateAvailability(identifierBytes)

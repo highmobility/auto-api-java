@@ -68,7 +68,8 @@ class KRooftopControlTest : BaseTest() {
         assertTrue(state.getSunroofRainEvent().value == RooftopControl.SunroofRainEvent.NO_EVENT)
     }
     
-    @Test fun testGetRooftopState() {
+    @Test
+    fun testGetRooftopState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "002500")
         val defaultGetter = RooftopControl.GetRooftopState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -80,7 +81,8 @@ class KRooftopControlTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506"))
     }
     
-    @Test fun testGetRooftopStateAvailabilityAll() {
+    @Test
+    fun testGetRooftopStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "002502")
         val created = RooftopControl.GetRooftopStateAvailability()
         assertTrue(created.identifier == Identifier.ROOFTOP_CONTROL)
@@ -97,7 +99,8 @@ class KRooftopControlTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetRooftopStateAvailabilitySome() {
+    @Test
+    fun testGetRooftopStateAvailabilitySome() {
         val identifierBytes = Bytes("010203040506")
         val allBytes = Bytes(COMMAND_HEADER + "002502" + identifierBytes)
         val constructed = RooftopControl.GetRooftopStateAvailability(identifierBytes)
@@ -117,7 +120,8 @@ class KRooftopControlTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun controlRooftop() {
+    @Test
+    fun controlRooftop() {
         val bytes = Bytes(COMMAND_HEADER + "002501" +
             "01000B0100083ff0000000000000" +
             "02000B0100083fe0000000000000" +

@@ -100,7 +100,8 @@ class KChassisSettingsTest : BaseTest() {
         assertTrue(state.getMinimumChassisPosition().value?.unit == Length.Unit.MILLIMETERS)
     }
     
-    @Test fun testGetChassisSettings() {
+    @Test
+    fun testGetChassisSettings() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "005300")
         val defaultGetter = ChassisSettings.GetChassisSettings()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -112,7 +113,8 @@ class KChassisSettingsTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010205060708090a"))
     }
     
-    @Test fun testGetChassisSettingsAvailabilityAll() {
+    @Test
+    fun testGetChassisSettingsAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "005302")
         val created = ChassisSettings.GetChassisSettingsAvailability()
         assertTrue(created.identifier == Identifier.CHASSIS_SETTINGS)
@@ -129,7 +131,8 @@ class KChassisSettingsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetChassisSettingsAvailabilitySome() {
+    @Test
+    fun testGetChassisSettingsAvailabilitySome() {
         val identifierBytes = Bytes("010205060708090a")
         val allBytes = Bytes(COMMAND_HEADER + "005302" + identifierBytes)
         val constructed = ChassisSettings.GetChassisSettingsAvailability(identifierBytes)
@@ -149,7 +152,8 @@ class KChassisSettingsTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun setDrivingMode() {
+    @Test
+    fun setDrivingMode() {
         val bytes = Bytes(COMMAND_HEADER + "005301" +
             "01000401000101")
     
@@ -163,7 +167,8 @@ class KChassisSettingsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun startStopSportsChrono() {
+    @Test
+    fun startStopSportsChrono() {
         val bytes = Bytes(COMMAND_HEADER + "005301" +
             "02000401000101")
     
@@ -177,7 +182,8 @@ class KChassisSettingsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun setSpringRates() {
+    @Test
+    fun setSpringRates() {
         val bytes = Bytes(COMMAND_HEADER + "005301" +
             "05000E01000B0018014035000000000000" +
             "05000E01000B0118014037000000000000")
@@ -199,7 +205,8 @@ class KChassisSettingsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun setChassisPosition() {
+    @Test
+    fun setChassisPosition() {
         val bytes = Bytes(COMMAND_HEADER + "005301" +
             "08000D01000A12014039666666666666")
     

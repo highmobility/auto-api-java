@@ -77,7 +77,8 @@ class KWindscreenTest : BaseTest() {
         assertTrue(dateIsSame(state.getWindscreenDamageDetectionTime().value, "2017-01-10T16:32:05.000Z"))
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "004200")
         val defaultGetter = Windscreen.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -89,7 +90,8 @@ class KWindscreenTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "004202")
         val created = Windscreen.GetStateAvailability()
         assertTrue(created.identifier == Identifier.WINDSCREEN)
@@ -106,7 +108,8 @@ class KWindscreenTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0102030405060708")
         val allBytes = Bytes(COMMAND_HEADER + "004202" + identifierBytes)
         val constructed = Windscreen.GetStateAvailability(identifierBytes)
@@ -126,7 +129,8 @@ class KWindscreenTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun setWindscreenDamage() {
+    @Test
+    fun setWindscreenDamage() {
         val bytes = Bytes(COMMAND_HEADER + "004201" +
             "03000401000101" +
             "0500050100020102")
@@ -143,7 +147,8 @@ class KWindscreenTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun setWindscreenReplacementNeeded() {
+    @Test
+    fun setWindscreenReplacementNeeded() {
         val bytes = Bytes(COMMAND_HEADER + "004201" +
             "06000401000101")
     
@@ -157,7 +162,8 @@ class KWindscreenTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun controlWipers() {
+    @Test
+    fun controlWipers() {
         val bytes = Bytes(COMMAND_HEADER + "004201" +
             "01000401000102" +
             "02000401000103")

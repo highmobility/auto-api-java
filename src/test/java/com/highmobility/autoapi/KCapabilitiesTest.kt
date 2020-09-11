@@ -67,7 +67,8 @@ class KCapabilitiesTest : BaseTest() {
         assertTrue(state.getWebhooks()[1].value?.event == Webhook.Event.TRIP_ENDED)
     }
     
-    @Test fun testGetCapabilities() {
+    @Test
+    fun testGetCapabilities() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "001000")
         val defaultGetter = Capabilities.GetCapabilities()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -79,7 +80,8 @@ class KCapabilitiesTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test fun testGetCapabilitiesAvailabilityAll() {
+    @Test
+    fun testGetCapabilitiesAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "001002")
         val created = Capabilities.GetCapabilitiesAvailability()
         assertTrue(created.identifier == Identifier.CAPABILITIES)
@@ -96,7 +98,8 @@ class KCapabilitiesTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetCapabilitiesAvailabilitySome() {
+    @Test
+    fun testGetCapabilitiesAvailabilitySome() {
         val identifierBytes = Bytes("0102")
         val allBytes = Bytes(COMMAND_HEADER + "001002" + identifierBytes)
         val constructed = Capabilities.GetCapabilitiesAvailability(identifierBytes)

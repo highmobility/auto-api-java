@@ -55,7 +55,8 @@ class KHonkHornFlashLightsTest : BaseTest() {
         assertTrue(state.getFlashers().value == HonkHornFlashLights.Flashers.LEFT_FLASHER_ACTIVE)
     }
     
-    @Test fun testGetFlashersState() {
+    @Test
+    fun testGetFlashersState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "002600")
         val defaultGetter = HonkHornFlashLights.GetFlashersState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -67,7 +68,8 @@ class KHonkHornFlashLightsTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405"))
     }
     
-    @Test fun testGetFlashersStateAvailabilityAll() {
+    @Test
+    fun testGetFlashersStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "002602")
         val created = HonkHornFlashLights.GetFlashersStateAvailability()
         assertTrue(created.identifier == Identifier.HONK_HORN_FLASH_LIGHTS)
@@ -84,7 +86,8 @@ class KHonkHornFlashLightsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetFlashersStateAvailabilitySome() {
+    @Test
+    fun testGetFlashersStateAvailabilitySome() {
         val identifierBytes = Bytes("0102030405")
         val allBytes = Bytes(COMMAND_HEADER + "002602" + identifierBytes)
         val constructed = HonkHornFlashLights.GetFlashersStateAvailability(identifierBytes)
@@ -104,7 +107,8 @@ class KHonkHornFlashLightsTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun honkFlash() {
+    @Test
+    fun honkFlash() {
         val bytes = Bytes(COMMAND_HEADER + "002601" +
             "03000401000105" +
             "05000D01000A07004000000000000000")
@@ -121,7 +125,8 @@ class KHonkHornFlashLightsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun activateDeactivateEmergencyFlasher() {
+    @Test
+    fun activateDeactivateEmergencyFlasher() {
         val bytes = Bytes(COMMAND_HEADER + "002601" +
             "04000401000101")
     

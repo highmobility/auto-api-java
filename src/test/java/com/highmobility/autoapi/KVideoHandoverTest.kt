@@ -31,7 +31,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertTrue
 
 class KVideoHandoverTest : BaseTest() {
-    @Test fun videoHandoverCommand() {
+    @Test
+    fun videoHandoverCommand() {
         val bytes = Bytes(COMMAND_HEADER + "004301" +
             "01001901001668747470733a2f2f6269742e6c792f326f6259374735" +
             "03000401000101" +

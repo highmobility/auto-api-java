@@ -91,7 +91,8 @@ class KSeatsTest : BaseTest() {
         assertTrue(state.getSeatbeltsState()[4].value?.fastenedState == SeatbeltState.FastenedState.NOT_FASTENED)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "005600")
         val defaultGetter = Seats.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -103,7 +104,8 @@ class KSeatsTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0203"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "005602")
         val created = Seats.GetStateAvailability()
         assertTrue(created.identifier == Identifier.SEATS)
@@ -120,7 +122,8 @@ class KSeatsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0203")
         val allBytes = Bytes(COMMAND_HEADER + "005602" + identifierBytes)
         val constructed = Seats.GetStateAvailability(identifierBytes)

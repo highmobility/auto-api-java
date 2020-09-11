@@ -59,7 +59,8 @@ class KLightConditionsTest : BaseTest() {
         assertTrue(state.getInsideLight().value?.unit == Illuminance.Unit.LUX)
     }
     
-    @Test fun testGetLightConditions() {
+    @Test
+    fun testGetLightConditions() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "005400")
         val defaultGetter = LightConditions.GetLightConditions()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -71,7 +72,8 @@ class KLightConditionsTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test fun testGetLightConditionsAvailabilityAll() {
+    @Test
+    fun testGetLightConditionsAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "005402")
         val created = LightConditions.GetLightConditionsAvailability()
         assertTrue(created.identifier == Identifier.LIGHT_CONDITIONS)
@@ -88,7 +90,8 @@ class KLightConditionsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetLightConditionsAvailabilitySome() {
+    @Test
+    fun testGetLightConditionsAvailabilitySome() {
         val identifierBytes = Bytes("0102")
         val allBytes = Bytes(COMMAND_HEADER + "005402" + identifierBytes)
         val constructed = LightConditions.GetLightConditionsAvailability(identifierBytes)

@@ -89,7 +89,8 @@ class KTachographTest : BaseTest() {
         assertTrue(state.getVehicleSpeed().value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "006400")
         val defaultGetter = Tachograph.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -101,7 +102,8 @@ class KTachographTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("01020304050607"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "006402")
         val created = Tachograph.GetStateAvailability()
         assertTrue(created.identifier == Identifier.TACHOGRAPH)
@@ -118,7 +120,8 @@ class KTachographTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("01020304050607")
         val allBytes = Bytes(COMMAND_HEADER + "006402" + identifierBytes)
         val constructed = Tachograph.GetStateAvailability(identifierBytes)

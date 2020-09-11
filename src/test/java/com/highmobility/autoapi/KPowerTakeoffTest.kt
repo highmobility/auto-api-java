@@ -57,7 +57,8 @@ class KPowerTakeoffTest : BaseTest() {
         assertTrue(state.getEngaged().value == PowerTakeoff.Engaged.ENGAGED)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "006500")
         val defaultGetter = PowerTakeoff.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -69,7 +70,8 @@ class KPowerTakeoffTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "006502")
         val created = PowerTakeoff.GetStateAvailability()
         assertTrue(created.identifier == Identifier.POWER_TAKEOFF)
@@ -86,7 +88,8 @@ class KPowerTakeoffTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0102")
         val allBytes = Bytes(COMMAND_HEADER + "006502" + identifierBytes)
         val constructed = PowerTakeoff.GetStateAvailability(identifierBytes)
@@ -106,7 +109,8 @@ class KPowerTakeoffTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun activateDeactivatePowerTakeoff() {
+    @Test
+    fun activateDeactivatePowerTakeoff() {
         val bytes = Bytes(COMMAND_HEADER + "006501" +
             "01000401000101")
     

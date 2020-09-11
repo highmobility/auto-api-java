@@ -132,7 +132,8 @@ class KRaceTest : BaseTest() {
         assertTrue(state.getVehicleMoving().value == Race.VehicleMoving.MOVING)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "005700")
         val defaultGetter = Race.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -144,7 +145,8 @@ class KRaceTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "005702")
         val created = Race.GetStateAvailability()
         assertTrue(created.identifier == Identifier.RACE)
@@ -161,7 +163,8 @@ class KRaceTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112")
         val allBytes = Bytes(COMMAND_HEADER + "005702" + identifierBytes)
         val constructed = Race.GetStateAvailability(identifierBytes)

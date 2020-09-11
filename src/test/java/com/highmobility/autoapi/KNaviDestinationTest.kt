@@ -73,7 +73,8 @@ class KNaviDestinationTest : BaseTest() {
         assertTrue(state.getDistanceToDestination().value?.unit == Length.Unit.KILOMETERS)
     }
     
-    @Test fun testGetNaviDestination() {
+    @Test
+    fun testGetNaviDestination() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "003100")
         val defaultGetter = NaviDestination.GetNaviDestination()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -85,7 +86,8 @@ class KNaviDestinationTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506"))
     }
     
-    @Test fun testGetNaviDestinationAvailabilityAll() {
+    @Test
+    fun testGetNaviDestinationAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "003102")
         val created = NaviDestination.GetNaviDestinationAvailability()
         assertTrue(created.identifier == Identifier.NAVI_DESTINATION)
@@ -102,7 +104,8 @@ class KNaviDestinationTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetNaviDestinationAvailabilitySome() {
+    @Test
+    fun testGetNaviDestinationAvailabilitySome() {
         val identifierBytes = Bytes("010203040506")
         val allBytes = Bytes(COMMAND_HEADER + "003102" + identifierBytes)
         val constructed = NaviDestination.GetNaviDestinationAvailability(identifierBytes)
@@ -122,7 +125,8 @@ class KNaviDestinationTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun setNaviDestination() {
+    @Test
+    fun setNaviDestination() {
         val bytes = Bytes(COMMAND_HEADER + "003101" +
             "010013010010404a428f9f44d445402acf562174c4ce" +
             "0200090100064265726c696e")

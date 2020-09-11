@@ -54,14 +54,16 @@ class KMobileTest : BaseTest() {
         assertTrue(state.getConnection().value == ConnectionState.CONNECTED)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "006600")
         val defaultGetter = Mobile.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "006602")
         val created = Mobile.GetStateAvailability()
         assertTrue(created.identifier == Identifier.MOBILE)

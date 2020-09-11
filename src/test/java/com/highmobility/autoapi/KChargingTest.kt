@@ -184,7 +184,8 @@ class KChargingTest : BaseTest() {
         assertTrue(state.getPreconditioningError().value == Charging.PreconditioningError.NOT_POSSIBLE_LOW)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "002300")
         val defaultGetter = Charging.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -196,7 +197,8 @@ class KChargingTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f20212223"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "002302")
         val created = Charging.GetStateAvailability()
         assertTrue(created.identifier == Identifier.CHARGING)
@@ -213,7 +215,8 @@ class KChargingTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f20212223")
         val allBytes = Bytes(COMMAND_HEADER + "002302" + identifierBytes)
         val constructed = Charging.GetStateAvailability(identifierBytes)
@@ -233,7 +236,8 @@ class KChargingTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun startStopCharging() {
+    @Test
+    fun startStopCharging() {
         val bytes = Bytes(COMMAND_HEADER + "002301" +
             "17000401000101")
     
@@ -247,7 +251,8 @@ class KChargingTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun setChargeLimit() {
+    @Test
+    fun setChargeLimit() {
         val bytes = Bytes(COMMAND_HEADER + "002301" +
             "08000B0100083feccccccccccccd")
     
@@ -261,7 +266,8 @@ class KChargingTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun openCloseChargingPort() {
+    @Test
+    fun openCloseChargingPort() {
         val bytes = Bytes(COMMAND_HEADER + "002301" +
             "0b000401000101")
     
@@ -275,7 +281,8 @@ class KChargingTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun setChargeMode() {
+    @Test
+    fun setChargeMode() {
         val bytes = Bytes(COMMAND_HEADER + "002301" +
             "0c000401000101")
     
@@ -289,7 +296,8 @@ class KChargingTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun setChargingTimers() {
+    @Test
+    fun setChargingTimers() {
         val bytes = Bytes(COMMAND_HEADER + "002301" +
             "15000C01000900000001598938e788" +
             "15000C0100090100000159893c9108" +
@@ -313,7 +321,8 @@ class KChargingTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun setReductionOfChargingCurrentTimes() {
+    @Test
+    fun setReductionOfChargingCurrentTimes() {
         val bytes = Bytes(COMMAND_HEADER + "002301" +
             "130006010003001121" +
             "130006010003010c34")

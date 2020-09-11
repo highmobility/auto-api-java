@@ -103,7 +103,8 @@ class KLightsTest : BaseTest() {
         assertTrue(state.getSwitchPosition().value == Lights.SwitchPosition.PARKING_LIGHT_RIGHT)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "003600")
         val defaultGetter = Lights.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -115,7 +116,8 @@ class KLightsTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("01020405060708090a"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "003602")
         val created = Lights.GetStateAvailability()
         assertTrue(created.identifier == Identifier.LIGHTS)
@@ -132,7 +134,8 @@ class KLightsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("01020405060708090a")
         val allBytes = Bytes(COMMAND_HEADER + "003602" + identifierBytes)
         val constructed = Lights.GetStateAvailability(identifierBytes)
@@ -152,7 +155,8 @@ class KLightsTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun controlLights() {
+    @Test
+    fun controlLights() {
         val bytes = Bytes(COMMAND_HEADER + "003601" +
             "01000401000102" +
             "02000401000101" +

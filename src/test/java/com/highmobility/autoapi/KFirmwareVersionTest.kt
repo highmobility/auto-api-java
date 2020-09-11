@@ -62,7 +62,8 @@ class KFirmwareVersionTest : BaseTest() {
         assertTrue(state.getApplicationVersion().value == "v1.5-prod")
     }
     
-    @Test fun testGetFirmwareVersion() {
+    @Test
+    fun testGetFirmwareVersion() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "000300")
         val defaultGetter = FirmwareVersion.GetFirmwareVersion()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -74,7 +75,8 @@ class KFirmwareVersionTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203"))
     }
     
-    @Test fun testGetFirmwareVersionAvailabilityAll() {
+    @Test
+    fun testGetFirmwareVersionAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "000302")
         val created = FirmwareVersion.GetFirmwareVersionAvailability()
         assertTrue(created.identifier == Identifier.FIRMWARE_VERSION)
@@ -91,7 +93,8 @@ class KFirmwareVersionTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetFirmwareVersionAvailabilitySome() {
+    @Test
+    fun testGetFirmwareVersionAvailabilitySome() {
         val identifierBytes = Bytes("010203")
         val allBytes = Bytes(COMMAND_HEADER + "000302" + identifierBytes)
         val constructed = FirmwareVersion.GetFirmwareVersionAvailability(identifierBytes)

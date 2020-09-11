@@ -91,7 +91,8 @@ class KWindowsTest : BaseTest() {
         assertTrue(state.getPositions()[4].value?.position == WindowPosition.Position.OPEN)
     }
     
-    @Test fun testGetWindows() {
+    @Test
+    fun testGetWindows() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "004500")
         val defaultGetter = Windows.GetWindows()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -103,7 +104,8 @@ class KWindowsTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0203"))
     }
     
-    @Test fun testGetWindowsAvailabilityAll() {
+    @Test
+    fun testGetWindowsAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "004502")
         val created = Windows.GetWindowsAvailability()
         assertTrue(created.identifier == Identifier.WINDOWS)
@@ -120,7 +122,8 @@ class KWindowsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetWindowsAvailabilitySome() {
+    @Test
+    fun testGetWindowsAvailabilitySome() {
         val identifierBytes = Bytes("0203")
         val allBytes = Bytes(COMMAND_HEADER + "004502" + identifierBytes)
         val constructed = Windows.GetWindowsAvailability(identifierBytes)
@@ -140,7 +143,8 @@ class KWindowsTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun controlWindows() {
+    @Test
+    fun controlWindows() {
         val bytes = Bytes(COMMAND_HEADER + "004501" +
             "02000C010009003fc999999999999a" +
             "02000C010009013fe0000000000000" +

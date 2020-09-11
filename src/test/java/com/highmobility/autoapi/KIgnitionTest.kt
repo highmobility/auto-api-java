@@ -60,7 +60,8 @@ class KIgnitionTest : BaseTest() {
         assertTrue(state.getState().value == Ignition.IgnitionState.ACCESSORY)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "003500")
         val defaultGetter = Ignition.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -72,7 +73,8 @@ class KIgnitionTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "003502")
         val created = Ignition.GetStateAvailability()
         assertTrue(created.identifier == Identifier.IGNITION)
@@ -89,7 +91,8 @@ class KIgnitionTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("010203")
         val allBytes = Bytes(COMMAND_HEADER + "003502" + identifierBytes)
         val constructed = Ignition.GetStateAvailability(identifierBytes)
@@ -109,7 +112,8 @@ class KIgnitionTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun turnIgnitionOnOff() {
+    @Test
+    fun turnIgnitionOnOff() {
         val bytes = Bytes(COMMAND_HEADER + "003501" +
             "01000401000100")
     

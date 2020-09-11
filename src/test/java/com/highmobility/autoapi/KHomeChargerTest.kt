@@ -118,7 +118,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(state.getChargingPower().value?.unit == Power.Unit.KILOWATTS)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "006000")
         val defaultGetter = HomeCharger.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -130,7 +131,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040508090a0b0d0e0f10111213"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "006002")
         val created = HomeCharger.GetStateAvailability()
         assertTrue(created.identifier == Identifier.HOME_CHARGER)
@@ -147,7 +149,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("010203040508090a0b0d0e0f10111213")
         val allBytes = Bytes(COMMAND_HEADER + "006002" + identifierBytes)
         val constructed = HomeCharger.GetStateAvailability(identifierBytes)
@@ -167,7 +170,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun setChargeCurrent() {
+    @Test
+    fun setChargeCurrent() {
         val bytes = Bytes(COMMAND_HEADER + "006001" +
             "0e000D01000A09003fe0000000000000")
     
@@ -182,7 +186,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun setPriceTariffs() {
+    @Test
+    fun setPriceTariffs() {
         val bytes = Bytes(COMMAND_HEADER + "006001" +
             "12001101000E0040120000000000000003455552" +
             "12001101000E013fd33333333333330003455552" +
@@ -209,7 +214,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun activateDeactivateSolarCharging() {
+    @Test
+    fun activateDeactivateSolarCharging() {
         val bytes = Bytes(COMMAND_HEADER + "006001" +
             "05000401000101")
     
@@ -223,7 +229,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun enableDisableWiFiHotspot() {
+    @Test
+    fun enableDisableWiFiHotspot() {
         val bytes = Bytes(COMMAND_HEADER + "006001" +
             "08000401000101")
     
@@ -237,7 +244,8 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun authenticateExpire() {
+    @Test
+    fun authenticateExpire() {
         val bytes = Bytes(COMMAND_HEADER + "006001" +
             "0d000401000101")
     

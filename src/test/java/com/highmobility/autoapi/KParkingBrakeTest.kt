@@ -54,14 +54,16 @@ class KParkingBrakeTest : BaseTest() {
         assertTrue(state.getStatus().value == ActiveState.ACTIVE)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "005800")
         val defaultGetter = ParkingBrake.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "005802")
         val created = ParkingBrake.GetStateAvailability()
         assertTrue(created.identifier == Identifier.PARKING_BRAKE)
@@ -78,7 +80,8 @@ class KParkingBrakeTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun setParkingBrake() {
+    @Test
+    fun setParkingBrake() {
         val bytes = Bytes(COMMAND_HEADER + "005801" +
             "01000401000101")
     

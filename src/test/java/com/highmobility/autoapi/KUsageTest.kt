@@ -244,7 +244,8 @@ class KUsageTest : BaseTest() {
         assertTrue(state.getEcoScoreBonusRange().value?.unit == Length.Unit.KILOMETERS)
     }
     
-    @Test fun testGetUsage() {
+    @Test
+    fun testGetUsage() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "006800")
         val defaultGetter = Usage.GetUsage()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -256,7 +257,8 @@ class KUsageTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627"))
     }
     
-    @Test fun testGetUsageAvailabilityAll() {
+    @Test
+    fun testGetUsageAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "006802")
         val created = Usage.GetUsageAvailability()
         assertTrue(created.identifier == Identifier.USAGE)
@@ -273,7 +275,8 @@ class KUsageTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetUsageAvailabilitySome() {
+    @Test
+    fun testGetUsageAvailabilitySome() {
         val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
         val allBytes = Bytes(COMMAND_HEADER + "006802" + identifierBytes)
         val constructed = Usage.GetUsageAvailability(identifierBytes)

@@ -128,7 +128,8 @@ class KClimateTest : BaseTest() {
         assertTrue(state.getRearTemperatureSetting().value?.unit == Temperature.Unit.CELSIUS)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "002400")
         val defaultGetter = Climate.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -140,7 +141,8 @@ class KClimateTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090b0c"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "002402")
         val created = Climate.GetStateAvailability()
         assertTrue(created.identifier == Identifier.CLIMATE)
@@ -157,7 +159,8 @@ class KClimateTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0102030405060708090b0c")
         val allBytes = Bytes(COMMAND_HEADER + "002402" + identifierBytes)
         val constructed = Climate.GetStateAvailability(identifierBytes)
@@ -177,7 +180,8 @@ class KClimateTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun changeStartingTimes() {
+    @Test
+    fun changeStartingTimes() {
         val bytes = Bytes(COMMAND_HEADER + "002401" +
             "0b0006010003001000" +
             "0b0006010003011000" +
@@ -229,7 +233,8 @@ class KClimateTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun startStopHvac() {
+    @Test
+    fun startStopHvac() {
         val bytes = Bytes(COMMAND_HEADER + "002401" +
             "05000401000101")
     
@@ -243,7 +248,8 @@ class KClimateTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun startStopDefogging() {
+    @Test
+    fun startStopDefogging() {
         val bytes = Bytes(COMMAND_HEADER + "002401" +
             "06000401000100")
     
@@ -257,7 +263,8 @@ class KClimateTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun startStopDefrosting() {
+    @Test
+    fun startStopDefrosting() {
         val bytes = Bytes(COMMAND_HEADER + "002401" +
             "07000401000100")
     
@@ -271,7 +278,8 @@ class KClimateTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun startStopIonising() {
+    @Test
+    fun startStopIonising() {
         val bytes = Bytes(COMMAND_HEADER + "002401" +
             "08000401000100")
     
@@ -285,7 +293,8 @@ class KClimateTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun setTemperatureSettings() {
+    @Test
+    fun setTemperatureSettings() {
         val bytes = Bytes(COMMAND_HEADER + "002401" +
             "03000D01000A17014035800000000000" +
             "04000D01000A17014035b33333333333" +

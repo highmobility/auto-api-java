@@ -57,7 +57,8 @@ class KEngineTest : BaseTest() {
         assertTrue(state.getStartStopState().value == ActiveState.ACTIVE)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "006900")
         val defaultGetter = Engine.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -69,7 +70,8 @@ class KEngineTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "006902")
         val created = Engine.GetStateAvailability()
         assertTrue(created.identifier == Identifier.ENGINE)
@@ -86,7 +88,8 @@ class KEngineTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0102")
         val allBytes = Bytes(COMMAND_HEADER + "006902" + identifierBytes)
         val constructed = Engine.GetStateAvailability(identifierBytes)
@@ -106,7 +109,8 @@ class KEngineTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun turnEngineOnOff() {
+    @Test
+    fun turnEngineOnOff() {
         val bytes = Bytes(COMMAND_HEADER + "006901" +
             "01000401000100")
     
@@ -120,7 +124,8 @@ class KEngineTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun activateDeactivateStartStop() {
+    @Test
+    fun activateDeactivateStartStop() {
         val bytes = Bytes(COMMAND_HEADER + "006901" +
             "02000401000101")
     

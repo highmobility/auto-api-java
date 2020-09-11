@@ -72,7 +72,8 @@ class KTheftAlarmTest : BaseTest() {
         assertTrue(state.getEventType().value == TheftAlarm.EventType.REAR_RIGHT)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "004600")
         val defaultGetter = TheftAlarm.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -84,7 +85,8 @@ class KTheftAlarmTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("01020304050607"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "004602")
         val created = TheftAlarm.GetStateAvailability()
         assertTrue(created.identifier == Identifier.THEFT_ALARM)
@@ -101,7 +103,8 @@ class KTheftAlarmTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("01020304050607")
         val allBytes = Bytes(COMMAND_HEADER + "004602" + identifierBytes)
         val constructed = TheftAlarm.GetStateAvailability(identifierBytes)
@@ -121,7 +124,8 @@ class KTheftAlarmTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun setTheftAlarm() {
+    @Test
+    fun setTheftAlarm() {
         val bytes = Bytes(COMMAND_HEADER + "004601" +
             "01000401000101")
     

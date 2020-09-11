@@ -55,14 +55,16 @@ class KVehicleTimeTest : BaseTest() {
         assertTrue(state.getVehicleTime().value?.minute == 55)
     }
     
-    @Test fun testGetVehicleTime() {
+    @Test
+    fun testGetVehicleTime() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "005000")
         val defaultGetter = VehicleTime.GetVehicleTime()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
     
-    @Test fun testGetVehicleTimeAvailabilityAll() {
+    @Test
+    fun testGetVehicleTimeAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "005002")
         val created = VehicleTime.GetVehicleTimeAvailability()
         assertTrue(created.identifier == Identifier.VEHICLE_TIME)

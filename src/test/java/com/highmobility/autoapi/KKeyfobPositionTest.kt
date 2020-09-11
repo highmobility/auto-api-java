@@ -45,14 +45,16 @@ class KKeyfobPositionTest : BaseTest() {
         assertTrue(state.getLocation().value == KeyfobPosition.Location.INSIDE_CAR)
     }
     
-    @Test fun testGetKeyfobPosition() {
+    @Test
+    fun testGetKeyfobPosition() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "004800")
         val defaultGetter = KeyfobPosition.GetKeyfobPosition()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
     
-    @Test fun testGetKeyfobPositionAvailabilityAll() {
+    @Test
+    fun testGetKeyfobPositionAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "004802")
         val created = KeyfobPosition.GetKeyfobPositionAvailability()
         assertTrue(created.identifier == Identifier.KEYFOB_POSITION)

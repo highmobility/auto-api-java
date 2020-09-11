@@ -115,7 +115,8 @@ class KVehicleInformationTest : BaseTest() {
         assertTrue(state.getTimeformat().value == VehicleInformation.Timeformat.TWENTY_FOUR_H)
     }
     
-    @Test fun testGetVehicleInformation() {
+    @Test
+    fun testGetVehicleInformation() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "001400")
         val defaultGetter = VehicleInformation.GetVehicleInformation()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -127,7 +128,8 @@ class KVehicleInformationTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0d0e0f1011131415"))
     }
     
-    @Test fun testGetVehicleInformationAvailabilityAll() {
+    @Test
+    fun testGetVehicleInformationAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "001402")
         val created = VehicleInformation.GetVehicleInformationAvailability()
         assertTrue(created.identifier == Identifier.VEHICLE_INFORMATION)
@@ -144,7 +146,8 @@ class KVehicleInformationTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetVehicleInformationAvailabilitySome() {
+    @Test
+    fun testGetVehicleInformationAvailabilitySome() {
         val identifierBytes = Bytes("02030405060708090a0b0c0d0e0f1011131415")
         val allBytes = Bytes(COMMAND_HEADER + "001402" + identifierBytes)
         val constructed = VehicleInformation.GetVehicleInformationAvailability(identifierBytes)

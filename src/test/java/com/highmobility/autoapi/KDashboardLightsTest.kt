@@ -516,14 +516,16 @@ class KDashboardLightsTest : BaseTest() {
         assertTrue(state.getDashboardLights()[92].value?.colour == DashboardLight.Colour.INFO)
     }
     
-    @Test fun testGetDashboardLights() {
+    @Test
+    fun testGetDashboardLights() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "006100")
         val defaultGetter = DashboardLights.GetDashboardLights()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
     
-    @Test fun testGetDashboardLightsAvailabilityAll() {
+    @Test
+    fun testGetDashboardLightsAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "006102")
         val created = DashboardLights.GetDashboardLightsAvailability()
         assertTrue(created.identifier == Identifier.DASHBOARD_LIGHTS)

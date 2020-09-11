@@ -57,7 +57,8 @@ class KTrunkTest : BaseTest() {
         assertTrue(state.getPosition().value == Position.OPEN)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "002100")
         val defaultGetter = Trunk.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -69,7 +70,8 @@ class KTrunkTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "002102")
         val created = Trunk.GetStateAvailability()
         assertTrue(created.identifier == Identifier.TRUNK)
@@ -86,7 +88,8 @@ class KTrunkTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0102")
         val allBytes = Bytes(COMMAND_HEADER + "002102" + identifierBytes)
         val constructed = Trunk.GetStateAvailability(identifierBytes)
@@ -106,7 +109,8 @@ class KTrunkTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun controlTrunk() {
+    @Test
+    fun controlTrunk() {
         val bytes = Bytes(COMMAND_HEADER + "002101" +
             "01000401000100" +
             "02000401000101")

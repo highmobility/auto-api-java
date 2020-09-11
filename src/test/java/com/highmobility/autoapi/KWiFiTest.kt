@@ -63,7 +63,8 @@ class KWiFiTest : BaseTest() {
         assertTrue(state.getNetworkSecurity().value == NetworkSecurity.WPA2_PERSONAL)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "005900")
         val defaultGetter = WiFi.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -75,7 +76,8 @@ class KWiFiTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "005902")
         val created = WiFi.GetStateAvailability()
         assertTrue(created.identifier == Identifier.WI_FI)
@@ -92,7 +94,8 @@ class KWiFiTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0102030405")
         val allBytes = Bytes(COMMAND_HEADER + "005902" + identifierBytes)
         val constructed = WiFi.GetStateAvailability(identifierBytes)
@@ -112,7 +115,8 @@ class KWiFiTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun connectToNetwork() {
+    @Test
+    fun connectToNetwork() {
         val bytes = Bytes(COMMAND_HEADER + "005901" +
             "030007010004484f4d45" +
             "04000401000103" +
@@ -130,7 +134,8 @@ class KWiFiTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun forgetNetwork() {
+    @Test
+    fun forgetNetwork() {
         val bytes = Bytes(COMMAND_HEADER + "005901" +
             "030007010004484f4d45")
     
@@ -144,7 +149,8 @@ class KWiFiTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun enableDisableWiFi() {
+    @Test
+    fun enableDisableWiFi() {
         val bytes = Bytes(COMMAND_HEADER + "005901" +
             "01000401000101")
     

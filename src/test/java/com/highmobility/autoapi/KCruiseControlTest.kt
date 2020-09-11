@@ -57,7 +57,8 @@ class KCruiseControlTest : BaseTest() {
         assertTrue(state.getAccTargetSpeed().value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "006200")
         val defaultGetter = CruiseControl.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -69,7 +70,8 @@ class KCruiseControlTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "006202")
         val created = CruiseControl.GetStateAvailability()
         assertTrue(created.identifier == Identifier.CRUISE_CONTROL)
@@ -86,7 +88,8 @@ class KCruiseControlTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0102030405")
         val allBytes = Bytes(COMMAND_HEADER + "006202" + identifierBytes)
         val constructed = CruiseControl.GetStateAvailability(identifierBytes)
@@ -106,7 +109,8 @@ class KCruiseControlTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun activateDeactivateCruiseControl() {
+    @Test
+    fun activateDeactivateCruiseControl() {
         val bytes = Bytes(COMMAND_HEADER + "006201" +
             "01000401000101" +
             "03000D01000A1601404e800000000000")

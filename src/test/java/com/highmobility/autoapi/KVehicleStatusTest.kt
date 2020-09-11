@@ -56,14 +56,16 @@ class KVehicleStatusTest : BaseTest() {
         assertTrue(state.getStates()[1].value == CommandResolver.resolve("0c0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788"))
     }
     
-    @Test fun testGetVehicleStatus() {
+    @Test
+    fun testGetVehicleStatus() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "001100")
         val defaultGetter = VehicleStatus.GetVehicleStatus()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
     
-    @Test fun testGetVehicleStatusAvailabilityAll() {
+    @Test
+    fun testGetVehicleStatusAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "001102")
         val created = VehicleStatus.GetVehicleStatusAvailability()
         assertTrue(created.identifier == Identifier.VEHICLE_STATUS)

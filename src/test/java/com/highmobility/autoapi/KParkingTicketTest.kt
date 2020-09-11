@@ -65,7 +65,8 @@ class KParkingTicketTest : BaseTest() {
         assertTrue(dateIsSame(state.getTicketEndTime().value, "2019-10-08T11:21:45.000Z"))
     }
     
-    @Test fun testGetParkingTicket() {
+    @Test
+    fun testGetParkingTicket() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "004700")
         val defaultGetter = ParkingTicket.GetParkingTicket()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -77,7 +78,8 @@ class KParkingTicketTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405"))
     }
     
-    @Test fun testGetParkingTicketAvailabilityAll() {
+    @Test
+    fun testGetParkingTicketAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "004702")
         val created = ParkingTicket.GetParkingTicketAvailability()
         assertTrue(created.identifier == Identifier.PARKING_TICKET)
@@ -94,7 +96,8 @@ class KParkingTicketTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetParkingTicketAvailabilitySome() {
+    @Test
+    fun testGetParkingTicketAvailabilitySome() {
         val identifierBytes = Bytes("0102030405")
         val allBytes = Bytes(COMMAND_HEADER + "004702" + identifierBytes)
         val constructed = ParkingTicket.GetParkingTicketAvailability(identifierBytes)
@@ -114,7 +117,8 @@ class KParkingTicketTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun startParking() {
+    @Test
+    fun startParking() {
         val bytes = Bytes(COMMAND_HEADER + "004701" +
             "01000401000101" +
             "02001101000E4265726c696e205061726b696e67" +
@@ -151,7 +155,8 @@ class KParkingTicketTest : BaseTest() {
         }
     }
     
-    @Test fun endParking() {
+    @Test
+    fun endParking() {
         val bytes = Bytes(COMMAND_HEADER + "004701" +
             "01000401000100")
     

@@ -54,14 +54,16 @@ class KValetModeTest : BaseTest() {
         assertTrue(state.getStatus().value == ActiveState.ACTIVE)
     }
     
-    @Test fun testGetValetMode() {
+    @Test
+    fun testGetValetMode() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "002800")
         val defaultGetter = ValetMode.GetValetMode()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
     
-    @Test fun testGetValetModeAvailabilityAll() {
+    @Test
+    fun testGetValetModeAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "002802")
         val created = ValetMode.GetValetModeAvailability()
         assertTrue(created.identifier == Identifier.VALET_MODE)
@@ -78,7 +80,8 @@ class KValetModeTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun activateDeactivateValetMode() {
+    @Test
+    fun activateDeactivateValetMode() {
         val bytes = Bytes(COMMAND_HEADER + "002801" +
             "01000401000101")
     

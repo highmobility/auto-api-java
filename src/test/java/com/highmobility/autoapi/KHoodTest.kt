@@ -53,14 +53,16 @@ class KHoodTest : BaseTest() {
         assertTrue(state.getPosition().value == Hood.Position.OPEN)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "006700")
         val defaultGetter = Hood.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "006702")
         val created = Hood.GetStateAvailability()
         assertTrue(created.identifier == Identifier.HOOD)

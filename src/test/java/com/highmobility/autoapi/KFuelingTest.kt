@@ -57,7 +57,8 @@ class KFuelingTest : BaseTest() {
         assertTrue(state.getGasFlapPosition().value == Position.CLOSED)
     }
     
-    @Test fun testGetGasFlapState() {
+    @Test
+    fun testGetGasFlapState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "004000")
         val defaultGetter = Fueling.GetGasFlapState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -69,7 +70,8 @@ class KFuelingTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0203"))
     }
     
-    @Test fun testGetGasFlapStateAvailabilityAll() {
+    @Test
+    fun testGetGasFlapStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "004002")
         val created = Fueling.GetGasFlapStateAvailability()
         assertTrue(created.identifier == Identifier.FUELING)
@@ -86,7 +88,8 @@ class KFuelingTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetGasFlapStateAvailabilitySome() {
+    @Test
+    fun testGetGasFlapStateAvailabilitySome() {
         val identifierBytes = Bytes("0203")
         val allBytes = Bytes(COMMAND_HEADER + "004002" + identifierBytes)
         val constructed = Fueling.GetGasFlapStateAvailability(identifierBytes)
@@ -106,7 +109,8 @@ class KFuelingTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun controlGasFlap() {
+    @Test
+    fun controlGasFlap() {
         val bytes = Bytes(COMMAND_HEADER + "004001" +
             "02000401000101" +
             "03000401000100")

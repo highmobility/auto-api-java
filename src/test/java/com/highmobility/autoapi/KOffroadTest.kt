@@ -58,7 +58,8 @@ class KOffroadTest : BaseTest() {
         assertTrue(state.getWheelSuspension().value == 0.5)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "005200")
         val defaultGetter = Offroad.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -70,7 +71,8 @@ class KOffroadTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "005202")
         val created = Offroad.GetStateAvailability()
         assertTrue(created.identifier == Identifier.OFFROAD)
@@ -87,7 +89,8 @@ class KOffroadTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0102")
         val allBytes = Bytes(COMMAND_HEADER + "005202" + identifierBytes)
         val constructed = Offroad.GetStateAvailability(identifierBytes)

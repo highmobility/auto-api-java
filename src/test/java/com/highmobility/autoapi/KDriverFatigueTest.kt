@@ -45,14 +45,16 @@ class KDriverFatigueTest : BaseTest() {
         assertTrue(state.getDetectedFatigueLevel().value == DriverFatigue.DetectedFatigueLevel.PAUSE_RECOMMENDED)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "004100")
         val defaultGetter = DriverFatigue.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "004102")
         val created = DriverFatigue.GetStateAvailability()
         assertTrue(created.identifier == Identifier.DRIVER_FATIGUE)

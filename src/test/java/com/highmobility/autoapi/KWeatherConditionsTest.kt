@@ -53,14 +53,16 @@ class KWeatherConditionsTest : BaseTest() {
         assertTrue(state.getRainIntensity().value == 1.0)
     }
     
-    @Test fun testGetWeatherConditions() {
+    @Test
+    fun testGetWeatherConditions() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "005500")
         val defaultGetter = WeatherConditions.GetWeatherConditions()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
     
-    @Test fun testGetWeatherConditionsAvailabilityAll() {
+    @Test
+    fun testGetWeatherConditionsAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "005502")
         val created = WeatherConditions.GetWeatherConditionsAvailability()
         assertTrue(created.identifier == Identifier.WEATHER_CONDITIONS)

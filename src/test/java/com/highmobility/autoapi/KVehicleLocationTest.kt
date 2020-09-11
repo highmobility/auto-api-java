@@ -68,7 +68,8 @@ class KVehicleLocationTest : BaseTest() {
         assertTrue(state.getPrecision().value?.unit == Length.Unit.METERS)
     }
     
-    @Test fun testGetVehicleLocation() {
+    @Test
+    fun testGetVehicleLocation() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "003000")
         val defaultGetter = VehicleLocation.GetVehicleLocation()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -80,7 +81,8 @@ class KVehicleLocationTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("04050607"))
     }
     
-    @Test fun testGetVehicleLocationAvailabilityAll() {
+    @Test
+    fun testGetVehicleLocationAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "003002")
         val created = VehicleLocation.GetVehicleLocationAvailability()
         assertTrue(created.identifier == Identifier.VEHICLE_LOCATION)
@@ -97,7 +99,8 @@ class KVehicleLocationTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetVehicleLocationAvailabilitySome() {
+    @Test
+    fun testGetVehicleLocationAvailabilitySome() {
         val identifierBytes = Bytes("04050607")
         val allBytes = Bytes(COMMAND_HEADER + "003002" + identifierBytes)
         val constructed = VehicleLocation.GetVehicleLocationAvailability(identifierBytes)

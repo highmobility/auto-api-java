@@ -109,7 +109,8 @@ class KDoorsTest : BaseTest() {
         assertTrue(state.getLocksState().value == LockState.UNLOCKED)
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "002000")
         val defaultGetter = Doors.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -121,7 +122,8 @@ class KDoorsTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0203040506"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "002002")
         val created = Doors.GetStateAvailability()
         assertTrue(created.identifier == Identifier.DOORS)
@@ -138,7 +140,8 @@ class KDoorsTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0203040506")
         val allBytes = Bytes(COMMAND_HEADER + "002002" + identifierBytes)
         val constructed = Doors.GetStateAvailability(identifierBytes)
@@ -158,7 +161,8 @@ class KDoorsTest : BaseTest() {
         assertTrue(resolved == allBytes)
     }
     
-    @Test fun lockUnlockDoors() {
+    @Test
+    fun lockUnlockDoors() {
         val bytes = Bytes(COMMAND_HEADER + "002001" +
             "06000401000100")
     

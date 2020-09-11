@@ -49,14 +49,16 @@ class KRemoteControlTest : BaseTest() {
         assertTrue(state.getAngle().value?.unit == Angle.Unit.DEGREES)
     }
     
-    @Test fun testGetControlState() {
+    @Test
+    fun testGetControlState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "002700")
         val defaultGetter = RemoteControl.GetControlState()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
     
-    @Test fun testGetControlStateAvailabilityAll() {
+    @Test
+    fun testGetControlStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "002702")
         val created = RemoteControl.GetControlStateAvailability()
         assertTrue(created.identifier == Identifier.REMOTE_CONTROL)
@@ -73,7 +75,8 @@ class KRemoteControlTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun controlCommand() {
+    @Test
+    fun controlCommand() {
         val bytes = Bytes(COMMAND_HEADER + "002701" +
             "02000D01000A02004049000000000000" +
             "03000D01000A16014014000000000000")
@@ -91,7 +94,8 @@ class KRemoteControlTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun startControl() {
+    @Test
+    fun startControl() {
         val bytes = Bytes(COMMAND_HEADER + "002701" +
             "01000401000102")
     
@@ -116,7 +120,8 @@ class KRemoteControlTest : BaseTest() {
         }
     }
     
-    @Test fun stopControl() {
+    @Test
+    fun stopControl() {
         val bytes = Bytes(COMMAND_HEADER + "002701" +
             "01000401000105")
     

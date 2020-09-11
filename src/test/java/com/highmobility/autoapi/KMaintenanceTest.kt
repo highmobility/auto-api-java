@@ -113,7 +113,8 @@ class KMaintenanceTest : BaseTest() {
         assertTrue(dateIsSame(state.getLastECall().value, "2018-12-05T03:22:56.000Z"))
     }
     
-    @Test fun testGetState() {
+    @Test
+    fun testGetState() {
         val defaultGetterBytes = Bytes(COMMAND_HEADER + "003400")
         val defaultGetter = Maintenance.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
@@ -125,7 +126,8 @@ class KMaintenanceTest : BaseTest() {
         assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f10"))
     }
     
-    @Test fun testGetStateAvailabilityAll() {
+    @Test
+    fun testGetStateAvailabilityAll() {
         val bytes = Bytes(COMMAND_HEADER + "003402")
         val created = Maintenance.GetStateAvailability()
         assertTrue(created.identifier == Identifier.MAINTENANCE)
@@ -142,7 +144,8 @@ class KMaintenanceTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    @Test fun testGetStateAvailabilitySome() {
+    @Test
+    fun testGetStateAvailabilitySome() {
         val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f10")
         val allBytes = Bytes(COMMAND_HEADER + "003402" + identifierBytes)
         val constructed = Maintenance.GetStateAvailability(identifierBytes)
