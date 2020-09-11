@@ -39,21 +39,79 @@ public class Fueling {
     public static final byte PROPERTY_GAS_FLAP_POSITION = 0x03;
 
     /**
-     * Get gas flap state
+     * Get Fueling property availability information.
      */
-    public static class GetGasFlapState extends GetCommand<State> {
-        public GetGasFlapState() {
-            super(State.class, IDENTIFIER);
+    public static class GetGasFlapStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Fueling property availability
+         */
+        public GetGasFlapStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetGasFlapState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Fueling property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetGasFlapStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Fueling property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetGasFlapStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetGasFlapStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific fueling properties
+     * Get gas flap state
      */
+    public static class GetGasFlapState extends GetCommand<State> {
+        /**
+         * Get all Fueling properties
+         */
+        public GetGasFlapState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Fueling properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetGasFlapState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Fueling properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetGasFlapState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetGasFlapState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Fueling properties
+     * 
+     * @deprecated use {@link GetGasFlapState#GetGasFlapState(byte...)} instead
+     */
+    @Deprecated
     public static class GetGasFlapProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -97,7 +155,7 @@ public class Fueling {
         
         /**
          * Control gas flap
-         *
+         * 
          * @param gasFlapLock The gas flap lock
          * @param gasFlapPosition The gas flap position
          */
@@ -198,42 +256,6 @@ public class Fueling {
                 addProperty(this.gasFlapPosition);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all fueling property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific fueling property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

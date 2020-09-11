@@ -60,17 +60,53 @@ class KIgnitionTest : BaseTest() {
         assertTrue(state.getState().value == Ignition.IgnitionState.ACCESSORY)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "003500")
-        assertTrue(Ignition.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "003500")
+        val defaultGetter = Ignition.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "003500010203")
+        val propertyGetter = Ignition.GetState(0x01, 0x02, 0x03)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "003500010203")
-        val getter = Ignition.GetProperties(0x01, 0x02, 0x03)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "003502")
+        val created = Ignition.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.IGNITION)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Ignition.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.IGNITION)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("010203")
+        val allBytes = Bytes(COMMAND_HEADER + "003502" + identifierBytes)
+        val constructed = Ignition.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.IGNITION)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Ignition.GetStateAvailability(0x01, 0x02, 0x03)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Ignition.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.IGNITION)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun turnIgnitionOnOff() {

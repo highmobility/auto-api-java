@@ -45,21 +45,79 @@ public class NaviDestination {
     public static final byte PROPERTY_DISTANCE_TO_DESTINATION = 0x06;
 
     /**
-     * Get navi destination
+     * Get Navi Destination property availability information.
      */
-    public static class GetNaviDestination extends GetCommand<State> {
-        public GetNaviDestination() {
-            super(State.class, IDENTIFIER);
+    public static class GetNaviDestinationAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Navi Destination property availability
+         */
+        public GetNaviDestinationAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetNaviDestination(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Navi Destination property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetNaviDestinationAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Navi Destination property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetNaviDestinationAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetNaviDestinationAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific navi destination properties
+     * Get navi destination
      */
+    public static class GetNaviDestination extends GetCommand<State> {
+        /**
+         * Get all Navi Destination properties
+         */
+        public GetNaviDestination() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Navi Destination properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetNaviDestination(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Navi Destination properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetNaviDestination(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetNaviDestination(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Navi Destination properties
+     * 
+     * @deprecated use {@link GetNaviDestination#GetNaviDestination(byte...)} instead
+     */
+    @Deprecated
     public static class GetNaviDestinationProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -103,7 +161,7 @@ public class NaviDestination {
         
         /**
          * Set navi destination
-         *
+         * 
          * @param coordinates The coordinates
          * @param destinationName Destination name
          */
@@ -288,42 +346,6 @@ public class NaviDestination {
                 addProperty(this.distanceToDestination);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all navi destination property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific navi destination property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

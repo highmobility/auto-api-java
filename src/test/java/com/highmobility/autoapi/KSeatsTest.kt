@@ -91,16 +91,52 @@ class KSeatsTest : BaseTest() {
         assertTrue(state.getSeatbeltsState()[4].value?.fastenedState == SeatbeltState.FastenedState.NOT_FASTENED)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "005600")
-        assertTrue(Seats.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "005600")
+        val defaultGetter = Seats.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0056000203")
+        val propertyGetter = Seats.GetState(0x02, 0x03)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0203"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0056000203")
-        val getter = Seats.GetProperties(0x02, 0x03)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "005602")
+        val created = Seats.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.SEATS)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Seats.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.SEATS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("0203")
+        val allBytes = Bytes(COMMAND_HEADER + "005602" + identifierBytes)
+        val constructed = Seats.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.SEATS)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Seats.GetStateAvailability(0x02, 0x03)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Seats.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.SEATS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
 }

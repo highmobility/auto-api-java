@@ -38,21 +38,79 @@ public class FirmwareVersion {
     public static final byte PROPERTY_APPLICATION_VERSION = 0x03;
 
     /**
-     * Get firmware version
+     * Get Firmware Version property availability information.
      */
-    public static class GetFirmwareVersion extends GetCommand<State> {
-        public GetFirmwareVersion() {
-            super(State.class, IDENTIFIER);
+    public static class GetFirmwareVersionAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Firmware Version property availability
+         */
+        public GetFirmwareVersionAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetFirmwareVersion(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Firmware Version property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetFirmwareVersionAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Firmware Version property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetFirmwareVersionAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetFirmwareVersionAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific firmware version properties
+     * Get firmware version
      */
+    public static class GetFirmwareVersion extends GetCommand<State> {
+        /**
+         * Get all Firmware Version properties
+         */
+        public GetFirmwareVersion() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Firmware Version properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetFirmwareVersion(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Firmware Version properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetFirmwareVersion(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetFirmwareVersion(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Firmware Version properties
+     * 
+     * @deprecated use {@link GetFirmwareVersion#GetFirmwareVersion(byte...)} instead
+     */
+    @Deprecated
     public static class GetFirmwareVersionProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -167,42 +225,6 @@ public class FirmwareVersion {
                 addProperty(this.applicationVersion);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all firmware version property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific firmware version property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

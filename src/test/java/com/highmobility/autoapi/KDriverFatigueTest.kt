@@ -46,9 +46,28 @@ class KDriverFatigueTest : BaseTest() {
         assertTrue(state.getDetectedFatigueLevel().value == DriverFatigue.DetectedFatigueLevel.PAUSE_RECOMMENDED)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "004100")
-        assertTrue(DriverFatigue.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "004100")
+        val defaultGetter = DriverFatigue.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
+    
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "004102")
+        val created = DriverFatigue.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.DRIVER_FATIGUE)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as DriverFatigue.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.DRIVER_FATIGUE)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
 }

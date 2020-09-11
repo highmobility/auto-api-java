@@ -38,21 +38,79 @@ public class Engine {
     public static final byte PROPERTY_START_STOP_STATE = 0x02;
 
     /**
-     * Get all engine properties
+     * Get Engine property availability information.
      */
-    public static class GetState extends GetCommand<State> {
-        public GetState() {
-            super(State.class, IDENTIFIER);
+    public static class GetStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Engine property availability
+         */
+        public GetStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Engine property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Engine property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific engine properties
+     * Get Engine properties
      */
+    public static class GetState extends GetCommand<State> {
+        /**
+         * Get all Engine properties
+         */
+        public GetState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Engine properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Engine properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Engine properties
+     * 
+     * @deprecated use {@link GetState#GetState(byte...)} instead
+     */
+    @Deprecated
     public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -88,7 +146,7 @@ public class Engine {
         
         /**
          * Turn engine on off
-         *
+         * 
          * @param status The status
          */
         public TurnEngineOnOff(OnOffState status) {
@@ -126,7 +184,7 @@ public class Engine {
         
         /**
          * Activate deactivate start stop
-         *
+         * 
          * @param startStopState The start stop state
          */
         public ActivateDeactivateStartStop(ActiveState startStopState) {
@@ -222,42 +280,6 @@ public class Engine {
                 addProperty(this.startStopState);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all engine property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific engine property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

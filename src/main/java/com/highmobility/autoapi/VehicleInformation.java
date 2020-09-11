@@ -62,21 +62,79 @@ public class VehicleInformation {
     public static final byte PROPERTY_TIMEFORMAT = 0x15;
 
     /**
-     * Get vehicle information
+     * Get Vehicle Information property availability information.
      */
-    public static class GetVehicleInformation extends GetCommand<State> {
-        public GetVehicleInformation() {
-            super(State.class, IDENTIFIER);
+    public static class GetVehicleInformationAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Vehicle Information property availability
+         */
+        public GetVehicleInformationAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetVehicleInformation(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Vehicle Information property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetVehicleInformationAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Vehicle Information property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetVehicleInformationAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetVehicleInformationAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific vehicle information properties
+     * Get vehicle information
      */
+    public static class GetVehicleInformation extends GetCommand<State> {
+        /**
+         * Get all Vehicle Information properties
+         */
+        public GetVehicleInformation() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Vehicle Information properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetVehicleInformation(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Vehicle Information properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetVehicleInformation(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetVehicleInformation(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Vehicle Information properties
+     * 
+     * @deprecated use {@link GetVehicleInformation#GetVehicleInformation(byte...)} instead
+     */
+    @Deprecated
     public static class GetVehicleInformationProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -172,7 +230,7 @@ public class VehicleInformation {
     
         /**
          * @return The power of the vehicle
-         * @deprecated removed the unit from the name. Replaced by {@link #getPower()}
+         *  * @deprecated removed the unit from the name. Replaced by {@link #getPower()}
          */
         @Deprecated
         public Property<Power> getPowerInKW() {
@@ -421,7 +479,7 @@ public class VehicleInformation {
             /**
              * @param powerInKW The power of the vehicle
              * @return The builder
-             * @deprecated removed the unit from the name. Replaced by {@link #getPower()}
+             *  * @deprecated removed the unit from the name. Replaced by {@link #getPower()}
              */
             @Deprecated
             public Builder setPowerInKW(Property<Power> powerInKW) {
@@ -557,42 +615,6 @@ public class VehicleInformation {
                 addProperty(this.timeformat);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all vehicle information property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific vehicle information property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

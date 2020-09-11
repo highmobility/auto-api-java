@@ -83,21 +83,79 @@ public class Charging {
     public static final byte PROPERTY_PRECONDITIONING_ERROR = 0x23;
 
     /**
-     * Get all charging properties
+     * Get Charging property availability information.
      */
-    public static class GetState extends GetCommand<State> {
-        public GetState() {
-            super(State.class, IDENTIFIER);
+    public static class GetStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Charging property availability
+         */
+        public GetStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Charging property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Charging property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific charging properties
+     * Get Charging properties
      */
+    public static class GetState extends GetCommand<State> {
+        /**
+         * Get all Charging properties
+         */
+        public GetState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Charging properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Charging properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Charging properties
+     * 
+     * @deprecated use {@link GetState#GetState(byte...)} instead
+     */
+    @Deprecated
     public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -133,7 +191,7 @@ public class Charging {
         
         /**
          * Start stop charging
-         *
+         * 
          * @param status The status
          */
         public StartStopCharging(Status status) {
@@ -181,7 +239,7 @@ public class Charging {
         
         /**
          * Set charge limit
-         *
+         * 
          * @param chargeLimit Charge limit percentage between 0.0-1.0
          */
         public SetChargeLimit(Double chargeLimit) {
@@ -219,7 +277,7 @@ public class Charging {
         
         /**
          * Open close charging port
-         *
+         * 
          * @param chargePortState The charge port state
          */
         public OpenCloseChargingPort(Position chargePortState) {
@@ -257,7 +315,7 @@ public class Charging {
         
         /**
          * Set charge mode
-         *
+         * 
          * @param chargeMode The charge mode
          */
         public SetChargeMode(ChargeMode chargeMode) {
@@ -297,7 +355,7 @@ public class Charging {
         
         /**
          * Set charging timers
-         *
+         * 
          * @param timers The timers
          */
         public SetChargingTimers(List<Timer> timers) {
@@ -352,7 +410,7 @@ public class Charging {
         
         /**
          * Set reduction of charging current times
-         *
+         * 
          * @param reductionTimes The reduction times
          */
         public SetReductionOfChargingCurrentTimes(List<ReductionTime> reductionTimes) {
@@ -445,7 +503,7 @@ public class Charging {
     
         /**
          * @return Battery alternating current
-         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
+         *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
          */
         @Deprecated
         public Property<ElectricCurrent> getBatteryCurrentAC() {
@@ -454,7 +512,7 @@ public class Charging {
     
         /**
          * @return Battery direct current
-         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
+         *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
          */
         @Deprecated
         public Property<ElectricCurrent> getBatteryCurrentDC() {
@@ -463,7 +521,7 @@ public class Charging {
     
         /**
          * @return Charger voltage for alternating current
-         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
+         *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
          */
         @Deprecated
         public Property<ElectricPotentialDifference> getChargerVoltageAC() {
@@ -472,7 +530,7 @@ public class Charging {
     
         /**
          * @return Charger voltage for direct current
-         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
+         *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
          */
         @Deprecated
         public Property<ElectricPotentialDifference> getChargerVoltageDC() {
@@ -495,7 +553,7 @@ public class Charging {
     
         /**
          * @return Charging rate
-         * @deprecated removed the unit from the name. Replaced by {@link #getChargingRate()}
+         *  * @deprecated removed the unit from the name. Replaced by {@link #getChargingRate()}
          */
         @Deprecated
         public Property<Power> getChargingRateKW() {
@@ -827,7 +885,7 @@ public class Charging {
             /**
              * @param batteryCurrentAC Battery alternating current
              * @return The builder
-             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
+             *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
              */
             @Deprecated
             public Builder setBatteryCurrentAC(Property<ElectricCurrent> batteryCurrentAC) {
@@ -839,7 +897,7 @@ public class Charging {
             /**
              * @param batteryCurrentDC Battery direct current
              * @return The builder
-             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
+             *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
              */
             @Deprecated
             public Builder setBatteryCurrentDC(Property<ElectricCurrent> batteryCurrentDC) {
@@ -851,7 +909,7 @@ public class Charging {
             /**
              * @param chargerVoltageAC Charger voltage for alternating current
              * @return The builder
-             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
+             *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
              */
             @Deprecated
             public Builder setChargerVoltageAC(Property<ElectricPotentialDifference> chargerVoltageAC) {
@@ -863,7 +921,7 @@ public class Charging {
             /**
              * @param chargerVoltageDC Charger voltage for direct current
              * @return The builder
-             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
+             *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
              */
             @Deprecated
             public Builder setChargerVoltageDC(Property<ElectricPotentialDifference> chargerVoltageDC) {
@@ -895,7 +953,7 @@ public class Charging {
             /**
              * @param chargingRateKW Charging rate
              * @return The builder
-             * @deprecated removed the unit from the name. Replaced by {@link #getChargingRate()}
+             *  * @deprecated removed the unit from the name. Replaced by {@link #getChargingRate()}
              */
             @Deprecated
             public Builder setChargingRateKW(Property<Power> chargingRateKW) {
@@ -1187,42 +1245,6 @@ public class Charging {
                 addProperty(this.preconditioningError);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all charging property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific charging property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

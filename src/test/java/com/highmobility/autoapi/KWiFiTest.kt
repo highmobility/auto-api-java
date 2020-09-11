@@ -63,17 +63,53 @@ class KWiFiTest : BaseTest() {
         assertTrue(state.getNetworkSecurity().value == NetworkSecurity.WPA2_PERSONAL)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "005900")
-        assertTrue(WiFi.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "005900")
+        val defaultGetter = WiFi.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0059000102030405")
+        val propertyGetter = WiFi.GetState(0x01, 0x02, 0x03, 0x04, 0x05)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0059000102030405")
-        val getter = WiFi.GetProperties(0x01, 0x02, 0x03, 0x04, 0x05)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "005902")
+        val created = WiFi.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.WI_FI)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as WiFi.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.WI_FI)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("0102030405")
+        val allBytes = Bytes(COMMAND_HEADER + "005902" + identifierBytes)
+        val constructed = WiFi.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.WI_FI)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = WiFi.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as WiFi.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.WI_FI)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun connectToNetwork() {

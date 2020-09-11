@@ -303,16 +303,52 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(state.getConfirmedTroubleCodes()[1].value?.status == "ACTIVE")
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "003300")
-        assertTrue(Diagnostics.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "003300")
+        val defaultGetter = Diagnostics.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "003300010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
+        val propertyGetter = Diagnostics.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "003300010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
-        val getter = Diagnostics.GetProperties(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "003302")
+        val created = Diagnostics.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.DIAGNOSTICS)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Diagnostics.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.DIAGNOSTICS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
+        val allBytes = Bytes(COMMAND_HEADER + "003302" + identifierBytes)
+        val constructed = Diagnostics.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.DIAGNOSTICS)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Diagnostics.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Diagnostics.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.DIAGNOSTICS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
 }

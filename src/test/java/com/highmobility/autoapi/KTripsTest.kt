@@ -120,4 +120,5 @@ class KTripsTest : BaseTest() {
         assertTrue(state.getEndAddressComponents()[2].value?.type == AddressComponent.Type.COUNTRY)
         assertTrue(state.getEndAddressComponents()[2].value?.value == "Germany")
     }
+    
 }

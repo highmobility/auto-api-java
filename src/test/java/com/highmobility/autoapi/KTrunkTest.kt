@@ -57,17 +57,53 @@ class KTrunkTest : BaseTest() {
         assertTrue(state.getPosition().value == Position.OPEN)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "002100")
-        assertTrue(Trunk.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "002100")
+        val defaultGetter = Trunk.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0021000102")
+        val propertyGetter = Trunk.GetState(0x01, 0x02)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0021000102")
-        val getter = Trunk.GetProperties(0x01, 0x02)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "002102")
+        val created = Trunk.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.TRUNK)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Trunk.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.TRUNK)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("0102")
+        val allBytes = Bytes(COMMAND_HEADER + "002102" + identifierBytes)
+        val constructed = Trunk.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.TRUNK)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Trunk.GetStateAvailability(0x01, 0x02)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Trunk.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.TRUNK)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun controlTrunk() {

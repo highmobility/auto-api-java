@@ -42,21 +42,79 @@ public class Seats {
     public static final byte PROPERTY_SEATBELTS_STATE = 0x03;
 
     /**
-     * Get all seats properties
+     * Get Seats property availability information.
      */
-    public static class GetState extends GetCommand<State> {
-        public GetState() {
-            super(State.class, IDENTIFIER);
+    public static class GetStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Seats property availability
+         */
+        public GetStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Seats property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Seats property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific seats properties
+     * Get Seats properties
      */
+    public static class GetState extends GetCommand<State> {
+        /**
+         * Get all Seats properties
+         */
+        public GetState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Seats properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Seats properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Seats properties
+     * 
+     * @deprecated use {@link GetState#GetState(byte...)} instead
+     */
+    @Deprecated
     public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -226,42 +284,6 @@ public class Seats {
                 seatbeltsState.add(seatbeltState);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all seats property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific seats property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

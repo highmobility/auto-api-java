@@ -46,21 +46,79 @@ public class TheftAlarm {
     public static final byte PROPERTY_EVENT_TYPE = 0x07;
 
     /**
-     * Get all theft alarm properties
+     * Get Theft Alarm property availability information.
      */
-    public static class GetState extends GetCommand<State> {
-        public GetState() {
-            super(State.class, IDENTIFIER);
+    public static class GetStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Theft Alarm property availability
+         */
+        public GetStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Theft Alarm property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Theft Alarm property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific theft alarm properties
+     * Get Theft Alarm properties
      */
+    public static class GetState extends GetCommand<State> {
+        /**
+         * Get all Theft Alarm properties
+         */
+        public GetState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Theft Alarm properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Theft Alarm properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Theft Alarm properties
+     * 
+     * @deprecated use {@link GetState#GetState(byte...)} instead
+     */
+    @Deprecated
     public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -96,7 +154,7 @@ public class TheftAlarm {
         
         /**
          * Set theft alarm
-         *
+         * 
          * @param status The status
          */
         public SetTheftAlarm(Status status) {
@@ -297,42 +355,6 @@ public class TheftAlarm {
                 addProperty(this.eventType);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all theft alarm property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific theft alarm property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

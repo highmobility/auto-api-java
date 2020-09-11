@@ -37,21 +37,79 @@ public class Offroad {
     public static final byte PROPERTY_WHEEL_SUSPENSION = 0x02;
 
     /**
-     * Get all offroad properties
+     * Get Offroad property availability information.
      */
-    public static class GetState extends GetCommand<State> {
-        public GetState() {
-            super(State.class, IDENTIFIER);
+    public static class GetStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Offroad property availability
+         */
+        public GetStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Offroad property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Offroad property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific offroad properties
+     * Get Offroad properties
      */
+    public static class GetState extends GetCommand<State> {
+        /**
+         * Get all Offroad properties
+         */
+        public GetState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Offroad properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Offroad properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Offroad properties
+     * 
+     * @deprecated use {@link GetState#GetState(byte...)} instead
+     */
+    @Deprecated
     public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -145,42 +203,6 @@ public class Offroad {
                 addProperty(this.wheelSuspension);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all offroad property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific offroad property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

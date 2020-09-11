@@ -42,21 +42,79 @@ public class Windows {
     public static final byte PROPERTY_POSITIONS = 0x03;
 
     /**
-     * Get windows
+     * Get Windows property availability information.
      */
-    public static class GetWindows extends GetCommand<State> {
-        public GetWindows() {
-            super(State.class, IDENTIFIER);
+    public static class GetWindowsAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Windows property availability
+         */
+        public GetWindowsAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetWindows(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Windows property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetWindowsAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Windows property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetWindowsAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetWindowsAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific windows properties
+     * Get windows
      */
+    public static class GetWindows extends GetCommand<State> {
+        /**
+         * Get all Windows properties
+         */
+        public GetWindows() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Windows properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetWindows(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Windows properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetWindows(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetWindows(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Windows properties
+     * 
+     * @deprecated use {@link GetWindows#GetWindows(byte...)} instead
+     */
+    @Deprecated
     public static class GetWindowsProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -100,7 +158,7 @@ public class Windows {
         
         /**
          * Control windows
-         *
+         * 
          * @param openPercentages The open percentages
          * @param positions The positions
          */
@@ -305,42 +363,6 @@ public class Windows {
                 positions.add(position);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all windows property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific windows property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

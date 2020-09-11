@@ -65,17 +65,53 @@ class KParkingTicketTest : BaseTest() {
         assertTrue(dateIsSame(state.getTicketEndTime().value, "2019-10-08T11:21:45.000Z"))
     }
     
-    @Test
-    fun testGetParkingTicket() {
-        val bytes = Bytes(COMMAND_HEADER + "004700")
-        assertTrue(ParkingTicket.GetParkingTicket() == bytes)
+    @Test fun testGetParkingTicket() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "004700")
+        val defaultGetter = ParkingTicket.GetParkingTicket()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0047000102030405")
+        val propertyGetter = ParkingTicket.GetParkingTicket(0x01, 0x02, 0x03, 0x04, 0x05)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405"))
     }
     
-    @Test
-    fun testGetParkingTicketProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0047000102030405")
-        val getter = ParkingTicket.GetParkingTicketProperties(0x01, 0x02, 0x03, 0x04, 0x05)
-        assertTrue(getter == bytes)
+    @Test fun testGetParkingTicketAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "004702")
+        val created = ParkingTicket.GetParkingTicketAvailability()
+        assertTrue(created.identifier == Identifier.PARKING_TICKET)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as ParkingTicket.GetParkingTicketAvailability
+        assertTrue(resolved.identifier == Identifier.PARKING_TICKET)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetParkingTicketAvailabilitySome() {
+        val identifierBytes = Bytes("0102030405")
+        val allBytes = Bytes(COMMAND_HEADER + "004702" + identifierBytes)
+        val constructed = ParkingTicket.GetParkingTicketAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.PARKING_TICKET)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = ParkingTicket.GetParkingTicketAvailability(0x01, 0x02, 0x03, 0x04, 0x05)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as ParkingTicket.GetParkingTicketAvailability
+        assertTrue(resolved.identifier == Identifier.PARKING_TICKET)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun startParking() {

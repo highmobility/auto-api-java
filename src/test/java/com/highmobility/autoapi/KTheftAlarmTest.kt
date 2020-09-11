@@ -72,17 +72,53 @@ class KTheftAlarmTest : BaseTest() {
         assertTrue(state.getEventType().value == TheftAlarm.EventType.REAR_RIGHT)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "004600")
-        assertTrue(TheftAlarm.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "004600")
+        val defaultGetter = TheftAlarm.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00460001020304050607")
+        val propertyGetter = TheftAlarm.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("01020304050607"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "00460001020304050607")
-        val getter = TheftAlarm.GetProperties(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "004602")
+        val created = TheftAlarm.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.THEFT_ALARM)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as TheftAlarm.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.THEFT_ALARM)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("01020304050607")
+        val allBytes = Bytes(COMMAND_HEADER + "004602" + identifierBytes)
+        val constructed = TheftAlarm.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.THEFT_ALARM)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = TheftAlarm.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as TheftAlarm.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.THEFT_ALARM)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun setTheftAlarm() {

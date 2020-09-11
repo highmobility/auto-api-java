@@ -516,9 +516,28 @@ class KDashboardLightsTest : BaseTest() {
         assertTrue(state.getDashboardLights()[92].value?.colour == DashboardLight.Colour.INFO)
     }
     
-    @Test
-    fun testGetDashboardLights() {
-        val bytes = Bytes(COMMAND_HEADER + "006100")
-        assertTrue(DashboardLights.GetDashboardLights() == bytes)
+    @Test fun testGetDashboardLights() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "006100")
+        val defaultGetter = DashboardLights.GetDashboardLights()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
+    
+    @Test fun testGetDashboardLightsAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "006102")
+        val created = DashboardLights.GetDashboardLightsAvailability()
+        assertTrue(created.identifier == Identifier.DASHBOARD_LIGHTS)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as DashboardLights.GetDashboardLightsAvailability
+        assertTrue(resolved.identifier == Identifier.DASHBOARD_LIGHTS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
 }

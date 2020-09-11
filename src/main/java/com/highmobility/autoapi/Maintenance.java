@@ -60,21 +60,79 @@ public class Maintenance {
     public static final byte PROPERTY_LAST_ECALL = 0x10;
 
     /**
-     * Get all maintenance properties
+     * Get Maintenance property availability information.
      */
-    public static class GetState extends GetCommand<State> {
-        public GetState() {
-            super(State.class, IDENTIFIER);
+    public static class GetStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Maintenance property availability
+         */
+        public GetStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Maintenance property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Maintenance property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific maintenance properties
+     * Get Maintenance properties
      */
+    public static class GetState extends GetCommand<State> {
+        /**
+         * Get all Maintenance properties
+         */
+        public GetState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Maintenance properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Maintenance properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Maintenance properties
+     * 
+     * @deprecated use {@link GetState#GetState(byte...)} instead
+     */
+    @Deprecated
     public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -118,7 +176,7 @@ public class Maintenance {
     
         /**
          * @return Time until next servicing of the car
-         * @deprecated removed the unit from the name. Replaced by {@link #getTimeToNextService()}
+         *  * @deprecated removed the unit from the name. Replaced by {@link #getTimeToNextService()}
          */
         @Deprecated
         public Property<Duration> getDaysToNextService() {
@@ -127,7 +185,7 @@ public class Maintenance {
     
         /**
          * @return The distance until next servicing of the vehicle
-         * @deprecated removed the unit from the name. Replaced by {@link #getDistanceToNextService()}
+         *  * @deprecated removed the unit from the name. Replaced by {@link #getDistanceToNextService()}
          */
         @Deprecated
         public Property<Length> getKilometersToNextService() {
@@ -143,7 +201,7 @@ public class Maintenance {
     
         /**
          * @return Time until exhaust inspection
-         * @deprecated removed the unit from the name. Replaced by {@link #getTimeToExhaustInspection()}
+         *  * @deprecated removed the unit from the name. Replaced by {@link #getTimeToExhaustInspection()}
          */
         @Deprecated
         public Property<Duration> getMonthsToExhaustInspection() {
@@ -320,7 +378,7 @@ public class Maintenance {
             /**
              * @param daysToNextService Time until next servicing of the car
              * @return The builder
-             * @deprecated removed the unit from the name. Replaced by {@link #getTimeToNextService()}
+             *  * @deprecated removed the unit from the name. Replaced by {@link #getTimeToNextService()}
              */
             @Deprecated
             public Builder setDaysToNextService(Property<Duration> daysToNextService) {
@@ -332,7 +390,7 @@ public class Maintenance {
             /**
              * @param kilometersToNextService The distance until next servicing of the vehicle
              * @return The builder
-             * @deprecated removed the unit from the name. Replaced by {@link #getDistanceToNextService()}
+             *  * @deprecated removed the unit from the name. Replaced by {@link #getDistanceToNextService()}
              */
             @Deprecated
             public Builder setKilometersToNextService(Property<Length> kilometersToNextService) {
@@ -354,7 +412,7 @@ public class Maintenance {
             /**
              * @param monthsToExhaustInspection Time until exhaust inspection
              * @return The builder
-             * @deprecated removed the unit from the name. Replaced by {@link #getTimeToExhaustInspection()}
+             *  * @deprecated removed the unit from the name. Replaced by {@link #getTimeToExhaustInspection()}
              */
             @Deprecated
             public Builder setMonthsToExhaustInspection(Property<Duration> monthsToExhaustInspection) {
@@ -500,42 +558,6 @@ public class Maintenance {
                 addProperty(this.lastECall);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all maintenance property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific maintenance property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

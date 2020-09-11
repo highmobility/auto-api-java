@@ -50,21 +50,79 @@ public class ChassisSettings {
     public static final byte PROPERTY_MINIMUM_CHASSIS_POSITION = 0x0a;
 
     /**
-     * Get chassis settings
+     * Get Chassis Settings property availability information.
      */
-    public static class GetChassisSettings extends GetCommand<State> {
-        public GetChassisSettings() {
-            super(State.class, IDENTIFIER);
+    public static class GetChassisSettingsAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Chassis Settings property availability
+         */
+        public GetChassisSettingsAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetChassisSettings(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Chassis Settings property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetChassisSettingsAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Chassis Settings property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetChassisSettingsAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetChassisSettingsAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific chassis settings properties
+     * Get chassis settings
      */
+    public static class GetChassisSettings extends GetCommand<State> {
+        /**
+         * Get all Chassis Settings properties
+         */
+        public GetChassisSettings() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Chassis Settings properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetChassisSettings(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Chassis Settings properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetChassisSettings(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetChassisSettings(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Chassis Settings properties
+     * 
+     * @deprecated use {@link GetChassisSettings#GetChassisSettings(byte...)} instead
+     */
+    @Deprecated
     public static class GetChassisSettingsProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -100,7 +158,7 @@ public class ChassisSettings {
         
         /**
          * Set driving mode
-         *
+         * 
          * @param drivingMode The driving mode
          */
         public SetDrivingMode(DrivingMode drivingMode) {
@@ -138,7 +196,7 @@ public class ChassisSettings {
         
         /**
          * Start stop sports chrono
-         *
+         * 
          * @param sportChrono The sport chrono
          */
         public StartStopSportsChrono(SportChrono sportChrono) {
@@ -176,7 +234,7 @@ public class ChassisSettings {
         
         /**
          * Set spring rates
-         *
+         * 
          * @param currentSpringRates The current values for the spring rates
          */
         public SetSpringRates(List<SpringRate> currentSpringRates) {
@@ -231,7 +289,7 @@ public class ChassisSettings {
         
         /**
          * Set chassis position
-         *
+         * 
          * @param currentChassisPosition The chassis position calculated from the lowest point
          */
         public SetChassisPosition(Length currentChassisPosition) {
@@ -525,42 +583,6 @@ public class ChassisSettings {
                 addProperty(this.minimumChassisPosition);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all chassis settings property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific chassis settings property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

@@ -68,7 +68,7 @@ public class Notifications {
         
         /**
          * Notification
-         *
+         * 
          * @param text Text for the notification
          * @param actionItems The action items
          */
@@ -128,7 +128,7 @@ public class Notifications {
         
         /**
          * Action
-         *
+         * 
          * @param activatedAction Identifier of the activated action
          */
         public Action(Integer activatedAction) {
@@ -321,42 +321,6 @@ public class Notifications {
                 addProperty(this.clear);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all notifications property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific notifications property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

@@ -54,11 +54,30 @@ class KParkingBrakeTest : BaseTest() {
         assertTrue(state.getStatus().value == ActiveState.ACTIVE)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "005800")
-        assertTrue(ParkingBrake.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "005800")
+        val defaultGetter = ParkingBrake.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
+    
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "005802")
+        val created = ParkingBrake.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.PARKING_BRAKE)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as ParkingBrake.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.PARKING_BRAKE)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
     
     @Test fun setParkingBrake() {
         val bytes = Bytes(COMMAND_HEADER + "005801" +

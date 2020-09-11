@@ -58,17 +58,53 @@ class KCruiseControlTest : BaseTest() {
         assertTrue(state.getAccTargetSpeed().value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "006200")
-        assertTrue(CruiseControl.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "006200")
+        val defaultGetter = CruiseControl.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0062000102030405")
+        val propertyGetter = CruiseControl.GetState(0x01, 0x02, 0x03, 0x04, 0x05)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0062000102030405")
-        val getter = CruiseControl.GetProperties(0x01, 0x02, 0x03, 0x04, 0x05)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "006202")
+        val created = CruiseControl.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.CRUISE_CONTROL)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as CruiseControl.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.CRUISE_CONTROL)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("0102030405")
+        val allBytes = Bytes(COMMAND_HEADER + "006202" + identifierBytes)
+        val constructed = CruiseControl.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.CRUISE_CONTROL)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = CruiseControl.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as CruiseControl.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.CRUISE_CONTROL)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun activateDeactivateCruiseControl() {

@@ -73,17 +73,53 @@ class KNaviDestinationTest : BaseTest() {
         assertTrue(state.getDistanceToDestination().value?.unit == Length.Unit.KILOMETERS)
     }
     
-    @Test
-    fun testGetNaviDestination() {
-        val bytes = Bytes(COMMAND_HEADER + "003100")
-        assertTrue(NaviDestination.GetNaviDestination() == bytes)
+    @Test fun testGetNaviDestination() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "003100")
+        val defaultGetter = NaviDestination.GetNaviDestination()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "003100010203040506")
+        val propertyGetter = NaviDestination.GetNaviDestination(0x01, 0x02, 0x03, 0x04, 0x05, 0x06)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506"))
     }
     
-    @Test
-    fun testGetNaviDestinationProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "003100010203040506")
-        val getter = NaviDestination.GetNaviDestinationProperties(0x01, 0x02, 0x03, 0x04, 0x05, 0x06)
-        assertTrue(getter == bytes)
+    @Test fun testGetNaviDestinationAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "003102")
+        val created = NaviDestination.GetNaviDestinationAvailability()
+        assertTrue(created.identifier == Identifier.NAVI_DESTINATION)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as NaviDestination.GetNaviDestinationAvailability
+        assertTrue(resolved.identifier == Identifier.NAVI_DESTINATION)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetNaviDestinationAvailabilitySome() {
+        val identifierBytes = Bytes("010203040506")
+        val allBytes = Bytes(COMMAND_HEADER + "003102" + identifierBytes)
+        val constructed = NaviDestination.GetNaviDestinationAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.NAVI_DESTINATION)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = NaviDestination.GetNaviDestinationAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as NaviDestination.GetNaviDestinationAvailability
+        assertTrue(resolved.identifier == Identifier.NAVI_DESTINATION)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun setNaviDestination() {

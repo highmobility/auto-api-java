@@ -29,9 +29,6 @@ import com.highmobility.value.Bytes;
 import static com.highmobility.autoapi.Identifier.*;
 
 public class CommandResolver {
-    private static final int GET_STATE_LENGTH = Command.HEADER_LENGTH + 3;
-    private static final int GET_ALL_AVAILABILITIES_LENGTH = GET_STATE_LENGTH;
-
     /**
      * Try to parse the command bytes to a more specific Command subclass. Check the returned
      * object's instance type (instanceOf) to understand which command was received.
@@ -65,15 +62,9 @@ public class CommandResolver {
                             command = new VehicleStatus.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new VehicleStatus.GetVehicleStatus(bytes);
-                        }
+                        command = new VehicleStatus.GetVehicleStatus(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new VehicleStatus.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new VehicleStatus.GetAvailabilities(bytes, true);
-                        }
+                        command = new VehicleStatus.GetVehicleStatusAvailability(bytes, true);
                     }
                     break;
                 }
@@ -96,31 +87,16 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new ParkingTicket.GetParkingTicket(bytes);
-                        } else {
-                            command = new ParkingTicket.GetParkingTicketProperties(bytes, true);
-                        }
+                        command = new ParkingTicket.GetParkingTicket(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new ParkingTicket.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new ParkingTicket.GetAvailabilities(bytes, true);
-                        }
+                        command = new ParkingTicket.GetParkingTicketAvailability(bytes, true);
                     }
                     break;
                 }
                 case BROWSER: {
                     if (type == Type.SET) {
                         command = new Browser.LoadUrl(bytes);
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Browser.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Browser.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case WINDOWS: {
                     if (type == Type.SET) {
@@ -130,17 +106,9 @@ public class CommandResolver {
                             command = new Windows.ControlWindows(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Windows.GetWindows(bytes);
-                        } else {
-                            command = new Windows.GetWindowsProperties(bytes, true);
-                        }
+                        command = new Windows.GetWindows(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Windows.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Windows.GetAvailabilities(bytes, true);
-                        }
+                        command = new Windows.GetWindowsAvailability(bytes, true);
                     }
                     break;
                 }
@@ -150,15 +118,9 @@ public class CommandResolver {
                             command = new VehicleTime.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new VehicleTime.GetVehicleTime(bytes);
-                        }
+                        command = new VehicleTime.GetVehicleTime(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new VehicleTime.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new VehicleTime.GetAvailabilities(bytes, true);
-                        }
+                        command = new VehicleTime.GetVehicleTimeAvailability(bytes, true);
                     }
                     break;
                 }
@@ -168,15 +130,9 @@ public class CommandResolver {
                             command = new DriverFatigue.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new DriverFatigue.GetState(bytes);
-                        }
+                        command = new DriverFatigue.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new DriverFatigue.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new DriverFatigue.GetAvailabilities(bytes, true);
-                        }
+                        command = new DriverFatigue.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -201,15 +157,9 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new RemoteControl.GetControlState(bytes);
-                        }
+                        command = new RemoteControl.GetControlState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new RemoteControl.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new RemoteControl.GetAvailabilities(bytes, true);
-                        }
+                        command = new RemoteControl.GetControlStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -221,17 +171,9 @@ public class CommandResolver {
                             command = new Fueling.ControlGasFlap(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Fueling.GetGasFlapState(bytes);
-                        } else {
-                            command = new Fueling.GetGasFlapProperties(bytes, true);
-                        }
+                        command = new Fueling.GetGasFlapState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Fueling.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Fueling.GetAvailabilities(bytes, true);
-                        }
+                        command = new Fueling.GetGasFlapStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -243,17 +185,9 @@ public class CommandResolver {
                             command = new NaviDestination.SetNaviDestination(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new NaviDestination.GetNaviDestination(bytes);
-                        } else {
-                            command = new NaviDestination.GetNaviDestinationProperties(bytes, true);
-                        }
+                        command = new NaviDestination.GetNaviDestination(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new NaviDestination.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new NaviDestination.GetAvailabilities(bytes, true);
-                        }
+                        command = new NaviDestination.GetNaviDestinationAvailability(bytes, true);
                     }
                     break;
                 }
@@ -263,17 +197,9 @@ public class CommandResolver {
                             command = new LightConditions.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new LightConditions.GetLightConditions(bytes);
-                        } else {
-                            command = new LightConditions.GetLightConditionsProperties(bytes, true);
-                        }
+                        command = new LightConditions.GetLightConditions(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new LightConditions.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new LightConditions.GetAvailabilities(bytes, true);
-                        }
+                        command = new LightConditions.GetLightConditionsAvailability(bytes, true);
                     }
                     break;
                 }
@@ -283,17 +209,9 @@ public class CommandResolver {
                             command = new Offroad.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Offroad.GetState(bytes);
-                        } else {
-                            command = new Offroad.GetProperties(bytes, true);
-                        }
+                        command = new Offroad.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Offroad.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Offroad.GetAvailabilities(bytes, true);
-                        }
+                        command = new Offroad.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -305,17 +223,9 @@ public class CommandResolver {
                             command = new Trunk.ControlTrunk(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Trunk.GetState(bytes);
-                        } else {
-                            command = new Trunk.GetProperties(bytes, true);
-                        }
+                        command = new Trunk.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Trunk.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Trunk.GetAvailabilities(bytes, true);
-                        }
+                        command = new Trunk.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -327,17 +237,9 @@ public class CommandResolver {
                             command = new Doors.LockUnlockDoors(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Doors.GetState(bytes);
-                        } else {
-                            command = new Doors.GetProperties(bytes, true);
-                        }
+                        command = new Doors.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Doors.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Doors.GetAvailabilities(bytes, true);
-                        }
+                        command = new Doors.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -349,15 +251,9 @@ public class CommandResolver {
                             command = new ValetMode.ActivateDeactivateValetMode(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new ValetMode.GetValetMode(bytes);
-                        }
+                        command = new ValetMode.GetValetMode(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new ValetMode.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new ValetMode.GetAvailabilities(bytes, true);
-                        }
+                        command = new ValetMode.GetValetModeAvailability(bytes, true);
                     }
                     break;
                 }
@@ -367,15 +263,9 @@ public class CommandResolver {
                             command = new DashboardLights.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new DashboardLights.GetDashboardLights(bytes);
-                        }
+                        command = new DashboardLights.GetDashboardLights(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new DashboardLights.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new DashboardLights.GetAvailabilities(bytes, true);
-                        }
+                        command = new DashboardLights.GetDashboardLightsAvailability(bytes, true);
                     }
                     break;
                 }
@@ -386,26 +276,12 @@ public class CommandResolver {
                         } else {
                             command = new MultiCommand.MultiCommandCommand(bytes);
                         }
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new MultiCommand.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new MultiCommand.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case TEXT_INPUT: {
                     if (type == Type.SET) {
                         command = new TextInput.TextInputCommand(bytes);
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new TextInput.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new TextInput.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case LIGHTS: {
                     if (type == Type.SET) {
@@ -415,17 +291,9 @@ public class CommandResolver {
                             command = new Lights.ControlLights(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Lights.GetState(bytes);
-                        } else {
-                            command = new Lights.GetProperties(bytes, true);
-                        }
+                        command = new Lights.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Lights.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Lights.GetAvailabilities(bytes, true);
-                        }
+                        command = new Lights.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -452,17 +320,9 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new ChassisSettings.GetChassisSettings(bytes);
-                        } else {
-                            command = new ChassisSettings.GetChassisSettingsProperties(bytes, true);
-                        }
+                        command = new ChassisSettings.GetChassisSettings(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new ChassisSettings.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new ChassisSettings.GetAvailabilities(bytes, true);
-                        }
+                        command = new ChassisSettings.GetChassisSettingsAvailability(bytes, true);
                     }
                     break;
                 }
@@ -486,14 +346,7 @@ public class CommandResolver {
                                 });
                             }
                         }
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Notifications.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Notifications.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case HOOD: {
                     if (type == Type.SET) {
@@ -501,15 +354,9 @@ public class CommandResolver {
                             command = new Hood.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Hood.GetState(bytes);
-                        }
+                        command = new Hood.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Hood.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Hood.GetAvailabilities(bytes, true);
-                        }
+                        command = new Hood.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -540,17 +387,9 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Charging.GetState(bytes);
-                        } else {
-                            command = new Charging.GetProperties(bytes, true);
-                        }
+                        command = new Charging.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Charging.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Charging.GetAvailabilities(bytes, true);
-                        }
+                        command = new Charging.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -560,15 +399,9 @@ public class CommandResolver {
                             command = new Mobile.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Mobile.GetState(bytes);
-                        }
+                        command = new Mobile.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Mobile.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Mobile.GetAvailabilities(bytes, true);
-                        }
+                        command = new Mobile.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -597,17 +430,9 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new HomeCharger.GetState(bytes);
-                        } else {
-                            command = new HomeCharger.GetProperties(bytes, true);
-                        }
+                        command = new HomeCharger.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new HomeCharger.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new HomeCharger.GetAvailabilities(bytes, true);
-                        }
+                        command = new HomeCharger.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -617,17 +442,9 @@ public class CommandResolver {
                             command = new Diagnostics.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Diagnostics.GetState(bytes);
-                        } else {
-                            command = new Diagnostics.GetProperties(bytes, true);
-                        }
+                        command = new Diagnostics.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Diagnostics.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Diagnostics.GetAvailabilities(bytes, true);
-                        }
+                        command = new Diagnostics.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -637,17 +454,9 @@ public class CommandResolver {
                             command = new Usage.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Usage.GetUsage(bytes);
-                        } else {
-                            command = new Usage.GetUsageProperties(bytes, true);
-                        }
+                        command = new Usage.GetUsage(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Usage.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Usage.GetAvailabilities(bytes, true);
-                        }
+                        command = new Usage.GetUsageAvailability(bytes, true);
                     }
                     break;
                 }
@@ -657,17 +466,9 @@ public class CommandResolver {
                             command = new VehicleInformation.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new VehicleInformation.GetVehicleInformation(bytes);
-                        } else {
-                            command = new VehicleInformation.GetVehicleInformationProperties(bytes, true);
-                        }
+                        command = new VehicleInformation.GetVehicleInformation(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new VehicleInformation.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new VehicleInformation.GetAvailabilities(bytes, true);
-                        }
+                        command = new VehicleInformation.GetVehicleInformationAvailability(bytes, true);
                     }
                     break;
                 }
@@ -679,43 +480,21 @@ public class CommandResolver {
                             command = new PowerTakeoff.ActivateDeactivatePowerTakeoff(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new PowerTakeoff.GetState(bytes);
-                        } else {
-                            command = new PowerTakeoff.GetProperties(bytes, true);
-                        }
+                        command = new PowerTakeoff.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new PowerTakeoff.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new PowerTakeoff.GetAvailabilities(bytes, true);
-                        }
+                        command = new PowerTakeoff.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
                 case WAKE_UP: {
                     if (type == Type.SET) {
                         command = new WakeUp.WakeUpCommand(bytes);
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new WakeUp.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new WakeUp.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case VIDEO_HANDOVER: {
                     if (type == Type.SET) {
                         command = new VideoHandover.VideoHandoverCommand(bytes);
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new VideoHandover.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new VideoHandover.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case HISTORICAL: {
                     if (type == Type.SET) {
@@ -735,14 +514,7 @@ public class CommandResolver {
                                 });
                             }
                         }
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Historical.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Historical.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case WI_FI: {
                     if (type == Type.SET) {
@@ -765,17 +537,9 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new WiFi.GetState(bytes);
-                        } else {
-                            command = new WiFi.GetProperties(bytes, true);
-                        }
+                        command = new WiFi.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new WiFi.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new WiFi.GetAvailabilities(bytes, true);
-                        }
+                        command = new WiFi.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -785,43 +549,21 @@ public class CommandResolver {
                             command = new VehicleLocation.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new VehicleLocation.GetVehicleLocation(bytes);
-                        } else {
-                            command = new VehicleLocation.GetVehicleLocationProperties(bytes, true);
-                        }
+                        command = new VehicleLocation.GetVehicleLocation(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new VehicleLocation.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new VehicleLocation.GetAvailabilities(bytes, true);
-                        }
+                        command = new VehicleLocation.GetVehicleLocationAvailability(bytes, true);
                     }
                     break;
                 }
                 case HEART_RATE: {
                     if (type == Type.SET) {
                         command = new HeartRate.SendHeartRate(bytes);
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new HeartRate.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new HeartRate.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case GRAPHICS: {
                     if (type == Type.SET) {
                         command = new Graphics.DisplayImage(bytes);
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Graphics.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Graphics.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case RACE: {
                     if (type == Type.SET) {
@@ -829,17 +571,9 @@ public class CommandResolver {
                             command = new Race.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Race.GetState(bytes);
-                        } else {
-                            command = new Race.GetProperties(bytes, true);
-                        }
+                        command = new Race.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Race.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Race.GetAvailabilities(bytes, true);
-                        }
+                        command = new Race.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -849,17 +583,9 @@ public class CommandResolver {
                             command = new FirmwareVersion.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new FirmwareVersion.GetFirmwareVersion(bytes);
-                        } else {
-                            command = new FirmwareVersion.GetFirmwareVersionProperties(bytes, true);
-                        }
+                        command = new FirmwareVersion.GetFirmwareVersion(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new FirmwareVersion.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new FirmwareVersion.GetAvailabilities(bytes, true);
-                        }
+                        command = new FirmwareVersion.GetFirmwareVersionAvailability(bytes, true);
                     }
                     break;
                 }
@@ -871,17 +597,9 @@ public class CommandResolver {
                             command = new TheftAlarm.SetTheftAlarm(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new TheftAlarm.GetState(bytes);
-                        } else {
-                            command = new TheftAlarm.GetProperties(bytes, true);
-                        }
+                        command = new TheftAlarm.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new TheftAlarm.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new TheftAlarm.GetAvailabilities(bytes, true);
-                        }
+                        command = new TheftAlarm.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -891,17 +609,9 @@ public class CommandResolver {
                             command = new Seats.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Seats.GetState(bytes);
-                        } else {
-                            command = new Seats.GetProperties(bytes, true);
-                        }
+                        command = new Seats.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Seats.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Seats.GetAvailabilities(bytes, true);
-                        }
+                        command = new Seats.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -911,17 +621,9 @@ public class CommandResolver {
                             command = new Tachograph.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Tachograph.GetState(bytes);
-                        } else {
-                            command = new Tachograph.GetProperties(bytes, true);
-                        }
+                        command = new Tachograph.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Tachograph.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Tachograph.GetAvailabilities(bytes, true);
-                        }
+                        command = new Tachograph.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -933,15 +635,9 @@ public class CommandResolver {
                             command = new ParkingBrake.SetParkingBrake(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new ParkingBrake.GetState(bytes);
-                        }
+                        command = new ParkingBrake.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new ParkingBrake.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new ParkingBrake.GetAvailabilities(bytes, true);
-                        }
+                        command = new ParkingBrake.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -951,17 +647,9 @@ public class CommandResolver {
                             command = new Capabilities.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Capabilities.GetCapabilities(bytes);
-                        } else {
-                            command = new Capabilities.GetCapabilitiesProperties(bytes, true);
-                        }
+                        command = new Capabilities.GetCapabilities(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Capabilities.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Capabilities.GetAvailabilities(bytes, true);
-                        }
+                        command = new Capabilities.GetCapabilitiesAvailability(bytes, true);
                     }
                     break;
                 }
@@ -971,17 +659,9 @@ public class CommandResolver {
                             command = new Maintenance.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Maintenance.GetState(bytes);
-                        } else {
-                            command = new Maintenance.GetProperties(bytes, true);
-                        }
+                        command = new Maintenance.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Maintenance.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Maintenance.GetAvailabilities(bytes, true);
-                        }
+                        command = new Maintenance.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -993,17 +673,9 @@ public class CommandResolver {
                             command = new RooftopControl.ControlRooftop(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new RooftopControl.GetRooftopState(bytes);
-                        } else {
-                            command = new RooftopControl.GetRooftopProperties(bytes, true);
-                        }
+                        command = new RooftopControl.GetRooftopState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new RooftopControl.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new RooftopControl.GetAvailabilities(bytes, true);
-                        }
+                        command = new RooftopControl.GetRooftopStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -1012,14 +684,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new FailureMessage.State(bytes);
                         }
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new FailureMessage.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new FailureMessage.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case WINDSCREEN: {
                     if (type == Type.SET) {
@@ -1042,17 +707,9 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Windscreen.GetState(bytes);
-                        } else {
-                            command = new Windscreen.GetProperties(bytes, true);
-                        }
+                        command = new Windscreen.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Windscreen.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Windscreen.GetAvailabilities(bytes, true);
-                        }
+                        command = new Windscreen.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -1064,17 +721,9 @@ public class CommandResolver {
                             command = new CruiseControl.ActivateDeactivateCruiseControl(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new CruiseControl.GetState(bytes);
-                        } else {
-                            command = new CruiseControl.GetProperties(bytes, true);
-                        }
+                        command = new CruiseControl.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new CruiseControl.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new CruiseControl.GetAvailabilities(bytes, true);
-                        }
+                        command = new CruiseControl.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -1083,14 +732,7 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new Trips.State(bytes);
                         }
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Trips.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Trips.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case KEYFOB_POSITION: {
                     if (type == Type.SET) {
@@ -1098,15 +740,9 @@ public class CommandResolver {
                             command = new KeyfobPosition.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new KeyfobPosition.GetKeyfobPosition(bytes);
-                        }
+                        command = new KeyfobPosition.GetKeyfobPosition(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new KeyfobPosition.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new KeyfobPosition.GetAvailabilities(bytes, true);
-                        }
+                        command = new KeyfobPosition.GetKeyfobPositionAvailability(bytes, true);
                     }
                     break;
                 }
@@ -1129,17 +765,9 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new HonkHornFlashLights.GetFlashersState(bytes);
-                        } else {
-                            command = new HonkHornFlashLights.GetFlashersProperties(bytes, true);
-                        }
+                        command = new HonkHornFlashLights.GetFlashersState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new HonkHornFlashLights.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new HonkHornFlashLights.GetAvailabilities(bytes, true);
-                        }
+                        command = new HonkHornFlashLights.GetFlashersStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -1162,17 +790,9 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Engine.GetState(bytes);
-                        } else {
-                            command = new Engine.GetProperties(bytes, true);
-                        }
+                        command = new Engine.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Engine.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Engine.GetAvailabilities(bytes, true);
-                        }
+                        command = new Engine.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -1182,15 +802,9 @@ public class CommandResolver {
                             command = new WeatherConditions.State(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new WeatherConditions.GetWeatherConditions(bytes);
-                        }
+                        command = new WeatherConditions.GetWeatherConditions(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new WeatherConditions.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new WeatherConditions.GetAvailabilities(bytes, true);
-                        }
+                        command = new WeatherConditions.GetWeatherConditionsAvailability(bytes, true);
                     }
                     break;
                 }
@@ -1201,14 +815,7 @@ public class CommandResolver {
                         } else {
                             command = new Messaging.MessageReceived(bytes);
                         }
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Messaging.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Messaging.GetAvailabilities(bytes, true);
-                        }
-                    }
-                    break;
+                    }    break;
                 }
                 case IGNITION: {
                     if (type == Type.SET) {
@@ -1218,17 +825,9 @@ public class CommandResolver {
                             command = new Ignition.TurnIgnitionOnOff(bytes);
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Ignition.GetState(bytes);
-                        } else {
-                            command = new Ignition.GetProperties(bytes, true);
-                        }
+                        command = new Ignition.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Ignition.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Ignition.GetAvailabilities(bytes, true);
-                        }
+                        command = new Ignition.GetStateAvailability(bytes, true);
                     }
                     break;
                 }
@@ -1259,17 +858,9 @@ public class CommandResolver {
                             }
                         }
                     } else if (type == Type.GET) {
-                        if (bytes.length == GET_STATE_LENGTH) {
-                            command = new Climate.GetState(bytes);
-                        } else {
-                            command = new Climate.GetProperties(bytes, true);
-                        }
+                        command = new Climate.GetState(bytes, true);
                     } else if (type == Type.GET_AVAILABILITY) {
-                        if (bytes.length == GET_ALL_AVAILABILITIES_LENGTH) {
-                            command = new Climate.GetAllAvailabilities(bytes);
-                        } else {
-                             command = new Climate.GetAvailabilities(bytes, true);
-                        }
+                        command = new Climate.GetStateAvailability(bytes, true);
                     }
                     break;
                 }

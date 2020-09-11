@@ -40,21 +40,79 @@ public class Capabilities {
     public static final byte PROPERTY_WEBHOOKS = 0x02;
 
     /**
-     * Get capabilities
+     * Get Capabilities property availability information.
      */
-    public static class GetCapabilities extends GetCommand<State> {
-        public GetCapabilities() {
-            super(State.class, IDENTIFIER);
+    public static class GetCapabilitiesAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Capabilities property availability
+         */
+        public GetCapabilitiesAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetCapabilities(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Capabilities property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetCapabilitiesAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Capabilities property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetCapabilitiesAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetCapabilitiesAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific capabilities properties
+     * Get capabilities
      */
+    public static class GetCapabilities extends GetCommand<State> {
+        /**
+         * Get all Capabilities properties
+         */
+        public GetCapabilities() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Capabilities properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetCapabilities(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Capabilities properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetCapabilities(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetCapabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Capabilities properties
+     * 
+     * @deprecated use {@link GetCapabilities#GetCapabilities(byte...)} instead
+     */
+    @Deprecated
     public static class GetCapabilitiesProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -217,42 +275,6 @@ public class Capabilities {
                 webhooks.add(webhook);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all capabilities property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific capabilities property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

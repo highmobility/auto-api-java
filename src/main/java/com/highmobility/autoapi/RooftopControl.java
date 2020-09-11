@@ -44,21 +44,79 @@ public class RooftopControl {
     public static final byte PROPERTY_SUNROOF_RAIN_EVENT = 0x06;
 
     /**
-     * Get rooftop state
+     * Get Rooftop Control property availability information.
      */
-    public static class GetRooftopState extends GetCommand<State> {
-        public GetRooftopState() {
-            super(State.class, IDENTIFIER);
+    public static class GetRooftopStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Rooftop Control property availability
+         */
+        public GetRooftopStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetRooftopState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Rooftop Control property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetRooftopStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Rooftop Control property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetRooftopStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetRooftopStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific rooftop control properties
+     * Get rooftop state
      */
+    public static class GetRooftopState extends GetCommand<State> {
+        /**
+         * Get all Rooftop Control properties
+         */
+        public GetRooftopState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Rooftop Control properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetRooftopState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Rooftop Control properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetRooftopState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetRooftopState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Rooftop Control properties
+     * 
+     * @deprecated use {@link GetRooftopState#GetRooftopState(byte...)} instead
+     */
+    @Deprecated
     public static class GetRooftopProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -126,7 +184,7 @@ public class RooftopControl {
         
         /**
          * Control rooftop
-         *
+         * 
          * @param dimming 1.0 (100%) is opaque, 0.0 (0%) is transparent
          * @param position 1.0 (100%) is fully open, 0.0 (0%) is closed
          * @param convertibleRoofState The convertible roof state
@@ -328,42 +386,6 @@ public class RooftopControl {
                 addProperty(this.sunroofRainEvent);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all rooftop control property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific rooftop control property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

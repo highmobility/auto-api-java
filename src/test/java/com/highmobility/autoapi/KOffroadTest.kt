@@ -58,16 +58,52 @@ class KOffroadTest : BaseTest() {
         assertTrue(state.getWheelSuspension().value == 0.5)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "005200")
-        assertTrue(Offroad.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "005200")
+        val defaultGetter = Offroad.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0052000102")
+        val propertyGetter = Offroad.GetState(0x01, 0x02)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0052000102")
-        val getter = Offroad.GetProperties(0x01, 0x02)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "005202")
+        val created = Offroad.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.OFFROAD)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Offroad.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.OFFROAD)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("0102")
+        val allBytes = Bytes(COMMAND_HEADER + "005202" + identifierBytes)
+        val constructed = Offroad.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.OFFROAD)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Offroad.GetStateAvailability(0x01, 0x02)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Offroad.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.OFFROAD)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
 }

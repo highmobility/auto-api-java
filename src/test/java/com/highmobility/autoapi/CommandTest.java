@@ -210,17 +210,18 @@ public class CommandTest extends BaseTest {
 
     @Test public void getProperties() {
         Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "00470001");
-        ParkingTicket.GetParkingTicketProperties getter =
-                new ParkingTicket.GetParkingTicketProperties(new Bytes("01"));
+        ParkingTicket.GetParkingTicket getter = new ParkingTicket.GetParkingTicket(new Bytes("01"));
+        ParkingTicket.GetParkingTicket getterSecondConstructor = new ParkingTicket.GetParkingTicket((byte) 0x01);
         assertTrue(bytesTheSame(getter, waitingForBytes));
+        assertTrue(bytesTheSame(getterSecondConstructor, waitingForBytes));
 
         setRuntime(CommandResolver.RunTime.JAVA);
-        ParkingTicket.GetParkingTicketProperties resolved =
-                (ParkingTicket.GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes);
+        ParkingTicket.GetParkingTicket resolved =
+                (ParkingTicket.GetParkingTicket) CommandResolver.resolve(waitingForBytes);
         assertTrue(resolved.getPropertyIdentifiers().equals("01"));
 
-        ParkingTicket.GetParkingTicketProperties resolved2 =
-                (ParkingTicket.GetParkingTicketProperties) CommandResolver.resolve(waitingForBytes.concat(new Bytes("02")));
+        ParkingTicket.GetParkingTicket resolved2 =
+                (ParkingTicket.GetParkingTicket) CommandResolver.resolve(waitingForBytes.concat(new Bytes("02")));
 
         assertTrue(resolved2.getPropertyIdentifiers().equals("0102"));
     }

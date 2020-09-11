@@ -57,17 +57,53 @@ class KFuelingTest : BaseTest() {
         assertTrue(state.getGasFlapPosition().value == Position.CLOSED)
     }
     
-    @Test
-    fun testGetGasFlapState() {
-        val bytes = Bytes(COMMAND_HEADER + "004000")
-        assertTrue(Fueling.GetGasFlapState() == bytes)
+    @Test fun testGetGasFlapState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "004000")
+        val defaultGetter = Fueling.GetGasFlapState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0040000203")
+        val propertyGetter = Fueling.GetGasFlapState(0x02, 0x03)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0203"))
     }
     
-    @Test
-    fun testGetGasFlapProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0040000203")
-        val getter = Fueling.GetGasFlapProperties(0x02, 0x03)
-        assertTrue(getter == bytes)
+    @Test fun testGetGasFlapStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "004002")
+        val created = Fueling.GetGasFlapStateAvailability()
+        assertTrue(created.identifier == Identifier.FUELING)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Fueling.GetGasFlapStateAvailability
+        assertTrue(resolved.identifier == Identifier.FUELING)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetGasFlapStateAvailabilitySome() {
+        val identifierBytes = Bytes("0203")
+        val allBytes = Bytes(COMMAND_HEADER + "004002" + identifierBytes)
+        val constructed = Fueling.GetGasFlapStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.FUELING)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Fueling.GetGasFlapStateAvailability(0x02, 0x03)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Fueling.GetGasFlapStateAvailability
+        assertTrue(resolved.identifier == Identifier.FUELING)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun controlGasFlap() {

@@ -51,21 +51,79 @@ public class Climate {
     public static final byte PROPERTY_REAR_TEMPERATURE_SETTING = 0x0c;
 
     /**
-     * Get all climate properties
+     * Get Climate property availability information.
      */
-    public static class GetState extends GetCommand<State> {
-        public GetState() {
-            super(State.class, IDENTIFIER);
+    public static class GetStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Climate property availability
+         */
+        public GetStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Climate property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Climate property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific climate properties
+     * Get Climate properties
      */
+    public static class GetState extends GetCommand<State> {
+        /**
+         * Get all Climate properties
+         */
+        public GetState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Climate properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Climate properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Climate properties
+     * 
+     * @deprecated use {@link GetState#GetState(byte...)} instead
+     */
+    @Deprecated
     public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -101,7 +159,7 @@ public class Climate {
         
         /**
          * Change starting times
-         *
+         * 
          * @param hvacWeekdayStartingTimes The hvac weekday starting times
          */
         public ChangeStartingTimes(List<HvacWeekdayStartingTime> hvacWeekdayStartingTimes) {
@@ -156,7 +214,7 @@ public class Climate {
         
         /**
          * Start stop hvac
-         *
+         * 
          * @param hvacState The hvac state
          */
         public StartStopHvac(ActiveState hvacState) {
@@ -194,7 +252,7 @@ public class Climate {
         
         /**
          * Start stop defogging
-         *
+         * 
          * @param defoggingState The defogging state
          */
         public StartStopDefogging(ActiveState defoggingState) {
@@ -232,7 +290,7 @@ public class Climate {
         
         /**
          * Start stop defrosting
-         *
+         * 
          * @param defrostingState The defrosting state
          */
         public StartStopDefrosting(ActiveState defrostingState) {
@@ -270,7 +328,7 @@ public class Climate {
         
         /**
          * Start stop ionising
-         *
+         * 
          * @param ionisingState The ionising state
          */
         public StartStopIonising(ActiveState ionisingState) {
@@ -324,7 +382,7 @@ public class Climate {
         
         /**
          * Set temperature settings
-         *
+         * 
          * @param driverTemperatureSetting The driver temperature setting
          * @param passengerTemperatureSetting The passenger temperature setting
          * @param rearTemperatureSetting The rear temperature
@@ -643,42 +701,6 @@ public class Climate {
                 addProperty(this.rearTemperatureSetting);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all climate property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific climate property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

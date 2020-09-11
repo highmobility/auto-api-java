@@ -46,21 +46,79 @@ public class HonkHornFlashLights {
     public static final byte PROPERTY_HONK_TIME = 0x05;
 
     /**
-     * Get flashers state
+     * Get Honk Horn &amp; Flash Lights property availability information.
      */
-    public static class GetFlashersState extends GetCommand<State> {
-        public GetFlashersState() {
-            super(State.class, IDENTIFIER);
+    public static class GetFlashersStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Honk Horn &amp; Flash Lights property availability
+         */
+        public GetFlashersStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetFlashersState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Honk Horn &amp; Flash Lights property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetFlashersStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Honk Horn &amp; Flash Lights property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetFlashersStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetFlashersStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific honk horn flash lights properties
+     * Get flashers state
      */
+    public static class GetFlashersState extends GetCommand<State> {
+        /**
+         * Get all Honk Horn &amp; Flash Lights properties
+         */
+        public GetFlashersState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Honk Horn &amp; Flash Lights properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetFlashersState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Honk Horn &amp; Flash Lights properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetFlashersState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetFlashersState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Honk Horn &amp; Flash Lights properties
+     * 
+     * @deprecated use {@link GetFlashersState#GetFlashersState(byte...)} instead
+     */
+    @Deprecated
     public static class GetFlashersProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -104,7 +162,7 @@ public class HonkHornFlashLights {
         
         /**
          * Honk flash
-         *
+         * 
          * @param flashTimes Number of times to flash the lights
          * @param honkTime Time to honk the horn
          */
@@ -147,7 +205,7 @@ public class HonkHornFlashLights {
         
         /**
          * Activate deactivate emergency flasher
-         *
+         * 
          * @param emergencyFlashersState The emergency flashers state
          */
         public ActivateDeactivateEmergencyFlasher(ActiveState emergencyFlashersState) {
@@ -222,42 +280,6 @@ public class HonkHornFlashLights {
                 addProperty(this.flashers);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all honk horn flash lights property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific honk horn flash lights property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

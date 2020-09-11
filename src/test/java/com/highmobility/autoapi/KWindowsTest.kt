@@ -91,17 +91,53 @@ class KWindowsTest : BaseTest() {
         assertTrue(state.getPositions()[4].value?.position == WindowPosition.Position.OPEN)
     }
     
-    @Test
-    fun testGetWindows() {
-        val bytes = Bytes(COMMAND_HEADER + "004500")
-        assertTrue(Windows.GetWindows() == bytes)
+    @Test fun testGetWindows() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "004500")
+        val defaultGetter = Windows.GetWindows()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0045000203")
+        val propertyGetter = Windows.GetWindows(0x02, 0x03)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0203"))
     }
     
-    @Test
-    fun testGetWindowsProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0045000203")
-        val getter = Windows.GetWindowsProperties(0x02, 0x03)
-        assertTrue(getter == bytes)
+    @Test fun testGetWindowsAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "004502")
+        val created = Windows.GetWindowsAvailability()
+        assertTrue(created.identifier == Identifier.WINDOWS)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Windows.GetWindowsAvailability
+        assertTrue(resolved.identifier == Identifier.WINDOWS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetWindowsAvailabilitySome() {
+        val identifierBytes = Bytes("0203")
+        val allBytes = Bytes(COMMAND_HEADER + "004502" + identifierBytes)
+        val constructed = Windows.GetWindowsAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.WINDOWS)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Windows.GetWindowsAvailability(0x02, 0x03)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Windows.GetWindowsAvailability
+        assertTrue(resolved.identifier == Identifier.WINDOWS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun controlWindows() {

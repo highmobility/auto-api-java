@@ -44,21 +44,79 @@ public class ParkingTicket {
     public static final byte PROPERTY_TICKET_END_TIME = 0x05;
 
     /**
-     * Get parking ticket
+     * Get Parking Ticket property availability information.
      */
-    public static class GetParkingTicket extends GetCommand<State> {
-        public GetParkingTicket() {
-            super(State.class, IDENTIFIER);
+    public static class GetParkingTicketAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Parking Ticket property availability
+         */
+        public GetParkingTicketAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetParkingTicket(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Parking Ticket property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetParkingTicketAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Parking Ticket property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetParkingTicketAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetParkingTicketAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific parking ticket properties
+     * Get parking ticket
      */
+    public static class GetParkingTicket extends GetCommand<State> {
+        /**
+         * Get all Parking Ticket properties
+         */
+        public GetParkingTicket() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Parking Ticket properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetParkingTicket(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Parking Ticket properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetParkingTicket(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetParkingTicket(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Parking Ticket properties
+     * 
+     * @deprecated use {@link GetParkingTicket#GetParkingTicket(byte...)} instead
+     */
+    @Deprecated
     public static class GetParkingTicketProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -119,7 +177,7 @@ public class ParkingTicket {
         
         /**
          * Start parking
-         *
+         * 
          * @param operatorName Operator name
          * @param operatorTicketID Operator ticket ID
          * @param ticketStartTime Parking ticket start time
@@ -322,42 +380,6 @@ public class ParkingTicket {
                 addProperty(this.ticketEndTime);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all parking ticket property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific parking ticket property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

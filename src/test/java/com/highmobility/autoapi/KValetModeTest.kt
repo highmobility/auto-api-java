@@ -54,11 +54,30 @@ class KValetModeTest : BaseTest() {
         assertTrue(state.getStatus().value == ActiveState.ACTIVE)
     }
     
-    @Test
-    fun testGetValetMode() {
-        val bytes = Bytes(COMMAND_HEADER + "002800")
-        assertTrue(ValetMode.GetValetMode() == bytes)
+    @Test fun testGetValetMode() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "002800")
+        val defaultGetter = ValetMode.GetValetMode()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
+    
+    @Test fun testGetValetModeAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "002802")
+        val created = ValetMode.GetValetModeAvailability()
+        assertTrue(created.identifier == Identifier.VALET_MODE)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as ValetMode.GetValetModeAvailability
+        assertTrue(resolved.identifier == Identifier.VALET_MODE)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
     
     @Test fun activateDeactivateValetMode() {
         val bytes = Bytes(COMMAND_HEADER + "002801" +

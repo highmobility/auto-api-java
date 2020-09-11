@@ -35,14 +35,33 @@ public class WeatherConditions {
     public static final byte PROPERTY_RAIN_INTENSITY = 0x01;
 
     /**
+     * Get Weather Conditions property availability information.
+     */
+    public static class GetWeatherConditionsAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Weather Conditions property availability
+         */
+        public GetWeatherConditionsAvailability() {
+            super(IDENTIFIER);
+        }
+    
+        GetWeatherConditionsAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
+        }
+    }
+
+    /**
      * Get weather conditions
      */
     public static class GetWeatherConditions extends GetCommand<State> {
+        /**
+         * Get all Weather Conditions properties
+         */
         public GetWeatherConditions() {
             super(State.class, IDENTIFIER);
         }
     
-        GetWeatherConditions(byte[] bytes) throws CommandParseException {
+        GetWeatherConditions(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
         }
     }
@@ -99,42 +118,6 @@ public class WeatherConditions {
                 addProperty(this.rainIntensity);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all weather conditions property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific weather conditions property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

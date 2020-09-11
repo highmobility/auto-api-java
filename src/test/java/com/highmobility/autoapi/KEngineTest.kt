@@ -57,17 +57,53 @@ class KEngineTest : BaseTest() {
         assertTrue(state.getStartStopState().value == ActiveState.ACTIVE)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "006900")
-        assertTrue(Engine.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "006900")
+        val defaultGetter = Engine.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0069000102")
+        val propertyGetter = Engine.GetState(0x01, 0x02)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0069000102")
-        val getter = Engine.GetProperties(0x01, 0x02)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "006902")
+        val created = Engine.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.ENGINE)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Engine.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.ENGINE)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("0102")
+        val allBytes = Bytes(COMMAND_HEADER + "006902" + identifierBytes)
+        val constructed = Engine.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.ENGINE)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Engine.GetStateAvailability(0x01, 0x02)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Engine.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.ENGINE)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun turnEngineOnOff() {

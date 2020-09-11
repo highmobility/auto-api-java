@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 class KWakeUpTest : BaseTest() {
     
+    
     @Test fun wakeUpCommand() {
         val bytes = Bytes(COMMAND_HEADER + "002201" +
             "01000401000100")

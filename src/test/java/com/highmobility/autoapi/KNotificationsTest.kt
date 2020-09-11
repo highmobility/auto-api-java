@@ -68,6 +68,7 @@ class KNotificationsTest : BaseTest() {
         assertTrue(state.getClear().value == Notifications.Clear.CLEAR)
     }
     
+    
     @Test fun notification() {
         val bytes = Bytes(COMMAND_HEADER + "003801" +
             "01000E01000B4f70656e20476172616765" +

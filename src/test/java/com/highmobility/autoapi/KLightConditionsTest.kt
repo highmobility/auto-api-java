@@ -59,16 +59,52 @@ class KLightConditionsTest : BaseTest() {
         assertTrue(state.getInsideLight().value?.unit == Illuminance.Unit.LUX)
     }
     
-    @Test
-    fun testGetLightConditions() {
-        val bytes = Bytes(COMMAND_HEADER + "005400")
-        assertTrue(LightConditions.GetLightConditions() == bytes)
+    @Test fun testGetLightConditions() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "005400")
+        val defaultGetter = LightConditions.GetLightConditions()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0054000102")
+        val propertyGetter = LightConditions.GetLightConditions(0x01, 0x02)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test
-    fun testGetLightConditionsProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0054000102")
-        val getter = LightConditions.GetLightConditionsProperties(0x01, 0x02)
-        assertTrue(getter == bytes)
+    @Test fun testGetLightConditionsAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "005402")
+        val created = LightConditions.GetLightConditionsAvailability()
+        assertTrue(created.identifier == Identifier.LIGHT_CONDITIONS)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as LightConditions.GetLightConditionsAvailability
+        assertTrue(resolved.identifier == Identifier.LIGHT_CONDITIONS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetLightConditionsAvailabilitySome() {
+        val identifierBytes = Bytes("0102")
+        val allBytes = Bytes(COMMAND_HEADER + "005402" + identifierBytes)
+        val constructed = LightConditions.GetLightConditionsAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.LIGHT_CONDITIONS)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = LightConditions.GetLightConditionsAvailability(0x01, 0x02)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as LightConditions.GetLightConditionsAvailability
+        assertTrue(resolved.identifier == Identifier.LIGHT_CONDITIONS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
 }

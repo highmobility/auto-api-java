@@ -36,14 +36,33 @@ public class VehicleTime {
     public static final byte PROPERTY_VEHICLE_TIME = 0x01;
 
     /**
+     * Get Vehicle Time property availability information.
+     */
+    public static class GetVehicleTimeAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Vehicle Time property availability
+         */
+        public GetVehicleTimeAvailability() {
+            super(IDENTIFIER);
+        }
+    
+        GetVehicleTimeAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
+        }
+    }
+
+    /**
      * Get vehicle time
      */
     public static class GetVehicleTime extends GetCommand<State> {
+        /**
+         * Get all Vehicle Time properties
+         */
         public GetVehicleTime() {
             super(State.class, IDENTIFIER);
         }
     
-        GetVehicleTime(byte[] bytes) throws CommandParseException {
+        GetVehicleTime(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
         }
     }
@@ -100,42 +119,6 @@ public class VehicleTime {
                 addProperty(this.vehicleTime);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all vehicle time property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific vehicle time property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

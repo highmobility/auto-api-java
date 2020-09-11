@@ -244,16 +244,52 @@ class KUsageTest : BaseTest() {
         assertTrue(state.getEcoScoreBonusRange().value?.unit == Length.Unit.KILOMETERS)
     }
     
-    @Test
-    fun testGetUsage() {
-        val bytes = Bytes(COMMAND_HEADER + "006800")
-        assertTrue(Usage.GetUsage() == bytes)
+    @Test fun testGetUsage() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "006800")
+        val defaultGetter = Usage.GetUsage()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0068000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
+        val propertyGetter = Usage.GetUsage(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627"))
     }
     
-    @Test
-    fun testGetUsageProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0068000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
-        val getter = Usage.GetUsageProperties(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27)
-        assertTrue(getter == bytes)
+    @Test fun testGetUsageAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "006802")
+        val created = Usage.GetUsageAvailability()
+        assertTrue(created.identifier == Identifier.USAGE)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Usage.GetUsageAvailability
+        assertTrue(resolved.identifier == Identifier.USAGE)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetUsageAvailabilitySome() {
+        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
+        val allBytes = Bytes(COMMAND_HEADER + "006802" + identifierBytes)
+        val constructed = Usage.GetUsageAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.USAGE)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Usage.GetUsageAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Usage.GetUsageAvailability
+        assertTrue(resolved.identifier == Identifier.USAGE)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
 }

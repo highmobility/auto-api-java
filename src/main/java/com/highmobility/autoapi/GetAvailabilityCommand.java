@@ -3,11 +3,15 @@ package com.highmobility.autoapi;
 import com.highmobility.value.Bytes;
 
 class GetAvailabilityCommand extends Command {
+    Bytes propertyIdentifiers;
+
     /**
      * The property identifiers the availability is requested for
      */
-    Bytes propertyIdentifiers;
-
+    public Bytes getPropertyIdentifiers() {
+        return propertyIdentifiers;
+    }
+    
     public GetAvailabilityCommand(int identifier, Bytes propertyIdentifiers) {
         super(identifier, Type.GET_AVAILABILITY, propertyIdentifiers.size());
         set(COMMAND_TYPE_POSITION + 1, propertyIdentifiers);

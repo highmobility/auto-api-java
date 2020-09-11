@@ -64,4 +64,5 @@ class KFailureMessageTest : BaseTest() {
         assertTrue(state.getFailureDescription().value == "Try again")
         assertTrue(state.getFailedPropertyIDs().value == Bytes(byteArrayOf(0x01, 0x02)))
     }
+    
 }

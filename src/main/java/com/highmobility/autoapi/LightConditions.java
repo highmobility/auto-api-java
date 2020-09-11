@@ -37,21 +37,79 @@ public class LightConditions {
     public static final byte PROPERTY_INSIDE_LIGHT = 0x02;
 
     /**
-     * Get light conditions
+     * Get Light Conditions property availability information.
      */
-    public static class GetLightConditions extends GetCommand<State> {
-        public GetLightConditions() {
-            super(State.class, IDENTIFIER);
+    public static class GetLightConditionsAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Light Conditions property availability
+         */
+        public GetLightConditionsAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetLightConditions(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Light Conditions property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetLightConditionsAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Light Conditions property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetLightConditionsAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetLightConditionsAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific light conditions properties
+     * Get light conditions
      */
+    public static class GetLightConditions extends GetCommand<State> {
+        /**
+         * Get all Light Conditions properties
+         */
+        public GetLightConditions() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Light Conditions properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetLightConditions(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Light Conditions properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetLightConditions(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetLightConditions(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Light Conditions properties
+     * 
+     * @deprecated use {@link GetLightConditions#GetLightConditions(byte...)} instead
+     */
+    @Deprecated
     public static class GetLightConditionsProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -145,42 +203,6 @@ public class LightConditions {
                 addProperty(this.insideLight);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all light conditions property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific light conditions property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

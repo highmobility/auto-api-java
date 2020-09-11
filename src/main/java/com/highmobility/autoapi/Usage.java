@@ -89,21 +89,79 @@ public class Usage {
     public static final byte PROPERTY_ECO_SCORE_BONUS_RANGE = 0x27;
 
     /**
-     * Get usage
+     * Get Usage property availability information.
      */
-    public static class GetUsage extends GetCommand<State> {
-        public GetUsage() {
-            super(State.class, IDENTIFIER);
+    public static class GetUsageAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Usage property availability
+         */
+        public GetUsageAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetUsage(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Usage property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetUsageAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Usage property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetUsageAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetUsageAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific usage properties
+     * Get usage
      */
+    public static class GetUsage extends GetCommand<State> {
+        /**
+         * Get all Usage properties
+         */
+        public GetUsage() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Usage properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetUsage(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Usage properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetUsage(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetUsage(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Usage properties
+     * 
+     * @deprecated use {@link GetUsage#GetUsage(byte...)} instead
+     */
+    @Deprecated
     public static class GetUsageProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -226,7 +284,7 @@ public class Usage {
     
         /**
          * @return Mileage after the last trip
-         * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometerAfterLastTrip()}
+         *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometerAfterLastTrip()}
          */
         @Deprecated
         public Property<Length> getMileageAfterLastTrip() {
@@ -747,7 +805,7 @@ public class Usage {
             /**
              * @param mileageAfterLastTrip Mileage after the last trip
              * @return The builder
-             * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometerAfterLastTrip()}
+             *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometerAfterLastTrip()}
              */
             @Deprecated
             public Builder setMileageAfterLastTrip(Property<Length> mileageAfterLastTrip) {
@@ -1055,42 +1113,6 @@ public class Usage {
                 addProperty(this.ecoScoreBonusRange);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all usage property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific usage property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

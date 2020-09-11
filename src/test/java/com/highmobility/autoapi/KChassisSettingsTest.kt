@@ -100,17 +100,53 @@ class KChassisSettingsTest : BaseTest() {
         assertTrue(state.getMinimumChassisPosition().value?.unit == Length.Unit.MILLIMETERS)
     }
     
-    @Test
-    fun testGetChassisSettings() {
-        val bytes = Bytes(COMMAND_HEADER + "005300")
-        assertTrue(ChassisSettings.GetChassisSettings() == bytes)
+    @Test fun testGetChassisSettings() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "005300")
+        val defaultGetter = ChassisSettings.GetChassisSettings()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "005300010205060708090a")
+        val propertyGetter = ChassisSettings.GetChassisSettings(0x01, 0x02, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010205060708090a"))
     }
     
-    @Test
-    fun testGetChassisSettingsProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "005300010205060708090a")
-        val getter = ChassisSettings.GetChassisSettingsProperties(0x01, 0x02, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
-        assertTrue(getter == bytes)
+    @Test fun testGetChassisSettingsAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "005302")
+        val created = ChassisSettings.GetChassisSettingsAvailability()
+        assertTrue(created.identifier == Identifier.CHASSIS_SETTINGS)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as ChassisSettings.GetChassisSettingsAvailability
+        assertTrue(resolved.identifier == Identifier.CHASSIS_SETTINGS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetChassisSettingsAvailabilitySome() {
+        val identifierBytes = Bytes("010205060708090a")
+        val allBytes = Bytes(COMMAND_HEADER + "005302" + identifierBytes)
+        val constructed = ChassisSettings.GetChassisSettingsAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.CHASSIS_SETTINGS)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = ChassisSettings.GetChassisSettingsAvailability(0x01, 0x02, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as ChassisSettings.GetChassisSettingsAvailability
+        assertTrue(resolved.identifier == Identifier.CHASSIS_SETTINGS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun setDrivingMode() {

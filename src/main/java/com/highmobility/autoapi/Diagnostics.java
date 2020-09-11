@@ -89,21 +89,79 @@ public class Diagnostics {
     public static final byte PROPERTY_CONFIRMED_TROUBLE_CODES = 0x27;
 
     /**
-     * Get all diagnostics properties
+     * Get Diagnostics property availability information.
      */
-    public static class GetState extends GetCommand<State> {
-        public GetState() {
-            super(State.class, IDENTIFIER);
+    public static class GetStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Diagnostics property availability
+         */
+        public GetStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Diagnostics property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Diagnostics property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific diagnostics properties
+     * Get Diagnostics properties
      */
+    public static class GetState extends GetCommand<State> {
+        /**
+         * Get all Diagnostics properties
+         */
+        public GetState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Diagnostics properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Diagnostics properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Diagnostics properties
+     * 
+     * @deprecated use {@link GetState#GetState(byte...)} instead
+     */
+    @Deprecated
     public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -167,7 +225,7 @@ public class Diagnostics {
     
         /**
          * @return The vehicle mileage (odometer)
-         * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
+         *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
          */
         @Deprecated
         public Property<Length> getMileage() {
@@ -267,7 +325,7 @@ public class Diagnostics {
     
         /**
          * @return The accumulated time of engine operation
-         * @deprecated removed the unit from the name. Replaced by {@link #getEngineTotalOperatingTime()}
+         *  * @deprecated removed the unit from the name. Replaced by {@link #getEngineTotalOperatingTime()}
          */
         @Deprecated
         public Property<Duration> getEngineTotalOperatingHours() {
@@ -353,7 +411,7 @@ public class Diagnostics {
     
         /**
          * @return The vehicle mileage (odometer) in meters
-         * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
+         *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
          */
         @Deprecated
         public Property<Length> getMileageMeters() {
@@ -604,7 +662,7 @@ public class Diagnostics {
             /**
              * @param mileage The vehicle mileage (odometer)
              * @return The builder
-             * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
+             *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
              */
             @Deprecated
             public Builder setMileage(Property<Length> mileage) {
@@ -746,7 +804,7 @@ public class Diagnostics {
             /**
              * @param engineTotalOperatingHours The accumulated time of engine operation
              * @return The builder
-             * @deprecated removed the unit from the name. Replaced by {@link #getEngineTotalOperatingTime()}
+             *  * @deprecated removed the unit from the name. Replaced by {@link #getEngineTotalOperatingTime()}
              */
             @Deprecated
             public Builder setEngineTotalOperatingHours(Property<Duration> engineTotalOperatingHours) {
@@ -958,7 +1016,7 @@ public class Diagnostics {
             /**
              * @param mileageMeters The vehicle mileage (odometer) in meters
              * @return The builder
-             * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
+             *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
              */
             @Deprecated
             public Builder setMileageMeters(Property<Length> mileageMeters) {
@@ -1109,42 +1167,6 @@ public class Diagnostics {
                 confirmedTroubleCodes.add(confirmedTroubleCode);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all diagnostics property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific diagnostics property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

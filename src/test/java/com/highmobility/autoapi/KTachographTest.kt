@@ -89,16 +89,52 @@ class KTachographTest : BaseTest() {
         assertTrue(state.getVehicleSpeed().value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "006400")
-        assertTrue(Tachograph.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "006400")
+        val defaultGetter = Tachograph.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00640001020304050607")
+        val propertyGetter = Tachograph.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("01020304050607"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "00640001020304050607")
-        val getter = Tachograph.GetProperties(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "006402")
+        val created = Tachograph.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.TACHOGRAPH)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Tachograph.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.TACHOGRAPH)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("01020304050607")
+        val allBytes = Bytes(COMMAND_HEADER + "006402" + identifierBytes)
+        val constructed = Tachograph.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.TACHOGRAPH)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Tachograph.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Tachograph.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.TACHOGRAPH)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
 }

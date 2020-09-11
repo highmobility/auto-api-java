@@ -41,14 +41,33 @@ public class KeyfobPosition {
     public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.WEB };
 
     /**
+     * Get Keyfob Position property availability information.
+     */
+    public static class GetKeyfobPositionAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Keyfob Position property availability
+         */
+        public GetKeyfobPositionAvailability() {
+            super(IDENTIFIER);
+        }
+    
+        GetKeyfobPositionAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
+        }
+    }
+
+    /**
      * Get keyfob position
      */
     public static class GetKeyfobPosition extends GetCommand<State> {
+        /**
+         * Get all Keyfob Position properties
+         */
         public GetKeyfobPosition() {
             super(State.class, IDENTIFIER);
         }
     
-        GetKeyfobPosition(byte[] bytes) throws CommandParseException {
+        GetKeyfobPosition(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
         }
     }
@@ -77,42 +96,6 @@ public class KeyfobPosition {
                     return null;
                 });
             }
-        }
-    }
-
-    /**
-     * Get all keyfob position property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific keyfob position property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

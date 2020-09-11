@@ -55,17 +55,53 @@ class KHonkHornFlashLightsTest : BaseTest() {
         assertTrue(state.getFlashers().value == HonkHornFlashLights.Flashers.LEFT_FLASHER_ACTIVE)
     }
     
-    @Test
-    fun testGetFlashersState() {
-        val bytes = Bytes(COMMAND_HEADER + "002600")
-        assertTrue(HonkHornFlashLights.GetFlashersState() == bytes)
+    @Test fun testGetFlashersState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "002600")
+        val defaultGetter = HonkHornFlashLights.GetFlashersState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0026000102030405")
+        val propertyGetter = HonkHornFlashLights.GetFlashersState(0x01, 0x02, 0x03, 0x04, 0x05)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405"))
     }
     
-    @Test
-    fun testGetFlashersProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0026000102030405")
-        val getter = HonkHornFlashLights.GetFlashersProperties(0x01, 0x02, 0x03, 0x04, 0x05)
-        assertTrue(getter == bytes)
+    @Test fun testGetFlashersStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "002602")
+        val created = HonkHornFlashLights.GetFlashersStateAvailability()
+        assertTrue(created.identifier == Identifier.HONK_HORN_FLASH_LIGHTS)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as HonkHornFlashLights.GetFlashersStateAvailability
+        assertTrue(resolved.identifier == Identifier.HONK_HORN_FLASH_LIGHTS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetFlashersStateAvailabilitySome() {
+        val identifierBytes = Bytes("0102030405")
+        val allBytes = Bytes(COMMAND_HEADER + "002602" + identifierBytes)
+        val constructed = HonkHornFlashLights.GetFlashersStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.HONK_HORN_FLASH_LIGHTS)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = HonkHornFlashLights.GetFlashersStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as HonkHornFlashLights.GetFlashersStateAvailability
+        assertTrue(resolved.identifier == Identifier.HONK_HORN_FLASH_LIGHTS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun honkFlash() {

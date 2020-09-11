@@ -57,17 +57,53 @@ class KPowerTakeoffTest : BaseTest() {
         assertTrue(state.getEngaged().value == PowerTakeoff.Engaged.ENGAGED)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "006500")
-        assertTrue(PowerTakeoff.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "006500")
+        val defaultGetter = PowerTakeoff.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0065000102")
+        val propertyGetter = PowerTakeoff.GetState(0x01, 0x02)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0065000102")
-        val getter = PowerTakeoff.GetProperties(0x01, 0x02)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "006502")
+        val created = PowerTakeoff.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.POWER_TAKEOFF)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as PowerTakeoff.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.POWER_TAKEOFF)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("0102")
+        val allBytes = Bytes(COMMAND_HEADER + "006502" + identifierBytes)
+        val constructed = PowerTakeoff.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.POWER_TAKEOFF)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = PowerTakeoff.GetStateAvailability(0x01, 0x02)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as PowerTakeoff.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.POWER_TAKEOFF)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun activateDeactivatePowerTakeoff() {

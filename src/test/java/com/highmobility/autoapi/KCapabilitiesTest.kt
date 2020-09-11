@@ -67,16 +67,52 @@ class KCapabilitiesTest : BaseTest() {
         assertTrue(state.getWebhooks()[1].value?.event == Webhook.Event.TRIP_ENDED)
     }
     
-    @Test
-    fun testGetCapabilities() {
-        val bytes = Bytes(COMMAND_HEADER + "001000")
-        assertTrue(Capabilities.GetCapabilities() == bytes)
+    @Test fun testGetCapabilities() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "001000")
+        val defaultGetter = Capabilities.GetCapabilities()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0010000102")
+        val propertyGetter = Capabilities.GetCapabilities(0x01, 0x02)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
-    @Test
-    fun testGetCapabilitiesProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "0010000102")
-        val getter = Capabilities.GetCapabilitiesProperties(0x01, 0x02)
-        assertTrue(getter == bytes)
+    @Test fun testGetCapabilitiesAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "001002")
+        val created = Capabilities.GetCapabilitiesAvailability()
+        assertTrue(created.identifier == Identifier.CAPABILITIES)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Capabilities.GetCapabilitiesAvailability
+        assertTrue(resolved.identifier == Identifier.CAPABILITIES)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetCapabilitiesAvailabilitySome() {
+        val identifierBytes = Bytes("0102")
+        val allBytes = Bytes(COMMAND_HEADER + "001002" + identifierBytes)
+        val constructed = Capabilities.GetCapabilitiesAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.CAPABILITIES)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Capabilities.GetCapabilitiesAvailability(0x01, 0x02)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Capabilities.GetCapabilitiesAvailability
+        assertTrue(resolved.identifier == Identifier.CAPABILITIES)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
 }

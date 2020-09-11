@@ -36,14 +36,33 @@ public class ParkingBrake {
     public static final byte PROPERTY_STATUS = 0x01;
 
     /**
-     * Get all parking brake properties
+     * Get Parking Brake property availability information.
+     */
+    public static class GetStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Parking Brake property availability
+         */
+        public GetStateAvailability() {
+            super(IDENTIFIER);
+        }
+    
+        GetStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
+        }
+    }
+
+    /**
+     * Get Parking Brake properties
      */
     public static class GetState extends GetCommand<State> {
+        /**
+         * Get all Parking Brake properties
+         */
         public GetState() {
             super(State.class, IDENTIFIER);
         }
     
-        GetState(byte[] bytes) throws CommandParseException {
+        GetState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
         }
     }
@@ -63,7 +82,7 @@ public class ParkingBrake {
         
         /**
          * Set parking brake
-         *
+         * 
          * @param status The status
          */
         public SetParkingBrake(ActiveState status) {
@@ -138,42 +157,6 @@ public class ParkingBrake {
                 addProperty(this.status);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all parking brake property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific parking brake property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }

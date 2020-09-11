@@ -63,21 +63,79 @@ public class HomeCharger {
     public static final byte PROPERTY_CHARGING_POWER = 0x13;
 
     /**
-     * Get all home charger properties
+     * Get Home Charger property availability information.
      */
-    public static class GetState extends GetCommand<State> {
-        public GetState() {
-            super(State.class, IDENTIFIER);
+    public static class GetStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Home Charger property availability
+         */
+        public GetStateAvailability() {
+            super(IDENTIFIER);
         }
     
-        GetState(byte[] bytes) throws CommandParseException {
-            super(State.class, bytes);
+        /**
+         * Get specific Home Charger property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(Bytes propertyIdentifiers) {
+            super(IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Home Charger property availabilities
+         * 
+         * @param propertyIdentifiers The property identifierBytes
+         */
+        public GetStateAvailability(byte... propertyIdentifiers) {
+            super(IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
         }
     }
 
     /**
-     * Get specific home charger properties
+     * Get Home Charger properties
      */
+    public static class GetState extends GetCommand<State> {
+        /**
+         * Get all Home Charger properties
+         */
+        public GetState() {
+            super(State.class, IDENTIFIER);
+        }
+    
+        /**
+         * Get specific Home Charger properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(Bytes propertyIdentifiers) {
+            super(State.class, IDENTIFIER, propertyIdentifiers);
+        }
+    
+        /**
+         * Get specific Home Charger properties
+         * 
+         * @param propertyIdentifiers The property identifiers
+         */
+        public GetState(byte... propertyIdentifiers) {
+            super(State.class, IDENTIFIER, new Bytes(propertyIdentifiers));
+        }
+    
+        GetState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(State.class, bytes);
+        }
+    }
+    
+    /**
+     * Get specific Home Charger properties
+     * 
+     * @deprecated use {@link GetState#GetState(byte...)} instead
+     */
+    @Deprecated
     public static class GetProperties extends GetCommand<State> {
         /**
          * @param propertyIdentifiers The property identifiers
@@ -113,7 +171,7 @@ public class HomeCharger {
         
         /**
          * Set charge current
-         *
+         * 
          * @param chargeCurrent The charge current
          */
         public SetChargeCurrent(ElectricCurrent chargeCurrent) {
@@ -151,7 +209,7 @@ public class HomeCharger {
         
         /**
          * Set price tariffs
-         *
+         * 
          * @param priceTariffs The price tariffs
          */
         public SetPriceTariffs(List<PriceTariff> priceTariffs) {
@@ -206,7 +264,7 @@ public class HomeCharger {
         
         /**
          * Activate deactivate solar charging
-         *
+         * 
          * @param solarCharging The solar charging
          */
         public ActivateDeactivateSolarCharging(ActiveState solarCharging) {
@@ -244,7 +302,7 @@ public class HomeCharger {
         
         /**
          * Enable disable wi fi hotspot
-         *
+         * 
          * @param wifiHotspotEnabled The wi fi hotspot enabled
          */
         public EnableDisableWiFiHotspot(EnabledState wifiHotspotEnabled) {
@@ -282,7 +340,7 @@ public class HomeCharger {
         
         /**
          * Authenticate expire
-         *
+         * 
          * @param authenticationState The authentication state
          */
         public AuthenticateExpire(AuthenticationState authenticationState) {
@@ -349,7 +407,7 @@ public class HomeCharger {
     
         /**
          * @return Charging power
-         * @deprecated removed the unit from the name. Replaced by {@link #getChargingPower()}
+         *  * @deprecated removed the unit from the name. Replaced by {@link #getChargingPower()}
          */
         @Deprecated
         public Property<Power> getChargingPowerKW() {
@@ -571,7 +629,7 @@ public class HomeCharger {
             /**
              * @param chargingPowerKW Charging power
              * @return The builder
-             * @deprecated removed the unit from the name. Replaced by {@link #getChargingPower()}
+             *  * @deprecated removed the unit from the name. Replaced by {@link #getChargingPower()}
              */
             @Deprecated
             public Builder setChargingPowerKW(Property<Power> chargingPowerKW) {
@@ -717,42 +775,6 @@ public class HomeCharger {
                 addProperty(this.chargingPower);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all home charger property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific home charger property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

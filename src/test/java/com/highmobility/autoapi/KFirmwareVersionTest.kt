@@ -62,16 +62,52 @@ class KFirmwareVersionTest : BaseTest() {
         assertTrue(state.getApplicationVersion().value == "v1.5-prod")
     }
     
-    @Test
-    fun testGetFirmwareVersion() {
-        val bytes = Bytes(COMMAND_HEADER + "000300")
-        assertTrue(FirmwareVersion.GetFirmwareVersion() == bytes)
+    @Test fun testGetFirmwareVersion() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "000300")
+        val defaultGetter = FirmwareVersion.GetFirmwareVersion()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "000300010203")
+        val propertyGetter = FirmwareVersion.GetFirmwareVersion(0x01, 0x02, 0x03)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203"))
     }
     
-    @Test
-    fun testGetFirmwareVersionProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "000300010203")
-        val getter = FirmwareVersion.GetFirmwareVersionProperties(0x01, 0x02, 0x03)
-        assertTrue(getter == bytes)
+    @Test fun testGetFirmwareVersionAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "000302")
+        val created = FirmwareVersion.GetFirmwareVersionAvailability()
+        assertTrue(created.identifier == Identifier.FIRMWARE_VERSION)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as FirmwareVersion.GetFirmwareVersionAvailability
+        assertTrue(resolved.identifier == Identifier.FIRMWARE_VERSION)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetFirmwareVersionAvailabilitySome() {
+        val identifierBytes = Bytes("010203")
+        val allBytes = Bytes(COMMAND_HEADER + "000302" + identifierBytes)
+        val constructed = FirmwareVersion.GetFirmwareVersionAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.FIRMWARE_VERSION)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = FirmwareVersion.GetFirmwareVersionAvailability(0x01, 0x02, 0x03)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as FirmwareVersion.GetFirmwareVersionAvailability
+        assertTrue(resolved.identifier == Identifier.FIRMWARE_VERSION)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
 }

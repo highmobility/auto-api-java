@@ -68,16 +68,52 @@ class KVehicleLocationTest : BaseTest() {
         assertTrue(state.getPrecision().value?.unit == Length.Unit.METERS)
     }
     
-    @Test
-    fun testGetVehicleLocation() {
-        val bytes = Bytes(COMMAND_HEADER + "003000")
-        assertTrue(VehicleLocation.GetVehicleLocation() == bytes)
+    @Test fun testGetVehicleLocation() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "003000")
+        val defaultGetter = VehicleLocation.GetVehicleLocation()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00300004050607")
+        val propertyGetter = VehicleLocation.GetVehicleLocation(0x04, 0x05, 0x06, 0x07)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("04050607"))
     }
     
-    @Test
-    fun testGetVehicleLocationProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "00300004050607")
-        val getter = VehicleLocation.GetVehicleLocationProperties(0x04, 0x05, 0x06, 0x07)
-        assertTrue(getter == bytes)
+    @Test fun testGetVehicleLocationAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "003002")
+        val created = VehicleLocation.GetVehicleLocationAvailability()
+        assertTrue(created.identifier == Identifier.VEHICLE_LOCATION)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as VehicleLocation.GetVehicleLocationAvailability
+        assertTrue(resolved.identifier == Identifier.VEHICLE_LOCATION)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetVehicleLocationAvailabilitySome() {
+        val identifierBytes = Bytes("04050607")
+        val allBytes = Bytes(COMMAND_HEADER + "003002" + identifierBytes)
+        val constructed = VehicleLocation.GetVehicleLocationAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.VEHICLE_LOCATION)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = VehicleLocation.GetVehicleLocationAvailability(0x04, 0x05, 0x06, 0x07)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as VehicleLocation.GetVehicleLocationAvailability
+        assertTrue(resolved.identifier == Identifier.VEHICLE_LOCATION)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
 }

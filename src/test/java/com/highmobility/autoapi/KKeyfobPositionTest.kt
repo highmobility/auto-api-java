@@ -46,9 +46,28 @@ class KKeyfobPositionTest : BaseTest() {
         assertTrue(state.getLocation().value == KeyfobPosition.Location.INSIDE_CAR)
     }
     
-    @Test
-    fun testGetKeyfobPosition() {
-        val bytes = Bytes(COMMAND_HEADER + "004800")
-        assertTrue(KeyfobPosition.GetKeyfobPosition() == bytes)
+    @Test fun testGetKeyfobPosition() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "004800")
+        val defaultGetter = KeyfobPosition.GetKeyfobPosition()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
+    
+    @Test fun testGetKeyfobPositionAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "004802")
+        val created = KeyfobPosition.GetKeyfobPositionAvailability()
+        assertTrue(created.identifier == Identifier.KEYFOB_POSITION)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as KeyfobPosition.GetKeyfobPositionAvailability
+        assertTrue(resolved.identifier == Identifier.KEYFOB_POSITION)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
 }

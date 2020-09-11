@@ -103,17 +103,53 @@ class KLightsTest : BaseTest() {
         assertTrue(state.getSwitchPosition().value == Lights.SwitchPosition.PARKING_LIGHT_RIGHT)
     }
     
-    @Test
-    fun testGetState() {
-        val bytes = Bytes(COMMAND_HEADER + "003600")
-        assertTrue(Lights.GetState() == bytes)
+    @Test fun testGetState() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "003600")
+        val defaultGetter = Lights.GetState()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00360001020405060708090a")
+        val propertyGetter = Lights.GetState(0x01, 0x02, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("01020405060708090a"))
     }
     
-    @Test
-    fun testGetProperties() {
-        val bytes = Bytes(COMMAND_HEADER + "00360001020405060708090a")
-        val getter = Lights.GetProperties(0x01, 0x02, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
-        assertTrue(getter == bytes)
+    @Test fun testGetStateAvailabilityAll() {
+        val bytes = Bytes(COMMAND_HEADER + "003602")
+        val created = Lights.GetStateAvailability()
+        assertTrue(created.identifier == Identifier.LIGHTS)
+        assertTrue(created.type == Type.GET_AVAILABILITY)
+        assertTrue(created.getPropertyIdentifiers().isEmpty())
+        assertTrue(created == bytes)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(bytes) as Lights.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.LIGHTS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("01020405060708090a")
+        val allBytes = Bytes(COMMAND_HEADER + "003602" + identifierBytes)
+        val constructed = Lights.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.LIGHTS)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Lights.GetStateAvailability(0x01, 0x02, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
+        assertTrue(constructed == secondConstructed)
+    
+        setRuntime(CommandResolver.RunTime.JAVA)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Lights.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.LIGHTS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
     
     @Test fun controlLights() {

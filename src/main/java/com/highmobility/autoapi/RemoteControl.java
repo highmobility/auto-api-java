@@ -46,14 +46,33 @@ public class RemoteControl {
     public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.WEB };
 
     /**
+     * Get Remote Control property availability information.
+     */
+    public static class GetControlStateAvailability extends GetAvailabilityCommand {
+        /**
+         * Get every Remote Control property availability
+         */
+        public GetControlStateAvailability() {
+            super(IDENTIFIER);
+        }
+    
+        GetControlStateAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(bytes);
+        }
+    }
+
+    /**
      * Get control state
      */
     public static class GetControlState extends GetCommand<State> {
+        /**
+         * Get all Remote Control properties
+         */
         public GetControlState() {
             super(State.class, IDENTIFIER);
         }
     
-        GetControlState(byte[] bytes) throws CommandParseException {
+        GetControlState(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
             super(State.class, bytes);
         }
     }
@@ -81,7 +100,7 @@ public class RemoteControl {
         
         /**
          * Control command
-         *
+         * 
          * @param angle Wheel base angle
          * @param speed Target speed
          */
@@ -200,42 +219,6 @@ public class RemoteControl {
                     return null;
                 });
             }
-        }
-    }
-
-    /**
-     * Get all remote control property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific remote control property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 

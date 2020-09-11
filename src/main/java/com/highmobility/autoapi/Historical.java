@@ -76,7 +76,7 @@ public class Historical {
         
         /**
          * Request states
-         *
+         * 
          * @param capabilityID The identifier of the Capability
          * @param startDate Start date for historical data query
          * @param endDate End date for historical data query
@@ -131,7 +131,7 @@ public class Historical {
         
         /**
          * Get trips
-         *
+         * 
          * @param startDate Start date for historical data query
          * @param endDate End date for historical data query
          */
@@ -238,42 +238,6 @@ public class Historical {
                 states.add(state);
                 return this;
             }
-        }
-    }
-
-    /**
-     * Get all historical property availabilities
-     */
-    public static class GetAllAvailabilities extends GetAvailabilityCommand {
-        public GetAllAvailabilities() {
-            super(IDENTIFIER);
-        }
-    
-        GetAllAvailabilities(byte[] bytes) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
-     * Get specific historical property availabilities.
-     */
-    public static class GetAvailabilities extends GetAvailabilityCommand {
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * @param propertyIdentifiers The property identifiers
-         */
-        public GetAvailabilities(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetAvailabilities(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
         }
     }
 }
