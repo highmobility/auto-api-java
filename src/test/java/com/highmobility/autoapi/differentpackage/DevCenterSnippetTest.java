@@ -23,7 +23,19 @@
  */
 package com.highmobility.autoapi.differentpackage;
 
-import com.highmobility.autoapi.*;
+import com.highmobility.autoapi.Capabilities;
+import com.highmobility.autoapi.Command;
+import com.highmobility.autoapi.CommandResolver;
+import com.highmobility.autoapi.Doors;
+import com.highmobility.autoapi.FailureMessage;
+import com.highmobility.autoapi.Fueling;
+import com.highmobility.autoapi.HonkHornFlashLights;
+import com.highmobility.autoapi.Identifier;
+import com.highmobility.autoapi.Trunk;
+import com.highmobility.autoapi.Type;
+import com.highmobility.autoapi.VehicleInformation;
+import com.highmobility.autoapi.VehicleLocation;
+import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Location;
 import com.highmobility.autoapi.value.Lock;
@@ -84,7 +96,7 @@ public class DevCenterSnippetTest {
             // Now you can inspect the Vehicle Information, for example
 
             // Get the VIN number
-            vehicleInfo.getPower().getValue().getValue();
+            vehicleInfo.getVin();
 
             // Check the power train type
             if (vehicleInfo.getPowertrain().getValue() == VehicleInformation.Powertrain.ALL_ELECTRIC) {
