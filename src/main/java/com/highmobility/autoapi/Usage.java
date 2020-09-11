@@ -313,7 +313,7 @@ public class Usage {
         }
     
         /**
-         * @return Milliseconds since UNIX Epoch time
+         * @return The last trip date
          */
         public Property<Calendar> getLastTripDate() {
             return lastTripDate;
@@ -845,7 +845,7 @@ public class Usage {
             }
             
             /**
-             * @param lastTripDate Milliseconds since UNIX Epoch time
+             * @param lastTripDate The last trip date
              * @return The builder
              */
             public Builder setLastTripDate(Property<Calendar> lastTripDate) {

@@ -258,7 +258,7 @@ public class Maintenance {
         }
     
         /**
-         * @return Milliseconds since UNIX Epoch time
+         * @return Brake fluid change date
          */
         public Property<Calendar> getBrakeFluidChangeDate() {
             return brakeFluidChangeDate;
@@ -510,7 +510,7 @@ public class Maintenance {
             }
             
             /**
-             * @param brakeFluidChangeDate Milliseconds since UNIX Epoch time
+             * @param brakeFluidChangeDate Brake fluid change date
              * @return The builder
              */
             public Builder setBrakeFluidChangeDate(Property<Calendar> brakeFluidChangeDate) {

@@ -47,7 +47,7 @@ public class Timer extends PropertyValueObject {
     }
 
     /**
-     * @return Milliseconds since UNIX Epoch time.
+     * @return Timer date.
      */
     public Calendar getDate() {
         return date;

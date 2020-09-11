@@ -344,7 +344,7 @@ public class Windscreen {
         }
     
         /**
-         * @return Milliseconds since UNIX Epoch time
+         * @return Windscreen damage detection date
          */
         public Property<Calendar> getWindscreenDamageDetectionTime() {
             return windscreenDamageDetectionTime;
@@ -472,7 +472,7 @@ public class Windscreen {
             }
             
             /**
-             * @param windscreenDamageDetectionTime Milliseconds since UNIX Epoch time
+             * @param windscreenDamageDetectionTime Windscreen damage detection date
              * @return The builder
              */
             public Builder setWindscreenDamageDetectionTime(Property<Calendar> windscreenDamageDetectionTime) {
