@@ -23,20 +23,20 @@
  */
 package com.highmobility.autoapi;
 
-import javax.annotation.Nullable;
-import com.highmobility.autoapi.value.Axle;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.Acceleration;
-import com.highmobility.autoapi.value.measurement.Angle;
-import com.highmobility.autoapi.value.measurement.Pressure;
-import com.highmobility.autoapi.value.measurement.AngularVelocity;
-import com.highmobility.autoapi.value.ActiveState;
-import com.highmobility.autoapi.value.BrakeTorqueVectoring;
 import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.Acceleration;
+import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.value.Axle;
+import com.highmobility.autoapi.value.BrakeTorqueVectoring;
+import com.highmobility.autoapi.value.measurement.Angle;
+import com.highmobility.autoapi.value.measurement.AngularVelocity;
+import com.highmobility.autoapi.value.measurement.Pressure;
+import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
-import com.highmobility.value.Bytes;
+import javax.annotation.Nullable;
 
 import static com.highmobility.utils.ByteUtils.hexFromByte;
 

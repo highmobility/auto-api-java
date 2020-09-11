@@ -56,7 +56,6 @@ class KHistoricalTest : BaseTest() {
         assertTrue(state.getStates()[1].value == CommandResolver.resolve("0c0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788"))
     }
     
-    
     @Test fun requestStates() {
         val bytes = Bytes(COMMAND_HEADER + "001201" +
             "0200050100020060" +

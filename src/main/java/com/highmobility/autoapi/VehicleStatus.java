@@ -23,11 +23,11 @@
  */
 package com.highmobility.autoapi;
 
-import javax.annotation.Nullable;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
-import com.highmobility.value.Bytes;
+import javax.annotation.Nullable;
 
 /**
  * The Vehicle Status capability

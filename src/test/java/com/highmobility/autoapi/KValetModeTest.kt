@@ -78,7 +78,6 @@ class KValetModeTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    
     @Test fun activateDeactivateValetMode() {
         val bytes = Bytes(COMMAND_HEADER + "002801" +
             "01000401000101")

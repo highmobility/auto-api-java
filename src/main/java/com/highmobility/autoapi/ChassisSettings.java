@@ -23,14 +23,14 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.DrivingMode;
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.value.SpringRate;
 import com.highmobility.autoapi.value.measurement.Length;
+import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
-import com.highmobility.value.Bytes;
 
 import static com.highmobility.utils.ByteUtils.hexFromByte;
 

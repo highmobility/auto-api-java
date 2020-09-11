@@ -78,7 +78,6 @@ class KParkingBrakeTest : BaseTest() {
         assertTrue(resolved == bytes)
     }
     
-    
     @Test fun setParkingBrake() {
         val bytes = Bytes(COMMAND_HEADER + "005801" +
             "01000401000101")

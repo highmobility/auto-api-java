@@ -23,7 +23,6 @@
  */
 package com.highmobility.autoapi
 
-import com.highmobility.autoapi.property.Property
 import com.highmobility.value.Bytes
 
 import org.junit.jupiter.api.Test
@@ -31,8 +30,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertTrue
 
 class KGraphicsTest : BaseTest() {
-    
-    
     @Test fun displayImage() {
         val bytes = Bytes(COMMAND_HEADER + "005101" +
             "01003C01003968747470733a2f2f61626f75742e686967682d6d6f62696c6974792e636f6d2f6173736574732f696d616765732f686d2d6c6f676f2e737667")

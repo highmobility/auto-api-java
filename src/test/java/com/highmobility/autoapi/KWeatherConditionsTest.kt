@@ -76,5 +76,4 @@ class KWeatherConditionsTest : BaseTest() {
         assertTrue(resolved.getPropertyIdentifiers().isEmpty())
         assertTrue(resolved == bytes)
     }
-    
 }

@@ -56,7 +56,6 @@ class KMessagingTest : BaseTest() {
         assertTrue(state.getHandle().value == "Epp")
     }
     
-    
     @Test fun messageReceived() {
         val bytes = Bytes(COMMAND_HEADER + "003701" +
             "01000B010008486579206d6f6d21" +

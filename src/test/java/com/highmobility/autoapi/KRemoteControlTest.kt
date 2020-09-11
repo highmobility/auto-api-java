@@ -23,7 +23,6 @@
  */
 package com.highmobility.autoapi
 
-import com.highmobility.autoapi.property.Property
 import com.highmobility.autoapi.value.measurement.*
 import com.highmobility.value.Bytes
 
@@ -73,7 +72,6 @@ class KRemoteControlTest : BaseTest() {
         assertTrue(resolved.getPropertyIdentifiers().isEmpty())
         assertTrue(resolved == bytes)
     }
-    
     
     @Test fun controlCommand() {
         val bytes = Bytes(COMMAND_HEADER + "002701" +

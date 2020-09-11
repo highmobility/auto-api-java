@@ -23,11 +23,11 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveSelectedState;
-import java.util.Calendar;
 import com.highmobility.value.Bytes;
+import java.util.Calendar;
 
 import static com.highmobility.utils.ByteUtils.hexFromByte;
 

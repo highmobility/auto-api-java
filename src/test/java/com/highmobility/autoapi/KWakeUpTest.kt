@@ -23,7 +23,6 @@
  */
 package com.highmobility.autoapi
 
-import com.highmobility.autoapi.property.Property
 import com.highmobility.value.Bytes
 
 import org.junit.jupiter.api.Test
@@ -31,8 +30,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertTrue
 
 class KWakeUpTest : BaseTest() {
-    
-    
     @Test fun wakeUpCommand() {
         val bytes = Bytes(COMMAND_HEADER + "002201" +
             "01000401000100")

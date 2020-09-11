@@ -23,10 +23,10 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.ByteEnum;
-import java.util.Calendar;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.value.Bytes;
+import java.util.Calendar;
 import javax.annotation.Nullable;
 
 import static com.highmobility.utils.ByteUtils.hexFromByte;

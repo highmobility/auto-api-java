@@ -77,5 +77,4 @@ class KMobileTest : BaseTest() {
         assertTrue(resolved.getPropertyIdentifiers().isEmpty())
         assertTrue(resolved == bytes)
     }
-    
 }

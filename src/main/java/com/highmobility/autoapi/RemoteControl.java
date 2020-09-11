@@ -23,11 +23,11 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.measurement.Angle;
 import com.highmobility.autoapi.value.measurement.Speed;
-import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 

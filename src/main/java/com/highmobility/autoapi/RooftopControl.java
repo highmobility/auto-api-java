@@ -23,8 +23,8 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 

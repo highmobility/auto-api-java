@@ -24,26 +24,26 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.measurement.Length;
-import com.highmobility.autoapi.value.measurement.Temperature;
-import com.highmobility.autoapi.value.measurement.Speed;
-import com.highmobility.autoapi.value.measurement.AngularVelocity;
-import com.highmobility.autoapi.value.FluidLevel;
-import com.highmobility.autoapi.value.measurement.ElectricPotentialDifference;
-import com.highmobility.autoapi.value.measurement.Volume;
 import com.highmobility.autoapi.value.ActiveState;
-import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.autoapi.value.CheckControlMessage;
-import com.highmobility.autoapi.value.TirePressure;
-import com.highmobility.autoapi.value.TireTemperature;
-import com.highmobility.autoapi.value.WheelRpm;
-import com.highmobility.autoapi.value.TroubleCode;
-import com.highmobility.autoapi.value.TirePressureStatus;
-import com.highmobility.autoapi.value.OemTroubleCodeValue;
 import com.highmobility.autoapi.value.ConfirmedTroubleCode;
+import com.highmobility.autoapi.value.FluidLevel;
+import com.highmobility.autoapi.value.OemTroubleCodeValue;
+import com.highmobility.autoapi.value.TirePressure;
+import com.highmobility.autoapi.value.TirePressureStatus;
+import com.highmobility.autoapi.value.TireTemperature;
+import com.highmobility.autoapi.value.TroubleCode;
+import com.highmobility.autoapi.value.WheelRpm;
+import com.highmobility.autoapi.value.measurement.AngularVelocity;
+import com.highmobility.autoapi.value.measurement.Duration;
+import com.highmobility.autoapi.value.measurement.ElectricPotentialDifference;
+import com.highmobility.autoapi.value.measurement.Length;
+import com.highmobility.autoapi.value.measurement.Speed;
+import com.highmobility.autoapi.value.measurement.Temperature;
+import com.highmobility.autoapi.value.measurement.Volume;
+import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
-import com.highmobility.value.Bytes;
 
 /**
  * The Diagnostics capability

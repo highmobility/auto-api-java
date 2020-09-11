@@ -23,17 +23,17 @@
  */
 package com.highmobility.autoapi;
 
-import javax.annotation.Nullable;
-import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.DriverWorkingState;
-import com.highmobility.autoapi.value.DriverTimeState;
-import com.highmobility.autoapi.value.DriverCardPresent;
-import com.highmobility.autoapi.value.Detected;
 import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.Detected;
+import com.highmobility.autoapi.value.DriverCardPresent;
+import com.highmobility.autoapi.value.DriverTimeState;
+import com.highmobility.autoapi.value.DriverWorkingState;
 import com.highmobility.autoapi.value.measurement.Speed;
+import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
-import com.highmobility.value.Bytes;
+import javax.annotation.Nullable;
 
 import static com.highmobility.utils.ByteUtils.hexFromByte;
 

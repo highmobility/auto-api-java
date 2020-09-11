@@ -76,5 +76,4 @@ class KHoodTest : BaseTest() {
         assertTrue(resolved.getPropertyIdentifiers().isEmpty())
         assertTrue(resolved == bytes)
     }
-    
 }

@@ -79,5 +79,4 @@ class KVehicleStatusTest : BaseTest() {
         assertTrue(resolved.getPropertyIdentifiers().isEmpty())
         assertTrue(resolved == bytes)
     }
-    
 }

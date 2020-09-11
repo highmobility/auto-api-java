@@ -23,16 +23,16 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.ConditionBasedService;
 import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.autoapi.value.measurement.Length;
-import com.highmobility.autoapi.property.PropertyInteger;
-import com.highmobility.autoapi.property.ByteEnum;
-import java.util.Calendar;
-import com.highmobility.autoapi.value.ConditionBasedService;
-import java.util.ArrayList;
-import java.util.List;
 import com.highmobility.value.Bytes;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import static com.highmobility.utils.ByteUtils.hexFromByte;
 

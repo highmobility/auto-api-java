@@ -23,23 +23,23 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.measurement.Length;
+import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.value.DepartureTime;
+import com.highmobility.autoapi.value.EnabledState;
+import com.highmobility.autoapi.value.Position;
+import com.highmobility.autoapi.value.ReductionTime;
+import com.highmobility.autoapi.value.Timer;
+import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.autoapi.value.measurement.ElectricCurrent;
 import com.highmobility.autoapi.value.measurement.ElectricPotentialDifference;
-import com.highmobility.autoapi.value.measurement.Duration;
+import com.highmobility.autoapi.value.measurement.Length;
 import com.highmobility.autoapi.value.measurement.Power;
-import com.highmobility.autoapi.value.Position;
-import com.highmobility.autoapi.property.ByteEnum;
-import com.highmobility.autoapi.value.DepartureTime;
-import com.highmobility.autoapi.value.ReductionTime;
 import com.highmobility.autoapi.value.measurement.Temperature;
-import com.highmobility.autoapi.value.Timer;
-import com.highmobility.autoapi.value.ActiveState;
-import com.highmobility.autoapi.value.EnabledState;
+import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
-import com.highmobility.value.Bytes;
 
 import static com.highmobility.utils.ByteUtils.hexFromByte;
 

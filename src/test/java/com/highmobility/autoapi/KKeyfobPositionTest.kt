@@ -23,7 +23,6 @@
  */
 package com.highmobility.autoapi
 
-import com.highmobility.autoapi.property.Property
 import com.highmobility.value.Bytes
 
 import org.junit.jupiter.api.Test
@@ -69,5 +68,4 @@ class KKeyfobPositionTest : BaseTest() {
         assertTrue(resolved.getPropertyIdentifiers().isEmpty())
         assertTrue(resolved == bytes)
     }
-    
 }

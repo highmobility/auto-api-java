@@ -23,7 +23,6 @@
  */
 package com.highmobility.autoapi
 
-import com.highmobility.autoapi.property.Property
 import com.highmobility.autoapi.value.measurement.*
 import com.highmobility.value.Bytes
 
@@ -32,8 +31,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertTrue
 
 class KHeartRateTest : BaseTest() {
-    
-    
     @Test fun sendHeartRate() {
         val bytes = Bytes(COMMAND_HEADER + "002901" +
             "01000D01000A0e084050000000000000")

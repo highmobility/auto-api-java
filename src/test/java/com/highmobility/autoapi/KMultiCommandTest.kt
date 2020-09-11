@@ -56,7 +56,6 @@ class KMultiCommandTest : BaseTest() {
         assertTrue(state.getMultiStates()[1].value == CommandResolver.resolve("0c0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788"))
     }
     
-    
     @Test fun multiCommandCommand() {
         val bytes = Bytes(COMMAND_HEADER + "001301" +
             "02000E01000B0c00200106000401000101" +

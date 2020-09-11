@@ -23,7 +23,6 @@
  */
 package com.highmobility.autoapi
 
-import com.highmobility.autoapi.property.Property
 import com.highmobility.value.Bytes
 
 import org.junit.jupiter.api.Test
@@ -31,8 +30,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertTrue
 
 class KBrowserTest : BaseTest() {
-    
-    
     @Test fun loadUrl() {
         val bytes = Bytes(COMMAND_HEADER + "004901" +
             "01002201001F68747470733a2f2f61626f75742e686967682d6d6f62696c6974792e636f6d")

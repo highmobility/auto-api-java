@@ -23,7 +23,6 @@
  */
 package com.highmobility.autoapi
 
-import com.highmobility.autoapi.property.Property
 import com.highmobility.value.Bytes
 
 import org.junit.jupiter.api.Test
@@ -31,8 +30,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertTrue
 
 class KTextInputTest : BaseTest() {
-    
-    
     @Test fun textInputCommand() {
         val bytes = Bytes(COMMAND_HEADER + "004401" +
             "01001701001452656e64657a766f757320776974682052616d61")

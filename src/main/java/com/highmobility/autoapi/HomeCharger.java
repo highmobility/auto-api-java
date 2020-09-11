@@ -23,19 +23,19 @@
  */
 package com.highmobility.autoapi;
 
-import javax.annotation.Nullable;
-import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.ByteEnum;
-import com.highmobility.autoapi.value.measurement.Power;
+import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.value.EnabledState;
 import com.highmobility.autoapi.value.NetworkSecurity;
-import com.highmobility.autoapi.value.measurement.ElectricCurrent;
-import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.value.PriceTariff;
+import com.highmobility.autoapi.value.measurement.ElectricCurrent;
+import com.highmobility.autoapi.value.measurement.Power;
+import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
-import com.highmobility.value.Bytes;
+import javax.annotation.Nullable;
 
 import static com.highmobility.utils.ByteUtils.hexFromByte;
 
