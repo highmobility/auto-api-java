@@ -25,7 +25,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.DashboardLight;
-import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
 

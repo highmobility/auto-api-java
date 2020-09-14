@@ -24,7 +24,6 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;

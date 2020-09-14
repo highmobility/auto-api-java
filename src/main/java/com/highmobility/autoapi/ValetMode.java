@@ -25,7 +25,6 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
-import com.highmobility.value.Bytes;
 
 /**
  * The Valet Mode capability

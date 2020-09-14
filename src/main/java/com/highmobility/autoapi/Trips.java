@@ -29,7 +29,6 @@ import com.highmobility.autoapi.value.AddressComponent;
 import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.value.measurement.FuelEfficiency;
 import com.highmobility.autoapi.value.measurement.Length;
-import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
