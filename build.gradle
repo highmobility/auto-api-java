@@ -16,11 +16,13 @@ apply plugin: "java-library"
 
 repositories {
     jcenter()
-    maven {
-        url "http://jfrog.high-mobility.com/artifactory/gradle-dev-local/"
-        credentials {
-            username devReadUser
-            password devReadPassword
+    if (project.hasProperty('devReadUser')) {
+        maven {
+            url "http://jfrog.high-mobility.com/artifactory/gradle-dev-local/"
+            credentials {
+                username devReadUser
+                password devReadPassword
+            }
         }
     }
 }
