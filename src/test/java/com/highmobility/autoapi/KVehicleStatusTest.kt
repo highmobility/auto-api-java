@@ -63,22 +63,4 @@ class KVehicleStatusTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
-    
-    @Test
-    fun testGetVehicleStatusAvailabilityAll() {
-        val bytes = Bytes(COMMAND_HEADER + "001102")
-        val created = VehicleStatus.GetVehicleStatusAvailability()
-        assertTrue(created.identifier == Identifier.VEHICLE_STATUS)
-        assertTrue(created.type == Type.GET_AVAILABILITY)
-        assertTrue(created.getPropertyIdentifiers().isEmpty())
-        assertTrue(created == bytes)
-    
-        setRuntime(CommandResolver.RunTime.JAVA)
-    
-        val resolved = CommandResolver.resolve(bytes) as VehicleStatus.GetVehicleStatusAvailability
-        assertTrue(resolved.identifier == Identifier.VEHICLE_STATUS)
-        assertTrue(resolved.type == Type.GET_AVAILABILITY)
-        assertTrue(resolved.getPropertyIdentifiers().isEmpty())
-        assertTrue(resolved == bytes)
-    }
 }

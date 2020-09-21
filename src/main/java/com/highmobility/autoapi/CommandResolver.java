@@ -63,8 +63,6 @@ public class CommandResolver {
                         }
                     } else if (type == Type.GET) {
                         command = new VehicleStatus.GetVehicleStatus(bytes, true);
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        command = new VehicleStatus.GetVehicleStatusAvailability(bytes, true);
                     }
                     break;
                 }
@@ -96,7 +94,8 @@ public class CommandResolver {
                 case BROWSER: {
                     if (type == Type.SET) {
                         command = new Browser.LoadUrl(bytes);
-                    }    break;
+                    }
+                    break;
                 }
                 case WINDOWS: {
                     if (type == Type.SET) {
@@ -276,12 +275,14 @@ public class CommandResolver {
                         } else {
                             command = new MultiCommand.MultiCommandCommand(bytes);
                         }
-                    }    break;
+                    }
+                    break;
                 }
                 case TEXT_INPUT: {
                     if (type == Type.SET) {
                         command = new TextInput.TextInputCommand(bytes);
-                    }    break;
+                    }
+                    break;
                 }
                 case LIGHTS: {
                     if (type == Type.SET) {
@@ -346,7 +347,8 @@ public class CommandResolver {
                                 });
                             }
                         }
-                    }    break;
+                    }
+                    break;
                 }
                 case HOOD: {
                     if (type == Type.SET) {
@@ -467,8 +469,6 @@ public class CommandResolver {
                         }
                     } else if (type == Type.GET) {
                         command = new VehicleInformation.GetVehicleInformation(bytes, true);
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        command = new VehicleInformation.GetVehicleInformationAvailability(bytes, true);
                     }
                     break;
                 }
@@ -489,12 +489,14 @@ public class CommandResolver {
                 case WAKE_UP: {
                     if (type == Type.SET) {
                         command = new WakeUp.WakeUpCommand(bytes);
-                    }    break;
+                    }
+                    break;
                 }
                 case VIDEO_HANDOVER: {
                     if (type == Type.SET) {
                         command = new VideoHandover.VideoHandoverCommand(bytes);
-                    }    break;
+                    }
+                    break;
                 }
                 case HISTORICAL: {
                     if (type == Type.SET) {
@@ -514,7 +516,8 @@ public class CommandResolver {
                                 });
                             }
                         }
-                    }    break;
+                    }
+                    break;
                 }
                 case WI_FI: {
                     if (type == Type.SET) {
@@ -558,12 +561,14 @@ public class CommandResolver {
                 case HEART_RATE: {
                     if (type == Type.SET) {
                         command = new HeartRate.SendHeartRate(bytes);
-                    }    break;
+                    }
+                    break;
                 }
                 case GRAPHICS: {
                     if (type == Type.SET) {
                         command = new Graphics.DisplayImage(bytes);
-                    }    break;
+                    }
+                    break;
                 }
                 case RACE: {
                     if (type == Type.SET) {
@@ -584,8 +589,6 @@ public class CommandResolver {
                         }
                     } else if (type == Type.GET) {
                         command = new FirmwareVersion.GetFirmwareVersion(bytes, true);
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        command = new FirmwareVersion.GetFirmwareVersionAvailability(bytes, true);
                     }
                     break;
                 }
@@ -648,8 +651,6 @@ public class CommandResolver {
                         }
                     } else if (type == Type.GET) {
                         command = new Capabilities.GetCapabilities(bytes, true);
-                    } else if (type == Type.GET_AVAILABILITY) {
-                        command = new Capabilities.GetCapabilitiesAvailability(bytes, true);
                     }
                     break;
                 }
@@ -684,7 +685,8 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new FailureMessage.State(bytes);
                         }
-                    }    break;
+                    }
+                    break;
                 }
                 case WINDSCREEN: {
                     if (type == Type.SET) {
@@ -732,7 +734,8 @@ public class CommandResolver {
                         if (getRuntime() == RunTime.ANDROID) {
                             command = new Trips.State(bytes);
                         }
-                    }    break;
+                    }
+                    break;
                 }
                 case KEYFOB_POSITION: {
                     if (type == Type.SET) {
@@ -815,7 +818,8 @@ public class CommandResolver {
                         } else {
                             command = new Messaging.MessageReceived(bytes);
                         }
-                    }    break;
+                    }
+                    break;
                 }
                 case IGNITION: {
                     if (type == Type.SET) {

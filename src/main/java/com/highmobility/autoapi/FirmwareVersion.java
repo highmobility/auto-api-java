@@ -38,40 +38,6 @@ public class FirmwareVersion {
     public static final byte PROPERTY_APPLICATION_VERSION = 0x03;
 
     /**
-     * Get Firmware Version property availability information.
-     */
-    public static class GetFirmwareVersionAvailability extends GetAvailabilityCommand {
-        /**
-         * Get every Firmware Version property availability
-         */
-        public GetFirmwareVersionAvailability() {
-            super(IDENTIFIER);
-        }
-    
-        /**
-         * Get specific Firmware Version property availabilities
-         * 
-         * @param propertyIdentifiers The property identifierBytes
-         */
-        public GetFirmwareVersionAvailability(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * Get specific Firmware Version property availabilities
-         * 
-         * @param propertyIdentifiers The property identifierBytes
-         */
-        public GetFirmwareVersionAvailability(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetFirmwareVersionAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
      * Get firmware version
      */
     public static class GetFirmwareVersion extends GetCommand<State> {

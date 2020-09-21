@@ -40,40 +40,6 @@ public class Capabilities {
     public static final byte PROPERTY_WEBHOOKS = 0x02;
 
     /**
-     * Get Capabilities property availability information.
-     */
-    public static class GetCapabilitiesAvailability extends GetAvailabilityCommand {
-        /**
-         * Get every Capabilities property availability
-         */
-        public GetCapabilitiesAvailability() {
-            super(IDENTIFIER);
-        }
-    
-        /**
-         * Get specific Capabilities property availabilities
-         * 
-         * @param propertyIdentifiers The property identifierBytes
-         */
-        public GetCapabilitiesAvailability(Bytes propertyIdentifiers) {
-            super(IDENTIFIER, propertyIdentifiers);
-        }
-    
-        /**
-         * Get specific Capabilities property availabilities
-         * 
-         * @param propertyIdentifiers The property identifierBytes
-         */
-        public GetCapabilitiesAvailability(byte... propertyIdentifiers) {
-            super(IDENTIFIER, new Bytes(propertyIdentifiers));
-        }
-    
-        GetCapabilitiesAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
      * Get capabilities
      */
     public static class GetCapabilities extends GetCommand<State> {

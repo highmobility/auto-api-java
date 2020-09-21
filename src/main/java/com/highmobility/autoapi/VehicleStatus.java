@@ -37,22 +37,6 @@ public class VehicleStatus {
     public static final byte PROPERTY_STATES = (byte)0x99;
 
     /**
-     * Get Vehicle Status property availability information.
-     */
-    public static class GetVehicleStatusAvailability extends GetAvailabilityCommand {
-        /**
-         * Get every Vehicle Status property availability
-         */
-        public GetVehicleStatusAvailability() {
-            super(IDENTIFIER);
-        }
-    
-        GetVehicleStatusAvailability(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
-            super(bytes);
-        }
-    }
-
-    /**
      * Get vehicle status
      */
     public static class GetVehicleStatus extends GetCommand<State> {
