@@ -631,7 +631,6 @@ public class Property<V> extends Bytes {
         return getString(Arrays.copyOfRange(bytes, at, at + length));
     }
 
-
     public static byte[] stringToBytes(String string) {
         try {
             return string.getBytes(PropertyComponentValue.CHARSET);
