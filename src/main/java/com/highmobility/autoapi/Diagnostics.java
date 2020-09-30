@@ -27,6 +27,7 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.CheckControlMessage;
 import com.highmobility.autoapi.value.ConfirmedTroubleCode;
+import com.highmobility.autoapi.value.DieselExhaustFilterStatus;
 import com.highmobility.autoapi.value.FluidLevel;
 import com.highmobility.autoapi.value.OemTroubleCodeValue;
 import com.highmobility.autoapi.value.TirePressure;
@@ -87,6 +88,7 @@ public class Diagnostics {
     public static final byte PROPERTY_DIESEL_EXHAUST_FLUID_RANGE = 0x25;
     public static final byte PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL = 0x26;
     public static final byte PROPERTY_CONFIRMED_TROUBLE_CODES = 0x27;
+    public static final byte PROPERTY_DIESEL_EXHAUST_FILTER_STATUS = 0x28;
 
     /**
      * Get Diagnostics property availability information.
@@ -222,6 +224,7 @@ public class Diagnostics {
         Property<Length> dieselExhaustFluidRange = new Property<>(Length.class, PROPERTY_DIESEL_EXHAUST_FLUID_RANGE);
         Property<Double> dieselParticulateFilterSootLevel = new Property<>(Double.class, PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL);
         List<Property<ConfirmedTroubleCode>> confirmedTroubleCodes;
+        Property<DieselExhaustFilterStatus> dieselExhaustFilterStatus = new Property<>(DieselExhaustFilterStatus.class, PROPERTY_DIESEL_EXHAUST_FILTER_STATUS);
     
         /**
          * @return The vehicle mileage (odometer)
@@ -481,6 +484,13 @@ public class Diagnostics {
             return confirmedTroubleCodes;
         }
     
+        /**
+         * @return The diesel exhaust filter status
+         */
+        public Property<DieselExhaustFilterStatus> getDieselExhaustFilterStatus() {
+            return dieselExhaustFilterStatus;
+        }
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
@@ -556,6 +566,7 @@ public class Diagnostics {
                             Property<ConfirmedTroubleCode> confirmedTroubleCode = new Property<>(ConfirmedTroubleCode.class, p);
                             confirmedTroubleCodesBuilder.add(confirmedTroubleCode);
                             return confirmedTroubleCode;
+                        case PROPERTY_DIESEL_EXHAUST_FILTER_STATUS: return dieselExhaustFilterStatus.update(p);
                     }
     
                     return null;
@@ -611,6 +622,7 @@ public class Diagnostics {
             dieselExhaustFluidRange = builder.dieselExhaustFluidRange;
             dieselParticulateFilterSootLevel = builder.dieselParticulateFilterSootLevel;
             confirmedTroubleCodes = builder.confirmedTroubleCodes;
+            dieselExhaustFilterStatus = builder.dieselExhaustFilterStatus;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -650,6 +662,7 @@ public class Diagnostics {
             private Property<Length> dieselExhaustFluidRange;
             private Property<Double> dieselParticulateFilterSootLevel;
             private final List<Property<ConfirmedTroubleCode>> confirmedTroubleCodes = new ArrayList<>();
+            private Property<DieselExhaustFilterStatus> dieselExhaustFilterStatus;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -1155,6 +1168,7 @@ public class Diagnostics {
             
                 return this;
             }
+            
             /**
              * Add a single confirmed trouble code.
              * 
@@ -1165,6 +1179,16 @@ public class Diagnostics {
                 confirmedTroubleCode.setIdentifier(PROPERTY_CONFIRMED_TROUBLE_CODES);
                 addProperty(confirmedTroubleCode);
                 confirmedTroubleCodes.add(confirmedTroubleCode);
+                return this;
+            }
+            
+            /**
+             * @param dieselExhaustFilterStatus The diesel exhaust filter status
+             * @return The builder
+             */
+            public Builder setDieselExhaustFilterStatus(Property<DieselExhaustFilterStatus> dieselExhaustFilterStatus) {
+                this.dieselExhaustFilterStatus = dieselExhaustFilterStatus.setIdentifier(PROPERTY_DIESEL_EXHAUST_FILTER_STATUS);
+                addProperty(this.dieselExhaustFilterStatus);
                 return this;
             }
         }

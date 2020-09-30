@@ -90,7 +90,8 @@ class KDiagnosticsTest : BaseTest() {
             "25000D01000A120440a1720000000000" +  // Diesel exhaust fluid is empty in 2233.0km
             "26000B0100083fc47ae147ae147b" +  // Diesel exhaust particulate filter soot level is 16%
             "27001C01001900063830314331300002313600034341530006414354495645" +  // Confirmed trouble code '801C10' with ECU address '16' and variante name "CAS" is 'ACTIVE'
-            "27001C01001900064435324334340002343800034341530006414354495645" // Confirmed trouble code 'D52C44' with ECU address '48' and variante name "CAS" is 'ACTIVE'
+            "27001C01001900064435324334340002343800034341530006414354495645" +  // Confirmed trouble code 'D52C44' with ECU address '48' and variante name "CAS" is 'ACTIVE'
+            "280006010003010100" // Diesel 'exhaust filter' is in 'normal operation' and not cleaning
     )
     
     @Test
@@ -159,6 +160,7 @@ class KDiagnosticsTest : BaseTest() {
         builder.setDieselParticulateFilterSootLevel(Property(0.16))
         builder.addConfirmedTroubleCode(Property(ConfirmedTroubleCode("801C10", "16", "CAS", "ACTIVE")))
         builder.addConfirmedTroubleCode(Property(ConfirmedTroubleCode("D52C44", "48", "CAS", "ACTIVE")))
+        builder.setDieselExhaustFilterStatus(Property(DieselExhaustFilterStatus(DieselExhaustFilterStatus.Status.NORMAL_OPERATION, DieselExhaustFilterStatus.Component.EXHAUST_FILTER, DieselExhaustFilterStatus.Cleaning.UNKNOWN)))
         testState(builder.build())
     }
     
@@ -301,6 +303,9 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(state.getConfirmedTroubleCodes()[1].value?.ecuAddress == "48")
         assertTrue(state.getConfirmedTroubleCodes()[1].value?.ecuVariantName == "CAS")
         assertTrue(state.getConfirmedTroubleCodes()[1].value?.status == "ACTIVE")
+        assertTrue(state.getDieselExhaustFilterStatus().value?.status == DieselExhaustFilterStatus.Status.NORMAL_OPERATION)
+        assertTrue(state.getDieselExhaustFilterStatus().value?.component == DieselExhaustFilterStatus.Component.EXHAUST_FILTER)
+        assertTrue(state.getDieselExhaustFilterStatus().value?.cleaning == DieselExhaustFilterStatus.Cleaning.UNKNOWN)
     }
     
     @Test
@@ -310,10 +315,10 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "003300010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
-        val propertyGetter = Diagnostics.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "003300010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728")
+        val propertyGetter = Diagnostics.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728"))
     }
     
     @Test
@@ -336,14 +341,14 @@ class KDiagnosticsTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
+        val identifierBytes = Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728")
         val allBytes = Bytes(COMMAND_HEADER + "003302" + identifierBytes)
         val constructed = Diagnostics.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.DIAGNOSTICS)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Diagnostics.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27)
+        val secondConstructed = Diagnostics.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28)
         assertTrue(constructed == secondConstructed)
     
         setRuntime(CommandResolver.RunTime.JAVA)
