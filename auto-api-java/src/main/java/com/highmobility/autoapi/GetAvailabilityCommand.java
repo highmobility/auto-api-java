@@ -6,7 +6,7 @@ class GetAvailabilityCommand extends Command {
     Bytes propertyIdentifiers;
 
     /**
-     * The property identifiers the availability is requested for
+     * @return The property identifiers the availability is requested for
      */
     public Bytes getPropertyIdentifiers() {
         return propertyIdentifiers;
