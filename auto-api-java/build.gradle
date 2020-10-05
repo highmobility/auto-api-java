@@ -1,0 +1,41 @@
+apply plugin: "java-library"
+
+sourceCompatibility = '1.8'
+
+def deploy = new Properties()
+deploy.load(new FileInputStream("$projectDir/deploy.settings"))
+
+group = deploy.groupId
+version = deploy.version
+
+// these are not release numbers. release numbers are in deploy.settings files.
+ext.ver = [
+        utils: "1.4.5-dev"
+]
+
+ext.deps = [
+        "utils"   : "com.highmobility:hmkit-utils:${ver.utils}",
+        "findBugs": 'com.google.code.findbugs:jsr305:3.0.2'
+]
+
+dependencies {
+    if (project.hasProperty('depLocation') == true && project.depLocation == 0) {
+        implementation project(':hmkit-utils')
+    } else {
+        api deps.utils
+    }
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+
+    implementation deps.findBugs // for @Nullable
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    testImplementation 'org.slf4j:slf4j-simple:1.7.25'
+}
+
+// deploy script
+apply from: "https://raw.githubusercontent.com/tonisives/tools/master/scripts/deploy-java.gradle"
+apply from: "https://raw.githubusercontent.com/tonisives/tools/master/scripts/jupiter-test-shell-logging.gradle"
