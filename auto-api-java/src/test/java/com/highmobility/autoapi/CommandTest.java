@@ -52,7 +52,7 @@ public class CommandTest extends BaseTest {
     String parkingBrakeCommand = COMMAND_HEADER + "00580101000401000101";
 
     @Test public void invalidProperty() {
-        TestUtils.debugLogExpected(() -> {
+        debugLogExpected(() -> {
             // test that invalid gasflapstate just sets the property to null and keeps the base
             // property
 
@@ -95,7 +95,7 @@ public class CommandTest extends BaseTest {
         Bytes bytes = new Bytes(parkingBrakeCommand + "A2000B01000800000160E0EA1388");
         String expectedDate = "2018-01-10T16:32:05";
         ParkingBrake.State command = (ParkingBrake.State) CommandResolver.resolve(bytes);
-        assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
+        assertTrue(dateIsSame(command.getTimestamp(), expectedDate));
 
         Calendar calendar = TestUtils.getUTCCalendar(expectedDate);
         ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
@@ -103,7 +103,7 @@ public class CommandTest extends BaseTest {
         builder.setTimestamp(calendar);
         command = builder.build();
         assertTrue(command.equals(bytes));
-        assertTrue(TestUtils.dateIsSame(command.getTimestamp(), expectedDate));
+        assertTrue(dateIsSame(command.getTimestamp(), expectedDate));
     }
 
     @Test public void nonce() {

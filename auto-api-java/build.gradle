@@ -38,6 +38,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
     testImplementation 'org.slf4j:slf4j-simple:1.7.25'
+    testImplementation "io.mockk:mockk:1.10.2"
 }
 
 // deploy script

@@ -26,6 +26,8 @@ package com.highmobility.autoapi;
 import com.highmobility.utils.Base64;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
+
+import static com.highmobility.autoapi.AutoApiLogger.getLogger;
 import static com.highmobility.autoapi.Identifier.*;
 
 public class CommandResolver {
@@ -872,7 +874,7 @@ public class CommandResolver {
         } catch (Exception e) {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
-            Command.logger.error("Failed to parse command {}", commandToString(bytes), e);
+            getLogger().error(String.format("Failed to parse command %s", commandToString(bytes)), e);
         }
 
         // The identifier was unknown or failed to parse. Return the base class.

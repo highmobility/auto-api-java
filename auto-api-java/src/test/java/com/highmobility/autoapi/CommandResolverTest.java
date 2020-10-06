@@ -27,6 +27,7 @@ import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
 
+import static com.highmobility.autoapi.Command.AUTO_API_VERSION;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommandResolverTest extends BaseTest {
@@ -34,7 +35,7 @@ public class CommandResolverTest extends BaseTest {
         setRuntime(CommandResolver.RunTime.JAVA);
 
         // It tries to match 2 to commands, but for both the property parsing fails
-        TestUtils.debugLogExpected(2, () -> {
+        debugLogExpected(2, () -> {
             Bytes invalidEndParking = new Bytes(
                     COMMAND_HEADER + "004701" +
                             "01000401000104"
@@ -46,13 +47,19 @@ public class CommandResolverTest extends BaseTest {
     }
 
     @Test public void handlesIncorrectAutoApiVersion() {
-        // if hoodState bytes are correct the State will be returned. Only error is logged.
-        Bytes hoodBytes = new Bytes("020B" + "006701" + "01000401000101");
-        TestUtils.errorLogExpected(1, () -> CommandResolver.resolve(hoodBytes));
+        // if auto api version(first byte) is incorrect, an error is shown and bytes returned as command
+        Bytes hoodBytes = new Bytes("AC" + "006701" + "01000401000101");
+        errorLogExpected(() -> {
+            Command command = CommandResolver.resolve(hoodBytes);
+            assertTrue(command instanceof Command);
+            assertTrue(command.equals(hoodBytes));
+        });
+    }
 
-        // For unknown VSS bytes the bytes are just returned in Command instance
-        Bytes randomBytes = new Bytes("020B" + "676767" + "676767676767676767");
-        TestUtils.errorLogExpected(1, () -> {
+    @Test public void handlesUnknownBytes() {
+        // For unknown command bytes the bytes are just returned as a Command
+        Bytes randomBytes = new Bytes(AUTO_API_VERSION + "676767" + "676767676767676767");
+        errorLogExpected(() -> {
             Command command = CommandResolver.resolve(randomBytes);
             assertTrue(command instanceof Command);
             assertTrue(command.equals(randomBytes));

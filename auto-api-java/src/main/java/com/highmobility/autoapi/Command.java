@@ -27,15 +27,14 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Brand;
 import com.highmobility.value.Bytes;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 
 import javax.annotation.Nullable;
+
+import static com.highmobility.autoapi.AutoApiLogger.getLogger;
 
 /**
  * Used for commands with properties. Can have 0 properties.
@@ -50,8 +49,6 @@ public class Command extends Bytes {
       the subclass knows the identifier, it copies the components and replaces the base property
       with itself.
      */
-    public static Logger logger = LoggerFactory.getLogger(Command.class);
-
     private static final String INVALID_VERSION_EXCEPTION = "Invalid AutoAPI version. This " +
             "package supports level %d.";
 
@@ -166,7 +163,7 @@ public class Command extends Bytes {
         super(bytes);
 
         if (bytes[0] != AUTO_API_VERSION)
-            logger.error(String.format(INVALID_VERSION_EXCEPTION, (int) AUTO_API_VERSION));
+            getLogger().error(String.format(INVALID_VERSION_EXCEPTION, (int) AUTO_API_VERSION));
 
         setTypeAndBytes(bytes);
 
