@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.assertTrue
 
+@Suppress("DEPRECATION")
 class KUsageTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "006801" + 
             "01000D01000A12044084d4cccccccccd" +  // Average weekly distance is 666.6km

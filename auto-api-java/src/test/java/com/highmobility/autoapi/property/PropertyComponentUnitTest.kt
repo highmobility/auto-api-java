@@ -129,12 +129,12 @@ class PropertyComponentUnitTest : BaseTest() {
     }
 
     @Test
-    fun <T> testBytesCtor() {
+    fun testBytesCtor() {
         val valueClass = Light::class.java
         val valueBytes = Bytes("0001") // front, inactive
 
         val constructor: Constructor<*> = valueClass.getConstructor(Bytes::class.java)
-        val parsedValue: T = constructor.newInstance(valueBytes) as T
-        parsedValue as Light
+        val parsedValue = constructor.newInstance(valueBytes)
+        assertTrue(parsedValue is Light)
     }
 }

@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.assertTrue
 
+@Suppress("DEPRECATION")
 class KVideoHandoverTest : BaseTest() {
     @Test
     fun videoHandoverCommand() {

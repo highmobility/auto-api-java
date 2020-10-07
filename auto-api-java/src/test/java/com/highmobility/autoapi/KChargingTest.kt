@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.assertTrue
 
+@Suppress("DEPRECATION")
 class KChargingTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "002301" + 
             "02000D01000A1204407b01999999999a" +  // 432.1km estimated range

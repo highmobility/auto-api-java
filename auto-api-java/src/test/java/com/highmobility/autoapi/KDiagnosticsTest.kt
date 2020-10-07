@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.assertTrue
 
+@Suppress("DEPRECATION")
 class KDiagnosticsTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "003301" + 
             "01000D01000A120441024f8000000000" +  // Odometer is showing 150'000.0km

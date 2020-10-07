@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.assertTrue
 
+@Suppress("DEPRECATION")
 class KHonkHornFlashLightsTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "002601" + 
             "01000401000102" // Left flasher is active

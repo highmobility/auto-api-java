@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.assertTrue
 
+@Suppress("DEPRECATION")
 class KHomeChargerTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "006001" + 
             "01000401000102" +  // Charging is active

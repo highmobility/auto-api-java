@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.assertTrue
 
+@Suppress("DEPRECATION")
 class KVehicleInformationTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "001401" + 
             "02000401000101" +  // Powertrain is all electric

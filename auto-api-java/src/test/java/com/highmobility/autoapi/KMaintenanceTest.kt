@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.assertTrue
 
+@Suppress("DEPRECATION")
 class KMaintenanceTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "003401" + 
             "01000D01000A0703407f500000000000" +  // 501.0 days until next service
