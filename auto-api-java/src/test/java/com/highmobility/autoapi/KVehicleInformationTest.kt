@@ -52,7 +52,8 @@ class KVehicleInformationTest : BaseTest() {
             "1100130100104175746f6d6174696320776970657273" +  // Automatic wipers are equipped (installed)
             "13000D01000A1402406b800000000000" +  // Vehicle has 220kW of power
             "14000B0100086573746f6e69616e" +  // Headunit is in estonian language
-            "15000401000101" // Headunit is using a 24h timeformat
+            "15000401000101" +  // Headunit is using a 24h timeformat
+            "16000401000101" // Vehicle has rear-wheel drive
     )
     
     @Test
@@ -84,6 +85,7 @@ class KVehicleInformationTest : BaseTest() {
         builder.setPower(Property(Power(220.0, Power.Unit.KILOWATTS)))
         builder.setLanguage(Property("estonian"))
         builder.setTimeformat(Property(VehicleInformation.Timeformat.TWENTY_FOUR_H))
+        builder.setDrive(Property(VehicleInformation.Drive.RWD))
         testState(builder.build())
     }
     
@@ -113,6 +115,7 @@ class KVehicleInformationTest : BaseTest() {
         assertTrue(state.getPower().value?.unit == Power.Unit.KILOWATTS)
         assertTrue(state.getLanguage().value == "estonian")
         assertTrue(state.getTimeformat().value == VehicleInformation.Timeformat.TWENTY_FOUR_H)
+        assertTrue(state.getDrive().value == VehicleInformation.Drive.RWD)
     }
     
     @Test
@@ -122,9 +125,9 @@ class KVehicleInformationTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00140002030405060708090a0b0c0d0e0f1011131415")
-        val propertyGetter = VehicleInformation.GetVehicleInformation(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00140002030405060708090a0b0c0d0e0f101113141516")
+        val propertyGetter = VehicleInformation.GetVehicleInformation(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0d0e0f1011131415"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0d0e0f101113141516"))
     }
 }

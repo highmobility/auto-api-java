@@ -60,6 +60,7 @@ public class VehicleInformation {
     public static final byte PROPERTY_POWER = 0x13;
     public static final byte PROPERTY_LANGUAGE = 0x14;
     public static final byte PROPERTY_TIMEFORMAT = 0x15;
+    public static final byte PROPERTY_DRIVE = 0x16;
 
     /**
      * Get vehicle information
@@ -144,6 +145,7 @@ public class VehicleInformation {
         Property<Power> power = new Property<>(Power.class, PROPERTY_POWER);
         Property<String> language = new Property<>(String.class, PROPERTY_LANGUAGE);
         Property<Timeformat> timeformat = new Property<>(Timeformat.class, PROPERTY_TIMEFORMAT);
+        Property<Drive> drive = new Property<>(Drive.class, PROPERTY_DRIVE);
     
         /**
          * @return The powertrain
@@ -280,6 +282,13 @@ public class VehicleInformation {
             return timeformat;
         }
     
+        /**
+         * @return Wheels driven by the engine
+         */
+        public Property<Drive> getDrive() {
+            return drive;
+        }
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
@@ -310,6 +319,7 @@ public class VehicleInformation {
                         case PROPERTY_POWER: return power.update(p);
                         case PROPERTY_LANGUAGE: return language.update(p);
                         case PROPERTY_TIMEFORMAT: return timeformat.update(p);
+                        case PROPERTY_DRIVE: return drive.update(p);
                     }
     
                     return null;
@@ -341,6 +351,7 @@ public class VehicleInformation {
             power = builder.power;
             language = builder.language;
             timeformat = builder.timeformat;
+            drive = builder.drive;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -363,6 +374,7 @@ public class VehicleInformation {
             private Property<Power> power;
             private Property<String> language;
             private Property<Timeformat> timeformat;
+            private Property<Drive> drive;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -581,6 +593,16 @@ public class VehicleInformation {
                 addProperty(this.timeformat);
                 return this;
             }
+            
+            /**
+             * @param drive Wheels driven by the engine
+             * @return The builder
+             */
+            public Builder setDrive(Property<Drive> drive) {
+                this.drive = drive.setIdentifier(PROPERTY_DRIVE);
+                addProperty(this.drive);
+                return this;
+            }
         }
     }
 
@@ -722,6 +744,48 @@ public class VehicleInformation {
         private final byte value;
     
         Timeformat(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum Drive implements ByteEnum {
+        /**
+         * Front-wheel drive
+         */
+        FWD((byte) 0x00),
+        /**
+         * Rear-wheel drive
+         */
+        RWD((byte) 0x01),
+        /**
+         * Four-wheel drive
+         */
+        FOUR_WD((byte) 0x02),
+        /**
+         * All-wheel drive
+         */
+        AWD((byte) 0x03);
+    
+        public static Drive fromByte(byte byteValue) throws CommandParseException {
+            Drive[] values = Drive.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                Drive state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException("VehicleInformation.Drive does not contain: " + hexFromByte(byteValue));
+        }
+    
+        private final byte value;
+    
+        Drive(byte value) {
             this.value = value;
         }
     
