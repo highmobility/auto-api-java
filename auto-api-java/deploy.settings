@@ -1,6 +1,6 @@
 siteUrl = https://github.com/highmobility/auto-api-java
 gitUrl = https://github.com/highmobility/auto-api-java
-version = 3.12.0-dev
 groupId = com.highmobility
-licenses = MIT
+licenseName = MIT
+licenseUrl = https://opensource.org/licenses/MIT
 id = hmkit-auto-api

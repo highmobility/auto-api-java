@@ -6,13 +6,13 @@ apply plugin: "java-library"
 
 sourceCompatibility = '1.8'
 
-// these are not release numbers. release numbers are in deploy.settings files.
 ext.ver = [
-        utils: "1.4.5-dev"
+        "hmkit-utils"       : "1.4.5-dev",
+        "hmkit-auto-api"    : "3.12.0-dev"
 ]
 
 ext.deps = [
-        "utils"   : "com.highmobility:hmkit-utils:${ver.utils}",
+        "utils"   : "com.highmobility:hmkit-utils:${ver."hmkit-utils"}",
         "findBugs": 'com.google.code.findbugs:jsr305:3.0.2'
 ]
 
@@ -36,5 +36,5 @@ dependencies {
 }
 
 // deploy script
-apply from: "https://raw.githubusercontent.com/tonisives/tools/master/scripts/deploy-java.gradle"
-apply from: "https://raw.githubusercontent.com/tonisives/tools/master/scripts/jupiter-test-shell-logging.gradle"
+apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/deploy-java-v2.gradle"
+apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/jupiter-test-shell-logging.gradle"
