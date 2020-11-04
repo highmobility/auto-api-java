@@ -33,99 +33,99 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 class KDashboardLightsTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "006101" + 
-            "010006010003000000" +  // High beam is inactive
-            "010006010003010000" +  // Low beam is inactive
-            "010006010003020100" +  // Info light active for hazard warning
-            "010006010003030000" +  // Brake failure/brake system malfunction is inactive
-            "010006010003040000" +  // Hatch open is inactive
-            "010006010003050000" +  // Fuel level is inactive
-            "010006010003060000" +  // Engine coolant temperature is inactive
-            "010006010003070000" +  // Battery charging condition is inactive
-            "010006010003080000" +  // Engine oil is inactive
-            "010006010003090000" +  // Position lights is inactive
-            "0100060100030a0000" +  // Front fog light is inactive
-            "0100060100030b0000" +  // Rear fog light is inactive
-            "0100060100030c0000" +  // Park heating is inactive
-            "0100060100030d0000" +  // Engine indicator is inactive
-            "0100060100030e0000" +  // Service call for maintenance is inactive
-            "0100060100030f0102" +  // Red light active for transmission fluid temperature
-            "010006010003100000" +  // Transmission failure/malfunction is inactive
-            "010006010003110000" +  // Anti-lock brake system failure is inactive
-            "010006010003120000" +  // Worn brake linings is inactive
-            "010006010003130000" +  // Windscreen washer fluid/windshield washer fluid is inactive
-            "010006010003140000" +  // Tire failure/malfunction is inactive
-            "010006010003150100" +  // Yellow light active for engine oil temperature
-            "010006010003160000" +  // Engine coolant level is inactive
-            "010006010003170000" +  // Steering failure is inactive
-            "010006010003180000" +  // Electronic Speed Controller is inactive
-            "010006010003190000" +  // Brake lights is inactive
-            "0100060100031a0000" +  // AdBlue is inactive
-            "0100060100031b0000" +  // Fuel filter differential pressure is inactive
-            "0100060100031c0000" +  // Seat belt is inactive
-            "0100060100031d0000" +  // Advanced emergency braking system is inactive
-            "0100060100031e0000" +  // Autonomous Cruise Control is inactive
-            "0100060100031f0000" +  // Trailer connected is inactive
-            "010006010003200000" +  // Airbag is inactive
-            "010006010003210000" +  // ESC switched off is inactive
-            "010006010003220000" +  // Lane departure warning switched off is inactive
-            "010006010003230000" +  // Air filter minder is inactive
-            "010006010003240000" +  // Air suspension ride control fault is inactive
-            "010006010003250000" +  // All wheel drive disabled is inactive
-            "010006010003260000" +  // Anti theft is inactive
-            "010006010003270000" +  // Blind spot detection is inactive
-            "010006010003280000" +  // Charge system fault is inactive
-            "010006010003290000" +  // Check fuel cap is inactive
-            "0100060100032a0000" +  // Check fuel fill inlet is inactive
-            "0100060100032b0000" +  // Check fuel filter is inactive
-            "0100060100032c0000" +  // DC temperature warning is inactive
-            "0100060100032d0000" +  // DC warning status is inactive
-            "0100060100032e0000" +  // Diesel engine idle shutdown is inactive
-            "0100060100032f0000" +  // Diesel engine warning is inactive
-            "010006010003300000" +  // Diesel exhaust fluid system fault is inactive
-            "010006010003310000" +  // Diesel exhaust over temperature is inactive
-            "010006010003320000" +  // Diesel exhaust fluid quality is inactive
-            "010006010003330000" +  // Diesel filter regeneration is inactive
-            "010006010003340000" +  // Diesel particulate filter is inactive
-            "010006010003350000" +  // Diesel pre heat is inactive
-            "010006010003360000" +  // Electric trailer brake connection is inactive
-            "010006010003370000" +  // EV battery cell max voltage warning is inactive
-            "010006010003380000" +  // EV battery cell min voltage warning is inactive
-            "010006010003390000" +  // EV battery charge energy storage warning is inactive
-            "0100060100033a0000" +  // EV battery high level warning is inactive
-            "0100060100033b0000" +  // EV battery high temperature warning is inactive
-            "0100060100033c0000" +  // EV battery insulation resist warning is inactive
-            "0100060100033d0000" +  // EV battery jump level warning is inactive
-            "0100060100033e0000" +  // EV battery low level warning is inactive
-            "0100060100033f0000" +  // EV battery max volt veh energy warning is inactive
-            "010006010003400000" +  // EV battery min volt veh energy warning is inactive
-            "010006010003410000" +  // EV battery over charge warning is inactive
-            "010006010003420000" +  // EV battery poor cell warning is inactive
-            "010006010003430000" +  // EV battery temperature difference warning is inactive
-            "010006010003440000" +  // Forward collision warning is inactive
-            "010006010003450000" +  // Fuel doof open is inactive
-            "010006010003460000" +  // Hill descent control fault is inactive
-            "010006010003470000" +  // Hill start assist warning is inactive
-            "010006010003480000" +  // HV interlocking status warning is inactive
-            "010006010003490000" +  // Lighting system failure is inactive
-            "0100060100034a0000" +  // Malfunction indicator is inactive
-            "0100060100034b0000" +  // Motor controller temperature warning is inactive
-            "0100060100034c0000" +  // Park aid malfunction is inactive
-            "0100060100034d0000" +  // Passive entry passive start is inactive
-            "0100060100034e0000" +  // Powertrain malfunction is inactive
-            "0100060100034f0000" +  // Restraints indicator warning is inactive
-            "010006010003500000" +  // Start stop engine warning is inactive
-            "010006010003510000" +  // Traction control disabled is inactive
-            "010006010003520000" +  // Traction control active is inactive
-            "010006010003530000" +  // Traction motor temperature warning is inactive
-            "010006010003540000" +  // Tire pressure monitor system warning is inactive
-            "010006010003550000" +  // Water in fuel is inactive
-            "010006010003560000" +  // Tire warning front right is inactive
-            "010006010003570000" +  // Tire warning front left is inactive
-            "010006010003580000" +  // Tire warning rear right is inactive
-            "010006010003590000" +  // Tire warning rear left is inactive
-            "0100060100035a0000" +  // Tire warning system error is inactive
-            "0100060100035b0000" +  // Battery low warning is inactive
-            "0100060100035c0000" // Brake fluid warning is inactive
+            "0100050100020000" +  // High beam is off
+            "0100050100020100" +  // Low beam is off
+            "0100050100020201" +  // Hazard warning is on
+            "0100050100020300" +  // Brake failure/brake system malfunction is off
+            "0100050100020400" +  // Hatch open is off
+            "0100050100020500" +  // Fuel level is off
+            "0100050100020600" +  // Engine coolant temperature is off
+            "0100050100020700" +  // Battery charging condition is off
+            "0100050100020800" +  // Engine oil is off
+            "0100050100020900" +  // Position lights is off
+            "0100050100020a00" +  // Front fog light is off
+            "0100050100020b00" +  // Rear fog light is off
+            "0100050100020c00" +  // Park heating is off
+            "0100050100020d00" +  // Engine indicator is off
+            "0100050100020e00" +  // Service call for maintenance is off
+            "0100050100020f01" +  // Transmission fluid temperature is on
+            "0100050100021000" +  // Transmission failure/malfunction is off
+            "0100050100021100" +  // Anti-lock brake system failure is off
+            "0100050100021200" +  // Worn brake linings is off
+            "0100050100021300" +  // Windscreen washer fluid/windshield washer fluid is off
+            "0100050100021400" +  // Tire failure/malfunction is off
+            "0100050100021501" +  // Engine oil temperature is on
+            "0100050100021600" +  // Engine coolant level is off
+            "0100050100021700" +  // Steering failure is off
+            "0100050100021800" +  // Electronic Speed Controller is off
+            "0100050100021900" +  // Brake lights is off
+            "0100050100021a00" +  // AdBlue is off
+            "0100050100021b00" +  // Fuel filter differential pressure is off
+            "0100050100021c00" +  // Seat belt is off
+            "0100050100021d00" +  // Advanced emergency braking system is off
+            "0100050100021e00" +  // Autonomous Cruise Control is off
+            "0100050100021f00" +  // Trailer connected is off
+            "0100050100022000" +  // Airbag is off
+            "0100050100022100" +  // ESC switched off is off
+            "0100050100022200" +  // Lane departure warning switched off is off
+            "0100050100022300" +  // Air filter minder is off
+            "0100050100022400" +  // Air suspension ride control fault is off
+            "0100050100022500" +  // All wheel drive disabled is off
+            "0100050100022600" +  // Anti theft is off
+            "0100050100022700" +  // Blind spot detection is off
+            "0100050100022800" +  // Charge system fault is off
+            "0100050100022900" +  // Check fuel cap is off
+            "0100050100022a00" +  // Check fuel fill inlet is off
+            "0100050100022b00" +  // Check fuel filter is off
+            "0100050100022c00" +  // DC temperature warning is off
+            "0100050100022d00" +  // DC warning status is off
+            "0100050100022e00" +  // Diesel engine idle shutdown is off
+            "0100050100022f00" +  // Diesel engine warning is off
+            "0100050100023000" +  // Diesel exhaust fluid system fault is off
+            "0100050100023100" +  // Diesel exhaust over temperature is off
+            "0100050100023200" +  // Diesel exhaust fluid quality is off
+            "0100050100023300" +  // Diesel filter regeneration is off
+            "0100050100023400" +  // Diesel particulate filter is off
+            "0100050100023500" +  // Diesel pre heat is off
+            "0100050100023600" +  // Electric trailer brake connection is off
+            "0100050100023700" +  // EV battery cell max voltage warning is off
+            "0100050100023800" +  // EV battery cell min voltage warning is off
+            "0100050100023900" +  // EV battery charge energy storage warning is off
+            "0100050100023a00" +  // EV battery high level warning is off
+            "0100050100023b00" +  // EV battery high temperature warning is off
+            "0100050100023c00" +  // EV battery insulation resist warning is off
+            "0100050100023d00" +  // EV battery jump level warning is off
+            "0100050100023e00" +  // EV battery low level warning is off
+            "0100050100023f00" +  // EV battery max volt veh energy warning is off
+            "0100050100024000" +  // EV battery min volt veh energy warning is off
+            "0100050100024100" +  // EV battery over charge warning is off
+            "0100050100024200" +  // EV battery poor cell warning is off
+            "0100050100024300" +  // EV battery temperature difference warning is off
+            "0100050100024400" +  // Forward collision warning is off
+            "0100050100024500" +  // Fuel doof open is off
+            "0100050100024600" +  // Hill descent control fault is off
+            "0100050100024700" +  // Hill start assist warning is off
+            "0100050100024800" +  // HV interlocking status warning is off
+            "0100050100024900" +  // Lighting system failure is off
+            "0100050100024a00" +  // Malfunction indicator is off
+            "0100050100024b00" +  // Motor controller temperature warning is off
+            "0100050100024c00" +  // Park aid malfunction is off
+            "0100050100024d00" +  // Passive entry passive start is off
+            "0100050100024e00" +  // Powertrain malfunction is off
+            "0100050100024f00" +  // Restraints indicator warning is off
+            "0100050100025000" +  // Start stop engine warning is off
+            "0100050100025100" +  // Traction control disabled is off
+            "0100050100025200" +  // Traction control active is off
+            "0100050100025300" +  // Traction motor temperature warning is off
+            "0100050100025400" +  // Tire pressure monitor system warning is off
+            "0100050100025500" +  // Water in fuel is off
+            "0100050100025600" +  // Tire warning front right is off
+            "0100050100025700" +  // Tire warning front left is off
+            "0100050100025800" +  // Tire warning rear right is off
+            "0100050100025900" +  // Tire warning rear left is off
+            "0100050100025a00" +  // Tire warning system error is off
+            "0100050100025b00" +  // Battery low warning is off
+            "0100050100025c00" // Brake fluid warning is off
     )
     
     @Test
@@ -137,383 +137,290 @@ class KDashboardLightsTest : BaseTest() {
     @Test
     fun testBuilder() {
         val builder = DashboardLights.State.Builder()
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HIGH_BEAM, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.LOW_BEAM, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HAZARD_WARNING, ActiveState.ACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BRAKE_FAILURE, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HATCH_OPEN, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FUEL_LEVEL, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_COOLANT_TEMPERATURE, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BATTERY_CHARGING_CONDITION, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_OIL, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.POSITION_LIGHTS, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FRONT_FOG_LIGHT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.REAR_FOG_LIGHT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PARK_HEATING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_INDICATOR, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SERVICE_CALL, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRANSMISSION_FLUID_TEMPERATURE, ActiveState.ACTIVE, DashboardLight.Colour.RED)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRANSMISSION_FAILURE, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ANTI_LOCK_BRAKE_FAILURE, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.WORN_BRAKE_LININGS, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.WINDSCREEN_WASHER_FLUID, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_FAILURE, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_OIL_LEVEL, ActiveState.ACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_COOLANT_LEVEL, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.STEERING_FAILURE, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ESC_INDICATION, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BRAKE_LIGHTS, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ADBLUE_LEVEL, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FUEL_FILTER_DIFF_PRESSURE, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SEAT_BELT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ADVANCED_BRAKING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ACC, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRAILER_CONNECTED, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.AIRBAG, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ESC_SWITCHED_OFF, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.LANE_DEPARTURE_WARNING_OFF, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.AIR_FILTER_MINDER, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.AIR_SUSPENSION_RIDE_CONTROL_FAULT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ALL_WHEEL_DRIVE_DISABLED, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ANTI_THEFT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BLIND_SPOT_DETECTION, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.CHARGE_SYSTEM_FAULT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.CHECK_FUEL_CAP, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.CHECK_FUEL_FILL_INLET, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.CHECK_FUEL_FILTER, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DC_TEMP_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DC_WARNING_STATUS, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_ENGINE_IDLE_SHUTDOWN, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_ENGINE_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_EXHAUST_FLUID_SYSTEM_FAULT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_EXHAUST_OVER_TEMP, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_EXHAUST_FLUID_QUALITY, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_FILTER_REGENERATION, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_PARTICULATE_FILTER, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_PRE_HEAT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ELECTRIC_TRAILER_BRAKE_CONNECTION, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_CELL_MAX_VOLT_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_CELL_MIN_VOLT_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_CHARGE_ENERGY_STORAGE_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_HIGH_LEVEL_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_HIGH_TEMPERATURE_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_INSULATION_RESIST_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_JUMP_LEVEL_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_LOW_LEVEL_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_MAX_VOLT_VEH_ENERGY_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_MIN_VOLT_VEH_ENERGY_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_OVER_CHARGE_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_POOR_CELL_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_TEMP_DIFF_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FORWARD_COLLISION_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FUEL_DOOR_OPEN, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HILL_DESCENT_CONTROL_FAULT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HILL_START_ASSIST_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HV_INTERLOCKING_STATUS_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.LIGHTING_SYSTEM_FAILURE, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.MALFUNCTION_INDICATOR, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.MOTOR_CONTROLLER_TEMP_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PARK_AID_MALFUNCTION, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PASSIVE_ENTRY_PASSIVE_START, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.POWERTRAIN_MALFUNCTION, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.RESTRAINTS_INDICATOR_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.START_STOP_ENGINE_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRACTION_CONTROL_DISABLED, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRACTION_CONTROL_ACTIVE, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRACTION_MOTOR_TEMP_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_PRESSURE_MONITOR_SYSTEM_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.WATER_IN_FUEL, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_FRONT_RIGHT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_FRONT_LEFT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_REAR_RIGHT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_REAR_LEFT, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_SYSTEM_ERROR, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BATTERY_LOW_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
-        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BRAKE_FLUID_WARNING, ActiveState.INACTIVE, DashboardLight.Colour.INFO)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HIGH_BEAM, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.LOW_BEAM, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HAZARD_WARNING, OnOffState.ON)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BRAKE_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HATCH_OPEN, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FUEL_LEVEL, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_COOLANT_TEMPERATURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BATTERY_CHARGING_CONDITION, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_OIL, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.POSITION_LIGHTS, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FRONT_FOG_LIGHT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.REAR_FOG_LIGHT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PARK_HEATING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_INDICATOR, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SERVICE_CALL, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRANSMISSION_FLUID_TEMPERATURE, OnOffState.ON)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRANSMISSION_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ANTI_LOCK_BRAKE_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.WORN_BRAKE_LININGS, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.WINDSCREEN_WASHER_FLUID, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_OIL_LEVEL, OnOffState.ON)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_COOLANT_LEVEL, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.STEERING_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ESC_INDICATION, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BRAKE_LIGHTS, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ADBLUE_LEVEL, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FUEL_FILTER_DIFF_PRESSURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SEAT_BELT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ADVANCED_BRAKING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ACC, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRAILER_CONNECTED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.AIRBAG, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ESC_SWITCHED_OFF, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.LANE_DEPARTURE_WARNING_OFF, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.AIR_FILTER_MINDER, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.AIR_SUSPENSION_RIDE_CONTROL_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ALL_WHEEL_DRIVE_DISABLED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ANTI_THEFT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BLIND_SPOT_DETECTION, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.CHARGE_SYSTEM_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.CHECK_FUEL_CAP, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.CHECK_FUEL_FILL_INLET, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.CHECK_FUEL_FILTER, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DC_TEMP_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DC_WARNING_STATUS, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_ENGINE_IDLE_SHUTDOWN, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_ENGINE_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_EXHAUST_FLUID_SYSTEM_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_EXHAUST_OVER_TEMP, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_EXHAUST_FLUID_QUALITY, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_FILTER_REGENERATION, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_PARTICULATE_FILTER, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIESEL_PRE_HEAT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ELECTRIC_TRAILER_BRAKE_CONNECTION, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_CELL_MAX_VOLT_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_CELL_MIN_VOLT_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_CHARGE_ENERGY_STORAGE_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_HIGH_LEVEL_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_HIGH_TEMPERATURE_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_INSULATION_RESIST_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_JUMP_LEVEL_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_LOW_LEVEL_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_MAX_VOLT_VEH_ENERGY_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_MIN_VOLT_VEH_ENERGY_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_OVER_CHARGE_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_POOR_CELL_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EV_BATTERY_TEMP_DIFF_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FORWARD_COLLISION_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FUEL_DOOR_OPEN, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HILL_DESCENT_CONTROL_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HILL_START_ASSIST_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HV_INTERLOCKING_STATUS_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.LIGHTING_SYSTEM_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.MALFUNCTION_INDICATOR, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.MOTOR_CONTROLLER_TEMP_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PARK_AID_MALFUNCTION, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PASSIVE_ENTRY_PASSIVE_START, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.POWERTRAIN_MALFUNCTION, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.RESTRAINTS_INDICATOR_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.START_STOP_ENGINE_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRACTION_CONTROL_DISABLED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRACTION_CONTROL_ACTIVE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRACTION_MOTOR_TEMP_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_PRESSURE_MONITOR_SYSTEM_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.WATER_IN_FUEL, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_FRONT_RIGHT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_FRONT_LEFT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_REAR_RIGHT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_REAR_LEFT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_SYSTEM_ERROR, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BATTERY_LOW_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BRAKE_FLUID_WARNING, OnOffState.OFF)))
         testState(builder.build())
     }
     
     private fun testState(state: DashboardLights.State) {
         assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.getDashboardLights()[0].value?.name == DashboardLight.Name.HIGH_BEAM)
-        assertTrue(state.getDashboardLights()[0].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[0].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[0].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[1].value?.name == DashboardLight.Name.LOW_BEAM)
-        assertTrue(state.getDashboardLights()[1].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[1].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[1].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[2].value?.name == DashboardLight.Name.HAZARD_WARNING)
-        assertTrue(state.getDashboardLights()[2].value?.state == ActiveState.ACTIVE)
-        assertTrue(state.getDashboardLights()[2].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[2].value?.state == OnOffState.ON)
         assertTrue(state.getDashboardLights()[3].value?.name == DashboardLight.Name.BRAKE_FAILURE)
-        assertTrue(state.getDashboardLights()[3].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[3].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[3].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[4].value?.name == DashboardLight.Name.HATCH_OPEN)
-        assertTrue(state.getDashboardLights()[4].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[4].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[4].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[5].value?.name == DashboardLight.Name.FUEL_LEVEL)
-        assertTrue(state.getDashboardLights()[5].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[5].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[5].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[6].value?.name == DashboardLight.Name.ENGINE_COOLANT_TEMPERATURE)
-        assertTrue(state.getDashboardLights()[6].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[6].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[6].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[7].value?.name == DashboardLight.Name.BATTERY_CHARGING_CONDITION)
-        assertTrue(state.getDashboardLights()[7].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[7].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[7].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[8].value?.name == DashboardLight.Name.ENGINE_OIL)
-        assertTrue(state.getDashboardLights()[8].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[8].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[8].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[9].value?.name == DashboardLight.Name.POSITION_LIGHTS)
-        assertTrue(state.getDashboardLights()[9].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[9].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[9].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[10].value?.name == DashboardLight.Name.FRONT_FOG_LIGHT)
-        assertTrue(state.getDashboardLights()[10].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[10].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[10].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[11].value?.name == DashboardLight.Name.REAR_FOG_LIGHT)
-        assertTrue(state.getDashboardLights()[11].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[11].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[11].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[12].value?.name == DashboardLight.Name.PARK_HEATING)
-        assertTrue(state.getDashboardLights()[12].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[12].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[12].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[13].value?.name == DashboardLight.Name.ENGINE_INDICATOR)
-        assertTrue(state.getDashboardLights()[13].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[13].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[13].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[14].value?.name == DashboardLight.Name.SERVICE_CALL)
-        assertTrue(state.getDashboardLights()[14].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[14].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[14].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[15].value?.name == DashboardLight.Name.TRANSMISSION_FLUID_TEMPERATURE)
-        assertTrue(state.getDashboardLights()[15].value?.state == ActiveState.ACTIVE)
-        assertTrue(state.getDashboardLights()[15].value?.colour == DashboardLight.Colour.RED)
+        assertTrue(state.getDashboardLights()[15].value?.state == OnOffState.ON)
         assertTrue(state.getDashboardLights()[16].value?.name == DashboardLight.Name.TRANSMISSION_FAILURE)
-        assertTrue(state.getDashboardLights()[16].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[16].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[16].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[17].value?.name == DashboardLight.Name.ANTI_LOCK_BRAKE_FAILURE)
-        assertTrue(state.getDashboardLights()[17].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[17].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[17].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[18].value?.name == DashboardLight.Name.WORN_BRAKE_LININGS)
-        assertTrue(state.getDashboardLights()[18].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[18].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[18].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[19].value?.name == DashboardLight.Name.WINDSCREEN_WASHER_FLUID)
-        assertTrue(state.getDashboardLights()[19].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[19].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[19].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[20].value?.name == DashboardLight.Name.TIRE_FAILURE)
-        assertTrue(state.getDashboardLights()[20].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[20].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[20].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[21].value?.name == DashboardLight.Name.ENGINE_OIL_LEVEL)
-        assertTrue(state.getDashboardLights()[21].value?.state == ActiveState.ACTIVE)
-        assertTrue(state.getDashboardLights()[21].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[21].value?.state == OnOffState.ON)
         assertTrue(state.getDashboardLights()[22].value?.name == DashboardLight.Name.ENGINE_COOLANT_LEVEL)
-        assertTrue(state.getDashboardLights()[22].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[22].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[22].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[23].value?.name == DashboardLight.Name.STEERING_FAILURE)
-        assertTrue(state.getDashboardLights()[23].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[23].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[23].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[24].value?.name == DashboardLight.Name.ESC_INDICATION)
-        assertTrue(state.getDashboardLights()[24].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[24].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[24].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[25].value?.name == DashboardLight.Name.BRAKE_LIGHTS)
-        assertTrue(state.getDashboardLights()[25].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[25].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[25].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[26].value?.name == DashboardLight.Name.ADBLUE_LEVEL)
-        assertTrue(state.getDashboardLights()[26].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[26].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[26].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[27].value?.name == DashboardLight.Name.FUEL_FILTER_DIFF_PRESSURE)
-        assertTrue(state.getDashboardLights()[27].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[27].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[27].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[28].value?.name == DashboardLight.Name.SEAT_BELT)
-        assertTrue(state.getDashboardLights()[28].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[28].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[28].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[29].value?.name == DashboardLight.Name.ADVANCED_BRAKING)
-        assertTrue(state.getDashboardLights()[29].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[29].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[29].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[30].value?.name == DashboardLight.Name.ACC)
-        assertTrue(state.getDashboardLights()[30].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[30].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[30].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[31].value?.name == DashboardLight.Name.TRAILER_CONNECTED)
-        assertTrue(state.getDashboardLights()[31].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[31].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[31].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[32].value?.name == DashboardLight.Name.AIRBAG)
-        assertTrue(state.getDashboardLights()[32].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[32].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[32].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[33].value?.name == DashboardLight.Name.ESC_SWITCHED_OFF)
-        assertTrue(state.getDashboardLights()[33].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[33].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[33].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[34].value?.name == DashboardLight.Name.LANE_DEPARTURE_WARNING_OFF)
-        assertTrue(state.getDashboardLights()[34].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[34].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[34].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[35].value?.name == DashboardLight.Name.AIR_FILTER_MINDER)
-        assertTrue(state.getDashboardLights()[35].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[35].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[35].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[36].value?.name == DashboardLight.Name.AIR_SUSPENSION_RIDE_CONTROL_FAULT)
-        assertTrue(state.getDashboardLights()[36].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[36].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[36].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[37].value?.name == DashboardLight.Name.ALL_WHEEL_DRIVE_DISABLED)
-        assertTrue(state.getDashboardLights()[37].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[37].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[37].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[38].value?.name == DashboardLight.Name.ANTI_THEFT)
-        assertTrue(state.getDashboardLights()[38].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[38].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[38].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[39].value?.name == DashboardLight.Name.BLIND_SPOT_DETECTION)
-        assertTrue(state.getDashboardLights()[39].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[39].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[39].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[40].value?.name == DashboardLight.Name.CHARGE_SYSTEM_FAULT)
-        assertTrue(state.getDashboardLights()[40].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[40].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[40].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[41].value?.name == DashboardLight.Name.CHECK_FUEL_CAP)
-        assertTrue(state.getDashboardLights()[41].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[41].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[41].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[42].value?.name == DashboardLight.Name.CHECK_FUEL_FILL_INLET)
-        assertTrue(state.getDashboardLights()[42].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[42].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[42].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[43].value?.name == DashboardLight.Name.CHECK_FUEL_FILTER)
-        assertTrue(state.getDashboardLights()[43].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[43].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[43].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[44].value?.name == DashboardLight.Name.DC_TEMP_WARNING)
-        assertTrue(state.getDashboardLights()[44].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[44].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[44].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[45].value?.name == DashboardLight.Name.DC_WARNING_STATUS)
-        assertTrue(state.getDashboardLights()[45].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[45].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[45].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[46].value?.name == DashboardLight.Name.DIESEL_ENGINE_IDLE_SHUTDOWN)
-        assertTrue(state.getDashboardLights()[46].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[46].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[46].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[47].value?.name == DashboardLight.Name.DIESEL_ENGINE_WARNING)
-        assertTrue(state.getDashboardLights()[47].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[47].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[47].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[48].value?.name == DashboardLight.Name.DIESEL_EXHAUST_FLUID_SYSTEM_FAULT)
-        assertTrue(state.getDashboardLights()[48].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[48].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[48].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[49].value?.name == DashboardLight.Name.DIESEL_EXHAUST_OVER_TEMP)
-        assertTrue(state.getDashboardLights()[49].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[49].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[49].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[50].value?.name == DashboardLight.Name.DIESEL_EXHAUST_FLUID_QUALITY)
-        assertTrue(state.getDashboardLights()[50].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[50].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[50].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[51].value?.name == DashboardLight.Name.DIESEL_FILTER_REGENERATION)
-        assertTrue(state.getDashboardLights()[51].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[51].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[51].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[52].value?.name == DashboardLight.Name.DIESEL_PARTICULATE_FILTER)
-        assertTrue(state.getDashboardLights()[52].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[52].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[52].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[53].value?.name == DashboardLight.Name.DIESEL_PRE_HEAT)
-        assertTrue(state.getDashboardLights()[53].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[53].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[53].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[54].value?.name == DashboardLight.Name.ELECTRIC_TRAILER_BRAKE_CONNECTION)
-        assertTrue(state.getDashboardLights()[54].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[54].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[54].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[55].value?.name == DashboardLight.Name.EV_BATTERY_CELL_MAX_VOLT_WARNING)
-        assertTrue(state.getDashboardLights()[55].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[55].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[55].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[56].value?.name == DashboardLight.Name.EV_BATTERY_CELL_MIN_VOLT_WARNING)
-        assertTrue(state.getDashboardLights()[56].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[56].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[56].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[57].value?.name == DashboardLight.Name.EV_BATTERY_CHARGE_ENERGY_STORAGE_WARNING)
-        assertTrue(state.getDashboardLights()[57].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[57].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[57].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[58].value?.name == DashboardLight.Name.EV_BATTERY_HIGH_LEVEL_WARNING)
-        assertTrue(state.getDashboardLights()[58].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[58].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[58].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[59].value?.name == DashboardLight.Name.EV_BATTERY_HIGH_TEMPERATURE_WARNING)
-        assertTrue(state.getDashboardLights()[59].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[59].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[59].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[60].value?.name == DashboardLight.Name.EV_BATTERY_INSULATION_RESIST_WARNING)
-        assertTrue(state.getDashboardLights()[60].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[60].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[60].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[61].value?.name == DashboardLight.Name.EV_BATTERY_JUMP_LEVEL_WARNING)
-        assertTrue(state.getDashboardLights()[61].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[61].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[61].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[62].value?.name == DashboardLight.Name.EV_BATTERY_LOW_LEVEL_WARNING)
-        assertTrue(state.getDashboardLights()[62].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[62].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[62].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[63].value?.name == DashboardLight.Name.EV_BATTERY_MAX_VOLT_VEH_ENERGY_WARNING)
-        assertTrue(state.getDashboardLights()[63].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[63].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[63].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[64].value?.name == DashboardLight.Name.EV_BATTERY_MIN_VOLT_VEH_ENERGY_WARNING)
-        assertTrue(state.getDashboardLights()[64].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[64].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[64].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[65].value?.name == DashboardLight.Name.EV_BATTERY_OVER_CHARGE_WARNING)
-        assertTrue(state.getDashboardLights()[65].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[65].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[65].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[66].value?.name == DashboardLight.Name.EV_BATTERY_POOR_CELL_WARNING)
-        assertTrue(state.getDashboardLights()[66].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[66].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[66].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[67].value?.name == DashboardLight.Name.EV_BATTERY_TEMP_DIFF_WARNING)
-        assertTrue(state.getDashboardLights()[67].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[67].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[67].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[68].value?.name == DashboardLight.Name.FORWARD_COLLISION_WARNING)
-        assertTrue(state.getDashboardLights()[68].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[68].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[68].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[69].value?.name == DashboardLight.Name.FUEL_DOOR_OPEN)
-        assertTrue(state.getDashboardLights()[69].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[69].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[69].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[70].value?.name == DashboardLight.Name.HILL_DESCENT_CONTROL_FAULT)
-        assertTrue(state.getDashboardLights()[70].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[70].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[70].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[71].value?.name == DashboardLight.Name.HILL_START_ASSIST_WARNING)
-        assertTrue(state.getDashboardLights()[71].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[71].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[71].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[72].value?.name == DashboardLight.Name.HV_INTERLOCKING_STATUS_WARNING)
-        assertTrue(state.getDashboardLights()[72].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[72].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[72].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[73].value?.name == DashboardLight.Name.LIGHTING_SYSTEM_FAILURE)
-        assertTrue(state.getDashboardLights()[73].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[73].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[73].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[74].value?.name == DashboardLight.Name.MALFUNCTION_INDICATOR)
-        assertTrue(state.getDashboardLights()[74].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[74].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[74].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[75].value?.name == DashboardLight.Name.MOTOR_CONTROLLER_TEMP_WARNING)
-        assertTrue(state.getDashboardLights()[75].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[75].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[75].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[76].value?.name == DashboardLight.Name.PARK_AID_MALFUNCTION)
-        assertTrue(state.getDashboardLights()[76].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[76].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[76].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[77].value?.name == DashboardLight.Name.PASSIVE_ENTRY_PASSIVE_START)
-        assertTrue(state.getDashboardLights()[77].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[77].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[77].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[78].value?.name == DashboardLight.Name.POWERTRAIN_MALFUNCTION)
-        assertTrue(state.getDashboardLights()[78].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[78].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[78].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[79].value?.name == DashboardLight.Name.RESTRAINTS_INDICATOR_WARNING)
-        assertTrue(state.getDashboardLights()[79].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[79].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[79].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[80].value?.name == DashboardLight.Name.START_STOP_ENGINE_WARNING)
-        assertTrue(state.getDashboardLights()[80].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[80].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[80].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[81].value?.name == DashboardLight.Name.TRACTION_CONTROL_DISABLED)
-        assertTrue(state.getDashboardLights()[81].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[81].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[81].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[82].value?.name == DashboardLight.Name.TRACTION_CONTROL_ACTIVE)
-        assertTrue(state.getDashboardLights()[82].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[82].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[82].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[83].value?.name == DashboardLight.Name.TRACTION_MOTOR_TEMP_WARNING)
-        assertTrue(state.getDashboardLights()[83].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[83].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[83].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[84].value?.name == DashboardLight.Name.TIRE_PRESSURE_MONITOR_SYSTEM_WARNING)
-        assertTrue(state.getDashboardLights()[84].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[84].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[84].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[85].value?.name == DashboardLight.Name.WATER_IN_FUEL)
-        assertTrue(state.getDashboardLights()[85].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[85].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[85].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[86].value?.name == DashboardLight.Name.TIRE_WARNING_FRONT_RIGHT)
-        assertTrue(state.getDashboardLights()[86].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[86].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[86].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[87].value?.name == DashboardLight.Name.TIRE_WARNING_FRONT_LEFT)
-        assertTrue(state.getDashboardLights()[87].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[87].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[87].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[88].value?.name == DashboardLight.Name.TIRE_WARNING_REAR_RIGHT)
-        assertTrue(state.getDashboardLights()[88].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[88].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[88].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[89].value?.name == DashboardLight.Name.TIRE_WARNING_REAR_LEFT)
-        assertTrue(state.getDashboardLights()[89].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[89].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[89].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[90].value?.name == DashboardLight.Name.TIRE_WARNING_SYSTEM_ERROR)
-        assertTrue(state.getDashboardLights()[90].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[90].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[90].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[91].value?.name == DashboardLight.Name.BATTERY_LOW_WARNING)
-        assertTrue(state.getDashboardLights()[91].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[91].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[91].value?.state == OnOffState.OFF)
         assertTrue(state.getDashboardLights()[92].value?.name == DashboardLight.Name.BRAKE_FLUID_WARNING)
-        assertTrue(state.getDashboardLights()[92].value?.state == ActiveState.INACTIVE)
-        assertTrue(state.getDashboardLights()[92].value?.colour == DashboardLight.Colour.INFO)
+        assertTrue(state.getDashboardLights()[92].value?.state == OnOffState.OFF)
     }
     
     @Test

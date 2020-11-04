@@ -36,14 +36,14 @@ class KHeartRateTest : BaseTest() {
         val bytes = Bytes(COMMAND_HEADER + "002901" +
             "01000D01000A0e084050000000000000")
     
-        val constructed = HeartRate.SendHeartRate(Frequency(64.0, Frequency.Unit.BEATS_PER_MINUTE))
+        val constructed = HeartRate.SendHeartRate(Frequency(64.0, Frequency.Unit.TIMES_PER_MINUTE))
         assertTrue(bytesTheSame(constructed, bytes))
     
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as HeartRate.SendHeartRate
         assertTrue(resolved.getHeartRate().value?.value == 64.0)
-        assertTrue(resolved.getHeartRate().value?.unit == Frequency.Unit.BEATS_PER_MINUTE)
+        assertTrue(resolved.getHeartRate().value?.unit == Frequency.Unit.TIMES_PER_MINUTE)
         assertTrue(resolved == bytes)
     }
 }
