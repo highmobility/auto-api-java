@@ -198,7 +198,7 @@ public class VehicleInformation {
     
         /**
          * @return The power of the vehicle
-         *  * @deprecated removed the unit from the name. Replaced by {@link #getPower()}
+         * @deprecated removed the unit from the name. Replaced by {@link #getPower()}
          */
         @Deprecated
         public Property<Power> getPowerInKW() {
@@ -457,7 +457,7 @@ public class VehicleInformation {
             /**
              * @param powerInKW The power of the vehicle
              * @return The builder
-             *  * @deprecated removed the unit from the name. Replaced by {@link #getPower()}
+             * @deprecated removed the unit from the name. Replaced by {@link #getPower()}
              */
             @Deprecated
             public Builder setPowerInKW(Property<Power> powerInKW) {
