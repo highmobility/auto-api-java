@@ -52,7 +52,9 @@ class Frequency : MeasurementType {
             Unit.KILOHERTZ -> value * 1.0e+3
             Unit.MEGAHERTZ -> value * 1.0e+6
             Unit.GIGAHERTZ -> value * 1.0e+9
-            Unit.BEATS_PER_MINUTE -> value * 60.0
+            Unit.TIMES_PER_MINUTE -> value * 60.0
+            Unit.TIMES_PER_HOUR -> value * 3600.0
+            Unit.TIMES_PER_DAY -> value * 86400.0
         }
     }
     
@@ -64,7 +66,11 @@ class Frequency : MeasurementType {
     
     fun inGigahertz() = inHertz() / 1.0e+9
     
-    fun inBeatsPerMinute() = inHertz() / 60.0
+    fun inTimesPerMinute() = inHertz() / 60.0
+    
+    fun inTimesPerHour() = inHertz() / 3600.0
+    
+    fun inTimesPerDay() = inHertz() / 86400.0
     
     enum class Unit(val id: Byte) {
         HERTZ(0x00),
@@ -72,7 +78,9 @@ class Frequency : MeasurementType {
         KILOHERTZ(0x03),
         MEGAHERTZ(0x04),
         GIGAHERTZ(0x05),
-        BEATS_PER_MINUTE(0x08);
+        TIMES_PER_MINUTE(0x08),
+        TIMES_PER_HOUR(0x09),
+        TIMES_PER_DAY(0x0a);
     
         companion object {
             private val map = values().associateBy(Unit::id)

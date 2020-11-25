@@ -176,7 +176,7 @@ public class Maintenance {
     
         /**
          * @return Time until next servicing of the car
-         *  * @deprecated removed the unit from the name. Replaced by {@link #getTimeToNextService()}
+         * @deprecated removed the unit from the name. Replaced by {@link #getTimeToNextService()}
          */
         @Deprecated
         public Property<Duration> getDaysToNextService() {
@@ -185,7 +185,7 @@ public class Maintenance {
     
         /**
          * @return The distance until next servicing of the vehicle
-         *  * @deprecated removed the unit from the name. Replaced by {@link #getDistanceToNextService()}
+         * @deprecated removed the unit from the name. Replaced by {@link #getDistanceToNextService()}
          */
         @Deprecated
         public Property<Length> getKilometersToNextService() {
@@ -201,7 +201,7 @@ public class Maintenance {
     
         /**
          * @return Time until exhaust inspection
-         *  * @deprecated removed the unit from the name. Replaced by {@link #getTimeToExhaustInspection()}
+         * @deprecated removed the unit from the name. Replaced by {@link #getTimeToExhaustInspection()}
          */
         @Deprecated
         public Property<Duration> getMonthsToExhaustInspection() {
@@ -378,7 +378,7 @@ public class Maintenance {
             /**
              * @param daysToNextService Time until next servicing of the car
              * @return The builder
-             *  * @deprecated removed the unit from the name. Replaced by {@link #getTimeToNextService()}
+             * @deprecated removed the unit from the name. Replaced by {@link #getTimeToNextService()}
              */
             @Deprecated
             public Builder setDaysToNextService(Property<Duration> daysToNextService) {
@@ -390,7 +390,7 @@ public class Maintenance {
             /**
              * @param kilometersToNextService The distance until next servicing of the vehicle
              * @return The builder
-             *  * @deprecated removed the unit from the name. Replaced by {@link #getDistanceToNextService()}
+             * @deprecated removed the unit from the name. Replaced by {@link #getDistanceToNextService()}
              */
             @Deprecated
             public Builder setKilometersToNextService(Property<Length> kilometersToNextService) {
@@ -412,7 +412,7 @@ public class Maintenance {
             /**
              * @param monthsToExhaustInspection Time until exhaust inspection
              * @return The builder
-             *  * @deprecated removed the unit from the name. Replaced by {@link #getTimeToExhaustInspection()}
+             * @deprecated removed the unit from the name. Replaced by {@link #getTimeToExhaustInspection()}
              */
             @Deprecated
             public Builder setMonthsToExhaustInspection(Property<Duration> monthsToExhaustInspection) {

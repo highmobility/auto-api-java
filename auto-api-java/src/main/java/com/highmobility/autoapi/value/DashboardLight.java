@@ -34,8 +34,7 @@ public class DashboardLight extends PropertyValueObject {
     public static final int SIZE = 3;
 
     Name name;
-    ActiveState state;
-    Colour colour;
+    OnOffState state;
 
     /**
      * @return The name.
@@ -47,23 +46,15 @@ public class DashboardLight extends PropertyValueObject {
     /**
      * @return The state.
      */
-    public ActiveState getState() {
+    public OnOffState getState() {
         return state;
     }
 
-    /**
-     * @return The colour.
-     */
-    public Colour getColour() {
-        return colour;
-    }
-
-    public DashboardLight(Name name, ActiveState state, Colour colour) {
+    public DashboardLight(Name name, OnOffState state) {
         super(0);
 
         this.name = name;
         this.state = state;
-        this.colour = colour;
 
         bytes = new byte[getLength()];
 
@@ -72,28 +63,22 @@ public class DashboardLight extends PropertyValueObject {
         bytePosition += 1;
 
         set(bytePosition, state.getByte());
-        bytePosition += 1;
-
-        set(bytePosition, colour.getByte());
     }
 
     public DashboardLight(Bytes valueBytes) throws CommandParseException {
         super(valueBytes);
 
-        if (bytes.length < 3) throw new CommandParseException();
+        if (bytes.length < 2) throw new CommandParseException();
 
         int bytePosition = 0;
         name = Name.fromByte(get(bytePosition));
         bytePosition += 1;
 
-        state = ActiveState.fromByte(get(bytePosition));
-        bytePosition += 1;
-
-        colour = Colour.fromByte(get(bytePosition));
+        state = OnOffState.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {
-        return 1 + 1 + 1;
+        return 1 + 1;
     }
 
     public enum Name implements ByteEnum {
@@ -207,35 +192,6 @@ public class DashboardLight extends PropertyValueObject {
         private final byte value;
     
         Name(byte value) {
-            this.value = value;
-        }
-    
-        @Override public byte getByte() {
-            return value;
-        }
-    }
-
-    public enum Colour implements ByteEnum {
-        INFO((byte) 0x00),
-        YELLOW((byte) 0x01),
-        RED((byte) 0x02);
-    
-        public static Colour fromByte(byte byteValue) throws CommandParseException {
-            Colour[] values = Colour.values();
-    
-            for (int i = 0; i < values.length; i++) {
-                Colour state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-    
-            throw new CommandParseException("DashboardLight.Colour does not contain: " + hexFromByte(byteValue));
-        }
-    
-        private final byte value;
-    
-        Colour(byte value) {
             this.value = value;
         }
     

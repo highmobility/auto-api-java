@@ -251,9 +251,9 @@ public class FailureMessage {
          */
         RATE_LIMIT((byte) 0x07),
         /**
-         * API call to OEM returned an error
+         * API call to an OEM returned an error
          */
-        INTERNAL_OEM_ERROR((byte) 0x08);
+        OEM_ERROR((byte) 0x08);
     
         public static FailureReason fromByte(byte byteValue) throws CommandParseException {
             FailureReason[] values = FailureReason.values();

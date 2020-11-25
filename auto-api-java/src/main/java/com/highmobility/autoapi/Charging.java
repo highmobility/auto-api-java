@@ -503,7 +503,7 @@ public class Charging {
     
         /**
          * @return Battery alternating current
-         *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
+         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
          */
         @Deprecated
         public Property<ElectricCurrent> getBatteryCurrentAC() {
@@ -512,7 +512,7 @@ public class Charging {
     
         /**
          * @return Battery direct current
-         *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
+         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
          */
         @Deprecated
         public Property<ElectricCurrent> getBatteryCurrentDC() {
@@ -521,7 +521,7 @@ public class Charging {
     
         /**
          * @return Charger voltage for alternating current
-         *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
+         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
          */
         @Deprecated
         public Property<ElectricPotentialDifference> getChargerVoltageAC() {
@@ -530,7 +530,7 @@ public class Charging {
     
         /**
          * @return Charger voltage for direct current
-         *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
+         * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
          */
         @Deprecated
         public Property<ElectricPotentialDifference> getChargerVoltageDC() {
@@ -553,7 +553,7 @@ public class Charging {
     
         /**
          * @return Charging rate
-         *  * @deprecated removed the unit from the name. Replaced by {@link #getChargingRate()}
+         * @deprecated removed the unit from the name. Replaced by {@link #getChargingRate()}
          */
         @Deprecated
         public Property<Power> getChargingRateKW() {
@@ -885,7 +885,7 @@ public class Charging {
             /**
              * @param batteryCurrentAC Battery alternating current
              * @return The builder
-             *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
+             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
              */
             @Deprecated
             public Builder setBatteryCurrentAC(Property<ElectricCurrent> batteryCurrentAC) {
@@ -897,7 +897,7 @@ public class Charging {
             /**
              * @param batteryCurrentDC Battery direct current
              * @return The builder
-             *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
+             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getBatteryCurrent()}
              */
             @Deprecated
             public Builder setBatteryCurrentDC(Property<ElectricCurrent> batteryCurrentDC) {
@@ -909,7 +909,7 @@ public class Charging {
             /**
              * @param chargerVoltageAC Charger voltage for alternating current
              * @return The builder
-             *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
+             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
              */
             @Deprecated
             public Builder setChargerVoltageAC(Property<ElectricPotentialDifference> chargerVoltageAC) {
@@ -921,7 +921,7 @@ public class Charging {
             /**
              * @param chargerVoltageDC Charger voltage for direct current
              * @return The builder
-             *  * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
+             * @deprecated moved AC/DC distinction into a separate property. Replaced by {@link #getChargerVoltage()}
              */
             @Deprecated
             public Builder setChargerVoltageDC(Property<ElectricPotentialDifference> chargerVoltageDC) {
@@ -953,7 +953,7 @@ public class Charging {
             /**
              * @param chargingRateKW Charging rate
              * @return The builder
-             *  * @deprecated removed the unit from the name. Replaced by {@link #getChargingRate()}
+             * @deprecated removed the unit from the name. Replaced by {@link #getChargingRate()}
              */
             @Deprecated
             public Builder setChargingRateKW(Property<Power> chargingRateKW) {

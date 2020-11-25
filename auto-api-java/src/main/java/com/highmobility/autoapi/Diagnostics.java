@@ -228,7 +228,7 @@ public class Diagnostics {
     
         /**
          * @return The vehicle mileage (odometer)
-         *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
+         * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
          */
         @Deprecated
         public Property<Length> getMileage() {
@@ -285,7 +285,7 @@ public class Diagnostics {
         }
     
         /**
-         * @return AdBlue level in liters
+         * @return AdBlue level
          */
         public Property<Volume> getAdBlueLevel() {
             return adBlueLevel;
@@ -328,7 +328,7 @@ public class Diagnostics {
     
         /**
          * @return The accumulated time of engine operation
-         *  * @deprecated removed the unit from the name. Replaced by {@link #getEngineTotalOperatingTime()}
+         * @deprecated removed the unit from the name. Replaced by {@link #getEngineTotalOperatingTime()}
          */
         @Deprecated
         public Property<Duration> getEngineTotalOperatingHours() {
@@ -414,7 +414,7 @@ public class Diagnostics {
     
         /**
          * @return The vehicle mileage (odometer) in meters
-         *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
+         * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
          */
         @Deprecated
         public Property<Length> getMileageMeters() {
@@ -675,7 +675,7 @@ public class Diagnostics {
             /**
              * @param mileage The vehicle mileage (odometer)
              * @return The builder
-             *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
+             * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
              */
             @Deprecated
             public Builder setMileage(Property<Length> mileage) {
@@ -755,7 +755,7 @@ public class Diagnostics {
             }
             
             /**
-             * @param adBlueLevel AdBlue level in liters
+             * @param adBlueLevel AdBlue level
              * @return The builder
              */
             public Builder setAdBlueLevel(Property<Volume> adBlueLevel) {
@@ -817,7 +817,7 @@ public class Diagnostics {
             /**
              * @param engineTotalOperatingHours The accumulated time of engine operation
              * @return The builder
-             *  * @deprecated removed the unit from the name. Replaced by {@link #getEngineTotalOperatingTime()}
+             * @deprecated removed the unit from the name. Replaced by {@link #getEngineTotalOperatingTime()}
              */
             @Deprecated
             public Builder setEngineTotalOperatingHours(Property<Duration> engineTotalOperatingHours) {
@@ -1029,7 +1029,7 @@ public class Diagnostics {
             /**
              * @param mileageMeters The vehicle mileage (odometer) in meters
              * @return The builder
-             *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
+             * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometer()}
              */
             @Deprecated
             public Builder setMileageMeters(Property<Length> mileageMeters) {

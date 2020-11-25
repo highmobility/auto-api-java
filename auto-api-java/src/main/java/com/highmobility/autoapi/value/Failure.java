@@ -91,7 +91,7 @@ public class Failure extends PropertyValueObject {
         UNAUTHORISED((byte) 0x03),
         UNKNOWN((byte) 0x04),
         PENDING((byte) 0x05),
-        INTERNAL_OEM_ERROR((byte) 0x06);
+        OEM_ERROR((byte) 0x06);
     
         public static Reason fromByte(byte byteValue) throws CommandParseException {
             Reason[] values = Reason.values();

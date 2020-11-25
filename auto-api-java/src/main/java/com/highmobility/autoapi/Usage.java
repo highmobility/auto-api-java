@@ -284,7 +284,7 @@ public class Usage {
     
         /**
          * @return Mileage after the last trip
-         *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometerAfterLastTrip()}
+         * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometerAfterLastTrip()}
          */
         @Deprecated
         public Property<Length> getMileageAfterLastTrip() {
@@ -805,7 +805,7 @@ public class Usage {
             /**
              * @param mileageAfterLastTrip Mileage after the last trip
              * @return The builder
-             *  * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometerAfterLastTrip()}
+             * @deprecated 'mileage' is an incorrect term for this. Replaced by {@link #getOdometerAfterLastTrip()}
              */
             @Deprecated
             public Builder setMileageAfterLastTrip(Property<Length> mileageAfterLastTrip) {
