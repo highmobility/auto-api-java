@@ -26,9 +26,6 @@ package com.highmobility.autoapi;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Created by ttiganik on 07/06/16.
- */
 public class CommandParseException extends Exception {
     public CommandExceptionCode code;
     public static final String PARSE_ERROR_DESCRIPTION = "Unexpected bytes in the command";
