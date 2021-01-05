@@ -45,9 +45,9 @@ class Pressure : MeasurementType {
         value = Property.getDouble(valueBytes, 2)
     }
 
-    fun inNewtonsPerMetersSquared(): Double {
+    fun inPascals(): Double {
         return when (unit) {
-            Unit.NEWTONS_PER_METERS_SQUARED -> value * 1.0
+            Unit.PASCALS -> value * 1.0
             Unit.KILOPASCALS -> value * 1.0e+3
             Unit.INCHES_OF_MERCURY -> value * 3386.39
             Unit.BARS -> value * 1.0e+5
@@ -57,20 +57,20 @@ class Pressure : MeasurementType {
         }
     }
     
-    fun inKilopascals() = inNewtonsPerMetersSquared() / 1.0e+3
+    fun inKilopascals() = inPascals() / 1.0e+3
     
-    fun inInchesOfMercury() = inNewtonsPerMetersSquared() / 3386.39
+    fun inInchesOfMercury() = inPascals() / 3386.39
     
-    fun inBars() = inNewtonsPerMetersSquared() / 1.0e+5
+    fun inBars() = inPascals() / 1.0e+5
     
-    fun inMillibars() = inNewtonsPerMetersSquared() / 1.0e+2
+    fun inMillibars() = inPascals() / 1.0e+2
     
-    fun inMillimetersOfMercury() = inNewtonsPerMetersSquared() / 133.322
+    fun inMillimetersOfMercury() = inPascals() / 133.322
     
-    fun inPoundsForcePerSquareInch() = inNewtonsPerMetersSquared() / 6894.76
+    fun inPoundsForcePerSquareInch() = inPascals() / 6894.76
     
     enum class Unit(val id: Byte) {
-        NEWTONS_PER_METERS_SQUARED(0x00),
+        PASCALS(0x00),
         KILOPASCALS(0x03),
         INCHES_OF_MERCURY(0x05),
         BARS(0x06),

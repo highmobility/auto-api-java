@@ -31,7 +31,7 @@ import com.highmobility.value.Bytes;
 import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 public class DashboardLight extends PropertyValueObject {
-    public static final int SIZE = 3;
+    public static final int SIZE = 2;
 
     Name name;
     OnOffState state;

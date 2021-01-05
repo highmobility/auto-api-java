@@ -47,12 +47,22 @@ class KTripsTest : BaseTest() {
             "0b000D01000A120440c4978000000000" +  // At the start of the trip the odometer was showing 10543.0km
             "0c000D01000A0f00401d5c28f5c28f5c" +  // Average fuel consumption during the trip was 7.34 l/100km
             "0d000D01000A12044045800000000000" +  // Distance of trip was 43.0km
-            "0e001A010017050014536b616c69747a65722053747261c39f65203638" +  // Street component value is 'Skalitzer Straße 68'
             "0e000C0100090000064265726c696e" +  // City component value is 'Berlin'
             "0e000D01000A0100074765726d616e79" +  // Country component value is 'Germany'
-            "0f001A010017050014536b616c69747a65722053747261c39f65203638" +  // Street component value is 'Skalitzer Straße 68'
+            "0e00080100050200024445" +  // Country short component value is 'DE'
+            "0e000C0100090300064265726c696e" +  // District component value is 'Berlin'
+            "0e000B0100080400053130313137" +  // Postal code component value is '10117'
+            "0e001A010017050014536b616c69747a65722053747261c39f65203638" +  // Street component value is 'Skalitzer Straße 68'
+            "0e001101000E06000b4272616e64656e62757267" +  // Country component value is 'Brandenburg'
+            "0e000D01000A0700074765726d616e79" +  // Other component value is 'Germany'
             "0f000C0100090000064265726c696e" +  // City component value is 'Berlin'
-            "0f000D01000A0100074765726d616e79" // Country component value is 'Germany'
+            "0f000D01000A0100074765726d616e79" +  // Country component value is 'Germany'
+            "0f00080100050200024445" +  // Country short component value is 'DE'
+            "0f000C0100090300064265726c696e" +  // District component value is 'Berlin'
+            "0f000B0100080400053130313137" +  // Postal code component value is '10117'
+            "0f001A010017050014536b616c69747a65722053747261c39f65203638" +  // Street component value is 'Skalitzer Straße 68'
+            "0f001101000E06000b4272616e64656e62757267" +  // Country component value is 'Brandenburg'
+            "0f000D01000A0700074765726d616e79" // Other component value is 'Germany'
     )
     
     @Test
@@ -77,12 +87,22 @@ class KTripsTest : BaseTest() {
         builder.setEndOdometer(Property(Length(10543.0, Length.Unit.KILOMETERS)))
         builder.setAverageFuelConsumption(Property(FuelEfficiency(7.34, FuelEfficiency.Unit.LITERS_PER_100_KILOMETERS)))
         builder.setDistance(Property(Length(43.0, Length.Unit.KILOMETERS)))
-        builder.addStartAddressComponent(Property(AddressComponent(AddressComponent.Type.STREET, "Skalitzer Straße 68")))
         builder.addStartAddressComponent(Property(AddressComponent(AddressComponent.Type.CITY, "Berlin")))
         builder.addStartAddressComponent(Property(AddressComponent(AddressComponent.Type.COUNTRY, "Germany")))
-        builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.STREET, "Skalitzer Straße 68")))
+        builder.addStartAddressComponent(Property(AddressComponent(AddressComponent.Type.COUNTRY_SHORT, "DE")))
+        builder.addStartAddressComponent(Property(AddressComponent(AddressComponent.Type.DISTRICT, "Berlin")))
+        builder.addStartAddressComponent(Property(AddressComponent(AddressComponent.Type.POSTAL_CODE, "10117")))
+        builder.addStartAddressComponent(Property(AddressComponent(AddressComponent.Type.STREET, "Skalitzer Straße 68")))
+        builder.addStartAddressComponent(Property(AddressComponent(AddressComponent.Type.STATE_PROVINCE, "Brandenburg")))
+        builder.addStartAddressComponent(Property(AddressComponent(AddressComponent.Type.OTHER, "Germany")))
         builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.CITY, "Berlin")))
         builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.COUNTRY, "Germany")))
+        builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.COUNTRY_SHORT, "DE")))
+        builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.DISTRICT, "Berlin")))
+        builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.POSTAL_CODE, "10117")))
+        builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.STREET, "Skalitzer Straße 68")))
+        builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.STATE_PROVINCE, "Brandenburg")))
+        builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.OTHER, "Germany")))
         testState(builder.build())
     }
     
@@ -107,17 +127,37 @@ class KTripsTest : BaseTest() {
         assertTrue(state.getAverageFuelConsumption().value?.unit == FuelEfficiency.Unit.LITERS_PER_100_KILOMETERS)
         assertTrue(state.getDistance().value?.value == 43.0)
         assertTrue(state.getDistance().value?.unit == Length.Unit.KILOMETERS)
-        assertTrue(state.getStartAddressComponents()[0].value?.type == AddressComponent.Type.STREET)
-        assertTrue(state.getStartAddressComponents()[0].value?.value == "Skalitzer Straße 68")
-        assertTrue(state.getStartAddressComponents()[1].value?.type == AddressComponent.Type.CITY)
-        assertTrue(state.getStartAddressComponents()[1].value?.value == "Berlin")
-        assertTrue(state.getStartAddressComponents()[2].value?.type == AddressComponent.Type.COUNTRY)
-        assertTrue(state.getStartAddressComponents()[2].value?.value == "Germany")
-        assertTrue(state.getEndAddressComponents()[0].value?.type == AddressComponent.Type.STREET)
-        assertTrue(state.getEndAddressComponents()[0].value?.value == "Skalitzer Straße 68")
-        assertTrue(state.getEndAddressComponents()[1].value?.type == AddressComponent.Type.CITY)
-        assertTrue(state.getEndAddressComponents()[1].value?.value == "Berlin")
-        assertTrue(state.getEndAddressComponents()[2].value?.type == AddressComponent.Type.COUNTRY)
-        assertTrue(state.getEndAddressComponents()[2].value?.value == "Germany")
+        assertTrue(state.getStartAddressComponents()[0].value?.type == AddressComponent.Type.CITY)
+        assertTrue(state.getStartAddressComponents()[0].value?.value == "Berlin")
+        assertTrue(state.getStartAddressComponents()[1].value?.type == AddressComponent.Type.COUNTRY)
+        assertTrue(state.getStartAddressComponents()[1].value?.value == "Germany")
+        assertTrue(state.getStartAddressComponents()[2].value?.type == AddressComponent.Type.COUNTRY_SHORT)
+        assertTrue(state.getStartAddressComponents()[2].value?.value == "DE")
+        assertTrue(state.getStartAddressComponents()[3].value?.type == AddressComponent.Type.DISTRICT)
+        assertTrue(state.getStartAddressComponents()[3].value?.value == "Berlin")
+        assertTrue(state.getStartAddressComponents()[4].value?.type == AddressComponent.Type.POSTAL_CODE)
+        assertTrue(state.getStartAddressComponents()[4].value?.value == "10117")
+        assertTrue(state.getStartAddressComponents()[5].value?.type == AddressComponent.Type.STREET)
+        assertTrue(state.getStartAddressComponents()[5].value?.value == "Skalitzer Straße 68")
+        assertTrue(state.getStartAddressComponents()[6].value?.type == AddressComponent.Type.STATE_PROVINCE)
+        assertTrue(state.getStartAddressComponents()[6].value?.value == "Brandenburg")
+        assertTrue(state.getStartAddressComponents()[7].value?.type == AddressComponent.Type.OTHER)
+        assertTrue(state.getStartAddressComponents()[7].value?.value == "Germany")
+        assertTrue(state.getEndAddressComponents()[0].value?.type == AddressComponent.Type.CITY)
+        assertTrue(state.getEndAddressComponents()[0].value?.value == "Berlin")
+        assertTrue(state.getEndAddressComponents()[1].value?.type == AddressComponent.Type.COUNTRY)
+        assertTrue(state.getEndAddressComponents()[1].value?.value == "Germany")
+        assertTrue(state.getEndAddressComponents()[2].value?.type == AddressComponent.Type.COUNTRY_SHORT)
+        assertTrue(state.getEndAddressComponents()[2].value?.value == "DE")
+        assertTrue(state.getEndAddressComponents()[3].value?.type == AddressComponent.Type.DISTRICT)
+        assertTrue(state.getEndAddressComponents()[3].value?.value == "Berlin")
+        assertTrue(state.getEndAddressComponents()[4].value?.type == AddressComponent.Type.POSTAL_CODE)
+        assertTrue(state.getEndAddressComponents()[4].value?.value == "10117")
+        assertTrue(state.getEndAddressComponents()[5].value?.type == AddressComponent.Type.STREET)
+        assertTrue(state.getEndAddressComponents()[5].value?.value == "Skalitzer Straße 68")
+        assertTrue(state.getEndAddressComponents()[6].value?.type == AddressComponent.Type.STATE_PROVINCE)
+        assertTrue(state.getEndAddressComponents()[6].value?.value == "Brandenburg")
+        assertTrue(state.getEndAddressComponents()[7].value?.type == AddressComponent.Type.OTHER)
+        assertTrue(state.getEndAddressComponents()[7].value?.value == "Germany")
     }
 }

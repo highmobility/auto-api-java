@@ -1472,7 +1472,10 @@ public class Charging {
          * Smart Charge Communication is active
          */
         SCC_IS_ACTIVE((byte) 0x01),
-        INACTIVE((byte) 0x02);
+        /**
+         * On/Off-peak setting is active (charges when electricity is cheaper)
+         */
+        PEAK_SETTING_ACTIVE((byte) 0x02);
     
         public static SmartChargingStatus fromByte(byte byteValue) throws CommandParseException {
             SmartChargingStatus[] values = SmartChargingStatus.values();

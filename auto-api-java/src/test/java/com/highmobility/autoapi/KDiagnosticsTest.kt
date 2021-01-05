@@ -43,7 +43,7 @@ class KDiagnosticsTest : BaseTest() {
             "06000D01000A12044070900000000000" +  // Estimated range is 256.0km
             "09000401000101" +  // Washer fluid is filled
             "0b000D01000A0a004028333333333333" +  // Battery voltage is 12.1V
-            "0c000D01000A19023fe199999999999a" +  // 0.55L of AdBlue remaining
+            "0c000B0100083feccccccccccccd" +  // AdBlue level is at 90%
             "0d000D01000A12044097706666666666" +  // 1'500.1km driven since reset
             "0e000D01000A12044028cccccccccccd" +  // 12.4km driven since the engine start
             "0f000D01000A19024041c00000000000" +  // 35.5L of fuel remaining
@@ -84,6 +84,8 @@ class KDiagnosticsTest : BaseTest() {
             "2100050100020101" +  // Front right tire pressure is low
             "2100050100020202" +  // Rear right tire pressure status alert
             "2100050100020300" +  // Rear left tire pressure is normal
+            "2100050100020400" +  // Rear right outer tire pressure is normal
+            "2100050100020500" +  // Rear left outer tire pressure is normal
             "22000401000100" +  // Brake lining wear pre-warning is inactive
             "23000B0100083fec28f5c28f5c29" +  // Engine oil life remaining is 88%
             "240024010021000531323349440018000a736f6d655f6572726f72000a736f6d655f76616c7565" +  // Trouble code '123ID' has a value 'some_value' for a key 'some_error'
@@ -92,7 +94,7 @@ class KDiagnosticsTest : BaseTest() {
             "26000B0100083fc47ae147ae147b" +  // Diesel exhaust particulate filter soot level is 16%
             "27001C01001900063830314331300002313600034341530006414354495645" +  // Confirmed trouble code '801C10' with ECU address '16' and variante name "CAS" is 'ACTIVE'
             "27001C01001900064435324334340002343800034341530006414354495645" +  // Confirmed trouble code 'D52C44' with ECU address '48' and variante name "CAS" is 'ACTIVE'
-            "280006010003010100" // Diesel 'exhaust filter' is in 'normal operation' and not cleaning
+            "280006010003000100" // Diesel 'exhaust filter' is in 'unknown' status and unknown cleaning state
     )
     
     @Test
@@ -112,7 +114,7 @@ class KDiagnosticsTest : BaseTest() {
         builder.setEstimatedRange(Property(Length(265.0, Length.Unit.KILOMETERS)))
         builder.setWasherFluidLevel(Property(FluidLevel.FILLED))
         builder.setBatteryVoltage(Property(ElectricPotentialDifference(12.1, ElectricPotentialDifference.Unit.VOLTS)))
-        builder.setAdBlueLevel(Property(Volume(0.55, Volume.Unit.LITERS)))
+        builder.setAdBlueLevel(Property(0.9))
         builder.setDistanceSinceReset(Property(Length(1500.1, Length.Unit.KILOMETERS)))
         builder.setDistanceSinceStart(Property(Length(12.4, Length.Unit.KILOMETERS)))
         builder.setFuelVolume(Property(Volume(35.5, Volume.Unit.LITERS)))
@@ -153,6 +155,8 @@ class KDiagnosticsTest : BaseTest() {
         builder.addTirePressureStatus(Property(TirePressureStatus(LocationWheel.FRONT_RIGHT, TirePressureStatus.Status.LOW)))
         builder.addTirePressureStatus(Property(TirePressureStatus(LocationWheel.REAR_RIGHT, TirePressureStatus.Status.ALERT)))
         builder.addTirePressureStatus(Property(TirePressureStatus(LocationWheel.REAR_LEFT, TirePressureStatus.Status.NORMAL)))
+        builder.addTirePressureStatus(Property(TirePressureStatus(LocationWheel.REAR_RIGHT_OUTER, TirePressureStatus.Status.NORMAL)))
+        builder.addTirePressureStatus(Property(TirePressureStatus(LocationWheel.REAR_LEFT_OUTER, TirePressureStatus.Status.NORMAL)))
         builder.setBrakeLiningWearPreWarning(Property(ActiveState.INACTIVE))
         builder.setEngineOilLifeRemaining(Property(0.88))
         builder.addOemTroubleCodeValue(Property(OemTroubleCodeValue("123ID", KeyValue("some_error", "some_value"))))
@@ -161,7 +165,7 @@ class KDiagnosticsTest : BaseTest() {
         builder.setDieselParticulateFilterSootLevel(Property(0.16))
         builder.addConfirmedTroubleCode(Property(ConfirmedTroubleCode("801C10", "16", "CAS", "ACTIVE")))
         builder.addConfirmedTroubleCode(Property(ConfirmedTroubleCode("D52C44", "48", "CAS", "ACTIVE")))
-        builder.setDieselExhaustFilterStatus(Property(DieselExhaustFilterStatus(DieselExhaustFilterStatus.Status.NORMAL_OPERATION, DieselExhaustFilterStatus.Component.EXHAUST_FILTER, DieselExhaustFilterStatus.Cleaning.UNKNOWN)))
+        builder.setDieselExhaustFilterStatus(Property(DieselExhaustFilterStatus(DieselExhaustFilterStatus.Status.UNKNOWN, DieselExhaustFilterStatus.Component.EXHAUST_FILTER, DieselExhaustFilterStatus.Cleaning.UNKNOWN)))
         testState(builder.build())
     }
     
@@ -181,8 +185,7 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(state.getWasherFluidLevel().value == FluidLevel.FILLED)
         assertTrue(state.getBatteryVoltage().value?.value == 12.1)
         assertTrue(state.getBatteryVoltage().value?.unit == ElectricPotentialDifference.Unit.VOLTS)
-        assertTrue(state.getAdBlueLevel().value?.value == 0.55)
-        assertTrue(state.getAdBlueLevel().value?.unit == Volume.Unit.LITERS)
+        assertTrue(state.getAdBlueLevel().value == 0.9)
         assertTrue(state.getDistanceSinceReset().value?.value == 1500.1)
         assertTrue(state.getDistanceSinceReset().value?.unit == Length.Unit.KILOMETERS)
         assertTrue(state.getDistanceSinceStart().value?.value == 12.4)
@@ -285,6 +288,10 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(state.getTirePressureStatuses()[2].value?.status == TirePressureStatus.Status.ALERT)
         assertTrue(state.getTirePressureStatuses()[3].value?.location == LocationWheel.REAR_LEFT)
         assertTrue(state.getTirePressureStatuses()[3].value?.status == TirePressureStatus.Status.NORMAL)
+        assertTrue(state.getTirePressureStatuses()[4].value?.location == LocationWheel.REAR_RIGHT_OUTER)
+        assertTrue(state.getTirePressureStatuses()[4].value?.status == TirePressureStatus.Status.NORMAL)
+        assertTrue(state.getTirePressureStatuses()[5].value?.location == LocationWheel.REAR_LEFT_OUTER)
+        assertTrue(state.getTirePressureStatuses()[5].value?.status == TirePressureStatus.Status.NORMAL)
         assertTrue(state.getBrakeLiningWearPreWarning().value == ActiveState.INACTIVE)
         assertTrue(state.getEngineOilLifeRemaining().value == 0.88)
         assertTrue(state.getOemTroubleCodeValues()[0].value?.id == "123ID")
@@ -304,7 +311,7 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(state.getConfirmedTroubleCodes()[1].value?.ecuAddress == "48")
         assertTrue(state.getConfirmedTroubleCodes()[1].value?.ecuVariantName == "CAS")
         assertTrue(state.getConfirmedTroubleCodes()[1].value?.status == "ACTIVE")
-        assertTrue(state.getDieselExhaustFilterStatus().value?.status == DieselExhaustFilterStatus.Status.NORMAL_OPERATION)
+        assertTrue(state.getDieselExhaustFilterStatus().value?.status == DieselExhaustFilterStatus.Status.UNKNOWN)
         assertTrue(state.getDieselExhaustFilterStatus().value?.component == DieselExhaustFilterStatus.Component.EXHAUST_FILTER)
         assertTrue(state.getDieselExhaustFilterStatus().value?.cleaning == DieselExhaustFilterStatus.Cleaning.UNKNOWN)
     }

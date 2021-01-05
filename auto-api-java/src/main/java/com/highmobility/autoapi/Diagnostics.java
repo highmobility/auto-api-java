@@ -196,7 +196,7 @@ public class Diagnostics {
         Property<Length> estimatedRange = new Property<>(Length.class, PROPERTY_ESTIMATED_RANGE);
         Property<FluidLevel> washerFluidLevel = new Property<>(FluidLevel.class, PROPERTY_WASHER_FLUID_LEVEL);
         Property<ElectricPotentialDifference> batteryVoltage = new Property<>(ElectricPotentialDifference.class, PROPERTY_BATTERY_VOLTAGE);
-        Property<Volume> adBlueLevel = new Property<>(Volume.class, PROPERTY_ADBLUE_LEVEL);
+        Property<Double> adBlueLevel = new Property<>(Double.class, PROPERTY_ADBLUE_LEVEL);
         Property<Length> distanceSinceReset = new Property<>(Length.class, PROPERTY_DISTANCE_SINCE_RESET);
         Property<Length> distanceSinceStart = new Property<>(Length.class, PROPERTY_DISTANCE_SINCE_START);
         Property<Volume> fuelVolume = new Property<>(Volume.class, PROPERTY_FUEL_VOLUME);
@@ -285,9 +285,9 @@ public class Diagnostics {
         }
     
         /**
-         * @return AdBlue level
+         * @return AdBlue level percentage between 0.0-1.0
          */
-        public Property<Volume> getAdBlueLevel() {
+        public Property<Double> getAdBlueLevel() {
             return adBlueLevel;
         }
     
@@ -634,7 +634,7 @@ public class Diagnostics {
             private Property<Length> estimatedRange;
             private Property<FluidLevel> washerFluidLevel;
             private Property<ElectricPotentialDifference> batteryVoltage;
-            private Property<Volume> adBlueLevel;
+            private Property<Double> adBlueLevel;
             private Property<Length> distanceSinceReset;
             private Property<Length> distanceSinceStart;
             private Property<Volume> fuelVolume;
@@ -755,10 +755,10 @@ public class Diagnostics {
             }
             
             /**
-             * @param adBlueLevel AdBlue level
+             * @param adBlueLevel AdBlue level percentage between 0.0-1.0
              * @return The builder
              */
-            public Builder setAdBlueLevel(Property<Volume> adBlueLevel) {
+            public Builder setAdBlueLevel(Property<Double> adBlueLevel) {
                 this.adBlueLevel = adBlueLevel.setIdentifier(PROPERTY_ADBLUE_LEVEL);
                 addProperty(this.adBlueLevel);
                 return this;
