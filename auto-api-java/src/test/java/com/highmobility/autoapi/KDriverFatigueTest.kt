@@ -42,7 +42,7 @@ class KDriverFatigueTest : BaseTest() {
     
     private fun testState(state: DriverFatigue.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getDetectedFatigueLevel().value == DriverFatigue.DetectedFatigueLevel.PAUSE_RECOMMENDED)
+        assertTrue(state.detectedFatigueLevel.value == DriverFatigue.DetectedFatigueLevel.PAUSE_RECOMMENDED)
     }
     
     @Test

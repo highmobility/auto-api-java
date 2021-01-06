@@ -52,8 +52,8 @@ class KMessagingTest : BaseTest() {
     
     private fun testState(state: Messaging.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getText().value == "Hey mom!")
-        assertTrue(state.getHandle().value == "Epp")
+        assertTrue(state.text.value == "Hey mom!")
+        assertTrue(state.handle.value == "Epp")
     }
     
     @Test
@@ -68,8 +68,8 @@ class KMessagingTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Messaging.MessageReceived
-        assertTrue(resolved.getText().value == "Hey mom!")
-        assertTrue(resolved.getHandle().value == "Epp")
+        assertTrue(resolved.text.value == "Hey mom!")
+        assertTrue(resolved.handle.value == "Epp")
         assertTrue(resolved == bytes)
     }
 }

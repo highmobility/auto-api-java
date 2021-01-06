@@ -53,7 +53,7 @@ class KHonkHornFlashLightsTest : BaseTest() {
     
     private fun testState(state: HonkHornFlashLights.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getFlashers().value == HonkHornFlashLights.Flashers.LEFT_FLASHER_ACTIVE)
+        assertTrue(state.flashers.value == HonkHornFlashLights.Flashers.LEFT_FLASHER_ACTIVE)
     }
     
     @Test
@@ -120,9 +120,9 @@ class KHonkHornFlashLightsTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as HonkHornFlashLights.HonkFlash
-        assertTrue(resolved.getFlashTimes().value == 5)
-        assertTrue(resolved.getHonkTime().value?.value == 2.0)
-        assertTrue(resolved.getHonkTime().value?.unit == Duration.Unit.SECONDS)
+        assertTrue(resolved.flashTimes.value == 5)
+        assertTrue(resolved.honkTime.value?.value == 2.0)
+        assertTrue(resolved.honkTime.value?.unit == Duration.Unit.SECONDS)
         assertTrue(resolved == bytes)
     }
     
@@ -137,7 +137,7 @@ class KHonkHornFlashLightsTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as HonkHornFlashLights.ActivateDeactivateEmergencyFlasher
-        assertTrue(resolved.getEmergencyFlashersState().value == ActiveState.ACTIVE)
+        assertTrue(resolved.emergencyFlashersState.value == ActiveState.ACTIVE)
         assertTrue(resolved == bytes)
     }
 }

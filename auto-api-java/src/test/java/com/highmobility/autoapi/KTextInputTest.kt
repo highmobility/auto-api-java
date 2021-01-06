@@ -41,7 +41,7 @@ class KTextInputTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as TextInput.TextInputCommand
-        assertTrue(resolved.getText().value == "Rendezvous with Rama")
+        assertTrue(resolved.text.value == "Rendezvous with Rama")
         assertTrue(resolved == bytes)
     }
 }

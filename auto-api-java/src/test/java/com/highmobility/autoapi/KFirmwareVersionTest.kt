@@ -55,11 +55,11 @@ class KFirmwareVersionTest : BaseTest() {
     
     private fun testState(state: FirmwareVersion.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getHmKitVersion().value?.major == 1)
-        assertTrue(state.getHmKitVersion().value?.minor == 15)
-        assertTrue(state.getHmKitVersion().value?.patch == 33)
-        assertTrue(state.getHmKitBuildName().value == "btstack-uart")
-        assertTrue(state.getApplicationVersion().value == "v1.5-prod")
+        assertTrue(state.hmKitVersion.value?.major == 1)
+        assertTrue(state.hmKitVersion.value?.minor == 15)
+        assertTrue(state.hmKitVersion.value?.patch == 33)
+        assertTrue(state.hmKitBuildName.value == "btstack-uart")
+        assertTrue(state.applicationVersion.value == "v1.5-prod")
     }
     
     @Test

@@ -53,8 +53,8 @@ class KPowerTakeoffTest : BaseTest() {
     
     private fun testState(state: PowerTakeoff.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getStatus().value == ActiveState.ACTIVE)
-        assertTrue(state.getEngaged().value == PowerTakeoff.Engaged.ENGAGED)
+        assertTrue(state.status.value == ActiveState.ACTIVE)
+        assertTrue(state.engaged.value == PowerTakeoff.Engaged.ENGAGED)
     }
     
     @Test
@@ -120,7 +120,7 @@ class KPowerTakeoffTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as PowerTakeoff.ActivateDeactivatePowerTakeoff
-        assertTrue(resolved.getStatus().value == ActiveState.ACTIVE)
+        assertTrue(resolved.status.value == ActiveState.ACTIVE)
         assertTrue(resolved == bytes)
     }
 }

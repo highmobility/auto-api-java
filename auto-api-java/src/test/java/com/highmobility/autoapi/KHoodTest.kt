@@ -50,7 +50,7 @@ class KHoodTest : BaseTest() {
     
     private fun testState(state: Hood.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getPosition().value == Hood.Position.OPEN)
+        assertTrue(state.position.value == Hood.Position.OPEN)
     }
     
     @Test

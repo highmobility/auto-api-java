@@ -55,9 +55,9 @@ class KIgnitionTest : BaseTest() {
     
     private fun testState(state: Ignition.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getStatus().value == OnOffState.OFF)
-        assertTrue(state.getAccessoriesStatus().value == OnOffState.ON)
-        assertTrue(state.getState().value == Ignition.IgnitionState.ACCESSORY)
+        assertTrue(state.status.value == OnOffState.OFF)
+        assertTrue(state.accessoriesStatus.value == OnOffState.ON)
+        assertTrue(state.state.value == Ignition.IgnitionState.ACCESSORY)
     }
     
     @Test
@@ -123,7 +123,7 @@ class KIgnitionTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Ignition.TurnIgnitionOnOff
-        assertTrue(resolved.getStatus().value == OnOffState.OFF)
+        assertTrue(resolved.status.value == OnOffState.OFF)
         assertTrue(resolved == bytes)
     }
 }

@@ -51,7 +51,7 @@ class KValetModeTest : BaseTest() {
     
     private fun testState(state: ValetMode.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getStatus().value == ActiveState.ACTIVE)
+        assertTrue(state.status.value == ActiveState.ACTIVE)
     }
     
     @Test
@@ -91,7 +91,7 @@ class KValetModeTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as ValetMode.ActivateDeactivateValetMode
-        assertTrue(resolved.getStatus().value == ActiveState.ACTIVE)
+        assertTrue(resolved.status.value == ActiveState.ACTIVE)
         assertTrue(resolved == bytes)
     }
 }

@@ -53,10 +53,10 @@ class KLightConditionsTest : BaseTest() {
     
     private fun testState(state: LightConditions.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getOutsideLight().value?.value == 111000.0)
-        assertTrue(state.getOutsideLight().value?.unit == Illuminance.Unit.LUX)
-        assertTrue(state.getInsideLight().value?.value == 0.25)
-        assertTrue(state.getInsideLight().value?.unit == Illuminance.Unit.LUX)
+        assertTrue(state.outsideLight.value?.value == 111000.0)
+        assertTrue(state.outsideLight.value?.unit == Illuminance.Unit.LUX)
+        assertTrue(state.insideLight.value?.value == 0.25)
+        assertTrue(state.insideLight.value?.unit == Illuminance.Unit.LUX)
     }
     
     @Test

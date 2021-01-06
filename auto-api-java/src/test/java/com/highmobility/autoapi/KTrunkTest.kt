@@ -53,8 +53,8 @@ class KTrunkTest : BaseTest() {
     
     private fun testState(state: Trunk.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getLock().value == LockState.UNLOCKED)
-        assertTrue(state.getPosition().value == Position.OPEN)
+        assertTrue(state.lock.value == LockState.UNLOCKED)
+        assertTrue(state.position.value == Position.OPEN)
     }
     
     @Test
@@ -121,8 +121,8 @@ class KTrunkTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Trunk.ControlTrunk
-        assertTrue(resolved.getLock().value == LockState.UNLOCKED)
-        assertTrue(resolved.getPosition().value == Position.OPEN)
+        assertTrue(resolved.lock.value == LockState.UNLOCKED)
+        assertTrue(resolved.position.value == Position.OPEN)
         assertTrue(resolved == bytes)
     }
 }

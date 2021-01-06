@@ -87,36 +87,36 @@ class KHomeChargerTest : BaseTest() {
     
     private fun testState(state: HomeCharger.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getChargingStatus().value == HomeCharger.ChargingStatus.CHARGING)
-        assertTrue(state.getAuthenticationMechanism().value == HomeCharger.AuthenticationMechanism.APP)
-        assertTrue(state.getPlugType().value == HomeCharger.PlugType.TYPE_2)
-        assertTrue(state.getChargingPowerKW().value?.value == 11.5)
-        assertTrue(state.getChargingPowerKW().value?.unit == Power.Unit.KILOWATTS)
-        assertTrue(state.getSolarCharging().value == ActiveState.ACTIVE)
-        assertTrue(state.getWifiHotspotEnabled().value == EnabledState.ENABLED)
-        assertTrue(state.getWifiHotspotSSID().value == "Charger 7612")
-        assertTrue(state.getWiFiHotspotSecurity().value == NetworkSecurity.WPA2_PERSONAL)
-        assertTrue(state.getWiFiHotspotPassword().value == "ZW3vARNUBe")
-        assertTrue(state.getAuthenticationState().value == HomeCharger.AuthenticationState.AUTHENTICATED)
-        assertTrue(state.getChargeCurrent().value?.value == 0.5)
-        assertTrue(state.getChargeCurrent().value?.unit == ElectricCurrent.Unit.AMPERES)
-        assertTrue(state.getMaximumChargeCurrent().value?.value == 1.0)
-        assertTrue(state.getMaximumChargeCurrent().value?.unit == ElectricCurrent.Unit.AMPERES)
-        assertTrue(state.getMinimumChargeCurrent().value?.value == 0.1)
-        assertTrue(state.getMinimumChargeCurrent().value?.unit == ElectricCurrent.Unit.AMPERES)
-        assertTrue(state.getCoordinates().value?.latitude == 52.520008)
-        assertTrue(state.getCoordinates().value?.longitude == 13.404954)
-        assertTrue(state.getPriceTariffs()[0].value?.pricingType == PriceTariff.PricingType.STARTING_FEE)
-        assertTrue(state.getPriceTariffs()[0].value?.price == 4.5)
-        assertTrue(state.getPriceTariffs()[0].value?.currency == "EUR")
-        assertTrue(state.getPriceTariffs()[1].value?.pricingType == PriceTariff.PricingType.PER_MINUTE)
-        assertTrue(state.getPriceTariffs()[1].value?.price == 0.3)
-        assertTrue(state.getPriceTariffs()[1].value?.currency == "EUR")
-        assertTrue(state.getPriceTariffs()[2].value?.pricingType == PriceTariff.PricingType.PER_KWH)
-        assertTrue(state.getPriceTariffs()[2].value?.price == 0.3)
-        assertTrue(state.getPriceTariffs()[2].value?.currency == "Ripple")
-        assertTrue(state.getChargingPower().value?.value == 350.0)
-        assertTrue(state.getChargingPower().value?.unit == Power.Unit.KILOWATTS)
+        assertTrue(state.chargingStatus.value == HomeCharger.ChargingStatus.CHARGING)
+        assertTrue(state.authenticationMechanism.value == HomeCharger.AuthenticationMechanism.APP)
+        assertTrue(state.plugType.value == HomeCharger.PlugType.TYPE_2)
+        assertTrue(state.chargingPowerKW.value?.value == 11.5)
+        assertTrue(state.chargingPowerKW.value?.unit == Power.Unit.KILOWATTS)
+        assertTrue(state.solarCharging.value == ActiveState.ACTIVE)
+        assertTrue(state.wifiHotspotEnabled.value == EnabledState.ENABLED)
+        assertTrue(state.wifiHotspotSSID.value == "Charger 7612")
+        assertTrue(state.wiFiHotspotSecurity.value == NetworkSecurity.WPA2_PERSONAL)
+        assertTrue(state.wiFiHotspotPassword.value == "ZW3vARNUBe")
+        assertTrue(state.authenticationState.value == HomeCharger.AuthenticationState.AUTHENTICATED)
+        assertTrue(state.chargeCurrent.value?.value == 0.5)
+        assertTrue(state.chargeCurrent.value?.unit == ElectricCurrent.Unit.AMPERES)
+        assertTrue(state.maximumChargeCurrent.value?.value == 1.0)
+        assertTrue(state.maximumChargeCurrent.value?.unit == ElectricCurrent.Unit.AMPERES)
+        assertTrue(state.minimumChargeCurrent.value?.value == 0.1)
+        assertTrue(state.minimumChargeCurrent.value?.unit == ElectricCurrent.Unit.AMPERES)
+        assertTrue(state.coordinates.value?.latitude == 52.520008)
+        assertTrue(state.coordinates.value?.longitude == 13.404954)
+        assertTrue(state.priceTariffs[0].value?.pricingType == PriceTariff.PricingType.STARTING_FEE)
+        assertTrue(state.priceTariffs[0].value?.price == 4.5)
+        assertTrue(state.priceTariffs[0].value?.currency == "EUR")
+        assertTrue(state.priceTariffs[1].value?.pricingType == PriceTariff.PricingType.PER_MINUTE)
+        assertTrue(state.priceTariffs[1].value?.price == 0.3)
+        assertTrue(state.priceTariffs[1].value?.currency == "EUR")
+        assertTrue(state.priceTariffs[2].value?.pricingType == PriceTariff.PricingType.PER_KWH)
+        assertTrue(state.priceTariffs[2].value?.price == 0.3)
+        assertTrue(state.priceTariffs[2].value?.currency == "Ripple")
+        assertTrue(state.chargingPower.value?.value == 350.0)
+        assertTrue(state.chargingPower.value?.unit == Power.Unit.KILOWATTS)
     }
     
     @Test
@@ -182,8 +182,8 @@ class KHomeChargerTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as HomeCharger.SetChargeCurrent
-        assertTrue(resolved.getChargeCurrent().value?.value == 0.5)
-        assertTrue(resolved.getChargeCurrent().value?.unit == ElectricCurrent.Unit.AMPERES)
+        assertTrue(resolved.chargeCurrent.value?.value == 0.5)
+        assertTrue(resolved.chargeCurrent.value?.unit == ElectricCurrent.Unit.AMPERES)
         assertTrue(resolved == bytes)
     }
     
@@ -203,15 +203,15 @@ class KHomeChargerTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as HomeCharger.SetPriceTariffs
-        assertTrue(resolved.getPriceTariffs()[0].value?.pricingType == PriceTariff.PricingType.STARTING_FEE)
-        assertTrue(resolved.getPriceTariffs()[0].value?.price == 4.5)
-        assertTrue(resolved.getPriceTariffs()[0].value?.currency == "EUR")
-        assertTrue(resolved.getPriceTariffs()[1].value?.pricingType == PriceTariff.PricingType.PER_MINUTE)
-        assertTrue(resolved.getPriceTariffs()[1].value?.price == 0.3)
-        assertTrue(resolved.getPriceTariffs()[1].value?.currency == "EUR")
-        assertTrue(resolved.getPriceTariffs()[2].value?.pricingType == PriceTariff.PricingType.PER_KWH)
-        assertTrue(resolved.getPriceTariffs()[2].value?.price == 0.3)
-        assertTrue(resolved.getPriceTariffs()[2].value?.currency == "Ripple")
+        assertTrue(resolved.priceTariffs[0].value?.pricingType == PriceTariff.PricingType.STARTING_FEE)
+        assertTrue(resolved.priceTariffs[0].value?.price == 4.5)
+        assertTrue(resolved.priceTariffs[0].value?.currency == "EUR")
+        assertTrue(resolved.priceTariffs[1].value?.pricingType == PriceTariff.PricingType.PER_MINUTE)
+        assertTrue(resolved.priceTariffs[1].value?.price == 0.3)
+        assertTrue(resolved.priceTariffs[1].value?.currency == "EUR")
+        assertTrue(resolved.priceTariffs[2].value?.pricingType == PriceTariff.PricingType.PER_KWH)
+        assertTrue(resolved.priceTariffs[2].value?.price == 0.3)
+        assertTrue(resolved.priceTariffs[2].value?.currency == "Ripple")
         assertTrue(resolved == bytes)
     }
     
@@ -226,7 +226,7 @@ class KHomeChargerTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as HomeCharger.ActivateDeactivateSolarCharging
-        assertTrue(resolved.getSolarCharging().value == ActiveState.ACTIVE)
+        assertTrue(resolved.solarCharging.value == ActiveState.ACTIVE)
         assertTrue(resolved == bytes)
     }
     
@@ -241,7 +241,7 @@ class KHomeChargerTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as HomeCharger.EnableDisableWiFiHotspot
-        assertTrue(resolved.getWifiHotspotEnabled().value == EnabledState.ENABLED)
+        assertTrue(resolved.wifiHotspotEnabled.value == EnabledState.ENABLED)
         assertTrue(resolved == bytes)
     }
     
@@ -256,7 +256,7 @@ class KHomeChargerTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as HomeCharger.AuthenticateExpire
-        assertTrue(resolved.getAuthenticationState().value == HomeCharger.AuthenticationState.AUTHENTICATED)
+        assertTrue(resolved.authenticationState.value == HomeCharger.AuthenticationState.AUTHENTICATED)
         assertTrue(resolved == bytes)
     }
 }

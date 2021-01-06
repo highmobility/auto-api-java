@@ -65,16 +65,16 @@ class KWindscreenTest : BaseTest() {
     
     private fun testState(state: Windscreen.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getWipersStatus().value == Windscreen.WipersStatus.AUTOMATIC)
-        assertTrue(state.getWipersIntensity().value == Windscreen.WipersIntensity.LEVEL_3)
-        assertTrue(state.getWindscreenDamage().value == Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED)
-        assertTrue(state.getWindscreenZoneMatrix().value?.horizontal == 4)
-        assertTrue(state.getWindscreenZoneMatrix().value?.vertical == 3)
-        assertTrue(state.getWindscreenDamageZone().value?.horizontal == 1)
-        assertTrue(state.getWindscreenDamageZone().value?.vertical == 2)
-        assertTrue(state.getWindscreenNeedsReplacement().value == Windscreen.WindscreenNeedsReplacement.NO_REPLACEMENT_NEEDED)
-        assertTrue(state.getWindscreenDamageConfidence().value == 0.95)
-        assertTrue(dateIsSame(state.getWindscreenDamageDetectionTime().value, "2017-01-10T16:32:05.000Z"))
+        assertTrue(state.wipersStatus.value == Windscreen.WipersStatus.AUTOMATIC)
+        assertTrue(state.wipersIntensity.value == Windscreen.WipersIntensity.LEVEL_3)
+        assertTrue(state.windscreenDamage.value == Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED)
+        assertTrue(state.windscreenZoneMatrix.value?.horizontal == 4)
+        assertTrue(state.windscreenZoneMatrix.value?.vertical == 3)
+        assertTrue(state.windscreenDamageZone.value?.horizontal == 1)
+        assertTrue(state.windscreenDamageZone.value?.vertical == 2)
+        assertTrue(state.windscreenNeedsReplacement.value == Windscreen.WindscreenNeedsReplacement.NO_REPLACEMENT_NEEDED)
+        assertTrue(state.windscreenDamageConfidence.value == 0.95)
+        assertTrue(dateIsSame(state.windscreenDamageDetectionTime.value, "2017-01-10T16:32:05.000Z"))
     }
     
     @Test
@@ -141,9 +141,9 @@ class KWindscreenTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Windscreen.SetWindscreenDamage
-        assertTrue(resolved.getWindscreenDamage().value == Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED)
-        assertTrue(resolved.getWindscreenDamageZone().value?.horizontal == 1)
-        assertTrue(resolved.getWindscreenDamageZone().value?.vertical == 2)
+        assertTrue(resolved.windscreenDamage.value == Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED)
+        assertTrue(resolved.windscreenDamageZone.value?.horizontal == 1)
+        assertTrue(resolved.windscreenDamageZone.value?.vertical == 2)
         assertTrue(resolved == bytes)
     }
     
@@ -158,7 +158,7 @@ class KWindscreenTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Windscreen.SetWindscreenReplacementNeeded
-        assertTrue(resolved.getWindscreenNeedsReplacement().value == Windscreen.WindscreenNeedsReplacement.NO_REPLACEMENT_NEEDED)
+        assertTrue(resolved.windscreenNeedsReplacement.value == Windscreen.WindscreenNeedsReplacement.NO_REPLACEMENT_NEEDED)
         assertTrue(resolved == bytes)
     }
     
@@ -174,8 +174,8 @@ class KWindscreenTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Windscreen.ControlWipers
-        assertTrue(resolved.getWipersStatus().value == Windscreen.WipersStatus.AUTOMATIC)
-        assertTrue(resolved.getWipersIntensity().value == Windscreen.WipersIntensity.LEVEL_3)
+        assertTrue(resolved.wipersStatus.value == Windscreen.WipersStatus.AUTOMATIC)
+        assertTrue(resolved.wipersIntensity.value == Windscreen.WipersIntensity.LEVEL_3)
         assertTrue(resolved == bytes)
     }
 }

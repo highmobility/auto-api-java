@@ -41,7 +41,7 @@ class KBrowserTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Browser.LoadUrl
-        assertTrue(resolved.getUrl().value == "https://about.high-mobility.com")
+        assertTrue(resolved.url.value == "https://about.high-mobility.com")
         assertTrue(resolved == bytes)
     }
 }

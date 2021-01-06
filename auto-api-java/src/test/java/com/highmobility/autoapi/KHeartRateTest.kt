@@ -42,8 +42,8 @@ class KHeartRateTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as HeartRate.SendHeartRate
-        assertTrue(resolved.getHeartRate().value?.value == 64.0)
-        assertTrue(resolved.getHeartRate().value?.unit == Frequency.Unit.TIMES_PER_MINUTE)
+        assertTrue(resolved.heartRate.value?.value == 64.0)
+        assertTrue(resolved.heartRate.value?.unit == Frequency.Unit.TIMES_PER_MINUTE)
         assertTrue(resolved == bytes)
     }
 }

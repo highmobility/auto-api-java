@@ -58,14 +58,14 @@ class KVehicleLocationTest : BaseTest() {
     
     private fun testState(state: VehicleLocation.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getCoordinates().value?.latitude == 52.520008)
-        assertTrue(state.getCoordinates().value?.longitude == 13.404954)
-        assertTrue(state.getHeading().value?.value == 13.370123)
-        assertTrue(state.getHeading().value?.unit == Angle.Unit.DEGREES)
-        assertTrue(state.getAltitude().value?.value == 133.5)
-        assertTrue(state.getAltitude().value?.unit == Length.Unit.METERS)
-        assertTrue(state.getPrecision().value?.value == 500.0)
-        assertTrue(state.getPrecision().value?.unit == Length.Unit.METERS)
+        assertTrue(state.coordinates.value?.latitude == 52.520008)
+        assertTrue(state.coordinates.value?.longitude == 13.404954)
+        assertTrue(state.heading.value?.value == 13.370123)
+        assertTrue(state.heading.value?.unit == Angle.Unit.DEGREES)
+        assertTrue(state.altitude.value?.value == 133.5)
+        assertTrue(state.altitude.value?.unit == Length.Unit.METERS)
+        assertTrue(state.precision.value?.value == 500.0)
+        assertTrue(state.precision.value?.unit == Length.Unit.METERS)
     }
     
     @Test

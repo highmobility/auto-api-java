@@ -51,8 +51,8 @@ class KVehicleTimeTest : BaseTest() {
     
     private fun testState(state: VehicleTime.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getVehicleTime().value?.hour == 19)
-        assertTrue(state.getVehicleTime().value?.minute == 55)
+        assertTrue(state.vehicleTime.value?.hour == 19)
+        assertTrue(state.vehicleTime.value?.minute == 55)
     }
     
     @Test

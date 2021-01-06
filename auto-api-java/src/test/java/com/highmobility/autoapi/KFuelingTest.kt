@@ -53,8 +53,8 @@ class KFuelingTest : BaseTest() {
     
     private fun testState(state: Fueling.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getGasFlapLock().value == LockState.LOCKED)
-        assertTrue(state.getGasFlapPosition().value == Position.CLOSED)
+        assertTrue(state.gasFlapLock.value == LockState.LOCKED)
+        assertTrue(state.gasFlapPosition.value == Position.CLOSED)
     }
     
     @Test
@@ -121,8 +121,8 @@ class KFuelingTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Fueling.ControlGasFlap
-        assertTrue(resolved.getGasFlapLock().value == LockState.LOCKED)
-        assertTrue(resolved.getGasFlapPosition().value == Position.CLOSED)
+        assertTrue(resolved.gasFlapLock.value == LockState.LOCKED)
+        assertTrue(resolved.gasFlapPosition.value == Position.CLOSED)
         assertTrue(resolved == bytes)
     }
 }

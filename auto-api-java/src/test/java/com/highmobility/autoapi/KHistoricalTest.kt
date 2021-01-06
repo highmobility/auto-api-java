@@ -52,8 +52,8 @@ class KHistoricalTest : BaseTest() {
     
     private fun testState(state: Historical.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getStates()[0].value == CommandResolver.resolve("0c0020010600040100010004000501000200010400050100020201a2000b010008000001598938e788"))
-        assertTrue(state.getStates()[1].value == CommandResolver.resolve("0c0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788"))
+        assertTrue(state.states[0].value == CommandResolver.resolve("0c0020010600040100010004000501000200010400050100020201a2000b010008000001598938e788"))
+        assertTrue(state.states[1].value == CommandResolver.resolve("0c0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788"))
     }
     
     @Test
@@ -69,9 +69,9 @@ class KHistoricalTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Historical.RequestStates
-        assertTrue(resolved.getCapabilityID().value == 0x0060)
-        assertTrue(dateIsSame(resolved.getStartDate().value, "2019-10-07T13:04:32.000Z"))
-        assertTrue(dateIsSame(resolved.getEndDate().value, "2019-09-27T08:42:30.000Z"))
+        assertTrue(resolved.capabilityID.value == 0x0060)
+        assertTrue(dateIsSame(resolved.startDate.value, "2019-10-07T13:04:32.000Z"))
+        assertTrue(dateIsSame(resolved.endDate.value, "2019-09-27T08:42:30.000Z"))
         assertTrue(resolved == bytes)
     }
     

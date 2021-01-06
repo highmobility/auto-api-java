@@ -51,7 +51,7 @@ class KParkingBrakeTest : BaseTest() {
     
     private fun testState(state: ParkingBrake.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getStatus().value == ActiveState.ACTIVE)
+        assertTrue(state.status.value == ActiveState.ACTIVE)
     }
     
     @Test
@@ -91,7 +91,7 @@ class KParkingBrakeTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as ParkingBrake.SetParkingBrake
-        assertTrue(resolved.getStatus().value == ActiveState.ACTIVE)
+        assertTrue(resolved.status.value == ActiveState.ACTIVE)
         assertTrue(resolved == bytes)
     }
 }

@@ -72,32 +72,32 @@ class KChassisSettingsTest : BaseTest() {
     
     private fun testState(state: ChassisSettings.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getDrivingMode().value == DrivingMode.ECO)
-        assertTrue(state.getSportChrono().value == ChassisSettings.SportChrono.ACTIVE)
-        assertTrue(state.getCurrentSpringRates()[0].value?.axle == Axle.FRONT)
-        assertTrue(state.getCurrentSpringRates()[0].value?.springRate?.value == 21.0)
-        assertTrue(state.getCurrentSpringRates()[0].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
-        assertTrue(state.getCurrentSpringRates()[1].value?.axle == Axle.REAR)
-        assertTrue(state.getCurrentSpringRates()[1].value?.springRate?.value == 23.0)
-        assertTrue(state.getCurrentSpringRates()[1].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
-        assertTrue(state.getMaximumSpringRates()[0].value?.axle == Axle.FRONT)
-        assertTrue(state.getMaximumSpringRates()[0].value?.springRate?.value == 37.0)
-        assertTrue(state.getMaximumSpringRates()[0].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
-        assertTrue(state.getMaximumSpringRates()[1].value?.axle == Axle.REAR)
-        assertTrue(state.getMaximumSpringRates()[1].value?.springRate?.value == 39.0)
-        assertTrue(state.getMaximumSpringRates()[1].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
-        assertTrue(state.getMinimumSpringRates()[0].value?.axle == Axle.FRONT)
-        assertTrue(state.getMinimumSpringRates()[0].value?.springRate?.value == 16.0)
-        assertTrue(state.getMinimumSpringRates()[0].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
-        assertTrue(state.getMinimumSpringRates()[1].value?.axle == Axle.REAR)
-        assertTrue(state.getMinimumSpringRates()[1].value?.springRate?.value == 18.0)
-        assertTrue(state.getMinimumSpringRates()[1].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
-        assertTrue(state.getCurrentChassisPosition().value?.value == 25.4)
-        assertTrue(state.getCurrentChassisPosition().value?.unit == Length.Unit.MILLIMETERS)
-        assertTrue(state.getMaximumChassisPosition().value?.value == 55.5)
-        assertTrue(state.getMaximumChassisPosition().value?.unit == Length.Unit.MILLIMETERS)
-        assertTrue(state.getMinimumChassisPosition().value?.value == -28.4)
-        assertTrue(state.getMinimumChassisPosition().value?.unit == Length.Unit.MILLIMETERS)
+        assertTrue(state.drivingMode.value == DrivingMode.ECO)
+        assertTrue(state.sportChrono.value == ChassisSettings.SportChrono.ACTIVE)
+        assertTrue(state.currentSpringRates[0].value?.axle == Axle.FRONT)
+        assertTrue(state.currentSpringRates[0].value?.springRate?.value == 21.0)
+        assertTrue(state.currentSpringRates[0].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
+        assertTrue(state.currentSpringRates[1].value?.axle == Axle.REAR)
+        assertTrue(state.currentSpringRates[1].value?.springRate?.value == 23.0)
+        assertTrue(state.currentSpringRates[1].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
+        assertTrue(state.maximumSpringRates[0].value?.axle == Axle.FRONT)
+        assertTrue(state.maximumSpringRates[0].value?.springRate?.value == 37.0)
+        assertTrue(state.maximumSpringRates[0].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
+        assertTrue(state.maximumSpringRates[1].value?.axle == Axle.REAR)
+        assertTrue(state.maximumSpringRates[1].value?.springRate?.value == 39.0)
+        assertTrue(state.maximumSpringRates[1].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
+        assertTrue(state.minimumSpringRates[0].value?.axle == Axle.FRONT)
+        assertTrue(state.minimumSpringRates[0].value?.springRate?.value == 16.0)
+        assertTrue(state.minimumSpringRates[0].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
+        assertTrue(state.minimumSpringRates[1].value?.axle == Axle.REAR)
+        assertTrue(state.minimumSpringRates[1].value?.springRate?.value == 18.0)
+        assertTrue(state.minimumSpringRates[1].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
+        assertTrue(state.currentChassisPosition.value?.value == 25.4)
+        assertTrue(state.currentChassisPosition.value?.unit == Length.Unit.MILLIMETERS)
+        assertTrue(state.maximumChassisPosition.value?.value == 55.5)
+        assertTrue(state.maximumChassisPosition.value?.unit == Length.Unit.MILLIMETERS)
+        assertTrue(state.minimumChassisPosition.value?.value == -28.4)
+        assertTrue(state.minimumChassisPosition.value?.unit == Length.Unit.MILLIMETERS)
     }
     
     @Test
@@ -163,7 +163,7 @@ class KChassisSettingsTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as ChassisSettings.SetDrivingMode
-        assertTrue(resolved.getDrivingMode().value == DrivingMode.ECO)
+        assertTrue(resolved.drivingMode.value == DrivingMode.ECO)
         assertTrue(resolved == bytes)
     }
     
@@ -178,7 +178,7 @@ class KChassisSettingsTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as ChassisSettings.StartStopSportsChrono
-        assertTrue(resolved.getSportChrono().value == ChassisSettings.SportChrono.ACTIVE)
+        assertTrue(resolved.sportChrono.value == ChassisSettings.SportChrono.ACTIVE)
         assertTrue(resolved == bytes)
     }
     
@@ -196,12 +196,12 @@ class KChassisSettingsTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as ChassisSettings.SetSpringRates
-        assertTrue(resolved.getCurrentSpringRates()[0].value?.axle == Axle.FRONT)
-        assertTrue(resolved.getCurrentSpringRates()[0].value?.springRate?.value == 21.0)
-        assertTrue(resolved.getCurrentSpringRates()[0].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
-        assertTrue(resolved.getCurrentSpringRates()[1].value?.axle == Axle.REAR)
-        assertTrue(resolved.getCurrentSpringRates()[1].value?.springRate?.value == 23.0)
-        assertTrue(resolved.getCurrentSpringRates()[1].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
+        assertTrue(resolved.currentSpringRates[0].value?.axle == Axle.FRONT)
+        assertTrue(resolved.currentSpringRates[0].value?.springRate?.value == 21.0)
+        assertTrue(resolved.currentSpringRates[0].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
+        assertTrue(resolved.currentSpringRates[1].value?.axle == Axle.REAR)
+        assertTrue(resolved.currentSpringRates[1].value?.springRate?.value == 23.0)
+        assertTrue(resolved.currentSpringRates[1].value?.springRate?.unit == Torque.Unit.NEWTON_MILLIMETERS)
         assertTrue(resolved == bytes)
     }
     
@@ -216,8 +216,8 @@ class KChassisSettingsTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as ChassisSettings.SetChassisPosition
-        assertTrue(resolved.getCurrentChassisPosition().value?.value == 25.4)
-        assertTrue(resolved.getCurrentChassisPosition().value?.unit == Length.Unit.MILLIMETERS)
+        assertTrue(resolved.currentChassisPosition.value?.value == 25.4)
+        assertTrue(resolved.currentChassisPosition.value?.unit == Length.Unit.MILLIMETERS)
         assertTrue(resolved == bytes)
     }
 }

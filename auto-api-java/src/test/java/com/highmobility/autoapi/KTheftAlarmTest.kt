@@ -63,13 +63,13 @@ class KTheftAlarmTest : BaseTest() {
     
     private fun testState(state: TheftAlarm.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getStatus().value == TheftAlarm.Status.ARMED)
-        assertTrue(state.getInteriorProtectionStatus().value == ActiveSelectedState.ACTIVE)
-        assertTrue(state.getTowProtectionStatus().value == ActiveSelectedState.ACTIVE)
-        assertTrue(state.getLastWarningReason().value == TheftAlarm.LastWarningReason.HOOD)
-        assertTrue(dateIsSame(state.getLastEvent().value, "2020-06-16T11:10:02.000Z"))
-        assertTrue(state.getLastEventLevel().value == TheftAlarm.LastEventLevel.LOW)
-        assertTrue(state.getEventType().value == TheftAlarm.EventType.REAR_RIGHT)
+        assertTrue(state.status.value == TheftAlarm.Status.ARMED)
+        assertTrue(state.interiorProtectionStatus.value == ActiveSelectedState.ACTIVE)
+        assertTrue(state.towProtectionStatus.value == ActiveSelectedState.ACTIVE)
+        assertTrue(state.lastWarningReason.value == TheftAlarm.LastWarningReason.HOOD)
+        assertTrue(dateIsSame(state.lastEvent.value, "2020-06-16T11:10:02.000Z"))
+        assertTrue(state.lastEventLevel.value == TheftAlarm.LastEventLevel.LOW)
+        assertTrue(state.eventType.value == TheftAlarm.EventType.REAR_RIGHT)
     }
     
     @Test
@@ -135,7 +135,7 @@ class KTheftAlarmTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as TheftAlarm.SetTheftAlarm
-        assertTrue(resolved.getStatus().value == TheftAlarm.Status.ARMED)
+        assertTrue(resolved.status.value == TheftAlarm.Status.ARMED)
         assertTrue(resolved == bytes)
     }
 }

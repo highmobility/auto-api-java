@@ -62,15 +62,15 @@ class KNaviDestinationTest : BaseTest() {
     
     private fun testState(state: NaviDestination.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getCoordinates().value?.latitude == 52.520008)
-        assertTrue(state.getCoordinates().value?.longitude == 13.404954)
-        assertTrue(state.getDestinationName().value == "Berlin")
-        assertTrue(state.getDataSlotsFree().value == 14)
-        assertTrue(state.getDataSlotsMax().value == 30)
-        assertTrue(state.getArrivalDuration().value?.value == 2.6)
-        assertTrue(state.getArrivalDuration().value?.unit == Duration.Unit.HOURS)
-        assertTrue(state.getDistanceToDestination().value?.value == 1337.0)
-        assertTrue(state.getDistanceToDestination().value?.unit == Length.Unit.KILOMETERS)
+        assertTrue(state.coordinates.value?.latitude == 52.520008)
+        assertTrue(state.coordinates.value?.longitude == 13.404954)
+        assertTrue(state.destinationName.value == "Berlin")
+        assertTrue(state.dataSlotsFree.value == 14)
+        assertTrue(state.dataSlotsMax.value == 30)
+        assertTrue(state.arrivalDuration.value?.value == 2.6)
+        assertTrue(state.arrivalDuration.value?.unit == Duration.Unit.HOURS)
+        assertTrue(state.distanceToDestination.value?.value == 1337.0)
+        assertTrue(state.distanceToDestination.value?.unit == Length.Unit.KILOMETERS)
     }
     
     @Test
@@ -137,9 +137,9 @@ class KNaviDestinationTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as NaviDestination.SetNaviDestination
-        assertTrue(resolved.getCoordinates().value?.latitude == 52.520008)
-        assertTrue(resolved.getCoordinates().value?.longitude == 13.404954)
-        assertTrue(resolved.getDestinationName().value == "Berlin")
+        assertTrue(resolved.coordinates.value?.latitude == 52.520008)
+        assertTrue(resolved.coordinates.value?.longitude == 13.404954)
+        assertTrue(resolved.destinationName.value == "Berlin")
         assertTrue(resolved == bytes)
     }
 }

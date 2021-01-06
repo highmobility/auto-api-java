@@ -58,11 +58,11 @@ class KParkingTicketTest : BaseTest() {
     
     private fun testState(state: ParkingTicket.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getStatus().value == ParkingTicket.Status.ENDED)
-        assertTrue(state.getOperatorName().value == "Berlin Parking")
-        assertTrue(state.getOperatorTicketID().value == "6489AB4233")
-        assertTrue(dateIsSame(state.getTicketStartTime().value, "2017-01-10T19:34:22.000Z"))
-        assertTrue(dateIsSame(state.getTicketEndTime().value, "2019-10-08T11:21:45.000Z"))
+        assertTrue(state.status.value == ParkingTicket.Status.ENDED)
+        assertTrue(state.operatorName.value == "Berlin Parking")
+        assertTrue(state.operatorTicketID.value == "6489AB4233")
+        assertTrue(dateIsSame(state.ticketStartTime.value, "2017-01-10T19:34:22.000Z"))
+        assertTrue(dateIsSame(state.ticketEndTime.value, "2019-10-08T11:21:45.000Z"))
     }
     
     @Test
@@ -132,10 +132,10 @@ class KParkingTicketTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as ParkingTicket.StartParking
-        assertTrue(resolved.getOperatorName().value == "Berlin Parking")
-        assertTrue(resolved.getOperatorTicketID().value == "6489AB4233")
-        assertTrue(dateIsSame(resolved.getTicketStartTime().value, "2017-01-10T19:34:22.000Z"))
-        assertTrue(dateIsSame(resolved.getTicketEndTime().value, "2019-10-08T11:21:45.000Z"))
+        assertTrue(resolved.operatorName.value == "Berlin Parking")
+        assertTrue(resolved.operatorTicketID.value == "6489AB4233")
+        assertTrue(dateIsSame(resolved.ticketStartTime.value, "2017-01-10T19:34:22.000Z"))
+        assertTrue(dateIsSame(resolved.ticketEndTime.value, "2019-10-08T11:21:45.000Z"))
         assertTrue(resolved == bytes)
     }
     

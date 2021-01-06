@@ -57,14 +57,14 @@ class KCapabilitiesTest : BaseTest() {
     
     private fun testState(state: Capabilities.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getCapabilities()[0].value?.capabilityID == 0x0020)
-        assertTrue(state.getCapabilities()[0].value?.supportedPropertyIDs == Bytes(byteArrayOf(0x02, 0x03, 0x04, 0x05, 0x06)))
-        assertTrue(state.getCapabilities()[1].value?.capabilityID == 0x0023)
-        assertTrue(state.getCapabilities()[1].value?.supportedPropertyIDs == Bytes(byteArrayOf(0x02, 0x08, 0x11)))
-        assertTrue(state.getWebhooks()[0].value?.available == Webhook.Available.AVAILABLE)
-        assertTrue(state.getWebhooks()[0].value?.event == Webhook.Event.TRIP_STARTED)
-        assertTrue(state.getWebhooks()[1].value?.available == Webhook.Available.AVAILABLE)
-        assertTrue(state.getWebhooks()[1].value?.event == Webhook.Event.TRIP_ENDED)
+        assertTrue(state.capabilities[0].value?.capabilityID == 0x0020)
+        assertTrue(state.capabilities[0].value?.supportedPropertyIDs == Bytes(byteArrayOf(0x02, 0x03, 0x04, 0x05, 0x06)))
+        assertTrue(state.capabilities[1].value?.capabilityID == 0x0023)
+        assertTrue(state.capabilities[1].value?.supportedPropertyIDs == Bytes(byteArrayOf(0x02, 0x08, 0x11)))
+        assertTrue(state.webhooks[0].value?.available == Webhook.Available.AVAILABLE)
+        assertTrue(state.webhooks[0].value?.event == Webhook.Event.TRIP_STARTED)
+        assertTrue(state.webhooks[1].value?.available == Webhook.Available.AVAILABLE)
+        assertTrue(state.webhooks[1].value?.event == Webhook.Event.TRIP_ENDED)
     }
     
     @Test

@@ -58,10 +58,10 @@ class KFailureMessageTest : BaseTest() {
     
     private fun testState(state: FailureMessage.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getFailedMessageID().value == 0x0021)
-        assertTrue(state.getFailedMessageType().value == 0x01)
-        assertTrue(state.getFailureReason().value == FailureMessage.FailureReason.UNAUTHORISED)
-        assertTrue(state.getFailureDescription().value == "Try again")
-        assertTrue(state.getFailedPropertyIDs().value == Bytes(byteArrayOf(0x01, 0x02)))
+        assertTrue(state.failedMessageID.value == 0x0021)
+        assertTrue(state.failedMessageType.value == 0x01)
+        assertTrue(state.failureReason.value == FailureMessage.FailureReason.UNAUTHORISED)
+        assertTrue(state.failureDescription.value == "Try again")
+        assertTrue(state.failedPropertyIDs.value == Bytes(byteArrayOf(0x01, 0x02)))
     }
 }

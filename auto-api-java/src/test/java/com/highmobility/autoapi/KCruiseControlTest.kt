@@ -48,13 +48,13 @@ class KCruiseControlTest : BaseTest() {
     
     private fun testState(state: CruiseControl.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getCruiseControl().value == ActiveState.ACTIVE)
-        assertTrue(state.getLimiter().value == CruiseControl.Limiter.HIGHER_SPEED_REQUESTED)
-        assertTrue(state.getTargetSpeed().value?.value == 61.0)
-        assertTrue(state.getTargetSpeed().value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
-        assertTrue(state.getAdaptiveCruiseControl().value == ActiveState.INACTIVE)
-        assertTrue(state.getAccTargetSpeed().value?.value == 67.0)
-        assertTrue(state.getAccTargetSpeed().value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
+        assertTrue(state.cruiseControl.value == ActiveState.ACTIVE)
+        assertTrue(state.limiter.value == CruiseControl.Limiter.HIGHER_SPEED_REQUESTED)
+        assertTrue(state.targetSpeed.value?.value == 61.0)
+        assertTrue(state.targetSpeed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
+        assertTrue(state.adaptiveCruiseControl.value == ActiveState.INACTIVE)
+        assertTrue(state.accTargetSpeed.value?.value == 67.0)
+        assertTrue(state.accTargetSpeed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
     }
     
     @Test
@@ -121,9 +121,9 @@ class KCruiseControlTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as CruiseControl.ActivateDeactivateCruiseControl
-        assertTrue(resolved.getCruiseControl().value == ActiveState.ACTIVE)
-        assertTrue(resolved.getTargetSpeed().value?.value == 61.0)
-        assertTrue(resolved.getTargetSpeed().value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
+        assertTrue(resolved.cruiseControl.value == ActiveState.ACTIVE)
+        assertTrue(resolved.targetSpeed.value?.value == 61.0)
+        assertTrue(resolved.targetSpeed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
         assertTrue(resolved == bytes)
     }
 }

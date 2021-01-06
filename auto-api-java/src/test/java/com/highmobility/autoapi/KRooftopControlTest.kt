@@ -60,12 +60,12 @@ class KRooftopControlTest : BaseTest() {
     
     private fun testState(state: RooftopControl.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getDimming().value == 1.0)
-        assertTrue(state.getPosition().value == 0.5)
-        assertTrue(state.getConvertibleRoofState().value == RooftopControl.ConvertibleRoofState.OPEN)
-        assertTrue(state.getSunroofTiltState().value == RooftopControl.SunroofTiltState.HALF_TILTED)
-        assertTrue(state.getSunroofState().value == RooftopControl.SunroofState.OPEN)
-        assertTrue(state.getSunroofRainEvent().value == RooftopControl.SunroofRainEvent.NO_EVENT)
+        assertTrue(state.dimming.value == 1.0)
+        assertTrue(state.position.value == 0.5)
+        assertTrue(state.convertibleRoofState.value == RooftopControl.ConvertibleRoofState.OPEN)
+        assertTrue(state.sunroofTiltState.value == RooftopControl.SunroofTiltState.HALF_TILTED)
+        assertTrue(state.sunroofState.value == RooftopControl.SunroofState.OPEN)
+        assertTrue(state.sunroofRainEvent.value == RooftopControl.SunroofRainEvent.NO_EVENT)
     }
     
     @Test
@@ -135,11 +135,11 @@ class KRooftopControlTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as RooftopControl.ControlRooftop
-        assertTrue(resolved.getDimming().value == 1.0)
-        assertTrue(resolved.getPosition().value == 0.5)
-        assertTrue(resolved.getConvertibleRoofState().value == RooftopControl.ConvertibleRoofState.OPEN)
-        assertTrue(resolved.getSunroofTiltState().value == RooftopControl.SunroofTiltState.HALF_TILTED)
-        assertTrue(resolved.getSunroofState().value == RooftopControl.SunroofState.OPEN)
+        assertTrue(resolved.dimming.value == 1.0)
+        assertTrue(resolved.position.value == 0.5)
+        assertTrue(resolved.convertibleRoofState.value == RooftopControl.ConvertibleRoofState.OPEN)
+        assertTrue(resolved.sunroofTiltState.value == RooftopControl.SunroofTiltState.HALF_TILTED)
+        assertTrue(resolved.sunroofState.value == RooftopControl.SunroofState.OPEN)
         assertTrue(resolved == bytes)
     }
 }

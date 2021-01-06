@@ -57,10 +57,10 @@ class KWiFiTest : BaseTest() {
     
     private fun testState(state: WiFi.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getStatus().value == EnabledState.ENABLED)
-        assertTrue(state.getNetworkConnected().value == ConnectionState.CONNECTED)
-        assertTrue(state.getNetworkSSID().value == "HOME")
-        assertTrue(state.getNetworkSecurity().value == NetworkSecurity.WPA2_PERSONAL)
+        assertTrue(state.status.value == EnabledState.ENABLED)
+        assertTrue(state.networkConnected.value == ConnectionState.CONNECTED)
+        assertTrue(state.networkSSID.value == "HOME")
+        assertTrue(state.networkSecurity.value == NetworkSecurity.WPA2_PERSONAL)
     }
     
     @Test
@@ -128,9 +128,9 @@ class KWiFiTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as WiFi.ConnectToNetwork
-        assertTrue(resolved.getNetworkSSID().value == "HOME")
-        assertTrue(resolved.getNetworkSecurity().value == NetworkSecurity.WPA2_PERSONAL)
-        assertTrue(resolved.getPassword().value == "great_secret12")
+        assertTrue(resolved.networkSSID.value == "HOME")
+        assertTrue(resolved.networkSecurity.value == NetworkSecurity.WPA2_PERSONAL)
+        assertTrue(resolved.password.value == "great_secret12")
         assertTrue(resolved == bytes)
     }
     
@@ -145,7 +145,7 @@ class KWiFiTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as WiFi.ForgetNetwork
-        assertTrue(resolved.getNetworkSSID().value == "HOME")
+        assertTrue(resolved.networkSSID.value == "HOME")
         assertTrue(resolved == bytes)
     }
     
@@ -160,7 +160,7 @@ class KWiFiTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as WiFi.EnableDisableWiFi
-        assertTrue(resolved.getStatus().value == EnabledState.ENABLED)
+        assertTrue(resolved.status.value == EnabledState.ENABLED)
         assertTrue(resolved == bytes)
     }
 }

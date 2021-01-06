@@ -41,7 +41,7 @@ class KGraphicsTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Graphics.DisplayImage
-        assertTrue(resolved.getImageURL().value == "https://about.high-mobility.com/assets/images/hm-logo.svg")
+        assertTrue(resolved.imageURL.value == "https://about.high-mobility.com/assets/images/hm-logo.svg")
         assertTrue(resolved == bytes)
     }
 }

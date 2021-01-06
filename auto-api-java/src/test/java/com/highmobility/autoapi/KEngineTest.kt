@@ -53,8 +53,8 @@ class KEngineTest : BaseTest() {
     
     private fun testState(state: Engine.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getStatus().value == OnOffState.OFF)
-        assertTrue(state.getStartStopState().value == ActiveState.ACTIVE)
+        assertTrue(state.status.value == OnOffState.OFF)
+        assertTrue(state.startStopState.value == ActiveState.ACTIVE)
     }
     
     @Test
@@ -120,7 +120,7 @@ class KEngineTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Engine.TurnEngineOnOff
-        assertTrue(resolved.getStatus().value == OnOffState.OFF)
+        assertTrue(resolved.status.value == OnOffState.OFF)
         assertTrue(resolved == bytes)
     }
     
@@ -135,7 +135,7 @@ class KEngineTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Engine.ActivateDeactivateStartStop
-        assertTrue(resolved.getStartStopState().value == ActiveState.ACTIVE)
+        assertTrue(resolved.startStopState.value == ActiveState.ACTIVE)
         assertTrue(resolved == bytes)
     }
 }

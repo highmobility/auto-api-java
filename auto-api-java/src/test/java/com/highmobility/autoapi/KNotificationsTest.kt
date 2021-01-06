@@ -59,13 +59,13 @@ class KNotificationsTest : BaseTest() {
     
     private fun testState(state: Notifications.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getText().value == "Open Garage")
-        assertTrue(state.getActionItems()[0].value?.id == 27)
-        assertTrue(state.getActionItems()[0].value?.name == "Open")
-        assertTrue(state.getActionItems()[1].value?.id == 28)
-        assertTrue(state.getActionItems()[1].value?.name == "Cancel")
-        assertTrue(state.getActivatedAction().value == 27)
-        assertTrue(state.getClear().value == Notifications.Clear.CLEAR)
+        assertTrue(state.text.value == "Open Garage")
+        assertTrue(state.actionItems[0].value?.id == 27)
+        assertTrue(state.actionItems[0].value?.name == "Open")
+        assertTrue(state.actionItems[1].value?.id == 28)
+        assertTrue(state.actionItems[1].value?.name == "Cancel")
+        assertTrue(state.activatedAction.value == 27)
+        assertTrue(state.clear.value == Notifications.Clear.CLEAR)
     }
     
     @Test
@@ -84,11 +84,11 @@ class KNotificationsTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Notifications.Notification
-        assertTrue(resolved.getText().value == "Open Garage")
-        assertTrue(resolved.getActionItems()[0].value?.id == 27)
-        assertTrue(resolved.getActionItems()[0].value?.name == "Open")
-        assertTrue(resolved.getActionItems()[1].value?.id == 28)
-        assertTrue(resolved.getActionItems()[1].value?.name == "Cancel")
+        assertTrue(resolved.text.value == "Open Garage")
+        assertTrue(resolved.actionItems[0].value?.id == 27)
+        assertTrue(resolved.actionItems[0].value?.name == "Open")
+        assertTrue(resolved.actionItems[1].value?.id == 28)
+        assertTrue(resolved.actionItems[1].value?.name == "Cancel")
         assertTrue(resolved == bytes)
     }
     
@@ -103,7 +103,7 @@ class KNotificationsTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as Notifications.Action
-        assertTrue(resolved.getActivatedAction().value == 27)
+        assertTrue(resolved.activatedAction.value == 27)
         assertTrue(resolved == bytes)
     }
     

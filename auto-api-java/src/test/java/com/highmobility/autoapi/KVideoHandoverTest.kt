@@ -45,10 +45,10 @@ class KVideoHandoverTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as VideoHandover.VideoHandoverCommand
-        assertTrue(resolved.getUrl().value == "https://bit.ly/2obY7G5")
-        assertTrue(resolved.getScreen().value == VideoHandover.Screen.REAR)
-        assertTrue(resolved.getStartingTime().value?.value == 2.5)
-        assertTrue(resolved.getStartingTime().value?.unit == Duration.Unit.SECONDS)
+        assertTrue(resolved.url.value == "https://bit.ly/2obY7G5")
+        assertTrue(resolved.screen.value == VideoHandover.Screen.REAR)
+        assertTrue(resolved.startingTime.value?.value == 2.5)
+        assertTrue(resolved.startingTime.value?.unit == Duration.Unit.SECONDS)
         assertTrue(resolved == bytes)
     }
 }

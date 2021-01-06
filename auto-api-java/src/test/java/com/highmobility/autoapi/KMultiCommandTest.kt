@@ -52,8 +52,8 @@ class KMultiCommandTest : BaseTest() {
     
     private fun testState(state: MultiCommand.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getMultiStates()[0].value == CommandResolver.resolve("0c0020010600040100010004000501000200010400050100020201a2000b010008000001598938e788"))
-        assertTrue(state.getMultiStates()[1].value == CommandResolver.resolve("0c0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788"))
+        assertTrue(state.multiStates[0].value == CommandResolver.resolve("0c0020010600040100010004000501000200010400050100020201a2000b010008000001598938e788"))
+        assertTrue(state.multiStates[1].value == CommandResolver.resolve("0c0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788"))
     }
     
     @Test
@@ -70,8 +70,8 @@ class KMultiCommandTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as MultiCommand.MultiCommandCommand
-        assertTrue(resolved.getMultiCommands()[0].value == CommandResolver.resolve("0c00200106000401000101"))
-        assertTrue(resolved.getMultiCommands()[1].value == CommandResolver.resolve("0c00350101000401000100"))
+        assertTrue(resolved.multiCommands[0].value == CommandResolver.resolve("0c00200106000401000101"))
+        assertTrue(resolved.multiCommands[1].value == CommandResolver.resolve("0c00350101000401000100"))
         assertTrue(resolved == bytes)
     }
 }

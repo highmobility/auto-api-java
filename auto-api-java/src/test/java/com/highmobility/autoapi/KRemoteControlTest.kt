@@ -44,9 +44,9 @@ class KRemoteControlTest : BaseTest() {
     
     private fun testState(state: RemoteControl.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.getControlMode().value == RemoteControl.ControlMode.STARTED)
-        assertTrue(state.getAngle().value?.value == 50.0)
-        assertTrue(state.getAngle().value?.unit == Angle.Unit.DEGREES)
+        assertTrue(state.controlMode.value == RemoteControl.ControlMode.STARTED)
+        assertTrue(state.angle.value?.value == 50.0)
+        assertTrue(state.angle.value?.unit == Angle.Unit.DEGREES)
     }
     
     @Test
@@ -87,10 +87,10 @@ class KRemoteControlTest : BaseTest() {
         setRuntime(CommandResolver.RunTime.JAVA)
     
         val resolved = CommandResolver.resolve(bytes) as RemoteControl.ControlCommand
-        assertTrue(resolved.getAngle().value?.value == 50.0)
-        assertTrue(resolved.getAngle().value?.unit == Angle.Unit.DEGREES)
-        assertTrue(resolved.getSpeed().value?.value == 5.0)
-        assertTrue(resolved.getSpeed().value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
+        assertTrue(resolved.angle.value?.value == 50.0)
+        assertTrue(resolved.angle.value?.unit == Angle.Unit.DEGREES)
+        assertTrue(resolved.speed.value?.value == 5.0)
+        assertTrue(resolved.speed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
         assertTrue(resolved == bytes)
     }
     
