@@ -48,6 +48,10 @@ import com.highmobility.value.Bytes;
 @SuppressWarnings({"UnusedAssignment", "StatementWithEmptyBody", "ResultOfMethodCallIgnored"})
 public class DevCenterSnippetTest {
 
+    // IMPORTANT: Release numbers have to be searched and updated manually, eg in downloads.yml
+    //    desc: 'Works on Mobile, Android Wear & Android Things'
+    //    version: Version 2.0.4
+
     // 3 files have snippets:
     // auto api tutorial
     // android tutorial
