@@ -49,13 +49,16 @@ import com.highmobility.value.Bytes;
 public class DevCenterSnippetTest {
 
     // IMPORTANT: Release numbers have to be searched and updated manually, eg in downloads.yml
-    //    desc: 'Works on Mobile, Android Wear & Android Things'
-    //    version: Version 2.0.4
+    //  hmkit-android
+    //  auto-api
+    //  oem
 
-    // 3 files have snippets:
+    // files that have snippets:
     // auto api tutorial
     // android tutorial
     // android bluetooth tutorial
+    // oem tutorial
+    // scaffold app tutorial (if public)
 
     // if test does not compile, a snippet needs to be updated somewhere in docs.
     // these tests are not supposed to pass as tests
@@ -63,6 +66,8 @@ public class DevCenterSnippetTest {
 
     void lockCommand() {
         // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        // v2: api-references/code-references/android/auto-api
+
         // tabs/resources/tutorials/sdk/android/android-bluetooth.html
         // tabs/resources/tutorials/sdk/android/android-tutorial.html
         // tabs/resources/samples/android/scaffold.html
@@ -73,6 +78,7 @@ public class DevCenterSnippetTest {
         // tabs/resources/tutorials/sdk/android/android-bluetooth.html
         // tabs/resources/tutorials/sdk/android/android-tutorial.html
         // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        // v2: api-references/code-references/android/auto-api
         // tabs/resources/tutorials/for-carmakers/cloud-sdk/cloud-tutorial.html
         Command command = CommandResolver.resolve(bytes);
 
@@ -92,6 +98,7 @@ public class DevCenterSnippetTest {
 
     void vehicleStatus() {
         // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        // v2: api-references/code-references/android/auto-api
 
         Command command = CommandResolver.resolve(bytes);
 
@@ -111,6 +118,7 @@ public class DevCenterSnippetTest {
 
     void capabilites() {
         // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        // v2: api-references/code-references/android/auto-api
         Command command = CommandResolver.resolve(bytes);
 
         if (command instanceof Capabilities.State) {
@@ -133,6 +141,7 @@ public class DevCenterSnippetTest {
 
     void vehicleLocation() {
         // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        // v2: api-references/code-references/android/auto-api
         Command command = CommandResolver.resolve(bytes);
 
         if (command instanceof VehicleLocation.State) {
@@ -150,6 +159,7 @@ public class DevCenterSnippetTest {
 
     void lockStateLong() {
         // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        // v2: api-references/code-references/android/auto-api
 
         Command command = CommandResolver.resolve(bytes);
 
@@ -184,6 +194,7 @@ public class DevCenterSnippetTest {
 
     void failure() {
         // tabs/resources/documentation/mobile-sdks/android/auto-api.html
+        // v2: api-references/code-references/android/auto-api
         Command command = CommandResolver.resolve(bytes);
 
         if (command instanceof FailureMessage.State) {

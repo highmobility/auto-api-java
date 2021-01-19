@@ -35,6 +35,8 @@ import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
+import static com.highmobility.autoapi.AutoApiLogger.getLogger;
+
 public class PropertyComponentValue<V> extends PropertyComponent {
     static final byte IDENTIFIER = 0x01;
 
@@ -111,10 +113,14 @@ public class PropertyComponentValue<V> extends PropertyComponent {
                 return (V) method.invoke(null, valueBytes.get(0));
             }
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            getLogger().warn(getDebugMessage(valueClass, valueBytes));
+
             e.printStackTrace();
             throw new IllegalArgumentException("Cannot instantiate value: " + valueClass +
                     "\n" + e.getMessage());
         } catch (InvocationTargetException e) {
+            getLogger().warn(getDebugMessage(valueClass, valueBytes));
+
             // throw error that is from auto api value parsing
             if (e.getCause() instanceof CommandParseException) {
                 throw (CommandParseException) e.getCause();
@@ -123,6 +129,10 @@ public class PropertyComponentValue<V> extends PropertyComponent {
                 throw new CommandParseException("Value initialisation error");
             }
         }
+    }
+
+    private String getDebugMessage(Class<V> valueClass, Bytes valueBytes) {
+        return String.format("Failed parsing %s, bytes %s", valueClass.getName(), valueBytes);
     }
 
     public static Bytes getBytes(Object value) {

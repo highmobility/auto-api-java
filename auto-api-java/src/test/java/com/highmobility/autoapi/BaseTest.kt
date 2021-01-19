@@ -41,10 +41,11 @@ open class BaseTest {
         mockkStatic(AutoApiLogger::class)
         every { AutoApiLogger.getLogger() } returns mockLogger
 
-        every { mockLogger.warn(allAny()) } just Runs
-        every { mockLogger.debug(allAny()) } just Runs
-        every { mockLogger.error(allAny()) } just Runs
-        every { mockLogger.error(any(), any<Throwable>()) } just Runs
+        var log = CapturingSlot<String>()
+        every { mockLogger.warn(capture(log)) } answers { println(log.captured) }
+        every { mockLogger.debug(allAny()) } answers { println(log.captured) }
+        every { mockLogger.error(capture(log)) } answers { println(log.captured) }
+        every { mockLogger.error(any(), any<Throwable>()) } answers { println(log.captured) }
 
         setRuntime(RunTime.ANDROID)
     }
