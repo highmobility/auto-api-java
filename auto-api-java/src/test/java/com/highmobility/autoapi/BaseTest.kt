@@ -42,10 +42,10 @@ open class BaseTest {
         every { AutoApiLogger.getLogger() } returns mockLogger
 
         var log = CapturingSlot<String>()
-        every { mockLogger.warn(capture(log)) } answers { println(log.captured) }
-        every { mockLogger.debug(allAny()) } answers { println(log.captured) }
-        every { mockLogger.error(capture(log)) } answers { println(log.captured) }
-        every { mockLogger.error(any(), any<Throwable>()) } answers { println(log.captured) }
+        every { mockLogger.warn(capture(log)) } answers { println("w: ${log.captured}") }
+        every { mockLogger.debug(capture(log)) } answers { println("d: ${log.captured}") }
+        every { mockLogger.error(capture(log)) } answers { println("e: ${log.captured}") }
+        every { mockLogger.error(capture(log), any()) } answers { println("e: ${log.captured}") }
 
         setRuntime(RunTime.ANDROID)
     }
@@ -77,6 +77,7 @@ open class BaseTest {
     }
 
     fun errorLogExpected(count: Int, runnable: Runnable) {
+        println("expecting e:")
         runnable.run()
         verify(exactly = count) { mockLogger.error(allAny()) }
     }
@@ -86,6 +87,7 @@ open class BaseTest {
     }
 
     fun warningLogExpected(count: Int, runnable: Runnable) {
+        println("expecting w:")
         runnable.run()
         verify(exactly = count) { mockLogger.warn(allAny()) }
     }
@@ -95,6 +97,7 @@ open class BaseTest {
     }
 
     fun debugLogExpected(count: Int, runnable: Runnable) {
+        println("expecting d:")
         runnable.run()
         verify(exactly = count) { mockLogger.debug(allAny()) }
     }
