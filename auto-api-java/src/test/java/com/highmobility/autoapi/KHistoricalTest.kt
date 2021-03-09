@@ -66,7 +66,7 @@ class KHistoricalTest : BaseTest() {
         val constructed = Historical.RequestStates(0x0060, getCalendar("2019-10-07T13:04:32.000Z"), getCalendar("2019-09-27T08:42:30.000Z"))
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Historical.RequestStates
         assertTrue(resolved.capabilityID.value == 0x0060)

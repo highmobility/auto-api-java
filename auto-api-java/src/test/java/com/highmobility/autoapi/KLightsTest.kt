@@ -125,7 +125,7 @@ class KLightsTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Lights.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.LIGHTS)
@@ -146,7 +146,7 @@ class KLightsTest : BaseTest() {
         val secondConstructed = Lights.GetStateAvailability(0x01, 0x02, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Lights.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.LIGHTS)
@@ -187,7 +187,7 @@ class KLightsTest : BaseTest() {
             )
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Lights.ControlLights
         assertTrue(resolved.frontExteriorLight.value == Lights.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM)

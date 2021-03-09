@@ -141,7 +141,7 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as HomeCharger.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.HOME_CHARGER)
@@ -162,7 +162,7 @@ class KHomeChargerTest : BaseTest() {
         val secondConstructed = HomeCharger.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x08, 0x09, 0x0a, 0x0b, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as HomeCharger.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.HOME_CHARGER)
@@ -179,7 +179,7 @@ class KHomeChargerTest : BaseTest() {
         val constructed = HomeCharger.SetChargeCurrent(ElectricCurrent(0.5, ElectricCurrent.Unit.AMPERES))
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as HomeCharger.SetChargeCurrent
         assertTrue(resolved.chargeCurrent.value?.value == 0.5)
@@ -201,7 +201,7 @@ class KHomeChargerTest : BaseTest() {
             )
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as HomeCharger.SetPriceTariffs
         assertTrue(resolved.priceTariffs[0].value?.pricingType == PriceTariff.PricingType.STARTING_FEE)
@@ -224,7 +224,7 @@ class KHomeChargerTest : BaseTest() {
         val constructed = HomeCharger.ActivateDeactivateSolarCharging(ActiveState.ACTIVE)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as HomeCharger.ActivateDeactivateSolarCharging
         assertTrue(resolved.solarCharging.value == ActiveState.ACTIVE)
@@ -239,7 +239,7 @@ class KHomeChargerTest : BaseTest() {
         val constructed = HomeCharger.EnableDisableWiFiHotspot(EnabledState.ENABLED)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as HomeCharger.EnableDisableWiFiHotspot
         assertTrue(resolved.wifiHotspotEnabled.value == EnabledState.ENABLED)
@@ -254,7 +254,7 @@ class KHomeChargerTest : BaseTest() {
         val constructed = HomeCharger.AuthenticateExpire(HomeCharger.AuthenticationState.AUTHENTICATED)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as HomeCharger.AuthenticateExpire
         assertTrue(resolved.authenticationState.value == HomeCharger.AuthenticationState.AUTHENTICATED)

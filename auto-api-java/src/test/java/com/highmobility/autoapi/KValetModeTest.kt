@@ -71,7 +71,7 @@ class KValetModeTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ValetMode.GetValetModeAvailability
         assertTrue(resolved.identifier == Identifier.VALET_MODE)
@@ -88,7 +88,7 @@ class KValetModeTest : BaseTest() {
         val constructed = ValetMode.ActivateDeactivateValetMode(ActiveState.ACTIVE)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ValetMode.ActivateDeactivateValetMode
         assertTrue(resolved.status.value == ActiveState.ACTIVE)

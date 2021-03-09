@@ -71,7 +71,7 @@ class KParkingBrakeTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ParkingBrake.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.PARKING_BRAKE)
@@ -88,7 +88,7 @@ class KParkingBrakeTest : BaseTest() {
         val constructed = ParkingBrake.SetParkingBrake(ActiveState.ACTIVE)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ParkingBrake.SetParkingBrake
         assertTrue(resolved.status.value == ActiveState.ACTIVE)

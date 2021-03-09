@@ -78,7 +78,7 @@ class KHonkHornFlashLightsTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as HonkHornFlashLights.GetFlashersStateAvailability
         assertTrue(resolved.identifier == Identifier.HONK_HORN_FLASH_LIGHTS)
@@ -99,7 +99,7 @@ class KHonkHornFlashLightsTest : BaseTest() {
         val secondConstructed = HonkHornFlashLights.GetFlashersStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as HonkHornFlashLights.GetFlashersStateAvailability
         assertTrue(resolved.identifier == Identifier.HONK_HORN_FLASH_LIGHTS)
@@ -117,7 +117,7 @@ class KHonkHornFlashLightsTest : BaseTest() {
         val constructed = HonkHornFlashLights.HonkFlash(5, Duration(2.0, Duration.Unit.SECONDS))
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as HonkHornFlashLights.HonkFlash
         assertTrue(resolved.flashTimes.value == 5)
@@ -134,7 +134,7 @@ class KHonkHornFlashLightsTest : BaseTest() {
         val constructed = HonkHornFlashLights.ActivateDeactivateEmergencyFlasher(ActiveState.ACTIVE)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as HonkHornFlashLights.ActivateDeactivateEmergencyFlasher
         assertTrue(resolved.emergencyFlashersState.value == ActiveState.ACTIVE)

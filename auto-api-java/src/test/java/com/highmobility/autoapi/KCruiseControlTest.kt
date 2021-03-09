@@ -79,7 +79,7 @@ class KCruiseControlTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as CruiseControl.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.CRUISE_CONTROL)
@@ -100,7 +100,7 @@ class KCruiseControlTest : BaseTest() {
         val secondConstructed = CruiseControl.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as CruiseControl.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.CRUISE_CONTROL)
@@ -118,7 +118,7 @@ class KCruiseControlTest : BaseTest() {
         val constructed = CruiseControl.ActivateDeactivateCruiseControl(ActiveState.ACTIVE, Speed(61.0, Speed.Unit.KILOMETERS_PER_HOUR))
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as CruiseControl.ActivateDeactivateCruiseControl
         assertTrue(resolved.cruiseControl.value == ActiveState.ACTIVE)

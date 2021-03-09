@@ -80,7 +80,7 @@ class KOffroadTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Offroad.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.OFFROAD)
@@ -101,7 +101,7 @@ class KOffroadTest : BaseTest() {
         val secondConstructed = Offroad.GetStateAvailability(0x01, 0x02)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Offroad.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.OFFROAD)

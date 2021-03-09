@@ -111,7 +111,7 @@ class KTachographTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Tachograph.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.TACHOGRAPH)
@@ -132,7 +132,7 @@ class KTachographTest : BaseTest() {
         val secondConstructed = Tachograph.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Tachograph.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.TACHOGRAPH)

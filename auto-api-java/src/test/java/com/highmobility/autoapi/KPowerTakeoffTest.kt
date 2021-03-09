@@ -79,7 +79,7 @@ class KPowerTakeoffTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as PowerTakeoff.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.POWER_TAKEOFF)
@@ -100,7 +100,7 @@ class KPowerTakeoffTest : BaseTest() {
         val secondConstructed = PowerTakeoff.GetStateAvailability(0x01, 0x02)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as PowerTakeoff.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.POWER_TAKEOFF)
@@ -117,7 +117,7 @@ class KPowerTakeoffTest : BaseTest() {
         val constructed = PowerTakeoff.ActivateDeactivatePowerTakeoff(ActiveState.ACTIVE)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as PowerTakeoff.ActivateDeactivatePowerTakeoff
         assertTrue(resolved.status.value == ActiveState.ACTIVE)

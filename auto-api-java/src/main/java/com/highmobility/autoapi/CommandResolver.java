@@ -1,18 +1,18 @@
 /*
  * The MIT License
- *
+ * 
  * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -60,7 +60,7 @@ public class CommandResolver {
             switch (identifier) {
                 case VEHICLE_STATUS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new VehicleStatus.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -70,7 +70,7 @@ public class CommandResolver {
                 }
                 case PARKING_TICKET: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new ParkingTicket.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(2);
@@ -101,7 +101,7 @@ public class CommandResolver {
                 }
                 case WINDOWS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Windows.State(bytes);
                         } else {
                             command = new Windows.ControlWindows(bytes);
@@ -115,7 +115,7 @@ public class CommandResolver {
                 }
                 case VEHICLE_TIME: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new VehicleTime.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -127,7 +127,7 @@ public class CommandResolver {
                 }
                 case DRIVER_FATIGUE: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new DriverFatigue.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -139,7 +139,7 @@ public class CommandResolver {
                 }
                 case REMOTE_CONTROL: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new RemoteControl.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(3);
@@ -166,7 +166,7 @@ public class CommandResolver {
                 }
                 case FUELING: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Fueling.State(bytes);
                         } else {
                             command = new Fueling.ControlGasFlap(bytes);
@@ -180,7 +180,7 @@ public class CommandResolver {
                 }
                 case NAVI_DESTINATION: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new NaviDestination.State(bytes);
                         } else {
                             command = new NaviDestination.SetNaviDestination(bytes);
@@ -194,7 +194,7 @@ public class CommandResolver {
                 }
                 case LIGHT_CONDITIONS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new LightConditions.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -206,7 +206,7 @@ public class CommandResolver {
                 }
                 case OFFROAD: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Offroad.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -218,7 +218,7 @@ public class CommandResolver {
                 }
                 case TRUNK: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Trunk.State(bytes);
                         } else {
                             command = new Trunk.ControlTrunk(bytes);
@@ -232,7 +232,7 @@ public class CommandResolver {
                 }
                 case DOORS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Doors.State(bytes);
                         } else {
                             command = new Doors.LockUnlockDoors(bytes);
@@ -246,7 +246,7 @@ public class CommandResolver {
                 }
                 case VALET_MODE: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new ValetMode.State(bytes);
                         } else {
                             command = new ValetMode.ActivateDeactivateValetMode(bytes);
@@ -260,7 +260,7 @@ public class CommandResolver {
                 }
                 case DASHBOARD_LIGHTS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new DashboardLights.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -272,7 +272,7 @@ public class CommandResolver {
                 }
                 case MULTI_COMMAND: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new MultiCommand.State(bytes);
                         } else {
                             command = new MultiCommand.MultiCommandCommand(bytes);
@@ -288,7 +288,7 @@ public class CommandResolver {
                 }
                 case LIGHTS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Lights.State(bytes);
                         } else {
                             command = new Lights.ControlLights(bytes);
@@ -302,7 +302,7 @@ public class CommandResolver {
                 }
                 case CHASSIS_SETTINGS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new ChassisSettings.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(4);
@@ -331,7 +331,7 @@ public class CommandResolver {
                 }
                 case NOTIFICATIONS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Notifications.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(3);
@@ -354,7 +354,7 @@ public class CommandResolver {
                 }
                 case HOOD: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Hood.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -366,7 +366,7 @@ public class CommandResolver {
                 }
                 case CHARGING: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Charging.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(6);
@@ -399,7 +399,7 @@ public class CommandResolver {
                 }
                 case MOBILE: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Mobile.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -411,7 +411,7 @@ public class CommandResolver {
                 }
                 case HOME_CHARGER: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new HomeCharger.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(5);
@@ -442,7 +442,7 @@ public class CommandResolver {
                 }
                 case DIAGNOSTICS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Diagnostics.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -454,7 +454,7 @@ public class CommandResolver {
                 }
                 case USAGE: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Usage.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -466,7 +466,7 @@ public class CommandResolver {
                 }
                 case VEHICLE_INFORMATION: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new VehicleInformation.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -476,7 +476,7 @@ public class CommandResolver {
                 }
                 case POWER_TAKEOFF: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new PowerTakeoff.State(bytes);
                         } else {
                             command = new PowerTakeoff.ActivateDeactivatePowerTakeoff(bytes);
@@ -502,7 +502,7 @@ public class CommandResolver {
                 }
                 case HISTORICAL: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Historical.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(2);
@@ -523,7 +523,7 @@ public class CommandResolver {
                 }
                 case WI_FI: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new WiFi.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(3);
@@ -550,7 +550,7 @@ public class CommandResolver {
                 }
                 case VEHICLE_LOCATION: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new VehicleLocation.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -574,7 +574,7 @@ public class CommandResolver {
                 }
                 case RACE: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Race.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -586,7 +586,7 @@ public class CommandResolver {
                 }
                 case FIRMWARE_VERSION: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new FirmwareVersion.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -596,7 +596,7 @@ public class CommandResolver {
                 }
                 case THEFT_ALARM: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new TheftAlarm.State(bytes);
                         } else {
                             command = new TheftAlarm.SetTheftAlarm(bytes);
@@ -610,7 +610,7 @@ public class CommandResolver {
                 }
                 case SEATS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Seats.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -622,7 +622,7 @@ public class CommandResolver {
                 }
                 case TACHOGRAPH: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Tachograph.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -634,7 +634,7 @@ public class CommandResolver {
                 }
                 case PARKING_BRAKE: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new ParkingBrake.State(bytes);
                         } else {
                             command = new ParkingBrake.SetParkingBrake(bytes);
@@ -648,7 +648,7 @@ public class CommandResolver {
                 }
                 case CAPABILITIES: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Capabilities.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -658,7 +658,7 @@ public class CommandResolver {
                 }
                 case MAINTENANCE: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Maintenance.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -670,7 +670,7 @@ public class CommandResolver {
                 }
                 case ROOFTOP_CONTROL: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new RooftopControl.State(bytes);
                         } else {
                             command = new RooftopControl.ControlRooftop(bytes);
@@ -684,7 +684,7 @@ public class CommandResolver {
                 }
                 case FAILURE_MESSAGE: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new FailureMessage.State(bytes);
                         }
                     }
@@ -692,7 +692,7 @@ public class CommandResolver {
                 }
                 case WINDSCREEN: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Windscreen.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(3);
@@ -719,7 +719,7 @@ public class CommandResolver {
                 }
                 case CRUISE_CONTROL: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new CruiseControl.State(bytes);
                         } else {
                             command = new CruiseControl.ActivateDeactivateCruiseControl(bytes);
@@ -733,7 +733,7 @@ public class CommandResolver {
                 }
                 case TRIPS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Trips.State(bytes);
                         }
                     }
@@ -741,7 +741,7 @@ public class CommandResolver {
                 }
                 case KEYFOB_POSITION: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new KeyfobPosition.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -753,7 +753,7 @@ public class CommandResolver {
                 }
                 case HONK_HORN_FLASH_LIGHTS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new HonkHornFlashLights.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(2);
@@ -778,7 +778,7 @@ public class CommandResolver {
                 }
                 case ENGINE: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Engine.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(2);
@@ -803,7 +803,7 @@ public class CommandResolver {
                 }
                 case WEATHER_CONDITIONS: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new WeatherConditions.State(bytes);
                         }
                     } else if (type == Type.GET) {
@@ -815,7 +815,7 @@ public class CommandResolver {
                 }
                 case MESSAGING: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Messaging.State(bytes);
                         } else {
                             command = new Messaging.MessageReceived(bytes);
@@ -825,7 +825,7 @@ public class CommandResolver {
                 }
                 case IGNITION: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Ignition.State(bytes);
                         } else {
                             command = new Ignition.TurnIgnitionOnOff(bytes);
@@ -839,7 +839,7 @@ public class CommandResolver {
                 }
                 case CLIMATE: {
                     if (type == Type.SET) {
-                        if (getRuntime() == RunTime.ANDROID) {
+                        if (getEnvironment() == Environment.OWNER) {
                             command = new Climate.State(bytes);
                         } else {
                             SetterIterator iterator = new SetterIterator(6);
@@ -929,7 +929,7 @@ public class CommandResolver {
         if (_environment == Environment.VEHICLE) return RunTime.JAVA;
         else return RunTime.ANDROID;
     }
-
+    
     /**
      * Override the runtime.
      * <p>
@@ -943,7 +943,7 @@ public class CommandResolver {
         if (runtime == RunTime.JAVA) _environment = Environment.VEHICLE;
         else _environment = Environment.OWNER;
     }
-
+    
     /**
      * @deprecated use {@link Environment} instead
      */
@@ -951,16 +951,16 @@ public class CommandResolver {
     public enum RunTime {
         ANDROID, JAVA
     }
-
+    
     static Environment _environment = Environment.OWNER;
-
+    
     /**
      * @return The environment
      */
     static Environment getEnvironment() {
         return _environment;
     }
-
+    
     /**
      * Override the environment.
      * <p>
@@ -973,7 +973,7 @@ public class CommandResolver {
     public static void setEnvironment(Environment environment) {
         _environment = environment;
     }
-
+    
     /**
      * The possible environments of the AutoAPI package user. The default is
      * {@link Environment#OWNER}, which works for both Android and Fleet, when Android phone or the
@@ -982,7 +982,6 @@ public class CommandResolver {
     public enum Environment {
         OWNER, VEHICLE
     }
-
     /**
      * The purpose is to loop the possible setters.
      * <p>

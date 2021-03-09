@@ -38,7 +38,7 @@ class KWakeUpTest : BaseTest() {
         val constructed = WakeUp.WakeUpCommand()
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as WakeUp.WakeUpCommand
         assertTrue(resolved == bytes)
@@ -48,7 +48,7 @@ class KWakeUpTest : BaseTest() {
         val bytes = Bytes(COMMAND_HEADER + "002201" +
             "010004010001CD")
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         debugLogExpected { 
             val resolved = CommandResolver.resolve(bytes)

@@ -99,7 +99,7 @@ class KWindscreenTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Windscreen.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.WINDSCREEN)
@@ -120,7 +120,7 @@ class KWindscreenTest : BaseTest() {
         val secondConstructed = Windscreen.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Windscreen.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.WINDSCREEN)
@@ -138,7 +138,7 @@ class KWindscreenTest : BaseTest() {
         val constructed = Windscreen.SetWindscreenDamage(Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED, Zone(1, 2))
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Windscreen.SetWindscreenDamage
         assertTrue(resolved.windscreenDamage.value == Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED)
@@ -155,7 +155,7 @@ class KWindscreenTest : BaseTest() {
         val constructed = Windscreen.SetWindscreenReplacementNeeded(Windscreen.WindscreenNeedsReplacement.NO_REPLACEMENT_NEEDED)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Windscreen.SetWindscreenReplacementNeeded
         assertTrue(resolved.windscreenNeedsReplacement.value == Windscreen.WindscreenNeedsReplacement.NO_REPLACEMENT_NEEDED)
@@ -171,7 +171,7 @@ class KWindscreenTest : BaseTest() {
         val constructed = Windscreen.ControlWipers(Windscreen.WipersStatus.AUTOMATIC, Windscreen.WipersIntensity.LEVEL_3)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Windscreen.ControlWipers
         assertTrue(resolved.wipersStatus.value == Windscreen.WipersStatus.AUTOMATIC)

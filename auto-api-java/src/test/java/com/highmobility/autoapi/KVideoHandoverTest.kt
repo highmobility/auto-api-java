@@ -42,7 +42,7 @@ class KVideoHandoverTest : BaseTest() {
         val constructed = VideoHandover.VideoHandoverCommand("https://bit.ly/2obY7G5", VideoHandover.Screen.REAR, Duration(2.5, Duration.Unit.SECONDS))
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as VideoHandover.VideoHandoverCommand
         assertTrue(resolved.url.value == "https://bit.ly/2obY7G5")

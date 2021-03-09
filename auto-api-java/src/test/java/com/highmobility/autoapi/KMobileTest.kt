@@ -71,7 +71,7 @@ class KMobileTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Mobile.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.MOBILE)

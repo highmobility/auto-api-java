@@ -87,7 +87,7 @@ class KParkingTicketTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ParkingTicket.GetParkingTicketAvailability
         assertTrue(resolved.identifier == Identifier.PARKING_TICKET)
@@ -108,7 +108,7 @@ class KParkingTicketTest : BaseTest() {
         val secondConstructed = ParkingTicket.GetParkingTicketAvailability(0x01, 0x02, 0x03, 0x04, 0x05)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as ParkingTicket.GetParkingTicketAvailability
         assertTrue(resolved.identifier == Identifier.PARKING_TICKET)
@@ -129,7 +129,7 @@ class KParkingTicketTest : BaseTest() {
         val constructed = ParkingTicket.StartParking("Berlin Parking", "6489AB4233", getCalendar("2017-01-10T19:34:22.000Z"), getCalendar("2019-10-08T11:21:45.000Z"))
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ParkingTicket.StartParking
         assertTrue(resolved.operatorName.value == "Berlin Parking")
@@ -147,7 +147,7 @@ class KParkingTicketTest : BaseTest() {
             "04000B0100080000015989dfca30" +
             "05000B0100080000016dab1a8528")
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         debugLogExpected(2) { 
             val resolved = CommandResolver.resolve(bytes)
@@ -163,7 +163,7 @@ class KParkingTicketTest : BaseTest() {
         val constructed = ParkingTicket.EndParking()
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ParkingTicket.EndParking
         assertTrue(resolved == bytes)
@@ -173,7 +173,7 @@ class KParkingTicketTest : BaseTest() {
         val bytes = Bytes(COMMAND_HEADER + "004701" +
             "010004010001CD")
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         debugLogExpected(2) { 
             val resolved = CommandResolver.resolve(bytes)

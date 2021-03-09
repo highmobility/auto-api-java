@@ -23,7 +23,6 @@
  */
 package com.highmobility.autoapi
 
-import com.highmobility.autoapi.CommandResolver.RunTime
 import com.highmobility.autoapi.TestUtils.getExampleCalendar
 import com.highmobility.utils.ByteUtils
 import com.highmobility.value.Bytes
@@ -47,11 +46,11 @@ open class BaseTest {
         every { mockLogger.error(capture(log)) } answers { println("e: ${log.captured}") }
         every { mockLogger.error(capture(log), any()) } answers { println("e: ${log.captured}") }
 
-        setRuntime(RunTime.ANDROID)
-    }
+        setEnvironment(CommandResolver.Environment.OWNER)
+   }
 
-    fun setRuntime(runtime: RunTime?) {
-        CommandResolver.setRuntime(runtime)
+    fun setEnvironment(environment: CommandResolver.Environment) {
+        CommandResolver.setEnvironment(environment)
     }
 
     fun bytesTheSame(state: Bytes, bytes: Bytes): Boolean {

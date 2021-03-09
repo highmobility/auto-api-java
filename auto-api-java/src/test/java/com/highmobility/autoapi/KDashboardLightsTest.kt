@@ -440,7 +440,7 @@ class KDashboardLightsTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as DashboardLights.GetDashboardLightsAvailability
         assertTrue(resolved.identifier == Identifier.DASHBOARD_LIGHTS)

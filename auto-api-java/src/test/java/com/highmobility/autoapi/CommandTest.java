@@ -215,7 +215,7 @@ public class CommandTest extends BaseTest {
         assertTrue(bytesTheSame(getter, waitingForBytes));
         assertTrue(bytesTheSame(getterSecondConstructor, waitingForBytes));
 
-        setRuntime(CommandResolver.RunTime.JAVA);
+        setEnvironment(CommandResolver.Environment.VEHICLE);
         ParkingTicket.GetParkingTicket resolved =
                 (ParkingTicket.GetParkingTicket) CommandResolver.resolve(waitingForBytes);
         assertTrue(resolved.getPropertyIdentifiers().equals("01"));

@@ -62,7 +62,7 @@ class KKeyfobPositionTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as KeyfobPosition.GetKeyfobPositionAvailability
         assertTrue(resolved.identifier == Identifier.KEYFOB_POSITION)

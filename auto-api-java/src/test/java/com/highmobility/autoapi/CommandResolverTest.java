@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommandResolverTest extends BaseTest {
     @Test public void logsInvalidProperties() {
-        setRuntime(CommandResolver.RunTime.JAVA);
+        setEnvironment(CommandResolver.Environment.VEHICLE);
 
         // It tries to match 2 to commands, but for both the property parsing fails
         debugLogExpected(2, () -> {

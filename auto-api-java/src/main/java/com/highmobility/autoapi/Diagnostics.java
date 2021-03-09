@@ -422,7 +422,7 @@ public class Diagnostics {
         }
     
         /**
-         * @return The vehicle odometer value in a given units.
+         * @return The vehicle odometer value in a given units
          */
         public Property<Length> getOdometer() {
             return odometer;
@@ -1039,7 +1039,7 @@ public class Diagnostics {
             }
             
             /**
-             * @param odometer The vehicle odometer value in a given units.
+             * @param odometer The vehicle odometer value in a given units
              * @return The builder
              */
             public Builder setOdometer(Property<Length> odometer) {

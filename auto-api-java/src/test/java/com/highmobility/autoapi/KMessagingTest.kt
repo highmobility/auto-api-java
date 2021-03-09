@@ -65,7 +65,7 @@ class KMessagingTest : BaseTest() {
         val constructed = Messaging.MessageReceived("Hey mom!", "Epp")
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Messaging.MessageReceived
         assertTrue(resolved.text.value == "Hey mom!")

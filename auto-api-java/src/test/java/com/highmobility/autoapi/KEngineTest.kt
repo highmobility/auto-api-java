@@ -79,7 +79,7 @@ class KEngineTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Engine.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.ENGINE)
@@ -100,7 +100,7 @@ class KEngineTest : BaseTest() {
         val secondConstructed = Engine.GetStateAvailability(0x01, 0x02)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Engine.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.ENGINE)
@@ -117,7 +117,7 @@ class KEngineTest : BaseTest() {
         val constructed = Engine.TurnEngineOnOff(OnOffState.OFF)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Engine.TurnEngineOnOff
         assertTrue(resolved.status.value == OnOffState.OFF)
@@ -132,7 +132,7 @@ class KEngineTest : BaseTest() {
         val constructed = Engine.ActivateDeactivateStartStop(ActiveState.ACTIVE)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Engine.ActivateDeactivateStartStop
         assertTrue(resolved.startStopState.value == ActiveState.ACTIVE)

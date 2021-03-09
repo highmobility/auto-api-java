@@ -37,7 +37,7 @@ class KTheftAlarmTest : BaseTest() {
             "02000401000102" +  // Interior protection sensor is active
             "03000401000102" +  // Tow protection sensor is active
             "04000401000106" +  // Last warning is for the hood
-            "05000B01000800000172bcd25b10" +  // Last trip happened at 16. June 2020 at 11:10:02 GMT
+            "05000B01000800000172bcd25b10" +  // Last event happened at 16. June 2020 at 11:10:02 GMT
             "06000401000100" +  // Last event had a low impact
             "07000401000105" // Last event happened to rear right position
     )
@@ -94,7 +94,7 @@ class KTheftAlarmTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as TheftAlarm.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.THEFT_ALARM)
@@ -115,7 +115,7 @@ class KTheftAlarmTest : BaseTest() {
         val secondConstructed = TheftAlarm.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as TheftAlarm.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.THEFT_ALARM)
@@ -132,7 +132,7 @@ class KTheftAlarmTest : BaseTest() {
         val constructed = TheftAlarm.SetTheftAlarm(TheftAlarm.Status.ARMED)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as TheftAlarm.SetTheftAlarm
         assertTrue(resolved.status.value == TheftAlarm.Status.ARMED)

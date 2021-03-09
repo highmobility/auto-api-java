@@ -122,7 +122,7 @@ class KChassisSettingsTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ChassisSettings.GetChassisSettingsAvailability
         assertTrue(resolved.identifier == Identifier.CHASSIS_SETTINGS)
@@ -143,7 +143,7 @@ class KChassisSettingsTest : BaseTest() {
         val secondConstructed = ChassisSettings.GetChassisSettingsAvailability(0x01, 0x02, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as ChassisSettings.GetChassisSettingsAvailability
         assertTrue(resolved.identifier == Identifier.CHASSIS_SETTINGS)
@@ -160,7 +160,7 @@ class KChassisSettingsTest : BaseTest() {
         val constructed = ChassisSettings.SetDrivingMode(DrivingMode.ECO)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ChassisSettings.SetDrivingMode
         assertTrue(resolved.drivingMode.value == DrivingMode.ECO)
@@ -175,7 +175,7 @@ class KChassisSettingsTest : BaseTest() {
         val constructed = ChassisSettings.StartStopSportsChrono(ChassisSettings.SportChrono.ACTIVE)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ChassisSettings.StartStopSportsChrono
         assertTrue(resolved.sportChrono.value == ChassisSettings.SportChrono.ACTIVE)
@@ -194,7 +194,7 @@ class KChassisSettingsTest : BaseTest() {
             )
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ChassisSettings.SetSpringRates
         assertTrue(resolved.currentSpringRates[0].value?.axle == Axle.FRONT)
@@ -214,7 +214,7 @@ class KChassisSettingsTest : BaseTest() {
         val constructed = ChassisSettings.SetChassisPosition(Length(25.4, Length.Unit.MILLIMETERS))
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as ChassisSettings.SetChassisPosition
         assertTrue(resolved.currentChassisPosition.value?.value == 25.4)

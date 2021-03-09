@@ -90,7 +90,7 @@ class KVehicleLocationTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as VehicleLocation.GetVehicleLocationAvailability
         assertTrue(resolved.identifier == Identifier.VEHICLE_LOCATION)
@@ -111,7 +111,7 @@ class KVehicleLocationTest : BaseTest() {
         val secondConstructed = VehicleLocation.GetVehicleLocationAvailability(0x04, 0x05, 0x06, 0x07)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as VehicleLocation.GetVehicleLocationAvailability
         assertTrue(resolved.identifier == Identifier.VEHICLE_LOCATION)

@@ -82,7 +82,7 @@ class KNotificationsTest : BaseTest() {
             )
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Notifications.Notification
         assertTrue(resolved.text.value == "Open Garage")
@@ -101,7 +101,7 @@ class KNotificationsTest : BaseTest() {
         val constructed = Notifications.Action(27)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Notifications.Action
         assertTrue(resolved.activatedAction.value == 27)
@@ -116,7 +116,7 @@ class KNotificationsTest : BaseTest() {
         val constructed = Notifications.ClearNotification()
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Notifications.ClearNotification
         assertTrue(resolved == bytes)
@@ -126,7 +126,7 @@ class KNotificationsTest : BaseTest() {
         val bytes = Bytes(COMMAND_HEADER + "003801" +
             "040004010001CD")
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         debugLogExpected { 
             val resolved = CommandResolver.resolve(bytes)

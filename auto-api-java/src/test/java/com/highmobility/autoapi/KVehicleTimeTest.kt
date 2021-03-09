@@ -72,7 +72,7 @@ class KVehicleTimeTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as VehicleTime.GetVehicleTimeAvailability
         assertTrue(resolved.identifier == Identifier.VEHICLE_TIME)

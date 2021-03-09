@@ -78,7 +78,7 @@ class KDiagnosticsTest : BaseTest() {
             "1d002201001F0200074331313136464100095244555f3231324652000750454e44494e4700" +  // Trouble code 'C1116FA' with ECU-ID 'RDU_212FR' occurred 2 times and is 'PENDING'
             "1d001F01001C020007433136334146410006445452323132000750454e44494e4701" +  // Trouble code 'C163AFA' with ECU-ID 'DTR212' occurred 2 times in body-system and is 'PENDING'
             "1e000D01000A120441024f8800000000" +  // Odometer is showing 150'001km
-            "1f000D01000A1205401999999999999a" +  // Odometer is showing 6.4Mm – length of the Great Wall.
+            "1f000D01000A120440a0040000000000" +  // Odometer is showing 2050.0km
             "20000D01000A0702409772999999999a" +  // The engine has operated 1'500.65h in total
             "2100050100020000" +  // Front left tire pressure is normal
             "2100050100020101" +  // Front right tire pressure is low
@@ -149,7 +149,7 @@ class KDiagnosticsTest : BaseTest() {
         builder.addTroubleCode(Property(TroubleCode(2, "C1116FA", "RDU_212FR", "PENDING", TroubleCode.System.UNKNOWN)))
         builder.addTroubleCode(Property(TroubleCode(2, "C163AFA", "DTR212", "PENDING", TroubleCode.System.BODY)))
         builder.setMileageMeters(Property(Length(150001.0, Length.Unit.KILOMETERS)))
-        builder.setOdometer(Property(Length(6.4, Length.Unit.MEGAMETERS)))
+        builder.setOdometer(Property(Length(2050.0, Length.Unit.KILOMETERS)))
         builder.setEngineTotalOperatingTime(Property(Duration(1500.65, Duration.Unit.HOURS)))
         builder.addTirePressureStatus(Property(TirePressureStatus(LocationWheel.FRONT_LEFT, TirePressureStatus.Status.NORMAL)))
         builder.addTirePressureStatus(Property(TirePressureStatus(LocationWheel.FRONT_RIGHT, TirePressureStatus.Status.LOW)))
@@ -276,8 +276,8 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(state.troubleCodes[1].value?.system == TroubleCode.System.BODY)
         assertTrue(state.mileageMeters.value?.value == 150001.0)
         assertTrue(state.mileageMeters.value?.unit == Length.Unit.KILOMETERS)
-        assertTrue(state.odometer.value?.value == 6.4)
-        assertTrue(state.odometer.value?.unit == Length.Unit.MEGAMETERS)
+        assertTrue(state.odometer.value?.value == 2050.0)
+        assertTrue(state.odometer.value?.unit == Length.Unit.KILOMETERS)
         assertTrue(state.engineTotalOperatingTime.value?.value == 1500.65)
         assertTrue(state.engineTotalOperatingTime.value?.unit == Duration.Unit.HOURS)
         assertTrue(state.tirePressureStatuses[0].value?.location == LocationWheel.FRONT_LEFT)
@@ -338,7 +338,7 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Diagnostics.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.DIAGNOSTICS)
@@ -359,7 +359,7 @@ class KDiagnosticsTest : BaseTest() {
         val secondConstructed = Diagnostics.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Diagnostics.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.DIAGNOSTICS)

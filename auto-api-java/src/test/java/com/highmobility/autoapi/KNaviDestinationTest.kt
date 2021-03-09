@@ -95,7 +95,7 @@ class KNaviDestinationTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as NaviDestination.GetNaviDestinationAvailability
         assertTrue(resolved.identifier == Identifier.NAVI_DESTINATION)
@@ -116,7 +116,7 @@ class KNaviDestinationTest : BaseTest() {
         val secondConstructed = NaviDestination.GetNaviDestinationAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as NaviDestination.GetNaviDestinationAvailability
         assertTrue(resolved.identifier == Identifier.NAVI_DESTINATION)
@@ -134,7 +134,7 @@ class KNaviDestinationTest : BaseTest() {
         val constructed = NaviDestination.SetNaviDestination(Coordinates(52.520008, 13.404954), "Berlin")
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as NaviDestination.SetNaviDestination
         assertTrue(resolved.coordinates.value?.latitude == 52.520008)

@@ -81,7 +81,7 @@ class KLightConditionsTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as LightConditions.GetLightConditionsAvailability
         assertTrue(resolved.identifier == Identifier.LIGHT_CONDITIONS)
@@ -102,7 +102,7 @@ class KLightConditionsTest : BaseTest() {
         val secondConstructed = LightConditions.GetLightConditionsAvailability(0x01, 0x02)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as LightConditions.GetLightConditionsAvailability
         assertTrue(resolved.identifier == Identifier.LIGHT_CONDITIONS)

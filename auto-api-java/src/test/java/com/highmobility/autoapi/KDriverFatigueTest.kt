@@ -62,7 +62,7 @@ class KDriverFatigueTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as DriverFatigue.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.DRIVER_FATIGUE)

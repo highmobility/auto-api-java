@@ -207,7 +207,7 @@ class KChargingTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Charging.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.CHARGING)
@@ -228,7 +228,7 @@ class KChargingTest : BaseTest() {
         val secondConstructed = Charging.GetStateAvailability(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Charging.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.CHARGING)
@@ -245,7 +245,7 @@ class KChargingTest : BaseTest() {
         val constructed = Charging.StartStopCharging(Charging.Status.CHARGING)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Charging.StartStopCharging
         assertTrue(resolved.status.value == Charging.Status.CHARGING)
@@ -260,7 +260,7 @@ class KChargingTest : BaseTest() {
         val constructed = Charging.SetChargeLimit(0.9)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Charging.SetChargeLimit
         assertTrue(resolved.chargeLimit.value == 0.9)
@@ -275,7 +275,7 @@ class KChargingTest : BaseTest() {
         val constructed = Charging.OpenCloseChargingPort(Position.OPEN)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Charging.OpenCloseChargingPort
         assertTrue(resolved.chargePortState.value == Position.OPEN)
@@ -290,7 +290,7 @@ class KChargingTest : BaseTest() {
         val constructed = Charging.SetChargeMode(Charging.ChargeMode.TIMER_BASED)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Charging.SetChargeMode
         assertTrue(resolved.chargeMode.value == Charging.ChargeMode.TIMER_BASED)
@@ -311,7 +311,7 @@ class KChargingTest : BaseTest() {
             )
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Charging.SetChargingTimers
         assertTrue(resolved.timers[0].value?.timerType == Timer.TimerType.PREFERRED_START_TIME)
@@ -335,7 +335,7 @@ class KChargingTest : BaseTest() {
             )
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Charging.SetReductionOfChargingCurrentTimes
         assertTrue(resolved.reductionTimes[0].value?.startStop == StartStop.START)

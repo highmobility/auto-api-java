@@ -79,7 +79,7 @@ class KFuelingTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Fueling.GetGasFlapStateAvailability
         assertTrue(resolved.identifier == Identifier.FUELING)
@@ -100,7 +100,7 @@ class KFuelingTest : BaseTest() {
         val secondConstructed = Fueling.GetGasFlapStateAvailability(0x02, 0x03)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Fueling.GetGasFlapStateAvailability
         assertTrue(resolved.identifier == Identifier.FUELING)
@@ -118,7 +118,7 @@ class KFuelingTest : BaseTest() {
         val constructed = Fueling.ControlGasFlap(LockState.LOCKED, Position.CLOSED)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Fueling.ControlGasFlap
         assertTrue(resolved.gasFlapLock.value == LockState.LOCKED)

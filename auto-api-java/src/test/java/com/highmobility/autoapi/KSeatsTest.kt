@@ -113,7 +113,7 @@ class KSeatsTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Seats.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.SEATS)
@@ -134,7 +134,7 @@ class KSeatsTest : BaseTest() {
         val secondConstructed = Seats.GetStateAvailability(0x02, 0x03)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Seats.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.SEATS)

@@ -79,7 +79,7 @@ class KTrunkTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Trunk.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.TRUNK)
@@ -100,7 +100,7 @@ class KTrunkTest : BaseTest() {
         val secondConstructed = Trunk.GetStateAvailability(0x01, 0x02)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Trunk.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.TRUNK)
@@ -118,7 +118,7 @@ class KTrunkTest : BaseTest() {
         val constructed = Trunk.ControlTrunk(LockState.UNLOCKED, Position.OPEN)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Trunk.ControlTrunk
         assertTrue(resolved.lock.value == LockState.UNLOCKED)

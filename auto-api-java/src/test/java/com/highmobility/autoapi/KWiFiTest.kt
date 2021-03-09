@@ -85,7 +85,7 @@ class KWiFiTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as WiFi.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.WI_FI)
@@ -106,7 +106,7 @@ class KWiFiTest : BaseTest() {
         val secondConstructed = WiFi.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as WiFi.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.WI_FI)
@@ -125,7 +125,7 @@ class KWiFiTest : BaseTest() {
         val constructed = WiFi.ConnectToNetwork("HOME", NetworkSecurity.WPA2_PERSONAL, "great_secret12")
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as WiFi.ConnectToNetwork
         assertTrue(resolved.networkSSID.value == "HOME")
@@ -142,7 +142,7 @@ class KWiFiTest : BaseTest() {
         val constructed = WiFi.ForgetNetwork("HOME")
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as WiFi.ForgetNetwork
         assertTrue(resolved.networkSSID.value == "HOME")
@@ -157,7 +157,7 @@ class KWiFiTest : BaseTest() {
         val constructed = WiFi.EnableDisableWiFi(EnabledState.ENABLED)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as WiFi.EnableDisableWiFi
         assertTrue(resolved.status.value == EnabledState.ENABLED)

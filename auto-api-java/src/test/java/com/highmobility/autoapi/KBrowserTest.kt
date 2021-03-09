@@ -38,7 +38,7 @@ class KBrowserTest : BaseTest() {
         val constructed = Browser.LoadUrl("https://about.high-mobility.com")
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Browser.LoadUrl
         assertTrue(resolved.url.value == "https://about.high-mobility.com")

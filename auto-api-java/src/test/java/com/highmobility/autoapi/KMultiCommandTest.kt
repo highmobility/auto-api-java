@@ -68,7 +68,7 @@ class KMultiCommandTest : BaseTest() {
             )
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as MultiCommand.MultiCommandCommand
         assertTrue(resolved.multiCommands[0].value == CommandResolver.resolve("0c00200106000401000101"))

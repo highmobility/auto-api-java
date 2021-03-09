@@ -39,7 +39,7 @@ class KHeartRateTest : BaseTest() {
         val constructed = HeartRate.SendHeartRate(Frequency(64.0, Frequency.Unit.TIMES_PER_MINUTE))
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as HeartRate.SendHeartRate
         assertTrue(resolved.heartRate.value?.value == 64.0)

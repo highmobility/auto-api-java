@@ -70,7 +70,7 @@ class KHoodTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Hood.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.HOOD)

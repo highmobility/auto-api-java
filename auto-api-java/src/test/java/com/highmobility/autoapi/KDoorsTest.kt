@@ -131,7 +131,7 @@ class KDoorsTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Doors.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.DOORS)
@@ -152,7 +152,7 @@ class KDoorsTest : BaseTest() {
         val secondConstructed = Doors.GetStateAvailability(0x02, 0x03, 0x04, 0x05, 0x06)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Doors.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.DOORS)
@@ -169,7 +169,7 @@ class KDoorsTest : BaseTest() {
         val constructed = Doors.LockUnlockDoors(LockState.UNLOCKED)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Doors.LockUnlockDoors
         assertTrue(resolved.locksState.value == LockState.UNLOCKED)

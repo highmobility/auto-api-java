@@ -90,7 +90,7 @@ class KRooftopControlTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as RooftopControl.GetRooftopStateAvailability
         assertTrue(resolved.identifier == Identifier.ROOFTOP_CONTROL)
@@ -111,7 +111,7 @@ class KRooftopControlTest : BaseTest() {
         val secondConstructed = RooftopControl.GetRooftopStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as RooftopControl.GetRooftopStateAvailability
         assertTrue(resolved.identifier == Identifier.ROOFTOP_CONTROL)
@@ -132,7 +132,7 @@ class KRooftopControlTest : BaseTest() {
         val constructed = RooftopControl.ControlRooftop(1.0, 0.5, RooftopControl.ConvertibleRoofState.OPEN, RooftopControl.SunroofTiltState.HALF_TILTED, RooftopControl.SunroofState.OPEN)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as RooftopControl.ControlRooftop
         assertTrue(resolved.dimming.value == 1.0)

@@ -113,7 +113,7 @@ class KWindowsTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Windows.GetWindowsAvailability
         assertTrue(resolved.identifier == Identifier.WINDOWS)
@@ -134,7 +134,7 @@ class KWindowsTest : BaseTest() {
         val secondConstructed = Windows.GetWindowsAvailability(0x02, 0x03)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Windows.GetWindowsAvailability
         assertTrue(resolved.identifier == Identifier.WINDOWS)
@@ -173,7 +173,7 @@ class KWindowsTest : BaseTest() {
             )
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Windows.ControlWindows
         assertTrue(resolved.openPercentages[0].value?.location == WindowLocation.FRONT_LEFT)

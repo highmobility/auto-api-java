@@ -82,7 +82,7 @@ class KIgnitionTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Ignition.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.IGNITION)
@@ -103,7 +103,7 @@ class KIgnitionTest : BaseTest() {
         val secondConstructed = Ignition.GetStateAvailability(0x01, 0x02, 0x03)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Ignition.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.IGNITION)
@@ -120,7 +120,7 @@ class KIgnitionTest : BaseTest() {
         val constructed = Ignition.TurnIgnitionOnOff(OnOffState.OFF)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Ignition.TurnIgnitionOnOff
         assertTrue(resolved.status.value == OnOffState.OFF)

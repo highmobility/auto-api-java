@@ -150,7 +150,7 @@ class KClimateTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Climate.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.CLIMATE)
@@ -171,7 +171,7 @@ class KClimateTest : BaseTest() {
         val secondConstructed = Climate.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0b, 0x0c)
         assertTrue(constructed == secondConstructed)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(allBytes) as Climate.GetStateAvailability
         assertTrue(resolved.identifier == Identifier.CLIMATE)
@@ -204,7 +204,7 @@ class KClimateTest : BaseTest() {
             )
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Climate.ChangeStartingTimes
         assertTrue(resolved.hvacWeekdayStartingTimes[0].value?.weekday == Weekday.MONDAY)
@@ -242,7 +242,7 @@ class KClimateTest : BaseTest() {
         val constructed = Climate.StartStopHvac(ActiveState.ACTIVE)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Climate.StartStopHvac
         assertTrue(resolved.hvacState.value == ActiveState.ACTIVE)
@@ -257,7 +257,7 @@ class KClimateTest : BaseTest() {
         val constructed = Climate.StartStopDefogging(ActiveState.INACTIVE)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Climate.StartStopDefogging
         assertTrue(resolved.defoggingState.value == ActiveState.INACTIVE)
@@ -272,7 +272,7 @@ class KClimateTest : BaseTest() {
         val constructed = Climate.StartStopDefrosting(ActiveState.INACTIVE)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Climate.StartStopDefrosting
         assertTrue(resolved.defrostingState.value == ActiveState.INACTIVE)
@@ -287,7 +287,7 @@ class KClimateTest : BaseTest() {
         val constructed = Climate.StartStopIonising(ActiveState.INACTIVE)
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Climate.StartStopIonising
         assertTrue(resolved.ionisingState.value == ActiveState.INACTIVE)
@@ -304,7 +304,7 @@ class KClimateTest : BaseTest() {
         val constructed = Climate.SetTemperatureSettings(Temperature(21.5, Temperature.Unit.CELSIUS), Temperature(21.7, Temperature.Unit.CELSIUS), Temperature(21.6, Temperature.Unit.CELSIUS))
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Climate.SetTemperatureSettings
         assertTrue(resolved.driverTemperatureSetting.value?.value == 21.5)

@@ -66,7 +66,7 @@ class KRemoteControlTest : BaseTest() {
         assertTrue(created.getPropertyIdentifiers().isEmpty())
         assertTrue(created == bytes)
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as RemoteControl.GetControlStateAvailability
         assertTrue(resolved.identifier == Identifier.REMOTE_CONTROL)
@@ -84,7 +84,7 @@ class KRemoteControlTest : BaseTest() {
         val constructed = RemoteControl.ControlCommand(Angle(50.0, Angle.Unit.DEGREES), Speed(5.0, Speed.Unit.KILOMETERS_PER_HOUR))
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as RemoteControl.ControlCommand
         assertTrue(resolved.angle.value?.value == 50.0)
@@ -102,7 +102,7 @@ class KRemoteControlTest : BaseTest() {
         val constructed = RemoteControl.StartControl()
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as RemoteControl.StartControl
         assertTrue(resolved == bytes)
@@ -112,7 +112,7 @@ class KRemoteControlTest : BaseTest() {
         val bytes = Bytes(COMMAND_HEADER + "002701" +
             "010004010001CD")
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         debugLogExpected(2) { 
             val resolved = CommandResolver.resolve(bytes)
@@ -128,7 +128,7 @@ class KRemoteControlTest : BaseTest() {
         val constructed = RemoteControl.StopControl()
         assertTrue(bytesTheSame(constructed, bytes))
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as RemoteControl.StopControl
         assertTrue(resolved == bytes)
@@ -138,7 +138,7 @@ class KRemoteControlTest : BaseTest() {
         val bytes = Bytes(COMMAND_HEADER + "002701" +
             "010004010001CD")
     
-        setRuntime(CommandResolver.RunTime.JAVA)
+        setEnvironment(CommandResolver.Environment.VEHICLE)
     
         debugLogExpected(2) { 
             val resolved = CommandResolver.resolve(bytes)
