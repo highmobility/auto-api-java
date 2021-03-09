@@ -31,6 +31,7 @@ import com.highmobility.value.Bytes;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
@@ -133,6 +134,13 @@ public class PropertyComponentValue<V> extends PropertyComponent {
 
     private String getDebugMessage(Class<V> valueClass, Bytes valueBytes) {
         return String.format("Failed parsing %s, bytes %s", valueClass.getName(), valueBytes);
+    }
+
+    @Override public String toString() {
+        return "{" +
+                "value=" + value +
+                ", type=" + valueClass.getSimpleName() +
+                '}';
     }
 
     public static Bytes getBytes(Object value) {

@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -284,6 +286,25 @@ public class Command extends Bytes {
 
     // Used to catch the property parsing exception, managing parsed properties in this class.
     protected PropertyIterator propertyIterator;
+
+    @Override public String toString() {
+        String propertiesAsString = Arrays.stream(properties)
+                .map(n -> n.toString())
+                .collect(Collectors.joining("\n", "\n", ""));
+
+        return "Command{" +
+                "type=" + type +
+                ", identifier=" + new Bytes(Property.intToBytes(identifier, 2)) +
+                ", autoApiVersion=" + autoApiVersion +
+                ", properties=" + propertiesAsString +
+                ", nonce=" + nonce +
+                ", signature=" + signature +
+                ", timestamp=" + timestamp +
+                ", vin='" + vin + '\'' +
+                ", brand=" + brand +
+                ", full bytes=" + getHex() +
+                '}';
+    }
 
     protected class PropertyIterator implements Iterator<Property> {
         private final int currentSize;
