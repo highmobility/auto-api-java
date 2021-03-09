@@ -51,7 +51,7 @@ public class Climate {
     public static final byte PROPERTY_REAR_TEMPERATURE_SETTING = 0x0c;
 
     /**
-     * Get Climate property availability information.
+     * Get Climate property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**
@@ -665,7 +665,7 @@ public class Climate {
             }
             
             /**
-             * Add an array of hvac weekday starting times.
+             * Add an array of hvac weekday starting times
              * 
              * @param hvacWeekdayStartingTimes The hvac weekday starting times
              * @return The builder
@@ -680,7 +680,7 @@ public class Climate {
             }
             
             /**
-             * Add a single hvac weekday starting time.
+             * Add a single hvac weekday starting time
              * 
              * @param hvacWeekdayStartingTime The hvac weekday starting time
              * @return The builder

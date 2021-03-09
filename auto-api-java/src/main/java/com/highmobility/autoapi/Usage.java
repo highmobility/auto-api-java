@@ -89,7 +89,7 @@ public class Usage {
     public static final byte PROPERTY_ECO_SCORE_BONUS_RANGE = 0x27;
 
     /**
-     * Get Usage property availability information.
+     * Get Usage property availability information
      */
     public static class GetUsageAvailability extends GetAvailabilityCommand {
         /**
@@ -727,7 +727,7 @@ public class Usage {
             }
             
             /**
-             * Add an array of driving modes activation periods.
+             * Add an array of driving modes activation periods
              * 
              * @param drivingModesActivationPeriods The driving modes activation periods
              * @return The builder
@@ -742,7 +742,7 @@ public class Usage {
             }
             
             /**
-             * Add a single driving modes activation period.
+             * Add a single driving modes activation period
              * 
              * @param drivingModesActivationPeriod The driving modes activation period
              * @return The builder
@@ -755,7 +755,7 @@ public class Usage {
             }
             
             /**
-             * Add an array of driving modes energy consumptions.
+             * Add an array of driving modes energy consumptions
              * 
              * @param drivingModesEnergyConsumptions The driving modes energy consumptions
              * @return The builder
@@ -770,7 +770,7 @@ public class Usage {
             }
             
             /**
-             * Add a single driving mode energy consumption.
+             * Add a single driving mode energy consumption
              * 
              * @param drivingModeEnergyConsumption The driving mode energy consumption
              * @return The builder

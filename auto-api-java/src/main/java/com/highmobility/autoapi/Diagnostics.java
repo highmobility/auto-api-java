@@ -91,7 +91,7 @@ public class Diagnostics {
     public static final byte PROPERTY_DIESEL_EXHAUST_FILTER_STATUS = 0x28;
 
     /**
-     * Get Diagnostics property availability information.
+     * Get Diagnostics property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**
@@ -887,7 +887,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add an array of check control messages.
+             * Add an array of check control messages
              * 
              * @param checkControlMessages The check control messages
              * @return The builder
@@ -902,7 +902,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add a single check control message.
+             * Add a single check control message
              * 
              * @param checkControlMessage The check control message
              * @return The builder
@@ -915,7 +915,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add an array of tire pressures.
+             * Add an array of tire pressures
              * 
              * @param tirePressures The tire pressures
              * @return The builder
@@ -930,7 +930,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add a single tire pressure.
+             * Add a single tire pressure
              * 
              * @param tirePressure The tire pressure
              * @return The builder
@@ -943,7 +943,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add an array of tire temperatures.
+             * Add an array of tire temperatures
              * 
              * @param tireTemperatures The tire temperatures
              * @return The builder
@@ -958,7 +958,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add a single tire temperature.
+             * Add a single tire temperature
              * 
              * @param tireTemperature The tire temperature
              * @return The builder
@@ -971,7 +971,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add an array of wheel rpms.
+             * Add an array of wheel rpms
              * 
              * @param wheelRPMs The wheel rpms
              * @return The builder
@@ -986,7 +986,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add a single wheel rpm.
+             * Add a single wheel rpm
              * 
              * @param wheelRpm The wheel rpm
              * @return The builder
@@ -999,7 +999,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add an array of trouble codes.
+             * Add an array of trouble codes
              * 
              * @param troubleCodes The trouble codes
              * @return The builder
@@ -1014,7 +1014,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add a single trouble code.
+             * Add a single trouble code
              * 
              * @param troubleCode The trouble code
              * @return The builder
@@ -1059,7 +1059,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add an array of tire pressure statuses.
+             * Add an array of tire pressure statuses
              * 
              * @param tirePressureStatuses The tire pressure statuses
              * @return The builder
@@ -1074,7 +1074,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add a single tire pressure status.
+             * Add a single tire pressure status
              * 
              * @param tirePressureStatus The tire pressure status
              * @return The builder
@@ -1107,7 +1107,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add an array of oem trouble code values.
+             * Add an array of oem trouble code values
              * 
              * @param oemTroubleCodeValues The oem trouble code values. Additional OEM trouble codes
              * @return The builder
@@ -1122,7 +1122,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add a single oem trouble code value.
+             * Add a single oem trouble code value
              * 
              * @param oemTroubleCodeValue The oem trouble code value. Additional OEM trouble codes
              * @return The builder
@@ -1155,7 +1155,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add an array of confirmed trouble codes.
+             * Add an array of confirmed trouble codes
              * 
              * @param confirmedTroubleCodes The confirmed trouble codes
              * @return The builder
@@ -1170,7 +1170,7 @@ public class Diagnostics {
             }
             
             /**
-             * Add a single confirmed trouble code.
+             * Add a single confirmed trouble code
              * 
              * @param confirmedTroubleCode The confirmed trouble code
              * @return The builder

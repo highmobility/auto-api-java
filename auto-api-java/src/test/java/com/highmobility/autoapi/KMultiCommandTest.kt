@@ -63,8 +63,9 @@ class KMultiCommandTest : BaseTest() {
             "02000E01000B0c00350101000401000100")
     
         val constructed = MultiCommand.MultiCommandCommand(arrayListOf(
-            CommandResolver.resolve("0c00200106000401000101"), 
-            CommandResolver.resolve("0c00350101000401000100")))
+                CommandResolver.resolve("0c00200106000401000101"), 
+                CommandResolver.resolve("0c00350101000401000100"))
+            )
         assertTrue(bytesTheSame(constructed, bytes))
     
         setRuntime(CommandResolver.RunTime.JAVA)

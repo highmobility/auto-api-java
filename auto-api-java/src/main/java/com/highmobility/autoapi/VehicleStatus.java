@@ -119,7 +119,7 @@ public class VehicleStatus {
             }
     
             /**
-             * Add an array of states.
+             * Add an array of states
              * 
              * @param states The states
              * @return The builder
@@ -133,7 +133,7 @@ public class VehicleStatus {
                 return this;
             }
             /**
-             * Add a single state.
+             * Add a single state
              * 
              * @param state The state
              * @return The builder

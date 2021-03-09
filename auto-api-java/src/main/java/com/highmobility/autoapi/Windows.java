@@ -42,7 +42,7 @@ public class Windows {
     public static final byte PROPERTY_POSITIONS = 0x03;
 
     /**
-     * Get Windows property availability information.
+     * Get Windows property availability information
      */
     public static class GetWindowsAvailability extends GetAvailabilityCommand {
         /**
@@ -310,7 +310,7 @@ public class Windows {
             }
     
             /**
-             * Add an array of open percentages.
+             * Add an array of open percentages
              * 
              * @param openPercentages The open percentages
              * @return The builder
@@ -325,7 +325,7 @@ public class Windows {
             }
             
             /**
-             * Add a single open percentage.
+             * Add a single open percentage
              * 
              * @param openPercentage The open percentage
              * @return The builder
@@ -338,7 +338,7 @@ public class Windows {
             }
             
             /**
-             * Add an array of positions.
+             * Add an array of positions
              * 
              * @param positions The positions
              * @return The builder
@@ -352,7 +352,7 @@ public class Windows {
                 return this;
             }
             /**
-             * Add a single position.
+             * Add a single position
              * 
              * @param position The position
              * @return The builder

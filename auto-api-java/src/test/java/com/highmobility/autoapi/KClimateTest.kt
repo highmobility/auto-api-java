@@ -193,14 +193,15 @@ class KClimateTest : BaseTest() {
             "0b0006010003071000")
     
         val constructed = Climate.ChangeStartingTimes(arrayListOf(
-            HvacWeekdayStartingTime(Weekday.MONDAY, Time(16, 0)), 
-            HvacWeekdayStartingTime(Weekday.TUESDAY, Time(16, 0)), 
-            HvacWeekdayStartingTime(Weekday.WEDNESDAY, Time(16, 0)), 
-            HvacWeekdayStartingTime(Weekday.THURSDAY, Time(16, 0)), 
-            HvacWeekdayStartingTime(Weekday.FRIDAY, Time(16, 0)), 
-            HvacWeekdayStartingTime(Weekday.SATURDAY, Time(18, 30)), 
-            HvacWeekdayStartingTime(Weekday.SUNDAY, Time(19, 31)), 
-            HvacWeekdayStartingTime(Weekday.AUTOMATIC, Time(16, 0))))
+                HvacWeekdayStartingTime(Weekday.MONDAY, Time(16, 0)), 
+                HvacWeekdayStartingTime(Weekday.TUESDAY, Time(16, 0)), 
+                HvacWeekdayStartingTime(Weekday.WEDNESDAY, Time(16, 0)), 
+                HvacWeekdayStartingTime(Weekday.THURSDAY, Time(16, 0)), 
+                HvacWeekdayStartingTime(Weekday.FRIDAY, Time(16, 0)), 
+                HvacWeekdayStartingTime(Weekday.SATURDAY, Time(18, 30)), 
+                HvacWeekdayStartingTime(Weekday.SUNDAY, Time(19, 31)), 
+                HvacWeekdayStartingTime(Weekday.AUTOMATIC, Time(16, 0)))
+            )
         assertTrue(bytesTheSame(constructed, bytes))
     
         setRuntime(CommandResolver.RunTime.JAVA)

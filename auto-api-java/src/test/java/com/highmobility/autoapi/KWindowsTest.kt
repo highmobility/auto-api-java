@@ -158,17 +158,19 @@ class KWindowsTest : BaseTest() {
             "0300050100020401")
     
         val constructed = Windows.ControlWindows(arrayListOf(
-            WindowOpenPercentage(WindowLocation.FRONT_LEFT, 0.2), 
-            WindowOpenPercentage(WindowLocation.FRONT_RIGHT, 0.5), 
-            WindowOpenPercentage(WindowLocation.REAR_RIGHT, 0.5), 
-            WindowOpenPercentage(WindowLocation.REAR_LEFT, 0.1), 
-            WindowOpenPercentage(WindowLocation.HATCH, 0.18)), 
+                WindowOpenPercentage(WindowLocation.FRONT_LEFT, 0.2), 
+                WindowOpenPercentage(WindowLocation.FRONT_RIGHT, 0.5), 
+                WindowOpenPercentage(WindowLocation.REAR_RIGHT, 0.5), 
+                WindowOpenPercentage(WindowLocation.REAR_LEFT, 0.1), 
+                WindowOpenPercentage(WindowLocation.HATCH, 0.18))
+            , 
             arrayListOf(
-            WindowPosition(WindowLocation.FRONT_LEFT, WindowPosition.Position.OPEN), 
-            WindowPosition(WindowLocation.FRONT_RIGHT, WindowPosition.Position.OPEN), 
-            WindowPosition(WindowLocation.REAR_RIGHT, WindowPosition.Position.CLOSED), 
-            WindowPosition(WindowLocation.REAR_LEFT, WindowPosition.Position.OPEN), 
-            WindowPosition(WindowLocation.HATCH, WindowPosition.Position.OPEN)))
+                WindowPosition(WindowLocation.FRONT_LEFT, WindowPosition.Position.OPEN), 
+                WindowPosition(WindowLocation.FRONT_RIGHT, WindowPosition.Position.OPEN), 
+                WindowPosition(WindowLocation.REAR_RIGHT, WindowPosition.Position.CLOSED), 
+                WindowPosition(WindowLocation.REAR_LEFT, WindowPosition.Position.OPEN), 
+                WindowPosition(WindowLocation.HATCH, WindowPosition.Position.OPEN))
+            )
         assertTrue(bytesTheSame(constructed, bytes))
     
         setRuntime(CommandResolver.RunTime.JAVA)

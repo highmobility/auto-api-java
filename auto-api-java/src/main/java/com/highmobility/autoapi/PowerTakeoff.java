@@ -40,7 +40,7 @@ public class PowerTakeoff {
     public static final byte PROPERTY_ENGAGED = 0x02;
 
     /**
-     * Get Power Take-Off property availability information.
+     * Get Power Take-Off property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

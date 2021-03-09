@@ -35,7 +35,7 @@ public class ValetMode {
     public static final byte PROPERTY_STATUS = 0x01;
 
     /**
-     * Get Valet Mode property availability information.
+     * Get Valet Mode property availability information
      */
     public static class GetValetModeAvailability extends GetAvailabilityCommand {
         /**

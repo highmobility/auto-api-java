@@ -37,7 +37,7 @@ public class Offroad {
     public static final byte PROPERTY_WHEEL_SUSPENSION = 0x02;
 
     /**
-     * Get Offroad property availability information.
+     * Get Offroad property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

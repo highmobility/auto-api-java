@@ -34,7 +34,7 @@ public class WeatherConditions {
     public static final byte PROPERTY_RAIN_INTENSITY = 0x01;
 
     /**
-     * Get Weather Conditions property availability information.
+     * Get Weather Conditions property availability information
      */
     public static class GetWeatherConditionsAvailability extends GetAvailabilityCommand {
         /**

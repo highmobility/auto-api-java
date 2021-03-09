@@ -40,7 +40,7 @@ public class KeyfobPosition {
     public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.WEB };
 
     /**
-     * Get Keyfob Position property availability information.
+     * Get Keyfob Position property availability information
      */
     public static class GetKeyfobPositionAvailability extends GetAvailabilityCommand {
         /**

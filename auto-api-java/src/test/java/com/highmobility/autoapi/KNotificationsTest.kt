@@ -77,8 +77,9 @@ class KNotificationsTest : BaseTest() {
     
         val constructed = Notifications.Notification("Open Garage", 
             arrayListOf(
-            ActionItem(27, "Open"), 
-            ActionItem(28, "Cancel")))
+                ActionItem(27, "Open"), 
+                ActionItem(28, "Cancel"))
+            )
         assertTrue(bytesTheSame(constructed, bytes))
     
         setRuntime(CommandResolver.RunTime.JAVA)

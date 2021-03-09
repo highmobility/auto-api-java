@@ -63,7 +63,7 @@ public class HomeCharger {
     public static final byte PROPERTY_CHARGING_POWER = 0x13;
 
     /**
-     * Get Home Charger property availability information.
+     * Get Home Charger property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**
@@ -739,7 +739,7 @@ public class HomeCharger {
             }
             
             /**
-             * Add an array of price tariffs.
+             * Add an array of price tariffs
              * 
              * @param priceTariffs The price tariffs
              * @return The builder
@@ -754,7 +754,7 @@ public class HomeCharger {
             }
             
             /**
-             * Add a single price tariff.
+             * Add a single price tariff
              * 
              * @param priceTariff The price tariff
              * @return The builder

@@ -41,7 +41,7 @@ public class Ignition {
     public static final byte PROPERTY_STATE = 0x03;
 
     /**
-     * Get Ignition property availability information.
+     * Get Ignition property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

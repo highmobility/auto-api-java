@@ -39,7 +39,7 @@ public class Trunk {
     public static final byte PROPERTY_POSITION = 0x02;
 
     /**
-     * Get Trunk property availability information.
+     * Get Trunk property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

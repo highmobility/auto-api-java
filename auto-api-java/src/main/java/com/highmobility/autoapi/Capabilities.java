@@ -188,7 +188,7 @@ public class Capabilities {
             }
     
             /**
-             * Add an array of capabilities.
+             * Add an array of capabilities
              * 
              * @param capabilities The capabilities
              * @return The builder
@@ -203,7 +203,7 @@ public class Capabilities {
             }
             
             /**
-             * Add a single capability.
+             * Add a single capability
              * 
              * @param capability The capability
              * @return The builder
@@ -216,7 +216,7 @@ public class Capabilities {
             }
             
             /**
-             * Add an array of webhooks.
+             * Add an array of webhooks
              * 
              * @param webhooks The webhooks
              * @return The builder
@@ -230,7 +230,7 @@ public class Capabilities {
                 return this;
             }
             /**
-             * Add a single webhook.
+             * Add a single webhook
              * 
              * @param webhook The webhook
              * @return The builder

@@ -55,7 +55,7 @@ public class Lights {
     public static final byte PROPERTY_SWITCH_POSITION = 0x0a;
 
     /**
-     * Get Lights property availability information.
+     * Get Lights property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**
@@ -533,7 +533,7 @@ public class Lights {
             }
             
             /**
-             * Add an array of fog lights.
+             * Add an array of fog lights
              * 
              * @param fogLights The fog lights
              * @return The builder
@@ -548,7 +548,7 @@ public class Lights {
             }
             
             /**
-             * Add a single fog light.
+             * Add a single fog light
              * 
              * @param fogLight The fog light
              * @return The builder
@@ -561,7 +561,7 @@ public class Lights {
             }
             
             /**
-             * Add an array of reading lamps.
+             * Add an array of reading lamps
              * 
              * @param readingLamps The reading lamps
              * @return The builder
@@ -576,7 +576,7 @@ public class Lights {
             }
             
             /**
-             * Add a single reading lamp.
+             * Add a single reading lamp
              * 
              * @param readingLamp The reading lamp
              * @return The builder
@@ -589,7 +589,7 @@ public class Lights {
             }
             
             /**
-             * Add an array of interior lights.
+             * Add an array of interior lights
              * 
              * @param interiorLights The interior lights
              * @return The builder
@@ -604,7 +604,7 @@ public class Lights {
             }
             
             /**
-             * Add a single interior light.
+             * Add a single interior light
              * 
              * @param interiorLight The interior light
              * @return The builder

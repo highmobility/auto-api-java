@@ -48,7 +48,7 @@ public class CruiseControl {
     public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.WEB };
 
     /**
-     * Get Cruise Control property availability information.
+     * Get Cruise Control property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

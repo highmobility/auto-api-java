@@ -35,7 +35,7 @@ public class VehicleTime {
     public static final byte PROPERTY_VEHICLE_TIME = 0x01;
 
     /**
-     * Get Vehicle Time property availability information.
+     * Get Vehicle Time property availability information
      */
     public static class GetVehicleTimeAvailability extends GetAvailabilityCommand {
         /**

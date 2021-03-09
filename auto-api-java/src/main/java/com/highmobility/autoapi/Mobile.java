@@ -35,7 +35,7 @@ public class Mobile {
     public static final byte PROPERTY_CONNECTION = 0x01;
 
     /**
-     * Get Mobile property availability information.
+     * Get Mobile property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

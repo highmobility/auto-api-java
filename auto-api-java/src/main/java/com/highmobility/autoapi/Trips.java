@@ -398,7 +398,7 @@ public class Trips {
             }
             
             /**
-             * Add an array of start address components.
+             * Add an array of start address components
              * 
              * @param startAddressComponents The start address components. Start address components
              * @return The builder
@@ -413,7 +413,7 @@ public class Trips {
             }
             
             /**
-             * Add a single start address component.
+             * Add a single start address component
              * 
              * @param startAddressComponent The start address component. Start address components
              * @return The builder
@@ -426,7 +426,7 @@ public class Trips {
             }
             
             /**
-             * Add an array of end address components.
+             * Add an array of end address components
              * 
              * @param endAddressComponents The end address components. End address components
              * @return The builder
@@ -440,7 +440,7 @@ public class Trips {
                 return this;
             }
             /**
-             * Add a single end address component.
+             * Add a single end address component
              * 
              * @param endAddressComponent The end address component. End address components
              * @return The builder

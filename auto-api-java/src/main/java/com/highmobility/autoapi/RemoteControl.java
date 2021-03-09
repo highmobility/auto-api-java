@@ -46,7 +46,7 @@ public class RemoteControl {
     public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.WEB };
 
     /**
-     * Get Remote Control property availability information.
+     * Get Remote Control property availability information
      */
     public static class GetControlStateAvailability extends GetAvailabilityCommand {
         /**

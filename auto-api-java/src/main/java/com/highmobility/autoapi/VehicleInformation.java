@@ -537,7 +537,7 @@ public class VehicleInformation {
             }
             
             /**
-             * Add an array of equipments.
+             * Add an array of equipments
              * 
              * @param equipments The equipments. Names of equipment the vehicle is equipped with
              * @return The builder
@@ -552,7 +552,7 @@ public class VehicleInformation {
             }
             
             /**
-             * Add a single equipment.
+             * Add a single equipment
              * 
              * @param equipment The equipment. Names of equipment the vehicle is equipped with
              * @return The builder

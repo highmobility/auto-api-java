@@ -66,7 +66,7 @@ public class Race {
     public static final byte PROPERTY_VEHICLE_MOVING = 0x12;
 
     /**
-     * Get Race property availability information.
+     * Get Race property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**
@@ -431,7 +431,7 @@ public class Race {
             }
     
             /**
-             * Add an array of accelerations.
+             * Add an array of accelerations
              * 
              * @param accelerations The accelerations
              * @return The builder
@@ -446,7 +446,7 @@ public class Race {
             }
             
             /**
-             * Add a single acceleration.
+             * Add a single acceleration
              * 
              * @param acceleration The acceleration
              * @return The builder
@@ -539,7 +539,7 @@ public class Race {
             }
             
             /**
-             * Add an array of brake torque vectorings.
+             * Add an array of brake torque vectorings
              * 
              * @param brakeTorqueVectorings The brake torque vectorings
              * @return The builder
@@ -554,7 +554,7 @@ public class Race {
             }
             
             /**
-             * Add a single brake torque vectoring.
+             * Add a single brake torque vectoring
              * 
              * @param brakeTorqueVectoring The brake torque vectoring
              * @return The builder

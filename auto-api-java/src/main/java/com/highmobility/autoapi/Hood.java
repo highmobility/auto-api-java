@@ -37,7 +37,7 @@ public class Hood {
     public static final byte PROPERTY_POSITION = 0x01;
 
     /**
-     * Get Hood property availability information.
+     * Get Hood property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

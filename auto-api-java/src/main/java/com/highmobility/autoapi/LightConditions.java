@@ -37,7 +37,7 @@ public class LightConditions {
     public static final byte PROPERTY_INSIDE_LIGHT = 0x02;
 
     /**
-     * Get Light Conditions property availability information.
+     * Get Light Conditions property availability information
      */
     public static class GetLightConditionsAvailability extends GetAvailabilityCommand {
         /**

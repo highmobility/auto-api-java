@@ -275,7 +275,7 @@ public class Notifications {
             }
             
             /**
-             * Add an array of action items.
+             * Add an array of action items
              * 
              * @param actionItems The action items
              * @return The builder
@@ -290,7 +290,7 @@ public class Notifications {
             }
             
             /**
-             * Add a single action item.
+             * Add a single action item
              * 
              * @param actionItem The action item
              * @return The builder

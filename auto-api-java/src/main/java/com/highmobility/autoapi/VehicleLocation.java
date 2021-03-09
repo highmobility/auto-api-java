@@ -41,7 +41,7 @@ public class VehicleLocation {
     public static final byte PROPERTY_PRECISION = 0x07;
 
     /**
-     * Get Vehicle Location property availability information.
+     * Get Vehicle Location property availability information
      */
     public static class GetVehicleLocationAvailability extends GetAvailabilityCommand {
         /**

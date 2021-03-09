@@ -46,7 +46,7 @@ public class TheftAlarm {
     public static final byte PROPERTY_EVENT_TYPE = 0x07;
 
     /**
-     * Get Theft Alarm property availability information.
+     * Get Theft Alarm property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

@@ -83,7 +83,7 @@ public class Charging {
     public static final byte PROPERTY_PRECONDITIONING_ERROR = 0x23;
 
     /**
-     * Get Charging property availability information.
+     * Get Charging property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**
@@ -1013,7 +1013,7 @@ public class Charging {
             }
             
             /**
-             * Add an array of departure times.
+             * Add an array of departure times
              * 
              * @param departureTimes The departure times
              * @return The builder
@@ -1028,7 +1028,7 @@ public class Charging {
             }
             
             /**
-             * Add a single departure time.
+             * Add a single departure time
              * 
              * @param departureTime The departure time
              * @return The builder
@@ -1041,7 +1041,7 @@ public class Charging {
             }
             
             /**
-             * Add an array of reduction times.
+             * Add an array of reduction times
              * 
              * @param reductionTimes The reduction times
              * @return The builder
@@ -1056,7 +1056,7 @@ public class Charging {
             }
             
             /**
-             * Add a single reduction time.
+             * Add a single reduction time
              * 
              * @param reductionTime The reduction time
              * @return The builder
@@ -1079,7 +1079,7 @@ public class Charging {
             }
             
             /**
-             * Add an array of timers.
+             * Add an array of timers
              * 
              * @param timers The timers
              * @return The builder
@@ -1094,7 +1094,7 @@ public class Charging {
             }
             
             /**
-             * Add a single timer.
+             * Add a single timer
              * 
              * @param timer The timer
              * @return The builder

@@ -44,7 +44,7 @@ public class RooftopControl {
     public static final byte PROPERTY_SUNROOF_RAIN_EVENT = 0x06;
 
     /**
-     * Get Rooftop Control property availability information.
+     * Get Rooftop Control property availability information
      */
     public static class GetRooftopStateAvailability extends GetAvailabilityCommand {
         /**

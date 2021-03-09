@@ -40,7 +40,7 @@ public class DriverFatigue {
     public static final DisabledIn[] disabledIn = new DisabledIn[] { DisabledIn.WEB };
 
     /**
-     * Get Driver Fatigue property availability information.
+     * Get Driver Fatigue property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

@@ -52,7 +52,7 @@ public class Tachograph {
     public static final byte PROPERTY_VEHICLE_SPEED = 0x07;
 
     /**
-     * Get Tachograph property availability information.
+     * Get Tachograph property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**
@@ -318,7 +318,7 @@ public class Tachograph {
             }
     
             /**
-             * Add an array of drivers working states.
+             * Add an array of drivers working states
              * 
              * @param driversWorkingStates The drivers working states
              * @return The builder
@@ -333,7 +333,7 @@ public class Tachograph {
             }
             
             /**
-             * Add a single driver working state.
+             * Add a single driver working state
              * 
              * @param driverWorkingState The driver working state
              * @return The builder
@@ -346,7 +346,7 @@ public class Tachograph {
             }
             
             /**
-             * Add an array of drivers time states.
+             * Add an array of drivers time states
              * 
              * @param driversTimeStates The drivers time states
              * @return The builder
@@ -361,7 +361,7 @@ public class Tachograph {
             }
             
             /**
-             * Add a single drivers time state.
+             * Add a single drivers time state
              * 
              * @param driversTimeState The drivers time state
              * @return The builder
@@ -374,7 +374,7 @@ public class Tachograph {
             }
             
             /**
-             * Add an array of drivers cards present.
+             * Add an array of drivers cards present
              * 
              * @param driversCardsPresent The drivers cards present
              * @return The builder
@@ -389,7 +389,7 @@ public class Tachograph {
             }
             
             /**
-             * Add a single drivers card present.
+             * Add a single drivers card present
              * 
              * @param driversCardPresent The drivers card present
              * @return The builder

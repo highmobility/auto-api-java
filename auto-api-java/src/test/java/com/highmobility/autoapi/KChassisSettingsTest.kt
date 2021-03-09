@@ -189,8 +189,9 @@ class KChassisSettingsTest : BaseTest() {
             "05000E01000B0118014037000000000000")
     
         val constructed = ChassisSettings.SetSpringRates(arrayListOf(
-            SpringRate(Axle.FRONT, Torque(21.0, Torque.Unit.NEWTON_MILLIMETERS)), 
-            SpringRate(Axle.REAR, Torque(23.0, Torque.Unit.NEWTON_MILLIMETERS))))
+                SpringRate(Axle.FRONT, Torque(21.0, Torque.Unit.NEWTON_MILLIMETERS)), 
+                SpringRate(Axle.REAR, Torque(23.0, Torque.Unit.NEWTON_MILLIMETERS)))
+            )
         assertTrue(bytesTheSame(constructed, bytes))
     
         setRuntime(CommandResolver.RunTime.JAVA)

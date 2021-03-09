@@ -46,7 +46,7 @@ public class HonkHornFlashLights {
     public static final byte PROPERTY_HONK_TIME = 0x05;
 
     /**
-     * Get Honk Horn &amp; Flash Lights property availability information.
+     * Get Honk Horn &amp; Flash Lights property availability information
      */
     public static class GetFlashersStateAvailability extends GetAvailabilityCommand {
         /**

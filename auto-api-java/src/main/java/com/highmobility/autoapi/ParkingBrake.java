@@ -35,7 +35,7 @@ public class ParkingBrake {
     public static final byte PROPERTY_STATUS = 0x01;
 
     /**
-     * Get Parking Brake property availability information.
+     * Get Parking Brake property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

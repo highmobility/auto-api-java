@@ -43,7 +43,7 @@ public class WiFi {
     public static final byte PROPERTY_PASSWORD = 0x05;
 
     /**
-     * Get Wi-Fi property availability information.
+     * Get Wi-Fi property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

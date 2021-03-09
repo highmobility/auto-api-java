@@ -44,7 +44,7 @@ public class ParkingTicket {
     public static final byte PROPERTY_TICKET_END_TIME = 0x05;
 
     /**
-     * Get Parking Ticket property availability information.
+     * Get Parking Ticket property availability information
      */
     public static class GetParkingTicketAvailability extends GetAvailabilityCommand {
         /**

@@ -50,7 +50,7 @@ public class ChassisSettings {
     public static final byte PROPERTY_MINIMUM_CHASSIS_POSITION = 0x0a;
 
     /**
-     * Get Chassis Settings property availability information.
+     * Get Chassis Settings property availability information
      */
     public static class GetChassisSettingsAvailability extends GetAvailabilityCommand {
         /**
@@ -471,7 +471,7 @@ public class ChassisSettings {
             }
             
             /**
-             * Add an array of current spring rates.
+             * Add an array of current spring rates
              * 
              * @param currentSpringRates The current spring rates. The current values for the spring rates
              * @return The builder
@@ -486,7 +486,7 @@ public class ChassisSettings {
             }
             
             /**
-             * Add a single current spring rate.
+             * Add a single current spring rate
              * 
              * @param currentSpringRate The current spring rate. The current values for the spring rates
              * @return The builder
@@ -499,7 +499,7 @@ public class ChassisSettings {
             }
             
             /**
-             * Add an array of maximum spring rates.
+             * Add an array of maximum spring rates
              * 
              * @param maximumSpringRates The maximum spring rates. The maximum possible values for the spring rates
              * @return The builder
@@ -514,7 +514,7 @@ public class ChassisSettings {
             }
             
             /**
-             * Add a single maximum spring rate.
+             * Add a single maximum spring rate
              * 
              * @param maximumSpringRate The maximum spring rate. The maximum possible values for the spring rates
              * @return The builder
@@ -527,7 +527,7 @@ public class ChassisSettings {
             }
             
             /**
-             * Add an array of minimum spring rates.
+             * Add an array of minimum spring rates
              * 
              * @param minimumSpringRates The minimum spring rates. The minimum possible values for the spring rates
              * @return The builder
@@ -542,7 +542,7 @@ public class ChassisSettings {
             }
             
             /**
-             * Add a single minimum spring rate.
+             * Add a single minimum spring rate
              * 
              * @param minimumSpringRate The minimum spring rate. The minimum possible values for the spring rates
              * @return The builder

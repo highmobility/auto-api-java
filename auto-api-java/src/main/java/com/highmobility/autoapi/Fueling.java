@@ -39,7 +39,7 @@ public class Fueling {
     public static final byte PROPERTY_GAS_FLAP_POSITION = 0x03;
 
     /**
-     * Get Fueling property availability information.
+     * Get Fueling property availability information
      */
     public static class GetGasFlapStateAvailability extends GetAvailabilityCommand {
         /**

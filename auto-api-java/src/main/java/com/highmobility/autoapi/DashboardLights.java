@@ -37,7 +37,7 @@ public class DashboardLights {
     public static final byte PROPERTY_DASHBOARD_LIGHTS = 0x01;
 
     /**
-     * Get Dashboard Lights property availability information.
+     * Get Dashboard Lights property availability information
      */
     public static class GetDashboardLightsAvailability extends GetAvailabilityCommand {
         /**
@@ -120,7 +120,7 @@ public class DashboardLights {
             }
     
             /**
-             * Add an array of dashboard lights.
+             * Add an array of dashboard lights
              * 
              * @param dashboardLights The dashboard lights
              * @return The builder
@@ -134,7 +134,7 @@ public class DashboardLights {
                 return this;
             }
             /**
-             * Add a single dashboard light.
+             * Add a single dashboard light
              * 
              * @param dashboardLight The dashboard light
              * @return The builder

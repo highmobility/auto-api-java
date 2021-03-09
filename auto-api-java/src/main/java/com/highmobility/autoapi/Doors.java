@@ -46,7 +46,7 @@ public class Doors {
     public static final byte PROPERTY_LOCKS_STATE = 0x06;
 
     /**
-     * Get Doors property availability information.
+     * Get Doors property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**
@@ -326,7 +326,7 @@ public class Doors {
             }
     
             /**
-             * Add an array of inside locks.
+             * Add an array of inside locks
              * 
              * @param insideLocks The inside locks. Inside lock states for the given doors
              * @return The builder
@@ -341,7 +341,7 @@ public class Doors {
             }
             
             /**
-             * Add a single inside lock.
+             * Add a single inside lock
              * 
              * @param insideLock The inside lock. Inside lock states for the given doors
              * @return The builder
@@ -354,7 +354,7 @@ public class Doors {
             }
             
             /**
-             * Add an array of locks.
+             * Add an array of locks
              * 
              * @param locks The locks. Lock states for the given doors
              * @return The builder
@@ -369,7 +369,7 @@ public class Doors {
             }
             
             /**
-             * Add a single lock.
+             * Add a single lock
              * 
              * @param lock The lock. Lock states for the given doors
              * @return The builder
@@ -382,7 +382,7 @@ public class Doors {
             }
             
             /**
-             * Add an array of positions.
+             * Add an array of positions
              * 
              * @param positions The positions. Door positions for the given doors
              * @return The builder
@@ -397,7 +397,7 @@ public class Doors {
             }
             
             /**
-             * Add a single position.
+             * Add a single position
              * 
              * @param position The position. Door positions for the given doors
              * @return The builder

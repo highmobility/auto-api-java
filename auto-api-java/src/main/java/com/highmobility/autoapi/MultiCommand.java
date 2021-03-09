@@ -143,7 +143,7 @@ public class MultiCommand {
             }
     
             /**
-             * Add an array of multi states.
+             * Add an array of multi states
              * 
              * @param multiStates The multi states. The incoming states
              * @return The builder
@@ -157,7 +157,7 @@ public class MultiCommand {
                 return this;
             }
             /**
-             * Add a single multi state.
+             * Add a single multi state
              * 
              * @param multiState The multi state. The incoming states
              * @return The builder

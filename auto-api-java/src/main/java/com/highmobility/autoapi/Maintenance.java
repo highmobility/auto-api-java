@@ -60,7 +60,7 @@ public class Maintenance {
     public static final byte PROPERTY_LAST_ECALL = 0x10;
 
     /**
-     * Get Maintenance property availability information.
+     * Get Maintenance property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**
@@ -482,7 +482,7 @@ public class Maintenance {
             }
             
             /**
-             * Add an array of condition based services.
+             * Add an array of condition based services
              * 
              * @param conditionBasedServices The condition based services
              * @return The builder
@@ -497,7 +497,7 @@ public class Maintenance {
             }
             
             /**
-             * Add a single condition based service.
+             * Add a single condition based service
              * 
              * @param conditionBasedService The condition based service
              * @return The builder

@@ -48,7 +48,7 @@ public class Windscreen {
     public static final byte PROPERTY_WINDSCREEN_DAMAGE_DETECTION_TIME = 0x08;
 
     /**
-     * Get Windscreen property availability information.
+     * Get Windscreen property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

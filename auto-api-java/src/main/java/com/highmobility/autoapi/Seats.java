@@ -42,7 +42,7 @@ public class Seats {
     public static final byte PROPERTY_SEATBELTS_STATE = 0x03;
 
     /**
-     * Get Seats property availability information.
+     * Get Seats property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**
@@ -231,7 +231,7 @@ public class Seats {
             }
     
             /**
-             * Add an array of persons detected.
+             * Add an array of persons detected
              * 
              * @param personsDetected The persons detected
              * @return The builder
@@ -246,7 +246,7 @@ public class Seats {
             }
             
             /**
-             * Add a single person detected.
+             * Add a single person detected
              * 
              * @param personDetected The person detected
              * @return The builder
@@ -259,7 +259,7 @@ public class Seats {
             }
             
             /**
-             * Add an array of seatbelts state.
+             * Add an array of seatbelts state
              * 
              * @param seatbeltsState The seatbelts state
              * @return The builder
@@ -273,7 +273,7 @@ public class Seats {
                 return this;
             }
             /**
-             * Add a single seatbelt state.
+             * Add a single seatbelt state
              * 
              * @param seatbeltState The seatbelt state
              * @return The builder

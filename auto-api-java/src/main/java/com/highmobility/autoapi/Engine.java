@@ -38,7 +38,7 @@ public class Engine {
     public static final byte PROPERTY_START_STOP_STATE = 0x02;
 
     /**
-     * Get Engine property availability information.
+     * Get Engine property availability information
      */
     public static class GetStateAvailability extends GetAvailabilityCommand {
         /**

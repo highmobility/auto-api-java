@@ -45,7 +45,7 @@ public class NaviDestination {
     public static final byte PROPERTY_DISTANCE_TO_DESTINATION = 0x06;
 
     /**
-     * Get Navi Destination property availability information.
+     * Get Navi Destination property availability information
      */
     public static class GetNaviDestinationAvailability extends GetAvailabilityCommand {
         /**
