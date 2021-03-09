@@ -423,16 +423,6 @@ public class Property<V> extends Bytes {
         getLogger().error(String.format("Failed to parse property: " + toString() + componentString + exceptionString + "\n%s", e));
     }
 
-    @Override public String toString() {
-        return "Property{" +
-                "value=" + value +
-                ", timestamp=" + timestamp +
-                ", failure=" + failure +
-                ", availability=" + availability +
-                ", full bytes=" + new Bytes(bytes) +
-                '}';
-    }
-
     // MARK: ctor helpers
 
     public static long getLong(byte[] b, int at) throws IllegalArgumentException {

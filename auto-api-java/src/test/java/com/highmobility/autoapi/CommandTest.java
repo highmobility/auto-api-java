@@ -67,10 +67,10 @@ public class CommandTest extends BaseTest {
 
     @Test public void basePropertiesArrayObjectReplaced() {
         Bytes bytes = new Bytes(COMMAND_HEADER + "006101" +
-                "010006010003000000" +
-                "010006010003020100" +
-                "0100060100030F0300" +
-                "010006010003150000");
+                "0100050100020000" +
+                "0100050100020201" +
+                "0100050100020F03" +
+                "0100050100020100");
 
         Command command = CommandResolver.resolve(bytes);
 

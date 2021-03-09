@@ -135,13 +135,6 @@ public class PropertyComponentValue<V> extends PropertyComponent {
         return String.format("Failed parsing %s, bytes %s", valueClass.getName(), valueBytes);
     }
 
-    @Override public String toString() {
-        return "{" +
-                "value=" + value +
-                ", type=" + valueClass.getSimpleName() +
-                '}';
-    }
-
     public static Bytes getBytes(Object value) {
         // this is for builder/set command
         if (value instanceof PropertyValueObject) {
