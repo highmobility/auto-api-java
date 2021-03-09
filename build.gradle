@@ -16,7 +16,7 @@ plugins {
 ext {
     ver = [
             "hmkit-utils"   : "1.4.5",
-            "hmkit-auto-api": "3.12.1"
+            "hmkit-auto-api": "3.12.fleet-0"
     ]
 
     ext.deps = [
