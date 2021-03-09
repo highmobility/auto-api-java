@@ -1,18 +1,18 @@
 /*
  * The MIT License
- * 
+ *
  * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -921,13 +921,13 @@ public class CommandResolver {
                 .trimmedBytes(bytes, Math.min(bytes.length, 3)));
     }
 
-    static RunTime _runtime;
-
+    /**
+     * @return The runtime
+     * @deprecated use {@link #getEnvironment()} instead
+     */
     static RunTime getRuntime() {
-        if (_runtime == null)
-            _runtime = (System.getProperty("java.runtime.name").equals("Android Runtime")) ?
-                RunTime.ANDROID : RunTime.JAVA;
-            return _runtime;
+        if (_environment == Environment.VEHICLE) return RunTime.JAVA;
+        else return RunTime.ANDROID;
     }
 
     /**
@@ -937,13 +937,50 @@ public class CommandResolver {
      * </p>
      *
      * @param runtime The runtime.
+     * @deprecated use {@link Environment} instead
      */
     public static void setRuntime(RunTime runtime) {
-        _runtime = runtime;
+        if (runtime == RunTime.JAVA) _environment = Environment.VEHICLE;
+        else _environment = Environment.OWNER;
     }
 
+    /**
+     * @deprecated use {@link Environment} instead
+     */
+    @Deprecated
     public enum RunTime {
         ANDROID, JAVA
+    }
+
+    static Environment _environment = Environment.OWNER;
+
+    /**
+     * @return The environment
+     */
+    static Environment getEnvironment() {
+        return _environment;
+    }
+
+    /**
+     * Override the environment.
+     * <p>
+     * Some commands are disabled when using the AutoAPI as the vehicle owner or as the vehicle. This
+     * method can be used to override the default {@link Environment#OWNER} environment.
+     * </p>
+     *
+     * @param environment The environment.
+     */
+    public static void setEnvironment(Environment environment) {
+        _environment = environment;
+    }
+
+    /**
+     * The possible environments of the AutoAPI package user. The default is
+     * {@link Environment#OWNER}, which works for both Android and Fleet, when Android phone or the
+     * fleet manager are the vehicle owners.
+     */
+    public enum Environment {
+        OWNER, VEHICLE
     }
 
     /**

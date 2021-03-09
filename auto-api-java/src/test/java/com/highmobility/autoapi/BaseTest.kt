@@ -51,7 +51,7 @@ open class BaseTest {
     }
 
     fun setRuntime(runtime: RunTime?) {
-        CommandResolver._runtime = runtime
+        CommandResolver.setRuntime(runtime)
     }
 
     fun bytesTheSame(state: Bytes, bytes: Bytes): Boolean {
