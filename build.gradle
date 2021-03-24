@@ -16,26 +16,17 @@ plugins {
 ext {
     ver = [
             "hmkit-utils"   : "1.4.5",
-            "hmkit-auto-api": "3.12.fleet-0"
+            "hmkit-auto-api": "3.12.1"
     ]
 
     ext.deps = [
-            "utils"   : "com.highmobility:hmkit-utils:${ver."hmkit-utils"}",
+            "utils"   : "com.high-mobility:hmkit-utils:${ver."hmkit-utils"}",
             "findBugs": 'com.google.code.findbugs:jsr305:3.0.2'
     ]
 }
 
 allprojects {
     repositories {
-        jcenter()
-        if (project.hasProperty('devReadUser')) {
-            maven {
-                url "http://jfrog.high-mobility.com/artifactory/gradle-dev-local/"
-                credentials {
-                    username devReadUser
-                    password devReadPassword
-                }
-            }
-        }
+        mavenCentral()
     }
 }

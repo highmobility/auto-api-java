@@ -9,15 +9,15 @@ This repository contains the java parsers for Auto API.
 
 ### Install
 
-Releases are pushed to jcenter. To include hmkit-auto-api in your project, add to build.gradle:
+To include hmkit-auto-api in your project, add to the build.gradle:
 
 ```
 repositories {
-  jcenter()
+  mavenCentral()
 }
 
 dependencies {
-  implementation('com.highmobility:hmkit-auto-api:3.0.0')
+  implementation('com.highmobility:hmkit-auto-api:3.12.1')
 }
 ```
 
@@ -27,7 +27,7 @@ SLF4J is used for logging. Add slf4j binding to see the logs, for example:
 implementation 'org.slf4j:slf4j-simple:1.8.0-beta1'
 ```
 
-Find the latest version name in https://bintray.com/high-mobility/maven/hmkit-auto-api
+Find the latest versions in [mavenCentral](https://search.maven.org/search?q=g:com.high-mobility)
 
 ## How to create/parse commands
 
@@ -143,3 +143,13 @@ Bytes command = builder.build();
 * Follow, for instance, Fueling.java to add the capability-s skeleton commands.   
 * Create the tests. Copy this from previous FuelingTest.
 * Implement the new Capability commands.
+
+
+## OEM
+
+Some commands are not available if using AutoAPI on the vehicle (OEM) side. For them to work, the
+environment needs to be set to `VEHICLE` in `CommandResolver`:
+
+```java
+CommandResolver.setEnvironment(CommandResolver.Environment.VEHICLE);
+```
