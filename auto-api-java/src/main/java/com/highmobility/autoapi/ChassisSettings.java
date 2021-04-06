@@ -32,7 +32,7 @@ import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Chassis Settings capability
@@ -176,8 +176,9 @@ public class ChassisSettings {
                     return null;
                 });
             }
-            if (this.drivingMode.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.drivingMode.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -214,8 +215,9 @@ public class ChassisSettings {
                     return null;
                 });
             }
-            if (this.sportChrono.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.sportChrono.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -269,8 +271,9 @@ public class ChassisSettings {
             }
         
             currentSpringRates = currentSpringRatesBuilder;
-            if (this.currentSpringRates.size() == 0) 
-                throw new NoPropertiesException();
+            if (this.currentSpringRates.size() == 0) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -307,8 +310,9 @@ public class ChassisSettings {
                     return null;
                 });
             }
-            if (this.currentChassisPosition.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.currentChassisPosition.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -601,7 +605,9 @@ public class ChassisSettings {
                 }
             }
     
-            throw new CommandParseException("ChassisSettings.SportChrono does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(SportChrono.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

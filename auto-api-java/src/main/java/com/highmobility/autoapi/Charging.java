@@ -34,6 +34,7 @@ import com.highmobility.autoapi.value.Timer;
 import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.autoapi.value.measurement.ElectricCurrent;
 import com.highmobility.autoapi.value.measurement.ElectricPotentialDifference;
+import com.highmobility.autoapi.value.measurement.Energy;
 import com.highmobility.autoapi.value.measurement.Length;
 import com.highmobility.autoapi.value.measurement.Power;
 import com.highmobility.autoapi.value.measurement.Temperature;
@@ -41,7 +42,7 @@ import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Charging capability
@@ -81,6 +82,7 @@ public class Charging {
     public static final byte PROPERTY_PRECONDITIONING_IMMEDIATE_STATUS = 0x21;
     public static final byte PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED = 0x22;
     public static final byte PROPERTY_PRECONDITIONING_ERROR = 0x23;
+    public static final byte PROPERTY_BATTERY_CAPACITY = 0x24;
 
     /**
      * Get Charging property availability information
@@ -219,8 +221,9 @@ public class Charging {
                     return null;
                 });
             }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.status.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -257,8 +260,9 @@ public class Charging {
                     return null;
                 });
             }
-            if (this.chargeLimit.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.chargeLimit.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -295,8 +299,9 @@ public class Charging {
                     return null;
                 });
             }
-            if (this.chargePortState.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.chargePortState.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -335,8 +340,9 @@ public class Charging {
                     return null;
                 });
             }
-            if (this.chargeMode.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.chargeMode.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -390,8 +396,9 @@ public class Charging {
             }
         
             timers = timersBuilder;
-            if (this.timers.size() == 0) 
-                throw new NoPropertiesException();
+            if (this.timers.size() == 0) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -445,8 +452,9 @@ public class Charging {
             }
         
             reductionTimes = reductionTimesBuilder;
-            if (this.reductionTimes.size() == 0) 
-                throw new NoPropertiesException();
+            if (this.reductionTimes.size() == 0) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -486,6 +494,7 @@ public class Charging {
         Property<ActiveState> preconditioningImmediateStatus = new Property<>(ActiveState.class, PROPERTY_PRECONDITIONING_IMMEDIATE_STATUS);
         Property<EnabledState> preconditioningDepartureEnabled = new Property<>(EnabledState.class, PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED);
         Property<PreconditioningError> preconditioningError = new Property<>(PreconditioningError.class, PROPERTY_PRECONDITIONING_ERROR);
+        Property<Energy> batteryCapacity = new Property<>(Energy.class, PROPERTY_BATTERY_CAPACITY);
     
         /**
          * @return Estimated range
@@ -721,6 +730,13 @@ public class Charging {
             return preconditioningError;
         }
     
+        /**
+         * @return Indicates the battery capacity
+         */
+        public Property<Energy> getBatteryCapacity() {
+            return batteryCapacity;
+        }
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
@@ -772,6 +788,7 @@ public class Charging {
                         case PROPERTY_PRECONDITIONING_IMMEDIATE_STATUS: return preconditioningImmediateStatus.update(p);
                         case PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED: return preconditioningDepartureEnabled.update(p);
                         case PROPERTY_PRECONDITIONING_ERROR: return preconditioningError.update(p);
+                        case PROPERTY_BATTERY_CAPACITY: return batteryCapacity.update(p);
                     }
     
                     return null;
@@ -818,6 +835,7 @@ public class Charging {
             preconditioningImmediateStatus = builder.preconditioningImmediateStatus;
             preconditioningDepartureEnabled = builder.preconditioningDepartureEnabled;
             preconditioningError = builder.preconditioningError;
+            batteryCapacity = builder.batteryCapacity;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -853,6 +871,7 @@ public class Charging {
             private Property<ActiveState> preconditioningImmediateStatus;
             private Property<EnabledState> preconditioningDepartureEnabled;
             private Property<PreconditioningError> preconditioningError;
+            private Property<Energy> batteryCapacity;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -1245,6 +1264,16 @@ public class Charging {
                 addProperty(this.preconditioningError);
                 return this;
             }
+            
+            /**
+             * @param batteryCapacity Indicates the battery capacity
+             * @return The builder
+             */
+            public Builder setBatteryCapacity(Property<Energy> batteryCapacity) {
+                this.batteryCapacity = batteryCapacity.setIdentifier(PROPERTY_BATTERY_CAPACITY);
+                addProperty(this.batteryCapacity);
+                return this;
+            }
         }
     }
 
@@ -1263,7 +1292,9 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Charging.ChargeMode does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(ChargeMode.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -1293,7 +1324,9 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Charging.PlugType does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(PlugType.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -1321,7 +1354,9 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Charging.ChargingWindowChosen does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(ChargingWindowChosen.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -1349,7 +1384,9 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Charging.PluggedIn does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(PluggedIn.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -1386,7 +1423,9 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Charging.Status does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Status.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -1414,7 +1453,9 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Charging.CurrentType does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(CurrentType.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -1452,7 +1493,9 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Charging.StarterBatteryState does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(StarterBatteryState.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -1487,7 +1530,9 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Charging.SmartChargingStatus does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(SmartChargingStatus.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -1524,7 +1569,9 @@ public class Charging {
                 }
             }
     
-            throw new CommandParseException("Charging.PreconditioningError does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(PreconditioningError.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

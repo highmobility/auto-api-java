@@ -29,7 +29,7 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class DriverTimeState extends PropertyValueObject {
     public static final int SIZE = 2;
@@ -101,7 +101,9 @@ public class DriverTimeState extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("DriverTimeState.TimeState does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(TimeState.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

@@ -27,7 +27,7 @@ import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Keyfob Position capability
@@ -116,7 +116,9 @@ public class KeyfobPosition {
                 }
             }
     
-            throw new CommandParseException("KeyfobPosition.Location does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Location.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

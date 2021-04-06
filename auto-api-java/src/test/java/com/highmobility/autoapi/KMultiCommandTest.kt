@@ -60,11 +60,11 @@ class KMultiCommandTest : BaseTest() {
     fun multiCommandCommand() {
         val bytes = Bytes(COMMAND_HEADER + "001301" +
             "02000E01000B0c00200106000401000101" +
-            "02000E01000B0c00350101000401000100")
+            "02000E01000B0c00350103000401000101")
     
         val constructed = MultiCommand.MultiCommandCommand(arrayListOf(
                 CommandResolver.resolve("0c00200106000401000101"), 
-                CommandResolver.resolve("0c00350101000401000100"))
+                CommandResolver.resolve("0c00350103000401000101"))
             )
         assertTrue(bytesTheSame(constructed, bytes))
     
@@ -72,7 +72,7 @@ class KMultiCommandTest : BaseTest() {
     
         val resolved = CommandResolver.resolve(bytes) as MultiCommand.MultiCommandCommand
         assertTrue(resolved.multiCommands[0].value == CommandResolver.resolve("0c00200106000401000101"))
-        assertTrue(resolved.multiCommands[1].value == CommandResolver.resolve("0c00350101000401000100"))
+        assertTrue(resolved.multiCommands[1].value == CommandResolver.resolve("0c00350103000401000101"))
         assertTrue(resolved == bytes)
     }
 }

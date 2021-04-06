@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Lights capability
@@ -53,6 +53,7 @@ public class Lights {
     public static final byte PROPERTY_READING_LAMPS = 0x08;
     public static final byte PROPERTY_INTERIOR_LIGHTS = 0x09;
     public static final byte PROPERTY_SWITCH_POSITION = 0x0a;
+    public static final byte PROPERTY_PARKING_LIGHT_STATUS = 0x0b;
 
     /**
      * Get Lights property availability information
@@ -286,7 +287,9 @@ public class Lights {
             fogLights = fogLightsBuilder;
             readingLamps = readingLampsBuilder;
             interiorLights = interiorLightsBuilder;
-            if (this.frontExteriorLight.getValue() == null && this.rearExteriorLight.getValue() == null && this.ambientLightColour.getValue() == null && this.fogLights.size() == 0 && this.readingLamps.size() == 0 && this.interiorLights.size() == 0) throw new NoPropertiesException();
+            if (this.frontExteriorLight.getValue() == null && this.rearExteriorLight.getValue() == null && this.ambientLightColour.getValue() == null && this.fogLights.size() == 0 && this.readingLamps.size() == 0 && this.interiorLights.size() == 0) {
+                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -303,6 +306,7 @@ public class Lights {
         List<Property<ReadingLamp>> readingLamps;
         List<Property<Light>> interiorLights;
         Property<SwitchPosition> switchPosition = new Property<>(SwitchPosition.class, PROPERTY_SWITCH_POSITION);
+        Property<ParkingLightStatus> parkingLightStatus = new Property<>(ParkingLightStatus.class, PROPERTY_PARKING_LIGHT_STATUS);
     
         /**
          * @return The front exterior light
@@ -365,6 +369,13 @@ public class Lights {
          */
         public Property<SwitchPosition> getSwitchPosition() {
             return switchPosition;
+        }
+    
+        /**
+         * @return Indicates the status of the parking light.
+         */
+        public Property<ParkingLightStatus> getParkingLightStatus() {
+            return parkingLightStatus;
         }
     
         /**
@@ -438,6 +449,7 @@ public class Lights {
                             interiorLightsBuilder.add(interiorLight);
                             return interiorLight;
                         case PROPERTY_SWITCH_POSITION: return switchPosition.update(p);
+                        case PROPERTY_PARKING_LIGHT_STATUS: return parkingLightStatus.update(p);
                     }
     
                     return null;
@@ -461,6 +473,7 @@ public class Lights {
             readingLamps = builder.readingLamps;
             interiorLights = builder.interiorLights;
             switchPosition = builder.switchPosition;
+            parkingLightStatus = builder.parkingLightStatus;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -473,6 +486,7 @@ public class Lights {
             private final List<Property<ReadingLamp>> readingLamps = new ArrayList<>();
             private final List<Property<Light>> interiorLights = new ArrayList<>();
             private Property<SwitchPosition> switchPosition;
+            private Property<ParkingLightStatus> parkingLightStatus;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -625,6 +639,16 @@ public class Lights {
                 addProperty(this.switchPosition);
                 return this;
             }
+            
+            /**
+             * @param parkingLightStatus Indicates the status of the parking light.
+             * @return The builder
+             */
+            public Builder setParkingLightStatus(Property<ParkingLightStatus> parkingLightStatus) {
+                this.parkingLightStatus = parkingLightStatus.setIdentifier(PROPERTY_PARKING_LIGHT_STATUS);
+                addProperty(this.parkingLightStatus);
+                return this;
+            }
         }
     }
 
@@ -645,7 +669,9 @@ public class Lights {
                 }
             }
     
-            throw new CommandParseException("Lights.FrontExteriorLight does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(FrontExteriorLight.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -676,12 +702,46 @@ public class Lights {
                 }
             }
     
-            throw new CommandParseException("Lights.SwitchPosition does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(SwitchPosition.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
     
         SwitchPosition(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum ParkingLightStatus implements ByteEnum {
+        OFF((byte) 0x00),
+        LEFT((byte) 0x01),
+        RIGHT((byte) 0x02),
+        BOTH((byte) 0x03);
+    
+        public static ParkingLightStatus fromByte(byte byteValue) throws CommandParseException {
+            ParkingLightStatus[] values = ParkingLightStatus.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                ParkingLightStatus state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(ParkingLightStatus.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        ParkingLightStatus(byte value) {
             this.value = value;
         }
     

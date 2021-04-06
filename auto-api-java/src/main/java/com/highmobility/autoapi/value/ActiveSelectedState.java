@@ -26,7 +26,8 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.ByteEnum;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
+
 
 public enum ActiveSelectedState implements ByteEnum {
     INACTIVE_SELECTED((byte) 0x00),
@@ -43,7 +44,9 @@ public enum ActiveSelectedState implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("ActiveSelectedState does not contain: " + hexFromByte(byteValue));
+        throw new CommandParseException(
+            enumValueDoesNotExist(ActiveSelectedState.class.getSimpleName(), byteValue)
+        );
     }
 
     private final byte value;

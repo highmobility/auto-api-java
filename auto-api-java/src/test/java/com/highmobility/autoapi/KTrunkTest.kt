@@ -34,7 +34,8 @@ import org.junit.jupiter.api.Assertions.assertTrue
 class KTrunkTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "002101" + 
             "01000401000100" +  // Trunk is unlocked
-            "02000401000101" // Trunk is open
+            "02000401000101" +  // Trunk is open
+            "03000401000100" // Trunk lock is safely locked.
     )
     
     @Test
@@ -48,6 +49,7 @@ class KTrunkTest : BaseTest() {
         val builder = Trunk.State.Builder()
         builder.setLock(Property(LockState.UNLOCKED))
         builder.setPosition(Property(Position.OPEN))
+        builder.setLockSafety(Property(LockSafety.SAFE))
         testState(builder.build())
     }
     
@@ -55,6 +57,7 @@ class KTrunkTest : BaseTest() {
         assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.lock.value == LockState.UNLOCKED)
         assertTrue(state.position.value == Position.OPEN)
+        assertTrue(state.lockSafety.value == LockSafety.SAFE)
     }
     
     @Test
@@ -64,10 +67,10 @@ class KTrunkTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0021000102")
-        val propertyGetter = Trunk.GetState(0x01, 0x02)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "002100010203")
+        val propertyGetter = Trunk.GetState(0x01, 0x02, 0x03)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203"))
     }
     
     @Test
@@ -90,14 +93,14 @@ class KTrunkTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("0102")
+        val identifierBytes = Bytes("010203")
         val allBytes = Bytes(COMMAND_HEADER + "002102" + identifierBytes)
         val constructed = Trunk.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.TRUNK)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Trunk.GetStateAvailability(0x01, 0x02)
+        val secondConstructed = Trunk.GetStateAvailability(0x01, 0x02, 0x03)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

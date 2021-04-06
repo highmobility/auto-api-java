@@ -31,7 +31,7 @@ import com.highmobility.value.Bytes;
 
 import java.util.Calendar;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class Timer extends PropertyValueObject {
     public static final int SIZE = 9;
@@ -99,7 +99,9 @@ public class Timer extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Timer.TimerType does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(TimerType.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

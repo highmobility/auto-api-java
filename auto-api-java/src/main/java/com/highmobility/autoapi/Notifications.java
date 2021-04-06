@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Notifications capability
@@ -108,8 +108,9 @@ public class Notifications {
             }
         
             actionItems = actionItemsBuilder;
-            if (this.text.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.text.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -146,8 +147,9 @@ public class Notifications {
                     return null;
                 });
             }
-            if (this.activatedAction.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.activatedAction.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -175,8 +177,9 @@ public class Notifications {
                     return null;
                 });
             }
-            if ((clear.getValue() == null || clear.getValueComponent().getValueBytes().equals("00") == false)) 
-                throw new NoPropertiesException();
+            if ((clear.getValue() == null || clear.getValueComponent().getValueBytes().equals("00") == false)) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -337,7 +340,9 @@ public class Notifications {
                 }
             }
     
-            throw new CommandParseException("Notifications.Clear does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Clear.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

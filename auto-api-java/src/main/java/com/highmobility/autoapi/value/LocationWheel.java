@@ -26,7 +26,8 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.ByteEnum;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
+
 
 public enum LocationWheel implements ByteEnum {
     FRONT_LEFT((byte) 0x00),
@@ -34,7 +35,8 @@ public enum LocationWheel implements ByteEnum {
     REAR_RIGHT((byte) 0x02),
     REAR_LEFT((byte) 0x03),
     REAR_RIGHT_OUTER((byte) 0x04),
-    REAR_LEFT_OUTER((byte) 0x05);
+    REAR_LEFT_OUTER((byte) 0x05),
+    SPARE((byte) 0x06);
 
     public static LocationWheel fromByte(byte byteValue) throws CommandParseException {
         LocationWheel[] values = LocationWheel.values();
@@ -46,7 +48,9 @@ public enum LocationWheel implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("LocationWheel does not contain: " + hexFromByte(byteValue));
+        throw new CommandParseException(
+            enumValueDoesNotExist(LocationWheel.class.getSimpleName(), byteValue)
+        );
     }
 
     private final byte value;

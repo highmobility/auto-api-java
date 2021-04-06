@@ -86,8 +86,9 @@ public class MultiCommand {
             }
         
             multiCommands = multiCommandsBuilder;
-            if (this.multiCommands.size() == 0) 
-                throw new NoPropertiesException();
+            if (this.multiCommands.size() == 0) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 

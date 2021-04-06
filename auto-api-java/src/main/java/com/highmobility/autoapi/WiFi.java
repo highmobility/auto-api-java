@@ -194,8 +194,9 @@ public class WiFi {
                 });
             }
             if (this.networkSSID.getValue() == null ||
-                this.networkSecurity.getValue() == null) 
-                throw new NoPropertiesException();
+                this.networkSecurity.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -232,8 +233,9 @@ public class WiFi {
                     return null;
                 });
             }
-            if (this.networkSSID.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.networkSSID.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -270,8 +272,9 @@ public class WiFi {
                     return null;
                 });
             }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.status.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 

@@ -214,7 +214,9 @@ public class Windows {
         
             openPercentages = openPercentagesBuilder;
             positions = positionsBuilder;
-            if (this.openPercentages.size() == 0 && this.positions.size() == 0) throw new NoPropertiesException();
+            if (this.openPercentages.size() == 0 && this.positions.size() == 0) {
+                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 

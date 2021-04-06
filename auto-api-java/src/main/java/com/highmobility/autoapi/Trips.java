@@ -27,13 +27,16 @@ import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.AddressComponent;
 import com.highmobility.autoapi.value.Coordinates;
+import com.highmobility.autoapi.value.EcoDrivingThreshold;
 import com.highmobility.autoapi.value.measurement.FuelEfficiency;
 import com.highmobility.autoapi.value.measurement.Length;
+import com.highmobility.autoapi.value.measurement.Speed;
+import com.highmobility.autoapi.value.measurement.Volume;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Trips capability
@@ -56,6 +59,12 @@ public class Trips {
     public static final byte PROPERTY_DISTANCE = 0x0d;
     public static final byte PROPERTY_START_ADDRESS_COMPONENTS = 0x0e;
     public static final byte PROPERTY_END_ADDRESS_COMPONENTS = 0x0f;
+    public static final byte PROPERTY_EVENT = 0x10;
+    public static final byte PROPERTY_ECO_LEVEL = 0x11;
+    public static final byte PROPERTY_THRESHOLDS = 0x12;
+    public static final byte PROPERTY_TOTAL_FUEL_CONSUMPTION = 0x13;
+    public static final byte PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION = 0x14;
+    public static final byte PROPERTY_MAXIMUM_SPEED = 0x15;
 
     /**
      * The trips state
@@ -76,6 +85,12 @@ public class Trips {
         Property<Length> distance = new Property<>(Length.class, PROPERTY_DISTANCE);
         List<Property<AddressComponent>> startAddressComponents;
         List<Property<AddressComponent>> endAddressComponents;
+        Property<Event> event = new Property<>(Event.class, PROPERTY_EVENT);
+        Property<EcoLevel> ecoLevel = new Property<>(EcoLevel.class, PROPERTY_ECO_LEVEL);
+        List<Property<EcoDrivingThreshold>> thresholds;
+        Property<Volume> totalFuelConsumption = new Property<>(Volume.class, PROPERTY_TOTAL_FUEL_CONSUMPTION);
+        Property<Volume> totalIdleFuelConsumption = new Property<>(Volume.class, PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION);
+        Property<Speed> maximumSpeed = new Property<>(Speed.class, PROPERTY_MAXIMUM_SPEED);
     
         /**
          * @return Type of the trip
@@ -182,11 +197,54 @@ public class Trips {
             return endAddressComponents;
         }
     
+        /**
+         * @return The event
+         */
+        public Property<Event> getEvent() {
+            return event;
+        }
+    
+        /**
+         * @return The eco level
+         */
+        public Property<EcoLevel> getEcoLevel() {
+            return ecoLevel;
+        }
+    
+        /**
+         * @return Eco driving thresholds
+         */
+        public List<Property<EcoDrivingThreshold>> getThresholds() {
+            return thresholds;
+        }
+    
+        /**
+         * @return Total fuel consumption during the trip
+         */
+        public Property<Volume> getTotalFuelConsumption() {
+            return totalFuelConsumption;
+        }
+    
+        /**
+         * @return Fuel consumed while idle since the last ignition on.
+         */
+        public Property<Volume> getTotalIdleFuelConsumption() {
+            return totalIdleFuelConsumption;
+        }
+    
+        /**
+         * @return Maximum speed recorded since the last igntion on.
+         */
+        public Property<Speed> getMaximumSpeed() {
+            return maximumSpeed;
+        }
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
             final ArrayList<Property<AddressComponent>> startAddressComponentsBuilder = new ArrayList<>();
             final ArrayList<Property<AddressComponent>> endAddressComponentsBuilder = new ArrayList<>();
+            final ArrayList<Property<EcoDrivingThreshold>> thresholdsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -212,6 +270,15 @@ public class Trips {
                             Property<AddressComponent> endAddressComponent = new Property<>(AddressComponent.class, p);
                             endAddressComponentsBuilder.add(endAddressComponent);
                             return endAddressComponent;
+                        case PROPERTY_EVENT: return event.update(p);
+                        case PROPERTY_ECO_LEVEL: return ecoLevel.update(p);
+                        case PROPERTY_THRESHOLDS:
+                            Property<EcoDrivingThreshold> threshold = new Property<>(EcoDrivingThreshold.class, p);
+                            thresholdsBuilder.add(threshold);
+                            return threshold;
+                        case PROPERTY_TOTAL_FUEL_CONSUMPTION: return totalFuelConsumption.update(p);
+                        case PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION: return totalIdleFuelConsumption.update(p);
+                        case PROPERTY_MAXIMUM_SPEED: return maximumSpeed.update(p);
                     }
     
                     return null;
@@ -220,6 +287,7 @@ public class Trips {
     
             startAddressComponents = startAddressComponentsBuilder;
             endAddressComponents = endAddressComponentsBuilder;
+            thresholds = thresholdsBuilder;
         }
     
         private State(Builder builder) {
@@ -240,6 +308,12 @@ public class Trips {
             distance = builder.distance;
             startAddressComponents = builder.startAddressComponents;
             endAddressComponents = builder.endAddressComponents;
+            event = builder.event;
+            ecoLevel = builder.ecoLevel;
+            thresholds = builder.thresholds;
+            totalFuelConsumption = builder.totalFuelConsumption;
+            totalIdleFuelConsumption = builder.totalIdleFuelConsumption;
+            maximumSpeed = builder.maximumSpeed;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -258,6 +332,12 @@ public class Trips {
             private Property<Length> distance;
             private final List<Property<AddressComponent>> startAddressComponents = new ArrayList<>();
             private final List<Property<AddressComponent>> endAddressComponents = new ArrayList<>();
+            private Property<Event> event;
+            private Property<EcoLevel> ecoLevel;
+            private final List<Property<EcoDrivingThreshold>> thresholds = new ArrayList<>();
+            private Property<Volume> totalFuelConsumption;
+            private Property<Volume> totalIdleFuelConsumption;
+            private Property<Speed> maximumSpeed;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -439,6 +519,7 @@ public class Trips {
             
                 return this;
             }
+            
             /**
              * Add a single end address component
              * 
@@ -451,12 +532,91 @@ public class Trips {
                 endAddressComponents.add(endAddressComponent);
                 return this;
             }
+            
+            /**
+             * @param event The event
+             * @return The builder
+             */
+            public Builder setEvent(Property<Event> event) {
+                this.event = event.setIdentifier(PROPERTY_EVENT);
+                addProperty(this.event);
+                return this;
+            }
+            
+            /**
+             * @param ecoLevel The eco level
+             * @return The builder
+             */
+            public Builder setEcoLevel(Property<EcoLevel> ecoLevel) {
+                this.ecoLevel = ecoLevel.setIdentifier(PROPERTY_ECO_LEVEL);
+                addProperty(this.ecoLevel);
+                return this;
+            }
+            
+            /**
+             * Add an array of thresholds
+             * 
+             * @param thresholds The thresholds. Eco driving thresholds
+             * @return The builder
+             */
+            public Builder setThresholds(Property<EcoDrivingThreshold>[] thresholds) {
+                this.thresholds.clear();
+                for (int i = 0; i < thresholds.length; i++) {
+                    addThreshold(thresholds[i]);
+                }
+            
+                return this;
+            }
+            
+            /**
+             * Add a single threshold
+             * 
+             * @param threshold The threshold. Eco driving thresholds
+             * @return The builder
+             */
+            public Builder addThreshold(Property<EcoDrivingThreshold> threshold) {
+                threshold.setIdentifier(PROPERTY_THRESHOLDS);
+                addProperty(threshold);
+                thresholds.add(threshold);
+                return this;
+            }
+            
+            /**
+             * @param totalFuelConsumption Total fuel consumption during the trip
+             * @return The builder
+             */
+            public Builder setTotalFuelConsumption(Property<Volume> totalFuelConsumption) {
+                this.totalFuelConsumption = totalFuelConsumption.setIdentifier(PROPERTY_TOTAL_FUEL_CONSUMPTION);
+                addProperty(this.totalFuelConsumption);
+                return this;
+            }
+            
+            /**
+             * @param totalIdleFuelConsumption Fuel consumed while idle since the last ignition on.
+             * @return The builder
+             */
+            public Builder setTotalIdleFuelConsumption(Property<Volume> totalIdleFuelConsumption) {
+                this.totalIdleFuelConsumption = totalIdleFuelConsumption.setIdentifier(PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION);
+                addProperty(this.totalIdleFuelConsumption);
+                return this;
+            }
+            
+            /**
+             * @param maximumSpeed Maximum speed recorded since the last igntion on.
+             * @return The builder
+             */
+            public Builder setMaximumSpeed(Property<Speed> maximumSpeed) {
+                this.maximumSpeed = maximumSpeed.setIdentifier(PROPERTY_MAXIMUM_SPEED);
+                addProperty(this.maximumSpeed);
+                return this;
+            }
         }
     }
 
     public enum Type implements ByteEnum {
         SINGLE((byte) 0x00),
-        MULTI((byte) 0x01);
+        MULTI((byte) 0x01),
+        ECO((byte) 0x02);
     
         public static Type fromByte(byte byteValue) throws CommandParseException {
             Type[] values = Type.values();
@@ -468,12 +628,78 @@ public class Trips {
                 }
             }
     
-            throw new CommandParseException("Trips.Type does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Type.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
     
         Type(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum Event implements ByteEnum {
+        HARSH_BRAKING((byte) 0x00),
+        HARSH_ACCELERATION((byte) 0x01),
+        SHARP_TURN((byte) 0x02),
+        OVER_RPM((byte) 0x03),
+        OVERSPEED((byte) 0x04),
+        IDLING_ENGINE_ON((byte) 0x05);
+    
+        public static Event fromByte(byte byteValue) throws CommandParseException {
+            Event[] values = Event.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                Event state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(Event.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        Event(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum EcoLevel implements ByteEnum {
+        HIGH((byte) 0x00),
+        MEDIUM((byte) 0x01);
+    
+        public static EcoLevel fromByte(byte byteValue) throws CommandParseException {
+            EcoLevel[] values = EcoLevel.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                EcoLevel state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(EcoLevel.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        EcoLevel(byte value) {
             this.value = value;
         }
     

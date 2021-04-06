@@ -23,6 +23,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.CheckControlMessage;
@@ -45,6 +46,8 @@ import com.highmobility.autoapi.value.measurement.Volume;
 import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Diagnostics capability
@@ -89,6 +92,19 @@ public class Diagnostics {
     public static final byte PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL = 0x26;
     public static final byte PROPERTY_CONFIRMED_TROUBLE_CODES = 0x27;
     public static final byte PROPERTY_DIESEL_EXHAUST_FILTER_STATUS = 0x28;
+    public static final byte PROPERTY_ENGINE_TOTAL_IDLE_OPERATING_TIME = 0x2a;
+    public static final byte PROPERTY_ENGINE_OIL_AMOUNT = 0x2b;
+    public static final byte PROPERTY_ENGINE_OIL_LEVEL = 0x2c;
+    public static final byte PROPERTY_ESTIMATED_SECONDARY_POWERTRAIN_RANGE = 0x2d;
+    public static final byte PROPERTY_FUEL_LEVEL_ACCURACY = 0x2e;
+    public static final byte PROPERTY_TIRE_PRESSURES_TARGETS = 0x2f;
+    public static final byte PROPERTY_TIRE_PRESSURES_DIFFERENCES = 0x30;
+    public static final byte PROPERTY_BACKUP_BATTERY_REMAINING_TIME = 0x31;
+    public static final byte PROPERTY_ENGINE_COOLANT_FLUID_LEVEL = 0x32;
+    public static final byte PROPERTY_ENGINE_OIL_FLUID_LEVEL = 0x33;
+    public static final byte PROPERTY_ENGINE_OIL_PRESSURE_LEVEL = 0x34;
+    public static final byte PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE = 0x35;
+    public static final byte PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL = 0x36;
 
     /**
      * Get Diagnostics property availability information
@@ -224,7 +240,20 @@ public class Diagnostics {
         Property<Length> dieselExhaustFluidRange = new Property<>(Length.class, PROPERTY_DIESEL_EXHAUST_FLUID_RANGE);
         Property<Double> dieselParticulateFilterSootLevel = new Property<>(Double.class, PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL);
         List<Property<ConfirmedTroubleCode>> confirmedTroubleCodes;
-        Property<DieselExhaustFilterStatus> dieselExhaustFilterStatus = new Property<>(DieselExhaustFilterStatus.class, PROPERTY_DIESEL_EXHAUST_FILTER_STATUS);
+        List<Property<DieselExhaustFilterStatus>> dieselExhaustFilterStatus;
+        Property<Duration> engineTotalIdleOperatingTime = new Property<>(Duration.class, PROPERTY_ENGINE_TOTAL_IDLE_OPERATING_TIME);
+        Property<Volume> engineOilAmount = new Property<>(Volume.class, PROPERTY_ENGINE_OIL_AMOUNT);
+        Property<Double> engineOilLevel = new Property<>(Double.class, PROPERTY_ENGINE_OIL_LEVEL);
+        Property<Length> estimatedSecondaryPowertrainRange = new Property<>(Length.class, PROPERTY_ESTIMATED_SECONDARY_POWERTRAIN_RANGE);
+        Property<FuelLevelAccuracy> fuelLevelAccuracy = new Property<>(FuelLevelAccuracy.class, PROPERTY_FUEL_LEVEL_ACCURACY);
+        List<Property<TirePressure>> tirePressuresTargets;
+        List<Property<TirePressure>> tirePressuresDifferences;
+        Property<Duration> backupBatteryRemainingTime = new Property<>(Duration.class, PROPERTY_BACKUP_BATTERY_REMAINING_TIME);
+        Property<FluidLevel> engineCoolantFluidLevel = new Property<>(FluidLevel.class, PROPERTY_ENGINE_COOLANT_FLUID_LEVEL);
+        Property<FluidLevel> engineOilFluidLevel = new Property<>(FluidLevel.class, PROPERTY_ENGINE_OIL_FLUID_LEVEL);
+        Property<EngineOilPressureLevel> engineOilPressureLevel = new Property<>(EngineOilPressureLevel.class, PROPERTY_ENGINE_OIL_PRESSURE_LEVEL);
+        Property<Duration> engineTimeToNextService = new Property<>(Duration.class, PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE);
+        Property<LowVoltageBatteryChargeLevel> lowVoltageBatteryChargeLevel = new Property<>(LowVoltageBatteryChargeLevel.class, PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL);
     
         /**
          * @return The vehicle mileage (odometer)
@@ -487,8 +516,99 @@ public class Diagnostics {
         /**
          * @return The diesel exhaust filter status
          */
-        public Property<DieselExhaustFilterStatus> getDieselExhaustFilterStatus() {
+        public List<Property<DieselExhaustFilterStatus>> getDieselExhaustFilterStatus() {
             return dieselExhaustFilterStatus;
+        }
+    
+        /**
+         * @return The accumulated time of engine operation
+         */
+        public Property<Duration> getEngineTotalIdleOperatingTime() {
+            return engineTotalIdleOperatingTime;
+        }
+    
+        /**
+         * @return The current estimated oil tank liquid fill.
+         */
+        public Property<Volume> getEngineOilAmount() {
+            return engineOilAmount;
+        }
+    
+        /**
+         * @return The current estimated oil tank liquid fill in percentage.
+         */
+        public Property<Double> getEngineOilLevel() {
+            return engineOilLevel;
+        }
+    
+        /**
+         * @return Estimated secondary powertrain range
+         */
+        public Property<Length> getEstimatedSecondaryPowertrainRange() {
+            return estimatedSecondaryPowertrainRange;
+        }
+    
+        /**
+         * @return This value includes the information, if the fuel level has been calculated or measured.
+         */
+        public Property<FuelLevelAccuracy> getFuelLevelAccuracy() {
+            return fuelLevelAccuracy;
+        }
+    
+        /**
+         * @return Target tire pressures for the vehicle.
+         */
+        public List<Property<TirePressure>> getTirePressuresTargets() {
+            return tirePressuresTargets;
+        }
+    
+        /**
+         * @return Tire pressures difference from the target pressure.
+         */
+        public List<Property<TirePressure>> getTirePressuresDifferences() {
+            return tirePressuresDifferences;
+        }
+    
+        /**
+         * @return Remaining time the backup battery can work.
+         */
+        public Property<Duration> getBackupBatteryRemainingTime() {
+            return backupBatteryRemainingTime;
+        }
+    
+        /**
+         * @return Engine coolant fluid level
+         */
+        public Property<FluidLevel> getEngineCoolantFluidLevel() {
+            return engineCoolantFluidLevel;
+        }
+    
+        /**
+         * @return Engine oil fluid level
+         */
+        public Property<FluidLevel> getEngineOilFluidLevel() {
+            return engineOilFluidLevel;
+        }
+    
+        /**
+         * @return Engine oil pressure level
+         */
+        public Property<EngineOilPressureLevel> getEngineOilPressureLevel() {
+            return engineOilPressureLevel;
+        }
+    
+        /**
+         * @return Engine time until next service of the vehicle
+         */
+        public Property<Duration> getEngineTimeToNextService() {
+            return engineTimeToNextService;
+        }
+    
+        /**
+         * @return Indicates if the charge level of the low voltage battery is too low to use other systems
+         */
+        public Property<LowVoltageBatteryChargeLevel> getLowVoltageBatteryChargeLevel() {
+            return lowVoltageBatteryChargeLevel;
         }
     
         State(byte[] bytes) throws CommandParseException {
@@ -502,6 +622,9 @@ public class Diagnostics {
             final ArrayList<Property<TirePressureStatus>> tirePressureStatusesBuilder = new ArrayList<>();
             final ArrayList<Property<OemTroubleCodeValue>> oemTroubleCodeValuesBuilder = new ArrayList<>();
             final ArrayList<Property<ConfirmedTroubleCode>> confirmedTroubleCodesBuilder = new ArrayList<>();
+            final ArrayList<Property<DieselExhaustFilterStatus>> dieselExhaustFilterStatusBuilder = new ArrayList<>();
+            final ArrayList<Property<TirePressure>> tirePressuresTargetsBuilder = new ArrayList<>();
+            final ArrayList<Property<TirePressure>> tirePressuresDifferencesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -557,16 +680,38 @@ public class Diagnostics {
                         case PROPERTY_BRAKE_LINING_WEAR_PRE_WARNING: return brakeLiningWearPreWarning.update(p);
                         case PROPERTY_ENGINE_OIL_LIFE_REMAINING: return engineOilLifeRemaining.update(p);
                         case PROPERTY_OEM_TROUBLE_CODE_VALUES:
-                            Property<OemTroubleCodeValue> oemTroubleCodeValue = new Property<>(OemTroubleCodeValue.class, p);
-                            oemTroubleCodeValuesBuilder.add(oemTroubleCodeValue);
-                            return oemTroubleCodeValue;
+                            Property<OemTroubleCodeValue> engineTroubleCodeValue = new Property<>(OemTroubleCodeValue.class, p);
+                            oemTroubleCodeValuesBuilder.add(engineTroubleCodeValue);
+                            return engineTroubleCodeValue;
                         case PROPERTY_DIESEL_EXHAUST_FLUID_RANGE: return dieselExhaustFluidRange.update(p);
                         case PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL: return dieselParticulateFilterSootLevel.update(p);
                         case PROPERTY_CONFIRMED_TROUBLE_CODES:
                             Property<ConfirmedTroubleCode> confirmedTroubleCode = new Property<>(ConfirmedTroubleCode.class, p);
                             confirmedTroubleCodesBuilder.add(confirmedTroubleCode);
                             return confirmedTroubleCode;
-                        case PROPERTY_DIESEL_EXHAUST_FILTER_STATUS: return dieselExhaustFilterStatus.update(p);
+                        case PROPERTY_DIESEL_EXHAUST_FILTER_STATUS:
+                            Property<DieselExhaustFilterStatus> dieselExhaustFilterStatu = new Property<>(DieselExhaustFilterStatus.class, p);
+                            dieselExhaustFilterStatusBuilder.add(dieselExhaustFilterStatu);
+                            return dieselExhaustFilterStatu;
+                        case PROPERTY_ENGINE_TOTAL_IDLE_OPERATING_TIME: return engineTotalIdleOperatingTime.update(p);
+                        case PROPERTY_ENGINE_OIL_AMOUNT: return engineOilAmount.update(p);
+                        case PROPERTY_ENGINE_OIL_LEVEL: return engineOilLevel.update(p);
+                        case PROPERTY_ESTIMATED_SECONDARY_POWERTRAIN_RANGE: return estimatedSecondaryPowertrainRange.update(p);
+                        case PROPERTY_FUEL_LEVEL_ACCURACY: return fuelLevelAccuracy.update(p);
+                        case PROPERTY_TIRE_PRESSURES_TARGETS:
+                            Property<TirePressure> tirePressureTarget = new Property<>(TirePressure.class, p);
+                            tirePressuresTargetsBuilder.add(tirePressureTarget);
+                            return tirePressureTarget;
+                        case PROPERTY_TIRE_PRESSURES_DIFFERENCES:
+                            Property<TirePressure> tirePressureDifference = new Property<>(TirePressure.class, p);
+                            tirePressuresDifferencesBuilder.add(tirePressureDifference);
+                            return tirePressureDifference;
+                        case PROPERTY_BACKUP_BATTERY_REMAINING_TIME: return backupBatteryRemainingTime.update(p);
+                        case PROPERTY_ENGINE_COOLANT_FLUID_LEVEL: return engineCoolantFluidLevel.update(p);
+                        case PROPERTY_ENGINE_OIL_FLUID_LEVEL: return engineOilFluidLevel.update(p);
+                        case PROPERTY_ENGINE_OIL_PRESSURE_LEVEL: return engineOilPressureLevel.update(p);
+                        case PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE: return engineTimeToNextService.update(p);
+                        case PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL: return lowVoltageBatteryChargeLevel.update(p);
                     }
     
                     return null;
@@ -581,6 +726,9 @@ public class Diagnostics {
             tirePressureStatuses = tirePressureStatusesBuilder;
             oemTroubleCodeValues = oemTroubleCodeValuesBuilder;
             confirmedTroubleCodes = confirmedTroubleCodesBuilder;
+            dieselExhaustFilterStatus = dieselExhaustFilterStatusBuilder;
+            tirePressuresTargets = tirePressuresTargetsBuilder;
+            tirePressuresDifferences = tirePressuresDifferencesBuilder;
         }
     
         private State(Builder builder) {
@@ -623,6 +771,19 @@ public class Diagnostics {
             dieselParticulateFilterSootLevel = builder.dieselParticulateFilterSootLevel;
             confirmedTroubleCodes = builder.confirmedTroubleCodes;
             dieselExhaustFilterStatus = builder.dieselExhaustFilterStatus;
+            engineTotalIdleOperatingTime = builder.engineTotalIdleOperatingTime;
+            engineOilAmount = builder.engineOilAmount;
+            engineOilLevel = builder.engineOilLevel;
+            estimatedSecondaryPowertrainRange = builder.estimatedSecondaryPowertrainRange;
+            fuelLevelAccuracy = builder.fuelLevelAccuracy;
+            tirePressuresTargets = builder.tirePressuresTargets;
+            tirePressuresDifferences = builder.tirePressuresDifferences;
+            backupBatteryRemainingTime = builder.backupBatteryRemainingTime;
+            engineCoolantFluidLevel = builder.engineCoolantFluidLevel;
+            engineOilFluidLevel = builder.engineOilFluidLevel;
+            engineOilPressureLevel = builder.engineOilPressureLevel;
+            engineTimeToNextService = builder.engineTimeToNextService;
+            lowVoltageBatteryChargeLevel = builder.lowVoltageBatteryChargeLevel;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -662,7 +823,20 @@ public class Diagnostics {
             private Property<Length> dieselExhaustFluidRange;
             private Property<Double> dieselParticulateFilterSootLevel;
             private final List<Property<ConfirmedTroubleCode>> confirmedTroubleCodes = new ArrayList<>();
-            private Property<DieselExhaustFilterStatus> dieselExhaustFilterStatus;
+            private final List<Property<DieselExhaustFilterStatus>> dieselExhaustFilterStatus = new ArrayList<>();
+            private Property<Duration> engineTotalIdleOperatingTime;
+            private Property<Volume> engineOilAmount;
+            private Property<Double> engineOilLevel;
+            private Property<Length> estimatedSecondaryPowertrainRange;
+            private Property<FuelLevelAccuracy> fuelLevelAccuracy;
+            private final List<Property<TirePressure>> tirePressuresTargets = new ArrayList<>();
+            private final List<Property<TirePressure>> tirePressuresDifferences = new ArrayList<>();
+            private Property<Duration> backupBatteryRemainingTime;
+            private Property<FluidLevel> engineCoolantFluidLevel;
+            private Property<FluidLevel> engineOilFluidLevel;
+            private Property<EngineOilPressureLevel> engineOilPressureLevel;
+            private Property<Duration> engineTimeToNextService;
+            private Property<LowVoltageBatteryChargeLevel> lowVoltageBatteryChargeLevel;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -1115,22 +1289,22 @@ public class Diagnostics {
             public Builder setOemTroubleCodeValues(Property<OemTroubleCodeValue>[] oemTroubleCodeValues) {
                 this.oemTroubleCodeValues.clear();
                 for (int i = 0; i < oemTroubleCodeValues.length; i++) {
-                    addOemTroubleCodeValue(oemTroubleCodeValues[i]);
+                    addEngineTroubleCodeValue(oemTroubleCodeValues[i]);
                 }
             
                 return this;
             }
             
             /**
-             * Add a single oem trouble code value
+             * Add a single engine trouble code value
              * 
-             * @param oemTroubleCodeValue The oem trouble code value. Additional OEM trouble codes
+             * @param engineTroubleCodeValue The engine trouble code value. Additional OEM trouble codes
              * @return The builder
              */
-            public Builder addOemTroubleCodeValue(Property<OemTroubleCodeValue> oemTroubleCodeValue) {
-                oemTroubleCodeValue.setIdentifier(PROPERTY_OEM_TROUBLE_CODE_VALUES);
-                addProperty(oemTroubleCodeValue);
-                oemTroubleCodeValues.add(oemTroubleCodeValue);
+            public Builder addEngineTroubleCodeValue(Property<OemTroubleCodeValue> engineTroubleCodeValue) {
+                engineTroubleCodeValue.setIdentifier(PROPERTY_OEM_TROUBLE_CODE_VALUES);
+                addProperty(engineTroubleCodeValue);
+                oemTroubleCodeValues.add(engineTroubleCodeValue);
                 return this;
             }
             
@@ -1183,14 +1357,307 @@ public class Diagnostics {
             }
             
             /**
+             * Add an array of diesel exhaust filter status
+             * 
              * @param dieselExhaustFilterStatus The diesel exhaust filter status
              * @return The builder
              */
-            public Builder setDieselExhaustFilterStatus(Property<DieselExhaustFilterStatus> dieselExhaustFilterStatus) {
-                this.dieselExhaustFilterStatus = dieselExhaustFilterStatus.setIdentifier(PROPERTY_DIESEL_EXHAUST_FILTER_STATUS);
-                addProperty(this.dieselExhaustFilterStatus);
+            public Builder setDieselExhaustFilterStatus(Property<DieselExhaustFilterStatus>[] dieselExhaustFilterStatus) {
+                this.dieselExhaustFilterStatus.clear();
+                for (int i = 0; i < dieselExhaustFilterStatus.length; i++) {
+                    addDieselExhaustFilterStatu(dieselExhaustFilterStatus[i]);
+                }
+            
                 return this;
             }
+            
+            /**
+             * Add a single diesel exhaust filter statu
+             * 
+             * @param dieselExhaustFilterStatu The diesel exhaust filter statu
+             * @return The builder
+             */
+            public Builder addDieselExhaustFilterStatu(Property<DieselExhaustFilterStatus> dieselExhaustFilterStatu) {
+                dieselExhaustFilterStatu.setIdentifier(PROPERTY_DIESEL_EXHAUST_FILTER_STATUS);
+                addProperty(dieselExhaustFilterStatu);
+                dieselExhaustFilterStatus.add(dieselExhaustFilterStatu);
+                return this;
+            }
+            
+            /**
+             * @param engineTotalIdleOperatingTime The accumulated time of engine operation
+             * @return The builder
+             */
+            public Builder setEngineTotalIdleOperatingTime(Property<Duration> engineTotalIdleOperatingTime) {
+                this.engineTotalIdleOperatingTime = engineTotalIdleOperatingTime.setIdentifier(PROPERTY_ENGINE_TOTAL_IDLE_OPERATING_TIME);
+                addProperty(this.engineTotalIdleOperatingTime);
+                return this;
+            }
+            
+            /**
+             * @param engineOilAmount The current estimated oil tank liquid fill.
+             * @return The builder
+             */
+            public Builder setEngineOilAmount(Property<Volume> engineOilAmount) {
+                this.engineOilAmount = engineOilAmount.setIdentifier(PROPERTY_ENGINE_OIL_AMOUNT);
+                addProperty(this.engineOilAmount);
+                return this;
+            }
+            
+            /**
+             * @param engineOilLevel The current estimated oil tank liquid fill in percentage.
+             * @return The builder
+             */
+            public Builder setEngineOilLevel(Property<Double> engineOilLevel) {
+                this.engineOilLevel = engineOilLevel.setIdentifier(PROPERTY_ENGINE_OIL_LEVEL);
+                addProperty(this.engineOilLevel);
+                return this;
+            }
+            
+            /**
+             * @param estimatedSecondaryPowertrainRange Estimated secondary powertrain range
+             * @return The builder
+             */
+            public Builder setEstimatedSecondaryPowertrainRange(Property<Length> estimatedSecondaryPowertrainRange) {
+                this.estimatedSecondaryPowertrainRange = estimatedSecondaryPowertrainRange.setIdentifier(PROPERTY_ESTIMATED_SECONDARY_POWERTRAIN_RANGE);
+                addProperty(this.estimatedSecondaryPowertrainRange);
+                return this;
+            }
+            
+            /**
+             * @param fuelLevelAccuracy This value includes the information, if the fuel level has been calculated or measured.
+             * @return The builder
+             */
+            public Builder setFuelLevelAccuracy(Property<FuelLevelAccuracy> fuelLevelAccuracy) {
+                this.fuelLevelAccuracy = fuelLevelAccuracy.setIdentifier(PROPERTY_FUEL_LEVEL_ACCURACY);
+                addProperty(this.fuelLevelAccuracy);
+                return this;
+            }
+            
+            /**
+             * Add an array of tire pressures targets
+             * 
+             * @param tirePressuresTargets The tire pressures targets. Target tire pressures for the vehicle.
+             * @return The builder
+             */
+            public Builder setTirePressuresTargets(Property<TirePressure>[] tirePressuresTargets) {
+                this.tirePressuresTargets.clear();
+                for (int i = 0; i < tirePressuresTargets.length; i++) {
+                    addTirePressureTarget(tirePressuresTargets[i]);
+                }
+            
+                return this;
+            }
+            
+            /**
+             * Add a single tire pressure target
+             * 
+             * @param tirePressureTarget The tire pressure target. Target tire pressures for the vehicle.
+             * @return The builder
+             */
+            public Builder addTirePressureTarget(Property<TirePressure> tirePressureTarget) {
+                tirePressureTarget.setIdentifier(PROPERTY_TIRE_PRESSURES_TARGETS);
+                addProperty(tirePressureTarget);
+                tirePressuresTargets.add(tirePressureTarget);
+                return this;
+            }
+            
+            /**
+             * Add an array of tire pressures differences
+             * 
+             * @param tirePressuresDifferences The tire pressures differences. Tire pressures difference from the target pressure.
+             * @return The builder
+             */
+            public Builder setTirePressuresDifferences(Property<TirePressure>[] tirePressuresDifferences) {
+                this.tirePressuresDifferences.clear();
+                for (int i = 0; i < tirePressuresDifferences.length; i++) {
+                    addTirePressureDifference(tirePressuresDifferences[i]);
+                }
+            
+                return this;
+            }
+            
+            /**
+             * Add a single tire pressure difference
+             * 
+             * @param tirePressureDifference The tire pressure difference. Tire pressures difference from the target pressure.
+             * @return The builder
+             */
+            public Builder addTirePressureDifference(Property<TirePressure> tirePressureDifference) {
+                tirePressureDifference.setIdentifier(PROPERTY_TIRE_PRESSURES_DIFFERENCES);
+                addProperty(tirePressureDifference);
+                tirePressuresDifferences.add(tirePressureDifference);
+                return this;
+            }
+            
+            /**
+             * @param backupBatteryRemainingTime Remaining time the backup battery can work.
+             * @return The builder
+             */
+            public Builder setBackupBatteryRemainingTime(Property<Duration> backupBatteryRemainingTime) {
+                this.backupBatteryRemainingTime = backupBatteryRemainingTime.setIdentifier(PROPERTY_BACKUP_BATTERY_REMAINING_TIME);
+                addProperty(this.backupBatteryRemainingTime);
+                return this;
+            }
+            
+            /**
+             * @param engineCoolantFluidLevel Engine coolant fluid level
+             * @return The builder
+             */
+            public Builder setEngineCoolantFluidLevel(Property<FluidLevel> engineCoolantFluidLevel) {
+                this.engineCoolantFluidLevel = engineCoolantFluidLevel.setIdentifier(PROPERTY_ENGINE_COOLANT_FLUID_LEVEL);
+                addProperty(this.engineCoolantFluidLevel);
+                return this;
+            }
+            
+            /**
+             * @param engineOilFluidLevel Engine oil fluid level
+             * @return The builder
+             */
+            public Builder setEngineOilFluidLevel(Property<FluidLevel> engineOilFluidLevel) {
+                this.engineOilFluidLevel = engineOilFluidLevel.setIdentifier(PROPERTY_ENGINE_OIL_FLUID_LEVEL);
+                addProperty(this.engineOilFluidLevel);
+                return this;
+            }
+            
+            /**
+             * @param engineOilPressureLevel Engine oil pressure level
+             * @return The builder
+             */
+            public Builder setEngineOilPressureLevel(Property<EngineOilPressureLevel> engineOilPressureLevel) {
+                this.engineOilPressureLevel = engineOilPressureLevel.setIdentifier(PROPERTY_ENGINE_OIL_PRESSURE_LEVEL);
+                addProperty(this.engineOilPressureLevel);
+                return this;
+            }
+            
+            /**
+             * @param engineTimeToNextService Engine time until next service of the vehicle
+             * @return The builder
+             */
+            public Builder setEngineTimeToNextService(Property<Duration> engineTimeToNextService) {
+                this.engineTimeToNextService = engineTimeToNextService.setIdentifier(PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE);
+                addProperty(this.engineTimeToNextService);
+                return this;
+            }
+            
+            /**
+             * @param lowVoltageBatteryChargeLevel Indicates if the charge level of the low voltage battery is too low to use other systems
+             * @return The builder
+             */
+            public Builder setLowVoltageBatteryChargeLevel(Property<LowVoltageBatteryChargeLevel> lowVoltageBatteryChargeLevel) {
+                this.lowVoltageBatteryChargeLevel = lowVoltageBatteryChargeLevel.setIdentifier(PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL);
+                addProperty(this.lowVoltageBatteryChargeLevel);
+                return this;
+            }
+        }
+    }
+
+    public enum FuelLevelAccuracy implements ByteEnum {
+        MEASURED((byte) 0x00),
+        CALCULATED((byte) 0x01);
+    
+        public static FuelLevelAccuracy fromByte(byte byteValue) throws CommandParseException {
+            FuelLevelAccuracy[] values = FuelLevelAccuracy.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                FuelLevelAccuracy state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(FuelLevelAccuracy.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        FuelLevelAccuracy(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum EngineOilPressureLevel implements ByteEnum {
+        LOW((byte) 0x00),
+        NORMAL((byte) 0x01),
+        HIGH((byte) 0x02),
+        LOW_SOFT((byte) 0x03),
+        LOW_HARD((byte) 0x04),
+        NO_SENSOR((byte) 0x05),
+        SYSTEM_FAULT((byte) 0x06);
+    
+        public static EngineOilPressureLevel fromByte(byte byteValue) throws CommandParseException {
+            EngineOilPressureLevel[] values = EngineOilPressureLevel.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                EngineOilPressureLevel state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(EngineOilPressureLevel.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        EngineOilPressureLevel(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum LowVoltageBatteryChargeLevel implements ByteEnum {
+        /**
+         * Charge level is ok and no other systems are deactivated
+         */
+        OK((byte) 0x00),
+        /**
+         * High voltage users are cut off from low voltage management
+         */
+        DEACTIVATION_LEVEL_1((byte) 0x01),
+        /**
+         * Infotainment cut off, from that point on no data will be sent to vehicle backend
+         */
+        DEACTIVATION_LEVEL_2((byte) 0x02),
+        /**
+         * Wake up blocked, vehicle cannot be woken up externally
+         */
+        DEACTIVATION_LEVEL_3((byte) 0x03);
+    
+        public static LowVoltageBatteryChargeLevel fromByte(byte byteValue) throws CommandParseException {
+            LowVoltageBatteryChargeLevel[] values = LowVoltageBatteryChargeLevel.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                LowVoltageBatteryChargeLevel state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(LowVoltageBatteryChargeLevel.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        LowVoltageBatteryChargeLevel(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
         }
     }
 }

@@ -29,7 +29,7 @@ import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.value.measurement.Frequency;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class Availability extends PropertyValueObject {
     public static final int SIZE = 12;
@@ -138,7 +138,9 @@ public class Availability extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Availability.UpdateRate does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(UpdateRate.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -166,7 +168,9 @@ public class Availability extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Availability.AppliesPer does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(AppliesPer.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

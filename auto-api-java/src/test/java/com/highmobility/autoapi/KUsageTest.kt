@@ -52,14 +52,14 @@ class KUsageTest : BaseTest() {
             "06000E01000B040c044032000000000000" +  // Driving mode 'ecoPlus' consumed 18.0kWh of electric energy
             "06000E01000B050c044040d9999999999a" +  // Driving mode 'comfort' consumed 33.7kWh of electric energy
             "07000D01000A0c044059533333333333" +  // Last trip consumed 101.3kWh of electric energy
-            "08000D01000A19024036800000000000" +  // Last trip consumed 22.5L of fuel
+            "08000D01000A19024036800000000000" +  // Last trip consumed 22.5 L of fuel
             "09000D01000A120440f7590000000000" +  // Mileage is 95'632km after last trip
             "0a000B0100083fe6666666666666" +  // Electric postion of the last trip is 70%
             "0b000D01000A0d004016b851eb851eb8" +  // 5.68kWh/100km of electric energy was recuperated during last trip
             "0c000B0100083fe0000000000000" +  // Battery is at 50% after last trip
             "0d000B0100080000016682059d50" +  // Last trip happened at 17 October 2018 at 12:34:58 UTC
-            "0e000D01000A0f00401a000000000000" +  // Average fuel consumption is 6.5L per 100km
-            "0f000D01000A0f00401e000000000000" +  // Current fuel consumption is 7.5L per 100km
+            "0e000D01000A0f00401a000000000000" +  // Average fuel consumption is 6.5 L per 100km
+            "0f000D01000A0f00401e000000000000" +  // Current fuel consumption is 7.5 L per 100km
             "10000D01000A120440f7590000000000" +  // Odometer is 95'632km after last trip
             "11000B0100083fe6666666666666" +  // Safety driving score is evaluated at 70%
             "12000401000100" +  // Rapid acceleration is graded as excellent
@@ -83,7 +83,9 @@ class KUsageTest : BaseTest() {
             "24000B0100083fe6666666666666" +  // Total eco-score rating is 70%
             "25000B0100083fe6666666666666" +  // Eco-score free-wheeling rating is 70%
             "26000B0100083fe6666666666666" +  // Eco-score constant is 70%
-            "27000D01000A12043fe6666666666666" // Eco-score bonus range is 0.7km
+            "27000D01000A12043fe6666666666666" +  // Eco-score bonus range is 0.7km
+            "28000E01000B011204407c833333333333" +  // Trip meter 1`s distance is 456.2km
+            "28000E01000B02120440a372999999999a" // Trip meter 2`s distance is 2489.3km
     )
     
     @Test
@@ -144,6 +146,8 @@ class KUsageTest : BaseTest() {
         builder.setEcoScoreFreeWheel(Property(0.7))
         builder.setEcoScoreConstant(Property(0.7))
         builder.setEcoScoreBonusRange(Property(Length(0.7, Length.Unit.KILOMETERS)))
+        builder.addTripMeter(Property(TripMeter(1, Length(456.2, Length.Unit.KILOMETERS))))
+        builder.addTripMeter(Property(TripMeter(2, Length(2489.3, Length.Unit.KILOMETERS))))
         testState(builder.build())
     }
     
@@ -243,6 +247,12 @@ class KUsageTest : BaseTest() {
         assertTrue(state.ecoScoreConstant.value == 0.7)
         assertTrue(state.ecoScoreBonusRange.value?.value == 0.7)
         assertTrue(state.ecoScoreBonusRange.value?.unit == Length.Unit.KILOMETERS)
+        assertTrue(state.tripMeters[0].value?.id == 1)
+        assertTrue(state.tripMeters[0].value?.distance?.value == 456.2)
+        assertTrue(state.tripMeters[0].value?.distance?.unit == Length.Unit.KILOMETERS)
+        assertTrue(state.tripMeters[1].value?.id == 2)
+        assertTrue(state.tripMeters[1].value?.distance?.value == 2489.3)
+        assertTrue(state.tripMeters[1].value?.distance?.unit == Length.Unit.KILOMETERS)
     }
     
     @Test
@@ -252,10 +262,10 @@ class KUsageTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0068000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
-        val propertyGetter = Usage.GetUsage(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0068000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728")
+        val propertyGetter = Usage.GetUsage(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728"))
     }
     
     @Test
@@ -278,14 +288,14 @@ class KUsageTest : BaseTest() {
     
     @Test
     fun testGetUsageAvailabilitySome() {
-        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627")
+        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728")
         val allBytes = Bytes(COMMAND_HEADER + "006802" + identifierBytes)
         val constructed = Usage.GetUsageAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.USAGE)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Usage.GetUsageAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27)
+        val secondConstructed = Usage.GetUsageAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

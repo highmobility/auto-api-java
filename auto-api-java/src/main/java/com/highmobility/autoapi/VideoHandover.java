@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.measurement.Duration;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Video Handover capability
@@ -98,8 +98,9 @@ public class VideoHandover {
                     return null;
                 });
             }
-            if (this.url.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.url.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -117,7 +118,9 @@ public class VideoHandover {
                 }
             }
     
-            throw new CommandParseException("VideoHandover.Screen does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Screen.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

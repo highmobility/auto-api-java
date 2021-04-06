@@ -31,7 +31,7 @@ import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Honk Horn &amp; Flash Lights capability
@@ -186,7 +186,9 @@ public class HonkHornFlashLights {
                     return null;
                 });
             }
-            if (this.flashTimes.getValue() == null && this.honkTime.getValue() == null) throw new NoPropertiesException();
+            if (this.flashTimes.getValue() == null && this.honkTime.getValue() == null) {
+                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -223,8 +225,9 @@ public class HonkHornFlashLights {
                     return null;
                 });
             }
-            if (this.emergencyFlashersState.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.emergencyFlashersState.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -299,7 +302,9 @@ public class HonkHornFlashLights {
                 }
             }
     
-            throw new CommandParseException("HonkHornFlashLights.Flashers does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Flashers.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

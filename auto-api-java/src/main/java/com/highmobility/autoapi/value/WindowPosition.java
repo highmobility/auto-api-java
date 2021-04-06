@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class WindowPosition extends PropertyValueObject {
     public static final int SIZE = 2;
@@ -96,7 +96,9 @@ public class WindowPosition extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("WindowPosition.Position does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Position.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

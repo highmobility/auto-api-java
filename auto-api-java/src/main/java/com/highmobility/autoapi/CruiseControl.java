@@ -31,7 +31,7 @@ import com.highmobility.autoapi.value.measurement.Speed;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Cruise Control capability
@@ -187,8 +187,9 @@ public class CruiseControl {
                     return null;
                 });
             }
-            if (this.cruiseControl.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.cruiseControl.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -271,7 +272,9 @@ public class CruiseControl {
                 }
             }
     
-            throw new CommandParseException("CruiseControl.Limiter does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Limiter.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

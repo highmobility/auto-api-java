@@ -179,7 +179,9 @@ public class Fueling {
                     return null;
                 });
             }
-            if (this.gasFlapLock.getValue() == null && this.gasFlapPosition.getValue() == null) throw new NoPropertiesException();
+            if (this.gasFlapLock.getValue() == null && this.gasFlapPosition.getValue() == null) {
+                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 

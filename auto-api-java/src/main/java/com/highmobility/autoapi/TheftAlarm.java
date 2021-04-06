@@ -29,7 +29,7 @@ import com.highmobility.autoapi.value.ActiveSelectedState;
 import com.highmobility.value.Bytes;
 import java.util.Calendar;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Theft Alarm capability
@@ -172,8 +172,9 @@ public class TheftAlarm {
                     return null;
                 });
             }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.status.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -373,7 +374,9 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException("TheftAlarm.Status does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Status.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -420,7 +423,9 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException("TheftAlarm.LastWarningReason does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(LastWarningReason.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -449,7 +454,9 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException("TheftAlarm.LastEventLevel does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(LastEventLevel.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -485,7 +492,9 @@ public class TheftAlarm {
                 }
             }
     
-            throw new CommandParseException("TheftAlarm.EventType does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(EventType.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

@@ -31,7 +31,7 @@ import com.highmobility.autoapi.value.measurement.Speed;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Remote Control capability
@@ -124,7 +124,9 @@ public class RemoteControl {
                     return null;
                 });
             }
-            if (this.angle.getValue() == null && this.speed.getValue() == null) throw new NoPropertiesException();
+            if (this.angle.getValue() == null && this.speed.getValue() == null) {
+                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -152,8 +154,9 @@ public class RemoteControl {
                     return null;
                 });
             }
-            if ((controlMode.getValue() == null || controlMode.getValueComponent().getValueBytes().equals("02") == false)) 
-                throw new NoPropertiesException();
+            if ((controlMode.getValue() == null || controlMode.getValueComponent().getValueBytes().equals("02") == false)) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -181,8 +184,9 @@ public class RemoteControl {
                     return null;
                 });
             }
-            if ((controlMode.getValue() == null || controlMode.getValueComponent().getValueBytes().equals("05") == false)) 
-                throw new NoPropertiesException();
+            if ((controlMode.getValue() == null || controlMode.getValueComponent().getValueBytes().equals("05") == false)) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -240,7 +244,9 @@ public class RemoteControl {
                 }
             }
     
-            throw new CommandParseException("RemoteControl.ControlMode does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(ControlMode.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

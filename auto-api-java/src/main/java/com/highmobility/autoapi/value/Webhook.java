@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class Webhook extends PropertyValueObject {
     public static final int SIZE = 2;
@@ -95,62 +95,14 @@ public class Webhook extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Webhook.Available does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Available.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
     
         Available(byte value) {
-            this.value = value;
-        }
-    
-        @Override public byte getByte() {
-            return value;
-        }
-    }
-
-    public enum Event implements ByteEnum {
-        /**
-         * Sent every time when the webhook is configured or changed.
-         */
-        PING((byte) 0x00),
-        /**
-         * Sent every time a vehicle starts a trip.
-         */
-        TRIP_STARTED((byte) 0x01),
-        /**
-         * Sent when a vehicle ends a trip.
-         */
-        TRIP_ENDED((byte) 0x02),
-        /**
-         * Sent when the vehicle location changes.
-         */
-        VEHICLE_LOCATION_CHANGED((byte) 0x03),
-        /**
-         * Sent when the authorization status changes.
-         */
-        AUTHORIZATION_CHANGED((byte) 0x04),
-        /**
-         * Sent when the tire pressure changed to low or too high.
-         */
-        TIRE_PRESSURE_CHANGED((byte) 0x05);
-    
-        public static Event fromByte(byte byteValue) throws CommandParseException {
-            Event[] values = Event.values();
-    
-            for (int i = 0; i < values.length; i++) {
-                Event state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-    
-            throw new CommandParseException("Webhook.Event does not contain: " + hexFromByte(byteValue));
-        }
-    
-        private final byte value;
-    
-        Event(byte value) {
             this.value = value;
         }
     

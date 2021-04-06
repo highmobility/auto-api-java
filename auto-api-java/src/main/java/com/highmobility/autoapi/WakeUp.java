@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Wake Up capability
@@ -64,8 +64,9 @@ public class WakeUp {
                     return null;
                 });
             }
-            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("00") == false)) 
-                throw new NoPropertiesException();
+            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("00") == false)) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -83,7 +84,9 @@ public class WakeUp {
                 }
             }
     
-            throw new CommandParseException("WakeUp.Status does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Status.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

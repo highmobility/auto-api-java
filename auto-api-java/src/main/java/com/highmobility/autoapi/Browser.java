@@ -66,8 +66,9 @@ public class Browser {
                     return null;
                 });
             }
-            if (this.url.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.url.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 }

@@ -62,7 +62,13 @@ class KTripsTest : BaseTest() {
             "0f000B0100080400053130313137" +  // Postal code component value is '10117'
             "0f001A010017050014536b616c69747a65722053747261c39f65203638" +  // Street component value is 'Skalitzer Straße 68'
             "0f001101000E06000b4272616e64656e62757267" +  // Country component value is 'Brandenburg'
-            "0f000D01000A0700074765726d616e79" // Other component value is 'Germany'
+            "0f000D01000A0700074765726d616e79" +  // Other component value is 'Germany'
+            "10000401000101" +  // Driving event of harsh acceleration encountered
+            "11000401000100" +  // Eco driving level is high
+            "12000C010009000000000000000000" +  // Eco driving zero-threshold is set at 0.0
+            "13000D01000A19024037666666666666" +  // Total fuel consumption during the trip was 23.4 l
+            "14000D01000A19024004000000000000" +  // Since the last ignition the vehicle has consumed 2.5 l while ideling.
+            "15000D01000A16014050d33333333333" // Maximum speed since last ignition on is 67.3km/h
     )
     
     @Test
@@ -103,6 +109,12 @@ class KTripsTest : BaseTest() {
         builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.STREET, "Skalitzer Straße 68")))
         builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.STATE_PROVINCE, "Brandenburg")))
         builder.addEndAddressComponent(Property(AddressComponent(AddressComponent.Type.OTHER, "Germany")))
+        builder.setEvent(Property(Trips.Event.HARSH_ACCELERATION))
+        builder.setEcoLevel(Property(Trips.EcoLevel.HIGH))
+        builder.addThreshold(Property(EcoDrivingThreshold(EcoDrivingThreshold.Type.ZERO, 0.0)))
+        builder.setTotalFuelConsumption(Property(Volume(23.4, Volume.Unit.LITERS)))
+        builder.setTotalIdleFuelConsumption(Property(Volume(2.5, Volume.Unit.LITERS)))
+        builder.setMaximumSpeed(Property(Speed(67.3, Speed.Unit.KILOMETERS_PER_HOUR)))
         testState(builder.build())
     }
     
@@ -159,5 +171,15 @@ class KTripsTest : BaseTest() {
         assertTrue(state.endAddressComponents[6].value?.value == "Brandenburg")
         assertTrue(state.endAddressComponents[7].value?.type == AddressComponent.Type.OTHER)
         assertTrue(state.endAddressComponents[7].value?.value == "Germany")
+        assertTrue(state.event.value == Trips.Event.HARSH_ACCELERATION)
+        assertTrue(state.ecoLevel.value == Trips.EcoLevel.HIGH)
+        assertTrue(state.thresholds[0].value?.type == EcoDrivingThreshold.Type.ZERO)
+        assertTrue(state.thresholds[0].value?.value == 0.0)
+        assertTrue(state.totalFuelConsumption.value?.value == 23.4)
+        assertTrue(state.totalFuelConsumption.value?.unit == Volume.Unit.LITERS)
+        assertTrue(state.totalIdleFuelConsumption.value?.value == 2.5)
+        assertTrue(state.totalIdleFuelConsumption.value?.unit == Volume.Unit.LITERS)
+        assertTrue(state.maximumSpeed.value?.value == 67.3)
+        assertTrue(state.maximumSpeed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
     }
 }

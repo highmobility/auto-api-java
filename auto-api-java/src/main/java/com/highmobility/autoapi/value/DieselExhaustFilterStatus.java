@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class DieselExhaustFilterStatus extends PropertyValueObject {
     public static final int SIZE = 3;
@@ -113,7 +113,9 @@ public class DieselExhaustFilterStatus extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("DieselExhaustFilterStatus.Status does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Status.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -144,7 +146,9 @@ public class DieselExhaustFilterStatus extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("DieselExhaustFilterStatus.Component does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Component.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -174,7 +178,9 @@ public class DieselExhaustFilterStatus extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("DieselExhaustFilterStatus.Cleaning does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Cleaning.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

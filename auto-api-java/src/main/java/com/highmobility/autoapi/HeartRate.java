@@ -70,8 +70,9 @@ public class HeartRate {
                     return null;
                 });
             }
-            if (this.heartRate.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.heartRate.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 }

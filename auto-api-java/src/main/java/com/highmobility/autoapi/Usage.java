@@ -29,6 +29,7 @@ import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.value.DrivingModeActivationPeriod;
 import com.highmobility.autoapi.value.DrivingModeEnergyConsumption;
 import com.highmobility.autoapi.value.Grade;
+import com.highmobility.autoapi.value.TripMeter;
 import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.autoapi.value.measurement.Energy;
 import com.highmobility.autoapi.value.measurement.EnergyEfficiency;
@@ -87,6 +88,7 @@ public class Usage {
     public static final byte PROPERTY_ECO_SCORE_FREE_WHEEL = 0x25;
     public static final byte PROPERTY_ECO_SCORE_CONSTANT = 0x26;
     public static final byte PROPERTY_ECO_SCORE_BONUS_RANGE = 0x27;
+    public static final byte PROPERTY_TRIP_METERS = 0x28;
 
     /**
      * Get Usage property availability information
@@ -225,6 +227,7 @@ public class Usage {
         Property<Double> ecoScoreFreeWheel = new Property<>(Double.class, PROPERTY_ECO_SCORE_FREE_WHEEL);
         Property<Double> ecoScoreConstant = new Property<>(Double.class, PROPERTY_ECO_SCORE_CONSTANT);
         Property<Length> ecoScoreBonusRange = new Property<>(Length.class, PROPERTY_ECO_SCORE_BONUS_RANGE);
+        List<Property<TripMeter>> tripMeters;
     
         /**
          * @return Average weekly distance
@@ -502,6 +505,13 @@ public class Usage {
         }
     
         /**
+         * @return The trip meters
+         */
+        public List<Property<TripMeter>> getTripMeters() {
+            return tripMeters;
+        }
+    
+        /**
          * @param mode The driving mode.
          * @return The driving mode activation period for given mode.
          */
@@ -534,6 +544,7 @@ public class Usage {
     
             final ArrayList<Property<DrivingModeActivationPeriod>> drivingModesActivationPeriodsBuilder = new ArrayList<>();
             final ArrayList<Property<DrivingModeEnergyConsumption>> drivingModesEnergyConsumptionsBuilder = new ArrayList<>();
+            final ArrayList<Property<TripMeter>> tripMetersBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -583,6 +594,10 @@ public class Usage {
                         case PROPERTY_ECO_SCORE_FREE_WHEEL: return ecoScoreFreeWheel.update(p);
                         case PROPERTY_ECO_SCORE_CONSTANT: return ecoScoreConstant.update(p);
                         case PROPERTY_ECO_SCORE_BONUS_RANGE: return ecoScoreBonusRange.update(p);
+                        case PROPERTY_TRIP_METERS:
+                            Property<TripMeter> tripMeter = new Property<>(TripMeter.class, p);
+                            tripMetersBuilder.add(tripMeter);
+                            return tripMeter;
                     }
     
                     return null;
@@ -591,6 +606,7 @@ public class Usage {
     
             drivingModesActivationPeriods = drivingModesActivationPeriodsBuilder;
             drivingModesEnergyConsumptions = drivingModesEnergyConsumptionsBuilder;
+            tripMeters = tripMetersBuilder;
         }
     
         private State(Builder builder) {
@@ -635,6 +651,7 @@ public class Usage {
             ecoScoreFreeWheel = builder.ecoScoreFreeWheel;
             ecoScoreConstant = builder.ecoScoreConstant;
             ecoScoreBonusRange = builder.ecoScoreBonusRange;
+            tripMeters = builder.tripMeters;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -677,6 +694,7 @@ public class Usage {
             private Property<Double> ecoScoreFreeWheel;
             private Property<Double> ecoScoreConstant;
             private Property<Length> ecoScoreBonusRange;
+            private final List<Property<TripMeter>> tripMeters = new ArrayList<>();
     
             public Builder() {
                 super(IDENTIFIER);
@@ -1111,6 +1129,33 @@ public class Usage {
             public Builder setEcoScoreBonusRange(Property<Length> ecoScoreBonusRange) {
                 this.ecoScoreBonusRange = ecoScoreBonusRange.setIdentifier(PROPERTY_ECO_SCORE_BONUS_RANGE);
                 addProperty(this.ecoScoreBonusRange);
+                return this;
+            }
+            
+            /**
+             * Add an array of trip meters
+             * 
+             * @param tripMeters The trip meters
+             * @return The builder
+             */
+            public Builder setTripMeters(Property<TripMeter>[] tripMeters) {
+                this.tripMeters.clear();
+                for (int i = 0; i < tripMeters.length; i++) {
+                    addTripMeter(tripMeters[i]);
+                }
+            
+                return this;
+            }
+            /**
+             * Add a single trip meter
+             * 
+             * @param tripMeter The trip meter
+             * @return The builder
+             */
+            public Builder addTripMeter(Property<TripMeter> tripMeter) {
+                tripMeter.setIdentifier(PROPERTY_TRIP_METERS);
+                addProperty(tripMeter);
+                tripMeters.add(tripMeter);
                 return this;
             }
         }

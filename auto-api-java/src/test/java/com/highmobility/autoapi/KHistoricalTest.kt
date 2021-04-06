@@ -85,4 +85,36 @@ class KHistoricalTest : BaseTest() {
         val constructed = Historical.GetTrips(getCalendar("2019-10-07T13:04:32.000Z"), getCalendar("2019-09-27T08:42:30.000Z"))
         assertTrue(bytesTheSame(constructed, bytes))
     }
+    
+    @Test
+    fun getChargingSessions() {
+        val bytes = Bytes(COMMAND_HEADER + "001201" +
+            "020005010002006d" +
+            "03000B0100080000016da6524300" +
+            "04000B0100080000016d71e2c4f0")
+    
+        val constructed = Historical.GetChargingSessions(getCalendar("2019-10-07T13:04:32.000Z"), getCalendar("2019-09-27T08:42:30.000Z"))
+        assertTrue(bytesTheSame(constructed, bytes))
+    
+        setEnvironment(CommandResolver.Environment.VEHICLE)
+    
+        val resolved = CommandResolver.resolve(bytes) as Historical.GetChargingSessions
+        assertTrue(dateIsSame(resolved.startDate.value, "2019-10-07T13:04:32.000Z"))
+        assertTrue(dateIsSame(resolved.endDate.value, "2019-09-27T08:42:30.000Z"))
+        assertTrue(resolved == bytes)
+    }
+    
+    @Test fun invalidGetChargingSessionsCapabilityIDThrows() {
+        val bytes = Bytes(COMMAND_HEADER + "001201" +
+            "02000501000200CD" +
+            "03000B0100080000016da6524300" +
+            "04000B0100080000016d71e2c4f0")
+    
+        setEnvironment(CommandResolver.Environment.VEHICLE)
+    
+        errorLogExpected(3) { 
+            val resolved = CommandResolver.resolve(bytes)
+            assertTrue(resolved is Command)
+        }
+    }
 }

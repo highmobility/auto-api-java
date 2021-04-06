@@ -29,7 +29,7 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class TroubleCode extends PropertyValueObject {
     Integer occurrences;
@@ -154,7 +154,9 @@ public class TroubleCode extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("TroubleCode.System does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(System.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

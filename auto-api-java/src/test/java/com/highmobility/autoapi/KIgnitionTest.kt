@@ -31,10 +31,11 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.assertTrue
 
+@Suppress("DEPRECATION")
 class KIgnitionTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "003501" + 
-            "01000401000100" +  // Ignition is off
-            "02000401000101" +  // Accessories power is on
+            "01000401000101" +  // Ignition is off
+            "02000401000103" +  // Accessories power is on
             "03000401000102" // Ignition state is in accessory
     )
     
@@ -47,17 +48,17 @@ class KIgnitionTest : BaseTest() {
     @Test
     fun testBuilder() {
         val builder = Ignition.State.Builder()
-        builder.setStatus(Property(OnOffState.OFF))
-        builder.setAccessoriesStatus(Property(OnOffState.ON))
-        builder.setState(Property(Ignition.IgnitionState.ACCESSORY))
+        builder.setStatus(Property(IgnitionState.OFF))
+        builder.setAccessoriesStatus(Property(IgnitionState.ON))
+        builder.setState(Property(IgnitionState.ACCESSORY))
         testState(builder.build())
     }
     
     private fun testState(state: Ignition.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.status.value == OnOffState.OFF)
-        assertTrue(state.accessoriesStatus.value == OnOffState.ON)
-        assertTrue(state.state.value == Ignition.IgnitionState.ACCESSORY)
+        assertTrue(state.status.value == IgnitionState.OFF)
+        assertTrue(state.accessoriesStatus.value == IgnitionState.ON)
+        assertTrue(state.state.value == IgnitionState.ACCESSORY)
     }
     
     @Test
@@ -115,15 +116,15 @@ class KIgnitionTest : BaseTest() {
     @Test
     fun turnIgnitionOnOff() {
         val bytes = Bytes(COMMAND_HEADER + "003501" +
-            "01000401000100")
+            "03000401000102")
     
-        val constructed = Ignition.TurnIgnitionOnOff(OnOffState.OFF)
+        val constructed = Ignition.TurnIgnitionOnOff(IgnitionState.ACCESSORY)
         assertTrue(bytesTheSame(constructed, bytes))
     
         setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as Ignition.TurnIgnitionOnOff
-        assertTrue(resolved.status.value == OnOffState.OFF)
+        assertTrue(resolved.state.value == IgnitionState.ACCESSORY)
         assertTrue(resolved == bytes)
     }
 }

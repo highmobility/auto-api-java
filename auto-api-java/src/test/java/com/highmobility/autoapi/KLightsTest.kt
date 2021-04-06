@@ -46,7 +46,8 @@ class KLightsTest : BaseTest() {
             "0800050100020300" +  // Rear left reading lamp is inactive
             "0900050100020000" +  // Front interior lights are inactive
             "0900050100020101" +  // Rear reading lights are active
-            "0a000401000102" // Rotary light switch position parking light right
+            "0a000401000102" +  // Rotary light switch position parking light right
+            "0b000401000103" // Both parking lights are on.
     )
     
     @Test
@@ -72,6 +73,7 @@ class KLightsTest : BaseTest() {
         builder.addInteriorLight(Property(Light(LocationLongitudinal.FRONT, ActiveState.INACTIVE)))
         builder.addInteriorLight(Property(Light(LocationLongitudinal.REAR, ActiveState.ACTIVE)))
         builder.setSwitchPosition(Property(Lights.SwitchPosition.PARKING_LIGHT_RIGHT))
+        builder.setParkingLightStatus(Property(Lights.ParkingLightStatus.BOTH))
         testState(builder.build())
     }
     
@@ -101,6 +103,7 @@ class KLightsTest : BaseTest() {
         assertTrue(state.interiorLights[1].value?.location == LocationLongitudinal.REAR)
         assertTrue(state.interiorLights[1].value?.state == ActiveState.ACTIVE)
         assertTrue(state.switchPosition.value == Lights.SwitchPosition.PARKING_LIGHT_RIGHT)
+        assertTrue(state.parkingLightStatus.value == Lights.ParkingLightStatus.BOTH)
     }
     
     @Test
@@ -110,10 +113,10 @@ class KLightsTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00360001020405060708090a")
-        val propertyGetter = Lights.GetState(0x01, 0x02, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00360001020405060708090a0b")
+        val propertyGetter = Lights.GetState(0x01, 0x02, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("01020405060708090a"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("01020405060708090a0b"))
     }
     
     @Test
@@ -136,14 +139,14 @@ class KLightsTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("01020405060708090a")
+        val identifierBytes = Bytes("01020405060708090a0b")
         val allBytes = Bytes(COMMAND_HEADER + "003602" + identifierBytes)
         val constructed = Lights.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.LIGHTS)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Lights.GetStateAvailability(0x01, 0x02, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
+        val secondConstructed = Lights.GetStateAvailability(0x01, 0x02, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

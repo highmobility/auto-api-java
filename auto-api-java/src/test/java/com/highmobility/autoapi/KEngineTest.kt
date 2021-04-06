@@ -34,7 +34,8 @@ import org.junit.jupiter.api.Assertions.assertTrue
 class KEngineTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "006901" + 
             "01000401000100" +  // Engine is off
-            "02000401000101" // Automatic engine start-stop system is active
+            "02000401000101" +  // Automatic engine start-stop system is currently active
+            "03000401000101" // Automatic start-stop system is enabled
     )
     
     @Test
@@ -48,6 +49,7 @@ class KEngineTest : BaseTest() {
         val builder = Engine.State.Builder()
         builder.setStatus(Property(OnOffState.OFF))
         builder.setStartStopState(Property(ActiveState.ACTIVE))
+        builder.setStartStopEnabled(Property(EnabledState.ENABLED))
         testState(builder.build())
     }
     
@@ -55,6 +57,7 @@ class KEngineTest : BaseTest() {
         assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.status.value == OnOffState.OFF)
         assertTrue(state.startStopState.value == ActiveState.ACTIVE)
+        assertTrue(state.startStopEnabled.value == EnabledState.ENABLED)
     }
     
     @Test
@@ -64,10 +67,10 @@ class KEngineTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0069000102")
-        val propertyGetter = Engine.GetState(0x01, 0x02)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "006900010203")
+        val propertyGetter = Engine.GetState(0x01, 0x02, 0x03)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203"))
     }
     
     @Test
@@ -90,14 +93,14 @@ class KEngineTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("0102")
+        val identifierBytes = Bytes("010203")
         val allBytes = Bytes(COMMAND_HEADER + "006902" + identifierBytes)
         val constructed = Engine.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.ENGINE)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Engine.GetStateAvailability(0x01, 0x02)
+        val secondConstructed = Engine.GetStateAvailability(0x01, 0x02, 0x03)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)
@@ -125,17 +128,17 @@ class KEngineTest : BaseTest() {
     }
     
     @Test
-    fun activateDeactivateStartStop() {
+    fun enableDisableStartStop() {
         val bytes = Bytes(COMMAND_HEADER + "006901" +
-            "02000401000101")
+            "03000401000101")
     
-        val constructed = Engine.ActivateDeactivateStartStop(ActiveState.ACTIVE)
+        val constructed = Engine.EnableDisableStartStop(EnabledState.ENABLED)
         assertTrue(bytesTheSame(constructed, bytes))
     
         setEnvironment(CommandResolver.Environment.VEHICLE)
     
-        val resolved = CommandResolver.resolve(bytes) as Engine.ActivateDeactivateStartStop
-        assertTrue(resolved.startStopState.value == ActiveState.ACTIVE)
+        val resolved = CommandResolver.resolve(bytes) as Engine.EnableDisableStartStop
+        assertTrue(resolved.startStopEnabled.value == EnabledState.ENABLED)
         assertTrue(resolved == bytes)
     }
 }

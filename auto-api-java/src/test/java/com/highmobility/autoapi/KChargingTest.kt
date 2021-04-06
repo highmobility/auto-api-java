@@ -70,7 +70,8 @@ class KChargingTest : BaseTest() {
             "20000401000101" +  // Preconditioning is active for departure time
             "21000401000101" +  // Immediate preconditioning is active
             "22000401000101" +  // Preconditioning is enabled for departure
-            "23000401000101" // Preconditioning not possible because battery or fuel is low
+            "23000401000101" +  // Preconditioning not possible because battery or fuel is low
+            "24000D01000A0c044051800000000000" // Battery capacity is 70.0Kwh
     )
     
     @Test
@@ -118,6 +119,7 @@ class KChargingTest : BaseTest() {
         builder.setPreconditioningImmediateStatus(Property(ActiveState.ACTIVE))
         builder.setPreconditioningDepartureEnabled(Property(EnabledState.ENABLED))
         builder.setPreconditioningError(Property(Charging.PreconditioningError.NOT_POSSIBLE_LOW))
+        builder.setBatteryCapacity(Property(Energy(70.0, Energy.Unit.KILOWATT_HOURS)))
         testState(builder.build())
     }
     
@@ -183,6 +185,8 @@ class KChargingTest : BaseTest() {
         assertTrue(state.preconditioningImmediateStatus.value == ActiveState.ACTIVE)
         assertTrue(state.preconditioningDepartureEnabled.value == EnabledState.ENABLED)
         assertTrue(state.preconditioningError.value == Charging.PreconditioningError.NOT_POSSIBLE_LOW)
+        assertTrue(state.batteryCapacity.value?.value == 70.0)
+        assertTrue(state.batteryCapacity.value?.unit == Energy.Unit.KILOWATT_HOURS)
     }
     
     @Test
@@ -192,10 +196,10 @@ class KChargingTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00230002030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f20212223")
-        val propertyGetter = Charging.GetState(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00230002030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f2021222324")
+        val propertyGetter = Charging.GetState(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f20212223"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f2021222324"))
     }
     
     @Test
@@ -218,14 +222,14 @@ class KChargingTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f20212223")
+        val identifierBytes = Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f2021222324")
         val allBytes = Bytes(COMMAND_HEADER + "002302" + identifierBytes)
         val constructed = Charging.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.CHARGING)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Charging.GetStateAvailability(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23)
+        val secondConstructed = Charging.GetStateAvailability(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

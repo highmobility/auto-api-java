@@ -26,6 +26,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.EngineType;
 import com.highmobility.autoapi.value.measurement.Power;
 import com.highmobility.autoapi.value.measurement.Torque;
 import com.highmobility.autoapi.value.measurement.Volume;
@@ -33,7 +34,7 @@ import com.highmobility.value.Bytes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Vehicle Information capability
@@ -61,6 +62,7 @@ public class VehicleInformation {
     public static final byte PROPERTY_LANGUAGE = 0x14;
     public static final byte PROPERTY_TIMEFORMAT = 0x15;
     public static final byte PROPERTY_DRIVE = 0x16;
+    public static final byte PROPERTY_POWERTRAIN_SECONDARY = 0x17;
 
     /**
      * Get vehicle information
@@ -126,7 +128,7 @@ public class VehicleInformation {
      * The vehicle information state
      */
     public static class State extends SetCommand {
-        Property<Powertrain> powertrain = new Property<>(Powertrain.class, PROPERTY_POWERTRAIN);
+        Property<EngineType> powertrain = new Property<>(EngineType.class, PROPERTY_POWERTRAIN);
         Property<String> modelName = new Property<>(String.class, PROPERTY_MODEL_NAME);
         Property<String> name = new Property<>(String.class, PROPERTY_NAME);
         Property<String> licensePlate = new Property<>(String.class, PROPERTY_LICENSE_PLATE);
@@ -146,11 +148,12 @@ public class VehicleInformation {
         Property<String> language = new Property<>(String.class, PROPERTY_LANGUAGE);
         Property<Timeformat> timeformat = new Property<>(Timeformat.class, PROPERTY_TIMEFORMAT);
         Property<Drive> drive = new Property<>(Drive.class, PROPERTY_DRIVE);
+        Property<EngineType> powertrainSecondary = new Property<>(EngineType.class, PROPERTY_POWERTRAIN_SECONDARY);
     
         /**
-         * @return The powertrain
+         * @return Type of the (primary) powertrain
          */
-        public Property<Powertrain> getPowertrain() {
+        public Property<EngineType> getPowertrain() {
             return powertrain;
         }
     
@@ -289,6 +292,13 @@ public class VehicleInformation {
             return drive;
         }
     
+        /**
+         * @return The powertrain secondary
+         */
+        public Property<EngineType> getPowertrainSecondary() {
+            return powertrainSecondary;
+        }
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
@@ -320,6 +330,7 @@ public class VehicleInformation {
                         case PROPERTY_LANGUAGE: return language.update(p);
                         case PROPERTY_TIMEFORMAT: return timeformat.update(p);
                         case PROPERTY_DRIVE: return drive.update(p);
+                        case PROPERTY_POWERTRAIN_SECONDARY: return powertrainSecondary.update(p);
                     }
     
                     return null;
@@ -352,10 +363,11 @@ public class VehicleInformation {
             language = builder.language;
             timeformat = builder.timeformat;
             drive = builder.drive;
+            powertrainSecondary = builder.powertrainSecondary;
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private Property<Powertrain> powertrain;
+            private Property<EngineType> powertrain;
             private Property<String> modelName;
             private Property<String> name;
             private Property<String> licensePlate;
@@ -375,6 +387,7 @@ public class VehicleInformation {
             private Property<String> language;
             private Property<Timeformat> timeformat;
             private Property<Drive> drive;
+            private Property<EngineType> powertrainSecondary;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -385,10 +398,10 @@ public class VehicleInformation {
             }
     
             /**
-             * @param powertrain The powertrain
+             * @param powertrain Type of the (primary) powertrain
              * @return The builder
              */
-            public Builder setPowertrain(Property<Powertrain> powertrain) {
+            public Builder setPowertrain(Property<EngineType> powertrain) {
                 this.powertrain = powertrain.setIdentifier(PROPERTY_POWERTRAIN);
                 addProperty(this.powertrain);
                 return this;
@@ -603,38 +616,16 @@ public class VehicleInformation {
                 addProperty(this.drive);
                 return this;
             }
-        }
-    }
-
-    public enum Powertrain implements ByteEnum {
-        UNKNOWN((byte) 0x00),
-        ALL_ELECTRIC((byte) 0x01),
-        COMBUSTION_ENGINE((byte) 0x02),
-        PHEV((byte) 0x03),
-        HYDROGEN((byte) 0x04),
-        HYDROGEN_HYBRID((byte) 0x05);
-    
-        public static Powertrain fromByte(byte byteValue) throws CommandParseException {
-            Powertrain[] values = Powertrain.values();
-    
-            for (int i = 0; i < values.length; i++) {
-                Powertrain state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
+            
+            /**
+             * @param powertrainSecondary The powertrain secondary
+             * @return The builder
+             */
+            public Builder setPowertrainSecondary(Property<EngineType> powertrainSecondary) {
+                this.powertrainSecondary = powertrainSecondary.setIdentifier(PROPERTY_POWERTRAIN_SECONDARY);
+                addProperty(this.powertrainSecondary);
+                return this;
             }
-    
-            throw new CommandParseException("VehicleInformation.Powertrain does not contain: " + hexFromByte(byteValue));
-        }
-    
-        private final byte value;
-    
-        Powertrain(byte value) {
-            this.value = value;
-        }
-    
-        @Override public byte getByte() {
-            return value;
         }
     }
 
@@ -653,7 +644,9 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException("VehicleInformation.Gearbox does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Gearbox.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -681,7 +674,9 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException("VehicleInformation.DisplayUnit does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(DisplayUnit.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -710,7 +705,9 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException("VehicleInformation.DriverSeatLocation does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(DriverSeatLocation.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -738,7 +735,9 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException("VehicleInformation.Timeformat does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Timeformat.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -780,7 +779,9 @@ public class VehicleInformation {
                 }
             }
     
-            throw new CommandParseException("VehicleInformation.Drive does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Drive.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

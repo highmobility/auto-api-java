@@ -125,7 +125,9 @@ class KDashboardLightsTest : BaseTest() {
             "0100050100025900" +  // Tire warning rear left is off
             "0100050100025a00" +  // Tire warning system error is off
             "0100050100025b00" +  // Battery low warning is off
-            "0100050100025c00" // Brake fluid warning is off
+            "0100050100025c00" +  // Brake fluid warning is off
+            "02000401000101" +  // Right turn signal`s bulb has failed.
+            "02000401000105" // A high beam has failed.
     )
     
     @Test
@@ -230,6 +232,8 @@ class KDashboardLightsTest : BaseTest() {
         builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_SYSTEM_ERROR, OnOffState.OFF)))
         builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BATTERY_LOW_WARNING, OnOffState.OFF)))
         builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BRAKE_FLUID_WARNING, OnOffState.OFF)))
+        builder.addBulbFailure(Property(DashboardLights.BulbFailures.TURN_SIGNAL_RIGHT))
+        builder.addBulbFailure(Property(DashboardLights.BulbFailures.HIGH_BEAM))
         testState(builder.build())
     }
     
@@ -421,6 +425,8 @@ class KDashboardLightsTest : BaseTest() {
         assertTrue(state.dashboardLights[91].value?.state == OnOffState.OFF)
         assertTrue(state.dashboardLights[92].value?.name == DashboardLight.Name.BRAKE_FLUID_WARNING)
         assertTrue(state.dashboardLights[92].value?.state == OnOffState.OFF)
+        assertTrue(state.bulbFailures[0].value == DashboardLights.BulbFailures.TURN_SIGNAL_RIGHT)
+        assertTrue(state.bulbFailures[1].value == DashboardLights.BulbFailures.HIGH_BEAM)
     }
     
     @Test
@@ -429,6 +435,11 @@ class KDashboardLightsTest : BaseTest() {
         val defaultGetter = DashboardLights.GetDashboardLights()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0061000102")
+        val propertyGetter = DashboardLights.GetDashboardLights(0x01, 0x02)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102"))
     }
     
     @Test
@@ -447,5 +458,26 @@ class KDashboardLightsTest : BaseTest() {
         assertTrue(resolved.type == Type.GET_AVAILABILITY)
         assertTrue(resolved.getPropertyIdentifiers().isEmpty())
         assertTrue(resolved == bytes)
+    }
+    
+    @Test
+    fun testGetDashboardLightsAvailabilitySome() {
+        val identifierBytes = Bytes("0102")
+        val allBytes = Bytes(COMMAND_HEADER + "006102" + identifierBytes)
+        val constructed = DashboardLights.GetDashboardLightsAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.DASHBOARD_LIGHTS)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = DashboardLights.GetDashboardLightsAvailability(0x01, 0x02)
+        assertTrue(constructed == secondConstructed)
+    
+        setEnvironment(CommandResolver.Environment.VEHICLE)
+    
+        val resolved = CommandResolver.resolve(allBytes) as DashboardLights.GetDashboardLightsAvailability
+        assertTrue(resolved.identifier == Identifier.DASHBOARD_LIGHTS)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
 }

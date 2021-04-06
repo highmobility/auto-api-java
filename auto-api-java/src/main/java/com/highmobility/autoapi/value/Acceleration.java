@@ -29,7 +29,7 @@ import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.value.measurement.AccelerationUnit;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class Acceleration extends PropertyValueObject {
     public static final int SIZE = 11;
@@ -99,7 +99,9 @@ public class Acceleration extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Acceleration.Direction does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Direction.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

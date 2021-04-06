@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Failure Message capability
@@ -253,7 +253,11 @@ public class FailureMessage {
         /**
          * API call to an OEM returned an error
          */
-        OEM_ERROR((byte) 0x08);
+        OEM_ERROR((byte) 0x08),
+        /**
+         * Privacy mode is turned on, meaning vehicle location and other "private" data is not transmitted by the vehicle.
+         */
+        PRIVACY_MODE_ACTIVE((byte) 0x09);
     
         public static FailureReason fromByte(byte byteValue) throws CommandParseException {
             FailureReason[] values = FailureReason.values();
@@ -265,7 +269,9 @@ public class FailureMessage {
                 }
             }
     
-            throw new CommandParseException("FailureMessage.FailureReason does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(FailureReason.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Power Take-Off capability
@@ -166,8 +166,9 @@ public class PowerTakeoff {
                     return null;
                 });
             }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.status.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -261,7 +262,9 @@ public class PowerTakeoff {
                 }
             }
     
-            throw new CommandParseException("PowerTakeoff.Engaged does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Engaged.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

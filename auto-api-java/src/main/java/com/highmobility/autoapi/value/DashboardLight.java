@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class DashboardLight extends PropertyValueObject {
     public static final int SIZE = 2;
@@ -174,7 +174,110 @@ public class DashboardLight extends PropertyValueObject {
         TIRE_WARNING_REAR_LEFT((byte) 0x59),
         TIRE_WARNING_SYSTEM_ERROR((byte) 0x5a),
         BATTERY_LOW_WARNING((byte) 0x5b),
-        BRAKE_FLUID_WARNING((byte) 0x5c);
+        BRAKE_FLUID_WARNING((byte) 0x5c),
+        ACTIVE_HOOD_FAULT((byte) 0x5d),
+        ACTIVE_SPOILER_FAULT((byte) 0x5e),
+        ADJUST_TIRE_PRESSURE((byte) 0x5f),
+        STEERING_LOCK_ALERT((byte) 0x60),
+        ANTI_POLLUTION_FAILURE_ENGINE_START_IMPOSSIBLE((byte) 0x61),
+        ANTI_POLLUTION_SYSTEM_FAILURE((byte) 0x62),
+        ANTI_REVERSE_SYSTEM_FAILING((byte) 0x63),
+        AUTO_PARKING_BRAKE((byte) 0x64),
+        AUTOMATIC_BRAKING_DEACTIVE((byte) 0x65),
+        AUTOMATIC_BRAKING_SYSTEM_FAULT((byte) 0x66),
+        AUTOMATIC_LIGHTS_SETTINGS_FAILURE((byte) 0x67),
+        KEYFOB_BATTERY_ALARM((byte) 0x68),
+        TRUNK_OPEN((byte) 0x69),
+        CHECK_REVERSING_LAMP((byte) 0x6a),
+        CROSSING_LINE_SYSTEM_ALERT_FAILURE((byte) 0x6b),
+        DIPPED_BEAM_HEADLAMPS_FRONT_LEFT_FAILURE((byte) 0x6c),
+        DIPPED_BEAM_HEADLAMPS_FRONT_RIGHT_FAILURE((byte) 0x6d),
+        DIRECTIONAL_HEADLAMPS_FAILURE((byte) 0x6e),
+        DIRECTIONAL_LIGHT_FAILURE((byte) 0x6f),
+        DSG_FAILING((byte) 0x70),
+        ELECTRIC_MODE_NOT_AVAILABLE((byte) 0x71),
+        ELECTRONIC_LOCK_FAILURE((byte) 0x72),
+        ENGINE_CONTROL_SYSTEM_FAILURE((byte) 0x73),
+        ENGINE_OIL_PRESSURE_ALERT((byte) 0x74),
+        ESP_FAILURE((byte) 0x75),
+        EXCESSIVE_OIL_TEMPERATURE((byte) 0x76),
+        TIRE_FRONT_LEFT_FLAT((byte) 0x77),
+        TIRE_FRONT_RIGHT_FLAT((byte) 0x78),
+        TIRE_REAR_LEFT_FLAT((byte) 0x79),
+        TIRE_REAR_RIGHT_FLAT((byte) 0x7a),
+        FOG_LIGHT_FRONT_LEFT_FAILURE((byte) 0x7b),
+        FOG_LIGHT_FRONT_RIGHT_FAILURE((byte) 0x7c),
+        FOG_LIGHT_REAR_LEFT_FAILURE((byte) 0x7d),
+        FOG_LIGHT_REAR_RIGHT_FAILURE((byte) 0x7e),
+        FOG_LIGHT_FRONT_FAULT((byte) 0x7f),
+        DOOR_FRONT_LEFT_OPEN((byte) 0x80),
+        DOOR_FRONT_LEFT_OPEN_HIGH_SPEED((byte) 0x81),
+        TIRE_FRONT_LEFT_NOT_MONITORED((byte) 0x82),
+        DOOR_FRONT_RIGHT_OPEN((byte) 0x83),
+        DOOR_FRONT_RIGHT_OPEN_HIGH_SPEED((byte) 0x84),
+        TIRE_FRONT_RIGHT_NOT_MONITORED((byte) 0x85),
+        HEADLIGHTS_LEFT_FAILURE((byte) 0x86),
+        HEADLIGHTS_RIGHT_FAILURE((byte) 0x87),
+        HYBRID_SYSTEM_FAULT((byte) 0x88),
+        HYBRID_SYSTEM_FAULT_REPAIRED_VEHICLE((byte) 0x89),
+        HYDRAULIC_PRESSURE_OR_BRAKE_FUILD_INSUFFICIENT((byte) 0x8a),
+        LANE_DEPARTURE_FAULT((byte) 0x8b),
+        LIMITED_VISIBILITY_AIDS_CAMERA((byte) 0x8c),
+        TIRE_PRESSURE_LOW((byte) 0x8d),
+        MAINTENANCE_DATE_EXCEEDED((byte) 0x8e),
+        MAINTENANCE_ODOMETER_EXCEEDED((byte) 0x8f),
+        OTHER_FAILING_SYSTEM((byte) 0x90),
+        PARKING_BRAKE_CONTROL_FAILING((byte) 0x91),
+        PARKING_SPACE_MEASURING_SYSTEM_FAILURE((byte) 0x92),
+        PLACE_GEAR_TO_PARKING((byte) 0x93),
+        POWER_STEERING_ASSITANCE_FAILURE((byte) 0x94),
+        POWER_STEERING_FAILURE((byte) 0x95),
+        PREHEATING_DEACTIVATED_BATTERY_TOO_LOW((byte) 0x96),
+        PREHEATING_DEACTIVATED_FUEL_LEVEL_TOO_LOW((byte) 0x97),
+        PREHEATING_DEACTIVATED_BATTERY_SET_THE_CLOCK((byte) 0x98),
+        FOG_LIGHT_REAR_FAULT((byte) 0x99),
+        DOOR_REAR_LEFT_OPEN((byte) 0x9a),
+        DOOR_REAR_LEFT_OPEN_HIGH_SPEED((byte) 0x9b),
+        TIRE_REAR_LEFT_NOT_MONITORED((byte) 0x9c),
+        DOOR_REAR_RIGHT_OPEN((byte) 0x9d),
+        DOOR_REAR_RIGHT_OPEN_HIGH_SPEED((byte) 0x9e),
+        TIRE_REAR_RIGHT_NOT_MONITORED((byte) 0x9f),
+        SCREEN_REAR_OPEN((byte) 0xa0),
+        RETRACTABLE_ROOF_MECHANISM_FAULT((byte) 0xa1),
+        REVERSE_LIGHT_LEFT_FAILURE((byte) 0xa2),
+        REVERSE_LIGHT_RIGHT_FAILURE((byte) 0xa3),
+        RISK_OF_ICE((byte) 0xa4),
+        ROOF_OPERATION_IMPOSSIBLE_APPLY_PARKING_BREAK((byte) 0xa5),
+        ROOF_OPERATION_IMPOSSIBLE_APPLY_START_ENGINE((byte) 0xa6),
+        ROOF_OPERATION_IMPOSSIBLE_TEMPERATURE_TOO_HIGH((byte) 0xa7),
+        SEATBELT_PASSENGER_FRONT_RIGHT_UNBUCKLED((byte) 0xa8),
+        SEATBELT_PASSENGER_REAR_LEFT_UNBUCKLED((byte) 0xa9),
+        SEATBELT_PASSENGER_REAR_CENTER_UNBUCKLED((byte) 0xaa),
+        SEATBELT_PASSENGER_REAR_RIGHT_UNBUCKLED((byte) 0xab),
+        BATTERY_SECONDARY_LOW((byte) 0xac),
+        SHOCK_SENSOR_FAILING((byte) 0xad),
+        SIDE_LIGHTS_FRONT_LEFT_FAILURE((byte) 0xae),
+        SIDE_LIGHTS_FRONT_RIGHT_FAILURE((byte) 0xaf),
+        SIDE_LIGHTS_REAR_LEFT_FAILURE((byte) 0xb0),
+        SIDE_LIGHTS_REAR_RIGHT_FAILURE((byte) 0xb1),
+        SPARE_WHEEL_FITTER_DRIVING_AIDS_DEACTIVATED((byte) 0xb2),
+        SPEED_CONTROL_FAILURE((byte) 0xb3),
+        STOP_LIGHT_LEFT_FAILURE((byte) 0xb4),
+        STOP_LIGHT_RIGHT_FAILURE((byte) 0xb5),
+        SUSPENSION_FAILURE((byte) 0xb6),
+        SUSPENSION_FAILURE_REDUCE_SPEED((byte) 0xb7),
+        SUSPENSION_FAULT_LIMITED_TO_90KMH((byte) 0xb8),
+        TIRE_PRESSURE_SENSOR_FAILURE((byte) 0xb9),
+        TRUNK_OPEN_HIGH_SPEED((byte) 0xba),
+        TRUNK_WINDOW_OPEN((byte) 0xbb),
+        TURN_SIGNAL_FRONT_LEFT_FAILURE((byte) 0xbc),
+        TURN_SIGNAL_FRONT_RIGHT_FAILURE((byte) 0xbd),
+        TURN_SIGNAL_REAR_LEFT_FAILURE((byte) 0xbe),
+        TURN_SIGNAL_REAR_RIGHT_FAILURE((byte) 0xbf),
+        TIRE_UNDER_INFLATION((byte) 0xc0),
+        WHEEL_PRESSURE_FAULT((byte) 0xc1),
+        OIL_CHANGE_WARNING((byte) 0xc2),
+        INSPECTION_WARNING((byte) 0xc3);
     
         public static Name fromByte(byte byteValue) throws CommandParseException {
             Name[] values = Name.values();
@@ -186,7 +289,9 @@ public class DashboardLight extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("DashboardLight.Name does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Name.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

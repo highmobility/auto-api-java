@@ -23,7 +23,15 @@
  */
 package com.highmobility.autoapi.property;
 
+import org.jetbrains.annotations.NotNull;
+
+import static com.highmobility.utils.ByteUtils.hexFromByte;
+
 public interface ByteEnum {
     // needed to get byte value from enum
     byte getByte();
+
+    @NotNull static String enumValueDoesNotExist(String className, byte byteValue) {
+        return String.format("%s does not contain: %s", className, hexFromByte(byteValue));
+    }
 }

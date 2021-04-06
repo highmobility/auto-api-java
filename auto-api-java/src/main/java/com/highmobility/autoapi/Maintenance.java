@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Maintenance capability
@@ -58,6 +58,8 @@ public class Maintenance {
     public static final byte PROPERTY_DISTANCE_TO_NEXT_SERVICE = 0x0e;
     public static final byte PROPERTY_TIME_TO_EXHAUST_INSPECTION = 0x0f;
     public static final byte PROPERTY_LAST_ECALL = 0x10;
+    public static final byte PROPERTY_DISTANCE_TO_NEXT_OIL_SERVICE = 0x11;
+    public static final byte PROPERTY_TIME_TO_NEXT_OIL_SERVICE = 0x12;
 
     /**
      * Get Maintenance property availability information
@@ -173,6 +175,8 @@ public class Maintenance {
         Property<Length> distanceToNextService = new Property<>(Length.class, PROPERTY_DISTANCE_TO_NEXT_SERVICE);
         Property<Duration> timeToExhaustInspection = new Property<>(Duration.class, PROPERTY_TIME_TO_EXHAUST_INSPECTION);
         Property<Calendar> lastECall = new Property<>(Calendar.class, PROPERTY_LAST_ECALL);
+        Property<Length> distanceToNextOilService = new Property<>(Length.class, PROPERTY_DISTANCE_TO_NEXT_OIL_SERVICE);
+        Property<Duration> timeToNextOilService = new Property<>(Duration.class, PROPERTY_TIME_TO_NEXT_OIL_SERVICE);
     
         /**
          * @return Time until next servicing of the car
@@ -292,6 +296,20 @@ public class Maintenance {
             return lastECall;
         }
     
+        /**
+         * @return Indicates the remaining distance until the next oil service; if this limit was exceeded, this value indicates the distance that has been driven since then.
+         */
+        public Property<Length> getDistanceToNextOilService() {
+            return distanceToNextOilService;
+        }
+    
+        /**
+         * @return Indicates the time remaining until the next oil service; if this limit was exceeded, this value indicates the time that has passed since then.
+         */
+        public Property<Duration> getTimeToNextOilService() {
+            return timeToNextOilService;
+        }
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
     
@@ -319,6 +337,8 @@ public class Maintenance {
                         case PROPERTY_DISTANCE_TO_NEXT_SERVICE: return distanceToNextService.update(p);
                         case PROPERTY_TIME_TO_EXHAUST_INSPECTION: return timeToExhaustInspection.update(p);
                         case PROPERTY_LAST_ECALL: return lastECall.update(p);
+                        case PROPERTY_DISTANCE_TO_NEXT_OIL_SERVICE: return distanceToNextOilService.update(p);
+                        case PROPERTY_TIME_TO_NEXT_OIL_SERVICE: return timeToNextOilService.update(p);
                     }
     
                     return null;
@@ -347,6 +367,8 @@ public class Maintenance {
             distanceToNextService = builder.distanceToNextService;
             timeToExhaustInspection = builder.timeToExhaustInspection;
             lastECall = builder.lastECall;
+            distanceToNextOilService = builder.distanceToNextOilService;
+            timeToNextOilService = builder.timeToNextOilService;
         }
     
         public static final class Builder extends SetCommand.Builder {
@@ -366,6 +388,8 @@ public class Maintenance {
             private Property<Length> distanceToNextService;
             private Property<Duration> timeToExhaustInspection;
             private Property<Calendar> lastECall;
+            private Property<Length> distanceToNextOilService;
+            private Property<Duration> timeToNextOilService;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -558,6 +582,26 @@ public class Maintenance {
                 addProperty(this.lastECall);
                 return this;
             }
+            
+            /**
+             * @param distanceToNextOilService Indicates the remaining distance until the next oil service; if this limit was exceeded, this value indicates the distance that has been driven since then.
+             * @return The builder
+             */
+            public Builder setDistanceToNextOilService(Property<Length> distanceToNextOilService) {
+                this.distanceToNextOilService = distanceToNextOilService.setIdentifier(PROPERTY_DISTANCE_TO_NEXT_OIL_SERVICE);
+                addProperty(this.distanceToNextOilService);
+                return this;
+            }
+            
+            /**
+             * @param timeToNextOilService Indicates the time remaining until the next oil service; if this limit was exceeded, this value indicates the time that has passed since then.
+             * @return The builder
+             */
+            public Builder setTimeToNextOilService(Property<Duration> timeToNextOilService) {
+                this.timeToNextOilService = timeToNextOilService.setIdentifier(PROPERTY_TIME_TO_NEXT_OIL_SERVICE);
+                addProperty(this.timeToNextOilService);
+                return this;
+            }
         }
     }
 
@@ -577,7 +621,9 @@ public class Maintenance {
                 }
             }
     
-            throw new CommandParseException("Maintenance.TeleserviceAvailability does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(TeleserviceAvailability.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

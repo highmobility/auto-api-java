@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Home Charger capability
@@ -189,8 +189,9 @@ public class HomeCharger {
                     return null;
                 });
             }
-            if (this.chargeCurrent.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.chargeCurrent.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -244,8 +245,9 @@ public class HomeCharger {
             }
         
             priceTariffs = priceTariffsBuilder;
-            if (this.priceTariffs.size() == 0) 
-                throw new NoPropertiesException();
+            if (this.priceTariffs.size() == 0) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -282,8 +284,9 @@ public class HomeCharger {
                     return null;
                 });
             }
-            if (this.solarCharging.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.solarCharging.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -320,8 +323,9 @@ public class HomeCharger {
                     return null;
                 });
             }
-            if (this.wifiHotspotEnabled.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.wifiHotspotEnabled.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -358,8 +362,9 @@ public class HomeCharger {
                     return null;
                 });
             }
-            if (this.authenticationState.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.authenticationState.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -793,7 +798,9 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException("HomeCharger.ChargingStatus does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(ChargingStatus.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -821,7 +828,9 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException("HomeCharger.AuthenticationMechanism does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(AuthenticationMechanism.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -851,7 +860,9 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException("HomeCharger.PlugType does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(PlugType.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -879,7 +890,9 @@ public class HomeCharger {
                 }
             }
     
-            throw new CommandParseException("HomeCharger.AuthenticationState does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(AuthenticationState.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Race capability
@@ -667,7 +667,9 @@ public class Race {
                 }
             }
     
-            throw new CommandParseException("Race.GearMode does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(GearMode.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -695,7 +697,9 @@ public class Race {
                 }
             }
     
-            throw new CommandParseException("Race.VehicleMoving does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(VehicleMoving.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

@@ -194,8 +194,9 @@ public class Climate {
             }
         
             hvacWeekdayStartingTimes = hvacWeekdayStartingTimesBuilder;
-            if (this.hvacWeekdayStartingTimes.size() == 0) 
-                throw new NoPropertiesException();
+            if (this.hvacWeekdayStartingTimes.size() == 0) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -232,8 +233,9 @@ public class Climate {
                     return null;
                 });
             }
-            if (this.hvacState.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.hvacState.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -270,8 +272,9 @@ public class Climate {
                     return null;
                 });
             }
-            if (this.defoggingState.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.defoggingState.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -308,8 +311,9 @@ public class Climate {
                     return null;
                 });
             }
-            if (this.defrostingState.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.defrostingState.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -346,8 +350,9 @@ public class Climate {
                     return null;
                 });
             }
-            if (this.ionisingState.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.ionisingState.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -409,7 +414,9 @@ public class Climate {
                     return null;
                 });
             }
-            if (this.driverTemperatureSetting.getValue() == null && this.passengerTemperatureSetting.getValue() == null && this.rearTemperatureSetting.getValue() == null) throw new NoPropertiesException();
+            if (this.driverTemperatureSetting.getValue() == null && this.passengerTemperatureSetting.getValue() == null && this.rearTemperatureSetting.getValue() == null) {
+                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 

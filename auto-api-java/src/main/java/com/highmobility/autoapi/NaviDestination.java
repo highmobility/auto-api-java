@@ -184,8 +184,9 @@ public class NaviDestination {
                     return null;
                 });
             }
-            if (this.coordinates.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.coordinates.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 

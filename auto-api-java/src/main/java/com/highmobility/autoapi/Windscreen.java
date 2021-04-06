@@ -30,7 +30,7 @@ import com.highmobility.value.Bytes;
 import java.util.Calendar;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Windscreen capability
@@ -187,8 +187,9 @@ public class Windscreen {
                     return null;
                 });
             }
-            if (this.windscreenDamage.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.windscreenDamage.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -225,8 +226,9 @@ public class Windscreen {
                     return null;
                 });
             }
-            if (this.windscreenNeedsReplacement.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.windscreenNeedsReplacement.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -276,8 +278,9 @@ public class Windscreen {
                     return null;
                 });
             }
-            if (this.wipersStatus.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.wipersStatus.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -498,7 +501,9 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException("Windscreen.WipersStatus does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(WipersStatus.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -528,7 +533,9 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException("Windscreen.WipersIntensity does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(WipersIntensity.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -558,7 +565,9 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException("Windscreen.WindscreenDamage does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(WindscreenDamage.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -587,7 +596,9 @@ public class Windscreen {
                 }
             }
     
-            throw new CommandParseException("Windscreen.WindscreenNeedsReplacement does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(WindscreenNeedsReplacement.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

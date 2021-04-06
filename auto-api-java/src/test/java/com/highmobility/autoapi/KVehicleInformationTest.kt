@@ -24,6 +24,7 @@
 package com.highmobility.autoapi
 
 import com.highmobility.autoapi.property.Property
+import com.highmobility.autoapi.value.*
 import com.highmobility.autoapi.value.measurement.*
 import com.highmobility.value.Bytes
 
@@ -44,7 +45,7 @@ class KVehicleInformationTest : BaseTest() {
             "09000D01000A1402406b800000000000" +  // Vehicle has 220.0kW of power
             "0a000401000105" +  // Vehicle has 5 doors
             "0b000401000105" +  // Vehicle has 5 seats
-            "0c000D01000A19024004000000000000" +  // Engine volume is 2.5L
+            "0c000D01000A19024004000000000000" +  // Engine volume is 2.5 L
             "0d000D01000A1800406ea00000000000" +  // Engine maximum torque is 245.0Nm
             "0e000401000101" +  // Vehicle has an automatic gearbox
             "0f000401000100" +  // Vehicle displays values in kilometers
@@ -54,7 +55,8 @@ class KVehicleInformationTest : BaseTest() {
             "13000D01000A1402406b800000000000" +  // Vehicle has 220kW of power
             "14000B0100086573746f6e69616e" +  // Headunit is in estonian language
             "15000401000101" +  // Headunit is using a 24h timeformat
-            "16000401000101" // Vehicle has rear-wheel drive
+            "16000401000101" +  // Vehicle has rear-wheel drive
+            "17000401000106" // Secondary powertrain`s type is petrol.
     )
     
     @Test
@@ -66,7 +68,7 @@ class KVehicleInformationTest : BaseTest() {
     @Test
     fun testBuilder() {
         val builder = VehicleInformation.State.Builder()
-        builder.setPowertrain(Property(VehicleInformation.Powertrain.ALL_ELECTRIC))
+        builder.setPowertrain(Property(EngineType.ALL_ELECTRIC))
         builder.setModelName(Property("Type X"))
         builder.setName(Property("Speedy"))
         builder.setLicensePlate(Property("ABC123"))
@@ -87,12 +89,13 @@ class KVehicleInformationTest : BaseTest() {
         builder.setLanguage(Property("estonian"))
         builder.setTimeformat(Property(VehicleInformation.Timeformat.TWENTY_FOUR_H))
         builder.setDrive(Property(VehicleInformation.Drive.RWD))
+        builder.setPowertrainSecondary(Property(EngineType.PETROL))
         testState(builder.build())
     }
     
     private fun testState(state: VehicleInformation.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.powertrain.value == VehicleInformation.Powertrain.ALL_ELECTRIC)
+        assertTrue(state.powertrain.value == EngineType.ALL_ELECTRIC)
         assertTrue(state.modelName.value == "Type X")
         assertTrue(state.name.value == "Speedy")
         assertTrue(state.licensePlate.value == "ABC123")
@@ -117,6 +120,7 @@ class KVehicleInformationTest : BaseTest() {
         assertTrue(state.language.value == "estonian")
         assertTrue(state.timeformat.value == VehicleInformation.Timeformat.TWENTY_FOUR_H)
         assertTrue(state.drive.value == VehicleInformation.Drive.RWD)
+        assertTrue(state.powertrainSecondary.value == EngineType.PETROL)
     }
     
     @Test
@@ -126,9 +130,9 @@ class KVehicleInformationTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00140002030405060708090a0b0c0d0e0f101113141516")
-        val propertyGetter = VehicleInformation.GetVehicleInformation(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00140002030405060708090a0b0c0d0e0f10111314151617")
+        val propertyGetter = VehicleInformation.GetVehicleInformation(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0d0e0f101113141516"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0d0e0f10111314151617"))
     }
 }

@@ -25,6 +25,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.value.EnabledState;
 import com.highmobility.autoapi.value.OnOffState;
 import com.highmobility.value.Bytes;
 
@@ -36,6 +37,7 @@ public class Engine {
 
     public static final byte PROPERTY_STATUS = 0x01;
     public static final byte PROPERTY_START_STOP_STATE = 0x02;
+    public static final byte PROPERTY_START_STOP_ENABLED = 0x03;
 
     /**
      * Get Engine property availability information
@@ -164,46 +166,48 @@ public class Engine {
                     return null;
                 });
             }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.status.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
     /**
-     * Activate deactivate start stop
+     * Enable disable start stop
      */
-    public static class ActivateDeactivateStartStop extends SetCommand {
-        Property<ActiveState> startStopState = new Property<>(ActiveState.class, PROPERTY_START_STOP_STATE);
+    public static class EnableDisableStartStop extends SetCommand {
+        Property<EnabledState> startStopEnabled = new Property<>(EnabledState.class, PROPERTY_START_STOP_ENABLED);
     
         /**
-         * @return The start stop state
+         * @return The start stop enabled
          */
-        public Property<ActiveState> getStartStopState() {
-            return startStopState;
+        public Property<EnabledState> getStartStopEnabled() {
+            return startStopEnabled;
         }
         
         /**
-         * Activate deactivate start stop
+         * Enable disable start stop
          * 
-         * @param startStopState The start stop state
+         * @param startStopEnabled Indicates if the automatic start-stop system is enabled or not
          */
-        public ActivateDeactivateStartStop(ActiveState startStopState) {
+        public EnableDisableStartStop(EnabledState startStopEnabled) {
             super(IDENTIFIER);
         
-            addProperty(this.startStopState.update(startStopState));
+            addProperty(this.startStopEnabled.update(startStopEnabled));
             createBytes();
         }
     
-        ActivateDeactivateStartStop(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        EnableDisableStartStop(byte[] bytes) throws CommandParseException, NoPropertiesException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_START_STOP_STATE) return startStopState.update(p);
+                    if (p.getPropertyIdentifier() == PROPERTY_START_STOP_ENABLED) return startStopEnabled.update(p);
                     return null;
                 });
             }
-            if (this.startStopState.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.startStopEnabled.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -213,6 +217,7 @@ public class Engine {
     public static class State extends SetCommand {
         Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
         Property<ActiveState> startStopState = new Property<>(ActiveState.class, PROPERTY_START_STOP_STATE);
+        Property<EnabledState> startStopEnabled = new Property<>(EnabledState.class, PROPERTY_START_STOP_ENABLED);
     
         /**
          * @return The status
@@ -222,10 +227,17 @@ public class Engine {
         }
     
         /**
-         * @return The start stop state
+         * @return Indicates wheter the start-stop system is currently active or not
          */
         public Property<ActiveState> getStartStopState() {
             return startStopState;
+        }
+    
+        /**
+         * @return Indicates if the automatic start-stop system is enabled or not
+         */
+        public Property<EnabledState> getStartStopEnabled() {
+            return startStopEnabled;
         }
     
         State(byte[] bytes) throws CommandParseException {
@@ -235,6 +247,7 @@ public class Engine {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
                         case PROPERTY_START_STOP_STATE: return startStopState.update(p);
+                        case PROPERTY_START_STOP_ENABLED: return startStopEnabled.update(p);
                     }
     
                     return null;
@@ -247,11 +260,13 @@ public class Engine {
     
             status = builder.status;
             startStopState = builder.startStopState;
+            startStopEnabled = builder.startStopEnabled;
         }
     
         public static final class Builder extends SetCommand.Builder {
             private Property<OnOffState> status;
             private Property<ActiveState> startStopState;
+            private Property<EnabledState> startStopEnabled;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -272,12 +287,22 @@ public class Engine {
             }
             
             /**
-             * @param startStopState The start stop state
+             * @param startStopState Indicates wheter the start-stop system is currently active or not
              * @return The builder
              */
             public Builder setStartStopState(Property<ActiveState> startStopState) {
                 this.startStopState = startStopState.setIdentifier(PROPERTY_START_STOP_STATE);
                 addProperty(this.startStopState);
+                return this;
+            }
+            
+            /**
+             * @param startStopEnabled Indicates if the automatic start-stop system is enabled or not
+             * @return The builder
+             */
+            public Builder setStartStopEnabled(Property<EnabledState> startStopEnabled) {
+                this.startStopEnabled = startStopEnabled.setIdentifier(PROPERTY_START_STOP_ENABLED);
+                addProperty(this.startStopEnabled);
                 return this;
             }
         }

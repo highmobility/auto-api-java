@@ -23,12 +23,9 @@
  */
 package com.highmobility.autoapi;
 
-import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
-import com.highmobility.autoapi.value.OnOffState;
+import com.highmobility.autoapi.value.IgnitionState;
 import com.highmobility.value.Bytes;
-
-import static com.highmobility.utils.ByteUtils.hexFromByte;
 
 /**
  * The Ignition capability
@@ -138,24 +135,24 @@ public class Ignition {
      * Turn ignition on off
      */
     public static class TurnIgnitionOnOff extends SetCommand {
-        Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
+        Property<IgnitionState> state = new Property<>(IgnitionState.class, PROPERTY_STATE);
     
         /**
-         * @return The status
+         * @return The state
          */
-        public Property<OnOffState> getStatus() {
-            return status;
+        public Property<IgnitionState> getState() {
+            return state;
         }
         
         /**
          * Turn ignition on off
          * 
-         * @param status The status
+         * @param state The state
          */
-        public TurnIgnitionOnOff(OnOffState status) {
+        public TurnIgnitionOnOff(IgnitionState state) {
             super(IDENTIFIER);
         
-            addProperty(this.status.update(status));
+            addProperty(this.state.update(state));
             createBytes();
         }
     
@@ -163,12 +160,13 @@ public class Ignition {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
-                    if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    if (p.getPropertyIdentifier() == PROPERTY_STATE) return state.update(p);
                     return null;
                 });
             }
-            if (this.status.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.state.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -176,21 +174,25 @@ public class Ignition {
      * The ignition state
      */
     public static class State extends SetCommand {
-        Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
-        Property<OnOffState> accessoriesStatus = new Property<>(OnOffState.class, PROPERTY_ACCESSORIES_STATUS);
+        Property<IgnitionState> status = new Property<>(IgnitionState.class, PROPERTY_STATUS);
+        Property<IgnitionState> accessoriesStatus = new Property<>(IgnitionState.class, PROPERTY_ACCESSORIES_STATUS);
         Property<IgnitionState> state = new Property<>(IgnitionState.class, PROPERTY_STATE);
     
         /**
          * @return The status
+         * @deprecated combined with 'accessories_status'. Replaced by {@link #getState()}
          */
-        public Property<OnOffState> getStatus() {
+        @Deprecated
+        public Property<IgnitionState> getStatus() {
             return status;
         }
     
         /**
          * @return The accessories status
+         * @deprecated combined with 'status'. Replaced by {@link #getState()}
          */
-        public Property<OnOffState> getAccessoriesStatus() {
+        @Deprecated
+        public Property<IgnitionState> getAccessoriesStatus() {
             return accessoriesStatus;
         }
     
@@ -225,8 +227,8 @@ public class Ignition {
         }
     
         public static final class Builder extends SetCommand.Builder {
-            private Property<OnOffState> status;
-            private Property<OnOffState> accessoriesStatus;
+            private Property<IgnitionState> status;
+            private Property<IgnitionState> accessoriesStatus;
             private Property<IgnitionState> state;
     
             public Builder() {
@@ -240,8 +242,10 @@ public class Ignition {
             /**
              * @param status The status
              * @return The builder
+             * @deprecated combined with 'accessories_status'. Replaced by {@link #getState()}
              */
-            public Builder setStatus(Property<OnOffState> status) {
+            @Deprecated
+            public Builder setStatus(Property<IgnitionState> status) {
                 this.status = status.setIdentifier(PROPERTY_STATUS);
                 addProperty(this.status);
                 return this;
@@ -250,8 +254,10 @@ public class Ignition {
             /**
              * @param accessoriesStatus The accessories status
              * @return The builder
+             * @deprecated combined with 'status'. Replaced by {@link #getState()}
              */
-            public Builder setAccessoriesStatus(Property<OnOffState> accessoriesStatus) {
+            @Deprecated
+            public Builder setAccessoriesStatus(Property<IgnitionState> accessoriesStatus) {
                 this.accessoriesStatus = accessoriesStatus.setIdentifier(PROPERTY_ACCESSORIES_STATUS);
                 addProperty(this.accessoriesStatus);
                 return this;
@@ -266,37 +272,6 @@ public class Ignition {
                 addProperty(this.state);
                 return this;
             }
-        }
-    }
-
-    public enum IgnitionState implements ByteEnum {
-        LOCK((byte) 0x00),
-        OFF((byte) 0x01),
-        ACCESSORY((byte) 0x02),
-        ON((byte) 0x03),
-        START((byte) 0x04);
-    
-        public static IgnitionState fromByte(byte byteValue) throws CommandParseException {
-            IgnitionState[] values = IgnitionState.values();
-    
-            for (int i = 0; i < values.length; i++) {
-                IgnitionState state = values[i];
-                if (state.getByte() == byteValue) {
-                    return state;
-                }
-            }
-    
-            throw new CommandParseException("Ignition.IgnitionState does not contain: " + hexFromByte(byteValue));
-        }
-    
-        private final byte value;
-    
-        IgnitionState(byte value) {
-            this.value = value;
-        }
-    
-        @Override public byte getByte() {
-            return value;
         }
     }
 }

@@ -57,6 +57,14 @@ public class SetCommand extends Command {
                 true);
     }
 
+    protected String mandatoryPropertyErrorMessage(String className) {
+        return "Mandatory property does not exists for " + className;
+    }
+
+    protected String optionalPropertyErrorMessage(String className) {
+        return "Optional property does not exists for " + className;
+    }
+
     SetCommand(byte[] bytes) throws CommandParseException {
         super(bytes);
         if (bytes[Command.COMMAND_TYPE_POSITION] != Type.SET) throw new CommandParseException();

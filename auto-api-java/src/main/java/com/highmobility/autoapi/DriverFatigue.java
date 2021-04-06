@@ -27,7 +27,7 @@ import com.highmobility.autoapi.capability.DisabledIn;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Driver Fatigue capability
@@ -114,7 +114,9 @@ public class DriverFatigue {
                 }
             }
     
-            throw new CommandParseException("DriverFatigue.DetectedFatigueLevel does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(DetectedFatigueLevel.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

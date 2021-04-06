@@ -50,7 +50,7 @@ class KWakeUpTest : BaseTest() {
     
         setEnvironment(CommandResolver.Environment.VEHICLE)
     
-        debugLogExpected { 
+        errorLogExpected { 
             val resolved = CommandResolver.resolve(bytes)
             assertTrue(resolved is Command)
         }

@@ -93,6 +93,14 @@ public class CommandResolver {
                     }
                     break;
                 }
+                case CHARGING_SESSION: {
+                    if (type == Type.SET) {
+                        if (getEnvironment() == Environment.OWNER) {
+                            command = new ChargingSession.State(bytes);
+                        }
+                    }
+                    break;
+                }
                 case BROWSER: {
                     if (type == Type.SET) {
                         command = new Browser.LoadUrl(bytes);
@@ -409,6 +417,18 @@ public class CommandResolver {
                     }
                     break;
                 }
+                case CRASH: {
+                    if (type == Type.SET) {
+                        if (getEnvironment() == Environment.OWNER) {
+                            command = new Crash.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        command = new Crash.GetState(bytes, true);
+                    } else if (type == Type.GET_AVAILABILITY) {
+                        command = new Crash.GetStateAvailability(bytes, true);
+                    }
+                    break;
+                }
                 case HOME_CHARGER: {
                     if (type == Type.SET) {
                         if (getEnvironment() == Environment.OWNER) {
@@ -505,7 +525,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new Historical.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(2);
+                            SetterIterator iterator = new SetterIterator(3);
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -513,6 +533,8 @@ public class CommandResolver {
                                             return new Historical.RequestStates(bytes);
                                         case 1:
                                             return new Historical.GetTrips(bytes);
+                                        case 2:
+                                            return new Historical.GetChargingSessions(bytes);
                                     }
                                     return null;
                                 });
@@ -656,6 +678,18 @@ public class CommandResolver {
                     }
                     break;
                 }
+                case ADAS: {
+                    if (type == Type.SET) {
+                        if (getEnvironment() == Environment.OWNER) {
+                            command = new Adas.State(bytes);
+                        }
+                    } else if (type == Type.GET) {
+                        command = new Adas.GetState(bytes, true);
+                    } else if (type == Type.GET_AVAILABILITY) {
+                        command = new Adas.GetStateAvailability(bytes, true);
+                    }
+                    break;
+                }
                 case MAINTENANCE: {
                     if (type == Type.SET) {
                         if (getEnvironment() == Environment.OWNER) {
@@ -788,7 +822,7 @@ public class CommandResolver {
                                         case 0:
                                             return new Engine.TurnEngineOnOff(bytes);
                                         case 1:
-                                            return new Engine.ActivateDeactivateStartStop(bytes);
+                                            return new Engine.EnableDisableStartStop(bytes);
                                     }
                                     return null;
                                 });
@@ -874,7 +908,7 @@ public class CommandResolver {
         } catch (Exception e) {
             // the identifier is known but the command's parser class threw an exception.
             // return the base class.
-            getLogger().error(String.format("Failed to parse command %s", commandToString(bytes)), e);
+            getLogger().error(String.format("Failed to parse command %s: %s", commandToString(bytes), e.getMessage()));
         }
 
         // The identifier was unknown or failed to parse. Return the base class.

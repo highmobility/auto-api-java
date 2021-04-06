@@ -26,11 +26,16 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.ByteEnum;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
+
 
 public enum FluidLevel implements ByteEnum {
     LOW((byte) 0x00),
-    FILLED((byte) 0x01);
+    FILLED((byte) 0x01),
+    VERY_LOW((byte) 0x02),
+    NORMAL((byte) 0x03),
+    HIGH((byte) 0x04),
+    VERY_HIGH((byte) 0x05);
 
     public static FluidLevel fromByte(byte byteValue) throws CommandParseException {
         FluidLevel[] values = FluidLevel.values();
@@ -42,7 +47,9 @@ public enum FluidLevel implements ByteEnum {
             }
         }
 
-        throw new CommandParseException("FluidLevel does not contain: " + hexFromByte(byteValue));
+        throw new CommandParseException(
+            enumValueDoesNotExist(FluidLevel.class.getSimpleName(), byteValue)
+        );
     }
 
     private final byte value;

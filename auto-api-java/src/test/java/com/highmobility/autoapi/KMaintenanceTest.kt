@@ -50,7 +50,9 @@ class KMaintenanceTest : BaseTest() {
             "0d000D01000A0703407f500000000000" +  // 501.0 days until next service
             "0e000D01000A120440acc20000000000" +  // 3'681km until next service
             "0f000D01000A07054014000000000000" +  // 5 months until exhaust inspection
-            "10000B010008000001677c63d280" // Last eCall happened at 5 December 2018 at 03:22:56 GMT
+            "10000B010008000001677c63d280" +  // Last eCall happened at 5 December 2018 at 03:22:56 GMT
+            "11000D01000A120440806ccccccccccd" +  // Distance to the next oil service is 525.6km
+            "12000D01000A07034050b33333333333" // Time to the next oil service is 66.8 days
     )
     
     @Test
@@ -78,6 +80,8 @@ class KMaintenanceTest : BaseTest() {
         builder.setDistanceToNextService(Property(Length(3681.0, Length.Unit.KILOMETERS)))
         builder.setTimeToExhaustInspection(Property(Duration(5.0, Duration.Unit.MONTHS)))
         builder.setLastECall(Property(getCalendar("2018-12-05T03:22:56.000Z")))
+        builder.setDistanceToNextOilService(Property(Length(525.6, Length.Unit.KILOMETERS)))
+        builder.setTimeToNextOilService(Property(Duration(66.8, Duration.Unit.DAYS)))
         testState(builder.build())
     }
     
@@ -112,6 +116,10 @@ class KMaintenanceTest : BaseTest() {
         assertTrue(state.timeToExhaustInspection.value?.value == 5.0)
         assertTrue(state.timeToExhaustInspection.value?.unit == Duration.Unit.MONTHS)
         assertTrue(dateIsSame(state.lastECall.value, "2018-12-05T03:22:56.000Z"))
+        assertTrue(state.distanceToNextOilService.value?.value == 525.6)
+        assertTrue(state.distanceToNextOilService.value?.unit == Length.Unit.KILOMETERS)
+        assertTrue(state.timeToNextOilService.value?.value == 66.8)
+        assertTrue(state.timeToNextOilService.value?.unit == Duration.Unit.DAYS)
     }
     
     @Test
@@ -121,10 +129,10 @@ class KMaintenanceTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0034000102030405060708090a0b0c0d0e0f10")
-        val propertyGetter = Maintenance.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0034000102030405060708090a0b0c0d0e0f101112")
+        val propertyGetter = Maintenance.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f10"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112"))
     }
     
     @Test
@@ -147,14 +155,14 @@ class KMaintenanceTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f10")
+        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112")
         val allBytes = Bytes(COMMAND_HEADER + "003402" + identifierBytes)
         val constructed = Maintenance.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.MAINTENANCE)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Maintenance.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10)
+        val secondConstructed = Maintenance.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

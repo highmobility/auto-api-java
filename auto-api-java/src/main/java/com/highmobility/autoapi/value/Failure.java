@@ -29,7 +29,7 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class Failure extends PropertyValueObject {
     Reason reason;
@@ -91,7 +91,8 @@ public class Failure extends PropertyValueObject {
         UNAUTHORISED((byte) 0x03),
         UNKNOWN((byte) 0x04),
         PENDING((byte) 0x05),
-        OEM_ERROR((byte) 0x06);
+        OEM_ERROR((byte) 0x06),
+        PRIVACY_MODE_ACTIVE((byte) 0x07);
     
         public static Reason fromByte(byte byteValue) throws CommandParseException {
             Reason[] values = Reason.values();
@@ -103,7 +104,9 @@ public class Failure extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("Failure.Reason does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Reason.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

@@ -29,7 +29,7 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class ConditionBasedService extends PropertyValueObject {
     Integer year;
@@ -163,7 +163,9 @@ public class ConditionBasedService extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("ConditionBasedService.DueStatus does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(DueStatus.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

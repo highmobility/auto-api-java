@@ -29,7 +29,7 @@ import com.highmobility.value.Bytes;
 import java.util.Calendar;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Parking Ticket capability
@@ -210,8 +210,9 @@ public class ParkingTicket {
             }
             if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("01") == false) ||
                 this.operatorTicketID.getValue() == null ||
-                this.ticketStartTime.getValue() == null) 
-                throw new NoPropertiesException();
+                this.ticketStartTime.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -239,8 +240,9 @@ public class ParkingTicket {
                     return null;
                 });
             }
-            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("00") == false)) 
-                throw new NoPropertiesException();
+            if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("00") == false)) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -397,7 +399,9 @@ public class ParkingTicket {
                 }
             }
     
-            throw new CommandParseException("ParkingTicket.Status does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Status.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

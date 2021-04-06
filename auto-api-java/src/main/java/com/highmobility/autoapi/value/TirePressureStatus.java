@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class TirePressureStatus extends PropertyValueObject {
     public static final int SIZE = 2;
@@ -96,7 +96,9 @@ public class TirePressureStatus extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("TirePressureStatus.Status does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Status.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

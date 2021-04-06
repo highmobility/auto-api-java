@@ -24,6 +24,7 @@
 package com.highmobility.autoapi
 
 import com.highmobility.autoapi.property.Property
+import com.highmobility.autoapi.value.*
 import com.highmobility.value.Bytes
 
 import org.junit.jupiter.api.Test
@@ -32,7 +33,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 class KHoodTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "006701" + 
-            "01000401000101" // Hood is open
+            "01000401000101" +  // Hood is open
+            "02000401000101" +  // The hood is locked.
+            "03000401000100" // Trunk lock is safely locked.
     )
     
     @Test
@@ -45,12 +48,16 @@ class KHoodTest : BaseTest() {
     fun testBuilder() {
         val builder = Hood.State.Builder()
         builder.setPosition(Property(Hood.Position.OPEN))
+        builder.setLock(Property(LockState.LOCKED))
+        builder.setLockSafety(Property(LockSafety.SAFE))
         testState(builder.build())
     }
     
     private fun testState(state: Hood.State) {
         assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.position.value == Hood.Position.OPEN)
+        assertTrue(state.lock.value == LockState.LOCKED)
+        assertTrue(state.lockSafety.value == LockSafety.SAFE)
     }
     
     @Test
@@ -59,6 +66,11 @@ class KHoodTest : BaseTest() {
         val defaultGetter = Hood.GetState()
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
+        
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "006700010203")
+        val propertyGetter = Hood.GetState(0x01, 0x02, 0x03)
+        assertTrue(propertyGetter == propertyGetterBytes)
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203"))
     }
     
     @Test
@@ -77,5 +89,26 @@ class KHoodTest : BaseTest() {
         assertTrue(resolved.type == Type.GET_AVAILABILITY)
         assertTrue(resolved.getPropertyIdentifiers().isEmpty())
         assertTrue(resolved == bytes)
+    }
+    
+    @Test
+    fun testGetStateAvailabilitySome() {
+        val identifierBytes = Bytes("010203")
+        val allBytes = Bytes(COMMAND_HEADER + "006702" + identifierBytes)
+        val constructed = Hood.GetStateAvailability(identifierBytes)
+        assertTrue(constructed.identifier == Identifier.HOOD)
+        assertTrue(constructed.type == Type.GET_AVAILABILITY)
+        assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(constructed == allBytes)
+        val secondConstructed = Hood.GetStateAvailability(0x01, 0x02, 0x03)
+        assertTrue(constructed == secondConstructed)
+    
+        setEnvironment(CommandResolver.Environment.VEHICLE)
+    
+        val resolved = CommandResolver.resolve(allBytes) as Hood.GetStateAvailability
+        assertTrue(resolved.identifier == Identifier.HOOD)
+        assertTrue(resolved.type == Type.GET_AVAILABILITY)
+        assertTrue(resolved.getPropertyIdentifiers() == identifierBytes)
+        assertTrue(resolved == allBytes)
     }
 }

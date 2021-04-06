@@ -66,8 +66,9 @@ public class TextInput {
                     return null;
                 });
             }
-            if (this.text.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.text.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 }

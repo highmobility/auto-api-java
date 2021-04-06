@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.value.Bytes;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 public class DoorPosition extends PropertyValueObject {
     public static final int SIZE = 2;
@@ -98,7 +98,9 @@ public class DoorPosition extends PropertyValueObject {
                 }
             }
     
-            throw new CommandParseException("DoorPosition.Location does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(Location.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

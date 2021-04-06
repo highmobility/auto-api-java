@@ -24,6 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.LockSafety;
 import com.highmobility.autoapi.value.LockState;
 import com.highmobility.autoapi.value.Position;
 import com.highmobility.value.Bytes;
@@ -37,6 +38,7 @@ public class Trunk {
 
     public static final byte PROPERTY_LOCK = 0x01;
     public static final byte PROPERTY_POSITION = 0x02;
+    public static final byte PROPERTY_LOCK_SAFETY = 0x03;
 
     /**
      * Get Trunk property availability information
@@ -179,7 +181,9 @@ public class Trunk {
                     return null;
                 });
             }
-            if (this.lock.getValue() == null && this.position.getValue() == null) throw new NoPropertiesException();
+            if (this.lock.getValue() == null && this.position.getValue() == null) {
+                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -189,6 +193,7 @@ public class Trunk {
     public static class State extends SetCommand {
         Property<LockState> lock = new Property<>(LockState.class, PROPERTY_LOCK);
         Property<Position> position = new Property<>(Position.class, PROPERTY_POSITION);
+        Property<LockSafety> lockSafety = new Property<>(LockSafety.class, PROPERTY_LOCK_SAFETY);
     
         /**
          * @return The lock
@@ -204,6 +209,13 @@ public class Trunk {
             return position;
         }
     
+        /**
+         * @return Indicates the safe-state of the trunk.
+         */
+        public Property<LockSafety> getLockSafety() {
+            return lockSafety;
+        }
+    
         State(byte[] bytes) throws CommandParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -211,6 +223,7 @@ public class Trunk {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_LOCK: return lock.update(p);
                         case PROPERTY_POSITION: return position.update(p);
+                        case PROPERTY_LOCK_SAFETY: return lockSafety.update(p);
                     }
     
                     return null;
@@ -223,11 +236,13 @@ public class Trunk {
     
             lock = builder.lock;
             position = builder.position;
+            lockSafety = builder.lockSafety;
         }
     
         public static final class Builder extends SetCommand.Builder {
             private Property<LockState> lock;
             private Property<Position> position;
+            private Property<LockSafety> lockSafety;
     
             public Builder() {
                 super(IDENTIFIER);
@@ -254,6 +269,16 @@ public class Trunk {
             public Builder setPosition(Property<Position> position) {
                 this.position = position.setIdentifier(PROPERTY_POSITION);
                 addProperty(this.position);
+                return this;
+            }
+            
+            /**
+             * @param lockSafety Indicates the safe-state of the trunk.
+             * @return The builder
+             */
+            public Builder setLockSafety(Property<LockSafety> lockSafety) {
+                this.lockSafety = lockSafety.setIdentifier(PROPERTY_LOCK_SAFETY);
+                addProperty(this.lockSafety);
                 return this;
             }
         }

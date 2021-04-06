@@ -102,8 +102,9 @@ public class Historical {
                     return null;
                 });
             }
-            if (this.capabilityID.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.capabilityID.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -156,8 +157,64 @@ public class Historical {
                     return null;
                 });
             }
-            if ((capabilityID.getValue() == null || capabilityID.getValueComponent().getValueBytes().equals("006a") == false)) 
-                throw new NoPropertiesException();
+            if ((capabilityID.getValue() == null || capabilityID.getValueComponent().getValueBytes().equals("006a") == false)) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
+        }
+    }
+
+    /**
+     * Get charging sessions
+     */
+    public static class GetChargingSessions extends SetCommand {
+        PropertyInteger capabilityID = new PropertyInteger(PROPERTY_CAPABILITY_ID, false);
+        Property<Calendar> startDate = new Property<>(Calendar.class, PROPERTY_START_DATE);
+        Property<Calendar> endDate = new Property<>(Calendar.class, PROPERTY_END_DATE);
+    
+        /**
+         * @return The start date
+         */
+        public Property<Calendar> getStartDate() {
+            return startDate;
+        }
+        
+        /**
+         * @return The end date
+         */
+        public Property<Calendar> getEndDate() {
+            return endDate;
+        }
+        
+        /**
+         * Get charging sessions
+         * 
+         * @param startDate Start date for historical data query
+         * @param endDate End date for historical data query
+         */
+        public GetChargingSessions(@Nullable Calendar startDate, @Nullable Calendar endDate) {
+            super(IDENTIFIER);
+        
+            addProperty(capabilityID.addValueComponent(new Bytes("006d")));
+            addProperty(this.startDate.update(startDate));
+            addProperty(this.endDate.update(endDate));
+            createBytes();
+        }
+    
+        GetChargingSessions(byte[] bytes) throws CommandParseException, NoPropertiesException {
+            super(bytes);
+            while (propertyIterator.hasNext()) {
+                propertyIterator.parseNext(p -> {
+                    switch (p.getPropertyIdentifier()) {
+                        case PROPERTY_CAPABILITY_ID: capabilityID.update(p);
+                        case PROPERTY_START_DATE: return startDate.update(p);
+                        case PROPERTY_END_DATE: return endDate.update(p);
+                    }
+                    return null;
+                });
+            }
+            if ((capabilityID.getValue() == null || capabilityID.getValueComponent().getValueBytes().equals("006d") == false)) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 

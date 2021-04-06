@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Tachograph capability
@@ -457,7 +457,9 @@ public class Tachograph {
                 }
             }
     
-            throw new CommandParseException("Tachograph.VehicleOverspeed does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(VehicleOverspeed.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -485,7 +487,9 @@ public class Tachograph {
                 }
             }
     
-            throw new CommandParseException("Tachograph.VehicleDirection does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(VehicleDirection.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

@@ -28,7 +28,7 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.value.Bytes;
 import javax.annotation.Nullable;
 
-import static com.highmobility.utils.ByteUtils.hexFromByte;
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Rooftop Control capability
@@ -225,7 +225,9 @@ public class RooftopControl {
                     return null;
                 });
             }
-            if (this.dimming.getValue() == null && this.position.getValue() == null && this.convertibleRoofState.getValue() == null && this.sunroofTiltState.getValue() == null && this.sunroofState.getValue() == null) throw new NoPropertiesException();
+            if (this.dimming.getValue() == null && this.position.getValue() == null && this.convertibleRoofState.getValue() == null && this.sunroofTiltState.getValue() == null && this.sunroofState.getValue() == null) {
+                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 
@@ -410,7 +412,9 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException("RooftopControl.ConvertibleRoofState does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(ConvertibleRoofState.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -439,7 +443,9 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException("RooftopControl.SunroofTiltState does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(SunroofTiltState.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -468,7 +474,9 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException("RooftopControl.SunroofState does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(SunroofState.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;
@@ -497,7 +505,9 @@ public class RooftopControl {
                 }
             }
     
-            throw new CommandParseException("RooftopControl.SunroofRainEvent does not contain: " + hexFromByte(byteValue));
+            throw new CommandParseException(
+                enumValueDoesNotExist(SunroofRainEvent.class.getSimpleName(), byteValue)
+            );
         }
     
         private final byte value;

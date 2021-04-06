@@ -172,8 +172,9 @@ public class Doors {
                     return null;
                 });
             }
-            if (this.locksState.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.locksState.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 

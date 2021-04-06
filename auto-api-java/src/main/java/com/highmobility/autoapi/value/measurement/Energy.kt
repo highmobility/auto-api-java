@@ -49,17 +49,21 @@ class Energy : MeasurementType {
         return when (unit) {
             Unit.JOULES -> value * 1.0
             Unit.KILOJOULES -> value * 1000.0
+            Unit.WATT_HOURS -> value * 3600.0
             Unit.KILOWATT_HOURS -> value * 3600000.0
         }
     }
     
     fun inKilojoules() = inJoules() / 1000.0
     
+    fun inWattHours() = inJoules() / 3600.0
+    
     fun inKilowattHours() = inJoules() / 3600000.0
     
     enum class Unit(val id: Byte) {
         JOULES(0x00),
         KILOJOULES(0x01),
+        WATT_HOURS(0x03),
         KILOWATT_HOURS(0x04);
     
         companion object {

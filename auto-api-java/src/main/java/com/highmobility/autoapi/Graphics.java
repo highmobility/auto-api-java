@@ -66,8 +66,9 @@ public class Graphics {
                     return null;
                 });
             }
-            if (this.imageURL.getValue() == null) 
-                throw new NoPropertiesException();
+            if (this.imageURL.getValue() == null) {
+                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+            }
         }
     }
 }
