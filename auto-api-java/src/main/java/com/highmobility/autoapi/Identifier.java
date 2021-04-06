@@ -91,6 +91,10 @@ public class Identifier {
     public static final int ENGINE = 105;
     public static final int TRIPS = 106;
 
+    public static final int CRASH = 107;
+    public static final int ADAS = 108;
+    public static final int CHARGING_SESSION = 109;
+
     public static int fromBytes(byte first, byte second) {
         return ((first & 0xff) << 8) | (second & 0xff);
     }

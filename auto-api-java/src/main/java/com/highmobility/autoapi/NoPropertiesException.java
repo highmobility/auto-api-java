@@ -23,6 +23,9 @@
  */
 package com.highmobility.autoapi;
 
-public class NoPropertiesException extends Exception{
+public class NoPropertiesException extends Exception {
 
+    public NoPropertiesException(String description) {
+        super(description);
+    }
 }

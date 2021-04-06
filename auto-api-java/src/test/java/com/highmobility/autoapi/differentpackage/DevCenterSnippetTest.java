@@ -37,6 +37,7 @@ import com.highmobility.autoapi.VehicleInformation;
 import com.highmobility.autoapi.VehicleLocation;
 import com.highmobility.autoapi.VehicleStatus;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.EngineType;
 import com.highmobility.autoapi.value.Location;
 import com.highmobility.autoapi.value.Lock;
 import com.highmobility.autoapi.value.LockState;
@@ -110,7 +111,7 @@ public class DevCenterSnippetTest {
             vehicleInfo.getVin();
 
             // Check the power train type
-            if (vehicleInfo.getPowertrain().getValue() == VehicleInformation.Powertrain.ALL_ELECTRIC) {
+            if (vehicleInfo.getPowertrain().getValue() == EngineType.ALL_ELECTRIC) {
                 // vehicle has all electric power train
             }
         }

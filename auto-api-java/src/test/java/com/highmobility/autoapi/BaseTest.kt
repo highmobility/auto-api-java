@@ -27,12 +27,14 @@ import com.highmobility.autoapi.TestUtils.getExampleCalendar
 import com.highmobility.utils.ByteUtils
 import com.highmobility.value.Bytes
 import io.mockk.*
+import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.slf4j.Logger
 import java.util.*
 
 open class BaseTest {
-    lateinit var mockLogger:Logger
+    lateinit var mockLogger: Logger
+    var expectingError = false
 
     @BeforeEach
     fun before() {
@@ -43,13 +45,19 @@ open class BaseTest {
         var log = CapturingSlot<String>()
         every { mockLogger.warn(capture(log)) } answers { println("w: ${log.captured}") }
         every { mockLogger.debug(capture(log)) } answers { println("d: ${log.captured}") }
-        every { mockLogger.error(capture(log)) } answers { println("e: ${log.captured}") }
-        every { mockLogger.error(capture(log), any()) } answers { println("e: ${log.captured}") }
+        every { mockLogger.error(capture(log)) } answers {
+            println("e: ${log.captured}")
+            if (expectingError == false) fail<Any>("unexpected error log. call errorLogExpected first if error log is expected here")
+        }
+        every { mockLogger.error(capture(log), any()) } answers {
+            println("e: ${log.captured}")
+            if (expectingError == false) fail<Any>("unexpected error log. call errorLogExpected first if error log is expected here")
+        }
 
         setEnvironment(CommandResolver.Environment.OWNER)
-   }
+    }
 
-    fun setEnvironment(environment: CommandResolver.Environment) {
+    fun setEnvironment(environment: CommandResolver.Environment?) {
         CommandResolver.setEnvironment(environment)
     }
 
@@ -76,8 +84,9 @@ open class BaseTest {
     }
 
     fun errorLogExpected(count: Int, runnable: Runnable) {
-        println("expecting e:")
+        expectingError = true
         runnable.run()
+        expectingError = false
         verify(exactly = count) { mockLogger.error(allAny()) }
     }
 
