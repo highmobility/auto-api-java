@@ -34,15 +34,19 @@ public class CommandResolverTest extends BaseTest {
     @Test public void logsInvalidProperties() {
         setEnvironment(CommandResolver.Environment.VEHICLE);
 
-        // It tries to match 2 to commands, but for both the property parsing fails
-        debugLogExpected(2, () -> {
-            Bytes invalidEndParking = new Bytes(
-                    COMMAND_HEADER + "004701" +
-                            "01000401000104"
-            );
-            Command command = CommandResolver.resolve(invalidEndParking);
-            assertTrue(command.getClass() == Command.class);
-            assertTrue(command.getProperties().length == 1);
+        errorLogExpected(() -> {
+            // error log for general command parsing failure
+            debugLogExpected(2, () -> {
+                // debug log for trying to match 2 commands, for both of which the property parsing
+                // fails
+                Bytes invalidEndParking = new Bytes(
+                        COMMAND_HEADER + "004701" +
+                                "01000401000104"
+                );
+                Command command = CommandResolver.resolve(invalidEndParking);
+                assertTrue(command.getClass() == Command.class);
+                assertTrue(command.getProperties().length == 1);
+            });
         });
     }
 

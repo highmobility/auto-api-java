@@ -149,7 +149,7 @@ class KParkingTicketTest : BaseTest() {
     
         setEnvironment(CommandResolver.Environment.VEHICLE)
     
-        errorLogExpected(2) { 
+        errorLogExpected { 
             val resolved = CommandResolver.resolve(bytes)
             assertTrue(resolved is Command)
         }
@@ -175,7 +175,7 @@ class KParkingTicketTest : BaseTest() {
     
         setEnvironment(CommandResolver.Environment.VEHICLE)
     
-        errorLogExpected(2) { 
+        errorLogExpected { 
             val resolved = CommandResolver.resolve(bytes)
             assertTrue(resolved is Command)
         }

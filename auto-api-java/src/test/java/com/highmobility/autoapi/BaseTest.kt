@@ -38,6 +38,7 @@ open class BaseTest {
 
     @BeforeEach
     fun before() {
+        expectingError = false
         mockLogger = mockk()
         mockkStatic(AutoApiLogger::class)
         every { AutoApiLogger.getLogger() } returns mockLogger

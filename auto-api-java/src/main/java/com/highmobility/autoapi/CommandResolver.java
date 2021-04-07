@@ -73,7 +73,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new ParkingTicket.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(2);
+                            SetterIterator iterator = new SetterIterator(2, ParkingTicket.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -150,7 +150,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new RemoteControl.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(3);
+                            SetterIterator iterator = new SetterIterator(3, RemoteControl.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -313,7 +313,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new ChassisSettings.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(4);
+                            SetterIterator iterator = new SetterIterator(4, ChassisSettings.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -342,7 +342,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new Notifications.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(3);
+                            SetterIterator iterator = new SetterIterator(3, Notifications.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -377,7 +377,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new Charging.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(6);
+                            SetterIterator iterator = new SetterIterator(6, Charging.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -434,7 +434,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new HomeCharger.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(5);
+                            SetterIterator iterator = new SetterIterator(5, HomeCharger.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -525,7 +525,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new Historical.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(3);
+                            SetterIterator iterator = new SetterIterator(3, Historical.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -548,7 +548,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new WiFi.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(3);
+                            SetterIterator iterator = new SetterIterator(3, WiFi.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -729,7 +729,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new Windscreen.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(3);
+                            SetterIterator iterator = new SetterIterator(3, Windscreen.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -790,7 +790,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new HonkHornFlashLights.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(2);
+                            SetterIterator iterator = new SetterIterator(2, HonkHornFlashLights.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -815,7 +815,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new Engine.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(2);
+                            SetterIterator iterator = new SetterIterator(2, Engine.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -876,7 +876,7 @@ public class CommandResolver {
                         if (getEnvironment() == Environment.OWNER) {
                             command = new Climate.State(bytes);
                         } else {
-                            SetterIterator iterator = new SetterIterator(6);
+                            SetterIterator iterator = new SetterIterator(6, Climate.class.getName());
                             while (iterator.hasNext()) {
                                 command = iterator.parseNext(index -> {
                                     switch (index) {
@@ -1016,35 +1016,53 @@ public class CommandResolver {
     public enum Environment {
         OWNER, VEHICLE
     }
+
     /**
-     * The purpose is to loop the possible setters.
+     * The purpose of this iterator is to loop the possible setters.
      * <p>
-     * NoPropertiesException is ok when parsing Setters because we are in the process of trying to
-     * find correct setter.
+     * NoPropertiesException is ok here, because we are in the process of trying to find correct
+     * setter.
+     * <p>
+     * The need to find the correct setter arises because some setters have overlapping property id-s,
+     * like Start/End parking. Property id is the same, but constant value is different. This looper
+     * then tries to construct each of them until one doesn't fail with NoPropertiesException.
+     * <p>
+     * If all of the setters parsing failed, it is impossible to understand what setter was sent.
      */
     protected static class SetterIterator {
         private final int currentSize;
+        private String capabilityName;
         private int currentIndex = 0;
         public Command theParsedCommand;
-
-        SetterIterator(int count) {
+    
+        SetterIterator(int count, String capabilityName) {
             this.currentSize = count;
+            this.capabilityName = capabilityName;
         }
-
+    
         public boolean hasNext() {
             return currentIndex < currentSize && theParsedCommand == null;
         }
-
+    
         public Command parseNext(SetterIteration next) throws CommandParseException {
             try {
-                theParsedCommand = next.iterate(currentIndex);
+                /**
+                 * Loop the commands backwards, because in historical, the later setters are
+                 * children of the first request_states. So we try to match with the children first.
+                 */
+                theParsedCommand = next.iterate(currentSize - currentIndex - 1);
             } catch (NoPropertiesException e) {
                 // its ok, we are trying to find the command
             }
             currentIndex++;
+            if (hasNext() == false && theParsedCommand == null)
+                throw new CommandParseException(
+                        String.format("None of the %s setters matched the input bytes", capabilityName)
+                );
+    
             return theParsedCommand;
         }
-
+    
         public interface SetterIteration {
             Command iterate(int number) throws NoPropertiesException, CommandParseException;
         }

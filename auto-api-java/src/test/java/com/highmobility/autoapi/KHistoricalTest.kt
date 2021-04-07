@@ -112,7 +112,7 @@ class KHistoricalTest : BaseTest() {
     
         setEnvironment(CommandResolver.Environment.VEHICLE)
     
-        errorLogExpected(3) { 
+        errorLogExpected { 
             val resolved = CommandResolver.resolve(bytes)
             assertTrue(resolved is Command)
         }

@@ -114,7 +114,7 @@ class KRemoteControlTest : BaseTest() {
     
         setEnvironment(CommandResolver.Environment.VEHICLE)
     
-        errorLogExpected(2) { 
+        errorLogExpected { 
             val resolved = CommandResolver.resolve(bytes)
             assertTrue(resolved is Command)
         }
@@ -140,7 +140,7 @@ class KRemoteControlTest : BaseTest() {
     
         setEnvironment(CommandResolver.Environment.VEHICLE)
     
-        errorLogExpected(2) { 
+        errorLogExpected { 
             val resolved = CommandResolver.resolve(bytes)
             assertTrue(resolved is Command)
         }
