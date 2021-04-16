@@ -29,6 +29,7 @@ import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.autoapi.value.Availability;
 import com.highmobility.value.Bytes;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.io.UnsupportedEncodingException;
@@ -38,6 +39,7 @@ import java.nio.ByteOrder;
 import java.util.*;
 
 import static com.highmobility.autoapi.AutoApiLogger.getLogger;
+import static java.lang.String.format;
 
 /**
  * Property is a representation of some AutoAPI data. It consists of 4 optional components: data, unit
@@ -96,6 +98,7 @@ public class Property<V> extends Bytes {
 
     private Class<V> valueClass = null;
 
+    // On initialisation, the bytes are set to unknownBytes if they dont exists.
     public byte getPropertyIdentifier() {
         return bytes[0];
     }
@@ -247,7 +250,7 @@ public class Property<V> extends Bytes {
             try {
                 this.value.setClass(valueClass);
             } catch (Exception e) {
-                getLogger().debug(String.format("Invalid bytes %s for property: %s\n%s", p, valueClass.getSimpleName(), e));
+                getLogger().debug(format("Invalid bytes %s for property: %s\n%s", p, valueClass.getSimpleName(), e));
             }
         }
 
@@ -415,7 +418,7 @@ public class Property<V> extends Bytes {
         String exceptionString = (e != null ?
                 (" | " + e.getClass().getSimpleName() + ": " + e.getMessage()) : "");
 
-        getLogger().warn(String.format("Failed to parse property: " + toString() + componentString + exceptionString));
+        getLogger().warn(format("Failed to parse property: %s, %s, %s", toString(), componentString, exceptionString));
     }
 
     // MARK: ctor helpers

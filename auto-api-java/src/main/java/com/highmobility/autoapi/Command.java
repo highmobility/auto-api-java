@@ -338,7 +338,7 @@ public class Command extends Bytes {
                     propertiesReplaced++;
                 } else if (type == Type.SET) {
                     // TODO: do we know we are a setter/state here?
-                    // TODO: for state, the unknown properties should parse currently.
+                    //  for state, the unknown properties should parse currently.
                     // if we are a setter, we dont expect unknown properties, so can fail the parsing
                     throw new PropertyParseException(
                             SETTER_SUPERFLUOUS_PROPERTY,
@@ -369,6 +369,6 @@ public class Command extends Bytes {
          *                   property.
          */
         @Nullable
-        Property iterate(@Nullable Property p) throws Exception;
+        Property iterate(Property p) throws Exception;
     }
 }
