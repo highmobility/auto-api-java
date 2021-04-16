@@ -611,7 +611,7 @@ public class Diagnostics {
             return lowVoltageBatteryChargeLevel;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<CheckControlMessage>> checkControlMessagesBuilder = new ArrayList<>();

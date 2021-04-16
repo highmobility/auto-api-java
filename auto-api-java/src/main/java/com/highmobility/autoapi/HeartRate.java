@@ -62,16 +62,17 @@ public class HeartRate {
             createBytes();
         }
     
-        SendHeartRate(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SendHeartRate(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_HEART_RATE) return heartRate.update(p);
+                    
                     return null;
                 });
             }
             if (this.heartRate.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }

@@ -195,10 +195,10 @@ class PropertyTest : BaseTest() {
 
     @Test
     fun testFailureComponentFailedParsing() {
-        // test if invalid failure reason, then error logged and failure component not populated, and put to generic
-        // component array
+        // test if invalid failure reason, then warning logged and failure component not populated,
+        // and put to generic component array
         // 0x11 is invalid failure reason
-        errorLogExpected {
+        warningLogExpected {
             val command = CommandResolver.resolve(
                 COMMAND_HEADER + "002301" +
                         "19001C01000A0900bfe3333333333333" + "03000C110A54727920696e20343073" +

@@ -156,16 +156,17 @@ public class Ignition {
             createBytes();
         }
     
-        TurnIgnitionOnOff(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        TurnIgnitionOnOff(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATE) return state.update(p);
+                    
                     return null;
                 });
             }
             if (this.state.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -203,7 +204,7 @@ public class Ignition {
             return state;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

@@ -194,7 +194,7 @@ public class Crash {
             return impactZone;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<CrashIncident>> incidentsBuilder = new ArrayList<>();

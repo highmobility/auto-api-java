@@ -164,16 +164,17 @@ public class Doors {
             createBytes();
         }
     
-        LockUnlockDoors(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        LockUnlockDoors(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_LOCKS_STATE) return locksState.update(p);
+                    
                     return null;
                 });
             }
             if (this.locksState.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -266,7 +267,7 @@ public class Doors {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<Lock>> insideLocksBuilder = new ArrayList<>();

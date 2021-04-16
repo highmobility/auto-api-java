@@ -1020,12 +1020,12 @@ public class CommandResolver {
     /**
      * The purpose of this iterator is to loop the possible setters.
      * <p>
-     * NoPropertiesException is ok here, because we are in the process of trying to find correct
+     * PropertyParseException is ok here, because we are in the process of trying to find correct
      * setter.
      * <p>
      * The need to find the correct setter arises because some setters have overlapping property id-s,
      * like Start/End parking. Property id is the same, but constant value is different. This looper
-     * then tries to construct each of them until one doesn't fail with NoPropertiesException.
+     * then tries to construct each of them until one doesn't fail with PropertyParseException.
      * <p>
      * If all of the setters parsing failed, it is impossible to understand what setter was sent.
      */
@@ -1051,7 +1051,7 @@ public class CommandResolver {
                  * children of the first request_states. So we try to match with the children first.
                  */
                 theParsedCommand = next.iterate(currentSize - currentIndex - 1);
-            } catch (NoPropertiesException e) {
+            } catch (PropertyParseException e) {
                 // its ok, we are trying to find the command
             }
             currentIndex++;
@@ -1064,7 +1064,7 @@ public class CommandResolver {
         }
     
         public interface SetterIteration {
-            Command iterate(int number) throws NoPropertiesException, CommandParseException;
+            Command iterate(int number) throws PropertyParseException, CommandParseException;
         }
     }
 }

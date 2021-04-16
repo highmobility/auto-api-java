@@ -57,12 +57,12 @@ public class SetCommand extends Command {
                 true);
     }
 
-    protected String mandatoryPropertyErrorMessage(String className) {
-        return "Mandatory property does not exists for " + className;
+    protected String mandatoryPropertyErrorMessage(Class clazz) {
+        return "Mandatory property does not exists for " + clazz.getSimpleName();
     }
 
-    protected String optionalPropertyErrorMessage(String className) {
-        return "Optional property does not exists for " + className;
+    protected String optionalPropertyErrorMessage(Class clazz) {
+        return "Optional property does not exists for " + clazz.getSimpleName();
     }
 
     SetCommand(byte[] bytes) throws CommandParseException {

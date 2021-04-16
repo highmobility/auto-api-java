@@ -58,16 +58,17 @@ public class TextInput {
             createBytes();
         }
     
-        TextInputCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        TextInputCommand(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_TEXT) return text.update(p);
+                    
                     return null;
                 });
             }
             if (this.text.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }

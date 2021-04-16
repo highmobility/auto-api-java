@@ -91,16 +91,17 @@ public class ParkingBrake {
             createBytes();
         }
     
-        SetParkingBrake(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetParkingBrake(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    
                     return null;
                 });
             }
             if (this.status.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -118,7 +119,7 @@ public class ParkingBrake {
             return status;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

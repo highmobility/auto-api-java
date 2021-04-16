@@ -176,7 +176,7 @@ public class Windscreen {
             createBytes();
         }
     
-        SetWindscreenDamage(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetWindscreenDamage(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -184,11 +184,12 @@ public class Windscreen {
                         case PROPERTY_WINDSCREEN_DAMAGE: return windscreenDamage.update(p);
                         case PROPERTY_WINDSCREEN_DAMAGE_ZONE: return windscreenDamageZone.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.windscreenDamage.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -218,16 +219,17 @@ public class Windscreen {
             createBytes();
         }
     
-        SetWindscreenReplacementNeeded(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetWindscreenReplacementNeeded(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT) return windscreenNeedsReplacement.update(p);
+                    
                     return null;
                 });
             }
             if (this.windscreenNeedsReplacement.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -267,7 +269,7 @@ public class Windscreen {
             createBytes();
         }
     
-        ControlWipers(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ControlWipers(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -275,11 +277,12 @@ public class Windscreen {
                         case PROPERTY_WIPERS_STATUS: return wipersStatus.update(p);
                         case PROPERTY_WIPERS_INTENSITY: return wipersIntensity.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.wipersStatus.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -353,7 +356,7 @@ public class Windscreen {
             return windscreenDamageDetectionTime;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

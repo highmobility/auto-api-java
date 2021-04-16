@@ -168,16 +168,17 @@ public class ChassisSettings {
             createBytes();
         }
     
-        SetDrivingMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetDrivingMode(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_DRIVING_MODE) return drivingMode.update(p);
+                    
                     return null;
                 });
             }
             if (this.drivingMode.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -207,16 +208,17 @@ public class ChassisSettings {
             createBytes();
         }
     
-        StartStopSportsChrono(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        StartStopSportsChrono(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_SPORT_CHRONO) return sportChrono.update(p);
+                    
                     return null;
                 });
             }
             if (this.sportChrono.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -254,7 +256,7 @@ public class ChassisSettings {
             createBytes();
         }
     
-        SetSpringRates(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetSpringRates(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<SpringRate>> currentSpringRatesBuilder = new ArrayList<>();
@@ -266,13 +268,14 @@ public class ChassisSettings {
                         currentSpringRatesBuilder.add(currentSpringRate);
                         return currentSpringRate;
                     }
+                    
                     return null;
                 });
             }
         
             currentSpringRates = currentSpringRatesBuilder;
             if (this.currentSpringRates.size() == 0) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -302,16 +305,17 @@ public class ChassisSettings {
             createBytes();
         }
     
-        SetChassisPosition(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetChassisPosition(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CURRENT_CHASSIS_POSITION) return currentChassisPosition.update(p);
+                    
                     return null;
                 });
             }
             if (this.currentChassisPosition.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -385,7 +389,7 @@ public class ChassisSettings {
             return minimumChassisPosition;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<SpringRate>> currentSpringRatesBuilder = new ArrayList<>();

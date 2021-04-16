@@ -58,16 +58,17 @@ public class Graphics {
             createBytes();
         }
     
-        DisplayImage(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        DisplayImage(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_IMAGE_URL) return imageURL.update(p);
+                    
                     return null;
                 });
             }
             if (this.imageURL.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }

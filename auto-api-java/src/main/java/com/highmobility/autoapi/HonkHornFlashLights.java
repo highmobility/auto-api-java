@@ -175,7 +175,7 @@ public class HonkHornFlashLights {
             createBytes();
         }
     
-        HonkFlash(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        HonkFlash(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -183,11 +183,12 @@ public class HonkHornFlashLights {
                         case PROPERTY_FLASH_TIMES: return flashTimes.update(p);
                         case PROPERTY_HONK_TIME: return honkTime.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.flashTimes.getValue() == null && this.honkTime.getValue() == null) {
-                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(optionalPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -217,16 +218,17 @@ public class HonkHornFlashLights {
             createBytes();
         }
     
-        ActivateDeactivateEmergencyFlasher(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ActivateDeactivateEmergencyFlasher(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_EMERGENCY_FLASHERS_STATE) return emergencyFlashersState.update(p);
+                    
                     return null;
                 });
             }
             if (this.emergencyFlashersState.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -244,7 +246,7 @@ public class HonkHornFlashLights {
             return flashers;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

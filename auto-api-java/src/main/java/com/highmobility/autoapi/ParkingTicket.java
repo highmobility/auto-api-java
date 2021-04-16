@@ -194,7 +194,7 @@ public class ParkingTicket {
             createBytes();
         }
     
-        StartParking(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        StartParking(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -205,13 +205,14 @@ public class ParkingTicket {
                         case PROPERTY_TICKET_START_TIME: return ticketStartTime.update(p);
                         case PROPERTY_TICKET_END_TIME: return ticketEndTime.update(p);
                     }
+        
                     return null;
                 });
             }
             if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("01") == false) ||
                 this.operatorTicketID.getValue() == null ||
                 this.ticketStartTime.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -232,16 +233,17 @@ public class ParkingTicket {
             createBytes();
         }
     
-        EndParking(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        EndParking(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    
                     return null;
                 });
             }
             if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("00") == false)) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -291,7 +293,7 @@ public class ParkingTicket {
             return ticketEndTime;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

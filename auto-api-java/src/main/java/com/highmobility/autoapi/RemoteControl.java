@@ -113,7 +113,7 @@ public class RemoteControl {
             createBytes();
         }
     
-        ControlCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ControlCommand(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -121,11 +121,12 @@ public class RemoteControl {
                         case PROPERTY_ANGLE: return angle.update(p);
                         case PROPERTY_SPEED: return speed.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.angle.getValue() == null && this.speed.getValue() == null) {
-                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(optionalPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -146,16 +147,17 @@ public class RemoteControl {
             createBytes();
         }
     
-        StartControl(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        StartControl(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CONTROL_MODE) return controlMode.update(p);
+                    
                     return null;
                 });
             }
             if ((controlMode.getValue() == null || controlMode.getValueComponent().getValueBytes().equals("02") == false)) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -176,16 +178,17 @@ public class RemoteControl {
             createBytes();
         }
     
-        StopControl(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        StopControl(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CONTROL_MODE) return controlMode.update(p);
+                    
                     return null;
                 });
             }
             if ((controlMode.getValue() == null || controlMode.getValueComponent().getValueBytes().equals("05") == false)) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -211,7 +214,7 @@ public class RemoteControl {
             return angle;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

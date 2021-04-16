@@ -176,7 +176,7 @@ public class CruiseControl {
             createBytes();
         }
     
-        ActivateDeactivateCruiseControl(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ActivateDeactivateCruiseControl(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -184,11 +184,12 @@ public class CruiseControl {
                         case PROPERTY_CRUISE_CONTROL: return cruiseControl.update(p);
                         case PROPERTY_TARGET_SPEED: return targetSpeed.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.cruiseControl.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -238,7 +239,7 @@ public class CruiseControl {
             return accTargetSpeed;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

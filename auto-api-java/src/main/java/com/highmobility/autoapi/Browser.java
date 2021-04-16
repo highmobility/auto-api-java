@@ -58,16 +58,17 @@ public class Browser {
             createBytes();
         }
     
-        LoadUrl(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        LoadUrl(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_URL) return url.update(p);
+                    
                     return null;
                 });
             }
             if (this.url.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }

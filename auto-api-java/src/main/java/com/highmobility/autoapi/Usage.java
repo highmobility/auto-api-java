@@ -539,7 +539,7 @@ public class Usage {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<DrivingModeActivationPeriod>> drivingModesActivationPeriodsBuilder = new ArrayList<>();

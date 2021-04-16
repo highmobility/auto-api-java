@@ -141,7 +141,7 @@ public class Capabilities {
             return false;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<SupportedCapability>> capabilitiesBuilder = new ArrayList<>();

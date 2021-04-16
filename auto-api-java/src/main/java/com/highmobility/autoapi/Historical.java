@@ -90,7 +90,7 @@ public class Historical {
             createBytes();
         }
     
-        RequestStates(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        RequestStates(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -99,11 +99,12 @@ public class Historical {
                         case PROPERTY_START_DATE: return startDate.update(p);
                         case PROPERTY_END_DATE: return endDate.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.capabilityID.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -145,7 +146,7 @@ public class Historical {
             createBytes();
         }
     
-        GetTrips(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetTrips(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -154,11 +155,12 @@ public class Historical {
                         case PROPERTY_START_DATE: return startDate.update(p);
                         case PROPERTY_END_DATE: return endDate.update(p);
                     }
+        
                     return null;
                 });
             }
             if ((capabilityID.getValue() == null || capabilityID.getValueComponent().getValueBytes().equals("006a") == false)) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -200,7 +202,7 @@ public class Historical {
             createBytes();
         }
     
-        GetChargingSessions(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        GetChargingSessions(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -209,11 +211,12 @@ public class Historical {
                         case PROPERTY_START_DATE: return startDate.update(p);
                         case PROPERTY_END_DATE: return endDate.update(p);
                     }
+        
                     return null;
                 });
             }
             if ((capabilityID.getValue() == null || capabilityID.getValueComponent().getValueBytes().equals("006d") == false)) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -231,7 +234,7 @@ public class Historical {
             return states;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<Command>> statesBuilder = new ArrayList<>();

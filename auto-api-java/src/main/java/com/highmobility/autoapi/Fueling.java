@@ -168,7 +168,7 @@ public class Fueling {
             createBytes();
         }
     
-        ControlGasFlap(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ControlGasFlap(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -176,11 +176,12 @@ public class Fueling {
                         case PROPERTY_GAS_FLAP_LOCK: return gasFlapLock.update(p);
                         case PROPERTY_GAS_FLAP_POSITION: return gasFlapPosition.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.gasFlapLock.getValue() == null && this.gasFlapPosition.getValue() == null) {
-                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(optionalPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -206,7 +207,7 @@ public class Fueling {
             return gasFlapPosition;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

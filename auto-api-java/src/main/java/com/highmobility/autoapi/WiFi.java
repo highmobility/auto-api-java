@@ -181,7 +181,7 @@ public class WiFi {
             createBytes();
         }
     
-        ConnectToNetwork(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ConnectToNetwork(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -190,12 +190,13 @@ public class WiFi {
                         case PROPERTY_NETWORK_SECURITY: return networkSecurity.update(p);
                         case PROPERTY_PASSWORD: return password.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.networkSSID.getValue() == null ||
                 this.networkSecurity.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -225,16 +226,17 @@ public class WiFi {
             createBytes();
         }
     
-        ForgetNetwork(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ForgetNetwork(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_NETWORK_SSID) return networkSSID.update(p);
+                    
                     return null;
                 });
             }
             if (this.networkSSID.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -264,16 +266,17 @@ public class WiFi {
             createBytes();
         }
     
-        EnableDisableWiFi(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        EnableDisableWiFi(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    
                     return null;
                 });
             }
             if (this.status.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -315,7 +318,7 @@ public class WiFi {
             return networkSecurity;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

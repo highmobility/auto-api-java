@@ -69,7 +69,7 @@ public class MultiCommand {
             createBytes();
         }
     
-        MultiCommandCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        MultiCommandCommand(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<Command>> multiCommandsBuilder = new ArrayList<>();
@@ -81,13 +81,14 @@ public class MultiCommand {
                         multiCommandsBuilder.add(multiCommand);
                         return multiCommand;
                     }
+                    
                     return null;
                 });
             }
         
             multiCommands = multiCommandsBuilder;
             if (this.multiCommands.size() == 0) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -105,7 +106,7 @@ public class MultiCommand {
             return multiStates;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<Command>> multiStatesBuilder = new ArrayList<>();

@@ -336,7 +336,7 @@ public class Race {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<Acceleration>> accelerationsBuilder = new ArrayList<>();

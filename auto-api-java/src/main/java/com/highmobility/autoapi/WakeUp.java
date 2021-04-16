@@ -56,16 +56,17 @@ public class WakeUp {
             createBytes();
         }
     
-        WakeUpCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        WakeUpCommand(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    
                     return null;
                 });
             }
             if ((status.getValue() == null || status.getValueComponent().getValueBytes().equals("00") == false)) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }

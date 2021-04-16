@@ -406,12 +406,7 @@ public class Property<V> extends Bytes {
     }
 
     public boolean isUniversalProperty() {
-        byte propertyIdentifier = getPropertyIdentifier();
-        return propertyIdentifier == Command.SIGNATURE_IDENTIFIER ||
-                propertyIdentifier == Command.NONCE_IDENTIFIER ||
-                propertyIdentifier == Command.TIMESTAMP_IDENTIFIER ||
-                propertyIdentifier == Command.VIN_IDENTIFIER ||
-                propertyIdentifier == Command.BRAND_IDENTIFIER;
+        return Command.universalPropertyIds.contains(getPropertyIdentifier());
     }
 
     public void printFailedToParse(Exception e, Bytes component) {
@@ -420,7 +415,7 @@ public class Property<V> extends Bytes {
         String exceptionString = (e != null ?
                 (" | " + e.getClass().getSimpleName() + ": " + e.getMessage()) : "");
 
-        getLogger().error(String.format("Failed to parse property: " + toString() + componentString + exceptionString + "\n%s", e));
+        getLogger().warn(String.format("Failed to parse property: " + toString() + componentString + exceptionString));
     }
 
     // MARK: ctor helpers

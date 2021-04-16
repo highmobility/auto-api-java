@@ -70,7 +70,7 @@ public class Messaging {
             createBytes();
         }
     
-        MessageReceived(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        MessageReceived(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -78,11 +78,12 @@ public class Messaging {
                         case PROPERTY_TEXT: return text.update(p);
                         case PROPERTY_HANDLE: return handle.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.text.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -108,7 +109,7 @@ public class Messaging {
             return handle;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

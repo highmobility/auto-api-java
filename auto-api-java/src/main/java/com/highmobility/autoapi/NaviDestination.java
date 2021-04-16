@@ -173,7 +173,7 @@ public class NaviDestination {
             createBytes();
         }
     
-        SetNaviDestination(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetNaviDestination(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -181,11 +181,12 @@ public class NaviDestination {
                         case PROPERTY_COORDINATES: return coordinates.update(p);
                         case PROPERTY_DESTINATION_NAME: return destinationName.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.coordinates.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -243,7 +244,7 @@ public class NaviDestination {
             return distanceToDestination;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

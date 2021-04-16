@@ -240,7 +240,7 @@ public class Adas {
             return blindSpotWarningSystem;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<LaneKeepAssistState>> laneKeepAssistsStatesBuilder = new ArrayList<>();

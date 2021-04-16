@@ -23,9 +23,35 @@
  */
 package com.highmobility.autoapi;
 
-public class NoPropertiesException extends Exception {
+import com.highmobility.utils.ByteUtils;
 
-    public NoPropertiesException(String description) {
+/**
+ * This exception can be thrown from commands, and is normal when Vehicle side is trying to parse the
+ * correct setter. There is either wrong data in the properties or some of the properties are not
+ * expected.
+ */
+public class PropertyParseException extends Exception {
+    private ErrorCode code;
+
+    public ErrorCode getCode() {
+        return code;
+    }
+
+    enum ErrorCode {SETTER_SUPERFLUOUS_PROPERTY}
+
+    public PropertyParseException(String description) {
         super(description);
+    }
+
+    public PropertyParseException(ErrorCode code, Class command, Byte propertyId) {
+        super(superfluousPropertyErrorMessage(command, propertyId));
+        this.code = code;
+    }
+
+    private static String superfluousPropertyErrorMessage(Class command, Byte propertyId) {
+        return String.format("Superfluous property %s for %s",
+                ByteUtils.hexFromByte(propertyId),
+                command.getSimpleName()
+        );
     }
 }

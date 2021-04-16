@@ -213,16 +213,17 @@ public class Charging {
             createBytes();
         }
     
-        StartStopCharging(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        StartStopCharging(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    
                     return null;
                 });
             }
             if (this.status.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -252,16 +253,17 @@ public class Charging {
             createBytes();
         }
     
-        SetChargeLimit(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetChargeLimit(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CHARGE_LIMIT) return chargeLimit.update(p);
+                    
                     return null;
                 });
             }
             if (this.chargeLimit.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -291,16 +293,17 @@ public class Charging {
             createBytes();
         }
     
-        OpenCloseChargingPort(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        OpenCloseChargingPort(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CHARGE_PORT_STATE) return chargePortState.update(p);
+                    
                     return null;
                 });
             }
             if (this.chargePortState.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -332,16 +335,17 @@ public class Charging {
             createBytes();
         }
     
-        SetChargeMode(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetChargeMode(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CHARGE_MODE) return chargeMode.update(p);
+                    
                     return null;
                 });
             }
             if (this.chargeMode.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -379,7 +383,7 @@ public class Charging {
             createBytes();
         }
     
-        SetChargingTimers(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetChargingTimers(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<Timer>> timersBuilder = new ArrayList<>();
@@ -391,13 +395,14 @@ public class Charging {
                         timersBuilder.add(timer);
                         return timer;
                     }
+                    
                     return null;
                 });
             }
         
             timers = timersBuilder;
             if (this.timers.size() == 0) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -435,7 +440,7 @@ public class Charging {
             createBytes();
         }
     
-        SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
@@ -447,13 +452,14 @@ public class Charging {
                         reductionTimesBuilder.add(reductionTime);
                         return reductionTime;
                     }
+                    
                     return null;
                 });
             }
         
             reductionTimes = reductionTimesBuilder;
             if (this.reductionTimes.size() == 0) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -737,7 +743,7 @@ public class Charging {
             return batteryCapacity;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<DepartureTime>> departureTimesBuilder = new ArrayList<>();

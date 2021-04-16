@@ -184,7 +184,7 @@ public class Seats {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<PersonDetected>> personsDetectedBuilder = new ArrayList<>();

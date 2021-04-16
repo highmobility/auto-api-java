@@ -88,7 +88,7 @@ public class Notifications {
             createBytes();
         }
     
-        Notification(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        Notification(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
@@ -103,13 +103,14 @@ public class Notifications {
                             return actionItem;
                         }
                     }
+        
                     return null;
                 });
             }
         
             actionItems = actionItemsBuilder;
             if (this.text.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -139,16 +140,17 @@ public class Notifications {
             createBytes();
         }
     
-        Action(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        Action(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_ACTIVATED_ACTION) return activatedAction.update(p);
+                    
                     return null;
                 });
             }
             if (this.activatedAction.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -169,16 +171,17 @@ public class Notifications {
             createBytes();
         }
     
-        ClearNotification(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ClearNotification(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CLEAR) return clear.update(p);
+                    
                     return null;
                 });
             }
             if ((clear.getValue() == null || clear.getValueComponent().getValueBytes().equals("00") == false)) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -220,7 +223,7 @@ public class Notifications {
             return clear;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();

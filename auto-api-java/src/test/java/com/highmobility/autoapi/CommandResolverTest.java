@@ -23,6 +23,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
 import org.junit.jupiter.api.Test;
@@ -61,12 +62,10 @@ public class CommandResolverTest extends BaseTest {
     }
 
     @Test public void handlesUnknownBytes() {
-        // For unknown command bytes the bytes are just returned as a Command
-        Bytes randomBytes = new Bytes(AUTO_API_VERSION + "676767" + "676767676767676767");
-        errorLogExpected(() -> {
-            Command command = CommandResolver.resolve(randomBytes);
-            assertTrue(command instanceof Command);
-            assertTrue(command.equals(randomBytes));
-        });
+        // For unknown bytes the bytes are returned as a the base Command class. No error is printed
+        Bytes randomBytes = new Bytes(ByteUtils.hexFromByte(AUTO_API_VERSION) + "676767" + "676767676767676767");
+        Command command = CommandResolver.resolve(randomBytes);
+        assertTrue(command instanceof Command);
+        assertTrue(command.equals(randomBytes));
     }
 }

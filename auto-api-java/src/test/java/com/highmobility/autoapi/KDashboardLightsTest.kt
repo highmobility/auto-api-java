@@ -126,6 +126,109 @@ class KDashboardLightsTest : BaseTest() {
             "0100050100025a00" +  // Tire warning system error is off
             "0100050100025b00" +  // Battery low warning is off
             "0100050100025c00" +  // Brake fluid warning is off
+            "0100050100025d00" +  // Active hood fault is off
+            "0100050100025e00" +  // Active spoiler fault is off
+            "0100050100025f00" +  // Adjust tire pressure is off
+            "0100050100026000" +  // Steering lock alert is off
+            "0100050100026100" +  // Anti pollution failure engine start impossible is off
+            "0100050100026200" +  // Anti pollution system failure is off
+            "0100050100026300" +  // Anti reverse system failing is off
+            "0100050100026400" +  // Auto parking brake is off
+            "0100050100026500" +  // Automatic braking deactive is off
+            "0100050100026600" +  // Automatic braking system fault is off
+            "0100050100026700" +  // Automatic lights settings failure is off
+            "0100050100026800" +  // Keyfob battery alarm is off
+            "0100050100026900" +  // Trunk open is off
+            "0100050100026a00" +  // Check reversing lamp is off
+            "0100050100026b00" +  // Crossing line system alert failure is off
+            "0100050100026c00" +  // Dipped beam headlamps front left failure is off
+            "0100050100026d00" +  // Dipped beam headlamps front right failure is off
+            "0100050100026e00" +  // Directional headlamps failure is off
+            "0100050100026f00" +  // Directional light failure is off
+            "0100050100027000" +  // Dsg failing is off
+            "0100050100027100" +  // Electric mode not available is off
+            "0100050100027200" +  // Electronic lock failure is off
+            "0100050100027300" +  // Engine control system failure is off
+            "0100050100027400" +  // Engine oil pressure alert is off
+            "0100050100027500" +  // Esp failure is off
+            "0100050100027600" +  // Excessive oil temperature is off
+            "0100050100027700" +  // Tire front left flat is off
+            "0100050100027800" +  // Tire front right flat is off
+            "0100050100027900" +  // Tire rear left flat is off
+            "0100050100027a00" +  // Tire rear right flat is off
+            "0100050100027b00" +  // Fog light front left failure is off
+            "0100050100027c00" +  // Fog light front right failure is off
+            "0100050100027d00" +  // Fog light rear left failure is off
+            "0100050100027e00" +  // Fog light rear right failure is off
+            "0100050100027f00" +  // Fog light front fault is off
+            "0100050100028000" +  // Door front left open is off
+            "0100050100028100" +  // Door front left open high speed is off
+            "0100050100028200" +  // Tire front left not monitored is off
+            "0100050100028300" +  // Door front right open is off
+            "0100050100028400" +  // Door front right open high speed is off
+            "0100050100028500" +  // Tire front right not monitored is off
+            "0100050100028600" +  // Headlights left failure is off
+            "0100050100028700" +  // Headlights right failure is off
+            "0100050100028800" +  // Hybrid system fault is off
+            "0100050100028900" +  // Hybrid system fault repaired vehicle is off
+            "0100050100028a00" +  // Hydraulic pressure or brake fuild insufficient is off
+            "0100050100028b00" +  // Lane departure fault is off
+            "0100050100028c00" +  // Limited visibility aids camera is off
+            "0100050100028d00" +  // Tire pressure low is off
+            "0100050100028e00" +  // Maintenance date exceeded is off
+            "0100050100028f00" +  // Maintenance odometer exceeded is off
+            "0100050100029000" +  // Other failing system is off
+            "0100050100029100" +  // Parking brake control failing is off
+            "0100050100029200" +  // Parking space measuring system failure is off
+            "0100050100029300" +  // Place gear to parking is off
+            "0100050100029400" +  // Power steering assitance failure is off
+            "0100050100029500" +  // Power steering failure is off
+            "0100050100029600" +  // Preheating deactivated battery too low is off
+            "0100050100029700" +  // Preheating deactivated fuel level too low is off
+            "0100050100029800" +  // Preheating deactivated battery set the clock is off
+            "0100050100029900" +  // Fog light rear fault is off
+            "0100050100029a00" +  // Door rear left open is off
+            "0100050100029b00" +  // Door rear left open high speed is off
+            "0100050100029c00" +  // Tire rear left not monitored is off
+            "0100050100029d00" +  // Door rear right open is off
+            "0100050100029e00" +  // Door rear right open high speed is off
+            "0100050100029f00" +  // Tire rear right not monitored is off
+            "010005010002a000" +  // Screen rear open is off
+            "010005010002a100" +  // Retractable roof mechanism fault is off
+            "010005010002a200" +  // Reverse light left failure is off
+            "010005010002a300" +  // Reverse light right failure is off
+            "010005010002a400" +  // Risk of ice is off
+            "010005010002a500" +  // Roof operation impossible apply parking break is off
+            "010005010002a600" +  // Roof operation impossible apply start engine is off
+            "010005010002a700" +  // Roof operation impossible temperature too high is off
+            "010005010002a800" +  // Seatbelt passenger front right unbuckled is off
+            "010005010002a900" +  // Seatbelt passenger rear left unbuckled is off
+            "010005010002aa00" +  // Seatbelt passenger rear center unbuckled is off
+            "010005010002ab00" +  // Seatbelt passenger rear right unbuckled is off
+            "010005010002ac00" +  // Battery secondary low is off
+            "010005010002ad00" +  // Shock sensor failing is off
+            "010005010002ae00" +  // Side lights front left failure is off
+            "010005010002af00" +  // Side lights front right failure is off
+            "010005010002b000" +  // Side lights rear left failure is off
+            "010005010002b100" +  // Side lights rear right failure is off
+            "010005010002b200" +  // Spare wheel fitter driving aids deactivated is off
+            "010005010002b300" +  // Speed control failure is off
+            "010005010002b400" +  // Stop light left failure is off
+            "010005010002b500" +  // Stop light right failure is off
+            "010005010002b600" +  // Suspension failure is off
+            "010005010002b700" +  // Suspension failure reduce speed is off
+            "010005010002b800" +  // Suspension fault limited to 90kmh is off
+            "010005010002b900" +  // Tire pressure sensor failure is off
+            "010005010002ba00" +  // Trunk open high speed is off
+            "010005010002bb00" +  // Trunk window open is off
+            "010005010002bc00" +  // Turn signal front left failure is off
+            "010005010002bd00" +  // Turn signal front right failure is off
+            "010005010002be00" +  // Turn signal rear left failure is off
+            "010005010002bf00" +  // Turn signal rear right failure is off
+            "010005010002c000" +  // Tire under inflation is off
+            "010005010002c100" +  // Wheel pressure fault is off
+            "010005010002c200" +  // Oil change warning is off
+            "010005010002c300" +  // Inspection warning is off
             "02000401000101" +  // Right turn signal`s bulb has failed.
             "02000401000105" // A high beam has failed.
     )
@@ -232,6 +335,109 @@ class KDashboardLightsTest : BaseTest() {
         builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_WARNING_SYSTEM_ERROR, OnOffState.OFF)))
         builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BATTERY_LOW_WARNING, OnOffState.OFF)))
         builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BRAKE_FLUID_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ACTIVE_HOOD_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ACTIVE_SPOILER_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ADJUST_TIRE_PRESSURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.STEERING_LOCK_ALERT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ANTI_POLLUTION_FAILURE_ENGINE_START_IMPOSSIBLE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ANTI_POLLUTION_SYSTEM_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ANTI_REVERSE_SYSTEM_FAILING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.AUTO_PARKING_BRAKE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.AUTOMATIC_BRAKING_DEACTIVE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.AUTOMATIC_BRAKING_SYSTEM_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.AUTOMATIC_LIGHTS_SETTINGS_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.KEYFOB_BATTERY_ALARM, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRUNK_OPEN, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.CHECK_REVERSING_LAMP, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.CROSSING_LINE_SYSTEM_ALERT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIPPED_BEAM_HEADLAMPS_FRONT_LEFT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIPPED_BEAM_HEADLAMPS_FRONT_RIGHT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIRECTIONAL_HEADLAMPS_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DIRECTIONAL_LIGHT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DSG_FAILING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ELECTRIC_MODE_NOT_AVAILABLE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ELECTRONIC_LOCK_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_CONTROL_SYSTEM_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ENGINE_OIL_PRESSURE_ALERT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ESP_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.EXCESSIVE_OIL_TEMPERATURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_FRONT_LEFT_FLAT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_FRONT_RIGHT_FLAT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_REAR_LEFT_FLAT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_REAR_RIGHT_FLAT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FOG_LIGHT_FRONT_LEFT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FOG_LIGHT_FRONT_RIGHT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FOG_LIGHT_REAR_LEFT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FOG_LIGHT_REAR_RIGHT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FOG_LIGHT_FRONT_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DOOR_FRONT_LEFT_OPEN, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DOOR_FRONT_LEFT_OPEN_HIGH_SPEED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_FRONT_LEFT_NOT_MONITORED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DOOR_FRONT_RIGHT_OPEN, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DOOR_FRONT_RIGHT_OPEN_HIGH_SPEED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_FRONT_RIGHT_NOT_MONITORED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HEADLIGHTS_LEFT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HEADLIGHTS_RIGHT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HYBRID_SYSTEM_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HYBRID_SYSTEM_FAULT_REPAIRED_VEHICLE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.HYDRAULIC_PRESSURE_OR_BRAKE_FUILD_INSUFFICIENT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.LANE_DEPARTURE_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.LIMITED_VISIBILITY_AIDS_CAMERA, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_PRESSURE_LOW, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.MAINTENANCE_DATE_EXCEEDED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.MAINTENANCE_ODOMETER_EXCEEDED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.OTHER_FAILING_SYSTEM, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PARKING_BRAKE_CONTROL_FAILING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PARKING_SPACE_MEASURING_SYSTEM_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PLACE_GEAR_TO_PARKING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.POWER_STEERING_ASSITANCE_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.POWER_STEERING_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PREHEATING_DEACTIVATED_BATTERY_TOO_LOW, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PREHEATING_DEACTIVATED_FUEL_LEVEL_TOO_LOW, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.PREHEATING_DEACTIVATED_BATTERY_SET_THE_CLOCK, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.FOG_LIGHT_REAR_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DOOR_REAR_LEFT_OPEN, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DOOR_REAR_LEFT_OPEN_HIGH_SPEED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_REAR_LEFT_NOT_MONITORED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DOOR_REAR_RIGHT_OPEN, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.DOOR_REAR_RIGHT_OPEN_HIGH_SPEED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_REAR_RIGHT_NOT_MONITORED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SCREEN_REAR_OPEN, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.RETRACTABLE_ROOF_MECHANISM_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.REVERSE_LIGHT_LEFT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.REVERSE_LIGHT_RIGHT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.RISK_OF_ICE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ROOF_OPERATION_IMPOSSIBLE_APPLY_PARKING_BREAK, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ROOF_OPERATION_IMPOSSIBLE_APPLY_START_ENGINE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.ROOF_OPERATION_IMPOSSIBLE_TEMPERATURE_TOO_HIGH, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SEATBELT_PASSENGER_FRONT_RIGHT_UNBUCKLED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SEATBELT_PASSENGER_REAR_LEFT_UNBUCKLED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SEATBELT_PASSENGER_REAR_CENTER_UNBUCKLED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SEATBELT_PASSENGER_REAR_RIGHT_UNBUCKLED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.BATTERY_SECONDARY_LOW, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SHOCK_SENSOR_FAILING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SIDE_LIGHTS_FRONT_LEFT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SIDE_LIGHTS_FRONT_RIGHT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SIDE_LIGHTS_REAR_LEFT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SIDE_LIGHTS_REAR_RIGHT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SPARE_WHEEL_FITTER_DRIVING_AIDS_DEACTIVATED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SPEED_CONTROL_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.STOP_LIGHT_LEFT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.STOP_LIGHT_RIGHT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SUSPENSION_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SUSPENSION_FAILURE_REDUCE_SPEED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.SUSPENSION_FAULT_LIMITED_TO_90KMH, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_PRESSURE_SENSOR_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRUNK_OPEN_HIGH_SPEED, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TRUNK_WINDOW_OPEN, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TURN_SIGNAL_FRONT_LEFT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TURN_SIGNAL_FRONT_RIGHT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TURN_SIGNAL_REAR_LEFT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TURN_SIGNAL_REAR_RIGHT_FAILURE, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.TIRE_UNDER_INFLATION, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.WHEEL_PRESSURE_FAULT, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.OIL_CHANGE_WARNING, OnOffState.OFF)))
+        builder.addDashboardLight(Property(DashboardLight(DashboardLight.Name.INSPECTION_WARNING, OnOffState.OFF)))
         builder.addBulbFailure(Property(DashboardLights.BulbFailures.TURN_SIGNAL_RIGHT))
         builder.addBulbFailure(Property(DashboardLights.BulbFailures.HIGH_BEAM))
         testState(builder.build())
@@ -425,6 +631,212 @@ class KDashboardLightsTest : BaseTest() {
         assertTrue(state.dashboardLights[91].value?.state == OnOffState.OFF)
         assertTrue(state.dashboardLights[92].value?.name == DashboardLight.Name.BRAKE_FLUID_WARNING)
         assertTrue(state.dashboardLights[92].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[93].value?.name == DashboardLight.Name.ACTIVE_HOOD_FAULT)
+        assertTrue(state.dashboardLights[93].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[94].value?.name == DashboardLight.Name.ACTIVE_SPOILER_FAULT)
+        assertTrue(state.dashboardLights[94].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[95].value?.name == DashboardLight.Name.ADJUST_TIRE_PRESSURE)
+        assertTrue(state.dashboardLights[95].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[96].value?.name == DashboardLight.Name.STEERING_LOCK_ALERT)
+        assertTrue(state.dashboardLights[96].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[97].value?.name == DashboardLight.Name.ANTI_POLLUTION_FAILURE_ENGINE_START_IMPOSSIBLE)
+        assertTrue(state.dashboardLights[97].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[98].value?.name == DashboardLight.Name.ANTI_POLLUTION_SYSTEM_FAILURE)
+        assertTrue(state.dashboardLights[98].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[99].value?.name == DashboardLight.Name.ANTI_REVERSE_SYSTEM_FAILING)
+        assertTrue(state.dashboardLights[99].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[100].value?.name == DashboardLight.Name.AUTO_PARKING_BRAKE)
+        assertTrue(state.dashboardLights[100].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[101].value?.name == DashboardLight.Name.AUTOMATIC_BRAKING_DEACTIVE)
+        assertTrue(state.dashboardLights[101].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[102].value?.name == DashboardLight.Name.AUTOMATIC_BRAKING_SYSTEM_FAULT)
+        assertTrue(state.dashboardLights[102].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[103].value?.name == DashboardLight.Name.AUTOMATIC_LIGHTS_SETTINGS_FAILURE)
+        assertTrue(state.dashboardLights[103].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[104].value?.name == DashboardLight.Name.KEYFOB_BATTERY_ALARM)
+        assertTrue(state.dashboardLights[104].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[105].value?.name == DashboardLight.Name.TRUNK_OPEN)
+        assertTrue(state.dashboardLights[105].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[106].value?.name == DashboardLight.Name.CHECK_REVERSING_LAMP)
+        assertTrue(state.dashboardLights[106].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[107].value?.name == DashboardLight.Name.CROSSING_LINE_SYSTEM_ALERT_FAILURE)
+        assertTrue(state.dashboardLights[107].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[108].value?.name == DashboardLight.Name.DIPPED_BEAM_HEADLAMPS_FRONT_LEFT_FAILURE)
+        assertTrue(state.dashboardLights[108].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[109].value?.name == DashboardLight.Name.DIPPED_BEAM_HEADLAMPS_FRONT_RIGHT_FAILURE)
+        assertTrue(state.dashboardLights[109].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[110].value?.name == DashboardLight.Name.DIRECTIONAL_HEADLAMPS_FAILURE)
+        assertTrue(state.dashboardLights[110].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[111].value?.name == DashboardLight.Name.DIRECTIONAL_LIGHT_FAILURE)
+        assertTrue(state.dashboardLights[111].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[112].value?.name == DashboardLight.Name.DSG_FAILING)
+        assertTrue(state.dashboardLights[112].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[113].value?.name == DashboardLight.Name.ELECTRIC_MODE_NOT_AVAILABLE)
+        assertTrue(state.dashboardLights[113].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[114].value?.name == DashboardLight.Name.ELECTRONIC_LOCK_FAILURE)
+        assertTrue(state.dashboardLights[114].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[115].value?.name == DashboardLight.Name.ENGINE_CONTROL_SYSTEM_FAILURE)
+        assertTrue(state.dashboardLights[115].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[116].value?.name == DashboardLight.Name.ENGINE_OIL_PRESSURE_ALERT)
+        assertTrue(state.dashboardLights[116].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[117].value?.name == DashboardLight.Name.ESP_FAILURE)
+        assertTrue(state.dashboardLights[117].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[118].value?.name == DashboardLight.Name.EXCESSIVE_OIL_TEMPERATURE)
+        assertTrue(state.dashboardLights[118].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[119].value?.name == DashboardLight.Name.TIRE_FRONT_LEFT_FLAT)
+        assertTrue(state.dashboardLights[119].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[120].value?.name == DashboardLight.Name.TIRE_FRONT_RIGHT_FLAT)
+        assertTrue(state.dashboardLights[120].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[121].value?.name == DashboardLight.Name.TIRE_REAR_LEFT_FLAT)
+        assertTrue(state.dashboardLights[121].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[122].value?.name == DashboardLight.Name.TIRE_REAR_RIGHT_FLAT)
+        assertTrue(state.dashboardLights[122].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[123].value?.name == DashboardLight.Name.FOG_LIGHT_FRONT_LEFT_FAILURE)
+        assertTrue(state.dashboardLights[123].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[124].value?.name == DashboardLight.Name.FOG_LIGHT_FRONT_RIGHT_FAILURE)
+        assertTrue(state.dashboardLights[124].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[125].value?.name == DashboardLight.Name.FOG_LIGHT_REAR_LEFT_FAILURE)
+        assertTrue(state.dashboardLights[125].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[126].value?.name == DashboardLight.Name.FOG_LIGHT_REAR_RIGHT_FAILURE)
+        assertTrue(state.dashboardLights[126].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[127].value?.name == DashboardLight.Name.FOG_LIGHT_FRONT_FAULT)
+        assertTrue(state.dashboardLights[127].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[128].value?.name == DashboardLight.Name.DOOR_FRONT_LEFT_OPEN)
+        assertTrue(state.dashboardLights[128].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[129].value?.name == DashboardLight.Name.DOOR_FRONT_LEFT_OPEN_HIGH_SPEED)
+        assertTrue(state.dashboardLights[129].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[130].value?.name == DashboardLight.Name.TIRE_FRONT_LEFT_NOT_MONITORED)
+        assertTrue(state.dashboardLights[130].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[131].value?.name == DashboardLight.Name.DOOR_FRONT_RIGHT_OPEN)
+        assertTrue(state.dashboardLights[131].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[132].value?.name == DashboardLight.Name.DOOR_FRONT_RIGHT_OPEN_HIGH_SPEED)
+        assertTrue(state.dashboardLights[132].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[133].value?.name == DashboardLight.Name.TIRE_FRONT_RIGHT_NOT_MONITORED)
+        assertTrue(state.dashboardLights[133].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[134].value?.name == DashboardLight.Name.HEADLIGHTS_LEFT_FAILURE)
+        assertTrue(state.dashboardLights[134].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[135].value?.name == DashboardLight.Name.HEADLIGHTS_RIGHT_FAILURE)
+        assertTrue(state.dashboardLights[135].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[136].value?.name == DashboardLight.Name.HYBRID_SYSTEM_FAULT)
+        assertTrue(state.dashboardLights[136].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[137].value?.name == DashboardLight.Name.HYBRID_SYSTEM_FAULT_REPAIRED_VEHICLE)
+        assertTrue(state.dashboardLights[137].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[138].value?.name == DashboardLight.Name.HYDRAULIC_PRESSURE_OR_BRAKE_FUILD_INSUFFICIENT)
+        assertTrue(state.dashboardLights[138].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[139].value?.name == DashboardLight.Name.LANE_DEPARTURE_FAULT)
+        assertTrue(state.dashboardLights[139].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[140].value?.name == DashboardLight.Name.LIMITED_VISIBILITY_AIDS_CAMERA)
+        assertTrue(state.dashboardLights[140].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[141].value?.name == DashboardLight.Name.TIRE_PRESSURE_LOW)
+        assertTrue(state.dashboardLights[141].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[142].value?.name == DashboardLight.Name.MAINTENANCE_DATE_EXCEEDED)
+        assertTrue(state.dashboardLights[142].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[143].value?.name == DashboardLight.Name.MAINTENANCE_ODOMETER_EXCEEDED)
+        assertTrue(state.dashboardLights[143].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[144].value?.name == DashboardLight.Name.OTHER_FAILING_SYSTEM)
+        assertTrue(state.dashboardLights[144].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[145].value?.name == DashboardLight.Name.PARKING_BRAKE_CONTROL_FAILING)
+        assertTrue(state.dashboardLights[145].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[146].value?.name == DashboardLight.Name.PARKING_SPACE_MEASURING_SYSTEM_FAILURE)
+        assertTrue(state.dashboardLights[146].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[147].value?.name == DashboardLight.Name.PLACE_GEAR_TO_PARKING)
+        assertTrue(state.dashboardLights[147].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[148].value?.name == DashboardLight.Name.POWER_STEERING_ASSITANCE_FAILURE)
+        assertTrue(state.dashboardLights[148].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[149].value?.name == DashboardLight.Name.POWER_STEERING_FAILURE)
+        assertTrue(state.dashboardLights[149].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[150].value?.name == DashboardLight.Name.PREHEATING_DEACTIVATED_BATTERY_TOO_LOW)
+        assertTrue(state.dashboardLights[150].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[151].value?.name == DashboardLight.Name.PREHEATING_DEACTIVATED_FUEL_LEVEL_TOO_LOW)
+        assertTrue(state.dashboardLights[151].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[152].value?.name == DashboardLight.Name.PREHEATING_DEACTIVATED_BATTERY_SET_THE_CLOCK)
+        assertTrue(state.dashboardLights[152].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[153].value?.name == DashboardLight.Name.FOG_LIGHT_REAR_FAULT)
+        assertTrue(state.dashboardLights[153].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[154].value?.name == DashboardLight.Name.DOOR_REAR_LEFT_OPEN)
+        assertTrue(state.dashboardLights[154].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[155].value?.name == DashboardLight.Name.DOOR_REAR_LEFT_OPEN_HIGH_SPEED)
+        assertTrue(state.dashboardLights[155].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[156].value?.name == DashboardLight.Name.TIRE_REAR_LEFT_NOT_MONITORED)
+        assertTrue(state.dashboardLights[156].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[157].value?.name == DashboardLight.Name.DOOR_REAR_RIGHT_OPEN)
+        assertTrue(state.dashboardLights[157].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[158].value?.name == DashboardLight.Name.DOOR_REAR_RIGHT_OPEN_HIGH_SPEED)
+        assertTrue(state.dashboardLights[158].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[159].value?.name == DashboardLight.Name.TIRE_REAR_RIGHT_NOT_MONITORED)
+        assertTrue(state.dashboardLights[159].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[160].value?.name == DashboardLight.Name.SCREEN_REAR_OPEN)
+        assertTrue(state.dashboardLights[160].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[161].value?.name == DashboardLight.Name.RETRACTABLE_ROOF_MECHANISM_FAULT)
+        assertTrue(state.dashboardLights[161].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[162].value?.name == DashboardLight.Name.REVERSE_LIGHT_LEFT_FAILURE)
+        assertTrue(state.dashboardLights[162].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[163].value?.name == DashboardLight.Name.REVERSE_LIGHT_RIGHT_FAILURE)
+        assertTrue(state.dashboardLights[163].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[164].value?.name == DashboardLight.Name.RISK_OF_ICE)
+        assertTrue(state.dashboardLights[164].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[165].value?.name == DashboardLight.Name.ROOF_OPERATION_IMPOSSIBLE_APPLY_PARKING_BREAK)
+        assertTrue(state.dashboardLights[165].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[166].value?.name == DashboardLight.Name.ROOF_OPERATION_IMPOSSIBLE_APPLY_START_ENGINE)
+        assertTrue(state.dashboardLights[166].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[167].value?.name == DashboardLight.Name.ROOF_OPERATION_IMPOSSIBLE_TEMPERATURE_TOO_HIGH)
+        assertTrue(state.dashboardLights[167].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[168].value?.name == DashboardLight.Name.SEATBELT_PASSENGER_FRONT_RIGHT_UNBUCKLED)
+        assertTrue(state.dashboardLights[168].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[169].value?.name == DashboardLight.Name.SEATBELT_PASSENGER_REAR_LEFT_UNBUCKLED)
+        assertTrue(state.dashboardLights[169].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[170].value?.name == DashboardLight.Name.SEATBELT_PASSENGER_REAR_CENTER_UNBUCKLED)
+        assertTrue(state.dashboardLights[170].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[171].value?.name == DashboardLight.Name.SEATBELT_PASSENGER_REAR_RIGHT_UNBUCKLED)
+        assertTrue(state.dashboardLights[171].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[172].value?.name == DashboardLight.Name.BATTERY_SECONDARY_LOW)
+        assertTrue(state.dashboardLights[172].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[173].value?.name == DashboardLight.Name.SHOCK_SENSOR_FAILING)
+        assertTrue(state.dashboardLights[173].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[174].value?.name == DashboardLight.Name.SIDE_LIGHTS_FRONT_LEFT_FAILURE)
+        assertTrue(state.dashboardLights[174].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[175].value?.name == DashboardLight.Name.SIDE_LIGHTS_FRONT_RIGHT_FAILURE)
+        assertTrue(state.dashboardLights[175].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[176].value?.name == DashboardLight.Name.SIDE_LIGHTS_REAR_LEFT_FAILURE)
+        assertTrue(state.dashboardLights[176].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[177].value?.name == DashboardLight.Name.SIDE_LIGHTS_REAR_RIGHT_FAILURE)
+        assertTrue(state.dashboardLights[177].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[178].value?.name == DashboardLight.Name.SPARE_WHEEL_FITTER_DRIVING_AIDS_DEACTIVATED)
+        assertTrue(state.dashboardLights[178].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[179].value?.name == DashboardLight.Name.SPEED_CONTROL_FAILURE)
+        assertTrue(state.dashboardLights[179].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[180].value?.name == DashboardLight.Name.STOP_LIGHT_LEFT_FAILURE)
+        assertTrue(state.dashboardLights[180].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[181].value?.name == DashboardLight.Name.STOP_LIGHT_RIGHT_FAILURE)
+        assertTrue(state.dashboardLights[181].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[182].value?.name == DashboardLight.Name.SUSPENSION_FAILURE)
+        assertTrue(state.dashboardLights[182].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[183].value?.name == DashboardLight.Name.SUSPENSION_FAILURE_REDUCE_SPEED)
+        assertTrue(state.dashboardLights[183].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[184].value?.name == DashboardLight.Name.SUSPENSION_FAULT_LIMITED_TO_90KMH)
+        assertTrue(state.dashboardLights[184].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[185].value?.name == DashboardLight.Name.TIRE_PRESSURE_SENSOR_FAILURE)
+        assertTrue(state.dashboardLights[185].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[186].value?.name == DashboardLight.Name.TRUNK_OPEN_HIGH_SPEED)
+        assertTrue(state.dashboardLights[186].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[187].value?.name == DashboardLight.Name.TRUNK_WINDOW_OPEN)
+        assertTrue(state.dashboardLights[187].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[188].value?.name == DashboardLight.Name.TURN_SIGNAL_FRONT_LEFT_FAILURE)
+        assertTrue(state.dashboardLights[188].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[189].value?.name == DashboardLight.Name.TURN_SIGNAL_FRONT_RIGHT_FAILURE)
+        assertTrue(state.dashboardLights[189].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[190].value?.name == DashboardLight.Name.TURN_SIGNAL_REAR_LEFT_FAILURE)
+        assertTrue(state.dashboardLights[190].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[191].value?.name == DashboardLight.Name.TURN_SIGNAL_REAR_RIGHT_FAILURE)
+        assertTrue(state.dashboardLights[191].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[192].value?.name == DashboardLight.Name.TIRE_UNDER_INFLATION)
+        assertTrue(state.dashboardLights[192].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[193].value?.name == DashboardLight.Name.WHEEL_PRESSURE_FAULT)
+        assertTrue(state.dashboardLights[193].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[194].value?.name == DashboardLight.Name.OIL_CHANGE_WARNING)
+        assertTrue(state.dashboardLights[194].value?.state == OnOffState.OFF)
+        assertTrue(state.dashboardLights[195].value?.name == DashboardLight.Name.INSPECTION_WARNING)
+        assertTrue(state.dashboardLights[195].value?.state == OnOffState.OFF)
         assertTrue(state.bulbFailures[0].value == DashboardLights.BulbFailures.TURN_SIGNAL_RIGHT)
         assertTrue(state.bulbFailures[1].value == DashboardLights.BulbFailures.HIGH_BEAM)
     }

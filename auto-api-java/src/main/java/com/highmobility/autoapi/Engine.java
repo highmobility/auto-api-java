@@ -158,16 +158,17 @@ public class Engine {
             createBytes();
         }
     
-        TurnEngineOnOff(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        TurnEngineOnOff(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
+                    
                     return null;
                 });
             }
             if (this.status.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -197,16 +198,17 @@ public class Engine {
             createBytes();
         }
     
-        EnableDisableStartStop(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        EnableDisableStartStop(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_START_STOP_ENABLED) return startStopEnabled.update(p);
+                    
                     return null;
                 });
             }
             if (this.startStopEnabled.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -240,7 +242,7 @@ public class Engine {
             return startStopEnabled;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

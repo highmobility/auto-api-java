@@ -177,7 +177,7 @@ public class Climate {
             createBytes();
         }
     
-        ChangeStartingTimes(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ChangeStartingTimes(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
@@ -189,13 +189,14 @@ public class Climate {
                         hvacWeekdayStartingTimesBuilder.add(hvacWeekdayStartingTime);
                         return hvacWeekdayStartingTime;
                     }
+                    
                     return null;
                 });
             }
         
             hvacWeekdayStartingTimes = hvacWeekdayStartingTimesBuilder;
             if (this.hvacWeekdayStartingTimes.size() == 0) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -225,16 +226,17 @@ public class Climate {
             createBytes();
         }
     
-        StartStopHvac(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        StartStopHvac(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_HVAC_STATE) return hvacState.update(p);
+                    
                     return null;
                 });
             }
             if (this.hvacState.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -264,16 +266,17 @@ public class Climate {
             createBytes();
         }
     
-        StartStopDefogging(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        StartStopDefogging(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_DEFOGGING_STATE) return defoggingState.update(p);
+                    
                     return null;
                 });
             }
             if (this.defoggingState.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -303,16 +306,17 @@ public class Climate {
             createBytes();
         }
     
-        StartStopDefrosting(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        StartStopDefrosting(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_DEFROSTING_STATE) return defrostingState.update(p);
+                    
                     return null;
                 });
             }
             if (this.defrostingState.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -342,16 +346,17 @@ public class Climate {
             createBytes();
         }
     
-        StartStopIonising(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        StartStopIonising(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_IONISING_STATE) return ionisingState.update(p);
+                    
                     return null;
                 });
             }
             if (this.ionisingState.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -402,7 +407,7 @@ public class Climate {
             createBytes();
         }
     
-        SetTemperatureSettings(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetTemperatureSettings(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -411,11 +416,12 @@ public class Climate {
                         case PROPERTY_PASSENGER_TEMPERATURE_SETTING: return passengerTemperatureSetting.update(p);
                         case PROPERTY_REAR_TEMPERATURE_SETTING: return rearTemperatureSetting.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.driverTemperatureSetting.getValue() == null && this.passengerTemperatureSetting.getValue() == null && this.rearTemperatureSetting.getValue() == null) {
-                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(optionalPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -513,7 +519,7 @@ public class Climate {
             return rearTemperatureSetting;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();

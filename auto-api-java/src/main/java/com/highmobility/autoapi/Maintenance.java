@@ -310,7 +310,7 @@ public class Maintenance {
             return timeToNextOilService;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<ConditionBasedService>> conditionBasedServicesBuilder = new ArrayList<>();

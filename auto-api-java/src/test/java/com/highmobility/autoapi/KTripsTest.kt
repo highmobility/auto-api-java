@@ -66,6 +66,7 @@ class KTripsTest : BaseTest() {
             "10000401000101" +  // Driving event of harsh acceleration encountered
             "11000401000100" +  // Eco driving level is high
             "12000C010009000000000000000000" +  // Eco driving zero-threshold is set at 0.0
+            "12000C010009010000000000000000" +  // Eco driving one-threshold is set at 0.0
             "13000D01000A19024037666666666666" +  // Total fuel consumption during the trip was 23.4 l
             "14000D01000A19024004000000000000" +  // Since the last ignition the vehicle has consumed 2.5 l while ideling.
             "15000D01000A16014050d33333333333" // Maximum speed since last ignition on is 67.3km/h
@@ -112,6 +113,7 @@ class KTripsTest : BaseTest() {
         builder.setEvent(Property(Trips.Event.HARSH_ACCELERATION))
         builder.setEcoLevel(Property(Trips.EcoLevel.HIGH))
         builder.addThreshold(Property(EcoDrivingThreshold(EcoDrivingThreshold.Type.ZERO, 0.0)))
+        builder.addThreshold(Property(EcoDrivingThreshold(EcoDrivingThreshold.Type.ONE, 0.0)))
         builder.setTotalFuelConsumption(Property(Volume(23.4, Volume.Unit.LITERS)))
         builder.setTotalIdleFuelConsumption(Property(Volume(2.5, Volume.Unit.LITERS)))
         builder.setMaximumSpeed(Property(Speed(67.3, Speed.Unit.KILOMETERS_PER_HOUR)))
@@ -175,6 +177,8 @@ class KTripsTest : BaseTest() {
         assertTrue(state.ecoLevel.value == Trips.EcoLevel.HIGH)
         assertTrue(state.thresholds[0].value?.type == EcoDrivingThreshold.Type.ZERO)
         assertTrue(state.thresholds[0].value?.value == 0.0)
+        assertTrue(state.thresholds[1].value?.type == EcoDrivingThreshold.Type.ONE)
+        assertTrue(state.thresholds[1].value?.value == 0.0)
         assertTrue(state.totalFuelConsumption.value?.value == 23.4)
         assertTrue(state.totalFuelConsumption.value?.unit == Volume.Unit.LITERS)
         assertTrue(state.totalIdleFuelConsumption.value?.value == 2.5)

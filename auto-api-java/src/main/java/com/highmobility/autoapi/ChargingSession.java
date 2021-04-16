@@ -173,7 +173,7 @@ public class ChargingSession {
             return location;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<ChargingPoint>> publicChargingPointsBuilder = new ArrayList<>();

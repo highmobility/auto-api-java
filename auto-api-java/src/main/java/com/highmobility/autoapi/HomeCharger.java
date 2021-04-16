@@ -181,16 +181,17 @@ public class HomeCharger {
             createBytes();
         }
     
-        SetChargeCurrent(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetChargeCurrent(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CHARGE_CURRENT) return chargeCurrent.update(p);
+                    
                     return null;
                 });
             }
             if (this.chargeCurrent.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -228,7 +229,7 @@ public class HomeCharger {
             createBytes();
         }
     
-        SetPriceTariffs(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        SetPriceTariffs(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<PriceTariff>> priceTariffsBuilder = new ArrayList<>();
@@ -240,13 +241,14 @@ public class HomeCharger {
                         priceTariffsBuilder.add(priceTariff);
                         return priceTariff;
                     }
+                    
                     return null;
                 });
             }
         
             priceTariffs = priceTariffsBuilder;
             if (this.priceTariffs.size() == 0) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -276,16 +278,17 @@ public class HomeCharger {
             createBytes();
         }
     
-        ActivateDeactivateSolarCharging(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ActivateDeactivateSolarCharging(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_SOLAR_CHARGING) return solarCharging.update(p);
+                    
                     return null;
                 });
             }
             if (this.solarCharging.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -315,16 +318,17 @@ public class HomeCharger {
             createBytes();
         }
     
-        EnableDisableWiFiHotspot(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        EnableDisableWiFiHotspot(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_WI_FI_HOTSPOT_ENABLED) return wifiHotspotEnabled.update(p);
+                    
                     return null;
                 });
             }
             if (this.wifiHotspotEnabled.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -354,16 +358,17 @@ public class HomeCharger {
             createBytes();
         }
     
-        AuthenticateExpire(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        AuthenticateExpire(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_AUTHENTICATION_STATE) return authenticationState.update(p);
+                    
                     return null;
                 });
             }
             if (this.authenticationState.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -518,7 +523,7 @@ public class HomeCharger {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<PriceTariff>> priceTariffsBuilder = new ArrayList<>();

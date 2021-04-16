@@ -32,8 +32,8 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 class KMultiCommandTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "001301" + 
-            "01002C0100290c0020010600040100010004000501000200010400050100020201a2000b010008000001598938e788" +  // Doors capability - front left and rear right door is open while locks are unlocked, recorded at 10. January 2017 at 16:32:05 GMT
-            "0100430100400c0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788" // Charging capability - charging port is open, charge mode is immediate, charging rate is 35.0kW and max range is 555.0km, recorded at 10. January 2017 at 16:32:05 GMT
+            "01002C0100290d0020010600040100010004000501000200010400050100020201a2000b010008000001598938e788" +  // Doors capability - front left and rear right door is open while locks are unlocked, recorded at 10. January 2017 at 16:32:05 GMT
+            "0100430100400d0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788" // Charging capability - charging port is open, charge mode is immediate, charging rate is 35.0kW and max range is 555.0km, recorded at 10. January 2017 at 16:32:05 GMT
     )
     
     @Test
@@ -45,34 +45,34 @@ class KMultiCommandTest : BaseTest() {
     @Test
     fun testBuilder() {
         val builder = MultiCommand.State.Builder()
-        builder.addMultiState(Property(CommandResolver.resolve("0c0020010600040100010004000501000200010400050100020201a2000b010008000001598938e788")))
-        builder.addMultiState(Property(CommandResolver.resolve("0c0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788")))
+        builder.addMultiState(Property(CommandResolver.resolve("0d0020010600040100010004000501000200010400050100020201a2000b010008000001598938e788")))
+        builder.addMultiState(Property(CommandResolver.resolve("0d0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788")))
         testState(builder.build())
     }
     
     private fun testState(state: MultiCommand.State) {
         assertTrue(bytesTheSame(state, bytes))
-        assertTrue(state.multiStates[0].value == CommandResolver.resolve("0c0020010600040100010004000501000200010400050100020201a2000b010008000001598938e788"))
-        assertTrue(state.multiStates[1].value == CommandResolver.resolve("0c0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788"))
+        assertTrue(state.multiStates[0].value == CommandResolver.resolve("0d0020010600040100010004000501000200010400050100020201a2000b010008000001598938e788"))
+        assertTrue(state.multiStates[1].value == CommandResolver.resolve("0d0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788"))
     }
     
     @Test
     fun multiCommandCommand() {
         val bytes = Bytes(COMMAND_HEADER + "001301" +
-            "02000E01000B0c00200106000401000101" +
-            "02000E01000B0c00350103000401000101")
+            "02000E01000B0d00200106000401000101" +
+            "02000E01000B0d00350103000401000101")
     
         val constructed = MultiCommand.MultiCommandCommand(arrayListOf(
-                CommandResolver.resolve("0c00200106000401000101"), 
-                CommandResolver.resolve("0c00350103000401000101"))
+                CommandResolver.resolve("0d00200106000401000101"), 
+                CommandResolver.resolve("0d00350103000401000101"))
             )
         assertTrue(bytesTheSame(constructed, bytes))
     
         setEnvironment(CommandResolver.Environment.VEHICLE)
     
         val resolved = CommandResolver.resolve(bytes) as MultiCommand.MultiCommandCommand
-        assertTrue(resolved.multiCommands[0].value == CommandResolver.resolve("0c00200106000401000101"))
-        assertTrue(resolved.multiCommands[1].value == CommandResolver.resolve("0c00350103000401000101"))
+        assertTrue(resolved.multiCommands[0].value == CommandResolver.resolve("0d00200106000401000101"))
+        assertTrue(resolved.multiCommands[1].value == CommandResolver.resolve("0d00350103000401000101"))
         assertTrue(resolved == bytes)
     }
 }

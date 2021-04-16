@@ -299,7 +299,7 @@ public class VehicleInformation {
             return powertrainSecondary;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<String>> equipmentsBuilder = new ArrayList<>();

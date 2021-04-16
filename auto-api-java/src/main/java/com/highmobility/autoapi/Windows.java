@@ -188,7 +188,7 @@ public class Windows {
             createBytes();
         }
     
-        ControlWindows(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ControlWindows(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<WindowOpenPercentage>> openPercentagesBuilder = new ArrayList<>();
@@ -208,6 +208,7 @@ public class Windows {
                             return position;
                         }
                     }
+        
                     return null;
                 });
             }
@@ -215,7 +216,7 @@ public class Windows {
             openPercentages = openPercentagesBuilder;
             positions = positionsBuilder;
             if (this.openPercentages.size() == 0 && this.positions.size() == 0) {
-                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(optionalPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -265,7 +266,7 @@ public class Windows {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<WindowOpenPercentage>> openPercentagesBuilder = new ArrayList<>();

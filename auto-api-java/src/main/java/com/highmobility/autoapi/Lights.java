@@ -251,7 +251,7 @@ public class Lights {
             createBytes();
         }
     
-        ControlLights(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ControlLights(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<Light>> fogLightsBuilder = new ArrayList<>();
@@ -280,6 +280,7 @@ public class Lights {
                             return interiorLight;
                         }
                     }
+        
                     return null;
                 });
             }
@@ -288,7 +289,7 @@ public class Lights {
             readingLamps = readingLampsBuilder;
             interiorLights = interiorLightsBuilder;
             if (this.frontExteriorLight.getValue() == null && this.rearExteriorLight.getValue() == null && this.ambientLightColour.getValue() == null && this.fogLights.size() == 0 && this.readingLamps.size() == 0 && this.interiorLights.size() == 0) {
-                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(optionalPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -421,7 +422,7 @@ public class Lights {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<Light>> fogLightsBuilder = new ArrayList<>();

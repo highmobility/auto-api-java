@@ -170,7 +170,7 @@ public class Trunk {
             createBytes();
         }
     
-        ControlTrunk(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ControlTrunk(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -178,11 +178,12 @@ public class Trunk {
                         case PROPERTY_LOCK: return lock.update(p);
                         case PROPERTY_POSITION: return position.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.lock.getValue() == null && this.position.getValue() == null) {
-                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(optionalPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -216,7 +217,7 @@ public class Trunk {
             return lockSafety;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

@@ -211,7 +211,7 @@ public class RooftopControl {
             createBytes();
         }
     
-        ControlRooftop(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        ControlRooftop(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -222,11 +222,12 @@ public class RooftopControl {
                         case PROPERTY_SUNROOF_TILT_STATE: return sunroofTiltState.update(p);
                         case PROPERTY_SUNROOF_STATE: return sunroofState.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.dimming.getValue() == null && this.position.getValue() == null && this.convertibleRoofState.getValue() == null && this.sunroofTiltState.getValue() == null && this.sunroofState.getValue() == null) {
-                throw new NoPropertiesException(optionalPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(optionalPropertyErrorMessage(getClass()));
             }
         }
     }
@@ -284,7 +285,7 @@ public class RooftopControl {
             return sunroofRainEvent;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {

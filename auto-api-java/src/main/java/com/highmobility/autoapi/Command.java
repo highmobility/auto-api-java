@@ -31,11 +31,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
 import static com.highmobility.autoapi.AutoApiLogger.getLogger;
+import static com.highmobility.autoapi.PropertyParseException.ErrorCode.SETTER_SUPERFLUOUS_PROPERTY;
 
 /**
  * Used for commands with properties. Can have 0 properties.
@@ -59,7 +60,15 @@ public class Command extends Bytes {
     public static final byte VIN_IDENTIFIER = (byte) 0xA3;
     public static final byte BRAND_IDENTIFIER = (byte) 0xA4;
 
-    static final byte AUTO_API_VERSION = 0x0C;
+    public static final List<Byte> universalPropertyIds = Arrays.asList(
+            NONCE_IDENTIFIER,
+            SIGNATURE_IDENTIFIER,
+            TIMESTAMP_IDENTIFIER,
+            VIN_IDENTIFIER,
+            BRAND_IDENTIFIER
+    );
+
+    static final byte AUTO_API_VERSION = 0x0D;
     static final int HEADER_LENGTH = 1;
     static final int COMMAND_TYPE_POSITION = HEADER_LENGTH + 2;
 
@@ -311,8 +320,13 @@ public class Command extends Bytes {
             throw new UnsupportedOperationException();
         }
 
-        public void parseNext(PropertyIteration next) {
+        public void parseNext(PropertyIteration next) throws PropertyParseException {
             Property nextProperty = next();
+            // ignore universal properties
+            while (nextProperty.isUniversalProperty()) {
+                if (hasNext()) nextProperty = next();
+                else return;
+            }
 
             try {
                 Object parsedProperty = next.iterate(nextProperty);
@@ -322,8 +336,25 @@ public class Command extends Bytes {
                     // replace the base property with parsed one
                     properties[currentIndex - 1] = (Property) parsedProperty;
                     propertiesReplaced++;
+                } else if (type == Type.SET) {
+                    // TODO: do we know we are a setter/state here?
+                    // TODO: for state, the unknown properties should parse currently.
+                    // if we are a setter, we dont expect unknown properties, so can fail the parsing
+                    throw new PropertyParseException(
+                            SETTER_SUPERFLUOUS_PROPERTY,
+                            this.getClass(),
+                            nextProperty.getPropertyIdentifier());
+                }
+            } catch (PropertyParseException propertyParseException) {
+                if (propertyParseException.getCode() == SETTER_SUPERFLUOUS_PROPERTY) {
+                    // if failed a setter parsing, don't need to log the error, because we are trying
+                    // to find a matching setter and errors are expected if a match is not found
+                    throw propertyParseException;
+                } else {
+                    nextProperty.printFailedToParse(propertyParseException, null);
                 }
             } catch (Exception e) {
+                // if property parsing failed, but it was with an expected property ID, just leave it in
                 nextProperty.printFailedToParse(e, null);
             }
         }

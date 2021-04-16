@@ -239,7 +239,7 @@ public class Trips {
             return maximumSpeed;
         }
     
-        State(byte[] bytes) throws CommandParseException {
+        State(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
     
             final ArrayList<Property<AddressComponent>> startAddressComponentsBuilder = new ArrayList<>();

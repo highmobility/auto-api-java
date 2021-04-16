@@ -86,7 +86,7 @@ public class VideoHandover {
             createBytes();
         }
     
-        VideoHandoverCommand(byte[] bytes) throws CommandParseException, NoPropertiesException {
+        VideoHandoverCommand(byte[] bytes) throws CommandParseException, PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNext(p -> {
@@ -95,11 +95,12 @@ public class VideoHandover {
                         case PROPERTY_SCREEN: return screen.update(p);
                         case PROPERTY_STARTING_TIME: return startingTime.update(p);
                     }
+        
                     return null;
                 });
             }
             if (this.url.getValue() == null) {
-                throw new NoPropertiesException(mandatoryPropertyErrorMessage(getClass().getSimpleName()));
+                throw new PropertyParseException(mandatoryPropertyErrorMessage(getClass()));
             }
         }
     }
