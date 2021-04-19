@@ -103,18 +103,4 @@ class KHistoricalTest : BaseTest() {
         assertTrue(dateIsSame(resolved.endDate.value, "2019-09-27T08:42:30.000Z"))
         assertTrue(resolved == bytes)
     }
-    
-    @Test fun invalidGetChargingSessionsCapabilityIDThrows() {
-        val bytes = Bytes(COMMAND_HEADER + "001201" +
-            "02000501000200CD" +
-            "03000B0100080000016da6524300" +
-            "04000B0100080000016d71e2c4f0")
-    
-        setEnvironment(CommandResolver.Environment.VEHICLE)
-    
-        errorLogExpected { 
-            val resolved = CommandResolver.resolve(bytes)
-            assertTrue(resolved is Command)
-        }
-    }
 }

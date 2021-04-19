@@ -336,10 +336,14 @@ public class Command extends Bytes {
                     // replace the base property with parsed one
                     properties[currentIndex - 1] = (Property) parsedProperty;
                     propertiesReplaced++;
-                } else if (type == Type.SET) {
-                    // TODO: do we know we are a setter/state here?
-                    //  for state, the unknown properties should parse currently.
-                    // if we are a setter, we dont expect unknown properties, so can fail the parsing
+                } else if (type == Type.SET && CommandResolver._environment == CommandResolver.Environment.VEHICLE) {
+                    /*
+                     On OEM side, we expect only setters, on Owner side, only States. Both are Type.SET
+                     On OEM side, we should fail the setter parsing, because unknown properties are
+                     not allowed there. (We throw here)
+                     On Owner side, State can have unknown properties, so ignore them there
+                     */
+                    // TODO: L14 this logic can be removed if there are separate identifiers for setters
                     throw new PropertyParseException(
                             SETTER_SUPERFLUOUS_PROPERTY,
                             this.getClass(),
