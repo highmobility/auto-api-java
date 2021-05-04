@@ -1,7 +1,7 @@
 ext.deploy = [
         "siteUrl"           : "https ://github.com/highmobility/auto-api-java",
         "gitUrl"            : "https ://github.com/highmobility/auto-api-java",
-        "groupId"           : "com.highmobility",
+        "groupId"           : "com.high-mobility",
         "licenseName"       : "MIT",
         "licenseUrl"        : "https ://opensource.org/licenses/MIT",
         "id"                : "hmkit-auto-api"
