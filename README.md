@@ -9,11 +9,11 @@ This repository contains the java parsers for Auto API.
 
 ### Install
 
-Releases are pushed to jcenter. To include hmkit-auto-api in your project, add to build.gradle:
+Releases are pushed to mavenCentral. To include hmkit-auto-api in your project, add to build.gradle:
 
 ```
 repositories {
-  jcenter()
+  mavenCentral()
 }
 
 dependencies {
@@ -27,7 +27,7 @@ SLF4J is used for logging. Add slf4j binding to see the logs, for example:
 implementation 'org.slf4j:slf4j-simple:1.8.0-beta1'
 ```
 
-Find the latest version name in https://bintray.com/high-mobility/maven/hmkit-auto-api
+Find the latest version name in [mavenCentral](https://search.maven.org/search?q=g:com.high-mobility)
 
 ## How to create/parse commands
 

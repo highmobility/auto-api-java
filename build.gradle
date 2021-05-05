@@ -2,10 +2,7 @@ buildscript {
     ext.kotlinVersion="1.4.10"
 
     repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
+        mavenCentral()
     }
 }
 
@@ -15,15 +12,6 @@ plugins {
 
 allprojects {
     repositories {
-        jcenter()
-        if (project.hasProperty('devReadUser')) {
-            maven {
-                url "http://jfrog.high-mobility.com/artifactory/gradle-dev-local/"
-                credentials {
-                    username devReadUser
-                    password devReadPassword
-                }
-            }
-        }
+        mavenCentral()
     }
 }
