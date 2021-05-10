@@ -30,9 +30,9 @@ import com.highmobility.value.Bytes;
 
 public class ChargingCost extends PropertyValueObject {
     String currency;
-    Float calculatedChargingCost;
-    Float calculatedSavings;
-    Float simulatedImmediateChargingCost;
+    Double calculatedChargingCost;
+    Double calculatedSavings;
+    Double simulatedImmediateChargingCost;
 
     /**
      * @return Currency ISO code.
@@ -44,25 +44,25 @@ public class ChargingCost extends PropertyValueObject {
     /**
      * @return Calculated charging cost.
      */
-    public Float getCalculatedChargingCost() {
+    public Double getCalculatedChargingCost() {
         return calculatedChargingCost;
     }
 
     /**
      * @return Calculated savings from charging.
      */
-    public Float getCalculatedSavings() {
+    public Double getCalculatedSavings() {
         return calculatedSavings;
     }
 
     /**
      * @return Simulated charging costs.
      */
-    public Float getSimulatedImmediateChargingCost() {
+    public Double getSimulatedImmediateChargingCost() {
         return simulatedImmediateChargingCost;
     }
 
-    public ChargingCost(String currency, Float calculatedChargingCost, Float calculatedSavings, Float simulatedImmediateChargingCost) {
+    public ChargingCost(String currency, Double calculatedChargingCost, Double calculatedSavings, Double simulatedImmediateChargingCost) {
         super(0);
 
         this.currency = currency;
@@ -78,19 +78,19 @@ public class ChargingCost extends PropertyValueObject {
         set(bytePosition, Property.stringToBytes(currency));
         bytePosition += Property.getUtf8Length(currency);
 
-        set(bytePosition, Property.floatToBytes(calculatedChargingCost));
-        bytePosition += 4;
+        set(bytePosition, Property.doubleToBytes(calculatedChargingCost));
+        bytePosition += 8;
 
-        set(bytePosition, Property.floatToBytes(calculatedSavings));
-        bytePosition += 4;
+        set(bytePosition, Property.doubleToBytes(calculatedSavings));
+        bytePosition += 8;
 
-        set(bytePosition, Property.floatToBytes(simulatedImmediateChargingCost));
+        set(bytePosition, Property.doubleToBytes(simulatedImmediateChargingCost));
     }
 
     public ChargingCost(Bytes valueBytes) throws CommandParseException {
         super(valueBytes);
 
-        if (bytes.length < 14) throw new CommandParseException();
+        if (bytes.length < 26) throw new CommandParseException();
 
         int bytePosition = 0;
         int currencySize = getItemSize(bytePosition);
@@ -98,16 +98,16 @@ public class ChargingCost extends PropertyValueObject {
         currency = Property.getString(bytes, bytePosition, currencySize);
         bytePosition += currencySize;
 
-        calculatedChargingCost = Property.getFloat(bytes, bytePosition);
-        bytePosition += 4;
+        calculatedChargingCost = Property.getDouble(bytes, bytePosition);
+        bytePosition += 8;
 
-        calculatedSavings = Property.getFloat(bytes, bytePosition);
-        bytePosition += 4;
+        calculatedSavings = Property.getDouble(bytes, bytePosition);
+        bytePosition += 8;
 
-        simulatedImmediateChargingCost = Property.getFloat(bytes, bytePosition);
+        simulatedImmediateChargingCost = Property.getDouble(bytes, bytePosition);
     }
 
     @Override public int getLength() {
-        return Property.getUtf8Length(currency) + 2 + 4 + 4 + 4;
+        return Property.getUtf8Length(currency) + 2 + 8 + 8 + 8;
     }
 }

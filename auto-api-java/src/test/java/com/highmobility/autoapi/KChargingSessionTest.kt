@@ -48,7 +48,7 @@ class KChargingSessionTest : BaseTest() {
             "0a000D01000A0c044002c28f5c28f5c3" +  // Energy charged in the last session was 2.345Kwh
             "0b000401000101" +  // Preconditioning is active
             "0c000D01000A120440a0040000000000" +  // Odometer is showing 2050.0km
-            "0d001401001100034555524011a7563f1134054011a756" +  // Charging costs are shown in 'EUR' with calculated costs of 2.2758383109, calculated savings 0.5672 and simulated charging cost of 2.2758383109
+            "0d002001001D0003455552400234eab76265223fe226809d495183400234eab7626522" +  // Charging costs are shown in 'EUR' with calculated costs of 2.2758383109, calculated savings 0.5672 and simulated charging cost of 2.2758383109
             "0e004E01004B00064265726c696e002b536b616c69747a65722053747261c39f652036382c203130393937204265726c696e2c204765726d616e790014536b616c69747a65722053747261c39f65203638" // Charging location was 'Skalitzer Straße 68, 10997 Berlin, Germany'
     )
     
@@ -75,7 +75,7 @@ class KChargingSessionTest : BaseTest() {
         builder.setEnergyCharged(Property(Energy(2.345, Energy.Unit.KILOWATT_HOURS)))
         builder.setPreconditioningState(Property(ActiveState.ACTIVE))
         builder.setOdometer(Property(Length(2050.0, Length.Unit.KILOMETERS)))
-        builder.setChargingCost(Property(ChargingCost("EUR", 2.2758383109f, 0.5672f, 2.2758383109f)))
+        builder.setChargingCost(Property(ChargingCost("EUR", 2.2758383109, 0.5672, 2.2758383109)))
         builder.setLocation(Property(ChargingLocation("Berlin", "Skalitzer Straße 68, 10997 Berlin, Germany", "Skalitzer Straße 68")))
         testState(builder.build())
     }
@@ -107,9 +107,9 @@ class KChargingSessionTest : BaseTest() {
         assertTrue(state.odometer.value?.value == 2050.0)
         assertTrue(state.odometer.value?.unit == Length.Unit.KILOMETERS)
         assertTrue(state.chargingCost.value?.currency == "EUR")
-        assertTrue(state.chargingCost.value?.calculatedChargingCost == 2.2758383109f)
-        assertTrue(state.chargingCost.value?.calculatedSavings == 0.5672f)
-        assertTrue(state.chargingCost.value?.simulatedImmediateChargingCost == 2.2758383109f)
+        assertTrue(state.chargingCost.value?.calculatedChargingCost == 2.2758383109)
+        assertTrue(state.chargingCost.value?.calculatedSavings == 0.5672)
+        assertTrue(state.chargingCost.value?.simulatedImmediateChargingCost == 2.2758383109)
         assertTrue(state.location.value?.municipality == "Berlin")
         assertTrue(state.location.value?.formattedAddress == "Skalitzer Straße 68, 10997 Berlin, Germany")
         assertTrue(state.location.value?.streetAddress == "Skalitzer Straße 68")
