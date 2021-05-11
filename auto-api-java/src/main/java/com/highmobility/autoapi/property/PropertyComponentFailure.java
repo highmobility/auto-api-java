@@ -24,6 +24,7 @@
 package com.highmobility.autoapi.property;
 
 import com.highmobility.autoapi.CommandParseException;
+import com.highmobility.autoapi.value.Failure;
 import com.highmobility.utils.ByteUtils;
 import com.highmobility.value.Bytes;
 
@@ -34,50 +35,66 @@ import static com.highmobility.utils.ByteUtils.hexFromByte;
 public class PropertyComponentFailure extends PropertyComponent {
     private static final byte IDENTIFIER = 0x03;
 
-    Reason failureReason;
-    String description;
+    Failure failure;
 
-    public PropertyComponentFailure(Bytes bytes) throws CommandParseException {
-        super(bytes);
-        failureReason = Reason.fromByte(get(3));
-        int descriptionLength = Property.getUnsignedInt(this, 4, 1);
-        description = Property.getString(this, 5, descriptionLength);
+    /**
+     * @return The failure object
+     */
+    public Failure getFailure() {
+        return failure;
     }
 
     /**
      * @return The failure reason.
+     * @deprecated use {@link #getFailure()} instead
      */
-    public Reason getFailureReason() {
-        return failureReason;
+    // TODO: 11/5/21 remove Reason deprecations after may 2022
+    @Deprecated
+    public Reason getFailureReason() throws CommandParseException {
+        return Reason.fromByte(failure.getReason().getByte());
     }
 
     /**
      * @return The failure description.
      */
-
     @Nullable
     public String getFailureDescription() {
-        return description;
+        return failure.getDescription();
+    }
+
+    public PropertyComponentFailure(Bytes bytes) throws CommandParseException {
+        super(bytes);
+        failure = new Failure(getRange(3, size()));
     }
 
     /**
      * @param failureReason The failure reason.
      * @param description   The failure description.
+     * @deprecated use {@link #PropertyComponentFailure(Failure)} instead
      */
-    public PropertyComponentFailure(Reason failureReason, @Nullable String description) {
-        super(IDENTIFIER, 2 + description.length());
+    public PropertyComponentFailure(Reason failureReason, @Nullable String description) throws CommandParseException {
+        super(IDENTIFIER, 3 + description.length());
 
         bytes[3] = failureReason.getByte();
         if (description != null) {
-            bytes[4] = (byte) description.length();
-            ByteUtils.setBytes(bytes, description.getBytes(), 5);
+            set(4, Property.intToBytes(description.length(), 2));
+            ByteUtils.setBytes(bytes, description.getBytes(), 6);
         }
 
         this.valueBytes = getRange(3, size());
-        this.failureReason = failureReason;
-        this.description = description;
+        this.failure = new Failure(Failure.Reason.fromByte(failureReason.getByte()), description);
     }
 
+    PropertyComponentFailure(Failure failure) {
+        super(IDENTIFIER, failure);
+        this.failure = failure;
+    }
+
+    /**
+     * @deprecated use {@link Failure#getReason()} instead
+     */
+    @Deprecated
+    // TODO: 11/5/21 remove Reason deprecations after may 2022
     public enum Reason {
         /**
          * Property rate limit has been exceeded

@@ -28,13 +28,16 @@ import com.highmobility.autoapi.Charging
 import com.highmobility.autoapi.Charging.ChargeMode
 import com.highmobility.autoapi.CommandParseException
 import com.highmobility.autoapi.CommandResolver
+import com.highmobility.autoapi.TestUtils.dateIsSame
+import com.highmobility.autoapi.TestUtils.getCalendar
+import com.highmobility.autoapi.TestUtils.getExampleCalendar
+import com.highmobility.autoapi.value.Failure
 import com.highmobility.value.Bytes
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class PropertyTest : BaseTest() {
     // bytes: 00000160E0EA1388
-    var timestamp = getCalendar("2018-01-10T16:32:05.000Z")
 
     @Test
     @Throws(CommandParseException::class)
@@ -90,31 +93,7 @@ class PropertyTest : BaseTest() {
         testTimestampComponent(property)
     }
 
-    @Test
-    @Throws(CommandParseException::class)
-    fun parseFailure() {
-        // test bytes correct and components exist
-        var completeBytes = Bytes(
-            "00001A" +
-                    "" +  // value
-                    "02000800000160E0EA1388" +  // timestamp
-                    "03000C000A54727920696e20343073" //failure
-        )
-        val property: Property<*> = Property(ChargeMode::class.java, 0)
-        property.update(Property<Any?>(completeBytes.byteArray))
-        testTimestampComponent(property)
-        testFailureComponent(property, completeBytes)
-        // parse in different order as well
-        completeBytes = Bytes(
-            "00001A" +
-                    "" +  // value
-                    "03000C000A54727920696e20343073" +  //failure
-                    "02000800000160E0EA1388" // timestamp
-        )
-        property.update(Property<Any?>(completeBytes.byteArray))
-        testTimestampComponent(property)
-        testFailureComponent(property, completeBytes)
-    }
+
 
     @Test
     fun buildValue() {
@@ -148,32 +127,6 @@ class PropertyTest : BaseTest() {
         assertTrue(property == completeBytes)
     }
 
-    private fun testValueComponent(property: Property<*>, length: Int, value: Any) {
-        // test bytes value component identifier and length is correct
-        assertTrue(property.valueComponent != null)
-        assertTrue(property.valueComponent!!.getValue() != null)
-        assertTrue(property.valueComponent!!.getValueBytes().length == length)
-        assertTrue(property.valueComponent!!.getValue() === value)
-    }
-
-    private fun testTimestampComponent(property: Property<*>) {
-        assertTrue(property.timestampComponent != null)
-        assertTrue(property.timestampComponent!!.identifier.toInt() == 0x02)
-        assertTrue(dateIsSame(property.timestampComponent!!.calendar, timestamp))
-        // test that bytes are set in component
-        assertTrue(Property.getLong(property.timestampComponent!!.getValueBytes().byteArray) == 1515601925000L)
-    }
-
-    private fun testFailureComponent(property: Property<*>, expectedBytes: Bytes) {
-        val failureComponent = property.failureComponent
-        assertTrue(failureComponent != null)
-        assertTrue(failureComponent!!.identifier.toInt() == 0x03)
-        assertTrue(failureComponent.failureDescription == "Try in 40s")
-        assertTrue(failureComponent.getFailureReason() == PropertyComponentFailure.Reason.RATE_LIMIT)
-        assertTrue(failureComponent.valueBytes.equals("000A54727920696e20343073"))
-        assertTrue(property == expectedBytes)
-    }
-
     @Test
     fun testValueComponentFailedParsing() {
         debugLogExpected {
@@ -191,74 +144,6 @@ class PropertyTest : BaseTest() {
             )
             assertTrue(command.chargePortState.getValue() != null)
         }
-    }
-
-    @Test
-    fun testFailureComponentFailedParsing() {
-        // test if invalid failure reason, then warning logged and failure component not populated,
-        // and put to generic component array
-        // 0x11 is invalid failure reason
-        warningLogExpected {
-            val command = CommandResolver.resolve(
-                COMMAND_HEADER + "002301" +
-                        "19001C01000A0900bfe3333333333333" + "03000C110A54727920696e20343073" +
-                        "0b000401000101"
-            ) as Charging.State
-            assertTrue(command.batteryCurrent.failureComponent == null)
-            assertTrue(
-                command.batteryCurrent.getComponent(0x03)!!.equals(
-                    "03000C110A54727920696e20343073"
-                )
-            )
-        }
-    }
-
-    @Test
-    fun buildFailure() {
-        val failure =
-            PropertyComponentFailure(PropertyComponentFailure.Reason.RATE_LIMIT, "Try in 40s")
-        // test bytes correct
-        val property: Property<*> =
-            Property(
-                0x11,
-                null,
-                null,
-                failure,
-                null
-            )
-        assertTrue(property.timestampComponent == null)
-        assertTrue(property.valueComponent == null)
-        val completeBytes = Bytes(
-            "11000F" +
-                    "" +  // value
-                    "" +  // timestamp
-                    "03000C000A54727920696e20343073" //failure
-        )
-        testFailureComponent(property, completeBytes)
-    }
-
-    @Test
-    fun buildFailureIgnoreValue() {
-        val failure =
-            PropertyComponentFailure(PropertyComponentFailure.Reason.RATE_LIMIT, "Try in 40s")
-        val property: Property<*> =
-            Property(
-                0x02,
-                ChargeMode.IMMEDIATE,
-                timestamp,
-                failure,
-                null
-            )
-        assertTrue(property.timestampComponent != null)
-        assertTrue(property.valueComponent == null)
-        val completeBytes = Bytes(
-            "02001A" +
-                    "" +  // value
-                    "02000800000160E0EA1388" +  // timestamp
-                    "03000C000A54727920696e20343073" //failure
-        )
-        testFailureComponent(property, completeBytes)
-        testTimestampComponent(property)
     }
 
     @Test
@@ -395,4 +280,39 @@ class PropertyTest : BaseTest() {
         assertTrue(property.valueComponent!!.equals("01000100"))
         assertTrue(property.getComponents().size == 2)
     }
+
+    companion object {
+        var timestamp = getExampleCalendar("2018-01-10T16:32:05.000Z")
+
+        fun testValueComponent(property: Property<*>, length: Int, value: Any) {
+            // test bytes value component identifier and length is correct
+            assertTrue(property.valueComponent != null)
+            assertTrue(property.valueComponent!!.getValue() != null)
+            assertTrue(property.valueComponent!!.getValueBytes().length == length)
+            assertTrue(property.valueComponent!!.getValue() === value)
+        }
+
+        fun testFailureComponent(property: Property<*>, expectedBytes: Bytes) {
+            val failureComponent = property.failureComponent
+            assertTrue(failureComponent != null)
+            assertTrue(failureComponent!!.identifier.toInt() == 0x03)
+            assertTrue(failureComponent.getFailureReason() == PropertyComponentFailure.Reason.RATE_LIMIT)
+
+            assertTrue(failureComponent.failureDescription == "Try in 40s")
+            assertTrue(failureComponent.failure.reason == Failure.Reason.RATE_LIMIT)
+            assertTrue(failureComponent.failure.description == "Try in 40s")
+            assertTrue(failureComponent.valueBytes.equals("00000A54727920696e20343073"))
+
+            assertTrue(property == expectedBytes)
+        }
+
+        fun testTimestampComponent(property: Property<*>) {
+            assertTrue(property.timestampComponent != null)
+            assertTrue(property.timestampComponent!!.identifier.toInt() == 0x02)
+            assertTrue(dateIsSame(property.timestampComponent!!.calendar, timestamp))
+            // test that bytes are set in component
+            assertTrue(Property.getLong(property.timestampComponent!!.getValueBytes().byteArray) == 1515601925000L)
+        }
+    }
+
 }
