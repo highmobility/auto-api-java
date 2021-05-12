@@ -47,6 +47,7 @@ public class PropertyComponentFailure extends PropertyComponent {
     /**
      * @return The failure reason.
      * @deprecated use {@link #getFailure()} instead
+     * @throws CommandParseException if cannot convert from Reason to Failure.Reason
      */
     // TODO: 11/5/21 remove Reason deprecations after may 2022
     @Deprecated
@@ -71,6 +72,7 @@ public class PropertyComponentFailure extends PropertyComponent {
      * @param failureReason The failure reason.
      * @param description   The failure description.
      * @deprecated use {@link #PropertyComponentFailure(Failure)} instead
+     * @throws CommandParseException if cannot convert from Reason to Failure.Reason
      */
     public PropertyComponentFailure(Reason failureReason, @Nullable String description) throws CommandParseException {
         super(IDENTIFIER, 3 + description.length());
