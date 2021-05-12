@@ -5,9 +5,19 @@ plugins {
 apply plugin: "java-library"
 apply from: "deploy.gradle"
 apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/deploy-java-mavenCentral.gradle"
-apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/jupiter-test-shell-logging.gradle"
+apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/test-shell-logging.gradle"
 
 sourceCompatibility = '1.8'
+
+ext.ver = [
+        "hmkit-utils"       : "1.4.5",
+        "hmkit-auto-api"    : "3.12.0"
+]
+
+ext.deps = [
+        "utils"   : "com.high-mobility:hmkit-utils:${ver."hmkit-utils"}",
+        "findBugs": 'com.google.code.findbugs:jsr305:3.0.2'
+]
 
 dependencies {
     if (project.hasProperty('depLocation') == true && project.depLocation == 0) {
