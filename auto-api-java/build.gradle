@@ -15,7 +15,7 @@ ext.ver = [
 ]
 
 ext.deps = [
-        "utils"   : "com.highmobility:hmkit-utils:${ver."hmkit-utils"}",
+        "utils"   : "com.high-mobility:hmkit-utils:${ver."hmkit-utils"}",
         "findBugs": 'com.google.code.findbugs:jsr305:3.0.2'
 ]
 
