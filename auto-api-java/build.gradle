@@ -5,7 +5,7 @@ plugins {
 apply plugin: "java-library"
 apply from: "deploy.gradle"
 apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/deploy-java-mavenCentral.gradle"
-apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/test-shell-logging.gradle"
+apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/jupiter-test-shell-logging.gradle"
 
 sourceCompatibility = '1.8'
 
