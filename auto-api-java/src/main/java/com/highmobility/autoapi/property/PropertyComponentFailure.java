@@ -92,7 +92,7 @@ public class PropertyComponentFailure extends PropertyComponent {
      *
      * @param failure The failure object
      */
-    PropertyComponentFailure(Failure failure) {
+    public PropertyComponentFailure(Failure failure) {
         super(IDENTIFIER, failure);
         this.failure = failure;
     }
