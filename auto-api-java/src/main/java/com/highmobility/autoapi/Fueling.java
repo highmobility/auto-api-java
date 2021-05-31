@@ -228,7 +228,7 @@ public class Fueling {
             gasFlapPosition = builder.gasFlapPosition;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<LockState> gasFlapLock;
             private Property<Position> gasFlapPosition;
     

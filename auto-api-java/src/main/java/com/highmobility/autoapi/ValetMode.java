@@ -138,7 +138,7 @@ public class ValetMode {
             status = builder.status;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<ActiveState> status;
     
             public Builder() {

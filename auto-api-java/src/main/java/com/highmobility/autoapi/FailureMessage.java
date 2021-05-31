@@ -150,7 +150,7 @@ public class FailureMessage {
             failedPropertyIDs = builder.failedPropertyIDs;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private PropertyInteger failedMessageID;
             private PropertyInteger failedMessageType;
             private Property<FailureReason> failureReason;

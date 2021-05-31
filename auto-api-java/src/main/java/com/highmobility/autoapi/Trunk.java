@@ -240,7 +240,7 @@ public class Trunk {
             lockSafety = builder.lockSafety;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<LockState> lock;
             private Property<Position> position;
             private Property<LockSafety> lockSafety;

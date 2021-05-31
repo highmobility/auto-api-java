@@ -273,7 +273,7 @@ public class NaviDestination {
             distanceToDestination = builder.distanceToDestination;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Coordinates> coordinates;
             private Property<String> destinationName;
             private PropertyInteger dataSlotsFree;

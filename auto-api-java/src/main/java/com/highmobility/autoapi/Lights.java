@@ -477,7 +477,7 @@ public class Lights {
             parkingLightStatus = builder.parkingLightStatus;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<FrontExteriorLight> frontExteriorLight;
             private Property<ActiveState> rearExteriorLight;
             private Property<RgbColour> ambientLightColour;

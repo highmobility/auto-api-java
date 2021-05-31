@@ -215,7 +215,7 @@ public class PowerTakeoff {
             engaged = builder.engaged;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<ActiveState> status;
             private Property<Engaged> engaged;
     

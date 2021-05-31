@@ -316,7 +316,7 @@ public class Trips {
             maximumSpeed = builder.maximumSpeed;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Type> type;
             private Property<String> driverName;
             private Property<String> description;

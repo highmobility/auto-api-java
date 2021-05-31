@@ -389,7 +389,7 @@ public class Windscreen {
             windscreenDamageDetectionTime = builder.windscreenDamageDetectionTime;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<WipersStatus> wipersStatus;
             private Property<WipersIntensity> wipersIntensity;
             private Property<WindscreenDamage> windscreenDamage;

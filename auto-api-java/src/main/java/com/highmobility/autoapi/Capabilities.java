@@ -175,7 +175,7 @@ public class Capabilities {
             webhooks = builder.webhooks;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private final List<Property<SupportedCapability>> capabilities = new ArrayList<>();
             private final List<Property<Webhook>> webhooks = new ArrayList<>();
     

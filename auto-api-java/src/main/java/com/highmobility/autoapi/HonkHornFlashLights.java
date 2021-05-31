@@ -265,7 +265,7 @@ public class HonkHornFlashLights {
             flashers = builder.flashers;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Flashers> flashers;
     
             public Builder() {

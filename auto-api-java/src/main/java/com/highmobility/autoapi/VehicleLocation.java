@@ -221,7 +221,7 @@ public class VehicleLocation {
             gpsSignalStrength = builder.gpsSignalStrength;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Coordinates> coordinates;
             private Property<Angle> heading;
             private Property<Length> altitude;

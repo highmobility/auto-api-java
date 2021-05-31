@@ -232,4 +232,34 @@ public class CommandTest extends BaseTest {
             new GetAvailabilityCommand((new Bytes(COMMAND_HEADER + "0023AA")).getByteArray());
         });
     }
+
+    @Test public void setVinAndBrandReturnsChildClass() {
+        // If use setCommand's child class builder, will return the child class
+        VehicleStatus.State.Builder builder = new VehicleStatus.State.Builder();
+
+        assertTrue(builder.setVin("123").build() instanceof VehicleStatus.State);
+        assertTrue(builder.setBrand(Brand.BMW).build() instanceof VehicleStatus.State);
+
+        assertTrue(builder.addProperty(new Property("aa")).build() instanceof VehicleStatus.State);
+        assertTrue(builder.setNonce(new Bytes("aabb")).build() instanceof VehicleStatus.State);
+        assertTrue(builder.setSignature(new Bytes("aabb")).build() instanceof VehicleStatus.State);
+        assertTrue(builder.setTimestamp(Calendar.getInstance()).build() instanceof VehicleStatus.State);
+
+        assertTrue(builder.build() instanceof VehicleStatus.State);
+    }
+
+    @Test public void canCreateBaseSetter() {
+        // If use base command builder, will return the parent base
+        SetCommand.BaseBuilder builder = new SetCommand.BaseBuilder(2);
+
+        assertTrue(builder.setVin("123").build() instanceof SetCommand);
+        assertTrue(builder.setBrand(Brand.BMW).build() instanceof SetCommand);
+
+        assertTrue(builder.addProperty(new Property("aa")).build() instanceof SetCommand);
+        assertTrue(builder.setNonce(new Bytes("aabb")).build() instanceof SetCommand);
+        assertTrue(builder.setSignature(new Bytes("aabb")).build() instanceof SetCommand);
+        assertTrue(builder.setTimestamp(Calendar.getInstance()).build() instanceof SetCommand);
+
+        assertTrue(builder.build() instanceof SetCommand);
+    }
 }

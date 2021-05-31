@@ -314,7 +314,7 @@ public class RooftopControl {
             sunroofRainEvent = builder.sunroofRainEvent;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Double> dimming;
             private Property<Double> position;
             private Property<ConvertibleRoofState> convertibleRoofState;

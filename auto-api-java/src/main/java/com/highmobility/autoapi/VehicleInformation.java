@@ -366,7 +366,7 @@ public class VehicleInformation {
             powertrainSecondary = builder.powertrainSecondary;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<EngineType> powertrain;
             private Property<String> modelName;
             private Property<String> name;

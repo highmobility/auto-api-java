@@ -231,7 +231,7 @@ public class Crash {
             impactZone = builder.impactZone;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private final List<Property<CrashIncident>> incidents = new ArrayList<>();
             private Property<Type> type;
             private Property<TippedState> tippedState;

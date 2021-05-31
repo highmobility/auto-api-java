@@ -98,7 +98,7 @@ public class VehicleTime {
             vehicleTime = builder.vehicleTime;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Time> vehicleTime;
     
             public Builder() {

@@ -402,7 +402,7 @@ public class Race {
             vehicleMoving = builder.vehicleMoving;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private final List<Property<Acceleration>> accelerations = new ArrayList<>();
             private Property<Double> understeering;
             private Property<Double> oversteering;

@@ -187,7 +187,7 @@ public class Hood {
             lockSafety = builder.lockSafety;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Position> position;
             private Property<LockState> lock;
             private Property<LockSafety> lockSafety;

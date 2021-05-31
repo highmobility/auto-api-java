@@ -300,7 +300,7 @@ public class Tachograph {
             vehicleSpeed = builder.vehicleSpeed;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private final List<Property<DriverWorkingState>> driversWorkingStates = new ArrayList<>();
             private final List<Property<DriverTimeState>> driversTimeStates = new ArrayList<>();
             private final List<Property<DriverCardPresent>> driversCardsPresent = new ArrayList<>();

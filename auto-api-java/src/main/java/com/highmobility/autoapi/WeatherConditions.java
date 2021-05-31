@@ -97,7 +97,7 @@ public class WeatherConditions {
             rainIntensity = builder.rainIntensity;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Double> rainIntensity;
     
             public Builder() {

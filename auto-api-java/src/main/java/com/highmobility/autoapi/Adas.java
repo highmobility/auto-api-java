@@ -292,7 +292,7 @@ public class Adas {
             blindSpotWarningSystem = builder.blindSpotWarningSystem;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<OnOffState> status;
             private Property<ActiveState> alertnessSystemStatus;
             private Property<ActiveState> forwardCollisionWarningSystem;

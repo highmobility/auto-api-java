@@ -300,7 +300,7 @@ public class Windows {
             positions = builder.positions;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private final List<Property<WindowOpenPercentage>> openPercentages = new ArrayList<>();
             private final List<Property<WindowPosition>> positions = new ArrayList<>();
     

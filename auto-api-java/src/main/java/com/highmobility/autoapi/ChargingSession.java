@@ -231,7 +231,7 @@ public class ChargingSession {
             location = builder.location;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private final List<Property<ChargingPoint>> publicChargingPoints = new ArrayList<>();
             private Property<Double> displayedStateOfCharge;
             private Property<Double> displayedStartStateOfCharge;

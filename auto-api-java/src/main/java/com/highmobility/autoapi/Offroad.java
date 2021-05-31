@@ -172,7 +172,7 @@ public class Offroad {
             wheelSuspension = builder.wheelSuspension;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Angle> routeIncline;
             private Property<Double> wheelSuspension;
     

@@ -218,7 +218,7 @@ public class Seats {
             seatbeltsState = builder.seatbeltsState;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private final List<Property<PersonDetected>> personsDetected = new ArrayList<>();
             private final List<Property<SeatbeltState>> seatbeltsState = new ArrayList<>();
     

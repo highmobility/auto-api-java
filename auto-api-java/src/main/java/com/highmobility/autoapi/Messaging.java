@@ -130,7 +130,7 @@ public class Messaging {
             handle = builder.handle;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<String> text;
             private Property<String> handle;
     

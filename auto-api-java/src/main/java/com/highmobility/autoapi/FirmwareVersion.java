@@ -149,7 +149,7 @@ public class FirmwareVersion {
             applicationVersion = builder.applicationVersion;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<HmkitVersion> hmKitVersion;
             private Property<String> hmKitBuildName;
             private Property<String> applicationVersion;

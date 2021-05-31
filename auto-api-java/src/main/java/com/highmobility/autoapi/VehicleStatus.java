@@ -107,7 +107,7 @@ public class VehicleStatus {
             states = builder.states;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private final List<Property<Command>> states = new ArrayList<>();
     
             public Builder() {

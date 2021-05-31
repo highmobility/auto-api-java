@@ -271,7 +271,7 @@ public class TheftAlarm {
             eventType = builder.eventType;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Status> status;
             private Property<ActiveSelectedState> interiorProtectionStatus;
             private Property<ActiveSelectedState> towProtectionStatus;

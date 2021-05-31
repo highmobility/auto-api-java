@@ -98,7 +98,7 @@ public class Mobile {
             connection = builder.connection;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<ConnectionState> connection;
     
             public Builder() {

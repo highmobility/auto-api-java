@@ -440,7 +440,7 @@ public class ChassisSettings {
             minimumChassisPosition = builder.minimumChassisPosition;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<DrivingMode> drivingMode;
             private Property<SportChrono> sportChrono;
             private final List<Property<SpringRate>> currentSpringRates = new ArrayList<>();

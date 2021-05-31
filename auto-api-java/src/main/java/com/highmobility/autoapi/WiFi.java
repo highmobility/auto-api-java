@@ -343,7 +343,7 @@ public class WiFi {
             networkSecurity = builder.networkSecurity;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<EnabledState> status;
             private Property<ConnectionState> networkConnected;
             private Property<String> networkSSID;

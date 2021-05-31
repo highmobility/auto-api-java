@@ -11,7 +11,7 @@ sourceCompatibility = '1.8'
 
 ext.ver = [
         "hmkit-utils"       : "1.4.5",
-        "hmkit-auto-api"    : "3.13.0"
+        "hmkit-auto-api"    : "3.13.1"
 ]
 
 ext.deps = [

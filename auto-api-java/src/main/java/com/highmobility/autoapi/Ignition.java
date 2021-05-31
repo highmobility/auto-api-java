@@ -227,7 +227,7 @@ public class Ignition {
             state = builder.state;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<IgnitionState> status;
             private Property<IgnitionState> accessoriesStatus;
             private Property<IgnitionState> state;

@@ -844,7 +844,7 @@ public class Charging {
             batteryCapacity = builder.batteryCapacity;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Length> estimatedRange;
             private Property<Double> batteryLevel;
             private Property<ElectricCurrent> batteryCurrentAC;

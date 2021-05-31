@@ -172,7 +172,7 @@ public class LightConditions {
             insideLight = builder.insideLight;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Illuminance> outsideLight;
             private Property<Illuminance> insideLight;
     

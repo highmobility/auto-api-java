@@ -371,7 +371,7 @@ public class Maintenance {
             timeToNextOilService = builder.timeToNextOilService;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Duration> daysToNextService;
             private Property<Length> kilometersToNextService;
             private PropertyInteger cbsReportsCount;

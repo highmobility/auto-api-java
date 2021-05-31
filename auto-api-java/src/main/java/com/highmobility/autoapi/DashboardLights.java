@@ -190,7 +190,7 @@ public class DashboardLights {
             bulbFailures = builder.bulbFailures;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private final List<Property<DashboardLight>> dashboardLights = new ArrayList<>();
             private final List<Property<BulbFailures>> bulbFailures = new ArrayList<>();
     

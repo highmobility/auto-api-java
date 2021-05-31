@@ -786,7 +786,7 @@ public class Diagnostics {
             lowVoltageBatteryChargeLevel = builder.lowVoltageBatteryChargeLevel;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Length> mileage;
             private Property<Temperature> engineOilTemperature;
             private Property<Speed> speed;

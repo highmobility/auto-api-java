@@ -265,7 +265,7 @@ public class Engine {
             startStopEnabled = builder.startStopEnabled;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<OnOffState> status;
             private Property<ActiveState> startStopState;
             private Property<EnabledState> startStopEnabled;

@@ -580,7 +580,7 @@ public class HomeCharger {
             chargingPower = builder.chargingPower;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<ChargingStatus> chargingStatus;
             private Property<AuthenticationMechanism> authenticationMechanism;
             private Property<PlugType> plugType;

@@ -256,7 +256,7 @@ public class Notifications {
             clear = builder.clear;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<String> text;
             private final List<Property<ActionItem>> actionItems = new ArrayList<>();
             private PropertyInteger activatedAction;

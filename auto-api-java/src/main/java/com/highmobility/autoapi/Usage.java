@@ -654,7 +654,7 @@ public class Usage {
             tripMeters = builder.tripMeters;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private Property<Length> averageWeeklyDistance;
             private Property<Length> averageWeeklyDistanceLongRun;
             private Property<Double> accelerationEvaluation;

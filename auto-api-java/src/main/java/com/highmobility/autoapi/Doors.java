@@ -312,7 +312,7 @@ public class Doors {
             locksState = builder.locksState;
         }
     
-        public static final class Builder extends SetCommand.Builder {
+        public static final class Builder extends SetCommand.Builder<Builder> {
             private final List<Property<Lock>> insideLocks = new ArrayList<>();
             private final List<Property<Lock>> locks = new ArrayList<>();
             private final List<Property<DoorPosition>> positions = new ArrayList<>();
