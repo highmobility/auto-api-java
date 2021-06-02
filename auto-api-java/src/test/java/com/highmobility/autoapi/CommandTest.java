@@ -226,6 +226,17 @@ public class CommandTest extends BaseTest {
         assertTrue(resolved2.getPropertyIdentifiers().equals("0102"));
     }
 
+    @Test public void getState() {
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "004700");
+        ParkingTicket.GetParkingTicket getter = new ParkingTicket.GetParkingTicket();
+        assertTrue(getter.propertyIdentifiers.equals(""));
+
+        setEnvironment(CommandResolver.Environment.VEHICLE);
+        ParkingTicket.GetParkingTicket resolved =
+                (ParkingTicket.GetParkingTicket) CommandResolver.resolve(waitingForBytes);
+        assertTrue(resolved.propertyIdentifiers.equals(""));
+    }
+
     @Test public void invalidAvailabilityThrows() {
         assertThrows(CommandParseException.class, () -> {
             // invalid type
