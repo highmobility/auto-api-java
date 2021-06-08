@@ -124,7 +124,6 @@ class KChargingTest : BaseTest() {
     }
     
     private fun testState(state: Charging.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.estimatedRange.value?.value == 432.1)
         assertTrue(state.estimatedRange.value?.unit == Length.Unit.KILOMETERS)
         assertTrue(state.batteryLevel.value == 0.5)
@@ -187,6 +186,7 @@ class KChargingTest : BaseTest() {
         assertTrue(state.preconditioningError.value == Charging.PreconditioningError.NOT_POSSIBLE_LOW)
         assertTrue(state.batteryCapacity.value?.value == 70.0)
         assertTrue(state.batteryCapacity.value?.unit == Energy.Unit.KILOWATT_HOURS)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

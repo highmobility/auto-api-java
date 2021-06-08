@@ -94,7 +94,6 @@ class KVehicleInformationTest : BaseTest() {
     }
     
     private fun testState(state: VehicleInformation.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.powertrain.value == EngineType.ALL_ELECTRIC)
         assertTrue(state.modelName.value == "Type X")
         assertTrue(state.name.value == "Speedy")
@@ -121,6 +120,7 @@ class KVehicleInformationTest : BaseTest() {
         assertTrue(state.timeformat.value == VehicleInformation.Timeformat.TWENTY_FOUR_H)
         assertTrue(state.drive.value == VehicleInformation.Drive.RWD)
         assertTrue(state.powertrainSecondary.value == EngineType.PETROL)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

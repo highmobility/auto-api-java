@@ -52,9 +52,9 @@ class KFuelingTest : BaseTest() {
     }
     
     private fun testState(state: Fueling.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.gasFlapLock.value == LockState.LOCKED)
         assertTrue(state.gasFlapPosition.value == Position.CLOSED)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

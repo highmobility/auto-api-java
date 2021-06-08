@@ -611,7 +611,7 @@ public class Diagnostics {
             return lowVoltageBatteryChargeLevel;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<CheckControlMessage>> checkControlMessagesBuilder = new ArrayList<>();
@@ -627,7 +627,7 @@ public class Diagnostics {
             final ArrayList<Property<TirePressure>> tirePressuresDifferencesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_MILEAGE: return mileage.update(p);
                         case PROPERTY_ENGINE_OIL_TEMPERATURE: return engineOilTemperature.update(p);
@@ -731,119 +731,15 @@ public class Diagnostics {
             tirePressuresDifferences = tirePressuresDifferencesBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            mileage = builder.mileage;
-            engineOilTemperature = builder.engineOilTemperature;
-            speed = builder.speed;
-            engineRPM = builder.engineRPM;
-            fuelLevel = builder.fuelLevel;
-            estimatedRange = builder.estimatedRange;
-            washerFluidLevel = builder.washerFluidLevel;
-            batteryVoltage = builder.batteryVoltage;
-            adBlueLevel = builder.adBlueLevel;
-            distanceSinceReset = builder.distanceSinceReset;
-            distanceSinceStart = builder.distanceSinceStart;
-            fuelVolume = builder.fuelVolume;
-            antiLockBraking = builder.antiLockBraking;
-            engineCoolantTemperature = builder.engineCoolantTemperature;
-            engineTotalOperatingHours = builder.engineTotalOperatingHours;
-            engineTotalFuelConsumption = builder.engineTotalFuelConsumption;
-            brakeFluidLevel = builder.brakeFluidLevel;
-            engineTorque = builder.engineTorque;
-            engineLoad = builder.engineLoad;
-            wheelBasedSpeed = builder.wheelBasedSpeed;
-            batteryLevel = builder.batteryLevel;
-            checkControlMessages = builder.checkControlMessages;
-            tirePressures = builder.tirePressures;
-            tireTemperatures = builder.tireTemperatures;
-            wheelRPMs = builder.wheelRPMs;
-            troubleCodes = builder.troubleCodes;
-            mileageMeters = builder.mileageMeters;
-            odometer = builder.odometer;
-            engineTotalOperatingTime = builder.engineTotalOperatingTime;
-            tirePressureStatuses = builder.tirePressureStatuses;
-            brakeLiningWearPreWarning = builder.brakeLiningWearPreWarning;
-            engineOilLifeRemaining = builder.engineOilLifeRemaining;
-            oemTroubleCodeValues = builder.oemTroubleCodeValues;
-            dieselExhaustFluidRange = builder.dieselExhaustFluidRange;
-            dieselParticulateFilterSootLevel = builder.dieselParticulateFilterSootLevel;
-            confirmedTroubleCodes = builder.confirmedTroubleCodes;
-            dieselExhaustFilterStatus = builder.dieselExhaustFilterStatus;
-            engineTotalIdleOperatingTime = builder.engineTotalIdleOperatingTime;
-            engineOilAmount = builder.engineOilAmount;
-            engineOilLevel = builder.engineOilLevel;
-            estimatedSecondaryPowertrainRange = builder.estimatedSecondaryPowertrainRange;
-            fuelLevelAccuracy = builder.fuelLevelAccuracy;
-            tirePressuresTargets = builder.tirePressuresTargets;
-            tirePressuresDifferences = builder.tirePressuresDifferences;
-            backupBatteryRemainingTime = builder.backupBatteryRemainingTime;
-            engineCoolantFluidLevel = builder.engineCoolantFluidLevel;
-            engineOilFluidLevel = builder.engineOilFluidLevel;
-            engineOilPressureLevel = builder.engineOilPressureLevel;
-            engineTimeToNextService = builder.engineTimeToNextService;
-            lowVoltageBatteryChargeLevel = builder.lowVoltageBatteryChargeLevel;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<Length> mileage;
-            private Property<Temperature> engineOilTemperature;
-            private Property<Speed> speed;
-            private Property<AngularVelocity> engineRPM;
-            private Property<Double> fuelLevel;
-            private Property<Length> estimatedRange;
-            private Property<FluidLevel> washerFluidLevel;
-            private Property<ElectricPotentialDifference> batteryVoltage;
-            private Property<Double> adBlueLevel;
-            private Property<Length> distanceSinceReset;
-            private Property<Length> distanceSinceStart;
-            private Property<Volume> fuelVolume;
-            private Property<ActiveState> antiLockBraking;
-            private Property<Temperature> engineCoolantTemperature;
-            private Property<Duration> engineTotalOperatingHours;
-            private Property<Volume> engineTotalFuelConsumption;
-            private Property<FluidLevel> brakeFluidLevel;
-            private Property<Double> engineTorque;
-            private Property<Double> engineLoad;
-            private Property<Speed> wheelBasedSpeed;
-            private Property<Double> batteryLevel;
-            private final List<Property<CheckControlMessage>> checkControlMessages = new ArrayList<>();
-            private final List<Property<TirePressure>> tirePressures = new ArrayList<>();
-            private final List<Property<TireTemperature>> tireTemperatures = new ArrayList<>();
-            private final List<Property<WheelRpm>> wheelRPMs = new ArrayList<>();
-            private final List<Property<TroubleCode>> troubleCodes = new ArrayList<>();
-            private Property<Length> mileageMeters;
-            private Property<Length> odometer;
-            private Property<Duration> engineTotalOperatingTime;
-            private final List<Property<TirePressureStatus>> tirePressureStatuses = new ArrayList<>();
-            private Property<ActiveState> brakeLiningWearPreWarning;
-            private Property<Double> engineOilLifeRemaining;
-            private final List<Property<OemTroubleCodeValue>> oemTroubleCodeValues = new ArrayList<>();
-            private Property<Length> dieselExhaustFluidRange;
-            private Property<Double> dieselParticulateFilterSootLevel;
-            private final List<Property<ConfirmedTroubleCode>> confirmedTroubleCodes = new ArrayList<>();
-            private final List<Property<DieselExhaustFilterStatus>> dieselExhaustFilterStatus = new ArrayList<>();
-            private Property<Duration> engineTotalIdleOperatingTime;
-            private Property<Volume> engineOilAmount;
-            private Property<Double> engineOilLevel;
-            private Property<Length> estimatedSecondaryPowertrainRange;
-            private Property<FuelLevelAccuracy> fuelLevelAccuracy;
-            private final List<Property<TirePressure>> tirePressuresTargets = new ArrayList<>();
-            private final List<Property<TirePressure>> tirePressuresDifferences = new ArrayList<>();
-            private Property<Duration> backupBatteryRemainingTime;
-            private Property<FluidLevel> engineCoolantFluidLevel;
-            private Property<FluidLevel> engineOilFluidLevel;
-            private Property<EngineOilPressureLevel> engineOilPressureLevel;
-            private Property<Duration> engineTimeToNextService;
-            private Property<LowVoltageBatteryChargeLevel> lowVoltageBatteryChargeLevel;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -853,8 +749,8 @@ public class Diagnostics {
              */
             @Deprecated
             public Builder setMileage(Property<Length> mileage) {
-                this.mileage = mileage.setIdentifier(PROPERTY_MILEAGE);
-                addProperty(this.mileage);
+                Property property = mileage.setIdentifier(PROPERTY_MILEAGE);
+                addProperty(property);
                 return this;
             }
             
@@ -863,8 +759,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineOilTemperature(Property<Temperature> engineOilTemperature) {
-                this.engineOilTemperature = engineOilTemperature.setIdentifier(PROPERTY_ENGINE_OIL_TEMPERATURE);
-                addProperty(this.engineOilTemperature);
+                Property property = engineOilTemperature.setIdentifier(PROPERTY_ENGINE_OIL_TEMPERATURE);
+                addProperty(property);
                 return this;
             }
             
@@ -873,8 +769,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setSpeed(Property<Speed> speed) {
-                this.speed = speed.setIdentifier(PROPERTY_SPEED);
-                addProperty(this.speed);
+                Property property = speed.setIdentifier(PROPERTY_SPEED);
+                addProperty(property);
                 return this;
             }
             
@@ -883,8 +779,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineRPM(Property<AngularVelocity> engineRPM) {
-                this.engineRPM = engineRPM.setIdentifier(PROPERTY_ENGINE_RPM);
-                addProperty(this.engineRPM);
+                Property property = engineRPM.setIdentifier(PROPERTY_ENGINE_RPM);
+                addProperty(property);
                 return this;
             }
             
@@ -893,8 +789,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setFuelLevel(Property<Double> fuelLevel) {
-                this.fuelLevel = fuelLevel.setIdentifier(PROPERTY_FUEL_LEVEL);
-                addProperty(this.fuelLevel);
+                Property property = fuelLevel.setIdentifier(PROPERTY_FUEL_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -903,8 +799,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEstimatedRange(Property<Length> estimatedRange) {
-                this.estimatedRange = estimatedRange.setIdentifier(PROPERTY_ESTIMATED_RANGE);
-                addProperty(this.estimatedRange);
+                Property property = estimatedRange.setIdentifier(PROPERTY_ESTIMATED_RANGE);
+                addProperty(property);
                 return this;
             }
             
@@ -913,8 +809,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setWasherFluidLevel(Property<FluidLevel> washerFluidLevel) {
-                this.washerFluidLevel = washerFluidLevel.setIdentifier(PROPERTY_WASHER_FLUID_LEVEL);
-                addProperty(this.washerFluidLevel);
+                Property property = washerFluidLevel.setIdentifier(PROPERTY_WASHER_FLUID_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -923,8 +819,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setBatteryVoltage(Property<ElectricPotentialDifference> batteryVoltage) {
-                this.batteryVoltage = batteryVoltage.setIdentifier(PROPERTY_BATTERY_VOLTAGE);
-                addProperty(this.batteryVoltage);
+                Property property = batteryVoltage.setIdentifier(PROPERTY_BATTERY_VOLTAGE);
+                addProperty(property);
                 return this;
             }
             
@@ -933,8 +829,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setAdBlueLevel(Property<Double> adBlueLevel) {
-                this.adBlueLevel = adBlueLevel.setIdentifier(PROPERTY_ADBLUE_LEVEL);
-                addProperty(this.adBlueLevel);
+                Property property = adBlueLevel.setIdentifier(PROPERTY_ADBLUE_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -943,8 +839,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setDistanceSinceReset(Property<Length> distanceSinceReset) {
-                this.distanceSinceReset = distanceSinceReset.setIdentifier(PROPERTY_DISTANCE_SINCE_RESET);
-                addProperty(this.distanceSinceReset);
+                Property property = distanceSinceReset.setIdentifier(PROPERTY_DISTANCE_SINCE_RESET);
+                addProperty(property);
                 return this;
             }
             
@@ -953,8 +849,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setDistanceSinceStart(Property<Length> distanceSinceStart) {
-                this.distanceSinceStart = distanceSinceStart.setIdentifier(PROPERTY_DISTANCE_SINCE_START);
-                addProperty(this.distanceSinceStart);
+                Property property = distanceSinceStart.setIdentifier(PROPERTY_DISTANCE_SINCE_START);
+                addProperty(property);
                 return this;
             }
             
@@ -963,8 +859,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setFuelVolume(Property<Volume> fuelVolume) {
-                this.fuelVolume = fuelVolume.setIdentifier(PROPERTY_FUEL_VOLUME);
-                addProperty(this.fuelVolume);
+                Property property = fuelVolume.setIdentifier(PROPERTY_FUEL_VOLUME);
+                addProperty(property);
                 return this;
             }
             
@@ -973,8 +869,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setAntiLockBraking(Property<ActiveState> antiLockBraking) {
-                this.antiLockBraking = antiLockBraking.setIdentifier(PROPERTY_ANTI_LOCK_BRAKING);
-                addProperty(this.antiLockBraking);
+                Property property = antiLockBraking.setIdentifier(PROPERTY_ANTI_LOCK_BRAKING);
+                addProperty(property);
                 return this;
             }
             
@@ -983,8 +879,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineCoolantTemperature(Property<Temperature> engineCoolantTemperature) {
-                this.engineCoolantTemperature = engineCoolantTemperature.setIdentifier(PROPERTY_ENGINE_COOLANT_TEMPERATURE);
-                addProperty(this.engineCoolantTemperature);
+                Property property = engineCoolantTemperature.setIdentifier(PROPERTY_ENGINE_COOLANT_TEMPERATURE);
+                addProperty(property);
                 return this;
             }
             
@@ -995,8 +891,8 @@ public class Diagnostics {
              */
             @Deprecated
             public Builder setEngineTotalOperatingHours(Property<Duration> engineTotalOperatingHours) {
-                this.engineTotalOperatingHours = engineTotalOperatingHours.setIdentifier(PROPERTY_ENGINE_TOTAL_OPERATING_HOURS);
-                addProperty(this.engineTotalOperatingHours);
+                Property property = engineTotalOperatingHours.setIdentifier(PROPERTY_ENGINE_TOTAL_OPERATING_HOURS);
+                addProperty(property);
                 return this;
             }
             
@@ -1005,8 +901,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineTotalFuelConsumption(Property<Volume> engineTotalFuelConsumption) {
-                this.engineTotalFuelConsumption = engineTotalFuelConsumption.setIdentifier(PROPERTY_ENGINE_TOTAL_FUEL_CONSUMPTION);
-                addProperty(this.engineTotalFuelConsumption);
+                Property property = engineTotalFuelConsumption.setIdentifier(PROPERTY_ENGINE_TOTAL_FUEL_CONSUMPTION);
+                addProperty(property);
                 return this;
             }
             
@@ -1015,8 +911,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setBrakeFluidLevel(Property<FluidLevel> brakeFluidLevel) {
-                this.brakeFluidLevel = brakeFluidLevel.setIdentifier(PROPERTY_BRAKE_FLUID_LEVEL);
-                addProperty(this.brakeFluidLevel);
+                Property property = brakeFluidLevel.setIdentifier(PROPERTY_BRAKE_FLUID_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -1025,8 +921,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineTorque(Property<Double> engineTorque) {
-                this.engineTorque = engineTorque.setIdentifier(PROPERTY_ENGINE_TORQUE);
-                addProperty(this.engineTorque);
+                Property property = engineTorque.setIdentifier(PROPERTY_ENGINE_TORQUE);
+                addProperty(property);
                 return this;
             }
             
@@ -1035,8 +931,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineLoad(Property<Double> engineLoad) {
-                this.engineLoad = engineLoad.setIdentifier(PROPERTY_ENGINE_LOAD);
-                addProperty(this.engineLoad);
+                Property property = engineLoad.setIdentifier(PROPERTY_ENGINE_LOAD);
+                addProperty(property);
                 return this;
             }
             
@@ -1045,8 +941,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setWheelBasedSpeed(Property<Speed> wheelBasedSpeed) {
-                this.wheelBasedSpeed = wheelBasedSpeed.setIdentifier(PROPERTY_WHEEL_BASED_SPEED);
-                addProperty(this.wheelBasedSpeed);
+                Property property = wheelBasedSpeed.setIdentifier(PROPERTY_WHEEL_BASED_SPEED);
+                addProperty(property);
                 return this;
             }
             
@@ -1055,8 +951,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setBatteryLevel(Property<Double> batteryLevel) {
-                this.batteryLevel = batteryLevel.setIdentifier(PROPERTY_BATTERY_LEVEL);
-                addProperty(this.batteryLevel);
+                Property property = batteryLevel.setIdentifier(PROPERTY_BATTERY_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -1067,7 +963,6 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setCheckControlMessages(Property<CheckControlMessage>[] checkControlMessages) {
-                this.checkControlMessages.clear();
                 for (int i = 0; i < checkControlMessages.length; i++) {
                     addCheckControlMessage(checkControlMessages[i]);
                 }
@@ -1084,7 +979,6 @@ public class Diagnostics {
             public Builder addCheckControlMessage(Property<CheckControlMessage> checkControlMessage) {
                 checkControlMessage.setIdentifier(PROPERTY_CHECK_CONTROL_MESSAGES);
                 addProperty(checkControlMessage);
-                checkControlMessages.add(checkControlMessage);
                 return this;
             }
             
@@ -1095,7 +989,6 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setTirePressures(Property<TirePressure>[] tirePressures) {
-                this.tirePressures.clear();
                 for (int i = 0; i < tirePressures.length; i++) {
                     addTirePressure(tirePressures[i]);
                 }
@@ -1112,7 +1005,6 @@ public class Diagnostics {
             public Builder addTirePressure(Property<TirePressure> tirePressure) {
                 tirePressure.setIdentifier(PROPERTY_TIRE_PRESSURES);
                 addProperty(tirePressure);
-                tirePressures.add(tirePressure);
                 return this;
             }
             
@@ -1123,7 +1015,6 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setTireTemperatures(Property<TireTemperature>[] tireTemperatures) {
-                this.tireTemperatures.clear();
                 for (int i = 0; i < tireTemperatures.length; i++) {
                     addTireTemperature(tireTemperatures[i]);
                 }
@@ -1140,7 +1031,6 @@ public class Diagnostics {
             public Builder addTireTemperature(Property<TireTemperature> tireTemperature) {
                 tireTemperature.setIdentifier(PROPERTY_TIRE_TEMPERATURES);
                 addProperty(tireTemperature);
-                tireTemperatures.add(tireTemperature);
                 return this;
             }
             
@@ -1151,7 +1041,6 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setWheelRPMs(Property<WheelRpm>[] wheelRPMs) {
-                this.wheelRPMs.clear();
                 for (int i = 0; i < wheelRPMs.length; i++) {
                     addWheelRpm(wheelRPMs[i]);
                 }
@@ -1168,7 +1057,6 @@ public class Diagnostics {
             public Builder addWheelRpm(Property<WheelRpm> wheelRpm) {
                 wheelRpm.setIdentifier(PROPERTY_WHEEL_RPMS);
                 addProperty(wheelRpm);
-                wheelRPMs.add(wheelRpm);
                 return this;
             }
             
@@ -1179,7 +1067,6 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setTroubleCodes(Property<TroubleCode>[] troubleCodes) {
-                this.troubleCodes.clear();
                 for (int i = 0; i < troubleCodes.length; i++) {
                     addTroubleCode(troubleCodes[i]);
                 }
@@ -1196,7 +1083,6 @@ public class Diagnostics {
             public Builder addTroubleCode(Property<TroubleCode> troubleCode) {
                 troubleCode.setIdentifier(PROPERTY_TROUBLE_CODES);
                 addProperty(troubleCode);
-                troubleCodes.add(troubleCode);
                 return this;
             }
             
@@ -1207,8 +1093,8 @@ public class Diagnostics {
              */
             @Deprecated
             public Builder setMileageMeters(Property<Length> mileageMeters) {
-                this.mileageMeters = mileageMeters.setIdentifier(PROPERTY_MILEAGE_METERS);
-                addProperty(this.mileageMeters);
+                Property property = mileageMeters.setIdentifier(PROPERTY_MILEAGE_METERS);
+                addProperty(property);
                 return this;
             }
             
@@ -1217,8 +1103,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setOdometer(Property<Length> odometer) {
-                this.odometer = odometer.setIdentifier(PROPERTY_ODOMETER);
-                addProperty(this.odometer);
+                Property property = odometer.setIdentifier(PROPERTY_ODOMETER);
+                addProperty(property);
                 return this;
             }
             
@@ -1227,8 +1113,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineTotalOperatingTime(Property<Duration> engineTotalOperatingTime) {
-                this.engineTotalOperatingTime = engineTotalOperatingTime.setIdentifier(PROPERTY_ENGINE_TOTAL_OPERATING_TIME);
-                addProperty(this.engineTotalOperatingTime);
+                Property property = engineTotalOperatingTime.setIdentifier(PROPERTY_ENGINE_TOTAL_OPERATING_TIME);
+                addProperty(property);
                 return this;
             }
             
@@ -1239,7 +1125,6 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setTirePressureStatuses(Property<TirePressureStatus>[] tirePressureStatuses) {
-                this.tirePressureStatuses.clear();
                 for (int i = 0; i < tirePressureStatuses.length; i++) {
                     addTirePressureStatus(tirePressureStatuses[i]);
                 }
@@ -1256,7 +1141,6 @@ public class Diagnostics {
             public Builder addTirePressureStatus(Property<TirePressureStatus> tirePressureStatus) {
                 tirePressureStatus.setIdentifier(PROPERTY_TIRE_PRESSURE_STATUSES);
                 addProperty(tirePressureStatus);
-                tirePressureStatuses.add(tirePressureStatus);
                 return this;
             }
             
@@ -1265,8 +1149,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setBrakeLiningWearPreWarning(Property<ActiveState> brakeLiningWearPreWarning) {
-                this.brakeLiningWearPreWarning = brakeLiningWearPreWarning.setIdentifier(PROPERTY_BRAKE_LINING_WEAR_PRE_WARNING);
-                addProperty(this.brakeLiningWearPreWarning);
+                Property property = brakeLiningWearPreWarning.setIdentifier(PROPERTY_BRAKE_LINING_WEAR_PRE_WARNING);
+                addProperty(property);
                 return this;
             }
             
@@ -1275,8 +1159,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineOilLifeRemaining(Property<Double> engineOilLifeRemaining) {
-                this.engineOilLifeRemaining = engineOilLifeRemaining.setIdentifier(PROPERTY_ENGINE_OIL_LIFE_REMAINING);
-                addProperty(this.engineOilLifeRemaining);
+                Property property = engineOilLifeRemaining.setIdentifier(PROPERTY_ENGINE_OIL_LIFE_REMAINING);
+                addProperty(property);
                 return this;
             }
             
@@ -1287,7 +1171,6 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setOemTroubleCodeValues(Property<OemTroubleCodeValue>[] oemTroubleCodeValues) {
-                this.oemTroubleCodeValues.clear();
                 for (int i = 0; i < oemTroubleCodeValues.length; i++) {
                     addEngineTroubleCodeValue(oemTroubleCodeValues[i]);
                 }
@@ -1304,7 +1187,6 @@ public class Diagnostics {
             public Builder addEngineTroubleCodeValue(Property<OemTroubleCodeValue> engineTroubleCodeValue) {
                 engineTroubleCodeValue.setIdentifier(PROPERTY_OEM_TROUBLE_CODE_VALUES);
                 addProperty(engineTroubleCodeValue);
-                oemTroubleCodeValues.add(engineTroubleCodeValue);
                 return this;
             }
             
@@ -1313,8 +1195,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setDieselExhaustFluidRange(Property<Length> dieselExhaustFluidRange) {
-                this.dieselExhaustFluidRange = dieselExhaustFluidRange.setIdentifier(PROPERTY_DIESEL_EXHAUST_FLUID_RANGE);
-                addProperty(this.dieselExhaustFluidRange);
+                Property property = dieselExhaustFluidRange.setIdentifier(PROPERTY_DIESEL_EXHAUST_FLUID_RANGE);
+                addProperty(property);
                 return this;
             }
             
@@ -1323,8 +1205,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setDieselParticulateFilterSootLevel(Property<Double> dieselParticulateFilterSootLevel) {
-                this.dieselParticulateFilterSootLevel = dieselParticulateFilterSootLevel.setIdentifier(PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL);
-                addProperty(this.dieselParticulateFilterSootLevel);
+                Property property = dieselParticulateFilterSootLevel.setIdentifier(PROPERTY_DIESEL_PARTICULATE_FILTER_SOOT_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -1335,7 +1217,6 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setConfirmedTroubleCodes(Property<ConfirmedTroubleCode>[] confirmedTroubleCodes) {
-                this.confirmedTroubleCodes.clear();
                 for (int i = 0; i < confirmedTroubleCodes.length; i++) {
                     addConfirmedTroubleCode(confirmedTroubleCodes[i]);
                 }
@@ -1352,7 +1233,6 @@ public class Diagnostics {
             public Builder addConfirmedTroubleCode(Property<ConfirmedTroubleCode> confirmedTroubleCode) {
                 confirmedTroubleCode.setIdentifier(PROPERTY_CONFIRMED_TROUBLE_CODES);
                 addProperty(confirmedTroubleCode);
-                confirmedTroubleCodes.add(confirmedTroubleCode);
                 return this;
             }
             
@@ -1363,7 +1243,6 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setDieselExhaustFilterStatus(Property<DieselExhaustFilterStatus>[] dieselExhaustFilterStatus) {
-                this.dieselExhaustFilterStatus.clear();
                 for (int i = 0; i < dieselExhaustFilterStatus.length; i++) {
                     addDieselExhaustFilterStatu(dieselExhaustFilterStatus[i]);
                 }
@@ -1380,7 +1259,6 @@ public class Diagnostics {
             public Builder addDieselExhaustFilterStatu(Property<DieselExhaustFilterStatus> dieselExhaustFilterStatu) {
                 dieselExhaustFilterStatu.setIdentifier(PROPERTY_DIESEL_EXHAUST_FILTER_STATUS);
                 addProperty(dieselExhaustFilterStatu);
-                dieselExhaustFilterStatus.add(dieselExhaustFilterStatu);
                 return this;
             }
             
@@ -1389,8 +1267,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineTotalIdleOperatingTime(Property<Duration> engineTotalIdleOperatingTime) {
-                this.engineTotalIdleOperatingTime = engineTotalIdleOperatingTime.setIdentifier(PROPERTY_ENGINE_TOTAL_IDLE_OPERATING_TIME);
-                addProperty(this.engineTotalIdleOperatingTime);
+                Property property = engineTotalIdleOperatingTime.setIdentifier(PROPERTY_ENGINE_TOTAL_IDLE_OPERATING_TIME);
+                addProperty(property);
                 return this;
             }
             
@@ -1399,8 +1277,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineOilAmount(Property<Volume> engineOilAmount) {
-                this.engineOilAmount = engineOilAmount.setIdentifier(PROPERTY_ENGINE_OIL_AMOUNT);
-                addProperty(this.engineOilAmount);
+                Property property = engineOilAmount.setIdentifier(PROPERTY_ENGINE_OIL_AMOUNT);
+                addProperty(property);
                 return this;
             }
             
@@ -1409,8 +1287,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineOilLevel(Property<Double> engineOilLevel) {
-                this.engineOilLevel = engineOilLevel.setIdentifier(PROPERTY_ENGINE_OIL_LEVEL);
-                addProperty(this.engineOilLevel);
+                Property property = engineOilLevel.setIdentifier(PROPERTY_ENGINE_OIL_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -1419,8 +1297,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEstimatedSecondaryPowertrainRange(Property<Length> estimatedSecondaryPowertrainRange) {
-                this.estimatedSecondaryPowertrainRange = estimatedSecondaryPowertrainRange.setIdentifier(PROPERTY_ESTIMATED_SECONDARY_POWERTRAIN_RANGE);
-                addProperty(this.estimatedSecondaryPowertrainRange);
+                Property property = estimatedSecondaryPowertrainRange.setIdentifier(PROPERTY_ESTIMATED_SECONDARY_POWERTRAIN_RANGE);
+                addProperty(property);
                 return this;
             }
             
@@ -1429,8 +1307,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setFuelLevelAccuracy(Property<FuelLevelAccuracy> fuelLevelAccuracy) {
-                this.fuelLevelAccuracy = fuelLevelAccuracy.setIdentifier(PROPERTY_FUEL_LEVEL_ACCURACY);
-                addProperty(this.fuelLevelAccuracy);
+                Property property = fuelLevelAccuracy.setIdentifier(PROPERTY_FUEL_LEVEL_ACCURACY);
+                addProperty(property);
                 return this;
             }
             
@@ -1441,7 +1319,6 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setTirePressuresTargets(Property<TirePressure>[] tirePressuresTargets) {
-                this.tirePressuresTargets.clear();
                 for (int i = 0; i < tirePressuresTargets.length; i++) {
                     addTirePressureTarget(tirePressuresTargets[i]);
                 }
@@ -1458,7 +1335,6 @@ public class Diagnostics {
             public Builder addTirePressureTarget(Property<TirePressure> tirePressureTarget) {
                 tirePressureTarget.setIdentifier(PROPERTY_TIRE_PRESSURES_TARGETS);
                 addProperty(tirePressureTarget);
-                tirePressuresTargets.add(tirePressureTarget);
                 return this;
             }
             
@@ -1469,7 +1345,6 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setTirePressuresDifferences(Property<TirePressure>[] tirePressuresDifferences) {
-                this.tirePressuresDifferences.clear();
                 for (int i = 0; i < tirePressuresDifferences.length; i++) {
                     addTirePressureDifference(tirePressuresDifferences[i]);
                 }
@@ -1486,7 +1361,6 @@ public class Diagnostics {
             public Builder addTirePressureDifference(Property<TirePressure> tirePressureDifference) {
                 tirePressureDifference.setIdentifier(PROPERTY_TIRE_PRESSURES_DIFFERENCES);
                 addProperty(tirePressureDifference);
-                tirePressuresDifferences.add(tirePressureDifference);
                 return this;
             }
             
@@ -1495,8 +1369,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setBackupBatteryRemainingTime(Property<Duration> backupBatteryRemainingTime) {
-                this.backupBatteryRemainingTime = backupBatteryRemainingTime.setIdentifier(PROPERTY_BACKUP_BATTERY_REMAINING_TIME);
-                addProperty(this.backupBatteryRemainingTime);
+                Property property = backupBatteryRemainingTime.setIdentifier(PROPERTY_BACKUP_BATTERY_REMAINING_TIME);
+                addProperty(property);
                 return this;
             }
             
@@ -1505,8 +1379,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineCoolantFluidLevel(Property<FluidLevel> engineCoolantFluidLevel) {
-                this.engineCoolantFluidLevel = engineCoolantFluidLevel.setIdentifier(PROPERTY_ENGINE_COOLANT_FLUID_LEVEL);
-                addProperty(this.engineCoolantFluidLevel);
+                Property property = engineCoolantFluidLevel.setIdentifier(PROPERTY_ENGINE_COOLANT_FLUID_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -1515,8 +1389,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineOilFluidLevel(Property<FluidLevel> engineOilFluidLevel) {
-                this.engineOilFluidLevel = engineOilFluidLevel.setIdentifier(PROPERTY_ENGINE_OIL_FLUID_LEVEL);
-                addProperty(this.engineOilFluidLevel);
+                Property property = engineOilFluidLevel.setIdentifier(PROPERTY_ENGINE_OIL_FLUID_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -1525,8 +1399,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineOilPressureLevel(Property<EngineOilPressureLevel> engineOilPressureLevel) {
-                this.engineOilPressureLevel = engineOilPressureLevel.setIdentifier(PROPERTY_ENGINE_OIL_PRESSURE_LEVEL);
-                addProperty(this.engineOilPressureLevel);
+                Property property = engineOilPressureLevel.setIdentifier(PROPERTY_ENGINE_OIL_PRESSURE_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -1535,8 +1409,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setEngineTimeToNextService(Property<Duration> engineTimeToNextService) {
-                this.engineTimeToNextService = engineTimeToNextService.setIdentifier(PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE);
-                addProperty(this.engineTimeToNextService);
+                Property property = engineTimeToNextService.setIdentifier(PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE);
+                addProperty(property);
                 return this;
             }
             
@@ -1545,8 +1419,8 @@ public class Diagnostics {
              * @return The builder
              */
             public Builder setLowVoltageBatteryChargeLevel(Property<LowVoltageBatteryChargeLevel> lowVoltageBatteryChargeLevel) {
-                this.lowVoltageBatteryChargeLevel = lowVoltageBatteryChargeLevel.setIdentifier(PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL);
-                addProperty(this.lowVoltageBatteryChargeLevel);
+                Property property = lowVoltageBatteryChargeLevel.setIdentifier(PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL);
+                addProperty(property);
                 return this;
             }
         }

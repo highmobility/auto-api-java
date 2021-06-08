@@ -113,10 +113,10 @@ public class RemoteControl {
             createBytes();
         }
     
-        ControlCommand(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ControlCommand(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_ANGLE: return angle.update(p);
                         case PROPERTY_SPEED: return speed.update(p);
@@ -147,10 +147,10 @@ public class RemoteControl {
             createBytes();
         }
     
-        StartControl(byte[] bytes) throws CommandParseException, PropertyParseException {
+        StartControl(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CONTROL_MODE) return controlMode.update(p);
                     
                     return null;
@@ -178,10 +178,10 @@ public class RemoteControl {
             createBytes();
         }
     
-        StopControl(byte[] bytes) throws CommandParseException, PropertyParseException {
+        StopControl(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CONTROL_MODE) return controlMode.update(p);
                     
                     return null;
@@ -214,10 +214,10 @@ public class RemoteControl {
             return angle;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_CONTROL_MODE: return controlMode.update(p);
                         case PROPERTY_ANGLE: return angle.update(p);

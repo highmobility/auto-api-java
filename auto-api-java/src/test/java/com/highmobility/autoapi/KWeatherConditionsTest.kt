@@ -49,8 +49,8 @@ class KWeatherConditionsTest : BaseTest() {
     }
     
     private fun testState(state: WeatherConditions.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.rainIntensity.value == 1.0)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

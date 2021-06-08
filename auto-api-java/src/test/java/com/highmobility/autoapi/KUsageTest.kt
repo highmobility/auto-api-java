@@ -152,7 +152,6 @@ class KUsageTest : BaseTest() {
     }
     
     private fun testState(state: Usage.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.averageWeeklyDistance.value?.value == 666.6)
         assertTrue(state.averageWeeklyDistance.value?.unit == Length.Unit.KILOMETERS)
         assertTrue(state.averageWeeklyDistanceLongRun.value?.value == 777.7)
@@ -253,6 +252,7 @@ class KUsageTest : BaseTest() {
         assertTrue(state.tripMeters[1].value?.id == 2)
         assertTrue(state.tripMeters[1].value?.distance?.value == 2489.3)
         assertTrue(state.tripMeters[1].value?.distance?.unit == Length.Unit.KILOMETERS)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

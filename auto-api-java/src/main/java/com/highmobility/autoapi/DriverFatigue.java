@@ -84,10 +84,10 @@ public class DriverFatigue {
             return detectedFatigueLevel;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_DETECTED_FATIGUE_LEVEL: return detectedFatigueLevel.update(p);
                     }

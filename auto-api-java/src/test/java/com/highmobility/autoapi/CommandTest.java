@@ -237,6 +237,12 @@ public class CommandTest extends BaseTest {
         assertTrue(resolved.propertyIdentifiers.equals(""));
     }
 
+    @Test public void stateParsingInvalidPropertyPrintsWarningLog() {
+        Diagnostics.State.Builder builder = new Diagnostics.State.Builder();
+        builder.addProperty(new Property(0xdf, 1f));
+        warningLogExpected(1, () -> builder.build());
+    }
+
     @Test public void invalidAvailabilityThrows() {
         assertThrows(CommandParseException.class, () -> {
             // invalid type

@@ -539,7 +539,7 @@ public class Usage {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<DrivingModeActivationPeriod>> drivingModesActivationPeriodsBuilder = new ArrayList<>();
@@ -547,7 +547,7 @@ public class Usage {
             final ArrayList<Property<TripMeter>> tripMetersBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_AVERAGE_WEEKLY_DISTANCE: return averageWeeklyDistance.update(p);
                         case PROPERTY_AVERAGE_WEEKLY_DISTANCE_LONG_RUN: return averageWeeklyDistanceLongRun.update(p);
@@ -609,99 +609,15 @@ public class Usage {
             tripMeters = tripMetersBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            averageWeeklyDistance = builder.averageWeeklyDistance;
-            averageWeeklyDistanceLongRun = builder.averageWeeklyDistanceLongRun;
-            accelerationEvaluation = builder.accelerationEvaluation;
-            drivingStyleEvaluation = builder.drivingStyleEvaluation;
-            drivingModesActivationPeriods = builder.drivingModesActivationPeriods;
-            drivingModesEnergyConsumptions = builder.drivingModesEnergyConsumptions;
-            lastTripEnergyConsumption = builder.lastTripEnergyConsumption;
-            lastTripFuelConsumption = builder.lastTripFuelConsumption;
-            mileageAfterLastTrip = builder.mileageAfterLastTrip;
-            lastTripElectricPortion = builder.lastTripElectricPortion;
-            lastTripAverageEnergyRecuperation = builder.lastTripAverageEnergyRecuperation;
-            lastTripBatteryRemaining = builder.lastTripBatteryRemaining;
-            lastTripDate = builder.lastTripDate;
-            averageFuelConsumption = builder.averageFuelConsumption;
-            currentFuelConsumption = builder.currentFuelConsumption;
-            odometerAfterLastTrip = builder.odometerAfterLastTrip;
-            safetyDrivingScore = builder.safetyDrivingScore;
-            rapidAccelerationGrade = builder.rapidAccelerationGrade;
-            rapidDecelerationGrade = builder.rapidDecelerationGrade;
-            lateNightGrade = builder.lateNightGrade;
-            distanceOverTime = builder.distanceOverTime;
-            electricConsumptionRateSinceStart = builder.electricConsumptionRateSinceStart;
-            electricConsumptionRateSinceReset = builder.electricConsumptionRateSinceReset;
-            electricDistanceLastTrip = builder.electricDistanceLastTrip;
-            electricDistanceSinceReset = builder.electricDistanceSinceReset;
-            electricDurationLastTrip = builder.electricDurationLastTrip;
-            electricDurationSinceReset = builder.electricDurationSinceReset;
-            fuelConsumptionRateLastTrip = builder.fuelConsumptionRateLastTrip;
-            fuelConsumptionRateSinceReset = builder.fuelConsumptionRateSinceReset;
-            averageSpeedLastTrip = builder.averageSpeedLastTrip;
-            averageSpeedSinceReset = builder.averageSpeedSinceReset;
-            fuelDistanceLastTrip = builder.fuelDistanceLastTrip;
-            fuelDistanceSinceReset = builder.fuelDistanceSinceReset;
-            drivingDurationLastTrip = builder.drivingDurationLastTrip;
-            drivingDurationSinceReset = builder.drivingDurationSinceReset;
-            ecoScoreTotal = builder.ecoScoreTotal;
-            ecoScoreFreeWheel = builder.ecoScoreFreeWheel;
-            ecoScoreConstant = builder.ecoScoreConstant;
-            ecoScoreBonusRange = builder.ecoScoreBonusRange;
-            tripMeters = builder.tripMeters;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<Length> averageWeeklyDistance;
-            private Property<Length> averageWeeklyDistanceLongRun;
-            private Property<Double> accelerationEvaluation;
-            private Property<Double> drivingStyleEvaluation;
-            private final List<Property<DrivingModeActivationPeriod>> drivingModesActivationPeriods = new ArrayList<>();
-            private final List<Property<DrivingModeEnergyConsumption>> drivingModesEnergyConsumptions = new ArrayList<>();
-            private Property<Energy> lastTripEnergyConsumption;
-            private Property<Volume> lastTripFuelConsumption;
-            private Property<Length> mileageAfterLastTrip;
-            private Property<Double> lastTripElectricPortion;
-            private Property<EnergyEfficiency> lastTripAverageEnergyRecuperation;
-            private Property<Double> lastTripBatteryRemaining;
-            private Property<Calendar> lastTripDate;
-            private Property<FuelEfficiency> averageFuelConsumption;
-            private Property<FuelEfficiency> currentFuelConsumption;
-            private Property<Length> odometerAfterLastTrip;
-            private Property<Double> safetyDrivingScore;
-            private Property<Grade> rapidAccelerationGrade;
-            private Property<Grade> rapidDecelerationGrade;
-            private Property<Grade> lateNightGrade;
-            private Property<DistanceOverTime> distanceOverTime;
-            private Property<EnergyEfficiency> electricConsumptionRateSinceStart;
-            private Property<EnergyEfficiency> electricConsumptionRateSinceReset;
-            private Property<Length> electricDistanceLastTrip;
-            private Property<Length> electricDistanceSinceReset;
-            private Property<Duration> electricDurationLastTrip;
-            private Property<Duration> electricDurationSinceReset;
-            private Property<FuelEfficiency> fuelConsumptionRateLastTrip;
-            private Property<FuelEfficiency> fuelConsumptionRateSinceReset;
-            private Property<Speed> averageSpeedLastTrip;
-            private Property<Speed> averageSpeedSinceReset;
-            private Property<Length> fuelDistanceLastTrip;
-            private Property<Length> fuelDistanceSinceReset;
-            private Property<Duration> drivingDurationLastTrip;
-            private Property<Duration> drivingDurationSinceReset;
-            private Property<Double> ecoScoreTotal;
-            private Property<Double> ecoScoreFreeWheel;
-            private Property<Double> ecoScoreConstant;
-            private Property<Length> ecoScoreBonusRange;
-            private final List<Property<TripMeter>> tripMeters = new ArrayList<>();
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -709,8 +625,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setAverageWeeklyDistance(Property<Length> averageWeeklyDistance) {
-                this.averageWeeklyDistance = averageWeeklyDistance.setIdentifier(PROPERTY_AVERAGE_WEEKLY_DISTANCE);
-                addProperty(this.averageWeeklyDistance);
+                Property property = averageWeeklyDistance.setIdentifier(PROPERTY_AVERAGE_WEEKLY_DISTANCE);
+                addProperty(property);
                 return this;
             }
             
@@ -719,8 +635,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setAverageWeeklyDistanceLongRun(Property<Length> averageWeeklyDistanceLongRun) {
-                this.averageWeeklyDistanceLongRun = averageWeeklyDistanceLongRun.setIdentifier(PROPERTY_AVERAGE_WEEKLY_DISTANCE_LONG_RUN);
-                addProperty(this.averageWeeklyDistanceLongRun);
+                Property property = averageWeeklyDistanceLongRun.setIdentifier(PROPERTY_AVERAGE_WEEKLY_DISTANCE_LONG_RUN);
+                addProperty(property);
                 return this;
             }
             
@@ -729,8 +645,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setAccelerationEvaluation(Property<Double> accelerationEvaluation) {
-                this.accelerationEvaluation = accelerationEvaluation.setIdentifier(PROPERTY_ACCELERATION_EVALUATION);
-                addProperty(this.accelerationEvaluation);
+                Property property = accelerationEvaluation.setIdentifier(PROPERTY_ACCELERATION_EVALUATION);
+                addProperty(property);
                 return this;
             }
             
@@ -739,8 +655,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setDrivingStyleEvaluation(Property<Double> drivingStyleEvaluation) {
-                this.drivingStyleEvaluation = drivingStyleEvaluation.setIdentifier(PROPERTY_DRIVING_STYLE_EVALUATION);
-                addProperty(this.drivingStyleEvaluation);
+                Property property = drivingStyleEvaluation.setIdentifier(PROPERTY_DRIVING_STYLE_EVALUATION);
+                addProperty(property);
                 return this;
             }
             
@@ -751,7 +667,6 @@ public class Usage {
              * @return The builder
              */
             public Builder setDrivingModesActivationPeriods(Property<DrivingModeActivationPeriod>[] drivingModesActivationPeriods) {
-                this.drivingModesActivationPeriods.clear();
                 for (int i = 0; i < drivingModesActivationPeriods.length; i++) {
                     addDrivingModesActivationPeriod(drivingModesActivationPeriods[i]);
                 }
@@ -768,7 +683,6 @@ public class Usage {
             public Builder addDrivingModesActivationPeriod(Property<DrivingModeActivationPeriod> drivingModesActivationPeriod) {
                 drivingModesActivationPeriod.setIdentifier(PROPERTY_DRIVING_MODES_ACTIVATION_PERIODS);
                 addProperty(drivingModesActivationPeriod);
-                drivingModesActivationPeriods.add(drivingModesActivationPeriod);
                 return this;
             }
             
@@ -779,7 +693,6 @@ public class Usage {
              * @return The builder
              */
             public Builder setDrivingModesEnergyConsumptions(Property<DrivingModeEnergyConsumption>[] drivingModesEnergyConsumptions) {
-                this.drivingModesEnergyConsumptions.clear();
                 for (int i = 0; i < drivingModesEnergyConsumptions.length; i++) {
                     addDrivingModeEnergyConsumption(drivingModesEnergyConsumptions[i]);
                 }
@@ -796,7 +709,6 @@ public class Usage {
             public Builder addDrivingModeEnergyConsumption(Property<DrivingModeEnergyConsumption> drivingModeEnergyConsumption) {
                 drivingModeEnergyConsumption.setIdentifier(PROPERTY_DRIVING_MODES_ENERGY_CONSUMPTIONS);
                 addProperty(drivingModeEnergyConsumption);
-                drivingModesEnergyConsumptions.add(drivingModeEnergyConsumption);
                 return this;
             }
             
@@ -805,8 +717,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setLastTripEnergyConsumption(Property<Energy> lastTripEnergyConsumption) {
-                this.lastTripEnergyConsumption = lastTripEnergyConsumption.setIdentifier(PROPERTY_LAST_TRIP_ENERGY_CONSUMPTION);
-                addProperty(this.lastTripEnergyConsumption);
+                Property property = lastTripEnergyConsumption.setIdentifier(PROPERTY_LAST_TRIP_ENERGY_CONSUMPTION);
+                addProperty(property);
                 return this;
             }
             
@@ -815,8 +727,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setLastTripFuelConsumption(Property<Volume> lastTripFuelConsumption) {
-                this.lastTripFuelConsumption = lastTripFuelConsumption.setIdentifier(PROPERTY_LAST_TRIP_FUEL_CONSUMPTION);
-                addProperty(this.lastTripFuelConsumption);
+                Property property = lastTripFuelConsumption.setIdentifier(PROPERTY_LAST_TRIP_FUEL_CONSUMPTION);
+                addProperty(property);
                 return this;
             }
             
@@ -827,8 +739,8 @@ public class Usage {
              */
             @Deprecated
             public Builder setMileageAfterLastTrip(Property<Length> mileageAfterLastTrip) {
-                this.mileageAfterLastTrip = mileageAfterLastTrip.setIdentifier(PROPERTY_MILEAGE_AFTER_LAST_TRIP);
-                addProperty(this.mileageAfterLastTrip);
+                Property property = mileageAfterLastTrip.setIdentifier(PROPERTY_MILEAGE_AFTER_LAST_TRIP);
+                addProperty(property);
                 return this;
             }
             
@@ -837,8 +749,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setLastTripElectricPortion(Property<Double> lastTripElectricPortion) {
-                this.lastTripElectricPortion = lastTripElectricPortion.setIdentifier(PROPERTY_LAST_TRIP_ELECTRIC_PORTION);
-                addProperty(this.lastTripElectricPortion);
+                Property property = lastTripElectricPortion.setIdentifier(PROPERTY_LAST_TRIP_ELECTRIC_PORTION);
+                addProperty(property);
                 return this;
             }
             
@@ -847,8 +759,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setLastTripAverageEnergyRecuperation(Property<EnergyEfficiency> lastTripAverageEnergyRecuperation) {
-                this.lastTripAverageEnergyRecuperation = lastTripAverageEnergyRecuperation.setIdentifier(PROPERTY_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION);
-                addProperty(this.lastTripAverageEnergyRecuperation);
+                Property property = lastTripAverageEnergyRecuperation.setIdentifier(PROPERTY_LAST_TRIP_AVERAGE_ENERGY_RECUPERATION);
+                addProperty(property);
                 return this;
             }
             
@@ -857,8 +769,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setLastTripBatteryRemaining(Property<Double> lastTripBatteryRemaining) {
-                this.lastTripBatteryRemaining = lastTripBatteryRemaining.setIdentifier(PROPERTY_LAST_TRIP_BATTERY_REMAINING);
-                addProperty(this.lastTripBatteryRemaining);
+                Property property = lastTripBatteryRemaining.setIdentifier(PROPERTY_LAST_TRIP_BATTERY_REMAINING);
+                addProperty(property);
                 return this;
             }
             
@@ -867,8 +779,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setLastTripDate(Property<Calendar> lastTripDate) {
-                this.lastTripDate = lastTripDate.setIdentifier(PROPERTY_LAST_TRIP_DATE);
-                addProperty(this.lastTripDate);
+                Property property = lastTripDate.setIdentifier(PROPERTY_LAST_TRIP_DATE);
+                addProperty(property);
                 return this;
             }
             
@@ -877,8 +789,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setAverageFuelConsumption(Property<FuelEfficiency> averageFuelConsumption) {
-                this.averageFuelConsumption = averageFuelConsumption.setIdentifier(PROPERTY_AVERAGE_FUEL_CONSUMPTION);
-                addProperty(this.averageFuelConsumption);
+                Property property = averageFuelConsumption.setIdentifier(PROPERTY_AVERAGE_FUEL_CONSUMPTION);
+                addProperty(property);
                 return this;
             }
             
@@ -887,8 +799,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setCurrentFuelConsumption(Property<FuelEfficiency> currentFuelConsumption) {
-                this.currentFuelConsumption = currentFuelConsumption.setIdentifier(PROPERTY_CURRENT_FUEL_CONSUMPTION);
-                addProperty(this.currentFuelConsumption);
+                Property property = currentFuelConsumption.setIdentifier(PROPERTY_CURRENT_FUEL_CONSUMPTION);
+                addProperty(property);
                 return this;
             }
             
@@ -897,8 +809,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setOdometerAfterLastTrip(Property<Length> odometerAfterLastTrip) {
-                this.odometerAfterLastTrip = odometerAfterLastTrip.setIdentifier(PROPERTY_ODOMETER_AFTER_LAST_TRIP);
-                addProperty(this.odometerAfterLastTrip);
+                Property property = odometerAfterLastTrip.setIdentifier(PROPERTY_ODOMETER_AFTER_LAST_TRIP);
+                addProperty(property);
                 return this;
             }
             
@@ -907,8 +819,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setSafetyDrivingScore(Property<Double> safetyDrivingScore) {
-                this.safetyDrivingScore = safetyDrivingScore.setIdentifier(PROPERTY_SAFETY_DRIVING_SCORE);
-                addProperty(this.safetyDrivingScore);
+                Property property = safetyDrivingScore.setIdentifier(PROPERTY_SAFETY_DRIVING_SCORE);
+                addProperty(property);
                 return this;
             }
             
@@ -917,8 +829,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setRapidAccelerationGrade(Property<Grade> rapidAccelerationGrade) {
-                this.rapidAccelerationGrade = rapidAccelerationGrade.setIdentifier(PROPERTY_RAPID_ACCELERATION_GRADE);
-                addProperty(this.rapidAccelerationGrade);
+                Property property = rapidAccelerationGrade.setIdentifier(PROPERTY_RAPID_ACCELERATION_GRADE);
+                addProperty(property);
                 return this;
             }
             
@@ -927,8 +839,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setRapidDecelerationGrade(Property<Grade> rapidDecelerationGrade) {
-                this.rapidDecelerationGrade = rapidDecelerationGrade.setIdentifier(PROPERTY_RAPID_DECELERATION_GRADE);
-                addProperty(this.rapidDecelerationGrade);
+                Property property = rapidDecelerationGrade.setIdentifier(PROPERTY_RAPID_DECELERATION_GRADE);
+                addProperty(property);
                 return this;
             }
             
@@ -937,8 +849,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setLateNightGrade(Property<Grade> lateNightGrade) {
-                this.lateNightGrade = lateNightGrade.setIdentifier(PROPERTY_LATE_NIGHT_GRADE);
-                addProperty(this.lateNightGrade);
+                Property property = lateNightGrade.setIdentifier(PROPERTY_LATE_NIGHT_GRADE);
+                addProperty(property);
                 return this;
             }
             
@@ -947,8 +859,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setDistanceOverTime(Property<DistanceOverTime> distanceOverTime) {
-                this.distanceOverTime = distanceOverTime.setIdentifier(PROPERTY_DISTANCE_OVER_TIME);
-                addProperty(this.distanceOverTime);
+                Property property = distanceOverTime.setIdentifier(PROPERTY_DISTANCE_OVER_TIME);
+                addProperty(property);
                 return this;
             }
             
@@ -957,8 +869,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setElectricConsumptionRateSinceStart(Property<EnergyEfficiency> electricConsumptionRateSinceStart) {
-                this.electricConsumptionRateSinceStart = electricConsumptionRateSinceStart.setIdentifier(PROPERTY_ELECTRIC_CONSUMPTION_RATE_SINCE_START);
-                addProperty(this.electricConsumptionRateSinceStart);
+                Property property = electricConsumptionRateSinceStart.setIdentifier(PROPERTY_ELECTRIC_CONSUMPTION_RATE_SINCE_START);
+                addProperty(property);
                 return this;
             }
             
@@ -967,8 +879,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setElectricConsumptionRateSinceReset(Property<EnergyEfficiency> electricConsumptionRateSinceReset) {
-                this.electricConsumptionRateSinceReset = electricConsumptionRateSinceReset.setIdentifier(PROPERTY_ELECTRIC_CONSUMPTION_RATE_SINCE_RESET);
-                addProperty(this.electricConsumptionRateSinceReset);
+                Property property = electricConsumptionRateSinceReset.setIdentifier(PROPERTY_ELECTRIC_CONSUMPTION_RATE_SINCE_RESET);
+                addProperty(property);
                 return this;
             }
             
@@ -977,8 +889,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setElectricDistanceLastTrip(Property<Length> electricDistanceLastTrip) {
-                this.electricDistanceLastTrip = electricDistanceLastTrip.setIdentifier(PROPERTY_ELECTRIC_DISTANCE_LAST_TRIP);
-                addProperty(this.electricDistanceLastTrip);
+                Property property = electricDistanceLastTrip.setIdentifier(PROPERTY_ELECTRIC_DISTANCE_LAST_TRIP);
+                addProperty(property);
                 return this;
             }
             
@@ -987,8 +899,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setElectricDistanceSinceReset(Property<Length> electricDistanceSinceReset) {
-                this.electricDistanceSinceReset = electricDistanceSinceReset.setIdentifier(PROPERTY_ELECTRIC_DISTANCE_SINCE_RESET);
-                addProperty(this.electricDistanceSinceReset);
+                Property property = electricDistanceSinceReset.setIdentifier(PROPERTY_ELECTRIC_DISTANCE_SINCE_RESET);
+                addProperty(property);
                 return this;
             }
             
@@ -997,8 +909,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setElectricDurationLastTrip(Property<Duration> electricDurationLastTrip) {
-                this.electricDurationLastTrip = electricDurationLastTrip.setIdentifier(PROPERTY_ELECTRIC_DURATION_LAST_TRIP);
-                addProperty(this.electricDurationLastTrip);
+                Property property = electricDurationLastTrip.setIdentifier(PROPERTY_ELECTRIC_DURATION_LAST_TRIP);
+                addProperty(property);
                 return this;
             }
             
@@ -1007,8 +919,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setElectricDurationSinceReset(Property<Duration> electricDurationSinceReset) {
-                this.electricDurationSinceReset = electricDurationSinceReset.setIdentifier(PROPERTY_ELECTRIC_DURATION_SINCE_RESET);
-                addProperty(this.electricDurationSinceReset);
+                Property property = electricDurationSinceReset.setIdentifier(PROPERTY_ELECTRIC_DURATION_SINCE_RESET);
+                addProperty(property);
                 return this;
             }
             
@@ -1017,8 +929,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setFuelConsumptionRateLastTrip(Property<FuelEfficiency> fuelConsumptionRateLastTrip) {
-                this.fuelConsumptionRateLastTrip = fuelConsumptionRateLastTrip.setIdentifier(PROPERTY_FUEL_CONSUMPTION_RATE_LAST_TRIP);
-                addProperty(this.fuelConsumptionRateLastTrip);
+                Property property = fuelConsumptionRateLastTrip.setIdentifier(PROPERTY_FUEL_CONSUMPTION_RATE_LAST_TRIP);
+                addProperty(property);
                 return this;
             }
             
@@ -1027,8 +939,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setFuelConsumptionRateSinceReset(Property<FuelEfficiency> fuelConsumptionRateSinceReset) {
-                this.fuelConsumptionRateSinceReset = fuelConsumptionRateSinceReset.setIdentifier(PROPERTY_FUEL_CONSUMPTION_RATE_SINCE_RESET);
-                addProperty(this.fuelConsumptionRateSinceReset);
+                Property property = fuelConsumptionRateSinceReset.setIdentifier(PROPERTY_FUEL_CONSUMPTION_RATE_SINCE_RESET);
+                addProperty(property);
                 return this;
             }
             
@@ -1037,8 +949,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setAverageSpeedLastTrip(Property<Speed> averageSpeedLastTrip) {
-                this.averageSpeedLastTrip = averageSpeedLastTrip.setIdentifier(PROPERTY_AVERAGE_SPEED_LAST_TRIP);
-                addProperty(this.averageSpeedLastTrip);
+                Property property = averageSpeedLastTrip.setIdentifier(PROPERTY_AVERAGE_SPEED_LAST_TRIP);
+                addProperty(property);
                 return this;
             }
             
@@ -1047,8 +959,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setAverageSpeedSinceReset(Property<Speed> averageSpeedSinceReset) {
-                this.averageSpeedSinceReset = averageSpeedSinceReset.setIdentifier(PROPERTY_AVERAGE_SPEED_SINCE_RESET);
-                addProperty(this.averageSpeedSinceReset);
+                Property property = averageSpeedSinceReset.setIdentifier(PROPERTY_AVERAGE_SPEED_SINCE_RESET);
+                addProperty(property);
                 return this;
             }
             
@@ -1057,8 +969,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setFuelDistanceLastTrip(Property<Length> fuelDistanceLastTrip) {
-                this.fuelDistanceLastTrip = fuelDistanceLastTrip.setIdentifier(PROPERTY_FUEL_DISTANCE_LAST_TRIP);
-                addProperty(this.fuelDistanceLastTrip);
+                Property property = fuelDistanceLastTrip.setIdentifier(PROPERTY_FUEL_DISTANCE_LAST_TRIP);
+                addProperty(property);
                 return this;
             }
             
@@ -1067,8 +979,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setFuelDistanceSinceReset(Property<Length> fuelDistanceSinceReset) {
-                this.fuelDistanceSinceReset = fuelDistanceSinceReset.setIdentifier(PROPERTY_FUEL_DISTANCE_SINCE_RESET);
-                addProperty(this.fuelDistanceSinceReset);
+                Property property = fuelDistanceSinceReset.setIdentifier(PROPERTY_FUEL_DISTANCE_SINCE_RESET);
+                addProperty(property);
                 return this;
             }
             
@@ -1077,8 +989,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setDrivingDurationLastTrip(Property<Duration> drivingDurationLastTrip) {
-                this.drivingDurationLastTrip = drivingDurationLastTrip.setIdentifier(PROPERTY_DRIVING_DURATION_LAST_TRIP);
-                addProperty(this.drivingDurationLastTrip);
+                Property property = drivingDurationLastTrip.setIdentifier(PROPERTY_DRIVING_DURATION_LAST_TRIP);
+                addProperty(property);
                 return this;
             }
             
@@ -1087,8 +999,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setDrivingDurationSinceReset(Property<Duration> drivingDurationSinceReset) {
-                this.drivingDurationSinceReset = drivingDurationSinceReset.setIdentifier(PROPERTY_DRIVING_DURATION_SINCE_RESET);
-                addProperty(this.drivingDurationSinceReset);
+                Property property = drivingDurationSinceReset.setIdentifier(PROPERTY_DRIVING_DURATION_SINCE_RESET);
+                addProperty(property);
                 return this;
             }
             
@@ -1097,8 +1009,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setEcoScoreTotal(Property<Double> ecoScoreTotal) {
-                this.ecoScoreTotal = ecoScoreTotal.setIdentifier(PROPERTY_ECO_SCORE_TOTAL);
-                addProperty(this.ecoScoreTotal);
+                Property property = ecoScoreTotal.setIdentifier(PROPERTY_ECO_SCORE_TOTAL);
+                addProperty(property);
                 return this;
             }
             
@@ -1107,8 +1019,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setEcoScoreFreeWheel(Property<Double> ecoScoreFreeWheel) {
-                this.ecoScoreFreeWheel = ecoScoreFreeWheel.setIdentifier(PROPERTY_ECO_SCORE_FREE_WHEEL);
-                addProperty(this.ecoScoreFreeWheel);
+                Property property = ecoScoreFreeWheel.setIdentifier(PROPERTY_ECO_SCORE_FREE_WHEEL);
+                addProperty(property);
                 return this;
             }
             
@@ -1117,8 +1029,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setEcoScoreConstant(Property<Double> ecoScoreConstant) {
-                this.ecoScoreConstant = ecoScoreConstant.setIdentifier(PROPERTY_ECO_SCORE_CONSTANT);
-                addProperty(this.ecoScoreConstant);
+                Property property = ecoScoreConstant.setIdentifier(PROPERTY_ECO_SCORE_CONSTANT);
+                addProperty(property);
                 return this;
             }
             
@@ -1127,8 +1039,8 @@ public class Usage {
              * @return The builder
              */
             public Builder setEcoScoreBonusRange(Property<Length> ecoScoreBonusRange) {
-                this.ecoScoreBonusRange = ecoScoreBonusRange.setIdentifier(PROPERTY_ECO_SCORE_BONUS_RANGE);
-                addProperty(this.ecoScoreBonusRange);
+                Property property = ecoScoreBonusRange.setIdentifier(PROPERTY_ECO_SCORE_BONUS_RANGE);
+                addProperty(property);
                 return this;
             }
             
@@ -1139,7 +1051,6 @@ public class Usage {
              * @return The builder
              */
             public Builder setTripMeters(Property<TripMeter>[] tripMeters) {
-                this.tripMeters.clear();
                 for (int i = 0; i < tripMeters.length; i++) {
                     addTripMeter(tripMeters[i]);
                 }
@@ -1155,7 +1066,6 @@ public class Usage {
             public Builder addTripMeter(Property<TripMeter> tripMeter) {
                 tripMeter.setIdentifier(PROPERTY_TRIP_METERS);
                 addProperty(tripMeter);
-                tripMeters.add(tripMeter);
                 return this;
             }
         }

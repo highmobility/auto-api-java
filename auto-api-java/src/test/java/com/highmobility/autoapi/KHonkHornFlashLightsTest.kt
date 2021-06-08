@@ -52,8 +52,8 @@ class KHonkHornFlashLightsTest : BaseTest() {
     }
     
     private fun testState(state: HonkHornFlashLights.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.flashers.value == HonkHornFlashLights.Flashers.LEFT_FLASHER_ACTIVE)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

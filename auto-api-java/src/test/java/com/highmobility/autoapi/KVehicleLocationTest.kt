@@ -61,7 +61,6 @@ class KVehicleLocationTest : BaseTest() {
     }
     
     private fun testState(state: VehicleLocation.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.coordinates.value?.latitude == 52.520008)
         assertTrue(state.coordinates.value?.longitude == 13.404954)
         assertTrue(state.heading.value?.value == 13.370123)
@@ -72,6 +71,7 @@ class KVehicleLocationTest : BaseTest() {
         assertTrue(state.precision.value?.unit == Length.Unit.METERS)
         assertTrue(state.gpsSource.value == VehicleLocation.GpsSource.REAL)
         assertTrue(state.gpsSignalStrength.value == 0.8)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

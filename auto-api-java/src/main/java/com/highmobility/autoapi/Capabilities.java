@@ -141,14 +141,14 @@ public class Capabilities {
             return false;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<SupportedCapability>> capabilitiesBuilder = new ArrayList<>();
             final ArrayList<Property<Webhook>> webhooksBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_CAPABILITIES:
                             Property<SupportedCapability> capability = new Property<>(SupportedCapability.class, p);
@@ -168,23 +168,15 @@ public class Capabilities {
             webhooks = webhooksBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            capabilities = builder.capabilities;
-            webhooks = builder.webhooks;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private final List<Property<SupportedCapability>> capabilities = new ArrayList<>();
-            private final List<Property<Webhook>> webhooks = new ArrayList<>();
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -194,7 +186,6 @@ public class Capabilities {
              * @return The builder
              */
             public Builder setCapabilities(Property<SupportedCapability>[] capabilities) {
-                this.capabilities.clear();
                 for (int i = 0; i < capabilities.length; i++) {
                     addCapability(capabilities[i]);
                 }
@@ -211,7 +202,6 @@ public class Capabilities {
             public Builder addCapability(Property<SupportedCapability> capability) {
                 capability.setIdentifier(PROPERTY_CAPABILITIES);
                 addProperty(capability);
-                capabilities.add(capability);
                 return this;
             }
             
@@ -222,7 +212,6 @@ public class Capabilities {
              * @return The builder
              */
             public Builder setWebhooks(Property<Webhook>[] webhooks) {
-                this.webhooks.clear();
                 for (int i = 0; i < webhooks.length; i++) {
                     addWebhook(webhooks[i]);
                 }
@@ -238,7 +227,6 @@ public class Capabilities {
             public Builder addWebhook(Property<Webhook> webhook) {
                 webhook.setIdentifier(PROPERTY_WEBHOOKS);
                 addProperty(webhook);
-                webhooks.add(webhook);
                 return this;
             }
         }

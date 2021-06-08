@@ -86,7 +86,6 @@ class KHomeChargerTest : BaseTest() {
     }
     
     private fun testState(state: HomeCharger.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.chargingStatus.value == HomeCharger.ChargingStatus.CHARGING)
         assertTrue(state.authenticationMechanism.value == HomeCharger.AuthenticationMechanism.APP)
         assertTrue(state.plugType.value == HomeCharger.PlugType.TYPE_2)
@@ -117,6 +116,7 @@ class KHomeChargerTest : BaseTest() {
         assertTrue(state.priceTariffs[2].value?.currency == "Ripple")
         assertTrue(state.chargingPower.value?.value == 350.0)
         assertTrue(state.chargingPower.value?.unit == Power.Unit.KILOWATTS)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

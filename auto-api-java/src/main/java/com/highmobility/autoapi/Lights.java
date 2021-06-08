@@ -251,7 +251,7 @@ public class Lights {
             createBytes();
         }
     
-        ControlLights(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ControlLights(byte[] bytes) throws PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<Light>> fogLightsBuilder = new ArrayList<>();
@@ -259,7 +259,7 @@ public class Lights {
             final ArrayList<Property<Light>> interiorLightsBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_FRONT_EXTERIOR_LIGHT: return frontExteriorLight.update(p);
                         case PROPERTY_REAR_EXTERIOR_LIGHT: return rearExteriorLight.update(p);
@@ -422,7 +422,7 @@ public class Lights {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<Light>> fogLightsBuilder = new ArrayList<>();
@@ -430,7 +430,7 @@ public class Lights {
             final ArrayList<Property<Light>> interiorLightsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_FRONT_EXTERIOR_LIGHT: return frontExteriorLight.update(p);
                         case PROPERTY_REAR_EXTERIOR_LIGHT: return rearExteriorLight.update(p);
@@ -462,39 +462,15 @@ public class Lights {
             interiorLights = interiorLightsBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            frontExteriorLight = builder.frontExteriorLight;
-            rearExteriorLight = builder.rearExteriorLight;
-            ambientLightColour = builder.ambientLightColour;
-            reverseLight = builder.reverseLight;
-            emergencyBrakeLight = builder.emergencyBrakeLight;
-            fogLights = builder.fogLights;
-            readingLamps = builder.readingLamps;
-            interiorLights = builder.interiorLights;
-            switchPosition = builder.switchPosition;
-            parkingLightStatus = builder.parkingLightStatus;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<FrontExteriorLight> frontExteriorLight;
-            private Property<ActiveState> rearExteriorLight;
-            private Property<RgbColour> ambientLightColour;
-            private Property<ActiveState> reverseLight;
-            private Property<ActiveState> emergencyBrakeLight;
-            private final List<Property<Light>> fogLights = new ArrayList<>();
-            private final List<Property<ReadingLamp>> readingLamps = new ArrayList<>();
-            private final List<Property<Light>> interiorLights = new ArrayList<>();
-            private Property<SwitchPosition> switchPosition;
-            private Property<ParkingLightStatus> parkingLightStatus;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -502,8 +478,8 @@ public class Lights {
              * @return The builder
              */
             public Builder setFrontExteriorLight(Property<FrontExteriorLight> frontExteriorLight) {
-                this.frontExteriorLight = frontExteriorLight.setIdentifier(PROPERTY_FRONT_EXTERIOR_LIGHT);
-                addProperty(this.frontExteriorLight);
+                Property property = frontExteriorLight.setIdentifier(PROPERTY_FRONT_EXTERIOR_LIGHT);
+                addProperty(property);
                 return this;
             }
             
@@ -512,8 +488,8 @@ public class Lights {
              * @return The builder
              */
             public Builder setRearExteriorLight(Property<ActiveState> rearExteriorLight) {
-                this.rearExteriorLight = rearExteriorLight.setIdentifier(PROPERTY_REAR_EXTERIOR_LIGHT);
-                addProperty(this.rearExteriorLight);
+                Property property = rearExteriorLight.setIdentifier(PROPERTY_REAR_EXTERIOR_LIGHT);
+                addProperty(property);
                 return this;
             }
             
@@ -522,8 +498,8 @@ public class Lights {
              * @return The builder
              */
             public Builder setAmbientLightColour(Property<RgbColour> ambientLightColour) {
-                this.ambientLightColour = ambientLightColour.setIdentifier(PROPERTY_AMBIENT_LIGHT_COLOUR);
-                addProperty(this.ambientLightColour);
+                Property property = ambientLightColour.setIdentifier(PROPERTY_AMBIENT_LIGHT_COLOUR);
+                addProperty(property);
                 return this;
             }
             
@@ -532,8 +508,8 @@ public class Lights {
              * @return The builder
              */
             public Builder setReverseLight(Property<ActiveState> reverseLight) {
-                this.reverseLight = reverseLight.setIdentifier(PROPERTY_REVERSE_LIGHT);
-                addProperty(this.reverseLight);
+                Property property = reverseLight.setIdentifier(PROPERTY_REVERSE_LIGHT);
+                addProperty(property);
                 return this;
             }
             
@@ -542,8 +518,8 @@ public class Lights {
              * @return The builder
              */
             public Builder setEmergencyBrakeLight(Property<ActiveState> emergencyBrakeLight) {
-                this.emergencyBrakeLight = emergencyBrakeLight.setIdentifier(PROPERTY_EMERGENCY_BRAKE_LIGHT);
-                addProperty(this.emergencyBrakeLight);
+                Property property = emergencyBrakeLight.setIdentifier(PROPERTY_EMERGENCY_BRAKE_LIGHT);
+                addProperty(property);
                 return this;
             }
             
@@ -554,7 +530,6 @@ public class Lights {
              * @return The builder
              */
             public Builder setFogLights(Property<Light>[] fogLights) {
-                this.fogLights.clear();
                 for (int i = 0; i < fogLights.length; i++) {
                     addFogLight(fogLights[i]);
                 }
@@ -571,7 +546,6 @@ public class Lights {
             public Builder addFogLight(Property<Light> fogLight) {
                 fogLight.setIdentifier(PROPERTY_FOG_LIGHTS);
                 addProperty(fogLight);
-                fogLights.add(fogLight);
                 return this;
             }
             
@@ -582,7 +556,6 @@ public class Lights {
              * @return The builder
              */
             public Builder setReadingLamps(Property<ReadingLamp>[] readingLamps) {
-                this.readingLamps.clear();
                 for (int i = 0; i < readingLamps.length; i++) {
                     addReadingLamp(readingLamps[i]);
                 }
@@ -599,7 +572,6 @@ public class Lights {
             public Builder addReadingLamp(Property<ReadingLamp> readingLamp) {
                 readingLamp.setIdentifier(PROPERTY_READING_LAMPS);
                 addProperty(readingLamp);
-                readingLamps.add(readingLamp);
                 return this;
             }
             
@@ -610,7 +582,6 @@ public class Lights {
              * @return The builder
              */
             public Builder setInteriorLights(Property<Light>[] interiorLights) {
-                this.interiorLights.clear();
                 for (int i = 0; i < interiorLights.length; i++) {
                     addInteriorLight(interiorLights[i]);
                 }
@@ -627,7 +598,6 @@ public class Lights {
             public Builder addInteriorLight(Property<Light> interiorLight) {
                 interiorLight.setIdentifier(PROPERTY_INTERIOR_LIGHTS);
                 addProperty(interiorLight);
-                interiorLights.add(interiorLight);
                 return this;
             }
             
@@ -636,8 +606,8 @@ public class Lights {
              * @return The builder
              */
             public Builder setSwitchPosition(Property<SwitchPosition> switchPosition) {
-                this.switchPosition = switchPosition.setIdentifier(PROPERTY_SWITCH_POSITION);
-                addProperty(this.switchPosition);
+                Property property = switchPosition.setIdentifier(PROPERTY_SWITCH_POSITION);
+                addProperty(property);
                 return this;
             }
             
@@ -646,8 +616,8 @@ public class Lights {
              * @return The builder
              */
             public Builder setParkingLightStatus(Property<ParkingLightStatus> parkingLightStatus) {
-                this.parkingLightStatus = parkingLightStatus.setIdentifier(PROPERTY_PARKING_LIGHT_STATUS);
-                addProperty(this.parkingLightStatus);
+                Property property = parkingLightStatus.setIdentifier(PROPERTY_PARKING_LIGHT_STATUS);
+                addProperty(property);
                 return this;
             }
         }

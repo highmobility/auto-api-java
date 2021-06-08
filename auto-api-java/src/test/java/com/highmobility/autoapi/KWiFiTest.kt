@@ -56,11 +56,11 @@ class KWiFiTest : BaseTest() {
     }
     
     private fun testState(state: WiFi.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.status.value == EnabledState.ENABLED)
         assertTrue(state.networkConnected.value == ConnectionState.CONNECTED)
         assertTrue(state.networkSSID.value == "HOME")
         assertTrue(state.networkSecurity.value == NetworkSecurity.WPA2_PERSONAL)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

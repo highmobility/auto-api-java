@@ -86,10 +86,10 @@ public class VideoHandover {
             createBytes();
         }
     
-        VideoHandoverCommand(byte[] bytes) throws CommandParseException, PropertyParseException {
+        VideoHandoverCommand(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_URL: return url.update(p);
                         case PROPERTY_SCREEN: return screen.update(p);

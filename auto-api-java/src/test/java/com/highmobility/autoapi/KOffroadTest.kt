@@ -52,10 +52,10 @@ class KOffroadTest : BaseTest() {
     }
     
     private fun testState(state: Offroad.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.routeIncline.value?.value == 10.1)
         assertTrue(state.routeIncline.value?.unit == Angle.Unit.DEGREES)
         assertTrue(state.wheelSuspension.value == 0.5)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

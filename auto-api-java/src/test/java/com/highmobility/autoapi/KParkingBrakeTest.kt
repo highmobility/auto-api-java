@@ -50,8 +50,8 @@ class KParkingBrakeTest : BaseTest() {
     }
     
     private fun testState(state: ParkingBrake.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.status.value == ActiveState.ACTIVE)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

@@ -79,10 +79,10 @@ public class Mobile {
             return connection;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_CONNECTION: return connection.update(p);
                     }
@@ -92,21 +92,15 @@ public class Mobile {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            connection = builder.connection;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<ConnectionState> connection;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -114,8 +108,8 @@ public class Mobile {
              * @return The builder
              */
             public Builder setConnection(Property<ConnectionState> connection) {
-                this.connection = connection.setIdentifier(PROPERTY_CONNECTION);
-                addProperty(this.connection);
+                Property property = connection.setIdentifier(PROPERTY_CONNECTION);
+                addProperty(property);
                 return this;
             }
         }

@@ -444,7 +444,6 @@ class KDashboardLightsTest : BaseTest() {
     }
     
     private fun testState(state: DashboardLights.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.dashboardLights[0].value?.name == DashboardLight.Name.HIGH_BEAM)
         assertTrue(state.dashboardLights[0].value?.state == OnOffState.OFF)
         assertTrue(state.dashboardLights[1].value?.name == DashboardLight.Name.LOW_BEAM)
@@ -839,6 +838,7 @@ class KDashboardLightsTest : BaseTest() {
         assertTrue(state.dashboardLights[195].value?.state == OnOffState.OFF)
         assertTrue(state.bulbFailures[0].value == DashboardLights.BulbFailures.TURN_SIGNAL_RIGHT)
         assertTrue(state.bulbFailures[1].value == DashboardLights.BulbFailures.HIGH_BEAM)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

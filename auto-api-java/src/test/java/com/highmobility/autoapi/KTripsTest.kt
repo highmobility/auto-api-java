@@ -121,7 +121,6 @@ class KTripsTest : BaseTest() {
     }
     
     private fun testState(state: Trips.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.type.value == Trips.Type.SINGLE)
         assertTrue(state.driverName.value == "Hari Seldon")
         assertTrue(state.description.value == "To save humankind")
@@ -185,5 +184,6 @@ class KTripsTest : BaseTest() {
         assertTrue(state.totalIdleFuelConsumption.value?.unit == Volume.Unit.LITERS)
         assertTrue(state.maximumSpeed.value?.value == 67.3)
         assertTrue(state.maximumSpeed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
+        assertTrue(bytesTheSame(state, bytes))
     }
 }

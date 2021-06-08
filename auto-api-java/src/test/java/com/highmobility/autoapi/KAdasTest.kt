@@ -74,7 +74,6 @@ class KAdasTest : BaseTest() {
     }
     
     private fun testState(state: Adas.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.status.value == OnOffState.ON)
         assertTrue(state.alertnessSystemStatus.value == ActiveState.ACTIVE)
         assertTrue(state.forwardCollisionWarningSystem.value == ActiveState.ACTIVE)
@@ -94,6 +93,7 @@ class KAdasTest : BaseTest() {
         assertTrue(state.parkAssists[1].value?.alarm == ActiveState.ACTIVE)
         assertTrue(state.parkAssists[1].value?.muted == Muted.NOT_MUTED)
         assertTrue(state.blindSpotWarningSystem.value == OnOffState.ON)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

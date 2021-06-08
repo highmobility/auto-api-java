@@ -151,10 +151,10 @@ public class Offroad {
             return wheelSuspension;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_ROUTE_INCLINE: return routeIncline.update(p);
                         case PROPERTY_WHEEL_SUSPENSION: return wheelSuspension.update(p);
@@ -165,23 +165,15 @@ public class Offroad {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            routeIncline = builder.routeIncline;
-            wheelSuspension = builder.wheelSuspension;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<Angle> routeIncline;
-            private Property<Double> wheelSuspension;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -189,8 +181,8 @@ public class Offroad {
              * @return The builder
              */
             public Builder setRouteIncline(Property<Angle> routeIncline) {
-                this.routeIncline = routeIncline.setIdentifier(PROPERTY_ROUTE_INCLINE);
-                addProperty(this.routeIncline);
+                Property property = routeIncline.setIdentifier(PROPERTY_ROUTE_INCLINE);
+                addProperty(property);
                 return this;
             }
             
@@ -199,8 +191,8 @@ public class Offroad {
              * @return The builder
              */
             public Builder setWheelSuspension(Property<Double> wheelSuspension) {
-                this.wheelSuspension = wheelSuspension.setIdentifier(PROPERTY_WHEEL_SUSPENSION);
-                addProperty(this.wheelSuspension);
+                Property property = wheelSuspension.setIdentifier(PROPERTY_WHEEL_SUSPENSION);
+                addProperty(property);
                 return this;
             }
         }

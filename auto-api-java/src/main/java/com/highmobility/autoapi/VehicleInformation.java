@@ -299,13 +299,13 @@ public class VehicleInformation {
             return powertrainSecondary;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<String>> equipmentsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_POWERTRAIN: return powertrain.update(p);
                         case PROPERTY_MODEL_NAME: return modelName.update(p);
@@ -340,61 +340,15 @@ public class VehicleInformation {
             equipments = equipmentsBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            powertrain = builder.powertrain;
-            modelName = builder.modelName;
-            name = builder.name;
-            licensePlate = builder.licensePlate;
-            salesDesignation = builder.salesDesignation;
-            modelYear = builder.modelYear;
-            colourName = builder.colourName;
-            powerInKW = builder.powerInKW;
-            numberOfDoors = builder.numberOfDoors;
-            numberOfSeats = builder.numberOfSeats;
-            engineVolume = builder.engineVolume;
-            engineMaxTorque = builder.engineMaxTorque;
-            gearbox = builder.gearbox;
-            displayUnit = builder.displayUnit;
-            driverSeatLocation = builder.driverSeatLocation;
-            equipments = builder.equipments;
-            power = builder.power;
-            language = builder.language;
-            timeformat = builder.timeformat;
-            drive = builder.drive;
-            powertrainSecondary = builder.powertrainSecondary;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<EngineType> powertrain;
-            private Property<String> modelName;
-            private Property<String> name;
-            private Property<String> licensePlate;
-            private Property<String> salesDesignation;
-            private PropertyInteger modelYear;
-            private Property<String> colourName;
-            private Property<Power> powerInKW;
-            private PropertyInteger numberOfDoors;
-            private PropertyInteger numberOfSeats;
-            private Property<Volume> engineVolume;
-            private Property<Torque> engineMaxTorque;
-            private Property<Gearbox> gearbox;
-            private Property<DisplayUnit> displayUnit;
-            private Property<DriverSeatLocation> driverSeatLocation;
-            private final List<Property<String>> equipments = new ArrayList<>();
-            private Property<Power> power;
-            private Property<String> language;
-            private Property<Timeformat> timeformat;
-            private Property<Drive> drive;
-            private Property<EngineType> powertrainSecondary;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -402,8 +356,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setPowertrain(Property<EngineType> powertrain) {
-                this.powertrain = powertrain.setIdentifier(PROPERTY_POWERTRAIN);
-                addProperty(this.powertrain);
+                Property property = powertrain.setIdentifier(PROPERTY_POWERTRAIN);
+                addProperty(property);
                 return this;
             }
             
@@ -412,8 +366,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setModelName(Property<String> modelName) {
-                this.modelName = modelName.setIdentifier(PROPERTY_MODEL_NAME);
-                addProperty(this.modelName);
+                Property property = modelName.setIdentifier(PROPERTY_MODEL_NAME);
+                addProperty(property);
                 return this;
             }
             
@@ -422,8 +376,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setName(Property<String> name) {
-                this.name = name.setIdentifier(PROPERTY_NAME);
-                addProperty(this.name);
+                Property property = name.setIdentifier(PROPERTY_NAME);
+                addProperty(property);
                 return this;
             }
             
@@ -432,8 +386,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setLicensePlate(Property<String> licensePlate) {
-                this.licensePlate = licensePlate.setIdentifier(PROPERTY_LICENSE_PLATE);
-                addProperty(this.licensePlate);
+                Property property = licensePlate.setIdentifier(PROPERTY_LICENSE_PLATE);
+                addProperty(property);
                 return this;
             }
             
@@ -442,8 +396,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setSalesDesignation(Property<String> salesDesignation) {
-                this.salesDesignation = salesDesignation.setIdentifier(PROPERTY_SALES_DESIGNATION);
-                addProperty(this.salesDesignation);
+                Property property = salesDesignation.setIdentifier(PROPERTY_SALES_DESIGNATION);
+                addProperty(property);
                 return this;
             }
             
@@ -452,8 +406,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setModelYear(Property<Integer> modelYear) {
-                this.modelYear = new PropertyInteger(PROPERTY_MODEL_YEAR, false, 2, modelYear);
-                addProperty(this.modelYear);
+                Property property = new PropertyInteger(PROPERTY_MODEL_YEAR, false, 2, modelYear);
+                addProperty(property);
                 return this;
             }
             
@@ -462,8 +416,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setColourName(Property<String> colourName) {
-                this.colourName = colourName.setIdentifier(PROPERTY_COLOUR_NAME);
-                addProperty(this.colourName);
+                Property property = colourName.setIdentifier(PROPERTY_COLOUR_NAME);
+                addProperty(property);
                 return this;
             }
             
@@ -474,8 +428,8 @@ public class VehicleInformation {
              */
             @Deprecated
             public Builder setPowerInKW(Property<Power> powerInKW) {
-                this.powerInKW = powerInKW.setIdentifier(PROPERTY_POWER_IN_KW);
-                addProperty(this.powerInKW);
+                Property property = powerInKW.setIdentifier(PROPERTY_POWER_IN_KW);
+                addProperty(property);
                 return this;
             }
             
@@ -484,8 +438,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setNumberOfDoors(Property<Integer> numberOfDoors) {
-                this.numberOfDoors = new PropertyInteger(PROPERTY_NUMBER_OF_DOORS, false, 1, numberOfDoors);
-                addProperty(this.numberOfDoors);
+                Property property = new PropertyInteger(PROPERTY_NUMBER_OF_DOORS, false, 1, numberOfDoors);
+                addProperty(property);
                 return this;
             }
             
@@ -494,8 +448,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setNumberOfSeats(Property<Integer> numberOfSeats) {
-                this.numberOfSeats = new PropertyInteger(PROPERTY_NUMBER_OF_SEATS, false, 1, numberOfSeats);
-                addProperty(this.numberOfSeats);
+                Property property = new PropertyInteger(PROPERTY_NUMBER_OF_SEATS, false, 1, numberOfSeats);
+                addProperty(property);
                 return this;
             }
             
@@ -504,8 +458,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setEngineVolume(Property<Volume> engineVolume) {
-                this.engineVolume = engineVolume.setIdentifier(PROPERTY_ENGINE_VOLUME);
-                addProperty(this.engineVolume);
+                Property property = engineVolume.setIdentifier(PROPERTY_ENGINE_VOLUME);
+                addProperty(property);
                 return this;
             }
             
@@ -514,8 +468,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setEngineMaxTorque(Property<Torque> engineMaxTorque) {
-                this.engineMaxTorque = engineMaxTorque.setIdentifier(PROPERTY_ENGINE_MAX_TORQUE);
-                addProperty(this.engineMaxTorque);
+                Property property = engineMaxTorque.setIdentifier(PROPERTY_ENGINE_MAX_TORQUE);
+                addProperty(property);
                 return this;
             }
             
@@ -524,8 +478,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setGearbox(Property<Gearbox> gearbox) {
-                this.gearbox = gearbox.setIdentifier(PROPERTY_GEARBOX);
-                addProperty(this.gearbox);
+                Property property = gearbox.setIdentifier(PROPERTY_GEARBOX);
+                addProperty(property);
                 return this;
             }
             
@@ -534,8 +488,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setDisplayUnit(Property<DisplayUnit> displayUnit) {
-                this.displayUnit = displayUnit.setIdentifier(PROPERTY_DISPLAY_UNIT);
-                addProperty(this.displayUnit);
+                Property property = displayUnit.setIdentifier(PROPERTY_DISPLAY_UNIT);
+                addProperty(property);
                 return this;
             }
             
@@ -544,8 +498,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setDriverSeatLocation(Property<DriverSeatLocation> driverSeatLocation) {
-                this.driverSeatLocation = driverSeatLocation.setIdentifier(PROPERTY_DRIVER_SEAT_LOCATION);
-                addProperty(this.driverSeatLocation);
+                Property property = driverSeatLocation.setIdentifier(PROPERTY_DRIVER_SEAT_LOCATION);
+                addProperty(property);
                 return this;
             }
             
@@ -556,7 +510,6 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setEquipments(Property<String>[] equipments) {
-                this.equipments.clear();
                 for (int i = 0; i < equipments.length; i++) {
                     addEquipment(equipments[i]);
                 }
@@ -573,7 +526,6 @@ public class VehicleInformation {
             public Builder addEquipment(Property<String> equipment) {
                 equipment.setIdentifier(PROPERTY_EQUIPMENTS);
                 addProperty(equipment);
-                equipments.add(equipment);
                 return this;
             }
             
@@ -582,8 +534,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setPower(Property<Power> power) {
-                this.power = power.setIdentifier(PROPERTY_POWER);
-                addProperty(this.power);
+                Property property = power.setIdentifier(PROPERTY_POWER);
+                addProperty(property);
                 return this;
             }
             
@@ -592,8 +544,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setLanguage(Property<String> language) {
-                this.language = language.setIdentifier(PROPERTY_LANGUAGE);
-                addProperty(this.language);
+                Property property = language.setIdentifier(PROPERTY_LANGUAGE);
+                addProperty(property);
                 return this;
             }
             
@@ -602,8 +554,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setTimeformat(Property<Timeformat> timeformat) {
-                this.timeformat = timeformat.setIdentifier(PROPERTY_TIMEFORMAT);
-                addProperty(this.timeformat);
+                Property property = timeformat.setIdentifier(PROPERTY_TIMEFORMAT);
+                addProperty(property);
                 return this;
             }
             
@@ -612,8 +564,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setDrive(Property<Drive> drive) {
-                this.drive = drive.setIdentifier(PROPERTY_DRIVE);
-                addProperty(this.drive);
+                Property property = drive.setIdentifier(PROPERTY_DRIVE);
+                addProperty(property);
                 return this;
             }
             
@@ -622,8 +574,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setPowertrainSecondary(Property<EngineType> powertrainSecondary) {
-                this.powertrainSecondary = powertrainSecondary.setIdentifier(PROPERTY_POWERTRAIN_SECONDARY);
-                addProperty(this.powertrainSecondary);
+                Property property = powertrainSecondary.setIdentifier(PROPERTY_POWERTRAIN_SECONDARY);
+                addProperty(property);
                 return this;
             }
         }

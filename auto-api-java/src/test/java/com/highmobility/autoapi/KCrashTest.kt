@@ -64,7 +64,6 @@ class KCrashTest : BaseTest() {
     }
     
     private fun testState(state: Crash.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.incidents[0].value?.location == CrashIncident.Location.FRONT)
         assertTrue(state.incidents[0].value?.severity == CrashIncident.Severity.HIGH)
         assertTrue(state.incidents[0].value?.repairs == CrashIncident.Repairs.NEEDED)
@@ -79,6 +78,7 @@ class KCrashTest : BaseTest() {
         assertTrue(state.automaticECall.value == EnabledState.ENABLED)
         assertTrue(state.severity.value == 2)
         assertTrue(state.impactZone.value == Crash.ImpactZone.FRONT_DRIVER_SIDE)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

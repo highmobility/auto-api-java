@@ -158,10 +158,10 @@ public class Engine {
             createBytes();
         }
     
-        TurnEngineOnOff(byte[] bytes) throws CommandParseException, PropertyParseException {
+        TurnEngineOnOff(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     
                     return null;
@@ -198,10 +198,10 @@ public class Engine {
             createBytes();
         }
     
-        EnableDisableStartStop(byte[] bytes) throws CommandParseException, PropertyParseException {
+        EnableDisableStartStop(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_START_STOP_ENABLED) return startStopEnabled.update(p);
                     
                     return null;
@@ -242,10 +242,10 @@ public class Engine {
             return startStopEnabled;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
                         case PROPERTY_START_STOP_STATE: return startStopState.update(p);
@@ -257,25 +257,15 @@ public class Engine {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            status = builder.status;
-            startStopState = builder.startStopState;
-            startStopEnabled = builder.startStopEnabled;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<OnOffState> status;
-            private Property<ActiveState> startStopState;
-            private Property<EnabledState> startStopEnabled;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -283,8 +273,8 @@ public class Engine {
              * @return The builder
              */
             public Builder setStatus(Property<OnOffState> status) {
-                this.status = status.setIdentifier(PROPERTY_STATUS);
-                addProperty(this.status);
+                Property property = status.setIdentifier(PROPERTY_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -293,8 +283,8 @@ public class Engine {
              * @return The builder
              */
             public Builder setStartStopState(Property<ActiveState> startStopState) {
-                this.startStopState = startStopState.setIdentifier(PROPERTY_START_STOP_STATE);
-                addProperty(this.startStopState);
+                Property property = startStopState.setIdentifier(PROPERTY_START_STOP_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -303,8 +293,8 @@ public class Engine {
              * @return The builder
              */
             public Builder setStartStopEnabled(Property<EnabledState> startStopEnabled) {
-                this.startStopEnabled = startStopEnabled.setIdentifier(PROPERTY_START_STOP_ENABLED);
-                addProperty(this.startStopEnabled);
+                Property property = startStopEnabled.setIdentifier(PROPERTY_START_STOP_ENABLED);
+                addProperty(property);
                 return this;
             }
         }

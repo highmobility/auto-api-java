@@ -192,10 +192,10 @@ public class VehicleLocation {
             return gpsSignalStrength;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_COORDINATES: return coordinates.update(p);
                         case PROPERTY_HEADING: return heading.update(p);
@@ -210,31 +210,15 @@ public class VehicleLocation {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            coordinates = builder.coordinates;
-            heading = builder.heading;
-            altitude = builder.altitude;
-            precision = builder.precision;
-            gpsSource = builder.gpsSource;
-            gpsSignalStrength = builder.gpsSignalStrength;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<Coordinates> coordinates;
-            private Property<Angle> heading;
-            private Property<Length> altitude;
-            private Property<Length> precision;
-            private Property<GpsSource> gpsSource;
-            private Property<Double> gpsSignalStrength;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -242,8 +226,8 @@ public class VehicleLocation {
              * @return The builder
              */
             public Builder setCoordinates(Property<Coordinates> coordinates) {
-                this.coordinates = coordinates.setIdentifier(PROPERTY_COORDINATES);
-                addProperty(this.coordinates);
+                Property property = coordinates.setIdentifier(PROPERTY_COORDINATES);
+                addProperty(property);
                 return this;
             }
             
@@ -252,8 +236,8 @@ public class VehicleLocation {
              * @return The builder
              */
             public Builder setHeading(Property<Angle> heading) {
-                this.heading = heading.setIdentifier(PROPERTY_HEADING);
-                addProperty(this.heading);
+                Property property = heading.setIdentifier(PROPERTY_HEADING);
+                addProperty(property);
                 return this;
             }
             
@@ -262,8 +246,8 @@ public class VehicleLocation {
              * @return The builder
              */
             public Builder setAltitude(Property<Length> altitude) {
-                this.altitude = altitude.setIdentifier(PROPERTY_ALTITUDE);
-                addProperty(this.altitude);
+                Property property = altitude.setIdentifier(PROPERTY_ALTITUDE);
+                addProperty(property);
                 return this;
             }
             
@@ -272,8 +256,8 @@ public class VehicleLocation {
              * @return The builder
              */
             public Builder setPrecision(Property<Length> precision) {
-                this.precision = precision.setIdentifier(PROPERTY_PRECISION);
-                addProperty(this.precision);
+                Property property = precision.setIdentifier(PROPERTY_PRECISION);
+                addProperty(property);
                 return this;
             }
             
@@ -282,8 +266,8 @@ public class VehicleLocation {
              * @return The builder
              */
             public Builder setGpsSource(Property<GpsSource> gpsSource) {
-                this.gpsSource = gpsSource.setIdentifier(PROPERTY_GPS_SOURCE);
-                addProperty(this.gpsSource);
+                Property property = gpsSource.setIdentifier(PROPERTY_GPS_SOURCE);
+                addProperty(property);
                 return this;
             }
             
@@ -292,8 +276,8 @@ public class VehicleLocation {
              * @return The builder
              */
             public Builder setGpsSignalStrength(Property<Double> gpsSignalStrength) {
-                this.gpsSignalStrength = gpsSignalStrength.setIdentifier(PROPERTY_GPS_SIGNAL_STRENGTH);
-                addProperty(this.gpsSignalStrength);
+                Property property = gpsSignalStrength.setIdentifier(PROPERTY_GPS_SIGNAL_STRENGTH);
+                addProperty(property);
                 return this;
             }
         }

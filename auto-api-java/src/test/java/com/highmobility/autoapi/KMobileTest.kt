@@ -50,8 +50,8 @@ class KMobileTest : BaseTest() {
     }
     
     private fun testState(state: Mobile.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.connection.value == ConnectionState.CONNECTED)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

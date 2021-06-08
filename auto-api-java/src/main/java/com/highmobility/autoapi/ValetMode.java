@@ -91,10 +91,10 @@ public class ValetMode {
             createBytes();
         }
     
-        ActivateDeactivateValetMode(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ActivateDeactivateValetMode(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     
                     return null;
@@ -119,10 +119,10 @@ public class ValetMode {
             return status;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
                     }
@@ -132,21 +132,15 @@ public class ValetMode {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            status = builder.status;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<ActiveState> status;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -154,8 +148,8 @@ public class ValetMode {
              * @return The builder
              */
             public Builder setStatus(Property<ActiveState> status) {
-                this.status = status.setIdentifier(PROPERTY_STATUS);
-                addProperty(this.status);
+                Property property = status.setIdentifier(PROPERTY_STATUS);
+                addProperty(property);
                 return this;
             }
         }

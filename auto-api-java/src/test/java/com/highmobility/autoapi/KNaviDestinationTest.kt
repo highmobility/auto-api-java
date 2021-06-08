@@ -61,7 +61,6 @@ class KNaviDestinationTest : BaseTest() {
     }
     
     private fun testState(state: NaviDestination.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.coordinates.value?.latitude == 52.520008)
         assertTrue(state.coordinates.value?.longitude == 13.404954)
         assertTrue(state.destinationName.value == "Berlin")
@@ -71,6 +70,7 @@ class KNaviDestinationTest : BaseTest() {
         assertTrue(state.arrivalDuration.value?.unit == Duration.Unit.HOURS)
         assertTrue(state.distanceToDestination.value?.value == 1337.0)
         assertTrue(state.distanceToDestination.value?.unit == Length.Unit.KILOMETERS)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

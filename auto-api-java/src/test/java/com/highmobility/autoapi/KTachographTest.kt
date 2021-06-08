@@ -69,7 +69,6 @@ class KTachographTest : BaseTest() {
     }
     
     private fun testState(state: Tachograph.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.driversWorkingStates[0].value?.driverNumber == 1)
         assertTrue(state.driversWorkingStates[0].value?.workingState == DriverWorkingState.WorkingState.WORKING)
         assertTrue(state.driversWorkingStates[1].value?.driverNumber == 2)
@@ -87,6 +86,7 @@ class KTachographTest : BaseTest() {
         assertTrue(state.vehicleDirection.value == Tachograph.VehicleDirection.FORWARD)
         assertTrue(state.vehicleSpeed.value?.value == 80.0)
         assertTrue(state.vehicleSpeed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

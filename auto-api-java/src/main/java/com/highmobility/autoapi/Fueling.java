@@ -168,10 +168,10 @@ public class Fueling {
             createBytes();
         }
     
-        ControlGasFlap(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ControlGasFlap(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_GAS_FLAP_LOCK: return gasFlapLock.update(p);
                         case PROPERTY_GAS_FLAP_POSITION: return gasFlapPosition.update(p);
@@ -207,10 +207,10 @@ public class Fueling {
             return gasFlapPosition;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_GAS_FLAP_LOCK: return gasFlapLock.update(p);
                         case PROPERTY_GAS_FLAP_POSITION: return gasFlapPosition.update(p);
@@ -221,23 +221,15 @@ public class Fueling {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            gasFlapLock = builder.gasFlapLock;
-            gasFlapPosition = builder.gasFlapPosition;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<LockState> gasFlapLock;
-            private Property<Position> gasFlapPosition;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -245,8 +237,8 @@ public class Fueling {
              * @return The builder
              */
             public Builder setGasFlapLock(Property<LockState> gasFlapLock) {
-                this.gasFlapLock = gasFlapLock.setIdentifier(PROPERTY_GAS_FLAP_LOCK);
-                addProperty(this.gasFlapLock);
+                Property property = gasFlapLock.setIdentifier(PROPERTY_GAS_FLAP_LOCK);
+                addProperty(property);
                 return this;
             }
             
@@ -255,8 +247,8 @@ public class Fueling {
              * @return The builder
              */
             public Builder setGasFlapPosition(Property<Position> gasFlapPosition) {
-                this.gasFlapPosition = gasFlapPosition.setIdentifier(PROPERTY_GAS_FLAP_POSITION);
-                addProperty(this.gasFlapPosition);
+                Property property = gasFlapPosition.setIdentifier(PROPERTY_GAS_FLAP_POSITION);
+                addProperty(property);
                 return this;
             }
         }

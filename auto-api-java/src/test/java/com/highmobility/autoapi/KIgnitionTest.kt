@@ -55,10 +55,10 @@ class KIgnitionTest : BaseTest() {
     }
     
     private fun testState(state: Ignition.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.status.value == IgnitionState.OFF)
         assertTrue(state.accessoriesStatus.value == IgnitionState.ON)
         assertTrue(state.state.value == IgnitionState.ACCESSORY)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

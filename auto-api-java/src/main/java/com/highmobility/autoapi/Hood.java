@@ -164,10 +164,10 @@ public class Hood {
             return lockSafety;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_POSITION: return position.update(p);
                         case PROPERTY_LOCK: return lock.update(p);
@@ -179,25 +179,15 @@ public class Hood {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            position = builder.position;
-            lock = builder.lock;
-            lockSafety = builder.lockSafety;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<Position> position;
-            private Property<LockState> lock;
-            private Property<LockSafety> lockSafety;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -205,8 +195,8 @@ public class Hood {
              * @return The builder
              */
             public Builder setPosition(Property<Position> position) {
-                this.position = position.setIdentifier(PROPERTY_POSITION);
-                addProperty(this.position);
+                Property property = position.setIdentifier(PROPERTY_POSITION);
+                addProperty(property);
                 return this;
             }
             
@@ -215,8 +205,8 @@ public class Hood {
              * @return The builder
              */
             public Builder setLock(Property<LockState> lock) {
-                this.lock = lock.setIdentifier(PROPERTY_LOCK);
-                addProperty(this.lock);
+                Property property = lock.setIdentifier(PROPERTY_LOCK);
+                addProperty(property);
                 return this;
             }
             
@@ -225,8 +215,8 @@ public class Hood {
              * @return The builder
              */
             public Builder setLockSafety(Property<LockSafety> lockSafety) {
-                this.lockSafety = lockSafety.setIdentifier(PROPERTY_LOCK_SAFETY);
-                addProperty(this.lockSafety);
+                Property property = lockSafety.setIdentifier(PROPERTY_LOCK_SAFETY);
+                addProperty(property);
                 return this;
             }
         }

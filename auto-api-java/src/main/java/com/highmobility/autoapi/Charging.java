@@ -213,10 +213,10 @@ public class Charging {
             createBytes();
         }
     
-        StartStopCharging(byte[] bytes) throws CommandParseException, PropertyParseException {
+        StartStopCharging(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     
                     return null;
@@ -253,10 +253,10 @@ public class Charging {
             createBytes();
         }
     
-        SetChargeLimit(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetChargeLimit(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CHARGE_LIMIT) return chargeLimit.update(p);
                     
                     return null;
@@ -293,10 +293,10 @@ public class Charging {
             createBytes();
         }
     
-        OpenCloseChargingPort(byte[] bytes) throws CommandParseException, PropertyParseException {
+        OpenCloseChargingPort(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CHARGE_PORT_STATE) return chargePortState.update(p);
                     
                     return null;
@@ -335,10 +335,10 @@ public class Charging {
             createBytes();
         }
     
-        SetChargeMode(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetChargeMode(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CHARGE_MODE) return chargeMode.update(p);
                     
                     return null;
@@ -383,13 +383,13 @@ public class Charging {
             createBytes();
         }
     
-        SetChargingTimers(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetChargingTimers(byte[] bytes) throws PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<Timer>> timersBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_TIMERS) {
                         Property<Timer> timer = new Property<>(Timer.class, p);
                         timersBuilder.add(timer);
@@ -440,13 +440,13 @@ public class Charging {
             createBytes();
         }
     
-        SetReductionOfChargingCurrentTimes(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetReductionOfChargingCurrentTimes(byte[] bytes) throws PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<ReductionTime>> reductionTimesBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_REDUCTION_TIMES) {
                         Property<ReductionTime> reductionTime = new Property<>(ReductionTime.class, p);
                         reductionTimesBuilder.add(reductionTime);
@@ -743,7 +743,7 @@ public class Charging {
             return batteryCapacity;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<DepartureTime>> departureTimesBuilder = new ArrayList<>();
@@ -751,7 +751,7 @@ public class Charging {
             final ArrayList<Property<Timer>> timersBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_ESTIMATED_RANGE: return estimatedRange.update(p);
                         case PROPERTY_BATTERY_LEVEL: return batteryLevel.update(p);
@@ -806,85 +806,15 @@ public class Charging {
             timers = timersBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            estimatedRange = builder.estimatedRange;
-            batteryLevel = builder.batteryLevel;
-            batteryCurrentAC = builder.batteryCurrentAC;
-            batteryCurrentDC = builder.batteryCurrentDC;
-            chargerVoltageAC = builder.chargerVoltageAC;
-            chargerVoltageDC = builder.chargerVoltageDC;
-            chargeLimit = builder.chargeLimit;
-            timeToCompleteCharge = builder.timeToCompleteCharge;
-            chargingRateKW = builder.chargingRateKW;
-            chargePortState = builder.chargePortState;
-            chargeMode = builder.chargeMode;
-            maxChargingCurrent = builder.maxChargingCurrent;
-            plugType = builder.plugType;
-            chargingWindowChosen = builder.chargingWindowChosen;
-            departureTimes = builder.departureTimes;
-            reductionTimes = builder.reductionTimes;
-            batteryTemperature = builder.batteryTemperature;
-            timers = builder.timers;
-            pluggedIn = builder.pluggedIn;
-            status = builder.status;
-            chargingRate = builder.chargingRate;
-            batteryCurrent = builder.batteryCurrent;
-            chargerVoltage = builder.chargerVoltage;
-            currentType = builder.currentType;
-            maxRange = builder.maxRange;
-            starterBatteryState = builder.starterBatteryState;
-            smartChargingStatus = builder.smartChargingStatus;
-            batteryLevelAtDeparture = builder.batteryLevelAtDeparture;
-            preconditioningDepartureStatus = builder.preconditioningDepartureStatus;
-            preconditioningImmediateStatus = builder.preconditioningImmediateStatus;
-            preconditioningDepartureEnabled = builder.preconditioningDepartureEnabled;
-            preconditioningError = builder.preconditioningError;
-            batteryCapacity = builder.batteryCapacity;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<Length> estimatedRange;
-            private Property<Double> batteryLevel;
-            private Property<ElectricCurrent> batteryCurrentAC;
-            private Property<ElectricCurrent> batteryCurrentDC;
-            private Property<ElectricPotentialDifference> chargerVoltageAC;
-            private Property<ElectricPotentialDifference> chargerVoltageDC;
-            private Property<Double> chargeLimit;
-            private Property<Duration> timeToCompleteCharge;
-            private Property<Power> chargingRateKW;
-            private Property<Position> chargePortState;
-            private Property<ChargeMode> chargeMode;
-            private Property<ElectricCurrent> maxChargingCurrent;
-            private Property<PlugType> plugType;
-            private Property<ChargingWindowChosen> chargingWindowChosen;
-            private final List<Property<DepartureTime>> departureTimes = new ArrayList<>();
-            private final List<Property<ReductionTime>> reductionTimes = new ArrayList<>();
-            private Property<Temperature> batteryTemperature;
-            private final List<Property<Timer>> timers = new ArrayList<>();
-            private Property<PluggedIn> pluggedIn;
-            private Property<Status> status;
-            private Property<Power> chargingRate;
-            private Property<ElectricCurrent> batteryCurrent;
-            private Property<ElectricPotentialDifference> chargerVoltage;
-            private Property<CurrentType> currentType;
-            private Property<Length> maxRange;
-            private Property<StarterBatteryState> starterBatteryState;
-            private Property<SmartChargingStatus> smartChargingStatus;
-            private Property<Double> batteryLevelAtDeparture;
-            private Property<ActiveState> preconditioningDepartureStatus;
-            private Property<ActiveState> preconditioningImmediateStatus;
-            private Property<EnabledState> preconditioningDepartureEnabled;
-            private Property<PreconditioningError> preconditioningError;
-            private Property<Energy> batteryCapacity;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -892,8 +822,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setEstimatedRange(Property<Length> estimatedRange) {
-                this.estimatedRange = estimatedRange.setIdentifier(PROPERTY_ESTIMATED_RANGE);
-                addProperty(this.estimatedRange);
+                Property property = estimatedRange.setIdentifier(PROPERTY_ESTIMATED_RANGE);
+                addProperty(property);
                 return this;
             }
             
@@ -902,8 +832,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setBatteryLevel(Property<Double> batteryLevel) {
-                this.batteryLevel = batteryLevel.setIdentifier(PROPERTY_BATTERY_LEVEL);
-                addProperty(this.batteryLevel);
+                Property property = batteryLevel.setIdentifier(PROPERTY_BATTERY_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -914,8 +844,8 @@ public class Charging {
              */
             @Deprecated
             public Builder setBatteryCurrentAC(Property<ElectricCurrent> batteryCurrentAC) {
-                this.batteryCurrentAC = batteryCurrentAC.setIdentifier(PROPERTY_BATTERY_CURRENT_AC);
-                addProperty(this.batteryCurrentAC);
+                Property property = batteryCurrentAC.setIdentifier(PROPERTY_BATTERY_CURRENT_AC);
+                addProperty(property);
                 return this;
             }
             
@@ -926,8 +856,8 @@ public class Charging {
              */
             @Deprecated
             public Builder setBatteryCurrentDC(Property<ElectricCurrent> batteryCurrentDC) {
-                this.batteryCurrentDC = batteryCurrentDC.setIdentifier(PROPERTY_BATTERY_CURRENT_DC);
-                addProperty(this.batteryCurrentDC);
+                Property property = batteryCurrentDC.setIdentifier(PROPERTY_BATTERY_CURRENT_DC);
+                addProperty(property);
                 return this;
             }
             
@@ -938,8 +868,8 @@ public class Charging {
              */
             @Deprecated
             public Builder setChargerVoltageAC(Property<ElectricPotentialDifference> chargerVoltageAC) {
-                this.chargerVoltageAC = chargerVoltageAC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_AC);
-                addProperty(this.chargerVoltageAC);
+                Property property = chargerVoltageAC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_AC);
+                addProperty(property);
                 return this;
             }
             
@@ -950,8 +880,8 @@ public class Charging {
              */
             @Deprecated
             public Builder setChargerVoltageDC(Property<ElectricPotentialDifference> chargerVoltageDC) {
-                this.chargerVoltageDC = chargerVoltageDC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_DC);
-                addProperty(this.chargerVoltageDC);
+                Property property = chargerVoltageDC.setIdentifier(PROPERTY_CHARGER_VOLTAGE_DC);
+                addProperty(property);
                 return this;
             }
             
@@ -960,8 +890,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setChargeLimit(Property<Double> chargeLimit) {
-                this.chargeLimit = chargeLimit.setIdentifier(PROPERTY_CHARGE_LIMIT);
-                addProperty(this.chargeLimit);
+                Property property = chargeLimit.setIdentifier(PROPERTY_CHARGE_LIMIT);
+                addProperty(property);
                 return this;
             }
             
@@ -970,8 +900,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setTimeToCompleteCharge(Property<Duration> timeToCompleteCharge) {
-                this.timeToCompleteCharge = timeToCompleteCharge.setIdentifier(PROPERTY_TIME_TO_COMPLETE_CHARGE);
-                addProperty(this.timeToCompleteCharge);
+                Property property = timeToCompleteCharge.setIdentifier(PROPERTY_TIME_TO_COMPLETE_CHARGE);
+                addProperty(property);
                 return this;
             }
             
@@ -982,8 +912,8 @@ public class Charging {
              */
             @Deprecated
             public Builder setChargingRateKW(Property<Power> chargingRateKW) {
-                this.chargingRateKW = chargingRateKW.setIdentifier(PROPERTY_CHARGING_RATE_KW);
-                addProperty(this.chargingRateKW);
+                Property property = chargingRateKW.setIdentifier(PROPERTY_CHARGING_RATE_KW);
+                addProperty(property);
                 return this;
             }
             
@@ -992,8 +922,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setChargePortState(Property<Position> chargePortState) {
-                this.chargePortState = chargePortState.setIdentifier(PROPERTY_CHARGE_PORT_STATE);
-                addProperty(this.chargePortState);
+                Property property = chargePortState.setIdentifier(PROPERTY_CHARGE_PORT_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -1002,8 +932,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setChargeMode(Property<ChargeMode> chargeMode) {
-                this.chargeMode = chargeMode.setIdentifier(PROPERTY_CHARGE_MODE);
-                addProperty(this.chargeMode);
+                Property property = chargeMode.setIdentifier(PROPERTY_CHARGE_MODE);
+                addProperty(property);
                 return this;
             }
             
@@ -1012,8 +942,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setMaxChargingCurrent(Property<ElectricCurrent> maxChargingCurrent) {
-                this.maxChargingCurrent = maxChargingCurrent.setIdentifier(PROPERTY_MAX_CHARGING_CURRENT);
-                addProperty(this.maxChargingCurrent);
+                Property property = maxChargingCurrent.setIdentifier(PROPERTY_MAX_CHARGING_CURRENT);
+                addProperty(property);
                 return this;
             }
             
@@ -1022,8 +952,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setPlugType(Property<PlugType> plugType) {
-                this.plugType = plugType.setIdentifier(PROPERTY_PLUG_TYPE);
-                addProperty(this.plugType);
+                Property property = plugType.setIdentifier(PROPERTY_PLUG_TYPE);
+                addProperty(property);
                 return this;
             }
             
@@ -1032,8 +962,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setChargingWindowChosen(Property<ChargingWindowChosen> chargingWindowChosen) {
-                this.chargingWindowChosen = chargingWindowChosen.setIdentifier(PROPERTY_CHARGING_WINDOW_CHOSEN);
-                addProperty(this.chargingWindowChosen);
+                Property property = chargingWindowChosen.setIdentifier(PROPERTY_CHARGING_WINDOW_CHOSEN);
+                addProperty(property);
                 return this;
             }
             
@@ -1044,7 +974,6 @@ public class Charging {
              * @return The builder
              */
             public Builder setDepartureTimes(Property<DepartureTime>[] departureTimes) {
-                this.departureTimes.clear();
                 for (int i = 0; i < departureTimes.length; i++) {
                     addDepartureTime(departureTimes[i]);
                 }
@@ -1061,7 +990,6 @@ public class Charging {
             public Builder addDepartureTime(Property<DepartureTime> departureTime) {
                 departureTime.setIdentifier(PROPERTY_DEPARTURE_TIMES);
                 addProperty(departureTime);
-                departureTimes.add(departureTime);
                 return this;
             }
             
@@ -1072,7 +1000,6 @@ public class Charging {
              * @return The builder
              */
             public Builder setReductionTimes(Property<ReductionTime>[] reductionTimes) {
-                this.reductionTimes.clear();
                 for (int i = 0; i < reductionTimes.length; i++) {
                     addReductionTime(reductionTimes[i]);
                 }
@@ -1089,7 +1016,6 @@ public class Charging {
             public Builder addReductionTime(Property<ReductionTime> reductionTime) {
                 reductionTime.setIdentifier(PROPERTY_REDUCTION_TIMES);
                 addProperty(reductionTime);
-                reductionTimes.add(reductionTime);
                 return this;
             }
             
@@ -1098,8 +1024,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setBatteryTemperature(Property<Temperature> batteryTemperature) {
-                this.batteryTemperature = batteryTemperature.setIdentifier(PROPERTY_BATTERY_TEMPERATURE);
-                addProperty(this.batteryTemperature);
+                Property property = batteryTemperature.setIdentifier(PROPERTY_BATTERY_TEMPERATURE);
+                addProperty(property);
                 return this;
             }
             
@@ -1110,7 +1036,6 @@ public class Charging {
              * @return The builder
              */
             public Builder setTimers(Property<Timer>[] timers) {
-                this.timers.clear();
                 for (int i = 0; i < timers.length; i++) {
                     addTimer(timers[i]);
                 }
@@ -1127,7 +1052,6 @@ public class Charging {
             public Builder addTimer(Property<Timer> timer) {
                 timer.setIdentifier(PROPERTY_TIMERS);
                 addProperty(timer);
-                timers.add(timer);
                 return this;
             }
             
@@ -1136,8 +1060,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setPluggedIn(Property<PluggedIn> pluggedIn) {
-                this.pluggedIn = pluggedIn.setIdentifier(PROPERTY_PLUGGED_IN);
-                addProperty(this.pluggedIn);
+                Property property = pluggedIn.setIdentifier(PROPERTY_PLUGGED_IN);
+                addProperty(property);
                 return this;
             }
             
@@ -1146,8 +1070,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setStatus(Property<Status> status) {
-                this.status = status.setIdentifier(PROPERTY_STATUS);
-                addProperty(this.status);
+                Property property = status.setIdentifier(PROPERTY_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -1156,8 +1080,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setChargingRate(Property<Power> chargingRate) {
-                this.chargingRate = chargingRate.setIdentifier(PROPERTY_CHARGING_RATE);
-                addProperty(this.chargingRate);
+                Property property = chargingRate.setIdentifier(PROPERTY_CHARGING_RATE);
+                addProperty(property);
                 return this;
             }
             
@@ -1166,8 +1090,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setBatteryCurrent(Property<ElectricCurrent> batteryCurrent) {
-                this.batteryCurrent = batteryCurrent.setIdentifier(PROPERTY_BATTERY_CURRENT);
-                addProperty(this.batteryCurrent);
+                Property property = batteryCurrent.setIdentifier(PROPERTY_BATTERY_CURRENT);
+                addProperty(property);
                 return this;
             }
             
@@ -1176,8 +1100,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setChargerVoltage(Property<ElectricPotentialDifference> chargerVoltage) {
-                this.chargerVoltage = chargerVoltage.setIdentifier(PROPERTY_CHARGER_VOLTAGE);
-                addProperty(this.chargerVoltage);
+                Property property = chargerVoltage.setIdentifier(PROPERTY_CHARGER_VOLTAGE);
+                addProperty(property);
                 return this;
             }
             
@@ -1186,8 +1110,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setCurrentType(Property<CurrentType> currentType) {
-                this.currentType = currentType.setIdentifier(PROPERTY_CURRENT_TYPE);
-                addProperty(this.currentType);
+                Property property = currentType.setIdentifier(PROPERTY_CURRENT_TYPE);
+                addProperty(property);
                 return this;
             }
             
@@ -1196,8 +1120,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setMaxRange(Property<Length> maxRange) {
-                this.maxRange = maxRange.setIdentifier(PROPERTY_MAX_RANGE);
-                addProperty(this.maxRange);
+                Property property = maxRange.setIdentifier(PROPERTY_MAX_RANGE);
+                addProperty(property);
                 return this;
             }
             
@@ -1206,8 +1130,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setStarterBatteryState(Property<StarterBatteryState> starterBatteryState) {
-                this.starterBatteryState = starterBatteryState.setIdentifier(PROPERTY_STARTER_BATTERY_STATE);
-                addProperty(this.starterBatteryState);
+                Property property = starterBatteryState.setIdentifier(PROPERTY_STARTER_BATTERY_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -1216,8 +1140,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setSmartChargingStatus(Property<SmartChargingStatus> smartChargingStatus) {
-                this.smartChargingStatus = smartChargingStatus.setIdentifier(PROPERTY_SMART_CHARGING_STATUS);
-                addProperty(this.smartChargingStatus);
+                Property property = smartChargingStatus.setIdentifier(PROPERTY_SMART_CHARGING_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -1226,8 +1150,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setBatteryLevelAtDeparture(Property<Double> batteryLevelAtDeparture) {
-                this.batteryLevelAtDeparture = batteryLevelAtDeparture.setIdentifier(PROPERTY_BATTERY_LEVEL_AT_DEPARTURE);
-                addProperty(this.batteryLevelAtDeparture);
+                Property property = batteryLevelAtDeparture.setIdentifier(PROPERTY_BATTERY_LEVEL_AT_DEPARTURE);
+                addProperty(property);
                 return this;
             }
             
@@ -1236,8 +1160,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setPreconditioningDepartureStatus(Property<ActiveState> preconditioningDepartureStatus) {
-                this.preconditioningDepartureStatus = preconditioningDepartureStatus.setIdentifier(PROPERTY_PRECONDITIONING_DEPARTURE_STATUS);
-                addProperty(this.preconditioningDepartureStatus);
+                Property property = preconditioningDepartureStatus.setIdentifier(PROPERTY_PRECONDITIONING_DEPARTURE_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -1246,8 +1170,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setPreconditioningImmediateStatus(Property<ActiveState> preconditioningImmediateStatus) {
-                this.preconditioningImmediateStatus = preconditioningImmediateStatus.setIdentifier(PROPERTY_PRECONDITIONING_IMMEDIATE_STATUS);
-                addProperty(this.preconditioningImmediateStatus);
+                Property property = preconditioningImmediateStatus.setIdentifier(PROPERTY_PRECONDITIONING_IMMEDIATE_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -1256,8 +1180,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setPreconditioningDepartureEnabled(Property<EnabledState> preconditioningDepartureEnabled) {
-                this.preconditioningDepartureEnabled = preconditioningDepartureEnabled.setIdentifier(PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED);
-                addProperty(this.preconditioningDepartureEnabled);
+                Property property = preconditioningDepartureEnabled.setIdentifier(PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED);
+                addProperty(property);
                 return this;
             }
             
@@ -1266,8 +1190,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setPreconditioningError(Property<PreconditioningError> preconditioningError) {
-                this.preconditioningError = preconditioningError.setIdentifier(PROPERTY_PRECONDITIONING_ERROR);
-                addProperty(this.preconditioningError);
+                Property property = preconditioningError.setIdentifier(PROPERTY_PRECONDITIONING_ERROR);
+                addProperty(property);
                 return this;
             }
             
@@ -1276,8 +1200,8 @@ public class Charging {
              * @return The builder
              */
             public Builder setBatteryCapacity(Property<Energy> batteryCapacity) {
-                this.batteryCapacity = batteryCapacity.setIdentifier(PROPERTY_BATTERY_CAPACITY);
-                addProperty(this.batteryCapacity);
+                Property property = batteryCapacity.setIdentifier(PROPERTY_BATTERY_CAPACITY);
+                addProperty(property);
                 return this;
             }
         }

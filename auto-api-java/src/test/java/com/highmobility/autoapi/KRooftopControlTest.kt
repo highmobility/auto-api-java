@@ -59,13 +59,13 @@ class KRooftopControlTest : BaseTest() {
     }
     
     private fun testState(state: RooftopControl.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.dimming.value == 1.0)
         assertTrue(state.position.value == 0.5)
         assertTrue(state.convertibleRoofState.value == RooftopControl.ConvertibleRoofState.OPEN)
         assertTrue(state.sunroofTiltState.value == RooftopControl.SunroofTiltState.HALF_TILTED)
         assertTrue(state.sunroofState.value == RooftopControl.SunroofState.OPEN)
         assertTrue(state.sunroofRainEvent.value == RooftopControl.SunroofRainEvent.NO_EVENT)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

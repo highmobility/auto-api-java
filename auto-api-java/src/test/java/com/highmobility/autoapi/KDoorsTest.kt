@@ -78,7 +78,6 @@ class KDoorsTest : BaseTest() {
     }
     
     private fun testState(state: Doors.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.insideLocks[0].value?.location == Location.FRONT_LEFT)
         assertTrue(state.insideLocks[0].value?.lockState == LockState.LOCKED)
         assertTrue(state.insideLocks[1].value?.location == Location.FRONT_RIGHT)
@@ -107,6 +106,7 @@ class KDoorsTest : BaseTest() {
         assertTrue(state.positions[4].value?.position == Position.CLOSED)
         assertTrue(state.insideLocksState.value == LockState.LOCKED)
         assertTrue(state.locksState.value == LockState.UNLOCKED)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

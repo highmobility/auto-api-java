@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -295,6 +296,7 @@ public class Command extends Bytes {
     // Used to catch the property parsing exception, managing parsed properties in this class.
     protected PropertyIterator propertyIterator;
 
+
     protected class PropertyIterator implements Iterator<Property> {
         private final int currentSize;
         private int propertiesReplaced = 0;
@@ -320,34 +322,26 @@ public class Command extends Bytes {
             throw new UnsupportedOperationException();
         }
 
-        public void parseNext(PropertyIteration next) throws PropertyParseException {
+        private void parseNext(PropertyIteration next, HandleNotParsedProperty nullProperty) throws PropertyParseException {
             Property nextProperty = next();
+
             // ignore universal properties
             while (nextProperty.isUniversalProperty()) {
                 if (hasNext()) nextProperty = next();
                 else return;
             }
 
+            // parsing both state and setter properties
             try {
-                Object parsedProperty = next.iterate(nextProperty);
+                Property parsedProperty = next.iterate(nextProperty);
                 // failure and timestamp are separate properties and should be retained in base
                 // properties array
                 if (parsedProperty != null) {
                     // replace the base property with parsed one
-                    properties[currentIndex - 1] = (Property) parsedProperty;
+                    properties[currentIndex - 1] = parsedProperty;
                     propertiesReplaced++;
-                } else if (type == Type.SET && CommandResolver._environment == CommandResolver.Environment.VEHICLE) {
-                    /*
-                     On OEM side, we expect only setters, on Owner side, only States. Both are Type.SET
-                     On OEM side, we should fail the setter parsing, because unknown properties are
-                     not allowed there. (We throw here)
-                     On Owner side, State can have unknown properties, so ignore them there
-                     */
-                    // TODO: L14 this logic can be removed if there are separate identifiers for setters
-                    throw new PropertyParseException(
-                            SETTER_SUPERFLUOUS_PROPERTY,
-                            this.getClass(),
-                            nextProperty.getPropertyIdentifier());
+                } else {
+                    nullProperty.handle(nextProperty);
                 }
             } catch (PropertyParseException propertyParseException) {
                 if (propertyParseException.getCode() == SETTER_SUPERFLUOUS_PROPERTY) {
@@ -362,6 +356,48 @@ public class Command extends Bytes {
                 nextProperty.printFailedToParse(e, null);
             }
         }
+
+        public void parseNextState(PropertyIteration next) {
+            // state will never throw
+            try {
+                parseNext(next, notHandledProperty -> {
+                    notHandledProperty.printFailedToParse(
+                            new PropertyParseException("Invalid property"),
+                            null);
+
+                    // if a property failed to parse, keep it in the base array and don't replace
+                    // base parseNext does this already
+                });
+            } catch (PropertyParseException e) {
+                // the parseNext() will only throw for Setters
+            }
+        }
+
+        public void parseNextSetter(PropertyIteration next) throws PropertyParseException {
+            parseNext(next, notHandledProperty -> {
+                if (CommandResolver._environment == CommandResolver.Environment.VEHICLE) {
+                   /*
+                    On OEM side, we expect only setters, on Owner side, only States. Both are
+                    Type.SET
+
+                    On OEM side, we should fail the setter parsing, because unknown properties are
+                    not allowed there. (We throw here)
+                    On Owner side, State can have unknown properties, so ignore them there
+                    */
+                    // TODO: L14 this logic can be removed if there are separate identifiers for
+                    //  state and setters
+                    throw new PropertyParseException(
+                            SETTER_SUPERFLUOUS_PROPERTY,
+                            this.getClass(),
+                            notHandledProperty.getPropertyIdentifier());
+                }
+            });
+        }
+    }
+
+    @FunctionalInterface
+    public interface HandleNotParsedProperty {
+        void handle(Property iteration) throws PropertyParseException;
     }
 
     public interface PropertyIteration {

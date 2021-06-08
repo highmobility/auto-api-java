@@ -62,7 +62,6 @@ class KTheftAlarmTest : BaseTest() {
     }
     
     private fun testState(state: TheftAlarm.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.status.value == TheftAlarm.Status.ARMED)
         assertTrue(state.interiorProtectionStatus.value == ActiveSelectedState.ACTIVE)
         assertTrue(state.towProtectionStatus.value == ActiveSelectedState.ACTIVE)
@@ -70,6 +69,7 @@ class KTheftAlarmTest : BaseTest() {
         assertTrue(dateIsSame(state.lastEvent.value, "2020-06-16T11:10:02.000Z"))
         assertTrue(state.lastEventLevel.value == TheftAlarm.LastEventLevel.LOW)
         assertTrue(state.eventType.value == TheftAlarm.EventType.REAR_RIGHT)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

@@ -86,7 +86,6 @@ class KMaintenanceTest : BaseTest() {
     }
     
     private fun testState(state: Maintenance.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.daysToNextService.value?.value == 501.0)
         assertTrue(state.daysToNextService.value?.unit == Duration.Unit.DAYS)
         assertTrue(state.kilometersToNextService.value?.value == 3681.0)
@@ -120,6 +119,7 @@ class KMaintenanceTest : BaseTest() {
         assertTrue(state.distanceToNextOilService.value?.unit == Length.Unit.KILOMETERS)
         assertTrue(state.timeToNextOilService.value?.value == 66.8)
         assertTrue(state.timeToNextOilService.value?.unit == Duration.Unit.DAYS)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

@@ -51,9 +51,9 @@ class KMessagingTest : BaseTest() {
     }
     
     private fun testState(state: Messaging.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.text.value == "Hey mom!")
         assertTrue(state.handle.value == "Epp")
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

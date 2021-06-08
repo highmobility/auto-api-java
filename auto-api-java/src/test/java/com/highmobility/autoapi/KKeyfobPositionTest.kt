@@ -41,8 +41,8 @@ class KKeyfobPositionTest : BaseTest() {
     }
     
     private fun testState(state: KeyfobPosition.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.location.value == KeyfobPosition.Location.INSIDE_CAR)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

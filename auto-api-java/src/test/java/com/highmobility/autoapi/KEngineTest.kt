@@ -54,10 +54,10 @@ class KEngineTest : BaseTest() {
     }
     
     private fun testState(state: Engine.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.status.value == OnOffState.OFF)
         assertTrue(state.startStopState.value == ActiveState.ACTIVE)
         assertTrue(state.startStopEnabled.value == EnabledState.ENABLED)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

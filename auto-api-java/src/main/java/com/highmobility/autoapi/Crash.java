@@ -194,13 +194,13 @@ public class Crash {
             return impactZone;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<CrashIncident>> incidentsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_INCIDENTS:
                             Property<CrashIncident> incident = new Property<>(CrashIncident.class, p);
@@ -220,31 +220,15 @@ public class Crash {
             incidents = incidentsBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            incidents = builder.incidents;
-            type = builder.type;
-            tippedState = builder.tippedState;
-            automaticECall = builder.automaticECall;
-            severity = builder.severity;
-            impactZone = builder.impactZone;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private final List<Property<CrashIncident>> incidents = new ArrayList<>();
-            private Property<Type> type;
-            private Property<TippedState> tippedState;
-            private Property<EnabledState> automaticECall;
-            private PropertyInteger severity;
-            private Property<ImpactZone> impactZone;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -254,7 +238,6 @@ public class Crash {
              * @return The builder
              */
             public Builder setIncidents(Property<CrashIncident>[] incidents) {
-                this.incidents.clear();
                 for (int i = 0; i < incidents.length; i++) {
                     addIncident(incidents[i]);
                 }
@@ -271,7 +254,6 @@ public class Crash {
             public Builder addIncident(Property<CrashIncident> incident) {
                 incident.setIdentifier(PROPERTY_INCIDENTS);
                 addProperty(incident);
-                incidents.add(incident);
                 return this;
             }
             
@@ -280,8 +262,8 @@ public class Crash {
              * @return The builder
              */
             public Builder setType(Property<Type> type) {
-                this.type = type.setIdentifier(PROPERTY_TYPE);
-                addProperty(this.type);
+                Property property = type.setIdentifier(PROPERTY_TYPE);
+                addProperty(property);
                 return this;
             }
             
@@ -290,8 +272,8 @@ public class Crash {
              * @return The builder
              */
             public Builder setTippedState(Property<TippedState> tippedState) {
-                this.tippedState = tippedState.setIdentifier(PROPERTY_TIPPED_STATE);
-                addProperty(this.tippedState);
+                Property property = tippedState.setIdentifier(PROPERTY_TIPPED_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -300,8 +282,8 @@ public class Crash {
              * @return The builder
              */
             public Builder setAutomaticECall(Property<EnabledState> automaticECall) {
-                this.automaticECall = automaticECall.setIdentifier(PROPERTY_AUTOMATIC_ECALL);
-                addProperty(this.automaticECall);
+                Property property = automaticECall.setIdentifier(PROPERTY_AUTOMATIC_ECALL);
+                addProperty(property);
                 return this;
             }
             
@@ -310,8 +292,8 @@ public class Crash {
              * @return The builder
              */
             public Builder setSeverity(Property<Integer> severity) {
-                this.severity = new PropertyInteger(PROPERTY_SEVERITY, false, 1, severity);
-                addProperty(this.severity);
+                Property property = new PropertyInteger(PROPERTY_SEVERITY, false, 1, severity);
+                addProperty(property);
                 return this;
             }
             
@@ -320,8 +302,8 @@ public class Crash {
              * @return The builder
              */
             public Builder setImpactZone(Property<ImpactZone> impactZone) {
-                this.impactZone = impactZone.setIdentifier(PROPERTY_IMPACT_ZONE);
-                addProperty(this.impactZone);
+                Property property = impactZone.setIdentifier(PROPERTY_IMPACT_ZONE);
+                addProperty(property);
                 return this;
             }
         }

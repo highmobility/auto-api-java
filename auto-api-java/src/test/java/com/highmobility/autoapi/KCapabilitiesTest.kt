@@ -56,7 +56,6 @@ class KCapabilitiesTest : BaseTest() {
     }
     
     private fun testState(state: Capabilities.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.capabilities[0].value?.capabilityID == 0x0020)
         assertTrue(state.capabilities[0].value?.supportedPropertyIDs == Bytes(byteArrayOf(0x02, 0x03, 0x04, 0x05, 0x06)))
         assertTrue(state.capabilities[1].value?.capabilityID == 0x0023)
@@ -65,6 +64,7 @@ class KCapabilitiesTest : BaseTest() {
         assertTrue(state.webhooks[0].value?.event == Event.TRIP_STARTED)
         assertTrue(state.webhooks[1].value?.available == Webhook.Available.AVAILABLE)
         assertTrue(state.webhooks[1].value?.event == Event.TRIP_ENDED)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

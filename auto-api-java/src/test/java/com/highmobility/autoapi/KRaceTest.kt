@@ -93,7 +93,6 @@ class KRaceTest : BaseTest() {
     }
     
     private fun testState(state: Race.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.accelerations[0].value?.direction == Acceleration.Direction.LONGITUDINAL)
         assertTrue(state.accelerations[0].value?.acceleration?.value == 0.864)
         assertTrue(state.accelerations[0].value?.acceleration?.unit == AccelerationUnit.Unit.GRAVITY)
@@ -130,6 +129,7 @@ class KRaceTest : BaseTest() {
         assertTrue(state.acceleratorPedalIdleSwitch.value == ActiveState.ACTIVE)
         assertTrue(state.acceleratorPedalKickdownSwitch.value == ActiveState.ACTIVE)
         assertTrue(state.vehicleMoving.value == Race.VehicleMoving.MOVING)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

@@ -71,7 +71,6 @@ class KChassisSettingsTest : BaseTest() {
     }
     
     private fun testState(state: ChassisSettings.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.drivingMode.value == DrivingMode.ECO)
         assertTrue(state.sportChrono.value == ChassisSettings.SportChrono.ACTIVE)
         assertTrue(state.currentSpringRates[0].value?.axle == Axle.FRONT)
@@ -98,6 +97,7 @@ class KChassisSettingsTest : BaseTest() {
         assertTrue(state.maximumChassisPosition.value?.unit == Length.Unit.MILLIMETERS)
         assertTrue(state.minimumChassisPosition.value?.value == -28.4)
         assertTrue(state.minimumChassisPosition.value?.unit == Length.Unit.MILLIMETERS)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

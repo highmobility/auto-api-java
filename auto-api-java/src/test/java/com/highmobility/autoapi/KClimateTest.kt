@@ -85,7 +85,6 @@ class KClimateTest : BaseTest() {
     }
     
     private fun testState(state: Climate.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.insideTemperature.value?.value == 19.1)
         assertTrue(state.insideTemperature.value?.unit == Temperature.Unit.CELSIUS)
         assertTrue(state.outsideTemperature.value?.value == 12.2)
@@ -126,6 +125,7 @@ class KClimateTest : BaseTest() {
         assertTrue(state.hvacWeekdayStartingTimes[7].value?.time?.minute == 0)
         assertTrue(state.rearTemperatureSetting.value?.value == 21.6)
         assertTrue(state.rearTemperatureSetting.value?.unit == Temperature.Unit.CELSIUS)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

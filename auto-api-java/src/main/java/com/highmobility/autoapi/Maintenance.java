@@ -310,13 +310,13 @@ public class Maintenance {
             return timeToNextOilService;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<ConditionBasedService>> conditionBasedServicesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_DAYS_TO_NEXT_SERVICE: return daysToNextService.update(p);
                         case PROPERTY_KILOMETERS_TO_NEXT_SERVICE: return kilometersToNextService.update(p);
@@ -348,55 +348,15 @@ public class Maintenance {
             conditionBasedServices = conditionBasedServicesBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            daysToNextService = builder.daysToNextService;
-            kilometersToNextService = builder.kilometersToNextService;
-            cbsReportsCount = builder.cbsReportsCount;
-            monthsToExhaustInspection = builder.monthsToExhaustInspection;
-            teleserviceAvailability = builder.teleserviceAvailability;
-            serviceDistanceThreshold = builder.serviceDistanceThreshold;
-            serviceTimeThreshold = builder.serviceTimeThreshold;
-            automaticTeleserviceCallDate = builder.automaticTeleserviceCallDate;
-            teleserviceBatteryCallDate = builder.teleserviceBatteryCallDate;
-            nextInspectionDate = builder.nextInspectionDate;
-            conditionBasedServices = builder.conditionBasedServices;
-            brakeFluidChangeDate = builder.brakeFluidChangeDate;
-            timeToNextService = builder.timeToNextService;
-            distanceToNextService = builder.distanceToNextService;
-            timeToExhaustInspection = builder.timeToExhaustInspection;
-            lastECall = builder.lastECall;
-            distanceToNextOilService = builder.distanceToNextOilService;
-            timeToNextOilService = builder.timeToNextOilService;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<Duration> daysToNextService;
-            private Property<Length> kilometersToNextService;
-            private PropertyInteger cbsReportsCount;
-            private Property<Duration> monthsToExhaustInspection;
-            private Property<TeleserviceAvailability> teleserviceAvailability;
-            private Property<Length> serviceDistanceThreshold;
-            private Property<Duration> serviceTimeThreshold;
-            private Property<Calendar> automaticTeleserviceCallDate;
-            private Property<Calendar> teleserviceBatteryCallDate;
-            private Property<Calendar> nextInspectionDate;
-            private final List<Property<ConditionBasedService>> conditionBasedServices = new ArrayList<>();
-            private Property<Calendar> brakeFluidChangeDate;
-            private Property<Duration> timeToNextService;
-            private Property<Length> distanceToNextService;
-            private Property<Duration> timeToExhaustInspection;
-            private Property<Calendar> lastECall;
-            private Property<Length> distanceToNextOilService;
-            private Property<Duration> timeToNextOilService;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -406,8 +366,8 @@ public class Maintenance {
              */
             @Deprecated
             public Builder setDaysToNextService(Property<Duration> daysToNextService) {
-                this.daysToNextService = daysToNextService.setIdentifier(PROPERTY_DAYS_TO_NEXT_SERVICE);
-                addProperty(this.daysToNextService);
+                Property property = daysToNextService.setIdentifier(PROPERTY_DAYS_TO_NEXT_SERVICE);
+                addProperty(property);
                 return this;
             }
             
@@ -418,8 +378,8 @@ public class Maintenance {
              */
             @Deprecated
             public Builder setKilometersToNextService(Property<Length> kilometersToNextService) {
-                this.kilometersToNextService = kilometersToNextService.setIdentifier(PROPERTY_KILOMETERS_TO_NEXT_SERVICE);
-                addProperty(this.kilometersToNextService);
+                Property property = kilometersToNextService.setIdentifier(PROPERTY_KILOMETERS_TO_NEXT_SERVICE);
+                addProperty(property);
                 return this;
             }
             
@@ -428,8 +388,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setCbsReportsCount(Property<Integer> cbsReportsCount) {
-                this.cbsReportsCount = new PropertyInteger(PROPERTY_CBS_REPORTS_COUNT, false, 1, cbsReportsCount);
-                addProperty(this.cbsReportsCount);
+                Property property = new PropertyInteger(PROPERTY_CBS_REPORTS_COUNT, false, 1, cbsReportsCount);
+                addProperty(property);
                 return this;
             }
             
@@ -440,8 +400,8 @@ public class Maintenance {
              */
             @Deprecated
             public Builder setMonthsToExhaustInspection(Property<Duration> monthsToExhaustInspection) {
-                this.monthsToExhaustInspection = monthsToExhaustInspection.setIdentifier(PROPERTY_MONTHS_TO_EXHAUST_INSPECTION);
-                addProperty(this.monthsToExhaustInspection);
+                Property property = monthsToExhaustInspection.setIdentifier(PROPERTY_MONTHS_TO_EXHAUST_INSPECTION);
+                addProperty(property);
                 return this;
             }
             
@@ -450,8 +410,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setTeleserviceAvailability(Property<TeleserviceAvailability> teleserviceAvailability) {
-                this.teleserviceAvailability = teleserviceAvailability.setIdentifier(PROPERTY_TELESERVICE_AVAILABILITY);
-                addProperty(this.teleserviceAvailability);
+                Property property = teleserviceAvailability.setIdentifier(PROPERTY_TELESERVICE_AVAILABILITY);
+                addProperty(property);
                 return this;
             }
             
@@ -460,8 +420,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setServiceDistanceThreshold(Property<Length> serviceDistanceThreshold) {
-                this.serviceDistanceThreshold = serviceDistanceThreshold.setIdentifier(PROPERTY_SERVICE_DISTANCE_THRESHOLD);
-                addProperty(this.serviceDistanceThreshold);
+                Property property = serviceDistanceThreshold.setIdentifier(PROPERTY_SERVICE_DISTANCE_THRESHOLD);
+                addProperty(property);
                 return this;
             }
             
@@ -470,8 +430,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setServiceTimeThreshold(Property<Duration> serviceTimeThreshold) {
-                this.serviceTimeThreshold = serviceTimeThreshold.setIdentifier(PROPERTY_SERVICE_TIME_THRESHOLD);
-                addProperty(this.serviceTimeThreshold);
+                Property property = serviceTimeThreshold.setIdentifier(PROPERTY_SERVICE_TIME_THRESHOLD);
+                addProperty(property);
                 return this;
             }
             
@@ -480,8 +440,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setAutomaticTeleserviceCallDate(Property<Calendar> automaticTeleserviceCallDate) {
-                this.automaticTeleserviceCallDate = automaticTeleserviceCallDate.setIdentifier(PROPERTY_AUTOMATIC_TELESERVICE_CALL_DATE);
-                addProperty(this.automaticTeleserviceCallDate);
+                Property property = automaticTeleserviceCallDate.setIdentifier(PROPERTY_AUTOMATIC_TELESERVICE_CALL_DATE);
+                addProperty(property);
                 return this;
             }
             
@@ -490,8 +450,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setTeleserviceBatteryCallDate(Property<Calendar> teleserviceBatteryCallDate) {
-                this.teleserviceBatteryCallDate = teleserviceBatteryCallDate.setIdentifier(PROPERTY_TELESERVICE_BATTERY_CALL_DATE);
-                addProperty(this.teleserviceBatteryCallDate);
+                Property property = teleserviceBatteryCallDate.setIdentifier(PROPERTY_TELESERVICE_BATTERY_CALL_DATE);
+                addProperty(property);
                 return this;
             }
             
@@ -500,8 +460,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setNextInspectionDate(Property<Calendar> nextInspectionDate) {
-                this.nextInspectionDate = nextInspectionDate.setIdentifier(PROPERTY_NEXT_INSPECTION_DATE);
-                addProperty(this.nextInspectionDate);
+                Property property = nextInspectionDate.setIdentifier(PROPERTY_NEXT_INSPECTION_DATE);
+                addProperty(property);
                 return this;
             }
             
@@ -512,7 +472,6 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setConditionBasedServices(Property<ConditionBasedService>[] conditionBasedServices) {
-                this.conditionBasedServices.clear();
                 for (int i = 0; i < conditionBasedServices.length; i++) {
                     addConditionBasedService(conditionBasedServices[i]);
                 }
@@ -529,7 +488,6 @@ public class Maintenance {
             public Builder addConditionBasedService(Property<ConditionBasedService> conditionBasedService) {
                 conditionBasedService.setIdentifier(PROPERTY_CONDITION_BASED_SERVICES);
                 addProperty(conditionBasedService);
-                conditionBasedServices.add(conditionBasedService);
                 return this;
             }
             
@@ -538,8 +496,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setBrakeFluidChangeDate(Property<Calendar> brakeFluidChangeDate) {
-                this.brakeFluidChangeDate = brakeFluidChangeDate.setIdentifier(PROPERTY_BRAKE_FLUID_CHANGE_DATE);
-                addProperty(this.brakeFluidChangeDate);
+                Property property = brakeFluidChangeDate.setIdentifier(PROPERTY_BRAKE_FLUID_CHANGE_DATE);
+                addProperty(property);
                 return this;
             }
             
@@ -548,8 +506,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setTimeToNextService(Property<Duration> timeToNextService) {
-                this.timeToNextService = timeToNextService.setIdentifier(PROPERTY_TIME_TO_NEXT_SERVICE);
-                addProperty(this.timeToNextService);
+                Property property = timeToNextService.setIdentifier(PROPERTY_TIME_TO_NEXT_SERVICE);
+                addProperty(property);
                 return this;
             }
             
@@ -558,8 +516,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setDistanceToNextService(Property<Length> distanceToNextService) {
-                this.distanceToNextService = distanceToNextService.setIdentifier(PROPERTY_DISTANCE_TO_NEXT_SERVICE);
-                addProperty(this.distanceToNextService);
+                Property property = distanceToNextService.setIdentifier(PROPERTY_DISTANCE_TO_NEXT_SERVICE);
+                addProperty(property);
                 return this;
             }
             
@@ -568,8 +526,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setTimeToExhaustInspection(Property<Duration> timeToExhaustInspection) {
-                this.timeToExhaustInspection = timeToExhaustInspection.setIdentifier(PROPERTY_TIME_TO_EXHAUST_INSPECTION);
-                addProperty(this.timeToExhaustInspection);
+                Property property = timeToExhaustInspection.setIdentifier(PROPERTY_TIME_TO_EXHAUST_INSPECTION);
+                addProperty(property);
                 return this;
             }
             
@@ -578,8 +536,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setLastECall(Property<Calendar> lastECall) {
-                this.lastECall = lastECall.setIdentifier(PROPERTY_LAST_ECALL);
-                addProperty(this.lastECall);
+                Property property = lastECall.setIdentifier(PROPERTY_LAST_ECALL);
+                addProperty(property);
                 return this;
             }
             
@@ -588,8 +546,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setDistanceToNextOilService(Property<Length> distanceToNextOilService) {
-                this.distanceToNextOilService = distanceToNextOilService.setIdentifier(PROPERTY_DISTANCE_TO_NEXT_OIL_SERVICE);
-                addProperty(this.distanceToNextOilService);
+                Property property = distanceToNextOilService.setIdentifier(PROPERTY_DISTANCE_TO_NEXT_OIL_SERVICE);
+                addProperty(property);
                 return this;
             }
             
@@ -598,8 +556,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setTimeToNextOilService(Property<Duration> timeToNextOilService) {
-                this.timeToNextOilService = timeToNextOilService.setIdentifier(PROPERTY_TIME_TO_NEXT_OIL_SERVICE);
-                addProperty(this.timeToNextOilService);
+                Property property = timeToNextOilService.setIdentifier(PROPERTY_TIME_TO_NEXT_OIL_SERVICE);
+                addProperty(property);
                 return this;
             }
         }

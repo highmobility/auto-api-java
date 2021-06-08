@@ -164,10 +164,10 @@ public class TheftAlarm {
             createBytes();
         }
     
-        SetTheftAlarm(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetTheftAlarm(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     
                     return null;
@@ -240,10 +240,10 @@ public class TheftAlarm {
             return eventType;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
                         case PROPERTY_INTERIOR_PROTECTION_STATUS: return interiorProtectionStatus.update(p);
@@ -259,33 +259,15 @@ public class TheftAlarm {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            status = builder.status;
-            interiorProtectionStatus = builder.interiorProtectionStatus;
-            towProtectionStatus = builder.towProtectionStatus;
-            lastWarningReason = builder.lastWarningReason;
-            lastEvent = builder.lastEvent;
-            lastEventLevel = builder.lastEventLevel;
-            eventType = builder.eventType;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<Status> status;
-            private Property<ActiveSelectedState> interiorProtectionStatus;
-            private Property<ActiveSelectedState> towProtectionStatus;
-            private Property<LastWarningReason> lastWarningReason;
-            private Property<Calendar> lastEvent;
-            private Property<LastEventLevel> lastEventLevel;
-            private Property<EventType> eventType;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -293,8 +275,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setStatus(Property<Status> status) {
-                this.status = status.setIdentifier(PROPERTY_STATUS);
-                addProperty(this.status);
+                Property property = status.setIdentifier(PROPERTY_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -303,8 +285,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setInteriorProtectionStatus(Property<ActiveSelectedState> interiorProtectionStatus) {
-                this.interiorProtectionStatus = interiorProtectionStatus.setIdentifier(PROPERTY_INTERIOR_PROTECTION_STATUS);
-                addProperty(this.interiorProtectionStatus);
+                Property property = interiorProtectionStatus.setIdentifier(PROPERTY_INTERIOR_PROTECTION_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -313,8 +295,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setTowProtectionStatus(Property<ActiveSelectedState> towProtectionStatus) {
-                this.towProtectionStatus = towProtectionStatus.setIdentifier(PROPERTY_TOW_PROTECTION_STATUS);
-                addProperty(this.towProtectionStatus);
+                Property property = towProtectionStatus.setIdentifier(PROPERTY_TOW_PROTECTION_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -323,8 +305,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setLastWarningReason(Property<LastWarningReason> lastWarningReason) {
-                this.lastWarningReason = lastWarningReason.setIdentifier(PROPERTY_LAST_WARNING_REASON);
-                addProperty(this.lastWarningReason);
+                Property property = lastWarningReason.setIdentifier(PROPERTY_LAST_WARNING_REASON);
+                addProperty(property);
                 return this;
             }
             
@@ -333,8 +315,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setLastEvent(Property<Calendar> lastEvent) {
-                this.lastEvent = lastEvent.setIdentifier(PROPERTY_LAST_EVENT);
-                addProperty(this.lastEvent);
+                Property property = lastEvent.setIdentifier(PROPERTY_LAST_EVENT);
+                addProperty(property);
                 return this;
             }
             
@@ -343,8 +325,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setLastEventLevel(Property<LastEventLevel> lastEventLevel) {
-                this.lastEventLevel = lastEventLevel.setIdentifier(PROPERTY_LAST_EVENT_LEVEL);
-                addProperty(this.lastEventLevel);
+                Property property = lastEventLevel.setIdentifier(PROPERTY_LAST_EVENT_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -353,8 +335,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setEventType(Property<EventType> eventType) {
-                this.eventType = eventType.setIdentifier(PROPERTY_EVENT_TYPE);
-                addProperty(this.eventType);
+                Property property = eventType.setIdentifier(PROPERTY_EVENT_TYPE);
+                addProperty(property);
                 return this;
             }
         }

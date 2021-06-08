@@ -236,7 +236,6 @@ class KDiagnosticsTest : BaseTest() {
     }
     
     private fun testState(state: Diagnostics.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.mileage.value?.value == 150000.0)
         assertTrue(state.mileage.value?.unit == Length.Unit.KILOMETERS)
         assertTrue(state.engineOilTemperature.value?.value == 99.5)
@@ -461,6 +460,7 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(state.engineTimeToNextService.value?.value == 501.0)
         assertTrue(state.engineTimeToNextService.value?.unit == Duration.Unit.HOURS)
         assertTrue(state.lowVoltageBatteryChargeLevel.value == Diagnostics.LowVoltageBatteryChargeLevel.OK)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

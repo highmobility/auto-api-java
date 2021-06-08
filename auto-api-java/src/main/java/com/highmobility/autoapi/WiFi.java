@@ -181,10 +181,10 @@ public class WiFi {
             createBytes();
         }
     
-        ConnectToNetwork(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ConnectToNetwork(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_NETWORK_SSID: return networkSSID.update(p);
                         case PROPERTY_NETWORK_SECURITY: return networkSecurity.update(p);
@@ -226,10 +226,10 @@ public class WiFi {
             createBytes();
         }
     
-        ForgetNetwork(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ForgetNetwork(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_NETWORK_SSID) return networkSSID.update(p);
                     
                     return null;
@@ -266,10 +266,10 @@ public class WiFi {
             createBytes();
         }
     
-        EnableDisableWiFi(byte[] bytes) throws CommandParseException, PropertyParseException {
+        EnableDisableWiFi(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     
                     return null;
@@ -318,10 +318,10 @@ public class WiFi {
             return networkSecurity;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
                         case PROPERTY_NETWORK_CONNECTED: return networkConnected.update(p);
@@ -334,27 +334,15 @@ public class WiFi {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            status = builder.status;
-            networkConnected = builder.networkConnected;
-            networkSSID = builder.networkSSID;
-            networkSecurity = builder.networkSecurity;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<EnabledState> status;
-            private Property<ConnectionState> networkConnected;
-            private Property<String> networkSSID;
-            private Property<NetworkSecurity> networkSecurity;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -362,8 +350,8 @@ public class WiFi {
              * @return The builder
              */
             public Builder setStatus(Property<EnabledState> status) {
-                this.status = status.setIdentifier(PROPERTY_STATUS);
-                addProperty(this.status);
+                Property property = status.setIdentifier(PROPERTY_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -372,8 +360,8 @@ public class WiFi {
              * @return The builder
              */
             public Builder setNetworkConnected(Property<ConnectionState> networkConnected) {
-                this.networkConnected = networkConnected.setIdentifier(PROPERTY_NETWORK_CONNECTED);
-                addProperty(this.networkConnected);
+                Property property = networkConnected.setIdentifier(PROPERTY_NETWORK_CONNECTED);
+                addProperty(property);
                 return this;
             }
             
@@ -382,8 +370,8 @@ public class WiFi {
              * @return The builder
              */
             public Builder setNetworkSSID(Property<String> networkSSID) {
-                this.networkSSID = networkSSID.setIdentifier(PROPERTY_NETWORK_SSID);
-                addProperty(this.networkSSID);
+                Property property = networkSSID.setIdentifier(PROPERTY_NETWORK_SSID);
+                addProperty(property);
                 return this;
             }
             
@@ -392,8 +380,8 @@ public class WiFi {
              * @return The builder
              */
             public Builder setNetworkSecurity(Property<NetworkSecurity> networkSecurity) {
-                this.networkSecurity = networkSecurity.setIdentifier(PROPERTY_NETWORK_SECURITY);
-                addProperty(this.networkSecurity);
+                Property property = networkSecurity.setIdentifier(PROPERTY_NETWORK_SECURITY);
+                addProperty(property);
                 return this;
             }
         }

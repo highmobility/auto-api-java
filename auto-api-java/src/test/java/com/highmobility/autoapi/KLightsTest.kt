@@ -78,7 +78,6 @@ class KLightsTest : BaseTest() {
     }
     
     private fun testState(state: Lights.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.frontExteriorLight.value == Lights.FrontExteriorLight.ACTIVE_WITH_FULL_BEAM)
         assertTrue(state.rearExteriorLight.value == ActiveState.ACTIVE)
         assertTrue(state.ambientLightColour.value?.red == 255)
@@ -104,6 +103,7 @@ class KLightsTest : BaseTest() {
         assertTrue(state.interiorLights[1].value?.state == ActiveState.ACTIVE)
         assertTrue(state.switchPosition.value == Lights.SwitchPosition.PARKING_LIGHT_RIGHT)
         assertTrue(state.parkingLightStatus.value == Lights.ParkingLightStatus.BOTH)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

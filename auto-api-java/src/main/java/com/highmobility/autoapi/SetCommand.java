@@ -23,6 +23,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Brand;
 import com.highmobility.value.Bytes;
@@ -65,9 +66,9 @@ public class SetCommand extends Command {
         return "Optional property does not exists for " + clazz.getSimpleName();
     }
 
-    SetCommand(byte[] bytes) throws CommandParseException {
+    SetCommand(byte[] bytes) throws ParseException {
         super(bytes);
-        if (bytes[Command.COMMAND_TYPE_POSITION] != Type.SET) throw new CommandParseException();
+        if (bytes[Command.COMMAND_TYPE_POSITION] != Type.SET) throw new ParseException();
     }
 
     public SetCommand(Builder builder) {

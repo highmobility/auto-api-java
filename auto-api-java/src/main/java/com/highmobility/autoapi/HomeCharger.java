@@ -181,10 +181,10 @@ public class HomeCharger {
             createBytes();
         }
     
-        SetChargeCurrent(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetChargeCurrent(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CHARGE_CURRENT) return chargeCurrent.update(p);
                     
                     return null;
@@ -229,13 +229,13 @@ public class HomeCharger {
             createBytes();
         }
     
-        SetPriceTariffs(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetPriceTariffs(byte[] bytes) throws PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<PriceTariff>> priceTariffsBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_PRICE_TARIFFS) {
                         Property<PriceTariff> priceTariff = new Property<>(PriceTariff.class, p);
                         priceTariffsBuilder.add(priceTariff);
@@ -278,10 +278,10 @@ public class HomeCharger {
             createBytes();
         }
     
-        ActivateDeactivateSolarCharging(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ActivateDeactivateSolarCharging(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_SOLAR_CHARGING) return solarCharging.update(p);
                     
                     return null;
@@ -318,10 +318,10 @@ public class HomeCharger {
             createBytes();
         }
     
-        EnableDisableWiFiHotspot(byte[] bytes) throws CommandParseException, PropertyParseException {
+        EnableDisableWiFiHotspot(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_WI_FI_HOTSPOT_ENABLED) return wifiHotspotEnabled.update(p);
                     
                     return null;
@@ -358,10 +358,10 @@ public class HomeCharger {
             createBytes();
         }
     
-        AuthenticateExpire(byte[] bytes) throws CommandParseException, PropertyParseException {
+        AuthenticateExpire(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_AUTHENTICATION_STATE) return authenticationState.update(p);
                     
                     return null;
@@ -523,13 +523,13 @@ public class HomeCharger {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<PriceTariff>> priceTariffsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_CHARGING_STATUS: return chargingStatus.update(p);
                         case PROPERTY_AUTHENTICATION_MECHANISM: return authenticationMechanism.update(p);
@@ -559,51 +559,15 @@ public class HomeCharger {
             priceTariffs = priceTariffsBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            chargingStatus = builder.chargingStatus;
-            authenticationMechanism = builder.authenticationMechanism;
-            plugType = builder.plugType;
-            chargingPowerKW = builder.chargingPowerKW;
-            solarCharging = builder.solarCharging;
-            wifiHotspotEnabled = builder.wifiHotspotEnabled;
-            wifiHotspotSSID = builder.wifiHotspotSSID;
-            wiFiHotspotSecurity = builder.wiFiHotspotSecurity;
-            wiFiHotspotPassword = builder.wiFiHotspotPassword;
-            authenticationState = builder.authenticationState;
-            chargeCurrent = builder.chargeCurrent;
-            maximumChargeCurrent = builder.maximumChargeCurrent;
-            minimumChargeCurrent = builder.minimumChargeCurrent;
-            coordinates = builder.coordinates;
-            priceTariffs = builder.priceTariffs;
-            chargingPower = builder.chargingPower;
-        }
-    
         public static final class Builder extends SetCommand.Builder<Builder> {
-            private Property<ChargingStatus> chargingStatus;
-            private Property<AuthenticationMechanism> authenticationMechanism;
-            private Property<PlugType> plugType;
-            private Property<Power> chargingPowerKW;
-            private Property<ActiveState> solarCharging;
-            private Property<EnabledState> wifiHotspotEnabled;
-            private Property<String> wifiHotspotSSID;
-            private Property<NetworkSecurity> wiFiHotspotSecurity;
-            private Property<String> wiFiHotspotPassword;
-            private Property<AuthenticationState> authenticationState;
-            private Property<ElectricCurrent> chargeCurrent;
-            private Property<ElectricCurrent> maximumChargeCurrent;
-            private Property<ElectricCurrent> minimumChargeCurrent;
-            private Property<Coordinates> coordinates;
-            private final List<Property<PriceTariff>> priceTariffs = new ArrayList<>();
-            private Property<Power> chargingPower;
-    
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -611,8 +575,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setChargingStatus(Property<ChargingStatus> chargingStatus) {
-                this.chargingStatus = chargingStatus.setIdentifier(PROPERTY_CHARGING_STATUS);
-                addProperty(this.chargingStatus);
+                Property property = chargingStatus.setIdentifier(PROPERTY_CHARGING_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -621,8 +585,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setAuthenticationMechanism(Property<AuthenticationMechanism> authenticationMechanism) {
-                this.authenticationMechanism = authenticationMechanism.setIdentifier(PROPERTY_AUTHENTICATION_MECHANISM);
-                addProperty(this.authenticationMechanism);
+                Property property = authenticationMechanism.setIdentifier(PROPERTY_AUTHENTICATION_MECHANISM);
+                addProperty(property);
                 return this;
             }
             
@@ -631,8 +595,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setPlugType(Property<PlugType> plugType) {
-                this.plugType = plugType.setIdentifier(PROPERTY_PLUG_TYPE);
-                addProperty(this.plugType);
+                Property property = plugType.setIdentifier(PROPERTY_PLUG_TYPE);
+                addProperty(property);
                 return this;
             }
             
@@ -643,8 +607,8 @@ public class HomeCharger {
              */
             @Deprecated
             public Builder setChargingPowerKW(Property<Power> chargingPowerKW) {
-                this.chargingPowerKW = chargingPowerKW.setIdentifier(PROPERTY_CHARGING_POWER_KW);
-                addProperty(this.chargingPowerKW);
+                Property property = chargingPowerKW.setIdentifier(PROPERTY_CHARGING_POWER_KW);
+                addProperty(property);
                 return this;
             }
             
@@ -653,8 +617,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setSolarCharging(Property<ActiveState> solarCharging) {
-                this.solarCharging = solarCharging.setIdentifier(PROPERTY_SOLAR_CHARGING);
-                addProperty(this.solarCharging);
+                Property property = solarCharging.setIdentifier(PROPERTY_SOLAR_CHARGING);
+                addProperty(property);
                 return this;
             }
             
@@ -663,8 +627,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setWifiHotspotEnabled(Property<EnabledState> wifiHotspotEnabled) {
-                this.wifiHotspotEnabled = wifiHotspotEnabled.setIdentifier(PROPERTY_WI_FI_HOTSPOT_ENABLED);
-                addProperty(this.wifiHotspotEnabled);
+                Property property = wifiHotspotEnabled.setIdentifier(PROPERTY_WI_FI_HOTSPOT_ENABLED);
+                addProperty(property);
                 return this;
             }
             
@@ -673,8 +637,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setWifiHotspotSSID(Property<String> wifiHotspotSSID) {
-                this.wifiHotspotSSID = wifiHotspotSSID.setIdentifier(PROPERTY_WI_FI_HOTSPOT_SSID);
-                addProperty(this.wifiHotspotSSID);
+                Property property = wifiHotspotSSID.setIdentifier(PROPERTY_WI_FI_HOTSPOT_SSID);
+                addProperty(property);
                 return this;
             }
             
@@ -683,8 +647,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setWiFiHotspotSecurity(Property<NetworkSecurity> wiFiHotspotSecurity) {
-                this.wiFiHotspotSecurity = wiFiHotspotSecurity.setIdentifier(PROPERTY_WI_FI_HOTSPOT_SECURITY);
-                addProperty(this.wiFiHotspotSecurity);
+                Property property = wiFiHotspotSecurity.setIdentifier(PROPERTY_WI_FI_HOTSPOT_SECURITY);
+                addProperty(property);
                 return this;
             }
             
@@ -693,8 +657,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setWiFiHotspotPassword(Property<String> wiFiHotspotPassword) {
-                this.wiFiHotspotPassword = wiFiHotspotPassword.setIdentifier(PROPERTY_WI_FI_HOTSPOT_PASSWORD);
-                addProperty(this.wiFiHotspotPassword);
+                Property property = wiFiHotspotPassword.setIdentifier(PROPERTY_WI_FI_HOTSPOT_PASSWORD);
+                addProperty(property);
                 return this;
             }
             
@@ -703,8 +667,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setAuthenticationState(Property<AuthenticationState> authenticationState) {
-                this.authenticationState = authenticationState.setIdentifier(PROPERTY_AUTHENTICATION_STATE);
-                addProperty(this.authenticationState);
+                Property property = authenticationState.setIdentifier(PROPERTY_AUTHENTICATION_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -713,8 +677,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setChargeCurrent(Property<ElectricCurrent> chargeCurrent) {
-                this.chargeCurrent = chargeCurrent.setIdentifier(PROPERTY_CHARGE_CURRENT);
-                addProperty(this.chargeCurrent);
+                Property property = chargeCurrent.setIdentifier(PROPERTY_CHARGE_CURRENT);
+                addProperty(property);
                 return this;
             }
             
@@ -723,8 +687,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setMaximumChargeCurrent(Property<ElectricCurrent> maximumChargeCurrent) {
-                this.maximumChargeCurrent = maximumChargeCurrent.setIdentifier(PROPERTY_MAXIMUM_CHARGE_CURRENT);
-                addProperty(this.maximumChargeCurrent);
+                Property property = maximumChargeCurrent.setIdentifier(PROPERTY_MAXIMUM_CHARGE_CURRENT);
+                addProperty(property);
                 return this;
             }
             
@@ -733,8 +697,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setMinimumChargeCurrent(Property<ElectricCurrent> minimumChargeCurrent) {
-                this.minimumChargeCurrent = minimumChargeCurrent.setIdentifier(PROPERTY_MINIMUM_CHARGE_CURRENT);
-                addProperty(this.minimumChargeCurrent);
+                Property property = minimumChargeCurrent.setIdentifier(PROPERTY_MINIMUM_CHARGE_CURRENT);
+                addProperty(property);
                 return this;
             }
             
@@ -743,8 +707,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setCoordinates(Property<Coordinates> coordinates) {
-                this.coordinates = coordinates.setIdentifier(PROPERTY_COORDINATES);
-                addProperty(this.coordinates);
+                Property property = coordinates.setIdentifier(PROPERTY_COORDINATES);
+                addProperty(property);
                 return this;
             }
             
@@ -755,7 +719,6 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setPriceTariffs(Property<PriceTariff>[] priceTariffs) {
-                this.priceTariffs.clear();
                 for (int i = 0; i < priceTariffs.length; i++) {
                     addPriceTariff(priceTariffs[i]);
                 }
@@ -772,7 +735,6 @@ public class HomeCharger {
             public Builder addPriceTariff(Property<PriceTariff> priceTariff) {
                 priceTariff.setIdentifier(PROPERTY_PRICE_TARIFFS);
                 addProperty(priceTariff);
-                priceTariffs.add(priceTariff);
                 return this;
             }
             
@@ -781,8 +743,8 @@ public class HomeCharger {
              * @return The builder
              */
             public Builder setChargingPower(Property<Power> chargingPower) {
-                this.chargingPower = chargingPower.setIdentifier(PROPERTY_CHARGING_POWER);
-                addProperty(this.chargingPower);
+                Property property = chargingPower.setIdentifier(PROPERTY_CHARGING_POWER);
+                addProperty(property);
                 return this;
             }
         }
