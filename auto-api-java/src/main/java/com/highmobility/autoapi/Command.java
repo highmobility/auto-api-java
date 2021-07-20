@@ -254,20 +254,25 @@ public class Command extends Bytes {
                         if (property.getValueComponent().getValueBytes().getLength() != 9)
                             continue; // invalid nonce length, just ignore
                         nonce = property.getValueComponent().getValueBytes();
+                        break;
                     }
                     case SIGNATURE_IDENTIFIER: {
                         if (property.getValueComponent().getValueBytes().getLength() != 64)
                             continue; // ignore invalid length
                         signature = property.getValueComponent().getValueBytes();
+                        break;
                     }
                     case TIMESTAMP_IDENTIFIER: {
                         timestamp = Property.getCalendar(property.getValueComponent().getValueBytes());
+                        break;
                     }
                     case VIN_IDENTIFIER: {
                         vin = Property.getString(property.getValueComponent().getValueBytes());
+                        break;
                     }
                     case BRAND_IDENTIFIER: {
                         brand = Brand.Companion.fromInt(property.getValueComponent().getValueByte());
+                        break;
                     }
                 }
             } catch (Exception e) {

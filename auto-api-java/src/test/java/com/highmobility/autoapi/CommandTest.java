@@ -140,6 +140,17 @@ public class CommandTest extends BaseTest {
         assertTrue(command.getVin().equals("JF2SHBDC7CH451869"));
     }
 
+    @Test public void vinAndTimestamp() {
+        ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
+        builder.setStatus(new Property(ActiveState.ACTIVE));
+
+        builder.setVin("JF2SHBDC7CH451869");
+        builder.setTimestamp(Calendar.getInstance());
+        ParkingBrake.State command = builder.build();
+        String vin = command.getVin();
+        assertTrue(vin.equals("JF2SHBDC7CH451869"));
+    }
+
     @Test public void brand() {
         Bytes bytes = new Bytes(parkingBrakeCommand + "A4000401000105");
         ParkingBrake.State command = (ParkingBrake.State) CommandResolver.resolve(bytes);
