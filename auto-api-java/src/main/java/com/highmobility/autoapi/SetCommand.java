@@ -84,7 +84,7 @@ public class SetCommand extends Command {
         }
     }
 
-    protected static class Builder<Child> {
+    public static class Builder<Child> {
         private final Integer identifier;
 
         private ArrayList<Property> propertiesBuilder = new ArrayList<>();
@@ -144,11 +144,11 @@ public class SetCommand extends Command {
             return (Child) this;
         }
 
-        protected SetCommand build() {
+        public SetCommand build() {
             return new SetCommand(this);
         }
 
-        protected Property[] getProperties() {
+        public Property[] getProperties() {
             return propertiesBuilder.toArray(new Property[0]);
         }
 
