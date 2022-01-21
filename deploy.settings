@@ -1,7 +1,0 @@
-siteUrl = https://github.com/highmobility/hm-java-auto-api
-gitUrl = https://github.com/highmobility/hm-java-auto-api
-version = 1.7.3
-groupId = com.highmobility
-licenses = ['GPL-3.0']
-id = hmkit-auto-api
-repo = gradle-dev-local

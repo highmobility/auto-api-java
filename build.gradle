@@ -1,134 +1,31 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
-        classpath 'com.github.dcendents:android-maven-plugin:1.2'
-    }
+plugins {
+    id 'java'
 }
 
-apply plugin: 'java'
+repositories {
+    mavenCentral()
+}
 
-def artifact = new Properties()
-artifact.load(new FileInputStream("deploy.settings"))
+ext.ver = [
+        "hmkit-auto-api": "1.7.4"
+]
 
-group artifact.groupId
-version artifact.version
 
 sourceCompatibility = 1.8
 
-repositories {
-    jcenter()
-    maven {
-        url "http://jfrog.high-mobility.com/artifactory/gradle-dev-local/"
-        credentials {
-            username System.properties['devReadUser']
-            password System.properties['devReadPassword']
-        }
-    }
-}
-
 dependencies {
-    implementation('com.highmobility:hmkit-utils:1.3.0')
+    implementation('com.high-mobility:hmkit-utils:1.4.5')
     implementation 'org.slf4j:slf4j-api:1.7.5'
 
     testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation 'org.slf4j:slf4j-simple:1.7.5'
 }
 
+// unit test logging
+apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/test-shell-logging.gradle"
+
 // deploy
 
-apply plugin: 'maven'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.jfrog.artifactory'
-
-version = artifact.version
-group = artifact.groupId
-
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            packaging 'jar'
-            groupId artifact.groupId
-            artifactId artifact.id
-            version artifact.version
-            name artifact.id // pom.project.name must be same as bintray.pkg.name
-            url artifact.siteUrl
-            inceptionYear '2018'
-            licenses {
-                license { // HARDCODED
-                    name 'GPL-3.0'
-                    url 'https://www.gnu.org/licenses/gpl.txt'
-                    distribution 'repo'
-                }
-            }
-            scm {
-                connection artifact.gitUrl
-                developerConnection artifact.gitUrl
-                url artifact.siteUrl
-            }
-        }
-    }
-}
-
-bintray {
-    user = System.properties['hmBintrayUser']
-    key = System.properties['hmBintrayApikey']
-
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = artifact.id
-        websiteUrl = artifact.siteUrl
-        vcsUrl = artifact.gitUrl
-        licenses = artifact.licenses
-        publish = true
-        version {
-            name = artifact.version
-        }
-    }
-}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-    // options.encoding = 'UTF-8'
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-}
-
-// artifactory
-
-artifactory {
-    contextUrl = System.properties['hmArtifactoryUrl']
-
-    publish {
-        repository {
-            repoKey = artifact.repo
-            username = System.properties['hmArtifactoryPublishUser']
-            password = System.properties['hmArtifactoryPublishPassword']
-            maven = true
-        }
-
-        defaults {
-            publishConfigs('archives', 'published')
-            publishPom = true
-            publishIvy = false
-        }
-    }
-}
+apply from: "deploy.gradle"
+// deploy script
+apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/deploy-java-mavenCentral.gradle"
