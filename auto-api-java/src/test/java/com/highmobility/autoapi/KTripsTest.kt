@@ -69,7 +69,8 @@ class KTripsTest : BaseTest() {
             "12000C010009010000000000000000" +  // Eco driving one-threshold is set at 0.0
             "13000D01000A19024037666666666666" +  // Total fuel consumption during the trip was 23.4 l
             "14000D01000A19024004000000000000" +  // Since the last ignition the vehicle has consumed 2.5 l while ideling.
-            "15000D01000A16014050d33333333333" // Maximum speed since last ignition on is 67.3km/h
+            "15000D01000A16014050d33333333333" +  // Maximum speed since last ignition on is 67.3km/h
+            "16000401000101" // Road was of local type.
     )
     
     @Test
@@ -117,6 +118,7 @@ class KTripsTest : BaseTest() {
         builder.setTotalFuelConsumption(Property(Volume(23.4, Volume.Unit.LITERS)))
         builder.setTotalIdleFuelConsumption(Property(Volume(2.5, Volume.Unit.LITERS)))
         builder.setMaximumSpeed(Property(Speed(67.3, Speed.Unit.KILOMETERS_PER_HOUR)))
+        builder.setRoadType(Property(Trips.RoadType.LOCAL))
         testState(builder.build())
     }
     
@@ -184,6 +186,7 @@ class KTripsTest : BaseTest() {
         assertTrue(state.totalIdleFuelConsumption.value?.unit == Volume.Unit.LITERS)
         assertTrue(state.maximumSpeed.value?.value == 67.3)
         assertTrue(state.maximumSpeed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
+        assertTrue(state.roadType.value == Trips.RoadType.LOCAL)
         assertTrue(bytesTheSame(state, bytes))
     }
 }

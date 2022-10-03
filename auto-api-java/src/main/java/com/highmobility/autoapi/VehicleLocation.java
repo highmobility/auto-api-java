@@ -44,6 +44,7 @@ public class VehicleLocation {
     public static final byte PROPERTY_PRECISION = 0x07;
     public static final byte PROPERTY_GPS_SOURCE = 0x08;
     public static final byte PROPERTY_GPS_SIGNAL_STRENGTH = 0x09;
+    public static final byte PROPERTY_FUZZY_COORDINATES = 0x0a;
 
     /**
      * Get Vehicle Location property availability information
@@ -149,6 +150,7 @@ public class VehicleLocation {
         Property<Length> precision = new Property<>(Length.class, PROPERTY_PRECISION);
         Property<GpsSource> gpsSource = new Property<>(GpsSource.class, PROPERTY_GPS_SOURCE);
         Property<Double> gpsSignalStrength = new Property<>(Double.class, PROPERTY_GPS_SIGNAL_STRENGTH);
+        Property<Coordinates> fuzzyCoordinates = new Property<>(Coordinates.class, PROPERTY_FUZZY_COORDINATES);
     
         /**
          * @return The coordinates
@@ -192,6 +194,13 @@ public class VehicleLocation {
             return gpsSignalStrength;
         }
     
+        /**
+         * @return Fuzzy coordinates for the vehicle location.
+         */
+        public Property<Coordinates> getFuzzyCoordinates() {
+            return fuzzyCoordinates;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -203,6 +212,7 @@ public class VehicleLocation {
                         case PROPERTY_PRECISION: return precision.update(p);
                         case PROPERTY_GPS_SOURCE: return gpsSource.update(p);
                         case PROPERTY_GPS_SIGNAL_STRENGTH: return gpsSignalStrength.update(p);
+                        case PROPERTY_FUZZY_COORDINATES: return fuzzyCoordinates.update(p);
                     }
     
                     return null;
@@ -277,6 +287,16 @@ public class VehicleLocation {
              */
             public Builder setGpsSignalStrength(Property<Double> gpsSignalStrength) {
                 Property property = gpsSignalStrength.setIdentifier(PROPERTY_GPS_SIGNAL_STRENGTH);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param fuzzyCoordinates Fuzzy coordinates for the vehicle location.
+             * @return The builder
+             */
+            public Builder setFuzzyCoordinates(Property<Coordinates> fuzzyCoordinates) {
+                Property property = fuzzyCoordinates.setIdentifier(PROPERTY_FUZZY_COORDINATES);
                 addProperty(property);
                 return this;
             }

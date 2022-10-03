@@ -21,44 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.highmobility.autoapi.value;
+package com.highmobility.autoapi
 
-import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.value.Bytes
 
-import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
+import org.junit.jupiter.api.Test
 
+import org.junit.jupiter.api.Assertions.assertTrue
 
-public enum DrivingMode implements ByteEnum {
-    REGULAR((byte) 0x00),
-    ECO((byte) 0x01),
-    SPORT((byte) 0x02),
-    SPORT_PLUS((byte) 0x03),
-    ECO_PLUS((byte) 0x04),
-    COMFORT((byte) 0x05);
-
-    public static DrivingMode fromByte(byte byteValue) throws CommandParseException {
-        DrivingMode[] values = DrivingMode.values();
-
-        for (int i = 0; i < values.length; i++) {
-            DrivingMode state = values[i];
-            if (state.getByte() == byteValue) {
-                return state;
-            }
-        }
-
-        throw new CommandParseException(
-            enumValueDoesNotExist(DrivingMode.class.getSimpleName(), byteValue)
-        );
-    }
-
-    private final byte value;
-
-    DrivingMode(byte value) {
-        this.value = value;
-    }
-
-    @Override public byte getByte() {
-        return value;
+class KUniversalTest : BaseTest() {
+    @Test
+    fun testGetUniversalProperties() {
+        val defaultGetterBytes = Bytes(COMMAND_HEADER + "001500")
+        val defaultGetter = Universal.GetUniversalProperties()
+        assertTrue(defaultGetter == defaultGetterBytes)
+        assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
     }
 }

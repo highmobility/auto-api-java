@@ -29,40 +29,29 @@ import com.highmobility.autoapi.property.ByteEnum;
 import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 
-public enum EngineType implements ByteEnum {
-    UNKNOWN((byte) 0x00),
-    ALL_ELECTRIC((byte) 0x01),
-    COMBUSTION_ENGINE((byte) 0x02),
-    PHEV((byte) 0x03),
-    HYDROGEN((byte) 0x04),
-    HYDROGEN_HYBRID((byte) 0x05),
-    PETROL((byte) 0x06),
-    ELECTRIC((byte) 0x07),
-    GAS((byte) 0x08),
-    DIESEL((byte) 0x09),
-    GASOLINE((byte) 0x0a),
-    CNG((byte) 0x0b),
-    LPG((byte) 0x0c),
-    HYBRID((byte) 0x0d);
+public enum ServiceStatus implements ByteEnum {
+    OK((byte) 0x00),
+    WARNING((byte) 0x01),
+    CRITICAL((byte) 0x02);
 
-    public static EngineType fromByte(byte byteValue) throws CommandParseException {
-        EngineType[] values = EngineType.values();
+    public static ServiceStatus fromByte(byte byteValue) throws CommandParseException {
+        ServiceStatus[] values = ServiceStatus.values();
 
         for (int i = 0; i < values.length; i++) {
-            EngineType state = values[i];
+            ServiceStatus state = values[i];
             if (state.getByte() == byteValue) {
                 return state;
             }
         }
 
         throw new CommandParseException(
-            enumValueDoesNotExist(EngineType.class.getSimpleName(), byteValue)
+            enumValueDoesNotExist(ServiceStatus.class.getSimpleName(), byteValue)
         );
     }
 
     private final byte value;
 
-    EngineType(byte value) {
+    ServiceStatus(byte value) {
         this.value = value;
     }
 

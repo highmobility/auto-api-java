@@ -131,7 +131,8 @@ public class CrashIncident extends PropertyValueObject {
         VERY_HIGH((byte) 0x00),
         HIGH((byte) 0x01),
         MEDIUM((byte) 0x02),
-        LOW((byte) 0x03);
+        LOW((byte) 0x03),
+        UNKNOWN((byte) 0x04);
     
         public static Severity fromByte(byte byteValue) throws CommandParseException {
             Severity[] values = Severity.values();

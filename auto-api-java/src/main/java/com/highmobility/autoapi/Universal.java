@@ -21,44 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.highmobility.autoapi.value;
-
-import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.ByteEnum;
-
-import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
+package com.highmobility.autoapi;
 
 
-public enum DrivingMode implements ByteEnum {
-    REGULAR((byte) 0x00),
-    ECO((byte) 0x01),
-    SPORT((byte) 0x02),
-    SPORT_PLUS((byte) 0x03),
-    ECO_PLUS((byte) 0x04),
-    COMFORT((byte) 0x05);
+/**
+ * The Universal capability
+ */
+public class Universal {
+    public static final int IDENTIFIER = Identifier.UNIVERSAL;
 
-    public static DrivingMode fromByte(byte byteValue) throws CommandParseException {
-        DrivingMode[] values = DrivingMode.values();
 
-        for (int i = 0; i < values.length; i++) {
-            DrivingMode state = values[i];
-            if (state.getByte() == byteValue) {
-                return state;
-            }
+
+    /**
+     * Get universal properties
+     */
+    public static class GetUniversalProperties extends GetCommand<SetCommand> {
+        /**
+         * Get all Universal properties
+         */
+        public GetUniversalProperties() {
+            super(SetCommand.class, IDENTIFIER);
         }
-
-        throw new CommandParseException(
-            enumValueDoesNotExist(DrivingMode.class.getSimpleName(), byteValue)
-        );
-    }
-
-    private final byte value;
-
-    DrivingMode(byte value) {
-        this.value = value;
-    }
-
-    @Override public byte getByte() {
-        return value;
+    
+        GetUniversalProperties(byte[] bytes, @SuppressWarnings("unused") boolean fromRaw) throws CommandParseException {
+            super(SetCommand.class, bytes);
+        }
     }
 }

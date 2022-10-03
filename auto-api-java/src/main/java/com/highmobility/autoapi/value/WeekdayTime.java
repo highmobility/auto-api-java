@@ -24,49 +24,58 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.value.Bytes;
 
-import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
+public class WeekdayTime extends PropertyValueObject {
+    public static final int SIZE = 3;
 
+    Weekday weekday;
+    Time time;
 
-public enum EngineType implements ByteEnum {
-    UNKNOWN((byte) 0x00),
-    ALL_ELECTRIC((byte) 0x01),
-    COMBUSTION_ENGINE((byte) 0x02),
-    PHEV((byte) 0x03),
-    HYDROGEN((byte) 0x04),
-    HYDROGEN_HYBRID((byte) 0x05),
-    PETROL((byte) 0x06),
-    ELECTRIC((byte) 0x07),
-    GAS((byte) 0x08),
-    DIESEL((byte) 0x09),
-    GASOLINE((byte) 0x0a),
-    CNG((byte) 0x0b),
-    LPG((byte) 0x0c),
-    HYBRID((byte) 0x0d);
-
-    public static EngineType fromByte(byte byteValue) throws CommandParseException {
-        EngineType[] values = EngineType.values();
-
-        for (int i = 0; i < values.length; i++) {
-            EngineType state = values[i];
-            if (state.getByte() == byteValue) {
-                return state;
-            }
-        }
-
-        throw new CommandParseException(
-            enumValueDoesNotExist(EngineType.class.getSimpleName(), byteValue)
-        );
+    /**
+     * @return The weekday.
+     */
+    public Weekday getWeekday() {
+        return weekday;
     }
 
-    private final byte value;
-
-    EngineType(byte value) {
-        this.value = value;
+    /**
+     * @return The time.
+     */
+    public Time getTime() {
+        return time;
     }
 
-    @Override public byte getByte() {
-        return value;
+    public WeekdayTime(Weekday weekday, Time time) {
+        super(0);
+
+        this.weekday = weekday;
+        this.time = time;
+
+        bytes = new byte[getLength()];
+
+        int bytePosition = 0;
+        set(bytePosition, weekday.getByte());
+        bytePosition += 1;
+
+        set(bytePosition, time);
+    }
+
+    public WeekdayTime(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 3) throw new CommandParseException();
+
+        int bytePosition = 0;
+        weekday = Weekday.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        int timeSize = Time.SIZE;
+        time = new Time(getRange(bytePosition, bytePosition + timeSize));
+    }
+
+    @Override public int getLength() {
+        return 1 + time.getLength();
     }
 }

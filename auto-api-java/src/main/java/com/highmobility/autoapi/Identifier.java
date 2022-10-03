@@ -34,6 +34,7 @@ public class Identifier {
     public static final int HISTORICAL = 18;
     public static final int MULTI_COMMAND = 19;
     public static final int VEHICLE_INFORMATION = 20;
+    public static final int UNIVERSAL = 21;
 
     public static final int DOORS = 32;
     public static final int TRUNK = 33;

@@ -25,7 +25,8 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
-import com.highmobility.autoapi.value.HvacWeekdayStartingTime;
+import com.highmobility.autoapi.value.WeekdayTime;
+import com.highmobility.autoapi.value.measurement.Power;
 import com.highmobility.autoapi.value.measurement.Temperature;
 import com.highmobility.value.Bytes;
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public class Climate {
     public static final byte PROPERTY_DEFROSTING_TEMPERATURE_SETTING = 0x09;
     public static final byte PROPERTY_HVAC_WEEKDAY_STARTING_TIMES = 0x0b;
     public static final byte PROPERTY_REAR_TEMPERATURE_SETTING = 0x0c;
+    public static final byte PROPERTY_HUMIDITY = 0x0d;
+    public static final byte PROPERTY_AIR_CONDITIONER_COMPRESSOR_POWER = 0x0e;
 
     /**
      * Get Climate property availability information
@@ -148,12 +151,12 @@ public class Climate {
      * Change starting times
      */
     public static class ChangeStartingTimes extends SetCommand {
-        List<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimes;
+        List<Property<WeekdayTime>> hvacWeekdayStartingTimes;
     
         /**
          * @return The hvac weekday starting times
          */
-        public List<Property<HvacWeekdayStartingTime>> getHvacWeekdayStartingTimes() {
+        public List<Property<WeekdayTime>> getHvacWeekdayStartingTimes() {
             return hvacWeekdayStartingTimes;
         }
         
@@ -162,13 +165,13 @@ public class Climate {
          * 
          * @param hvacWeekdayStartingTimes The hvac weekday starting times
          */
-        public ChangeStartingTimes(List<HvacWeekdayStartingTime> hvacWeekdayStartingTimes) {
+        public ChangeStartingTimes(List<WeekdayTime> hvacWeekdayStartingTimes) {
             super(IDENTIFIER);
         
-            final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
+            final ArrayList<Property<WeekdayTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
             if (hvacWeekdayStartingTimes != null) {
-                for (HvacWeekdayStartingTime hvacWeekdayStartingTime : hvacWeekdayStartingTimes) {
-                    Property<HvacWeekdayStartingTime> prop = new Property<>(0x0b, hvacWeekdayStartingTime);
+                for (WeekdayTime hvacWeekdayStartingTime : hvacWeekdayStartingTimes) {
+                    Property<WeekdayTime> prop = new Property<>(0x0b, hvacWeekdayStartingTime);
                     hvacWeekdayStartingTimesBuilder.add(prop);
                     addProperty(prop);
                 }
@@ -180,12 +183,12 @@ public class Climate {
         ChangeStartingTimes(byte[] bytes) throws PropertyParseException {
             super(bytes);
         
-            final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
+            final ArrayList<Property<WeekdayTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_HVAC_WEEKDAY_STARTING_TIMES) {
-                        Property<HvacWeekdayStartingTime> hvacWeekdayStartingTime = new Property<>(HvacWeekdayStartingTime.class, p);
+                        Property<WeekdayTime> hvacWeekdayStartingTime = new Property<>(WeekdayTime.class, p);
                         hvacWeekdayStartingTimesBuilder.add(hvacWeekdayStartingTime);
                         return hvacWeekdayStartingTime;
                     }
@@ -439,8 +442,10 @@ public class Climate {
         Property<ActiveState> defrostingState = new Property<>(ActiveState.class, PROPERTY_DEFROSTING_STATE);
         Property<ActiveState> ionisingState = new Property<>(ActiveState.class, PROPERTY_IONISING_STATE);
         Property<Temperature> defrostingTemperatureSetting = new Property<>(Temperature.class, PROPERTY_DEFROSTING_TEMPERATURE_SETTING);
-        List<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimes;
+        List<Property<WeekdayTime>> hvacWeekdayStartingTimes;
         Property<Temperature> rearTemperatureSetting = new Property<>(Temperature.class, PROPERTY_REAR_TEMPERATURE_SETTING);
+        Property<Double> humidity = new Property<>(Double.class, PROPERTY_HUMIDITY);
+        Property<Power> airConditionerCompressorPower = new Property<>(Power.class, PROPERTY_AIR_CONDITIONER_COMPRESSOR_POWER);
     
         /**
          * @return The inside temperature
@@ -508,7 +513,7 @@ public class Climate {
         /**
          * @return The hvac weekday starting times
          */
-        public List<Property<HvacWeekdayStartingTime>> getHvacWeekdayStartingTimes() {
+        public List<Property<WeekdayTime>> getHvacWeekdayStartingTimes() {
             return hvacWeekdayStartingTimes;
         }
     
@@ -519,10 +524,24 @@ public class Climate {
             return rearTemperatureSetting;
         }
     
+        /**
+         * @return Measured relative humidity between 0.0 - 1.0.
+         */
+        public Property<Double> getHumidity() {
+            return humidity;
+        }
+    
+        /**
+         * @return Electric air conditioner compressor power.
+         */
+        public Property<Power> getAirConditionerCompressorPower() {
+            return airConditionerCompressorPower;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
     
-            final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
+            final ArrayList<Property<WeekdayTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNextState(p -> {
@@ -537,10 +556,12 @@ public class Climate {
                         case PROPERTY_IONISING_STATE: return ionisingState.update(p);
                         case PROPERTY_DEFROSTING_TEMPERATURE_SETTING: return defrostingTemperatureSetting.update(p);
                         case PROPERTY_HVAC_WEEKDAY_STARTING_TIMES:
-                            Property<HvacWeekdayStartingTime> hvacWeekdayStartingTime = new Property<>(HvacWeekdayStartingTime.class, p);
+                            Property<WeekdayTime> hvacWeekdayStartingTime = new Property<>(WeekdayTime.class, p);
                             hvacWeekdayStartingTimesBuilder.add(hvacWeekdayStartingTime);
                             return hvacWeekdayStartingTime;
                         case PROPERTY_REAR_TEMPERATURE_SETTING: return rearTemperatureSetting.update(p);
+                        case PROPERTY_HUMIDITY: return humidity.update(p);
+                        case PROPERTY_AIR_CONDITIONER_COMPRESSOR_POWER: return airConditionerCompressorPower.update(p);
                     }
     
                     return null;
@@ -657,7 +678,7 @@ public class Climate {
              * @param hvacWeekdayStartingTimes The hvac weekday starting times
              * @return The builder
              */
-            public Builder setHvacWeekdayStartingTimes(Property<HvacWeekdayStartingTime>[] hvacWeekdayStartingTimes) {
+            public Builder setHvacWeekdayStartingTimes(Property<WeekdayTime>[] hvacWeekdayStartingTimes) {
                 for (int i = 0; i < hvacWeekdayStartingTimes.length; i++) {
                     addHvacWeekdayStartingTime(hvacWeekdayStartingTimes[i]);
                 }
@@ -671,7 +692,7 @@ public class Climate {
              * @param hvacWeekdayStartingTime The hvac weekday starting time
              * @return The builder
              */
-            public Builder addHvacWeekdayStartingTime(Property<HvacWeekdayStartingTime> hvacWeekdayStartingTime) {
+            public Builder addHvacWeekdayStartingTime(Property<WeekdayTime> hvacWeekdayStartingTime) {
                 hvacWeekdayStartingTime.setIdentifier(PROPERTY_HVAC_WEEKDAY_STARTING_TIMES);
                 addProperty(hvacWeekdayStartingTime);
                 return this;
@@ -683,6 +704,26 @@ public class Climate {
              */
             public Builder setRearTemperatureSetting(Property<Temperature> rearTemperatureSetting) {
                 Property property = rearTemperatureSetting.setIdentifier(PROPERTY_REAR_TEMPERATURE_SETTING);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param humidity Measured relative humidity between 0.0 - 1.0.
+             * @return The builder
+             */
+            public Builder setHumidity(Property<Double> humidity) {
+                Property property = humidity.setIdentifier(PROPERTY_HUMIDITY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param airConditionerCompressorPower Electric air conditioner compressor power.
+             * @return The builder
+             */
+            public Builder setAirConditionerCompressorPower(Property<Power> airConditionerCompressorPower) {
+                Property property = airConditionerCompressorPower.setIdentifier(PROPERTY_AIR_CONDITIONER_COMPRESSOR_POWER);
                 addProperty(property);
                 return this;
             }

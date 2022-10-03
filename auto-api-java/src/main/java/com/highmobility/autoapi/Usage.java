@@ -35,6 +35,7 @@ import com.highmobility.autoapi.value.measurement.Energy;
 import com.highmobility.autoapi.value.measurement.EnergyEfficiency;
 import com.highmobility.autoapi.value.measurement.FuelEfficiency;
 import com.highmobility.autoapi.value.measurement.Length;
+import com.highmobility.autoapi.value.measurement.Power;
 import com.highmobility.autoapi.value.measurement.Speed;
 import com.highmobility.autoapi.value.measurement.Volume;
 import com.highmobility.value.Bytes;
@@ -89,6 +90,10 @@ public class Usage {
     public static final byte PROPERTY_ECO_SCORE_CONSTANT = 0x26;
     public static final byte PROPERTY_ECO_SCORE_BONUS_RANGE = 0x27;
     public static final byte PROPERTY_TRIP_METERS = 0x28;
+    public static final byte PROPERTY_ELECTRIC_CONSUMPTION_AVERAGE = 0x29;
+    public static final byte PROPERTY_BRAKING_EVALUATION = 0x2a;
+    public static final byte PROPERTY_AVERAGE_SPEED = 0x2b;
+    public static final byte PROPERTY_RECUPERATION_POWER = 0x2c;
 
     /**
      * Get Usage property availability information
@@ -228,6 +233,10 @@ public class Usage {
         Property<Double> ecoScoreConstant = new Property<>(Double.class, PROPERTY_ECO_SCORE_CONSTANT);
         Property<Length> ecoScoreBonusRange = new Property<>(Length.class, PROPERTY_ECO_SCORE_BONUS_RANGE);
         List<Property<TripMeter>> tripMeters;
+        Property<EnergyEfficiency> electricConsumptionAverage = new Property<>(EnergyEfficiency.class, PROPERTY_ELECTRIC_CONSUMPTION_AVERAGE);
+        Property<Double> brakingEvaluation = new Property<>(Double.class, PROPERTY_BRAKING_EVALUATION);
+        Property<Speed> averageSpeed = new Property<>(Speed.class, PROPERTY_AVERAGE_SPEED);
+        Property<Power> recuperationPower = new Property<>(Power.class, PROPERTY_RECUPERATION_POWER);
     
         /**
          * @return Average weekly distance
@@ -512,6 +521,34 @@ public class Usage {
         }
     
         /**
+         * @return Average electric energy consumption calculated based on the last 20km
+         */
+        public Property<EnergyEfficiency> getElectricConsumptionAverage() {
+            return electricConsumptionAverage;
+        }
+    
+        /**
+         * @return Braking evaluation percentage
+         */
+        public Property<Double> getBrakingEvaluation() {
+            return brakingEvaluation;
+        }
+    
+        /**
+         * @return Average speed at data collection.
+         */
+        public Property<Speed> getAverageSpeed() {
+            return averageSpeed;
+        }
+    
+        /**
+         * @return Recuperation energy of the drivetrain.
+         */
+        public Property<Power> getRecuperationPower() {
+            return recuperationPower;
+        }
+    
+        /**
          * @param mode The driving mode.
          * @return The driving mode activation period for given mode.
          */
@@ -598,6 +635,10 @@ public class Usage {
                             Property<TripMeter> tripMeter = new Property<>(TripMeter.class, p);
                             tripMetersBuilder.add(tripMeter);
                             return tripMeter;
+                        case PROPERTY_ELECTRIC_CONSUMPTION_AVERAGE: return electricConsumptionAverage.update(p);
+                        case PROPERTY_BRAKING_EVALUATION: return brakingEvaluation.update(p);
+                        case PROPERTY_AVERAGE_SPEED: return averageSpeed.update(p);
+                        case PROPERTY_RECUPERATION_POWER: return recuperationPower.update(p);
                     }
     
                     return null;
@@ -1057,6 +1098,7 @@ public class Usage {
             
                 return this;
             }
+            
             /**
              * Add a single trip meter
              * 
@@ -1066,6 +1108,46 @@ public class Usage {
             public Builder addTripMeter(Property<TripMeter> tripMeter) {
                 tripMeter.setIdentifier(PROPERTY_TRIP_METERS);
                 addProperty(tripMeter);
+                return this;
+            }
+            
+            /**
+             * @param electricConsumptionAverage Average electric energy consumption calculated based on the last 20km
+             * @return The builder
+             */
+            public Builder setElectricConsumptionAverage(Property<EnergyEfficiency> electricConsumptionAverage) {
+                Property property = electricConsumptionAverage.setIdentifier(PROPERTY_ELECTRIC_CONSUMPTION_AVERAGE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param brakingEvaluation Braking evaluation percentage
+             * @return The builder
+             */
+            public Builder setBrakingEvaluation(Property<Double> brakingEvaluation) {
+                Property property = brakingEvaluation.setIdentifier(PROPERTY_BRAKING_EVALUATION);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param averageSpeed Average speed at data collection.
+             * @return The builder
+             */
+            public Builder setAverageSpeed(Property<Speed> averageSpeed) {
+                Property property = averageSpeed.setIdentifier(PROPERTY_AVERAGE_SPEED);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param recuperationPower Recuperation energy of the drivetrain.
+             * @return The builder
+             */
+            public Builder setRecuperationPower(Property<Power> recuperationPower) {
+                Property property = recuperationPower.setIdentifier(PROPERTY_RECUPERATION_POWER);
+                addProperty(property);
                 return this;
             }
         }

@@ -30,82 +30,80 @@ import com.highmobility.value.Bytes;
 
 import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
-public class TirePressureStatus extends PropertyValueObject {
+public class ChargingRestriction extends PropertyValueObject {
     public static final int SIZE = 2;
 
-    LocationWheel location;
-    Status status;
+    ActiveState active;
+    Limit limit;
 
     /**
-     * @return The location.
+     * @return Indicates whether the charging current used to charge the vehicle is limited..
      */
-    public LocationWheel getLocation() {
-        return location;
+    public ActiveState getActive() {
+        return active;
     }
 
     /**
-     * @return The status.
+     * @return The limit.
      */
-    public Status getStatus() {
-        return status;
+    public Limit getLimit() {
+        return limit;
     }
 
-    public TirePressureStatus(LocationWheel location, Status status) {
+    public ChargingRestriction(ActiveState active, Limit limit) {
         super(0);
 
-        this.location = location;
-        this.status = status;
+        this.active = active;
+        this.limit = limit;
 
         bytes = new byte[getLength()];
 
         int bytePosition = 0;
-        set(bytePosition, location.getByte());
+        set(bytePosition, active.getByte());
         bytePosition += 1;
 
-        set(bytePosition, status.getByte());
+        set(bytePosition, limit.getByte());
     }
 
-    public TirePressureStatus(Bytes valueBytes) throws CommandParseException {
+    public ChargingRestriction(Bytes valueBytes) throws CommandParseException {
         super(valueBytes);
 
         if (bytes.length < 2) throw new CommandParseException();
 
         int bytePosition = 0;
-        location = LocationWheel.fromByte(get(bytePosition));
+        active = ActiveState.fromByte(get(bytePosition));
         bytePosition += 1;
 
-        status = Status.fromByte(get(bytePosition));
+        limit = Limit.fromByte(get(bytePosition));
     }
 
     @Override public int getLength() {
         return 1 + 1;
     }
 
-    public enum Status implements ByteEnum {
-        NORMAL((byte) 0x00),
-        LOW((byte) 0x01),
-        ALERT((byte) 0x02),
-        SOFT((byte) 0x03),
-        DEFLATION((byte) 0x04);
+    public enum Limit implements ByteEnum {
+        MAX((byte) 0x00),
+        REDUCED((byte) 0x01),
+        MIN((byte) 0x02);
     
-        public static Status fromByte(byte byteValue) throws CommandParseException {
-            Status[] values = Status.values();
+        public static Limit fromByte(byte byteValue) throws CommandParseException {
+            Limit[] values = Limit.values();
     
             for (int i = 0; i < values.length; i++) {
-                Status state = values[i];
+                Limit state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
             }
     
             throw new CommandParseException(
-                enumValueDoesNotExist(Status.class.getSimpleName(), byteValue)
+                enumValueDoesNotExist(Limit.class.getSimpleName(), byteValue)
             );
         }
     
         private final byte value;
     
-        Status(byte value) {
+        Limit(byte value) {
             this.value = value;
         }
     

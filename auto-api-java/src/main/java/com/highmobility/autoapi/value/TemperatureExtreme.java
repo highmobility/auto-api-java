@@ -26,86 +26,85 @@ package com.highmobility.autoapi.value;
 import com.highmobility.autoapi.CommandParseException;
 import com.highmobility.autoapi.property.PropertyValueObject;
 import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.value.measurement.Temperature;
 import com.highmobility.value.Bytes;
 
 import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
-public class TirePressureStatus extends PropertyValueObject {
-    public static final int SIZE = 2;
+public class TemperatureExtreme extends PropertyValueObject {
+    public static final int SIZE = 11;
 
-    LocationWheel location;
-    Status status;
+    Extreme extreme;
+    Temperature temperature;
 
     /**
-     * @return The location.
+     * @return The extreme.
      */
-    public LocationWheel getLocation() {
-        return location;
+    public Extreme getExtreme() {
+        return extreme;
     }
 
     /**
-     * @return The status.
+     * @return The temperature.
      */
-    public Status getStatus() {
-        return status;
+    public Temperature getTemperature() {
+        return temperature;
     }
 
-    public TirePressureStatus(LocationWheel location, Status status) {
+    public TemperatureExtreme(Extreme extreme, Temperature temperature) {
         super(0);
 
-        this.location = location;
-        this.status = status;
+        this.extreme = extreme;
+        this.temperature = temperature;
 
         bytes = new byte[getLength()];
 
         int bytePosition = 0;
-        set(bytePosition, location.getByte());
+        set(bytePosition, extreme.getByte());
         bytePosition += 1;
 
-        set(bytePosition, status.getByte());
+        set(bytePosition, temperature);
     }
 
-    public TirePressureStatus(Bytes valueBytes) throws CommandParseException {
+    public TemperatureExtreme(Bytes valueBytes) throws CommandParseException {
         super(valueBytes);
 
-        if (bytes.length < 2) throw new CommandParseException();
+        if (bytes.length < 11) throw new CommandParseException();
 
         int bytePosition = 0;
-        location = LocationWheel.fromByte(get(bytePosition));
+        extreme = Extreme.fromByte(get(bytePosition));
         bytePosition += 1;
 
-        status = Status.fromByte(get(bytePosition));
+        int temperatureSize = Temperature.SIZE;
+        temperature = new Temperature(getRange(bytePosition, bytePosition + temperatureSize));
     }
 
     @Override public int getLength() {
-        return 1 + 1;
+        return 1 + 10;
     }
 
-    public enum Status implements ByteEnum {
-        NORMAL((byte) 0x00),
-        LOW((byte) 0x01),
-        ALERT((byte) 0x02),
-        SOFT((byte) 0x03),
-        DEFLATION((byte) 0x04);
+    public enum Extreme implements ByteEnum {
+        HIGHEST((byte) 0x00),
+        LOWEST((byte) 0x01);
     
-        public static Status fromByte(byte byteValue) throws CommandParseException {
-            Status[] values = Status.values();
+        public static Extreme fromByte(byte byteValue) throws CommandParseException {
+            Extreme[] values = Extreme.values();
     
             for (int i = 0; i < values.length; i++) {
-                Status state = values[i];
+                Extreme state = values[i];
                 if (state.getByte() == byteValue) {
                     return state;
                 }
             }
     
             throw new CommandParseException(
-                enumValueDoesNotExist(Status.class.getSimpleName(), byteValue)
+                enumValueDoesNotExist(Extreme.class.getSimpleName(), byteValue)
             );
         }
     
         private final byte value;
     
-        Status(byte value) {
+        Extreme(byte value) {
             this.value = value;
         }
     

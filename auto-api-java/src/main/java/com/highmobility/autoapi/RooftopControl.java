@@ -42,6 +42,7 @@ public class RooftopControl {
     public static final byte PROPERTY_SUNROOF_TILT_STATE = 0x04;
     public static final byte PROPERTY_SUNROOF_STATE = 0x05;
     public static final byte PROPERTY_SUNROOF_RAIN_EVENT = 0x06;
+    public static final byte PROPERTY_TILT_POSITION = 0x07;
 
     /**
      * Get Rooftop Control property availability information
@@ -242,6 +243,7 @@ public class RooftopControl {
         Property<SunroofTiltState> sunroofTiltState = new Property<>(SunroofTiltState.class, PROPERTY_SUNROOF_TILT_STATE);
         Property<SunroofState> sunroofState = new Property<>(SunroofState.class, PROPERTY_SUNROOF_STATE);
         Property<SunroofRainEvent> sunroofRainEvent = new Property<>(SunroofRainEvent.class, PROPERTY_SUNROOF_RAIN_EVENT);
+        Property<Double> tiltPosition = new Property<>(Double.class, PROPERTY_TILT_POSITION);
     
         /**
          * @return 1.0 (100%) is opaque, 0.0 (0%) is transparent
@@ -285,6 +287,13 @@ public class RooftopControl {
             return sunroofRainEvent;
         }
     
+        /**
+         * @return 1.0 (100%) is fully tilted, 0.0 (0%) is not
+         */
+        public Property<Double> getTiltPosition() {
+            return tiltPosition;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
@@ -296,6 +305,7 @@ public class RooftopControl {
                         case PROPERTY_SUNROOF_TILT_STATE: return sunroofTiltState.update(p);
                         case PROPERTY_SUNROOF_STATE: return sunroofState.update(p);
                         case PROPERTY_SUNROOF_RAIN_EVENT: return sunroofRainEvent.update(p);
+                        case PROPERTY_TILT_POSITION: return tiltPosition.update(p);
                     }
     
                     return null;
@@ -370,6 +380,16 @@ public class RooftopControl {
              */
             public Builder setSunroofRainEvent(Property<SunroofRainEvent> sunroofRainEvent) {
                 Property property = sunroofRainEvent.setIdentifier(PROPERTY_SUNROOF_RAIN_EVENT);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param tiltPosition 1.0 (100%) is fully tilted, 0.0 (0%) is not
+             * @return The builder
+             */
+            public Builder setTiltPosition(Property<Double> tiltPosition) {
+                Property property = tiltPosition.setIdentifier(PROPERTY_TILT_POSITION);
                 addProperty(property);
                 return this;
             }
@@ -478,7 +498,8 @@ public class RooftopControl {
     public enum SunroofRainEvent implements ByteEnum {
         NO_EVENT((byte) 0x00),
         IN_STROKE_POSITION_BECAUSE_OF_RAIN((byte) 0x01),
-        AUTOMATICALLY_IN_STROKE_POSITION((byte) 0x02);
+        AUTOMATICALLY_IN_STROKE_POSITION((byte) 0x02),
+        TIMER((byte) 0x03);
     
         public static SunroofRainEvent fromByte(byte byteValue) throws CommandParseException {
             SunroofRainEvent[] values = SunroofRainEvent.values();

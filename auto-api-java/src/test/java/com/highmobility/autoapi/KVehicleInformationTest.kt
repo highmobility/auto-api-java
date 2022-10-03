@@ -56,7 +56,18 @@ class KVehicleInformationTest : BaseTest() {
             "14000B0100086573746f6e69616e" +  // Headunit is in estonian language
             "15000401000101" +  // Headunit is using a 24h timeformat
             "16000401000101" +  // Vehicle has rear-wheel drive
-            "17000401000106" // Secondary powertrain`s type is petrol.
+            "17000401000106" +  // Secondary powertrain`s type is petrol.
+            "18000D01000A19024054000000000000" +  // 80.0 L of fuel remaining
+            "19000B0100080000017fdfd0f9e8" +  // The vehicle was built at 31 March 2022 at 11:51:29 GMT
+            "1a00050100024445" +  // Vehicle country code is 'DE'
+            "1b0006010003433332" +  // Vehicle model key is 'C32'
+            "1c000401000101" +  // Data quality is up-to-date.
+            "1d000A010007434f4445313233" +  // Vehicle has extra equipment with a code 'CODE123'
+            "1d0009010006455150363636" +  // Vehicle has extra equipment with a code 'EQP666'
+            "1e00050100024134" +  // Vehicle model's series is 'A4'
+            "1f000B0100080000016682059d50" +  // Last trip happened at 17 October 2018 at 12:34:58 UTC
+            "20000401000101" +  // Time zone is set to 'summertime'.
+            "21000D01000A130040998c0000000000" // Vehicle mass is 1635.0kg
     )
     
     @Test
@@ -90,6 +101,17 @@ class KVehicleInformationTest : BaseTest() {
         builder.setTimeformat(Property(VehicleInformation.Timeformat.TWENTY_FOUR_H))
         builder.setDrive(Property(VehicleInformation.Drive.RWD))
         builder.setPowertrainSecondary(Property(EngineType.PETROL))
+        builder.setFuelTankCapacity(Property(Volume(80.0, Volume.Unit.LITERS)))
+        builder.setBuildDate(Property(getCalendar("2022-03-31T11:51:29.000Z")))
+        builder.setCountryCode(Property("DE"))
+        builder.setModelKey(Property("C32"))
+        builder.setDataQuality(Property(VehicleInformation.DataQuality.UP_TO_DATE))
+        builder.addExtraEquipmentCode(Property("CODE123"))
+        builder.addExtraEquipmentCode(Property("EQP666"))
+        builder.setSeries(Property("A4"))
+        builder.setLastDataTransferDate(Property(getCalendar("2018-10-17T12:34:58.000Z")))
+        builder.setTimeZone(Property(VehicleInformation.TimeZone.SUMMERTIME))
+        builder.setVehicleMass(Property(Mass(1635.0, Mass.Unit.KILOGRAMS)))
         testState(builder.build())
     }
     
@@ -120,6 +142,19 @@ class KVehicleInformationTest : BaseTest() {
         assertTrue(state.timeformat.value == VehicleInformation.Timeformat.TWENTY_FOUR_H)
         assertTrue(state.drive.value == VehicleInformation.Drive.RWD)
         assertTrue(state.powertrainSecondary.value == EngineType.PETROL)
+        assertTrue(state.fuelTankCapacity.value?.value == 80.0)
+        assertTrue(state.fuelTankCapacity.value?.unit == Volume.Unit.LITERS)
+        assertTrue(dateIsSame(state.buildDate.value, "2022-03-31T11:51:29.000Z"))
+        assertTrue(state.countryCode.value == "DE")
+        assertTrue(state.modelKey.value == "C32")
+        assertTrue(state.dataQuality.value == VehicleInformation.DataQuality.UP_TO_DATE)
+        assertTrue(state.extraEquipmentCodes[0].value == "CODE123")
+        assertTrue(state.extraEquipmentCodes[1].value == "EQP666")
+        assertTrue(state.series.value == "A4")
+        assertTrue(dateIsSame(state.lastDataTransferDate.value, "2018-10-17T12:34:58.000Z"))
+        assertTrue(state.timeZone.value == VehicleInformation.TimeZone.SUMMERTIME)
+        assertTrue(state.vehicleMass.value?.value == 1635.0)
+        assertTrue(state.vehicleMass.value?.unit == Mass.Unit.KILOGRAMS)
         assertTrue(bytesTheSame(state, bytes))
     }
     
@@ -130,9 +165,9 @@ class KVehicleInformationTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00140002030405060708090a0b0c0d0e0f10111314151617")
-        val propertyGetter = VehicleInformation.GetVehicleInformation(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00140002030405060708090a0b0c0d0e0f1011131415161718191a1b1c1d1e1f2021")
+        val propertyGetter = VehicleInformation.GetVehicleInformation(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0d0e0f10111314151617"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0d0e0f1011131415161718191a1b1c1d1e1f2021"))
     }
 }
