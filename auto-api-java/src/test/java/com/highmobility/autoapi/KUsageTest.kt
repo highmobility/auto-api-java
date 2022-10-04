@@ -43,13 +43,13 @@ class KUsageTest : BaseTest() {
             "05000C010009013fd3333333333333" +  // Driving mode 'eco' is engaged 30% of the time
             "05000C010009023fb999999999999a" +  // Driving mode 'eco' is engaged 10% of the time
             "05000C010009033fb999999999999a" +  // Driving mode 'eco' is engaged 1% of the time
-            "05000C010009043fd3333333333333" +  // Driving mode 'eco' is engaged 30% of the time
+            "05000C010009043fd3333333333333" +  // Driving mode 'eco_plus' is engaged 30% of the time
             "05000C010009050000000000000000" +  // Driving mode 'eco' is engaged 0% of the time
             "06000E01000B000c044034333333333333" +  // Driving mode 'regular' consumed 20.2kWh of electric energy
             "06000E01000B010c04404099999999999a" +  // Driving mode 'eco' consumed 33.2kWh of electric energy
             "06000E01000B020c04404b266666666666" +  // Driving mode 'sport' consumed 54.3kWh of electric energy
             "06000E01000B030c044050333333333333" +  // Driving mode 'sport_plus' consumed 64.8kWh of electric energy
-            "06000E01000B040c044032000000000000" +  // Driving mode 'ecoPlus' consumed 18.0kWh of electric energy
+            "06000E01000B040c044032000000000000" +  // Driving mode 'eco_plus' consumed 18.0kWh of electric energy
             "06000E01000B050c044040d9999999999a" +  // Driving mode 'comfort' consumed 33.7kWh of electric energy
             "07000D01000A0c044059533333333333" +  // Last trip consumed 101.3kWh of electric energy
             "08000D01000A19024036800000000000" +  // Last trip consumed 22.5 L of fuel
@@ -85,7 +85,11 @@ class KUsageTest : BaseTest() {
             "26000B0100083fe6666666666666" +  // Eco-score constant is 70%
             "27000D01000A12043fe6666666666666" +  // Eco-score bonus range is 0.7km
             "28000E01000B011204407c833333333333" +  // Trip meter 1`s distance is 456.2km
-            "28000E01000B02120440a372999999999a" // Trip meter 2`s distance is 2489.3km
+            "28000E01000B02120440a372999999999a" +  // Trip meter 2`s distance is 2489.3km
+            "29000D01000A0d00402670a3d70a3d71" +  // Average consumption is 11.22kWh/100km
+            "2a000B0100083fe6666666666666" +  // Braking is evaluated at 70%
+            "2b000D01000A16014053600000000000" +  // Average speed is 77.5km/h.
+            "2c000D01000A140040a1f80000000000" // Recuperation energy is 2300.0W.
     )
     
     @Test
@@ -105,13 +109,13 @@ class KUsageTest : BaseTest() {
         builder.addDrivingModesActivationPeriod(Property(DrivingModeActivationPeriod(DrivingMode.ECO, 0.3)))
         builder.addDrivingModesActivationPeriod(Property(DrivingModeActivationPeriod(DrivingMode.SPORT, 0.1)))
         builder.addDrivingModesActivationPeriod(Property(DrivingModeActivationPeriod(DrivingMode.SPORT_PLUS, 0.1)))
-        builder.addDrivingModesActivationPeriod(Property(DrivingModeActivationPeriod(DrivingMode.ECOPLUS, 0.3)))
+        builder.addDrivingModesActivationPeriod(Property(DrivingModeActivationPeriod(DrivingMode.ECO_PLUS, 0.3)))
         builder.addDrivingModesActivationPeriod(Property(DrivingModeActivationPeriod(DrivingMode.COMFORT, 0.0)))
         builder.addDrivingModeEnergyConsumption(Property(DrivingModeEnergyConsumption(DrivingMode.REGULAR, Energy(20.2, Energy.Unit.KILOWATT_HOURS))))
         builder.addDrivingModeEnergyConsumption(Property(DrivingModeEnergyConsumption(DrivingMode.ECO, Energy(33.2, Energy.Unit.KILOWATT_HOURS))))
         builder.addDrivingModeEnergyConsumption(Property(DrivingModeEnergyConsumption(DrivingMode.SPORT, Energy(54.3, Energy.Unit.KILOWATT_HOURS))))
         builder.addDrivingModeEnergyConsumption(Property(DrivingModeEnergyConsumption(DrivingMode.SPORT_PLUS, Energy(64.8, Energy.Unit.KILOWATT_HOURS))))
-        builder.addDrivingModeEnergyConsumption(Property(DrivingModeEnergyConsumption(DrivingMode.ECOPLUS, Energy(18.0, Energy.Unit.KILOWATT_HOURS))))
+        builder.addDrivingModeEnergyConsumption(Property(DrivingModeEnergyConsumption(DrivingMode.ECO_PLUS, Energy(18.0, Energy.Unit.KILOWATT_HOURS))))
         builder.addDrivingModeEnergyConsumption(Property(DrivingModeEnergyConsumption(DrivingMode.COMFORT, Energy(33.7, Energy.Unit.KILOWATT_HOURS))))
         builder.setLastTripEnergyConsumption(Property(Energy(101.3, Energy.Unit.KILOWATT_HOURS)))
         builder.setLastTripFuelConsumption(Property(Volume(22.5, Volume.Unit.LITERS)))
@@ -148,6 +152,10 @@ class KUsageTest : BaseTest() {
         builder.setEcoScoreBonusRange(Property(Length(0.7, Length.Unit.KILOMETERS)))
         builder.addTripMeter(Property(TripMeter(1, Length(456.2, Length.Unit.KILOMETERS))))
         builder.addTripMeter(Property(TripMeter(2, Length(2489.3, Length.Unit.KILOMETERS))))
+        builder.setElectricConsumptionAverage(Property(EnergyEfficiency(11.22, EnergyEfficiency.Unit.KWH_PER_100_KILOMETERS)))
+        builder.setBrakingEvaluation(Property(0.7))
+        builder.setAverageSpeed(Property(Speed(77.5, Speed.Unit.KILOMETERS_PER_HOUR)))
+        builder.setRecuperationPower(Property(Power(2300.0, Power.Unit.WATTS)))
         testState(builder.build())
     }
     
@@ -166,7 +174,7 @@ class KUsageTest : BaseTest() {
         assertTrue(state.drivingModesActivationPeriods[2].value?.period == 0.1)
         assertTrue(state.drivingModesActivationPeriods[3].value?.drivingMode == DrivingMode.SPORT_PLUS)
         assertTrue(state.drivingModesActivationPeriods[3].value?.period == 0.1)
-        assertTrue(state.drivingModesActivationPeriods[4].value?.drivingMode == DrivingMode.ECOPLUS)
+        assertTrue(state.drivingModesActivationPeriods[4].value?.drivingMode == DrivingMode.ECO_PLUS)
         assertTrue(state.drivingModesActivationPeriods[4].value?.period == 0.3)
         assertTrue(state.drivingModesActivationPeriods[5].value?.drivingMode == DrivingMode.COMFORT)
         assertTrue(state.drivingModesActivationPeriods[5].value?.period == 0.0)
@@ -182,7 +190,7 @@ class KUsageTest : BaseTest() {
         assertTrue(state.drivingModesEnergyConsumptions[3].value?.drivingMode == DrivingMode.SPORT_PLUS)
         assertTrue(state.drivingModesEnergyConsumptions[3].value?.consumption?.value == 64.8)
         assertTrue(state.drivingModesEnergyConsumptions[3].value?.consumption?.unit == Energy.Unit.KILOWATT_HOURS)
-        assertTrue(state.drivingModesEnergyConsumptions[4].value?.drivingMode == DrivingMode.ECOPLUS)
+        assertTrue(state.drivingModesEnergyConsumptions[4].value?.drivingMode == DrivingMode.ECO_PLUS)
         assertTrue(state.drivingModesEnergyConsumptions[4].value?.consumption?.value == 18.0)
         assertTrue(state.drivingModesEnergyConsumptions[4].value?.consumption?.unit == Energy.Unit.KILOWATT_HOURS)
         assertTrue(state.drivingModesEnergyConsumptions[5].value?.drivingMode == DrivingMode.COMFORT)
@@ -252,6 +260,13 @@ class KUsageTest : BaseTest() {
         assertTrue(state.tripMeters[1].value?.id == 2)
         assertTrue(state.tripMeters[1].value?.distance?.value == 2489.3)
         assertTrue(state.tripMeters[1].value?.distance?.unit == Length.Unit.KILOMETERS)
+        assertTrue(state.electricConsumptionAverage.value?.value == 11.22)
+        assertTrue(state.electricConsumptionAverage.value?.unit == EnergyEfficiency.Unit.KWH_PER_100_KILOMETERS)
+        assertTrue(state.brakingEvaluation.value == 0.7)
+        assertTrue(state.averageSpeed.value?.value == 77.5)
+        assertTrue(state.averageSpeed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
+        assertTrue(state.recuperationPower.value?.value == 2300.0)
+        assertTrue(state.recuperationPower.value?.unit == Power.Unit.WATTS)
         assertTrue(bytesTheSame(state, bytes))
     }
     
@@ -262,10 +277,10 @@ class KUsageTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0068000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728")
-        val propertyGetter = Usage.GetUsage(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0068000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c")
+        val propertyGetter = Usage.GetUsage(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c"))
     }
     
     @Test
@@ -288,14 +303,14 @@ class KUsageTest : BaseTest() {
     
     @Test
     fun testGetUsageAvailabilitySome() {
-        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728")
+        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c")
         val allBytes = Bytes(COMMAND_HEADER + "006802" + identifierBytes)
         val constructed = Usage.GetUsageAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.USAGE)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Usage.GetUsageAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28)
+        val secondConstructed = Usage.GetUsageAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

@@ -64,6 +64,7 @@ public class Race {
     public static final byte PROPERTY_ACCELERATOR_PEDAL_IDLE_SWITCH = 0x10;
     public static final byte PROPERTY_ACCELERATOR_PEDAL_KICKDOWN_SWITCH = 0x11;
     public static final byte PROPERTY_VEHICLE_MOVING = 0x12;
+    public static final byte PROPERTY_DRIVETRAIN_STATE = 0x13;
 
     /**
      * Get Race property availability information
@@ -181,6 +182,7 @@ public class Race {
         Property<ActiveState> acceleratorPedalIdleSwitch = new Property<>(ActiveState.class, PROPERTY_ACCELERATOR_PEDAL_IDLE_SWITCH);
         Property<ActiveState> acceleratorPedalKickdownSwitch = new Property<>(ActiveState.class, PROPERTY_ACCELERATOR_PEDAL_KICKDOWN_SWITCH);
         Property<VehicleMoving> vehicleMoving = new Property<>(VehicleMoving.class, PROPERTY_VEHICLE_MOVING);
+        Property<DrivetrainState> drivetrainState = new Property<>(DrivetrainState.class, PROPERTY_DRIVETRAIN_STATE);
     
         /**
          * @return The accelerations
@@ -309,6 +311,13 @@ public class Race {
         }
     
         /**
+         * @return State of the drivetrain for starts.
+         */
+        public Property<DrivetrainState> getDrivetrainState() {
+            return drivetrainState;
+        }
+    
+        /**
          * @param direction The acceleration type.
          * @return Acceleration for the given acceleration type. Null if doesnt exist.
          */
@@ -369,6 +378,7 @@ public class Race {
                         case PROPERTY_ACCELERATOR_PEDAL_IDLE_SWITCH: return acceleratorPedalIdleSwitch.update(p);
                         case PROPERTY_ACCELERATOR_PEDAL_KICKDOWN_SWITCH: return acceleratorPedalKickdownSwitch.update(p);
                         case PROPERTY_VEHICLE_MOVING: return vehicleMoving.update(p);
+                        case PROPERTY_DRIVETRAIN_STATE: return drivetrainState.update(p);
                     }
     
                     return null;
@@ -601,6 +611,16 @@ public class Race {
                 addProperty(property);
                 return this;
             }
+            
+            /**
+             * @param drivetrainState State of the drivetrain for starts.
+             * @return The builder
+             */
+            public Builder setDrivetrainState(Property<DrivetrainState> drivetrainState) {
+                Property property = drivetrainState.setIdentifier(PROPERTY_DRIVETRAIN_STATE);
+                addProperty(property);
+                return this;
+            }
         }
     }
 
@@ -661,6 +681,43 @@ public class Race {
         private final byte value;
     
         VehicleMoving(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum DrivetrainState implements ByteEnum {
+        INACTIVE((byte) 0x00),
+        RACE_START_PREPARATION((byte) 0x01),
+        RACE_START((byte) 0x02),
+        START((byte) 0x03),
+        COMFORT_START((byte) 0x04),
+        START_IDLE_RUN_CONTROL((byte) 0x05),
+        READY_FOR_OVERPRESSING((byte) 0x06),
+        LOW_SPEED_MODE((byte) 0x07),
+        E_LAUNCH((byte) 0x08);
+    
+        public static DrivetrainState fromByte(byte byteValue) throws CommandParseException {
+            DrivetrainState[] values = DrivetrainState.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                DrivetrainState state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(DrivetrainState.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        DrivetrainState(byte value) {
             this.value = value;
         }
     

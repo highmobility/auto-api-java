@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlinVersion = "1.4.10"
+    ext.kotlinVersion = "1.7.20"
 
     repositories {
         mavenCentral()
@@ -13,7 +13,7 @@ plugins {
 ext {
     ver = [
             "hmkit-utils"   : "1.4.5",
-            "hmkit-auto-api": "3.13.1"
+            "hmkit-auto-api": "13.1.1"
     ]
 
     ext.deps = [

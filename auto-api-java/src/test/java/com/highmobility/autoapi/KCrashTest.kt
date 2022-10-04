@@ -36,11 +36,14 @@ class KCrashTest : BaseTest() {
             "010006010003000101" +  // High severity front crash incident needs repairs
             "010006010003010201" +  // Medium severity lateral crash incident needs repairs
             "010006010003020302" +  // Low severity rear crash incident does not need repairs
-            "02000401000101" +  // Crash type is non-pedestrian (i.e. a another vehicle)
+            "02000401000101" +  // Crash type is non-pedestrian (i.e. another vehicle)
             "03000401000101" +  // Crash did not tip over the vehicle
             "04000401000101" +  // Automatic eCall is enabled
             "05000401000102" +  // Crash severity is 2
-            "06000401000107" // Impact zone is front driver side
+            "06000401000103" +  // Impact zone is rear driver side
+            "06000401000105" +  // Impact zone is side driver side
+            "06000401000107" +  // Impact zone is front driver side
+            "07000401000100" // Impact effect on the vehicle was 'normal'.
     )
     
     @Test
@@ -59,7 +62,10 @@ class KCrashTest : BaseTest() {
         builder.setTippedState(Property(Crash.TippedState.NOT_TIPPED))
         builder.setAutomaticECall(Property(EnabledState.ENABLED))
         builder.setSeverity(Property(2))
-        builder.setImpactZone(Property(Crash.ImpactZone.FRONT_DRIVER_SIDE))
+        builder.addImpactZone(Property(Crash.ImpactZone.REAR_DRIVER_SIDE))
+        builder.addImpactZone(Property(Crash.ImpactZone.SIDE_DRIVER_SIDE))
+        builder.addImpactZone(Property(Crash.ImpactZone.FRONT_DRIVER_SIDE))
+        builder.setStatus(Property(Crash.Status.NORMAL))
         testState(builder.build())
     }
     
@@ -77,7 +83,10 @@ class KCrashTest : BaseTest() {
         assertTrue(state.tippedState.value == Crash.TippedState.NOT_TIPPED)
         assertTrue(state.automaticECall.value == EnabledState.ENABLED)
         assertTrue(state.severity.value == 2)
-        assertTrue(state.impactZone.value == Crash.ImpactZone.FRONT_DRIVER_SIDE)
+        assertTrue(state.impactZone[0].value == Crash.ImpactZone.REAR_DRIVER_SIDE)
+        assertTrue(state.impactZone[1].value == Crash.ImpactZone.SIDE_DRIVER_SIDE)
+        assertTrue(state.impactZone[2].value == Crash.ImpactZone.FRONT_DRIVER_SIDE)
+        assertTrue(state.status.value == Crash.Status.NORMAL)
         assertTrue(bytesTheSame(state, bytes))
     }
     
@@ -88,10 +97,10 @@ class KCrashTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "006b00010203040506")
-        val propertyGetter = Crash.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "006b0001020304050607")
+        val propertyGetter = Crash.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("01020304050607"))
     }
     
     @Test
@@ -114,14 +123,14 @@ class KCrashTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("010203040506")
+        val identifierBytes = Bytes("01020304050607")
         val allBytes = Bytes(COMMAND_HEADER + "006b02" + identifierBytes)
         val constructed = Crash.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.CRASH)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Crash.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06)
+        val secondConstructed = Crash.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

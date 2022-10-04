@@ -39,7 +39,9 @@ class KTheftAlarmTest : BaseTest() {
             "04000401000106" +  // Last warning is for the hood
             "05000B01000800000172bcd25b10" +  // Last event happened at 16. June 2020 at 11:10:02 GMT
             "06000401000100" +  // Last event had a low impact
-            "07000401000105" // Last event happened to rear right position
+            "07000401000105" +  // Last event happened to rear right position
+            "08000401000100" +  // Interior protection sensors are not triggered.
+            "09000401000100" // Tow protection sensors are not triggered.
     )
     
     @Test
@@ -58,6 +60,8 @@ class KTheftAlarmTest : BaseTest() {
         builder.setLastEvent(Property(getCalendar("2020-06-16T11:10:02.000Z")))
         builder.setLastEventLevel(Property(TheftAlarm.LastEventLevel.LOW))
         builder.setEventType(Property(TheftAlarm.EventType.REAR_RIGHT))
+        builder.setInteriorProtectionTriggered(Property(Triggered.NOT_TRIGGERED))
+        builder.setTowProtectionTriggered(Property(Triggered.NOT_TRIGGERED))
         testState(builder.build())
     }
     
@@ -69,6 +73,8 @@ class KTheftAlarmTest : BaseTest() {
         assertTrue(dateIsSame(state.lastEvent.value, "2020-06-16T11:10:02.000Z"))
         assertTrue(state.lastEventLevel.value == TheftAlarm.LastEventLevel.LOW)
         assertTrue(state.eventType.value == TheftAlarm.EventType.REAR_RIGHT)
+        assertTrue(state.interiorProtectionTriggered.value == Triggered.NOT_TRIGGERED)
+        assertTrue(state.towProtectionTriggered.value == Triggered.NOT_TRIGGERED)
         assertTrue(bytesTheSame(state, bytes))
     }
     
@@ -79,10 +85,10 @@ class KTheftAlarmTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00460001020304050607")
-        val propertyGetter = TheftAlarm.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "004600010203040506070809")
+        val propertyGetter = TheftAlarm.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("01020304050607"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506070809"))
     }
     
     @Test
@@ -105,14 +111,14 @@ class KTheftAlarmTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("01020304050607")
+        val identifierBytes = Bytes("010203040506070809")
         val allBytes = Bytes(COMMAND_HEADER + "004602" + identifierBytes)
         val constructed = TheftAlarm.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.THEFT_ALARM)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = TheftAlarm.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
+        val secondConstructed = TheftAlarm.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

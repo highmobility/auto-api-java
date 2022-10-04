@@ -46,6 +46,7 @@ public class Crash {
     public static final byte PROPERTY_AUTOMATIC_ECALL = 0x04;
     public static final byte PROPERTY_SEVERITY = 0x05;
     public static final byte PROPERTY_IMPACT_ZONE = 0x06;
+    public static final byte PROPERTY_STATUS = 0x07;
 
     /**
      * Get Crash property availability information
@@ -150,7 +151,8 @@ public class Crash {
         Property<TippedState> tippedState = new Property<>(TippedState.class, PROPERTY_TIPPED_STATE);
         Property<EnabledState> automaticECall = new Property<>(EnabledState.class, PROPERTY_AUTOMATIC_ECALL);
         PropertyInteger severity = new PropertyInteger(PROPERTY_SEVERITY, false);
-        Property<ImpactZone> impactZone = new Property<>(ImpactZone.class, PROPERTY_IMPACT_ZONE);
+        List<Property<ImpactZone>> impactZone;
+        Property<Status> status = new Property<>(Status.class, PROPERTY_STATUS);
     
         /**
          * @return The incidents
@@ -190,14 +192,22 @@ public class Crash {
         /**
          * @return Impact zone of the crash
          */
-        public Property<ImpactZone> getImpactZone() {
+        public List<Property<ImpactZone>> getImpactZone() {
             return impactZone;
+        }
+    
+        /**
+         * @return The system effect an inpact had on the vehicle.
+         */
+        public Property<Status> getStatus() {
+            return status;
         }
     
         State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<CrashIncident>> incidentsBuilder = new ArrayList<>();
+            final ArrayList<Property<ImpactZone>> impactZoneBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNextState(p -> {
@@ -210,7 +220,11 @@ public class Crash {
                         case PROPERTY_TIPPED_STATE: return tippedState.update(p);
                         case PROPERTY_AUTOMATIC_ECALL: return automaticECall.update(p);
                         case PROPERTY_SEVERITY: return severity.update(p);
-                        case PROPERTY_IMPACT_ZONE: return impactZone.update(p);
+                        case PROPERTY_IMPACT_ZONE:
+                            Property<ImpactZone> impactZone = new Property<>(ImpactZone.class, p);
+                            impactZoneBuilder.add(impactZone);
+                            return impactZone;
+                        case PROPERTY_STATUS: return status.update(p);
                     }
     
                     return null;
@@ -218,6 +232,7 @@ public class Crash {
             }
     
             incidents = incidentsBuilder;
+            impactZone = impactZoneBuilder;
         }
     
         public static final class Builder extends SetCommand.Builder<Builder> {
@@ -298,11 +313,37 @@ public class Crash {
             }
             
             /**
-             * @param impactZone Impact zone of the crash
+             * Add an array of impact zone
+             * 
+             * @param impactZone The impact zone. Impact zone of the crash
              * @return The builder
              */
-            public Builder setImpactZone(Property<ImpactZone> impactZone) {
-                Property property = impactZone.setIdentifier(PROPERTY_IMPACT_ZONE);
+            public Builder setImpactZone(Property<ImpactZone>[] impactZone) {
+                for (int i = 0; i < impactZone.length; i++) {
+                    addImpactZone(impactZone[i]);
+                }
+            
+                return this;
+            }
+            
+            /**
+             * Add a single impact zone
+             * 
+             * @param impactZone The impact zone. Impact zone of the crash
+             * @return The builder
+             */
+            public Builder addImpactZone(Property<ImpactZone> impactZone) {
+                impactZone.setIdentifier(PROPERTY_IMPACT_ZONE);
+                addProperty(impactZone);
+                return this;
+            }
+            
+            /**
+             * @param status The system effect an inpact had on the vehicle.
+             * @return The builder
+             */
+            public Builder setStatus(Property<Status> status) {
+                Property property = status.setIdentifier(PROPERTY_STATUS);
                 addProperty(property);
                 return this;
             }
@@ -370,11 +411,11 @@ public class Crash {
     }
 
     public enum ImpactZone implements ByteEnum {
-        PREDESTRIAN_PROTECTION((byte) 0x00),
+        PEDESTRIAN_PROTECTION((byte) 0x00),
         ROLLOVER((byte) 0x01),
         REAR_PASSENGER_SIDE((byte) 0x02),
         REAR_DRIVER_SIDE((byte) 0x03),
-        SIDE_PASSEGER_SIDE((byte) 0x04),
+        SIDE_PASSENGER_SIDE((byte) 0x04),
         SIDE_DRIVER_SIDE((byte) 0x05),
         FRONT_PASSENGER_SIDE((byte) 0x06),
         FRONT_DRIVER_SIDE((byte) 0x07);
@@ -397,6 +438,37 @@ public class Crash {
         private final byte value;
     
         ImpactZone(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum Status implements ByteEnum {
+        NORMAL((byte) 0x00),
+        RESTRAINTS_ENGAGED((byte) 0x01),
+        AIRBAG_TRIGGERED((byte) 0x02);
+    
+        public static Status fromByte(byte byteValue) throws CommandParseException {
+            Status[] values = Status.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                Status state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(Status.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        Status(byte value) {
             this.value = value;
         }
     

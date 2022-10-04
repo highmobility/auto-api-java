@@ -52,6 +52,7 @@ public class Adas {
     public static final byte PROPERTY_LANE_KEEP_ASSISTS_STATES = 0x09;
     public static final byte PROPERTY_PARK_ASSISTS = 0x0a;
     public static final byte PROPERTY_BLIND_SPOT_WARNING_SYSTEM = 0x0b;
+    public static final byte PROPERTY_LAUNCH_CONTROL = 0x0c;
 
     /**
      * Get ADAS property availability information
@@ -162,6 +163,7 @@ public class Adas {
         List<Property<LaneKeepAssistState>> laneKeepAssistsStates;
         List<Property<ParkAssist>> parkAssists;
         Property<OnOffState> blindSpotWarningSystem = new Property<>(OnOffState.class, PROPERTY_BLIND_SPOT_WARNING_SYSTEM);
+        Property<ActiveState> launchControl = new Property<>(ActiveState.class, PROPERTY_LAUNCH_CONTROL);
     
         /**
          * @return Indicates whether the driver assistance system is active or not.
@@ -240,6 +242,13 @@ public class Adas {
             return blindSpotWarningSystem;
         }
     
+        /**
+         * @return State of launch control activation.
+         */
+        public Property<ActiveState> getLaunchControl() {
+            return launchControl;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
     
@@ -266,6 +275,7 @@ public class Adas {
                             parkAssistsBuilder.add(parkAssist);
                             return parkAssist;
                         case PROPERTY_BLIND_SPOT_WARNING_SYSTEM: return blindSpotWarningSystem.update(p);
+                        case PROPERTY_LAUNCH_CONTROL: return launchControl.update(p);
                     }
     
                     return null;
@@ -425,6 +435,16 @@ public class Adas {
              */
             public Builder setBlindSpotWarningSystem(Property<OnOffState> blindSpotWarningSystem) {
                 Property property = blindSpotWarningSystem.setIdentifier(PROPERTY_BLIND_SPOT_WARNING_SYSTEM);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param launchControl State of launch control activation.
+             * @return The builder
+             */
+            public Builder setLaunchControl(Property<ActiveState> launchControl) {
+                Property property = launchControl.setIdentifier(PROPERTY_LAUNCH_CONTROL);
                 addProperty(property);
                 return this;
             }

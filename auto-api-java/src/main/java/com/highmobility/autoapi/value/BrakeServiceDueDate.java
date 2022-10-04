@@ -24,49 +24,60 @@
 package com.highmobility.autoapi.value;
 
 import com.highmobility.autoapi.CommandParseException;
-import com.highmobility.autoapi.property.ByteEnum;
+import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyValueObject;
+import com.highmobility.value.Bytes;
 
-import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
+import java.util.Calendar;
 
+public class BrakeServiceDueDate extends PropertyValueObject {
+    public static final int SIZE = 9;
 
-public enum EngineType implements ByteEnum {
-    UNKNOWN((byte) 0x00),
-    ALL_ELECTRIC((byte) 0x01),
-    COMBUSTION_ENGINE((byte) 0x02),
-    PHEV((byte) 0x03),
-    HYDROGEN((byte) 0x04),
-    HYDROGEN_HYBRID((byte) 0x05),
-    PETROL((byte) 0x06),
-    ELECTRIC((byte) 0x07),
-    GAS((byte) 0x08),
-    DIESEL((byte) 0x09),
-    GASOLINE((byte) 0x0a),
-    CNG((byte) 0x0b),
-    LPG((byte) 0x0c),
-    HYBRID((byte) 0x0d);
+    Axle axle;
+    Calendar dueDate;
 
-    public static EngineType fromByte(byte byteValue) throws CommandParseException {
-        EngineType[] values = EngineType.values();
-
-        for (int i = 0; i < values.length; i++) {
-            EngineType state = values[i];
-            if (state.getByte() == byteValue) {
-                return state;
-            }
-        }
-
-        throw new CommandParseException(
-            enumValueDoesNotExist(EngineType.class.getSimpleName(), byteValue)
-        );
+    /**
+     * @return The axle.
+     */
+    public Axle getAxle() {
+        return axle;
     }
 
-    private final byte value;
-
-    EngineType(byte value) {
-        this.value = value;
+    /**
+     * @return The due date.
+     */
+    public Calendar getDueDate() {
+        return dueDate;
     }
 
-    @Override public byte getByte() {
-        return value;
+    public BrakeServiceDueDate(Axle axle, Calendar dueDate) {
+        super(0);
+
+        this.axle = axle;
+        this.dueDate = dueDate;
+
+        bytes = new byte[getLength()];
+
+        int bytePosition = 0;
+        set(bytePosition, axle.getByte());
+        bytePosition += 1;
+
+        set(bytePosition, Property.calendarToBytes(dueDate));
+    }
+
+    public BrakeServiceDueDate(Bytes valueBytes) throws CommandParseException {
+        super(valueBytes);
+
+        if (bytes.length < 9) throw new CommandParseException();
+
+        int bytePosition = 0;
+        axle = Axle.fromByte(get(bytePosition));
+        bytePosition += 1;
+
+        dueDate = Property.getCalendar(bytes, bytePosition);
+    }
+
+    @Override public int getLength() {
+        return 1 + 8;
     }
 }

@@ -26,11 +26,16 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
+import com.highmobility.autoapi.value.ChargingRestriction;
 import com.highmobility.autoapi.value.DepartureTime;
 import com.highmobility.autoapi.value.EnabledState;
+import com.highmobility.autoapi.value.LockState;
 import com.highmobility.autoapi.value.Position;
 import com.highmobility.autoapi.value.ReductionTime;
+import com.highmobility.autoapi.value.TemperatureExtreme;
+import com.highmobility.autoapi.value.Time;
 import com.highmobility.autoapi.value.Timer;
+import com.highmobility.autoapi.value.WeekdayTime;
 import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.autoapi.value.measurement.ElectricCurrent;
 import com.highmobility.autoapi.value.measurement.ElectricPotentialDifference;
@@ -83,6 +88,36 @@ public class Charging {
     public static final byte PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED = 0x22;
     public static final byte PROPERTY_PRECONDITIONING_ERROR = 0x23;
     public static final byte PROPERTY_BATTERY_CAPACITY = 0x24;
+    public static final byte PROPERTY_AUXILIARY_POWER = 0x25;
+    public static final byte PROPERTY_CHARGING_COMPLETE_LOCK = 0x26;
+    public static final byte PROPERTY_BATTERY_MAX_AVAILABLE = 0x27;
+    public static final byte PROPERTY_CHARGING_END_REASON = 0x28;
+    public static final byte PROPERTY_CHARGING_PHASES = 0x29;
+    public static final byte PROPERTY_BATTERY_ENERGY = 0x2a;
+    public static final byte PROPERTY_BATTERY_ENERGY_CHARGABLE = 0x2b;
+    public static final byte PROPERTY_CHARGING_SINGLE_IMMEDIATE = 0x2c;
+    public static final byte PROPERTY_CHARGING_TIME_DISPLAY = 0x2d;
+    public static final byte PROPERTY_DEPARTURE_TIME_DISPLAY = 0x2e;
+    public static final byte PROPERTY_RESTRICTION = 0x2f;
+    public static final byte PROPERTY_LIMIT_STATUS = 0x30;
+    public static final byte PROPERTY_CURRENT_LIMIT = 0x31;
+    public static final byte PROPERTY_SMART_CHARGING_OPTION = 0x32;
+    public static final byte PROPERTY_PLUG_LOCK_STATUS = 0x33;
+    public static final byte PROPERTY_FLAP_LOCK_STATUS = 0x34;
+    public static final byte PROPERTY_ACOUSTIC_LIMIT = 0x35;
+    public static final byte PROPERTY_MIN_CHARGING_CURRENT = 0x36;
+    public static final byte PROPERTY_ESTIMATED_RANGE_TARGET = 0x37;
+    public static final byte PROPERTY_FULLY_CHARGED_END_TIMES = 0x38;
+    public static final byte PROPERTY_PRECONDITIONING_SCHEDULED_TIME = 0x39;
+    public static final byte PROPERTY_PRECONDITIONING_REMAINING_TIME = 0x3a;
+    public static final byte PROPERTY_BATTERY_VOLTAGE = 0x3b;
+    public static final byte PROPERTY_BATTERY_TEMPRETATURE_EXTREMES = 0x3c;
+    public static final byte PROPERTY_BATTERY_TEMPERATURE_CONTROL_DEMAND = 0x3d;
+    public static final byte PROPERTY_CHARGING_CURRENT = 0x3e;
+    public static final byte PROPERTY_BATTERY_STATUS = 0x3f;
+    public static final byte PROPERTY_BATTERY_LED = 0x40;
+    public static final byte PROPERTY_BATTERY_COOLING_TEMPERATURE = 0x41;
+    public static final byte PROPERTY_BATTERY_TEMPERATURE_EXTREMES = 0x42;
 
     /**
      * Get Charging property availability information
@@ -207,7 +242,8 @@ public class Charging {
                 status == Status.SLOW_CHARGING ||
                 status == Status.FAST_CHARGING ||
                 status == Status.DISCHARGING ||
-                status == Status.FOREIGN_OBJECT_DETECTED) throw new IllegalArgumentException();
+                status == Status.FOREIGN_OBJECT_DETECTED ||
+                status == Status.CONDITIONING) throw new IllegalArgumentException();
         
             addProperty(this.status.update(status));
             createBytes();
@@ -329,7 +365,9 @@ public class Charging {
         public SetChargeMode(ChargeMode chargeMode) {
             super(IDENTIFIER);
         
-            if (chargeMode == ChargeMode.INDUCTIVE) throw new IllegalArgumentException();
+            if (chargeMode == ChargeMode.INDUCTIVE ||
+                chargeMode == ChargeMode.CONDUCTIVE ||
+                chargeMode == ChargeMode.PUSH_BUTTON) throw new IllegalArgumentException();
         
             addProperty(this.chargeMode.update(chargeMode));
             createBytes();
@@ -501,6 +539,36 @@ public class Charging {
         Property<EnabledState> preconditioningDepartureEnabled = new Property<>(EnabledState.class, PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED);
         Property<PreconditioningError> preconditioningError = new Property<>(PreconditioningError.class, PROPERTY_PRECONDITIONING_ERROR);
         Property<Energy> batteryCapacity = new Property<>(Energy.class, PROPERTY_BATTERY_CAPACITY);
+        Property<Power> auxiliaryPower = new Property<>(Power.class, PROPERTY_AUXILIARY_POWER);
+        Property<ActiveState> chargingCompleteLock = new Property<>(ActiveState.class, PROPERTY_CHARGING_COMPLETE_LOCK);
+        Property<Energy> batteryMaxAvailable = new Property<>(Energy.class, PROPERTY_BATTERY_MAX_AVAILABLE);
+        Property<ChargingEndReason> chargingEndReason = new Property<>(ChargingEndReason.class, PROPERTY_CHARGING_END_REASON);
+        Property<ChargingPhases> chargingPhases = new Property<>(ChargingPhases.class, PROPERTY_CHARGING_PHASES);
+        Property<Energy> batteryEnergy = new Property<>(Energy.class, PROPERTY_BATTERY_ENERGY);
+        Property<Energy> batteryEnergyChargable = new Property<>(Energy.class, PROPERTY_BATTERY_ENERGY_CHARGABLE);
+        Property<ActiveState> chargingSingleImmediate = new Property<>(ActiveState.class, PROPERTY_CHARGING_SINGLE_IMMEDIATE);
+        Property<ChargingTimeDisplay> chargingTimeDisplay = new Property<>(ChargingTimeDisplay.class, PROPERTY_CHARGING_TIME_DISPLAY);
+        Property<DepartureTimeDisplay> departureTimeDisplay = new Property<>(DepartureTimeDisplay.class, PROPERTY_DEPARTURE_TIME_DISPLAY);
+        Property<ChargingRestriction> restriction = new Property<>(ChargingRestriction.class, PROPERTY_RESTRICTION);
+        Property<ActiveState> limitStatus = new Property<>(ActiveState.class, PROPERTY_LIMIT_STATUS);
+        Property<ElectricCurrent> currentLimit = new Property<>(ElectricCurrent.class, PROPERTY_CURRENT_LIMIT);
+        Property<SmartChargingOption> smartChargingOption = new Property<>(SmartChargingOption.class, PROPERTY_SMART_CHARGING_OPTION);
+        Property<LockState> plugLockStatus = new Property<>(LockState.class, PROPERTY_PLUG_LOCK_STATUS);
+        Property<LockState> flapLockStatus = new Property<>(LockState.class, PROPERTY_FLAP_LOCK_STATUS);
+        Property<AcousticLimit> acousticLimit = new Property<>(AcousticLimit.class, PROPERTY_ACOUSTIC_LIMIT);
+        Property<ElectricCurrent> minChargingCurrent = new Property<>(ElectricCurrent.class, PROPERTY_MIN_CHARGING_CURRENT);
+        Property<Length> estimatedRangeTarget = new Property<>(Length.class, PROPERTY_ESTIMATED_RANGE_TARGET);
+        Property<WeekdayTime> fullyChargedEndTimes = new Property<>(WeekdayTime.class, PROPERTY_FULLY_CHARGED_END_TIMES);
+        Property<Time> preconditioningScheduledTime = new Property<>(Time.class, PROPERTY_PRECONDITIONING_SCHEDULED_TIME);
+        Property<Duration> preconditioningRemainingTime = new Property<>(Duration.class, PROPERTY_PRECONDITIONING_REMAINING_TIME);
+        Property<ElectricPotentialDifference> batteryVoltage = new Property<>(ElectricPotentialDifference.class, PROPERTY_BATTERY_VOLTAGE);
+        Property<TemperatureExtreme> batteryTempretatureExtremes = new Property<>(TemperatureExtreme.class, PROPERTY_BATTERY_TEMPRETATURE_EXTREMES);
+        Property<BatteryTemperatureControlDemand> batteryTemperatureControlDemand = new Property<>(BatteryTemperatureControlDemand.class, PROPERTY_BATTERY_TEMPERATURE_CONTROL_DEMAND);
+        Property<ElectricCurrent> chargingCurrent = new Property<>(ElectricCurrent.class, PROPERTY_CHARGING_CURRENT);
+        Property<BatteryStatus> batteryStatus = new Property<>(BatteryStatus.class, PROPERTY_BATTERY_STATUS);
+        Property<BatteryLed> batteryLed = new Property<>(BatteryLed.class, PROPERTY_BATTERY_LED);
+        Property<Temperature> batteryCoolingTemperature = new Property<>(Temperature.class, PROPERTY_BATTERY_COOLING_TEMPERATURE);
+        Property<TemperatureExtreme> batteryTemperatureExtremes = new Property<>(TemperatureExtreme.class, PROPERTY_BATTERY_TEMPERATURE_EXTREMES);
     
         /**
          * @return Estimated range
@@ -660,7 +728,7 @@ public class Charging {
         }
     
         /**
-         * @return Battery current
+         * @return Battery current - charging if posititive and discharning when negative.
          */
         public Property<ElectricCurrent> getBatteryCurrent() {
             return batteryCurrent;
@@ -743,6 +811,218 @@ public class Charging {
             return batteryCapacity;
         }
     
+        /**
+         * @return Auxiliary power used for predictions.
+         */
+        public Property<Power> getAuxiliaryPower() {
+            return auxiliaryPower;
+        }
+    
+        /**
+         * @return Locking status of the charging plug after charging complete.
+         */
+        public Property<ActiveState> getChargingCompleteLock() {
+            return chargingCompleteLock;
+        }
+    
+        /**
+         * @return Maximum available energy content of the high-voltage battery.
+         */
+        public Property<Energy> getBatteryMaxAvailable() {
+            return batteryMaxAvailable;
+        }
+    
+        /**
+         * @return Reason for ending a charging process.
+         */
+        public Property<ChargingEndReason> getChargingEndReason() {
+            return chargingEndReason;
+        }
+    
+        /**
+         * @return Charging process count of the high-voltage battery (phases).
+         */
+        public Property<ChargingPhases> getChargingPhases() {
+            return chargingPhases;
+        }
+    
+        /**
+         * @return Energy content of the high-voltage battery.
+         */
+        public Property<Energy> getBatteryEnergy() {
+            return batteryEnergy;
+        }
+    
+        /**
+         * @return Energy required until high-voltage battery is fully charged.
+         */
+        public Property<Energy> getBatteryEnergyChargable() {
+            return batteryEnergyChargable;
+        }
+    
+        /**
+         * @return Single instant charging function status.
+         */
+        public Property<ActiveState> getChargingSingleImmediate() {
+            return chargingSingleImmediate;
+        }
+    
+        /**
+         * @return Charging time displayed in the vehicle.
+         */
+        public Property<ChargingTimeDisplay> getChargingTimeDisplay() {
+            return chargingTimeDisplay;
+        }
+    
+        /**
+         * @return Departure time displayed in the vehicle.
+         */
+        public Property<DepartureTimeDisplay> getDepartureTimeDisplay() {
+            return departureTimeDisplay;
+        }
+    
+        /**
+         * @return Charging limit and state
+         */
+        public Property<ChargingRestriction> getRestriction() {
+            return restriction;
+        }
+    
+        /**
+         * @return Indicates whether charging limit is active.
+         */
+        public Property<ActiveState> getLimitStatus() {
+            return limitStatus;
+        }
+    
+        /**
+         * @return Limit for the charging current.
+         */
+        public Property<ElectricCurrent> getCurrentLimit() {
+            return currentLimit;
+        }
+    
+        /**
+         * @return Smart charging option being used to charge with.
+         */
+        public Property<SmartChargingOption> getSmartChargingOption() {
+            return smartChargingOption;
+        }
+    
+        /**
+         * @return Locking status of charging plug.
+         */
+        public Property<LockState> getPlugLockStatus() {
+            return plugLockStatus;
+        }
+    
+        /**
+         * @return Locking status of charging flap.
+         */
+        public Property<LockState> getFlapLockStatus() {
+            return flapLockStatus;
+        }
+    
+        /**
+         * @return Acoustic limitation of charging process.
+         */
+        public Property<AcousticLimit> getAcousticLimit() {
+            return acousticLimit;
+        }
+    
+        /**
+         * @return Minimum charging current.
+         */
+        public Property<ElectricCurrent> getMinChargingCurrent() {
+            return minChargingCurrent;
+        }
+    
+        /**
+         * @return Remaining electric range depending on target charging status.
+         */
+        public Property<Length> getEstimatedRangeTarget() {
+            return estimatedRangeTarget;
+        }
+    
+        /**
+         * @return Time and weekday when the vehicle will be fully charged.
+         */
+        public Property<WeekdayTime> getFullyChargedEndTimes() {
+            return fullyChargedEndTimes;
+        }
+    
+        /**
+         * @return Preconditioning scheduled departure time.
+         */
+        public Property<Time> getPreconditioningScheduledTime() {
+            return preconditioningScheduledTime;
+        }
+    
+        /**
+         * @return Time until preconditioning is complete.
+         */
+        public Property<Duration> getPreconditioningRemainingTime() {
+            return preconditioningRemainingTime;
+        }
+    
+        /**
+         * @return High-voltage battery electric potential difference (aka voltage).
+         */
+        public Property<ElectricPotentialDifference> getBatteryVoltage() {
+            return batteryVoltage;
+        }
+    
+        /**
+         * @return Current highest-lowest temperature inside the battery.
+         * @deprecated fixed the name typo. Replaced by {@link #getBatteryTemperatureExtremes()}
+         */
+        @Deprecated
+        public Property<TemperatureExtreme> getBatteryTempretatureExtremes() {
+            return batteryTempretatureExtremes;
+        }
+    
+        /**
+         * @return Current demand of HV battery temperature control system.
+         */
+        public Property<BatteryTemperatureControlDemand> getBatteryTemperatureControlDemand() {
+            return batteryTemperatureControlDemand;
+        }
+    
+        /**
+         * @return Charging electric current.
+         */
+        public Property<ElectricCurrent> getChargingCurrent() {
+            return chargingCurrent;
+        }
+    
+        /**
+         * @return Battery state.
+         */
+        public Property<BatteryStatus> getBatteryStatus() {
+            return batteryStatus;
+        }
+    
+        /**
+         * @return State of LED for the battery.
+         */
+        public Property<BatteryLed> getBatteryLed() {
+            return batteryLed;
+        }
+    
+        /**
+         * @return Battery cooling temperature.
+         */
+        public Property<Temperature> getBatteryCoolingTemperature() {
+            return batteryCoolingTemperature;
+        }
+    
+        /**
+         * @return Current highest-lowest temperature inside the battery.
+         */
+        public Property<TemperatureExtreme> getBatteryTemperatureExtremes() {
+            return batteryTemperatureExtremes;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
     
@@ -795,6 +1075,36 @@ public class Charging {
                         case PROPERTY_PRECONDITIONING_DEPARTURE_ENABLED: return preconditioningDepartureEnabled.update(p);
                         case PROPERTY_PRECONDITIONING_ERROR: return preconditioningError.update(p);
                         case PROPERTY_BATTERY_CAPACITY: return batteryCapacity.update(p);
+                        case PROPERTY_AUXILIARY_POWER: return auxiliaryPower.update(p);
+                        case PROPERTY_CHARGING_COMPLETE_LOCK: return chargingCompleteLock.update(p);
+                        case PROPERTY_BATTERY_MAX_AVAILABLE: return batteryMaxAvailable.update(p);
+                        case PROPERTY_CHARGING_END_REASON: return chargingEndReason.update(p);
+                        case PROPERTY_CHARGING_PHASES: return chargingPhases.update(p);
+                        case PROPERTY_BATTERY_ENERGY: return batteryEnergy.update(p);
+                        case PROPERTY_BATTERY_ENERGY_CHARGABLE: return batteryEnergyChargable.update(p);
+                        case PROPERTY_CHARGING_SINGLE_IMMEDIATE: return chargingSingleImmediate.update(p);
+                        case PROPERTY_CHARGING_TIME_DISPLAY: return chargingTimeDisplay.update(p);
+                        case PROPERTY_DEPARTURE_TIME_DISPLAY: return departureTimeDisplay.update(p);
+                        case PROPERTY_RESTRICTION: return restriction.update(p);
+                        case PROPERTY_LIMIT_STATUS: return limitStatus.update(p);
+                        case PROPERTY_CURRENT_LIMIT: return currentLimit.update(p);
+                        case PROPERTY_SMART_CHARGING_OPTION: return smartChargingOption.update(p);
+                        case PROPERTY_PLUG_LOCK_STATUS: return plugLockStatus.update(p);
+                        case PROPERTY_FLAP_LOCK_STATUS: return flapLockStatus.update(p);
+                        case PROPERTY_ACOUSTIC_LIMIT: return acousticLimit.update(p);
+                        case PROPERTY_MIN_CHARGING_CURRENT: return minChargingCurrent.update(p);
+                        case PROPERTY_ESTIMATED_RANGE_TARGET: return estimatedRangeTarget.update(p);
+                        case PROPERTY_FULLY_CHARGED_END_TIMES: return fullyChargedEndTimes.update(p);
+                        case PROPERTY_PRECONDITIONING_SCHEDULED_TIME: return preconditioningScheduledTime.update(p);
+                        case PROPERTY_PRECONDITIONING_REMAINING_TIME: return preconditioningRemainingTime.update(p);
+                        case PROPERTY_BATTERY_VOLTAGE: return batteryVoltage.update(p);
+                        case PROPERTY_BATTERY_TEMPRETATURE_EXTREMES: return batteryTempretatureExtremes.update(p);
+                        case PROPERTY_BATTERY_TEMPERATURE_CONTROL_DEMAND: return batteryTemperatureControlDemand.update(p);
+                        case PROPERTY_CHARGING_CURRENT: return chargingCurrent.update(p);
+                        case PROPERTY_BATTERY_STATUS: return batteryStatus.update(p);
+                        case PROPERTY_BATTERY_LED: return batteryLed.update(p);
+                        case PROPERTY_BATTERY_COOLING_TEMPERATURE: return batteryCoolingTemperature.update(p);
+                        case PROPERTY_BATTERY_TEMPERATURE_EXTREMES: return batteryTemperatureExtremes.update(p);
                     }
     
                     return null;
@@ -1086,7 +1396,7 @@ public class Charging {
             }
             
             /**
-             * @param batteryCurrent Battery current
+             * @param batteryCurrent Battery current - charging if posititive and discharning when negative.
              * @return The builder
              */
             public Builder setBatteryCurrent(Property<ElectricCurrent> batteryCurrent) {
@@ -1204,13 +1514,317 @@ public class Charging {
                 addProperty(property);
                 return this;
             }
+            
+            /**
+             * @param auxiliaryPower Auxiliary power used for predictions.
+             * @return The builder
+             */
+            public Builder setAuxiliaryPower(Property<Power> auxiliaryPower) {
+                Property property = auxiliaryPower.setIdentifier(PROPERTY_AUXILIARY_POWER);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param chargingCompleteLock Locking status of the charging plug after charging complete.
+             * @return The builder
+             */
+            public Builder setChargingCompleteLock(Property<ActiveState> chargingCompleteLock) {
+                Property property = chargingCompleteLock.setIdentifier(PROPERTY_CHARGING_COMPLETE_LOCK);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param batteryMaxAvailable Maximum available energy content of the high-voltage battery.
+             * @return The builder
+             */
+            public Builder setBatteryMaxAvailable(Property<Energy> batteryMaxAvailable) {
+                Property property = batteryMaxAvailable.setIdentifier(PROPERTY_BATTERY_MAX_AVAILABLE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param chargingEndReason Reason for ending a charging process.
+             * @return The builder
+             */
+            public Builder setChargingEndReason(Property<ChargingEndReason> chargingEndReason) {
+                Property property = chargingEndReason.setIdentifier(PROPERTY_CHARGING_END_REASON);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param chargingPhases Charging process count of the high-voltage battery (phases).
+             * @return The builder
+             */
+            public Builder setChargingPhases(Property<ChargingPhases> chargingPhases) {
+                Property property = chargingPhases.setIdentifier(PROPERTY_CHARGING_PHASES);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param batteryEnergy Energy content of the high-voltage battery.
+             * @return The builder
+             */
+            public Builder setBatteryEnergy(Property<Energy> batteryEnergy) {
+                Property property = batteryEnergy.setIdentifier(PROPERTY_BATTERY_ENERGY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param batteryEnergyChargable Energy required until high-voltage battery is fully charged.
+             * @return The builder
+             */
+            public Builder setBatteryEnergyChargable(Property<Energy> batteryEnergyChargable) {
+                Property property = batteryEnergyChargable.setIdentifier(PROPERTY_BATTERY_ENERGY_CHARGABLE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param chargingSingleImmediate Single instant charging function status.
+             * @return The builder
+             */
+            public Builder setChargingSingleImmediate(Property<ActiveState> chargingSingleImmediate) {
+                Property property = chargingSingleImmediate.setIdentifier(PROPERTY_CHARGING_SINGLE_IMMEDIATE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param chargingTimeDisplay Charging time displayed in the vehicle.
+             * @return The builder
+             */
+            public Builder setChargingTimeDisplay(Property<ChargingTimeDisplay> chargingTimeDisplay) {
+                Property property = chargingTimeDisplay.setIdentifier(PROPERTY_CHARGING_TIME_DISPLAY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param departureTimeDisplay Departure time displayed in the vehicle.
+             * @return The builder
+             */
+            public Builder setDepartureTimeDisplay(Property<DepartureTimeDisplay> departureTimeDisplay) {
+                Property property = departureTimeDisplay.setIdentifier(PROPERTY_DEPARTURE_TIME_DISPLAY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param restriction Charging limit and state
+             * @return The builder
+             */
+            public Builder setRestriction(Property<ChargingRestriction> restriction) {
+                Property property = restriction.setIdentifier(PROPERTY_RESTRICTION);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param limitStatus Indicates whether charging limit is active.
+             * @return The builder
+             */
+            public Builder setLimitStatus(Property<ActiveState> limitStatus) {
+                Property property = limitStatus.setIdentifier(PROPERTY_LIMIT_STATUS);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param currentLimit Limit for the charging current.
+             * @return The builder
+             */
+            public Builder setCurrentLimit(Property<ElectricCurrent> currentLimit) {
+                Property property = currentLimit.setIdentifier(PROPERTY_CURRENT_LIMIT);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param smartChargingOption Smart charging option being used to charge with.
+             * @return The builder
+             */
+            public Builder setSmartChargingOption(Property<SmartChargingOption> smartChargingOption) {
+                Property property = smartChargingOption.setIdentifier(PROPERTY_SMART_CHARGING_OPTION);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param plugLockStatus Locking status of charging plug.
+             * @return The builder
+             */
+            public Builder setPlugLockStatus(Property<LockState> plugLockStatus) {
+                Property property = plugLockStatus.setIdentifier(PROPERTY_PLUG_LOCK_STATUS);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param flapLockStatus Locking status of charging flap.
+             * @return The builder
+             */
+            public Builder setFlapLockStatus(Property<LockState> flapLockStatus) {
+                Property property = flapLockStatus.setIdentifier(PROPERTY_FLAP_LOCK_STATUS);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param acousticLimit Acoustic limitation of charging process.
+             * @return The builder
+             */
+            public Builder setAcousticLimit(Property<AcousticLimit> acousticLimit) {
+                Property property = acousticLimit.setIdentifier(PROPERTY_ACOUSTIC_LIMIT);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param minChargingCurrent Minimum charging current.
+             * @return The builder
+             */
+            public Builder setMinChargingCurrent(Property<ElectricCurrent> minChargingCurrent) {
+                Property property = minChargingCurrent.setIdentifier(PROPERTY_MIN_CHARGING_CURRENT);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param estimatedRangeTarget Remaining electric range depending on target charging status.
+             * @return The builder
+             */
+            public Builder setEstimatedRangeTarget(Property<Length> estimatedRangeTarget) {
+                Property property = estimatedRangeTarget.setIdentifier(PROPERTY_ESTIMATED_RANGE_TARGET);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param fullyChargedEndTimes Time and weekday when the vehicle will be fully charged.
+             * @return The builder
+             */
+            public Builder setFullyChargedEndTimes(Property<WeekdayTime> fullyChargedEndTimes) {
+                Property property = fullyChargedEndTimes.setIdentifier(PROPERTY_FULLY_CHARGED_END_TIMES);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param preconditioningScheduledTime Preconditioning scheduled departure time.
+             * @return The builder
+             */
+            public Builder setPreconditioningScheduledTime(Property<Time> preconditioningScheduledTime) {
+                Property property = preconditioningScheduledTime.setIdentifier(PROPERTY_PRECONDITIONING_SCHEDULED_TIME);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param preconditioningRemainingTime Time until preconditioning is complete.
+             * @return The builder
+             */
+            public Builder setPreconditioningRemainingTime(Property<Duration> preconditioningRemainingTime) {
+                Property property = preconditioningRemainingTime.setIdentifier(PROPERTY_PRECONDITIONING_REMAINING_TIME);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param batteryVoltage High-voltage battery electric potential difference (aka voltage).
+             * @return The builder
+             */
+            public Builder setBatteryVoltage(Property<ElectricPotentialDifference> batteryVoltage) {
+                Property property = batteryVoltage.setIdentifier(PROPERTY_BATTERY_VOLTAGE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param batteryTempretatureExtremes Current highest-lowest temperature inside the battery.
+             * @return The builder
+             * @deprecated fixed the name typo. Replaced by {@link #getBatteryTemperatureExtremes()}
+             */
+            @Deprecated
+            public Builder setBatteryTempretatureExtremes(Property<TemperatureExtreme> batteryTempretatureExtremes) {
+                Property property = batteryTempretatureExtremes.setIdentifier(PROPERTY_BATTERY_TEMPRETATURE_EXTREMES);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param batteryTemperatureControlDemand Current demand of HV battery temperature control system.
+             * @return The builder
+             */
+            public Builder setBatteryTemperatureControlDemand(Property<BatteryTemperatureControlDemand> batteryTemperatureControlDemand) {
+                Property property = batteryTemperatureControlDemand.setIdentifier(PROPERTY_BATTERY_TEMPERATURE_CONTROL_DEMAND);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param chargingCurrent Charging electric current.
+             * @return The builder
+             */
+            public Builder setChargingCurrent(Property<ElectricCurrent> chargingCurrent) {
+                Property property = chargingCurrent.setIdentifier(PROPERTY_CHARGING_CURRENT);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param batteryStatus Battery state.
+             * @return The builder
+             */
+            public Builder setBatteryStatus(Property<BatteryStatus> batteryStatus) {
+                Property property = batteryStatus.setIdentifier(PROPERTY_BATTERY_STATUS);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param batteryLed State of LED for the battery.
+             * @return The builder
+             */
+            public Builder setBatteryLed(Property<BatteryLed> batteryLed) {
+                Property property = batteryLed.setIdentifier(PROPERTY_BATTERY_LED);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param batteryCoolingTemperature Battery cooling temperature.
+             * @return The builder
+             */
+            public Builder setBatteryCoolingTemperature(Property<Temperature> batteryCoolingTemperature) {
+                Property property = batteryCoolingTemperature.setIdentifier(PROPERTY_BATTERY_COOLING_TEMPERATURE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param batteryTemperatureExtremes Current highest-lowest temperature inside the battery.
+             * @return The builder
+             */
+            public Builder setBatteryTemperatureExtremes(Property<TemperatureExtreme> batteryTemperatureExtremes) {
+                Property property = batteryTemperatureExtremes.setIdentifier(PROPERTY_BATTERY_TEMPERATURE_EXTREMES);
+                addProperty(property);
+                return this;
+            }
         }
     }
 
     public enum ChargeMode implements ByteEnum {
         IMMEDIATE((byte) 0x00),
         TIMER_BASED((byte) 0x01),
-        INDUCTIVE((byte) 0x02);
+        INDUCTIVE((byte) 0x02),
+        CONDUCTIVE((byte) 0x03),
+        PUSH_BUTTON((byte) 0x04);
     
         public static ChargeMode fromByte(byte byteValue) throws CommandParseException {
             ChargeMode[] values = ChargeMode.values();
@@ -1302,7 +1916,8 @@ public class Charging {
 
     public enum PluggedIn implements ByteEnum {
         DISCONNECTED((byte) 0x00),
-        PLUGGED_IN((byte) 0x01);
+        PLUGGED_IN((byte) 0x01),
+        PLUGGED_IN_BOTH_SIDES((byte) 0x02);
     
         public static PluggedIn fromByte(byte byteValue) throws CommandParseException {
             PluggedIn[] values = PluggedIn.values();
@@ -1341,7 +1956,8 @@ public class Charging {
         SLOW_CHARGING((byte) 0x07),
         FAST_CHARGING((byte) 0x08),
         DISCHARGING((byte) 0x09),
-        FOREIGN_OBJECT_DETECTED((byte) 0x0a);
+        FOREIGN_OBJECT_DETECTED((byte) 0x0a),
+        CONDITIONING((byte) 0x0b);
     
         public static Status fromByte(byte byteValue) throws CommandParseException {
             Status[] values = Status.values();
@@ -1401,17 +2017,25 @@ public class Charging {
 
     public enum StarterBatteryState implements ByteEnum {
         /**
-         * Battery charge is greater than 0%
+         * Vehicle engine will not start anymore, battery must be charged using an external system (battery charge is greater than 0%).
          */
         RED((byte) 0x00),
         /**
-         * Battery charge is greater than 40%
+         * Battery partly discharged, battery should be charged by driving the vehicle to avoid loosing functionality (battery charge is greater than 40%).
          */
         YELLOW((byte) 0x01),
         /**
-         * Battery charge is greater than 70%
+         * Ok, (battery charge is greater than 70%).
          */
-        GREEN((byte) 0x02);
+        GREEN((byte) 0x02),
+        /**
+         * Battery is now in saving mode, remote commands are not possible anymore, battery should be charged by driving the vehicle.
+         */
+        ORANGE((byte) 0x03),
+        /**
+         * Battery partly discharged but ok.
+         */
+        GREEN_YELLOW((byte) 0x04);
     
         public static StarterBatteryState fromByte(byte byteValue) throws CommandParseException {
             StarterBatteryState[] values = StarterBatteryState.values();
@@ -1507,6 +2131,313 @@ public class Charging {
         private final byte value;
     
         PreconditioningError(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum ChargingEndReason implements ByteEnum {
+        UNKNOWN((byte) 0x00),
+        GOAL_REACHED((byte) 0x01),
+        REQUESTED_BY_DRIVER((byte) 0x02),
+        CONNECTOR_REMOVED((byte) 0x03),
+        POWERGRID_FAILED((byte) 0x04),
+        HV_SYSTEM_FAILURE((byte) 0x05),
+        CHARGING_STATION_FAILURE((byte) 0x06),
+        PARKING_LOCK_FAILED((byte) 0x07),
+        NO_PARKING_LOCK((byte) 0x08),
+        SIGNAL_INVALID((byte) 0x09);
+    
+        public static ChargingEndReason fromByte(byte byteValue) throws CommandParseException {
+            ChargingEndReason[] values = ChargingEndReason.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                ChargingEndReason state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(ChargingEndReason.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        ChargingEndReason(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum ChargingPhases implements ByteEnum {
+        NO_CHARGING((byte) 0x00),
+        ONE((byte) 0x01),
+        TWO((byte) 0x02),
+        THREE((byte) 0x03);
+    
+        public static ChargingPhases fromByte(byte byteValue) throws CommandParseException {
+            ChargingPhases[] values = ChargingPhases.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                ChargingPhases state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(ChargingPhases.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        ChargingPhases(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum ChargingTimeDisplay implements ByteEnum {
+        NO_DISPLAY((byte) 0x00),
+        DISPLAY_DURATION((byte) 0x01),
+        NO_DISPLAY_DURATION((byte) 0x02);
+    
+        public static ChargingTimeDisplay fromByte(byte byteValue) throws CommandParseException {
+            ChargingTimeDisplay[] values = ChargingTimeDisplay.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                ChargingTimeDisplay state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(ChargingTimeDisplay.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        ChargingTimeDisplay(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum DepartureTimeDisplay implements ByteEnum {
+        NO_DISPLAY((byte) 0x00),
+        REACHABLE((byte) 0x01),
+        NOT_REACHABLE((byte) 0x02);
+    
+        public static DepartureTimeDisplay fromByte(byte byteValue) throws CommandParseException {
+            DepartureTimeDisplay[] values = DepartureTimeDisplay.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                DepartureTimeDisplay state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(DepartureTimeDisplay.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        DepartureTimeDisplay(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum SmartChargingOption implements ByteEnum {
+        PRICE_OPTIMIZED((byte) 0x00),
+        RENEWABLE_ENERGY((byte) 0x01),
+        CO2_OPTIMIZED((byte) 0x02);
+    
+        public static SmartChargingOption fromByte(byte byteValue) throws CommandParseException {
+            SmartChargingOption[] values = SmartChargingOption.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                SmartChargingOption state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(SmartChargingOption.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        SmartChargingOption(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum AcousticLimit implements ByteEnum {
+        NO_ACTION((byte) 0x00),
+        AUTOMATIC((byte) 0x01),
+        UNLIMITED((byte) 0x02),
+        LIMITED((byte) 0x03);
+    
+        public static AcousticLimit fromByte(byte byteValue) throws CommandParseException {
+            AcousticLimit[] values = AcousticLimit.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                AcousticLimit state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(AcousticLimit.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        AcousticLimit(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum BatteryTemperatureControlDemand implements ByteEnum {
+        HIGH_COOLING((byte) 0x00),
+        MEDIUM_COOLING((byte) 0x01),
+        LOW_COOLING((byte) 0x02),
+        NO_TEMPERATURE_REQUIREMENT((byte) 0x03),
+        LOW_HEATING((byte) 0x04),
+        MEDIUM_HEATING((byte) 0x05),
+        HIGH_HEATING((byte) 0x06),
+        CIRCULATION_REQUIREMENT((byte) 0x07);
+    
+        public static BatteryTemperatureControlDemand fromByte(byte byteValue) throws CommandParseException {
+            BatteryTemperatureControlDemand[] values = BatteryTemperatureControlDemand.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                BatteryTemperatureControlDemand state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(BatteryTemperatureControlDemand.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        BatteryTemperatureControlDemand(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum BatteryStatus implements ByteEnum {
+        INACTIVE((byte) 0x00),
+        ACTIVE((byte) 0x01),
+        BALANCING((byte) 0x02),
+        EXTERNAL_LOAD((byte) 0x03),
+        LOAD((byte) 0x04),
+        ERROR((byte) 0x05),
+        INITIALISING((byte) 0x06),
+        CONDITIONING((byte) 0x07);
+    
+        public static BatteryStatus fromByte(byte byteValue) throws CommandParseException {
+            BatteryStatus[] values = BatteryStatus.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                BatteryStatus state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(BatteryStatus.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        BatteryStatus(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum BatteryLed implements ByteEnum {
+        NO_COLOUR((byte) 0x00),
+        WHITE((byte) 0x01),
+        YELLOW((byte) 0x02),
+        GREEN((byte) 0x03),
+        RED((byte) 0x04),
+        YELLOW_PULSING((byte) 0x05),
+        GREEN_PULSING((byte) 0x06),
+        RED_PULSING((byte) 0x07),
+        GREEN_RED_PULSING((byte) 0x08),
+        GREEN_FLASHING((byte) 0x09),
+        INITIALISING((byte) 0x0a),
+        ERROR((byte) 0x0b);
+    
+        public static BatteryLed fromByte(byte byteValue) throws CommandParseException {
+            BatteryLed[] values = BatteryLed.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                BatteryLed state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(BatteryLed.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        BatteryLed(byte value) {
             this.value = value;
         }
     

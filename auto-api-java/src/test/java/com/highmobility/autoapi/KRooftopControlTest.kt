@@ -37,7 +37,8 @@ class KRooftopControlTest : BaseTest() {
             "03000401000101" +  // Convertible roof is open
             "04000401000102" +  // Sunroof is half-tilted
             "05000401000101" +  // Sunroof is open
-            "06000401000100" // Sunroof had no rain event
+            "06000401000100" +  // Sunroof had no rain event
+            "07000B0100083fe0000000000000" // Rooftop is half-tilted (50%)
     )
     
     @Test
@@ -55,6 +56,7 @@ class KRooftopControlTest : BaseTest() {
         builder.setSunroofTiltState(Property(RooftopControl.SunroofTiltState.HALF_TILTED))
         builder.setSunroofState(Property(RooftopControl.SunroofState.OPEN))
         builder.setSunroofRainEvent(Property(RooftopControl.SunroofRainEvent.NO_EVENT))
+        builder.setTiltPosition(Property(0.5))
         testState(builder.build())
     }
     
@@ -65,6 +67,7 @@ class KRooftopControlTest : BaseTest() {
         assertTrue(state.sunroofTiltState.value == RooftopControl.SunroofTiltState.HALF_TILTED)
         assertTrue(state.sunroofState.value == RooftopControl.SunroofState.OPEN)
         assertTrue(state.sunroofRainEvent.value == RooftopControl.SunroofRainEvent.NO_EVENT)
+        assertTrue(state.tiltPosition.value == 0.5)
         assertTrue(bytesTheSame(state, bytes))
     }
     
@@ -75,10 +78,10 @@ class KRooftopControlTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "002500010203040506")
-        val propertyGetter = RooftopControl.GetRooftopState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00250001020304050607")
+        val propertyGetter = RooftopControl.GetRooftopState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("01020304050607"))
     }
     
     @Test
@@ -101,14 +104,14 @@ class KRooftopControlTest : BaseTest() {
     
     @Test
     fun testGetRooftopStateAvailabilitySome() {
-        val identifierBytes = Bytes("010203040506")
+        val identifierBytes = Bytes("01020304050607")
         val allBytes = Bytes(COMMAND_HEADER + "002502" + identifierBytes)
         val constructed = RooftopControl.GetRooftopStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.ROOFTOP_CONTROL)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = RooftopControl.GetRooftopStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06)
+        val secondConstructed = RooftopControl.GetRooftopStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

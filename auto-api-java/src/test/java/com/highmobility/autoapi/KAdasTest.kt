@@ -45,7 +45,8 @@ class KAdasTest : BaseTest() {
             "0900050100020101" +  // Right lane keeping assist is actively controlling the wheels.
             "0a0006010003000000" +  // Front park assist is inactive and not muted.
             "0a0006010003010100" +  // Rear park assist is active and not muted.
-            "0b000401000101" // Blind spot warning system is turned on.
+            "0b000401000101" +  // Blind spot warning system is turned on.
+            "0c000401000101" // Launch control is active.
     )
     
     @Test
@@ -70,6 +71,7 @@ class KAdasTest : BaseTest() {
         builder.addParkAssist(Property(ParkAssist(LocationLongitudinal.FRONT, ActiveState.INACTIVE, Muted.NOT_MUTED)))
         builder.addParkAssist(Property(ParkAssist(LocationLongitudinal.REAR, ActiveState.ACTIVE, Muted.NOT_MUTED)))
         builder.setBlindSpotWarningSystem(Property(OnOffState.ON))
+        builder.setLaunchControl(Property(ActiveState.ACTIVE))
         testState(builder.build())
     }
     
@@ -93,6 +95,7 @@ class KAdasTest : BaseTest() {
         assertTrue(state.parkAssists[1].value?.alarm == ActiveState.ACTIVE)
         assertTrue(state.parkAssists[1].value?.muted == Muted.NOT_MUTED)
         assertTrue(state.blindSpotWarningSystem.value == OnOffState.ON)
+        assertTrue(state.launchControl.value == ActiveState.ACTIVE)
         assertTrue(bytesTheSame(state, bytes))
     }
     
@@ -103,10 +106,10 @@ class KAdasTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "006c000102030405060708090a0b")
-        val propertyGetter = Adas.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "006c000102030405060708090a0b0c")
+        val propertyGetter = Adas.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c"))
     }
     
     @Test
@@ -129,14 +132,14 @@ class KAdasTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("0102030405060708090a0b")
+        val identifierBytes = Bytes("0102030405060708090a0b0c")
         val allBytes = Bytes(COMMAND_HEADER + "006c02" + identifierBytes)
         val constructed = Adas.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.ADAS)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Adas.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b)
+        val secondConstructed = Adas.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

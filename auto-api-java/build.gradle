@@ -9,15 +9,11 @@ apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/jup
 
 sourceCompatibility = '1.8'
 
-ext.ver = [
-        "hmkit-utils"       : "1.4.5",
-        "hmkit-auto-api"    : "3.13.1"
-]
+ext.ver = ["hmkit-utils"   : "1.4.5",
+           "hmkit-auto-api": "13.1.1"]
 
-ext.deps = [
-        "utils"   : "com.high-mobility:hmkit-utils:${ver."hmkit-utils"}",
-        "findBugs": 'com.google.code.findbugs:jsr305:3.0.2'
-]
+ext.deps = ["utils"   : "com.high-mobility:hmkit-utils:${ver."hmkit-utils"}",
+            "findBugs": 'com.google.code.findbugs:jsr305:3.0.2']
 
 dependencies {
     if (project.hasProperty('depLocation') == true && project.depLocation == 0) {

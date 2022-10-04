@@ -52,7 +52,27 @@ class KMaintenanceTest : BaseTest() {
             "0f000D01000A07054014000000000000" +  // 5 months until exhaust inspection
             "10000B010008000001677c63d280" +  // Last eCall happened at 5 December 2018 at 03:22:56 GMT
             "11000D01000A120440806ccccccccccd" +  // Distance to the next oil service is 525.6km
-            "12000D01000A07034050b33333333333" // Time to the next oil service is 66.8 days
+            "12000D01000A07034050b33333333333" +  // Time to the next oil service is 66.8 days
+            "13000D01000A12044097710000000000" +  // Brake fluid remaining distance is 1500.25km
+            "14000401000100" +  // Brake fluid status is 'ok'
+            "16000C010009000000017fda4373c0" +  // Front brake has a service date at 30 March 2022 at 09:58:48 GMT
+            "16000C010009010000017fda4373c0" +  // Rear brake has a service date at 30 March 2022 at 09:58:48 GMT
+            "17000E01000B0012044097710000000000" +  // Front brake's remaining distance to service is 1500.25km
+            "17000E01000B0112044097710000000000" +  // Rear brake's remaining distance to service is 1500.25km
+            "1800050100020000" +  // Front brake's service status is 'ok'
+            "1800050100020100" +  // Rear brake's service status is 'ok'
+            "19000B0100080000017ff961a380" +  // Next drive-in inspection date is at 5 April 2022 at 11:00:00 GMT
+            "1a000401000100" +  // Drive-in inspection service status is 'ok'
+            "1b000B0100080000017fdabd2800" +  // Next oil service is at 30 March 2022 at 12:11:44 GMT
+            "1c000D01000A12044097710000000000" +  // Distance until the next inspection is 1500.25km
+            "1d000B0100080000017fdabd2800" +  // Next legally required inspection date is at 30 March 2022 at 12:11:44 GMT
+            "1e000401000100" +  // No current service requirements.
+            "1f000B0100080000017fdabd2800" +  // Date of the earliest service is at 30 March 2022 at 12:11:44 GMT
+            "20000401000100" +  // Vehicle inspection service status is 'ok'.
+            "21000D01000A120440acc20000000000" +  // 3'681km until next drive-in inspection
+            "22000B0100080000017fe45286dd" +  // Vehicle check is on 1. April 2022 at 11:51:28 EEST.
+            "23000401000100" +  // Vehicle check service status is 'ok'.
+            "24000D01000A1204409519999999999a" // The distance to next vehicle check is 1350.4km.
     )
     
     @Test
@@ -82,6 +102,26 @@ class KMaintenanceTest : BaseTest() {
         builder.setLastECall(Property(getCalendar("2018-12-05T03:22:56.000Z")))
         builder.setDistanceToNextOilService(Property(Length(525.6, Length.Unit.KILOMETERS)))
         builder.setTimeToNextOilService(Property(Duration(66.8, Duration.Unit.DAYS)))
+        builder.setBrakeFluidRemainingDistance(Property(Length(1500.25, Length.Unit.KILOMETERS)))
+        builder.setBrakeFluidStatus(Property(ServiceStatus.OK))
+        builder.addBrakeServiceDueDate(Property(BrakeServiceDueDate(Axle.FRONT, getCalendar("2022-03-30T09:58:48.000Z"))))
+        builder.addBrakeServiceDueDate(Property(BrakeServiceDueDate(Axle.REAR, getCalendar("2022-03-30T09:58:48.000Z"))))
+        builder.addBrakeServiceRemainingDistance(Property(BrakeServiceRemainingDistance(Axle.FRONT, Length(1500.25, Length.Unit.KILOMETERS))))
+        builder.addBrakeServiceRemainingDistance(Property(BrakeServiceRemainingDistance(Axle.REAR, Length(1500.25, Length.Unit.KILOMETERS))))
+        builder.addBrakeServiceStatus(Property(BrakeServiceStatus(Axle.FRONT, ServiceStatus.OK)))
+        builder.addBrakeServiceStatus(Property(BrakeServiceStatus(Axle.REAR, ServiceStatus.OK)))
+        builder.setDriveInInspectionDate(Property(getCalendar("2022-04-05T11:00:00.000Z")))
+        builder.setDriveInInspectionStatus(Property(ServiceStatus.OK))
+        builder.setNextOilServiceDate(Property(getCalendar("2022-03-30T12:11:44.000Z")))
+        builder.setNextInspectionDistanceTo(Property(Length(1500.25, Length.Unit.KILOMETERS)))
+        builder.setLegalInspectionDate(Property(getCalendar("2022-03-30T12:11:44.000Z")))
+        builder.setServiceStatus(Property(ServiceStatus.OK))
+        builder.setServiceDate(Property(getCalendar("2022-03-30T12:11:44.000Z")))
+        builder.setInspectionStatus(Property(ServiceStatus.OK))
+        builder.setDriveInInspectionDistanceTo(Property(Length(3681.0, Length.Unit.KILOMETERS)))
+        builder.setVehicleCheckDate(Property(getCalendar("2022-04-01T08:51:28.093Z")))
+        builder.setVehicleCheckStatus(Property(ServiceStatus.OK))
+        builder.setVehicleCheckDistanceTo(Property(Length(1350.4, Length.Unit.KILOMETERS)))
         testState(builder.build())
     }
     
@@ -119,6 +159,38 @@ class KMaintenanceTest : BaseTest() {
         assertTrue(state.distanceToNextOilService.value?.unit == Length.Unit.KILOMETERS)
         assertTrue(state.timeToNextOilService.value?.value == 66.8)
         assertTrue(state.timeToNextOilService.value?.unit == Duration.Unit.DAYS)
+        assertTrue(state.brakeFluidRemainingDistance.value?.value == 1500.25)
+        assertTrue(state.brakeFluidRemainingDistance.value?.unit == Length.Unit.KILOMETERS)
+        assertTrue(state.brakeFluidStatus.value == ServiceStatus.OK)
+        assertTrue(state.brakesServiceDueDates[0].value?.axle == Axle.FRONT)
+        assertTrue(dateIsSame(state.brakesServiceDueDates[0].value?.dueDate, "2022-03-30T09:58:48.000Z"))
+        assertTrue(state.brakesServiceDueDates[1].value?.axle == Axle.REAR)
+        assertTrue(dateIsSame(state.brakesServiceDueDates[1].value?.dueDate, "2022-03-30T09:58:48.000Z"))
+        assertTrue(state.brakesServiceRemainingDistances[0].value?.axle == Axle.FRONT)
+        assertTrue(state.brakesServiceRemainingDistances[0].value?.distance?.value == 1500.25)
+        assertTrue(state.brakesServiceRemainingDistances[0].value?.distance?.unit == Length.Unit.KILOMETERS)
+        assertTrue(state.brakesServiceRemainingDistances[1].value?.axle == Axle.REAR)
+        assertTrue(state.brakesServiceRemainingDistances[1].value?.distance?.value == 1500.25)
+        assertTrue(state.brakesServiceRemainingDistances[1].value?.distance?.unit == Length.Unit.KILOMETERS)
+        assertTrue(state.brakesServiceStatuses[0].value?.axle == Axle.FRONT)
+        assertTrue(state.brakesServiceStatuses[0].value?.status == ServiceStatus.OK)
+        assertTrue(state.brakesServiceStatuses[1].value?.axle == Axle.REAR)
+        assertTrue(state.brakesServiceStatuses[1].value?.status == ServiceStatus.OK)
+        assertTrue(dateIsSame(state.driveInInspectionDate.value, "2022-04-05T11:00:00.000Z"))
+        assertTrue(state.driveInInspectionStatus.value == ServiceStatus.OK)
+        assertTrue(dateIsSame(state.nextOilServiceDate.value, "2022-03-30T12:11:44.000Z"))
+        assertTrue(state.nextInspectionDistanceTo.value?.value == 1500.25)
+        assertTrue(state.nextInspectionDistanceTo.value?.unit == Length.Unit.KILOMETERS)
+        assertTrue(dateIsSame(state.legalInspectionDate.value, "2022-03-30T12:11:44.000Z"))
+        assertTrue(state.serviceStatus.value == ServiceStatus.OK)
+        assertTrue(dateIsSame(state.serviceDate.value, "2022-03-30T12:11:44.000Z"))
+        assertTrue(state.inspectionStatus.value == ServiceStatus.OK)
+        assertTrue(state.driveInInspectionDistanceTo.value?.value == 3681.0)
+        assertTrue(state.driveInInspectionDistanceTo.value?.unit == Length.Unit.KILOMETERS)
+        assertTrue(dateIsSame(state.vehicleCheckDate.value, "2022-04-01T08:51:28.093Z"))
+        assertTrue(state.vehicleCheckStatus.value == ServiceStatus.OK)
+        assertTrue(state.vehicleCheckDistanceTo.value?.value == 1350.4)
+        assertTrue(state.vehicleCheckDistanceTo.value?.unit == Length.Unit.KILOMETERS)
         assertTrue(bytesTheSame(state, bytes))
     }
     
@@ -129,10 +201,10 @@ class KMaintenanceTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0034000102030405060708090a0b0c0d0e0f101112")
-        val propertyGetter = Maintenance.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0034000102030405060708090a0b0c0d0e0f1011121314161718191a1b1c1d1e1f2021222324")
+        val propertyGetter = Maintenance.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f1011121314161718191a1b1c1d1e1f2021222324"))
     }
     
     @Test
@@ -155,14 +227,14 @@ class KMaintenanceTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112")
+        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f1011121314161718191a1b1c1d1e1f2021222324")
         val allBytes = Bytes(COMMAND_HEADER + "003402" + identifierBytes)
         val constructed = Maintenance.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.MAINTENANCE)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Maintenance.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12)
+        val secondConstructed = Maintenance.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

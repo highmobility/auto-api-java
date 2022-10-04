@@ -55,27 +55,11 @@ public enum Event implements ByteEnum {
      */
     TIRE_PRESSURE_CHANGED((byte) 0x05),
     /**
-     * Sent when the vehicle’s acceleration rate exceeds the configurable limit for hard acceleration for a duration exceeding the configurable time duration limit.
-     */
-    HARSH_ACCELERATION_TRIGGERED((byte) 0x06),
-    /**
-     * Sent when the vehicle’s acceleration pedal position exceeds the configurable limit for hard acceleration for a duration exceeding the configurable time duration limit.
-     */
-    HARSH_ACCELERATION_PEDAL_POSITION_TRIGGERED((byte) 0x07),
-    /**
-     * Indicates if the vehicle’s deceleration rate exceeds the configurable limit for harsh braking for a duration exceeding the configurable time limit.
-     */
-    HARSH_BRAKING_TRIGGERED((byte) 0x08),
-    /**
-     * Indicates if the vehicle’s lateral acceleration rate exceeds the configurable limit for harsh cornering for a duration exceeding the configurable time duration limit.
-     */
-    HARSH_CORNERING_TRIGGERED((byte) 0x09),
-    /**
      * Indicates a seat belt is buckled while the vehicle is moving.
      */
     SEAT_BELT_TRIGGERED((byte) 0x0a),
     /**
-     * Triggered when the property "condition_based_services" in Diagnostics capability changes.
+     * Triggered when the property "condition_based_services" in Maintenance capability changes.
      */
     MAINTENANCE_CHANGED((byte) 0x0b),
     /**

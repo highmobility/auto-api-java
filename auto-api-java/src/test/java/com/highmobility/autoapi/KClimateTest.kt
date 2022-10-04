@@ -51,7 +51,9 @@ class KClimateTest : BaseTest() {
             "0b000601000305121e" +  // HVAC is started on saturday at 18:30
             "0b000601000306131f" +  // HVAC is started on sunday at 19:31
             "0b0006010003071000" +  // HVAC is automatic
-            "0c000D01000A1701403599999999999a" // Rear temperature setting is 21.6°C
+            "0c000D01000A1701403599999999999a" +  // Rear temperature setting is 21.6°C
+            "0d000B0100083fe22d0e56041893" +  // Measured relative humidity is 0.568%.
+            "0e000D01000A14023fe999999999999a" // Air conditioner compressor is using/producing 0.8kW of power.
     )
     
     @Test
@@ -72,15 +74,17 @@ class KClimateTest : BaseTest() {
         builder.setDefrostingState(Property(ActiveState.INACTIVE))
         builder.setIonisingState(Property(ActiveState.INACTIVE))
         builder.setDefrostingTemperatureSetting(Property(Temperature(21.2, Temperature.Unit.CELSIUS)))
-        builder.addHvacWeekdayStartingTime(Property(HvacWeekdayStartingTime(Weekday.MONDAY, Time(16, 0))))
-        builder.addHvacWeekdayStartingTime(Property(HvacWeekdayStartingTime(Weekday.TUESDAY, Time(16, 0))))
-        builder.addHvacWeekdayStartingTime(Property(HvacWeekdayStartingTime(Weekday.WEDNESDAY, Time(16, 0))))
-        builder.addHvacWeekdayStartingTime(Property(HvacWeekdayStartingTime(Weekday.THURSDAY, Time(16, 0))))
-        builder.addHvacWeekdayStartingTime(Property(HvacWeekdayStartingTime(Weekday.FRIDAY, Time(16, 0))))
-        builder.addHvacWeekdayStartingTime(Property(HvacWeekdayStartingTime(Weekday.SATURDAY, Time(18, 30))))
-        builder.addHvacWeekdayStartingTime(Property(HvacWeekdayStartingTime(Weekday.SUNDAY, Time(19, 31))))
-        builder.addHvacWeekdayStartingTime(Property(HvacWeekdayStartingTime(Weekday.AUTOMATIC, Time(16, 0))))
+        builder.addHvacWeekdayStartingTime(Property(WeekdayTime(Weekday.MONDAY, Time(16, 0))))
+        builder.addHvacWeekdayStartingTime(Property(WeekdayTime(Weekday.TUESDAY, Time(16, 0))))
+        builder.addHvacWeekdayStartingTime(Property(WeekdayTime(Weekday.WEDNESDAY, Time(16, 0))))
+        builder.addHvacWeekdayStartingTime(Property(WeekdayTime(Weekday.THURSDAY, Time(16, 0))))
+        builder.addHvacWeekdayStartingTime(Property(WeekdayTime(Weekday.FRIDAY, Time(16, 0))))
+        builder.addHvacWeekdayStartingTime(Property(WeekdayTime(Weekday.SATURDAY, Time(18, 30))))
+        builder.addHvacWeekdayStartingTime(Property(WeekdayTime(Weekday.SUNDAY, Time(19, 31))))
+        builder.addHvacWeekdayStartingTime(Property(WeekdayTime(Weekday.AUTOMATIC, Time(16, 0))))
         builder.setRearTemperatureSetting(Property(Temperature(21.6, Temperature.Unit.CELSIUS)))
+        builder.setHumidity(Property(0.568))
+        builder.setAirConditionerCompressorPower(Property(Power(0.8, Power.Unit.KILOWATTS)))
         testState(builder.build())
     }
     
@@ -125,6 +129,9 @@ class KClimateTest : BaseTest() {
         assertTrue(state.hvacWeekdayStartingTimes[7].value?.time?.minute == 0)
         assertTrue(state.rearTemperatureSetting.value?.value == 21.6)
         assertTrue(state.rearTemperatureSetting.value?.unit == Temperature.Unit.CELSIUS)
+        assertTrue(state.humidity.value == 0.568)
+        assertTrue(state.airConditionerCompressorPower.value?.value == 0.8)
+        assertTrue(state.airConditionerCompressorPower.value?.unit == Power.Unit.KILOWATTS)
         assertTrue(bytesTheSame(state, bytes))
     }
     
@@ -135,10 +142,10 @@ class KClimateTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0024000102030405060708090b0c")
-        val propertyGetter = Climate.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0b, 0x0c)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0024000102030405060708090b0c0d0e")
+        val propertyGetter = Climate.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0b, 0x0c, 0x0d, 0x0e)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090b0c"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090b0c0d0e"))
     }
     
     @Test
@@ -161,14 +168,14 @@ class KClimateTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("0102030405060708090b0c")
+        val identifierBytes = Bytes("0102030405060708090b0c0d0e")
         val allBytes = Bytes(COMMAND_HEADER + "002402" + identifierBytes)
         val constructed = Climate.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.CLIMATE)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Climate.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0b, 0x0c)
+        val secondConstructed = Climate.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0b, 0x0c, 0x0d, 0x0e)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)
@@ -193,14 +200,14 @@ class KClimateTest : BaseTest() {
             "0b0006010003071000")
     
         val constructed = Climate.ChangeStartingTimes(arrayListOf(
-                HvacWeekdayStartingTime(Weekday.MONDAY, Time(16, 0)), 
-                HvacWeekdayStartingTime(Weekday.TUESDAY, Time(16, 0)), 
-                HvacWeekdayStartingTime(Weekday.WEDNESDAY, Time(16, 0)), 
-                HvacWeekdayStartingTime(Weekday.THURSDAY, Time(16, 0)), 
-                HvacWeekdayStartingTime(Weekday.FRIDAY, Time(16, 0)), 
-                HvacWeekdayStartingTime(Weekday.SATURDAY, Time(18, 30)), 
-                HvacWeekdayStartingTime(Weekday.SUNDAY, Time(19, 31)), 
-                HvacWeekdayStartingTime(Weekday.AUTOMATIC, Time(16, 0)))
+                WeekdayTime(Weekday.MONDAY, Time(16, 0)), 
+                WeekdayTime(Weekday.TUESDAY, Time(16, 0)), 
+                WeekdayTime(Weekday.WEDNESDAY, Time(16, 0)), 
+                WeekdayTime(Weekday.THURSDAY, Time(16, 0)), 
+                WeekdayTime(Weekday.FRIDAY, Time(16, 0)), 
+                WeekdayTime(Weekday.SATURDAY, Time(18, 30)), 
+                WeekdayTime(Weekday.SUNDAY, Time(19, 31)), 
+                WeekdayTime(Weekday.AUTOMATIC, Time(16, 0)))
             )
         assertTrue(bytesTheSame(constructed, bytes))
     

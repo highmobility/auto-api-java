@@ -27,11 +27,13 @@ import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.EngineType;
+import com.highmobility.autoapi.value.measurement.Mass;
 import com.highmobility.autoapi.value.measurement.Power;
 import com.highmobility.autoapi.value.measurement.Torque;
 import com.highmobility.autoapi.value.measurement.Volume;
 import com.highmobility.value.Bytes;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
@@ -63,6 +65,16 @@ public class VehicleInformation {
     public static final byte PROPERTY_TIMEFORMAT = 0x15;
     public static final byte PROPERTY_DRIVE = 0x16;
     public static final byte PROPERTY_POWERTRAIN_SECONDARY = 0x17;
+    public static final byte PROPERTY_FUEL_TANK_CAPACITY = 0x18;
+    public static final byte PROPERTY_BUILD_DATE = 0x19;
+    public static final byte PROPERTY_COUNTRY_CODE = 0x1a;
+    public static final byte PROPERTY_MODEL_KEY = 0x1b;
+    public static final byte PROPERTY_DATA_QUALITY = 0x1c;
+    public static final byte PROPERTY_EXTRA_EQUIPMENT_CODES = 0x1d;
+    public static final byte PROPERTY_SERIES = 0x1e;
+    public static final byte PROPERTY_LAST_DATA_TRANSFER_DATE = 0x1f;
+    public static final byte PROPERTY_TIME_ZONE = 0x20;
+    public static final byte PROPERTY_VEHICLE_MASS = 0x21;
 
     /**
      * Get vehicle information
@@ -149,6 +161,16 @@ public class VehicleInformation {
         Property<Timeformat> timeformat = new Property<>(Timeformat.class, PROPERTY_TIMEFORMAT);
         Property<Drive> drive = new Property<>(Drive.class, PROPERTY_DRIVE);
         Property<EngineType> powertrainSecondary = new Property<>(EngineType.class, PROPERTY_POWERTRAIN_SECONDARY);
+        Property<Volume> fuelTankCapacity = new Property<>(Volume.class, PROPERTY_FUEL_TANK_CAPACITY);
+        Property<Calendar> buildDate = new Property<>(Calendar.class, PROPERTY_BUILD_DATE);
+        Property<String> countryCode = new Property<>(String.class, PROPERTY_COUNTRY_CODE);
+        Property<String> modelKey = new Property<>(String.class, PROPERTY_MODEL_KEY);
+        Property<DataQuality> dataQuality = new Property<>(DataQuality.class, PROPERTY_DATA_QUALITY);
+        List<Property<String>> extraEquipmentCodes;
+        Property<String> series = new Property<>(String.class, PROPERTY_SERIES);
+        Property<Calendar> lastDataTransferDate = new Property<>(Calendar.class, PROPERTY_LAST_DATA_TRANSFER_DATE);
+        Property<TimeZone> timeZone = new Property<>(TimeZone.class, PROPERTY_TIME_ZONE);
+        Property<Mass> vehicleMass = new Property<>(Mass.class, PROPERTY_VEHICLE_MASS);
     
         /**
          * @return Type of the (primary) powertrain
@@ -299,10 +321,81 @@ public class VehicleInformation {
             return powertrainSecondary;
         }
     
+        /**
+         * @return The fuel tank capacity measured in liters
+         */
+        public Property<Volume> getFuelTankCapacity() {
+            return fuelTankCapacity;
+        }
+    
+        /**
+         * @return Build (construction) date of the vehicle.
+         */
+        public Property<Calendar> getBuildDate() {
+            return buildDate;
+        }
+    
+        /**
+         * @return The country code of the vehicle.
+         */
+        public Property<String> getCountryCode() {
+            return countryCode;
+        }
+    
+        /**
+         * @return The model key of the vehicle.
+         */
+        public Property<String> getModelKey() {
+            return modelKey;
+        }
+    
+        /**
+         * @return Evaluation of the timeliness of the available vehicle data.
+         */
+        public Property<DataQuality> getDataQuality() {
+            return dataQuality;
+        }
+    
+        /**
+         * @return Codes of the extra equipment the vehicle has
+         */
+        public List<Property<String>> getExtraEquipmentCodes() {
+            return extraEquipmentCodes;
+        }
+    
+        /**
+         * @return The vehicle model's series
+         */
+        public Property<String> getSeries() {
+            return series;
+        }
+    
+        /**
+         * @return The last trip date
+         */
+        public Property<Calendar> getLastDataTransferDate() {
+            return lastDataTransferDate;
+        }
+    
+        /**
+         * @return Time zone setting in the vehicle.
+         */
+        public Property<TimeZone> getTimeZone() {
+            return timeZone;
+        }
+    
+        /**
+         * @return Vehicle mass.
+         */
+        public Property<Mass> getVehicleMass() {
+            return vehicleMass;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<String>> equipmentsBuilder = new ArrayList<>();
+            final ArrayList<Property<String>> extraEquipmentCodesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNextState(p -> {
@@ -331,6 +424,19 @@ public class VehicleInformation {
                         case PROPERTY_TIMEFORMAT: return timeformat.update(p);
                         case PROPERTY_DRIVE: return drive.update(p);
                         case PROPERTY_POWERTRAIN_SECONDARY: return powertrainSecondary.update(p);
+                        case PROPERTY_FUEL_TANK_CAPACITY: return fuelTankCapacity.update(p);
+                        case PROPERTY_BUILD_DATE: return buildDate.update(p);
+                        case PROPERTY_COUNTRY_CODE: return countryCode.update(p);
+                        case PROPERTY_MODEL_KEY: return modelKey.update(p);
+                        case PROPERTY_DATA_QUALITY: return dataQuality.update(p);
+                        case PROPERTY_EXTRA_EQUIPMENT_CODES:
+                            Property<String> extraEquipmentCode = new Property<>(String.class, p);
+                            extraEquipmentCodesBuilder.add(extraEquipmentCode);
+                            return extraEquipmentCode;
+                        case PROPERTY_SERIES: return series.update(p);
+                        case PROPERTY_LAST_DATA_TRANSFER_DATE: return lastDataTransferDate.update(p);
+                        case PROPERTY_TIME_ZONE: return timeZone.update(p);
+                        case PROPERTY_VEHICLE_MASS: return vehicleMass.update(p);
                     }
     
                     return null;
@@ -338,6 +444,7 @@ public class VehicleInformation {
             }
     
             equipments = equipmentsBuilder;
+            extraEquipmentCodes = extraEquipmentCodesBuilder;
         }
     
         public static final class Builder extends SetCommand.Builder<Builder> {
@@ -578,6 +685,122 @@ public class VehicleInformation {
                 addProperty(property);
                 return this;
             }
+            
+            /**
+             * @param fuelTankCapacity The fuel tank capacity measured in liters
+             * @return The builder
+             */
+            public Builder setFuelTankCapacity(Property<Volume> fuelTankCapacity) {
+                Property property = fuelTankCapacity.setIdentifier(PROPERTY_FUEL_TANK_CAPACITY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param buildDate Build (construction) date of the vehicle.
+             * @return The builder
+             */
+            public Builder setBuildDate(Property<Calendar> buildDate) {
+                Property property = buildDate.setIdentifier(PROPERTY_BUILD_DATE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param countryCode The country code of the vehicle.
+             * @return The builder
+             */
+            public Builder setCountryCode(Property<String> countryCode) {
+                Property property = countryCode.setIdentifier(PROPERTY_COUNTRY_CODE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param modelKey The model key of the vehicle.
+             * @return The builder
+             */
+            public Builder setModelKey(Property<String> modelKey) {
+                Property property = modelKey.setIdentifier(PROPERTY_MODEL_KEY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param dataQuality Evaluation of the timeliness of the available vehicle data.
+             * @return The builder
+             */
+            public Builder setDataQuality(Property<DataQuality> dataQuality) {
+                Property property = dataQuality.setIdentifier(PROPERTY_DATA_QUALITY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * Add an array of extra equipment codes
+             * 
+             * @param extraEquipmentCodes The extra equipment codes. Codes of the extra equipment the vehicle has
+             * @return The builder
+             */
+            public Builder setExtraEquipmentCodes(Property<String>[] extraEquipmentCodes) {
+                for (int i = 0; i < extraEquipmentCodes.length; i++) {
+                    addExtraEquipmentCode(extraEquipmentCodes[i]);
+                }
+            
+                return this;
+            }
+            
+            /**
+             * Add a single extra equipment code
+             * 
+             * @param extraEquipmentCode The extra equipment code. Codes of the extra equipment the vehicle has
+             * @return The builder
+             */
+            public Builder addExtraEquipmentCode(Property<String> extraEquipmentCode) {
+                extraEquipmentCode.setIdentifier(PROPERTY_EXTRA_EQUIPMENT_CODES);
+                addProperty(extraEquipmentCode);
+                return this;
+            }
+            
+            /**
+             * @param series The vehicle model's series
+             * @return The builder
+             */
+            public Builder setSeries(Property<String> series) {
+                Property property = series.setIdentifier(PROPERTY_SERIES);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param lastDataTransferDate The last trip date
+             * @return The builder
+             */
+            public Builder setLastDataTransferDate(Property<Calendar> lastDataTransferDate) {
+                Property property = lastDataTransferDate.setIdentifier(PROPERTY_LAST_DATA_TRANSFER_DATE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param timeZone Time zone setting in the vehicle.
+             * @return The builder
+             */
+            public Builder setTimeZone(Property<TimeZone> timeZone) {
+                Property property = timeZone.setIdentifier(PROPERTY_TIME_ZONE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param vehicleMass Vehicle mass.
+             * @return The builder
+             */
+            public Builder setVehicleMass(Property<Mass> vehicleMass) {
+                Property property = vehicleMass.setIdentifier(PROPERTY_VEHICLE_MASS);
+                addProperty(property);
+                return this;
+            }
         }
     }
 
@@ -739,6 +962,82 @@ public class VehicleInformation {
         private final byte value;
     
         Drive(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum DataQuality implements ByteEnum {
+        /**
+         * No data available
+         */
+        NO_DATA((byte) 0x00),
+        /**
+         * Data transmitted within the last 48h
+         */
+        UP_TO_DATE((byte) 0x01),
+        /**
+         * Data transmitted within the last 7 days, but not within the last 48h
+         */
+        ALMOST_UP_TO_DATE((byte) 0x02),
+        /**
+         * No data transferred within the last 7 days
+         */
+        OUT_OF_DATE((byte) 0x03);
+    
+        public static DataQuality fromByte(byte byteValue) throws CommandParseException {
+            DataQuality[] values = DataQuality.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                DataQuality state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(DataQuality.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        DataQuality(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum TimeZone implements ByteEnum {
+        WINTERTIME((byte) 0x00),
+        SUMMERTIME((byte) 0x01),
+        UTC((byte) 0x02),
+        MANUAL((byte) 0x03);
+    
+        public static TimeZone fromByte(byte byteValue) throws CommandParseException {
+            TimeZone[] values = TimeZone.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                TimeZone state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(TimeZone.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        TimeZone(byte value) {
             this.value = value;
         }
     

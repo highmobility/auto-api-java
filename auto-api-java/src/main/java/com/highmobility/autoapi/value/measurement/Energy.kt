@@ -51,6 +51,7 @@ class Energy : MeasurementType {
             Unit.KILOJOULES -> value * 1000.0
             Unit.WATT_HOURS -> value * 3600.0
             Unit.KILOWATT_HOURS -> value * 3600000.0
+            Unit.AMPERE_HOURS -> value * 3600.0
         }
     }
     
@@ -60,11 +61,14 @@ class Energy : MeasurementType {
     
     fun inKilowattHours() = inJoules() / 3600000.0
     
+    fun inAmpereHours() = inJoules() / 3600.0
+    
     enum class Unit(val id: Byte) {
         JOULES(0x00),
         KILOJOULES(0x01),
         WATT_HOURS(0x03),
-        KILOWATT_HOURS(0x04);
+        KILOWATT_HOURS(0x04),
+        AMPERE_HOURS(0x05);
     
         companion object {
             private val map = values().associateBy(Unit::id)

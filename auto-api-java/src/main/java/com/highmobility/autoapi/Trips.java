@@ -65,6 +65,7 @@ public class Trips {
     public static final byte PROPERTY_TOTAL_FUEL_CONSUMPTION = 0x13;
     public static final byte PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION = 0x14;
     public static final byte PROPERTY_MAXIMUM_SPEED = 0x15;
+    public static final byte PROPERTY_ROAD_TYPE = 0x16;
 
     /**
      * The trips state
@@ -91,6 +92,7 @@ public class Trips {
         Property<Volume> totalFuelConsumption = new Property<>(Volume.class, PROPERTY_TOTAL_FUEL_CONSUMPTION);
         Property<Volume> totalIdleFuelConsumption = new Property<>(Volume.class, PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION);
         Property<Speed> maximumSpeed = new Property<>(Speed.class, PROPERTY_MAXIMUM_SPEED);
+        Property<RoadType> roadType = new Property<>(RoadType.class, PROPERTY_ROAD_TYPE);
     
         /**
          * @return Type of the trip
@@ -239,6 +241,13 @@ public class Trips {
             return maximumSpeed;
         }
     
+        /**
+         * @return Type of road travelled on.
+         */
+        public Property<RoadType> getRoadType() {
+            return roadType;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
     
@@ -279,6 +288,7 @@ public class Trips {
                         case PROPERTY_TOTAL_FUEL_CONSUMPTION: return totalFuelConsumption.update(p);
                         case PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION: return totalIdleFuelConsumption.update(p);
                         case PROPERTY_MAXIMUM_SPEED: return maximumSpeed.update(p);
+                        case PROPERTY_ROAD_TYPE: return roadType.update(p);
                     }
     
                     return null;
@@ -558,6 +568,16 @@ public class Trips {
                 addProperty(property);
                 return this;
             }
+            
+            /**
+             * @param roadType Type of road travelled on.
+             * @return The builder
+             */
+            public Builder setRoadType(Property<RoadType> roadType) {
+                Property property = roadType.setIdentifier(PROPERTY_ROAD_TYPE);
+                addProperty(property);
+                return this;
+            }
         }
     }
 
@@ -648,6 +668,42 @@ public class Trips {
         private final byte value;
     
         EcoLevel(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum RoadType implements ByteEnum {
+        PRIVATE_OR_GRAVEL((byte) 0x00),
+        LOCAL((byte) 0x01),
+        COUNTY((byte) 0x02),
+        RURAL((byte) 0x03),
+        FEDERAL_HIGHWAY((byte) 0x04),
+        HIGHWAY((byte) 0x05),
+        COUNTRY((byte) 0x06),
+        NATIONAL((byte) 0x07);
+    
+        public static RoadType fromByte(byte byteValue) throws CommandParseException {
+            RoadType[] values = RoadType.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                RoadType state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(RoadType.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        RoadType(byte value) {
             this.value = value;
         }
     

@@ -31,6 +31,7 @@ import com.highmobility.autoapi.value.ConfirmedTroubleCode;
 import com.highmobility.autoapi.value.DieselExhaustFilterStatus;
 import com.highmobility.autoapi.value.FluidLevel;
 import com.highmobility.autoapi.value.OemTroubleCodeValue;
+import com.highmobility.autoapi.value.ServiceStatus;
 import com.highmobility.autoapi.value.TirePressure;
 import com.highmobility.autoapi.value.TirePressureStatus;
 import com.highmobility.autoapi.value.TireTemperature;
@@ -105,6 +106,7 @@ public class Diagnostics {
     public static final byte PROPERTY_ENGINE_OIL_PRESSURE_LEVEL = 0x34;
     public static final byte PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE = 0x35;
     public static final byte PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL = 0x36;
+    public static final byte PROPERTY_ENGINE_OIL_SERVICE_STATUS = 0x37;
 
     /**
      * Get Diagnostics property availability information
@@ -254,6 +256,7 @@ public class Diagnostics {
         Property<EngineOilPressureLevel> engineOilPressureLevel = new Property<>(EngineOilPressureLevel.class, PROPERTY_ENGINE_OIL_PRESSURE_LEVEL);
         Property<Duration> engineTimeToNextService = new Property<>(Duration.class, PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE);
         Property<LowVoltageBatteryChargeLevel> lowVoltageBatteryChargeLevel = new Property<>(LowVoltageBatteryChargeLevel.class, PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL);
+        Property<ServiceStatus> engineOilServiceStatus = new Property<>(ServiceStatus.class, PROPERTY_ENGINE_OIL_SERVICE_STATUS);
     
         /**
          * @return The vehicle mileage (odometer)
@@ -611,6 +614,13 @@ public class Diagnostics {
             return lowVoltageBatteryChargeLevel;
         }
     
+        /**
+         * @return Engine oil service status
+         */
+        public Property<ServiceStatus> getEngineOilServiceStatus() {
+            return engineOilServiceStatus;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
     
@@ -712,6 +722,7 @@ public class Diagnostics {
                         case PROPERTY_ENGINE_OIL_PRESSURE_LEVEL: return engineOilPressureLevel.update(p);
                         case PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE: return engineTimeToNextService.update(p);
                         case PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL: return lowVoltageBatteryChargeLevel.update(p);
+                        case PROPERTY_ENGINE_OIL_SERVICE_STATUS: return engineOilServiceStatus.update(p);
                     }
     
                     return null;
@@ -1420,6 +1431,16 @@ public class Diagnostics {
              */
             public Builder setLowVoltageBatteryChargeLevel(Property<LowVoltageBatteryChargeLevel> lowVoltageBatteryChargeLevel) {
                 Property property = lowVoltageBatteryChargeLevel.setIdentifier(PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param engineOilServiceStatus Engine oil service status
+             * @return The builder
+             */
+            public Builder setEngineOilServiceStatus(Property<ServiceStatus> engineOilServiceStatus) {
+                Property property = engineOilServiceStatus.setIdentifier(PROPERTY_ENGINE_OIL_SERVICE_STATUS);
                 addProperty(property);
                 return this;
             }
