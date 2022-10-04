@@ -78,6 +78,6 @@ public class BrakeServiceDueDate extends PropertyValueObject {
     }
 
     @Override public int getLength() {
-        return 1 + 0;
+        return 1 + 8;
     }
 }

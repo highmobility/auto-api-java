@@ -55,7 +55,7 @@ class KMaintenanceTest : BaseTest() {
             "12000D01000A07034050b33333333333" +  // Time to the next oil service is 66.8 days
             "13000D01000A12044097710000000000" +  // Brake fluid remaining distance is 1500.25km
             "14000401000100" +  // Brake fluid status is 'ok'
-            "16000C010009010000017fda4373c0" +  // Front brake has a service date at 30 March 2022 at 09:58:48 GMT
+            "16000C010009000000017fda4373c0" +  // Front brake has a service date at 30 March 2022 at 09:58:48 GMT
             "16000C010009010000017fda4373c0" +  // Rear brake has a service date at 30 March 2022 at 09:58:48 GMT
             "17000E01000B0012044097710000000000" +  // Front brake's remaining distance to service is 1500.25km
             "17000E01000B0112044097710000000000" +  // Rear brake's remaining distance to service is 1500.25km
@@ -119,7 +119,7 @@ class KMaintenanceTest : BaseTest() {
         builder.setServiceDate(Property(getCalendar("2022-03-30T12:11:44.000Z")))
         builder.setInspectionStatus(Property(ServiceStatus.OK))
         builder.setDriveInInspectionDistanceTo(Property(Length(3681.0, Length.Unit.KILOMETERS)))
-        builder.setVehicleCheckDate(Property(getCalendar("2022-04-01T08:51:28Z")))
+        builder.setVehicleCheckDate(Property(getCalendar("2022-04-01T08:51:28.093Z")))
         builder.setVehicleCheckStatus(Property(ServiceStatus.OK))
         builder.setVehicleCheckDistanceTo(Property(Length(1350.4, Length.Unit.KILOMETERS)))
         testState(builder.build())
@@ -187,7 +187,7 @@ class KMaintenanceTest : BaseTest() {
         assertTrue(state.inspectionStatus.value == ServiceStatus.OK)
         assertTrue(state.driveInInspectionDistanceTo.value?.value == 3681.0)
         assertTrue(state.driveInInspectionDistanceTo.value?.unit == Length.Unit.KILOMETERS)
-        assertTrue(dateIsSame(state.vehicleCheckDate.value, "2022-04-01T08:51:28Z"))
+        assertTrue(dateIsSame(state.vehicleCheckDate.value, "2022-04-01T08:51:28.093Z"))
         assertTrue(state.vehicleCheckStatus.value == ServiceStatus.OK)
         assertTrue(state.vehicleCheckDistanceTo.value?.value == 1350.4)
         assertTrue(state.vehicleCheckDistanceTo.value?.unit == Length.Unit.KILOMETERS)
